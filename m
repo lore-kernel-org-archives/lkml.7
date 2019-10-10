@@ -2,163 +2,134 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BBFC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334B8ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E5D20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112482190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="LK3c4rVQ"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="b4RMAMJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfJJRrn (ORCPT
+        id S1726884AbfJJRsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:47:43 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:33892 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726091AbfJJRrm (ORCPT
+        Thu, 10 Oct 2019 13:48:10 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39981 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfJJRsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:47:42 -0400
-Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9AHZd5Y007859;
-        Thu, 10 Oct 2019 13:47:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=smtpout1;
- bh=L5GXx3mox0EzVbNJGhVgnlBj3HadmPIkaxN59aZroN4=;
- b=LK3c4rVQkg3CJXSFZZxvhAyiBoT0FHlcOxrKUXhSlFfVE0B8Q3UCdPlz2vLBgsAwfo6Q
- DdWAsDrvwB+JKss4T9iLAgaApwIZpEhns1LLYBEnTJ7gfXHqqFB4VUtU63IsPjJ4uelV
- iVIHmsstcUxEtbGpdUR93VFglQ6Vt7OQVRdbAWRqWlwkSCmgT7Tw4v2vgIIe2NGbIJ34
- MvfGSo1uzUXloODPAKItCljn+xqbLk4jkWsLfA2JHOhHAzyg+ALet3V2Z+TrZmD33w9U
- ODMS7YH9bHjKyeAi5CCqKE6LLRlusP2WYKZ4XbUzbq6B1dTU8ysbO+eQpTPzF47xEaeX MQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 2vj8kwg8hy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Oct 2019 13:47:37 -0400
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9AHcUBp028792;
-        Thu, 10 Oct 2019 13:47:36 -0400
-Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
-        by mx0a-00154901.pphosted.com with ESMTP id 2vj7m7t5m8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 13:47:36 -0400
-X-LoopCount0: from 10.166.132.133
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="472812424"
-From:   <Narendra.K@dell.com>
-To:     <ard.biesheuvel@linaro.org>
-CC:     <linux-efi@vger.kernel.org>, <Mario.Limonciello@dell.com>,
-        <geert@linux-m68k.org>, <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, <james.morse@arm.com>,
-        <mingo@kernel.org>
-Subject: Re: [PATCH] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-Thread-Topic: [PATCH] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-Thread-Index: AQHVeVm8hd3/NfhPNEW1ErxPMn2a1adSB94AgAHOtgA=
-Date:   Thu, 10 Oct 2019 17:47:30 +0000
-Message-ID: <20191010174710.GA2405@localhost.localdomain>
-References: <20191002194346.GA3792@localhost.localdomain>
- <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
-In-Reply-To: <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.10.1 (2018-07-13)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <CDDA16D306AADF4A96E170322B65887B@dell.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-10_06:2019-10-10,2019-10-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501
- adultscore=0 clxscore=1015 malwarescore=0 spamscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1910100155
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 mlxscore=0
- malwarescore=0 adultscore=0 spamscore=0 mlxlogscore=999 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1910100155
+        Thu, 10 Oct 2019 13:48:10 -0400
+Received: by mail-qt1-f194.google.com with SMTP id m61so9920222qte.7
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:48:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cYn1vCkpH2UTkYb1MjEld3EXDRqgDSQ+QW91PhLxXEg=;
+        b=b4RMAMJqUWpE9nTsf3SUUcuR/dfk6xQY+sq5BMJ5OJYcAGbuJN/PV5K+RXiRRjiLV6
+         wPzwh9Yy6224tWvt4cNkhUroXnczv6DSj/IiK+QpUuUdoBOiynjlptf89TdxqryA+j73
+         IZlgMx/YKZXjVlLD+qAaNcspz80/XwLf55KxkSr/1kDEVVeSkVe6l4vjKuV40qZNjb7K
+         BHQ6MnHZ0hSKfTTSJNO1oUIyPH179JC3zuDfcZAq3v1eYEoPQ/TxVF3x2QRWp/gl/YQh
+         7YbSlKvmM8JWxyo4Gd0hYE49BlY06Y8f545WmQlOdphnF2Qqx+r4rWeQH9y5UWFnd/zH
+         HqYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cYn1vCkpH2UTkYb1MjEld3EXDRqgDSQ+QW91PhLxXEg=;
+        b=gzseq2gLow6RdDFefJQy5lUNZrjrXaH15akiVP/EW3RDmfDCWuhy50LOj/+F4/d2y/
+         jke2FAeEgQFZosWN11mw4ZYqE7zDK6TohqHg3/2VDT5ou/RZ9ZdthOzReqSljOzQgHrO
+         ghxMzD3j1DFvdXkEqGb2PXzNHmUXy48JyTatPckpSMVVk+4r1olXLoyH4HtyzUXN3+Yt
+         QCvsC6v659G9gDpBf60uw+bH4UPP6WtZssnRzdjNJ/Go8vVtZve0kn0DOJoakTdxG9fJ
+         4iif6k2xfbxPC7IDzs2ikTNVDJlXbwL3sLH5v5YWtBjFrDiFR4A6RV8T1gXd/s3yz0TW
+         bHLQ==
+X-Gm-Message-State: APjAAAWOD34139w3GpIeKp89voMlOnINGOIsrRvf3M+YCISktNA5U5Ig
+        vk/PX4p0hE/X9DrGQUpsHncx0g==
+X-Google-Smtp-Source: APXvYqy2QuWmiOejsKpqxjUS01WpAo08ztOf+vAMcZ2cohqpxD9OrkReBY+a++681Kf6Or7CgIKYqg==
+X-Received: by 2002:ac8:2653:: with SMTP id v19mr12076131qtv.278.1570729688691;
+        Thu, 10 Oct 2019 10:48:08 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id a11sm3048644qkc.123.2019.10.10.10.48.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 10:48:07 -0700 (PDT)
+Message-ID: <1570729686.5937.30.camel@lca.pw>
+Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
+From:   Qian Cai <cai@lca.pw>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        john.ogness@linutronix.de, akpm@linux-foundation.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 10 Oct 2019 13:48:06 -0400
+In-Reply-To: <20191010173040.GK18412@dhcp22.suse.cz>
+References: <20191009162339.GI6681@dhcp22.suse.cz>
+         <6AAB77B5-092B-43E3-9F4B-0385DE1890D9@lca.pw>
+         <20191010105927.GG18412@dhcp22.suse.cz> <1570713112.5937.26.camel@lca.pw>
+         <20191010141820.GI18412@dhcp22.suse.cz> <1570718858.5937.28.camel@lca.pw>
+         <20191010173040.GK18412@dhcp22.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ard,
+On Thu, 2019-10-10 at 19:30 +0200, Michal Hocko wrote:
+> On Thu 10-10-19 10:47:38, Qian Cai wrote:
+> > On Thu, 2019-10-10 at 16:18 +0200, Michal Hocko wrote:
+> > > On Thu 10-10-19 09:11:52, Qian Cai wrote:
+> > > > On Thu, 2019-10-10 at 12:59 +0200, Michal Hocko wrote:
+> > > > > On Thu 10-10-19 05:01:44, Qian Cai wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > > On Oct 9, 2019, at 12:23 PM, Michal Hocko <mhocko@kernel.org> wrote:
+> > > > > > > 
+> > > > > > > If this was only about the memory offline code then I would agree. But
+> > > > > > > we are talking about any printk from the zone->lock context and that is
+> > > > > > > a bigger deal. Besides that it is quite natural that the printk code
+> > > > > > > should be more universal and allow to be also called from the MM
+> > > > > > > contexts as much as possible. If there is any really strong reason this
+> > > > > > > is not possible then it should be documented at least.
+> > > > > > 
+> > > > > > Where is the best place to document this? I am thinking about under
+> > > > > > the “struct zone” definition’s lock field in mmzone.h.
+> > > > > 
+> > > > > I am not sure TBH and I do not think we have reached the state where
+> > > > > this would be the only way forward.
+> > > > 
+> > > > How about I revised the changelog to focus on memory offline rather than making
+> > > > a rule that nobody should call printk() with zone->lock held?
+> > > 
+> > > If you are to remove the CONFIG_DEBUG_VM printk then I am all for it. I
+> > > am still not convinced that fiddling with dump_page in the isolation
+> > > code is justified though.
+> > 
+> > No, dump_page() there has to be fixed together for memory offline to be useful.
+> > What's the other options it has here?
+> 
+> I would really prefer to not repeat myself
+> http://lkml.kernel.org/r/20191010074049.GD18412@dhcp22.suse.cz
 
-Thank you for the review comments.=20
+Care to elaborate what does that mean? I am confused on if you finally agree on
+no printk() while held zone->lock or not. You said "If there is absolutely
+no way around that then we might have to bite a bullet and consider some
+of MM locks a land of no printk." which makes me think you agreed, but your
+stance from the last reply seems you were opposite to it.
 
-On Wed, Oct 09, 2019 at 04:11:04PM +0200, Ard Biesheuvel wrote:
-> On Wed, 2 Oct 2019 at 21:44, <Narendra.K@dell.com> wrote:
-> >
-> > From: Narendra K <Narendra.K@dell.com>
-> >
-> > For the EFI_RCI2_TABLE kconfig option, 'make oldconfig' asks the user
-> > for input as it is a new kconfig option in kernel version 5.4. This pat=
-ch
-> > modifies the kconfig option to ask the user for input only when CONFIG_=
-X86
-> > or CONFIG_COMPILE_TEST is set to y.
-> >
-> > The patch also makes EFI_RCI2_TABLE kconfig option depend on CONFIG_EFI=
-.
-> >
-> > Signed-off-by: Narendra K <Narendra.K@dell.com>
-> > ---
-> > The patch is created on kernel version 5.4-rc1.
-> >
-> > Hi Ard, I have made following changes -
-> >
-> > - changed the prompt string from "EFI Runtime Configuration
-> > Interface Table Version 2 Support" to "EFI RCI Table Version 2 Support"
-> > as the string crossed 80 char limit.
-> >
-> > - added "depends on EFI" so that code builds only when CONFIG_EFI is
-> > set to y.
-> >
-> > - added 'default n' for ease of understanding though default is set to =
-n.
-> >
->=20
-> None of these changes are necessary, tbh. 'depends on EFI' is implied
-> by the placement of the option, and default n is indeed the default.
-
-I will drop the changes in the next version of the patch.
-
->=20
->=20
-> >  drivers/firmware/efi/Kconfig | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfi=
-g
-> > index 178ee8106828..6e4c46e8a954 100644
-> > --- a/drivers/firmware/efi/Kconfig
-> > +++ b/drivers/firmware/efi/Kconfig
-> > @@ -181,7 +181,10 @@ config RESET_ATTACK_MITIGATION
-> >           reboots.
-> >
-> >  config EFI_RCI2_TABLE
-> > -       bool "EFI Runtime Configuration Interface Table Version 2 Suppo=
-rt"
-> > +       bool
-> > +       prompt "EFI RCI Table Version 2 Support" if X86 || COMPILE_TEST
->=20
-> You can drop the || COMPILE_TEST as well.
-
-I will drop this part of the change in the next version of the patch.=20
-
---=20
-With regards,
-Narendra K=
+> 
+> > By not holding zone->lock in dump_page()
+> > from set_migratetype_isolate(), it even has a good side-effect to increase the
+> > system throughput as dump_page() could be time-consuming. It may make the code a
+> > bit cleaner by introducing a has_unmovable_pages_locked() version.
+> 
+> I do not see why we should really optimize this cold path.
