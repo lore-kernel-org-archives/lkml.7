@@ -5,78 +5,77 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4EEC47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7464C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D2420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9852720B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="PcALcLoS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OADQjVjK"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="dZgCLK1c";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GWl/lLxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732739AbfJJCJ4 (ORCPT
+        id S1732808AbfJJCKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 22:09:56 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:46333 "EHLO
+        Wed, 9 Oct 2019 22:10:04 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:35361 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732219AbfJJCHz (ORCPT
+        by vger.kernel.org with ESMTP id S1726469AbfJJCIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 22:07:55 -0400
+        Wed, 9 Oct 2019 22:08:02 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E78A120B51;
-        Wed,  9 Oct 2019 22:06:28 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 063B921C24;
+        Wed,  9 Oct 2019 22:07:05 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 09 Oct 2019 22:06:28 -0400
+  by compute4.internal (MEProxy); Wed, 09 Oct 2019 22:07:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=gXUmnVUli/y3V
-        yBEI1euJF3NoxsH2wWbrvVYjkbZXEc=; b=PcALcLoSErFFMgcGP3yoKmL5V9SR2
-        Aq5Xd4l476/HxSLI+yD27EJ6md1PgnZHryesUb8rpM6nAGyFh28WVnRZa0LWwFZh
-        KOtCOydKJe5hJuwDZjyoH2EsAK80M90iaYX93mVNFfi2aPCZWm4p9CZzWNDIP2s4
-        WPzFJ8tlKz22qY5NyMO4I4v1CImj8YuRXzkNGFijAKxu7SoI+3kkm2uzX46TU0AY
-        tZ/CC2ItEhNavB9ZVpoS1OlBqGzzI6gMp0Jg/zxjG4p0oETbFBl7AQ/AqBgz4Gk6
-        e6xCHNlZ7Cc839QkbXAGhNASiN7Hq/FVdWiZLRUwv/ibqO8RiC+vSH78Q==
+        :mime-version:content-transfer-encoding; s=fm3; bh=/ZpOKiZozizLe
+        7jyQflbx5yKpx8pRHgLZdXkZKFa2Hg=; b=dZgCLK1cVP859GF3NSW/Y0RSrwbC+
+        FN6WHktScdyypzOyLWvLPfer0xRg+AccUNGHtweQbl0V/7rEA6A2z8RgwxWlRppf
+        8S8oQR1B+zrbyMIf8BOWXeyVLjJWpVcoP5tp1Kl2zW1UVM6BiPrN1tC8C/T3EPbJ
+        zoH+XdMD4RNeL2vj/WCVYPPERAXhPee3x1xABwjcYtyMHQ5MpO4GgALNv7vLNAfJ
+        WoGSeTEuUTuDBRahmsFtEp1ACAPzIXPeh8p6RIrahJZMUrwuqUyBmm1fPGaCmD/Q
+        kS9g/whN7xNNayUDLGIDx2cTd+UkAnkk1d/YHUSY47PqqjPjn5jSY5BNg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=gXUmnVUli/y3VyBEI1euJF3NoxsH2wWbrvVYjkbZXEc=; b=OADQjVjK
-        8QHHZgsoAIicXVU7HvxV8g9SfcvScREj+avAdguj54fEc5jb0yDPPUnk/+Hls98t
-        hOIybqyEiRw95fVOpQ8pYfqiTlicvtLo24uGc+LC179XrozvDOf1UHfTIP00qMJJ
-        6jgPYxmceyMSxhsPX3K3nG1ieuTfDlFEnpDQZaG+6DfmpiSoQigkr5hC0MxjiMN0
-        oxEb6eitUwqLipp1bEr682gP5lbubawTIzmpC1cpFQUjfyOg8EsBT5AJD+rjIvYw
-        A3Dy1Zcdqldj4+Yu24SNHW1w6TbAkY6dKTtr+lBk3DozitTURhVjgvyaiVhIdeCV
-        72NyBGJXpUBZyQ==
-X-ME-Sender: <xms:JJKeXTx1g7CIjuMVtqLDktx2bbUcFz9tA0WJcTJCNgNewOVzag5PdA>
+        fm1; bh=/ZpOKiZozizLe7jyQflbx5yKpx8pRHgLZdXkZKFa2Hg=; b=GWl/lLxc
+        bDwDADwW7Gay8uPl9LYFTy/HJmEiOslDOI7Ya6VxBCzU1anE7GzrKA5/bgU7XKmi
+        MYRJa/+z0xg7z+u7ZVU7JRnWRplo1BK/YqhSvTxFwKt08o569jAaJZlboXxRCIC2
+        5fvVbsGfe+aji3txbJcfMZfbeoGXVZTy8TQ6kGSztUFh7G16s/zbHTwxDHPgRVYF
+        IEpCo1RsN0JKLc7z63ihfSU36419lAi6YyDpAiVB9vWV66CP4g2DjRV8QfP8ZSV0
+        ekWJ8sjUUbAlaawn/E0AGkUFMdq2LK5jP3brOdCJhLJkv4WN3YFCN1+ovESHkY3/
+        Tb5OvO3WwiRMhg==
+X-ME-Sender: <xms:SJKeXRCDD2boWRBZ06LxfDjlEw_q9PncQjxGkElCbdhbBVBYTOkHDw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedriedvgdehjecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
     ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
     rdhiugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrih
     hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
-    vd
-X-ME-Proxy: <xmx:JJKeXe-MO_XqAvPbUVol9xOSbV3gt0s1wGp4V1acWt7vPeW2Z4D0OQ>
-    <xmx:JJKeXYbJnw-D09bRU5ROZpXO_yMa_z88GdPn55mVmxgMrYKxlKR1XQ>
-    <xmx:JJKeXa8RGO0C0KVNB9AnsEaBKy123ptoMlIPTPpHkS5lA5rcdgeYMg>
-    <xmx:JJKeXXHWJNjxUJvz0ZZBJOdC4h51Q6dpz5TsczpHK6uuxDliBn9p4w>
+    he
+X-ME-Proxy: <xmx:SZKeXb4ML-jLRL_CgJSaGQz-KUMz2dttoul9go8GTa6Xks3FUKnWPA>
+    <xmx:SZKeXfYNjeSU9jK663vzR-J5NZG5PbGSa0Sc9TKHw3AE3tOizsMu2Q>
+    <xmx:SZKeXa3rV6bSfAAbSxYoiVckK-CUyJnghswk9lTdZFR0KK2AJIj_bQ>
+    <xmx:SZKeXUAV6NAvOGMh1n6aLPgOSbYNwieJ8c5gYee5QWfC6XVgLr_CsQ>
 Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7F6F98005C;
-        Wed,  9 Oct 2019 22:06:25 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id ECAA080059;
+        Wed,  9 Oct 2019 22:07:01 -0400 (EDT)
 From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, joel@jms.id.au,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 2/2] clk: ast2600: Add RMII RCLK gates for all four MACs
-Date:   Thu, 10 Oct 2019 12:37:25 +1030
-Message-Id: <20191010020725.3990-3-andrew@aj.id.au>
+To:     netdev@vger.kernel.org
+Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@jms.id.au, benh@kernel.crashing.org,
+        linux-aspeed@lists.ozlabs.org
+Subject: [PATCH v2 3/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
+Date:   Thu, 10 Oct 2019 12:37:56 +1030
+Message-Id: <20191010020756.4198-4-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191010020725.3990-1-andrew@aj.id.au>
-References: <20191010020725.3990-1-andrew@aj.id.au>
+In-Reply-To: <20191010020756.4198-1-andrew@aj.id.au>
+References: <20191010020756.4198-1-andrew@aj.id.au>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,100 +83,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RCLK is a fixed 50MHz clock derived from HPLL/HCLK that is described by a
-single gate for each MAC.
+The 50MHz RCLK has to be enabled before the RMII interface will function.
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/clk/clk-ast2600.c | 47 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
+v2: Mainly a rework of error case handling, some changes to comments
 
-diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
-index 1c1bb39bb04e..85acc7cdc83c 100644
---- a/drivers/clk/clk-ast2600.c
-+++ b/drivers/clk/clk-ast2600.c
-@@ -15,7 +15,7 @@
+ drivers/net/ethernet/faraday/ftgmac100.c | 50 +++++++++++++++++++-----
+ 1 file changed, 40 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
+index 9b7af94a40bb..824310253099 100644
+--- a/drivers/net/ethernet/faraday/ftgmac100.c
++++ b/drivers/net/ethernet/faraday/ftgmac100.c
+@@ -90,6 +90,9 @@ struct ftgmac100 {
+ 	struct mii_bus *mii_bus;
+ 	struct clk *clk;
  
- #include "clk-aspeed.h"
- 
--#define ASPEED_G6_NUM_CLKS		67
-+#define ASPEED_G6_NUM_CLKS		71
- 
- #define ASPEED_G6_SILICON_REV		0x004
- 
-@@ -40,6 +40,9 @@
- 
- #define ASPEED_G6_STRAP1		0x500
- 
-+#define ASPEED_MAC12_CLK_DLY		0x340
-+#define ASPEED_MAC34_CLK_DLY		0x350
++	/* AST2500/AST2600 RMII ref clock gate */
++	struct clk *rclk;
 +
- /* Globally visible clocks */
- static DEFINE_SPINLOCK(aspeed_g6_clk_lock);
+ 	/* Link management */
+ 	int cur_speed;
+ 	int cur_duplex;
+@@ -1718,20 +1721,41 @@ static void ftgmac100_ncsi_handler(struct ncsi_dev *nd)
+ 		   nd->link_up ? "up" : "down");
+ }
  
-@@ -485,6 +488,11 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
- 		return PTR_ERR(hw);
- 	aspeed_g6_clk_data->hws[ASPEED_CLK_SDIO] = hw;
+-static void ftgmac100_setup_clk(struct ftgmac100 *priv)
++static int ftgmac100_setup_clk(struct ftgmac100 *priv)
+ {
+-	priv->clk = devm_clk_get(priv->dev, NULL);
+-	if (IS_ERR(priv->clk))
+-		return;
++	struct clk *clk;
++	int rc;
  
-+	/* MAC1/2 RMII 50MHz RCLK */
-+	hw = clk_hw_register_fixed_rate(dev, "mac12rclk", "hpll", 0, 50000000);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
- 	/* MAC1/2 AHB bus clock divider */
- 	hw = clk_hw_register_divider_table(dev, "mac12", "hpll", 0,
- 			scu_g6_base + ASPEED_G6_CLK_SELECTION1, 16, 3, 0,
-@@ -494,6 +502,27 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
- 		return PTR_ERR(hw);
- 	aspeed_g6_clk_data->hws[ASPEED_CLK_MAC12] = hw;
+-	clk_prepare_enable(priv->clk);
++	clk = devm_clk_get(priv->dev, NULL /* MACCLK */);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++	priv->clk = clk;
++	rc = clk_prepare_enable(priv->clk);
++	if (rc)
++		return rc;
  
-+	/* RMII1 50MHz (RCLK) output enable */
-+	hw = clk_hw_register_gate(dev, "mac1rclk", "mac12rclk", 0,
-+			scu_g6_base + ASPEED_MAC12_CLK_DLY, 29, 0,
-+			&aspeed_g6_clk_lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+	aspeed_g6_clk_data->hws[ASPEED_CLK_MAC1RCLK] = hw;
+ 	/* Aspeed specifies a 100MHz clock is required for up to
+ 	 * 1000Mbit link speeds. As NCSI is limited to 100Mbit, 25MHz
+ 	 * is sufficient
+ 	 */
+-	clk_set_rate(priv->clk, priv->use_ncsi ? FTGMAC_25MHZ :
+-			FTGMAC_100MHZ);
++	rc = clk_set_rate(priv->clk, priv->use_ncsi ? FTGMAC_25MHZ :
++			  FTGMAC_100MHZ);
++	if (rc)
++		goto cleanup_clk;
 +
-+	/* RMII2 50MHz (RCLK) output enable */
-+	hw = clk_hw_register_gate(dev, "mac2rclk", "mac12rclk", 0,
-+			scu_g6_base + ASPEED_MAC12_CLK_DLY, 30, 0,
-+			&aspeed_g6_clk_lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+	aspeed_g6_clk_data->hws[ASPEED_CLK_MAC2RCLK] = hw;
++	/* RCLK is for RMII, typically used for NCSI. Optional because its not
++	 * necessary if it's the AST2400 MAC, or the MAC is configured for
++	 * RGMII, or the controller is not an ASPEED-based controller.
++	 */
++	priv->rclk = devm_clk_get_optional(priv->dev, "RCLK");
++	rc = clk_prepare_enable(priv->rclk);
++	if (!rc)
++		return 0;
 +
-+	/* MAC1/2 RMII 50MHz RCLK */
-+	hw = clk_hw_register_fixed_rate(dev, "mac34rclk", "hclk", 0, 50000000);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
++cleanup_clk:
++	clk_disable_unprepare(priv->clk);
 +
- 	/* MAC3/4 AHB bus clock divider */
- 	hw = clk_hw_register_divider_table(dev, "mac34", "hpll", 0,
- 			scu_g6_base + 0x310, 24, 3, 0,
-@@ -503,6 +532,22 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
- 		return PTR_ERR(hw);
- 	aspeed_g6_clk_data->hws[ASPEED_CLK_MAC34] = hw;
++	return rc;
+ }
  
-+	/* RMII3 50MHz (RCLK) output enable */
-+	hw = clk_hw_register_gate(dev, "mac3rclk", "mac34rclk", 0,
-+			scu_g6_base + ASPEED_MAC34_CLK_DLY, 29, 0,
-+			&aspeed_g6_clk_lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+	aspeed_g6_clk_data->hws[ASPEED_CLK_MAC3RCLK] = hw;
-+
-+	/* RMII4 50MHz (RCLK) output enable */
-+	hw = clk_hw_register_gate(dev, "mac4rclk", "mac34rclk", 0,
-+			scu_g6_base + ASPEED_MAC34_CLK_DLY, 30, 0,
-+			&aspeed_g6_clk_lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+	aspeed_g6_clk_data->hws[ASPEED_CLK_MAC4RCLK] = hw;
-+
- 	/* LPC Host (LHCLK) clock divider */
- 	hw = clk_hw_register_divider_table(dev, "lhclk", "hpll", 0,
- 			scu_g6_base + ASPEED_G6_CLK_SELECTION1, 20, 3, 0,
+ static int ftgmac100_probe(struct platform_device *pdev)
+@@ -1853,8 +1877,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
+ 			goto err_setup_mdio;
+ 	}
+ 
+-	if (priv->is_aspeed)
+-		ftgmac100_setup_clk(priv);
++	if (priv->is_aspeed) {
++		err = ftgmac100_setup_clk(priv);
++		if (err)
++			goto err_ncsi_dev;
++	}
+ 
+ 	/* Default ring sizes */
+ 	priv->rx_q_entries = priv->new_rx_q_entries = DEF_RX_QUEUE_ENTRIES;
+@@ -1886,8 +1913,10 @@ static int ftgmac100_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
+-err_ncsi_dev:
+ err_register_netdev:
++	clk_disable_unprepare(priv->rclk);
++	clk_disable_unprepare(priv->clk);
++err_ncsi_dev:
+ 	ftgmac100_destroy_mdio(netdev);
+ err_setup_mdio:
+ 	iounmap(priv->base);
+@@ -1909,6 +1938,7 @@ static int ftgmac100_remove(struct platform_device *pdev)
+ 
+ 	unregister_netdev(netdev);
+ 
++	clk_disable_unprepare(priv->rclk);
+ 	clk_disable_unprepare(priv->clk);
+ 
+ 	/* There's a small chance the reset task will have been re-queued,
 -- 
 2.20.1
 
