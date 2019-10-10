@@ -2,151 +2,96 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFD6C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEA4C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B602E20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9894820659
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="pXvR3Wde"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkcZfWzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfJJRVV (ORCPT
+        id S1726841AbfJJRVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:21:21 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:32811 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfJJRVV (ORCPT
+        Thu, 10 Oct 2019 13:21:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43982 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbfJJRVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:21:21 -0400
-Received: by mail-qk1-f196.google.com with SMTP id x134so6352955qkb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:21:20 -0700 (PDT)
+        Thu, 10 Oct 2019 13:21:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j18so8847876wrq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:21:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=xuvZN0JITodz2dLriQ7w9E3lEap+u/kTKfmALojGiXI=;
-        b=pXvR3WdevfThpK6cyxcaeOuvjdw4Z2kJd6T4aFcXn2jmKAeJo74f0Tmk2tKwk6EUdN
-         cGCTn5Y/HVU0nmpCGVUM9YI55p/CiuzGU7poiJHq3C5voS1pwmjv2Q18v2uVyPklSrPI
-         4EYqI0j5pTpGWTNNA2T/yiT7acrkbCZziLGKS1XW0x27hoiPi4YreBLFCje2gjU9q8Qu
-         26JBHgtgJnf6tMzpN7oW3itWRwLSS2KamPJ5U0ANI431FsCOc/q3TDgj1WH+ezdWQ3eQ
-         rQz3vySzMofV+CV+o0GallARMOJIB1L9mo3EDGU5TPWH7E1+gexllXrLawymH7wXBobO
-         Y0xg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tcMFZrYzkXthDN2tPL7urUoh2Atq6M3SFm7VW5KGajA=;
+        b=LkcZfWzUVAWf/bqrwArXIPyypKwGXOf1p3QX2ZQUZX9A29nRGH1d8b19tbfjBnk5L8
+         sbTfW+HpzeLJ8t7mb8uiaXfutckcbijR6kDvAwMwyhl8+7ndlFpbiPux7tQEumPugjAp
+         cohSbhOlPeE0L4dgVYDcnGgHqOzSJYIUCzb2EFXZn0dBjweOJynyl4689nG/TErLCe3O
+         6oy2lJ4H99/xfuUJUu8ASzBtuItX+7x8Wx7Dclwlm9fo1BlMQwBhqo74KbqDa4Bah0h6
+         ux053NaZChG7r16Yip7K/spNk4bjLJuocT7rLKvn1gLtl+xdX361/bO8wB7Fe7MOrl7w
+         CAXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=xuvZN0JITodz2dLriQ7w9E3lEap+u/kTKfmALojGiXI=;
-        b=BvT2BKFdpcWxiJrcGImoKswgUBboRcHIM7C8vNgdAUDFwy/l68JiAGDecBC+ULZ/L+
-         FK0PyDXntfz+bHtHr0kON7c5nKqFoHSpZNpmpBR6kiKNJORtEJQE6lYhFKaycKMXLfRM
-         tZif4W90iQtDPTa+AuIupLPWdyFO+oEZFV00NlqlDxbcbMgrtUfTjSLbDRZhgCdWhC+p
-         6+dXSZqNxU7mD9kYXPD5qifLMJfuYZIplJVZzDFeM2+4BLnerj7JZQCO/EfneQq7pu4i
-         HsiNI6qjw03Ir8unjnV4cGgY+aF/97boc0YaUVdjmoeStvz9+8tfuB3KsMDzKGRAc44v
-         1WOw==
-X-Gm-Message-State: APjAAAVD0pBuZqHlaS9ubxHZSAHTejpeKSWVcE2FTVHXsUX4vnL4lanY
-        LiDKCg/INf+dNnyQKg1nsz0ieA==
-X-Google-Smtp-Source: APXvYqys42xIeFnEN5JmYINrqK78cSzCxgKoo1zagzhJB4sId53ApV4Lp3JoUu8AyzpgxfsZ65rJWA==
-X-Received: by 2002:a37:6255:: with SMTP id w82mr10872838qkb.305.1570728080205;
-        Thu, 10 Oct 2019 10:21:20 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id q207sm3254120qke.98.2019.10.10.10.21.18
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tcMFZrYzkXthDN2tPL7urUoh2Atq6M3SFm7VW5KGajA=;
+        b=Bw0KsKuj8ulQ3uNSKEHDt6dd1qM9XENAr+LV24di36anqvXHCswUP5UGHVL/A9cosw
+         QXrJmq/7SssApNuMTgIpooiBVw9pSZLECf1gBdUfoOjjhPoj2c5lSGG6up8wcKtkq4LG
+         7mx0ExJ5TuG/wef7eIp5fvoBltxMxSBp6D8UoF8sXx9wu4Ayslqo82oxUL6jPPtuf9Dc
+         BEDyNtMibgf+ta376CWV1zneliVN/GD8zNOfPfTRzkA5UeNt2rlvogzV3vg2tjlTlQ3/
+         //30L0P5P1rQRAON6vWHu+/GRDIVsQq9pW9r/4ASf/VMACzBI4NPK+fL3VSHlRIJPhep
+         Q6TA==
+X-Gm-Message-State: APjAAAWAeN3nOq5a4zAV096IeIni1gvkE5OfAashmS/3oAwG7ThtIay9
+        +moNi0sKDGNmbIHx9d2eVQ==
+X-Google-Smtp-Source: APXvYqwh4JQKHmQGA7zvATE+l3bRYx4mHPNLiy9MYUBN7U6F8fs8oiYz3XeDYeid4ntItM/uM9TgTg==
+X-Received: by 2002:adf:e646:: with SMTP id b6mr9138851wrn.373.1570728091281;
+        Thu, 10 Oct 2019 10:21:31 -0700 (PDT)
+Received: from ninjahub.org.net ([94.119.64.23])
+        by smtp.googlemail.com with ESMTPSA id y18sm11734475wro.36.2019.10.10.10.21.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 10:21:19 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 10:21:02 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] genetlink: do not parse attributes for
- families with zero maxattr
-Message-ID: <20191010102102.3bc8515d@cakuba.netronome.com>
-In-Reply-To: <20191010103402.36408E378C@unicorn.suse.cz>
-References: <20191010103402.36408E378C@unicorn.suse.cz>
-Organization: Netronome Systems, Ltd.
+        Thu, 10 Oct 2019 10:21:30 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        dan.carpenter@oracle.com, Jules Irenge <jbi.octave@gmail.com>
+Subject: [RESEND PATCH] staging: qlge: correct a misspelled word
+Date:   Thu, 10 Oct 2019 18:21:14 +0100
+Message-Id: <20191010172114.12345-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 12:34:02 +0200 (CEST), Michal Kubecek wrote:
-> Commit c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing
-> to a separate function") moved attribute buffer allocation and attribute
-> parsing from genl_family_rcv_msg_doit() into a separate function
-> genl_family_rcv_msg_attrs_parse() which, unlike the previous code, calls
-> __nlmsg_parse() even if family->maxattr is 0 (i.e. the family does its own
-> parsing). The parser error is ignored and does not propagate out of
-> genl_family_rcv_msg_attrs_parse() but an error message ("Unknown attribute
-> type") is set in extack and if further processing generates no error or
-> warning, it stays there and is interpreted as a warning by userspace.
-> 
-> Dumpit requests are not affected as genl_family_rcv_msg_dumpit() bypasses
-> the call of genl_family_rcv_msg_doit() if family->maxattr is zero. Do the
-> same also in genl_family_rcv_msg_doit().
-> 
-> Fixes: c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing to a separate function")
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-> ---
->  net/netlink/genetlink.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
-> index ecc2bd3e73e4..1f14e55ad3ad 100644
-> --- a/net/netlink/genetlink.c
-> +++ b/net/netlink/genetlink.c
-> @@ -639,21 +639,23 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
->  				    const struct genl_ops *ops,
->  				    int hdrlen, struct net *net)
->  {
-> -	struct nlattr **attrbuf;
-> +	struct nlattr **attrbuf = NULL;
->  	struct genl_info info;
->  	int err;
->  
->  	if (!ops->doit)
->  		return -EOPNOTSUPP;
->  
-> +	if (!family->maxattr)
-> +		goto no_attrs;
->  	attrbuf = genl_family_rcv_msg_attrs_parse(family, nlh, extack,
->  						  ops, hdrlen,
->  						  GENL_DONT_VALIDATE_STRICT,
-> -						  family->maxattr &&
->  						  family->parallel_ops);
->  	if (IS_ERR(attrbuf))
->  		return PTR_ERR(attrbuf);
->  
-> +no_attrs:
+Fix a misspelling of "several" detected by checkpatch
 
-The use of a goto statement as a replacement for an if is making me
-uncomfortable. 
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ drivers/staging/qlge/qlge_dbg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Looks like both callers of genl_family_rcv_msg_attrs_parse() jump
-around it if !family->maxattr and then check the result with IS_ERR().
+diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+index 5599525a19d5..28fc974ce982 100644
+--- a/drivers/staging/qlge/qlge_dbg.c
++++ b/drivers/staging/qlge/qlge_dbg.c
+@@ -354,7 +354,7 @@ static int ql_get_xgmac_regs(struct ql_adapter *qdev, u32 *buf,
+ 
+ 	for (i = PAUSE_SRC_LO; i < XGMAC_REGISTER_END; i += 4, buf++) {
+ 		/* We're reading 400 xgmac registers, but we filter out
+-		 * serveral locations that are non-responsive to reads.
++		 * several locations that are non-responsive to reads.
+ 		 */
+ 		if ((i == 0x00000114) ||
+ 			(i == 0x00000118) ||
+-- 
+2.21.0
 
-Would it not make more sense to have genl_family_rcv_msg_attrs_parse()
-return NULL if !family->maxattr?
-
-Just wondering, if you guys prefer this version I can apply..
-
->  	info.snd_seq = nlh->nlmsg_seq;
->  	info.snd_portid = NETLINK_CB(skb).portid;
->  	info.nlhdr = nlh;
-> @@ -676,8 +678,7 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
->  		family->post_doit(ops, skb, &info);
->  
->  out:
-> -	genl_family_rcv_msg_attrs_free(family, attrbuf,
-> -				       family->maxattr && family->parallel_ops);
-> +	genl_family_rcv_msg_attrs_free(family, attrbuf, family->parallel_ops);
->  
->  	return err;
->  }
