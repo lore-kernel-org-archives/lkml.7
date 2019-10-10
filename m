@@ -2,45 +2,45 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312E3C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35FCC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07BE3214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC936214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="Gpw6agS0"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="jS4Zsgce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfJJOxQ (ORCPT
+        id S1726543AbfJJOxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 10 Oct 2019 10:53:16 -0400
-Received: from mail.dlink.ru ([178.170.168.18]:52196 "EHLO fd.dlink.ru"
+Received: from fd.dlink.ru ([178.170.168.18]:52200 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbfJJOxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725959AbfJJOxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Oct 2019 10:53:15 -0400
-X-Greylist: delayed 568 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Oct 2019 10:53:13 EDT
 Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id E492E1B219BE; Thu, 10 Oct 2019 17:43:42 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru E492E1B219BE
+        id A62161B210B7; Thu, 10 Oct 2019 17:43:51 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru A62161B210B7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1570718622; bh=FHtBS7Jcy3ew21+qN/bqcaXjjtB/iGpxjWtHVQNCEX4=;
-        h=From:To:Cc:Subject:Date;
-        b=Gpw6agS0xR8MiOYQfIXLjNRyme0C+TDGSzgicBwsS8JnC3x5oUkxmVFCIWYbiV+yc
-         BfqIW6VWEefCFMDBMZ8Bg2M/lSe3A/UbsAxGAloEiKLL2XBL3jjSDl9RJmSdhcu0CU
-         y6aypR59NclPV7mYEM8eew/XCzHWiN38D0w/wMYw=
+        t=1570718631; bh=GvqeVN9ysGFiOtylE0GYxEuqYzgBWNb6Nz0VozKTHgc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=jS4ZsgceNBUX5CdBQ9Ye5azBcsI4jUHZj8rrmNwF5MOXUmE56olo30Xy5/bcaSA0t
+         xjwbOwfMGOkdHuxP0N6abQSZvagh27e8gtSaHUulxq+2UiKx9Oeg6xv9IXGqPKBDsd
+         FJT+pcK9I58cNyHFK1jTWJV4XwNo8a7i9A0Sr0hU=
 Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 066C21B20B0D;
-        Thu, 10 Oct 2019 17:43:34 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 066C21B20B0D
+        by fd.dlink.ru (Postfix) with ESMTP id 216C01B219DF;
+        Thu, 10 Oct 2019 17:43:40 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 216C01B219DF
 Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 0CD121B2023E;
-        Thu, 10 Oct 2019 17:43:33 +0300 (MSK)
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 2EE0D1B202D0;
+        Thu, 10 Oct 2019 17:43:39 +0300 (MSK)
 Received: from localhost.localdomain (unknown [196.196.203.126])
         by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Thu, 10 Oct 2019 17:43:32 +0300 (MSK)
+        Thu, 10 Oct 2019 17:43:39 +0300 (MSK)
 From:   Alexander Lobakin <alobakin@dlink.ru>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Edward Cree <ecree@solarflare.com>, Jiri Pirko <jiri@mellanox.com>,
@@ -54,10 +54,12 @@ Cc:     Edward Cree <ecree@solarflare.com>, Jiri Pirko <jiri@mellanox.com>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexander Lobakin <alobakin@dlink.ru>
-Subject: [PATCH net-next 0/2] net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
-Date:   Thu, 10 Oct 2019 17:42:24 +0300
-Message-Id: <20191010144226.4115-1-alobakin@dlink.ru>
+Subject: [PATCH net-next 2/2] net: core: increase the default size of GRO_NORMAL skb lists to flush
+Date:   Thu, 10 Oct 2019 17:42:26 +0300
+Message-Id: <20191010144226.4115-3-alobakin@dlink.ru>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010144226.4115-1-alobakin@dlink.ru>
+References: <20191010144226.4115-1-alobakin@dlink.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,40 +67,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+Commit 323ebb61e32b ("net: use listified RX for handling GRO_NORMAL
+skbs") have introduced a sysctl variable gro_normal_batch for defining
+a limit for listified Rx of GRO_NORMAL skbs. The initial value of 8 is
+purely arbitrary and has been chosen, I believe, as a minimal safe
+default.
+However, several tests show that it's rather suboptimal and doesn't
+allow to take a full advantage of listified processing. The best and
+the most balanced results have been achieved with a batches of 16 skbs
+per flush.
+So double the default value to give a yet another boost for Rx path.
+It remains configurable via sysctl anyway, so may be fine-tuned for
+each hardware.
 
-This series was written as a continuation to commit 323ebb61e32b
-("net: use listified RX for handling GRO_NORMAL skbs"), and also takes
-an advantage of listified Rx for GRO. This time, however, we're
-targeting at a way more common and used function, napi_gro_receive().
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+---
+ net/core/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There are about ~100 call sites of this function, including gro_cells
-and mac80211, so even wireless systems will benefit from it.
-The only driver that cares about the return value is
-ethernet/socionext/netsec, and only for updating statistics. I don't
-believe that this change can break its functionality, but anyway,
-we have plenty of time till next merge window to pay this change
-a proper attention.
-
-Besides having this functionality implemented for napi_gro_frags()
-users, the main reason is the solid performance boost that has been
-shown during tests on 1-core MIPS board (with not yet mainlined
-driver):
-
-* no batching (5.4-rc2): ~450/450 Mbit/s
-* with gro_normal_batch == 8: ~480/480 Mbit/s
-* with gro_normal_batch == 16: ~500/500 Mbit/s
-
-Applies on top of net-next.
-Thanks.
-
-Alexander Lobakin (2):
-  net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
-  net: core: increase the default size of GRO_NORMAL skb lists to flush
-
- net/core/dev.c | 51 +++++++++++++++++++++++++-------------------------
- 1 file changed, 26 insertions(+), 25 deletions(-)
-
+diff --git a/net/core/dev.c b/net/core/dev.c
+index a33f56b439ce..4f60444bb766 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4189,7 +4189,7 @@ int dev_weight_tx_bias __read_mostly = 1;  /* bias for output_queue quota */
+ int dev_rx_weight __read_mostly = 64;
+ int dev_tx_weight __read_mostly = 64;
+ /* Maximum number of GRO_NORMAL skbs to batch up for list-RX */
+-int gro_normal_batch __read_mostly = 8;
++int gro_normal_batch __read_mostly = 16;
+ 
+ /* Called with irq disabled */
+ static inline void ____napi_schedule(struct softnet_data *sd,
 -- 
 2.23.0
 
