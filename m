@@ -2,51 +2,53 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7093EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85273ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403312064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5600A208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697236;
-	bh=XueAMMMjI+mRyFaJH7EeKgVF0OSCLCSbn9EDBMHy6V4=;
+	s=default; t=1570697241;
+	bh=Gi9OCBf2zp9pYAtNqckJKhGKm64nq0WQybonBSa/r+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xr5I317756ym3aJizrdDHKFuFVrl2XvJKqcOMWxyOjjkzaKCOoEl0F92JxiXDCbTU
-	 PTjWHoBnLqZDF1DV7YCDtdwpiqRxJjeAcG3nkL9ohfl1cmLfMW7PpvH65R05qD2St0
-	 LBc8BcFqn5GeH5piGZkiGJKfdt//rsuIwoXzhF64=
+	b=mkquz7PdKK2VkL7tcWJQdrV2MRzaYuQuZsnSx6yR6u3R5g/nX0IxfQa1O3UKDqB2k
+	 DijaicejC7gh07SQyaUreWR48zJBRcEmAkhVmXmcQW9nDvCWFYmE1KD7A3xf2b6LZH
+	 0z8iDzqO4IwzcZTIGMmgo8vw1liTUzNdM0ESiG+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388870AbfJJIrP (ORCPT
+        id S2387700AbfJJIrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53084 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389427AbfJJIrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:12 -0400
+        id S2388859AbfJJIrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D311E2064A;
-        Thu, 10 Oct 2019 08:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F1C622572;
+        Thu, 10 Oct 2019 08:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697231;
-        bh=XueAMMMjI+mRyFaJH7EeKgVF0OSCLCSbn9EDBMHy6V4=;
+        s=default; t=1570697228;
+        bh=Gi9OCBf2zp9pYAtNqckJKhGKm64nq0WQybonBSa/r+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C1ctoF0p8VFmcrhUSrmSTfOONcNItc3aclDH83B/zyGJoIPIYKZbkLL676yJfJXsj
-         nkLbXrru8CxW2zSRSsSUp7vCatGBKSxk4wm9FVwasYhjVWjegbZ8E4h+11pe5cBqAR
-         HRCnc9hN/2wn9S/H5VmIeoPg6g4cC/mdVk2nnC5A=
+        b=sYYqkCI5Oi4oIwioyHtxRb0Axa6EejKuYqRVtWPFectHQyQTQdKggIaQM1jzM5RQJ
+         jzwc3nvt+xyCr8rqVBXSmmIGN4eq1ylQhOCrFJD1BlPQom8M1T4PdnTBjx/ntXc1S0
+         Ado3HHO1343x9xgEgxDPUPB19YYT1LLbBMZrHbOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: [PATCH 4.19 039/114] drm/nouveau/kms/nv50-: Dont create MSTMs for eDP connectors
-Date:   Thu, 10 Oct 2019 10:35:46 +0200
-Message-Id: <20191010083604.810310442@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 065/114] thermal: Fix use-after-free when unregistering thermal zone device
+Date:   Thu, 10 Oct 2019 10:36:12 +0200
+Message-Id: <20191010083610.265686648@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -59,49 +61,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit 698c1aa9f83b618de79e9e5e19a58f70a4a6ae0f upstream.
+[ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
 
-On the ThinkPad P71, we have one eDP connector exposed along with 5 DP
-connectors, resulting in a total of 11 TMDS encoders. Since the GPU on
-this system is also capable of MST, we create an additional 4 fake MST
-encoders for each DP port. Unfortunately, we also do this for the eDP
-port as well, resulting in:
+thermal_zone_device_unregister() cancels the delayed work that polls the
+thermal zone, but it does not wait for it to finish. This is racy with
+respect to the freeing of the thermal zone device, which can result in a
+use-after-free [1].
 
-  1 eDP port: +1 TMDS encoder
-              +4 DPMST encoders
-  5 DP ports: +2 TMDS encoders
-              +4 DPMST encoders
-	      *5 ports
-	      == 35 encoders
+Fix this by waiting for the delayed work to finish before freeing the
+thermal zone device. Note that thermal_zone_device_set_polling() is
+never invoked from an atomic context, so it is safe to call
+cancel_delayed_work_sync() that can block.
 
-Which breaks things, since DRM has a hard coded limit of 32 encoders.
-So, fix this by not creating MSTMs for any eDP connectors. This brings
-us down to 31 encoders, although we can do better.
+[1]
+[  +0.002221] ==================================================================
+[  +0.000064] BUG: KASAN: use-after-free in __mutex_lock+0x1076/0x11c0
+[  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task kworker/1:0/17
 
-This fixes driver probing for nouveau on the ThinkPad P71.
+[  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6-custom-02495-g8e73ca3be4af #1701
+[  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  +0.000016] Workqueue: events_freezable_power_ thermal_zone_device_check
+[  +0.000012] Call Trace:
+[  +0.000021]  dump_stack+0xa9/0x10e
+[  +0.000020]  print_address_description.cold.2+0x9/0x25e
+[  +0.000018]  __kasan_report.cold.3+0x78/0x9d
+[  +0.000016]  kasan_report+0xe/0x20
+[  +0.000016]  __mutex_lock+0x1076/0x11c0
+[  +0.000014]  step_wise_throttle+0x72/0x150
+[  +0.000018]  handle_thermal_trip+0x167/0x760
+[  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
+[  +0.000019]  process_one_work+0x969/0x16f0
+[  +0.000017]  worker_thread+0x91/0xc40
+[  +0.000014]  kthread+0x33d/0x400
+[  +0.000015]  ret_from_fork+0x3a/0x50
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[  +0.000020] Allocated by task 1:
+[  +0.000015]  save_stack+0x19/0x80
+[  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
+[  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
+[  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
+[  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
+[  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
+[  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
+[  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
+[  +0.000014]  local_pci_probe+0xc3/0x150
+[  +0.000013]  pci_device_probe+0x280/0x410
+[  +0.000013]  really_probe+0x26a/0xbb0
+[  +0.000013]  driver_probe_device+0x208/0x2e0
+[  +0.000013]  device_driver_attach+0xfe/0x140
+[  +0.000013]  __driver_attach+0x110/0x310
+[  +0.000013]  bus_for_each_dev+0x14b/0x1d0
+[  +0.000013]  driver_register+0x1c0/0x400
+[  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
+[  +0.000014]  do_one_initcall+0x239/0x4dd
+[  +0.000013]  kernel_init_freeable+0x42b/0x4e8
+[  +0.000012]  kernel_init+0x11/0x18b
+[  +0.000013]  ret_from_fork+0x3a/0x50
 
+[  +0.000015] Freed by task 581:
+[  +0.000013]  save_stack+0x19/0x80
+[  +0.000014]  __kasan_slab_free+0x125/0x170
+[  +0.000013]  kfree+0xf3/0x310
+[  +0.000013]  thermal_release+0xc7/0xf0
+[  +0.000014]  device_release+0x77/0x200
+[  +0.000014]  kobject_put+0x1a8/0x4c0
+[  +0.000014]  device_unregister+0x38/0xc0
+[  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
+[  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
+[  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
+[  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
+[  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
+[  +0.000014]  genl_family_rcv_msg+0x700/0xee0
+[  +0.000013]  genl_rcv_msg+0xca/0x170
+[  +0.000013]  netlink_rcv_skb+0x137/0x3a0
+[  +0.000012]  genl_rcv+0x29/0x40
+[  +0.000013]  netlink_unicast+0x49b/0x660
+[  +0.000013]  netlink_sendmsg+0x755/0xc90
+[  +0.000013]  __sys_sendto+0x3de/0x430
+[  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
+[  +0.000013]  do_syscall_64+0xa4/0x4d0
+[  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+[  +0.000017] The buggy address belongs to the object at ffff8881e48e0008
+               which belongs to the cache kmalloc-2k of size 2048
+[  +0.000012] The buggy address is located 1096 bytes inside of
+               2048-byte region [ffff8881e48e0008, ffff8881e48e0808)
+[  +0.000007] The buggy address belongs to the page:
+[  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0 mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
+[  +0.000020] flags: 0x200000000010200(slab|head)
+[  +0.000019] raw: 0200000000010200 ffffea0007682008 ffffea00076ab808 ffff88823680d0c0
+[  +0.000016] raw: 0000000000000000 00000000000d000d 00000001ffffffff 0000000000000000
+[  +0.000007] page dumped because: kasan: bad access detected
+
+[  +0.000012] Memory state around the buggy address:
+[  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000008]                                                  ^
+[  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000007] ==================================================================
+
+Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic thermal layer")
+Reported-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/thermal/thermal_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -1517,7 +1517,8 @@ nv50_sor_create(struct drm_connector *co
- 			nv_encoder->aux = aux;
- 		}
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index bf9721fc2824e..be3eafc7682ba 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -296,7 +296,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
+ 		mod_delayed_work(system_freezable_wq, &tz->poll_queue,
+ 				 msecs_to_jiffies(delay));
+ 	else
+-		cancel_delayed_work(&tz->poll_queue);
++		cancel_delayed_work_sync(&tz->poll_queue);
+ }
  
--		if ((data = nvbios_dp_table(bios, &ver, &hdr, &cnt, &len)) &&
-+		if (nv_connector->type != DCB_CONNECTOR_eDP &&
-+		    (data = nvbios_dp_table(bios, &ver, &hdr, &cnt, &len)) &&
- 		    ver >= 0x40 && (nvbios_rd08(bios, data + 0x08) & 0x04)) {
- 			ret = nv50_mstm_new(nv_encoder, &nv_connector->aux, 16,
- 					    nv_connector->base.base.id,
+ static void monitor_thermal_zone(struct thermal_zone_device *tz)
+-- 
+2.20.1
+
 
 
