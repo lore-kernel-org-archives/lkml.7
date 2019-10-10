@@ -2,456 +2,233 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3C0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC6CECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FBC2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iwV4mp+D"
+	by mail.kernel.org (Postfix) with ESMTP id 2CF262190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570697994;
+	bh=Juyn08iySSOZ2HAzZg/2OdnBcyAXJyMLacNSIqx3PyU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FTBA+fQf+6MNo8eB7V+2Pom9PzVxg7mGtBHmm+atJS2FaKUvjQYR9ZQa6zjzVjwUz
+	 g7GHAihEo6mcBzHs+sc0qmHHpl73qkk+tQ5fN5omNKbMpDv2NWyhGIUqHCBre355fD
+	 3mYVCMjNIXjMTB0ICTMMplmFh6NXNiyFWNw49b3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389029AbfJJI7h (ORCPT
+        id S2388778AbfJJInm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:59:37 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43784 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387946AbfJJI7d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:59:33 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9A8wtvM111374;
-        Thu, 10 Oct 2019 03:58:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570697935;
-        bh=FZ5m5fs3B8g3OBzN8iroXxEV7WIfFcZBg387gdAKDFo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=iwV4mp+D6AptkvLFGg/EZjal0oTFYZRm34GDNYRn7i+jZKfvBHvWvpojJ1Ov6mCT9
-         VDDkSh5r8hKyN+frX2QKumbJa8D8P++9nGOsckDUZefI9Cy8QsPoJ9UEZSQyCW069g
-         +N+kmOMT4A0ZzFtXLknJCJchvHDpIzXu5uyIekJg=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9A8wtoY083866
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Oct 2019 03:58:55 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 10
- Oct 2019 03:58:51 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 10 Oct 2019 03:58:51 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9A8wlcw079738;
-        Thu, 10 Oct 2019 03:58:48 -0500
-Subject: Re: [PATCH v3 15/16] phy: phy-mmp3-usb: add a new driver
-To:     Lubomir Rintel <lkundrak@v3.sk>,
-        "To : Olof Johansson" <olof@lixom.net>
-CC:     "Cc : Rob Herring" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thu, 10 Oct 2019 04:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387749AbfJJInj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:43:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC4A621D6C;
+        Thu, 10 Oct 2019 08:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570697018;
+        bh=Juyn08iySSOZ2HAzZg/2OdnBcyAXJyMLacNSIqx3PyU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HN7VgKMcMfb+8QhYBHZ3e06+HZJ7uiXpOsl+Og1fF3dU+rE7n7HECnyCwyS3uJG4W
+         h5MgmFuH/2IKXovbkguVvovwP5F25H2uBDCtvo2knXz6YzrwJOMaTI7AnSRhdaSHz1
+         /2DnWnO7IIF7WdrzH5lU18Jgnh/L9QvrBUU54/EI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-clk@vger.kernel.org>
-References: <20190830220743.439670-1-lkundrak@v3.sk>
- <20190830220743.439670-16-lkundrak@v3.sk>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <cc2dba6e-17df-af14-c5b9-b5148a64dcfb@ti.com>
-Date:   Thu, 10 Oct 2019 14:28:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 138/148] tick: broadcast-hrtimer: Fix a race in bc_set_next
+Date:   Thu, 10 Oct 2019 10:36:39 +0200
+Message-Id: <20191010083620.712424142@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
+References: <20191010083609.660878383@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190830220743.439670-16-lkundrak@v3.sk>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
 
-On 31/08/19 3:37 AM, Lubomir Rintel wrote:
+[ Upstream commit b9023b91dd020ad7e093baa5122b6968c48cc9e0 ]
 
-Change the $subject to "phy: Add USB2 PHY driver for Marvell MMP3 SoC"
-> This is the USB2 PHY as found on the Marvell MMP3 SoC. Based on Marvell GPL
-> release.
+When a cpu requests broadcasting, before starting the tick broadcast
+hrtimer, bc_set_next() checks if the timer callback (bc_handler) is active
+using hrtimer_try_to_cancel(). But hrtimer_try_to_cancel() does not provide
+the required synchronization when the callback is active on other core.
 
-Just have "Add PHY driver for the USB2 PHY found on Marvell MMP3 SoC." here.
-> 
-> While at that, also add a MAINTAINERS entry including the other MMP PHY
-> driver.
+The callback could have already executed tick_handle_oneshot_broadcast()
+and could have also returned. But still there is a small time window where
+the hrtimer_try_to_cancel() returns -1. In that case bc_set_next() returns
+without doing anything, but the next_event of the tick broadcast clock
+device is already set to a timeout value.
 
-Adding MAINTAINERS could be a different patch.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+In the race condition diagram below, CPU #1 is running the timer callback
+and CPU #2 is entering idle state and so calls bc_set_next().
 
-Once the commit log is fixed:
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+In the worst case, the next_event will contain an expiry time, but the
+hrtimer will not be started which happens when the racing callback returns
+HRTIMER_NORESTART. The hrtimer might never recover if all further requests
+from the CPUs to subscribe to tick broadcast have timeout greater than the
+next_event of tick broadcast clock device. This leads to cascading of
+failures and finally noticed as rcu stall warnings
 
-Thanks
-Kishon
-> ---
->  MAINTAINERS                        |   7 +
->  drivers/phy/marvell/Kconfig        |  11 ++
->  drivers/phy/marvell/Makefile       |   1 +
->  drivers/phy/marvell/phy-mmp3-usb.c | 291 +++++++++++++++++++++++++++++
->  4 files changed, 310 insertions(+)
->  create mode 100644 drivers/phy/marvell/phy-mmp3-usb.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 176ef19f0b9db..449349f8f20bf 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10799,6 +10799,13 @@ F:	arch/arm/boot/dts/mmp*
->  F:	arch/arm/mach-mmp/
->  F:	linux/soc/mmp/
->  
-> +MMP USB PHY DRIVERS
-> +R:	Lubomir Rintel <lkundrak@v3.sk>
-> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> +S:	Maintained
-> +F:	drivers/phy/marvell/phy-mmp3-usb.c
-> +F:	drivers/phy/marvell/phy-pxa-usb.c
-> +
->  MMU GATHER AND TLB INVALIDATION
->  M:	Will Deacon <will@kernel.org>
->  M:	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
-> index 0e1642419c0bf..d33ef35b3e51b 100644
-> --- a/drivers/phy/marvell/Kconfig
-> +++ b/drivers/phy/marvell/Kconfig
-> @@ -102,3 +102,14 @@ config PHY_PXA_USB
->  	  The PHY driver will be used by Marvell udc/ehci/otg driver.
->  
->  	  To compile this driver as a module, choose M here.
-> +
-> +config PHY_MMP3_USB
-> +	tristate "Marvell MMP3 USB PHY Driver"
-> +	depends on MACH_MMP3_DT || COMPILE_TEST
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support Marvell MMP3 USB PHY driver for Marvell
-> +	  SoC. This driver will do the PHY initialization and shutdown.
-> +	  The PHY driver will be used by Marvell udc/ehci/otg driver.
-> +
-> +	  To compile this driver as a module, choose M here.
-> diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
-> index 434eb9ca6cc3f..5a106b1549f41 100644
-> --- a/drivers/phy/marvell/Makefile
-> +++ b/drivers/phy/marvell/Makefile
-> @@ -2,6 +2,7 @@
->  obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
->  obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
->  obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
-> +obj-$(CONFIG_PHY_MMP3_USB)		+= phy-mmp3-usb.o
->  obj-$(CONFIG_PHY_MVEBU_A3700_COMPHY)	+= phy-mvebu-a3700-comphy.o
->  obj-$(CONFIG_PHY_MVEBU_A3700_UTMI)	+= phy-mvebu-a3700-utmi.o
->  obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+= phy-armada38x-comphy.o
-> diff --git a/drivers/phy/marvell/phy-mmp3-usb.c b/drivers/phy/marvell/phy-mmp3-usb.c
-> new file mode 100644
-> index 0000000000000..499869595a582
-> --- /dev/null
-> +++ b/drivers/phy/marvell/phy-mmp3-usb.c
-> @@ -0,0 +1,291 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2011 Marvell International Ltd. All rights reserved.
-> + * Copyright (C) 2018,2019 Lubomir Rintel <lkundrak@v3.sk>
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/soc/mmp/cputype.h>
-> +
-> +#define USB2_PLL_REG0		0x4
-> +#define USB2_PLL_REG1		0x8
-> +#define USB2_TX_REG0		0x10
-> +#define USB2_TX_REG1		0x14
-> +#define USB2_TX_REG2		0x18
-> +#define USB2_RX_REG0		0x20
-> +#define USB2_RX_REG1		0x24
-> +#define USB2_RX_REG2		0x28
-> +#define USB2_ANA_REG0		0x30
-> +#define USB2_ANA_REG1		0x34
-> +#define USB2_ANA_REG2		0x38
-> +#define USB2_DIG_REG0		0x3C
-> +#define USB2_DIG_REG1		0x40
-> +#define USB2_DIG_REG2		0x44
-> +#define USB2_DIG_REG3		0x48
-> +#define USB2_TEST_REG0		0x4C
-> +#define USB2_TEST_REG1		0x50
-> +#define USB2_TEST_REG2		0x54
-> +#define USB2_CHARGER_REG0	0x58
-> +#define USB2_OTG_REG0		0x5C
-> +#define USB2_PHY_MON0		0x60
-> +#define USB2_RESETVE_REG0	0x64
-> +#define USB2_ICID_REG0		0x78
-> +#define USB2_ICID_REG1		0x7C
-> +
-> +/* USB2_PLL_REG0 */
-> +
-> +/* This is for Ax stepping */
-> +#define USB2_PLL_FBDIV_SHIFT_MMP3		0
-> +#define USB2_PLL_FBDIV_MASK_MMP3		(0xFF << 0)
-> +
-> +#define USB2_PLL_REFDIV_SHIFT_MMP3		8
-> +#define USB2_PLL_REFDIV_MASK_MMP3		(0xF << 8)
-> +
-> +#define USB2_PLL_VDD12_SHIFT_MMP3		12
-> +#define USB2_PLL_VDD18_SHIFT_MMP3		14
-> +
-> +/* This is for B0 stepping */
-> +#define USB2_PLL_FBDIV_SHIFT_MMP3_B0		0
-> +#define USB2_PLL_REFDIV_SHIFT_MMP3_B0		9
-> +#define USB2_PLL_VDD18_SHIFT_MMP3_B0		14
-> +#define USB2_PLL_FBDIV_MASK_MMP3_B0		0x01FF
-> +#define USB2_PLL_REFDIV_MASK_MMP3_B0		0x3E00
-> +
-> +#define USB2_PLL_CAL12_SHIFT_MMP3		0
-> +#define USB2_PLL_CALI12_MASK_MMP3		(0x3 << 0)
-> +
-> +#define USB2_PLL_VCOCAL_START_SHIFT_MMP3	2
-> +
-> +#define USB2_PLL_KVCO_SHIFT_MMP3		4
-> +#define USB2_PLL_KVCO_MASK_MMP3			(0x7<<4)
-> +
-> +#define USB2_PLL_ICP_SHIFT_MMP3			8
-> +#define USB2_PLL_ICP_MASK_MMP3			(0x7<<8)
-> +
-> +#define USB2_PLL_LOCK_BYPASS_SHIFT_MMP3		12
-> +
-> +#define USB2_PLL_PU_PLL_SHIFT_MMP3		13
-> +#define USB2_PLL_PU_PLL_MASK			(0x1 << 13)
-> +
-> +#define USB2_PLL_READY_MASK_MMP3		(0x1 << 15)
-> +
-> +/* USB2_TX_REG0 */
-> +#define USB2_TX_IMPCAL_VTH_SHIFT_MMP3		8
-> +#define USB2_TX_IMPCAL_VTH_MASK_MMP3		(0x7 << 8)
-> +
-> +#define USB2_TX_RCAL_START_SHIFT_MMP3		13
-> +
-> +/* USB2_TX_REG1 */
-> +#define USB2_TX_CK60_PHSEL_SHIFT_MMP3		0
-> +#define USB2_TX_CK60_PHSEL_MASK_MMP3		(0xf << 0)
-> +
-> +#define USB2_TX_AMP_SHIFT_MMP3			4
-> +#define USB2_TX_AMP_MASK_MMP3			(0x7 << 4)
-> +
-> +#define USB2_TX_VDD12_SHIFT_MMP3		8
-> +#define USB2_TX_VDD12_MASK_MMP3			(0x3 << 8)
-> +
-> +/* USB2_TX_REG2 */
-> +#define USB2_TX_DRV_SLEWRATE_SHIFT		10
-> +
-> +/* USB2_RX_REG0 */
-> +#define USB2_RX_SQ_THRESH_SHIFT_MMP3		4
-> +#define USB2_RX_SQ_THRESH_MASK_MMP3		(0xf << 4)
-> +
-> +#define USB2_RX_SQ_LENGTH_SHIFT_MMP3		10
-> +#define USB2_RX_SQ_LENGTH_MASK_MMP3		(0x3 << 10)
-> +
-> +/* USB2_ANA_REG1*/
-> +#define USB2_ANA_PU_ANA_SHIFT_MMP3		14
-> +
-> +/* USB2_OTG_REG0 */
-> +#define USB2_OTG_PU_OTG_SHIFT_MMP3		3
-> +
-> +struct mmp3_usb_phy {
-> +	struct phy *phy;
-> +	void __iomem *base;
-> +};
-> +
-> +static unsigned int u2o_get(void __iomem *base, unsigned int offset)
-> +{
-> +	return readl_relaxed(base + offset);
-> +}
-> +
-> +static void u2o_set(void __iomem *base, unsigned int offset,
-> +		unsigned int value)
-> +{
-> +	u32 reg;
-> +
-> +	reg = readl_relaxed(base + offset);
-> +	reg |= value;
-> +	writel_relaxed(reg, base + offset);
-> +	readl_relaxed(base + offset);
-> +}
-> +
-> +static void u2o_clear(void __iomem *base, unsigned int offset,
-> +		unsigned int value)
-> +{
-> +	u32 reg;
-> +
-> +	reg = readl_relaxed(base + offset);
-> +	reg &= ~value;
-> +	writel_relaxed(reg, base + offset);
-> +	readl_relaxed(base + offset);
-> +}
-> +
-> +static int mmp3_usb_phy_init(struct phy *phy)
-> +{
-> +	struct mmp3_usb_phy *mmp3_usb_phy = phy_get_drvdata(phy);
-> +	void __iomem *base = mmp3_usb_phy->base;
-> +
-> +	if (cpu_is_mmp3_a0()) {
-> +		u2o_clear(base, USB2_PLL_REG0, (USB2_PLL_FBDIV_MASK_MMP3
-> +			| USB2_PLL_REFDIV_MASK_MMP3));
-> +		u2o_set(base, USB2_PLL_REG0,
-> +			0xd << USB2_PLL_REFDIV_SHIFT_MMP3
-> +			| 0xf0 << USB2_PLL_FBDIV_SHIFT_MMP3);
-> +	} else if (cpu_is_mmp3_b0()) {
-> +		u2o_clear(base, USB2_PLL_REG0, USB2_PLL_REFDIV_MASK_MMP3_B0
-> +			| USB2_PLL_FBDIV_MASK_MMP3_B0);
-> +		u2o_set(base, USB2_PLL_REG0,
-> +			0xd << USB2_PLL_REFDIV_SHIFT_MMP3_B0
-> +			| 0xf0 << USB2_PLL_FBDIV_SHIFT_MMP3_B0);
-> +	} else {
-> +		dev_err(&phy->dev, "unsupported silicon revision\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	u2o_clear(base, USB2_PLL_REG1, USB2_PLL_PU_PLL_MASK
-> +		| USB2_PLL_ICP_MASK_MMP3
-> +		| USB2_PLL_KVCO_MASK_MMP3
-> +		| USB2_PLL_CALI12_MASK_MMP3);
-> +	u2o_set(base, USB2_PLL_REG1, 1 << USB2_PLL_PU_PLL_SHIFT_MMP3
-> +		| 1 << USB2_PLL_LOCK_BYPASS_SHIFT_MMP3
-> +		| 3 << USB2_PLL_ICP_SHIFT_MMP3
-> +		| 3 << USB2_PLL_KVCO_SHIFT_MMP3
-> +		| 3 << USB2_PLL_CAL12_SHIFT_MMP3);
-> +
-> +	u2o_clear(base, USB2_TX_REG0, USB2_TX_IMPCAL_VTH_MASK_MMP3);
-> +	u2o_set(base, USB2_TX_REG0, 2 << USB2_TX_IMPCAL_VTH_SHIFT_MMP3);
-> +
-> +	u2o_clear(base, USB2_TX_REG1, USB2_TX_VDD12_MASK_MMP3
-> +		| USB2_TX_AMP_MASK_MMP3
-> +		| USB2_TX_CK60_PHSEL_MASK_MMP3);
-> +	u2o_set(base, USB2_TX_REG1, 3 << USB2_TX_VDD12_SHIFT_MMP3
-> +		| 4 << USB2_TX_AMP_SHIFT_MMP3
-> +		| 4 << USB2_TX_CK60_PHSEL_SHIFT_MMP3);
-> +
-> +	u2o_clear(base, USB2_TX_REG2, 3 << USB2_TX_DRV_SLEWRATE_SHIFT);
-> +	u2o_set(base, USB2_TX_REG2, 2 << USB2_TX_DRV_SLEWRATE_SHIFT);
-> +
-> +	u2o_clear(base, USB2_RX_REG0, USB2_RX_SQ_THRESH_MASK_MMP3);
-> +	u2o_set(base, USB2_RX_REG0, 0xa << USB2_RX_SQ_THRESH_SHIFT_MMP3);
-> +
-> +	u2o_set(base, USB2_ANA_REG1, 0x1 << USB2_ANA_PU_ANA_SHIFT_MMP3);
-> +
-> +	u2o_set(base, USB2_OTG_REG0, 0x1 << USB2_OTG_PU_OTG_SHIFT_MMP3);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mmp3_usb_phy_calibrate(struct phy *phy)
-> +{
-> +	struct mmp3_usb_phy *mmp3_usb_phy = phy_get_drvdata(phy);
-> +	void __iomem *base = mmp3_usb_phy->base;
-> +	int loops;
-> +
-> +	/*
-> +	 * PLL VCO and TX Impedance Calibration Timing:
-> +	 *
-> +	 *                _____________________________________
-> +	 * PU  __________|
-> +	 *                        _____________________________
-> +	 * VCOCAL START _________|
-> +	 *                                 ___
-> +	 * REG_RCAL_START ________________|   |________|_______
-> +	 *               | 200us | 400us  | 40| 400us  | USB PHY READY
-> +	 */
-> +
-> +	udelay(200);
-> +	u2o_set(base, USB2_PLL_REG1, 1 << USB2_PLL_VCOCAL_START_SHIFT_MMP3);
-> +	udelay(400);
-> +	u2o_set(base, USB2_TX_REG0, 1 << USB2_TX_RCAL_START_SHIFT_MMP3);
-> +	udelay(40);
-> +	u2o_clear(base, USB2_TX_REG0, 1 << USB2_TX_RCAL_START_SHIFT_MMP3);
-> +	udelay(400);
-> +
-> +	loops = 0;
-> +	while ((u2o_get(base, USB2_PLL_REG1) & USB2_PLL_READY_MASK_MMP3) == 0) {
-> +		mdelay(1);
-> +		loops++;
-> +		if (loops > 100) {
-> +			dev_err(&phy->dev, "PLL_READY not set after 100mS.\n");
-> +			return -ETIMEDOUT;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops mmp3_usb_phy_ops = {
-> +	.init		= mmp3_usb_phy_init,
-> +	.calibrate	= mmp3_usb_phy_calibrate,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static const struct of_device_id mmp3_usb_phy_of_match[] = {
-> +	{ .compatible = "marvell,mmp3-usb-phy", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, mmp3_usb_phy_of_match);
-> +
-> +static int mmp3_usb_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *resource;
-> +	struct mmp3_usb_phy *mmp3_usb_phy;
-> +	struct phy_provider *provider;
-> +
-> +	mmp3_usb_phy = devm_kzalloc(dev, sizeof(*mmp3_usb_phy), GFP_KERNEL);
-> +	if (!mmp3_usb_phy)
-> +		return -ENOMEM;
-> +
-> +	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	mmp3_usb_phy->base = devm_ioremap_resource(dev, resource);
-> +	if (IS_ERR(mmp3_usb_phy->base)) {
-> +		dev_err(dev, "failed to remap PHY regs\n");
-> +		return PTR_ERR(mmp3_usb_phy->base);
-> +	}
-> +
-> +	mmp3_usb_phy->phy = devm_phy_create(dev, NULL, &mmp3_usb_phy_ops);
-> +	if (IS_ERR(mmp3_usb_phy->phy)) {
-> +		dev_err(dev, "failed to create PHY\n");
-> +		return PTR_ERR(mmp3_usb_phy->phy);
-> +	}
-> +
-> +	phy_set_drvdata(mmp3_usb_phy->phy, mmp3_usb_phy);
-> +	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	if (IS_ERR(provider)) {
-> +		dev_err(dev, "failed to register PHY provider\n");
-> +		return PTR_ERR(provider);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver mmp3_usb_phy_driver = {
-> +	.probe		= mmp3_usb_phy_probe,
-> +	.driver		= {
-> +		.name	= "mmp3-usb-phy",
-> +		.of_match_table = mmp3_usb_phy_of_match,
-> +	},
-> +};
-> +module_platform_driver(mmp3_usb_phy_driver);
-> +
-> +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-> +MODULE_DESCRIPTION("Marvell MMP3 USB PHY Driver");
-> +MODULE_LICENSE("GPL v2");
-> 
+Here is a depiction of the race condition
+
+CPU #1 (Running timer callback)                   CPU #2 (Enter idle
+                                                  and subscribe to
+                                                  tick broadcast)
+---------------------                             ---------------------
+
+__run_hrtimer()                                   tick_broadcast_enter()
+
+  bc_handler()                                      __tick_broadcast_oneshot_control()
+
+    tick_handle_oneshot_broadcast()
+
+      raw_spin_lock(&tick_broadcast_lock);
+
+      dev->next_event = KTIME_MAX;                  //wait for tick_broadcast_lock
+      //next_event for tick broadcast clock
+      set to KTIME_MAX since no other cores
+      subscribed to tick broadcasting
+
+      raw_spin_unlock(&tick_broadcast_lock);
+
+    if (dev->next_event == KTIME_MAX)
+      return HRTIMER_NORESTART
+    // callback function exits without
+       restarting the hrtimer                      //tick_broadcast_lock acquired
+                                                   raw_spin_lock(&tick_broadcast_lock);
+
+                                                   tick_broadcast_set_event()
+
+                                                     clockevents_program_event()
+
+                                                       dev->next_event = expires;
+
+                                                       bc_set_next()
+
+                                                         hrtimer_try_to_cancel()
+                                                         //returns -1 since the timer
+                                                         callback is active. Exits without
+                                                         restarting the timer
+  cpu_base->running = NULL;
+
+The comment that hrtimer cannot be armed from within the callback is
+wrong. It is fine to start the hrtimer from within the callback. Also it is
+safe to start the hrtimer from the enter/exit idle code while the broadcast
+handler is active. The enter/exit idle code and the broadcast handler are
+synchronized using tick_broadcast_lock. So there is no need for the
+existing try to cancel logic. All this can be removed which will eliminate
+the race condition as well.
+
+Fixes: 5d1638acb9f6 ("tick: Introduce hrtimer based broadcast")
+Originally-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190926135101.12102-2-balasubramani_vivekanandan@mentor.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/time/tick-broadcast-hrtimer.c | 57 ++++++++++++++--------------
+ 1 file changed, 29 insertions(+), 28 deletions(-)
+
+diff --git a/kernel/time/tick-broadcast-hrtimer.c b/kernel/time/tick-broadcast-hrtimer.c
+index 5be6154e2fd2c..99fbfb8d9117c 100644
+--- a/kernel/time/tick-broadcast-hrtimer.c
++++ b/kernel/time/tick-broadcast-hrtimer.c
+@@ -42,34 +42,39 @@ static int bc_shutdown(struct clock_event_device *evt)
+  */
+ static int bc_set_next(ktime_t expires, struct clock_event_device *bc)
+ {
+-	int bc_moved;
+ 	/*
+-	 * We try to cancel the timer first. If the callback is on
+-	 * flight on some other cpu then we let it handle it. If we
+-	 * were able to cancel the timer nothing can rearm it as we
+-	 * own broadcast_lock.
++	 * This is called either from enter/exit idle code or from the
++	 * broadcast handler. In all cases tick_broadcast_lock is held.
+ 	 *
+-	 * However we can also be called from the event handler of
+-	 * ce_broadcast_hrtimer itself when it expires. We cannot
+-	 * restart the timer because we are in the callback, but we
+-	 * can set the expiry time and let the callback return
+-	 * HRTIMER_RESTART.
++	 * hrtimer_cancel() cannot be called here neither from the
++	 * broadcast handler nor from the enter/exit idle code. The idle
++	 * code can run into the problem described in bc_shutdown() and the
++	 * broadcast handler cannot wait for itself to complete for obvious
++	 * reasons.
+ 	 *
+-	 * Since we are in the idle loop at this point and because
+-	 * hrtimer_{start/cancel} functions call into tracing,
+-	 * calls to these functions must be bound within RCU_NONIDLE.
++	 * Each caller tries to arm the hrtimer on its own CPU, but if the
++	 * hrtimer callbback function is currently running, then
++	 * hrtimer_start() cannot move it and the timer stays on the CPU on
++	 * which it is assigned at the moment.
++	 *
++	 * As this can be called from idle code, the hrtimer_start()
++	 * invocation has to be wrapped with RCU_NONIDLE() as
++	 * hrtimer_start() can call into tracing.
+ 	 */
+-	RCU_NONIDLE({
+-			bc_moved = hrtimer_try_to_cancel(&bctimer) >= 0;
+-			if (bc_moved)
+-				hrtimer_start(&bctimer, expires,
+-					      HRTIMER_MODE_ABS_PINNED);});
+-	if (bc_moved) {
+-		/* Bind the "device" to the cpu */
+-		bc->bound_on = smp_processor_id();
+-	} else if (bc->bound_on == smp_processor_id()) {
+-		hrtimer_set_expires(&bctimer, expires);
+-	}
++	RCU_NONIDLE( {
++		hrtimer_start(&bctimer, expires, HRTIMER_MODE_ABS_PINNED);
++		/*
++		 * The core tick broadcast mode expects bc->bound_on to be set
++		 * correctly to prevent a CPU which has the broadcast hrtimer
++		 * armed from going deep idle.
++		 *
++		 * As tick_broadcast_lock is held, nothing can change the cpu
++		 * base which was just established in hrtimer_start() above. So
++		 * the below access is safe even without holding the hrtimer
++		 * base lock.
++		 */
++		bc->bound_on = bctimer.base->cpu_base->cpu;
++	} );
+ 	return 0;
+ }
+ 
+@@ -95,10 +100,6 @@ static enum hrtimer_restart bc_handler(struct hrtimer *t)
+ {
+ 	ce_broadcast_hrtimer.event_handler(&ce_broadcast_hrtimer);
+ 
+-	if (clockevent_state_oneshot(&ce_broadcast_hrtimer))
+-		if (ce_broadcast_hrtimer.next_event != KTIME_MAX)
+-			return HRTIMER_RESTART;
+-
+ 	return HRTIMER_NORESTART;
+ }
+ 
+-- 
+2.20.1
+
+
+
