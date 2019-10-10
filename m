@@ -2,524 +2,144 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62068C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 04:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735C1C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 04:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3542A2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 04:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCED206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 04:37:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="dDRq5svS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfJJEf6 (ORCPT
+        id S1728613AbfJJEh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 00:35:58 -0400
-Received: from mga09.intel.com ([134.134.136.24]:20349 "EHLO mga09.intel.com"
+        Thu, 10 Oct 2019 00:37:26 -0400
+Received: from mx6.ucr.edu ([138.23.62.71]:3586 "EHLO mx6.ucr.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726304AbfJJEf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 00:35:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 21:35:56 -0700
-X-ExtLoop1: 1
+        id S1725822AbfJJEhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 00:37:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1570682245; x=1602218245;
+  h=from:to:cc:subject:date:message-id;
+  bh=Qglj1z/rVFrSvjj0s8+qncgzWBHeOEvd87vRgzQFxfQ=;
+  b=dDRq5svSVuJDpW/2PmZ1sZh6gBKPxYLeybWsRm3fw3H2PuHpi78AvKEn
+   GZT9th6MgGPRowUlyQ6VUCXgpZ62JZ88AcTO4h5ykpMeZ/gYo9DHPN0q/
+   0t+kIPbKaAIkVCfl+Pzix74+epiZAkVQ1ceOWU2LlUlz66OHTbZfuiET6
+   3nuGd3u7cXFVizB3wlrr0ozQ1DVjSRkGJ9L+AUA1WChWEhnnCAaH1OtIA
+   UkSJbo4BRLGijVS+RHJfR69PX/t5OeMuonbcZfwEcimNcfJpQ+QgkgRFj
+   I2f1rkXbm024k7HnXxM2G/4rpZ0rK98WvrtLYzmunJtZwCvoARi9rEyme
+   A==;
+IronPort-SDR: sH0t18O0OqK10eP2OGIbFWNf0uyPEXgQ19U+6Fzb7utDKEhm4+7Oiv/lCJhWX3PkHzDjcwV12s
+ jfLywTkLu05qsf1uNSuA3hthTxrzHwrELxFrCRQ1oFyhZU+tCaZZmSQk2r4+68fsP9mJy3wBUG
+ geHwnVVBw20ns+hHdXQ+lqlEMHeQjo8VN3W0byQoHnXWhL0EzcMJzmbO+EUGxsWLnwnu2QpHov
+ g0dIGWNBVMFWEgQduaFLhwafHMAyTso8BHjXi7FDND65dh6VOzwC4Poe7khvEO29jOjOCIDZyy
+ R24=
+IronPort-PHdr: =?us-ascii?q?9a23=3AWW/WFRBA94xYO51nJO2LUyQJP3N1i/DPJgcQr6?=
+ =?us-ascii?q?AfoPdwSPT6rsbcNUDSrc9gkEXOFd2Cra4d0KyI6euwByQp2tWoiDg6aptCVh?=
+ =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
+ =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagb75+NhS7oRveusQVgIZpN7o8xA?=
+ =?us-ascii?q?bOrnZUYepd2HlmJUiUnxby58ew+IBs/iFNsP8/9MBOTLv3cb0gQbNXEDopPW?=
+ =?us-ascii?q?Y15Nb2tRbYVguA+mEcUmQNnRVWBQXO8Qz3UY3wsiv+sep9xTWaMMjrRr06RT?=
+ =?us-ascii?q?iu86FmQwLzhSwZKzA27n3Yis1ojKJavh2hoQB/w5XJa42RLfZyY7/Rcc8fSW?=
+ =?us-ascii?q?dHW8ZRVjdBApi9b4sJAOoKIPhWoZDgrFsArBuxGw2sC/7ywTNMiHL6wag23u?=
+ =?us-ascii?q?ImHgza0gEsA88CvG3IoNnoKaweVf25wanNwTjFcvhY2yry6JLQfx4hv/+CQL?=
+ =?us-ascii?q?x+f8nWx0Q0Cw/Jkk+dpZD/Mj+JyugAtXWQ4ep6VeKojm4qswN+ojmux8csl4?=
+ =?us-ascii?q?nJgZ8ex1fE9CR4wIY6P9y4RFJnbdOqC5ZQqj2VN5FsTsw8Xm5opT83x7sbsp?=
+ =?us-ascii?q?C4ZCgH0IorywLbZvCdcIWF4gjvWPiMLTp3nn5pZbayihWq/US9y+DxUtO43E?=
+ =?us-ascii?q?hEoydFiNXAqHEA2wbR58WITPZ2412v1iyV1w/J7+FJOUU0la3GJJE/2rMwjZ?=
+ =?us-ascii?q?8TsVjbHi/xhUX2kLeadkU69eis7OTqerDmqYWdN49wkw3+KqAultGmDeQ2Lw?=
+ =?us-ascii?q?QDW2uW9f6z1L3k+k35T7FKgeMsnqbFt5DaINwXpq+/AwBLzoYu8wizAyui3d?=
+ =?us-ascii?q?gCnnQKLEhJdAyag4XmIV3CPfT1APSnj1SpijhrxvTGPrP7ApXKK3jOiLfgfL?=
+ =?us-ascii?q?d960FGyQo/0cxT6pxPB7EcPP3zQFX9u8LFAR8kKwC02froCM1h1oMCXmKCGq?=
+ =?us-ascii?q?uZMKLUsV+V6eMjOuqMa5EPuDb7Nfcl4+XjjWE2mVADZ6mlx5gXZ26iHvRgPU?=
+ =?us-ascii?q?qZZWDggtAbEWcF7UIQVuvv3WyDQz5OYD7mTrA87zBjUNmOEIzZAI2hnerSj2?=
+ =?us-ascii?q?+AApRKazUeWRi3GnDyetDBBqoB?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HSCgDHtJ5dhsbWVdFlHgELHIFwC4N?=
+ =?us-ascii?q?fTBCNJYYqAQEGiykYcYV6ijABCAEBAQwBAS0CAQGEQIJUIzcGDgIDCQEBBQE?=
+ =?us-ascii?q?BAQEBBQQBAQIQAQEBCAsLCCmFQII6KYM1CxZngRUBBQE1IjmCRwGCUiUFpD+?=
+ =?us-ascii?q?BAzyMWIhmAQkNgUgJAQiBIoc1hFmBEIEHhGGEDYNZgkoEgTkBAQGVL5ZXAQY?=
+ =?us-ascii?q?CghAUgXiTFSeEPIk/i0QBp2MCCgcGDyOBRYF8TSWBbAqBRFAQFIFbDgmOQyE?=
+ =?us-ascii?q?zgQiNP4JUAQ?=
+X-IPAS-Result: =?us-ascii?q?A2HSCgDHtJ5dhsbWVdFlHgELHIFwC4NfTBCNJYYqAQEGi?=
+ =?us-ascii?q?ykYcYV6ijABCAEBAQwBAS0CAQGEQIJUIzcGDgIDCQEBBQEBAQEBBQQBAQIQA?=
+ =?us-ascii?q?QEBCAsLCCmFQII6KYM1CxZngRUBBQE1IjmCRwGCUiUFpD+BAzyMWIhmAQkNg?=
+ =?us-ascii?q?UgJAQiBIoc1hFmBEIEHhGGEDYNZgkoEgTkBAQGVL5ZXAQYCghAUgXiTFSeEP?=
+ =?us-ascii?q?Ik/i0QBp2MCCgcGDyOBRYF8TSWBbAqBRFAQFIFbDgmOQyEzgQiNP4JUAQ?=
 X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
-   d="scan'208";a="368954237"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 09 Oct 2019 21:35:56 -0700
-Received: from [10.226.38.65] (unknown [10.226.38.65])
-        by linux.intel.com (Postfix) with ESMTP id B53885802BC;
-        Wed,  9 Oct 2019 21:35:50 -0700 (PDT)
-Subject: Re: [PATCH v1 1/2] pinctrl: Add pinmux & GPIO controller driver for
- new SoC
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
- <65898579e78b4b3bb5db9ddc884a818046c1eb4c.1568274587.git.rahul.tanwar@linux.intel.com>
- <CACRpkdbFDTR140_a1FabyjCP2MnBTg-xo2BWnchEvCP161cFLw@mail.gmail.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <f4cf3553-be3b-ffed-e801-ecb698309a63@linux.intel.com>
-Date:   Thu, 10 Oct 2019 12:35:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CACRpkdbFDTR140_a1FabyjCP2MnBTg-xo2BWnchEvCP161cFLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+   d="scan'208";a="81371076"
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+  by smtpmx6.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Oct 2019 21:37:24 -0700
+Received: by mail-pl1-f198.google.com with SMTP id y2so3051365plk.19
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 21:37:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Z2jlPo7cNUsYiJLA96HLY+XLNur36/5ee7Rqvg0uC5E=;
+        b=dNTKilwDzbCkPDITRIkLdIhaasmpL4sg3dWkpX64tyrjqZU8yeNkhiQZAfrNppyhsO
+         HiKQGpa4g0ccHVwBwjRQdT4hBsLhsGBM8CSn9Yg0i34jv2VoIreiE9vKHxVTzcTX3eDk
+         mAJeur8XgQnRq5qeffS3aYv1SZjLlg6b42WuO2VXiLW6rfwPUuPXm4Gkkj/y0B/0UG+c
+         jr7nnMtONXqzItjHXrgjkk+/F9pq8rQza/Z7l8Q/SfEw+XFXu5uQtsbzPrbgVyhcrnvH
+         njkvkSjkpg4zEKVVTN1mvFe0Mjwq6LuXWd53ghMOPQWWebxWjI3TJ1aLNaecQFWYSiRF
+         rW1w==
+X-Gm-Message-State: APjAAAXioxzJHyIeDH9MUzjq4OVjWynFs2pM0BLgKQsMHb3hvA3OchK7
+        dNy71s8Eb/eYuBjpR/5IMWmmNIeQjoJcLguYzXQ0tbY1CystbarnlbcRGGzA9Xz+LEvsLB7a0+l
+        v2TbblWjwZDeuUF2ctuIjGZnCLg==
+X-Received: by 2002:a63:f908:: with SMTP id h8mr8409110pgi.244.1570682243561;
+        Wed, 09 Oct 2019 21:37:23 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzHyOtObFJngENmZ9WtxzkJ1f8WRSs7XqzpzG4G5O/ox5y97nK3RVIhkAPkPbp3dMBqdu0v/w==
+X-Received: by 2002:a63:f908:: with SMTP id h8mr8409069pgi.244.1570682243138;
+        Wed, 09 Oct 2019 21:37:23 -0700 (PDT)
+Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
+        by smtp.googlemail.com with ESMTPSA id g12sm6544968pfb.97.2019.10.09.21.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 21:37:22 -0700 (PDT)
+From:   Yizhuo <yzhai003@ucr.edu>
+Cc:     Yizhuo <yzhai003@ucr.edu>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: sm750fb: Potential uninitialized field in "pll"
+Date:   Wed,  9 Oct 2019 21:38:08 -0700
+Message-Id: <20191010043809.27594-1-yzhai003@ucr.edu>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Inside function set_chip_clock(), struct pll is supposed to be
+initialized in sm750_calc_pll_value(), if condition
+"diff < mini_diff" in sm750_calc_pll_value() cannot be fulfilled,
+then some field of pll will not be initialized but used in
+function sm750_format_pll_reg(), which is potentially unsafe.
 
-Hi Linus,
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+---
+ drivers/staging/sm750fb/ddk750_chip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for taking time out to review.
+diff --git a/drivers/staging/sm750fb/ddk750_chip.c b/drivers/staging/sm750fb/ddk750_chip.c
+index 5a317cc98a4b..31b3cf9c2d8b 100644
+--- a/drivers/staging/sm750fb/ddk750_chip.c
++++ b/drivers/staging/sm750fb/ddk750_chip.c
+@@ -55,7 +55,7 @@ static unsigned int get_mxclk_freq(void)
+  */
+ static void set_chip_clock(unsigned int frequency)
+ {
+-	struct pll_value pll;
++	struct pll_value pll = {};
+ 	unsigned int actual_mx_clk;
+ 
+ 	/* Cheok_0509: For SM750LE, the chip clock is fixed. Nothing to set. */
+-- 
+2.17.1
 
-On 5/10/2019 4:28 AM, Linus Walleij wrote:
->> +config PINCTRL_EQUILIBRIUM
->> +       tristate "Generic pinctrl and GPIO driver for Intel Lightning Mountain SoC"
->> +       select PINMUX
->> +       select PINCONF
->> +       select GPIOLIB
->> +       select GPIOLIB_IRQCHIP
-> Nice use of the GPIOLIB_IRQCHIP.
->
-> Are you sure you can't just use GPIO_GENERIC as well?
-> This is almost always usable when you have a register with
-> n consecutive bits representing GPIO lines.
->
-> Look how we use bgpio_init() in e.g. drivers/gpio/gpio-ftgpio010.c
-> to cut down on boilerplate code, and we also get a spinlock
-> protection and .get/.set_multiple() implementation for free.
-
-I went through gpio-mmio.c & gpio-ftgpio010.c code. My understanding is
-that GPIO_GENERIC can support a max of 64 consecutive bits representing
-GPIO lines. We have more than 100 GPIO's and they are spread out across
-4 different banks with non consecutive registers i.e. DATA_IN_0~31@offset0x0,
-DATA_IN_32~63@offset0x100 and so on. In other words, i think we can not
-support memory mapped GPIO controller.
-
->> +#include <linux/pinctrl/consumer.h>
->> +#include <linux/pinctrl/machine.h>
-> Why do you need these two includes?
-
-Yes, these are redundant. I will remove them. Thanks.
-
->> +static const struct pin_config pin_cfg_type[] = {
->> +       {"intel,pullup",                PINCONF_TYPE_PULL_UP},
->> +       {"intel,pulldown",              PINCONF_TYPE_PULL_DOWN},
->> +       {"intel,drive-current",         PINCONF_TYPE_DRIVE_CURRENT},
->> +       {"intel,slew-rate",             PINCONF_TYPE_SLEW_RATE},
->> +       {"intel,open-drain",            PINCONF_TYPE_OPEN_DRAIN},
->> +       {"intel,output",                PINCONF_TYPE_OUTPUT},
->> +};
-> So... if we are adding a new driver with a new DT binding,
-> why use the made-up "intel," prefixed flags when we have the
-> standard DT flags from
-> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> already handled by the core?
-
-Yes, Andy & Rob have also raised same concerns. I will switch to using
-standard DT properties & generic pinconf and remove redundant code.
-Thanks.
-
->> +static inline void eqbr_set_val(void __iomem *addr, u32 offset,
->> +                               u32 mask, u32 set, raw_spinlock_t *lock)
->> +{
->> +       u32 val;
->> +       unsigned long flags;
->> +
->> +       raw_spin_lock_irqsave(lock, flags);
->> +       val = readl(addr) & ~(mask << offset);
->> +       writel(val | ((set & mask) << offset), addr);
->> +       raw_spin_unlock_irqrestore(lock, flags);
->> +}
-> Mask-and-set is usually achieved with regmap-mmio if you
-> dont use GPIO_GENERIC, but I think you can just use
-> GPIO_GENERIC. All of these:
-
-As mentioned above, we cannot use GPIO_GENERIC. And there was no specific
-reason/motivation for us to use regmap-mmio because most of the driver's
-that we referenced were using readl()/write(). Do you recommend us to remove
-readl()/writel() and switch to regmap-mmio based design ?
-
->> +static int intel_eqbr_gpio_get_dir(struct gpio_chip *gc, unsigned int offset)
->> +static int intel_eqbr_gpio_dir_input(struct gpio_chip *gc, unsigned int offset)
->> +static int intel_eqbr_gpio_dir_output(struct gpio_chip *gc, unsigned int offset,
->> +static void intel_eqbr_gpio_set(struct gpio_chip *gc,
->> +                               unsigned int offset, int dir)
->> +static int intel_eqbr_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> Look very bit-per-bit mapped.
->
->> +static int intel_eqbr_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
->> +{
->> +       struct intel_gpio_desc *desc = gpiochip_get_data(gc);
-> Since struct gpio_desc means a per-line state container
-> and struct intel_gpio_desc refers to the whole chip, I think this
-> struct should be renamed something like struct eqbr_gpio.
-
-Just to clarify, we have 4 different GPIO banks and each GPIO bank is
-implemented as a separate gpio_chip. So we have 4 instances of gpio_desc
-each one having its own gpio_chip. What i mean to say is that gpio_desc
-is actually not a per-line state container, its a per gpio_chip container.
-
->> +       unsigned int virq;
->> +
->> +       if (!desc->irq_domain)
->> +               return -ENODEV;
->> +
->> +       virq = irq_find_mapping(desc->irq_domain, offset);
->> +       if (virq)
->> +               return virq;
->> +       else
->> +               return irq_create_mapping(desc->irq_domain, offset);
->> +}
->> +
->> +static int gpiochip_setup(struct device *dev, struct intel_gpio_desc *desc)
->> +{
-> (...)
->> +       gc->to_irq              = intel_eqbr_gpio_to_irq;
-> You don't need any of this funku stuff. The GPIOLIB_IRQCHIP
-> provides default implementations to do all this for you.
-> Just look in drivers/gpio/gpio-ftgpio010.c and follow
-> the pattern (look how I set up struct gpio_irq_chip using
-> *girq etc). If you need anything custom we need some
-> special motivation here.
-
-Yes, i checked gpio-ftgpio010.c and agree that this is already handled
-under GPIOLIB_IRQCHIP. I will make these changes in V2. Thanks.
-
->> +       gc->of_node             = desc->node;
->> +       gc->parent              = dev;
-> I would allocate a dynamic irqchip as part of the
-> struct intel_gpio_desc and populate it dynamically with
-> function pointers.
->
-> struct gpio_irq_chip *girq;
->
-> girq = &gc->irq;
-> girq->chip = ...
-
-Agree, i will follow this approach as part of switching to reusing
-GPIOLIB_IRQCHIP default implementations. Thanks.
-
->> +static int eqbr_gpio_irq_req_res(struct irq_data *d)
->> +{
->> +       struct intel_gpio_desc *desc = irq_data_get_irq_chip_data(d);
->> +       unsigned int offset;
->> +       int ret;
->> +
->> +       offset = irqd_to_hwirq(d);
->> +
->> +       /* gpio must be set as input */
->> +       intel_eqbr_gpio_dir_input(&desc->chip, offset);
-> Please move this to the .irq_enable() callback instead.
-
-Well noted.
-
->> +       ret = gpiochip_lock_as_irq(&desc->chip, offset);
->> +       if (ret) {
->> +               pr_err("%s: Failed to lock gpio %u as irq!\n",
->> +                      desc->name, offset);
->> +               return ret;
->> +       }
->> +       eqbr_gpio_enable_irq(d);
-> Why are you calling this here? It is premature I think,
-> isn't the call in .unmask() soon enough? The latter is
-> what we rely upon.
-
-Agree, have already changed it.
-
->> +static void eqbr_gpio_irq_rel_res(struct irq_data *d)
->> +{
->> +       struct intel_gpio_desc *desc = irq_data_get_irq_chip_data(d);
->> +       unsigned int offset = irqd_to_hwirq(d);
->> +
->> +       eqbr_gpio_disable_irq(d);
-> No need to do this, .irq_mask() has already done it at this
-> point.
-
-Agree, have already changed it.
-
->> +       gpiochip_unlock_as_irq(&desc->chip, offset);
->> +}
-> I think the core default implementations should be fine for both
-> reqres and relres.
-
-I also observed this when referring to gpio-ftgpio010.c. Will change to
-default implementations.
-
->> +static struct irq_chip eqbr_irq_chip = {
->> +       .name                   = "gpio_irq",
->> +       .irq_mask               = eqbr_gpio_disable_irq,
->> +       .irq_unmask             = eqbr_gpio_enable_irq,
->> +       .irq_ack                = eqbr_gpio_ack_irq,
->> +       .irq_mask_ack           = eqbr_gpio_mask_ack_irq,
->> +       .irq_set_type           = eqbr_gpio_set_irq_type,
->> +       .irq_request_resources  = eqbr_gpio_irq_req_res,
->> +       .irq_release_resources  = eqbr_gpio_irq_rel_res,
->> +};
-> So please add a struct irq_chip to the state container
-> (struct intel_gpio_desc) and assign these functions directly
-> in probe (again look at gpio-ftgpio010.c).
-
-Yup, agree. Will change. Thanks.
-
->> +static void eqbr_irq_handler(struct irq_desc *desc)
->> +{
->> +       struct intel_gpio_desc *gc;
->> +       struct irq_chip *ic;
->> +       u32 pins, offset;
->> +       unsigned int virq;
->> +
->> +       gc = irq_desc_get_handler_data(desc);
->> +       ic = irq_desc_get_chip(desc);
-> When using the GPIOLIB_IRQCHIP follow the pattern from
-> other drivers and assume the handler data is the struct gpio_chip
-> instead.
->
-> struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> struct intel_gpio_desc *i = gpiochip_get_data(gc);
-> (...)
-
-Well noted.
-
->> +static int irqchip_setup(struct device *dev, struct intel_gpio_desc *desc)
->> +{
->> +       struct device_node *np = desc->node;
->> +
->> +       if (!of_property_read_bool(np, "interrupt-controller")) {
->> +               dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
->> +                        desc->name);
->> +               return 0;
->> +       }
-> OK just skip assigning *girq with the chip etc for this case.
-
-I understand. BTW, this call is in the probe path. I am planning to do girq
-setup on the lines of gpio-ftgpio010.c in this function instead of probe.
-So yes, i can skip assigning chip to girq for this case in this function.
-
->> +       desc->irq_domain = irq_domain_add_linear(desc->node,
->> +                                                desc->bank->nr_pins,
->> +                                                &gc_irqdomain_ops, desc);
->> +       if (!desc->irq_domain) {
->> +               dev_err(dev, "%s: failed to create gpio irq domain!\n",
->> +                       desc->name);
->> +               return -ENODEV;
->> +       }
->> +       irq_set_chained_handler_and_data(desc->virq, eqbr_irq_handler, desc);
-> Let GPIOLIB_IRQCHIP handle these things for you instead of
-> making your own domain etc.
-
-Yes, got it now. Thanks.
-
->> +static int gpiolib_reg(struct intel_pinctrl_drv_data *drvdata)
->> +{
->> +       struct device_node *np;
->> +       struct intel_gpio_desc *desc;
->> +       struct device *dev;
->> +       int i, ret;
->> +       char name[32];
->> +       struct resource res;
->> +
->> +       dev = drvdata->dev;
->> +       for (i = 0; i < drvdata->nr_gpio_descs; i++) {
->> +               desc = drvdata->gpio_desc + i;
->> +               np = desc->node;
->> +               sprintf(name, "gpiochip%d", i);
->> +               desc->name = devm_kmemdup(dev, name,
->> +                                         strlen(name) + 1, GFP_KERNEL);
->> +               if (!desc->name)
->> +                       return -ENOMEM;
->> +               if (of_address_to_resource(np, 0, &res)) {
->> +                       dev_err(dev, "Failed to get GPIO register addrss\n");
-> Speling
-
-Well noted.
-
->> +                       return -ENXIO;
->> +               }
->> +               desc->membase = devm_ioremap_resource(dev, &res);
->> +               if (IS_ERR(desc->membase)) {
->> +                       dev_err(dev, "ioremap fail\n");
->> +                       return PTR_ERR(desc->membase);
->> +               }
->> +               dev_dbg(dev, "gpio resource: %pr\n", &res);
->> +               dev_dbg(dev, "gpiochip membase: %px\n", desc->membase);
->> +
->> +               desc->virq = irq_of_parse_and_map(np, 0);
->> +               if (!desc->virq) {
->> +                       dev_err(dev, "%s: failed to parse and map irq\n",
->> +                               name);
->> +                       return -ENXIO;
->> +               }
->> +               raw_spin_lock_init(&desc->lock);
->> +
->> +               ret = gpiochip_setup(dev, desc);
->> +               if (ret)
->> +                       return ret;
->> +               ret = irqchip_setup(dev, desc);
->> +               if (ret)
->> +                       return ret;
-> Bake these two into a single function setting up gpio_chip and
-> irq_chip. With proper use of GPIOLIB_IRQCHIP it will be so
-> much simpler anyway.
-
-Agree. Will change accordingly. Thanks.
-
->> +static int parse_mux_info(struct device_node *np)
->> +{
->> +       int ret;
->> +       const char *str;
->> +
->> +       ret = of_property_read_string(np, "intel,function", &str);
->> +       if (ret)
->> +               return -ENODEV;
->> +       ret = of_property_read_string(np, "intel,groups", &str);
->> +       if (ret)
->> +               return -ENODEV;
->> +
->> +       return ret;
->> +}
-> Again these are intel,foo-specific properties for things we already
-> have standard bindings for, so use those.
-
-Yes, this will most likely go away because pinctrl_ops->dt_node_to_map()
-uses this function to count group map entries. And based on your comments,
-i will switch to using pinconf generic with standard properties which already
-handles dt_node_to_map() & dt_free_map().
-
->> +static int add_config(struct intel_pinctrl_drv_data *drvdata,
->> +                     unsigned long **confs, unsigned int *nr_conf,
->> +                     unsigned long pinconf)
->> +{
->> +       unsigned long *configs;
->> +       struct device *dev = drvdata->dev;
->> +       unsigned int num_conf = *nr_conf + 1;
->> +
->> +       if (!(*nr_conf)) {
->> +               configs = devm_kcalloc(dev, 1, sizeof(pinconf), GFP_KERNEL);
->> +               if (!configs)
->> +                       return -ENOMEM;
->> +       } else {
->> +               configs = devm_kmemdup(dev, *confs,
->> +                                      num_conf * sizeof(pinconf), GFP_KERNEL);
->> +               if (!configs)
->> +                       return -ENOMEM;
->> +               devm_kfree(dev, *confs);
->> +       }
->> +
->> +       configs[num_conf - 1] = pinconf;
->> +       *confs = configs;
->> +       *nr_conf = num_conf;
->> +
->> +       return 0;
->> +}
->> +
->> +static void eqbr_add_map_mux(struct device_node *np, struct pinctrl_map **map,
->> +                            int *index)
->> +{
->> +       int idx = *index;
->> +       const char *function, *group;
->> +
->> +       of_property_read_string(np, "intel,function", &function);
->> +       of_property_read_string(np, "intel,groups", &group);
->> +
->> +       (*map)[idx].type = PIN_MAP_TYPE_MUX_GROUP;
->> +       (*map)[idx].data.mux.group = group;
->> +       (*map)[idx].data.mux.function = function;
->> +       *index = idx + 1;
->> +}
->> +
->> +static void eqbr_add_map_configs(struct device_node *np,
->> +                                struct pinctrl_map **map, int *index,
->> +                                unsigned long *configs, unsigned int nr_config)
->> +{
->> +       int idx = *index;
->> +       const char *group;
->> +
->> +       of_property_read_string(np, "intel,groups", &group);
->> +       (*map)[idx].type = PIN_MAP_TYPE_CONFIGS_GROUP;
->> +       (*map)[idx].data.configs.group_or_pin = group;
->> +       (*map)[idx].data.configs.configs = configs;
->> +       (*map)[idx].data.configs.num_configs = nr_config;
->> +       *index = idx + 1;
->> +}
->> +
->> +static int eqbr_dt_node_to_map(struct pinctrl_dev *pctldev,
->> +                              struct device_node *np,
->> +                              struct pinctrl_map **map, unsigned int *num_maps)
->> +{
->> +       struct intel_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
->> +       unsigned int map_cnt, nr_config;
->> +       unsigned long pin_conf, *configs = NULL;
->> +       int i, ret;
->> +       unsigned int val;
->> +       bool func = false;
->> +
->> +       *map = NULL;
->> +       *num_maps = map_cnt = nr_config = 0;
->> +
->> +       ret = parse_mux_info(np);
->> +       if (!ret) {
->> +               map_cnt++;
->> +               func = true;
->> +       }
->> +
->> +       for (i = 0; i < ARRAY_SIZE(pin_cfg_type); i++) {
->> +               ret = of_property_read_u32(np, pin_cfg_type[i].property, &val);
->> +               if (!ret) {
->> +                       pin_conf = PINCONF_PACK(pin_cfg_type[i].type, val);
->> +                       ret = add_config(pctl, &configs, &nr_config, pin_conf);
->> +                       if (ret)
->> +                               return ret;
->> +               }
->> +       }
->> +
->> +       /**
->> +        * Create pinctrl_map for each groups, per group per entry.
->> +        * Create pinctrl_map for pin config, per group per entry.
->> +        */
->> +       if (nr_config)
->> +               map_cnt++;
->> +
->> +       *map = devm_kcalloc(pctl->dev, map_cnt, sizeof(**map), GFP_KERNEL);
->> +       if (!*map)
->> +               return -ENOMEM;
->> +
->> +       i = 0;
->> +       if (func)
->> +               eqbr_add_map_mux(np, map, &i);
->> +       if (nr_config)
->> +               eqbr_add_map_configs(np, map, &i, configs, nr_config);
->> +
->> +       *num_maps = map_cnt;
->> +
->> +       return 0;
->> +}
-> With the library code for the standard bindings select
-> GENERIC_PINMUX_FUNCTIONS and select GENERIC_PINCONF
-> most of the above goes away as well.
-
-Agree, clear about it now. All this goes away with GENERIC_PINCONF.
-Not yet sure about GENERIC_PINMUX_FUNCTIONS. Need to test if generic
-pinmux functions are ok to use for us. Seems not many driveruse
-generic pinmux presently.
-
->> +static void eqbr_dt_free_map(struct pinctrl_dev *pctldev,
->> +                            struct pinctrl_map *map, unsigned int num_maps)
->> +{
->> +       struct intel_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
->> +       int i;
->> +
->> +       for (i = 0; i < num_maps; i++)
->> +               if (map[i].type == PIN_MAP_TYPE_CONFIGS_GROUP)
->> +                       devm_kfree(pctl->dev, map[i].data.configs.configs);
->> +       devm_kfree(pctl->dev, map);
->> +}
-> In this case I think you can use the library function
-> pinctrl_utils_free_map() just as is.
-
-Yup, thanks.
-
-> Now I ran out of time, but the generic advice is to use
-> library code and standard bindings as much as you can
-> and all will shrink down considerably. Start with the
-> above pointers and I will look closer after that!
->
-> Yours,
-> Linus Walleij
-
-Regards,
-Rahul
