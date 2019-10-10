@@ -2,85 +2,82 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41567C47404
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AB0ECE58C
 	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 01:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21CB320B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 01:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BE521848
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 01:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732446AbfJJBWa convert rfc822-to-8bit (ORCPT
+        id S1732572AbfJJBXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 21:22:30 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:43989 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731553AbfJJBWa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 21:22:30 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9A1MHeT016151
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 10 Oct 2019 10:22:17 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9A1MHgX028027;
-        Thu, 10 Oct 2019 10:22:17 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9A1MHo8000593;
-        Thu, 10 Oct 2019 10:22:17 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-9316515; Thu, 10 Oct 2019 10:22:03 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0439.000; Thu,
- 10 Oct 2019 10:22:03 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Jane Chu <jane.chu@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH v4 0/2] mm/memory-failure: Poison read receives SIGKILL
- instead of SIGBUS issue
-Thread-Topic: [PATCH v4 0/2] mm/memory-failure: Poison read receives SIGKILL
- instead of SIGBUS issue
-Thread-Index: AQHVfgQYMR1+dM5I0kqkeQcqu0tLzKdQyn2AgAGckgCAABhEgA==
-Date:   Thu, 10 Oct 2019 01:22:01 +0000
-Message-ID: <20191010012201.GA2149@hori.linux.bs1.fc.nec.co.jp>
-References: <1565112345-28754-1-git-send-email-jane.chu@oracle.com>
- <9af6b35d-bfbf-7f87-a419-042dff018fdd@oracle.com>
- <20191008231831.GB27781@hori.linux.bs1.fc.nec.co.jp>
- <20191009165510.9b38833c1117c77c0de21c9d@linux-foundation.org>
-In-Reply-To: <20191009165510.9b38833c1117c77c0de21c9d@linux-foundation.org>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.96]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <420B238EBD4D854C9BFF7FB450C25653@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Wed, 9 Oct 2019 21:23:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:61706 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731134AbfJJBXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 21:23:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 18:23:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
+   d="scan'208";a="197089771"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga003.jf.intel.com with ESMTP; 09 Oct 2019 18:23:39 -0700
+Date:   Thu, 10 Oct 2019 09:23:22 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] userfaultfd: remove set but not used variable 'h'
+Message-ID: <20191010012322.GB2167@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191009122740.70517-1-yuehaibing@huawei.com>
+ <a28da32b-5c26-21e9-4a08-722abf9fbeba@oracle.com>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a28da32b-5c26-21e9-4a08-722abf9fbeba@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 04:55:10PM -0700, Andrew Morton wrote:
-> On Tue, 8 Oct 2019 23:18:31 +0000 Naoya Horiguchi <n-horiguchi@ah.jp.nec.com> wrote:
-> 
-> > I think that this patchset is good enough and ready to be merged.
-> > Andrew, could you consider queuing this series into your tree?
-> 
-> I'll treat that as an acked-by:.
+On Wed, Oct 09, 2019 at 05:45:57PM -0700, Mike Kravetz wrote:
+>On 10/9/19 5:27 AM, YueHaibing wrote:
+>> Fixes gcc '-Wunused-but-set-variable' warning:
+>> 
+>> mm/userfaultfd.c: In function '__mcopy_atomic_hugetlb':
+>> mm/userfaultfd.c:217:17: warning:
+>>  variable 'h' set but not used [-Wunused-but-set-variable]
+>> 
+>> It is not used since commit 78911d0e18ac ("userfaultfd: use vma_pagesize
+>> for all huge page size calculation")
+>> 
+>
+>Thanks!  That should have been removed with the recent cleanups.
+>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>
+>Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
 
-thanks.
+If I am correct, this is removed in a recent patch.
 
-> 
-> Do you think 2/2 should be backported into -stable trees?
+>-- 
+>Mike Kravetz
 
-Yes, I think so. Please add Cc: stable.
-
-Thanks,
-Naoya Horiguchi
+-- 
+Wei Yang
+Help you, Help me
