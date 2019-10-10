@@ -2,108 +2,100 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C42DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1F3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70377218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1EF218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="f1xpBmge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387497AbfJJJw4 (ORCPT
+        id S2387658AbfJJJx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:52:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39508 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727330AbfJJJwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:52:55 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4C03F80F83
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:52:55 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id n3so2501274wrt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:52:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TqIbFc3q/Gn71WMn1cgD1WOyhahKFHqycUgmiD17c60=;
-        b=EuGu427IDiAUTOr/IDLGe6M3SNMh6lG3ugDoBlqjUBjH+N9MwyXcURlFndNTHV2nlb
-         dD4JAWt+2WpnaKiUJVaBmYW+89ClNQZKjsnKLIvri3BXse915gn4iKuW27sDnSeHR+VM
-         k2VlYZhZmDrbUsoLpTa7+TAlYKIQobtFjKP0Nu7x6xjeuz4azXc7WuMlt13Sx1Een1Ra
-         ScsHx5hzg6Sw1cFjTIVfmpIiZMOX21AIwSHyCNTsZ3JDvcaKd3GfgEcu/2ESabiGABhp
-         gDUQ+YulbileK2dfvX4gdPJXL4s/+E3OTRNEVpztU7k5xx2DGp/tc4r+CPEk1dWlj85t
-         FW0g==
-X-Gm-Message-State: APjAAAUZKtMHvqaNyMiqiNUo7ey8IopeBTFp++//Z207VLqyKTrOOoUm
-        w6Snd1WT0FlWUc75fbqHQre3fz3zreQacioHodwtHnQhaDfKXU4p1SHx9DTYZjYpUo8FMRDyLVF
-        2n/9bsibUqw6tMG0oaNgseecI
-X-Received: by 2002:a05:600c:28d:: with SMTP id 13mr198473wmk.100.1570701173969;
-        Thu, 10 Oct 2019 02:52:53 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqypapq2mOJT0UwRrfDwUNCu9powWRCw63cVBYVEzLpMWYF3N5fg0WGtA5sfkqGUCAP/OmrMBQ==
-X-Received: by 2002:a05:600c:28d:: with SMTP id 13mr198456wmk.100.1570701173753;
-        Thu, 10 Oct 2019 02:52:53 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id c6sm5901462wrm.71.2019.10.10.02.52.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 02:52:53 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 11:52:50 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        Thu, 10 Oct 2019 05:53:57 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59894 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727330AbfJJJx4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 05:53:56 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A9pV2K030904;
+        Thu, 10 Oct 2019 09:53:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=ahGSpze+9lUT7YqwkusHb/yoyTKU/yaGcaTwqlc6Jbs=;
+ b=f1xpBmgeIXxHrIIYpzdeKMs6JcvHmJ7YGK1Tfxlt/VZjXwFbz0zkxMMTBrZQKBCfmyEh
+ zYUYImaJf1zX5QoMajO894wr7aBHnlqmrXvSz+YeU07jKOnuH4XggfjCrWQIyYQtEHN4
+ yI4imaY9eyryrMntSkHy/c4n9Ths8IaIVU74N/mVKngdOPBxX7o7qI0I0ejec2knyiak
+ fKmFmMEq9DGIBiQt49sq5pvVSqyREwTtIVwJizBHCikqsvXW4RvZzHAB91X/vgXYdKV6
+ SfJNl+Nwh9nAf4FiabLQ2nTUmw4Wky6rwNJqsWfNi3RDKtwOgJASBfpa8NxC32bBYSfL 2A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2vejkut3f9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 09:53:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A9hQJ4129582;
+        Thu, 10 Oct 2019 09:53:46 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2vh8k2j3w4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 09:53:46 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9A9rgIH023123;
+        Thu, 10 Oct 2019 09:53:43 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 10 Oct 2019 02:53:42 -0700
+Date:   Thu, 10 Oct 2019 12:53:35 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Yizhuo <yzhai003@ucr.edu>
+Cc:     devel@driverdev.osuosl.org, linux-fbdev@vger.kernel.org,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 08/13] vsock: move vsock_insert_unbound() in the
- vsock_create()
-Message-ID: <20191010095250.zmwmce7bgqgf3nv4@steredhat>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-9-sgarzare@redhat.com>
- <20191009123423.GI5747@stefanha-x1.localdomain>
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: Re: [PATCH] staging: sm750fb: Potential uninitialized field in "pll"
+Message-ID: <20191010091834.GG20470@kadam>
+References: <20191010043809.27594-1-yzhai003@ucr.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191009123423.GI5747@stefanha-x1.localdomain>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191010043809.27594-1-yzhai003@ucr.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=866
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910100087
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=953 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910100088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 01:34:23PM +0100, Stefan Hajnoczi wrote:
-> On Fri, Sep 27, 2019 at 01:26:58PM +0200, Stefano Garzarella wrote:
-> > vsock_insert_unbound() was called only when 'sock' parameter of
-> > __vsock_create() was not null. This only happened when
-> > __vsock_create() was called by vsock_create().
-> > 
-> > In order to simplify the multi-transports support, this patch
-> > moves vsock_insert_unbound() at the end of vsock_create().
-> > 
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > ---
-> >  net/vmw_vsock/af_vsock.c | 13 +++++++++----
-> >  1 file changed, 9 insertions(+), 4 deletions(-)
+On Wed, Oct 09, 2019 at 09:38:08PM -0700, Yizhuo wrote:
+> Inside function set_chip_clock(), struct pll is supposed to be
+> initialized in sm750_calc_pll_value(), if condition
+> "diff < mini_diff" in sm750_calc_pll_value() cannot be fulfilled,
+> then some field of pll will not be initialized but used in
+> function sm750_format_pll_reg(), which is potentially unsafe.
 > 
-> Maybe transports shouldn't call __vsock_create() directly.  They always
-> pass NULL as the parent socket, so we could have a more specific
-> function that transports call without a parent sock argument.  This
-> would eliminate any concern over moving vsock_insert_unbound() out of
-> this function.  In any case, I've checked the code and this patch is
-> correct.
+> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
 
-Yes, I agree with you, I can add a new patch to do this cleaning.
+The patch is correct, but it doesn't apply to linux-next any more.  Can
+you re-write it on top of the most recent staging-next and resend?
 
-> 
-> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+regards,
+dan carpenter
 
-Thanks,
-Stefano
