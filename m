@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55053C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2ABC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 226612064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D3F2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697563;
-	bh=iYquV7rnSBLN4fz1yz+JjspIOWP43YtxMzKycPphq00=;
+	s=default; t=1570697568;
+	bh=M/1L9r3hm2HcfToilF464yUmkijmVjpQx5kooM31p+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KfUkQMhasfb7dWYG6r1OkxOdeEFoWrOBOY3PyyKBuE5toJHE76JmFZenAEHtdDTE2
-	 p5WQv43QPqobJ2DWpNJ2P4A4CKYq9Jlfqns1iIXoj+z7vs2fiRTqNuY0WLfji/V38q
-	 93dRyMb7VjqfGliEa8hXS+koa1k2TpyB/ljuFQ4c=
+	b=1L8+Y347a0Fwux+rBPARua8eliOEhTQfyYgXrDzo6KtuDZxYU7UDdQEXetCva6qs/
+	 J+JTswZbY7Ck4uU2bvKxCVK7HlpGAIpW5xP0wpp0l+EXdPz0eOawbW/aa26VrV3jWO
+	 2R65fE9D6L5wPPuUr8yJxl96tTXX8f0DDLa0lAnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388337AbfJJIwg (ORCPT
+        id S2390260AbfJJIw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:52:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60400 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:52:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389156AbfJJIwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:52:30 -0400
+        id S2390227AbfJJIwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:52:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCE8A21A4C;
-        Thu, 10 Oct 2019 08:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C448420B7C;
+        Thu, 10 Oct 2019 08:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697550;
-        bh=iYquV7rnSBLN4fz1yz+JjspIOWP43YtxMzKycPphq00=;
+        s=default; t=1570697542;
+        bh=M/1L9r3hm2HcfToilF464yUmkijmVjpQx5kooM31p+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VMq+9aIgOOMc2EtFpariFvVtQViDKJyZ2KF3fluNvwluMDlKT0jg+xusKAeX17EBg
-         q8CLE9CbZflfh2hYlhfXCoYEY7ApTEXg0AcNn4w2bnwh8Nq4/N6fl39A7PN0Sz04FU
-         NisKWZj0wslBbmZz4fU5fUWLu9JKbdCMq4on9/bY=
+        b=TlwN1ZVl7YkSeEHPyvFv09rEIf1RX95zq0Hd7oV7ZBCBEEfC8hL17NZ8iHbxIjg8x
+         BBoWJ9+hzWZ1gh92Uc1DlafE2bjoR7If9bPf1Bijv1CFoFoUnevnDTXhcpHxKe4oo7
+         +XV8Yicz9O9QN8TFyek+9PlmDxvHsQqEfKC7UeK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 32/61] ceph: fix directories inode i_blkbits initialization
-Date:   Thu, 10 Oct 2019 10:36:57 +0200
-Message-Id: <20191010083509.551622651@linuxfoundation.org>
+Subject: [PATCH 4.14 29/61] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
+Date:   Thu, 10 Oct 2019 10:36:54 +0200
+Message-Id: <20191010083507.860566665@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -61,48 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 750670341a24cb714e624e0fd7da30900ad93752 ]
+[ Upstream commit e2751463eaa6f9fec8fea80abbdc62dbc487b3c5 ]
 
-When filling an inode with info from the MDS, i_blkbits is being
-initialized using fl_stripe_unit, which contains the stripe unit in
-bytes.  Unfortunately, this doesn't make sense for directories as they
-have fl_stripe_unit set to '0'.  This means that i_blkbits will be set
-to 0xff, causing an UBSAN undefined behaviour in i_blocksize():
+In encode_attrs(), there is an if statement on line 1145 to check
+whether label is NULL:
+    if (label && (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL))
 
-  UBSAN: Undefined behaviour in ./include/linux/fs.h:731:12
-  shift exponent 255 is too large for 32-bit type 'int'
+When label is NULL, it is used on lines 1178-1181:
+    *p++ = cpu_to_be32(label->lfs);
+    *p++ = cpu_to_be32(label->pi);
+    *p++ = cpu_to_be32(label->len);
+    p = xdr_encode_opaque_fixed(p, label->label, label->len);
 
-Fix this by initializing i_blkbits to CEPH_BLOCK_SHIFT if fl_stripe_unit
-is zero.
+To fix these bugs, label is checked before being used.
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 9bda8c7a80a05..879bc08250931 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -789,7 +789,12 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
- 	ci->i_version = le64_to_cpu(info->version);
- 	inode->i_version++;
- 	inode->i_rdev = le32_to_cpu(info->rdev);
--	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
-+	/* directories have fl_stripe_unit set to zero */
-+	if (le32_to_cpu(info->layout.fl_stripe_unit))
-+		inode->i_blkbits =
-+			fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
-+	else
-+		inode->i_blkbits = CEPH_BLOCK_SHIFT;
- 
- 	if ((new_version || (new_issued & CEPH_CAP_AUTH_SHARED)) &&
- 	    (issued & CEPH_CAP_AUTH_EXCL) == 0) {
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 549c916d28599..525684b0056fc 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -1132,7 +1132,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
+ 		} else
+ 			*p++ = cpu_to_be32(NFS4_SET_TO_SERVER_TIME);
+ 	}
+-	if (bmval[2] & FATTR4_WORD2_SECURITY_LABEL) {
++	if (label && (bmval[2] & FATTR4_WORD2_SECURITY_LABEL)) {
+ 		*p++ = cpu_to_be32(label->lfs);
+ 		*p++ = cpu_to_be32(label->pi);
+ 		*p++ = cpu_to_be32(label->len);
 -- 
 2.20.1
 
