@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAFDC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4484C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2799D21D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6EE21D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697922;
-	bh=WfoyCfdIo3r6xcNuaQI/cVJPvfzJANcGm0c2yQ8l61M=;
+	s=default; t=1570697927;
+	bh=TwhRtVwj2d8olyfgirCJIBvL/72xC1NpXJeOfgfd5OA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mLqYZLM48a9wewliz2iTTjuWhjLdVaa+k11pmecL5dWQBnjwE3INNS4bgxCfYUSUc
-	 NE8aQOobVMBDWsiTNeZplmeBY1nBKzko8tZC5VnPK3y22yYnDF0ITQHUMWb3BQQgln
-	 3YE2qrZQ0yEwrsCasxSc4IrP7er4Wek4Ei7fLmvo=
+	b=PCYxnLCBHyAzKueyA5KczDCY8bOe1R/2n468WRhTSxTqwMHk5ChRue+2sNsS1mzQ6
+	 2VTdDXgxrphFBtEIVjNMVaiUCDaL1fgU7naNpdcYEX3F/5JclXuRt09kf3vDDhceSv
+	 nznk7sE7WE7zfT4rAKHY2GfzMHFuvemuERuPeH5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389223AbfJJI6k (ORCPT
+        id S2389127AbfJJIpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:58:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51106 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387710AbfJJIpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:30 -0400
+        id S2389093AbfJJIpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF51021A4A;
-        Thu, 10 Oct 2019 08:45:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13C132054F;
+        Thu, 10 Oct 2019 08:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697130;
-        bh=WfoyCfdIo3r6xcNuaQI/cVJPvfzJANcGm0c2yQ8l61M=;
+        s=default; t=1570697116;
+        bh=TwhRtVwj2d8olyfgirCJIBvL/72xC1NpXJeOfgfd5OA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2JF/OY2SJvMtYkMekangTKcmu5IFr62atZz7dA3MshOdtmAxnRFAzJKBwW3X5jt9X
-         wPg1jZY1Q0Xi/95QwFSubiyhLTvf+bPwfiqGzaXLXuLU7dImaodjWlSZZbxKX2v2xq
-         poGfMsV2mxvHyJQw91uONgfw6Ev+poNAjQBP1MW4=
+        b=l6yRvVI4TStyJ58XpTVcy05rsCOIByZhS3fsxdHOYCBFk2trf9TGwPL7oEWbio6u2
+         JbS+e9McbsF4GYaMxXomS4ShfgFHB4ctHlWaH/B4wVfQXBxeUQMKtbuavaNj6nEr8X
+         5HAnJ0SUqbt1JscXNAqJ82YQGhQkv9O8unlKnPlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Nosthoff <committed@heine.so>,
-        Brian Norris <briannorris@chromium.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 4.19 029/114] power: supply: sbs-battery: only return health when battery present
-Date:   Thu, 10 Oct 2019 10:35:36 +0200
-Message-Id: <20191010083559.078712124@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 024/114] crypto: caam - fix concurrency issue in givencrypt descriptor
+Date:   Thu, 10 Oct 2019 10:35:31 +0200
+Message-Id: <20191010083555.042181193@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,74 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Nosthoff <committed@heine.so>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-commit fe55e770327363304c4111423e6f7ff3c650136d upstream.
+commit 48f89d2a2920166c35b1c0b69917dbb0390ebec7 upstream.
 
-when the battery is set to sbs-mode and  no gpio detection is enabled
-"health" is always returning a value even when the battery is not present.
-All other fields return "not present".
-This leads to a scenario where the driver is constantly switching between
-"present" and "not present" state. This generates a lot of constant
-traffic on the i2c.
+IV transfer from ofifo to class2 (set up at [29][30]) is not guaranteed
+to be scheduled before the data transfer from ofifo to external memory
+(set up at [38]:
 
-This commit changes the response of "health" to an error when the battery
-is not responding leading to a consistent "not present" state.
+[29] 10FA0004           ld: ind-nfifo (len=4) imm
+[30] 81F00010               <nfifo_entry: ofifo->class2 type=msg len=16>
+[31] 14820004           ld: ccb2-datasz len=4 offs=0 imm
+[32] 00000010               data:0x00000010
+[33] 8210010D    operation: cls1-op aes cbc init-final enc
+[34] A8080B04         math: (seqin + math0)->vseqout len=4
+[35] 28000010    seqfifold: skip len=16
+[36] A8080A04         math: (seqin + math0)->vseqin len=4
+[37] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
+[38] 69300000   seqfifostr: msg len=vseqoutsz
+[39] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
 
-Fixes: 76b16f4cdfb8 ("power: supply: sbs-battery: don't assume MANUFACTURER_DATA formats")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Michael Nosthoff <committed@heine.so>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+If ofifo -> external memory transfer happens first, DECO will hang
+(issuing a Watchdog Timeout error, if WDOG is enabled) waiting for
+data availability in ofifo for the ofifo -> c2 ififo transfer.
+
+Make sure IV transfer happens first by waiting for all CAAM internal
+transfers to end before starting payload transfer.
+
+New descriptor with jump command inserted at [37]:
+
+[..]
+[36] A8080A04         math: (seqin + math0)->vseqin len=4
+[37] A1000401         jump: jsl1 all-match[!nfifopend] offset=[01] local->[38]
+[38] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
+[39] 69300000   seqfifostr: msg len=vseqoutsz
+[40] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
+
+[Note: the issue is present in the descriptor from the very beginning
+(cf. Fixes tag). However I've marked it v4.19+ since it's the oldest
+maintained kernel that the patch applies clean against.]
+
+Cc: <stable@vger.kernel.org> # v4.19+
+Fixes: 1acebad3d8db8 ("crypto: caam - faster aead implementation")
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/supply/sbs-battery.c |   25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/crypto/caam/caamalg_desc.c |    9 +++++++++
+ drivers/crypto/caam/caamalg_desc.h |    2 +-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/power/supply/sbs-battery.c
-+++ b/drivers/power/supply/sbs-battery.c
-@@ -323,17 +323,22 @@ static int sbs_get_battery_presence_and_
+--- a/drivers/crypto/caam/caamalg_desc.c
++++ b/drivers/crypto/caam/caamalg_desc.c
+@@ -509,6 +509,7 @@ void cnstr_shdsc_aead_givencap(u32 * con
+ 			       const bool is_qi, int era)
  {
- 	int ret;
+ 	u32 geniv, moveiv;
++	u32 *wait_cmd;
  
--	if (psp == POWER_SUPPLY_PROP_PRESENT) {
--		/* Dummy command; if it succeeds, battery is present. */
--		ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
--		if (ret < 0)
--			val->intval = 0; /* battery disconnected */
--		else
--			val->intval = 1; /* battery present */
--	} else { /* POWER_SUPPLY_PROP_HEALTH */
-+	/* Dummy command; if it succeeds, battery is present. */
-+	ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
-+
-+	if (ret < 0) { /* battery not present*/
-+		if (psp == POWER_SUPPLY_PROP_PRESENT) {
-+			val->intval = 0;
-+			return 0;
-+		}
-+		return ret;
-+	}
-+
-+	if (psp == POWER_SUPPLY_PROP_PRESENT)
-+		val->intval = 1; /* battery present */
-+	else /* POWER_SUPPLY_PROP_HEALTH */
- 		/* SBS spec doesn't have a general health command. */
- 		val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
--	}
+ 	/* Note: Context registers are saved. */
+ 	init_sh_desc_key_aead(desc, cdata, adata, is_rfc3686, nonce, era);
+@@ -604,6 +605,14 @@ copy_iv:
  
- 	return 0;
- }
-@@ -635,6 +640,8 @@ static int sbs_get_property(struct power
- 		else
- 			ret = sbs_get_battery_presence_and_health(client, psp,
- 								  val);
+ 	/* Will read cryptlen */
+ 	append_math_add(desc, VARSEQINLEN, SEQINLEN, REG0, CAAM_CMD_SZ);
 +
-+		/* this can only be true if no gpio is used */
- 		if (psp == POWER_SUPPLY_PROP_PRESENT)
- 			return 0;
- 		break;
++	/*
++	 * Wait for IV transfer (ofifo -> class2) to finish before starting
++	 * ciphertext transfer (ofifo -> external memory).
++	 */
++	wait_cmd = append_jump(desc, JUMP_JSL | JUMP_TEST_ALL | JUMP_COND_NIFP);
++	set_jump_tgt_here(desc, wait_cmd);
++
+ 	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_BOTH | KEY_VLF |
+ 			     FIFOLD_TYPE_MSG1OUT2 | FIFOLD_TYPE_LASTBOTH);
+ 	append_seq_fifo_store(desc, 0, FIFOST_TYPE_MESSAGE_DATA | KEY_VLF);
+--- a/drivers/crypto/caam/caamalg_desc.h
++++ b/drivers/crypto/caam/caamalg_desc.h
+@@ -12,7 +12,7 @@
+ #define DESC_AEAD_BASE			(4 * CAAM_CMD_SZ)
+ #define DESC_AEAD_ENC_LEN		(DESC_AEAD_BASE + 11 * CAAM_CMD_SZ)
+ #define DESC_AEAD_DEC_LEN		(DESC_AEAD_BASE + 15 * CAAM_CMD_SZ)
+-#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 7 * CAAM_CMD_SZ)
++#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 8 * CAAM_CMD_SZ)
+ #define DESC_QI_AEAD_ENC_LEN		(DESC_AEAD_ENC_LEN + 3 * CAAM_CMD_SZ)
+ #define DESC_QI_AEAD_DEC_LEN		(DESC_AEAD_DEC_LEN + 3 * CAAM_CMD_SZ)
+ #define DESC_QI_AEAD_GIVENC_LEN		(DESC_AEAD_GIVENC_LEN + 3 * CAAM_CMD_SZ)
 
 
