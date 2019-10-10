@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B105C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63040C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A6B2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9EE2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697148;
-	bh=+Dp3VPKRNAonIXNzDT/w+gGIHl/t8uq8h/pUwdBBssE=;
+	s=default; t=1570697151;
+	bh=REnVTK/vJsHqsJ2ph+V4kW/zCAVVACeJOLkSLwg2JdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kR2YaWQRuNhz2TElqwup63mJfqQhx5QMD9qL8o4PuQ0Ilb7heNbSNkDvpU75enMDm
-	 elnmyyV3e0viRoVb/SMASByu7RYwTxAl3E/NAyqUlswpWCnZoITFyIoY+JWdOzWy/x
-	 EzN7zBKgdpD+K+B33sOSRzRrUQc3yr7TcCnOIslg=
+	b=0MC7QWm4jPi7I2akqt2pBpEvsHB2IhOvVzehWpDaKmn1Ck/LZphJZYTj96QRKgigJ
+	 AQtFJhsZxqk5kDQzPK6KkNB+V1jVfnSn1u3WniaZ+sLgm7XjdNfg5YPfnhfbLU2RYZ
+	 LcIF2JRTBDH6u9a0nxrm6dVQExPlDi6QIqWHZgq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389196AbfJJIpq (ORCPT
+        id S2389214AbfJJIpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388460AbfJJIpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:44 -0400
+        id S2389195AbfJJIpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E6D2054F;
-        Thu, 10 Oct 2019 08:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04D1D208C3;
+        Thu, 10 Oct 2019 08:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697143;
-        bh=+Dp3VPKRNAonIXNzDT/w+gGIHl/t8uq8h/pUwdBBssE=;
+        s=default; t=1570697146;
+        bh=REnVTK/vJsHqsJ2ph+V4kW/zCAVVACeJOLkSLwg2JdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FDUUY9EPKG+5W+M49glHpXCvSl10G7SYrdQjRGNU3CJnZuM0AYq7JyRT8nBOQwbGP
-         t71YC+zBuohDL7+7/ih2lKqy5W0ie5B1QXb99c4ja8q2jRwPSP6ig4pv4nTbhPyYz/
-         f+l5VX706O4Gg/MW2Tr51gMoHqpC8SyoRj1p0UaM=
+        b=Dma4e8u0n56aZBqsvagRIh5QOPuh+gaUgtfMU7vdcdQ5jkdocdsv+ou6MisPgrixU
+         7XZTOBV5UTNmStCV4D8j9mI0NcrbyehAqUYRjt35Z7qmA0rfXe3Z4vtmurP46noNDj
+         qFRbk41GxHJ+3jFyIrimBqrHIbdC1MLGyr87i1vY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 4.19 033/114] PCI: vmd: Fix shadow offsets to reflect spec changes
-Date:   Thu, 10 Oct 2019 10:35:40 +0200
-Message-Id: <20191010083600.748316121@linuxfoundation.org>
+        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Subject: [PATCH 4.19 034/114] PCI: Restore Resizable BAR size bits correctly for 1MB BARs
+Date:   Thu, 10 Oct 2019 10:35:41 +0200
+Message-Id: <20191010083601.646843873@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -59,55 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Sumit Saxena <sumit.saxena@broadcom.com>
 
-commit a1a30170138c9c5157bd514ccd4d76b47060f29b upstream.
+commit d2182b2d4b71ff0549a07f414d921525fade707b upstream.
 
-The shadow offset scratchpad was moved to 0x2000-0x2010. Update the
-location to get the correct shadow offset.
+In a Resizable BAR Control Register, bits 13:8 control the size of the BAR.
+The encoded values of these bits are as follows (see PCIe r5.0, sec
+7.8.6.3):
 
-Fixes: 6788958e4f3c ("PCI: vmd: Assign membar addresses from shadow registers")
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org # v5.2+
+  Value    BAR size
+     0     1 MB (2^20 bytes)
+     1     2 MB (2^21 bytes)
+     2     4 MB (2^22 bytes)
+   ...
+    43     8 EB (2^63 bytes)
+
+Previously we incorrectly set the BAR size bits for a 1 MB BAR to 0x1f
+instead of 0, so devices that support that size, e.g., new megaraid_sas and
+mpt3sas adapters, fail to initialize during resume from S3 sleep.
+
+Correctly calculate the BAR size bits for Resizable BAR control registers.
+
+Link: https://lore.kernel.org/r/20190725192552.24295-1-sumit.saxena@broadcom.com
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
+Fixes: d3252ace0bc6 ("PCI: Restore resized BAR state on resume")
+Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Cc: stable@vger.kernel.org	# v4.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/vmd.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/pci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -31,6 +31,9 @@
- #define PCI_REG_VMLOCK		0x70
- #define MB2_SHADOW_EN(vmlock)	(vmlock & 0x2)
- 
-+#define MB2_SHADOW_OFFSET	0x2000
-+#define MB2_SHADOW_SIZE		16
-+
- enum vmd_features {
- 	/*
- 	 * Device may contain registers which hint the physical location of the
-@@ -600,7 +603,7 @@ static int vmd_enable_domain(struct vmd_
- 		u32 vmlock;
- 		int ret;
- 
--		membar2_offset = 0x2018;
-+		membar2_offset = MB2_SHADOW_OFFSET + MB2_SHADOW_SIZE;
- 		ret = pci_read_config_dword(vmd->dev, PCI_REG_VMLOCK, &vmlock);
- 		if (ret || vmlock == ~0)
- 			return -ENODEV;
-@@ -612,9 +615,9 @@ static int vmd_enable_domain(struct vmd_
- 			if (!membar2)
- 				return -ENOMEM;
- 			offset[0] = vmd->dev->resource[VMD_MEMBAR1].start -
--						readq(membar2 + 0x2008);
-+					readq(membar2 + MB2_SHADOW_OFFSET);
- 			offset[1] = vmd->dev->resource[VMD_MEMBAR2].start -
--						readq(membar2 + 0x2010);
-+					readq(membar2 + MB2_SHADOW_OFFSET + 8);
- 			pci_iounmap(vmd->dev, membar2);
- 		}
- 	}
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1366,7 +1366,7 @@ static void pci_restore_rebar_state(stru
+ 		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
+ 		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
+ 		res = pdev->resource + bar_idx;
+-		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
++		size = ilog2(resource_size(res)) - 20;
+ 		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
+ 		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
+ 		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
 
 
