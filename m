@@ -2,81 +2,106 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF981ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6ECC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B8B21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:30:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LA7cSGj5"
+	by mail.kernel.org (Postfix) with ESMTP id C547220B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570721542;
+	bh=OCbNHp9XfcUM0QmcYZHuxvuZ72tVMIWV5NkzlJUXnf4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vh1ReFI5cC5/90P26ODVn6iBfjCrnvnclv0eJzRQpCGMfg9r8157Uu2a8dW7X7qjp
+	 2iHIse4nC9BPYE71UIBzxXuo0rJRVyWACWlIv44MiXdiwp7tDTZqPoUqfAaTYOvyNV
+	 fyz+Kw8FS0HhL8z6p+YJ3oIF2lJkF9g/WqWyFClY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfJJPaa (ORCPT
+        id S1726366AbfJJPcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 11:30:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58896 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfJJPaa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 11:30:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XF1dfGMSpDW66HI1cGgQOXZSop4na+NieFHtTNAhj2s=; b=LA7cSGj57rV+6/LL3KsTZxyFc
-        zAqEnEmjCY1zPQijinIyjbcme2nevlFroU1bo6U6Bex4b6MfRIBccRh1lxiMeAmkfCasPXMvsu+UH
-        7MUBioSfQAK1HV8/jNTxrF4y15cPVuMtdts9jTG0rRALJRd6uY/28AZ6GKZ3rYLHsVIgUDNNxDitC
-        ZUTacSy/crM2KS51aqi7QmBMYvhasW1JWczpJzxeTdDpRz9Mk5n9kpn814KfMIYJ1r5BV225vQYnZ
-        yTstuc0o6K2h8hshfuxLwJR8YxLkkAjQsR7eWGIcPyogsCdmT4E+6Na9nUoexBFwDhGxxOrToEOy5
-        KKtQkYi9g==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIaOc-0006m5-0i; Thu, 10 Oct 2019 15:30:30 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] samples: watch_queue: depends on HEADERS_INSTALL
-Message-ID: <32afa048-0b12-ce26-2bb0-7672dca8ffb8@infradead.org>
-Date:   Thu, 10 Oct 2019 08:30:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 10 Oct 2019 11:32:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbfJJPcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 11:32:21 -0400
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E338E20B7C
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 15:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570721541;
+        bh=OCbNHp9XfcUM0QmcYZHuxvuZ72tVMIWV5NkzlJUXnf4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nHVklzU1lmcKAHuGh682Tq/tEEzBngD2WqvYJqJr7e4qIvJg1BX+gBZgdqqPWMH5f
+         qJgvNTw/UJT6GKgfZIqF0duoSeK+X8hMiQA4tzIQ0rxN6MaDu9wQfYcfGU9HYGF4KB
+         iIVLMM6CpdQSoU0lwlicUbBsLkgjoftACQGyj35E=
+Received: by mail-yb1-f174.google.com with SMTP id 206so2068841ybc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:32:20 -0700 (PDT)
+X-Gm-Message-State: APjAAAVm9Gj2AbxGie1Wav5+RcL3ez3AV7sF3wV1xMhaFyH2hPw8rblB
+        8xA32eoECeF8da6m9veAQLGbwVjXsAQ7zj9fug==
+X-Google-Smtp-Source: APXvYqzEPhAkVCbQQjjzo3IU4PJ7Pf1s3lEphJMuRfUgT2YpW+iGwzGZuhEIh3L+n8n4IVIq7CX9WAYQbFh77rEa5+A=
+X-Received: by 2002:a25:c883:: with SMTP id y125mr6956870ybf.358.1570721540132;
+ Thu, 10 Oct 2019 08:32:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191008194155.4810-1-robh@kernel.org> <fd2f61bb-1ff8-f90b-9514-e662db2ff19f@epam.com>
+ <362d1eac-e352-d8de-1b6f-586acc0007ce@oracle.com>
+In-Reply-To: <362d1eac-e352-d8de-1b6f-586acc0007ce@oracle.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 10 Oct 2019 10:32:09 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+OajTgKoV2gWQCfGbE32LNp23tjgOpTTLcwLx19jBU9A@mail.gmail.com>
+Message-ID: <CAL_Jsq+OajTgKoV2gWQCfGbE32LNp23tjgOpTTLcwLx19jBU9A@mail.gmail.com>
+Subject: Re: [PATCH v2] xen: Stop abusing DT of_dma_configure API
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Oleksandr Andrushchenko <Oleksandr_Andrushchenko@epam.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Oct 10, 2019 at 9:00 AM Boris Ostrovsky
+<boris.ostrovsky@oracle.com> wrote:
+>
+> On 10/9/19 7:42 AM, Oleksandr Andrushchenko wrote:
+> > On 10/8/19 10:41 PM, Rob Herring wrote:
+> >> As the removed comments say, these aren't DT based devices.
+> >> of_dma_configure() is going to stop allowing a NULL DT node and calling
+> >> it will no longer work.
+> >>
+> >> The comment is also now out of date as of commit 9ab91e7c5c51 ("arm64:
+> >> default to the direct mapping in get_arch_dma_ops"). Direct mapping
+> >> is now the default rather than dma_dummy_ops.
+> >>
+> >> According to Stefano and Oleksandr, the only other part needed is
+> >> setting the DMA masks and there's no reason to restrict the masks to
+> >> 32-bits. So set the masks to 64 bits.
+> >>
+> >> Cc: Robin Murphy <robin.murphy@arm.com>
+> >> Cc: Julien Grall <julien.grall@arm.com>
+> >> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >> Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+> >> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> >> Cc: Juergen Gross <jgross@suse.com>
+> >> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> >> Cc: Christoph Hellwig <hch@lst.de>
+> >> Cc: xen-devel@lists.xenproject.org
+> >> Signed-off-by: Rob Herring <robh@kernel.org>
+> > Acked-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+>
+>
+> Is this going to go via drm tree or should I pick it up for Xen tree?
 
-Building samples/watch_queue/ uses installed headers, so make it
-depends on HEADERS_INSTALL to prevent a build error.
+Please apply to the Xen tree.
 
-../samples/watch_queue/watch_test.c:23:10: fatal error: linux/watch_queue.h: No such file or directory
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: David Howells <dhowells@redhat.com>
----
- samples/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
-
---- linux-next-20191010.orig/samples/Kconfig
-+++ linux-next-20191010/samples/Kconfig
-@@ -171,6 +171,7 @@ config SAMPLE_VFS
- 
- config SAMPLE_WATCH_QUEUE
- 	bool "Build example /dev/watch_queue notification consumer"
-+	depends on HEADERS_INSTALL
- 	help
- 	  Build example userspace program to use the new mount_notify(),
- 	  sb_notify() syscalls and the KEYCTL_WATCH_KEY keyctl() function.
-
-
+Rob
