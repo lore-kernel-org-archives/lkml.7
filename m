@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088C1C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D944DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A7A2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0FE21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698141;
-	bh=ZJWDCC2fU/a/3yXYhKk3XyY44xVH0QvR1aJCNfPUzJc=;
+	s=default; t=1570698143;
+	bh=GTWgFHLwoXXGGIzbDDyDhmgz2NP0QKE5HFdI4syuReA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ORtqZ/RrclOqI2zwUOohmcJygco37csjfp7QDHziBOVzoITOJzSbo/5hSmP+NG3y2
-	 m9vEth7J+cgFaH2VsBB6yr//NE+LkRIH8nwtCHmV6aBNdurliEbM5HnD1hABdv2Eb+
-	 uwmJZ8cIMn+UnAwga960/EFLEjWTrza5oKBNgimU=
+	b=nIchUvaN9h/NX2Z5X1viU95ATtcbp5YVfjKvZxMwAQm+UZy0UbCynZRYG2dJxpofh
+	 zoljmHO7JZ/xFM7PbEXZbA+FNAnGWrlNuAm24c1nbuVRDd781WlT4Nmpoa5ht++SB8
+	 qynxiRgy5e0oBeZBYBZDRhMVqUDMP7pG8TVA+ZTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388019AbfJJIkD (ORCPT
+        id S2388696AbfJJJCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43830 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 05:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733089AbfJJIj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:39:58 -0400
+        id S1733302AbfJJIkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:40:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF3E520B7C;
-        Thu, 10 Oct 2019 08:39:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 735F621D56;
+        Thu, 10 Oct 2019 08:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696797;
-        bh=ZJWDCC2fU/a/3yXYhKk3XyY44xVH0QvR1aJCNfPUzJc=;
+        s=default; t=1570696803;
+        bh=GTWgFHLwoXXGGIzbDDyDhmgz2NP0QKE5HFdI4syuReA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UAOSjTg0LNYa9RG+++67/I9oojVCtNLnNMURXR581PwutS2Kz+kjUmWxA6F0RfaUO
-         nE4WtACxJ1wusOiCedru/+nBNQBomPOLNL1sccGDUt5zuVQh/sWlzTAB/5F1XFmS9I
-         HT0NIxoBiHeXeA2bNq7zKC8tbOs69ZvFvWrAAO88=
+        b=rTE7pgJN8a8gZ2i/yWiYEqayJJB3PPWxZgoXN/7uXpKGmURUo8G7F8rBqEYFn4IDJ
+         kduXhbkP3zQQMCCBpMN1YNU3jviW5DQcB/hZjfKGsbAedLI3VmNePbXAySMSz72eHg
+         X+Y4gRvWRC7fIRztuk0cxpEmp9D7xRVc11ZUz0t0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [PATCH 5.3 056/148] PCI: Restore Resizable BAR size bits correctly for 1MB BARs
-Date:   Thu, 10 Oct 2019 10:35:17 +0200
-Message-Id: <20191010083614.542332247@linuxfoundation.org>
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 5.3 058/148] selftests: pidfd: Fix undefined reference to pthread_create()
+Date:   Thu, 10 Oct 2019 10:35:19 +0200
+Message-Id: <20191010083614.662526683@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,50 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Saxena <sumit.saxena@broadcom.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
 
-commit d2182b2d4b71ff0549a07f414d921525fade707b upstream.
+commit 3969e76909d3aa06715997896184ee684f68d164 upstream.
 
-In a Resizable BAR Control Register, bits 13:8 control the size of the BAR.
-The encoded values of these bits are as follows (see PCIe r5.0, sec
-7.8.6.3):
+Fix build failure:
 
-  Value    BAR size
-     0     1 MB (2^20 bytes)
-     1     2 MB (2^21 bytes)
-     2     4 MB (2^22 bytes)
-   ...
-    43     8 EB (2^63 bytes)
+undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
 
-Previously we incorrectly set the BAR size bits for a 1 MB BAR to 0x1f
-instead of 0, so devices that support that size, e.g., new megaraid_sas and
-mpt3sas adapters, fail to initialize during resume from S3 sleep.
+Fix CFLAGS to include pthread correctly.
 
-Correctly calculate the BAR size bits for Resizable BAR control registers.
-
-Link: https://lore.kernel.org/r/20190725192552.24295-1-sumit.saxena@broadcom.com
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
-Fixes: d3252ace0bc6 ("PCI: Restore resized BAR state on resume")
-Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Cc: stable@vger.kernel.org	# v4.19+
+Fixes: 740378dc7834 ("pidfd: add polling selftests")
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190924195237.30519-1-skhan@linuxfoundation.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pci.c |    2 +-
+ tools/testing/selftests/pidfd/Makefile |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1443,7 +1443,7 @@ static void pci_restore_rebar_state(stru
- 		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
- 		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
- 		res = pdev->resource + bar_idx;
--		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
-+		size = ilog2(resource_size(res)) - 20;
- 		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
- 		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
- 		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
+--- a/tools/testing/selftests/pidfd/Makefile
++++ b/tools/testing/selftests/pidfd/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-CFLAGS += -g -I../../../../usr/include/ -lpthread
++CFLAGS += -g -I../../../../usr/include/ -pthread
+ 
+ TEST_GEN_PROGS := pidfd_test pidfd_open_test
+ 
 
 
