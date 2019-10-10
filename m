@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E01C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CCBC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECBD2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC0521D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697135;
-	bh=RXDJvWVTo8lu8kyUI4kAD6p3ZVPAu2fNww1xcGZrX4k=;
+	s=default; t=1570697139;
+	bh=kHF1T18V0B85FjA/sMNpJQV9yXiVVxa+g33YQBJI1fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=He0cMqAbgcYhkC3avAH7Sv0JXzRoE4VZWqUhtK2C3F5m2BNTyhQv+/R6c/rNXkZ3q
-	 tUoWGJTRYLFI79gDZS3cVzykcZnhMRGp98tZLzQw+78+/H7fyGx9G6kpH3NlbXj3gP
-	 bn3gJqya4ryghqnItnuSNCa97LkLn6U7maIr8PgE=
+	b=lKUSEIcgsrI2wILp3lpE0HQqN8RM2tdzyg5iFvFl4hzMsP2jELqeHN1aTjgN+M2Zz
+	 QQomuf4A5U3xYCqBpK0lAmx7Uszg66upL91BQ196Z8adqIzsTHXiHUqIPec5HNHh2o
+	 z4OyoATD/EN0FekO3/oqvdEcaG+8woQ66IP0MFZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388100AbfJJIpe (ORCPT
+        id S2389172AbfJJIph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51054 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387494AbfJJIp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:28 -0400
+        id S2389158AbfJJIpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F832190F;
-        Thu, 10 Oct 2019 08:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 711A02054F;
+        Thu, 10 Oct 2019 08:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697127;
-        bh=RXDJvWVTo8lu8kyUI4kAD6p3ZVPAu2fNww1xcGZrX4k=;
+        s=default; t=1570697133;
+        bh=kHF1T18V0B85FjA/sMNpJQV9yXiVVxa+g33YQBJI1fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sQALHGGAAqsHL+7CVE8izClpb0U01OVRskpHDNSlOLFngpMDaApXQ7ELFAM1O9A7T
-         rca4Ul7w6PwwIiBvRyujOEvIsip6lDTP00bHPsegEWXOvBY669guRvChDq3ISlgJKk
-         g/gxo+GbUBiHyAxNQXmLyeetRI58qPxPM88LMn+k=
+        b=KogfDiq6aV4rdKwhnKawa6nJRfVjgn6fV02Y2v+bfVE2OWU3N/PoAR/VWDBSPj3k1
+         CdXTnZwPcW55E65HeJWRyVerMT3qb5eOS2dDdmhJGtXNj9F3nMB5eOMdh4cy3qfnoF
+         kYduZUhIjKxdQTUsW64l4ubE/wUm5sZm/3rznveM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Nosthoff <committed@heine.so>,
-        Brian Norris <briannorris@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 4.19 028/114] power: supply: sbs-battery: use correct flags field
-Date:   Thu, 10 Oct 2019 10:35:35 +0200
-Message-Id: <20191010083558.685954681@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.19 003/114] s390/topology: avoid firing events before kobjs are created
+Date:   Thu, 10 Oct 2019 10:35:10 +0200
+Message-Id: <20191010083545.766494656@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -61,37 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Nosthoff <committed@heine.so>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit 99956a9e08251a1234434b492875b1eaff502a12 upstream.
+commit f3122a79a1b0a113d3aea748e0ec26f2cb2889de upstream.
 
-the type flag is stored in the chip->flags field not in the
-client->flags field. This currently leads to never using the ti
-specific health function as client->flags doesn't use that bit.
-So it's always falling back to the general one.
+arch_update_cpu_topology is first called from:
+kernel_init_freeable->sched_init_smp->sched_init_domains
 
-Fixes: 76b16f4cdfb8 ("power: supply: sbs-battery: don't assume MANUFACTURER_DATA formats")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Michael Nosthoff <committed@heine.so>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+even before cpus has been registered in:
+kernel_init_freeable->do_one_initcall->s390_smp_init
+
+Do not trigger kobject_uevent change events until cpu devices are
+actually created. Fixes the following kasan findings:
+
+BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb40/0xee0
+Read of size 8 at addr 0000000000000020 by task swapper/0/1
+
+BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb36/0xee0
+Read of size 8 at addr 0000000000000018 by task swapper/0/1
+
+CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B
+Hardware name: IBM 3906 M04 704 (LPAR)
+Call Trace:
+([<0000000143c6db7e>] show_stack+0x14e/0x1a8)
+ [<0000000145956498>] dump_stack+0x1d0/0x218
+ [<000000014429fb4c>] print_address_description+0x64/0x380
+ [<000000014429f630>] __kasan_report+0x138/0x168
+ [<0000000145960b96>] kobject_uevent_env+0xb36/0xee0
+ [<0000000143c7c47c>] arch_update_cpu_topology+0x104/0x108
+ [<0000000143df9e22>] sched_init_domains+0x62/0xe8
+ [<000000014644c94a>] sched_init_smp+0x3a/0xc0
+ [<0000000146433a20>] kernel_init_freeable+0x558/0x958
+ [<000000014599002a>] kernel_init+0x22/0x160
+ [<00000001459a71d4>] ret_from_fork+0x28/0x30
+ [<00000001459a71dc>] kernel_thread_starter+0x0/0x10
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/supply/sbs-battery.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/kernel/topology.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/power/supply/sbs-battery.c
-+++ b/drivers/power/supply/sbs-battery.c
-@@ -629,7 +629,7 @@ static int sbs_get_property(struct power
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_PRESENT:
- 	case POWER_SUPPLY_PROP_HEALTH:
--		if (client->flags & SBS_FLAGS_TI_BQ20Z75)
-+		if (chip->flags & SBS_FLAGS_TI_BQ20Z75)
- 			ret = sbs_get_ti_battery_presence_and_health(client,
- 								     psp, val);
- 		else
+--- a/arch/s390/kernel/topology.c
++++ b/arch/s390/kernel/topology.c
+@@ -311,7 +311,8 @@ int arch_update_cpu_topology(void)
+ 	on_each_cpu(__arch_update_dedicated_flag, NULL, 0);
+ 	for_each_online_cpu(cpu) {
+ 		dev = get_cpu_device(cpu);
+-		kobject_uevent(&dev->kobj, KOBJ_CHANGE);
++		if (dev)
++			kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+ 	}
+ 	return rc;
+ }
 
 
