@@ -2,94 +2,95 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FC6ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094D4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C0E21A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF851206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:46:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZPkFQitf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387529AbfJJJmU (ORCPT
+        id S2387569AbfJJJqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:42:20 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:43010 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbfJJJmU (ORCPT
+        Thu, 10 Oct 2019 05:46:53 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58424 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfJJJqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:42:20 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 1D02725B7E8;
-        Thu, 10 Oct 2019 20:42:18 +1100 (AEDT)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 245009405EE; Thu, 10 Oct 2019 11:42:16 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 11:42:16 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] selftests: netfilter: add ipvs test script
-Message-ID: <20191010094215.73rlcbn2tt4wgr54@verge.net.au>
-References: <1570619790-6086-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <1570619790-6086-2-git-send-email-yanhaishuang@cmss.chinamobile.com>
+        Thu, 10 Oct 2019 05:46:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sTRhFKvn0glVeC9mpJ0ol8xV4CtebwGWcwgq8iAIB/k=; b=ZPkFQitfoTicBpUlrGCAHIgyB
+        NgqXJzWuoebSOlXlPHneEHlEK8iP38ulBLQ7xpUryw3FSrtoTLXd6xQxpNJTFU5KpTrxvwI/LD/Es
+        ry4N8Od7qHRhJkkiRZ1TdybR3MVwIv0UppEr7Sly5aXACIIrctsU30/de/G/wRR36WvYi8GWj+PIS
+        IgN7/ZzB4CQvbCXokCHILiF4jfm/bd1lfXhhnh8ech6UiCcpSTE8yImz+xXsBQgS0uQNn6kQIk1hz
+        X9bvAg3UJxnUpcYpbTezcjr1liSlRTYto0eraFROPxY9q2iz7+C7ELcJ8FFZTPKWTSjm1B6EMS0tm
+        d1UxbHCKA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iIV1q-0001e8-Si; Thu, 10 Oct 2019 09:46:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5F9093013A4;
+        Thu, 10 Oct 2019 11:45:45 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8B8E2202F4F54; Thu, 10 Oct 2019 11:46:37 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 11:46:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Li RongQing <lirongqing@baidu.com>
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][RFC] perf/x86: avoid false-positives hard lockup
+Message-ID: <20191010094637.GN2328@hirez.programming.kicks-ass.net>
+References: <1570696898-13169-1-git-send-email-lirongqing@baidu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1570619790-6086-2-git-send-email-yanhaishuang@cmss.chinamobile.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1570696898-13169-1-git-send-email-lirongqing@baidu.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 07:16:28PM +0800, Haishuang Yan wrote:
-> Test virutal server via directing routing for IPv4.
+On Thu, Oct 10, 2019 at 04:41:38PM +0800, Li RongQing wrote:
+> if perf counter is used as nmi watchdog, and twice nmi in soft
+> watchdog sample period will trigger hard lockup
 > 
-> Tested:
+> make sure left time is not less than soft watchdog period by
+> compared with 3/5 period to skip forward, since soft watchdog
+> sample period is 2/5 of watchdog_thresh, nmi watchdog sample
+> period, computed by set_sample_period
 > 
-> # selftests: netfilter: ipvs.sh
-> # Testing DR mode...
-> # ipvs.sh: PASS
-> ok 6 selftests: netfilter: ipvs.sh
-> 
-> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
 > ---
-> v5: use cmp to compare two file contents suggested by Simon Horman
-> v4: use #!/bin/bash -p suggested by Duncan Roe
-> v3: use bash style
-> v2: optimize test script
-> ---
->  tools/testing/selftests/netfilter/Makefile |   2 +-
->  tools/testing/selftests/netfilter/ipvs.sh  | 178 +++++++++++++++++++++++++++++
->  2 files changed, 179 insertions(+), 1 deletion(-)
->  create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
+>  arch/x86/events/core.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/tools/testing/selftests/netfilter/Makefile b/tools/testing/selftests/netfilter/Makefile
-> index 4144984..de1032b 100644
-> --- a/tools/testing/selftests/netfilter/Makefile
-> +++ b/tools/testing/selftests/netfilter/Makefile
-> @@ -2,6 +2,6 @@
->  # Makefile for netfilter selftests
->  
->  TEST_PROGS := nft_trans_stress.sh nft_nat.sh bridge_brouter.sh \
-> -	conntrack_icmp_related.sh nft_flowtable.sh
-> +	conntrack_icmp_related.sh nft_flowtable.sh ipvs.sh
->  
->  include ../lib.mk
-> diff --git a/tools/testing/selftests/netfilter/ipvs.sh b/tools/testing/selftests/netfilter/ipvs.sh
-> new file mode 100755
-> index 0000000..f844c0a
-> --- /dev/null
-> +++ b/tools/testing/selftests/netfilter/ipvs.sh
-> @@ -0,0 +1,178 @@
-> +#!/bin/bash -p
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 7b21455d7504..1f5309456d4c 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1196,7 +1196,11 @@ int x86_perf_event_set_period(struct perf_event *event)
+>  	/*
+>  	 * If we are way outside a reasonable range then just skip forward:
+>  	 */
+> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
+> +	if (unlikely(left <= -(period * 3 / 5))) {
+> +#else
+>  	if (unlikely(left <= -period)) {
+> +#endif
 
-Please change this to /bin/sh
+NAK. This is 100% the wrong place to do anything like that.
