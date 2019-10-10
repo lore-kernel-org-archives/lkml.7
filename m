@@ -2,74 +2,125 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A7BC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FFDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1BF22196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696107;
-	bh=L5is3Avng3rknWFuaXu0mMsht9z+QsEW6JsvwMdFvA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sFMmqgboI+oooCidx2hf4JaRHzuPz+iiFd4EZWqcFrPnJaxG6DZlhdYOWC0GsQG7z
-	 sBP5d5fwJPTJjHWS0GZF7ODFJ7xqATrnNrU6uLHsV6I+0RuLEwAUPbbmWQEhDKMCre
-	 YIa720NKNQ9LYnffQV0q7Om9EtlukkNMMU37oyB8=
+	by mail.kernel.org (Postfix) with ESMTP id BB7582190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="zRKZvZ6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387404AbfJJI20 (ORCPT
+        id S1733236AbfJJI3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:28:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbfJJI20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:28:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E39982190F;
-        Thu, 10 Oct 2019 08:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696105;
-        bh=L5is3Avng3rknWFuaXu0mMsht9z+QsEW6JsvwMdFvA0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BfBBTPYw33qgR9u4E5Mc7HStrgmcfJEHHXzSTD9gWbhGpoOpzRIl6av3RrVBsyLvh
-         M2IdxTjDr75uEBGOb173VkhYPFsbAnfjqMFgkSVUNX4+qKlMBJxh3/6QbidG0qdyIC
-         qlrRpxRf8KI8WZJQb9aoLhTi6sf0DUCR6+fvlNGc=
-Date:   Thu, 10 Oct 2019 10:28:22 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-stable@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 0/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent
- future TPM operations
-Message-ID: <20191010082822.GD326087@kroah.com>
-References: <20191009212831.29081-1-jarkko.sakkinen@linux.intel.com>
+        Thu, 10 Oct 2019 04:29:52 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:37624 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733108AbfJJI3w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:29:52 -0400
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id D56712E15D0;
+        Thu, 10 Oct 2019 11:29:47 +0300 (MSK)
+Received: from sas2-62907d92d1d8.qloud-c.yandex.net (sas2-62907d92d1d8.qloud-c.yandex.net [2a02:6b8:c08:b895:0:640:6290:7d92])
+        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id Zc688KOaea-TiVmdN0E;
+        Thu, 10 Oct 2019 11:29:47 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1570696187; bh=hLJ/aLE1zH4IN571wxoIu2uw5Z79/QiM5/xU95wGKRY=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=zRKZvZ6kX56PyRt2T8Xphz93/xAsoc/Env+se02AJ7ZxRyCwDs39GtZgBxTJ3LnbB
+         C1ZCrWUFYh1mpxvzqlPPq0NENg/D/bVtbGrBsW7RPVUAanG26vl+KcQe493DgCThmY
+         5ve2W5rGVuNS8LPuiiS6f1IoTOLMXZirWNiI8Lks=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
+        by sas2-62907d92d1d8.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id yLNF14isCU-TiISECQI;
+        Thu, 10 Oct 2019 11:29:44 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: "reuse mergeable anon_vma as parent when fork" causes a crash on
+ s390
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Shakeel Butt <shakeelb@google.com>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rik van Riel <riel@surriel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+References: <1570656570.5937.24.camel@lca.pw>
+ <CALvZod4psOEyYwPOF1UcJoK96LbYBccYhsG0DrKD+CCf8Sc-Yg@mail.gmail.com>
+ <20191010023601.GA4793@richard> <20191010031516.GA5060@richard>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
+Date:   Thu, 10 Oct 2019 11:29:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009212831.29081-1-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191010031516.GA5060@richard>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 12:28:28AM +0300, Jarkko Sakkinen wrote:
-> commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
+On 10/10/2019 06.15, Wei Yang wrote:
+> On Thu, Oct 10, 2019 at 10:36:01AM +0800, Wei Yang wrote:
+>> Hi, Qian, Shakeel
+>>
+>> Thanks for testing.
+>>
+>> Sounds I missed some case to handle. anon_vma_clone() now would be called in
+>> vma_adjust, which is a different case when it is introduced.
+>>
 > 
-> This backport is for v4.14 and v4.19 The backport requires non-racy
-> behaviour from TPM 1.x sysfs code. Thus, the dependecies for that
-> are included.
+> Well, I have to correct my statement. The reason is we may did something more
+> in anon_vma_clone().
 > 
-> NOTE: 1/3 is only needed for v4.14.
+> Here is a quick fix, while I need to go through all the cases carefully.
 
-How can a 0/X have a git commit id?
+Oops, I've overlooked this case too.
 
-:)
+You have to check src->anon_vma
+otherwise in  __split_vma or copy_vma dst could pick completely random anon_vma.
 
-greg k-h
+Also checking prev will not hurt, just to be sure.
+
+So, something like this should work:
+
+if (!dst->anon_vma && src->anon_vma &&
+     prev && pprev && pprev->anon_vma == src->anon_vma)
+       dst->anon_vma = prev->anon_vma;
+
+> 
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 12f6c3d7fd9d..2844f442208d 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -271,7 +271,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+>           * 1. Parent has vm_prev, which implies we have vm_prev.
+>           * 2. Parent and its vm_prev have the same anon_vma.
+>           */
+> -       if (pprev && pprev->anon_vma == src->anon_vma)
+> +       if (!dst->anon_vma && pprev && pprev->anon_vma == src->anon_vma)
+>                  dst->anon_vma = prev->anon_vma;
+>   
+>          list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
+> 
+>> BTW, do you have the specific test case? So that I could verify my change. The
+>> kernel build test doesn't trigger this.
+>>
+>> Thanks a lot :-)
+>>
+>> On Wed, Oct 09, 2019 at 03:21:11PM -0700, Shakeel Butt wrote:
+>> -- 
+>> Wei Yang
+>> Help you, Help me
+> 
