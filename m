@@ -2,114 +2,160 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E43ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EB9C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0F82053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B21120640
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570733679;
+	bh=Vp90z7NiCC7zCRxWA5jqpdJwl0eM/UnV+JScJcMH/OM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QqRSsjDnFnOxnJxT5LH5t8/DXx81WkN5a1mfCzr8qRBKednHco+JDoaZ/2074OmvW
+	 cUTsqdXIqPYBGAL3Wah29k5P2qEhwHgF7FGkA5oHf2fgTlLoV3nv6YW8A974J+hAt4
+	 gRlJO7fOQ0JOhOQ1SXNNiFKIMsQksXA9AGnFu2Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfJJSu6 (ORCPT
+        id S1726773AbfJJSyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:50:58 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44285 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfJJSu6 (ORCPT
+        Thu, 10 Oct 2019 14:54:37 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41812 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfJJSyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:50:58 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w6so5808654oie.11;
-        Thu, 10 Oct 2019 11:50:57 -0700 (PDT)
+        Thu, 10 Oct 2019 14:54:37 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g13so5810790otp.8;
+        Thu, 10 Oct 2019 11:54:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pe9UtS2nB3IVlBbTVZ3hO/YsOnzfUIPDBvq3veYk6Pg=;
-        b=kx1OW3fFfVDe/l3mHLjQOWgaEBP+jrlLuvk24StYiZMhfPIOGBXlbC5Z0Lu5I2ZOen
-         GXfRad53Wa+dEclrWfWtGsvokTsmw/mg0GuVBnf0osci4swUorj3I2+s6MNQ6zdDSaVt
-         1eyrkcx/KAdrZbuv0MYdw6EvZx6d0T0UvJr/WVRhOEZqK8lVYh0dxRrkfzjICsP3p6gM
-         gxGvVLqszAof4lxhVG5uRDyPXi7nFbHmvi/Qc6Qpnp2VxTW8YVMCElVg/hWxc/56cxfY
-         abac6XJN3HT2BHfuwyKFYJff3fnfSFezS7VQR1h8E+0P422t/iIF3YSUIcydkmHClMhT
-         iqnQ==
-X-Gm-Message-State: APjAAAWiRsCFPlj9hoU9jOUnZCUcsC9hhcY71aattfbRiCDY+DBWaWUn
-        fb0Pr2ZVJ+swT/lHdCslDSM2z6SUFHZBPjffVN8FXWnZ
-X-Google-Smtp-Source: APXvYqxHBnRYVznAMgmZqD4x3EvzZXk8DCBb1p7eqY2OJrA8SaFoMCgRJz6m1m2/1M3jlyYoLP5l6HXOT/RSdtNr0f4=
-X-Received: by 2002:a54:4e89:: with SMTP id c9mr8518987oiy.148.1570733457084;
- Thu, 10 Oct 2019 11:50:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o+zin2bL1A/EltcDjtt8OSEY4VLYK08n8Dj1hQ6Wf2k=;
+        b=NK80gRkKNwDHsBMg0GSP1e/bG/pYjwQZzjy3vZyMSsay1NN3FQ3YnrTF4bNz6+HKeg
+         aYvQPqsSIvhPPRpEj0bk0phRBT1Jnl9xoKTx39tlTM3vqrXGLNrJUkCUoIB0z5xsSYb7
+         A6v+gL4GrW2lCYvNVSUVDrqDAIYUam92A0FacTSuD8R0p3DK49Yot3owk3nDgYpkbZ9B
+         aPwlnHEhuT4IK5ablxSTCoiFLqhhMAHHeRNsJi3Uf9sq1g8S7lPFV9uJAxFuF4mX7Sl6
+         FD4DN3F6DvwYygZT/HEinr0QCbg93tKWwoHOaxXiKKAUPBj2Im5bkwUmGAQVoYotT+Jt
+         8big==
+X-Gm-Message-State: APjAAAV2Ci4ZiTprfbwQ4kK9Koc7wkjQEUv7w0/p+j8So0hGa4Qi4L7j
+        FYH7YuujYOaPx0k7MKy7Jg==
+X-Google-Smtp-Source: APXvYqxQEXGO9Uc01zKUGpeB8t0R+xv3eN1jyvC9TPfe47vyIsyRP58qHhRhPLQG1SNW3RGl2mO7pw==
+X-Received: by 2002:a9d:73d8:: with SMTP id m24mr8810042otk.227.1570733674052;
+        Thu, 10 Oct 2019 11:54:34 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r19sm1846829ota.79.2019.10.10.11.54.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 11:54:33 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 13:54:32 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Convert PWM bindings to
+ json-schema
+Message-ID: <20191010185432.GA17457@bogus>
+References: <20191002164047.14499-1-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20191002194346.GA3792@localhost.localdomain> <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
- <20191010174710.GA2405@localhost.localdomain>
-In-Reply-To: <20191010174710.GA2405@localhost.localdomain>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 10 Oct 2019 20:50:45 +0200
-Message-ID: <CAMuHMdVriPMVWdNOD4ytZQFPmad7CvD_4utbw1PxMJBua1TSfQ@mail.gmail.com>
-Subject: Re: [PATCH] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-To:     Narendra K <Narendra.K@dell.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002164047.14499-1-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Narendra,
+On Wed, Oct 02, 2019 at 06:40:46PM +0200, Krzysztof Kozlowski wrote:
+> Convert generic PWM bindings to DT schema format using json-schema.  The
+> consumer bindings are split to separate file.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v2:
+> 1. Change also pwm-sprd.txt
+> 
+> Changes since v1:
+> 1. Indent example with four spaces (more readable),
+> 2. Change pattern for pwm nodes,
+> 3. Remove $ref from #cells.
+> ---
 
-On Thu, Oct 10, 2019 at 7:47 PM <Narendra.K@dell.com> wrote:
-> On Wed, Oct 09, 2019 at 04:11:04PM +0200, Ard Biesheuvel wrote:
-> > On Wed, 2 Oct 2019 at 21:44, <Narendra.K@dell.com> wrote:
-> > >
-> > > From: Narendra K <Narendra.K@dell.com>
-> > >
-> > > For the EFI_RCI2_TABLE kconfig option, 'make oldconfig' asks the user
-> > > for input as it is a new kconfig option in kernel version 5.4. This patch
-> > > modifies the kconfig option to ask the user for input only when CONFIG_X86
-> > > or CONFIG_COMPILE_TEST is set to y.
-> > >
-> > > The patch also makes EFI_RCI2_TABLE kconfig option depend on CONFIG_EFI.
-> > >
-> > > Signed-off-by: Narendra K <Narendra.K@dell.com>
 
-> > >  drivers/firmware/efi/Kconfig | 5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> > > index 178ee8106828..6e4c46e8a954 100644
-> > > --- a/drivers/firmware/efi/Kconfig
-> > > +++ b/drivers/firmware/efi/Kconfig
-> > > @@ -181,7 +181,10 @@ config RESET_ATTACK_MITIGATION
-> > >           reboots.
-> > >
-> > >  config EFI_RCI2_TABLE
-> > > -       bool "EFI Runtime Configuration Interface Table Version 2 Support"
-> > > +       bool
-> > > +       prompt "EFI RCI Table Version 2 Support" if X86 || COMPILE_TEST
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml b/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
+> new file mode 100644
+> index 000000000000..39c844fe6338
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-consumers.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-consumers.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Specifying PWM information for devices
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +
+> +description: |
+> +  PWM properties should be named "pwms". The exact meaning of each pwms
+> +  property must be documented in the device tree binding for each device.
+> +  An optional property "pwm-names" may contain a list of strings to label
+> +  each of the PWM devices listed in the "pwms" property. If no "pwm-names"
+> +  property is given, the name of the user node will be used as fallback.
+> +
+> +  Drivers for devices that use more than a single PWM device can use the
+> +  "pwm-names" property to map the name of the PWM device requested by the
+> +  pwm_get() call to an index into the list given by the "pwms" property.
+> +
+> +properties:
+> +  pwms:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      Phandle to PWM controller node and pwm-specifier (controller specific).
+> +      pwm-specifier typically encodes the chip-relative PWM number and the PWM
+> +      period in nanoseconds.
+> +      Optionally, the pwm-specifier can encode a number of flags (defined in
+> +      <dt-bindings/pwm/pwm.h>) in a third cell:
+> +        - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> +
+> +  pwm-names:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    description:
+> +      A list of strings to label each of the PWM devices listed in the "pwms"
+> +      property. If no "pwm-names" property is given, the name of the user node
+> +      will be used as fallback.
+> +
+> +required:
+> +  - pwms
 
-Why the split of bool and prompt?
-Why not simply add a single line "depends on X86 || COMPILE_TEST"?
+This schema is never applied because it has no 'select' which is only 
+automatic for $nodename or compatible. You could include this from other 
+schemas, but why? Any consumer still has to list these properties to 
+define their specific constraints.
 
-> >
-> > You can drop the || COMPILE_TEST as well.
->
-> I will drop this part of the change in the next version of the patch.
+We already have a schema in dtschema for consumer side. It's just 
+missing descriptions which needs relicensing from this.
 
-Why drop that part? Isn't it good to have more compile test coverage?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +
+> +dependencies:
+> +  pwm-names: [ pwms ]
