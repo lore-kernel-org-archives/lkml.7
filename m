@@ -2,51 +2,54 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D00C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB15C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D37D21929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FF021D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697006;
-	bh=BOanT1SW13OnGnjPMS6uXvmdJhRS0NsJ5UKaucbKJNY=;
+	s=default; t=1570697010;
+	bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ger50gfj5/jtN12Ju6BpbJSApaLjxCiwfdgLWv7P6i/xB6f1W+96HKyzu4BhpGOMB
-	 RVVlYCBrh+MdeG7jwBMMiPDAV/1W5640DPtJ5HgaWgV5pnDimlnmvUfZ5GlCTc1wiw
-	 q6JVH+CAJuK/w5zyZYmvTJMvwZKXP+7iAmcJXW00=
+	b=jwxBMYyBV6sFxgvTPwjZl75q+s9CD4U/fX5NQwTxH3PEdqeo+ln6U5HMf9ZWYAOAc
+	 xy63wMZVZGX3tCIwk6pPTBZnX1ipRH587g+JaM6v2+i5ZwGggLZrtU/bEB5p1tF/HK
+	 UXGtp0HSAlSNmdtwQ+1RrwmYlMquoSbKK2vNZJzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388727AbfJJInY (ORCPT
+        id S2388739AbfJJIn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:43:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:43:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388073AbfJJInW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:43:22 -0400
+        id S2388001AbfJJIn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:43:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A39A2190F;
-        Thu, 10 Oct 2019 08:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DF602190F;
+        Thu, 10 Oct 2019 08:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697002;
-        bh=BOanT1SW13OnGnjPMS6uXvmdJhRS0NsJ5UKaucbKJNY=;
+        s=default; t=1570697004;
+        bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=POg6CoZfdbdNeAQlwE8pJm5wJrYy9BLnRM6TN6aG2ZHePC7TL3rfNcyKQ/HFhMu/5
-         YUHVB6QlY+5oWZuMjUY3RlY6SENziDFJoLC/g25mRsp07cwYL/udCm2VR0cdHmw38J
-         i1vHxMgSejfHhEcuY5belnNcW+cL0rWKpB6riqF0=
+        b=oYzKSRa3MMRLJgHq8dHKJ9HOypNhv8l8D9tuAfET54JVsR5NeVcsCIwzsH5Vtqby8
+         3Run2qM0p3qYF8x3QrlwPDmJfwUFyD8OO25fOrnR2lxerQmoZW0iK1/9wmEAND0on1
+         MR2UrSuZbincpYMyRkujTs9Hor43oxf8izOi8ct0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.3 087/148] cfg80211: initialize on-stack chandefs
-Date:   Thu, 10 Oct 2019 10:35:48 +0200
-Message-Id: <20191010083616.634383014@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 088/148] drivers: thermal: qcom: tsens: Fix memory leak from qfprom read
+Date:   Thu, 10 Oct 2019 10:35:49 +0200
+Message-Id: <20191010083616.685532154@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,72 +62,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-commit f43e5210c739fe76a4b0ed851559d6902f20ceb1 upstream.
+[ Upstream commit 6b8249abb093551ef173d13a25ed0044d5dd33e0 ]
 
-In a few places we don't properly initialize on-stack chandefs,
-resulting in EDMG data to be non-zero, which broke things.
+memory returned as part of nvmem_read via qfprom_read should be
+freed by the consumer once done.
+Existing code is not doing it so fix it.
 
-Additionally, in a few places we rely on the driver to init the
-data completely, but perhaps we shouldn't as non-EDMG drivers
-may not initialize the EDMG data, also initialize it there.
+Below memory leak detected by kmemleak
+   [<ffffff80088b7658>] kmemleak_alloc+0x50/0x84
+    [<ffffff80081df120>] __kmalloc+0xe8/0x168
+    [<ffffff80086db350>] nvmem_cell_read+0x30/0x80
+    [<ffffff8008632790>] qfprom_read+0x4c/0x7c
+    [<ffffff80086335a4>] calibrate_v1+0x34/0x204
+    [<ffffff8008632518>] tsens_probe+0x164/0x258
+    [<ffffff80084e0a1c>] platform_drv_probe+0x80/0xa0
+    [<ffffff80084de4f4>] really_probe+0x208/0x248
+    [<ffffff80084de2c4>] driver_probe_device+0x98/0xc0
+    [<ffffff80084dec54>] __device_attach_driver+0x9c/0xac
+    [<ffffff80084dca74>] bus_for_each_drv+0x60/0x8c
+    [<ffffff80084de634>] __device_attach+0x8c/0x100
+    [<ffffff80084de6c8>] device_initial_probe+0x20/0x28
+    [<ffffff80084dcbb8>] bus_probe_device+0x34/0x7c
+    [<ffffff80084deb08>] deferred_probe_work_func+0x6c/0x98
+    [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
 
-Cc: stable@vger.kernel.org
-Fixes: 2a38075cd0be ("nl80211: Add support for EDMG channels")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/1569239475-I2dcce394ecf873376c386a78f31c2ec8b538fa25@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c     |    4 +++-
- net/wireless/reg.c         |    2 +-
- net/wireless/wext-compat.c |    2 +-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/thermal/qcom/tsens-8960.c |  2 ++
+ drivers/thermal/qcom/tsens-v0_1.c | 12 ++++++++++--
+ drivers/thermal/qcom/tsens-v1.c   |  1 +
+ drivers/thermal/qcom/tsens.h      |  1 +
+ 4 files changed, 14 insertions(+), 2 deletions(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -2597,6 +2597,8 @@ int nl80211_parse_chandef(struct cfg8021
+diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
+index 8d9b721dadb65..e46a4e3f25c42 100644
+--- a/drivers/thermal/qcom/tsens-8960.c
++++ b/drivers/thermal/qcom/tsens-8960.c
+@@ -229,6 +229,8 @@ static int calibrate_8960(struct tsens_priv *priv)
+ 	for (i = 0; i < num_read; i++, s++)
+ 		s->offset = data[i];
  
- 	control_freq = nla_get_u32(attrs[NL80211_ATTR_WIPHY_FREQ]);
- 
-+	memset(chandef, 0, sizeof(*chandef));
++	kfree(data);
 +
- 	chandef->chan = ieee80211_get_channel(&rdev->wiphy, control_freq);
- 	chandef->width = NL80211_CHAN_WIDTH_20_NOHT;
- 	chandef->center_freq1 = control_freq;
-@@ -3125,7 +3127,7 @@ static int nl80211_send_iface(struct sk_
+ 	return 0;
+ }
  
- 	if (rdev->ops->get_channel) {
- 		int ret;
--		struct cfg80211_chan_def chandef;
-+		struct cfg80211_chan_def chandef = {};
+diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
+index 6f26fadf4c279..055647bcee67d 100644
+--- a/drivers/thermal/qcom/tsens-v0_1.c
++++ b/drivers/thermal/qcom/tsens-v0_1.c
+@@ -145,8 +145,10 @@ static int calibrate_8916(struct tsens_priv *priv)
+ 		return PTR_ERR(qfprom_cdata);
  
- 		ret = rdev_get_channel(rdev, wdev, &chandef);
- 		if (ret == 0) {
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -2108,7 +2108,7 @@ static void reg_call_notifier(struct wip
+ 	qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
+-	if (IS_ERR(qfprom_csel))
++	if (IS_ERR(qfprom_csel)) {
++		kfree(qfprom_cdata);
+ 		return PTR_ERR(qfprom_csel);
++	}
  
- static bool reg_wdev_chan_valid(struct wiphy *wiphy, struct wireless_dev *wdev)
- {
--	struct cfg80211_chan_def chandef;
-+	struct cfg80211_chan_def chandef = {};
- 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
- 	enum nl80211_iftype iftype;
+ 	mode = (qfprom_csel[0] & MSM8916_CAL_SEL_MASK) >> MSM8916_CAL_SEL_SHIFT;
+ 	dev_dbg(priv->dev, "calibration mode is %d\n", mode);
+@@ -181,6 +183,8 @@ static int calibrate_8916(struct tsens_priv *priv)
+ 	}
  
---- a/net/wireless/wext-compat.c
-+++ b/net/wireless/wext-compat.c
-@@ -797,7 +797,7 @@ static int cfg80211_wext_giwfreq(struct
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
- 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
--	struct cfg80211_chan_def chandef;
-+	struct cfg80211_chan_def chandef = {};
- 	int ret;
+ 	compute_intercept_slope(priv, p1, p2, mode);
++	kfree(qfprom_cdata);
++	kfree(qfprom_csel);
  
- 	switch (wdev->iftype) {
+ 	return 0;
+ }
+@@ -198,8 +202,10 @@ static int calibrate_8974(struct tsens_priv *priv)
+ 		return PTR_ERR(calib);
+ 
+ 	bkp = (u32 *)qfprom_read(priv->dev, "calib_backup");
+-	if (IS_ERR(bkp))
++	if (IS_ERR(bkp)) {
++		kfree(calib);
+ 		return PTR_ERR(bkp);
++	}
+ 
+ 	calib_redun_sel =  bkp[1] & BKP_REDUN_SEL;
+ 	calib_redun_sel >>= BKP_REDUN_SHIFT;
+@@ -313,6 +319,8 @@ static int calibrate_8974(struct tsens_priv *priv)
+ 	}
+ 
+ 	compute_intercept_slope(priv, p1, p2, mode);
++	kfree(calib);
++	kfree(bkp);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
+index 10b595d4f6199..870f502f2cb6c 100644
+--- a/drivers/thermal/qcom/tsens-v1.c
++++ b/drivers/thermal/qcom/tsens-v1.c
+@@ -138,6 +138,7 @@ static int calibrate_v1(struct tsens_priv *priv)
+ 	}
+ 
+ 	compute_intercept_slope(priv, p1, p2, mode);
++	kfree(qfprom_cdata);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+index 2fd94997245bf..b89083b61c383 100644
+--- a/drivers/thermal/qcom/tsens.h
++++ b/drivers/thermal/qcom/tsens.h
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/thermal.h>
+ #include <linux/regmap.h>
++#include <linux/slab.h>
+ 
+ struct tsens_priv;
+ 
+-- 
+2.20.1
+
 
 
