@@ -2,153 +2,111 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B3BC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B894AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D31320B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884DF218DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:19:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="sbIhRX2J"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="N+An6FkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732815AbfJJGPM (ORCPT
+        id S1732881AbfJJGT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 02:15:12 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:49439 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfJJGPL (ORCPT
+        Thu, 10 Oct 2019 02:19:27 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5216 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726840AbfJJGT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 02:15:11 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 1772C3F669;
-        Thu, 10 Oct 2019 08:15:09 +0200 (CEST)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=sbIhRX2J;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yF_BPEmU0Hjj; Thu, 10 Oct 2019 08:15:08 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 9B3E83F382;
-        Thu, 10 Oct 2019 08:15:04 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id D1CAF360162;
-        Thu, 10 Oct 2019 08:15:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1570688103; bh=4ue4EqSxzXPPi4ag3sKg2WTH3PY+hWrK79ED1yBsa+0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=sbIhRX2JQ+of5RLA1KLI3iQ7xs3ubZLmjQuAA5owJXkEMaAF+3Wgh6UKoEZkI7KJo
-         66hjoJLEsbvXDc87+xAg1IhFKaHJEBhnegJnUKu4vAx/NNDexVYH+TUbDBPK5B2Vsd
-         ohUzQ8JecXUJerZgrz2/9c6Rzc0OdurkQyVquwHk=
-Subject: Re: [PATCH v4 3/9] mm: pagewalk: Don't split transhuge pmds when a
- pmd_entry is present
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <20191008091508.2682-1-thomas_os@shipmail.org>
- <20191008091508.2682-4-thomas_os@shipmail.org>
- <20191009152737.p42w7w456zklxz72@box>
- <CAHk-=wh4waroKr-Xtcv+5pTxBcHxGEj-g73eQvXVawML_C0EXw@mail.gmail.com>
- <03d85a6a-e24a-82f4-93b8-86584b463471@shipmail.org>
- <CAHk-=whhdRSqjX5wy1LzFYnOG58UztpifkNvbxBcTVbT3Mzv4g@mail.gmail.com>
- <MN2PR05MB6141B981C2CAB4955D59747EA1950@MN2PR05MB6141.namprd05.prod.outlook.com>
- <CAHk-=wgy-ULe8UmEDn9gCCmTtw65chS0h309WrTaQhK3RAXM-A@mail.gmail.com>
- <c054849e-1e24-6b27-6a54-740ea9d17054@shipmail.org>
- <CAHk-=wgmr-BPMTnSuKrAMoHL_A0COV_sZkdcNB9aosYfouA_fw@mail.gmail.com>
- <80f25292-585c-7729-2a23-7c46b3309a1a@shipmail.org>
- <CAHk-=wg6n_nGRtJd4MeXZrA5QrrVViJeO4x2w37KDbcDmTh3dg@mail.gmail.com>
- <6d3ef513-ca9d-9778-10da-86f368a57cd0@shipmail.org>
- <CAHk-=wimOMuhBVrxYneQ5bawFNeGW1h_D3cxN80pitDKgfBx0A@mail.gmail.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <2899bd30-ca8a-3b44-8946-a69de8db7b93@shipmail.org>
-Date:   Thu, 10 Oct 2019 08:15:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 10 Oct 2019 02:19:27 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9A6Aamm032481
+        for <linux-kernel@vger.kernel.org>; Wed, 9 Oct 2019 23:19:26 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=fQdwDnCPngz+0vM6jXWTh2YHwn4lEhUtF8/NVMQtnMY=;
+ b=N+An6FkB8vi+UKXE4fPt0yehTc97qXxWrw4grcNh7LvlQ87QJoQvqF9iq0jcHfAxKYZw
+ PDtHNzxGVpzomzBNe2JQkMxejdHdd1+BWgRfOgdgqJGGXKEfpe+mMgRrtQamYnsBslMi
+ oh3znn5Mh7BFciLL89RujEpM0kY16rwe9ew= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vhhyvuee0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 23:19:26 -0700
+Received: from 2401:db00:2050:5076:face:0:1f:0 (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Wed, 9 Oct 2019 23:19:25 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id E4AD262E3559; Wed,  9 Oct 2019 23:19:22 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH bpf-next 0/2] bpf/stackmap: fix A-A deadlock in bpf_get_stack()
+Date:   Wed, 9 Oct 2019 23:19:14 -0700
+Message-ID: <20191010061916.198761-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wimOMuhBVrxYneQ5bawFNeGW1h_D3cxN80pitDKgfBx0A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-10_03:2019-10-08,2019-10-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ mlxlogscore=963 suspectscore=0 bulkscore=0 impostorscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910100058
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/19 4:07 AM, Linus Torvalds wrote:
-> On Wed, Oct 9, 2019 at 6:10 PM Thomas Hellström (VMware)
-> <thomas_os@shipmail.org> wrote:
->> Your original patch does exactly the same!
-> Oh, no. You misread my original patch.
->
-> Look again.
->
-> The logic in my original patch was very different. It said that
->
->   - *if* we have a pmd_entry function, then we obviously call that one.
->
->      And if - after calling the pmd_entry function - we are still a
-> hugepage, then we skip the pte_entry case entirely.
->
->     And part of skipping is obviously "don't split" - but it never had
-> that "don't split and then call the pte walker" case.
->
->   - and if we *don't* have a pmd_entry function, but we do have a
-> pte_entry function, then we always split before calling it.
->
-> Notice the difference?
+bpf stackmap with build-id lookup (BPF_F_STACK_BUILD_ID) can trigger A-A
+deadlock on rq_lock():
 
- From what I can tell, my patch is doing the same. At least that always 
-was the intention. To determine whether to skip pte and skip split, your 
-patch uses
+rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+[...]
+Call Trace:
+ try_to_wake_up+0x1ad/0x590
+ wake_up_q+0x54/0x80
+ rwsem_wake+0x8a/0xb0
+ bpf_get_stack+0x13c/0x150
+ bpf_prog_fbdaf42eded9fe46_on_event+0x5e3/0x1000
+ bpf_overflow_handler+0x60/0x100
+ __perf_event_overflow+0x4f/0xf0
+ perf_swevent_overflow+0x99/0xc0
+ ___perf_sw_event+0xe7/0x120
+ __schedule+0x47d/0x620
+ schedule+0x29/0x90
+ futex_wait_queue_me+0xb9/0x110
+ futex_wait+0x139/0x230
+ do_futex+0x2ac/0xa50
+ __x64_sys_futex+0x13c/0x180
+ do_syscall_64+0x42/0x100
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-                         /* No pte level at all? */
-                         if (is_swap_pmd(*pmd) || pmd_trans_huge(*pmd)
-|| pmd_devmap(*pmd))
-                                 continue;
+For more details on how to reproduce this is error, please refer to 2/2.
 
-whereas my patch does
+Fix this issue by checking a new helper this_rq_is_locked(). If the
+rq_lock is already locked, postpone up_read() in irq_work, just like the
+in_nmi() case.
 
-                         if (pmd_trans_unstable(pmd))
-                                 goto again;
-			/* Fall through */
+Song Liu (2):
+  sched: introduce this_rq_is_locked()
+  bpf/stackmap: fix A-A deadlock in bpf_get_stack()
 
-which is the same (pmd_trans_unstable() is the same test as you do, but 
-not racy). Yes, it's missing the test for pmd_devmap() but I think 
-that's an mm bug been discussed elsewhere, and we also rerun because a 
-huge / none pmd at this (FALLBACK) point is probably a race and unintended.
+ include/linux/sched.h | 1 +
+ kernel/bpf/stackmap.c | 2 +-
+ kernel/sched/core.c   | 8 ++++++++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
->
-> But I think the "change pmd_entry to have a sane return code" is a
-> simpler and more flexible model, and then the pmd_entry code can just
-> let the pte walker split the pmd if needed.
-
-OK, let's aim for that then.
-
-Thanks,
-
-Thomas
-
-
->
-> So I liked that part of your patch.
->
->             Linus
-
-
+--
+2.17.1
