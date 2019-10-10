@@ -2,29 +2,30 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DA6ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DF2C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683432067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0845B2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388238AbfJJNdg (ORCPT
+        id S2388262AbfJJNdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:33:36 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3687 "EHLO huawei.com"
+        Thu, 10 Oct 2019 09:33:40 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3686 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727797AbfJJNdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:33:33 -0400
+        id S2387992AbfJJNdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 09:33:39 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 35BE18FFC8C8BBB8F560;
+        by Forcepoint Email with ESMTP id 2EE84B697AC0BF877381;
         Thu, 10 Oct 2019 21:33:26 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 10 Oct 2019 21:33:19 +0800
+ 14.3.439.0; Thu, 10 Oct 2019 21:33:18 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <catalin.marinas@arm.com>, <will@kernel.org>, <rjw@rjwysocki.net>,
         <lenb@kernel.org>, <robert.moore@intel.com>,
@@ -34,10 +35,11 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
         <linuxarm@huawei.com>, <gregkh@linuxfoundation.org>,
         <guohanjun@huawei.com>, <wanghuiqiang@huawei.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         John Garry <john.garry@huawei.com>
-Subject: [RFC PATCH 3/3] arm64: topology: Use PPTT to determine if PE is a thread
-Date:   Thu, 10 Oct 2019 21:29:52 +0800
-Message-ID: <1570714192-236724-4-git-send-email-john.garry@huawei.com>
+Subject: [RFC PATCH 1/3] ACPICA: ACPI 6.3: PPTT add additional fields in Processor Structure Flags
+Date:   Thu, 10 Oct 2019 21:29:50 +0800
+Message-ID: <1570714192-236724-2-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1570714192-236724-1-git-send-email-john.garry@huawei.com>
 References: <1570714192-236724-1-git-send-email-john.garry@huawei.com>
@@ -50,70 +52,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+From: Erik Schmauss <erik.schmauss@intel.com>
 
-Commit 98dc19902a0b2e5348e43d6a2c39a0a7d0fc639e upstream.
+Commit b5eab512e7cffb2bb37c4b342b5594e9e75fd486 upstream.
 
-ACPI 6.3 adds a thread flag to represent if a CPU/PE is
-actually a thread. Given that the MPIDR_MT bit may not
-represent this information consistently on homogeneous machines
-we should prefer the PPTT flag if its available.
+ACPICA commit c736ea34add19a3a07e0e398711847cd6b95affd
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Robert Richter <rrichter@marvell.com>
-[will: made acpi_cpu_is_threaded() return 'bool']
-Signed-off-by: Will Deacon <will@kernel.org>
+Link: https://github.com/acpica/acpica/commit/c736ea34
+Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- arch/arm64/kernel/topology.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ include/acpi/actbl2.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 0825c4a856e3..6106c49f84bc 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -340,17 +340,28 @@ void remove_cpu_topology(unsigned int cpu)
- }
+diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+index c50ef7e6b942..1d4ef0621174 100644
+--- a/include/acpi/actbl2.h
++++ b/include/acpi/actbl2.h
+@@ -1472,8 +1472,11 @@ struct acpi_pptt_processor {
  
- #ifdef CONFIG_ACPI
-+static bool __init acpi_cpu_is_threaded(int cpu)
-+{
-+	int is_threaded = acpi_pptt_cpu_is_thread(cpu);
-+
-+	/*
-+	 * if the PPTT doesn't have thread information, assume a homogeneous
-+	 * machine and return the current CPU's thread state.
-+	 */
-+	if (is_threaded < 0)
-+		is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
-+
-+	return !!is_threaded;
-+}
-+
- /*
-  * Propagate the topology information of the processor_topology_node tree to the
-  * cpu_topology array.
-  */
- static int __init parse_acpi_topology(void)
- {
--	bool is_threaded;
- 	int cpu, topology_id;
+ /* Flags */
  
--	is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
--
- 	for_each_possible_cpu(cpu) {
- 		int i, cache_id;
+-#define ACPI_PPTT_PHYSICAL_PACKAGE          (1)	/* Physical package */
+-#define ACPI_PPTT_ACPI_PROCESSOR_ID_VALID   (2)	/* ACPI Processor ID valid */
++#define ACPI_PPTT_PHYSICAL_PACKAGE          (1)
++#define ACPI_PPTT_ACPI_PROCESSOR_ID_VALID   (1<<1)
++#define ACPI_PPTT_ACPI_PROCESSOR_IS_THREAD  (1<<2)	/* ACPI 6.3 */
++#define ACPI_PPTT_ACPI_LEAF_NODE            (1<<3)	/* ACPI 6.3 */
++#define ACPI_PPTT_ACPI_IDENTICAL            (1<<4)	/* ACPI 6.3 */
  
-@@ -358,7 +369,7 @@ static int __init parse_acpi_topology(void)
- 		if (topology_id < 0)
- 			return topology_id;
+ /* 1: Cache Type Structure */
  
--		if (is_threaded) {
-+		if (acpi_cpu_is_threaded(cpu)) {
- 			cpu_topology[cpu].thread_id = topology_id;
- 			topology_id = find_acpi_cpu_topology(cpu, 1);
- 			cpu_topology[cpu].core_id   = topology_id;
 -- 
 2.17.1
 
