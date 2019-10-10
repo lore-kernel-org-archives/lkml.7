@@ -2,275 +2,74 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F783C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5177C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9972067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570734767;
-	bh=CzECmPElfOBV82JB55pzmLPRpMe5y3G/RB8ZAL55fJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rahoq130bMKCBP/tk5gtKDJ00KAhqxoPHCruWPj6N+krGir9Ol6P1UMT+t7itF9Zb
-	 xchxmJnvKiU9PAfSwtlIZ2bcFTU1aAgTS09BflkcbhYuCOlzOzZ3vPXus+N5K5jsFm
-	 YXD1K3ffAsxuA6Jfr6UkBsIZgkbI8FaHtYpVj2Xg=
+	by mail.kernel.org (Postfix) with ESMTP id AE9AE21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfJJTMq (ORCPT
+        id S1727132AbfJJTMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 15:12:46 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33712 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfJJTMp (ORCPT
+        Thu, 10 Oct 2019 15:12:49 -0400
+Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:37943 "EHLO
+        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726007AbfJJTMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 15:12:45 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a15so5927730oic.0;
-        Thu, 10 Oct 2019 12:12:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TB0eH3ae3vSi2BTINdu4YWUfxkdAB53RghmO04INfwE=;
-        b=ArSe95mAfCRXqkMIytaj6fYFOTlqU0iiet4ZBsvBJKCLbX5pFyegLfOk9Zw2XyKJt9
-         Y37Izxrxg/OWZ4ju2R5WE+jmSIgLrm4VNKDsJGgcKTHlGELiPfsM3XjsE5OP4B2eESDv
-         bt7nfZRXhFDGrY5t3SYUQ5RVp1UHlGsV7rBitwNGZgBvAQ3+oyfFIj3JgKY57MvsEHn3
-         hyXisd3PjfV9QZE1OIT291GcqmLABdEFBrtmnQKVrYKaA1RkO4EX+RkbNAJwyXVH+1Ly
-         +LLJtkkreadhM0twrcQuCNd5y/3cSTMCQWwlGIVZuF/x0nj0uIrqcIzDSLgTv2ap4KyA
-         mlxg==
-X-Gm-Message-State: APjAAAVbEGi6Dbyf/xPTaxNN2llK5495iT+JNKzN8whta/u34h3z7Jgm
-        08hpgSg2MvVHf3Sku3WNKw==
-X-Google-Smtp-Source: APXvYqzTNwu0JxpmueZM2zdBUYD25a/vLovCXlgQYNf1BmMTJANPQvgzTPJMPVKxRBQ9IHDbu1EaRw==
-X-Received: by 2002:a54:4419:: with SMTP id k25mr8594181oiw.0.1570734762353;
-        Thu, 10 Oct 2019 12:12:42 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s194sm1910974oie.19.2019.10.10.12.12.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 12:12:41 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 14:12:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v3 01/10] dt-bindings: sram: Convert SRAM bindings to
- json-schema
-Message-ID: <20191010191240.GA15006@bogus>
-References: <20191002164316.14905-1-krzk@kernel.org>
+        Thu, 10 Oct 2019 15:12:47 -0400
+X-Greylist: delayed 1315 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Oct 2019 15:12:46 EDT
+Received: from [4.30.142.84] (helo=[127.0.1.1])
+        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.82)
+        (envelope-from <srivatsa@csail.mit.edu>)
+        id 1iIdWT-000Zwa-C8; Thu, 10 Oct 2019 14:50:49 -0400
+Subject: [PATCH 1/3] tracing/hwlat: Report total time spent in all NMIs
+ during the sample
+From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+To:     linux-kernel@vger.kernel.org, rostedt@goodmis.org, mingo@redhat.com
+Cc:     amakhalov@vmware.com, akaher@vmware.com, anishs@vmware.com,
+        bordoloih@vmware.com, srivatsab@vmware.com, srivatsa@csail.mit.edu
+Date:   Thu, 10 Oct 2019 11:50:46 -0700
+Message-ID: <157073343544.17189.13911783866738671133.stgit@srivatsa-ubuntu>
+User-Agent: StGit/0.18
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002164316.14905-1-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:43:07PM +0200, Krzysztof Kozlowski wrote:
-> Convert generic mmio-sram bindings to DT schema format using
-> json-schema.  Require the address/size cells to be 1, not equal to root
-> node.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v2:
-> 1. Add Rob as maintainer,
-> 2. Use "contains" for compatible,
-> 3. Fix address and size cells to 1,
-> 4. Add maxitems to reg under children,
-> 5. Remove unneeded string type from label.
-> 
-> Changes since v1:
-> 1. Indent example with four spaces (more readable).
-> ---
->  .../devicetree/bindings/sram/sram.txt         |  80 -----------
->  .../devicetree/bindings/sram/sram.yaml        | 134 ++++++++++++++++++
->  2 files changed, 134 insertions(+), 80 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/sram.txt
->  create mode 100644 Documentation/devicetree/bindings/sram/sram.yaml
+From: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
 
+nmi_total_ts is supposed to record the total time spent in *all* NMIs
+that occur on the given CPU during the (active portion of the)
+sampling window. However, the code seems to be overwriting this
+variable for each NMI, thereby only recording the time spent in the
+most recent NMI. Fix it by accumulating the duration instead.
 
-> diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-> new file mode 100644
-> index 000000000000..a1c1ec2183f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sram/sram.yaml
-> @@ -0,0 +1,134 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sram/sram.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic on-chip SRAM
-> +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
-> +
-> +description: |+
-> +  Simple IO memory regions to be managed by the genalloc API.
-> +
-> +  Each child of the sram node specifies a region of reserved memory. Each
-> +  child node should use a 'reg' property to specify a specific range of
-> +  reserved memory.
-> +
-> +  Following the generic-names recommended practice, node names should
-> +  reflect the purpose of the node. Unit address (@<address>) should be
-> +  appended to the name.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^sram(@.*)?"
-> +
-> +  compatible:
-> +    contains:
-> +      enum:
-> +        - mmio-sram
-> +        - atmel,sama5d2-securam
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +  ranges:
-> +    description:
-> +      Should translate from local addresses within the sram to bus addresses.
-> +
-> +  no-memory-wc:
-> +    description:
-> +      The flag indicating, that SRAM memory region has not to be remapped
-> +      as write combining. WC is used by default.
-> +    type: boolean
-> +
-> +patternProperties:
-> +  "^([a-z]*-)?sram@[a-f0-9]$":
-> +    type: object
-> +    description:
-> +      Each child of the sram node specifies a region of reserved memory.
-> +    properties:
-> +      reg:
-> +        description:
-> +          IO mem address range, relative to the SRAM range.
-> +        maxItems: 1
-> +
-> +      compatible:
-> +        $ref: /schemas/types.yaml#/definitions/string
+Fixes: 7b2c86250122 ("tracing: Add NMI tracing in hwlat detector")
+Cc: stable@vger.kernel.org
+Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+---
 
-No need to define the type again. We can say 'maxItems: 1' if we really 
-want to force it to 1 entry.
+ kernel/trace/trace_hwlat.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +        description:
-> +          Should contain a vendor specific string in the form
-> +          <vendor>,[<device>-]<usage>
-> +
-> +      pool:
-> +        description:
-> +          Indicates that the particular reserved SRAM area is addressable
-> +          and in use by another device or devices.
-> +        type: boolean
-> +
-> +      export:
-> +        description:
-> +          Indicates that the reserved SRAM area may be accessed outside
-> +          of the kernel, e.g. by bootloader or userspace.
-> +        type: boolean
-> +
-> +      protect-exec:
-> +        description: |
-> +          Same as 'pool' above but with the additional constraint that code
-> +          will be run from the region and that the memory is maintained as
-> +          read-only, executable during code execution. NOTE: This region must
-> +          be page aligned on start and end in order to properly allow
-> +          manipulation of the page attributes.
-> +        type: boolean
-> +
-> +      label:
-> +        description:
-> +          The name for the reserved partition, if omitted, the label is taken
-> +          from the node name excluding the unit address.
-> +
-> +      clocks:
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index fa95139..a0251a7 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -150,7 +150,7 @@ void trace_hwlat_callback(bool enter)
+ 		if (enter)
+ 			nmi_ts_start = time_get();
+ 		else
+-			nmi_total_ts = time_get() - nmi_ts_start;
++			nmi_total_ts += time_get() - nmi_ts_start;
+ 	}
+ 
+ 	if (enter)
 
-Shouldn't this be up one level? Looks like this is the only case 
-(Marvell and i.MX are the only ones I see with clocks).
-
-> +        description:
-> +          A list of phandle and clock specifier pair that controls the
-> +          single SRAM clock.
-
-maxItems: 1
-
-> +
-> +    required:
-> +      - reg
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
-
-Does 'additionalProperties' work here and/or in the child node? I guess 
-not if we keep some node names.
-
-> +
-> +examples:
-> +  - |
-> +    sram: sram@5c000000 {
-> +        compatible = "mmio-sram";
-> +        reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges = <0 0x5c000000 0x40000>;
-> +
-> +        smp-sram@100 {
-> +            compatible = "socvendor,smp-sram";
-> +            reg = <0x100 0x50>;
-> +        };
-> +
-> +        device-sram@1000 {
-> +            reg = <0x1000 0x1000>;
-> +            pool;
-> +        };
-> +
-> +        exported@20000 {
-
-This one doesn't match the pattern. That's fine I guess for dts files, 
-but examples should be good examples.
-
-> +            reg = <0x20000 0x20000>;
-> +            export;
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
