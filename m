@@ -2,105 +2,117 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2569C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 04:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F248BC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 04:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9268218DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 04:38:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKUf19Dk"
+	by mail.kernel.org (Postfix) with ESMTP id CED68206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 04:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfJJEig (ORCPT
+        id S1727636AbfJJEoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 00:38:36 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36694 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfJJEig (ORCPT
+        Thu, 10 Oct 2019 00:44:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9482 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726201AbfJJEoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 00:38:36 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 23so2841330pgk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 21:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l5uokupUiO2U2j99X5zPHcQ8eZZb9WokuIKIk7sOlFY=;
-        b=AKUf19DkQPdw0kdHAAVDVBCfTDQY7NEaj4VomUaYZY2MA04uGr4YUiCrg9NPqKbkGq
-         BjC+s85LwAKZrzkkyEg/vA7TL+mvERFXgVNeDqGcWzjBZJmzfysAilRVLg546r+lFALb
-         MJFV9zbG0VGRktwQCMdq6Fswm26LvaoEIy6qQaT6ymwKgMq9Ig4wJWUJlHungqmW81J0
-         BmNRSKp96SXKwHJRBjC9V8C9ETZwsNBSCg5QwST0kVBZHi/voZIS9bmv69xDPN0GF8qX
-         oDEk2GOLuqx7G/fpcVdQjpWyFnVQbEZHfl/RNenN4m4cluNLTbjObB2PYhI1gNLnLc32
-         KWjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l5uokupUiO2U2j99X5zPHcQ8eZZb9WokuIKIk7sOlFY=;
-        b=XAFSBM0JX6Y0em4XkkecH2TWLMOvER1aIBSegP3HCZlA69ouhBQTRQ3SuG+8M/Npan
-         3BEiY6zkpvRiJJ9LLVZG1NBaNlPzyzH5SCE8CTnYCLtbVb6sDLuoS7aI5SjJT7TP9YyZ
-         ZSlF6VYB+SoabUV+rrNPWvg/Y4dZQh/5JaS6zLpCYf6mOHn6WX2bTjuRb9kG5svuh+xo
-         u4D4T50ZDfVq8icXBPA24S8oJkBnIX6fOyftim4Ar4/Rfw1FOu3H0ftJunEfDUiTjO3B
-         MY5KytJI05tClRMOMC4cZhABbUpVHNAc0w8+TNeHoIkZE0d4Goapdmcawob147Rh2BUh
-         /drQ==
-X-Gm-Message-State: APjAAAXO+N6gVvtKT7WNGi51gCaIXIwJaRciXOYk/VuE5OYv0NMBL0/o
-        CWBtCCE1Orgtt+8HJPZdswhQydJYw9axVA==
-X-Google-Smtp-Source: APXvYqwqAOIgfwe6DjQigpRhbLT1ifaj2H8W91DCzGL2sLJsiXL5q1Dh91K8D/dSGP/e96d4vUs9tA==
-X-Received: by 2002:a63:ff46:: with SMTP id s6mr8656134pgk.337.1570682314092;
-        Wed, 09 Oct 2019 21:38:34 -0700 (PDT)
-Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id 2sm3607480pfo.91.2019.10.09.21.38.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 21:38:33 -0700 (PDT)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        Thu, 10 Oct 2019 00:44:15 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9A4fYWf038681
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 00:44:14 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vht4b5741-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 00:44:13 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Thu, 10 Oct 2019 05:44:11 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 10 Oct 2019 05:44:08 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9A4i72M42992074
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 04:44:07 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 356945204F;
+        Thu, 10 Oct 2019 04:44:07 +0000 (GMT)
+Received: from [9.124.31.69] (unknown [9.124.31.69])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9E9D252050;
+        Thu, 10 Oct 2019 04:44:05 +0000 (GMT)
+Subject: Re: [PATCH v4 0/5] Powerpc/Watchpoint: Few important fixes
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, npiggin@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org,
+        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org,
-        Wambui Karuga <wambui.karugax@gmail.com>
-Subject: [PATCH] staging: octeon: Fix incorrect type in assignment
-Date:   Thu, 10 Oct 2019 07:38:15 +0300
-Message-Id: <20191010043815.14027-1-wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20190925040630.6948-1-ravi.bangoria@linux.ibm.com>
+ <19b222ce-3013-7de5-1c04-48c6fd00fe81@linux.ibm.com>
+ <0d98e256-44ee-f920-cb2f-f79545584769@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Thu, 10 Oct 2019 10:14:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0d98e256-44ee-f920-cb2f-f79545584769@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101004-0028-0000-0000-000003A8B5B6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101004-0029-0000-0000-0000246ABC78
+Message-Id: <3e31e5f7-f948-512a-054c-9ad10103ccc0@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-10_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=931 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910100042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following warning generated by sparse in
-drivers/staging/octeon/ethernet-tx.c:
 
-drivers/staging/octeon/ethernet-tx.c:563:50: warning: incorrect type in assignment (different base types)
-drivers/staging/octeon/ethernet-tx.c:563:50:    expected unsigned short [usertype] hw_chksum
-drivers/staging/octeon/ethernet-tx.c:563:50:    got restricted __wsum [usertype] csum
+>> @Christophe, Is patch5 works for you on 8xx?
+>>
+> 
+> Getting the following :
+> 
+> root@vgoip:~# ./ptrace-hwbreak
+> test: ptrace-hwbreak
+> tags: git_version:v5.4-rc2-710-gf0082e173fe4-dirty
+> PTRACE_SET_DEBUGREG, WO, len: 1: Ok
+> PTRACE_SET_DEBUGREG, WO, len: 2: Ok
+> PTRACE_SET_DEBUGREG, WO, len: 4: Ok
+> PTRACE_SET_DEBUGREG, WO, len: 8: Ok
+> PTRACE_SET_DEBUGREG, RO, len: 1: Ok
+> PTRACE_SET_DEBUGREG, RO, len: 2: Ok
+> PTRACE_SET_DEBUGREG, RO, len: 4: Ok
+> PTRACE_SET_DEBUGREG, RO, len: 8: Ok
+> PTRACE_SET_DEBUGREG, RW, len: 1: Ok
+> PTRACE_SET_DEBUGREG, RW, len: 2: Ok
+> PTRACE_SET_DEBUGREG, RW, len: 4: Ok
+> PTRACE_SET_DEBUGREG, RW, len: 8: Ok
+> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
+> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
+> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
+> PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO, len: 6: Ok
+> PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RO, len: 6: Fail
+> failure: ptrace-hwbreak
+> 
 
-Warning generated by running:
-make C=2 CF="-D__CHECK_ENDIAN__" drivers/staging/octeon/
+Thanks Christophe. I don't have any 8xx box. I checked qemu and it seems
+qemu emulation for 8xx is not yet supported. So I can't debug this. Can
+you please check why it's failing?
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/staging/octeon/octeon-stubs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-index 38954b6c89e1..b2e3c72205dd 100644
---- a/drivers/staging/octeon/octeon-stubs.h
-+++ b/drivers/staging/octeon/octeon-stubs.h
-@@ -123,7 +123,7 @@ union cvmx_pip_wqe_word0 {
- 	struct {
- 		uint64_t next_ptr:40;
- 		uint8_t unused;
--		uint16_t hw_chksum;
-+		__wsum hw_chksum;
- 	} cn38xx;
- 	struct {
- 		uint64_t pknd:6;        /* 0..5 */
--- 
-2.23.0
+-Ravi
 
