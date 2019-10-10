@@ -2,100 +2,103 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21471C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50230C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0443B20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284B321835
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570731483;
+	bh=0KC8xA9ZBy3AsBFBe/plN/z4+ZJLeyzqAtdvefSmMhk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bdo3an92hAHokbIrFZk3PpIPRMcGwsL73yE/QY/bwXHpMaAufxqeFM9ANHLT2F5qe
+	 JCbmEtgV/Yjb8HYtXuFCdZgzNkbpZoAem97Ve004q46JglAHIDbTRKh+Kz/JnvedGO
+	 Ka9LTZp+tXy7kAK1wWgvZDbavAtdxCjjbksFdL4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfJJSRu (ORCPT
+        id S1726934AbfJJSSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:17:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40692 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726691AbfJJSRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:17:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 56503AC16;
-        Thu, 10 Oct 2019 18:17:48 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 96806E378C; Thu, 10 Oct 2019 20:17:43 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 20:17:43 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 13/17] ethtool: add standard notification
- handler
-Message-ID: <20191010181743.GF22163@unicorn.suse.cz>
-References: <cover.1570654310.git.mkubecek@suse.cz>
- <ac2fef494116db9d4679f4501f1be6a7898ef724.1570654310.git.mkubecek@suse.cz>
- <20191010152559.GA2994@nanopsycho>
+        Thu, 10 Oct 2019 14:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbfJJSSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 14:18:00 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E294021835
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570731480;
+        bh=0KC8xA9ZBy3AsBFBe/plN/z4+ZJLeyzqAtdvefSmMhk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZLTR0HtDz3P2RRoAiQBzAsBVOSYUls5hZ21a6hijqBq91+U//JMiNisw9ROozz+VG
+         PK2SH8gc+mL+0yjS9F1QKZRke4vlXA4w66IV8Jj7k59zfg9aUED2+y6Ty4fjIg8eEy
+         c7J4+Kp/UWapD09K/T0uMPOlFdHszTB7BjUJArIs=
+Received: by mail-wr1-f46.google.com with SMTP id v8so9054856wrt.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:17:59 -0700 (PDT)
+X-Gm-Message-State: APjAAAUsioPxnJAXfAdDLFHH8l+ftPX7cvBLo+mx6rFvGEwRDJ13PrB4
+        eXxaTu3qQAIlfuroXBy2bXgSVXkt18+YomucIIPUdg==
+X-Google-Smtp-Source: APXvYqxtOoDpuy38/n7xJJKFLHNJ498UfovM8YnSjpcvEoj+a0VLIagGtiR3tBc8qsBvkx/yCd2Q+666Vn1NR4g9c+A=
+X-Received: by 2002:a5d:56c4:: with SMTP id m4mr9288431wrw.195.1570731478457;
+ Thu, 10 Oct 2019 11:17:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010152559.GA2994@nanopsycho>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190913210018.125266-1-samitolvanen@google.com> <20191008224049.115427-1-samitolvanen@google.com>
+In-Reply-To: <20191008224049.115427-1-samitolvanen@google.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 10 Oct 2019 11:17:47 -0700
+X-Gmail-Original-Message-ID: <CALCETrUAQ0of6bViOCmSu6qyoswTL+ThPOo3++9v_f-ek4CtEw@mail.gmail.com>
+Message-ID: <CALCETrUAQ0of6bViOCmSu6qyoswTL+ThPOo3++9v_f-ek4CtEw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v2 0/5] x86: fix syscall function type mismatches
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 05:25:59PM +0200, Jiri Pirko wrote:
-> Wed, Oct 09, 2019 at 10:59:40PM CEST, mkubecek@suse.cz wrote:
-> >+static void *ethnl_bcastmsg_put(struct sk_buff *skb, u8 cmd)
-> >+{
-> >+	return genlmsg_put(skb, 0, ++ethnl_bcast_seq, &ethtool_genl_family, 0,
-> >+			   cmd);
-> >+}
-> >+
-> >+static int ethnl_multicast(struct sk_buff *skb, struct net_device *dev)
-> >+{
-> >+	return genlmsg_multicast_netns(&ethtool_genl_family, dev_net(dev), skb,
-> >+				       0, ETHNL_MCGRP_MONITOR, GFP_KERNEL);
-> >+}
-> 
-> No need for these 2 helpers. Just put the code directly into
-> ethnl_std_notify() and make the code easier to read.
+On Tue, Oct 8, 2019 at 3:41 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> This patch set changes x86 syscall wrappers and related functions to
+> use function types that match sys_call_ptr_t. This fixes indirect call
+> mismatches with Control-Flow Integrity (CFI) checking.
 
-In later patches (not submitted yet), these two will be also called by
-other notification handlers.
+tglx, I'm pretty happy with this series.  Do you need anything else
+from me or do you want to just pick it up in -tip?
 
-> >+static const struct get_request_ops *ethnl_std_notify_to_ops(unsigned int cmd)
-> >+{
-> >+	WARN_ONCE(1, "unexpected notification type %u\n", cmd);
-> >+	return NULL;
-> >+}
-> 
-> Why this isn't a table similar to get_requests ?
+--Andy
 
-It's a relic of earlier version before splitting the complex message
-types when the table was rather sparse. I'll change it to a lookup table
-to make it consistent with the rest of the code.
-
-> >+
-> >+/* generic notification handler */
-> >+static void ethnl_std_notify(struct net_device *dev, unsigned int cmd,
-> 
-> Better "common" comparing to "standard", I believe.
-
-That's similar to ethnl_std_parse(), the idea is that this is the
-standard handler for notifications which are triggered without
-additional data and the message is the same as reply to corresponding
-"GET" request (which is generated by the standard ethnl_get_doit()
-handler). Notifications for actions and notifications for SET commands
-which cannot be generated this standard way will have to use their own
-(nonstandard) handler.
-
-Michal
+>
+> Changes since v1:
+>   - Use SYSCALL_DEFINE0 for __x64_sys_ni_syscall.
+>   - Include Andy's COMPAT_SYSCALL_DEFINE0 patch and use the macro
+>     for (rt_)sigreturn.
+>
+> Andy Lutomirski (1):
+>   x86/syscalls: Wire up COMPAT_SYSCALL_DEFINE0
+>
+> Sami Tolvanen (4):
+>   x86: use the correct function type in SYSCALL_DEFINE0
+>   x86: use COMPAT_SYSCALL_DEFINE0 for IA32 (rt_)sigreturn
+>   x86: use the correct function type for sys_ni_syscall
+>   x86: fix function types in COND_SYSCALL
+>
+>  arch/x86/entry/syscall_32.c            |  8 +--
+>  arch/x86/entry/syscall_64.c            | 14 +++--
+>  arch/x86/entry/syscalls/syscall_32.tbl |  8 +--
+>  arch/x86/ia32/ia32_signal.c            |  5 +-
+>  arch/x86/include/asm/syscall_wrapper.h | 76 ++++++++++++++++++++------
+>  5 files changed, 78 insertions(+), 33 deletions(-)
+>
+> --
+> 2.23.0.581.g78d2f28ef7-goog
+>
