@@ -2,250 +2,267 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145ADC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB927C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D605C218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F98218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OSvqdGd/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EaP6/08j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387946AbfJJJc1 (ORCPT
+        id S2388072AbfJJJcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:32:27 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38214 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfJJJc1 (ORCPT
+        Thu, 10 Oct 2019 05:32:31 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25846 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388027AbfJJJca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:32:27 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u28so3842388lfc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C/wkh/GnDCqsZNIodlB9tNbqA2+NzVOROU2ZLiYiw8c=;
-        b=OSvqdGd/HH6LNxUtzlPkUEUmkHKnfJuBpTU/F2JyAocadOJvBk5t0cXMz76yLL4go6
-         q8m/7SsAuhyIDIVwgqaReMcIBjgl4nokwNaxHKB3Inyr+4Tdx+9B59EIbEJHwa01MSbo
-         fbIs1WZOlrgRXsMwy4NdS17VYdPXkHiPE3qgk=
+        Thu, 10 Oct 2019 05:32:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570699948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=R/0XPqz4UbSzXqNBQ4Ow1dmSjgqzj/YZ0K/FLzFSFj8=;
+        b=EaP6/08jWXg7xz4uXTaXEx5hEoRHnDfaA9LNnhPbrKF/pe9aMT/9OUZv3wDv5mTD3Q5TBH
+        bMmjJcvCU+Pi56yBfKcKLx0bm99IQe6wT2KJul7fuJIJPoCpKOr+PkPSsCnHbCez3+FsKG
+        2QgYNAr2gxmtKJWJ24uexFHnTTR5Gk0=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-370-5a9YvdruP9GJkDhYZATzyw-1; Thu, 10 Oct 2019 05:32:27 -0400
+Received: by mail-ed1-f71.google.com with SMTP id p55so3231406edc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:32:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C/wkh/GnDCqsZNIodlB9tNbqA2+NzVOROU2ZLiYiw8c=;
-        b=Z+ZPChPo8xbEwPFKkMJ5ngPOIc5cfTmPvOpk3AH8+xGDwqrAZCwX87YZwVbGn4rOh5
-         WPz7TvnvtUuxv8RMI9Dc1vh4R2lJSjX60e9WUA0+8Mvjv/9a5uzbTh5gj73YKvhRUITE
-         ERyEyJN7+I+kHikoixZQJfunPxrXo4UfSJ5GdIMF34zKIfUCFz2G4S1phx0cMLJKqyG4
-         4OpEojLm3MWhd/7JHaXKxeDg63mM1hNxn+YKo7YjfEQbJqZ3ETGiRVK8upqP/GMLdTSI
-         M4F/2TadeVPfq9yMp961BiGRvKuyKLMSKrdTqb+33hZXC4GHCaEesbjSYSq4FzudQkTx
-         vW6Q==
-X-Gm-Message-State: APjAAAUFM06R1ZFW6RFm5QCxTkRSmPE63U0qOWz+i32FwWZbFXUalDi5
-        2ZU6PREfeQXgP4Of2rfz9lwg6byMVxo6HYwbPoRaLg==
-X-Google-Smtp-Source: APXvYqx9u+tBp+tunckOnU4ovHq/Lwxq2h7DFjTIyiy3FX+VTE6GQYYQgqljs/51buL58PMOEZjAGOIA3WDm2xfSISc=
-X-Received: by 2002:a19:23cc:: with SMTP id j195mr5332104lfj.91.1570699944121;
- Thu, 10 Oct 2019 02:32:24 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FyF419gdvItKDCVEO02AA/AvNq5Oq0Zq5xBcCsqWjLI=;
+        b=qJIt6kzkA4gvSyOwNjgYD1b7mwhH+hjX9ze0nqrUWk6w+HZjWGF5g5EP/flPMHEV9n
+         xm2riMtJzaHc44kBczOQZGb2KD46MYUHyi6e+XEeUmb9NTzxDlZR15uAwZVptrdUknOM
+         sv5PNxp1pAjvQk7xLOCf1jxlMJrhnxIDKhMlpjuY4czD+oJ5bHlIolu7zb81yaUfuBwF
+         o2scFb2saShNeUOQv/zmu3SsVL/ANt0LcAL+KBHR2l95S0eyu9208FiL4MpMw1p5GCj9
+         PyxF3xgzHKBo4iYvBfEOz//Ws/NAHzeoxHqKSqxTFvrWcSpv4g9onZ78/tdTFKVfDV0/
+         BKwQ==
+X-Gm-Message-State: APjAAAXgxMZkKJrw4HfjMovBOO0nFqnCt5Y2V59yAzfpgk+WRQ2coRwC
+        eYjIB++qfzUEPmJLpgIVSzE3KVmkqQUdA+A5MPZ8cyYhcta5oxlbw7rciOpS5RApznERoeUATF3
+        DFuyAIdw8wZbmDS2aV2gt9f2E
+X-Received: by 2002:a17:906:6dd3:: with SMTP id j19mr6998574ejt.144.1570699945455;
+        Thu, 10 Oct 2019 02:32:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy/iW1IsAGT9UA6UddG6Andm1MGHC3gYJRggjYmhupyXhYVLX87Hw/q8XSJFT3DTcEBGv6Y5w==
+X-Received: by 2002:a17:906:6dd3:: with SMTP id j19mr6998550ejt.144.1570699945167;
+        Thu, 10 Oct 2019 02:32:25 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id p19sm818317edq.31.2019.10.10.02.32.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2019 02:32:24 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] extcon: axp288: Move to swnodes
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20191008122600.22340-1-heikki.krogerus@linux.intel.com>
+ <8120fbf2-08d3-6ee2-21bf-458a4e12b29c@redhat.com>
+ <20191008140159.GC12909@kuha.fi.intel.com>
+ <20191010083110.GA4981@kuha.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <7730d466-53bc-c14a-120f-dcb91de1e973@redhat.com>
+Date:   Thu, 10 Oct 2019 11:32:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <1569825869-30640-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-In-Reply-To: <1569825869-30640-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date:   Thu, 10 Oct 2019 15:02:13 +0530
-Message-ID: <CAHO=5PFSTomeNm4vAKyPmRZXNPBKGT4ck3mB8uOY395uwuVdNg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] i2c: iproc: Add i2c repeated start capability
-To:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Michael Cheng <ccheng@broadcom.com>,
-        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
-        Lori Hikichi <lori.hikichi@broadcom.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Icarus Chau <icarus.chau@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Shivaraj Shetty <sshetty1@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191010083110.GA4981@kuha.fi.intel.com>
+Content-Language: en-US
+X-MC-Unique: 5a9YvdruP9GJkDhYZATzyw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+Hi,
 
-Did you get a chance to review this patch.
+On 10-10-2019 10:31, Heikki Krogerus wrote:
+> On Tue, Oct 08, 2019 at 05:02:04PM +0300, Heikki Krogerus wrote:
+>> On Tue, Oct 08, 2019 at 03:59:23PM +0200, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 08-10-2019 14:25, Heikki Krogerus wrote:
+>>>> Hi Hans,
+>>>>
+>>>> Fixed the compiler warning in this version. No other changes.
+>>>>
+>>>> The original cover letter:
+>>>>
+>>>> That AXP288 extcon driver is the last that uses build-in connection
+>>>> description. I'm replacing it with a code that finds the role mux
+>>>> software node instead.
+>>>>
+>>>> I'm proposing also here a little helper
+>>>> usb_role_switch_find_by_fwnode() that uses
+>>>> class_find_device_by_fwnode() to find the role switches.
+>>>
+>>> Both patches look good to me and I can confirm that things still
+>>> work as they should on a CHT device with an AXP288 PMIC, so for both:
+>>>
+>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>> Tested-by: Hans de Goede <hdegoede@redhat.com>
+>>>
+>>> Regards,
+>>>
+>>> Hans
+>>>
+>>> p.s.
+>>>
+>>> I guess this means we can remove the build-in connection (
+>>> device_connection_add / remove) stuff now?
+>>
+>> Yes. I'll prepare separate patches for that.
+>=20
+> Actually, maybe it would make sense to just remove it in this series.
+> I'm attaching a patch that remove struct device_connection completely.
+> Can you check if it makes sense to you?
 
-Best regards,
-Rayagonda
+This bit seems broken:
+
+  static void *
+  fwnode_graph_devcon_match(struct fwnode_handle *fwnode, const char *con_i=
+d,
+                           void *data, devcon_match_fn_t match)
+  {
+-       struct device_connection con =3D { .id =3D con_id };
+         struct fwnode_handle *ep;
+         void *ret;
+
+         fwnode_graph_for_each_endpoint(fwnode, ep) {
+-               con.fwnode =3D fwnode_graph_get_remote_port_parent(ep);
+-               if (!fwnode_device_is_available(con.fwnode))
++               fwnode =3D fwnode_graph_get_remote_port_parent(ep);
+
+You are no replacing the passed in fwnode with the fwnode for the
+remote_port_parent and then the next time through the loop you will
+look at the wrong fwnode as the fwnode argument to
+fwnode_graph_for_each_endpoint() gets evaluated multiple times:
+
+#define fwnode_graph_for_each_endpoint(fwnode, child)                   \
+         for (child =3D NULL;                                              =
+\
+              (child =3D fwnode_graph_get_next_endpoint(fwnode, child)); )
+
+###
+
+And there is a similar problem here, where you again use the fwmode
+argument also as local variable in a loop where the function
+argument should be evaluated more then once:
+
+  fwnode_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
+                     void *data, devcon_match_fn_t match)
+  {
+-       struct device_connection con =3D { };
+         void *ret;
+         int i;
+
+         for (i =3D 0; ; i++) {
+-               con.fwnode =3D fwnode_find_reference(fwnode, con_id, i);
+-               if (IS_ERR(con.fwnode))
++               fwnode =3D fwnode_find_reference(fwnode, con_id, i);
+
+###
+
+And it seems that this bit where you introduce -EPROBE_DEFER is an unrelate=
+d
+behavior change? :
+
++static void *generic_match(struct fwnode_handle *fwnode, const char *id,
++                          void *data)
+  {
+         struct bus_type *bus;
+         struct device *dev;
++       void *ret =3D NULL;
+
+         for (bus =3D generic_match_buses[0]; bus; bus++) {
+-               dev =3D bus_find_device_by_fwnode(bus, con->fwnode);
+-               if (dev && !strncmp(dev_name(dev), con->id, strlen(con->id)=
+))
+-                       return dev;
++               dev =3D bus_find_device_by_fwnode(bus, fwnode);
++               if (dev) {
++                       if (!strncmp(dev_name(dev), id, strlen(id)))
++                               return dev;
++                       ret =3D ERR_PTR(-EPROBE_DEFER);
++               }
 
 
-On Mon, Sep 30, 2019 at 12:19 PM Rayagonda Kokatanur
-<rayagonda.kokatanur@broadcom.com> wrote:
->
-> From: Lori Hikichi <lori.hikichi@broadcom.com>
->
-> Enable handling of i2c repeated start. The current code
-> handles a multi msg i2c transfer as separate i2c bus
-> transactions. This change will now handle this case
-> using the i2c repeated start protocol. The number of msgs
-> in a transfer is limited to two, and must be a write
-> followed by a read.
->
-> Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> Signed-off-by: Icarus Chau <icarus.chau@broadcom.com>
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> Signed-off-by: Shivaraj Shetty <sshetty1@broadcom.com>
-> ---
-> changes from v1:
->  - Address following review comments from Wolfarm Sang,
->    Use i2c_8bit_addr_from_msg() api instead of decoding i2c_msg struct and
->    remove check against number of i2c message as it will be taken care
->    by core using quirks flags.
->
->  drivers/i2c/busses/i2c-bcm-iproc.c | 63 ++++++++++++++++++++++++++++++--------
->  1 file changed, 50 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-> index d7fd76b..e478db7 100644
-> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
-> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-> @@ -81,6 +81,7 @@
->  #define M_CMD_PROTOCOL_MASK          0xf
->  #define M_CMD_PROTOCOL_BLK_WR        0x7
->  #define M_CMD_PROTOCOL_BLK_RD        0x8
-> +#define M_CMD_PROTOCOL_PROCESS       0xa
->  #define M_CMD_PEC_SHIFT              8
->  #define M_CMD_RD_CNT_SHIFT           0
->  #define M_CMD_RD_CNT_MASK            0xff
-> @@ -675,13 +676,20 @@ static int bcm_iproc_i2c_xfer_wait(struct bcm_iproc_i2c_dev *iproc_i2c,
->         return 0;
->  }
->
-> -static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
-> -                                        struct i2c_msg *msg)
-> +/*
-> + * If 'process_call' is true, then this is a multi-msg transfer that requires
-> + * a repeated start between the messages.
-> + * More specifically, it must be a write (reg) followed by a read (data).
-> + * The i2c quirks are set to enforce this rule.
-> + */
-> +static int bcm_iproc_i2c_xfer_internal(struct bcm_iproc_i2c_dev *iproc_i2c,
-> +                                       struct i2c_msg *msgs, bool process_call)
->  {
->         int i;
->         u8 addr;
->         u32 val, tmp, val_intr_en;
->         unsigned int tx_bytes;
-> +       struct i2c_msg *msg = &msgs[0];
->
->         /* check if bus is busy */
->         if (!!(iproc_i2c_rd_reg(iproc_i2c,
-> @@ -707,14 +715,29 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
->                         val = msg->buf[i];
->
->                         /* mark the last byte */
-> -                       if (i == msg->len - 1)
-> -                               val |= BIT(M_TX_WR_STATUS_SHIFT);
-> +                       if (!process_call && (i == msg->len - 1))
-> +                               val |= 1 << M_TX_WR_STATUS_SHIFT;
->
->                         iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
->                 }
->                 iproc_i2c->tx_bytes = tx_bytes;
->         }
->
-> +       /* Process the read message if this is process call */
-> +       if (process_call) {
-> +               msg++;
-> +               iproc_i2c->msg = msg;  /* point to second msg */
-> +
-> +               /*
-> +                * The last byte to be sent out should be a slave
-> +                * address with read operation
-> +                */
-> +               addr = i2c_8bit_addr_from_msg(msg);
-> +               /* mark it the last byte out */
-> +               val = addr | (1 << M_TX_WR_STATUS_SHIFT);
-> +               iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
-> +       }
-> +
->         /* mark as incomplete before starting the transaction */
->         if (iproc_i2c->irq)
->                 reinit_completion(&iproc_i2c->done);
-> @@ -733,7 +756,7 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
->          * underrun interrupt, which will be triggerred when the TX FIFO is
->          * empty. When that happens we can then pump more data into the FIFO
->          */
-> -       if (!(msg->flags & I2C_M_RD) &&
-> +       if (!process_call && !(msg->flags & I2C_M_RD) &&
->             msg->len > iproc_i2c->tx_bytes)
->                 val_intr_en |= BIT(IE_M_TX_UNDERRUN_SHIFT);
->
-> @@ -743,6 +766,8 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
->          */
->         val = BIT(M_CMD_START_BUSY_SHIFT);
->         if (msg->flags & I2C_M_RD) {
-> +               u32 protocol;
-> +
->                 iproc_i2c->rx_bytes = 0;
->                 if (msg->len > M_RX_FIFO_MAX_THLD_VALUE)
->                         iproc_i2c->thld_bytes = M_RX_FIFO_THLD_VALUE;
-> @@ -758,7 +783,10 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
->                 /* enable the RX threshold interrupt */
->                 val_intr_en |= BIT(IE_M_RX_THLD_SHIFT);
->
-> -               val |= (M_CMD_PROTOCOL_BLK_RD << M_CMD_PROTOCOL_SHIFT) |
-> +               protocol = process_call ?
-> +                               M_CMD_PROTOCOL_PROCESS : M_CMD_PROTOCOL_BLK_RD;
-> +
-> +               val |= (protocol << M_CMD_PROTOCOL_SHIFT) |
->                        (msg->len << M_CMD_RD_CNT_SHIFT);
->         } else {
->                 val |= (M_CMD_PROTOCOL_BLK_WR << M_CMD_PROTOCOL_SHIFT);
-> @@ -774,17 +802,24 @@ static int bcm_iproc_i2c_xfer(struct i2c_adapter *adapter,
->                               struct i2c_msg msgs[], int num)
->  {
->         struct bcm_iproc_i2c_dev *iproc_i2c = i2c_get_adapdata(adapter);
-> -       int ret, i;
-> +       bool process_call = false;
-> +       int ret;
->
-> -       /* go through all messages */
-> -       for (i = 0; i < num; i++) {
-> -               ret = bcm_iproc_i2c_xfer_single_msg(iproc_i2c, &msgs[i]);
-> -               if (ret) {
-> -                       dev_dbg(iproc_i2c->device, "xfer failed\n");
-> -                       return ret;
-> +       if (num == 2) {
-> +               /* Repeated start, use process call */
-> +               process_call = true;
-> +               if (msgs[1].flags & I2C_M_NOSTART) {
-> +                       dev_err(iproc_i2c->device, "Invalid repeated start\n");
-> +                       return -EOPNOTSUPP;
->                 }
->         }
->
-> +       ret = bcm_iproc_i2c_xfer_internal(iproc_i2c, msgs, process_call);
-> +       if (ret) {
-> +               dev_dbg(iproc_i2c->device, "xfer failed\n");
-> +               return ret;
-> +       }
-> +
->         return num;
->  }
->
-> @@ -806,6 +841,8 @@ static uint32_t bcm_iproc_i2c_functionality(struct i2c_adapter *adap)
->  };
->
->  static struct i2c_adapter_quirks bcm_iproc_i2c_quirks = {
-> +       .flags = I2C_AQ_COMB_WRITE_THEN_READ,
-> +       .max_comb_1st_msg_len = M_TX_RX_FIFO_SIZE,
->         .max_read_len = M_RX_MAX_READ_LEN,
->  };
->
-> --
-> 1.9.1
->
+Note that the old generic_match code had:
+
+-       if (con->fwnode)
+-               return device_connection_fwnode_match(con);
+
+Which will simply always return either the dev or NULL, so as said this
+is a behavior change AFAICT.
+
+I've been trying to figure out what you are trying to do here and
+I found a troublesome path through the old code:
+
+1. device_connection_find() gets called on a device with a fwnode
+2. device_connection_find() calls device_connection_find_match()
+3. device_connection_find_match() calls fwnode_connection_find_match()
+4. fwnode_connection_find_match() calls fwnode_graph_devcon_match() this re=
+turns NULL
+5. fwnode_connection_find_match() calls fwnode_devcon_match()
+6. fwnode_devcon_match() creates a struct device_connection with just fwnod=
+e set, the rest is 0/NULL
+7. fwnode_devcon_match() calls generic_match() with this struct
+8. generic_match() calls device_connection_fwnode_match() because con->fwno=
+de is set
+9. device_connection_fwnode_match() does the following if a device is found=
+:
+    if (dev && !strncmp(dev_name(dev), con->id, strlen(con->id)))
+        return dev;
+    but con->id is NULL here, so we have a NULL pointer deref here!
+
+We are currently not hitting this path because there are no callers of
+device_connection_find() all devcon users currently use device_connection_f=
+ind_match()
+
+Note I believe the code after your patch still has this problem. Also doing
+the strcmp on the dev_name seems wrong? At least for the above code path, w=
+here
+fwnode_devcon_match() has already used / consumed the id.
+
+So at a minimum we need to add a id =3D=3D NULL check to generic_match (*),=
+ but
+Since there are no users and the strcmp to to dev_name is weird, I believe =
+that
+it would be better to just remove device_connection_find() (and generic_mat=
+ch, etc.) ?
+
+This could be a preparation patch for the patch you attached, this would si=
+mplify
+this patch a bit.
+
+###
+
+If we end up with something like your suggested patch I think it might be g=
+ood to
+do a follow up where device_connection_find_match callers simply call
+fwnode_connection_find_match directly and we remove device_connection_find_=
+match ?
+Or maybe turn it into a static inline function?
+
+Regards,
+
+Hans
+
+*)  Note that the typec related callers of device_connection_find_match() a=
+ll 3
+either already have an id =3D=3D NULL check, or just ignore id completely.
+
