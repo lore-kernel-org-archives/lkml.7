@@ -2,112 +2,105 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F329C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C662C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51267222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E53F20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:38:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Si0K657W"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZQ6PxwUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfJJShV (ORCPT
+        id S1726899AbfJJSiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:37:21 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:41340 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbfJJShT (ORCPT
+        Thu, 10 Oct 2019 14:38:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36368 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfJJSiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:37:19 -0400
-Received: by mail-pl1-f201.google.com with SMTP id q3so4390992pll.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:37:18 -0700 (PDT)
+        Thu, 10 Oct 2019 14:38:12 -0400
+Received: by mail-io1-f68.google.com with SMTP id b136so16011122iof.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:38:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+OGMGqzbdua1JvnmjrGnKHeEWLFeUVoFJYkCdgpO3Hs=;
-        b=Si0K657WqBNfzzombtJEqYD9VASpxzIMXDMNjaDeOBy+RFG8/Qs3Tg14berZ88Prc6
-         4/N0N1BREZ9QFWp8wbVHkoGaJV+OVR6ATaEEDg7KBX7OvaZRD9UU9bz/nQ1VpOqA0n9S
-         8eeR7yZLFH/UxhfUaLWSXFy3bVaweMOTegE6mMYZm5r9NkLVC6Vcuo7rTgoA0LaZP3a8
-         bJ3TT0Egwz3NhuZdAm29i1aDTbUY8//zvlI3xJWGZEiM7+T17U3VxRUWA3O9uHzRP+9Q
-         Ezq12OvlSBrdzwd3LudIJKZU1sx1AEJrYYG412E7LL5XmThm65Zwzz5L9NZJuPiylBLQ
-         Gs1w==
+        bh=uUzRX7Xh7byk+MCJLYcIVyEy+EENOl4g6KMABWycDWw=;
+        b=ZQ6PxwUt7uDnexDJkq9OENRzTCFskAngHyXDBZksax3F+PGRBGH8FR1A6RJapyEQ55
+         /zzucfJ05Y9z2hjpZyqzThIvKaXCo7NfK/mdARhJfTS2Z1kk3fh+fAgRvxEYh+Hfn0xb
+         CgRg0yjdWxEEOFfba4LnL9gOFEwaksq23hjZQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=+OGMGqzbdua1JvnmjrGnKHeEWLFeUVoFJYkCdgpO3Hs=;
-        b=Qpv7U/D1ynz9ytRyCbLAqwPZzllzmIB9oeiqFQz9zExtUEdrypy3qVppoxjzhPnsX5
-         MOu3G/UrWUdqlJ7ZkmphAvotJleYGfV+8ovCmR3bYCp4WzhI7/ARB8R+cihOIqSVyCdw
-         03WRprZg80A/XeMZDbDAMuWZbCsX8SFABba+d6J7ONr4dnSvzM8TyUWZ9cofpCRI71Iz
-         mEqXEqm5cYk0nc7wXdMF5jy1/sejfwesvyEa6Gj8hRwkhfthy07pxQS1JtQ8QzMQEmWI
-         koOBQXssukRcWBwLw0GCYWPpZJlYAG3EQk+eY95uZI0Yeq5T2D6eOc33kQPbQNEJYeOF
-         tYFA==
-X-Gm-Message-State: APjAAAVFRQJjCDjhydHSjw6khml//jgTsMg8KTSWKg4FHWVbcyY1G8ym
-        nPkFOXnyQhQmLZUo8i1GhJaI9vkdtxAl
-X-Google-Smtp-Source: APXvYqyWLLZ50q7uviVNuXVKErM04P/Vd9axLWq91lNhBhfrDYvxqRIQHOHYYFeL8sr76Jo1J8Kk+RO5fw7K
-X-Received: by 2002:a63:6a46:: with SMTP id f67mr12116929pgc.87.1570732637239;
- Thu, 10 Oct 2019 11:37:17 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 11:36:49 -0700
-In-Reply-To: <20191010183649.23768-1-irogers@google.com>
-Message-Id: <20191010183649.23768-6-irogers@google.com>
-Mime-Version: 1.0
-References: <20191010183649.23768-1-irogers@google.com>
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-Subject: [PATCH 5/5] perf annotate: fix objdump --no-show-raw-insn flag
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uUzRX7Xh7byk+MCJLYcIVyEy+EENOl4g6KMABWycDWw=;
+        b=Oz5yo32hPiH035hExEw/EJVJ+7ZZBazZZ/hmwYucv5nXba1VBZdetsHpF12wp2iKz3
+         IH5iz0zJhEUrJpHohCnN+2LpCD6/adeVUoS2s6R8kdrRMZDy2tpbRZyuoVQF/60E7moa
+         DwKEWN5EKl4yBu3vlMVIGwA+2fb1GIsHDt7S5WiNY5KjR4ITqWx5+XAaucaM4Jsx2CBv
+         5z+BzzhdqlyRwK0Sg0OqnsJmpkMGXY6XWxvkU4h6H26e9kX2a874JjNutRHwi2EuOvPF
+         yp0ITfhgfz/JVfVlsD3YfOBlAgXllXLZaWDqI4/5UOTY1ZvgUgq00lj1SjCKOKWYslCH
+         CgBQ==
+X-Gm-Message-State: APjAAAUAhIydIb75VTmhgfJ/W/fj7K17jtJM5vnMA8BpH9+Lm8oor/p+
+        1s0my7hOIr3zWhFImbDlXrml1EvrPIn26EWL9BIVdw==
+X-Google-Smtp-Source: APXvYqyEPPCMhzAxynrhUpsjYl18h3kyEF/0J8BemwV2SSA0s8xu58jyxX1AcQyr0RHPK4QPm9Qtmih6L0sw0Cz+Egw=
+X-Received: by 2002:a02:c4cd:: with SMTP id h13mr12796842jaj.142.1570732690810;
+ Thu, 10 Oct 2019 11:38:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191008115342.28483-1-patrick.rudolph@9elements.com>
+ <20191008115342.28483-2-patrick.rudolph@9elements.com> <5d9d120b.1c69fb81.b6201.1477@mx.google.com>
+ <CAODwPW-mfySMQUejCwT+G45BtOysq_JCRQa8GwoYTkjY_yRwgA@mail.gmail.com>
+ <6cfca8c34ccd51f12b4418e9a74d8961e32077ed.camel@9elements.com> <5d9f3b9f.1c69fb81.62109.325d@mx.google.com>
+In-Reply-To: <5d9f3b9f.1c69fb81.62109.325d@mx.google.com>
+From:   Julius Werner <jwerner@chromium.org>
+Date:   Thu, 10 Oct 2019 11:37:58 -0700
+Message-ID: <CAODwPW-x1fwGSrvLNWCU4GAfGbD0zqo2HLm+33D8eUtxbnFLCg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] firmware: coreboot: Export active CBFS partition
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Julius Werner <jwerner@chromium.org>,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Zhang <benzh@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Samuel Holland <samuel@sholland.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove redirection of objdump's stderr to /dev/null to help diagnose
-failures.
-Fix the '--no-show-raw' flag to be '--no-show-raw-insn' which binutils
-is permissive and allows, but fails with LLVM objdump.
+> > I'll expose the coreboot tables using a sysfs driver, which then can be
+> > used by coreboot tools instead of accessing /dev/mem. As it holds the
+> > FMAP and "boot media params" that's all I need for now.
+> >
+> > The downside is that the userspace tools need to be keep in sync with
+> > the binary interface the coreboot tables are providing.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/annotate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Well, in the other version the kernel needs to be kept in sync
+instead. No matter where you do the parsing, something needs to be
+kept in sync. I think userspace would be easier, especially if we
+would host a small userspace library in the coreboot repository that
+other tools could just link.
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 3d5b9236576a..2a71c90a4921 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1944,13 +1944,13 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 	err = asprintf(&command,
- 		 "%s %s%s --start-address=0x%016" PRIx64
- 		 " --stop-address=0x%016" PRIx64
--		 " -l -d %s %s -C \"$1\" 2>/dev/null",
-+		 " -l -d %s %s -C \"$1\"",
- 		 opts->objdump_path ?: "objdump",
- 		 opts->disassembler_style ? "-M " : "",
- 		 opts->disassembler_style ?: "",
- 		 map__rip_2objdump(map, sym->start),
- 		 map__rip_2objdump(map, sym->end),
--		 opts->show_asm_raw ? "" : "--no-show-raw",
-+		 opts->show_asm_raw ? "" : "--no-show-raw-insn",
- 		 opts->annotate_src ? "-S" : "");
- 
- 	if (err < 0) {
--- 
-2.23.0.581.g78d2f28ef7-goog
+> I'd rather we export this information in sysfs via some coreboot_fmap
+> class and then make the "boot media params" another property of one of
+> the fmap devices. Then userspace can search through all the fmap devices
+> and find the "boot media params" one. Is anything else needed?
 
+Okay, this is the fundamental question we need to answer first... do
+you really think it's better to add a separate interface for each of
+these, Stephen? The coreboot table[1] currently contains 49 entries
+with all sorts of random firmware information, and most of these will
+never be interesting to the kernel. Do we want to establish a pattern
+where we add a new sysfs interface for each of them whenever someone
+has a use case for reading it from userspace? I think this might be a
+good point to implement a generic interface to read any coreboot table
+entry from userspace instead, and say that if the kernel doesn't need
+the information in a specific entry itself, it shouldn't need to know
+how to parse it.
+
+[1] https://review.coreboot.org/cgit/coreboot.git/tree/src/commonlib/include/commonlib/coreboot_tables.h
