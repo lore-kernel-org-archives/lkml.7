@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E7BECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E186AECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A892196E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB27E2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696855;
-	bh=mq35Vn0tqDDrU82odl0/7IBoZLhV+ZjLps5XJFxnzU4=;
+	s=default; t=1570696858;
+	bh=Ck7sX0+FXelRH0DMHdATlyjDNhesOgfQM+4Zk78puy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LjBmyeDSYtXShxhV18N9RGIzF/yJlNkqBFcK+JEKW2x0nNaNGn4A16/933mYHQwy+
-	 qTP+4v2ny9OzPQ9XMZLAym+JE8kVshY6S/sDeNp0/MG1aKJuDkLvdWrJmL1RP0+Gz3
-	 SaSdJRhZughA/rlA40O9PiaY3VCS8LY4vE8iXTz8=
+	b=HxIvIZJeLoUjRgVga4F5U6yj0DHA2zS4YpxbzH3WVF7EXsBWLWVGAnnwl0bHUqAPK
+	 +qjuJb6Wgb9/YoqjzqFFVX57Xc7hpHZzddI+jbpbF4lqAPJPDVp/Xvm4Wm8ZjxrrJK
+	 UJEJ+yhzpwiuHdMvasE9Y2GE1/kzGNC6nU5MHGaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388216AbfJJIky (ORCPT
+        id S2388221AbfJJIk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:40:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45032 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:40:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387576AbfJJIkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:40:52 -0400
+        id S2387585AbfJJIkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:40:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79F52218AC;
-        Thu, 10 Oct 2019 08:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44B7A218AC;
+        Thu, 10 Oct 2019 08:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696852;
-        bh=mq35Vn0tqDDrU82odl0/7IBoZLhV+ZjLps5XJFxnzU4=;
+        s=default; t=1570696854;
+        bh=Ck7sX0+FXelRH0DMHdATlyjDNhesOgfQM+4Zk78puy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zp0yxi2K2/CAAecwmg8kwcazInhS3d/a23XYw9s4eSKJiVlc3wpq4bClIgLQw6A4r
-         2fU9CKcmHOrno3VI4KTWB9UqbLH+mmFuqP7biksimcWUocJ700Gzdm+Mr3Beys3jOH
-         d6O2uFbw42yakZKyeiP9cWc+pXbsSds3Qn67Kam8=
+        b=t3DFLrCwmWQtST2iZ3F6KldVcuFoHWVz4c2NT2fiZXq3KRwE66csr3Q5Va4PuQH/l
+         jCsw9KB4QUIRIaarnBncPyJxzDl+gqLJM8riup7uVuWUeR3CJ48yPraUvf8U/K9rg9
+         ACcik8MU4DhzIEqAVax5Y2cuOZu+PZ9ZocwC9kBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.3 074/148] mmc: tegra: Implement ->set_dma_mask()
-Date:   Thu, 10 Oct 2019 10:35:35 +0200
-Message-Id: <20191010083615.861633133@linuxfoundation.org>
+Subject: [PATCH 5.3 075/148] mmc: sdhci: improve ADMA error reporting
+Date:   Thu, 10 Oct 2019 10:35:36 +0200
+Message-Id: <20191010083615.913134034@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -61,214 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolin Chen <nicoleotsuka@gmail.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit b960bc448a252428bacca271f3416a8bda3b599b upstream.
+commit d1c536e3177390da43d99f20143b810c35433d1f upstream.
 
-The SDHCI controller on Tegra186 supports 40-bit addressing, which is
-usually enough to address all of system memory. However, if the SDHCI
-controller is behind an IOMMU, the address space can go beyond. This
-happens on Tegra186 and later where the ARM SMMU has an input address
-space of 48 bits. If the DMA API is backed by this ARM SMMU, the top-
-down IOVA allocator will cause IOV addresses to be returned that the
-SDHCI controller cannot access.
+ADMA errors are potentially data corrupting events; although we print
+the register state, we do not usefully print the ADMA descriptors.
+Worse than that, we print them by referencing their virtual address
+which is meaningless when the register state gives us the DMA address
+of the failing descriptor.
 
-Unfortunately, prior to the introduction of the ->set_dma_mask() host
-operation, the SDHCI core would set either a 64-bit DMA mask if the
-controller claimed to support 64-bit addressing, or a 32-bit DMA mask
-otherwise.
+Print the ADMA descriptors giving their DMA addresses rather than their
+virtual addresses, and print them using SDHCI_DUMP() rather than DBG().
 
-Since the full 64 bits cannot be addressed on Tegra, this had to be
-worked around in commit 68481a7e1c84 ("mmc: tegra: Mark 64 bit dma
-broken on Tegra186") by setting the SDHCI_QUIRK2_BROKEN_64_BIT_DMA
-quirk, which effectively restricts the DMA mask to 32 bits.
+We also do not show the correct value of the interrupt status register;
+the register dump shows the current value, after we have cleared the
+pending interrupts we are going to service.  What is more useful is to
+print the interrupts that _were_ pending at the time the ADMA error was
+encountered.  Fix that too.
 
-One disadvantage of this is that dma_map_*() APIs will now try to use
-the swiotlb to bounce DMA to addresses beyond of the controller's DMA
-mask. This in turn caused degraded performance and can lead to
-situations where the swiotlb buffer is exhausted, which in turn leads
-to DMA transfers to fail.
-
-With the recent introduction of the ->set_dma_mask() host operation,
-this can now be properly fixed. For each generation of Tegra, the exact
-supported DMA mask can be configured. This kills two birds with one
-stone: it avoids the use of bounce buffers because system memory never
-exceeds the addressable memory range of the SDHCI controllers on these
-devices, and at the same time when an IOMMU is involved, it prevents
-IOV addresses from being allocated beyond the addressible range of the
-controllers.
-
-Since the DMA mask is now properly handled, the 64-bit DMA quirk can be
-removed.
-
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-[treding@nvidia.com: provide more background in commit message]
-Tested-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Cc: stable@vger.kernel.org # v4.15 +
+Cc: stable@vger.kernel.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-tegra.c |   48 +++++++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 20 deletions(-)
+ drivers/mmc/host/sdhci.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -4,6 +4,7 @@
-  */
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2857,6 +2857,7 @@ static void sdhci_cmd_irq(struct sdhci_h
+ static void sdhci_adma_show_error(struct sdhci_host *host)
+ {
+ 	void *desc = host->adma_table;
++	dma_addr_t dma = host->adma_addr;
  
- #include <linux/delay.h>
-+#include <linux/dma-mapping.h>
- #include <linux/err.h>
- #include <linux/module.h>
- #include <linux/init.h>
-@@ -104,6 +105,7 @@
+ 	sdhci_dumpregs(host);
  
- struct sdhci_tegra_soc_data {
- 	const struct sdhci_pltfm_data *pdata;
-+	u64 dma_mask;
- 	u32 nvquirks;
- 	u8 min_tap_delay;
- 	u8 max_tap_delay;
-@@ -1233,11 +1235,25 @@ static const struct cqhci_host_ops sdhci
- 	.update_dcmd_desc = sdhci_tegra_update_dcmd_desc,
- };
+@@ -2864,18 +2865,21 @@ static void sdhci_adma_show_error(struct
+ 		struct sdhci_adma2_64_desc *dma_desc = desc;
  
-+static int tegra_sdhci_set_dma_mask(struct sdhci_host *host)
-+{
-+	struct sdhci_pltfm_host *platform = sdhci_priv(host);
-+	struct sdhci_tegra *tegra = sdhci_pltfm_priv(platform);
-+	const struct sdhci_tegra_soc_data *soc = tegra->soc_data;
-+	struct device *dev = mmc_dev(host->mmc);
-+
-+	if (soc->dma_mask)
-+		return dma_set_mask_and_coherent(dev, soc->dma_mask);
-+
-+	return 0;
-+}
-+
- static const struct sdhci_ops tegra_sdhci_ops = {
- 	.get_ro     = tegra_sdhci_get_ro,
- 	.read_w     = tegra_sdhci_readw,
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
-+	.set_dma_mask = tegra_sdhci_set_dma_mask,
- 	.set_bus_width = sdhci_set_bus_width,
- 	.reset      = tegra_sdhci_reset,
- 	.platform_execute_tuning = tegra_sdhci_execute_tuning,
-@@ -1257,6 +1273,7 @@ static const struct sdhci_pltfm_data sdh
+ 		if (host->flags & SDHCI_USE_64_BIT_DMA)
+-			DBG("%p: DMA 0x%08x%08x, LEN 0x%04x, Attr=0x%02x\n",
+-			    desc, le32_to_cpu(dma_desc->addr_hi),
++			SDHCI_DUMP("%08llx: DMA 0x%08x%08x, LEN 0x%04x, Attr=0x%02x\n",
++			    (unsigned long long)dma,
++			    le32_to_cpu(dma_desc->addr_hi),
+ 			    le32_to_cpu(dma_desc->addr_lo),
+ 			    le16_to_cpu(dma_desc->len),
+ 			    le16_to_cpu(dma_desc->cmd));
+ 		else
+-			DBG("%p: DMA 0x%08x, LEN 0x%04x, Attr=0x%02x\n",
+-			    desc, le32_to_cpu(dma_desc->addr_lo),
++			SDHCI_DUMP("%08llx: DMA 0x%08x, LEN 0x%04x, Attr=0x%02x\n",
++			    (unsigned long long)dma,
++			    le32_to_cpu(dma_desc->addr_lo),
+ 			    le16_to_cpu(dma_desc->len),
+ 			    le16_to_cpu(dma_desc->cmd));
  
- static const struct sdhci_tegra_soc_data soc_data_tegra20 = {
- 	.pdata = &sdhci_tegra20_pdata,
-+	.dma_mask = DMA_BIT_MASK(32),
- 	.nvquirks = NVQUIRK_FORCE_SDHCI_SPEC_200 |
- 		    NVQUIRK_ENABLE_BLOCK_GAP_DET,
- };
-@@ -1283,6 +1300,7 @@ static const struct sdhci_pltfm_data sdh
+ 		desc += host->desc_sz;
++		dma += host->desc_sz;
  
- static const struct sdhci_tegra_soc_data soc_data_tegra30 = {
- 	.pdata = &sdhci_tegra30_pdata,
-+	.dma_mask = DMA_BIT_MASK(32),
- 	.nvquirks = NVQUIRK_ENABLE_SDHCI_SPEC_300 |
- 		    NVQUIRK_ENABLE_SDR50 |
- 		    NVQUIRK_ENABLE_SDR104 |
-@@ -1295,6 +1313,7 @@ static const struct sdhci_ops tegra114_s
- 	.write_w    = tegra_sdhci_writew,
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
-+	.set_dma_mask = tegra_sdhci_set_dma_mask,
- 	.set_bus_width = sdhci_set_bus_width,
- 	.reset      = tegra_sdhci_reset,
- 	.platform_execute_tuning = tegra_sdhci_execute_tuning,
-@@ -1316,6 +1335,7 @@ static const struct sdhci_pltfm_data sdh
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra114 = {
- 	.pdata = &sdhci_tegra114_pdata,
-+	.dma_mask = DMA_BIT_MASK(32),
- };
- 
- static const struct sdhci_pltfm_data sdhci_tegra124_pdata = {
-@@ -1325,22 +1345,13 @@ static const struct sdhci_pltfm_data sdh
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
- 		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
--		   /*
--		    * The TRM states that the SD/MMC controller found on
--		    * Tegra124 can address 34 bits (the maximum supported by
--		    * the Tegra memory controller), but tests show that DMA
--		    * to or from above 4 GiB doesn't work. This is possibly
--		    * caused by missing programming, though it's not obvious
--		    * what sequence is required. Mark 64-bit DMA broken for
--		    * now to fix this for existing users (e.g. Nyan boards).
--		    */
--		   SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- 	.ops  = &tegra114_sdhci_ops,
- };
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra124 = {
- 	.pdata = &sdhci_tegra124_pdata,
-+	.dma_mask = DMA_BIT_MASK(34),
- };
- 
- static const struct sdhci_ops tegra210_sdhci_ops = {
-@@ -1349,6 +1360,7 @@ static const struct sdhci_ops tegra210_s
- 	.write_w    = tegra210_sdhci_writew,
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
-+	.set_dma_mask = tegra_sdhci_set_dma_mask,
- 	.set_bus_width = sdhci_set_bus_width,
- 	.reset      = tegra_sdhci_reset,
- 	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
-@@ -1369,6 +1381,7 @@ static const struct sdhci_pltfm_data sdh
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra210 = {
- 	.pdata = &sdhci_tegra210_pdata,
-+	.dma_mask = DMA_BIT_MASK(34),
- 	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
- 		    NVQUIRK_HAS_PADCALIB |
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
-@@ -1383,6 +1396,7 @@ static const struct sdhci_ops tegra186_s
- 	.read_w     = tegra_sdhci_readw,
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
-+	.set_dma_mask = tegra_sdhci_set_dma_mask,
- 	.set_bus_width = sdhci_set_bus_width,
- 	.reset      = tegra_sdhci_reset,
- 	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
-@@ -1398,20 +1412,13 @@ static const struct sdhci_pltfm_data sdh
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
- 		  SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
--		   /* SDHCI controllers on Tegra186 support 40-bit addressing.
--		    * IOVA addresses are 48-bit wide on Tegra186.
--		    * With 64-bit dma mask used for SDHCI, accesses can
--		    * be broken. Disable 64-bit dma, which would fall back
--		    * to 32-bit dma mask. Ideally 40-bit dma mask would work,
--		    * But it is not supported as of now.
--		    */
--		   SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- 	.ops  = &tegra186_sdhci_ops,
- };
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
- 	.pdata = &sdhci_tegra186_pdata,
-+	.dma_mask = DMA_BIT_MASK(40),
- 	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
- 		    NVQUIRK_HAS_PADCALIB |
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
-@@ -1424,6 +1431,7 @@ static const struct sdhci_tegra_soc_data
- 
- static const struct sdhci_tegra_soc_data soc_data_tegra194 = {
- 	.pdata = &sdhci_tegra186_pdata,
-+	.dma_mask = DMA_BIT_MASK(39),
- 	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
- 		    NVQUIRK_HAS_PADCALIB |
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+ 		if (dma_desc->cmd & cpu_to_le16(ADMA2_END))
+ 			break;
+@@ -2951,7 +2955,8 @@ static void sdhci_data_irq(struct sdhci_
+ 			!= MMC_BUS_TEST_R)
+ 		host->data->error = -EILSEQ;
+ 	else if (intmask & SDHCI_INT_ADMA_ERROR) {
+-		pr_err("%s: ADMA error\n", mmc_hostname(host->mmc));
++		pr_err("%s: ADMA error: 0x%08x\n", mmc_hostname(host->mmc),
++		       intmask);
+ 		sdhci_adma_show_error(host);
+ 		host->data->error = -EIO;
+ 		if (host->ops->adma_workaround)
 
 
