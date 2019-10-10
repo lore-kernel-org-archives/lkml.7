@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FDEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EB0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E20C20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D7321920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696785;
-	bh=lcfvZg2D+nWX4tQ0Ktw0J8gXOf+V1tNFCWd1K6KLb5k=;
+	s=default; t=1570696787;
+	bh=QWfFys8kVI5Ktj7hLu3Mlw2CYHL1/OpBrjhVm2QApV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mMkf50ou0MLAnuGTlTkhdYBE9dzzgL7JMocqBhdGH64MY4wr8MgfNkfMLw1TMfbG9
-	 8mCsu4WpFpvP+WWidcmftnjkCZdGI7jUXePYEn8Q9AZib2hCY5cp3B5SpqwQGPK01y
-	 17Hm0/EzeYAdcoNZTHheXSgN/LjA4B3wUre5/ZkY=
+	b=MgdHg4ch4JNdBZFcIbYUIujULNXAYUDF3zz10XHI1D6+YF17yFdpci8di89AR5UVo
+	 07+ubJUZYB2nSUBKP1aMlaWtqqYMt7tlKMMhLchmRWXiOxz58z1s6Q6SEfcRCFIdxL
+	 m6xh4rFpH8nLD0+VzpJYi3fF69Jk9TT4eww6F6tI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387947AbfJJIjo (ORCPT
+        id S2387960AbfJJIjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:39:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387932AbfJJIjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:39:42 -0400
+        id S2387948AbfJJIjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:39:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 920D220B7C;
-        Thu, 10 Oct 2019 08:39:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D6092190F;
+        Thu, 10 Oct 2019 08:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696781;
-        bh=lcfvZg2D+nWX4tQ0Ktw0J8gXOf+V1tNFCWd1K6KLb5k=;
+        s=default; t=1570696783;
+        bh=QWfFys8kVI5Ktj7hLu3Mlw2CYHL1/OpBrjhVm2QApV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6HJcqa5/S3bjVKGlSZlboCxwR2G6lscrz1Q0AcmfgLS+mxbBp5oYlq1nssPy7mnR
-         5wSpEHidhPcqjHzhcnJ9MztHsY68mGyi5hFO7p6k1dSeGjOVEI3iQ+rZlMxo6Kbnxy
-         tRdIvzOCd8cqTS4Dkwp+AnDIKqPPrDAufloiH6KM=
+        b=bWqKucCek85NUtEMs9VZcKJTLuLvUFZtYydcnFduQSmuZ3Xv/SrDpZWF7hjLQ+Ogp
+         cOAp5+Ajr2CIJVb77p5vSZznZnnj491O6+XTZ+Rp7jnvzWafrrKGUJlyn/o/HOIrx0
+         DuVGD8I32mlz9pEGi6shdwo0h/M+Z2Q5HonD2DBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.3 033/148] powerpc/book3s64/radix: Rename CPU_FTR_P9_TLBIE_BUG feature flag
-Date:   Thu, 10 Oct 2019 10:34:54 +0200
-Message-Id: <20191010083613.161863899@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.3 051/148] usercopy: Avoid HIGHMEM pfn warning
+Date:   Thu, 10 Oct 2019 10:35:12 +0200
+Message-Id: <20191010083614.257922832@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,110 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 09ce98cacd51fcd0fa0af2f79d1e1d3192f4cbb0 upstream.
+commit 314eed30ede02fa925990f535652254b5bad6b65 upstream.
 
-Rename the #define to indicate this is related to store vs tlbie
-ordering issue. In the next patch, we will be adding another feature
-flag that is used to handles ERAT flush vs tlbie ordering issue.
+When running on a system with >512MB RAM with a 32-bit kernel built with:
 
-Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190924035254.24612-2-aneesh.kumar@linux.ibm.com
+	CONFIG_DEBUG_VIRTUAL=y
+	CONFIG_HIGHMEM=y
+	CONFIG_HARDENED_USERCOPY=y
+
+all execve()s will fail due to argv copying into kmap()ed pages, and on
+usercopy checking the calls ultimately of virt_to_page() will be looking
+for "bad" kmap (highmem) pointers due to CONFIG_DEBUG_VIRTUAL=y:
+
+ ------------[ cut here ]------------
+ kernel BUG at ../arch/x86/mm/physaddr.c:83!
+ invalid opcode: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC
+ CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc8 #6
+ Hardware name: Dell Inc. Inspiron 1318/0C236D, BIOS A04 01/15/2009
+ EIP: __phys_addr+0xaf/0x100
+ ...
+ Call Trace:
+  __check_object_size+0xaf/0x3c0
+  ? __might_sleep+0x80/0xa0
+  copy_strings+0x1c2/0x370
+  copy_strings_kernel+0x2b/0x40
+  __do_execve_file+0x4ca/0x810
+  ? kmem_cache_alloc+0x1c7/0x370
+  do_execve+0x1b/0x20
+  ...
+
+The check is from arch/x86/mm/physaddr.c:
+
+	VIRTUAL_BUG_ON((phys_addr >> PAGE_SHIFT) > max_low_pfn);
+
+Due to the kmap() in fs/exec.c:
+
+		kaddr = kmap(kmapped_page);
+	...
+	if (copy_from_user(kaddr+offset, str, bytes_to_copy)) ...
+
+Now we can fetch the correct page to avoid the pfn check. In both cases,
+hardened usercopy will need to walk the page-span checker (if enabled)
+to do sanity checking.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Fixes: f5509cc18daa ("mm: Hardened usercopy")
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Link: https://lore.kernel.org/r/201909171056.7F2FFD17@keescook
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/cputable.h    |    4 ++--
- arch/powerpc/kernel/dt_cpu_ftrs.c      |    6 +++---
- arch/powerpc/kvm/book3s_hv_rm_mmu.c    |    2 +-
- arch/powerpc/mm/book3s64/hash_native.c |    2 +-
- arch/powerpc/mm/book3s64/radix_tlb.c   |    4 ++--
- 5 files changed, 9 insertions(+), 9 deletions(-)
+ mm/usercopy.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/include/asm/cputable.h
-+++ b/arch/powerpc/include/asm/cputable.h
-@@ -213,7 +213,7 @@ static inline void cpu_feature_keys_init
- #define CPU_FTR_POWER9_DD2_1		LONG_ASM_CONST(0x0000080000000000)
- #define CPU_FTR_P9_TM_HV_ASSIST		LONG_ASM_CONST(0x0000100000000000)
- #define CPU_FTR_P9_TM_XER_SO_BUG	LONG_ASM_CONST(0x0000200000000000)
--#define CPU_FTR_P9_TLBIE_BUG		LONG_ASM_CONST(0x0000400000000000)
-+#define CPU_FTR_P9_TLBIE_STQ_BUG	LONG_ASM_CONST(0x0000400000000000)
- #define CPU_FTR_P9_TIDR			LONG_ASM_CONST(0x0000800000000000)
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -11,6 +11,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
- #ifndef __ASSEMBLY__
-@@ -461,7 +461,7 @@ static inline void cpu_feature_keys_init
- 	    CPU_FTR_CFAR | CPU_FTR_HVMODE | CPU_FTR_VMX_COPY | \
- 	    CPU_FTR_DBELL | CPU_FTR_HAS_PPR | CPU_FTR_ARCH_207S | \
- 	    CPU_FTR_TM_COMP | CPU_FTR_ARCH_300 | CPU_FTR_PKEY | \
--	    CPU_FTR_P9_TLBIE_BUG | CPU_FTR_P9_TIDR)
-+	    CPU_FTR_P9_TLBIE_STQ_BUG | CPU_FTR_P9_TIDR)
- #define CPU_FTRS_POWER9_DD2_0 CPU_FTRS_POWER9
- #define CPU_FTRS_POWER9_DD2_1 (CPU_FTRS_POWER9 | CPU_FTR_POWER9_DD2_1)
- #define CPU_FTRS_POWER9_DD2_2 (CPU_FTRS_POWER9 | CPU_FTR_POWER9_DD2_1 | \
---- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-+++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-@@ -705,14 +705,14 @@ static __init void update_tlbie_feature_
- 		if ((pvr & 0xe000) == 0) {
- 			/* Nimbus */
- 			if ((pvr & 0xfff) < 0x203)
--				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
- 		} else if ((pvr & 0xc000) == 0) {
- 			/* Cumulus */
- 			if ((pvr & 0xfff) < 0x103)
--				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
- 		} else {
- 			WARN_ONCE(1, "Unknown PVR");
--			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
- 		}
- 	}
- }
---- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-+++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-@@ -451,7 +451,7 @@ static void do_tlbies(struct kvm *kvm, u
- 				     "r" (rbvalues[i]), "r" (kvm->arch.lpid));
- 		}
+ #include <linux/mm.h>
++#include <linux/highmem.h>
+ #include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <linux/sched/task.h>
+@@ -227,7 +228,12 @@ static inline void check_heap_object(con
+ 	if (!virt_addr_valid(ptr))
+ 		return;
  
--		if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
-+		if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
- 			/*
- 			 * Need the extra ptesync to make sure we don't
- 			 * re-order the tlbie
---- a/arch/powerpc/mm/book3s64/hash_native.c
-+++ b/arch/powerpc/mm/book3s64/hash_native.c
-@@ -199,7 +199,7 @@ static inline unsigned long  ___tlbie(un
+-	page = virt_to_head_page(ptr);
++	/*
++	 * When CONFIG_HIGHMEM=y, kmap_to_page() will give either the
++	 * highmem page or fallback to virt_to_page(). The following
++	 * is effectively a highmem-aware virt_to_head_page().
++	 */
++	page = compound_head(kmap_to_page((void *)ptr));
  
- static inline void fixup_tlbie(unsigned long vpn, int psize, int apsize, int ssize)
- {
--	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
-+	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
- 		/* Need the extra ptesync to ensure we don't reorder tlbie*/
- 		asm volatile("ptesync": : :"memory");
- 		___tlbie(vpn, psize, apsize, ssize);
---- a/arch/powerpc/mm/book3s64/radix_tlb.c
-+++ b/arch/powerpc/mm/book3s64/radix_tlb.c
-@@ -216,7 +216,7 @@ static inline void fixup_tlbie(void)
- 	unsigned long pid = 0;
- 	unsigned long va = ((1UL << 52) - 1);
- 
--	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
-+	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
- 		asm volatile("ptesync": : :"memory");
- 		__tlbie_va(va, pid, mmu_get_ap(MMU_PAGE_64K), RIC_FLUSH_TLB);
- 	}
-@@ -226,7 +226,7 @@ static inline void fixup_tlbie_lpid(unsi
- {
- 	unsigned long va = ((1UL << 52) - 1);
- 
--	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
-+	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
- 		asm volatile("ptesync": : :"memory");
- 		__tlbie_lpid_va(va, lpid, mmu_get_ap(MMU_PAGE_64K), RIC_FLUSH_TLB);
- 	}
+ 	if (PageSlab(page)) {
+ 		/* Check slab allocator for flags and size. */
 
 
