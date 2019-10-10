@@ -2,152 +2,70 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA643C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354EFC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A344E2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="n63q47Oi"
+	by mail.kernel.org (Postfix) with ESMTP id 0DCB92190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:05:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733003AbfJJHFT (ORCPT
+        id S1733018AbfJJHF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:05:19 -0400
-Received: from cmta18.telus.net ([209.171.16.91]:42139 "EHLO cmta18.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfJJHFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:05:19 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id ISVciThHlgu2QISVdixnlj; Thu, 10 Oct 2019 01:05:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1570691117; bh=yJAIubNgABwo5FHn45HxGvP11hFlYI+7AOXWX2KntCU=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=n63q47Oi4q9isHW8WZIYigmJPMJsghFIMSvQP74roEYi5UfvRcdSg5Xomw4Q0DmrQ
-         fMtiLUGORJXAWyrY2iEBNJOfyHWqYja/agKlt+FeqF5ydZJ0r2UOVLpL7wsE0FxQAb
-         MXNi6Z+5R/RcCVPCTZx3TxjuEcOs4a7525MUdw27IhavwR+KZ37Ac0cI4BTyGPyTE2
-         l+otz52ja4nuIDjYOdyToEUBIrNIUu8RxhI7FuMDE7UwkH0HepOvL6l0E0L821pqfp
-         jHAi3bVkpJgOcIEwz+Va+zhh7p0tisSDGcQqiNZKoVkWDKyS4CmXNQJcUv5sRYLBw8
-         6aqPZopvpvxQg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=QIcWuTDL c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=aatUQebYAAAA:8 a=VCGl1-TQkrmU9ILRUbUA:9
- a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=B-rJQ6SmICdiGdTV:21 a=MI_Jn2f3h0BHA_FJ:21
- a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=7715FyvI7WU-l6oqrZBK:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Frederic Weisbecker'" <frederic@kernel.org>,
-        "'Mel Gorman'" <mgorman@suse.de>,
-        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
-        "'Chen, Hu'" <hu1.chen@intel.com>,
-        "'Quentin Perret'" <quentin.perret@arm.com>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
-References: <001601d57487$e1029ef0$a307dcd0$@net> <CAJZ5v0jvusVBcKECBueDHk5KQGda=GGuSGPO3F4wCvk3cro56A@mail.gmail.com> <1574317.FFykgJKpNH@kreacher> <3490479.2dnHFFeJIp@kreacher>
-In-Reply-To: <3490479.2dnHFFeJIp@kreacher>
-Subject: RE: [RFC/RFT][PATCH v8] cpuidle: New timer events oriented governor for tickless systems
-Date:   Thu, 10 Oct 2019 00:05:11 -0700
-Message-ID: <000b01d57f39$11868670$34939350$@net>
+        Thu, 10 Oct 2019 03:05:29 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44174 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbfJJHF2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:05:28 -0400
+Received: from dhcp-172-31-174-146.wireless.concordia.ca (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2988E28E582;
+        Thu, 10 Oct 2019 08:05:27 +0100 (BST)
+Date:   Thu, 10 Oct 2019 09:05:24 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <vigneshr@ti.com>, <marek.vasut@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <geert+renesas@glider.be>,
+        <jonas@norrbonn.se>, linux-aspeed@lists.ozlabs.org,
+        andrew@aj.id.au, richard@nod.at, linux-kernel@vger.kernel.org,
+        vz@mleia.com, linux-mediatek@lists.infradead.org, joel@jms.id.au,
+        miquel.raynal@bootlin.com, matthias.bgg@gmail.com,
+        computersforpeace@gmail.com, dwmw2@infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 04/22] mtd: spi-nor: Rename nor->params to nor->flash
+Message-ID: <20191010090524.6de7e746@dhcp-172-31-174-146.wireless.concordia.ca>
+In-Reply-To: <20190924074533.6618-5-tudor.ambarus@microchip.com>
+References: <20190924074533.6618-1-tudor.ambarus@microchip.com>
+        <20190924074533.6618-5-tudor.ambarus@microchip.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdV+pp2JiVhEa0slQqie26B61DVX/QAen1OQ
-X-CMAE-Envelope: MS4wfHu/z7mA1YA3SYaJTrB79W1+Hvz5mXZEHAV9A0H5Yb2QfZmOXHloVuMAGicA3jv4YKjw5f8LPgM3NASyR9Sx1iMm/gwU+t8YVPcN/1B7/Y/3rUTU86s1
- PbZfXc9ANZBvN3N9PMuNhZoh640kHWAUwzEmrvaWtRQ49kdo1HVse3fZuj67cVZpPs/CQ8umW5O5DKg+6GAipXVdXe0qhBmrk71fMbnZkYHR9PLdLBsiG7LP
- NVTb00xopsaXvDkhmsBdFtpl2W+0Y0LrH1jnacso3k9gwpTi+rYNIVSZbea62oa2NVjuqkhG9WcbONcG8S6+Jv0ChmzTq8Job1H/Va9LyTurtWK46E4Z40+P
- oNdaYnGJKPc9W79vWw7L1ZXSAWa/nY0U5VUSJ9iCdvhsd8745qalIdmZ/DD4tla1UuiP3K7yXoEdMRt7/CIlQMAlW6j+OvIjSOhHBjUbAsZUicqhs1d10T1Q
- PpEbEYEgJygSPDalElqLyAJTglPOtMTHgxwOqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.10.09 06:37 Rafael J. Wysocki wrote:
-> On Wednesday, October 9, 2019 1:19:51 AM CEST Rafael J. Wysocki wrote:
->> On Tuesday, October 8, 2019 12:49:01 PM CEST Rafael J. Wysocki wrote:
->>> On Tue, Oct 8, 2019 at 11:51 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->>>> On Tue, Oct 8, 2019 at 8:20 AM Doug Smythies <dsmythies@telus.net> wrote:
->>>>> O.K. Thanks for your quick reply, and insight.
->>>>>
->>>>> I think long durations always need to be counted, but currently if
->>>>> the deepest idle state is disabled, they are not.
-...
->>>> AFAICS, adding early_hits to count is not a mistake if there are still
->>>> enabled states deeper than the current one.
->>> 
->>> And the mistake appears to be that the "hits" and "misses" metrics
->>> aren't handled in analogy with the "early_hits" one when the current
->>> state is disabled.
+On Tue, 24 Sep 2019 07:46:03 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
-I only know how to exploit and test the "hits" and "misses" path
-that should use the deepest available idle state upon transition
-to an idle system. Even so, the test has a low probability of
-failing, and so needs to be run many times.
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> Rename nor->params to nor->flash for a clearer separation
+> between the controller and flash operations.
 
-I do not know how to demonstrate and/or test any "early_hits" path
-to confirm that an issue exists or that it is fixed.
-
->>> 
->>> Let me try to cut a patch to address that.
->> 
->> Appended below, not tested.
-
-Reference as: rjw1
-
->> 
->> It is meant to address two problems, one of which is that the "hits" and
->> "misses" metrics of disabled states need to be taken into account too in
->> some cases, and the other is an issue with the handling of "early hits"
->> which may lead to suboptimal state selection if some states are disabled.
->
-> Well, it still misses a couple of points.
->
-> First, disable states that are too deep should not be taken into consideration
-> at all.
->
-> Second, the "hits" and "misses" metrics of disabled states need to be used for
-> idle duration ranges corresponding to them regardless of whether or not the
-> "hits" value is greater than the "misses" one.
->
-> Updated patch is below (still not tested), but it tries to do too much in one
-> go, so I need to split it into a series of smaller changes.
-
-Thanks for your continued look at this.
-
-Reference as: rjw2
-
-Test 1, hack job statistical test (old tests re-stated):
-
-Kernel  tests  	         fail rate
-5.4-rc1		 6616		13.45%
-5.3			 2376		 4.50%
-5.3-teov7		12136		 0.00%  <<< teo.c reverted and teov7 put in its place.
-5.4-rc1-ds		11168		 0.00%  <<< [old] ds proposed patch (> 7 hours test time)
-5.4-rc1-ds12	 4224		 0.00% <<< [old] new ds proposed patch
-5.4-rc2-rjw1	11280		 0.00%
-5.4-rc2-rjw2	  640		 0.00%  <<< Will be run again, for longer.
-
-Test 2: I also looked at every possible enable/disable idle combination,
-and they all seemed O.K.
-
-No other tests have been run yet.
-
-System:
-Processor: i7-2600K
-Deepest idle state: 4 (C6)
-
-... Doug
-
+Hm, I'm not sure 'flash' is clearer than 'params', and the spi_nor
+object is supposed to represent the NOR chip anyway, so it was pretty
+clear to me that nor->params were the NOR flash parameters not the
+NOR controller ones.
+If I had anything to change it would be s/params/properties/ (and
+s/spi_nor_flash_parameter/spi_nor_properties/) since those parameters
+look like immutable information discovered during the NOR detection,
+but I'm nitpicking here.
 
