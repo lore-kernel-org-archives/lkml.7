@@ -2,212 +2,457 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588B7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD9EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B46320B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2866C20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:02:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ssT0DKap"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zw8zvAH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732911AbfJJHBh (ORCPT
+        id S1732957AbfJJHCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:01:37 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:45866 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbfJJHBh (ORCPT
+        Thu, 10 Oct 2019 03:02:06 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35076 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732928AbfJJHCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:01:37 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191010070134euoutp024fa6a9b173b290e72a1a1d5ed4c525c7~MNwwQYD7m0192001920euoutp02n
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 07:01:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191010070134euoutp024fa6a9b173b290e72a1a1d5ed4c525c7~MNwwQYD7m0192001920euoutp02n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1570690895;
-        bh=9Qb+HXoM3YSdNp11C3zR48b48VxCNTQVc82NaoKIpeM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ssT0DKap7RhJWuDbhwIuXjSv+TlyC23cS6Q78WjmPplrBQD/PHCQmTkYC8uPw6nTS
-         cZt8SycnfSmI42wTAFvQHhPgvqIbG+EIcmO+KCqvqov+yzq1XFKfYS70Tq1omCAAeo
-         /uTPC3co/Il3iR0lgnCxwKLODujiMX5duJUjc6eg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191010070134eucas1p2af696c60adf770326146e56b386b805b~MNwwBIelY0356003560eucas1p2i;
-        Thu, 10 Oct 2019 07:01:34 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 9A.36.04374.E47DE9D5; Thu, 10
-        Oct 2019 08:01:34 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191010070134eucas1p1a5a9a64e9eb496fac919e77c68864367~MNwvrCUIb1596515965eucas1p1H;
-        Thu, 10 Oct 2019 07:01:34 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191010070134eusmtrp24d534bf82ee054ba29762009c4844c49~MNwvqSa7r0121201212eusmtrp2i;
-        Thu, 10 Oct 2019 07:01:34 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-23-5d9ed74ea7f7
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A8.B0.04117.E47DE9D5; Thu, 10
-        Oct 2019 08:01:34 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191010070133eusmtip10aba0388d0be7fe5d8fda6ce38dd381e~MNwvHoUj01290012900eusmtip1d;
-        Thu, 10 Oct 2019 07:01:33 +0000 (GMT)
-Subject: Re: [PATCH RESEND] gpu: drm: bridge: sii9234: convert to
- devm_i2c_new_dummy_device
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-i2c@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <4887a9f6-8f37-d56b-322b-c04a38b7361e@samsung.com>
-Date:   Thu, 10 Oct 2019 09:01:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Thu, 10 Oct 2019 03:02:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y21so5484256wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 00:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4dwWpB0VeJDrUWncAO9XEt6CLkOt4d9BmzYibkejxqc=;
+        b=zw8zvAH2poJI6y12d3PeAgePxG0yoDdunggoXWMUfC9djEzUfir7TO1FutGwVesrGs
+         P1iUt2IPbYIDooCrHVlMU3+cr/4LvV+qpcnsXChtAShVxlIYGbC5GNmPVKkPdHCt3PEQ
+         JyJzfUDBVwoJLfE8sTXoPkuWDCsqaeJ86PKESmL7vxWiGmQ9Xt92s9Yllz+vFEND0pJ5
+         e84tUXSCJ800zC5LEpfZkMpTEBMRZicDDymChe7zRKv/psuA+t9uEHPjN0tn/9HtZ4Hf
+         tPH0nI1DP3Rl+64pq9dfdSvPhm3C7cNbgiLtnI9t03/3Y8ZzOHfD7D7KHF+gIDAJlQNt
+         3row==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4dwWpB0VeJDrUWncAO9XEt6CLkOt4d9BmzYibkejxqc=;
+        b=YgRTiD2hdmAC6qo75YaJev9L6PjY5a2f2CK33bNiHfBfIwUd/kL5uYfy/vIyqaqih/
+         Lkia6M2wiQACFsJw/AMWXzz6Z/xerbeyZsz4kfMEVWe9VIWb1PvNzQ1fKjJfxMrjBlPZ
+         ZxFzXpHR9KcWLBejGoAeum/1XFZrpGNyXKL+02a2+jpQRvjEBjQV+sCFY7W4Ik3OMrKB
+         zEnbUpl9Xf3LD419/fCzZvg1I/MFEgWfAMfE+qEYwN+nXpnGE0SGDTpyfTyc1VhgmOwr
+         HiS/COZB79B8AE1qKA4Ph9SMot9U7rWEPKekG4sg5AaD4tTxTjtZ1rk89kpKe9cklygv
+         8XpQ==
+X-Gm-Message-State: APjAAAVAwQUcJZ24uVbkK0uti4xkYTm5mnUGBzQj8ppHOPu0a8pQu7XV
+        JfOVaOjluQuWb0ptfCw2I3uunlSIp2FqwJClaVaf2A==
+X-Google-Smtp-Source: APXvYqxbnlzXpnNtKe4bbifDs/bBZqGhmlWfl63btw+8LmVpIG+xwIXkYkd8JCwB48fGJYWJHedMyN21jQb69RRBXTA=
+X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr6424648wml.10.1570690921445;
+ Thu, 10 Oct 2019 00:02:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191008203322.3238-1-wsa+renesas@sang-engineering.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUYRT1m/dm5s3UyOe4XVwKBw2S0iKJB4oYJL1flRUtLtSYD3edZlzr
-        R6JZ44pLFI7mmCiZKKPmTkWM5CiapTWpSS5hgdIguZXhkjNPyX/n3nPPved8fBQhHeA7UdEJ
-        SawyQR4nE4jJ9t6190fPjlaGHcv660kXDPXz6K32YoL+tLIgoI2/5wi6/6eRpHOKa4S0emMZ
-        0R+7KwS0vjCELhw6EyBmFsayhcyr1SqSKVeX8Zm+ohEe07E6zWem8gw85sdTHcm8KSglmaWW
-        A+dFwWK/CDYuOoVVevvfEEctf2smFI0Oab/qB4gMpJPmIhEF2AcmjS1kLhJTUlyHoKCsjWcm
-        pHgZQUY2yxFLCP7MlpG7ioyt/B3FMwTa4oeIK0wIyjvqheYpWxwGUzkFyIzt8GXoza6xKAjc
-        xIP6B/OEmRDgw7DxYlxgxhLsDxWF3ZY+iT1gNK/Tgu3xVVic7uFzMzbQXzZrsSHCgVCrrrNg
-        Ah+EDlMFwWFH+DKr5ZmPAZ4TQkNmw7aY2i5OQ++qCxfBFuYNrUIOu8BWl5bH4bswVXeP4LRq
-        BG1NXQRH+EKPYdiyh9g2rev25tqnYKJ1nODWW8OYyYazYA0l7Y932hJQ3995ajeYete2s9AR
-        aj+sCIqQTLMnmGZPGM2eMJr/d6sQWY8c2WRVfCSrOpHApnqp5PGq5IRIr5uJ8S1o+4sNbBpW
-        OtHr9XA9whSS7ZdE9T8Jk/LlKar0eD0CipDZSao1FWFSSYQ8/TarTLyuTI5jVXrkTJEyR8kd
-        q+kQKY6UJ7GxLKtglbssjxI5ZaAkhcJbv/lVqnGNeDvzOeZSABl8xeeCacaYGYLJa761EUUl
-        rh7hg2u42quxtDDxuUJhNxhqf46JDeqyEhhcRZsnA0eOrDknGy+mhOb7xcRNut+ixN9lqQqr
-        wD6REPnqOh8tV3sNL66/1OqyDvm7I4cqvtZnn1tQV+WEa3OaSUaqouTHPQmlSv4Pdi93YV4D
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xu7p+1+fFGqxbLWDRe+4kk8X/bROZ
-        La58fc9mcfX7S2aLk2+uslh0TlzCbtHx9wujxeVdc9gsDvVFW/Sdc3fg8nh/o5XdY++3BSwe
-        sztmsnqcmHCJyWP7twesHve7jzN5PFu4nsXjQO9kFo/Pm+QCOKP0bIryS0tSFTLyi0tslaIN
-        LYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mr482shcsFas4uOq08wNjOuFuhg5
-        OSQETCQa/vewdDFycQgJLGWUOPT4ABNEQlxi9/y3zBC2sMSfa11sEEWvGSUWHJrJCJIQFoiV
-        uN/ZC2aLCIRJXJ0zhx2kiFlgA5PE/+6vrCAJIYEZjBKXlseC2GwCmhJ/N99kA7F5Bewk5vTt
-        AtvAIqAqcb17B5gtKhAhcXjHLEaIGkGJkzOfsIDYnAKuEks7VoDZzALqEn/mXWKGsOUltr+d
-        A2WLS9x6Mp9pAqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucVGesWJucWleel6yfm5mxiB
-        kbvt2M8tOxi73gUfYhTgYFTi4T1wem6sEGtiWXFl7iFGCQ5mJRHeRbPmxArxpiRWVqUW5ccX
-        leakFh9iNAV6biKzlGhyPjCp5JXEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0tSC2C
-        6WPi4JRqYFTX3xHeOcc0+cqWkiK+6322lqJ7jrY5LNn8k9FNVC5CcBmba8VB954U/VIXMf9v
-        aYcTay1KVvU13HtW+jtztXJMttu9j6EPvpaHWi1t1Vpw3bG68tCs+4cmCWV9N3qj5nFnQtCi
-        Qzu3vZh+2SrzyppPn2wmCpdce5zLdeHU/YObNZv1RbdveaXEUpyRaKjFXFScCACNG0To8gIA
-        AA==
-X-CMS-MailID: 20191010070134eucas1p1a5a9a64e9eb496fac919e77c68864367
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191008203330epcas2p31dc15af8587d35eba5a03f71418587bd
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191008203330epcas2p31dc15af8587d35eba5a03f71418587bd
-References: <CGME20191008203330epcas2p31dc15af8587d35eba5a03f71418587bd@epcas2p3.samsung.com>
-        <20191008203322.3238-1-wsa+renesas@sang-engineering.com>
+References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157066231436.1059972.14633230333322624569.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <157066231436.1059972.14633230333322624569.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 10 Oct 2019 09:01:48 +0200
+Message-ID: <CAKv+Gu-yM+QfzUjcVNe1UzW7w2A_nEazPkWRYJ93jEepGx36Cg@mail.gmail.com>
+Subject: Re: [PATCH v6 07/12] x86/efi: Add efi_fake_mem support for EFI_MEMORY_SP
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.10.2019 22:33, Wolfram Sang wrote:
-> Move from the deprecated i2c_new_dummy() to devm_i2c_new_dummy_device().
-> We now get an ERRPTR which we use in error handling and we can skip
-> removal of the created devices.
+On Thu, 10 Oct 2019 at 01:19, Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Given that EFI_MEMORY_SP is platform BIOS policy decision for marking
+> memory ranges as "reserved for a specific purpose" there will inevitably
+> be scenarios where the BIOS omits the attribute in situations where it
+> is desired. Unlike other attributes if the OS wants to reserve this
+> memory from the kernel the reservation needs to happen early in init. So
+> early, in fact, that it needs to happen before e820__memblock_setup()
+> which is a pre-requisite for efi_fake_memmap() that wants to allocate
+> memory for the updated table.
+>
+> Introduce an x86 specific efi_fake_memmap_early() that can search for
+> attempts to set EFI_MEMORY_SP via efi_fake_mem and update the e820 table
+> accordingly.
+>
+> The KASLR code that scans the command line looking for user-directed
+> memory reservations also needs to be updated to consider
+> "efi_fake_mem=nn@ss:0x40000" requests.
+>
+> Cc: <x86@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+
 > ---
-
-
-Applied, thx.
-
-
-Rergards
-
-Andrzej
-
-
+>  Documentation/admin-guide/kernel-parameters.txt |   10 +++
+>  arch/x86/boot/compressed/kaslr.c                |   42 ++++++++++++--
+>  arch/x86/include/asm/efi.h                      |    8 +++
+>  arch/x86/platform/efi/efi.c                     |    2 +
+>  drivers/firmware/efi/Makefile                   |    5 +-
+>  drivers/firmware/efi/fake_mem.c                 |   24 ++++----
+>  drivers/firmware/efi/fake_mem.h                 |   10 +++
+>  drivers/firmware/efi/x86_fake_mem.c             |   69 +++++++++++++++++++++++
+>  8 files changed, 147 insertions(+), 23 deletions(-)
+>  create mode 100644 drivers/firmware/efi/fake_mem.h
+>  create mode 100644 drivers/firmware/efi/x86_fake_mem.c
 >
-> Rebased to v5.4-rc2 since last time. One of the last two users of the
-> old API, so please apply soon, so I can remove the old interface. Only
-> build tested.
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 47478a730011..9489d76b0e9f 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1196,15 +1196,21 @@
+>                         updating original EFI memory map.
+>                         Region of memory which aa attribute is added to is
+>                         from ss to ss+nn.
+> +
+>                         If efi_fake_mem=2G@4G:0x10000,2G@0x10a0000000:0x10000
+>                         is specified, EFI_MEMORY_MORE_RELIABLE(0x10000)
+>                         attribute is added to range 0x100000000-0x180000000 and
+>                         0x10a0000000-0x1120000000.
 >
->  drivers/gpu/drm/bridge/sii9234.c | 36 +++++++++++---------------------
->  1 file changed, 12 insertions(+), 24 deletions(-)
+> +                       If efi_fake_mem=8G@9G:0x40000 is specified, the
+> +                       EFI_MEMORY_SP(0x40000) attribute is added to
+> +                       range 0x240000000-0x43fffffff.
+> +
+>                         Using this parameter you can do debugging of EFI memmap
+> -                       related feature. For example, you can do debugging of
+> +                       related features. For example, you can do debugging of
+>                         Address Range Mirroring feature even if your box
+> -                       doesn't support it.
+> +                       doesn't support it, or mark specific memory as
+> +                       "soft reserved".
 >
-> diff --git a/drivers/gpu/drm/bridge/sii9234.c b/drivers/gpu/drm/bridge/sii9234.c
-> index 25d4ad8c7ad6..8a6c85693a88 100644
-> --- a/drivers/gpu/drm/bridge/sii9234.c
-> +++ b/drivers/gpu/drm/bridge/sii9234.c
-> @@ -841,39 +841,28 @@ static int sii9234_init_resources(struct sii9234 *ctx,
->  
->  	ctx->client[I2C_MHL] = client;
->  
-> -	ctx->client[I2C_TPI] = i2c_new_dummy(adapter, I2C_TPI_ADDR);
-> -	if (!ctx->client[I2C_TPI]) {
-> +	ctx->client[I2C_TPI] = devm_i2c_new_dummy_device(&client->dev, adapter,
-> +							 I2C_TPI_ADDR);
-> +	if (IS_ERR(ctx->client[I2C_TPI])) {
->  		dev_err(ctx->dev, "failed to create TPI client\n");
-> -		return -ENODEV;
-> +		return PTR_ERR(ctx->client[I2C_TPI]);
->  	}
->  
-> -	ctx->client[I2C_HDMI] = i2c_new_dummy(adapter, I2C_HDMI_ADDR);
-> -	if (!ctx->client[I2C_HDMI]) {
-> +	ctx->client[I2C_HDMI] = devm_i2c_new_dummy_device(&client->dev, adapter,
-> +							  I2C_HDMI_ADDR);
-> +	if (IS_ERR(ctx->client[I2C_HDMI])) {
->  		dev_err(ctx->dev, "failed to create HDMI RX client\n");
-> -		goto fail_tpi;
-> +		return PTR_ERR(ctx->client[I2C_HDMI]);
->  	}
->  
-> -	ctx->client[I2C_CBUS] = i2c_new_dummy(adapter, I2C_CBUS_ADDR);
-> -	if (!ctx->client[I2C_CBUS]) {
-> +	ctx->client[I2C_CBUS] = devm_i2c_new_dummy_device(&client->dev, adapter,
-> +							  I2C_CBUS_ADDR);
-> +	if (IS_ERR(ctx->client[I2C_CBUS])) {
->  		dev_err(ctx->dev, "failed to create CBUS client\n");
-> -		goto fail_hdmi;
-> +		return PTR_ERR(ctx->client[I2C_CBUS]);
->  	}
->  
->  	return 0;
-> -
-> -fail_hdmi:
-> -	i2c_unregister_device(ctx->client[I2C_HDMI]);
-> -fail_tpi:
-> -	i2c_unregister_device(ctx->client[I2C_TPI]);
-> -
-> -	return -ENODEV;
-> -}
-> -
-> -static void sii9234_deinit_resources(struct sii9234 *ctx)
-> -{
-> -	i2c_unregister_device(ctx->client[I2C_CBUS]);
-> -	i2c_unregister_device(ctx->client[I2C_HDMI]);
-> -	i2c_unregister_device(ctx->client[I2C_TPI]);
+>         efivar_ssdt=    [EFI; X86] Name of an EFI variable that contains an SSDT
+>                         that is to be dynamically loaded by Linux. If there are
+> diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+> index ff6fa81949cd..da0eedd5635d 100644
+> --- a/arch/x86/boot/compressed/kaslr.c
+> +++ b/arch/x86/boot/compressed/kaslr.c
+> @@ -132,8 +132,14 @@ char *skip_spaces(const char *str)
+>  #include "../../../../lib/ctype.c"
+>  #include "../../../../lib/cmdline.c"
+>
+> +enum parse_mode {
+> +       PARSE_MEMMAP,
+> +       PARSE_EFI,
+> +};
+> +
+>  static int
+> -parse_memmap(char *p, unsigned long long *start, unsigned long long *size)
+> +parse_memmap(char *p, unsigned long long *start, unsigned long long *size,
+> +               enum parse_mode mode)
+>  {
+>         char *oldp;
+>
+> @@ -156,8 +162,29 @@ parse_memmap(char *p, unsigned long long *start, unsigned long long *size)
+>                 *start = memparse(p + 1, &p);
+>                 return 0;
+>         case '@':
+> -               /* memmap=nn@ss specifies usable region, should be skipped */
+> -               *size = 0;
+> +               if (mode == PARSE_MEMMAP) {
+> +                       /*
+> +                        * memmap=nn@ss specifies usable region, should
+> +                        * be skipped
+> +                        */
+> +                       *size = 0;
+> +               } else {
+> +                       unsigned long long flags;
+> +
+> +                       /*
+> +                        * efi_fake_mem=nn@ss:attr the attr specifies
+> +                        * flags that might imply a soft-reservation.
+> +                        */
+> +                       *start = memparse(p + 1, &p);
+> +                       if (p && *p == ':') {
+> +                               p++;
+> +                               if (kstrtoull(p, 0, &flags) < 0)
+> +                                       *size = 0;
+> +                               else if (flags & EFI_MEMORY_SP)
+> +                                       return 0;
+> +                       }
+> +                       *size = 0;
+> +               }
+>                 /* Fall through */
+>         default:
+>                 /*
+> @@ -172,7 +199,7 @@ parse_memmap(char *p, unsigned long long *start, unsigned long long *size)
+>         return -EINVAL;
 >  }
->  
->  static inline struct sii9234 *bridge_to_sii9234(struct drm_bridge *bridge)
-> @@ -950,7 +939,6 @@ static int sii9234_remove(struct i2c_client *client)
->  
->  	sii9234_cable_out(ctx);
->  	drm_bridge_remove(&ctx->bridge);
-> -	sii9234_deinit_resources(ctx);
->  
->  	return 0;
+>
+> -static void mem_avoid_memmap(char *str)
+> +static void mem_avoid_memmap(enum parse_mode mode, char *str)
+>  {
+>         static int i;
+>
+> @@ -187,7 +214,7 @@ static void mem_avoid_memmap(char *str)
+>                 if (k)
+>                         *k++ = 0;
+>
+> -               rc = parse_memmap(str, &start, &size);
+> +               rc = parse_memmap(str, &start, &size, mode);
+>                 if (rc < 0)
+>                         break;
+>                 str = k;
+> @@ -238,7 +265,6 @@ static void parse_gb_huge_pages(char *param, char *val)
+>         }
 >  }
-
-
+>
+> -
+>  static void handle_mem_options(void)
+>  {
+>         char *args = (char *)get_cmd_line_ptr();
+> @@ -271,7 +297,7 @@ static void handle_mem_options(void)
+>                 }
+>
+>                 if (!strcmp(param, "memmap")) {
+> -                       mem_avoid_memmap(val);
+> +                       mem_avoid_memmap(PARSE_MEMMAP, val);
+>                 } else if (strstr(param, "hugepages")) {
+>                         parse_gb_huge_pages(param, val);
+>                 } else if (!strcmp(param, "mem")) {
+> @@ -284,6 +310,8 @@ static void handle_mem_options(void)
+>                                 goto out;
+>
+>                         mem_limit = mem_size;
+> +               } else if (!strcmp(param, "efi_fake_mem")) {
+> +                       mem_avoid_memmap(PARSE_EFI, val);
+>                 }
+>         }
+>
+> diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+> index 45f853bce869..d028e9acdf1c 100644
+> --- a/arch/x86/include/asm/efi.h
+> +++ b/arch/x86/include/asm/efi.h
+> @@ -263,4 +263,12 @@ static inline void efi_reserve_boot_services(void)
+>  }
+>  #endif /* CONFIG_EFI */
+>
+> +#ifdef CONFIG_EFI_FAKE_MEMMAP
+> +extern void __init efi_fake_memmap_early(void);
+> +#else
+> +static inline void efi_fake_memmap_early(void)
+> +{
+> +}
+> +#endif
+> +
+>  #endif /* _ASM_X86_EFI_H */
+> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> index c96657993167..188cd73cd7d6 100644
+> --- a/arch/x86/platform/efi/efi.c
+> +++ b/arch/x86/platform/efi/efi.c
+> @@ -259,6 +259,8 @@ int __init efi_memblock_x86_reserve_range(void)
+>                 do_add_efi_memmap(ADD_EFI_SOFT_RESERVED);
+>         }
+>
+> +       efi_fake_memmap_early();
+> +
+>         WARN(efi.memmap.desc_version != 1,
+>              "Unexpected EFI_MEMORY_DESCRIPTOR version %ld",
+>              efi.memmap.desc_version);
+> diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
+> index 4ac2de4dfa72..554d795270d9 100644
+> --- a/drivers/firmware/efi/Makefile
+> +++ b/drivers/firmware/efi/Makefile
+> @@ -20,13 +20,16 @@ obj-$(CONFIG_UEFI_CPER)                     += cper.o
+>  obj-$(CONFIG_EFI_RUNTIME_MAP)          += runtime-map.o
+>  obj-$(CONFIG_EFI_RUNTIME_WRAPPERS)     += runtime-wrappers.o
+>  obj-$(CONFIG_EFI_STUB)                 += libstub/
+> -obj-$(CONFIG_EFI_FAKE_MEMMAP)          += fake_mem.o
+> +obj-$(CONFIG_EFI_FAKE_MEMMAP)          += fake_map.o
+>  obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)   += efibc.o
+>  obj-$(CONFIG_EFI_TEST)                 += test/
+>  obj-$(CONFIG_EFI_DEV_PATH_PARSER)      += dev-path-parser.o
+>  obj-$(CONFIG_APPLE_PROPERTIES)         += apple-properties.o
+>  obj-$(CONFIG_EFI_RCI2_TABLE)           += rci2-table.o
+>
+> +fake_map-y                             += fake_mem.o
+> +fake_map-$(CONFIG_X86)                 += x86_fake_mem.o
+> +
+>  arm-obj-$(CONFIG_EFI)                  := arm-init.o arm-runtime.o
+>  obj-$(CONFIG_ARM)                      += $(arm-obj-y)
+>  obj-$(CONFIG_ARM64)                    += $(arm-obj-y)
+> diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
+> index 526b45331d96..bb9fc70d0cfa 100644
+> --- a/drivers/firmware/efi/fake_mem.c
+> +++ b/drivers/firmware/efi/fake_mem.c
+> @@ -17,12 +17,10 @@
+>  #include <linux/memblock.h>
+>  #include <linux/types.h>
+>  #include <linux/sort.h>
+> -#include <asm/efi.h>
+> +#include "fake_mem.h"
+>
+> -#define EFI_MAX_FAKEMEM CONFIG_EFI_MAX_FAKE_MEM
+> -
+> -static struct efi_mem_range fake_mems[EFI_MAX_FAKEMEM];
+> -static int nr_fake_mem;
+> +struct efi_mem_range efi_fake_mems[EFI_MAX_FAKEMEM];
+> +int nr_fake_mem;
+>
+>  static int __init cmp_fake_mem(const void *x1, const void *x2)
+>  {
+> @@ -50,7 +48,7 @@ void __init efi_fake_memmap(void)
+>         /* count up the number of EFI memory descriptor */
+>         for (i = 0; i < nr_fake_mem; i++) {
+>                 for_each_efi_memory_desc(md) {
+> -                       struct range *r = &fake_mems[i].range;
+> +                       struct range *r = &efi_fake_mems[i].range;
+>
+>                         new_nr_map += efi_memmap_split_count(md, r);
+>                 }
+> @@ -70,7 +68,7 @@ void __init efi_fake_memmap(void)
+>         }
+>
+>         for (i = 0; i < nr_fake_mem; i++)
+> -               efi_memmap_insert(&efi.memmap, new_memmap, &fake_mems[i]);
+> +               efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
+>
+>         /* swap into new EFI memmap */
+>         early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
+> @@ -104,22 +102,22 @@ static int __init setup_fake_mem(char *p)
+>                 if (nr_fake_mem >= EFI_MAX_FAKEMEM)
+>                         break;
+>
+> -               fake_mems[nr_fake_mem].range.start = start;
+> -               fake_mems[nr_fake_mem].range.end = start + mem_size - 1;
+> -               fake_mems[nr_fake_mem].attribute = attribute;
+> +               efi_fake_mems[nr_fake_mem].range.start = start;
+> +               efi_fake_mems[nr_fake_mem].range.end = start + mem_size - 1;
+> +               efi_fake_mems[nr_fake_mem].attribute = attribute;
+>                 nr_fake_mem++;
+>
+>                 if (*p == ',')
+>                         p++;
+>         }
+>
+> -       sort(fake_mems, nr_fake_mem, sizeof(struct efi_mem_range),
+> +       sort(efi_fake_mems, nr_fake_mem, sizeof(struct efi_mem_range),
+>              cmp_fake_mem, NULL);
+>
+>         for (i = 0; i < nr_fake_mem; i++)
+>                 pr_info("efi_fake_mem: add attr=0x%016llx to [mem 0x%016llx-0x%016llx]",
+> -                       fake_mems[i].attribute, fake_mems[i].range.start,
+> -                       fake_mems[i].range.end);
+> +                       efi_fake_mems[i].attribute, efi_fake_mems[i].range.start,
+> +                       efi_fake_mems[i].range.end);
+>
+>         return *p == '\0' ? 0 : -EINVAL;
+>  }
+> diff --git a/drivers/firmware/efi/fake_mem.h b/drivers/firmware/efi/fake_mem.h
+> new file mode 100644
+> index 000000000000..d52791af4b18
+> --- /dev/null
+> +++ b/drivers/firmware/efi/fake_mem.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __EFI_FAKE_MEM_H__
+> +#define __EFI_FAKE_MEM_H__
+> +#include <asm/efi.h>
+> +
+> +#define EFI_MAX_FAKEMEM CONFIG_EFI_MAX_FAKE_MEM
+> +
+> +extern struct efi_mem_range efi_fake_mems[EFI_MAX_FAKEMEM];
+> +extern int nr_fake_mem;
+> +#endif /* __EFI_FAKE_MEM_H__ */
+> diff --git a/drivers/firmware/efi/x86_fake_mem.c b/drivers/firmware/efi/x86_fake_mem.c
+> new file mode 100644
+> index 000000000000..e5d6d5a1b240
+> --- /dev/null
+> +++ b/drivers/firmware/efi/x86_fake_mem.c
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright(c) 2019 Intel Corporation. All rights reserved. */
+> +#include <linux/efi.h>
+> +#include <asm/e820/api.h>
+> +#include "fake_mem.h"
+> +
+> +void __init efi_fake_memmap_early(void)
+> +{
+> +       int i;
+> +
+> +       /*
+> +        * The late efi_fake_mem() call can handle all requests if
+> +        * EFI_MEMORY_SP support is disabled.
+> +        */
+> +       if (!efi_soft_reserve_enabled())
+> +               return;
+> +
+> +       if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
+> +               return;
+> +
+> +       /*
+> +        * Given that efi_fake_memmap() needs to perform memblock
+> +        * allocations it needs to run after e820__memblock_setup().
+> +        * However, if efi_fake_mem specifies EFI_MEMORY_SP for a given
+> +        * address range that potentially needs to mark the memory as
+> +        * reserved prior to e820__memblock_setup(). Update e820
+> +        * directly if EFI_MEMORY_SP is specified for an
+> +        * EFI_CONVENTIONAL_MEMORY descriptor.
+> +        */
+> +       for (i = 0; i < nr_fake_mem; i++) {
+> +               struct efi_mem_range *mem = &efi_fake_mems[i];
+> +               efi_memory_desc_t *md;
+> +               u64 m_start, m_end;
+> +
+> +               if ((mem->attribute & EFI_MEMORY_SP) == 0)
+> +                       continue;
+> +
+> +               m_start = mem->range.start;
+> +               m_end = mem->range.end;
+> +               for_each_efi_memory_desc(md) {
+> +                       u64 start, end;
+> +
+> +                       if (md->type != EFI_CONVENTIONAL_MEMORY)
+> +                               continue;
+> +
+> +                       start = md->phys_addr;
+> +                       end = md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT) - 1;
+> +
+> +                       if (m_start <= end && m_end >= start)
+> +                               /* fake range overlaps descriptor */;
+> +                       else
+> +                               continue;
+> +
+> +                       /*
+> +                        * Trim the boundary of the e820 update to the
+> +                        * descriptor in case the fake range overlaps
+> +                        * !EFI_CONVENTIONAL_MEMORY
+> +                        */
+> +                       start = max(start, m_start);
+> +                       end = min(end, m_end);
+> +
+> +                       if (end <= start)
+> +                               continue;
+> +                       e820__range_update(start, end - start + 1, E820_TYPE_RAM,
+> +                                       E820_TYPE_SOFT_RESERVED);
+> +                       e820__update_table(e820_table);
+> +               }
+> +       }
+> +}
+>
