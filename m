@@ -2,142 +2,158 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93067C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B5BC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6BB20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E98214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvY+F1VY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbfJJVhm (ORCPT
+        id S1727339AbfJJVk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:37:42 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58988 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJVhl (ORCPT
+        Thu, 10 Oct 2019 17:40:27 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39368 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfJJVk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:37:41 -0400
-Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id cd4238d3936759af; Thu, 10 Oct 2019 23:37:39 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: [PATCH 4/4] cpuidle: teo: Fix "early hits" handling for disabled idle states
-Date:   Thu, 10 Oct 2019 23:37:39 +0200
-Message-ID: <1746940.X44tFrgt99@kreacher>
-In-Reply-To: <60416800.X4hXmAfbqi@kreacher>
-References: <60416800.X4hXmAfbqi@kreacher>
+        Thu, 10 Oct 2019 17:40:27 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r3so9598307wrj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 14:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XMJglR3k39oo4lFzmZ/NkXw1yJ/6wrmxZJcm2kMQjmw=;
+        b=PvY+F1VYaxQrnqBlJD58hDny3N9yiiWe+m/OLkz52Dmkwp5x9bKGbWo0COyLmAXNwu
+         Vw17CkjrhVHj9qHYpXLbNitEatrskyN0M9svUZmmG77ZkxteamJ4ZTMPIW9ek8kBg9Cu
+         gTuSE4F41QCNgIjLvR6kV/lgqi1zWbNk9FGlugi3LsN/5Wgx8I96n9+vObBmMVdBK9IM
+         pRiF1C0BlurG4Hd2v0cArtcJS/Z4z1v4+VNAwWWv+pzYYE8Nl7QhFwdQ9Gul+31cvVXL
+         T5D2Qm5OgNzFsJOG9zMBE39pcAci0Xl0FzvUMvvsfYy5O+5IcUS8WKKy5ETL6PcBrXpU
+         0+dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XMJglR3k39oo4lFzmZ/NkXw1yJ/6wrmxZJcm2kMQjmw=;
+        b=OWu0OqAyNWTAT6wuRvFTz141gl9WerRhKm1iguysCq/8grW4f2WZso1Sd1ckbFHSfS
+         f50GkmYgPVDB+H0SgCsvrxXW1NSxhvcz+VjohR3O5w3j+3KaipOnkKYTSnJett3/T8/z
+         Hn9o1pSvHW+ITf08Ses3f2WzSCoz4U7dVXhfLtxsLjuW2cUT0D48Ev+p/BA+Vy3hykk5
+         3hOJxql9uAo6aalF4GqflxF51tEI1juFEVjf3YU/XywkbkSdpoPcU8Rfkc5V+76Bmqci
+         753Qh4rMKjVrD3jpQhAhx13W2zO9PaLCBz+ZYpQQp7ICur++08zZOuTrTXUIwYKMnyFm
+         ly6g==
+X-Gm-Message-State: APjAAAXuyiM6gY5Ku5V4Fv1/4GIUMEvqMyAT3GKI71faSycAmezorTm0
+        s3z3DPpHGtixQc+1SiQ9ZQ==
+X-Google-Smtp-Source: APXvYqxp2X3mij+XJLhkVV3NDsw60mdBlZJn0aM+SQHG1O3YkTmaxKgFsb23/vDICVVFykPdMmu+zA==
+X-Received: by 2002:adf:9c81:: with SMTP id d1mr9781941wre.238.1570743624401;
+        Thu, 10 Oct 2019 14:40:24 -0700 (PDT)
+Received: from ninjahub.lan (host-2-102-13-201.as13285.net. [2.102.13.201])
+        by smtp.googlemail.com with ESMTPSA id h63sm11455423wmf.15.2019.10.10.14.40.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 14:40:24 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        dan.carpenter@oracle.com, Jules Irenge <jbi.octave@gmail.com>
+Subject: [RESEND PATCH v1 3/5] staging: qlge: Fix multiple assignments warning by replacing integer variables to bool
+Date:   Thu, 10 Oct 2019 22:40:04 +0100
+Message-Id: <20191010214006.23677-2-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191010214006.23677-1-jbi.octave@gmail.com>
+References: <20191010214006.23677-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fix multiple assignments warning " check
+ issue detected by checkpatch tool:
+"CHECK: multiple assignments should be avoided".
 
-The TEO governor uses idle duration "bins" defined in accordance with
-the CPU idle states table provided by the driver, so that each "bin"
-covers the idle duration range between the target residency of the
-idle state corresponding to it and the target residency of the closest
-deeper idle state.  The governor collects statistics for each bin
-regardless of whether or not the idle state corresponding to it is
-currently enabled.
-
-In particular, the "early hits" metric measures the likelihood of a
-situation in which the idle duration measured after wakeup falls into
-to given bin, but the time till the next timer (sleep length) falls
-into a bin corresponding to one of the deeper idle states.  It is
-used when the "hits" and "misses" metrics indicate that the state
-"matching" the sleep length should not be selected, so that the state
-with the maximum "early hits" value is selected instead of it.
-
-If the idle state corresponding to the given bin is disabled, it
-cannot be selected and if it turns out to be the one that should be
-selected, a shallower idle state needs to be used instead of it.
-Nevertheless, the metrics collected for the bin corresponding to it
-are still valid and need to be taken into account as though that
-state had not been disabled.
-
-As far as the "early hits" metric is concerned, teo_select() tries to
-take disabled states into account, but the state index corresponding
-to the maximum "early hits" value computed by it may be incorrect.
-Namely, it always uses the index of the previous maximum "early hits"
-state then, but there may be enabled idle states closer to the
-disabled one in question.  In particular, if the current candidate
-state (whose index is the idx value) is closer to the disabled one
-and the "early hits" value of the disabled state is greater than the
-current maximum, the index of the current candidate state (idx)
-should replace the "maximum early hits state" index.
-
-Modify the code to handle that case correctly.
-
-Fixes: b26bf6ab716f ("cpuidle: New timer events oriented governor for tickless systems")
-Reported-by: Doug Smythies <dsmythies@telus.net>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/cpuidle/governors/teo.c |   35 ++++++++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 9 deletions(-)
+ drivers/staging/qlge/qlge_dbg.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-Index: linux-pm/drivers/cpuidle/governors/teo.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governors/teo.c
-+++ linux-pm/drivers/cpuidle/governors/teo.c
-@@ -277,18 +277,35 @@ static int teo_select(struct cpuidle_dri
- 			hits = cpu_data->states[i].hits;
- 			misses = cpu_data->states[i].misses;
+diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+index 27aa8de3b5ff..b8ff9eccc472 100644
+--- a/drivers/staging/qlge/qlge_dbg.c
++++ b/drivers/staging/qlge/qlge_dbg.c
+@@ -112,7 +112,7 @@ static int ql_read_serdes_reg(struct ql_adapter *qdev, u32 reg, u32 *data)
  
-+			if (early_hits >= cpu_data->states[i].early_hits ||
-+			    idx < 0)
-+				continue;
-+
-+			/*
-+			 * If the current candidate state has been the one with
-+			 * the maximum "early hits" metric so far, the "early
-+			 * hits" metric of the disabled state replaces the
-+			 * current "early hits" count to avoid selecting a
-+			 * deeper state with lower "early hits" metric.
-+			 */
-+			if (max_early_idx == idx) {
-+				early_hits = cpu_data->states[i].early_hits;
-+				continue;
-+			}
-+
- 			/*
--			 * If the "early hits" metric of a disabled state is
--			 * greater than the current maximum, it should be taken
--			 * into account, because it would be a mistake to select
--			 * a deeper state with lower "early hits" metric.  The
--			 * index cannot be changed to point to it, however, so
--			 * just increase the "early hits" count alone and let
--			 * the index still point to a shallower idle state.
-+			 * The current candidate state is closer to the disabled
-+			 * one than the current maximum "early hits" state, so
-+			 * replace the latter with it, but in case the maximum
-+			 * "early hits" state index has not been set so far,
-+			 * check if the current candidate state is not too
-+			 * shallow for that role.
- 			 */
--			if (max_early_idx >= 0 &&
--			    early_hits < cpu_data->states[i].early_hits)
-+			if (!(tick_nohz_tick_stopped() &&
-+			      drv->states[idx].target_residency < TICK_USEC)) {
- 				early_hits = cpu_data->states[i].early_hits;
-+				max_early_idx = idx;
-+			}
+ static void ql_get_both_serdes(struct ql_adapter *qdev, u32 addr,
+ 			       u32 *direct_ptr, u32 *indirect_ptr,
+-			unsigned int direct_valid, unsigned int indirect_valid)
++			       bool direct_valid, bool indirect_valid)
+ {
+ 	unsigned int status;
  
- 			continue;
- 		}
-
-
+@@ -136,13 +136,12 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+ 			      struct ql_mpi_coredump *mpi_coredump)
+ {
+ 	int status;
+-	unsigned int xfi_direct_valid, xfi_indirect_valid, xaui_direct_valid;
+-	unsigned int xaui_indirect_valid, i;
++	bool xfi_direct_valid = false, xfi_indirect_valid = false;
++	bool xaui_direct_valid = true, xaui_indirect_valid = true;
++	unsigned int i;
+ 	u32 *direct_ptr, temp;
+ 	u32 *indirect_ptr;
+ 
+-	xfi_direct_valid = xfi_indirect_valid = 0;
+-	xaui_direct_valid = xaui_indirect_valid = 1;
+ 
+ 	/* The XAUI needs to be read out per port */
+ 	status = ql_read_other_func_serdes_reg(qdev,
+@@ -152,7 +151,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+ 
+ 	if ((temp & XG_SERDES_ADDR_XAUI_PWR_DOWN) ==
+ 				XG_SERDES_ADDR_XAUI_PWR_DOWN)
+-		xaui_indirect_valid = 0;
++		xaui_indirect_valid = false;
+ 
+ 	status = ql_read_serdes_reg(qdev, XG_SERDES_XAUI_HSS_PCS_START, &temp);
+ 
+@@ -161,7 +160,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+ 
+ 	if ((temp & XG_SERDES_ADDR_XAUI_PWR_DOWN) ==
+ 				XG_SERDES_ADDR_XAUI_PWR_DOWN)
+-		xaui_direct_valid = 0;
++		xaui_direct_valid = false;
+ 
+ 	/*
+ 	 * XFI register is shared so only need to read one
+@@ -176,18 +175,18 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+ 		/* now see if i'm NIC 1 or NIC 2 */
+ 		if (qdev->func & 1)
+ 			/* I'm NIC 2, so the indirect (NIC1) xfi is up. */
+-			xfi_indirect_valid = 1;
++			xfi_indirect_valid = true;
+ 		else
+-			xfi_direct_valid = 1;
++			xfi_direct_valid = true;
+ 	}
+ 	if ((temp & XG_SERDES_ADDR_XFI2_PWR_UP) ==
+ 					XG_SERDES_ADDR_XFI2_PWR_UP) {
+ 		/* now see if i'm NIC 1 or NIC 2 */
+ 		if (qdev->func & 1)
+ 			/* I'm NIC 2, so the indirect (NIC1) xfi is up. */
+-			xfi_direct_valid = 1;
++			xfi_direct_valid = true;
+ 		else
+-			xfi_indirect_valid = 1;
++			xfi_indirect_valid = true;
+ 	}
+ 
+ 	/* Get XAUI_AN register block. */
+-- 
+2.21.0
 
