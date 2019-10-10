@@ -2,81 +2,130 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 654ABC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37DEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2CF22477
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC0B2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697746;
-	bh=fWJjbXpmFkxTYN182RrS0pGcx/QVyeR2dPDwnS/HsTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OnsbUhVyUjegm6K5CoLpcZ6zrQqZ5xEegqV9SIii1Q3VS+A3jzmJjy2Nf71FVm3g9
-	 VgN1U5j0VPEG1o/9VjRLOy8MLtXnQLpvXb9oEjjO2LrC2ubeyOsQ0Z0GH7lx0s6WNI
-	 YGJy3MsJ2VVKAVOoRQhmh3/obNm1bvlLnhfUUrs4=
+	s=default; t=1570697749;
+	bh=frxZ1c0Yl11YuZfJJQl+IVKGf+OQqwOKfjhdN+46TS8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IjX88LMampm8vbtHrZq4UCegrzYmH/QgqfSimoBgHYooHiP3v/XnoiRf6B6Xn/9dK
+	 02dH/wthSOD2kIpnphGH/cDPxB4s0Ve93POCl0FEnIku1uj4j3yktzDmKvCQpOAerJ
+	 Z+niGMWaBW+p1St3lfW9np3oNz6HO9DBE1uGHzHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389535AbfJJIzp (ORCPT
+        id S2389746AbfJJItG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34686 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388327AbfJJIzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:55:44 -0400
+        id S2389731AbfJJItE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:49:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31C682190F;
-        Thu, 10 Oct 2019 08:55:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E9BA208C3;
+        Thu, 10 Oct 2019 08:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697743;
-        bh=fWJjbXpmFkxTYN182RrS0pGcx/QVyeR2dPDwnS/HsTs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tqrbyxx7vQRb3pTZ4yaY7TfY+WhmKqOi6eLilR4NrlcMSSP0IWAve36knAdr3v+Xw
-         vT6fVwb9maoaNVWLfj1OJaTMKtnXDY7OA7///Oti93WxRXDfYyv6FCyV2qPH/NZb1O
-         Aa5/gG8zcshCE1q4zUMY9p7RqYR4afqPec9QQyQY=
-Date:   Thu, 10 Oct 2019 10:49:12 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: qlge: fix "alignment should match open
- parenthesis" check
-Message-ID: <20191010084912.GA394561@kroah.com>
-References: <20191009135909.19474-1-jbi.octave@gmail.com>
+        s=default; t=1570697343;
+        bh=frxZ1c0Yl11YuZfJJQl+IVKGf+OQqwOKfjhdN+46TS8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AdjJdHtFgHV5EBT65PQn4ZfXAYBJfMr70ggv2r5rLEcZTbFUjL+MnBQdzJFkN7riQ
+         bDkEYpLys5JCI8/o72nDKz3AojTouBIgQRFyjK9HgUE4KrM97BsUT+q6kpYXHncRBR
+         P5rt5geeo+iya06CCDRzp6tIZg1we2bv6RlZi2Y0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.19 107/114] coresight: etm4x: Use explicit barriers on enable/disable
+Date:   Thu, 10 Oct 2019 10:36:54 +0200
+Message-Id: <20191010083613.897582109@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
+References: <20191010083544.711104709@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009135909.19474-1-jbi.octave@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 02:59:09PM +0100, Jules Irenge wrote:
-> Fix "alignment should match open parenthesis" check
->  issued by checkpatch.pl tool:
-> "CHECK: Alignment should match open parenthesis".
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  drivers/staging/qlge/qlge_dbg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+From: Andrew Murray <andrew.murray@arm.com>
 
-Hi,
+commit 1004ce4c255fc3eb3ad9145ddd53547d1b7ce327 upstream.
 
-You sent 8 patches for the same driver, some patches with almost
-identical subject lines, and some a bit different.  None of these gave
-me any hint as to which ones superseed which, and which order to apply
-any of these in.
+Synchronization is recommended before disabling the trace registers
+to prevent any start or stop points being speculative at the point
+of disabling the unit (section 7.3.77 of ARM IHI 0064D).
 
-Please resend all of the latest versions, in a patch series properly
-numbered, so that I have a chance to apply them correctly.
+Synchronization is also recommended after programming the trace
+registers to ensure all updates are committed prior to normal code
+resuming (section 4.3.7 of ARM IHI 0064D).
 
-thanks,
+Let's ensure these syncronization points are present in the code
+and clearly commented.
 
-greg k-h
+Note that we could rely on the barriers in CS_LOCK and
+coresight_disclaim_device_unlocked or the context switch to user
+space - however coresight may be of use in the kernel.
+
+On armv8 the mb macro is defined as dsb(sy) - Given that the etm4x is
+only used on armv8 let's directly use dsb(sy) instead of mb(). This
+removes some ambiguity and makes it easier to correlate the code with
+the TRM.
+
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+[Fixed capital letter for "use" in title]
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20190829202842.580-11-mathieu.poirier@linaro.org
+Cc: stable@vger.kernel.org # 4.9+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/hwtracing/coresight/coresight-etm4x.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -174,6 +174,12 @@ static void etm4_enable_hw(void *info)
+ 	if (coresight_timeout(drvdata->base, TRCSTATR, TRCSTATR_IDLE_BIT, 0))
+ 		dev_err(drvdata->dev,
+ 			"timeout while waiting for Idle Trace Status\n");
++	/*
++	 * As recommended by section 4.3.7 ("Synchronization when using the
++	 * memory-mapped interface") of ARM IHI 0064D
++	 */
++	dsb(sy);
++	isb();
+ 
+ 	CS_LOCK(drvdata->base);
+ 
+@@ -324,8 +330,12 @@ static void etm4_disable_hw(void *info)
+ 	/* EN, bit[0] Trace unit enable bit */
+ 	control &= ~0x1;
+ 
+-	/* make sure everything completes before disabling */
+-	mb();
++	/*
++	 * Make sure everything completes before disabling, as recommended
++	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
++	 * SSTATUS") of ARM IHI 0064D
++	 */
++	dsb(sy);
+ 	isb();
+ 	writel_relaxed(control, drvdata->base + TRCPRGCTLR);
+ 
+
+
