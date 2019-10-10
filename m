@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37638ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9313C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F04821929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9148F21A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697030;
-	bh=Unj/6prc7e9Uu2o7AWgxamwyvugM5e+gPlPFrolWZUE=;
+	s=default; t=1570697032;
+	bh=oW5Rfbl6SsO+qi24/vZmZMOz5+wZgp/IY5u2ko0W1Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SZKOmDwSlv+6B9Mtr84AjrVvlf7J/WSjbZRLHeE4v2Bpz0wmIDM3dTwNqpXfNDejK
-	 MfaHFIP13T0zCRTJYaHhJGoBusyaS8gYLV4VBMDGTtkFW7ahhS6xDlOT4yitp1+qEi
-	 GRuo/BZqdgg95/oLGILk2YpKGErz82ebYOBnde4c=
+	b=G2bG2g3QmhLyNSC97FxpQr2Fy7W4qremB9e6LmC6yDeLynkhEHfXvyIMMQO6JeVHk
+	 9qWpubUl+APL0dKHp3lklEGPqA1qT4ztTF5B8kR6ZjIluSzKJpb13fgFYrL2W4irJP
+	 9Ml/ofcJQ7fl/iO3Zxe0JIStyFjgJ00JY670/Ohg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388808AbfJJIns (ORCPT
+        id S2388819AbfJJInv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:43:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48684 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:43:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388145AbfJJInr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:43:47 -0400
+        id S2388145AbfJJInu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:43:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFE8421929;
-        Thu, 10 Oct 2019 08:43:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C105F2054F;
+        Thu, 10 Oct 2019 08:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697026;
-        bh=Unj/6prc7e9Uu2o7AWgxamwyvugM5e+gPlPFrolWZUE=;
+        s=default; t=1570697029;
+        bh=oW5Rfbl6SsO+qi24/vZmZMOz5+wZgp/IY5u2ko0W1Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVpcru8biNymXdONDVXacT0Oi79JFkgmS4ocAQSihR2oktNPrXhVL5gKI+tZzyZMl
-         zfRpKackGt40LpkC8eSqbgzrm1jvXEPIv6AGPb2WthOBNhFxsTIoPWb5VvsCPmVDY4
-         eJUO/Kxmz0xQZtirUY3pXWYoIsHyg18OPVMgRj2k=
+        b=fQuO2gSo39WWv2TAQMK4EFvN/uItKohonoAiOmZpc07oJirF3YyPzjlWj3TPGWASh
+         BrBESR6gpRleJqRkST3RJg/7yYl4glZRkPrqrGyq9dLRdWqJhjJk9s7miaMevTAtVw
+         LYbVvD5Ob8h1Bvnq3p97TJYnhdqRLf0Il3L6iGsM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 141/148] vfs: Fix EOVERFLOW testing in put_compat_statfs64
-Date:   Thu, 10 Oct 2019 10:36:42 +0200
-Message-Id: <20191010083620.865774230@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 5.3 142/148] coresight: etm4x: Use explicit barriers on enable/disable
+Date:   Thu, 10 Oct 2019 10:36:43 +0200
+Message-Id: <20191010083620.916764208@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,62 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Andrew Murray <andrew.murray@arm.com>
 
-commit cc3a7bfe62b947b423fcb2cfe89fcba92bf48fa3 upstream.
+commit 1004ce4c255fc3eb3ad9145ddd53547d1b7ce327 upstream.
 
-Today, put_compat_statfs64() disallows nearly any field value over
-2^32 if f_bsize is only 32 bits, but that makes no sense.
-compat_statfs64 is there for the explicit purpose of providing 64-bit
-fields for f_files, f_ffree, etc.  And f_bsize is always only 32 bits.
+Synchronization is recommended before disabling the trace registers
+to prevent any start or stop points being speculative at the point
+of disabling the unit (section 7.3.77 of ARM IHI 0064D).
 
-As a result, 32-bit userspace gets -EOVERFLOW for i.e.  large file
-counts even with -D_FILE_OFFSET_BITS=64 set.
+Synchronization is also recommended after programming the trace
+registers to ensure all updates are committed prior to normal code
+resuming (section 4.3.7 of ARM IHI 0064D).
 
-In reality, only f_bsize and f_frsize can legitimately overflow
-(fields like f_type and f_namelen should never be large), so test
-only those fields.
+Let's ensure these syncronization points are present in the code
+and clearly commented.
 
-This bug was discussed at length some time ago, and this is the proposal
-Al suggested at https://lkml.org/lkml/2018/8/6/640.  It seemed to get
-dropped amid the discussion of other related changes, but this
-part seems obviously correct on its own, so I've picked it up and
-sent it, for expediency.
+Note that we could rely on the barriers in CS_LOCK and
+coresight_disclaim_device_unlocked or the context switch to user
+space - however coresight may be of use in the kernel.
 
-Fixes: 64d2ab32efe3 ("vfs: fix put_compat_statfs64() does not handle errors")
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+On armv8 the mb macro is defined as dsb(sy) - Given that the etm4x is
+only used on armv8 let's directly use dsb(sy) instead of mb(). This
+removes some ambiguity and makes it easier to correlate the code with
+the TRM.
+
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+[Fixed capital letter for "use" in title]
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20190829202842.580-11-mathieu.poirier@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/statfs.c |   17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
---- a/fs/statfs.c
-+++ b/fs/statfs.c
-@@ -318,19 +318,10 @@ COMPAT_SYSCALL_DEFINE2(fstatfs, unsigned
- static int put_compat_statfs64(struct compat_statfs64 __user *ubuf, struct kstatfs *kbuf)
- {
- 	struct compat_statfs64 buf;
--	if (sizeof(ubuf->f_bsize) == 4) {
--		if ((kbuf->f_type | kbuf->f_bsize | kbuf->f_namelen |
--		     kbuf->f_frsize | kbuf->f_flags) & 0xffffffff00000000ULL)
--			return -EOVERFLOW;
--		/* f_files and f_ffree may be -1; it's okay
--		 * to stuff that into 32 bits */
--		if (kbuf->f_files != 0xffffffffffffffffULL
--		 && (kbuf->f_files & 0xffffffff00000000ULL))
--			return -EOVERFLOW;
--		if (kbuf->f_ffree != 0xffffffffffffffffULL
--		 && (kbuf->f_ffree & 0xffffffff00000000ULL))
--			return -EOVERFLOW;
--	}
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -188,6 +188,13 @@ static int etm4_enable_hw(struct etmv4_d
+ 		dev_err(etm_dev,
+ 			"timeout while waiting for Idle Trace Status\n");
+ 
++	/*
++	 * As recommended by section 4.3.7 ("Synchronization when using the
++	 * memory-mapped interface") of ARM IHI 0064D
++	 */
++	dsb(sy);
++	isb();
 +
-+	if ((kbuf->f_bsize | kbuf->f_frsize) & 0xffffffff00000000ULL)
-+		return -EOVERFLOW;
-+
- 	memset(&buf, 0, sizeof(struct compat_statfs64));
- 	buf.f_type = kbuf->f_type;
- 	buf.f_bsize = kbuf->f_bsize;
+ done:
+ 	CS_LOCK(drvdata->base);
+ 
+@@ -453,8 +460,12 @@ static void etm4_disable_hw(void *info)
+ 	/* EN, bit[0] Trace unit enable bit */
+ 	control &= ~0x1;
+ 
+-	/* make sure everything completes before disabling */
+-	mb();
++	/*
++	 * Make sure everything completes before disabling, as recommended
++	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
++	 * SSTATUS") of ARM IHI 0064D
++	 */
++	dsb(sy);
+ 	isb();
+ 	writel_relaxed(control, drvdata->base + TRCPRGCTLR);
+ 
 
 
