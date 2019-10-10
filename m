@@ -2,59 +2,97 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07D7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E344DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC562067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B870420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387860AbfJJM6V (ORCPT
+        id S2387920AbfJJM6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:58:21 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37684 "EHLO fornost.hmeau.com"
+        Thu, 10 Oct 2019 08:58:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733300AbfJJM6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:58:20 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1iIY1G-0001zf-Ii; Thu, 10 Oct 2019 23:58:15 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Oct 2019 23:58:14 +1100
-Date:   Thu, 10 Oct 2019 23:58:14 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: user - fix memory leak in crypto_reportstat
-Message-ID: <20191010125814.GJ31566@gondor.apana.org.au>
-References: <20191004193455.18348-1-navid.emamdoost@gmail.com>
+        id S2387764AbfJJM6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:58:49 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F23A2067B;
+        Thu, 10 Oct 2019 12:58:48 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 08:58:46 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] ftrace/module: Allow ftrace to make only loaded module
+ text read-write
+Message-ID: <20191010085846.2e7cc625@gandalf.local.home>
+In-Reply-To: <20191009223638.60b78727@oasis.local.home>
+References: <20191009223638.60b78727@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004193455.18348-1-navid.emamdoost@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 02:34:54PM -0500, Navid Emamdoost wrote:
-> In crypto_reportstat, a new skb is created by nlmsg_new(). This skb is
-> leaked if crypto_reportstat_alg() fails. Required release for skb is
-> added.
-> 
-> Fixes: cac5818c25d0 ("crypto: user - Implement a generic crypto statistics")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  crypto/crypto_user_stat.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+On Wed, 9 Oct 2019 22:36:38 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -2029,6 +2029,37 @@ static void module_enable_nx(const struct module *mod)
+>  	frob_writable_data(&mod->init_layout, set_memory_nx);
+>  }
+>  
+
+Also, if you are worried about these being used anywhere else, we can
+add:
+
+> +void set_module_text_rw(const struct module *mod)
+> +{
+> +	if (!rodata_enabled)
+> +		return;
+> +
+> +	mutex_lock(&module_mutex);
+> +	if (mod->state == MODULE_STATE_UNFORMED)
+
+	if (mod->state == MODULE_STATE_UNFORMED ||
+	    mod->state == MODULE_STATE_LIVE)
+
+As this will keep it from being used on modules that are executing.
+
+-- Steve
+
+
+> +		goto out;
+> +
+> +	frob_text(&mod->core_layout, set_memory_rw);
+> +	frob_text(&mod->init_layout, set_memory_rw);
+> +out:
+> +	mutex_unlock(&module_mutex);
+> +}
+> +
+> +void set_module_text_ro(const struct module *mod)
+> +{
+> +	if (!rodata_enabled)
+> +		return;
+> +
+> +	mutex_lock(&module_mutex);
+> +	if (mod->state == MODULE_STATE_UNFORMED ||
+> +	    mod->state == MODULE_STATE_GOING)
+> +		goto out;
+> +
+> +	frob_text(&mod->core_layout, set_memory_ro);
+> +	frob_text(&mod->init_layout, set_memory_ro);
+> +out:
+> +	mutex_unlock(&module_mutex);
+> +}
+> +
