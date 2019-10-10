@@ -2,102 +2,144 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B22C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10E5ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBBE218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A69F2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:49:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o2NO/7NO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rN9RRE7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732790AbfJJFsg (ORCPT
+        id S1732869AbfJJFtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 01:48:36 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:39964 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbfJJFsg (ORCPT
+        Thu, 10 Oct 2019 01:49:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33959 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbfJJFtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 01:48:36 -0400
-Received: by mail-pl1-f170.google.com with SMTP id d22so2223450pll.7;
-        Wed, 09 Oct 2019 22:48:35 -0700 (PDT)
+        Thu, 10 Oct 2019 01:49:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id y35so2952415pgl.1;
+        Wed, 09 Oct 2019 22:49:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=M73eTh2IyVB2ImUoY1cyaaC83v8DNk4r7gIsheGhrG0=;
-        b=o2NO/7NOyiJUrzG5T5hM3oUYqOGgKyeswjXsaRZdUPLvWgTPPwTJys3V1lLQmkBfnO
-         UXXyZ2C70NbESHQbFnnqKM9LEOGK+/tlxX2MfvIao7tKlA4IwCbmsGoFJYClF4r7/zXD
-         BR0djjkFJWfBLkkmiAHB9NIkW1d7goQa7DeMIL4ysZaVUo9eSbxUwEmSs403H0hZPhcB
-         k/DaukaKEDslnQBJ4vf1Ck5yJyueCsXdv4lQuGorp+tUYk+JvGjRnCfXut3dr3F1lBio
-         uro0J7tiAZDLrthJ5dIRmlbZKBuUTTJAK1kLQWSBwFLLnjR5qDcpY/CEM/Y1W1Onzb8/
-         3IRg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RhxY1MPKMW6WR/zUFAC74xJM92OHmjB+kj8GPP9wIlw=;
+        b=rN9RRE7cIrRHiqRZYHnHSbHLkLn8sEliKdKOykE1BAiQd6iUPmf/oYzt2zGUIJLtc1
+         J/Hv96bumBiGBFwkKfJnzTskhdi2HR4zk98z5zCQoBtcrgdsvi4YEfsu8ALTj07La0Z2
+         y5DSQdzRYQybpa8QuuYByRSJxvy99ZC+pOqw1RuDAryOAY9qmzzrEwX1sEvhtMP8mKu9
+         Wn0659AVEQs+A8IfAtiI13X+kXbgHTJuPiITwSKFjVxmcEh8gBVFsbX9Dn7NegnpBsx5
+         cBDj4qkHToVxQk92I5PH9cOFLPLVKWoqKmLZHyR3XAXJDbJ7Fw31c/i5VvJ2MaY8KCxQ
+         A9Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M73eTh2IyVB2ImUoY1cyaaC83v8DNk4r7gIsheGhrG0=;
-        b=rf0sbAnUC7ASOQYrG06AnioJVaNxM4xmm/fHruRjlrF8FHQEKLeEeUk/jznVktS4Cu
-         uPqgTjnlnjgdOyO7Jo+rZu4qmnRkjKbM9uQYTPUyXkPRVreLgQMfhDB0o5K98aiCmiDy
-         //YmGsK+12nquaLNKaU05tQzcSQFoOJHAw4lDS1qYxlI/63qdbW22MqRTzJYtq/O6RgO
-         SuE8GIKQH2l2rxZS9drmxzIAq1g9JT1HKxC99Bz0kTjui1JgncmF6cmLeEWPw3+QRs3x
-         vhI5fita2FKSPWiX8YR16izVb8ptJIeg2DKChLpB4FcrXthyi7GBiYpBMFx9hf+695Pt
-         bNPA==
-X-Gm-Message-State: APjAAAWSnWCZIkg9eIqKyoMntaHTDVh6HagXuawTs2ye0vsC7GgEAG4p
-        tdhhmijO+eyBwZBpg0OGqYI=
-X-Google-Smtp-Source: APXvYqyqnjbFtD0gz8TaokY4cezJLZBiOwaHWq2Wq6FW0ezA2ldw5FjwVSqQLES7VVRFHEztgKXZww==
-X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr7333329plb.135.1570686515501;
-        Wed, 09 Oct 2019 22:48:35 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id dw19sm3745090pjb.27.2019.10.09.22.48.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Oct 2019 22:48:34 -0700 (PDT)
-Subject: Re: Potential NULL pointer deference in spi
-To:     Yizhuo Zhai <yzhai003@ucr.edu>, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhiyun Qian <zhiyunq@cs.ucr.edu>,
-        Chengyu Song <csong@cs.ucr.edu>
-References: <CABvMjLToYzmCue-TiDhR4Yu4v3+Z+-UV9WhixV7uvwoMh2m5Lw@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <f3ce1620-c421-b41f-440b-efe3ff6e91fe@gmail.com>
-Date:   Wed, 9 Oct 2019 22:48:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RhxY1MPKMW6WR/zUFAC74xJM92OHmjB+kj8GPP9wIlw=;
+        b=F7nj+6YmpxvPdixuRntqvQz5inOmXb0mIoPiIzl1s8ayXxHPKynffNnJFCAgTRLjOP
+         eq5X+vs8ZfEnOYrhRg0S6F0u7rXOhohTf1j6kEi/51d4QTD1nNtNWnMh2qoFq+LO+1G8
+         bW8528f/+sgZIp/iJK3ToYwQVmQFKxhZTkPTxhitnJiNGI2Hm5CY5EOqyW4IrnF/mz/C
+         32WAr/0uyYq/TkQLZYf4de9ZxhZbLmDfRxKMkEXTzZ9mJS71MPd39cSZ3kGAYmnYYXDp
+         5IM1LEoLlnoIPUhZzMteeO886OXYCta7UVzPWmRz+/52WUaJdAlMKWjWsK1QjaicsW8v
+         2Hhg==
+X-Gm-Message-State: APjAAAVSK7r0LrdGueHgyXHvb0hHXvgpSXmg/exA0UZzjAFCU/UDwmaK
+        p3HKKOxpdN/p7nZfLKpCoQd9/3z10d21jWssoSs=
+X-Google-Smtp-Source: APXvYqxTWGaHrxna/RW71KUqM4PD44f4t6P+cJUv3cQo53Tkjbf14ZESvxDMrwfIJKmfQGqBt7rE4hOcImn0K/p+Em0=
+X-Received: by 2002:a17:90a:db4a:: with SMTP id u10mr9179621pjx.30.1570686562156;
+ Wed, 09 Oct 2019 22:49:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CABvMjLToYzmCue-TiDhR4Yu4v3+Z+-UV9WhixV7uvwoMh2m5Lw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1570633189.git.vilhelm.gray@gmail.com> <893c3b4f03266c9496137cc98ac2b1bd27f92c73.1570633189.git.vilhelm.gray@gmail.com>
+ <CAK7LNATgW7bXUmqV=3QAaJ0Qu73Kox-TgDCQJb=s0=mwewSCUg@mail.gmail.com>
+ <20191009170917.GG32742@smile.fi.intel.com> <CAMuHMdXyyrL4ibKvjMV6r8TuxpmK73=JxsWNEfcRk1NjwsnOjA@mail.gmail.com>
+ <CAK7LNASVdqU_6+_iinWStb9ALqLw494pnZKr46fLW+WJ9nUo6A@mail.gmail.com>
+In-Reply-To: <CAK7LNASVdqU_6+_iinWStb9ALqLw494pnZKr46fLW+WJ9nUo6A@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 10 Oct 2019 08:49:10 +0300
+Message-ID: <CAHp75VeLkfNZkqhD8tedJdav81L+VA3Z50Kwcd9h4R7zMwjtvA@mail.gmail.com>
+Subject: Re: [PATCH v17 01/14] bitops: Introduce the for_each_set_clump8 macro
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Lukas Wunner <lukas@wunner.de>, sean.nyekjaer@prevas.dk,
+        morten.tiljeset@prevas.dk, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 10, 2019 at 5:31 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> On Thu, Oct 10, 2019 at 3:54 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Wed, Oct 9, 2019 at 7:09 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Thu, Oct 10, 2019 at 01:28:08AM +0900, Masahiro Yamada wrote:
+> > > > On Thu, Oct 10, 2019 at 12:27 AM William Breathitt Gray
+> > > > <vilhelm.gray@gmail.com> wrote:
+> > > > >
+> > > > > This macro iterates for each 8-bit group of bits (clump) with set bits,
+> > > > > within a bitmap memory region. For each iteration, "start" is set to the
+> > > > > bit offset of the found clump, while the respective clump value is
+> > > > > stored to the location pointed by "clump". Additionally, the
+> > > > > bitmap_get_value8 and bitmap_set_value8 functions are introduced to
+> > > > > respectively get and set an 8-bit value in a bitmap memory region.
+> > >
+> > > > Why is the return type "unsigned long" where you know
+> > > > it return the 8-bit value ?
+> > >
+> > > Because bitmap API operates on unsigned long type. This is not only
+> > > consistency, but for sake of flexibility in case we would like to introduce
+> > > more calls like clump16 or so.
+> >
+> > TBH, that doesn't convince me: those functions explicitly take/return an
+> > 8-bit value, and have "8" in their name.  The 8-bit value is never
+> > really related to, retrieved from, or stored in a full "unsigned long"
+> > element of a bitmap, only to/from/in a part (byte) of it.
+> >
+> > Following your rationale, all of iowrite{8,16,32,64}*() should take an
+> > "unsigned long" value, too.
+> >
+>
+> +1
+>
+> Using u8/u16/u32/u64 looks more consistent with other bitmap helpers.
+>
+> void bitmap_from_arr32(unsigned long *bitmap, const u32 *buf, unsigned
+> int nbits);
+> void bitmap_to_arr32(u32 *buf, const unsigned long *bitmap, unsigned int nbits);
+> static inline void bitmap_from_u64(unsigned long *dst, u64 mask);
+>
+>
+>
+> If you want to see more examples from other parts,
 
+Geert's and yours examples both are not related. They are about
+fixed-width properies when we know that is the part of protocol.
+Here we have no protocol which stricts us to the mentioned fixed-width types.
 
-On 10/9/19 10:37 PM, Yizhuo Zhai wrote:
-> Hi All:
-> 
-> drivers/spi/spi.c:
-> 
-> The function to_spi_device() could return NULL, but some callers
-> in this file does not check the return value while directly dereference
-> it, which seems potentially unsafe.
-> 
-> Such callers include spidev_release(),  spi_dev_check(),
-> driver_override_store(), etc.
-> 
-> 
+So, I can tell an opposite, your arguments didn't convince me.
 
+Imagine the function which does an or / and / xor operation on bitmap.
+Now, when I supply unsigned long, I will see
+operations on one type in _one_ function independently of the size.
+Your proposal will make an unneded churn.
 
-Many of your reports are completely bogus.
-
-I suggest you spend more time before sending such emails to very large audience
-and risk being ignored at some point.
-
-Thanks.
+-- 
+With Best Regards,
+Andy Shevchenko
