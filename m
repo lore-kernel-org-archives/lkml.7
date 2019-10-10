@@ -2,119 +2,128 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C90FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C896C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5599820B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEDC206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:01:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DyCP4NZI"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="rBl0cx6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfJJWqv (ORCPT
+        id S1726719AbfJJXBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 18:46:51 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36290 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfJJWqu (ORCPT
+        Thu, 10 Oct 2019 19:01:21 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45212 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfJJXBV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 18:46:50 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y22so4838482pfr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 15:46:50 -0700 (PDT)
+        Thu, 10 Oct 2019 19:01:21 -0400
+Received: by mail-qt1-f193.google.com with SMTP id c21so11136013qtj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 16:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=1bKGtbkU276Qic7083jH1GxErr25ze2mM6VPeh2J7GA=;
-        b=DyCP4NZI/zuNYDu7jY/ZZUEXHfDKMSazvkYJ6PuzJxjMRKhp+rAxzK5Dt2H01Pv6+m
-         LlMpUzTq+PUEEJZm/ab4gpJ3nZT0JvOiDbHG3GengQcNOIRuhA8pbDGv4navVXCn01qB
-         xpFAse9TBG8UdMjY262hjIHZRhZAMMC7WV7UM=
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=hKb1hJiJoZr7sDzi9awmt+z6YG7rgK/yyFTSM1pIHvc=;
+        b=rBl0cx6+eIElwhvMYT30TfWDTrbVzMZqR9vc1u08+8UkgRFWwsWJItiHPlbIz75bbO
+         yjErSPaO+d+mOXOukCkpOiBJnqGmHKu50/Uyz9FW/epJCtKe8478nPgRPB6CcvAY1a1I
+         Ceuu7vL7cH8gJEFTgdiOM8xNWMPqzJ4hpm14bppd6CQU3FROOOIgnoJhKh5GJ4rvJ7G7
+         trLU5f3s1a3fEC2JtQtzqks393lZwdH9IdblrWwCQZ01vQ7JRdlrHsiigbRxkJSzRSvm
+         +LnPGfJbwjrZh5kS1fHLpLjgKlFwoFNpuGaKfGkNdVIg8LEUr2UFHovhiakkDrFMacbh
+         yd9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=1bKGtbkU276Qic7083jH1GxErr25ze2mM6VPeh2J7GA=;
-        b=Qq+GBm3Vx6BKPHWlTHYUxit0caRyTl0hwtcwY49Vmq1gjv/l0m9tCAWPVvEWslK7tI
-         KRujvkl8gp6/DXFfd7EZSVerOVNbvvzQKBqOmdz1RRfiM0h/rtNZkKh194NrviK+w/ME
-         /UWijFmieKOEXYQBr+eCSwwFz4d7VxtsXveJHU6EzHOu5qsPLmUPAN13TifhAA+sXcQ2
-         uWBmcq5XcZERlTxiNxIqWc+LO/pPIHUZwU3y691UUCDbKB+SUybG+Oil8mgmBzf4c8A9
-         B6hbomJOuj5pW8HA6d9cif8LdFUkeHamEexpHvzV7yHyDbX7EivSGX8hEy8BBOAy2ter
-         RtYQ==
-X-Gm-Message-State: APjAAAUqMl/mJYWArpLmb1i+ei/9JwC7+VDitDVeYHp9/ZHrnioV0dVM
-        U+0eYPSRZKwmer5QKsFSDXP9u1Vig7Q=
-X-Google-Smtp-Source: APXvYqzPLTDHvgkpFIsRejZmoidbgu1xjUA2eDPKSvdkhsR2rKQm7kIBl5bRbTqnNTcfRoKBUArVEA==
-X-Received: by 2002:a17:90a:c383:: with SMTP id h3mr13985098pjt.122.1570747609862;
-        Thu, 10 Oct 2019 15:46:49 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w134sm6554453pfd.4.2019.10.10.15.46.48
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=hKb1hJiJoZr7sDzi9awmt+z6YG7rgK/yyFTSM1pIHvc=;
+        b=CPl9n9qn+9NTDMKTLJw0da1qQ4HkCii0XZ6oz5AMhLfjiuQmS/ROFpT3ZYvBkzsgzQ
+         MInGwT+Io0kpCTFFM8BV0guPJYZNz85a2DDiQr7ZrqOF3elzqzQ+f5gIR9OIQgEbRnyZ
+         JtU4YuWMApo5pl2/gJdvhayqWV+idicHYAvdAiRozngOQPwXNfqMB3gL7ZALa6i9OTXG
+         j5UzgrV/cCAMkR7PW/nQg4lWbpAO1XBEyj5AUYeXXhNs0LfhMFKVmHvTk8/MxzNESA0G
+         QN7vJkdVx3MnQ+bjnHhDdm/5V0ob6R003nNWrG6YJF1Vl6puenoZCP6bH41EgDBAesQN
+         RVcw==
+X-Gm-Message-State: APjAAAUxKBq1+159snRn0qyX97fT47NNDiDhhTVfnti72TY1Z7NgufNb
+        EarOOvjzWAh6+9HyeXCEg0QfZA==
+X-Google-Smtp-Source: APXvYqzlvVcUTrNNKzaif/kXN8GZwkAMecaGfYJIaGrr9Y2IjFLnQDpHQHTA/hY/Sd8K4BincCEN3w==
+X-Received: by 2002:a0c:f8cd:: with SMTP id h13mr12808457qvo.53.1570748480202;
+        Thu, 10 Oct 2019 16:01:20 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id 64sm3058098qkk.63.2019.10.10.16.01.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 15:46:49 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 15:46:48 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ralf Baechle <ralf@linux-mips.org>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: OCTEON: Replace SIZEOF_FIELD() macro
-Message-ID: <201910101545.586BCFC@keescook>
+        Thu, 10 Oct 2019 16:01:20 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 16:01:03 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Biao Huang <biao.huang@mediatek.com>
+Cc:     <davem@davemloft.net>, Jose Abreu <joabreu@synopsys.com>,
+        <andrew@lunn.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
+        <jianguo.zhang@mediatek.com>, <boon.leong.ong@intel.com>
+Subject: Re: [PATCH] net: stmmac: disable/enable ptp_ref_clk in
+ suspend/resume flow
+Message-ID: <20191010160103.63c3c0ed@cakuba.netronome.com>
+In-Reply-To: <20191009085649.6736-1-biao.huang@mediatek.com>
+References: <20191009085649.6736-1-biao.huang@mediatek.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+On Wed, 9 Oct 2019 16:56:49 +0800, Biao Huang wrote:
+> disable ptp_ref_clk in suspend flow, and enable it in resume flow.
+> 
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index c7c9e5f162e6..b592aeecc3dd 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -4469,6 +4469,8 @@ int stmmac_suspend(struct device *dev)
+>  		stmmac_mac_set(priv, priv->ioaddr, false);
+>  		pinctrl_pm_select_sleep_state(priv->device);
+>  		/* Disable clock in case of PWM is off */
+> +		if (priv->plat->clk_ptp_ref)
+> +			clk_disable_unprepare(priv->plat->clk_ptp_ref);
 
-In preparation for switching to a standard sizeof_member() macro to find the
-size of a member of a struct, remove the custom SIZEOF_FIELD() macro and use
-the more common FIELD_SIZEOF() instead. Later patches will globally replace
-FIELD_SIZEOF() and sizeof_field() with the more accurate sizeof_member().
+I don't know much embedded, but it seems like this should perhaps just
+be clk_disable() without the unprepare? stmmac_hw_teardown() is called
+when driver is removed so it needs to unprepare as well.
 
-Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Link: https://lore.kernel.org/r/20190924105839.110713-4-pankaj.laxminarayan.bharadiya@intel.com
-Co-developed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/mips/cavium-octeon/executive/cvmx-bootmem.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+Please feel free to explain to me why this needs to be
+clk_disable_unprepare(), as I said - not an expert.
 
-diff --git a/arch/mips/cavium-octeon/executive/cvmx-bootmem.c b/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
-index ba8f82a29a81..44b506a14666 100644
---- a/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
-+++ b/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
-@@ -44,13 +44,6 @@ static struct cvmx_bootmem_desc *cvmx_bootmem_desc;
- 
- /* See header file for descriptions of functions */
- 
--/**
-- * This macro returns the size of a member of a structure.
-- * Logically it is the same as "sizeof(s::field)" in C++, but
-- * C lacks the "::" operator.
-- */
--#define SIZEOF_FIELD(s, field) sizeof(((s *)NULL)->field)
--
- /**
-  * This macro returns a member of the
-  * cvmx_bootmem_named_block_desc_t structure. These members can't
-@@ -65,7 +58,7 @@ static struct cvmx_bootmem_desc *cvmx_bootmem_desc;
- #define CVMX_BOOTMEM_NAMED_GET_FIELD(addr, field)			\
- 	__cvmx_bootmem_desc_get(addr,					\
- 		offsetof(struct cvmx_bootmem_named_block_desc, field),	\
--		SIZEOF_FIELD(struct cvmx_bootmem_named_block_desc, field))
-+		FIELD_SIZEOF(struct cvmx_bootmem_named_block_desc, field))
- 
- /**
-  * This function is the implementation of the get macros defined
--- 
-2.17.1
+Also - if this is a bug fix and you'd like to have it backported to
+older releases you need to add a Fixes tag.
 
+Thanks!
 
--- 
-Kees Cook
+>  		clk_disable(priv->plat->pclk);
+>  		clk_disable(priv->plat->stmmac_clk);
+>  	}
+> @@ -4535,6 +4537,8 @@ int stmmac_resume(struct device *dev)
+>  		/* enable the clk previously disabled */
+>  		clk_enable(priv->plat->stmmac_clk);
+>  		clk_enable(priv->plat->pclk);
+> +		if (priv->plat->clk_ptp_ref)
+> +			clk_prepare_enable(priv->plat->clk_ptp_ref);
+>  		/* reset the phy so that it's ready */
+>  		if (priv->mii)
+>  			stmmac_mdio_reset(priv->mii);
+
