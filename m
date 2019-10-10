@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA11FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFDFC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C96214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B05214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:24:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L+26j3w/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X2Pgj+AX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfJJXYF (ORCPT
+        id S1727464AbfJJXYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 19:24:05 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34244 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727459AbfJJXYD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Oct 2019 19:24:03 -0400
-Received: by mail-pg1-f193.google.com with SMTP id y35so4654117pgl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 16:24:01 -0700 (PDT)
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35088 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfJJXYB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 19:24:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c3so3553932plo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 16:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0G08DVDmHHpYBvqrNiRz2P/EWIDmTXItkvaTB27EiyI=;
-        b=L+26j3w/f0Pvqirk5VQGVIaNnOzQ2IdJK1izuYoKNo3SNs6N6HAOgE0M/aYhGT3nnY
-         YJiZD1qfB6cRN1s5hFnMMcbVtr1ThMS0G3uUnMNPgxf+aQ5Yioc6LCYHRTtv6d5KMIg/
-         Ss3qpng+qg6mwj+zSd5BFQKD6vfSiz3COgl80=
+        bh=yMqmNRh9/WRVuOhxmgeAss8KGdVZEWgP1gvN19lsOqw=;
+        b=X2Pgj+AXTV2Ft841aCpOcTDGSCdqRW7jKxi/A0JNfzkCvRnBRTlgiBPSQlnSB+smXf
+         KM/0N/YQd1W8z5kju+9JLAHVI1pfeWN/BEzNRrEERIuWwD3BkBcqvXop0Shui4yPMLqZ
+         D7f/vZRRKSScbxm9PdqjdsYfiYl9R3gEC2Gak=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0G08DVDmHHpYBvqrNiRz2P/EWIDmTXItkvaTB27EiyI=;
-        b=KoAZVi3XfxgAtY8GjhAb7KuEZFZDTE3CH4leFnLM/4mqIWOC3GlJYgHpmecDJ3wefv
-         35pFnReaK8TLYleznhobiLOKUk8bzw1mAQowhUibzV0FQMCThAqgKv1AIHsTpd18r6Fy
-         /THzL3tHsTg14notRrRm7WCYcN3R6DrQmw0xSkUJdeYHjJBKExsRlAPmTlcAH4hCBK1u
-         MpyNCncQgqUcZs7/9USHSetbzEmwWUcXP/5VQOnf3caqR3GU5s+fTrPeYH8pan4R14Rx
-         8TIvpnjr9MsxYivBQzexJK+oy+GREgv3chFnGgsOzTqFhODa75NeVJWUPmWL8/5Cw1SQ
-         V+9Q==
-X-Gm-Message-State: APjAAAXIBsXbO93GU/8MHf0aX3Lxjj4F1c2uAop04SeT9JqKO939xMYH
-        azJRdeNBCtdYJiKeG00NR7oboQ==
-X-Google-Smtp-Source: APXvYqxjCP9hXmIHY8zl6IMdUQdpDHJPmIqU3YoKsTJXuzror2pooZA8+yn8qs+v6tKBGdrepjliWw==
-X-Received: by 2002:a63:cc4a:: with SMTP id q10mr13860587pgi.221.1570749840928;
-        Thu, 10 Oct 2019 16:24:00 -0700 (PDT)
+        bh=yMqmNRh9/WRVuOhxmgeAss8KGdVZEWgP1gvN19lsOqw=;
+        b=SSwfNFdi1x2TYMLIMGRUuZ6sXmBnxP+8ucifLvqN6jCktIcNhecYUWhZXcF63YQ1A0
+         /VtaS9+kZ537K1Qy6rFIe4gCLwYPJhAaX7duOIu7pUAy77etOcKAXkPuum933H/sVo0U
+         loXocPZbdW0n2na4IWTUhhqmPe7s/t6sKjXAc9N9xxxFAQY/UO17vPIEbrrbv1kbpHMh
+         rbxgx7EN4dHEPBLBpXbzg1GwaV+R5JwMp6bTbVIeXNG0LCmifIJrmt3asB7TkmIbStZm
+         KxvkrpiKeOG7ZoaJlDR67M+rcpoGG6/Wa3v6Hzb8AAVF9M3koEJGZjTVvSZMjGIk1prs
+         hTQA==
+X-Gm-Message-State: APjAAAVYf8allsJ0Oyr2Wzev/jgLggvLsEx1zmG38M+A9AcBjvaokzwP
+        XesivQGq5x+Q1Uxref4V0fAmKA==
+X-Google-Smtp-Source: APXvYqzr5TEKsgP0lOS7AdzCh27u/YbVsT+Ij4ZMEVcIou1HxRIVeL6D9p3wjllIloBGYMby8gU1TQ==
+X-Received: by 2002:a17:902:7b96:: with SMTP id w22mr12067901pll.40.1570749839357;
+        Thu, 10 Oct 2019 16:23:59 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 184sm5994385pgf.33.2019.10.10.16.23.57
+        by smtp.gmail.com with ESMTPSA id m2sm6645331pff.154.2019.10.10.16.23.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 10 Oct 2019 16:23:58 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -63,9 +63,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         netdev@vger.kernel.org, linux-arch@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 2/4] linux/stddef.h: Add sizeof_member() macro
-Date:   Thu, 10 Oct 2019 16:23:43 -0700
-Message-Id: <20191010232345.26594-3-keescook@chromium.org>
+Subject: [PATCH v2 4/4] include: Remove FIELD_SIZEOF() and sizeof_field() macros
+Date:   Thu, 10 Oct 2019 16:23:45 -0700
+Message-Id: <20191010232345.26594-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191010232345.26594-1-keescook@chromium.org>
 References: <20191010232345.26594-1-keescook@chromium.org>
@@ -76,78 +76,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
 
-At present we have 2 different macros to calculate the size of a member
-of a struct: FIELD_SIZEOF() and sizeof_field(). As a prerequisite to
-bringing uniformity to the entire kernel source tree, add sizeof_member()
-macro as it is both more pleasant (not upper case) and more correct
-(sizeof()-family cannot operate on bit fields; this is meant to operate
-on struct members), as discussed[1].
-
-Future patches will replace all occurrences of above macros with
-sizeof_member().
-
-[1] https://www.openwall.com/lists/kernel-hardening/2019/07/02/2
+The common function used to find struct member size is sizeof_member().
+Remove the now unused FIELD_SIZEOF() and sizeof_field() macros.
 
 Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Link: https://lore.kernel.org/r/20190924105839.110713-2-pankaj.laxminarayan.bharadiya@intel.com
+Link: https://lore.kernel.org/r/20190924105839.110713-5-pankaj.laxminarayan.bharadiya@intel.com
 Co-developed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/stddef.h                 | 13 ++++++++++++-
- tools/testing/selftests/bpf/bpf_util.h |  6 +++---
- 2 files changed, 15 insertions(+), 4 deletions(-)
+ include/linux/kernel.h | 9 ---------
+ include/linux/stddef.h | 8 --------
+ 2 files changed, 17 deletions(-)
 
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index d83d403dac2e..d67020250d75 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -79,15 +79,6 @@
+  */
+ #define round_down(x, y) ((x) & ~__round_mask(x, y))
+ 
+-/**
+- * FIELD_SIZEOF - get the size of a struct's field
+- * @t: the target struct
+- * @f: the target struct's field
+- * Return: the size of @f in the struct definition without having a
+- * declared instance of @t.
+- */
+-#define FIELD_SIZEOF(t, f) (sizeof(((t*)0)->f))
+-
+ #define typeof_member(T, m)	typeof(((T*)0)->m)
+ 
+ #define DIV_ROUND_UP __KERNEL_DIV_ROUND_UP
 diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index 998a4ba28eba..ecadb736c853 100644
+index ecadb736c853..74b5e644d50a 100644
 --- a/include/linux/stddef.h
 +++ b/include/linux/stddef.h
-@@ -27,6 +27,17 @@ enum {
-  */
- #define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
- 
-+/**
-+ * sizeof_member(TYPE, MEMBER) - get the size of a struct's member
-+ *
-+ * @TYPE: the target struct
-+ * @MEMBER: the target struct's member
-+ *
-+ * Return: the size of @MEMBER in the struct definition without having a
-+ * declared instance of @TYPE.
-+ */
-+#define sizeof_member(TYPE, MEMBER)	(sizeof(((TYPE *)0)->MEMBER))
-+
- /**
-  * offsetofend(TYPE, MEMBER)
-  *
-@@ -34,6 +45,6 @@ enum {
-  * @MEMBER: The member within the structure to get the end offset of
-  */
- #define offsetofend(TYPE, MEMBER) \
--	(offsetof(TYPE, MEMBER)	+ sizeof_field(TYPE, MEMBER))
-+	(offsetof(TYPE, MEMBER)	+ sizeof_member(TYPE, MEMBER))
- 
- #endif
-diff --git a/tools/testing/selftests/bpf/bpf_util.h b/tools/testing/selftests/bpf/bpf_util.h
-index ec219f84e041..6b4b3e24ba9f 100644
---- a/tools/testing/selftests/bpf/bpf_util.h
-+++ b/tools/testing/selftests/bpf/bpf_util.h
-@@ -31,13 +31,13 @@ static inline unsigned int bpf_num_possible_cpus(void)
- # define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+@@ -19,14 +19,6 @@ enum {
+ #define offsetof(TYPE, MEMBER)	((size_t)&((TYPE *)0)->MEMBER)
  #endif
  
--#ifndef sizeof_field
+-/**
+- * sizeof_field(TYPE, MEMBER)
+- *
+- * @TYPE: The structure containing the field of interest
+- * @MEMBER: The field to return the size of
+- */
 -#define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
-+#ifndef sizeof_member
-+#define sizeof_member(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
- #endif
- 
- #ifndef offsetofend
- #define offsetofend(TYPE, MEMBER) \
--	(offsetof(TYPE, MEMBER)	+ sizeof_field(TYPE, MEMBER))
-+	(offsetof(TYPE, MEMBER)	+ sizeof_member(TYPE, MEMBER))
- #endif
- 
- #endif /* __BPF_UTIL__ */
+-
+ /**
+  * sizeof_member(TYPE, MEMBER) - get the size of a struct's member
+  *
 -- 
 2.17.1
 
