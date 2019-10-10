@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E191C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97AAC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262A621920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837D421D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696689;
-	bh=KXPIak5gVB/545cBYDyectDUfIbRwx5aoYc83wnV82M=;
+	s=default; t=1570696693;
+	bh=s9LQjxudcIhOXT71s3GlOhEPsdGOco/H+iJNyFCdFtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nKITg7zT1wcXu7CK0wQVPjTuFWUljuvaEGJpkEK/FV1uuPKQAJmbZ7I63BsCnkT/c
-	 mUXngq6/ujfMu7nex+VEkCik+1/XwdmCGfjxMe0ozeH09YoWduGgajBdOPeu+DzEeI
-	 v76lM+8Bm5n4hQQA7dbR0RJpUSPyU4k9mYUzk9gc=
+	b=mOIagSNugbG1tC17J3/NOJ/C9fBc283tQZ40u8C79uw+Q161+cW61ouK7CNcQP9RW
+	 sdibX4WMfKFoKfFTKbONDXnExblJE32Etr3gTRiK5buomLyBwEwTFe4PPZy5Jlwgc7
+	 Pmm6/swFcEYBprhb0Ph5vaftaEtwI3rOlRBenajQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbfJJIiH (ORCPT
+        id S2387551AbfJJIiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:38:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40812 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:38:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387498AbfJJIiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:38:03 -0400
+        id S2387498AbfJJIiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:38:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8765720B7C;
-        Thu, 10 Oct 2019 08:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02FBC218AC;
+        Thu, 10 Oct 2019 08:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696683;
-        bh=KXPIak5gVB/545cBYDyectDUfIbRwx5aoYc83wnV82M=;
+        s=default; t=1570696688;
+        bh=s9LQjxudcIhOXT71s3GlOhEPsdGOco/H+iJNyFCdFtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=veGtfb9rtrnT1tUWQqZekBHuDSBpYxwdF8/cgSDFoQzhZYJktxpdYQNaEOUeb8GvO
-         10t7LsW+S1317v9u05JEOU0blS35xC+ISW4hHftosjGtb68DYXpxz8nkuyf35xZzZT
-         rtXjaWs6FFtBZlx5M/xW9VYzelSAfWTcocCIdFpg=
+        b=G8CSppoghimMVbclNtK2Ml6sPI+EEdxK0hCnXSFTPB52RDF22fVmQ2mDlVhJI5uWj
+         YdcD68t9LOhsDEm7fqZaWCcq2MiNIheVZ9sQR4oNDWQig34Qs0ASeUzz8H5OEW2uyA
+         xabGRHIn5bGjKqj32VBlCiB4rK70Gkt5wUM69dHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: [PATCH 5.3 015/148] KVM: PPC: Book3S HV: Dont lose pending doorbell request on migration on P9
-Date:   Thu, 10 Oct 2019 10:34:36 +0200
-Message-Id: <20191010083612.025631289@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.3 017/148] nbd: fix max number of supported devs
+Date:   Thu, 10 Oct 2019 10:34:38 +0200
+Message-Id: <20191010083612.153232421@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,52 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Mackerras <paulus@ozlabs.org>
+From: Mike Christie <mchristi@redhat.com>
 
-commit ff42df49e75f053a8a6b4c2533100cdcc23afe69 upstream.
+commit e9e006f5fcf2bab59149cb38a48a4817c1b538b4 upstream.
 
-On POWER9, when userspace reads the value of the DPDES register on a
-vCPU, it is possible for 0 to be returned although there is a doorbell
-interrupt pending for the vCPU.  This can lead to a doorbell interrupt
-being lost across migration.  If the guest kernel uses doorbell
-interrupts for IPIs, then it could malfunction because of the lost
-interrupt.
+This fixes a bug added in 4.10 with commit:
 
-This happens because a newly-generated doorbell interrupt is signalled
-by setting vcpu->arch.doorbell_request to 1; the DPDES value in
-vcpu->arch.vcore->dpdes is not updated, because it can only be updated
-when holding the vcpu mutex, in order to avoid races.
+commit 9561a7ade0c205bc2ee035a2ac880478dcc1a024
+Author: Josef Bacik <jbacik@fb.com>
+Date:   Tue Nov 22 14:04:40 2016 -0500
 
-To fix this, we OR in vcpu->arch.doorbell_request when reading the
-DPDES value.
+    nbd: add multi-connection support
 
-Cc: stable@vger.kernel.org # v4.13+
-Fixes: 579006944e0d ("KVM: PPC: Book3S HV: Virtualize doorbell facility on POWER9")
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+that limited the number of devices to 256. Before the patch we could
+create 1000s of devices, but the patch switched us from using our
+own thread to using a work queue which has a default limit of 256
+active works.
+
+The problem is that our recv_work function sits in a loop until
+disconnection but only handles IO for one connection. The work is
+started when the connection is started/restarted, but if we end up
+creating 257 or more connections, the queue_work call just queues
+connection257+'s recv_work and that waits for connection 1 - 256's
+recv_work to be disconnected and that work instance completing.
+
+Instead of reverting back to kthreads, this has us allocate a
+workqueue_struct per device, so we can block in the work.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/block/nbd.c |   39 +++++++++++++++++++++++++--------------
+ 1 file changed, 25 insertions(+), 14 deletions(-)
 
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -1678,7 +1678,14 @@ static int kvmppc_get_one_reg_hv(struct
- 		*val = get_reg_val(id, vcpu->arch.pspb);
- 		break;
- 	case KVM_REG_PPC_DPDES:
--		*val = get_reg_val(id, vcpu->arch.vcore->dpdes);
-+		/*
-+		 * On POWER9, where we are emulating msgsndp etc.,
-+		 * we return 1 bit for each vcpu, which can come from
-+		 * either vcore->dpdes or doorbell_request.
-+		 * On POWER8, doorbell_request is 0.
-+		 */
-+		*val = get_reg_val(id, vcpu->arch.vcore->dpdes |
-+				   vcpu->arch.doorbell_request);
- 		break;
- 	case KVM_REG_PPC_VTB:
- 		*val = get_reg_val(id, vcpu->arch.vcore->vtb);
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -108,6 +108,7 @@ struct nbd_device {
+ 	struct nbd_config *config;
+ 	struct mutex config_lock;
+ 	struct gendisk *disk;
++	struct workqueue_struct *recv_workq;
+ 
+ 	struct list_head list;
+ 	struct task_struct *task_recv;
+@@ -138,7 +139,6 @@ static struct dentry *nbd_dbg_dir;
+ 
+ static unsigned int nbds_max = 16;
+ static int max_part = 16;
+-static struct workqueue_struct *recv_workqueue;
+ static int part_shift;
+ 
+ static int nbd_dev_dbg_init(struct nbd_device *nbd);
+@@ -1038,7 +1038,7 @@ static int nbd_reconnect_socket(struct n
+ 		/* We take the tx_mutex in an error path in the recv_work, so we
+ 		 * need to queue_work outside of the tx_mutex.
+ 		 */
+-		queue_work(recv_workqueue, &args->work);
++		queue_work(nbd->recv_workq, &args->work);
+ 
+ 		atomic_inc(&config->live_connections);
+ 		wake_up(&config->conn_wait);
+@@ -1139,6 +1139,10 @@ static void nbd_config_put(struct nbd_de
+ 		kfree(nbd->config);
+ 		nbd->config = NULL;
+ 
++		if (nbd->recv_workq)
++			destroy_workqueue(nbd->recv_workq);
++		nbd->recv_workq = NULL;
++
+ 		nbd->tag_set.timeout = 0;
+ 		nbd->disk->queue->limits.discard_granularity = 0;
+ 		nbd->disk->queue->limits.discard_alignment = 0;
+@@ -1167,6 +1171,14 @@ static int nbd_start_device(struct nbd_d
+ 		return -EINVAL;
+ 	}
+ 
++	nbd->recv_workq = alloc_workqueue("knbd%d-recv",
++					  WQ_MEM_RECLAIM | WQ_HIGHPRI |
++					  WQ_UNBOUND, 0, nbd->index);
++	if (!nbd->recv_workq) {
++		dev_err(disk_to_dev(nbd->disk), "Could not allocate knbd recv work queue.\n");
++		return -ENOMEM;
++	}
++
+ 	blk_mq_update_nr_hw_queues(&nbd->tag_set, config->num_connections);
+ 	nbd->task_recv = current;
+ 
+@@ -1197,7 +1209,7 @@ static int nbd_start_device(struct nbd_d
+ 		INIT_WORK(&args->work, recv_work);
+ 		args->nbd = nbd;
+ 		args->index = i;
+-		queue_work(recv_workqueue, &args->work);
++		queue_work(nbd->recv_workq, &args->work);
+ 	}
+ 	nbd_size_update(nbd);
+ 	return error;
+@@ -1217,8 +1229,10 @@ static int nbd_start_device_ioctl(struct
+ 	mutex_unlock(&nbd->config_lock);
+ 	ret = wait_event_interruptible(config->recv_wq,
+ 					 atomic_read(&config->recv_threads) == 0);
+-	if (ret)
++	if (ret) {
+ 		sock_shutdown(nbd);
++		flush_workqueue(nbd->recv_workq);
++	}
+ 	mutex_lock(&nbd->config_lock);
+ 	nbd_bdev_reset(bdev);
+ 	/* user requested, ignore socket errors */
+@@ -1877,6 +1891,12 @@ static void nbd_disconnect_and_put(struc
+ 	nbd_disconnect(nbd);
+ 	nbd_clear_sock(nbd);
+ 	mutex_unlock(&nbd->config_lock);
++	/*
++	 * Make sure recv thread has finished, so it does not drop the last
++	 * config ref and try to destroy the workqueue from inside the work
++	 * queue.
++	 */
++	flush_workqueue(nbd->recv_workq);
+ 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
+ 			       &nbd->config->runtime_flags))
+ 		nbd_config_put(nbd);
+@@ -2263,20 +2283,12 @@ static int __init nbd_init(void)
+ 
+ 	if (nbds_max > 1UL << (MINORBITS - part_shift))
+ 		return -EINVAL;
+-	recv_workqueue = alloc_workqueue("knbd-recv",
+-					 WQ_MEM_RECLAIM | WQ_HIGHPRI |
+-					 WQ_UNBOUND, 0);
+-	if (!recv_workqueue)
+-		return -ENOMEM;
+ 
+-	if (register_blkdev(NBD_MAJOR, "nbd")) {
+-		destroy_workqueue(recv_workqueue);
++	if (register_blkdev(NBD_MAJOR, "nbd"))
+ 		return -EIO;
+-	}
+ 
+ 	if (genl_register_family(&nbd_genl_family)) {
+ 		unregister_blkdev(NBD_MAJOR, "nbd");
+-		destroy_workqueue(recv_workqueue);
+ 		return -EINVAL;
+ 	}
+ 	nbd_dbg_init();
+@@ -2318,7 +2330,6 @@ static void __exit nbd_cleanup(void)
+ 
+ 	idr_destroy(&nbd_index_idr);
+ 	genl_unregister_family(&nbd_genl_family);
+-	destroy_workqueue(recv_workqueue);
+ 	unregister_blkdev(NBD_MAJOR, "nbd");
+ }
+ 
 
 
