@@ -2,143 +2,94 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F005AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA4FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8B220659
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A059920659
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfJJRgN (ORCPT
+        id S1726846AbfJJRgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:36:13 -0400
-Received: from mga07.intel.com ([134.134.136.100]:11447 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfJJRgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:36:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 10:36:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,281,1566889200"; 
-   d="scan'208";a="200538447"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by FMSMGA003.fm.intel.com with SMTP; 10 Oct 2019 10:36:08 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 10 Oct 2019 20:36:07 +0300
-Date:   Thu, 10 Oct 2019 20:36:07 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Ilia Mirkin <imirkin@alum.mit.edu>
-Cc:     Sean Paul <sean@poorly.run>, Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH v4 2/3] drm/rockchip: Add optional support for CRTC gamma
- LUT
-Message-ID: <20191010173607.GH1208@intel.com>
-References: <20191008230038.24037-1-ezequiel@collabora.com>
- <20191008230038.24037-3-ezequiel@collabora.com>
- <20191009180136.GE85762@art_vandelay>
- <CAAEAJfDP0PsGAoRfGyDyWj7DxgP6nwwwA1_gwLQuVy-fRDa-UA@mail.gmail.com>
- <20191010160059.GJ85762@art_vandelay>
- <CAKb7UvhWWYcpmyMZgerdJiG=sZjQUBVkeEwev+PdYzBW6+xsbQ@mail.gmail.com>
+        Thu, 10 Oct 2019 13:36:40 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41280 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfJJRgk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 13:36:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q7so4335845pfh.8;
+        Thu, 10 Oct 2019 10:36:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AztIdm8ETHfYaIQY0y0NENQuQnv+NGef0JvaVEKw0VA=;
+        b=mtNy5ebUSRFEnD3V21ypvKXYnZn+CTCxyJzt71m+go1RBYZoGknXg+o5YnxWmmF2I/
+         4xG5AiPecTw/z8chA1p14YhFBlcOVi8lrnq60M0AuWuxjUSy+e7a0XgryYphA3RlVzkn
+         F+mtdpOy1nv0znVisiGkopPWs9U2/jSggnqjXBCX+9ePbLratJh6WmtNwyh6ls4tjnQG
+         V9r/7ui/I5b9ZwdImaB5FJFNTg+cL6iwwgzifOmqcKDQ4NmKFA6IuShXcuRxMQdUI4BZ
+         AFg12cBG8shgEHZ6KXpbUEfXfPcP7YQhvTZiSOOhZTcedRs5k7i4UJeK284nj9n9WnUA
+         5W1A==
+X-Gm-Message-State: APjAAAXGz/pPJBofEekiCLapOys3tsopQGJbGTxFnlWxlUFXh12YLytW
+        ZAogoeAQzongKVG+1LYPlO01R1Qr
+X-Google-Smtp-Source: APXvYqymdms+PgPjcLo7aDcPpc9E7No7XXX10oBOOSZW/Qht9KDC9Y7xMYsUR2hFJDIk7/Q7ryQGkQ==
+X-Received: by 2002:a17:90a:9a92:: with SMTP id e18mr12907030pjp.87.1570728998580;
+        Thu, 10 Oct 2019 10:36:38 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id z23sm5584589pgu.16.2019.10.10.10.36.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2019 10:36:37 -0700 (PDT)
+Subject: Re: linux-next: Fixes tag needs some work in the block tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191008071620.5799d02a@canb.auug.org.au>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <9d421f2b-04f5-44dc-8a00-981b2ff09b5d@acm.org>
+Date:   Thu, 10 Oct 2019 10:36:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKb7UvhWWYcpmyMZgerdJiG=sZjQUBVkeEwev+PdYzBW6+xsbQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008071620.5799d02a@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 12:23:05PM -0400, Ilia Mirkin wrote:
-> On Thu, Oct 10, 2019 at 12:01 PM Sean Paul <sean@poorly.run> wrote:
-> > > > > +static int vop_crtc_atomic_check(struct drm_crtc *crtc,
-> > > > > +                              struct drm_crtc_state *crtc_state)
-> > > > > +{
-> > > > > +     struct vop *vop = to_vop(crtc);
-> > > > > +
-> > > > > +     if (vop->lut_regs && crtc_state->color_mgmt_changed &&
-> > > > > +         crtc_state->gamma_lut) {
-> > > > > +             unsigned int len;
-> > > > > +
-> > > > > +             len = drm_color_lut_size(crtc_state->gamma_lut);
-> > > > > +             if (len != crtc->gamma_size) {
-> > > > > +                     DRM_DEBUG_KMS("Invalid LUT size; got %d, expected %d\n",
-> > > > > +                                   len, crtc->gamma_size);
-> > > > > +                     return -EINVAL;
-> > > > > +             }
-> > > >
-> > > > Overflow is avoided in drm_mode_gamma_set_ioctl(), so I don't think you need
-> > > > this function.
-> > > >
-> > >
-> > > But that only applies to the legacy path. Isn't this needed to ensure
-> > > a gamma blob
-> > > has the right size?
-> >
-> > Yeah, good point, we check the element size in the atomic path, but not the max
-> > size. I haven't looked at enough color lut stuff to have an opinion whether this
-> > check would be useful in a helper function or not, something to consider, I
-> > suppose.
+On 10/7/19 1:16 PM, Stephen Rothwell wrote:
+> In commit
 > 
-> Some implementations support multiple sizes (e.g. 256 and 1024) but
-> not anything in between. It would be difficult to expose this
-> generically, I would imagine.
-> The 256 size is kind of special, since
-> basically all legacy usage assumes that 256 is the one true quantity
-> of LUT entries...
+>    1d200e9d6f63 ("block: Fix writeback throttling W=1 compiler warnings")
+> 
+> Fixes tag
+> 
+>    Fixes: e34cbd307477 ("blk-wbt: add general throttling mechanism"; v4.10).
+> 
+> has these problem(s):
+> 
+>    - Subject has leading but no trailing quotes
+>    - Subject does not match target commit subject
+>      Just use
+> 	git log -1 --format='Fixes: %h ("%s")'
 
-What we do currently in i915 is:
-crtc->gamma_size = 256
-GAMMA_LUT_SIZE = platform specific (256, 129, 257, 2^10, or 2^18+1 (lol))
-DEGAMMA_LUT_SIZE = platform specific (0, 33, 65, or 2^10)
+Hi Stephen,
 
-i915 will accept:
-- gamma lut of size 256, iff ctm==NULL and degamma==NULL (the so
-  called "legacy gamma" mode)
-- (de)gamma_lut of size (DE)GAMMA_LUT_SIZE if it passes the
-  checks done by drm_color_lut_check()
+The above fixes tag follows the recommended format except that it is 
+followed by a kernel version number. Is there a recommended format for 
+embedding the kernel version number in a Fixes: tag? I think that 
+information is useful. I haven't found any recommendations for how to do 
+that in Documentation/process/submitting-patches.rst.
 
-Ie. just one or two gamma modes per platform is exposed. And that's
-about all we can do with the current uapi even though our hardware
-supports many more modes.
+Thanks,
 
-The resulting precision, interpolation vs. truncation behaviour,
-and handling of out of gamut values are all totally unspecified
-and userspace just has to make a guess.
-
-We also cheat with the 2^10 sized LUTs a bit due to the hw sharing
-the same LUT for gamma and degamma, and so if you enable both at
-the same time we throw away every second entry and each stage
-only gets a 2^9 entry LUT in the end.
-
-Oh and for the 2^18+1 monstrosity we cheat even more and
-throw away ~99.8% of the entries :(
+Bart.
 
 
-This here was my idea for extending the uapi so that we
-could expose the full hw capabilities and let userspace
-decide which mode suits it best without having to guess
-what it'll get:
-https://github.com/vsyrjala/linux/commits/gamma_mode_prop
-
-Maybe in a few years I'll find time to get back to it...
-
--- 
-Ville Syrjälä
-Intel
