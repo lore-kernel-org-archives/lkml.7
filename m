@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A941C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD606C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78DF2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87EFB2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698168;
-	bh=c7WJh+EJ+vLVCVWgY959mfZeB3g+LV991TNwgJT3s/k=;
+	s=default; t=1570698176;
+	bh=rdcIxeP4m44G4RKG8Wgygl8lX/dUoxoPTmdfFUaKgR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=syVUVAAWcggQPXNZj8Owuzfp4r9wRuC/9VF1prxFxcHfLEwQZypvbDcZDxtUoFcV8
-	 tdV+ZlX2OsshLzd7wFOSM4uij2x3qu3cuw3QzF+y3bzb98QkaRDiQ0/zcIP2luRipx
-	 a3LjE/Muu5Qxi1tDFdTVzO7z3bUZkqMltohlaTik=
+	b=XxYh8Ro7AnAzpyOEhAlocRFPWqOiMeClB3vYApphgxCBTLM06cNoEXzjqI3+kIm0G
+	 ZUDZcLsJMzPISelT3Kxehl41Wz+/qY4rJyNIcPB/kwBcQQQb901Z1qwWd5qPWUkURA
+	 Nv7/TUQg8lI7qPxZ2apGhJf/MIlEaZr2ToLrfQQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388583AbfJJJCr (ORCPT
+        id S2388675AbfJJJCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:02:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42760 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 05:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387811AbfJJIjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:39:19 -0400
+        id S1733279AbfJJIjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:39:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C938D21D80;
-        Thu, 10 Oct 2019 08:39:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6817121D6C;
+        Thu, 10 Oct 2019 08:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696759;
-        bh=c7WJh+EJ+vLVCVWgY959mfZeB3g+LV991TNwgJT3s/k=;
+        s=default; t=1570696753;
+        bh=rdcIxeP4m44G4RKG8Wgygl8lX/dUoxoPTmdfFUaKgR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yzEppY5AuX7fvxcH/MpUHcJDdOK6ea5l4K9mfu49PPtcdVO8wRUfxT/XKDBEl5mv8
-         aGwP6/UY9uac7ecQoq5Y3RYKQ5A4XVkg5mVqk/zBUCpi8bSVmND5d2z1J8yL2geqjC
-         HVhuaL7ET5zDShFdukb7/rDsvRhRy0idNDU2bdKg=
+        b=MR53nh5fRv5BAFO6rre0kbiF9aUrAWMbXxybj5FpYSv24a6gjnEuwS3wqn1sv290q
+         8Wck1Aa1yOUqnoHEqcxb8ukDMC9LVG+vRaWmpL590OGa7xOpRLlA3BMoxexu6ZkfkS
+         84/7mSlTzwjvQWVStkzVzyaH8iQefP63v08Jmor4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.3 043/148] crypto: caam/qi - fix error handling in ERN handler
-Date:   Thu, 10 Oct 2019 10:35:04 +0200
-Message-Id: <20191010083613.739344414@linuxfoundation.org>
+Subject: [PATCH 5.3 041/148] crypto: skcipher - Unmap pages after an external error
+Date:   Thu, 10 Oct 2019 10:35:02 +0200
+Message-Id: <20191010083613.631776460@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -61,70 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 51fab3d73054ca5b06b26e20edac0486b052c6f4 upstream.
+commit 0ba3c026e685573bd3534c17e27da7c505ac99c4 upstream.
 
-ERN handler calls the caam/qi frontend "done" callback with a status
-of -EIO. This is incorrect, since the callback expects a status value
-meaningful for the crypto engine - hence the cryptic messages
-like the one below:
-platform caam_qi: 15: unknown error source
+skcipher_walk_done may be called with an error by internal or
+external callers.  For those internal callers we shouldn't unmap
+pages but for external callers we must unmap any pages that are
+in use.
 
-Fix this by providing the callback with:
--the status returned by the crypto engine (fd[status]) in case
-it contains an error, OR
--a QI "No error" code otherwise; this will trigger the message:
-platform caam_qi: 50000000: Queue Manager Interface: No error
-which is fine, since QMan driver provides details about the cause of
-failure
+This patch distinguishes between the two cases by checking whether
+walk->nbytes is zero or not.  For internal callers, we now set
+walk->nbytes to zero prior to the call.  For external callers,
+walk->nbytes has always been non-zero (as zero is used to indicate
+the termination of a walk).
 
-Cc: <stable@vger.kernel.org> # v5.1+
-Fixes: 67c2315def06 ("crypto: caam - add Queue Interface (QI) backend support")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reported-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Fixes: 5cde0af2a982 ("[CRYPTO] cipher: Added block cipher type")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Tested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/error.c |    1 +
- drivers/crypto/caam/qi.c    |    5 ++++-
- drivers/crypto/caam/regs.h  |    1 +
- 3 files changed, 6 insertions(+), 1 deletion(-)
+ crypto/skcipher.c |   42 +++++++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
 
---- a/drivers/crypto/caam/error.c
-+++ b/drivers/crypto/caam/error.c
-@@ -118,6 +118,7 @@ static const struct {
- 	u8 value;
- 	const char *error_text;
- } qi_error_list[] = {
-+	{ 0x00, "No error" },
- 	{ 0x1F, "Job terminated by FQ or ICID flush" },
- 	{ 0x20, "FD format error"},
- 	{ 0x21, "FD command format error"},
---- a/drivers/crypto/caam/qi.c
-+++ b/drivers/crypto/caam/qi.c
-@@ -163,7 +163,10 @@ static void caam_fq_ern_cb(struct qman_p
- 	dma_unmap_single(drv_req->drv_ctx->qidev, qm_fd_addr(fd),
- 			 sizeof(drv_req->fd_sgt), DMA_BIDIRECTIONAL);
- 
--	drv_req->cbk(drv_req, -EIO);
-+	if (fd->status)
-+		drv_req->cbk(drv_req, be32_to_cpu(fd->status));
-+	else
-+		drv_req->cbk(drv_req, JRSTA_SSRC_QI);
+--- a/crypto/skcipher.c
++++ b/crypto/skcipher.c
+@@ -90,7 +90,7 @@ static inline u8 *skcipher_get_spot(u8 *
+ 	return max(start, end_page);
  }
  
- static struct qman_fq *create_caam_req_fq(struct device *qidev,
---- a/drivers/crypto/caam/regs.h
-+++ b/drivers/crypto/caam/regs.h
-@@ -641,6 +641,7 @@ struct caam_job_ring {
- #define JRSTA_SSRC_CCB_ERROR        0x20000000
- #define JRSTA_SSRC_JUMP_HALT_USER   0x30000000
- #define JRSTA_SSRC_DECO             0x40000000
-+#define JRSTA_SSRC_QI               0x50000000
- #define JRSTA_SSRC_JRERROR          0x60000000
- #define JRSTA_SSRC_JUMP_HALT_CC     0x70000000
+-static void skcipher_done_slow(struct skcipher_walk *walk, unsigned int bsize)
++static int skcipher_done_slow(struct skcipher_walk *walk, unsigned int bsize)
+ {
+ 	u8 *addr;
  
+@@ -98,19 +98,21 @@ static void skcipher_done_slow(struct sk
+ 	addr = skcipher_get_spot(addr, bsize);
+ 	scatterwalk_copychunks(addr, &walk->out, bsize,
+ 			       (walk->flags & SKCIPHER_WALK_PHYS) ? 2 : 1);
++	return 0;
+ }
+ 
+ int skcipher_walk_done(struct skcipher_walk *walk, int err)
+ {
+-	unsigned int n; /* bytes processed */
+-	bool more;
++	unsigned int n = walk->nbytes;
++	unsigned int nbytes = 0;
+ 
+-	if (unlikely(err < 0))
++	if (!n)
+ 		goto finish;
+ 
+-	n = walk->nbytes - err;
+-	walk->total -= n;
+-	more = (walk->total != 0);
++	if (likely(err >= 0)) {
++		n -= err;
++		nbytes = walk->total - n;
++	}
+ 
+ 	if (likely(!(walk->flags & (SKCIPHER_WALK_PHYS |
+ 				    SKCIPHER_WALK_SLOW |
+@@ -126,7 +128,7 @@ unmap_src:
+ 		memcpy(walk->dst.virt.addr, walk->page, n);
+ 		skcipher_unmap_dst(walk);
+ 	} else if (unlikely(walk->flags & SKCIPHER_WALK_SLOW)) {
+-		if (err) {
++		if (err > 0) {
+ 			/*
+ 			 * Didn't process all bytes.  Either the algorithm is
+ 			 * broken, or this was the last step and it turned out
+@@ -134,27 +136,29 @@ unmap_src:
+ 			 * the algorithm requires it.
+ 			 */
+ 			err = -EINVAL;
+-			goto finish;
+-		}
+-		skcipher_done_slow(walk, n);
+-		goto already_advanced;
++			nbytes = 0;
++		} else
++			n = skcipher_done_slow(walk, n);
+ 	}
+ 
++	if (err > 0)
++		err = 0;
++
++	walk->total = nbytes;
++	walk->nbytes = 0;
++
+ 	scatterwalk_advance(&walk->in, n);
+ 	scatterwalk_advance(&walk->out, n);
+-already_advanced:
+-	scatterwalk_done(&walk->in, 0, more);
+-	scatterwalk_done(&walk->out, 1, more);
++	scatterwalk_done(&walk->in, 0, nbytes);
++	scatterwalk_done(&walk->out, 1, nbytes);
+ 
+-	if (more) {
++	if (nbytes) {
+ 		crypto_yield(walk->flags & SKCIPHER_WALK_SLEEP ?
+ 			     CRYPTO_TFM_REQ_MAY_SLEEP : 0);
+ 		return skcipher_walk_next(walk);
+ 	}
+-	err = 0;
+-finish:
+-	walk->nbytes = 0;
+ 
++finish:
+ 	/* Short-circuit for the common/fast path. */
+ 	if (!((unsigned long)walk->buffer | (unsigned long)walk->page))
+ 		goto out;
 
 
