@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585D2C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B105C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EE921A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A6B2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697143;
-	bh=m0A4dozmc3ft37To+x2CKnsP/ZEoViU/LXeBCXYTEm0=;
+	s=default; t=1570697148;
+	bh=+Dp3VPKRNAonIXNzDT/w+gGIHl/t8uq8h/pUwdBBssE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bo8/2AQezycNH04jDoQ6tocDHYBDHiM5X9gDmeMy8djGilS1lSXDKAqKlbjTFF+Tz
-	 JN522CS2CFMkky/QV/gV64P/YKm9zP0gQuBfl6LJ9CVSIzcChA3QWxuxhefZOgUHYI
-	 eFC8FnMG02Pyz6UiS/noddv4ADhyA70tTcJ2+uRc=
+	b=kR2YaWQRuNhz2TElqwup63mJfqQhx5QMD9qL8o4PuQ0Ilb7heNbSNkDvpU75enMDm
+	 elnmyyV3e0viRoVb/SMASByu7RYwTxAl3E/NAyqUlswpWCnZoITFyIoY+JWdOzWy/x
+	 EzN7zBKgdpD+K+B33sOSRzRrUQc3yr7TcCnOIslg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389187AbfJJIpm (ORCPT
+        id S2389196AbfJJIpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51314 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389171AbfJJIpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:39 -0400
+        id S2388460AbfJJIpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1D8621A4A;
-        Thu, 10 Oct 2019 08:45:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62E6D2054F;
+        Thu, 10 Oct 2019 08:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697138;
-        bh=m0A4dozmc3ft37To+x2CKnsP/ZEoViU/LXeBCXYTEm0=;
+        s=default; t=1570697143;
+        bh=+Dp3VPKRNAonIXNzDT/w+gGIHl/t8uq8h/pUwdBBssE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yNhiZVeb20dXfXq21LLdr2A0SkIG4gOlKlg5UNCCJm5DQIm+VFWHPBUMIPs2SbMcN
-         zcaokWYzUWRJYTJeswwCHD7WjE15EeBmkXokcqb8bPGXVuwr7wHuHzY/Ys8eFlIoCk
-         t1qAAfMxNd1zS/UDEf6f8eFcAybczbSM6a0qNqqY=
+        b=FDUUY9EPKG+5W+M49glHpXCvSl10G7SYrdQjRGNU3CJnZuM0AYq7JyRT8nBOQwbGP
+         t71YC+zBuohDL7+7/ih2lKqy5W0ie5B1QXb99c4ja8q2jRwPSP6ig4pv4nTbhPyYz/
+         f+l5VX706O4Gg/MW2Tr51gMoHqpC8SyoRj1p0UaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 4.19 031/114] usercopy: Avoid HIGHMEM pfn warning
-Date:   Thu, 10 Oct 2019 10:35:38 +0200
-Message-Id: <20191010083600.106313568@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 4.19 033/114] PCI: vmd: Fix shadow offsets to reflect spec changes
+Date:   Thu, 10 Oct 2019 10:35:40 +0200
+Message-Id: <20191010083600.748316121@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,88 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-commit 314eed30ede02fa925990f535652254b5bad6b65 upstream.
+commit a1a30170138c9c5157bd514ccd4d76b47060f29b upstream.
 
-When running on a system with >512MB RAM with a 32-bit kernel built with:
+The shadow offset scratchpad was moved to 0x2000-0x2010. Update the
+location to get the correct shadow offset.
 
-	CONFIG_DEBUG_VIRTUAL=y
-	CONFIG_HIGHMEM=y
-	CONFIG_HARDENED_USERCOPY=y
-
-all execve()s will fail due to argv copying into kmap()ed pages, and on
-usercopy checking the calls ultimately of virt_to_page() will be looking
-for "bad" kmap (highmem) pointers due to CONFIG_DEBUG_VIRTUAL=y:
-
- ------------[ cut here ]------------
- kernel BUG at ../arch/x86/mm/physaddr.c:83!
- invalid opcode: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC
- CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc8 #6
- Hardware name: Dell Inc. Inspiron 1318/0C236D, BIOS A04 01/15/2009
- EIP: __phys_addr+0xaf/0x100
- ...
- Call Trace:
-  __check_object_size+0xaf/0x3c0
-  ? __might_sleep+0x80/0xa0
-  copy_strings+0x1c2/0x370
-  copy_strings_kernel+0x2b/0x40
-  __do_execve_file+0x4ca/0x810
-  ? kmem_cache_alloc+0x1c7/0x370
-  do_execve+0x1b/0x20
-  ...
-
-The check is from arch/x86/mm/physaddr.c:
-
-	VIRTUAL_BUG_ON((phys_addr >> PAGE_SHIFT) > max_low_pfn);
-
-Due to the kmap() in fs/exec.c:
-
-		kaddr = kmap(kmapped_page);
-	...
-	if (copy_from_user(kaddr+offset, str, bytes_to_copy)) ...
-
-Now we can fetch the correct page to avoid the pfn check. In both cases,
-hardened usercopy will need to walk the page-span checker (if enabled)
-to do sanity checking.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Fixes: f5509cc18daa ("mm: Hardened usercopy")
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Link: https://lore.kernel.org/r/201909171056.7F2FFD17@keescook
+Fixes: 6788958e4f3c ("PCI: vmd: Assign membar addresses from shadow registers")
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org # v5.2+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/usercopy.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pci/controller/vmd.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -15,6 +15,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -31,6 +31,9 @@
+ #define PCI_REG_VMLOCK		0x70
+ #define MB2_SHADOW_EN(vmlock)	(vmlock & 0x2)
  
- #include <linux/mm.h>
-+#include <linux/highmem.h>
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/task.h>
-@@ -231,7 +232,12 @@ static inline void check_heap_object(con
- 	if (!virt_addr_valid(ptr))
- 		return;
++#define MB2_SHADOW_OFFSET	0x2000
++#define MB2_SHADOW_SIZE		16
++
+ enum vmd_features {
+ 	/*
+ 	 * Device may contain registers which hint the physical location of the
+@@ -600,7 +603,7 @@ static int vmd_enable_domain(struct vmd_
+ 		u32 vmlock;
+ 		int ret;
  
--	page = virt_to_head_page(ptr);
-+	/*
-+	 * When CONFIG_HIGHMEM=y, kmap_to_page() will give either the
-+	 * highmem page or fallback to virt_to_page(). The following
-+	 * is effectively a highmem-aware virt_to_head_page().
-+	 */
-+	page = compound_head(kmap_to_page((void *)ptr));
- 
- 	if (PageSlab(page)) {
- 		/* Check slab allocator for flags and size. */
+-		membar2_offset = 0x2018;
++		membar2_offset = MB2_SHADOW_OFFSET + MB2_SHADOW_SIZE;
+ 		ret = pci_read_config_dword(vmd->dev, PCI_REG_VMLOCK, &vmlock);
+ 		if (ret || vmlock == ~0)
+ 			return -ENODEV;
+@@ -612,9 +615,9 @@ static int vmd_enable_domain(struct vmd_
+ 			if (!membar2)
+ 				return -ENOMEM;
+ 			offset[0] = vmd->dev->resource[VMD_MEMBAR1].start -
+-						readq(membar2 + 0x2008);
++					readq(membar2 + MB2_SHADOW_OFFSET);
+ 			offset[1] = vmd->dev->resource[VMD_MEMBAR2].start -
+-						readq(membar2 + 0x2010);
++					readq(membar2 + MB2_SHADOW_OFFSET + 8);
+ 			pci_iounmap(vmd->dev, membar2);
+ 		}
+ 	}
 
 
