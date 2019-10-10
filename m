@@ -2,229 +2,251 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B91DC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1D5C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375E6206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD5F206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mKQe7WMl"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="JDqRmA/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfJJPHl (ORCPT
+        id S1726363AbfJJPNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 11:07:41 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33626 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfJJPHk (ORCPT
+        Thu, 10 Oct 2019 11:13:38 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38235 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfJJPNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 11:07:40 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b9so8377133wrs.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:07:38 -0700 (PDT)
+        Thu, 10 Oct 2019 11:13:38 -0400
+Received: by mail-pf1-f194.google.com with SMTP id h195so4103166pfe.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:13:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WUDm5zaFSbVu0zV8h5brUsLKlZDD8nubj8jchHL8uiI=;
-        b=mKQe7WMl7WbrbvrR9sv6El1Eia4u2TAQY8VBeAFdGGjDfvhHf0R6aT+I8nxRN6a6Qz
-         /sBhxJ2Uw/jPmSS7NjLHeMz02RkpHKi0celaoAgmtZTfjy8ivNUsiwqcOLoO3Gfo0wKi
-         9zI7/ZJnrclP8rovCwS5OQgWl6b6BVTxHdS9Rw4pGKRwqjNU6GMALzSjCXhzY2mqRv4/
-         KxjPmbyAOEE+ZIZ195oefa541R8tTGV2GMe6ss/xGadNUcfioI8K7YUYy0fHqMkHJ2rA
-         nmu/Vs8ntPSMK4AYNc7GthaaFwD4gwGJ9Y1NRf5yXqqdcnmYRLyJGg+lj9tPU1DGtB50
-         eC9w==
+        bh=VXeYBQAM8h1PaL67Bf61gIW65uw4eLRIRvHFtIpEQhY=;
+        b=JDqRmA/dj97Eh+82JlJ7S4i+CfdlJn6XhjAl+rM29OqBccgZJHcpuLQi3eydE8QPru
+         y1wnnMHIZTrTS0K7h7GzTEBMRAYEaztShrmEZf7Z6n/KVlomGMl0k8oApxadE04OX4qz
+         Daw6e8YITBd6KZ4Zl3hz3mM9SV7SwYMrngXQ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WUDm5zaFSbVu0zV8h5brUsLKlZDD8nubj8jchHL8uiI=;
-        b=okYMIt7IyWLMUQRTrH4UOPmYOrFawtQ5XZMHstOTRc9F6jApWUJwuyAX6yW8PO2r87
-         bpmQeIzH4ydYHzEjr8YQqXcW3bet0PoaCqI/shZiUbsGkHiz8iwFpCm9wxhiu7gB+R5T
-         wCTVKskjoJHK75U5zaNxUxjFZNTct+tOK0WV0XmBSgZVrY7LwyAlL04QpoDkUq/yffCI
-         Lh0r+0NvQEbyvyHx+eI/5MMg6SiKZ15q8cbVwZZ2cv1ZM0o3EpMANNkt/nHstsNTV+1K
-         dI9MXBrKEUEcKlcF/wQdOWmMRIWFhNxSQGIME+2pGmzFDFBrsZynfJUrVg2bWDrzQn7E
-         LUTA==
-X-Gm-Message-State: APjAAAUlxudz31+5Llf98nL/4lLQ3vmsxveU82c2vAyWEBefmbsGracV
-        17/qWg1ov6eD7P1xXPJnCpO1JQ==
-X-Google-Smtp-Source: APXvYqy2VkQGbfL4jZPGzf9WRuO/jriBF5av5PQvo0WnR2Qdx8QI3WPmJJsFt0oGa21EtnGX/1Gttg==
-X-Received: by 2002:a5d:540e:: with SMTP id g14mr9300842wrv.177.1570720057665;
-        Thu, 10 Oct 2019 08:07:37 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id y186sm10500048wmb.41.2019.10.10.08.07.36
+        bh=VXeYBQAM8h1PaL67Bf61gIW65uw4eLRIRvHFtIpEQhY=;
+        b=L9ZkIKVRik31ET21IVGZgfzOaRnFvD4nwv/Lmg8Cn5jiCJrbRIQkyg6t5BotB9jBnl
+         QAatzQZQWUmxW2sj5fUw/YwJAwKEhJVghVJ8GT6ONQ5vI4VFvLzR/2BthjpmX/ZnT0Ux
+         23inkEizAp99e/OByyTUmqfg9opQFxnTy8j9woAzjWiHdFq08oLiHnHz88AdKUEkw/31
+         ChO6vWv+wV6kOBBAwThJpU/skI0wxS1Qj9I6yk9XzINaYSyS7oOeAYNUpJCUBjMiDSgR
+         lrQIE80UWTGE6u6MDvRGbSqjShMHGgB2szRalVha//kLFd8K9i9XPKBPhL+uQclxeVKQ
+         dyrQ==
+X-Gm-Message-State: APjAAAUWCv3IILceYuDj5XiWOcn3buQU3egoQyewlDNwYQDHtzw/R26e
+        B9x+O7CUF9ACjH6Q8ADgC4ImFw==
+X-Google-Smtp-Source: APXvYqz1PmBgMDm/CdysRGv040UaFtPAsTJvwhNOv7XvcrJNF2AXiquVL7MCJs6JaMbwwedghHcgMA==
+X-Received: by 2002:a65:4208:: with SMTP id c8mr11471239pgq.230.1570720415595;
+        Thu, 10 Oct 2019 08:13:35 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y10sm5561179pfe.148.2019.10.10.08.13.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 08:07:36 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 16:07:35 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] kdb: Fix "btc <cpu>" crash if the CPU didn't
- round up
-Message-ID: <20191010150735.dhrj3pbjgmjrdpwr@holly.lan>
-References: <20190925200220.157670-1-dianders@chromium.org>
- <20190925125811.v3.3.Id33c06cbd1516b49820faccd80da01c7c4bf15c7@changeid>
- <20191007135459.lj3qc2tqzcv3xcia@holly.lan>
- <CAD=FV=Vqj9JqGCQX_Foij8EkFtSy8r2wB3uoXNae6PECwNV+CQ@mail.gmail.com>
+        Thu, 10 Oct 2019 08:13:34 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 11:13:33 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        primiano@google.com, rsavitski@google.com, jeffv@google.com,
+        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
+Message-ID: <20191010151333.GE96813@google.com>
+References: <20191009203657.6070-1-joel@joelfernandes.org>
+ <20191010081251.GP2311@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=Vqj9JqGCQX_Foij8EkFtSy8r2wB3uoXNae6PECwNV+CQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191010081251.GP2311@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 04:34:55PM -0700, Doug Anderson wrote:
-> Hi,
+On Thu, Oct 10, 2019 at 10:12:51AM +0200, Peter Zijlstra wrote:
+> On Wed, Oct 09, 2019 at 04:36:57PM -0400, Joel Fernandes (Google) wrote:
+> > In currentl mainline, the degree of access to perf_event_open(2) system
+> > call depends on the perf_event_paranoid sysctl.  This has a number of
+> > limitations:
+> > 
+> > 1. The sysctl is only a single value. Many types of accesses are controlled
+> >    based on the single value thus making the control very limited and
+> >    coarse grained.
+> > 2. The sysctl is global, so if the sysctl is changed, then that means
+> >    all processes get access to perf_event_open(2) opening the door to
+> >    security issues.
+> > 
+> > This patch adds LSM and SELinux access checking which will be used in
+> > Android to access perf_event_open(2) for the purposes of attaching BPF
+> > programs to tracepoints, perf profiling and other operations from
+> > userspace. These operations are intended for production systems.
+> > 
+> > 5 new LSM hooks are added:
+> > 1. perf_event_open: This controls access during the perf_event_open(2)
+> >    syscall itself. The hook is called from all the places that the
+> >    perf_event_paranoid sysctl is checked to keep it consistent with the
+> >    systctl. The hook gets passed a 'type' argument which controls CPU,
+> >    kernel and tracepoint accesses (in this context, CPU, kernel and
+> >    tracepoint have the same semantics as the perf_event_paranoid sysctl).
+> >    Additionally, I added an 'open' type which is similar to
+> >    perf_event_paranoid sysctl == 3 patch carried in Android and several other
+> >    distros but was rejected in mainline [1] in 2016.
+> > 
+> > 2. perf_event_alloc: This allocates a new security object for the event
+> >    which stores the current SID within the event. It will be useful when
+> >    the perf event's FD is passed through IPC to another process which may
+> >    try to read the FD. Appropriate security checks will limit access.
+> > 
+> > 3. perf_event_free: Called when the event is closed.
+> > 
+> > 4. perf_event_read: Called from the read(2) system call path for the event.
 > 
-> On Mon, Oct 7, 2019 at 6:55 AM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > On Wed, Sep 25, 2019 at 01:02:19PM -0700, Douglas Anderson wrote:
-> > >
-> > > I noticed that when I did "btc <cpu>" and the CPU I passed in hadn't
-> > > rounded up that I'd crash.  I was going to copy the same fix from
-> > > commit 162bc7f5afd7 ("kdb: Don't back trace on a cpu that didn't round
-> > > up") into the "not all the CPUs" case, but decided it'd be better to
-> > > clean things up a little bit.
-> > >
-> > > This consolidates the two code paths.  It is _slightly_ wasteful in in
-> > > that the checks for "cpu" being too small or being offline isn't
-> > > really needed when we're iterating over all online CPUs, but that
-> > > really shouldn't hurt.  Better to have the same code path.
-> > >
-> > > While at it, eliminate at least one slightly ugly (and totally
-> > > needless) recursive use of kdb_parse().
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > >
-> > > Changes in v3:
-> > > - Patch ("kdb: Fix "btc <cpu>" crash if the CPU...") new for v3.
-> > >
-> > > Changes in v2: None
-> > >
-> > >  kernel/debug/kdb/kdb_bt.c | 61 ++++++++++++++++++++++-----------------
-> > >  1 file changed, 34 insertions(+), 27 deletions(-)
-> > >
-> > > diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
-> > > index 120fc686c919..d9af139f9a31 100644
-> > > --- a/kernel/debug/kdb/kdb_bt.c
-> > > +++ b/kernel/debug/kdb/kdb_bt.c
-> > > @@ -101,6 +101,27 @@ kdb_bt1(struct task_struct *p, unsigned long mask, bool btaprompt)
-> > >       return 0;
-> > >  }
-> > >
-> > > +static void
-> > > +kdb_bt_cpu(unsigned long cpu)
-> > > +{
-> > > +     struct task_struct *kdb_tsk;
-> > > +
-> > > +     if (cpu >= num_possible_cpus() || !cpu_online(cpu)) {
-> > > +             kdb_printf("WARNING: no process for cpu %ld\n", cpu);
-> > > +             return;
-> > > +     }
-> > > +
-> > > +     /* If a CPU failed to round up we could be here */
-> > > +     kdb_tsk = KDB_TSK(cpu);
-> > > +     if (!kdb_tsk) {
-> > > +             kdb_printf("WARNING: no task for cpu %ld\n", cpu);
-> > > +             return;
-> > > +     }
-> > > +
-> > > +     kdb_set_current_task(kdb_tsk);
-> > > +     kdb_bt1(kdb_tsk, ~0UL, false);
-> > > +}
-> > > +
-> > >  int
-> > >  kdb_bt(int argc, const char **argv)
-> > >  {
-> > > @@ -161,7 +182,6 @@ kdb_bt(int argc, const char **argv)
-> > >       } else if (strcmp(argv[0], "btc") == 0) {
-> > >               unsigned long cpu = ~0;
-> > >               struct task_struct *save_current_task = kdb_current_task;
-> > > -             char buf[80];
-> > >               if (argc > 1)
-> > >                       return KDB_ARGCOUNT;
-> > >               if (argc == 1) {
-> > > @@ -169,35 +189,22 @@ kdb_bt(int argc, const char **argv)
-> > >                       if (diag)
-> > >                               return diag;
-> > >               }
-> > > -             /* Recursive use of kdb_parse, do not use argv after
-> > > -              * this point */
-> > > -             argv = NULL;
-> > >               if (cpu != ~0) {
-> > > -                     if (cpu >= num_possible_cpus() || !cpu_online(cpu)) {
-> > > -                             kdb_printf("no process for cpu %ld\n", cpu);
-> > > -                             return 0;
-> > > -                     }
-> > > -                     sprintf(buf, "btt 0x%px\n", KDB_TSK(cpu));
-> > > -                     kdb_parse(buf);
-> > > -                     return 0;
-> > > -             }
-> > > -             kdb_printf("btc: cpu status: ");
-> > > -             kdb_parse("cpu\n");
-> > > -             for_each_online_cpu(cpu) {
-> > > -                     void *kdb_tsk = KDB_TSK(cpu);
-> > > -
-> > > -                     /* If a CPU failed to round up we could be here */
-> > > -                     if (!kdb_tsk) {
-> > > -                             kdb_printf("WARNING: no task for cpu %ld\n",
-> > > -                                        cpu);
-> > > -                             continue;
-> > > +                     kdb_bt_cpu(cpu);
-> > > +             } else {
-> > > +                     /*
-> > > +                      * Recursive use of kdb_parse, do not use argv after
-> > > +                      * this point.
-> > > +                      */
-> > > +                     argv = NULL;
-> > > +                     kdb_printf("btc: cpu status: ");
-> > > +                     kdb_parse("cpu\n");
-> > > +                     for_each_online_cpu(cpu) {
-> > > +                             kdb_bt_cpu(cpu);
-> > > +                             touch_nmi_watchdog();
-> > >                       }
-> > > -
-> > > -                     sprintf(buf, "btt 0x%px\n", kdb_tsk);
-> > > -                     kdb_parse(buf);
-> > > -                     touch_nmi_watchdog();
-> > > +                     kdb_set_current_task(save_current_task);
-> > >               }
-> > > -             kdb_set_current_task(save_current_task);
-> >
-> > Why does this move out into only one of the conditional branches?
-> > Don't both of the above paths modify the current task?
+> 	+ mmap()
+> > 
+> > 5. perf_event_write: Called from the read(2) system call path for the event.
 > 
-> The old code has a "return 0 in the case that "cpu != ~0", so this
-> basically matches the prior behavior in restoring the current task for
-> a "btc" but not leaving the current task changed in the case of "btc
-> <cpu>".  Thus my patch doesn't actually change the existing behavior,
-> but I guess that it does make the control flow simpler so it's easier
-> to understand what the behavior is.  ;-)
+> 	- read() + ioctl()
 
-Point taken. Horrific though it may be ;-) .
+Fixed.
 
-
-> Reading through other control flows of the various backtrace commands,
-> it looks like it is intentional to leave the current task changed when
-> you explicitly do an action on that task (or a CPU).
 > 
-> Actually, though, it wasn't clear to me that it ever made sense for
-> any of these commands to implicitly leave the current task changed.
-> If you agree, I can send a follow-up patch to change this behavior.
+> fresh from the keyboard.. but maybe consoldate things a little.
 
-Personally I don't like implicit changes of state but I might need a bit
-more thinking to agree (or disagree ;-) ).
+Looks great to me, I folded it into the patch. Thanks Peter! Just one comment
+on change in existing logic of the code, below:
 
+[snip]
+> --- a/arch/x86/events/intel/p4.c
+> +++ b/arch/x86/events/intel/p4.c
+> @@ -8,7 +8,6 @@
+>   */
+>  
+>  #include <linux/perf_event.h>
+> -#include <linux/security.h>
+>  
+>  #include <asm/perf_event_p4.h>
+>  #include <asm/hardirq.h>
+> @@ -777,10 +776,7 @@ static int p4_validate_raw_event(struct
+>  	 * the user needs special permissions to be able to use it
+>  	 */
+>  	if (p4_ht_active() && p4_event_bind_map[v].shared) {
+> -		if (perf_paranoid_cpu() && !capable(CAP_SYS_ADMIN))
+> -			return -EACCES;
+> -
+> -		v = security_perf_event_open(&event->attr, PERF_SECURITY_CPU);
+> +		v = perf_allow_cpu(&event->attr);
+>  		if (v)
+>  			return v;
+>  	}
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -56,6 +56,7 @@ struct perf_guest_info_callbacks {
+>  #include <linux/perf_regs.h>
+>  #include <linux/cgroup.h>
+>  #include <linux/refcount.h>
+> +#include <linux/security.h>
+>  #include <asm/local.h>
+>  
+>  struct perf_callchain_entry {
+> @@ -1244,19 +1245,28 @@ extern int perf_cpu_time_max_percent_han
+>  int perf_event_max_stack_handler(struct ctl_table *table, int write,
+>  				 void __user *buffer, size_t *lenp, loff_t *ppos);
+>  
+> -static inline bool perf_paranoid_tracepoint_raw(void)
+> +static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>  {
+> -	return sysctl_perf_event_paranoid > -1;
+> +	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
+> +		return -EACCES;
+> +
+> +	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+>  }
+>  
+> -static inline bool perf_paranoid_cpu(void)
+> +static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>  {
+> -	return sysctl_perf_event_paranoid > 0;
+> +	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
+> +		return -EACCES;
+> +
+> +	return security_perf_event_open(attr, PERF_SECURITY_CPU);
+>  }
+>  
+> -static inline bool perf_paranoid_kernel(void)
+> +static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+>  {
+> -	return sysctl_perf_event_paranoid > 1;
+> +	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
+> +		return -EPERM;
+> +
 
-Daniel.
+Here the sysctl check of > -1 also is now coupled with a CAP_SYS_ADMIN check.
+However..
+
+> +	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
+
+>  }
+>  
+>  extern void perf_event_init(void);
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -4229,10 +4229,7 @@ find_get_context(struct pmu *pmu, struct
+>  
+>  	if (!task) {
+>  		/* Must be root to operate on a CPU event: */
+> -		if (perf_paranoid_cpu() && !capable(CAP_SYS_ADMIN))
+> -			return ERR_PTR(-EACCES);
+> -
+> -		err = security_perf_event_open(&event->attr, PERF_SECURITY_CPU);
+> +		err = perf_allow_cpu(&event->attr);
+>  		if (err)
+>  			return ERR_PTR(err);
+>  
+> @@ -5862,14 +5859,8 @@ static int perf_mmap(struct file *file,
+>  	lock_limit >>= PAGE_SHIFT;
+>  	locked = atomic64_read(&vma->vm_mm->pinned_vm) + extra;
+>  
+> -	if (locked > lock_limit) {
+> -		if (perf_paranoid_tracepoint_raw() && !capable(CAP_IPC_LOCK)) {
+> -			ret = -EPERM;
+> -			goto unlock;
+> -		}
+> -
+> -		ret = security_perf_event_open(&event->attr,
+> -					       PERF_SECURITY_TRACEPOINT);
+> +	if (locked > lock_limit && !capable(CAP_IPC_LOCK)) {
+> +		ret = perf_allow_tracepoint(&event->attr);
+
+In previous code, this check did not involve a check for CAP_SYS_ADMIN.
+
+I am Ok with adding the CAP_SYS_ADMIN check as well which does make sense to
+me for tracepoint access. But it is still a change in the logic so I wanted
+to bring it up.
+
+Let me know any other thoughts and then I'll post a new patch.
+
+thanks,
+
+- Joel
+
+[snip]
