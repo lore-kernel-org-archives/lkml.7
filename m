@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA23C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7AFC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7548C2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81142067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570712333;
-	bh=JaOYT4xfOvr4kqwSZ9Wq5VVof1A2rGtzlZUoB310AmA=;
+	s=default; t=1570712338;
+	bh=1dj2wrbcSptv7rwRFOSmaeJnL3cw9XYOzs3YE9J3SXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6dMdO71X4XyPhJYNtd7yQU7g/A6CRF7Z3sTRiv27BTiyTYx7IzhEfL9wo/8UBrEp
-	 lnqKS8eUzx+wzeJixOA6Jh0YZuKFNfVezNJn0AwpvSfsAQSWeLSmG72TItfxaydlk6
-	 cJUAhmopm2lE21zo5nHRXZsClFz+qP5bsogrVAXA=
+	b=MNClxYiE/zCFLe24VK+Jm8XIuUx3WXZT8BEpSyFtZ2YrjBv1E3VdPJ1bYorwJK9c+
+	 ++yLuVZlIbLemEurNjjNaddQk3CH1A/V+fFXD36aAdvI/Ox0qdoOFB9IJ9ZwvNfr2w
+	 CuI3L+Qx33Lw7U1l5qSDkMeriZJVNgHuBNHbTz+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388025AbfJJM6w (ORCPT
+        id S2388040AbfJJM65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:58:52 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36597 "EHLO
+        Thu, 10 Oct 2019 08:58:57 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43445 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387794AbfJJM6v (ORCPT
+        with ESMTP id S1728274AbfJJM6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:58:51 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v24so6121554ljj.3;
-        Thu, 10 Oct 2019 05:58:49 -0700 (PDT)
+        Thu, 10 Oct 2019 08:58:50 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n14so6072783ljj.10;
+        Thu, 10 Oct 2019 05:58:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nsKcMQ0kOXYnZnGpbjDTlFoz3bxWZKfaGIfDlmHG+/g=;
-        b=Z8MXgmuUU/nvrVbVfpy1YnDJd8c/qmkDd2x76wCLmUHyEpVlDxSQMNgf0y1IS0laId
-         sMDAfGv2s0P/dJsMekm/OKElcleDdHR7F6uT2h2caDntPa8fHL8ZK1CBn9hRgOZuMHt2
-         hdKXhACVZkQvhphCNZXN3w3a6FRpHadKGR9fLUodIhnqPSBVHL6dIrH+/swzEfaSgrJ6
-         JmAhEqITITwvKMM5gzYGWkRPtIVVM/IV9v4l4bNUXPF9n3/Wklqu0Dikapv/BDDSGhuZ
-         dRBlldm0PqJxb3wWJOnoFFbkm8oiT71QA6WLj6WS8qWVqfIK6mTewuPKNnhRbBGCUA91
-         9wGw==
-X-Gm-Message-State: APjAAAWxbm9NQ0X5kCmVRmTY5BdnmtTjpvhnBuQEJLwuxKQKyZjO3crp
-        sdetcBkk5oMnghMRcwg2oRE=
-X-Google-Smtp-Source: APXvYqyYwfJIZO43Ub4WJDb8ROAYklkPlkhFFphSgKBa72PXTj14GSlJ1q9kJnVRvgIDOOWK8RPvJQ==
-X-Received: by 2002:a2e:8204:: with SMTP id w4mr6369540ljg.212.1570712328399;
-        Thu, 10 Oct 2019 05:58:48 -0700 (PDT)
+        bh=sFfJKZrsZ65QHdG/a6Vjdwobjv+Fk7Z1ecZ7AQainIo=;
+        b=PFBusBVRzgPljPc+cHreTsNfSAxkcbWsYhHyRB0TI9kSHuNA+J9TFgSkZvPBF7bEhq
+         AxdKaIfzITQXUCRgNV5BcUynpqGJsdcDA6VqmlfjcSSMbCw/QvO2KtGu8tKpvAB8nkxu
+         00BMrsAUw2jOA/fAmS023KaVFGTVjj31UtjciWx4l5quuEeTylhTY+J1O7j/0gRnw6e7
+         qT+zb6UYnMjoYA7Z1ZBBq6vZOjn76pgtqe9jAUcQNZcBYMR5R288HJcI0u9RPgXvLoP9
+         iEIYCJtQ10HGosng4lOrQnzpwUTNsfggg6tRCL09mmz+vFQayTGws8QxC2gf5U64tRFA
+         urSw==
+X-Gm-Message-State: APjAAAX161qTIt014B/mIdHiMTnW3FEOrpDcGS/oUjjuKYnkXt3OpA1d
+        SuVk9KxvlB9ejMzhh+FGqzs=
+X-Google-Smtp-Source: APXvYqzrMxpqqH/x0hvuWkRUifQkU26w8tdkyxPlpaMcnr1jxd8rdd6qQGWg12N0vXP4j9dc3lkBXQ==
+X-Received: by 2002:a2e:9a43:: with SMTP id k3mr6000549ljj.70.1570712327840;
+        Thu, 10 Oct 2019 05:58:47 -0700 (PDT)
 Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id l3sm1247120lfc.31.2019.10.10.05.58.46
+        by smtp.gmail.com with ESMTPSA id c26sm1358291ljj.45.2019.10.10.05.58.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Thu, 10 Oct 2019 05:58:46 -0700 (PDT)
 Received: from johan by xi.terra with local (Exim 4.92.2)
         (envelope-from <johan@xi.terra>)
-        id 1iIY1x-00072w-Km; Thu, 10 Oct 2019 14:58:57 +0200
+        id 1iIY1x-00072r-HT; Thu, 10 Oct 2019 14:58:57 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         Juergen Stuber <starblue@users.sourceforge.net>,
         Johan Hovold <johan@kernel.org>,
         stable <stable@vger.kernel.org>
-Subject: [PATCH 2/2] USB: legousbtower: fix memleak on disconnect
-Date:   Thu, 10 Oct 2019 14:58:35 +0200
-Message-Id: <20191010125835.27031-3-johan@kernel.org>
+Subject: [PATCH 1/2] USB: ldusb: fix memleak on disconnect
+Date:   Thu, 10 Oct 2019 14:58:34 +0200
+Message-Id: <20191010125835.27031-2-johan@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010125835.27031-1-johan@kernel.org>
 References: <20191010125835.27031-1-johan@kernel.org>
@@ -76,29 +76,29 @@ If disconnect() races with release() after a process has been
 interrupted, release() could end up returning early and the driver would
 fail to free its driver data.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.13
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/usb/misc/legousbtower.c | 5 +----
+ drivers/usb/misc/ldusb.c | 5 +----
  1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
-index 9d4c52a7ebe0..62dab2441ec4 100644
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -419,10 +419,7 @@ static int tower_release (struct inode *inode, struct file *file)
+diff --git a/drivers/usb/misc/ldusb.c b/drivers/usb/misc/ldusb.c
+index f3108d85e768..147c90c2a4e5 100644
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -380,10 +380,7 @@ static int ld_usb_release(struct inode *inode, struct file *file)
  		goto exit;
  	}
  
--	if (mutex_lock_interruptible(&dev->lock)) {
--	        retval = -ERESTARTSYS;
+-	if (mutex_lock_interruptible(&dev->mutex)) {
+-		retval = -ERESTARTSYS;
 -		goto exit;
 -	}
-+	mutex_lock(&dev->lock);
++	mutex_lock(&dev->mutex);
  
  	if (dev->open_count != 1) {
- 		dev_dbg(&dev->udev->dev, "%s: device not opened exactly once\n",
+ 		retval = -ENODEV;
 -- 
 2.23.0
 
