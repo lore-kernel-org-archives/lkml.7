@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72136C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55341C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F732064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DD02064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697695;
-	bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
+	s=default; t=1570697699;
+	bh=qT7Kvrkt0fJUpI1q/8NY3DMs5K2bhyu6Uhpan3ixSC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XzeMFhjmTlSSE9xwmgHfxacxGvMj7pij5LnyI/RFN6GfiAJNBbj2o3Mgw7JKwje+1
-	 ZsrFzHNp63tLJXBe2CYgeLiYvdwccerU1TALpwWEprVx3MxVzyFZdzGe4iYYBHGXm5
-	 Z4ifOoDzcMiVrhw2M48peSW7i76/R527PcDzueSI=
+	b=lcg1WXoZKMRVP1DbhDPE4GdwMGk/duqFLLk8BiaJ6TokZii9jsk5TblI6/RcUO5cj
+	 b+uy3c4iFLv/fmAdnwjB7+dlg0/PEF1jNu7wvX+Swuhhi4+jdLRmtdVxckRmBRWZoL
+	 TW2Oij03zURRZ9KLMQ01u8Gvd6E0TeH9XzUmqrnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389893AbfJJIuA (ORCPT
+        id S2389868AbfJJItw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:50:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56812 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:49:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389045AbfJJIt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:49:58 -0400
+        id S2389854AbfJJItr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:49:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0C6B21A4C;
-        Thu, 10 Oct 2019 08:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 396D12064A;
+        Thu, 10 Oct 2019 08:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697397;
-        bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
+        s=default; t=1570697386;
+        bh=qT7Kvrkt0fJUpI1q/8NY3DMs5K2bhyu6Uhpan3ixSC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WxpQU9gNBHSdvYNuUnCfJZQ+u9629UYr3UtOguvmU7+2+TEZLhO7ksUWJB5KKdaB6
-         ezfAPP59ke2jStD9ym8rgbZ96Ts+8uchYISHzm+lqElZqYmXVi8CF2qp4Js6/yQs5I
-         Og4KHuHU3wpHdPN/USY5ItWCqTpDv62Xwc5sU7eI=
+        b=vJO0ZS7d0bPdmboqFofU6ETySijlhb1NgVP84v0yEHquQXeKtcHau0V/AiJaCEjks
+         BYTwURObVOM/p8T+bEG9KY7LtXOuUEk6j1qXkbvO6O8HZA3FeVEWE2ELAf62ynos/5
+         rXgpAbkasjrh7xCewr1Z3LDZq0kXZYYIXrhvMidM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 13/61] crypto: qat - Silence smp_processor_id() warning
-Date:   Thu, 10 Oct 2019 10:36:38 +0200
-Message-Id: <20191010083457.191316850@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.14 01/61] s390/process: avoid potential reading of freed stack
+Date:   Thu, 10 Oct 2019 10:36:26 +0200
+Message-Id: <20191010083450.038549745@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,68 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit 1b82feb6c5e1996513d0fb0bbb475417088b4954 upstream.
+commit 8769f610fe6d473e5e8e221709c3ac402037da6c upstream.
 
-It seems that smp_processor_id() is only used for a best-effort
-load-balancing, refer to qat_crypto_get_instance_node(). It's not feasible
-to disable preemption for the duration of the crypto requests. Therefore,
-just silence the warning. This commit is similar to e7a9b05ca4
-("crypto: cavium - Fix smp_processor_id() warnings").
+With THREAD_INFO_IN_TASK (which is selected on s390) task's stack usage
+is refcounted and should always be protected by get/put when touching
+other task's stack to avoid race conditions with task's destruction code.
 
-Silences the following splat:
-BUG: using smp_processor_id() in preemptible [00000000] code: cryptomgr_test/2904
-caller is qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
-CPU: 1 PID: 2904 Comm: cryptomgr_test Tainted: P           O    4.14.69 #1
-...
-Call Trace:
- dump_stack+0x5f/0x86
- check_preemption_disabled+0xd3/0xe0
- qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
- skcipher_setkey_ablkcipher+0x2b/0x40
- __test_skcipher+0x1f3/0xb20
- ? cpumask_next_and+0x26/0x40
- ? find_busiest_group+0x10e/0x9d0
- ? preempt_count_add+0x49/0xa0
- ? try_module_get+0x61/0xf0
- ? crypto_mod_get+0x15/0x30
- ? __kmalloc+0x1df/0x1f0
- ? __crypto_alloc_tfm+0x116/0x180
- ? crypto_skcipher_init_tfm+0xa6/0x180
- ? crypto_create_tfm+0x4b/0xf0
- test_skcipher+0x21/0xa0
- alg_test_skcipher+0x3f/0xa0
- alg_test.part.6+0x126/0x2a0
- ? finish_task_switch+0x21b/0x260
- ? __schedule+0x1e9/0x800
- ? __wake_up_common+0x8d/0x140
- cryptomgr_test+0x40/0x50
- kthread+0xff/0x130
- ? cryptomgr_notify+0x540/0x540
- ? kthread_create_on_node+0x70/0x70
- ret_from_fork+0x24/0x50
-
-Fixes: ed8ccaef52 ("crypto: qat - Add support for SRIOV")
-Cc: stable@vger.kernel.org
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: d5c352cdd022 ("s390: move thread_info into task_struct")
+Cc: stable@vger.kernel.org # v4.10+
+Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/qat/qat_common/adf_common_drv.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/kernel/process.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/crypto/qat/qat_common/adf_common_drv.h
-+++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
-@@ -95,7 +95,7 @@ struct service_hndl {
+--- a/arch/s390/kernel/process.c
++++ b/arch/s390/kernel/process.c
+@@ -185,20 +185,30 @@ unsigned long get_wchan(struct task_stru
  
- static inline int get_current_node(void)
- {
--	return topology_physical_package_id(smp_processor_id());
-+	return topology_physical_package_id(raw_smp_processor_id());
+ 	if (!p || p == current || p->state == TASK_RUNNING || !task_stack_page(p))
+ 		return 0;
++
++	if (!try_get_task_stack(p))
++		return 0;
++
+ 	low = task_stack_page(p);
+ 	high = (struct stack_frame *) task_pt_regs(p);
+ 	sf = (struct stack_frame *) p->thread.ksp;
+-	if (sf <= low || sf > high)
+-		return 0;
++	if (sf <= low || sf > high) {
++		return_address = 0;
++		goto out;
++	}
+ 	for (count = 0; count < 16; count++) {
+ 		sf = (struct stack_frame *) sf->back_chain;
+-		if (sf <= low || sf > high)
+-			return 0;
++		if (sf <= low || sf > high) {
++			return_address = 0;
++			goto out;
++		}
+ 		return_address = sf->gprs[8];
+ 		if (!in_sched_functions(return_address))
+-			return return_address;
++			goto out;
+ 	}
+-	return 0;
++out:
++	put_task_stack(p);
++	return return_address;
  }
  
- int adf_service_register(struct service_hndl *service);
+ unsigned long arch_align_stack(unsigned long sp)
 
 
