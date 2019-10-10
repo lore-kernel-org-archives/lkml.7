@@ -2,174 +2,161 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593ADC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23188C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8AA20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netrounds-com.20150623.gappssmtp.com header.i=@netrounds-com.20150623.gappssmtp.com header.b="CgY1dBiE"
+	by mail.kernel.org (Postfix) with ESMTP id EBDF920B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732916AbfJJG2B (ORCPT
+        id S1732917AbfJJG3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 02:28:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40909 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfJJG2B (ORCPT
+        Thu, 10 Oct 2019 02:29:31 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36687 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfJJG3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 02:28:01 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 7so4941760ljw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 23:27:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netrounds-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=FiE63Jf0+YKrajX+a/6ereKGsQ9R9ph2lTRjBJOT88A=;
-        b=CgY1dBiEMb98NQ/At9u26khShIHa54HFYd24qpfRhl58R7WD6fhM90irNgl/CX5d4d
-         HP2cnwy5/XeyG/qAANZXTH0NDr4UO08Jm2FWN1Kn6aQYsp0qVzQAwM/I7J0a6LNwMHdo
-         NmZdWlv4ymo8P7jElxCNRnKkDcyYtDHSf75MeYqHamlsEf1P83lTOhgnWIbBb9sczx5B
-         iiKVlYHogkMOlNbl6PnmQvW90SsUlLFsqRd2Zd1PBxXbwBSZqP6Dg3+7q3LFTAl6Cgvj
-         WdoA1i8sTSHe+0D+INEx6wnJCxVMkL0HUBl3JW0pgn+Optq8dYqM6pQmjApVthj8sJLz
-         mArg==
+        Thu, 10 Oct 2019 02:29:31 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k20so3945959oih.3;
+        Wed, 09 Oct 2019 23:29:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FiE63Jf0+YKrajX+a/6ereKGsQ9R9ph2lTRjBJOT88A=;
-        b=e13s1GfHDH+Oq8eNbpMFV0DJDBHtDiYEiJ8YVkTyODu4u9Qv0TPpbqZNGNbOL+ASSp
-         sk/b4SgfbxUwOMLMq2rMC3qwQWsoGGs8pHTFkVcrNSjKseQdXG1W7gkpON3GChL4hdWH
-         Gq4BFw0PEJUWBozfd5eOt9z3ap26LhBFow8vg+Tu5sZlmhe4sgyrx+rhjD+kOCMa2nz2
-         DLvNQpZ9HVxMuu7YtNJxh8q2lLfDcaLsMLEj+SZ+XmjurHVs7vVxakBHJZTL/A1ujdFx
-         gtXGFpMBDuCtFvmBeamb8NBgawRbSknvAWQMWMeM8xeJHR2egePknPmqwEMCt7m7asr+
-         IOYg==
-X-Gm-Message-State: APjAAAXLfigwuYc6gGfCB6Im7pFJBmd06H/8wXcXDO70Uyfkz6xoUrYW
-        qeIL9Z+bJFEBKKaWHn+goKg3Ww==
-X-Google-Smtp-Source: APXvYqxotN273Jma0cjDfGOmGpDy+7PPz1s8PTIBAU1+t1GdknJwYANdAEzTA16fCFrmVjrN4k/xmA==
-X-Received: by 2002:a2e:a415:: with SMTP id p21mr5009509ljn.59.1570688877789;
-        Wed, 09 Oct 2019 23:27:57 -0700 (PDT)
-Received: from [10.0.156.104] ([195.22.87.57])
-        by smtp.gmail.com with ESMTPSA id v1sm988319lfe.34.2019.10.09.23.27.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Oct 2019 23:27:56 -0700 (PDT)
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Paolo Abeni <pabeni@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>
-References: <d102074f-7489-e35a-98cf-e2cad7efd8a2@netrounds.com>
- <95c5a697932e19ebd6577b5dac4d7052fe8c4255.camel@redhat.com>
-From:   Jonas Bonn <jonas.bonn@netrounds.com>
-Message-ID: <18f58ddc-f16e-600f-02de-29c79332d945@netrounds.com>
-Date:   Thu, 10 Oct 2019 08:27:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Cx2nK6QRBgJuBNcUtpzK8FDH7ngKKIhRfZFf1NmTFQ=;
+        b=kHPIj9KjP0SBjIgczu72EL/eRPNB35Ybua9nkVZSeG5OKbrLqXPWK4rRquBMLAluyK
+         EVb5jjYJvHYTkt1XmoB+2kbtcVEDyuyVkaVu+YNHY65wkCjFVGVcIFbErLVIZlfdYFV1
+         +ULDkchJXV5Sfe6wkuWn6PkGeAKVPvmutHcnlh1r6lQrEkraXax7ZbIpKXDpYbIGpOvn
+         AmmKuugV6T3g9exwUOIJt3kK1/b5pj9oeFIYRfUJFMWwFxKyeGo4YJPR2yHaVDeKl1Jd
+         UTVfZa725Oe45w1o7xout7BhvtvvIQ14ys0keOtbL9MgfVw5wCvybKXtT4okRea88r13
+         RdiA==
+X-Gm-Message-State: APjAAAXoF2R7ndOyiWKrqGvIFKAii27vIQwg76UOjN7hKgQxg1Vl7m4j
+        JnXGqeWUZ1SiKlMt93PgcZqCZ8nxYu20fQP/rDc=
+X-Google-Smtp-Source: APXvYqxmAwoB1fEOxz3+Xl/nikYsLddSYKE5o75tBiCX/ExRRXKw9htkShc664JHnVxtveTq0QU4eZt/Zpliy/z2V/0=
+X-Received: by 2002:a05:6808:3b4:: with SMTP id n20mr5863396oie.131.1570688969834;
+ Wed, 09 Oct 2019 23:29:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <95c5a697932e19ebd6577b5dac4d7052fe8c4255.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1570633189.git.vilhelm.gray@gmail.com> <893c3b4f03266c9496137cc98ac2b1bd27f92c73.1570633189.git.vilhelm.gray@gmail.com>
+ <CAK7LNATgW7bXUmqV=3QAaJ0Qu73Kox-TgDCQJb=s0=mwewSCUg@mail.gmail.com>
+ <20191009170917.GG32742@smile.fi.intel.com> <CAMuHMdXyyrL4ibKvjMV6r8TuxpmK73=JxsWNEfcRk1NjwsnOjA@mail.gmail.com>
+ <CAK7LNASVdqU_6+_iinWStb9ALqLw494pnZKr46fLW+WJ9nUo6A@mail.gmail.com> <CAHp75VeLkfNZkqhD8tedJdav81L+VA3Z50Kwcd9h4R7zMwjtvA@mail.gmail.com>
+In-Reply-To: <CAHp75VeLkfNZkqhD8tedJdav81L+VA3Z50Kwcd9h4R7zMwjtvA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 10 Oct 2019 08:29:17 +0200
+Message-ID: <CAMuHMdVs=PgET6=-fKgznETOye_Bxqt6h16Ok0nu6J2vXG-r_w@mail.gmail.com>
+Subject: Re: [PATCH v17 01/14] bitops: Introduce the for_each_set_clump8 macro
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Lukas Wunner <lukas@wunner.de>, sean.nyekjaer@prevas.dk,
+        morten.tiljeset@prevas.dk, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+Hi Andy,
 
-On 09/10/2019 21:14, Paolo Abeni wrote:
-> On Wed, 2019-10-09 at 08:46 +0200, Jonas Bonn wrote:
->> Hi,
->>
->> The lockless pfifo_fast qdisc has an issue with packets getting stuck in
->> the queue.  What appears to happen is:
->>
->> i)  Thread 1 holds the 'seqlock' on the qdisc and dequeues packets.
->> ii)  Thread 1 dequeues the last packet in the queue.
->> iii)  Thread 1 iterates through the qdisc->dequeue function again and
->> determines that the queue is empty.
->>
->> iv)  Thread 2 queues up a packet.  Since 'seqlock' is busy, it just
->> assumes the packet will be dequeued by whoever is holding the lock.
->>
->> v)  Thread 1 releases 'seqlock'.
->>
->> After v), nobody will check if there are packets in the queue until a
->> new packet is enqueued.  Thereby, the packet enqueued by Thread 2 may be
->> delayed indefinitely.
-> 
-> I think you are right.
-> 
-> It looks like this possible race is present since the initial lockless
-> implementation - commit 6b3ba9146fe6 ("net: sched: allow qdiscs to
-> handle locking")
-> 
-> Anyhow the racing windows looks quite tiny - I never observed that
-> issue in my tests. Do you have a working reproducer?
+On Thu, Oct 10, 2019 at 7:49 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Oct 10, 2019 at 5:31 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> > On Thu, Oct 10, 2019 at 3:54 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Wed, Oct 9, 2019 at 7:09 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Thu, Oct 10, 2019 at 01:28:08AM +0900, Masahiro Yamada wrote:
+> > > > > On Thu, Oct 10, 2019 at 12:27 AM William Breathitt Gray
+> > > > > <vilhelm.gray@gmail.com> wrote:
+> > > > > >
+> > > > > > This macro iterates for each 8-bit group of bits (clump) with set bits,
+> > > > > > within a bitmap memory region. For each iteration, "start" is set to the
+> > > > > > bit offset of the found clump, while the respective clump value is
+> > > > > > stored to the location pointed by "clump". Additionally, the
+> > > > > > bitmap_get_value8 and bitmap_set_value8 functions are introduced to
+> > > > > > respectively get and set an 8-bit value in a bitmap memory region.
+> > > >
+> > > > > Why is the return type "unsigned long" where you know
+> > > > > it return the 8-bit value ?
+> > > >
+> > > > Because bitmap API operates on unsigned long type. This is not only
+> > > > consistency, but for sake of flexibility in case we would like to introduce
+> > > > more calls like clump16 or so.
+> > >
+> > > TBH, that doesn't convince me: those functions explicitly take/return an
+> > > 8-bit value, and have "8" in their name.  The 8-bit value is never
+> > > really related to, retrieved from, or stored in a full "unsigned long"
+> > > element of a bitmap, only to/from/in a part (byte) of it.
+> > >
+> > > Following your rationale, all of iowrite{8,16,32,64}*() should take an
+> > > "unsigned long" value, too.
+> > >
+> >
+> > +1
+> >
+> > Using u8/u16/u32/u64 looks more consistent with other bitmap helpers.
+> >
+> > void bitmap_from_arr32(unsigned long *bitmap, const u32 *buf, unsigned
+> > int nbits);
+> > void bitmap_to_arr32(u32 *buf, const unsigned long *bitmap, unsigned int nbits);
+> > static inline void bitmap_from_u64(unsigned long *dst, u64 mask);
+> >
+> >
+> >
+> > If you want to see more examples from other parts,
+>
+> Geert's and yours examples both are not related. They are about
+> fixed-width properies when we know that is the part of protocol.
+> Here we have no protocol which stricts us to the mentioned fixed-width types.
 
-Yes, it's reliably reproducible.  We do network latency measurements and 
-latency spikes for these packets that get stuck in the queue.
+Yes you have: they are functions to store/retrieve an 8-bit value from
+the middle of the bitmap, which is reflected in their names ("clump8",
+"value8").
+The input/output value is clearly separated from the actual bitmap,
+which is referenced by the "unsigned long *".
 
-> 
-> Something alike the following code - completely untested - can possibly
-> address the issue, but it's a bit rough and I would prefer not adding
-> additonal complexity to the lockless qdiscs, can you please have a spin
-> a it?
+If you add new "value16" functions, they will be intended to store/retrieve
+16-bit values.
 
-Your change looks reasonable.  I'll give it a try.
+Besides, if retrieving an 8-bit value requires passing an
+"unsigned long *", the caller needs two variables: one unsigned long to
+pass the address of, and one u8 to copy the returned value into.
 
+> So, I can tell an opposite, your arguments didn't convince me.
+>
+> Imagine the function which does an or / and / xor operation on bitmap.
+> Now, when I supply unsigned long, I will see
+> operations on one type in _one_ function independently of the size.
+> Your proposal will make an unneded churn.
 
-> 
-> Thanks,
-> 
-> Paolo
-> ---
-> diff --git a/include/net/pkt_sched.h b/include/net/pkt_sched.h
-> index 6a70845bd9ab..65a1c03330d6 100644
-> --- a/include/net/pkt_sched.h
-> +++ b/include/net/pkt_sched.h
-> @@ -113,18 +113,23 @@ bool sch_direct_xmit(struct sk_buff *skb, struct Qdisc *q,
->   		     struct net_device *dev, struct netdev_queue *txq,
->   		     spinlock_t *root_lock, bool validate);
->   
-> -void __qdisc_run(struct Qdisc *q);
-> +int __qdisc_run(struct Qdisc *q);
->   
->   static inline void qdisc_run(struct Qdisc *q)
->   {
-> +	int quota = 0;
-> +
->   	if (qdisc_run_begin(q)) {
->   		/* NOLOCK qdisc must check 'state' under the qdisc seqlock
->   		 * to avoid racing with dev_qdisc_reset()
->   		 */
->   		if (!(q->flags & TCQ_F_NOLOCK) ||
->   		    likely(!test_bit(__QDISC_STATE_DEACTIVATED, &q->state)))
-> -			__qdisc_run(q);
-> +			quota = __qdisc_run(q);
->   		qdisc_run_end(q);
-> +
-> +		if (quota > 0 && q->flags & TCQ_F_NOLOCK && q->ops->peek(q))
-> +			__netif_schedule(q);
+Depends on what kind of value you will use to do the logical operation
+with the bitmap:
+  - Full bitmap => unsigned long * + size,
+  - Single bitmap "word" => unsigned long,
+  - 8-bit value => u8,
+  - 16-bit value => u16
 
-Not sure this is relevant, but there's a subtle difference in the way 
-that the underlying ptr_ring peeks at the queue head and checks whether 
-the queue is empty.
+Gr{oetje,eeting}s,
 
-For peek it's:
+                        Geert
 
-READ_ONCE(r->queue[r->consumer_head]);
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-For is_empty it's:
-
-!r->queue[READ_ONCE(r->consumer_head)];
-
-The placement of the READ_ONCE changes here.  I can't get my head around 
-whether this difference is significant or not.  If it is, then perhaps 
-an is_empty() method is needed on the qdisc_ops...???
-
-/Jonas
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
