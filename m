@@ -2,91 +2,141 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A02C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA512C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E8A2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94370208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570697275;
+	bh=AlUybCsrB0fQp7PIbGTomtI+efG1wHQyT5ucYaGg8Xk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TZF5JFrfjarxt9Vh2R4WIIRo8e6fDugisu3zlkfAdWf8Ivvl9QjqRMZ0H47Aih2/r
+	 ZRKsJuZLzGZ7i6IimZ4rbEIegMJIi3EnxUpiJDLnal6xu1OSzvReKkdgFkJXvoHZjS
+	 UK5FC+IBZsdT8HO8arfh+txbWuk2xGeXjOpr71us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389545AbfJJIrv (ORCPT
+        id S2389555AbfJJIry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:47:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:23141 "EHLO mx1.redhat.com"
+        Thu, 10 Oct 2019 04:47:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389525AbfJJIrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:49 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2389544AbfJJIrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0B63A75704
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:47:49 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id w8so2415723wrm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 01:47:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yMEA1vwAxxDR9KMsFNEltEDGLvMYr7N57Wh6Y66WRc0=;
-        b=Q0PHALrzz7qhpLZtfY7tFckoj2EONf+aIXTctf8NsWIm9AiQ5G4O4HAqh+oKl+X2Gy
-         PUZTkYUvORdNg/KUxgPKmaiyBP82LZdxMVtT39gqmtGApIJGRpvPKzQu81MQySJq9Fxw
-         uUjGoctZ7/zieGiyrR8AEBLlxPYpifvUSD71Sszom2tkeVu4B+g+AYOyIxJIzPQXZ7KF
-         Myc7tyEXDhUOISJ38Eahj0CFAXGIJ+XZqSdpXCm7ilcBs/ZWKADhl8GeWw62//d2ToXk
-         nXmEMdgNOfFS21UqqkOCXjYzzDA1C7TwWUduJNk3kLNkFkeRUqLwXQEZ+eTk5/A+PBYV
-         ucww==
-X-Gm-Message-State: APjAAAWwBII3PWuQsadUULPogld0+CvLre3E78JvoNUmDtb0vf+q8Cma
-        h7nYKqnNE0tfDah+rQUb7E5NLzwRm3Wo7fKgbNcx214bVvivkrmJZSSnTmBRxqxtQhU+Fw3vFRW
-        2FUa0qNsbCQNBzXqFr21ub68b
-X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr6460273wmk.135.1570697267773;
-        Thu, 10 Oct 2019 01:47:47 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwGlOe+0u6KXBMrN0A6Ztn9RSeVar+fTIwwT5kQa51LZTkc+efRSchIZ3bkrYo/CFxMwyo8bg==
-X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr6460257wmk.135.1570697267541;
-        Thu, 10 Oct 2019 01:47:47 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id z9sm5103737wrp.26.2019.10.10.01.47.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 01:47:46 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 10:47:44 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     netdev@vger.kernel.org, kvm <kvm@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        virtualization@lists.linux-foundation.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/11] VSOCK: add AF_VSOCK test cases
-Message-ID: <20191010084744.n46t3ryv7rilkpk2@steredhat>
-References: <20190801152541.245833-1-sgarzare@redhat.com>
- <20190801152541.245833-8-sgarzare@redhat.com>
- <CAGxU2F4N5ACePf6YLQCBFMHPu8wDLScF+AGQ2==JAuBUj0GB-A@mail.gmail.com>
- <20191009151503.GA13568@stefanha-x1.localdomain>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD352064A;
+        Thu, 10 Oct 2019 08:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570697269;
+        bh=AlUybCsrB0fQp7PIbGTomtI+efG1wHQyT5ucYaGg8Xk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r25Yxf17TeO73qjXtbwFKdyPPqpRzep/dtQm00ecsBlZ2Fa42EQL9OHP5Gd9PrEaP
+         MJc5Fuh0XGA2HYYUia1b4AVnKy/QtPEzDpBlqsu3WEWLET9JAYCbltlEwSZHxOuoMU
+         v8X726xFSKXAIpKE/R/VeyOItF+XvFXq2uK//zec=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 078/114] KVM: PPC: Book3S HV: XIVE: Free escalation interrupts before disabling the VP
+Date:   Thu, 10 Oct 2019 10:36:25 +0200
+Message-Id: <20191010083612.105058931@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
+References: <20191010083544.711104709@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009151503.GA13568@stefanha-x1.localdomain>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 04:15:03PM +0100, Stefan Hajnoczi wrote:
-> On Wed, Oct 09, 2019 at 12:03:53PM +0200, Stefano Garzarella wrote:
-> > Hi Stefan,
-> > I'm thinking about dividing this test into single applications, one
-> > for each test, do you think it makes sense?
-> > Or is it just a useless complication?
-> 
-> I don't mind either way but personally I would leave it as a single
-> program.
-> 
+From: Cédric Le Goater <clg@kaod.org>
 
-Okay, since I had the doubt it was a useless complication and you prefer
-a single application, I continue on this way :-)
+[ Upstream commit 237aed48c642328ff0ab19b63423634340224a06 ]
 
-Thanks,
-Stefano
+When a vCPU is brought done, the XIVE VP (Virtual Processor) is first
+disabled and then the event notification queues are freed. When freeing
+the queues, we check for possible escalation interrupts and free them
+also.
+
+But when a XIVE VP is disabled, the underlying XIVE ENDs also are
+disabled in OPAL. When an END (Event Notification Descriptor) is
+disabled, its ESB pages (ESn and ESe) are disabled and loads return all
+1s. Which means that any access on the ESB page of the escalation
+interrupt will return invalid values.
+
+When an interrupt is freed, the shutdown handler computes a 'saved_p'
+field from the value returned by a load in xive_do_source_set_mask().
+This value is incorrect for escalation interrupts for the reason
+described above.
+
+This has no impact on Linux/KVM today because we don't make use of it
+but we will introduce in future changes a xive_get_irqchip_state()
+handler. This handler will use the 'saved_p' field to return the state
+of an interrupt and 'saved_p' being incorrect, softlockup will occur.
+
+Fix the vCPU cleanup sequence by first freeing the escalation interrupts
+if any, then disable the XIVE VP and last free the queues.
+
+Fixes: 90c73795afa2 ("KVM: PPC: Book3S HV: Add a new KVM device for the XIVE native exploitation mode")
+Fixes: 5af50993850a ("KVM: PPC: Book3S HV: Native usage of the XIVE interrupt controller")
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190806172538.5087-1-clg@kaod.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/kvm/book3s_xive.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/arch/powerpc/kvm/book3s_xive.c b/arch/powerpc/kvm/book3s_xive.c
+index aae34f218ab45..031f07f048afd 100644
+--- a/arch/powerpc/kvm/book3s_xive.c
++++ b/arch/powerpc/kvm/book3s_xive.c
+@@ -1037,20 +1037,22 @@ void kvmppc_xive_cleanup_vcpu(struct kvm_vcpu *vcpu)
+ 	/* Mask the VP IPI */
+ 	xive_vm_esb_load(&xc->vp_ipi_data, XIVE_ESB_SET_PQ_01);
+ 
+-	/* Disable the VP */
+-	xive_native_disable_vp(xc->vp_id);
+-
+-	/* Free the queues & associated interrupts */
++	/* Free escalations */
+ 	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
+-		struct xive_q *q = &xc->queues[i];
+-
+-		/* Free the escalation irq */
+ 		if (xc->esc_virq[i]) {
+ 			free_irq(xc->esc_virq[i], vcpu);
+ 			irq_dispose_mapping(xc->esc_virq[i]);
+ 			kfree(xc->esc_virq_names[i]);
+ 		}
+-		/* Free the queue */
++	}
++
++	/* Disable the VP */
++	xive_native_disable_vp(xc->vp_id);
++
++	/* Free the queues */
++	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
++		struct xive_q *q = &xc->queues[i];
++
+ 		xive_native_disable_queue(xc->vp_id, q, i);
+ 		if (q->qpage) {
+ 			free_pages((unsigned long)q->qpage,
+-- 
+2.20.1
+
+
+
