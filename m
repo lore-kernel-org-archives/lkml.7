@@ -2,54 +2,50 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2F4C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65549C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D03C2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351C821920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697997;
-	bh=PMFljwLuGJXhVsdndEYQp6wTHEoqjTGybZ1dfjdUdx0=;
+	s=default; t=1570698005;
+	bh=Z7qMlZaZcDZIhgD5kbXQoS87jFUa8k4Q4KdfQBxnahk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qFmH6iN4iPz0aQz658PaRT4qDJBBrv4q5W2XctEDanjIbeWz7Txw81hJ8an/CV+/+
-	 Fz4Cfq8IbxpWeoPWpPWCXsEQFC5XamPbPWq9oVvT08Yj9GwFDtLU+2mzC3NPt7AsB6
-	 IjhNqZsnD3aGTHr3Ehzzh6NCDtcNZGhRstdvLjck=
+	b=UQHIH/4/ritF9a6f9L3X2uYWKKpuZ4EKfBZkhQyxh9XvZ6aZKL4LAsQKXlLt0ibyn
+	 p5XY4UK9RQhP+5DHMmk65D8jkrt9YrLDUWZikBleJkQKm4RU/t0fC/Wj6EfBENNwMv
+	 3X9coyFRdAHRahYbcA6KXZYmDZ5mRnQAg4OtpP/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388831AbfJJI74 (ORCPT
+        id S2389065AbfJJJAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:59:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48458 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 05:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388759AbfJJIng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:43:36 -0400
+        id S2387767AbfJJInT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:43:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13BB121929;
-        Thu, 10 Oct 2019 08:43:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF2C92190F;
+        Thu, 10 Oct 2019 08:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697015;
-        bh=PMFljwLuGJXhVsdndEYQp6wTHEoqjTGybZ1dfjdUdx0=;
+        s=default; t=1570696999;
+        bh=Z7qMlZaZcDZIhgD5kbXQoS87jFUa8k4Q4KdfQBxnahk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UlXBi0+PshpIOsY47HeXwVPFf7ddqJ2g9JV1XA0UDoj9KfYyx7zFNCNVbeg9alO6G
-         wJ2zoRsFU6QkGomy2snUMkxEqm8+4J/shePvs1zuvi4FbwVNz0WOZVj5wu+HXNkzDd
-         kEUGlPM58+I2XrjIG2LDo2JtYiVc64aCNmF0+uQE=
+        b=FWO25hlcnd4xuBLRvFeU7HTJyFBl1AerxaOQ52ZEvKhdP8IGr12hYRuXQd2mLVDX0
+         pQ8FqmwogrufWhENNVSNrdarNXgKJWXpTzHOv7DjJclutmFLfD+j7lKldrVDPEn+Bs
+         /IGTpofHaH7ia7M4/zIqJ7KFyd3IyFnk/q8r1ZAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 137/148] KVM: nVMX: Fix consistency check on injected exception error code
-Date:   Thu, 10 Oct 2019 10:36:38 +0200
-Message-Id: <20191010083620.661115143@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.3 086/148] cfg80211: validate SSID/MBSSID element ordering assumption
+Date:   Thu, 10 Oct 2019 10:35:47 +0200
+Message-Id: <20191010083616.576489163@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -62,48 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 567926cca99ba1750be8aae9c4178796bf9bb90b ]
+commit 242b0931c1918c56cd1dc5563fd250a3c39b996d upstream.
 
-Current versions of Intel's SDM incorrectly state that "bits 31:15 of
-the VM-Entry exception error-code field" must be zero.  In reality, bits
-31:16 must be zero, i.e. error codes are 16-bit values.
+The code copying the data assumes that the SSID element is
+before the MBSSID element, but since the data is untrusted
+from the AP, this cannot be guaranteed.
 
-The bogus error code check manifests as an unexpected VM-Entry failure
-due to an invalid code field (error number 7) in L1, e.g. when injecting
-a #GP with error_code=0x9f00.
+Validate that this is indeed the case and ignore the MBSSID
+otherwise, to avoid having to deal with both cases for the
+copy of data that should be between them.
 
-Nadav previously reported the bug[*], both to KVM and Intel, and fixed
-the associated kvm-unit-test.
-
-[*] https://patchwork.kernel.org/patch/11124749/
-
-Reported-by: Nadav Amit <namit@vmware.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 0b8fb8235be8 ("cfg80211: Parsing of Multiple BSSID information in scanning")
+Link: https://lore.kernel.org/r/1569009255-I1673911f5eae02964e21bdc11b2bf58e5e207e59@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/vmx/nested.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/scan.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index a3cba321b5c5d..61aa9421e27af 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2584,7 +2584,7 @@ static int nested_check_vm_entry_controls(struct kvm_vcpu *vcpu,
- 
- 		/* VM-entry exception error code */
- 		if (has_error_code &&
--		    vmcs12->vm_entry_exception_error_code & GENMASK(31, 15))
-+		       vmcs12->vm_entry_exception_error_code & GENMASK(31, 16))
- 			return -EINVAL;
- 
- 		/* VM-entry interruption-info field: reserved bits */
--- 
-2.20.1
-
+--- a/net/wireless/scan.c
++++ b/net/wireless/scan.c
+@@ -1711,7 +1711,12 @@ cfg80211_update_notlisted_nontrans(struc
+ 		return;
+ 	new_ie_len -= trans_ssid[1];
+ 	mbssid = cfg80211_find_ie(WLAN_EID_MULTIPLE_BSSID, ie, ielen);
+-	if (!mbssid)
++	/*
++	 * It's not valid to have the MBSSID element before SSID
++	 * ignore if that happens - the code below assumes it is
++	 * after (while copying things inbetween).
++	 */
++	if (!mbssid || mbssid < trans_ssid)
+ 		return;
+ 	new_ie_len -= mbssid[1];
+ 	rcu_read_lock();
 
 
