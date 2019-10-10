@@ -2,116 +2,183 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527CDC47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 01:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3244C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 01:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F482206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 01:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F82206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 01:38:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvXsAm1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732600AbfJJBeu (ORCPT
+        id S1732501AbfJJBiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 21:34:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:50444 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731134AbfJJBeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 21:34:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 18:34:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
-   d="scan'208";a="393873539"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Oct 2019 18:34:48 -0700
-Received: from [10.226.38.27] (unknown [10.226.38.27])
-        by linux.intel.com (Postfix) with ESMTP id 9DAFF5803E4;
-        Wed,  9 Oct 2019 18:34:45 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] spi: cadence-qspi: Add cadence-qspi support for
- Intel LGM SoC
-To:     Vignesh Raghavendra <vigneshr@ti.com>, broonie@kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <89e49834-8697-2917-d666-769969f074a4@linux.intel.com>
-Date:   Thu, 10 Oct 2019 09:34:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 9 Oct 2019 21:38:25 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:44024 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731553AbfJJBiY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 21:38:24 -0400
+Received: by mail-yb1-f195.google.com with SMTP id y204so1395261yby.10
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 18:38:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UFJYsUva5FRhcAbZsdQcSuIVXzC9BSS6Ql6F/47Wmsk=;
+        b=cvXsAm1qlmc+Kbv8i7YhK9zObTtu1ly7yMvlUxQMutSbYVH95MgCajf07z+x+zufvJ
+         agz6VDwepjFNpv0zWKXH1nYHgoOgA+JmuYf63UOHiqz8yowM+06edu7A8w+EWHGDJcC3
+         4/JCFGwNqfNV8Z5rt+xsZVoLuslm2q1AMNPPeofdPgphamXuUaIZAKOZXkvnaRi2XIaU
+         f0+WcyTD0LVRdG4VnbNCpnmyhyVOPDkWYhCdLGB7hGP4PgsbAuz9ZwQ7/yAfaOpyL7VF
+         jZKlHGYStG7dboM/75SjdMtz1mNsq3C3npFYuxO3IQlg+qxZCbFXtXfAV6a5IVUwppxn
+         ZGqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UFJYsUva5FRhcAbZsdQcSuIVXzC9BSS6Ql6F/47Wmsk=;
+        b=SuNWqY/Z5gQvUhjcpNbhGrEGeVbj3TP83adQKP5O77q4Ex0F0/2GuVAg1h+EwdodC7
+         BQFZ1JhwVT4TkZ51xWy2+VkZbhCTQwIezuZ3Gm9xn4oTxOjbiSAGMPHfJIsANqrUv6VO
+         UN+sglh6y2VO5uADKJxZVcA7wI/0u/dM1LVMDUO+HsjRddR0nloKyAZhn0eO48NyCZQ+
+         CNDcVvvF7NBHMaOYRJF8iNfXtSwIS0COwFRzDkAijKs42sfjvbgFNNrSSFl7aae80J4p
+         HtbX285D4enfAg5lv3lV01X7oBwZAZZ3YyaLZDJXjbA+/uQnBfsYIC34pc8sT4Kcwojv
+         0Ugw==
+X-Gm-Message-State: APjAAAV/R7tn6A9DFuvmgVDDb0W0DLrw3CSbi12uSl+DMOqQdai4sfOg
+        g8us74tvvD2Z1fLyuCTbm+pApw6ghM7LO4UPdz6/zjUI8yY=
+X-Google-Smtp-Source: APXvYqy5qQm96zZkZ//ly0S8Fu08YzPKTdph55FfVXIY19+1yN1kD1nrf2mh/IACpgkcsDp8rZx4QM+4gtNJMtIXviI=
+X-Received: by 2002:a5b:d50:: with SMTP id f16mr3995164ybr.25.1570671503860;
+ Wed, 09 Oct 2019 18:38:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20191009192105.GC26530@ZenIV.linux.org.uk>
+In-Reply-To: <20191009192105.GC26530@ZenIV.linux.org.uk>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Wed, 9 Oct 2019 18:38:12 -0700
+Message-ID: <CAMo8BfKUOmExGRMaUPmcRsy=iyRrguLF6JOLUMegNnzkF9vcvQ@mail.gmail.com>
+Subject: Re: [PATCH] xtensa: fix {get,put}_user() for 64bit values
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Vignesh,
+On Wed, Oct 9, 2019 at 12:21 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> First of all, on short copies __copy_{to,from}_user() return the amount
+> of bytes left uncopied, *not* -EFAULT.  get_user() and put_user() are
+> expected to return -EFAULT on failure.
+>
+> Another problem is get_user(v32, (__u64 __user *)p); that should
+> fetch 64bit value and the assign it to v32, truncating it in process.
+> Current code, OTOH, reads 8 bytes of data and stores them at the
+> address of v32, stomping on the 4 bytes that follow v32 itself.
+>
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> --
+> diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
+> index 6792928ba84a..155174ddb7ae 100644
+> --- a/arch/xtensa/include/asm/uaccess.h
+> +++ b/arch/xtensa/include/asm/uaccess.h
+> @@ -100,7 +100,7 @@ do {                                                                        \
+>         case 4: __put_user_asm(x, ptr, retval, 4, "s32i", __cb); break; \
+>         case 8: {                                                       \
+>                      __typeof__(*ptr) __v64 = x;                        \
+> -                    retval = __copy_to_user(ptr, &__v64, 8);           \
+> +                    retval = __copy_to_user(ptr, &__v64, 8) ? -EFAULT : 0;     \
 
-On 17/9/2019 12:50 AM, Vignesh Raghavendra wrote:
-> Hi,
->
-> On 16/09/19 1:08 PM, Ramuthevar,Vadivel MuruganX wrote:
->> patch 1: Add YAML for cadence-qspi devicetree cdocumentation.
->> patch 2: cadence-qspi controller driver to support QSPI-NAND flash
->> using existing spi-nand framework with legacy spi protocol.
-> Nope, you cannot have two drivers for the same IP (i.e Cadence QSPI)
-> just to support to different types of SPI memories. This is the reason
-> why spi_mem_ops was introduced.
->
-> Please rewrite this driver over to use spi_mem_ops (instead of using
-> generic SPI xfers) so that same driver supports both SPI-NOR and
-> SPI-NAND flashes. Once that's done drivers/mtd/spi-nor/cadence-quadspi.c
-> can be deleted.
->
-> There are few existing examples of spi_mem_ops users in drivers/spi/
-> (git grep spi_mem_ops) and materials here on how to write such a driver:
->
-> [1]
-> https://bootlin.com/blog/spi-mem-bringing-some-consistency-to-the-spi-memory-ecosystem/
-> [2] https://www.youtube.com/watch?v=PkWbuLM_gmU
-As per Mark Brown and your suggestion,  I have started adapting 
-cadence-qaudspi driver with spi_mem_ops framework to work
-QSPI-NAND/NOR as a generic driver(completely removed the legacy 
-SPI-XFERS),  is in progress on Intel LGM SoC.
-QSPI-IP on Intel LGM  do not have DMA  support and also not part of QSPI 
-IP, so couldn't able to validate DMA related.
-will adapt the DMA things which are existing in cadence-quadspi.c as it is.
+Sure, I agree with that.
 
-currently TI and Altera SoC's use this Cadence-qspi IP , both are not 
-using DMA as per my understanding (correct me if it is wrong).
-confirmed through device tree entry.
+>                      break;                                             \
+>                 }                                                       \
+>         default: __put_user_bad();                                      \
+> @@ -198,7 +198,12 @@ do {                                                                       \
+>         case 1: __get_user_asm(x, ptr, retval, 1, "l8ui", __cb);  break;\
+>         case 2: __get_user_asm(x, ptr, retval, 2, "l16ui", __cb); break;\
+>         case 4: __get_user_asm(x, ptr, retval, 4, "l32i", __cb);  break;\
+> -       case 8: retval = __copy_from_user(&x, ptr, 8);    break;        \
+> +       case 8: {                                                       \
+> +               __u64 __x = 0;                                          \
+> +               retval = __copy_from_user(&__x, ptr, 8) ? -EFAULT : 0;  \
+> +               (x) = *(__force __typeof__(*(ptr)) *) &__x;             \
+> +               break;                                                  \
+> +       }                                                               \
 
-what is your opinion on DMA related stuff? also using macronix(QSPI-NOR) 
-flash/Micron(QSPI-NAND).
----
-With Regards
-Vadivel
->> Ramuthevar Vadivel Murugan (2):
->>    dt-bindings: spi: Add support for cadence-qspi IP Intel LGM SoC
->>    spi: cadence-qspi: Add QSPI support for Intel LGM SoC
->>
->>   .../devicetree/bindings/spi/cadence,qspi-nand.yaml |  84 +++
->>   drivers/spi/Kconfig                                |   9 +
->>   drivers/spi/Makefile                               |   1 +
->>   drivers/spi/spi-cadence-qspi-apb.c                 | 644 +++++++++++++++++++++
->>   drivers/spi/spi-cadence-qspi-apb.h                 | 174 ++++++
->>   drivers/spi/spi-cadence-qspi.c                     | 461 +++++++++++++++
->>   drivers/spi/spi-cadence-qspi.h                     |  73 +++
->>   7 files changed, 1446 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->>   create mode 100644 drivers/spi/spi-cadence-qspi-apb.c
->>   create mode 100644 drivers/spi/spi-cadence-qspi-apb.h
->>   create mode 100644 drivers/spi/spi-cadence-qspi.c
->>   create mode 100644 drivers/spi/spi-cadence-qspi.h
->>
+There's also the following code in the callers of this macro, e.g. in
+__get_user_nocheck:
+
+        long __gu_err, __gu_val;                                \
+        __get_user_size(__gu_val, (ptr), (size), __gu_err);     \
+        (x) = (__force __typeof__(*(ptr)))__gu_val;             \
+
+the last line is important for sizes 1..4, because it takes care of
+sign extension of the value loaded by the assembly.
+At the same time the first line doesn't make sense for the size 8
+as it will result in value truncation.
+
+How about the following change instead:
+
+diff --git a/arch/xtensa/include/asm/uaccess.h
+b/arch/xtensa/include/asm/uaccess.h
+index 6792928ba84a..c54893651d69 100644
+--- a/arch/xtensa/include/asm/uaccess.h
++++ b/arch/xtensa/include/asm/uaccess.h
+@@ -100,7 +100,7 @@ do {
+                         \
+        case 4: __put_user_asm(x, ptr, retval, 4, "s32i", __cb); break; \
+        case 8: {                                                       \
+                     __typeof__(*ptr) __v64 = x;                        \
+-                    retval = __copy_to_user(ptr, &__v64, 8);           \
++                    retval = __copy_to_user(ptr, &__v64, 8) ? -EFAULT
+: 0;     \
+                     break;                                             \
+                }                                                       \
+        default: __put_user_bad();                                      \
+@@ -172,7 +172,8 @@ __asm__ __volatile__(
+         \
+
+ #define __get_user_nocheck(x, ptr, size)                       \
+ ({                                                             \
+-       long __gu_err, __gu_val;                                \
++       long __gu_err;                                          \
++       __typeof__(*(ptr) + 0) __gu_val;                        \
+        __get_user_size(__gu_val, (ptr), (size), __gu_err);     \
+        (x) = (__force __typeof__(*(ptr)))__gu_val;             \
+        __gu_err;                                               \
+@@ -180,7 +181,8 @@ __asm__ __volatile__(
+         \
+
+ #define __get_user_check(x, ptr, size)                                 \
+ ({                                                                     \
+-       long __gu_err = -EFAULT, __gu_val = 0;                          \
++       long __gu_err = -EFAULT;                                        \
++       __typeof__(*(ptr) + 0) __gu_val = 0;                            \
+        const __typeof__(*(ptr)) *__gu_addr = (ptr);                    \
+        if (access_ok(__gu_addr, size))                 \
+                __get_user_size(__gu_val, __gu_addr, (size), __gu_err); \
+@@ -198,7 +200,7 @@ do {
+                         \
+        case 1: __get_user_asm(x, ptr, retval, 1, "l8ui", __cb);  break;\
+        case 2: __get_user_asm(x, ptr, retval, 2, "l16ui", __cb); break;\
+        case 4: __get_user_asm(x, ptr, retval, 4, "l32i", __cb);  break;\
+-       case 8: retval = __copy_from_user(&x, ptr, 8);    break;        \
++       case 8: retval = __copy_from_user(&x, ptr, 8) ? -EFAULT : 0;
+ break;  \
+        default: (x) = __get_user_bad();                                \
+        }                                                               \
+ } while (0)
+
+Here __typeof__(*(ptr) + 0) makes enough room for all cases
+in the __get_user_size and the "+0" part takes care of pointers
+to const data.
+
+-- 
+Thanks.
+-- Max
