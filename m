@@ -2,109 +2,58 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AF0C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86667C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3EA218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B/+yaJLt"
+	by mail.kernel.org (Postfix) with ESMTP id 65349218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387466AbfJJHjr (ORCPT
+        id S2387481AbfJJHkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:39:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59156 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733088AbfJJHgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:36:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=WpK+tHhD79sRpUxX2TvDfN4NB5JxjZXZLIF/L+pB+ho=; b=B/+yaJLtn2cVn4Y0JCaEnkp8z
-        GCO9Pgjkv1e7IN5X5omdjhKjp0h3cXym7YDQFNfspg0x6rFAZEKgMD469ZTUiT3LZZoOrmuch6kCk
-        r9bUwJEZEjsGkrez/t8rbuuygdXtEpKAt5LaIEgtPcmqbAFStqCgVMqHnyPNj7tK5krrMJOKjgkja
-        5DwsM6zPJ/qSvjzgn/fbscBbwt5w3l03sEwpOpD/0++5ca1IBMSBuQcE8Bj3RgPXcRhBjKRZRVKOz
-        NjpStHdkwSLIs2KTsfXKVZZZ4vvJTNLXJ5haAS6C+mT6/ofAzN+ilh9bGzwmr22Hbpj2uPPf+KtwZ
-        hLPatH60Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iISza-0004Yw-5a; Thu, 10 Oct 2019 07:36:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D6B3301A79;
-        Thu, 10 Oct 2019 09:35:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 86BE4202F4F4F; Thu, 10 Oct 2019 09:36:08 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 09:36:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, kernel-team@fb.com, stable@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf-next 2/2] bpf/stackmap: fix A-A deadlock in
- bpf_get_stack()
-Message-ID: <20191010073608.GO2311@hirez.programming.kicks-ass.net>
-References: <20191010061916.198761-1-songliubraving@fb.com>
- <20191010061916.198761-3-songliubraving@fb.com>
+        Thu, 10 Oct 2019 03:40:02 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3683 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387469AbfJJHkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:40:01 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 051659DB5E3A0C01908C;
+        Thu, 10 Oct 2019 15:39:58 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 10 Oct
+ 2019 15:39:51 +0800
+Subject: Re: [PATCH for-next 1/5] erofs: clean up collection handling routines
+To:     Gao Xiang <gaoxiang25@huawei.com>, <linux-erofs@lists.ozlabs.org>
+CC:     LKML <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        "Li Guifu" <bluce.liguifu@huawei.com>
+References: <20191008125616.183715-1-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <94a79a77-6875-d60e-2a51-48460ba3ae7f@huawei.com>
+Date:   Thu, 10 Oct 2019 15:40:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010061916.198761-3-songliubraving@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008125616.183715-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 11:19:16PM -0700, Song Liu wrote:
-> bpf stackmap with build-id lookup (BPF_F_STACK_BUILD_ID) can trigger A-A
-> deadlock on rq_lock():
+On 2019/10/8 20:56, Gao Xiang wrote:
+>  - change return value to int since collection is
+>    already returned within the collector.
+>  - better function naming.
 > 
-> rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> [...]
-> Call Trace:
->  try_to_wake_up+0x1ad/0x590
->  wake_up_q+0x54/0x80
->  rwsem_wake+0x8a/0xb0
->  bpf_get_stack+0x13c/0x150
->  bpf_prog_fbdaf42eded9fe46_on_event+0x5e3/0x1000
->  bpf_overflow_handler+0x60/0x100
->  __perf_event_overflow+0x4f/0xf0
->  perf_swevent_overflow+0x99/0xc0
->  ___perf_sw_event+0xe7/0x120
->  __schedule+0x47d/0x620
->  schedule+0x29/0x90
->  futex_wait_queue_me+0xb9/0x110
->  futex_wait+0x139/0x230
->  do_futex+0x2ac/0xa50
->  __x64_sys_futex+0x13c/0x180
->  do_syscall_64+0x42/0x100
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> index 052580c33d26..3b278f6b0c3e 100644
-> --- a/kernel/bpf/stackmap.c
-> +++ b/kernel/bpf/stackmap.c
-> @@ -287,7 +287,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
->  	bool irq_work_busy = false;
->  	struct stack_map_irq_work *work = NULL;
-> 
-> -	if (in_nmi()) {
-> +	if (in_nmi() || this_rq_is_locked()) {
->  		work = this_cpu_ptr(&up_read_work);
->  		if (work->irq_work.flags & IRQ_WORK_BUSY)
->  			/* cannot queue more up_read, fallback */
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-This is horrific crap. Just say no to that get_build_id_offset()
-trainwreck.
+Thanks,
