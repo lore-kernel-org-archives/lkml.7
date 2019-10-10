@@ -2,115 +2,177 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADC4ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02103C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D2B21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570727169;
-	bh=Eht+PU+lHi92IsU0YnYYmvQeiFi7TS8nU1DAoBr0TR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bW3SYYX6Ywh04i3EVLzDP2/iRxIAqQkbBVWXI/sylNjbjxtVnZoVwjxwJ5BjXYbDk
-	 cuNJC5g/azYmvzTqeNHp//MLzcVgdbao29mKvNbj7HfxK1Qex+2/OfgSwbXdlucPK8
-	 VMS2NW7CYZ3OxRit+h3rIdb6xdZOhq3r8c5aOetI=
+	by mail.kernel.org (Postfix) with ESMTP id CE86121835
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:09:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vFJLATR5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfJJRGI (ORCPT
+        id S1726563AbfJJRJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:06:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfJJRGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:06:07 -0400
-Received: from localhost (unknown [131.107.174.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 010A52067B;
-        Thu, 10 Oct 2019 17:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570727167;
-        bh=Eht+PU+lHi92IsU0YnYYmvQeiFi7TS8nU1DAoBr0TR4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mwe6JmqF5r7rPK//hTLRFVxCLNcK7OzfHjShXp/yQa//v67d3otQbngXYyZrt+KiM
-         Z0N1bRUbs9VydvDRPOqptRoNzaVjAcfUqyD8pe6TUvLLfwNaT7C72QaYZqLYkNw+mW
-         ACpLWo8Oi2+4FZjKlfO2EE6Qv7bDK2DWyLC4Em+I=
-Date:   Thu, 10 Oct 2019 13:06:06 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>, davem@davemloft.net
-Cc:     Himadri Pandya <himadrispandya@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "himadri18.07" <himadri18.07@gmail.com>
-Subject: Re: [PATCH] hv_sock: use HV_HYP_PAGE_SIZE instead of PAGE_SIZE_4K
-Message-ID: <20191010170606.GA1396@sasha-vm>
-References: <20190725051125.10605-1-himadri18.07@gmail.com>
- <MWHPR21MB078479F82BBA6D3E6527ECECD7DF0@MWHPR21MB0784.namprd21.prod.outlook.com>
- <20191004154817.GL17454@sasha-vm>
+        Thu, 10 Oct 2019 13:09:38 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38938 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfJJRJi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 13:09:38 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y3so6991897ljj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:09:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=07k4TlcKY0H7BLbXRw8BDYAuoLrXRbYHdEv/KYsqSU4=;
+        b=vFJLATR5phjST86akF50pwuc+J9KFiVUkfzWYX6w0FfuZwKzxtKafM5wRV3MkXQ2lN
+         dg4UQH4RKYQvZV9N/7qlBeAlewyE8XSm5aprbAWf9z6Ea+7ZCjSix3jFa9eaXy6kZ8sf
+         cmSRhxZR/pCzv+T/ofyCa/gUVJBV6kx6BPlM195wXCdK3++s+A3UjD5oqjbqTENhFCM4
+         Nf2y5HWrU4IGa3RSCXshIADHMup8SfjK+hjIwSr025AtgjMZQCLsJIekVDPMwoKjfa6+
+         8DzYnycxGecjC/ui4KRy3JfE01AdRSqjksu0JMm4dnFuEKjeuCDsWm4tBxG8eM9IZjmf
+         yFuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=07k4TlcKY0H7BLbXRw8BDYAuoLrXRbYHdEv/KYsqSU4=;
+        b=CMAkE0TJ0/H/kD3MpgVYo965rALFYNu/vpFVvY2//gpC9rn71YCeN/OUBJsUIEI1iq
+         gOJYQ8Yu7E+lijdiC5arvNAthGWMJJa55VKl62cafZLSdEdVDaJuRSwlynPXpT6vCAjX
+         EWH9Cnh5AVTpfH4o6VdZHQtTzCL5k0VuioOawYuwvNORHfq1kt0XxuT27aAxo1g0VncO
+         lDxMGSyl02uCMKNaI+nhhNw4kxZr1GfcC33+tDL3N3+X5DsJFdClV5UWEo+0VyoIskXb
+         pZ/eh+xLNCXgxjfZnWIS841GwiQeoGBZepCkqfMAiek6XKOqzih2xUIsxmKG4qbsnGcz
+         0k7g==
+X-Gm-Message-State: APjAAAUutXNluaYXEWx1PScda0LP76ffIhiFnr+S5wD0VJl5zKQtk9eN
+        Lv43fpItT1Ze0tiV4obfgAdl64HVuQMk4Ag/88efHA==
+X-Google-Smtp-Source: APXvYqzkiTFz9JxPgxjfcvoaXi9BhxI9lFB1zec6ECI6cqMgVTmmfo4fX6mRQgPvTm7htW1vk/7U5Q7/kFuTjD+RbyQ=
+X-Received: by 2002:a2e:8602:: with SMTP id a2mr7211268lji.20.1570727376267;
+ Thu, 10 Oct 2019 10:09:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191004154817.GL17454@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191010083609.660878383@linuxfoundation.org>
+In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 10 Oct 2019 22:39:23 +0530
+Message-ID: <CA+G9fYsypoQHnYTeZJgeYecwTtbnVyRf=0y3Gm5EuGwLr2PKrg@mail.gmail.com>
+Subject: Re: [PATCH 5.3 000/148] 5.3.6-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 11:48:17AM -0400, Sasha Levin wrote:
->On Wed, Jul 31, 2019 at 01:02:03AM +0000, Michael Kelley wrote:
->>From: Himadri Pandya <himadrispandya@gmail.com> Sent: Wednesday, July 24, 2019 10:11 PM
->>>
->>>Older windows hosts require the hv_sock ring buffer to be defined
->>>using 4K pages. This was achieved by using the symbol PAGE_SIZE_4K
->>>defined specifically for this purpose. But now we have a new symbol
->>>HV_HYP_PAGE_SIZE defined in hyperv-tlfs which can be used for this.
->>>
->>>This patch removes the definition of symbol PAGE_SIZE_4K and replaces
->>>its usage with the symbol HV_HYP_PAGE_SIZE. This patch also aligns
->>>sndbuf and rcvbuf to hyper-v specific page size using HV_HYP_PAGE_SIZE
->>>instead of the guest page size(PAGE_SIZE) as hyper-v expects the page
->>>size to be 4K and it might not be the case on ARM64 architecture.
->>>
->>>Signed-off-by: Himadri Pandya <himadri18.07@gmail.com>
->>>---
->>> net/vmw_vsock/hyperv_transport.c | 21 +++++++++++----------
->>> 1 file changed, 11 insertions(+), 10 deletions(-)
->>>
->>>diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
->>>index f2084e3f7aa4..ecb5d72d8010 100644
->>>--- a/net/vmw_vsock/hyperv_transport.c
->>>+++ b/net/vmw_vsock/hyperv_transport.c
->>>@@ -13,15 +13,16 @@
->>> #include <linux/hyperv.h>
->>> #include <net/sock.h>
->>> #include <net/af_vsock.h>
->>>+#include <asm/hyperv-tlfs.h>
->>>
->>
->>Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
->>
->>This patch depends on a prerequisite patch in
->>
->>  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/hyperv
->>
->>that defines HV_HYP_PAGE_SIZE.
+On Thu, 10 Oct 2019 at 14:09, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
->David, the above prerequisite patch is now upstream, so this patch
->should be good to go. Would you take it through the net tree or should I
->do it via the hyperv tree?
+> This is the start of the stable review cycle for the 5.3.6 release.
+> There are 148 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.3.6-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.3.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Ping?
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
--- 
-Thanks,
-Sasha
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.3.6-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.3.y
+git commit: e863f125e178f8d2edf7a3a03e7fc144d3af82c2
+git describe: v5.3.5-149-ge863f125e178
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/bui=
+ld/v5.3.5-149-ge863f125e178
+
+No regressions (compared to build v5.3.5)
+
+No fixes (compared to build v5.3.5)
+
+Ran 23503 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* spectre-meltdown-checker-test
+* ltp-syscalls-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
