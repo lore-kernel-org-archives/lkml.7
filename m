@@ -2,152 +2,107 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884DAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2920C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62463218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE392218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732842AbfJJGHm (ORCPT
+        id S1732885AbfJJGHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 02:07:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58204 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726983AbfJJGHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 02:07:41 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 821DE867BB2CA994A83A;
-        Thu, 10 Oct 2019 14:07:38 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 10 Oct 2019
- 14:07:36 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     Michal Hocko <mhocko@kernel.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
-References: <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
- <20190924105622.GH23050@dhcp22.suse.cz>
- <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
- <20190924115401.GM23050@dhcp22.suse.cz>
- <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
- <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
-Date:   Thu, 10 Oct 2019 14:07:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Thu, 10 Oct 2019 02:07:49 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43000 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfJJGHs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 02:07:48 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c195so3405070lfg.9;
+        Wed, 09 Oct 2019 23:07:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=GYwpl+dJNMNoXcqNJFFxQgmx1yNVNLIbdWMuM8XH/a0=;
+        b=ekNISIm84MiFipvdd8pp5OrxXwE3qgr0PytWDBaWFGlJuf0WfJqbq7Nwa4zk+5A7cV
+         gRZp0XbA/q7IMJKsjE8oWLcP9xrhih4iOQSmzKlyef44Vq4rjoXagYz/VM9cYo+QY/C0
+         1cPeg8qdN/7zYEKvJXNbJ14mbdJXslkUCx/7ISbAk5wgymAytiQG37ajsEfqCyRW282u
+         8dQ+joUEbyeJ7X4LAno6FZAo6QmhJy7t75mMlULRNCK3ZvaG3+sDiFcBlA0TicHe4Lgi
+         D7igaIebuGDLAoUFyCI0sErK8xzLlND5BuDlDIPUjk2gI0FOZ+FvLQje17cxQ91CrogO
+         DelQ==
+X-Gm-Message-State: APjAAAXixSCYjJMonwx1mxR2YHtFt8lSrzGMZSdMemiYqoW1F0HWDPtQ
+        izwuZWnWdV1rxjR5w6MJgPo=
+X-Google-Smtp-Source: APXvYqz2V7USWc2sG27n/LR7ANjruXPbL1AKm7rjryZYn5k1t8ncB1nNwCuCIs/bQ43h+jqoIzVJiQ==
+X-Received: by 2002:a19:4f0e:: with SMTP id d14mr4567119lfb.177.1570687665921;
+        Wed, 09 Oct 2019 23:07:45 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id q66sm919806ljq.101.2019.10.09.23.07.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 23:07:45 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 09:07:33 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jiri Kosina <trivial@kernel.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] wdt: bd70528: Trivial function documentation fix
+Message-ID: <20191010060733.GA9979@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/9 20:25, Robin Murphy wrote:
-> On 2019-10-08 9:38 am, Yunsheng Lin wrote:
->> On 2019/9/25 18:41, Peter Zijlstra wrote:
->>> On Wed, Sep 25, 2019 at 05:14:20PM +0800, Yunsheng Lin wrote:
->>>>  From the discussion above, It seems making the node_to_cpumask_map()
->>>> NUMA_NO_NODE aware is the most feasible way to move forwad.
->>>
->>> That's still wrong.
->>
->> Hi, Peter
->>
->> It seems this has trapped in the dead circle.
->>
->>  From my understanding, NUMA_NO_NODE which means not node numa preference
->> is the state to describe the node of virtual device or the physical device
->> that has equal distance to all cpu.
->>
->> We can be stricter if the device does have a nearer node, but we can not
->> deny that a device does not have a node numa preference or node affinity,
->> which also means the control or data buffer can be allocated at the node where
->> the process is running.
->>
->> As you has proposed, making it -2 and have dev_to_node() warn if the device does
->> have a nearer node and not set by the fw is a way to be stricter.
->>
->> But I think maybe being stricter is not really relevant to NUMA_NO_NODE, because
->> we does need a state to describe the device that have equal distance to all node,
->> even if it is not physically scalable.
->>
->> Any better suggestion to move this forward?
-> 
-> FWIW (since this is in my inbox), it sounds like the fundamental issue is that NUMA_NO_NODE is conflated for at least two different purposes, so trying to sort that out would be a good first step. AFAICS we have genuine "don't care" cases like alloc_pages_node(), where if the producer says it doesn't matter then the consumer is free to make its own judgement on what to do, and fundamentally different "we expect this thing to have an affinity but it doesn't, so we can't say what's appropriate" cases which could really do with some separate indicator like "NUMA_INVALID_NODE".
-> 
-> The tricky part is then bestowed on the producers to decide whether they can downgrade "invalid" to "don't care". You can technically build 'a device' whose internal logic is distributed between nodes and thus appears to have equal affinity - interrupt controllers, for example, may have per-CPU or per-node interfaces that end up looking like that - so although it's unlikely it's not outright nonsensical. Similarly a 'device' that's actually emulated behind a firmware call interface may well effectively have no real affinity.
+The function documentation for the exported  ROHM BD70528 WDG control
+functions used old argument names. Fix the names.
 
-We may set node of the physical device to NUMA_INVALID_NODE when fw does not
-provide one.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/watchdog/bd70528_wdt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-But what do we do about NUMA_INVALID_NODE when alloc_pages_node() is called
-with nid being NUMA_INVALID_NODE?
-
-If we change the node to default one(like node 0) when node of device is
-NUMA_INVALID_NODE in device_add(), how do we know the default one(like node 0)
-is the right one to choose?
-
-From the privous disccusion, the below seems not get to consensus yet:
-1) Do we need a state like NUMA_NO_NODE to describe that the device does not
-   have any numa preference?
-
-2) What do we do if the fw does not provide a node for the device? Should
-   we guess and pick one for it and how do we do the guessing? Or leave it
-   as it is and handle it as NUMA_NO_NODE?
-
-The point of adding another state like NUMA_INVALID_NODE seems to catch
-the case and give a warning above it when the device does have a nearer
-node and the fw does not provide one, and alloc_pages_node() still need to
-handle it as NUMA_NO_NODE?
-
-If the above is true, then maybe we can move forward with the above goal.
-
-Thanks very much for the suggestion.
-
-> 
+diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
+index b0152fef4fc7..439f9920978a 100644
+--- a/drivers/watchdog/bd70528_wdt.c
++++ b/drivers/watchdog/bd70528_wdt.c
+@@ -97,7 +97,7 @@ EXPORT_SYMBOL(bd70528_wdt_set);
+ /**
+  * bd70528_wdt_lock - take WDT lock
+  *
+- * @bd70528:	device data for the PMIC instance we want to operate on
++ * @data:	device data for the PMIC instance we want to operate on
+  *
+  * Lock WDT for arming/disarming in order to avoid race condition caused
+  * by WDT state changes initiated by WDT and RTC drivers.
+@@ -114,7 +114,7 @@ EXPORT_SYMBOL(bd70528_wdt_lock);
+ /**
+  * bd70528_wdt_unlock - unlock WDT lock
+  *
+- * @bd70528:	device data for the PMIC instance we want to operate on
++ * @data:	device data for the PMIC instance we want to operate on
+  *
+  * Unlock WDT lock which has previously been taken by call to
+  * bd70528_wdt_lock.
+-- 
+2.21.0
 
 
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-> Robin.
-> 
-> .
-> 
-
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
