@@ -2,258 +2,164 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE070C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD995C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAAE20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:32:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="rEAgOEFU"
+	by mail.kernel.org (Postfix) with ESMTP id 902C320679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387745AbfJJJc4 (ORCPT
+        id S2388107AbfJJJdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:32:56 -0400
-Received: from mail-eopbgr770132.outbound.protection.outlook.com ([40.107.77.132]:7502
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733134AbfJJJc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:32:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bcVtowPkP7jwJJ5bqOm+J9nzzmQcX/KCdEB+rcpCgaftjUKGK6fuZtWS/8C0UeDk745suaSsDJDhwvQcVp+wjKe4SrXPTuT/DtoFQ0qa62r4fwocAx10S6KwvVgItetsAF8kyMNLbiePZuHwYcR9NVaX4nwUiVCCzTozLGrdKC/bYSjXZYLHiRTdFll2uuZCfrGWA/2+SrYl4TzvUd5W500Cbiy04dy/jh0ZD2dxm/36BX5bCRILJecicm5xzSx82c0E5wNBQWL3IZejwAin0ZQNOHFiY8YTY1pEfFsVx2732XYqHqk4PSphC/ml4bO34Npm0xul22Jro8Fogt4A1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rrgTNskGg8ZuhmFhtCjGXkTrtLDGZr+OZQHgY6yQ/BY=;
- b=UzQh2Yprnxob11qgJyfhmfCA4Ysvx11nxXrj3qBhIGSXhvHeX2mB6iO3QDVTdjd5E/bGg9GZF2BlCCjsuexAouzq3/1dfCjEQ+Dm4qsxJls66adPz7QyCFvp33A1IpU8uvngMg+oPGlU2zwinceynLMuyffhG15bRyGJKbsMgRXJEOpM2Eq8ZWddOdIH0nMXE9brk+yB9aLOM69OJGh4Adu6Nwt5miC2Avbv1ncayWYBSJmAfkdZs3yQI9izaL7YMLJMYTj4DoDfvP5FIhffN+5Z37FboWHei8pVrnLUXsVrnwOv/syE3YlYp9JQ3TflMcp+PtdQmhQwU/+KkFAkOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rrgTNskGg8ZuhmFhtCjGXkTrtLDGZr+OZQHgY6yQ/BY=;
- b=rEAgOEFUHoPvhEJ3NyR/nEy5N/dTH/EWRwBOuBH0oDbkNDJ598RcwLKtqWX3+R37y3T6C7G34dsgX1beFPv5jCRWa4tE1erGhHeFZX2z76DiAE5Gg/hRnUAqEbi5DhbXlCFmyf2E9L8lnUnK2Xtr9SrBBZqgyvh0NbiDC/vXA6c=
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com (52.135.120.29) by
- SN6PR04MB5374.namprd04.prod.outlook.com (20.178.6.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.18; Thu, 10 Oct 2019 09:32:53 +0000
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::c55e:6c70:adbb:cf87]) by SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::c55e:6c70:adbb:cf87%5]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
- 09:32:53 +0000
-From:   Xin Ji <xji@analogixsemi.com>
-To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: [PATCH v2 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Thread-Topic: [PATCH v2 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Thread-Index: AQHVf02w0tar4Vo+gkmhei+cTfK0uQ==
-Date:   Thu, 10 Oct 2019 09:32:53 +0000
-Message-ID: <75bb8a47d2c3c1f979c6d62158c21988b846e79b.1570699576.git.xji@analogixsemi.com>
-References: <cover.1570699576.git.xji@analogixsemi.com>
-In-Reply-To: <cover.1570699576.git.xji@analogixsemi.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK0P153CA0034.APCP153.PROD.OUTLOOK.COM
- (2603:1096:203:17::22) To SN6PR04MB4543.namprd04.prod.outlook.com
- (2603:10b6:805:a8::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [114.247.245.252]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a98796f1-9818-403c-f437-08d74d64d346
-x-ms-traffictypediagnostic: SN6PR04MB5374:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR04MB53746A930F2088112C8EB57FC7940@SN6PR04MB5374.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 018632C080
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39850400004)(366004)(136003)(346002)(376002)(199004)(189003)(99286004)(4326008)(71200400001)(71190400001)(6506007)(256004)(52116002)(386003)(76176011)(316002)(305945005)(2906002)(7736002)(186003)(102836004)(478600001)(25786009)(118296001)(26005)(14454004)(66066001)(8676002)(446003)(11346002)(86362001)(6436002)(5660300002)(8936002)(6306002)(2501003)(81166006)(81156014)(6512007)(486006)(54906003)(110136005)(7416002)(6116002)(3846002)(2616005)(6486002)(476003)(66556008)(66946007)(66476007)(107886003)(64756008)(66446008)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5374;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VNKIk+ezn9/3Oq0wGijk9CdJElpYUOP9DKOfMMxD+12e/jpY2j1DZ+uCwdgjvIcVPI2YBEoFmkMpdmmqlNnPj3Odpb5CvNBr6HhMUEMfeMVuXPJrhx+Oo+j5yzHowFXsMw744UYzeDLpKEJ3KTN4DZehvgCQRBDmYieH3MXgy/kuntEbHNzlZ5LOBlroU4PGQH3oippssDEPxB3zSESK55IGChKCWvcoic8mdHA1FGzEcRC3xUc11ahE7zy8iIq5slkNc+3qgl1u6cM8xehNuAV6kupF2vVOQFWKMfyV0Fevv25egBvrraCHJWeWWePeekusQnzpgxmmNaH/zXEcXrneMEZWLRMSzlhnAtakFMHSTHGruyWRWHrkz0vCoymZoj//BAuO5BxB7cLg9UpRU7O1paVTX1TX9javd+Z9sZ5pjpMYTEIuaYJS/Ld8NJC40Paj0RXX4gBWFbUXl4inug==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E8563689AB4F514E8864186E35B468E8@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 10 Oct 2019 05:33:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38974 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387803AbfJJJdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 05:33:00 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5D9AE81DF7
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:32:59 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id i10so2448073wrb.20
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:32:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hHaFcnAL50S5bJDTlPYhhk0RlrftYjgtnZsbNVxdruw=;
+        b=Ykl1GGreHpaoTqksPuagrOwjABH8j2un+ma0SIl8rrJpAAw/HyS7QnXVXzdv36DE38
+         /8okFpOC72bT2rsO7FB1mcKpnjTOUUMb78R/ROqsujN54QnagT3gufhDSnmvPeIS/yK0
+         pvW0ikAbMG1hiHFz5dea9mC63AuKF13rtIfhY59eKd4AYfAeK7eNhDjyAkrJ08tvG5Ez
+         O46B0ovDvvbt+9QACOQ81psEJOXsV1PeCiRqI5KhgzjcQE919PkpPrd43HUow9hJSm0U
+         n8m4ybyYi7tukrt8rEUXvERd2TOirhFj9CturoUi+KWIWcv3F1UiwX5SDuMRLLB4cbVe
+         tRuw==
+X-Gm-Message-State: APjAAAVS5WEaPtR0Y1Lih4bERZjzWW7tg2ScJS/BzMxXGdnz5M+roKsL
+        gb5wws9anStv2HmiRX2N55y3FOlVSdswVizzPz+wkIxvVV4FawlAFF0h4ty6WJ7vKymf7IYVJGq
+        kX63O5yqig1/0lGuwHgxuHkPB
+X-Received: by 2002:adf:f5c2:: with SMTP id k2mr8086192wrp.0.1570699978014;
+        Thu, 10 Oct 2019 02:32:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwZYmKYcpphquBJXQEx7PcBznop7/J4yPxwExmJMbotDVgXFZgLM3mbUlPv6hfBGTfBY51rWA==
+X-Received: by 2002:adf:f5c2:: with SMTP id k2mr8086156wrp.0.1570699977733;
+        Thu, 10 Oct 2019 02:32:57 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id f83sm6597182wmf.43.2019.10.10.02.32.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 02:32:56 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 11:32:54 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 07/13] vsock: handle buffer_size sockopts in the core
+Message-ID: <20191010093254.aluys4hpsfcepb42@steredhat>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-8-sgarzare@redhat.com>
+ <20191009123026.GH5747@stefanha-x1.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a98796f1-9818-403c-f437-08d74d64d346
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 09:32:53.6443
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9ttDePMQPlv/HbvZHwTUYZlKGjgabEC7gzxNUNyxB0emIBYp/EBr/jyjmOZX036t1346PuDi17nTfilsUObOug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5374
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009123026.GH5747@stefanha-x1.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
-for portable device. It converts MIPI to DisplayPort 1.3 4K.
+On Wed, Oct 09, 2019 at 01:30:26PM +0100, Stefan Hajnoczi wrote:
+> On Fri, Sep 27, 2019 at 01:26:57PM +0200, Stefano Garzarella wrote:
+> > @@ -140,18 +145,11 @@ struct vsock_transport {
+> >  		struct vsock_transport_send_notify_data *);
+> >  	int (*notify_send_post_enqueue)(struct vsock_sock *, ssize_t,
+> >  		struct vsock_transport_send_notify_data *);
+> > +	int (*notify_buffer_size)(struct vsock_sock *, u64 *);
+> 
+> Is ->notify_buffer_size() called under lock_sock(sk)?  If yes, please
+> document it.
 
-You can add support to your board with binding.
+Yes, it is. I'll document it!
 
-Example:
-	anx7625_bridge: encoder@58 {
-		compatible =3D "analogix,anx7625";
-		reg =3D <0x58>;
-		status =3D "okay";
-		panel-flags =3D <1>;
-		enable-gpios =3D <&pio 45 GPIO_ACTIVE_HIGH>;
-		reset-gpios =3D <&pio 73 GPIO_ACTIVE_HIGH>;
-		#address-cells =3D <1>;
-		#size-cells =3D <0>;
+> 
+> > +static void vsock_update_buffer_size(struct vsock_sock *vsk,
+> > +				     const struct vsock_transport *transport,
+> > +				     u64 val)
+> > +{
+> > +	if (val > vsk->buffer_max_size)
+> > +		val = vsk->buffer_max_size;
+> > +
+> > +	if (val < vsk->buffer_min_size)
+> > +		val = vsk->buffer_min_size;
+> > +
+> > +	if (val != vsk->buffer_size &&
+> > +	    transport && transport->notify_buffer_size)
+> > +		transport->notify_buffer_size(vsk, &val);
+> 
+> Why does this function return an int if we don't check the return value?
+> 
 
-		port@0 {
-		  reg =3D <0>;
-		  anx_1_in: endpoint {
-		    remote-endpoint =3D <&mipi_dsi>;
-		  };
-		};
+Copy and past :-(
+I'll fix it returning void since I don't think it can fail.
 
-		port@3 {
-		  reg =3D <3>;
-		  anx_1_out: endpoint {
-		    remote-endpoint =3D <&panel_in>;
-		  };
-		};
-	};
+> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > index fc046c071178..bac9e7430a2e 100644
+> > --- a/net/vmw_vsock/virtio_transport_common.c
+> > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > @@ -403,17 +403,13 @@ int virtio_transport_do_socket_init(struct vsock_sock *vsk,
+> >  	if (psk) {
+> >  		struct virtio_vsock_sock *ptrans = psk->trans;
+> >  
+> > -		vvs->buf_size	= ptrans->buf_size;
+> > -		vvs->buf_size_min = ptrans->buf_size_min;
+> > -		vvs->buf_size_max = ptrans->buf_size_max;
+> >  		vvs->peer_buf_alloc = ptrans->peer_buf_alloc;
+> > -	} else {
+> > -		vvs->buf_size = VIRTIO_VSOCK_DEFAULT_BUF_SIZE;
+> > -		vvs->buf_size_min = VIRTIO_VSOCK_DEFAULT_MIN_BUF_SIZE;
+> > -		vvs->buf_size_max = VIRTIO_VSOCK_DEFAULT_MAX_BUF_SIZE;
+> >  	}
+> >  
+> > -	vvs->buf_alloc = vvs->buf_size;
+> > +	if (vsk->buffer_size > VIRTIO_VSOCK_MAX_BUF_SIZE)
+> > +		vsk->buffer_size = VIRTIO_VSOCK_MAX_BUF_SIZE;
+> 
+> Hmm...this could be outside the [min, max] range.  I'm not sure how much
+> it matters.
 
-Signed-off-by: Xin Ji <xji@analogixsemi.com>
----
- .../bindings/display/bridge/anx7625.yaml           | 96 ++++++++++++++++++=
-++++
- 1 file changed, 96 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
-5.yaml
+The core guarantees that vsk->buffer_size is <= of the max, so since we are
+lowering it, the max should be respected. For the min you are right,
+but I think this limit is stricter than the min set by the user.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.yaml =
-b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-new file mode 100644
-index 0000000..fc84683
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-@@ -0,0 +1,96 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Analogix Semiconductor, Inc.
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
-+
-+maintainers:
-+  - Xin Ji <xji@analogixsemi.com>
-+
-+description: |
-+  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
-+  designed for portable devices.
-+
-+properties:
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+  compatible:
-+    items:
-+      - const: analogix,anx7625
-+
-+  reg:
-+    maxItems: 1
-+
-+  panel-flags:
-+    description: indicate the panel is internal or external
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  enable-gpios:
-+    description: used for power on chip control, POWER_EN pin D2.
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description: used for reset chip control, RESET_N pin B7.
-+    maxItems: 1
-+
-+  port@0:
-+    type: object
-+    description:
-+      A port node pointing to MIPI DSI host port node.
-+
-+  port@1:
-+    type: object
-+    description:
-+      A port node pointing to MIPI DPI host port node.
-+
-+  port@2:
-+    type: object
-+    description:
-+      A port node pointing to external connector port node.
-+
-+  port@3:
-+    type: object
-+    description:
-+      A port node pointing to eDP port node.
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+  - compatible
-+  - reg
-+  - port@0
-+  - port@3
-+
-+example:
-+  - |
-+    anx7625_bridge: encoder@58 {
-+        compatible =3D "analogix,anx7625";
-+        reg =3D <0x58>;
-+        status =3D "okay";
-+        panel-flags =3D <1>;
-+        enable-gpios =3D <&pio 45 GPIO_ACTIVE_HIGH>;
-+        reset-gpios =3D <&pio 73 GPIO_ACTIVE_HIGH>;
-+        #address-cells =3D <1>;
-+        #size-cells =3D <0>;
-+
-+        port@0 {
-+          reg =3D <0>;
-+          anx_1_in: endpoint {
-+            remote-endpoint =3D <&mipi_dsi>;
-+          };
-+        };
-+
-+        port@3 {
-+          reg =3D <3>;
-+          anx_1_out: endpoint {
-+            remote-endpoint =3D <&panel_in>;
-+          };
-+        };
-+    };
---=20
-2.7.4
+> 
+> Another issue is that this patch drops the VIRTIO_VSOCK_MAX_BUF_SIZE
+> limit that used to be enforced by virtio_transport_set_buffer_size().
+> Now the limit is only applied at socket init time.  If the buffer size
+> is changed later then VIRTIO_VSOCK_MAX_BUF_SIZE can be exceeded.  If
+> that doesn't matter, why even bother with VIRTIO_VSOCK_MAX_BUF_SIZE
+> here?
+> 
 
+The .notify_buffer_size() should avoid this issue, since it allows the
+transport to limit the buffer size requested after the initialization.
+
+But again the min set by the user can not be respected and in the
+previous implementation we forced it to VIRTIO_VSOCK_MAX_BUF_SIZE.
+
+Now we don't limit the min, but we guarantee only that vsk->buffer_size
+is lower than VIRTIO_VSOCK_MAX_BUF_SIZE.
+
+Can that be an acceptable compromise?
+
+Thanks,
+Stefano
