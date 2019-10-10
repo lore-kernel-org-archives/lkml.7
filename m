@@ -2,105 +2,79 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC652C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10513C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51C72064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE27F206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570711497;
-	bh=YMmXtb2JLA8hWzDQQfOgQycNtJFOok7eUnehOSyP+pA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aqzg2oDIUpCPw+qnd9IrPK3OJl+bbkP/C99rSi8UO/UgxQltqb+gbSPe+ll8rmxeu
-	 QzDGYtoxenr0C1lXrGHKUfC2OcstO3lHg57k5ofTw+jTUi4DQuVXcOORy2MExHpj90
-	 j00JZwFKlNgi/5LC0xnWnnPEo8MXywMCzXPE9CxI=
+	s=default; t=1570711676;
+	bh=xH5hUmNUB5+dgxk0q2lFYYcSuqGDN9IgEL40mmPPtqs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TIVMgDjFUquvKn2GLnxwJIwXptCYjVHl0vFiaTj0RQoJ+N+hRajQYW/1eHmpriTwh
+	 i1SNxI+wQmvWYB4Wugt/MANqakvBlPUd2tVCgiTuAl2UPG6n+g5/CDquEXzXy/ogmk
+	 wQDfZKq14Zpj28CMq2xXL664MZ769peTeVYwZa4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387962AbfJJMo4 (ORCPT
+        id S2387844AbfJJMrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:44:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49162 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 08:47:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733191AbfJJMo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:44:56 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1733288AbfJJMrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:47:55 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90E2220B7C;
-        Thu, 10 Oct 2019 12:44:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAE852067B;
+        Thu, 10 Oct 2019 12:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570711495;
-        bh=YMmXtb2JLA8hWzDQQfOgQycNtJFOok7eUnehOSyP+pA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LriOz2qFhwWE9p03RxfAw5yzayh07CQZffd0SfcdLfaXfS1Hb+hO+G+Ur4d8nIH2U
-         YUi80UntVX2mzkp6yJoMMQACXHvwShAcvMC9S+12N4YJh/0pHQreeOohE4Q6wtkfZl
-         DVaHHWkcbwGe2dd3mvLAoEPm1Dt2tS+Te6oBNxKI=
-Received: by mail-qt1-f178.google.com with SMTP id c21so8416191qtj.12;
-        Thu, 10 Oct 2019 05:44:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAWlJkM4VLHaTcCORsHsZm3X8OWfzZb/ex5imGi+ufwn7x2xELFT
-        bAIfhqmGxtako1nHMXQ7cVVDu042JoIiNGnNdg==
-X-Google-Smtp-Source: APXvYqwNvmWSytFEH52LryQ2mgDyEBuHBeeq3gQeZfuuroZ1Dr7vv+ZkYoV5zzwGc/l367nh1bLcdlmGVo4hk6usLJc=
-X-Received: by 2002:a0c:e606:: with SMTP id z6mr9343421qvm.135.1570711494582;
- Thu, 10 Oct 2019 05:44:54 -0700 (PDT)
+        s=default; t=1570711675;
+        bh=xH5hUmNUB5+dgxk0q2lFYYcSuqGDN9IgEL40mmPPtqs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=p8FpxpMXf6WpshIuSefbjbBq2Je8uZRrp5b1fsP8Pr3WVWcNX4PMBPGtol4L3yG0j
+         vzN5AdlKAi96Fv6ceLNiRMIS27shKnLFPnsJZ18T2IbPvoF99dQDkKhFU85xdRvVx3
+         snkhwNUYMk4t1i3o7TEAFHU+nspOkJvgG0+0iOAQ=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Rajat Jain <rajatja@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/1] PCI/ASPM: Remove locking
+Date:   Thu, 10 Oct 2019 07:47:45 -0500
+Message-Id: <20191010124746.2882-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-References: <20191009234648.2271-1-robh@kernel.org> <alpine.DEB.2.21.9999.1910091657240.11044@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1910091657240.11044@viisi.sifive.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 10 Oct 2019 07:44:43 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK==+6QPrx3NDobYfWQwRg9m-t0LZgL=KzqfhAfbu+xTg@mail.gmail.com>
-Message-ID: <CAL_JsqK==+6QPrx3NDobYfWQwRg9m-t0LZgL=KzqfhAfbu+xTg@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 7:08 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> On Wed, 9 Oct 2019, Rob Herring wrote:
->
-> > Fix the errors in the RiscV CPU DT schema:
-> >
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
-> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-> >
-> > The DT spec allows for 'timebase-frequency' to be in 'cpu' or 'cpus' node
-> > and RiscV is doing nothing special with it, so just drop the definition
-> > here and don't make it required.
->
-> The RISC-V kernel code does in fact parse it and use it, and we currently
-> rely on it being under /cpus:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/time.c#n19
->
-> The RISC-V user ISA specification also constrains the timebase-frequency
-> to be the same across all CPUs, in section 10.1:
->
->   https://github.com/riscv/riscv-isa-manual/releases/download/draft-20190608-f467e5d/riscv-spec.pdf
->
-> So the right thing is to require 'timebase-frequency' at /cpus, and forbid
-> it in the individual CPU nodes.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Yes, but this schema only deals with 'cpu' nodes and we can't check
-/cpus here. We'd need to write another schema matching on a child cpu
-node having a RiscV compatible.
+In reference to this thread:
+  https://lore.kernel.org/r/20191007223428.GA72605@google.com
 
-I can change this to 'timebase-frequency: false' to ban it here. That
-doesn't add too much as any undefined name is still allowed such as
-'timbase-frequency'. There's a way to address this in json-schema
-draft8 with 'unevaluatedProperties', but that's not ready yet.
+This removes locking from pcie_aspm_enabled() because the reference count
+held by the driver should provide all the locking we need.
 
-Rob
+Bjorn Helgaas (1):
+  PCI/ASPM: Remove pcie_aspm_enabled() unnecessary locking
+
+ drivers/pci/pcie/aspm.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+-- 
+2.23.0.581.g78d2f28ef7-goog
+
