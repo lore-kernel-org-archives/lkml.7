@@ -2,349 +2,106 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B6DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914D5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02FD22067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA4420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMp34YA3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BgqoRbf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387884AbfJJJSz (ORCPT
+        id S2387942AbfJJJVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:18:55 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34906 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387561AbfJJJSy (ORCPT
+        Thu, 10 Oct 2019 05:21:12 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58208 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387463AbfJJJVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:18:54 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v8so4813098eds.2;
-        Thu, 10 Oct 2019 02:18:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PfylDcjQHOyDfKCfGN7CUwC2z5Nw+1R84ekB8+XNDyw=;
-        b=SMp34YA3UQ+fuFMd80I0QbWcRDhdHPxJSh9xHhHX+rDVSkSKR4YL6fYeLAaAAV94qn
-         tLJwKrDSzESQWqG3ZHIeU55PeZ9Z1tdPTPXxPKfuh5W7FrYdI+13uPrOZCORcI6zEIXv
-         PtAvto7poB2xXNmR+DDnBqHZEoM1q0WAGlzT3GAUEzraSVWQ1Sxmd/IxvU/vs6JCRy/g
-         rJl4S+QT6Yt57Htd4Kcs6M5+29tw/P5daOg75AYlB+khvejwqZyIQANkDUtrjmC+fyXG
-         zJXqzQkm48pUxwYpKuk8/HAuXihFHJTICn+qQh9ioWyS6BjptBTn05QBxuqFgmGsqepa
-         dAUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PfylDcjQHOyDfKCfGN7CUwC2z5Nw+1R84ekB8+XNDyw=;
-        b=M210TZuC3of55yiXCn2bTvemqvPzno9lV8hTisEeY+aCHPW0AEAqElJ2wiPDZhPBl6
-         6GKwE79Sp7tF5q0hb0Zw3PZuAUYlyKN3LHT/bWTlKmixs33Wcmk5zwUJJZccNEaAD1Xn
-         yQ/oRxD3LKN+haFnFOmQPP8iOm5T+tjIG5NuOkOWuzEeE5A4Ps8EFNKA2o5+lQf2trRs
-         Lhf3hfZLRki8jjrIH+dyAoH3OUzXMYDLPIklrtY2HQvDvV63Rseiw5NQU4YkgfPCjFsh
-         qZdEGuOK/IwvNjEikmwR4VTwwP/e+7mxw9CPAxKNIkkQb0saZw+/r1PirgmQNh0ywJDa
-         MIww==
-X-Gm-Message-State: APjAAAUi8cUkh42awDo/tY5hkCn3fqEEe8Y4lCcI8vN1c6M+M+YFORso
-        bUTVxWjAbBQDu8J8jPLRL8k=
-X-Google-Smtp-Source: APXvYqzLaPZOBQV7CKfFNRDdsp9kRpcj0LxzV7V6s8H67alanYnCOfyoVappviJJzE4bfdCGAGNUhQ==
-X-Received: by 2002:a17:906:7212:: with SMTP id m18mr7098220ejk.88.1570699132012;
-        Thu, 10 Oct 2019 02:18:52 -0700 (PDT)
-Received: from Limone ([46.114.37.24])
-        by smtp.gmail.com with ESMTPSA id v27sm591386ejg.11.2019.10.10.02.18.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 02:18:51 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 11:18:48 +0200
-From:   Gon Solo <gonsolo@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] media: af9035: add support for Logilink VG0022A
-Message-ID: <20191010091848.GA2898@Limone>
-References: <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
- <9618316567493f917c41109f7dba94e533fbfb4b.1570194906.git.mchehab+samsung@kernel.org>
- <20191009214405.GA3621@Limone>
- <20191009220418.GA3131@Limone>
+        Thu, 10 Oct 2019 05:21:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dM+zNGSNOaaeInNQWIpN++xOSr2s5LE3tb5oYqXmsDk=; b=BgqoRbf8yoW75UGASXF0z271y
+        +I7Rmq8VsjAqIUZI7sGA+Sw9AHCNQnH0GV8qNoghODvF19KAM9nDybqOl1A7R6/Ig32PV7b/1w2FG
+        jHhW137wJkZRnIzsGafbCbZU3ynvwCqoK8nk0KkYkyNOgSBnh+D3aIChvsW6li15O6Rl5dOUT/6fj
+        fMj+91tlNlNY5QBuVlsVQSHpfhRGmy9rUHAU/NhQ2elzFr9xyT0zebHIekSMRb7u/9fxsn4IMoJic
+        mnZ7M4i7tRWnY6Sh3C++UORyTKn1d1KRXc4dWAjM0OKba1fgPd4mDVo0okHoDcxrwb82bTmaXX+rh
+        /dUSyeBug==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iIUcy-00013x-K3; Thu, 10 Oct 2019 09:20:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AE3C1307092;
+        Thu, 10 Oct 2019 11:20:02 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id ACD9720C3749A; Thu, 10 Oct 2019 11:20:54 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 11:20:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+References: <20191007081716.07616230.8@infradead.org>
+ <20191007081945.10951536.8@infradead.org>
+ <20191008104335.6fcd78c9@gandalf.local.home>
+ <20191009224135.2dcf7767@oasis.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191009220418.GA3131@Limone>
+In-Reply-To: <20191009224135.2dcf7767@oasis.local.home>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Wed, Oct 09, 2019 at 10:41:35PM -0400, Steven Rostedt wrote:
+> On Tue, 8 Oct 2019 10:43:35 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> 
+> > BTW, I'd really like to take this patch series through my tree. That
+> > way I can really hammer it, as well as I have code that will be built
+> > on top of it.
+> 
+> I did a bit of hammering and found two bugs. One I sent a patch to fix
+> (adding a module when tracing is enabled), but the other bug I
+> triggered, I'm too tired to debug right now. But figured I'd mention it
+> anyway.
 
-This patch works for me. It disables firmware downloading for the si2157
-instead of the si2168.
+I'm thinking this should fix it... Just not sure this is the right plce,
+then again, we're doing the same thing in jump_label and static_call, so
+perhaps we should do it like this.
 
-Convert si2157 and si2168 to kernel-doc format as suggested by Mauro.
-Use bits instead of bool.  Add a flag to si2157 for not loading the
-firmware.  Make computation of speed register clear. Add hack for
-Logilink VG0022A.
-
-Signed-off-by: Andreas Wendleder <andreas.wendleder@gmail.com>
-
-diff --git a/drivers/media/dvb-frontends/si2168.h b/drivers/media/dvb-frontends/si2168.h
-index 50dccb394efa..ecd21adf8950 100644
---- a/drivers/media/dvb-frontends/si2168.h
-+++ b/drivers/media/dvb-frontends/si2168.h
-@@ -9,38 +9,43 @@
- #define SI2168_H
- 
- #include <linux/dvb/frontend.h>
--/*
-- * I2C address
-- * 0x64
-+/**
-+ * struct si2168_config - configuration parameters for si2168
-+ *
-+ * @fe:
-+ *	frontend returned by driver
-+ * @i2c_adapter:
-+ *	tuner I2C adapter returned by driver
-+ * @ts_mode:
-+ *	Transport Stream mode. Can be:
-+ *	- %SI2168_TS_PARALLEL
-+ *	- %SI2168_TS_SERIAL
-+ *	- %SI2168_TS_TRISTATE
-+ *	- %SI2168_TS_CLK_MANUAL
-+ * @ts_clock_inv:
-+ *	TS clock inverted
-+ * @ts_clock_gapped:
-+ *	TS clock gapped
-+ * @spectral_inversion:
-+ *	Inverted spectrum
-+ *
-+ * Note:
-+ *	The I2C address of this demod is 0x64.
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1230,10 +1230,15 @@ void text_poke_queue(void *addr, const v
+  * dynamically allocated memory. This function should be used when it is
+  * not possible to allocate memory.
   */
- struct si2168_config {
--	/*
--	 * frontend
--	 * returned by driver
--	 */
- 	struct dvb_frontend **fe;
--
--	/*
--	 * tuner I2C adapter
--	 * returned by driver
--	 */
- 	struct i2c_adapter **i2c_adapter;
+-void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
++void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
+ {
+ 	struct text_poke_loc tp;
  
--	/* TS mode */
- #define SI2168_TS_PARALLEL	0x06
- #define SI2168_TS_SERIAL	0x03
- #define SI2168_TS_TRISTATE	0x00
- #define SI2168_TS_CLK_MANUAL	0x20
- 	u8 ts_mode;
- 
--	/* TS clock inverted */
--	bool ts_clock_inv;
--
--	/* TS clock gapped */
--	bool ts_clock_gapped;
--
--	/* Inverted spectrum */
--	bool spectral_inversion;
-+	/* Flags */
-+	unsigned int ts_clock_inv:1;
-+	unsigned int ts_clock_gapped:1;
-+	unsigned int spectral_inversion:1;
- };
- 
- #endif
-diff --git a/drivers/media/dvb-frontends/si2168_priv.h b/drivers/media/dvb-frontends/si2168_priv.h
-index 804d5b30c697..18bea5222082 100644
---- a/drivers/media/dvb-frontends/si2168_priv.h
-+++ b/drivers/media/dvb-frontends/si2168_priv.h
-@@ -34,12 +34,12 @@ struct si2168_dev {
- 	unsigned int chip_id;
- 	unsigned int version;
- 	const char *firmware_name;
--	bool active;
--	bool warm;
- 	u8 ts_mode;
--	bool ts_clock_inv;
--	bool ts_clock_gapped;
--	bool spectral_inversion;
-+	unsigned int active:1;
-+	unsigned int warm:1;
-+	unsigned int ts_clock_inv:1;
-+	unsigned int ts_clock_gapped:1;
-+	unsigned int spectral_inversion:1;
- };
- 
- /* firmware command struct */
-diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
-index e87040d6eca7..898e0f9f8b70 100644
---- a/drivers/media/tuners/si2157.c
-+++ b/drivers/media/tuners/si2157.c
-@@ -118,6 +118,11 @@ static int si2157_init(struct dvb_frontend *fe)
- 			goto err;
- 	}
- 
-+	if (dev->dont_load_firmware) {
-+		dev_info(&client->dev, "device is buggy, skipping firmware download\n");
-+		goto skip_fw_download;
++	if (unlikely(system_state == SYSTEM_BOOTING)) {
++		text_poke_early(addr, opcode, len);
++		return;
 +	}
 +
- 	/* query chip revision */
- 	memcpy(cmd.args, "\x02", 1);
- 	cmd.wlen = 1;
-@@ -440,6 +445,7 @@ static int si2157_probe(struct i2c_client *client,
- 	i2c_set_clientdata(client, dev);
- 	dev->fe = cfg->fe;
- 	dev->inversion = cfg->inversion;
-+	dev->dont_load_firmware = cfg->dont_load_firmware;
- 	dev->if_port = cfg->if_port;
- 	dev->chiptype = (u8)id->driver_data;
- 	dev->if_frequency = 5000000; /* default value of property 0x0706 */
-diff --git a/drivers/media/tuners/si2157.h b/drivers/media/tuners/si2157.h
-index c22ca784f43f..ffdece3c2eaa 100644
---- a/drivers/media/tuners/si2157.h
-+++ b/drivers/media/tuners/si2157.h
-@@ -11,29 +11,34 @@
- #include <media/media-device.h>
- #include <media/dvb_frontend.h>
- 
--/*
-- * I2C address
-- * 0x60
-+/**
-+ * struct si2157_config - configuration parameters for si2157
-+ *
-+ * @fe:
-+ *	frontend returned by driver
-+ * @mdev:
-+ *	media device returned by driver
-+ * @inversion:
-+ *	spectral inversion
-+ * @dont_load_firmware:
-+ *	Instead of uploading a new firmware, use the existing one
-+ * @if_port:
-+ *	Port selection
-+ *	Select the RF interface to use (pins 9+11 or 12+13)
-+ *
-+ * Note:
-+ *	The I2C address of this demod is 0x60.
-  */
- struct si2157_config {
--	/*
--	 * frontend
--	 */
- 	struct dvb_frontend *fe;
- 
- #if defined(CONFIG_MEDIA_CONTROLLER)
- 	struct media_device *mdev;
- #endif
- 
--	/*
--	 * Spectral Inversion
--	 */
--	bool inversion;
-+	unsigned int inversion:1;
-+	unsigned int dont_load_firmware:1;
- 
--	/*
--	 * Port selection
--	 * Select the RF interface to use (pins 9+11 or 12+13)
--	 */
- 	u8 if_port;
- };
- 
-diff --git a/drivers/media/tuners/si2157_priv.h b/drivers/media/tuners/si2157_priv.h
-index 2bda903358da..778f81b39996 100644
---- a/drivers/media/tuners/si2157_priv.h
-+++ b/drivers/media/tuners/si2157_priv.h
-@@ -23,8 +23,9 @@ enum si2157_pads {
- struct si2157_dev {
- 	struct mutex i2c_mutex;
- 	struct dvb_frontend *fe;
--	bool active;
--	bool inversion;
-+	unsigned int active:1;
-+	unsigned int inversion:1;
-+	unsigned int dont_load_firmware:1;
- 	u8 chiptype;
- 	u8 if_port;
- 	u32 if_frequency;
-diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
-index 3afd18733614..792667ee5ebc 100644
---- a/drivers/media/usb/dvb-usb-v2/af9035.c
-+++ b/drivers/media/usb/dvb-usb-v2/af9035.c
-@@ -1197,6 +1197,15 @@ static int af9035_frontend_attach(struct dvb_usb_adapter *adap)
- 	return ret;
+ 	text_poke_loc_init(&tp, addr, opcode, len, emulate);
+ 	text_poke_bp_batch(&tp, 1);
  }
- 
-+/*
-+ * The I2C speed register is calculated with:
-+ *	I2C speed register = (1000000000 / (24.4 * 16 * I2C_speed))
-+ *
-+ * The default speed register for it930x is 7, with means a
-+ * speed of ~366 kbps
-+ */
-+#define I2C_SPEED_366K 7
-+
- static int it930x_frontend_attach(struct dvb_usb_adapter *adap)
- {
- 	struct state *state = adap_to_priv(adap);
-@@ -1208,13 +1217,13 @@ static int it930x_frontend_attach(struct dvb_usb_adapter *adap)
- 
- 	dev_dbg(&intf->dev, "adap->id=%d\n", adap->id);
- 
--	/* I2C master bus 2 clock speed 300k */
--	ret = af9035_wr_reg(d, 0x00f6a7, 0x07);
-+	/* I2C master bus 2 clock speed 366k */
-+	ret = af9035_wr_reg(d, 0x00f6a7, I2C_SPEED_366K);
- 	if (ret < 0)
- 		goto err;
- 
--	/* I2C master bus 1,3 clock speed 300k */
--	ret = af9035_wr_reg(d, 0x00f103, 0x07);
-+	/* I2C master bus 1,3 clock speed 366k */
-+	ret = af9035_wr_reg(d, 0x00f103, I2C_SPEED_366K);
- 	if (ret < 0)
- 		goto err;
- 
-@@ -1610,6 +1619,24 @@ static int it930x_tuner_attach(struct dvb_usb_adapter *adap)
- 
- 	memset(&si2157_config, 0, sizeof(si2157_config));
- 	si2157_config.fe = adap->fe[0];
-+
-+	/*
-+	 * HACK: The Logilink VG0022A has a bug: when the si2157
-+	 * firmware that came with the device is replaced by a new
-+	 * one, the I2C transfers to the tuner will return just 0xff.
-+	 *
-+	 * Probably, the vendor firmware has some patch specifically
-+	 * designed for this device. So, we can't replace by the
-+	 * generic firmware. The right solution would be to extract
-+	 * the si2157 firmware from the original driver and ask the
-+	 * driver to load the specifically designed firmware, but,
-+	 * while we don't have that, the next best solution is to just
-+	 * keep the original firmware at the device.
-+	 */
-+	if (le16_to_cpu(d->udev->descriptor.idVendor) == USB_VID_DEXATEK &&
-+	    le16_to_cpu(d->udev->descriptor.idProduct) == 0x0100)
-+		si2157_config.dont_load_firmware = true;
-+
- 	si2157_config.if_port = it930x_addresses_table[state->it930x_addresses].tuner_if_port;
- 	ret = af9035_add_i2c_dev(d, "si2157",
- 				 it930x_addresses_table[state->it930x_addresses].tuner_i2c_addr,
-@@ -2121,6 +2148,8 @@ static const struct usb_device_id af9035_id_table[] = {
- 		&it930x_props, "ITE 9303 Generic", NULL) },
- 	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_TD310,
- 		&it930x_props, "AVerMedia TD310 DVB-T2", NULL) },
-+	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x0100,
-+		&it930x_props, "Logilink VG0022A", NULL) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(usb, af9035_id_table);
