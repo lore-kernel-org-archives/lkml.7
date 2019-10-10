@@ -2,57 +2,53 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB208C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA110C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47A22064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49082064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697589;
-	bh=QzZUIKgGeYlbpmGf0NnBsRvUqyBwNvPwsxQAVxza750=;
+	s=default; t=1570697592;
+	bh=TqBS6N8JkjqsvgsJ/jI7B4BEZAuyA9Xbhww9WsgX4Bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2D+dbfmPbrZG9a0HGoPB/2f/feC18DYExpVKCzr6Jg1c175cs/rWUe4ZCWQKC+0m
-	 btbg9WPtwOqUI+Px26/YLJ5KcOqoDauaMM3TfhnK1aqn4UxHGR8+fPA99yIZFt1Qdn
-	 sHs9CK8MSSnu/6MlfzJLCgIfRJuKR6y0XgU+Dnqw=
+	b=xT130jsFADRI/SeYx1eWf1/aihSNhqIOLCKU7YDrnAl3fotZfIpQO3g/9Galyl00S
+	 A3FmpPQfo3ILmPvDR3lQrvpdNJc/PBwTjPLp+8LZvoBgkrKKlAIKapLMnhoY83VwdS
+	 4kcltY694RR3ESWrWLFcMcCrIa2LX3DHe+/eGOSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390182AbfJJIv6 (ORCPT
+        id S2390174AbfJJIv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:51:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:51:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389331AbfJJIvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:53 -0400
+        id S2388764AbfJJIvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADAD22064A;
-        Thu, 10 Oct 2019 08:51:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1302821929;
+        Thu, 10 Oct 2019 08:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697512;
-        bh=QzZUIKgGeYlbpmGf0NnBsRvUqyBwNvPwsxQAVxza750=;
+        s=default; t=1570697509;
+        bh=TqBS6N8JkjqsvgsJ/jI7B4BEZAuyA9Xbhww9WsgX4Bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R0L2w0TtOjZCoJU39zStT5g7pt1TFHINdOCkHUlKMm8bkfRQtYSkh/f2UfV5/R+l9
-         eZQFfiHGw40J9nEhPzEbe9kZBcfQecBVoUN4Y2Phn2Be1aaR0YwGNsMa+YFxpQiaBO
-         mIsVgXUUdwjQ+r050XTx+MVmo8gFRXMuk/7hmGrU=
+        b=jneo9MxQPfLt1DnZtOSMQ7gk4ndLdvNdKxgrjo763o7yh9Oq3HJlZW6DpP6au/wPg
+         ck7VC/fH5iVm41UUIZjkJZ27PhoLKxZ6vfgOeqp62w73lBt1sGFu5zExaalvR2wd4V
+         dsOwRuxuH/7dbvk7PX0Opz3yETUOWAGRfyiJhAic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 53/61] perf stat: Fix a segmentation fault when using repeat forever
-Date:   Thu, 10 Oct 2019 10:37:18 +0200
-Message-Id: <20191010083523.076799160@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Aring <alex.aring@gmail.com>,
+        syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>,
+        Stefan Schmidt <stefan@datenfreihafen.org>
+Subject: [PATCH 4.14 26/61] ieee802154: atusb: fix use-after-free at disconnect
+Date:   Thu, 10 Oct 2019 10:36:51 +0200
+Message-Id: <20191010083505.665292632@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -65,108 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 443f2d5ba13d65ccfd879460f77941875159d154 ]
+commit 7fd25e6fc035f4b04b75bca6d7e8daa069603a76 upstream.
 
-Observe a segmentation fault when 'perf stat' is asked to repeat forever
-with the interval option.
+The disconnect callback was accessing the hardware-descriptor private
+data after having having freed it.
 
-Without fix:
+Fixes: 7490b008d123 ("ieee802154: add support for atusb transceiver")
+Cc: stable <stable@vger.kernel.org>     # 4.2
+Cc: Alexander Aring <alex.aring@gmail.com>
+Reported-by: syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
-  #           time             counts unit events
-       5.000211692  3,13,89,82,34,157      cycles
-      10.000380119  1,53,98,52,22,294      cycles
-      10.040467280       17,16,79,265      cycles
-  Segmentation fault
-
-This problem was only observed when we use forever option aka -r 0 and
-works with limited repeats. Calling print_counter with ts being set to
-NULL, is not a correct option when interval is set. Hence avoid
-print_counter(NULL,..)  if interval is set.
-
-With fix:
-
-  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
-   #           time             counts unit events
-       5.019866622  3,15,14,43,08,697      cycles
-      10.039865756  3,15,16,31,95,261      cycles
-      10.059950628     1,26,05,47,158      cycles
-       5.009902655  3,14,52,62,33,932      cycles
-      10.019880228  3,14,52,22,89,154      cycles
-      10.030543876       66,90,18,333      cycles
-       5.009848281  3,14,51,98,25,437      cycles
-      10.029854402  3,15,14,93,04,918      cycles
-       5.009834177  3,14,51,95,92,316      cycles
-
-Committer notes:
-
-Did the 'git bisect' to find the cset introducing the problem to add the
-Fixes tag below, and at that time the problem reproduced as:
-
-  (gdb) run stat -r0 -I500 sleep 1
-  <SNIP>
-  Program received signal SIGSEGV, Segmentation fault.
-  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
-  866		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, csv_sep);
-  (gdb) bt
-  #0  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
-  #1  0x000000000041860a in print_counters (ts=ts@entry=0x0, argc=argc@entry=2, argv=argv@entry=0x7fffffffd640) at builtin-stat.c:938
-  #2  0x0000000000419a7f in cmd_stat (argc=2, argv=0x7fffffffd640, prefix=<optimized out>) at builtin-stat.c:1411
-  #3  0x000000000045c65a in run_builtin (p=p@entry=0x6291b8 <commands+216>, argc=argc@entry=5, argv=argv@entry=0x7fffffffd640) at perf.c:370
-  #4  0x000000000045c893 in handle_internal_command (argc=5, argv=0x7fffffffd640) at perf.c:429
-  #5  0x000000000045c8f1 in run_argv (argcp=argcp@entry=0x7fffffffd4ac, argv=argv@entry=0x7fffffffd4a0) at perf.c:473
-  #6  0x000000000045cac9 in main (argc=<optimized out>, argv=<optimized out>) at perf.c:588
-  (gdb)
-
-Mostly the same as just before this patch:
-
-  Program received signal SIGSEGV, Segmentation fault.
-  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
-  964		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, config->csv_sep);
-  (gdb) bt
-  #0  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
-  #1  0x0000000000588047 in perf_evlist__print_counters (evlist=0xbc9b90, config=0xa1f2a0 <stat_config>, _target=0xa1f0c0 <target>, ts=0x0, argc=2, argv=0x7fffffffd670)
-      at util/stat-display.c:1172
-  #2  0x000000000045390f in print_counters (ts=0x0, argc=2, argv=0x7fffffffd670) at builtin-stat.c:656
-  #3  0x0000000000456bb5 in cmd_stat (argc=2, argv=0x7fffffffd670) at builtin-stat.c:1960
-  #4  0x00000000004dd2e0 in run_builtin (p=0xa30e00 <commands+288>, argc=5, argv=0x7fffffffd670) at perf.c:310
-  #5  0x00000000004dd54d in handle_internal_command (argc=5, argv=0x7fffffffd670) at perf.c:362
-  #6  0x00000000004dd694 in run_argv (argcp=0x7fffffffd4cc, argv=0x7fffffffd4c0) at perf.c:406
-  #7  0x00000000004dda11 in main (argc=5, argv=0x7fffffffd670) at perf.c:531
-  (gdb)
-
-Fixes: d4f63a4741a8 ("perf stat: Introduce print_counters function")
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org # v4.2+
-Link: http://lore.kernel.org/lkml/20190904094738.9558-3-srikar@linux.vnet.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ieee802154/atusb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 52486c90ab936..b6c1c9939c2f1 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2770,7 +2770,7 @@ int cmd_stat(int argc, const char **argv)
- 				run_idx + 1);
+--- a/drivers/net/ieee802154/atusb.c
++++ b/drivers/net/ieee802154/atusb.c
+@@ -907,10 +907,11 @@ static void atusb_disconnect(struct usb_
  
- 		status = run_perf_stat(argc, argv);
--		if (forever && status != -1) {
-+		if (forever && status != -1 && !interval) {
- 			print_counters(NULL, argc, argv);
- 			perf_stat__reset_stats();
- 		}
--- 
-2.20.1
-
+ 	ieee802154_unregister_hw(atusb->hw);
+ 
++	usb_put_dev(atusb->usb_dev);
++
+ 	ieee802154_free_hw(atusb->hw);
+ 
+ 	usb_set_intfdata(interface, NULL);
+-	usb_put_dev(atusb->usb_dev);
+ 
+ 	pr_debug("atusb_disconnect done\n");
+ }
 
 
