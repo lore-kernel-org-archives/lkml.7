@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE80C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297C5C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4411821BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02AFC21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697415;
-	bh=H0g6wd8iHFVMW6T+O08Km+OKeHzABQybpIi8NdBKT/s=;
+	s=default; t=1570697419;
+	bh=sh8gHUawqEyRuW5rv6pRRrdnpSkG2b5FcNjvngrx7mU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gWopfVDJt/IdF2zF08Cg7+z/AY+NpDm1WBlYTOMnNJ2vrYnjQzphlvd6laGTL//0s
-	 SbQiDj8NiDkAsdplSsKApc5x4a22QY4dE8ntI/0dYS2XYJpo030iDJCHuygsTCxtc4
-	 Um8+Bo3XQwCdJIbiclBAP8clcLUVpYolN2avljrg=
+	b=CLrbiZpOi6Ygfp4Q1bTHngXN/A+CCN8lcyGilvRS0YEKNSAMwX5Oj2feK+r8Z0aKK
+	 rvMT2Mu8TtnDcBByuhIWcTDbAEydLNnb9UmEQ7M8zvoDtqAEJklZNjVMNQ/NOMt+Dc
+	 /4s9553NLmGKifG5GqUnX1ogxeEDgQgRK403AsRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389931AbfJJIuO (ORCPT
+        id S2389941AbfJJIuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:50:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57102 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:50:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389911AbfJJIuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:12 -0400
+        id S2389932AbfJJIuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0C0921A4C;
-        Thu, 10 Oct 2019 08:50:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86716218AC;
+        Thu, 10 Oct 2019 08:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697411;
-        bh=H0g6wd8iHFVMW6T+O08Km+OKeHzABQybpIi8NdBKT/s=;
+        s=default; t=1570697414;
+        bh=sh8gHUawqEyRuW5rv6pRRrdnpSkG2b5FcNjvngrx7mU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwlIsCnxIGnJbviAcJqC0Bomc/EbXU4MYn60qmvQXUOrm6QoNz6/dc7zArB3KLBM0
-         pa3lvMUgBAI82KLq6xUMOilYKIk2ZJBmnvmAcgdCSHW6S958mP4d9ndklZMDG26Ngq
-         HOOAMLDMHhEEd6Nf8iSNYnciEc4LPfc5bnpoumtc=
+        b=gAVUVbzeXieqp9FW/CO+2FPVNrrC3VvgR6pUODZkFtehrQVuwkl3x+ukQzj5BG/1z
+         hnqnj9fxDFocVnjMw2LtBLo0byCUYgedg5oEWVm2tpTCtSyRO+kNt95bdD4nxQurxB
+         fcAeKUjbinQq2S+K0qbX/BROpFBsmWM98H4wqir0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 4.14 18/61] usercopy: Avoid HIGHMEM pfn warning
-Date:   Thu, 10 Oct 2019 10:36:43 +0200
-Message-Id: <20191010083501.010966866@linuxfoundation.org>
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Liang ZhiCheng <liangzhicheng@baidu.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 19/61] timer: Read jiffies once when forwarding base clk
+Date:   Thu, 10 Oct 2019 10:36:44 +0200
+Message-Id: <20191010083501.427571222@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -60,88 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Li RongQing <lirongqing@baidu.com>
 
-commit 314eed30ede02fa925990f535652254b5bad6b65 upstream.
+commit e430d802d6a3aaf61bd3ed03d9404888a29b9bf9 upstream.
 
-When running on a system with >512MB RAM with a 32-bit kernel built with:
+The timer delayed for more than 3 seconds warning was triggered during
+testing.
 
-	CONFIG_DEBUG_VIRTUAL=y
-	CONFIG_HIGHMEM=y
-	CONFIG_HARDENED_USERCOPY=y
-
-all execve()s will fail due to argv copying into kmap()ed pages, and on
-usercopy checking the calls ultimately of virt_to_page() will be looking
-for "bad" kmap (highmem) pointers due to CONFIG_DEBUG_VIRTUAL=y:
-
- ------------[ cut here ]------------
- kernel BUG at ../arch/x86/mm/physaddr.c:83!
- invalid opcode: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC
- CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc8 #6
- Hardware name: Dell Inc. Inspiron 1318/0C236D, BIOS A04 01/15/2009
- EIP: __phys_addr+0xaf/0x100
- ...
- Call Trace:
-  __check_object_size+0xaf/0x3c0
-  ? __might_sleep+0x80/0xa0
-  copy_strings+0x1c2/0x370
-  copy_strings_kernel+0x2b/0x40
-  __do_execve_file+0x4ca/0x810
-  ? kmem_cache_alloc+0x1c7/0x370
-  do_execve+0x1b/0x20
+  Workqueue: events_unbound sched_tick_remote
+  RIP: 0010:sched_tick_remote+0xee/0x100
   ...
+  Call Trace:
+   process_one_work+0x18c/0x3a0
+   worker_thread+0x30/0x380
+   kthread+0x113/0x130
+   ret_from_fork+0x22/0x40
 
-The check is from arch/x86/mm/physaddr.c:
+The reason is that the code in collect_expired_timers() uses jiffies
+unprotected:
 
-	VIRTUAL_BUG_ON((phys_addr >> PAGE_SHIFT) > max_low_pfn);
+    if (next_event > jiffies)
+        base->clk = jiffies;
 
-Due to the kmap() in fs/exec.c:
+As the compiler is allowed to reload the value base->clk can advance
+between the check and the store and in the worst case advance farther than
+next event. That causes the timer expiry to be delayed until the wheel
+pointer wraps around.
 
-		kaddr = kmap(kmapped_page);
-	...
-	if (copy_from_user(kaddr+offset, str, bytes_to_copy)) ...
+Convert the code to use READ_ONCE()
 
-Now we can fetch the correct page to avoid the pfn check. In both cases,
-hardened usercopy will need to walk the page-span checker (if enabled)
-to do sanity checking.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Fixes: f5509cc18daa ("mm: Hardened usercopy")
-Cc: Matthew Wilcox <willy@infradead.org>
+Fixes: 236968383cf5 ("timers: Optimize collect_expired_timers() for NOHZ")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Liang ZhiCheng <liangzhicheng@baidu.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Link: https://lore.kernel.org/r/201909171056.7F2FFD17@keescook
+Link: https://lkml.kernel.org/r/1568894687-14499-1-git-send-email-lirongqing@baidu.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/usercopy.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ kernel/time/timer.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -15,6 +15,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1545,21 +1545,23 @@ void timer_clear_idle(void)
+ static int collect_expired_timers(struct timer_base *base,
+ 				  struct hlist_head *heads)
+ {
++	unsigned long now = READ_ONCE(jiffies);
++
+ 	/*
+ 	 * NOHZ optimization. After a long idle sleep we need to forward the
+ 	 * base to current jiffies. Avoid a loop by searching the bitfield for
+ 	 * the next expiring timer.
+ 	 */
+-	if ((long)(jiffies - base->clk) > 2) {
++	if ((long)(now - base->clk) > 2) {
+ 		unsigned long next = __next_timer_interrupt(base);
  
- #include <linux/mm.h>
-+#include <linux/highmem.h>
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/task.h>
-@@ -203,7 +204,12 @@ static inline const char *check_heap_obj
- 	if (!virt_addr_valid(ptr))
- 		return NULL;
- 
--	page = virt_to_head_page(ptr);
-+	/*
-+	 * When CONFIG_HIGHMEM=y, kmap_to_page() will give either the
-+	 * highmem page or fallback to virt_to_page(). The following
-+	 * is effectively a highmem-aware virt_to_head_page().
-+	 */
-+	page = compound_head(kmap_to_page((void *)ptr));
- 
- 	/* Check slab allocator for flags and size. */
- 	if (PageSlab(page))
+ 		/*
+ 		 * If the next timer is ahead of time forward to current
+ 		 * jiffies, otherwise forward to the next expiry time:
+ 		 */
+-		if (time_after(next, jiffies)) {
++		if (time_after(next, now)) {
+ 			/* The call site will increment clock! */
+-			base->clk = jiffies - 1;
++			base->clk = now - 1;
+ 			return 0;
+ 		}
+ 		base->clk = next;
 
 
