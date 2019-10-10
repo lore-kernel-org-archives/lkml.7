@@ -2,164 +2,82 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3BCC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489D8C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF2420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A6A20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733076AbfJJHWJ (ORCPT
+        id S1733066AbfJJHWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:22:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33036 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733046AbfJJHRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:17:44 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 10 Oct 2019 03:22:08 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44548 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733044AbfJJHQ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:16:59 -0400
+Received: from dhcp-172-31-174-146.wireless.concordia.ca (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5194451F04;
-        Thu, 10 Oct 2019 07:17:44 +0000 (UTC)
-Received: from [10.36.117.125] (ovpn-117-125.ams2.redhat.com [10.36.117.125])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ED0B15C22C;
-        Thu, 10 Oct 2019 07:17:42 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
- memmaps in memory_failure()
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20191009142435.3975-1-david@redhat.com>
- <20191009142435.3975-3-david@redhat.com>
- <20191010002619.GB3585@hori.linux.bs1.fc.nec.co.jp>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <134d4f03-a40a-fe62-fb93-53d209a91d2e@redhat.com>
-Date:   Thu, 10 Oct 2019 09:17:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AEEFF290694;
+        Thu, 10 Oct 2019 08:16:57 +0100 (BST)
+Date:   Thu, 10 Oct 2019 09:16:54 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <vigneshr@ti.com>, <marek.vasut@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <geert+renesas@glider.be>,
+        <jonas@norrbonn.se>, linux-aspeed@lists.ozlabs.org,
+        andrew@aj.id.au, richard@nod.at, linux-kernel@vger.kernel.org,
+        vz@mleia.com, linux-mediatek@lists.infradead.org, joel@jms.id.au,
+        miquel.raynal@bootlin.com, matthias.bgg@gmail.com,
+        computersforpeace@gmail.com, dwmw2@infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 07/22] mtd: spi-nor: Rework read_cr()
+Message-ID: <20191010091648.10d9a993@dhcp-172-31-174-146.wireless.concordia.ca>
+In-Reply-To: <20190924074533.6618-8-tudor.ambarus@microchip.com>
+References: <20190924074533.6618-1-tudor.ambarus@microchip.com>
+        <20190924074533.6618-8-tudor.ambarus@microchip.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191010002619.GB3585@hori.linux.bs1.fc.nec.co.jp>
-Content-Type: text/plain; charset=iso-2022-jp
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 10 Oct 2019 07:17:44 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.10.19 02:26, Naoya Horiguchi wrote:
-> On Wed, Oct 09, 2019 at 04:24:35PM +0200, David Hildenbrand wrote:
->> We should check for pfn_to_online_page() to not access uninitialized
->> memmaps. Reshuffle the code so we don't have to duplicate the error
->> message.
->>
->> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  mm/memory-failure.c | 14 ++++++++------
->>  1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->> index 7ef849da8278..e866e6e5660b 100644
->> --- a/mm/memory-failure.c
->> +++ b/mm/memory-failure.c
->> @@ -1253,17 +1253,19 @@ int memory_failure(unsigned long pfn, int flags)
->>  	if (!sysctl_memory_failure_recovery)
->>  		panic("Memory failure on page %lx", pfn);
->>  
->> -	if (!pfn_valid(pfn)) {
->> +	p = pfn_to_online_page(pfn);
->> +	if (!p) {
->> +		if (pfn_valid(pfn)) {
->> +			pgmap = get_dev_pagemap(pfn, NULL);
->> +			if (pgmap)
->> +				return memory_failure_dev_pagemap(pfn, flags,
->> +								  pgmap);
->> +		}
->>  		pr_err("Memory failure: %#lx: memory outside kernel control\n",
->>  			pfn);
->>  		return -ENXIO;
->>  	}
->>  
->> -	pgmap = get_dev_pagemap(pfn, NULL);
->> -	if (pgmap)
->> -		return memory_failure_dev_pagemap(pfn, flags, pgmap);
->> -
->> -	p = pfn_to_page(pfn);
+On Tue, 24 Sep 2019 07:46:15 +0000
+<Tudor.Ambarus@microchip.com> wrote:
+
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
-> This change seems to assume that memory_failure_dev_pagemap() is never
-> called for online pages. Is it an intended behavior?
-> Or the concept "online pages" is not applicable to zone device pages?
+> static int read_cr(struct spi_nor *nor)
+> becomes
+> static int spi_nor_read_cr(struct spi_nor *nor, u8 *cr)
+> 
+> The new function returns 0 on success and -errno otherwise.
+> We let the callers pass the pointer to the buffer where the
+> value of the Configuration Register will be written. This way
+> we avoid the casts between int and u8, which can be confusing.
+> 
+> Prepend spi_nor_ to the function name, all functions should begin
+> with that.
+> 
 
-Yes, that's the real culprit. ZONE_DEVICE/devmem pages are never online
-(SECTION_IS_ONLINE). The terminology "online" only applies to pages that
-were given to the buddy. And as we support sup-section hotadd for
-devmem, we cannot easily make use of the section flag it. I already
-proposed somewhere to convert SECTION_IS_ONLINE to a subsection bitmap
-and call it something like pfn_active().
+Same as for patch 5, this should be split in several patches.
 
-pfn_online() would then be "pfn_active() && zone != ZONE_DEVICE". And we
-could use pfn_active() everywhere to test for initialized memmaps (well,
-besides some special cases like device reserved memory that does not
-span full sub-sections). Until now, nobody volunteered and I have other
-things to do.
+> Vendors are using both the "Configuration Register" and the
+> "Status Register 2" terminology when referring to the second byte
+> of the Status Register. Indicate in the description of the function
+> that we use the SPINOR_OP_RDCR (35h) command to interrogate the
 
--- 
+						  ^query
 
-Thanks,
-
-David / dhildenb
+> Configuration Register.
+> 
