@@ -6,126 +6,94 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C71ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F386ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F0521835
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE1F2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Do8hAovh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+JBtgs5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfJJRKS (ORCPT
+        id S1726697AbfJJRMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:10:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51610 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfJJRKS (ORCPT
+        Thu, 10 Oct 2019 13:12:31 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34458 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfJJRMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:10:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2ORhkw5GPRBxZuF/xlv/BjcMDmGKtcdp+AMxb3+giRk=; b=Do8hAovh7JWYg3ucRGcXnRKlp
-        Hk/Mdo6HvHbjjzVB2oeN73Lg3ScBEwJ7yLS2xEExgXEBE42Ov7eTrryiUc+6flTBzVMEVyngCfmr0
-        7DveBBO5dhInqtgUEe9a8uF1I+nODwJYoFohx1pWitYKqMGQnFzbQK9pZt+qPCF7MLYHxa6iEwG/W
-        8B6jY4hY9N4UfA4dnrnri9GsVVNzoPzINpuJzJ263r3CONhT24WWKWVS0iUkTf0g+msab95XEwsqm
-        robs5JYWD7vsNoTe5jx1EFbG3TPye9jJ4o0v+nT1wPbMgJAT9He3Ach8nHO3p/htt4/oIuFjVH/eV
-        AslgJc8fw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIbwl-0004bm-V5; Thu, 10 Oct 2019 17:09:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E0E243013A4;
-        Thu, 10 Oct 2019 19:08:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 29D5A21492B14; Thu, 10 Oct 2019 19:09:49 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 19:09:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
-Message-ID: <20191010170949.GR2328@hirez.programming.kicks-ass.net>
-References: <20191009203657.6070-1-joel@joelfernandes.org>
- <20191010081251.GP2311@hirez.programming.kicks-ass.net>
- <20191010151333.GE96813@google.com>
+        Thu, 10 Oct 2019 13:12:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b128so4323864pfa.1;
+        Thu, 10 Oct 2019 10:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gFkplFWsX/KWikFo2q63Yk6w/wjGYsWVVSNzNO5eWCA=;
+        b=h+JBtgs598QcD4Vh9cXa7CKKJUa7TPPDpqRyTFp0ZLKK1N/E94snAeEJu32YuCdaPn
+         TmioF3jiMEHYeBLKM2Dr17jD5RfiqeAsSGCFkoDb5oZugD557uVX++rOHwbLE5wsEmfs
+         QAe4bt4Jdulu4s1gG4oYUDmMtohJfJrTjKfv3BfIauTmMpexkHBCSWlsVk+JzqA+DoyF
+         drol4g4T4jQWCZy7pRY8dxdx2Ok0QYvJeTt5w6+YDb8qZ/RtKcL/HSv8kNJDV8fA7WtG
+         cjwQLHveBuFXkZrA1AM1gNT6nmGhoWVvcxLDJh9r9y6/ipyx5zpH1LBOc2T6DVJrWXx/
+         HzOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gFkplFWsX/KWikFo2q63Yk6w/wjGYsWVVSNzNO5eWCA=;
+        b=NsNHRoHGsTPi2VdexUuVTzksfo9y9CsXAzIQUzadgV7QGKv1aeBqH9G7+/QomOC7GC
+         46NkOUbGQaW2lupvuvXxNpry/jcrnKKZSHPmmxoaN/L/DJtbYPhpMqIXGtcUu5txYPAr
+         u0klp7eoTyKd7EBngCKSCZFhY/SsXAZRxzh8rqjPjIl0wv+VUpG6nCVuJdfEhwQP4dKX
+         FlG1ryWNoZOB41TAe8v0xjlLM5am7XdDhFcRpWZaejMxnvSleQ0j9aHPLlQcaCx5YSoD
+         qxRswSyFFo5bgXtKmlLCUEhYadWEJMOelI8GINdZQUsVEbsvYMM20bL7Q/5+1vchAqdN
+         M0ng==
+X-Gm-Message-State: APjAAAUlLjocq1mURIG3iFu2KNE463EXZcWK/5tRPHR0dZonYsVc+jsM
+        dledH239bl5WZKjQzalfTHJ2c0Lm
+X-Google-Smtp-Source: APXvYqyWmb9MlI935Au9xB562Z4BjyaNxtRl8Jm4vtNjamdzcCfEwyyvHuImE5QDXkYzhYDszz637w==
+X-Received: by 2002:a63:5a03:: with SMTP id o3mr12024714pgb.381.1570727549782;
+        Thu, 10 Oct 2019 10:12:29 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b3sm4849474pjp.13.2019.10.10.10.12.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 10:12:28 -0700 (PDT)
+Subject: Re: [PATCH 4.14 00/61] 4.14.149-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191010083449.500442342@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <ce4b3f10-eafd-1169-9240-fb3891279c2a@roeck-us.net>
+Date:   Thu, 10 Oct 2019 10:12:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010151333.GE96813@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:13:33AM -0400, Joel Fernandes wrote:
-> On Thu, Oct 10, 2019 at 10:12:51AM +0200, Peter Zijlstra wrote:
-> > +static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
-> >  {
-> > -	return sysctl_perf_event_paranoid > 1;
-> > +	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
-> > +		return -EPERM;
-> > +
+On 10/10/19 1:36 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.149 release.
+> There are 61 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Here the sysctl check of > -1 also is now coupled with a CAP_SYS_ADMIN check.
-> However..
+> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
+> Anything received after that time might be too late.
 > 
-> > +	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
-> 
-> >  }
-> >  
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
 
-> > @@ -5862,14 +5859,8 @@ static int perf_mmap(struct file *file,
-> >  	lock_limit >>= PAGE_SHIFT;
-> >  	locked = atomic64_read(&vma->vm_mm->pinned_vm) + extra;
-> >  
-> > -	if (locked > lock_limit) {
-> > -		if (perf_paranoid_tracepoint_raw() && !capable(CAP_IPC_LOCK)) {
-> > -			ret = -EPERM;
-> > -			goto unlock;
-> > -		}
-> > -
-> > -		ret = security_perf_event_open(&event->attr,
-> > -					       PERF_SECURITY_TRACEPOINT);
-> > +	if (locked > lock_limit && !capable(CAP_IPC_LOCK)) {
-> > +		ret = perf_allow_tracepoint(&event->attr);
-> 
-> In previous code, this check did not involve a check for CAP_SYS_ADMIN.
-> 
-> I am Ok with adding the CAP_SYS_ADMIN check as well which does make sense to
-> me for tracepoint access. But it is still a change in the logic so I wanted
-> to bring it up.
-> 
-> Let me know any other thoughts and then I'll post a new patch.
+Preliminary.
 
-Yes, I did notice, I found it weird.
+I see several mips build failures.
 
-If you have CAP_IPC_LIMIT you should be able to bust mlock memory
-limits, so I don't see why we should further relate that to paranoid.
+arch/mips/kernel/proc.c: In function 'show_cpuinfo':
+arch/mips/include/asm/cpu-features.h:352:31: error: implicit declaration of function '__ase'
 
-The way I wrote it, we also allow to bust the limit if we have disabled
-all paranoid checks. Which makes some sense I suppose.
-
-The original commit is this:
-
-  459ec28ab404 ("perf_counter: Allow mmap if paranoid checks are turned off")
+Guenter
