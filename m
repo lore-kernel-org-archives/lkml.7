@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1255C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291E7C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2822190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8272064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697332;
-	bh=FmzEMjZSelSMOSQZgp2rUdO+aFnsDCvFmd1Q5Ugd5d4=;
+	s=default; t=1570697339;
+	bh=T4FbpQKPhy3l01rC+LQL19O6vxjqjUvvNx+JZt0oe/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SPAm3OO+smjq5cbUzyMv0vWI66/KBSiMt7vduAuk5PndOgeSvPMnhPHy4eQc3b+34
-	 6yMWHHr+b5G5Ss5ZvMabd3SZxGAo13KONun38ILIJnCUXJfJP7oL6asQIvaWBnRvan
-	 DqZL53V3ovKj0AuOD5AVkDpgMdCowJuk2HNAtBQ4=
+	b=w0n0WQAqJRKl3TjedFSPhS5ROQqwIjtginrvflYr2XS6QaPOOhAGihd7hlPVHAWSK
+	 wn++X41RUZbRoKSqgMkc7QcRMZZ6bE963C7GmCBnanN+fwj/x8XQQeVLrbYwB/xtNE
+	 IAiBNnA+1gvvtKoLEuuo3z2sSf4VMYg7TzRWo9DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388754AbfJJIsv (ORCPT
+        id S2388771AbfJJIs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:48:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54916 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:48:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389680AbfJJIsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:40 -0400
+        id S2388745AbfJJIss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1006D2064A;
-        Thu, 10 Oct 2019 08:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FF84218AC;
+        Thu, 10 Oct 2019 08:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697318;
-        bh=FmzEMjZSelSMOSQZgp2rUdO+aFnsDCvFmd1Q5Ugd5d4=;
+        s=default; t=1570697326;
+        bh=T4FbpQKPhy3l01rC+LQL19O6vxjqjUvvNx+JZt0oe/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qmy6nPyi3kVlrkk2x0+Jdm8yqPjfJeBHPyLwqoBNtjO4FT/wrtk+4nbPU9dLRyHeo
-         ZrYgtCPDGh749AZN2tCAUNougzAlFC+t5j3ibFSS7dDKFSK15ZV7gkF+nPkuFUO99g
-         ZBP/6MFO0OPYoVwUJL1cGi0nGO/fuHZ3xbmf7ul0=
+        b=DvVzJZlH6/y+iqSowPXJUyKW6711tKRPd8A/IO2hKjo9IljHTvX6ypUPBYo9+0QAU
+         qNpJl0h3ijLl6zJxeIM1sDL0KR2AWYa06ykcGhDPS2rVWkgVzWc1aLLJjScRrXkO3o
+         pmZPJzJKw49tyrdXgI/L2eGsE897D52X1KxCeAAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.19 099/114] arm64: Always enable spectre-v2 vulnerability detection
-Date:   Thu, 10 Oct 2019 10:36:46 +0200
-Message-Id: <20191010083613.410310738@linuxfoundation.org>
+Subject: [PATCH 4.19 102/114] arm64: ssbs: Dont treat CPUs with SSBS as unaffected by SSB
+Date:   Thu, 10 Oct 2019 10:36:49 +0200
+Message-Id: <20191010083613.611304454@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -63,90 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+From: Will Deacon <will.deacon@arm.com>
 
-[ Upstream commit 8c1e3d2bb44cbb998cb28ff9a18f105fee7f1eb3 ]
+[ Upstream commit eb337cdfcd5dd3b10522c2f34140a73a4c285c30 ]
 
-Ensure we are always able to detect whether or not the CPU is affected
-by Spectre-v2, so that we can later advertise this to userspace.
+SSBS provides a relatively cheap mitigation for SSB, but it is still a
+mitigation and its presence does not indicate that the CPU is unaffected
+by the vulnerability.
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Tweak the mitigation logic so that we report the correct string in sysfs.
+
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/cpu_errata.c |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/arm64/kernel/cpu_errata.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 --- a/arch/arm64/kernel/cpu_errata.c
 +++ b/arch/arm64/kernel/cpu_errata.c
-@@ -87,7 +87,6 @@ cpu_enable_trap_ctr_access(const struct
+@@ -341,15 +341,17 @@ static bool has_ssbd_mitigation(const st
  
- atomic_t arm64_el2_vector_last_slot = ATOMIC_INIT(-1);
+ 	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
  
--#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
- #include <asm/mmu_context.h>
- #include <asm/cacheflush.h>
- 
-@@ -225,11 +224,11 @@ static int detect_harden_bp_fw(void)
- 	    ((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR_V1))
- 		cb = qcom_link_stack_sanitization;
- 
--	install_bp_hardening_cb(cb, smccc_start, smccc_end);
-+	if (IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR))
-+		install_bp_hardening_cb(cb, smccc_start, smccc_end);
- 
- 	return 1;
- }
--#endif	/* CONFIG_HARDEN_BRANCH_PREDICTOR */
- 
- DEFINE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
- 
-@@ -513,7 +512,6 @@ multi_entry_cap_cpu_enable(const struct
- 			caps->cpu_enable(caps);
- }
- 
--#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
- /*
-  * List of CPUs that do not need any Spectre-v2 mitigation at all.
-  */
-@@ -545,6 +543,12 @@ check_branch_predictor(const struct arm6
- 	if (!need_wa)
- 		return false;
- 
-+	if (!IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR)) {
-+		pr_warn_once("spectrev2 mitigation disabled by kernel configuration\n");
-+		__hardenbp_enab = false;
-+		return false;
-+	}
++	/* delay setting __ssb_safe until we get a firmware response */
++	if (is_midr_in_range_list(read_cpuid_id(), entry->midr_range_list))
++		this_cpu_safe = true;
 +
- 	/* forced off */
- 	if (__nospectre_v2) {
- 		pr_info_once("spectrev2 mitigation disabled by command line option\n");
-@@ -556,7 +560,6 @@ check_branch_predictor(const struct arm6
+ 	if (this_cpu_has_cap(ARM64_SSBS)) {
++		if (!this_cpu_safe)
++			__ssb_safe = false;
+ 		required = false;
+ 		goto out_printmsg;
+ 	}
  
- 	return (need_wa > 0);
- }
--#endif
- 
- #ifdef CONFIG_HARDEN_EL2_VECTORS
- 
-@@ -715,13 +718,11 @@ const struct arm64_cpu_capabilities arm6
- 		ERRATA_MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
- 	},
- #endif
--#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
- 	{
- 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
- 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
- 		.matches = check_branch_predictor,
- 	},
--#endif
- #ifdef CONFIG_HARDEN_EL2_VECTORS
- 	{
- 		.desc = "EL2 vector hardening",
+-	/* delay setting __ssb_safe until we get a firmware response */
+-	if (is_midr_in_range_list(read_cpuid_id(), entry->midr_range_list))
+-		this_cpu_safe = true;
+-
+ 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0) {
+ 		ssbd_state = ARM64_SSBD_UNKNOWN;
+ 		if (!this_cpu_safe)
 
 
