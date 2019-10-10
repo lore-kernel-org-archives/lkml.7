@@ -2,152 +2,90 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2A0C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0F7C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF2020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D86D21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:04:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u9hVV+E3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfJJUAf (ORCPT
+        id S1726475AbfJJUEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:00:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52856 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725867AbfJJUAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:00:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 682D2AF05;
-        Thu, 10 Oct 2019 20:00:33 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 94D07E378C; Thu, 10 Oct 2019 22:00:32 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 22:00:32 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 09/17] ethtool: generic handlers for GET
- requests
-Message-ID: <20191010200032.GH22163@unicorn.suse.cz>
-References: <cover.1570654310.git.mkubecek@suse.cz>
- <b000e461e348ba1a0af30f2e8493618bce11ec12.1570654310.git.mkubecek@suse.cz>
- <20191010135639.GJ2223@nanopsycho>
- <20191010180401.GD22163@unicorn.suse.cz>
- <eb6cb68ff77eb4f2c680809e11142150f0d83007.camel@sipsolutions.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb6cb68ff77eb4f2c680809e11142150f0d83007.camel@sipsolutions.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 10 Oct 2019 16:04:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45546 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJUEe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 16:04:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q64so7461714ljb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 13:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vNAkVByxwPtj47oxh98xv0GNfuNUm1Vy9lgUWGV2Qmo=;
+        b=u9hVV+E3ZunE59sLzfkY+4ImFrvA16AquH47JmeGhtlvu3jWShqzBOWm7YyGfokRAS
+         tn8X4hStXltCKlJKMnh9JcUa8GVzJ+MxoJ5Cne0x+A9ZcEomA/3/GfSDCL1+2uibmlRz
+         SSdNt7XeaRog9G99v8IaqCfxnP3D9xYV54jE2nZiah2uznevCJp9XBfHNx8qXNLfK5Nw
+         y3+Rel4ftgbbE2+y9U+ceeT1qxkDuDbJ3i02Su4CVh0fx7D1ZBXxvyZR5nsEQ2DRRIKC
+         RSBWiIhsvWTkZgKeBUMkqCyd1SWxsvqQ1DwmfsOt/TYOvydomTkG5N3DJRY/Kap7SSHv
+         A0/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vNAkVByxwPtj47oxh98xv0GNfuNUm1Vy9lgUWGV2Qmo=;
+        b=NM8K9R996vXPdVsIEat+kS9Lpz3VRVWrWt/ksPWvUp1E9ED+ZbSMguO7xywQNVLDQc
+         Na3B9yg7e5h0md6hlFIfIq2WdCLk5P48j9xtPZ59PyGMo3+9V8bqDt9DojFLplvvPV0f
+         bXDvpFZZSoRHrY8Ih8uLnTSuzIjWCPUGWVzc361gdAYZBjJkJdgs+4h+nOoRMyGEm+YP
+         OL9U9uPj0axmcnSJ6wPpOiPA4wM16jY2rpRdB0V69X0dLH1qvtfcI0eKT1q8vF5vqcVc
+         oNT0pFOlJ2xzM0+BdHdNe4JnLHRiKeLrNl+mYFuY53kWKBEBiUhs/Z30vkNcEQqt9gEU
+         q0Vw==
+X-Gm-Message-State: APjAAAVjfRBY1dkAgUSi+eaXi+/C5XURvXN5roWUC8UMktxSc6DBS6j1
+        dRT1pEK4Rdeyx7lYwpfVexkg3QP785FNdQ==
+X-Google-Smtp-Source: APXvYqz3NjfB0tQpVZRLiMxA+kFCIJ+uOCfqM6jrEJCnVfaz74fPH8QJt3Xqmfz1pA4clneR2cHXJQ==
+X-Received: by 2002:a2e:8183:: with SMTP id e3mr7433890ljg.14.1570737871799;
+        Thu, 10 Oct 2019 13:04:31 -0700 (PDT)
+Received: from vitaly-Dell-System-XPS-L322X (c188-150-241-161.bredband.comhem.se. [188.150.241.161])
+        by smtp.gmail.com with ESMTPSA id 126sm2222558lfh.45.2019.10.10.13.04.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 13:04:30 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 23:04:14 +0300
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Minchan Kim <minchan@kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Shakeel Butt <shakeelb@google.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Theodore Ts'o <tytso@thunk.org>
+Subject: [PATCH 0/3] Allow ZRAM to use any zpool-compatible backend
+Message-Id: <20191010230414.647c29f34665ca26103879c4@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 08:18:05PM +0200, Johannes Berg wrote:
-> On Thu, 2019-10-10 at 20:04 +0200, Michal Kubecek wrote:
-> > 
-> > The only thing I don't like about the genetlink infrastructure is the
-> > design decision that policy and corresponding maxattr is an attribute of
-> > the family rather than a command. This forces anyone who wants to use it
-> > to essentially have one common message format for all commands and if
-> > that is not possible, to do what you suggest above, hide the actual
-> > request into a nest.
-> > 
-> > Whether you use one common attribute type for "command specific nest" or
-> > different attribute for each request type, you do not actually make
-> > things simpler, you just move the complexity one level lower. You will
-> > still have to do your own (per request) parsing of the actual request,
-> > the only difference is that you will do it in a different place and use
-> > nla_parse_nested() rather than nlmsg_parse().
-> > 
-> > Rather than bending the message layout to fit into the limitations of
-> > unified genetlink parsing, I prefer to keep the logical message
-> > structure and do the parsing on my own.
-> 
-> I can't really agree with this.
-> 
-> Having a common format is way more accessible. Generic netlink (now)
-> even exposes the policy (if set) and all of its nested sub-policies to
-> userspace (if you use NLA_POLICY_NESTED), so it's very easy to discover
-> what's in the policy and how it'll be interpreted.
+The coming patchset is a new take on the old issue: ZRAM can currently be used only with zsmalloc even though this may not be the optimal combination for some configurations. The previous (unsuccessful) attempt dates back to 2015 [1] and is notable for the heated discussions it has caused.
 
-This, however, would require a different design that Jiri proposed. What
-he proposed was one attribute type for "request specific attributes".
-But to be able to perform nested validation of the whole message and
-export all policies would, with current genetlink design, require having
-one such attribute type for each request type (command).
+The patchset in [1] had basically the only goal of enabling ZRAM/zbud combo which had a very narrow use case. Things have changed substantially since then, and now, with z3fold used widely as a zswap backend, I, as the z3fold maintainer, am getting requests to re-interate on making it possible to use ZRAM with any zpool-compatible backend, first of all z3fold.
 
-But that would also require an extra check that the request message
-contains only the attribute matching its command (request type) so that
-the validation performed by genetlink would still be incomplete (it will
-always be incomplete as there are lots of strange constraints which
-cannot be described by a policy).
+The preliminary results for this work have been delivered at Linux Plumbers this year [2]. The talk at LPC, though having attracted limited interest, ended in a consensus to continue the work and pursue the goal of decoupling ZRAM from zsmalloc.
 
-Unless you suggest to effectively have just one command and determine
-the request type based on which of these request specific attributes is
-present (and define what to do if there is more than one).
+The current patchset has been stress tested on arm64 and x86_64 devices, including the Dell laptop I'm writing this message on now, not to mention several QEmu confugirations.
 
-> This makes it really easy to have tools for introspection, or have
-> common debugging tools that just understand the message format based on
-> the kernel's policy.
-> 
-> It's also much easier this way to not mess up things like "attribute # 7
-> always means a netdev index". You solved that by nesting the common
-> bits, though the part about ETHTOOL_A_HEADER_RFLAGS actually seems ...
-> wrong? Shouldn't that have been somewhere else? Or does that mean each
-> and every request_policy has to have this at the same index? That sounds
-> error prone ...
-
-ETHTOOL_A_HEADER_RFLAGS is a constant, it's always the same. Yes,
-logically it would rather belong outside header and maybe should be
-replaced by a (possibly empty) set of NLA_FLAG attributes. If having it
-in the common header is such a big problem, I'll move it out.
-
-> But you even have *two* policies for each kind of message, one for the
-> content and one for the header...?
-
-As I said in reply to another patch, it turns out that the only reason
-for having a per request header policy was rejecting
-ETHTOOL_A_HEADER_RFLAGS for requests which do not define any request
-flags but that's probably an overkill so that one universal header
-policy would be sufficient.
-
-> It almost seems though that your argument isn't so much on the actual
-> hierarchy/nesting structure of the message itself, but the easy of
-> parsing it?
-
-It's both. I still feel that from logical point of view it makes much
-more sense to use top level attributes for what the message is actually
-about. Nothing you said convinced me otherwise, rather the opposite: it
-only confirmed that the only reason for hiding the actual request
-contents one level below is to work around the consequences of the
-decision to make policy in genetlink per family rather than per command.
-
-> I have thought previous that it might make sense to create a
-> hierarchical representation of the message, with the nested TBs pre-
-> parsed too in generic netlink, so you wouldn't just have a common
-> attrbuf but (optionally) allocate nested attrbufs for those nested
-> attributes that are present, and give a way of accessing those.
-> 
-> I really do think that a single policy that's exposed for introspection
-> and links its nested sub-policies for the different sub-commands (which
-> are then also exposed to introspection) is much superior to having it
-> all just driven by the code like this.
-
-I still don't see any reason why all this could not work with per
-command policies and would be principially dependent on having one
-universal policy for the whole family.
-
-Michal Kubecek
+[1] https://lkml.org/lkml/2015/9/14/356
+[2] https://linuxplumbersconf.org/event/4/contributions/551/
