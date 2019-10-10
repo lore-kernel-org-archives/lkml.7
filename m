@@ -7,297 +7,408 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC00C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A201C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7FE208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7AF208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfJJUzD (ORCPT
+        id S1727195AbfJJU4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:55:03 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:40587 "EHLO
+        Thu, 10 Oct 2019 16:56:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:55991 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfJJUzC (ORCPT
+        with ESMTP id S1725867AbfJJU4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:55:02 -0400
+        Thu, 10 Oct 2019 16:56:32 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MV2Sk-1ihWPb3Xvi-00SBA4; Thu, 10 Oct 2019 22:54:53 +0200
+ 1MNwXA-1iTi5O0nyC-00OGri; Thu, 10 Oct 2019 22:56:14 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
         Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH 33/36] ARM: s3c: move low-level clk reg access into platform code
-Date:   Thu, 10 Oct 2019 22:30:17 +0200
-Message-Id: <20191010203043.1241612-33-arnd@arndb.de>
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [PATCH 34/36] ARM: s3c: stop including mach/hardware.h from mach/io.h
+Date:   Thu, 10 Oct 2019 22:30:18 +0200
+Message-Id: <20191010203043.1241612-34-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
 References: <20191010202802.1132272-1-arnd@arndb.de>
  <20191010203043.1241612-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:bD9sNRXsTKYakre0xRI32jXKWhIKxWw79vY401L6CxcOSZ9Z/vH
- JIDDCF1bhbsakv2QrcQ4cugzpC4dV85dLe5/XBc16I/gcMp/+OroX/GlphJXekeQtvi/++f
- e/p24Ujn5cKdeqMLjZlmN0tx5flJNJBGHH6DViP1OzvWP4d31j69t4gikgzhvl8OPSjzKWy
- 0kx6MErKSgquzsh9WPDUg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YcSF1edI9mo=:/YL660oxkYpq4Bj4xmawHA
- uuQhR6gtpk86CqqdjD1QWQPfhk+Zd58eyp+5GOrs8YKwWNtrnsROW2kvR3t1M7H4jwUjoc0Y6
- YujYBTeeGwIlChrjl7M+6otwe3fXSBMxD25APb2KUzVzN5FQ+QjuO1YbQjcYp2xbeTyLbcW13
- GnSXZY6d0BoI8pA0r6YcEYG+bC06gfRJRne7CoSETMDlnG0Y9wJf3cn+XH1s5stzrjpkysLQ7
- s+AvOEHaD7T2mpQJ8A4D73uYWH4okbk1h7CMaX7VhWd3HiJMzGpsVj0BGBE7fCD2LXYZmQdIl
- /tj9EEGuxAL825ZVG0D0xhe+jWF9vza9XCffXmHj4bKVDruAHPSmHM/5qKv8uD/5BpNHWEDp+
- XMQGCRehArJBr7cCupMy8cqYUB6FTGnXceP3iHEanwLx5YPrKDv6rsRua60NUVRF1BO4YDSX1
- f2ZFzxsJKC6SAvu+5bpYpLRbfJ5fxnrYMnMgOpqP/nykMx50mD8SRkK6vej17yLEVYtVgIOZn
- kQcR5PzOvLqt3hiRyMOF/6+A3JCZ5rPN9jGAEwzCU8bbNaNrodnSzspSVqtfnEgsDml2lxHVA
- KwWjE1V/9zP0ytO6pAfTqDh1I56mJUT87F9o06LppKDZ3dPOAQMNLeQpcniFaomrFvKOkYjae
- w/VBSwlnZulc0yWAYBVSAcv/epHPV0NGfBPjByu1opqLUvdd7/0VXv5OuOfgekTu++xxt8J0k
- 3gjLxCfILWb6I40uIka8gVN9DV937EgokYeX773u7VcfY2suGzz9mC8wkwa/pblWAH1aFnw16
- bZ1ntJS1xI3AUzV8WM2F7bKsTQ9qC9P9ej3Eo1bEmZfI68HycqjARa8TvU2uuULINQNhfsIVD
- uR5b2xV7it50nz16d41g==
+X-Provags-ID: V03:K1:LMl2ipg1DijdMjugydbZzoYkCnmLbylOvvQXsya3QlKsbqkQ54L
+ rRQiYD8uPwWNFRtZ9LNSFwnbjTRfWgKXO5EaWD7ShmjBMGB/FTGcmVOPSHqxSJKDcLENqXV
+ 6mlCYdH8gP9tJ15KGa5489j76oWy9eHTX/8ncu+rwoYA+ZrMG+1OA0GYNLSONi9424e52f4
+ 1aowKON7k3Wgp8Ns1IGGg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:quF4arNDUyg=:HiBvgCRB5O3CTHFspJe2/0
+ oTm/Q55a+CDLCSvsT0iy7WhF6sOYxv0M4cEyr/mFIzbNKJwBGpQzOOkacF0/T02lmeonYc3NE
+ piSQx9AlefIIFhhY8sLufIH7LlCEsSnU5hzIj5PyC99vcKd84RroldnthR/rjcOLYBDJtZDO1
+ iyJ2TCLb8Vb7dAE6RZ901KCj9i0RVuS4cwHOawuaHbmuk4EOlcymFGeZNnZzePEGe7VBRsx3S
+ UP4NX/41ZEw0UGWx24MGSoZh9c0WgWn0PZ6xjYpMuHvcj+eW/M/8/WOLQD8bekNbvb3+UM1Au
+ qI5D4eQ4WrtUxqRkPMLJYc9eLmhtjRDW1a+ppFYf5FeNwL4urBIVckpkCLL/jnW7/ML17WF6c
+ 1/3MbJ9DUkVhADZbKWw7jQtsvOlBh+6r2ECmP0gqwpfqODNajbbqGJe44seCK4qqZ12DP9nfB
+ 4bevibs5LJqUyDIsbaN5ieMmamo76+MgFVR/1BLhwzqLWagdhRrj7k5fT8pz4sfB002YgXTZZ
+ TwwI2y/7bS9rYqH/wpEUyBATftzVyCvpfSEovAZ+2IoW+ccdvPeAg0aQj2LQN2eENSAJcOrOd
+ aw5oTWWlS36C0FwplgchzPz/OdQTx165qsVqf0tJGh3jSSF5XHD8eA9boBGUKaNSOsliBcZz1
+ DjMAI/yqVznKMapgv/k6Ir0qsrks5GhmAkM6zGxRuQF2i6MK5n+e/stMA2TxFTyCGTGQRG+Bj
+ HFE6XwCgkI55Jll/ycWneTycBAAJ+GijAG32zBPJtpDdJbqcq+EaLDGalqkqdeaCdIlqqherL
+ NC+a0yypDpn56DcYlIkexf/DO0p3/nS68gnhet6jQiulHFA+k/YwaNXimyzFVOH8cFINFWVyD
+ uVOIY8kn8V2kbOMPS0Yw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than have the cpufreq drivers touch include the
-common headers to get the constants, add a small indirection.
-This is still not the proper way that would do this through
-the common clk API, but it lets us kill off the header file
-usage.
+A number of other files rely on mach/map.h to be indirectly
+included from mach/io.h through mach/hardware.h.
+
+Reduce this to the minimal plat/map-base.h and add explicit
+includes everywhere else.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mach-s3c24xx/Makefile               |  2 +-
- arch/arm/mach-s3c24xx/cpufreq-utils.c        | 32 ++++++++++++++++++++
- drivers/cpufreq/s3c2410-cpufreq.c            |  8 +----
- drivers/cpufreq/s3c2412-cpufreq.c            | 10 ++----
- drivers/cpufreq/s3c2440-cpufreq.c            | 16 +++-------
- drivers/cpufreq/s3c24xx-cpufreq.c            | 11 ++-----
- include/linux/soc/samsung/s3c-cpufreq-core.h |  7 +++++
- 7 files changed, 51 insertions(+), 35 deletions(-)
+ arch/arm/mach-s3c24xx/common.c                          | 1 +
+ arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h       | 2 ++
+ arch/arm/mach-s3c24xx/include/mach/hardware.h           | 7 -------
+ arch/arm/mach-s3c24xx/include/mach/io.h                 | 3 +--
+ arch/arm/mach-s3c24xx/include/mach/regs-clock.h         | 2 ++
+ arch/arm/mach-s3c24xx/include/mach/regs-gpio.h          | 2 ++
+ arch/arm/mach-s3c24xx/include/mach/regs-irq.h           | 2 ++
+ arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h | 1 +
+ arch/arm/mach-s3c24xx/include/mach/s3c2412.h            | 2 ++
+ arch/arm/mach-s3c24xx/mach-h1940.c                      | 1 +
+ arch/arm/mach-s3c24xx/mach-jive.c                       | 1 +
+ arch/arm/mach-s3c24xx/mach-rx1950.c                     | 1 +
+ arch/arm/mach-s3c24xx/pm-h1940.S                        | 1 -
+ arch/arm/mach-s3c24xx/regs-mem.h                        | 2 ++
+ arch/arm/mach-s3c24xx/s3c2410.c                         | 2 +-
+ arch/arm/mach-s3c24xx/s3c2412.c                         | 2 +-
+ arch/arm/mach-s3c24xx/s3c2416.c                         | 2 +-
+ arch/arm/mach-s3c24xx/s3c2443.c                         | 2 +-
+ arch/arm/mach-s3c24xx/s3c244x.c                         | 2 +-
+ arch/arm/mach-s3c24xx/sleep-s3c2410.S                   | 1 -
+ arch/arm/mach-s3c24xx/sleep-s3c2412.S                   | 1 -
+ arch/arm/mach-s3c24xx/sleep.S                           | 1 -
+ drivers/spi/spi-s3c24xx-regs.h                          | 2 ++
+ drivers/usb/gadget/udc/s3c2410_udc_regs.h               | 2 ++
+ 24 files changed, 27 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/mach-s3c24xx/Makefile b/arch/arm/mach-s3c24xx/Makefile
-index 695573df00b1..195a4cb23ecb 100644
---- a/arch/arm/mach-s3c24xx/Makefile
-+++ b/arch/arm/mach-s3c24xx/Makefile
-@@ -38,7 +38,7 @@ obj-$(CONFIG_PM_SLEEP)		+= irq-pm.o sleep.o
+diff --git a/arch/arm/mach-s3c24xx/common.c b/arch/arm/mach-s3c24xx/common.c
+index d16a164df6c4..42d828f48345 100644
+--- a/arch/arm/mach-s3c24xx/common.c
++++ b/arch/arm/mach-s3c24xx/common.c
+@@ -21,6 +21,7 @@
+ #include <linux/dmaengine.h>
  
- # common code
+ #include <mach/hardware.h>
++#include <mach/map.h>
+ #include <mach/regs-clock.h>
+ #include <asm/irq.h>
+ #include <asm/cacheflush.h>
+diff --git a/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h b/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h
+index 2ad22b2d459b..f8a114891f16 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h
++++ b/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h
+@@ -14,6 +14,8 @@
+ #ifndef GPIO_SAMSUNG_S3C24XX_H
+ #define GPIO_SAMSUNG_S3C24XX_H
  
--obj-$(CONFIG_S3C2410_CPUFREQ_UTILS) += cpufreq-utils.o
-+obj-$(CONFIG_ARM_S3C24XX_CPUFREQ) += cpufreq-utils.o
++#include <mach/map.h>
++
+ /*
+  * GPIO sizes for various SoCs:
+  *
+diff --git a/arch/arm/mach-s3c24xx/include/mach/hardware.h b/arch/arm/mach-s3c24xx/include/mach/hardware.h
+index f28ac6c78d82..c732ea54984c 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/hardware.h
++++ b/arch/arm/mach-s3c24xx/include/mach/hardware.h
+@@ -9,13 +9,6 @@
+ #ifndef __ASM_ARCH_HARDWARE_H
+ #define __ASM_ARCH_HARDWARE_H
  
- obj-$(CONFIG_S3C2410_IOTIMING)	+= iotiming-s3c2410.o
- obj-$(CONFIG_S3C2412_IOTIMING)	+= iotiming-s3c2412.o
-diff --git a/arch/arm/mach-s3c24xx/cpufreq-utils.c b/arch/arm/mach-s3c24xx/cpufreq-utils.c
-index 43ab714eaa9e..75c197d59a75 100644
---- a/arch/arm/mach-s3c24xx/cpufreq-utils.c
-+++ b/arch/arm/mach-s3c24xx/cpufreq-utils.c
-@@ -60,3 +60,35 @@ void s3c2410_set_fvco(struct s3c_cpufreq_config *cfg)
- 	if (!IS_ERR(cfg->mpll))
- 		clk_set_rate(cfg->mpll, cfg->pll.frequency);
- }
-+
-+#if defined(CONFIG_CPU_S3C2440) || defined(CONFIG_CPU_S3C2442)
-+u32 s3c2440_read_camdivn()
-+{
-+	return __raw_readl(S3C2440_CAMDIVN);
-+}
-+
-+void s3c2440_write_camdivn(u32 camdiv)
-+{
-+	__raw_writel(camdiv, S3C2440_CAMDIVN);
-+}
-+#endif
-+
-+u32 s3c24xx_read_clkdivn()
-+{
-+	return __raw_readl(S3C2410_CLKDIVN);
-+}
-+
-+void s3c24xx_write_clkdivn(u32 clkdiv)
-+{
-+	__raw_writel(clkdiv, S3C2410_CLKDIVN);
-+}
-+
-+u32 s3c24xx_read_mpllcon()
-+{
-+	return __raw_readl(S3C2410_MPLLCON);
-+}
-+
-+void s3c24xx_write_locktime(u32 locktime)
-+{
-+	return __raw_writel(locktime, S3C2410_LOCKTIME);
-+}
-diff --git a/drivers/cpufreq/s3c2410-cpufreq.c b/drivers/cpufreq/s3c2410-cpufreq.c
-index 9c2f29cacdd0..5dcfbf0bfb74 100644
---- a/drivers/cpufreq/s3c2410-cpufreq.c
-+++ b/drivers/cpufreq/s3c2410-cpufreq.c
-@@ -22,12 +22,6 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
+-#ifndef __ASSEMBLY__
+-
+ extern unsigned int s3c2410_modify_misccr(unsigned int clr, unsigned int chg);
  
+-#endif /* __ASSEMBLY__ */
+-
+-#include <linux/sizes.h>
 -#include <mach/map.h>
 -
--#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
+ #endif /* __ASM_ARCH_HARDWARE_H */
+diff --git a/arch/arm/mach-s3c24xx/include/mach/io.h b/arch/arm/mach-s3c24xx/include/mach/io.h
+index 3e8bff26cdd5..bcddf615adb6 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/io.h
++++ b/arch/arm/mach-s3c24xx/include/mach/io.h
+@@ -10,8 +10,7 @@
+ #ifndef __ASM_ARM_ARCH_IO_H
+ #define __ASM_ARM_ARCH_IO_H
+ 
+-#include <mach/hardware.h>
 -
--#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
--
- #define S3C2410_CLKDIVN_PDIVN	     (1<<0)
- #define S3C2410_CLKDIVN_HDIVN	     (1<<1)
++#include <plat/map-base.h>
  
-@@ -43,7 +37,7 @@ static void s3c2410_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
- 	if (cfg->divs.p_divisor != cfg->divs.h_divisor)
- 		clkdiv |= S3C2410_CLKDIVN_PDIVN;
+ /*
+  * ISA style IO, for each machine to sort out mappings for,
+diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-clock.h b/arch/arm/mach-s3c24xx/include/mach/regs-clock.h
+index 7ca3dd4f13c0..da4e7b3aeba6 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/regs-clock.h
++++ b/arch/arm/mach-s3c24xx/include/mach/regs-clock.h
+@@ -9,6 +9,8 @@
+ #ifndef __ASM_ARM_REGS_CLOCK
+ #define __ASM_ARM_REGS_CLOCK
  
--	__raw_writel(clkdiv, S3C2410_CLKDIVN);
-+	s3c24xx_write_clkdivn(clkdiv);
- }
- 
- static int s3c2410_cpufreq_calcdivs(struct s3c_cpufreq_config *cfg)
-diff --git a/drivers/cpufreq/s3c2412-cpufreq.c b/drivers/cpufreq/s3c2412-cpufreq.c
-index a77c63e92e1a..5945945ead7c 100644
---- a/drivers/cpufreq/s3c2412-cpufreq.c
-+++ b/drivers/cpufreq/s3c2412-cpufreq.c
-@@ -25,12 +25,6 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/map.h>
--
--#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
--
--#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
--
- #define S3C2412_CLKDIVN_PDIVN		(1<<2)
- #define S3C2412_CLKDIVN_HDIVN_MASK	(3<<0)
- #define S3C2412_CLKDIVN_ARMDIVN		(1<<3)
-@@ -132,7 +126,7 @@ static void s3c2412_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
- 	unsigned long clkdiv;
- 	unsigned long olddiv;
- 
--	olddiv = clkdiv = __raw_readl(S3C2410_CLKDIVN);
-+	olddiv = clkdiv = s3c24xx_read_clkdivn();
- 
- 	/* clear off current clock info */
- 
-@@ -149,7 +143,7 @@ static void s3c2412_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
- 		clkdiv |= S3C2412_CLKDIVN_PDIVN;
- 
- 	s3c_freq_dbg("%s: div %08lx => %08lx\n", __func__, olddiv, clkdiv);
--	__raw_writel(clkdiv, S3C2410_CLKDIVN);
-+	s3c24xx_write_clkdivn(clkdiv);
- 
- 	clk_set_parent(armclk, cfg->divs.dvs ? hclk : fclk);
- }
-diff --git a/drivers/cpufreq/s3c2440-cpufreq.c b/drivers/cpufreq/s3c2440-cpufreq.c
-index 442abdccb9c1..148e8aedefa9 100644
---- a/drivers/cpufreq/s3c2440-cpufreq.c
-+++ b/drivers/cpufreq/s3c2440-cpufreq.c
-@@ -26,12 +26,6 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/map.h>
--
--#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
--#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
--#define S3C2440_CAMDIVN	    S3C2410_CLKREG(0x18)
--
- #define S3C2440_CLKDIVN_PDIVN	     (1<<0)
- #define S3C2440_CLKDIVN_HDIVN_MASK   (3<<1)
- #define S3C2440_CLKDIVN_HDIVN_1      (0<<1)
-@@ -162,8 +156,8 @@ static void s3c2440_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
- 	s3c_freq_dbg("%s: divisors: h=%d, p=%d\n", __func__,
- 		     cfg->divs.h_divisor, cfg->divs.p_divisor);
- 
--	clkdiv = __raw_readl(S3C2410_CLKDIVN);
--	camdiv = __raw_readl(S3C2440_CAMDIVN);
-+	clkdiv = s3c24xx_read_clkdivn();
-+	camdiv = s3c2440_read_camdivn();
- 
- 	clkdiv &= ~(S3C2440_CLKDIVN_HDIVN_MASK | S3C2440_CLKDIVN_PDIVN);
- 	camdiv &= ~CAMDIVN_HCLK_HALF;
-@@ -203,11 +197,11 @@ static void s3c2440_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
- 	 * then make a short delay and remove the hclk halving if necessary.
- 	 */
- 
--	__raw_writel(camdiv | CAMDIVN_HCLK_HALF, S3C2440_CAMDIVN);
--	__raw_writel(clkdiv, S3C2410_CLKDIVN);
-+	s3c2440_write_camdivn(camdiv | CAMDIVN_HCLK_HALF);
-+	s3c24xx_write_clkdivn(clkdiv);
- 
- 	ndelay(20);
--	__raw_writel(camdiv, S3C2440_CAMDIVN);
-+	s3c2440_write_camdivn(camdiv);
- 
- 	clk_set_parent(armclk, cfg->divs.dvs ? hclk : fclk);
- }
-diff --git a/drivers/cpufreq/s3c24xx-cpufreq.c b/drivers/cpufreq/s3c24xx-cpufreq.c
-index 01b1823ea208..37efc0dc3f91 100644
---- a/drivers/cpufreq/s3c24xx-cpufreq.c
-+++ b/drivers/cpufreq/s3c24xx-cpufreq.c
-@@ -27,12 +27,7 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/map.h>
--
- /* note, cpufreq support deals in kHz, no Hz */
--#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
--#define S3C2410_MPLLCON     S3C2410_CLKREG(0x04)
--
- static struct cpufreq_driver s3c24xx_driver;
- static struct s3c_cpufreq_config cpu_cur;
- static struct s3c_iotimings s3c24xx_iotiming;
-@@ -69,7 +64,7 @@ static void s3c_cpufreq_getcur(struct s3c_cpufreq_config *cfg)
- 	cfg->freq.pclk = pclk = clk_get_rate(clk_pclk);
- 	cfg->freq.armclk = armclk = clk_get_rate(clk_arm);
- 
--	cfg->pll.driver_data = __raw_readl(S3C2410_MPLLCON);
-+	cfg->pll.driver_data = s3c24xx_read_mpllcon();
- 	cfg->pll.frequency = fclk;
- 
- 	cfg->freq.hclk_tns = 1000000000 / (cfg->freq.hclk / 10);
-@@ -387,7 +382,7 @@ static unsigned int suspend_freq;
- static int s3c_cpufreq_suspend(struct cpufreq_policy *policy)
- {
- 	suspend_pll.frequency = clk_get_rate(_clk_mpll);
--	suspend_pll.driver_data = __raw_readl(S3C2410_MPLLCON);
-+	suspend_pll.driver_data = s3c24xx_read_mpllcon();
- 	suspend_freq = clk_get_rate(clk_arm);
- 
- 	return 0;
-@@ -548,7 +543,7 @@ static void s3c_cpufreq_update_loctkime(void)
- 	val |= calc_locktime(rate, cpu_cur.info->locktime_m);
- 
- 	pr_info("%s: new locktime is 0x%08x\n", __func__, val);
--	__raw_writel(val, S3C2410_LOCKTIME);
-+	s3c24xx_write_locktime(val);
- }
- 
- static int s3c_cpufreq_build_freq(void)
-diff --git a/include/linux/soc/samsung/s3c-cpufreq-core.h b/include/linux/soc/samsung/s3c-cpufreq-core.h
-index eca942559014..eaee883008a8 100644
---- a/include/linux/soc/samsung/s3c-cpufreq-core.h
-+++ b/include/linux/soc/samsung/s3c-cpufreq-core.h
-@@ -286,3 +286,10 @@ static inline int s3c_cpufreq_addfreq(struct cpufreq_frequency_table *table,
- 
- 	return index + 1;
- }
++#include <mach/map.h>
 +
-+u32 s3c2440_read_camdivn(void);
-+void s3c2440_write_camdivn(u32 camdiv);
-+u32 s3c24xx_read_clkdivn(void);
-+void s3c24xx_write_clkdivn(u32 clkdiv);
-+u32 s3c24xx_read_mpllcon(void);
-+void s3c24xx_write_locktime(u32 locktime);
+ #define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
+ 
+ #define S3C2410_PLLVAL(_m,_p,_s) ((_m) << 12 | ((_p) << 4) | ((_s)))
+diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-gpio.h b/arch/arm/mach-s3c24xx/include/mach/regs-gpio.h
+index 594e967c0673..51827d5577b6 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/regs-gpio.h
++++ b/arch/arm/mach-s3c24xx/include/mach/regs-gpio.h
+@@ -10,6 +10,8 @@
+ #ifndef __ASM_ARCH_REGS_GPIO_H
+ #define __ASM_ARCH_REGS_GPIO_H
+ 
++#include <plat/map-s3c.h>
++
+ #define S3C24XX_MISCCR		S3C24XX_GPIOREG2(0x80)
+ 
+ /* general configuration options */
+diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-irq.h b/arch/arm/mach-s3c24xx/include/mach/regs-irq.h
+index 8d8e669e3903..2921b48c56b2 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/regs-irq.h
++++ b/arch/arm/mach-s3c24xx/include/mach/regs-irq.h
+@@ -8,6 +8,8 @@
+ #ifndef ___ASM_ARCH_REGS_IRQ_H
+ #define ___ASM_ARCH_REGS_IRQ_H
+ 
++#include <plat/map-s3c.h>
++
+ /* interrupt controller */
+ 
+ #define S3C2410_IRQREG(x)   ((x) + S3C24XX_VA_IRQ)
+diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h b/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
+index 682759549e63..fefef7233f4b 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
++++ b/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
+@@ -11,6 +11,7 @@
+ #define __ASM_ARM_REGS_S3C2443_CLOCK
+ 
+ #include <linux/delay.h>
++#include <plat/map-s3c.h>
+ 
+ #define S3C2443_CLKREG(x)		((x) + S3C24XX_VA_CLKPWR)
+ 
+diff --git a/arch/arm/mach-s3c24xx/include/mach/s3c2412.h b/arch/arm/mach-s3c24xx/include/mach/s3c2412.h
+index 4ff83f956cfb..1ae369c81beb 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/s3c2412.h
++++ b/arch/arm/mach-s3c24xx/include/mach/s3c2412.h
+@@ -8,6 +8,8 @@
+ #ifndef __ARCH_ARM_MACH_S3C24XX_S3C2412_H
+ #define __ARCH_ARM_MACH_S3C24XX_S3C2412_H __FILE__
+ 
++#include <plat/map-s3c.h>
++
+ #define S3C2412_MEMREG(x)		(S3C24XX_VA_MEMCTRL + (x))
+ #define S3C2412_EBIREG(x)		(S3C2412_VA_EBI + (x))
+ 
+diff --git a/arch/arm/mach-s3c24xx/mach-h1940.c b/arch/arm/mach-s3c24xx/mach-h1940.c
+index d56e3befa459..287e42fc1665 100644
+--- a/arch/arm/mach-s3c24xx/mach-h1940.c
++++ b/arch/arm/mach-s3c24xx/mach-h1940.c
+@@ -48,6 +48,7 @@
+ #include <sound/uda1380.h>
+ 
+ #include <linux/platform_data/fb-s3c2410.h>
++#include <mach/map.h>
+ #include <mach/hardware.h>
+ #include <mach/regs-clock.h>
+ #include <mach/regs-gpio.h>
+diff --git a/arch/arm/mach-s3c24xx/mach-jive.c b/arch/arm/mach-s3c24xx/mach-jive.c
+index 3b33132b2334..8012c34bddd9 100644
+--- a/arch/arm/mach-s3c24xx/mach-jive.c
++++ b/arch/arm/mach-s3c24xx/mach-jive.c
+@@ -31,6 +31,7 @@
+ #include <linux/platform_data/mtd-nand-s3c2410.h>
+ #include <linux/platform_data/i2c-s3c2410.h>
+ 
++#include <mach/hardware.h>
+ #include <mach/regs-gpio.h>
+ #include <linux/platform_data/fb-s3c2410.h>
+ #include <mach/gpio-samsung.h>
+diff --git a/arch/arm/mach-s3c24xx/mach-rx1950.c b/arch/arm/mach-s3c24xx/mach-rx1950.c
+index ee4a0992339f..f94884090fbe 100644
+--- a/arch/arm/mach-s3c24xx/mach-rx1950.c
++++ b/arch/arm/mach-s3c24xx/mach-rx1950.c
+@@ -46,6 +46,7 @@
+ 
+ #include <sound/uda1380.h>
+ 
++#include <mach/hardware.h>
+ #include <mach/regs-gpio.h>
+ #include <mach/gpio-samsung.h>
+ 
+diff --git a/arch/arm/mach-s3c24xx/pm-h1940.S b/arch/arm/mach-s3c24xx/pm-h1940.S
+index a7bbe336ac6b..f9ee515e1cbe 100644
+--- a/arch/arm/mach-s3c24xx/pm-h1940.S
++++ b/arch/arm/mach-s3c24xx/pm-h1940.S
+@@ -7,7 +7,6 @@
+ 
+ #include <linux/linkage.h>
+ #include <asm/assembler.h>
+-#include <mach/hardware.h>
+ #include <mach/map.h>
+ 
+ #include <mach/regs-gpio.h>
+diff --git a/arch/arm/mach-s3c24xx/regs-mem.h b/arch/arm/mach-s3c24xx/regs-mem.h
+index 2f3bc48b5890..5048ab8f06c2 100644
+--- a/arch/arm/mach-s3c24xx/regs-mem.h
++++ b/arch/arm/mach-s3c24xx/regs-mem.h
+@@ -9,6 +9,8 @@
+ #ifndef __ARCH_ARM_MACH_S3C24XX_REGS_MEM_H
+ #define __ARCH_ARM_MACH_S3C24XX_REGS_MEM_H __FILE__
+ 
++#include <plat/map-s3c.h>
++
+ #define S3C2410_MEMREG(x)		(S3C24XX_VA_MEMCTRL + (x))
+ 
+ #define S3C2410_BWSCON			S3C2410_MEMREG(0x00)
+diff --git a/arch/arm/mach-s3c24xx/s3c2410.c b/arch/arm/mach-s3c24xx/s3c2410.c
+index 8427c150dd22..44bf3e1e77f1 100644
+--- a/arch/arm/mach-s3c24xx/s3c2410.c
++++ b/arch/arm/mach-s3c24xx/s3c2410.c
+@@ -25,7 +25,7 @@
+ #include <asm/mach/map.h>
+ #include <asm/mach/irq.h>
+ 
+-#include <mach/hardware.h>
++#include <mach/map.h>
+ #include <mach/gpio-samsung.h>
+ #include <asm/irq.h>
+ #include <asm/system_misc.h>
+diff --git a/arch/arm/mach-s3c24xx/s3c2412.c b/arch/arm/mach-s3c24xx/s3c2412.c
+index 209f952a6c98..75648dcc2c1d 100644
+--- a/arch/arm/mach-s3c24xx/s3c2412.c
++++ b/arch/arm/mach-s3c24xx/s3c2412.c
+@@ -29,7 +29,7 @@
+ #include <asm/irq.h>
+ #include <asm/system_misc.h>
+ 
+-#include <mach/hardware.h>
++#include <mach/map.h>
+ #include <mach/regs-clock.h>
+ #include <mach/regs-gpio.h>
+ 
+diff --git a/arch/arm/mach-s3c24xx/s3c2416.c b/arch/arm/mach-s3c24xx/s3c2416.c
+index 1cdb7bd3e713..ef2eace605e6 100644
+--- a/arch/arm/mach-s3c24xx/s3c2416.c
++++ b/arch/arm/mach-s3c24xx/s3c2416.c
+@@ -26,7 +26,7 @@
+ #include <asm/mach/map.h>
+ #include <asm/mach/irq.h>
+ 
+-#include <mach/hardware.h>
++#include <mach/map.h>
+ #include <mach/gpio-samsung.h>
+ #include <asm/proc-fns.h>
+ #include <asm/irq.h>
+diff --git a/arch/arm/mach-s3c24xx/s3c2443.c b/arch/arm/mach-s3c24xx/s3c2443.c
+index f404ecac4baf..00318ad994ff 100644
+--- a/arch/arm/mach-s3c24xx/s3c2443.c
++++ b/arch/arm/mach-s3c24xx/s3c2443.c
+@@ -23,7 +23,7 @@
+ #include <asm/mach/map.h>
+ #include <asm/mach/irq.h>
+ 
+-#include <mach/hardware.h>
++#include <mach/map.h>
+ #include <mach/gpio-samsung.h>
+ #include <mach/irqs.h>
+ #include <asm/irq.h>
+diff --git a/arch/arm/mach-s3c24xx/s3c244x.c b/arch/arm/mach-s3c24xx/s3c244x.c
+index f5bd489bac85..0ca188d0ffe5 100644
+--- a/arch/arm/mach-s3c24xx/s3c244x.c
++++ b/arch/arm/mach-s3c24xx/s3c244x.c
+@@ -25,7 +25,7 @@
+ #include <asm/mach/map.h>
+ #include <asm/mach/irq.h>
+ 
+-#include <mach/hardware.h>
++#include <mach/map.h>
+ #include <asm/irq.h>
+ 
+ #include <mach/regs-clock.h>
+diff --git a/arch/arm/mach-s3c24xx/sleep-s3c2410.S b/arch/arm/mach-s3c24xx/sleep-s3c2410.S
+index 659f9eff9de2..e4f6f64e7826 100644
+--- a/arch/arm/mach-s3c24xx/sleep-s3c2410.S
++++ b/arch/arm/mach-s3c24xx/sleep-s3c2410.S
+@@ -13,7 +13,6 @@
+ #include <linux/linkage.h>
+ #include <linux/serial_s3c.h>
+ #include <asm/assembler.h>
+-#include <mach/hardware.h>
+ #include <mach/map.h>
+ 
+ #include <mach/regs-gpio.h>
+diff --git a/arch/arm/mach-s3c24xx/sleep-s3c2412.S b/arch/arm/mach-s3c24xx/sleep-s3c2412.S
+index c373f1ca862b..434f5082b2ed 100644
+--- a/arch/arm/mach-s3c24xx/sleep-s3c2412.S
++++ b/arch/arm/mach-s3c24xx/sleep-s3c2412.S
+@@ -8,7 +8,6 @@
+ 
+ #include <linux/linkage.h>
+ #include <asm/assembler.h>
+-#include <mach/hardware.h>
+ #include <mach/map.h>
+ 
+ #include <mach/regs-irq.h>
+diff --git a/arch/arm/mach-s3c24xx/sleep.S b/arch/arm/mach-s3c24xx/sleep.S
+index f0f11ad60c52..4bda4a413584 100644
+--- a/arch/arm/mach-s3c24xx/sleep.S
++++ b/arch/arm/mach-s3c24xx/sleep.S
+@@ -13,7 +13,6 @@
+ #include <linux/linkage.h>
+ #include <linux/serial_s3c.h>
+ #include <asm/assembler.h>
+-#include <mach/hardware.h>
+ #include <mach/map.h>
+ 
+ #include <mach/regs-gpio.h>
+diff --git a/drivers/spi/spi-s3c24xx-regs.h b/drivers/spi/spi-s3c24xx-regs.h
+index 37b93ff7c7fe..b76d591eba8c 100644
+--- a/drivers/spi/spi-s3c24xx-regs.h
++++ b/drivers/spi/spi-s3c24xx-regs.h
+@@ -8,6 +8,8 @@
+ #ifndef __ASM_ARCH_REGS_SPI_H
+ #define __ASM_ARCH_REGS_SPI_H
+ 
++#include <mach/map.h>
++
+ #define S3C2410_SPCON		(0x00)
+ 
+ #define S3C2410_SPCON_SMOD_DMA	(2 << 5)	/* DMA mode */
+diff --git a/drivers/usb/gadget/udc/s3c2410_udc_regs.h b/drivers/usb/gadget/udc/s3c2410_udc_regs.h
+index d8d2eeaca088..4df279342cdd 100644
+--- a/drivers/usb/gadget/udc/s3c2410_udc_regs.h
++++ b/drivers/usb/gadget/udc/s3c2410_udc_regs.h
+@@ -6,6 +6,8 @@
+ #ifndef __ASM_ARCH_REGS_UDC_H
+ #define __ASM_ARCH_REGS_UDC_H
+ 
++#include <mach/map.h>
++
+ #define S3C2410_USBDREG(x) (x)
+ 
+ #define S3C2410_UDC_FUNC_ADDR_REG	S3C2410_USBDREG(0x0140)
 -- 
 2.20.0
 
