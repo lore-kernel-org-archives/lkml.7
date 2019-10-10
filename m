@@ -2,166 +2,125 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0703AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67B4ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA4420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8157120679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iXJ5vQVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732874AbfJJFhH (ORCPT
+        id S1732891AbfJJFhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 01:37:07 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:10089
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726612AbfJJFhH (ORCPT
+        Thu, 10 Oct 2019 01:37:15 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40758 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfJJFhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 01:37:07 -0400
-X-IronPort-AV: E=Sophos;i="5.67,279,1566856800"; 
-   d="scan'208";a="322222603"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 07:37:03 +0200
-Date:   Thu, 10 Oct 2019 07:37:03 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     Jules Irenge <jbi.octave@gmail.com>,
-        outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Outreachy kernel] [PATCH] staging: qlge: Fix multiple assignments
- warning by splitting the assignement into two each
-In-Reply-To: <f9bdcaeccc9dd131f28a64f4b19136d1c92a27e2.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.1910100734330.3287@hadrien>
-References: <20191009204311.7988-1-jbi.octave@gmail.com>  <alpine.DEB.2.21.1910092248170.2570@hadrien> <f9bdcaeccc9dd131f28a64f4b19136d1c92a27e2.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 10 Oct 2019 01:37:15 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d26so2917141pgl.7;
+        Wed, 09 Oct 2019 22:37:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ld57m95bHJQBRxDnF5FnlK1Sfbx3W7UXVC5v8g98wR4=;
+        b=iXJ5vQVG3nQIDNvzt3AWLSYveRStNbcXZccXNXLBr55Dpz2RUwVzLtlrPVLOTmwc9O
+         JTYO5JlumlbzUVivQqGlauVQBPQmkENIAGljV/VSXMzW3pjS2HvTtNlxSwnVsKKVeFfY
+         VHE1lMB5NNAxqJa3oxlmSN/fYXLpyXeCTtjb5WPFY6CcakSNS8PwIfCFutTz5NWilk1V
+         GuMORY7w/6cTzTHoPQnYrSgaGwxu8a0TRvo4fr5qhlT0rshAgkJwzIRA0EAHdE5UEvpB
+         OV4edPzJeSxrAiF0+6teKeZ+pYqgHG03zZUBeUYVSEngfKvaAw8zQta/AyxumcMc3lkL
+         RpYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ld57m95bHJQBRxDnF5FnlK1Sfbx3W7UXVC5v8g98wR4=;
+        b=krizwEZJNDEFu0evJX6bqjVhtYx3L09DxPCQqE/YT/o713kksM4hMKjcnwHu0hPJ9M
+         FRBYli+ieCNJICHbrX3PCGCZALhqLvd8dmHOz4ZdC5smAdctOddEcfR0RSqa5rP+TTn0
+         jOirKervrboE00UAzuiSeN4cSmwG/zTxOJVsWUoy4AgTG+yr21iXhget+O2MAyM8zcBs
+         fIWeUMSXhsz4Ng3hMhN9zYiTDsrJYOJmKkcogAi+6jm9M+B/sR30uitZxYaMGyPT4ZF/
+         tOduRghtU1iU9u1GMSns9SBoen6aDd5WemfoOTm1i4kKa1x09THnwego/Oybj+FA6A9p
+         JRhg==
+X-Gm-Message-State: APjAAAX7WsXoq29cnqUYKj9eskaMczQIR/6ycxIoZkqeDHEyh/YB/6LC
+        VyAeKmus9Gtockx6pMo/P5abf92DoEbOC39/3gA=
+X-Google-Smtp-Source: APXvYqxH7326Yo5t32GMAyp5NmRX5IOI23GOLXR6jw0wZX0o300BEZOjtWXdIVqF/sN+W8nIFTIlo9LnKM8FVo6N8nw=
+X-Received: by 2002:a63:d0a:: with SMTP id c10mr6760026pgl.203.1570685834587;
+ Wed, 09 Oct 2019 22:37:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191009200523.8436-1-stuart.w.hayes@gmail.com> <20191009200523.8436-3-stuart.w.hayes@gmail.com>
+In-Reply-To: <20191009200523.8436-3-stuart.w.hayes@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 10 Oct 2019 08:37:02 +0300
+Message-ID: <CAHp75Vc1mZ7qxKPGaqDVAQ9d_UjNq9LJDEPWHQHaYCfw7vGrmA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 9, 2019 at 11:05 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+>
+> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+>
+> When inband presence is disabled, PDS may come up at any time, or not
+> at all. PDS being low may indicate that the card is still mating, and
+> we could expect contact bounce to bring down the link as well.
+>
+> It is reasonable to assume that most cards will mate in a hotplug slot
+> in about a second. Thus, when we know PDS only reflects out-of-band
+> presence, it's worthwhile to wait the extra second or so to make sure
+> the card is properly mated before loading the driver, and to prevent
+> the hotplug code from disabling a device if the presence detect change
+> goes active after the device is enabled.
 
+> +static void pcie_wait_for_presence(struct pci_dev *pdev)
+> +{
+> +       int timeout = 1250;
+> +       bool pds;
+> +       u16 slot_status;
+> +
+> +       while (true) {
+> +               pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> +               pds = !!(slot_status & PCI_EXP_SLTSTA_PDS);
+> +               if (pds || timeout <= 0)
+> +                       break;
+> +               msleep(10);
+> +               timeout -= 10;
+> +       }
 
-On Wed, 9 Oct 2019, Joe Perches wrote:
+Can we avoid infinite loops? They are hard to parse (in most cases,
+and especially when it's a timeout loop)
 
-> On Wed, 2019-10-09 at 22:48 +0200, Julia Lawall wrote:
-> > On Wed, 9 Oct 2019, Jules Irenge wrote:
-> > > Fix multiple assignments warning " check
-> > >  issued by checkpatch.pl tool:
-> > > "CHECK: multiple assignments should be avoided".
-> []
-> > > diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-> []
-> > > @@ -141,8 +141,10 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
-> > >  	u32 *direct_ptr, temp;
-> > >  	u32 *indirect_ptr;
-> > >
-> > > -	xfi_direct_valid = xfi_indirect_valid = 0;
-> > > -	xaui_direct_valid = xaui_indirect_valid = 1;
-> > > +	xfi_indirect_valid = 0;
-> > > +	xfi_direct_valid = xfi_indirect_valid;
-> > > +	xaui_indirect_valid = 1;
-> > > +	xaui_direct_valid = xaui_indirect_valid
-> >
-> > Despite checkpatch, I think that the original code was easier to
-> > understand.
->
-> It'd likely be easier to understand if all the
-> <foo>_valid uses were bool and the ql_get_both_serdes
-> <foo>_valid arguments were change to bool from
-> unsigned int as well.
+unsigned int retries = 125; // 1250 ms
 
-Indeed, given the names and the values, bool would be much better.
+do {
+ ...
+} while (--retries);
 
-> btw: qlge likely is going to be deleted and not updated.
+> +
+> +       if (!pds)
+> +               pci_info(pdev, "Presence Detect state not set in 1250 msec\n");
+> +}
 
-OK.  Jules, if you want to make this change, you can, but it could be
-better to move on to some other driver.
-
-thanks,
-julia
-
->
-> ---
->  drivers/staging/qlge/qlge_dbg.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-> index 7e16066a3527..90ab37d4c49d 100644
-> --- a/drivers/staging/qlge/qlge_dbg.c
-> +++ b/drivers/staging/qlge/qlge_dbg.c
-> @@ -112,7 +112,7 @@ static int ql_read_serdes_reg(struct ql_adapter *qdev, u32 reg, u32 *data)
->
->  static void ql_get_both_serdes(struct ql_adapter *qdev, u32 addr,
->  			u32 *direct_ptr, u32 *indirect_ptr,
-> -			unsigned int direct_valid, unsigned int indirect_valid)
-> +			bool direct_valid, bool indirect_valid)
->  {
->  	unsigned int status;
->
-> @@ -136,14 +136,12 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
->  				struct ql_mpi_coredump *mpi_coredump)
->  {
->  	int status;
-> -	unsigned int xfi_direct_valid, xfi_indirect_valid, xaui_direct_valid;
-> -	unsigned int xaui_indirect_valid, i;
-> +	bool xfi_direct_valid = false, xfi_indirect_valid = false;
-> +	bool xaui_direct_valid = true, xaui_indirect_valid = true;
-> +	unsigned int i;
->  	u32 *direct_ptr, temp;
->  	u32 *indirect_ptr;
->
-> -	xfi_direct_valid = xfi_indirect_valid = 0;
-> -	xaui_direct_valid = xaui_indirect_valid = 1;
-> -
->  	/* The XAUI needs to be read out per port */
->  	status = ql_read_other_func_serdes_reg(qdev,
->  			XG_SERDES_XAUI_HSS_PCS_START, &temp);
-> @@ -152,7 +150,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
->
->  	if ((temp & XG_SERDES_ADDR_XAUI_PWR_DOWN) ==
->  				XG_SERDES_ADDR_XAUI_PWR_DOWN)
-> -		xaui_indirect_valid = 0;
-> +		xaui_indirect_valid = false;
->
->  	status = ql_read_serdes_reg(qdev, XG_SERDES_XAUI_HSS_PCS_START, &temp);
->
-> @@ -161,7 +159,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
->
->  	if ((temp & XG_SERDES_ADDR_XAUI_PWR_DOWN) ==
->  				XG_SERDES_ADDR_XAUI_PWR_DOWN)
-> -		xaui_direct_valid = 0;
-> +		xaui_direct_valid = false;
->
->  	/*
->  	 * XFI register is shared so only need to read one
-> @@ -176,18 +174,18 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
->  		/* now see if i'm NIC 1 or NIC 2 */
->  		if (qdev->func & 1)
->  			/* I'm NIC 2, so the indirect (NIC1) xfi is up. */
-> -			xfi_indirect_valid = 1;
-> +			xfi_indirect_valid = true;
->  		else
-> -			xfi_direct_valid = 1;
-> +			xfi_direct_valid = true;
->  	}
->  	if ((temp & XG_SERDES_ADDR_XFI2_PWR_UP) ==
->  					XG_SERDES_ADDR_XFI2_PWR_UP) {
->  		/* now see if i'm NIC 1 or NIC 2 */
->  		if (qdev->func & 1)
->  			/* I'm NIC 2, so the indirect (NIC1) xfi is up. */
-> -			xfi_direct_valid = 1;
-> +			xfi_direct_valid = true;
->  		else
-> -			xfi_indirect_valid = 1;
-> +			xfi_indirect_valid = true;
->  	}
->
->  	/* Get XAUI_AN register block. */
->
->
+-- 
+With Best Regards,
+Andy Shevchenko
