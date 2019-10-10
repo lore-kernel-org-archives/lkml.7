@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D66C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D5BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E6C20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C030E21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696668;
-	bh=ADigWx33rF4XyHxIEKHsXdqfJMUHpqFwLSqHQEu0hVc=;
+	s=default; t=1570696673;
+	bh=y2zbsO5T3/Z2dXmo1sqzHSi55Pv/yML1S45Zkv/rtH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0OxC7MjsUQvoTRXI4CxcLoIJonZV39SA8+6ymNXVap/fQGmkcNW9lQHVM8kT5dirq
-	 0j9WCX0rqYib3/nH0GikGa6J9wt7c3JTQ0090Bk/pnAnw6jc9mE7IoGHIe5fij8bEA
-	 oadbIcmsuj5OFDNI3bcV3qtC7c6LCc3GZcO3Z1uU=
+	b=kE0sUry28e6Z4ZcjHb6zjoddraD7quwAifqevMEtLjvdegKwK3UsN9XFiKqr0tk7Y
+	 Wvr6si5P3aJzK78OHry71CJgtF+PKMMiYoUK+kv0/whH/10u7SGJwY6deXAbliIRVl
+	 uGfPmPO5OlT0vgbG/2tUazJmB6NePhSJnbsBnyRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733225AbfJJIhr (ORCPT
+        id S1733293AbfJJIhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40424 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:37:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbfJJIhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:37:47 -0400
+        id S1728388AbfJJIhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:37:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E0BD20B7C;
-        Thu, 10 Oct 2019 08:37:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0066B218AC;
+        Thu, 10 Oct 2019 08:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696666;
-        bh=ADigWx33rF4XyHxIEKHsXdqfJMUHpqFwLSqHQEu0hVc=;
+        s=default; t=1570696669;
+        bh=y2zbsO5T3/Z2dXmo1sqzHSi55Pv/yML1S45Zkv/rtH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNEyCt2P73zS+2K4y/4+/eup+SEKoEV/KLsYrJuBg/lJHvrTLzyCHejeSPFlaHoor
-         h9sgExYpUu1nMBSGOseJD+QfYR54DlUcV0fjsL0bBj2erADG/MlFO8Iv9FcgxAJgFk
-         oFbwedJESpwE3NnDxochzSlBC5UVNGdLrInQUsY4=
+        b=qZS4vFKhSPO1xsfQkO58Wb6yS02cr6LAM/82327fXSzOzJCcFhvIx7RYTLuBESec5
+         Z611qrxSjoIYIkfiiKZ3WOGkDHkBWuyN1LgaAxtrmEcW7MJpmwodycvgLdn0kiH1OO
+         iWz6R47OZtZdpjU8x0qLSqBqbBRp1unxGG0EwPM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.3 001/148] s390/process: avoid potential reading of freed stack
-Date:   Thu, 10 Oct 2019 10:34:22 +0200
-Message-Id: <20191010083609.882111313@linuxfoundation.org>
+        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Paul Mackerras <paulus@ozlabs.org>
+Subject: [PATCH 5.3 010/148] KVM: PPC: Book3S: Enable XIVE native capability only if OPAL has required functions
+Date:   Thu, 10 Oct 2019 10:34:31 +0200
+Message-Id: <20191010083611.708276260@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,62 +60,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Paul Mackerras <paulus@ozlabs.org>
 
-commit 8769f610fe6d473e5e8e221709c3ac402037da6c upstream.
+commit 2ad7a27deaf6d78545d97ab80874584f6990360e upstream.
 
-With THREAD_INFO_IN_TASK (which is selected on s390) task's stack usage
-is refcounted and should always be protected by get/put when touching
-other task's stack to avoid race conditions with task's destruction code.
+There are some POWER9 machines where the OPAL firmware does not support
+the OPAL_XIVE_GET_QUEUE_STATE and OPAL_XIVE_SET_QUEUE_STATE calls.
+The impact of this is that a guest using XIVE natively will not be able
+to be migrated successfully.  On the source side, the get_attr operation
+on the KVM native device for the KVM_DEV_XIVE_GRP_EQ_CONFIG attribute
+will fail; on the destination side, the set_attr operation for the same
+attribute will fail.
 
-Fixes: d5c352cdd022 ("s390: move thread_info into task_struct")
-Cc: stable@vger.kernel.org # v4.10+
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+This adds tests for the existence of the OPAL get/set queue state
+functions, and if they are not supported, the XIVE-native KVM device
+is not created and the KVM_CAP_PPC_IRQ_XIVE capability returns false.
+Userspace can then either provide a software emulation of XIVE, or
+else tell the guest that it does not have a XIVE controller available
+to it.
+
+Cc: stable@vger.kernel.org # v5.2+
+Fixes: 3fab2d10588e ("KVM: PPC: Book3S HV: XIVE: Activate XIVE exploitation mode")
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/process.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ arch/powerpc/include/asm/kvm_ppc.h    |    1 +
+ arch/powerpc/include/asm/xive.h       |    1 +
+ arch/powerpc/kvm/book3s.c             |    8 +++++---
+ arch/powerpc/kvm/book3s_xive_native.c |    5 +++++
+ arch/powerpc/kvm/powerpc.c            |    3 ++-
+ arch/powerpc/sysdev/xive/native.c     |    7 +++++++
+ 6 files changed, 21 insertions(+), 4 deletions(-)
 
---- a/arch/s390/kernel/process.c
-+++ b/arch/s390/kernel/process.c
-@@ -184,20 +184,30 @@ unsigned long get_wchan(struct task_stru
+--- a/arch/powerpc/include/asm/kvm_ppc.h
++++ b/arch/powerpc/include/asm/kvm_ppc.h
+@@ -598,6 +598,7 @@ extern int kvmppc_xive_native_get_vp(str
+ 				     union kvmppc_one_reg *val);
+ extern int kvmppc_xive_native_set_vp(struct kvm_vcpu *vcpu,
+ 				     union kvmppc_one_reg *val);
++extern bool kvmppc_xive_native_supported(void);
  
- 	if (!p || p == current || p->state == TASK_RUNNING || !task_stack_page(p))
- 		return 0;
-+
-+	if (!try_get_task_stack(p))
-+		return 0;
-+
- 	low = task_stack_page(p);
- 	high = (struct stack_frame *) task_pt_regs(p);
- 	sf = (struct stack_frame *) p->thread.ksp;
--	if (sf <= low || sf > high)
--		return 0;
-+	if (sf <= low || sf > high) {
-+		return_address = 0;
-+		goto out;
-+	}
- 	for (count = 0; count < 16; count++) {
- 		sf = (struct stack_frame *) sf->back_chain;
--		if (sf <= low || sf > high)
--			return 0;
-+		if (sf <= low || sf > high) {
-+			return_address = 0;
-+			goto out;
+ #else
+ static inline int kvmppc_xive_set_xive(struct kvm *kvm, u32 irq, u32 server,
+--- a/arch/powerpc/include/asm/xive.h
++++ b/arch/powerpc/include/asm/xive.h
+@@ -127,6 +127,7 @@ extern int xive_native_get_queue_state(u
+ extern int xive_native_set_queue_state(u32 vp_id, uint32_t prio, u32 qtoggle,
+ 				       u32 qindex);
+ extern int xive_native_get_vp_state(u32 vp_id, u64 *out_state);
++extern bool xive_native_has_queue_state_support(void);
+ 
+ #else
+ 
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -1083,9 +1083,11 @@ static int kvmppc_book3s_init(void)
+ 	if (xics_on_xive()) {
+ 		kvmppc_xive_init_module();
+ 		kvm_register_device_ops(&kvm_xive_ops, KVM_DEV_TYPE_XICS);
+-		kvmppc_xive_native_init_module();
+-		kvm_register_device_ops(&kvm_xive_native_ops,
+-					KVM_DEV_TYPE_XIVE);
++		if (kvmppc_xive_native_supported()) {
++			kvmppc_xive_native_init_module();
++			kvm_register_device_ops(&kvm_xive_native_ops,
++						KVM_DEV_TYPE_XIVE);
 +		}
- 		return_address = sf->gprs[8];
- 		if (!in_sched_functions(return_address))
--			return return_address;
-+			goto out;
- 	}
--	return 0;
-+out:
-+	put_task_stack(p);
-+	return return_address;
+ 	} else
+ #endif
+ 		kvm_register_device_ops(&kvm_xics_ops, KVM_DEV_TYPE_XICS);
+--- a/arch/powerpc/kvm/book3s_xive_native.c
++++ b/arch/powerpc/kvm/book3s_xive_native.c
+@@ -1171,6 +1171,11 @@ int kvmppc_xive_native_set_vp(struct kvm
+ 	return 0;
  }
  
- unsigned long arch_align_stack(unsigned long sp)
++bool kvmppc_xive_native_supported(void)
++{
++	return xive_native_has_queue_state_support();
++}
++
+ static int xive_native_debug_show(struct seq_file *m, void *private)
+ {
+ 	struct kvmppc_xive *xive = m->private;
+--- a/arch/powerpc/kvm/powerpc.c
++++ b/arch/powerpc/kvm/powerpc.c
+@@ -561,7 +561,8 @@ int kvm_vm_ioctl_check_extension(struct
+ 		 * a POWER9 processor) and the PowerNV platform, as
+ 		 * nested is not yet supported.
+ 		 */
+-		r = xive_enabled() && !!cpu_has_feature(CPU_FTR_HVMODE);
++		r = xive_enabled() && !!cpu_has_feature(CPU_FTR_HVMODE) &&
++			kvmppc_xive_native_supported();
+ 		break;
+ #endif
+ 
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -811,6 +811,13 @@ int xive_native_set_queue_state(u32 vp_i
+ }
+ EXPORT_SYMBOL_GPL(xive_native_set_queue_state);
+ 
++bool xive_native_has_queue_state_support(void)
++{
++	return opal_check_token(OPAL_XIVE_GET_QUEUE_STATE) &&
++		opal_check_token(OPAL_XIVE_SET_QUEUE_STATE);
++}
++EXPORT_SYMBOL_GPL(xive_native_has_queue_state_support);
++
+ int xive_native_get_vp_state(u32 vp_id, u64 *out_state)
+ {
+ 	__be64 state;
 
 
