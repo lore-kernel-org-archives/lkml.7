@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59703C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17448C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341772190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCBEB2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698081;
-	bh=+mT8/3hA2cfjUIcBsN2OvGqB9yxy2MWscjrV4RnpD/A=;
+	s=default; t=1570698088;
+	bh=uOi64M7D10KweumGcEk7pWtgTYT8TAKC8lUsJlYhmAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oRCbR450r3/AMXfCaLy+7SjTlKG4cUSMzy3NuVnhRdqq/nABS4tdd6t9MrVnDbKXh
-	 V9+rSPGSKfLqRGYQPEiKtVc5jg4kSQWG3vZhka6zIdabb1Ya/oELrngsmOY+83jBaN
-	 +P6jIkE3cLv8X4KsXgVCpCH0sSpLO3oJl7o2BJRk=
+	b=oMsppJlzE97VGoqSAo6L3IP6sn68EX8usNBPOM814GOEpVUGQqyzJqNMQbkFamZ5P
+	 hpI2VSJlNiPax4FALR7JjsiURgOJsZGaPPOqGxwNDbiLIKJtOj8tTkfHUvBDgV0Kw2
+	 +fC33tOLbPdKf34Vj0gNoJSJLTjphYrJmQ6WgI+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389037AbfJJJBT (ORCPT
+        id S2388355AbfJJIlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46238 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:41:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388391AbfJJIlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:41:44 -0400
+        id S2388342AbfJJIl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:41:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 685C521D56;
-        Thu, 10 Oct 2019 08:41:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8C962054F;
+        Thu, 10 Oct 2019 08:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696903;
-        bh=+mT8/3hA2cfjUIcBsN2OvGqB9yxy2MWscjrV4RnpD/A=;
+        s=default; t=1570696887;
+        bh=uOi64M7D10KweumGcEk7pWtgTYT8TAKC8lUsJlYhmAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=riaZ+ndGaWUXxAGdfoASXtzIKEOUvCEk8Ft1Ixm28Idx8lqcQdzlpp7cmUkvCGTEV
-         U3kv0Bk4ysFApawiOm7l1he+6s0mPyYWqiEBWDUdKjs6yngZCcUoXlzQJ54OL//dZb
-         MTa2zZ63Mq6v8PNt1Kf07V8vekrO75SeWDmuXNzU=
+        b=ThLi2d0wp4X+T8lrazxv4xx30X2qVZfotrmxuv3n80op3O94BftpIV9Py1/FmFMiJ
+         a4PtTrojpYDsXHnIWYpmYBO1CjI0HdLQJsC0EczyHbfC3BXLMsBjVioVVq0ektmISc
+         tCme/6b+QsZwMr8UA4IaOjoiQtrE5CblvNM2rI08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Druzhinin <igor.druzhinin@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 096/148] xen/pci: reserve MCFG areas earlier
-Date:   Thu, 10 Oct 2019 10:35:57 +0200
-Message-Id: <20191010083617.094504480@linuxfoundation.org>
+Subject: [PATCH 5.3 090/148] ima: fix freeing ongoing ahash_request
+Date:   Thu, 10 Oct 2019 10:35:51 +0200
+Message-Id: <20191010083616.787812636@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,88 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Druzhinin <igor.druzhinin@citrix.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit a4098bc6eed5e31e0391bcc068e61804c98138df ]
+[ Upstream commit 4ece3125f21b1d42b84896c5646dbf0e878464e1 ]
 
-If MCFG area is not reserved in E820, Xen by default will defer its usage
-until Dom0 registers it explicitly after ACPI parser recognizes it as
-a reserved resource in DSDT. Having it reserved in E820 is not
-mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
-and firmware is free to keep a hole in E820 in that place. Xen doesn't know
-what exactly is inside this hole since it lacks full ACPI view of the
-platform therefore it's potentially harmful to access MCFG region
-without additional checks as some machines are known to provide
-inconsistent information on the size of the region.
+integrity_kernel_read() can fail in which case we forward to call
+ahash_request_free() on a currently running request. We have to wait
+for its completion before we can free the request.
 
-Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
-PCI enumeration starts exactly there as well. Trying to register a device
-prior to MCFG reservation causes multiple problems with PCIe extended
-capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
-no convenient hooks for us to subscribe to so register MCFG areas earlier
-upon the first invocation of xen_add_device(). It should be safe to do once
-since all the boot time buses must have their MCFG areas in MCFG table
-already and we don't support PCI bus hot-plug.
+This was observed by interrupting a "find / -type f -xdev -print0 | xargs -0
+cat 1>/dev/null" with ctrl-c on an IMA enabled filesystem.
 
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/pci.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ security/integrity/ima/ima_crypto.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
-index 3eeb9bea76300..224df03ce42e3 100644
---- a/drivers/xen/pci.c
-+++ b/drivers/xen/pci.c
-@@ -17,6 +17,8 @@
- #include "../pci/pci.h"
- #ifdef CONFIG_PCI_MMCONFIG
- #include <asm/pci_x86.h>
-+
-+static int xen_mcfg_late(void);
- #endif
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index 7532b062be594..73044fc6a9521 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -271,6 +271,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
+ 		if (rc != rbuf_len) {
+ 			if (rc >= 0)
+ 				rc = -EINVAL;
++			/*
++			 * Forward current rc, do not overwrite with return value
++			 * from ahash_wait()
++			 */
++			ahash_wait(ahash_rc, &wait);
+ 			goto out3;
+ 		}
  
- static bool __read_mostly pci_seg_supported = true;
-@@ -28,7 +30,18 @@ static int xen_add_device(struct device *dev)
- #ifdef CONFIG_PCI_IOV
- 	struct pci_dev *physfn = pci_dev->physfn;
- #endif
--
-+#ifdef CONFIG_PCI_MMCONFIG
-+	static bool pci_mcfg_reserved = false;
-+	/*
-+	 * Reserve MCFG areas in Xen on first invocation due to this being
-+	 * potentially called from inside of acpi_init immediately after
-+	 * MCFG table has been finally parsed.
-+	 */
-+	if (!pci_mcfg_reserved) {
-+		xen_mcfg_late();
-+		pci_mcfg_reserved = true;
-+	}
-+#endif
- 	if (pci_seg_supported) {
- 		struct {
- 			struct physdev_pci_device_add add;
-@@ -201,7 +214,7 @@ static int __init register_xen_pci_notifier(void)
- arch_initcall(register_xen_pci_notifier);
- 
- #ifdef CONFIG_PCI_MMCONFIG
--static int __init xen_mcfg_late(void)
-+static int xen_mcfg_late(void)
- {
- 	struct pci_mmcfg_region *cfg;
- 	int rc;
-@@ -240,8 +253,4 @@ static int __init xen_mcfg_late(void)
- 	}
- 	return 0;
- }
--/*
-- * Needs to be done after acpi_init which are subsys_initcall.
-- */
--subsys_initcall_sync(xen_mcfg_late);
- #endif
 -- 
 2.20.1
 
