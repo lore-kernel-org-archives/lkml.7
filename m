@@ -2,143 +2,60 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877D2ECE58C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7F0ECE58C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6660320B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B34820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732655AbfJJCwl (ORCPT
+        id S1732698AbfJJCws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 22:52:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39694 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731589AbfJJCwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 22:52:40 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 401BE30860D6;
-        Thu, 10 Oct 2019 02:52:39 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-56.pek2.redhat.com [10.72.12.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 54D1260923;
-        Thu, 10 Oct 2019 02:52:33 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 10:52:29 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
-        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Stephan Mueller <smueller@chronox.de>,
-        kexec@lists.infradead.org
-Subject: Re: [PATCH] lib/string: make memzero_explicit inline instead of
- external
-Message-ID: <20191010025229.GA3376@dhcp-128-65.nay.redhat.com>
-References: <1d17349e-98ab-b582-6981-b484b0e970b6@redhat.com>
- <20191007220000.GA408752@rani.riverdale.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007220000.GA408752@rani.riverdale.lan>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 10 Oct 2019 02:52:40 +0000 (UTC)
+        Wed, 9 Oct 2019 22:52:48 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:39410 "EHLO
+        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbfJJCws (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 22:52:48 -0400
+Received: from P80254710 (unknown [121.12.147.249])
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 3A9C7261AAB;
+        Thu, 10 Oct 2019 10:52:45 +0800 (CST)
+Date:   Thu, 10 Oct 2019 10:52:49 +0800
+From:   "richard.peng@oppo.com" <richard.peng@oppo.com>
+To:     pbonzini <pbonzini@redhat.com>, rkrcmar <rkrcmar@redhat.com>
+Cc:     kvm <kvm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: [PATCH] kvm/x86 : Replace BUG_ON(1) with BUG()
+X-Priority: 3
+X-GUID: DC6DBE28-1918-4988-81E0-F1DEDA6BAD10
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.10.151[cn]
+Mime-Version: 1.0
+Message-ID: <201910101052488242114@oppo.com>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: base64
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZVk9VTE5NS0tKT0xJT0xISk9ZV1koWU
+        FJSUtLSjdXWS1ZQUlXWQkOFx4IWUFZNTQpNjo3JCkuNz5ZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MSI6Tgw4QzlNFUw9AywJGh0a
+        NhxPFEtVSlVKTkxLTUxOQk1OTE5JVTMWGhIXVQkSGBMaCR9VCx4VHDsUCwsUVRgUFkVZV1kSC1lB
+        WUpJSlVKSVVKT0xVSU9CWVdZCAFZQUpNSk03Bg++
+X-HM-Tid: 0a6db3953e9b9375kuws3a9c7261aab
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/19 at 06:00pm, Arvind Sankar wrote:
-> With the use of the barrier implied by barrier_data(), there is no need
-> for memzero_explicit to be extern. Making it inline saves the overhead
-> of a function call, and allows the code to be reused in arch/*/purgatory
-> without having to duplicate the implementation.
-> 
-> Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->  include/linux/string.h | 21 ++++++++++++++++++++-
->  lib/string.c           | 21 ---------------------
->  2 files changed, 20 insertions(+), 22 deletions(-)
-> 
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index b2f9df7f0761..b6ccdc2c7f02 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -227,7 +227,26 @@ static inline bool strstarts(const char *str, const char *prefix)
->  }
->  
->  size_t memweight(const void *ptr, size_t bytes);
-> -void memzero_explicit(void *s, size_t count);
-> +
-> +/**
-> + * memzero_explicit - Fill a region of memory (e.g. sensitive
-> + *		      keying data) with 0s.
-> + * @s: Pointer to the start of the area.
-> + * @count: The size of the area.
-> + *
-> + * Note: usually using memset() is just fine (!), but in cases
-> + * where clearing out _local_ data at the end of a scope is
-> + * necessary, memzero_explicit() should be used instead in
-> + * order to prevent the compiler from optimising away zeroing.
-> + *
-> + * memzero_explicit() doesn't need an arch-specific version as
-> + * it just invokes the one of memset() implicitly.
-> + */
-> +static inline void memzero_explicit(void *s, size_t count)
-> +{
-> +	memset(s, 0, count);
-> +	barrier_data(s);
-> +}
->  
->  /**
->   * kbasename - return the last part of a pathname.
-> diff --git a/lib/string.c b/lib/string.c
-> index cd7a10c19210..08ec58cc673b 100644
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -748,27 +748,6 @@ void *memset(void *s, int c, size_t count)
->  EXPORT_SYMBOL(memset);
->  #endif
->  
-> -/**
-> - * memzero_explicit - Fill a region of memory (e.g. sensitive
-> - *		      keying data) with 0s.
-> - * @s: Pointer to the start of the area.
-> - * @count: The size of the area.
-> - *
-> - * Note: usually using memset() is just fine (!), but in cases
-> - * where clearing out _local_ data at the end of a scope is
-> - * necessary, memzero_explicit() should be used instead in
-> - * order to prevent the compiler from optimising away zeroing.
-> - *
-> - * memzero_explicit() doesn't need an arch-specific version as
-> - * it just invokes the one of memset() implicitly.
-> - */
-> -void memzero_explicit(void *s, size_t count)
-> -{
-> -	memset(s, 0, count);
-> -	barrier_data(s);
-> -}
-> -EXPORT_SYMBOL(memzero_explicit);
-> -
->  #ifndef __HAVE_ARCH_MEMSET16
->  /**
->   * memset16() - Fill a memory area with a uint16_t
-> -- 
+U2lnbmVkLW9mZi1ieTogUGVuZyBIYW8gPHJpY2hhcmQucGVuZ0BvcHBvLmNvbT4KLS0tCsKgYXJj
+aC94ODYva3ZtL3ZteC9uZXN0ZWQuYyB8IDMgKy0tCsKgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
+aW9uKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS92bXgvbmVz
+dGVkLmMgYi9hcmNoL3g4Ni9rdm0vdm14L25lc3RlZC5jCmluZGV4IGU3NmViNGYuLmQwZTZjNDAg
+MTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2t2bS92bXgvbmVzdGVkLmMKKysrIGIvYXJjaC94ODYva3Zt
+L3ZteC9uZXN0ZWQuYwpAQCAtNDk0NSw4ICs0OTQ1LDcgQEAgc3RhdGljIGludCBoYW5kbGVfaW52
+ZXB0KHN0cnVjdCBrdm1fdmNwdSAqdmNwdSkKwqAJICovCsKgCQlicmVhazsKwqAJZGVmYXVsdDoK
+LQkJQlVHX09OKDEpOwotCQlicmVhazsKKwkJQlVHKCk7CsKgCX0KwqAKwqAJcmV0dXJuIG5lc3Rl
+ZF92bXhfc3VjY2VlZCh2Y3B1KTsKLS3CoAoyLjcuNA==
 
-Thanks for the fix!  Ccing kexec list since the problem is kexec/kdump
-related.  People can try it when they see same issue.
-
-Dave
