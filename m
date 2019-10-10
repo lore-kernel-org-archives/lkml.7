@@ -2,68 +2,67 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91BBC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0770C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEF82054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A7120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fHFwxPvr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Buhty/DM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733247AbfJJMRC (ORCPT
+        id S1733254AbfJJMYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:17:02 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33452 "EHLO
+        Thu, 10 Oct 2019 08:24:53 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47055 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728030AbfJJMRC (ORCPT
+        by vger.kernel.org with ESMTP id S1733010AbfJJMYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:17:02 -0400
+        Thu, 10 Oct 2019 08:24:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570709821;
+        s=mimecast20190719; t=1570710290;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2lHnonVw5Ni2BwUYIttHCnA3w1EKUNdv1m01q4IzX5U=;
-        b=fHFwxPvrCAthTS8XkKSAVbBXrrSYJdiO2RGTKF5WEqqI0mAyDqc1+Cu2wkzvGRDL+KEzI0
-        GBLODeGhBCMdqKgH4xK52nUPRg2jqZjO+40iAQ8MIxDRcfaODJuhAGRIWmm/kkyFtSUmBJ
-        L3f6d5K6aTAqO4YkekHlvOXO2r7fz4c=
+        bh=Z1PiOTpfKA6S0H6nQpCOs61aSj3VGg1/5P4RB8zuLvo=;
+        b=Buhty/DMhVQKEN9I6bGn59Icvyj7Gje1rLRQtKryrsfDYjheIKlT+5EFD7CPKdIXv56CqL
+        2QXC6g/44lv6g8gnGEpIkYWR3CApNcEns33bmXh/6RQHjws9TIdvjQ929a0MyelMq4Fm1H
+        xzY7XrmUOaCUuRFAnrxasYEfGcYSvIE=
 Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
  [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-111-yznj07MfP6ikZx2JdMrhog-1; Thu, 10 Oct 2019 08:16:59 -0400
-Received: by mail-qt1-f198.google.com with SMTP id c8so5516638qtd.20
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 05:16:59 -0700 (PDT)
+ us-mta-137-0hc7sEkwN0OPCsefIiQp9w-1; Thu, 10 Oct 2019 08:24:47 -0400
+Received: by mail-qt1-f198.google.com with SMTP id m20so5537480qtq.16
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 05:24:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=s7inn7T78nlvJNzw0gTQf4L+rcqUs2LyvXLi2sC3zEA=;
-        b=axrQd4xkkP8G4WIn9F2uwwc5DjInDvlqzJdx4NADrzjyTYNqAw/EbK5G3hKWQE8cSK
-         GJrjm1KxgrSRy3exSa9IX2edHabfKoFBdTXsNv0kljEqoD85uxTgQtxeZwunNNj8NFxS
-         m1T1zZKLpXyht0gKv4eFvWw2fSBHfH0U0C5qnEDf2e9QIxE7vy9vGs3SQuSGhsrl2DEX
-         jOAXMQfsh7BiMB7BnH40VULufzQlBKlfciaBR8ryCPyTPL9Xn3vjTjbp3IyoW71toFDH
-         9KvfywIWI/yF6LBkrFvBV9rl7fklH/5ciHgo8UiXLt5OfAAmMD7X91PLTGrGC1VvyS9C
-         EM3A==
-X-Gm-Message-State: APjAAAXQH55jxsXyXVhfabVsH6GMqPr8jAI/liTdRS4rGiLSL726jQbk
-        WEqiowAqbtbHP2hOhNIU71s2tBJb8eCIZjXCqgVKi3+9ksvMfzYjTobNyrHD6u2NfXBsfsZ9531
-        qyod8aD8i7kqpOfJ4jAHKO3lpcQUNpa0uOORgOsC/
-X-Received: by 2002:ac8:1e83:: with SMTP id c3mr9928771qtm.294.1570709819501;
-        Thu, 10 Oct 2019 05:16:59 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxRkW7AdvFDNqnvMgNQJTqUWcVFbQOfXSi/TrYiTpHKIad141T1gbycryZ8x/yjN9sQ4mymdPUrbnyPAAJdWq0=
-X-Received: by 2002:ac8:1e83:: with SMTP id c3mr9928733qtm.294.1570709819174;
- Thu, 10 Oct 2019 05:16:59 -0700 (PDT)
+        bh=1+C6ea0hNuFJ0RH805lPfk6alhjeCeIJ9+VYkTTd2Ww=;
+        b=A11fp6cob70Hd20wftdOakgTqFCh3ucQEBTUoP+c3awq3NNUMYxdSHdWO9Zhz1S++P
+         2HkXVVK46Ge10VCYAOX6dt4yFxuw4M7DIU+QG07fMlFFJXzEBqCKc9+ptNlkCDjE0g8Y
+         ZqRw/JSOvhh6Feh7p2LNAfUB+UGvujl1tTdzmjoczM8lktdemjzq0hchCdE6+pxrpYIk
+         w9kW4rBKf/ZoPr2OFthV6M3qUOgf3fKyoPVpjhWqK/AuT9cT56OL7trdGPINx9m0eZUo
+         fBNFwAQ10kPmeg9Ibd6U3K1k5caFZIjxrF0eCIyk4OpaFW3b1mcEN/aruBFHx3GA2Y4H
+         8p1w==
+X-Gm-Message-State: APjAAAWyziBtYOEbezZ8pNiBZYFSzrtFi47+l7FY3e3c4w7nJOrIddb8
+        131c0w42FJf2sN/g1erjeg2yh3FsgYw931s+ngIdDw+qcwunY4lKta/Nb6qOUIxEEvryFqlr/fw
+        1kWSlv6Y1VdJz65kqq+XaiN+4wvxT2alFzR/96A2D
+X-Received: by 2002:a37:648d:: with SMTP id y135mr8958856qkb.459.1570710286659;
+        Thu, 10 Oct 2019 05:24:46 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzkMt3NS82xgyIf0scvKcdLuCY5ChVMQq28kCW69B6P3qMz7wQusBovzbRCTAhZgcV4StFli0LR8QN+ughoOuM=
+X-Received: by 2002:a37:648d:: with SMTP id y135mr8958821qkb.459.1570710286350;
+ Thu, 10 Oct 2019 05:24:46 -0700 (PDT)
 MIME-Version: 1.0
 References: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
- <d739f691b677fb3ed88a23476d221527a87c363d.camel@suse.de> <nycvar.YFH.7.76.1910091958120.13160@cbobk.fhfr.pm>
- <CAPnx3XNGBw+SKSFA3DhhHFZZ17f54DMfYjKOcqYTb3N-PWGKpw@mail.gmail.com>
-In-Reply-To: <CAPnx3XNGBw+SKSFA3DhhHFZZ17f54DMfYjKOcqYTb3N-PWGKpw@mail.gmail.com>
+In-Reply-To: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
 From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 10 Oct 2019 14:16:47 +0200
-Message-ID: <CAO-hwJJEcP3AEYfadhEbqzfszawxiQ7E9NAwmxHcK6SH8zzhiQ@mail.gmail.com>
+Date:   Thu, 10 Oct 2019 14:24:34 +0200
+Message-ID: <CAO-hwJKjZedG6yySDHKQoAmG5DdQ7QPhuaoMN9g0_KmbktD9fA@mail.gmail.com>
 Subject: Re: [PATCH v2] HID: core: check whether usage page item is after
  usage id item
 To:     Candle Sun <candlesea@gmail.com>
@@ -74,7 +73,7 @@ Cc:     Jiri Kosina <jikos@kernel.org>,
         lkml <linux-kernel@vger.kernel.org>,
         Candle Sun <candle.sun@unisoc.com>,
         Nianfu Bai <nianfu.bai@unisoc.com>
-X-MC-Unique: yznj07MfP6ikZx2JdMrhog-1
+X-MC-Unique: 0hc7sEkwN0OPCsefIiQp9w-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
@@ -83,82 +82,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 5:19 AM Candle Sun <candlesea@gmail.com> wrote:
+On Wed, Oct 9, 2019 at 2:54 PM Candle Sun <candlesea@gmail.com> wrote:
 >
-> On Thu, Oct 10, 2019 at 2:00 AM Jiri Kosina <jikos@kernel.org> wrote:
-> >
-> > On Wed, 9 Oct 2019, Nicolas Saenz Julienne wrote:
-> >
-> > > > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> > > > index 3eaee2c..3394222 100644
-> > > > --- a/drivers/hid/hid-core.c
-> > > > +++ b/drivers/hid/hid-core.c
-> > > > @@ -35,6 +35,8 @@
-> > > >
-> > > >  #include "hid-ids.h"
-> > > >
-> > > > +#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xf=
-fff))
-> > >
-> > > Not sure I like the macro. I'd rather have the explicit code. That sa=
-id, lets
-> > > see what Benjamin has to say.
-> >
-> > Not sure about Benjamin :) but I personally would ask for putting it
-> > somewhere into hid.h as static inline.
-> >
-> > And even if it's for some reason insisted on this staying macro, please=
- at
-> > least put it as close to the place(s) it's being used as possible, in
-> > order to maintain some code sanity.
-> >
-> > Thanks,
-> >
-> > --
-> > Jiri Kosina
-> > SUSE Labs
-> >
+> From: Candle Sun <candle.sun@unisoc.com>
 >
-> Thanks Nicolas and Jiri,
-> If macro is not good, I will change it to static function. But the
-> funciton is only used in hid-core.c,
-> maybe placing it into hid.h is not good?
+> Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+> to Main item") adds support for Usage Page item after Usage ID items
+> (such as keyboards manufactured by Primax).
+>
+> Usage Page concatenation in Main item works well for following report
+> descriptor patterns:
+>
+>     USAGE_PAGE (Keyboard)                   05 07
+>     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+>     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (8)                        95 08
+>     INPUT (Data,Var,Abs)                    81 02
+>
+> -------------
+>
+>     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+>     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (8)                        95 08
+>     USAGE_PAGE (Keyboard)                   05 07
+>     INPUT (Data,Var,Abs)                    81 02
+>
+> But it makes the parser act wrong for the following report
+> descriptor pattern(such as some Gamepads):
+>
+>     USAGE_PAGE (Button)                     05 09
+>     USAGE (Button 1)                        09 01
+>     USAGE (Button 2)                        09 02
+>     USAGE (Button 4)                        09 04
+>     USAGE (Button 5)                        09 05
+>     USAGE (Button 7)                        09 07
+>     USAGE (Button 8)                        09 08
+>     USAGE (Button 14)                       09 0E
+>     USAGE (Button 15)                       09 0F
+>     USAGE (Button 13)                       09 0D
+>     USAGE_PAGE (Consumer Devices)           05 0C
+>     USAGE (Back)                            0a 24 02
+>     USAGE (HomePage)                        0a 23 02
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (11)                       95 0B
+>     INPUT (Data,Var,Abs)                    81 02
+>
+> With Usage Page concatenation in Main item, parser recognizes all the
+> 11 Usages as consumer keys, it is not the HID device's real intention.
+>
+> This patch adds usage_page_last to flag whether Usage Page is after
+> Usage ID items. usage_page_last is false default, it is set as true
+> once Usage Page item is encountered and is reverted by next Usage ID
+> item.
+>
+> Usage Page concatenation on the currently defined Usage Page will do
+> firstly in Local parsing when Usage ID items encountered.
+>
+> When Main item is parsing, concatenation will do again with last
+> defined Usage Page if usage_page_last flag is true.
+>
+> Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+> Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+> ---
+> Changes in v2:
+> - Update patch title
+> - Add GET_COMPLETE_USAGE macro
+> - Change the logic of checking whether to concatenate usage page again
+>   in main parsing
+> ---
+>  drivers/hid/hid-core.c | 31 +++++++++++++++++++++++++------
+>  include/linux/hid.h    |  1 +
+>  2 files changed, 26 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> index 3eaee2c..3394222 100644
+> --- a/drivers/hid/hid-core.c
+> +++ b/drivers/hid/hid-core.c
+> @@ -35,6 +35,8 @@
+>
+>  #include "hid-ids.h"
+>
+> +#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xffff))
+> +
+>  /*
+>   * Version Information
+>   */
+> @@ -221,7 +223,15 @@ static int hid_add_usage(struct hid_parser *parser, =
+unsigned usage, u8 size)
+>                 hid_err(parser->device, "usage index exceeded\n");
+>                 return -1;
+>         }
+> -       parser->local.usage[parser->local.usage_index] =3D usage;
+> +
+> +       if (size <=3D 2) {
+> +               parser->local.usage_page_last =3D false;
+> +               parser->local.usage[parser->local.usage_index] =3D
+> +                       GET_COMPLETE_USAGE(parser->global.usage_page, usa=
+ge);
+> +       } else {
+> +               parser->local.usage[parser->local.usage_index] =3D usage;
+> +       }
+> +
+>         parser->local.usage_size[parser->local.usage_index] =3D size;
+>         parser->local.collection_index[parser->local.usage_index] =3D
+>                 parser->collection_stack_ptr ?
+> @@ -366,6 +376,7 @@ static int hid_parser_global(struct hid_parser *parse=
+r, struct hid_item *item)
+>
+>         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
+>                 parser->global.usage_page =3D item_udata(item);
+> +               parser->local.usage_page_last =3D true;
+>                 return 0;
+>
+>         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
+> @@ -543,13 +554,21 @@ static int hid_parser_local(struct hid_parser *pars=
+er, struct hid_item *item)
+>   * usage value."
+>   */
+>
+> -static void hid_concatenate_usage_page(struct hid_parser *parser)
+> +static void hid_concatenate_last_usage_page(struct hid_parser *parser)
+>  {
+>         int i;
+> +       unsigned int usage;
+> +       unsigned int usage_page =3D parser->global.usage_page;
+> +
+> +       if (!parser->local.usage_page_last)
+> +               return;
+>
+>         for (i =3D 0; i < parser->local.usage_index; i++)
+> -               if (parser->local.usage_size[i] <=3D 2)
+> -                       parser->local.usage[i] +=3D parser->global.usage_=
+page << 16;
+> +               if (parser->local.usage_size[i] <=3D 2) {
+> +                       usage =3D parser->local.usage[i];
+> +                       parser->local.usage[i] =3D
+> +                               GET_COMPLETE_USAGE(usage_page, usage);
+> +               }
+>  }
+>
+>  /*
+> @@ -561,7 +580,7 @@ static int hid_parser_main(struct hid_parser *parser,=
+ struct hid_item *item)
+>         __u32 data;
+>         int ret;
+>
+> -       hid_concatenate_usage_page(parser);
+> +       hid_concatenate_last_usage_page(parser);
+>
+>         data =3D item_udata(item);
+>
+> @@ -772,7 +791,7 @@ static int hid_scan_main(struct hid_parser *parser, s=
+truct hid_item *item)
+>         __u32 data;
+>         int i;
+>
+> -       hid_concatenate_usage_page(parser);
+> +       hid_concatenate_last_usage_page(parser);
+>
+>         data =3D item_udata(item);
+>
+> diff --git a/include/linux/hid.h b/include/linux/hid.h
+> index cd41f20..2e0ea2f7 100644
+> --- a/include/linux/hid.h
+> +++ b/include/linux/hid.h
+> @@ -412,6 +412,7 @@ struct hid_local {
+>         unsigned usage_minimum;
+>         unsigned delimiter_depth;
+>         unsigned delimiter_branch;
+> +       bool usage_page_last;      /* whether usage page is after usage i=
+d */
 
-I would rather use a function too (in hid-core.c, as it's not reused
-anywhere else), and we can make it simpler from the caller point of
-view (if I am not mistaken):
----
-static void concatenate_usage_page(struct hid_parser *parser, int index)
-{
-    parser->local.usage[index] &=3D 0xFFFF;
-    parser->local.usage[index] |=3D (parser->global.usage_page & 0xFFFF) <<=
- 16;
-}
+We don't need that extra flag:
+if you just check on the last element, you can guess that information:
 
-// Which can then be called as:
-+       parser->local.usage[parser->local.usage_index] =3D usage;
-+       if (size <=3D 2)
-+               concatenate_usage_page(parser, parser->local.usage_index);
-+
+        if ((parser->local.usage[parser->local.usage_index - 1] &
+HID_USAGE_PAGE) >> 16 =3D=3D usage_page)
+              return 0;
 
-// And
-        for (i =3D 0; i < parser->local.usage_index; i++)
--               if (parser->local.usage_size[i] <=3D 2)
--                       parser->local.usage[i] +=3D
-parser->global.usage_page << 16;
-+               if (parser->local.usage_size[i] <=3D 2) {
-+                       concatenate_usage_page(parser, i);
-+               }
- }
----
+Let's see the next version before requesting too many changes.
 
-And now that I have written this, the check on the size could also be
-very well integrated in concatenate_usage_page().
+And yes, I agree I need the hid-tools patches or I will not merge this
+patch (and I will advise Jiri to not take it either).
 
 Cheers,
 Benjamin
-
->
-> Regards,
-> Candle
 
