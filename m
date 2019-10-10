@@ -2,150 +2,159 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9A8C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B89C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35AF120673
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:55:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bvv2TJW8"
+	by mail.kernel.org (Postfix) with ESMTP id 16B7D206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:59:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732933AbfJJKzu (ORCPT
+        id S1732992AbfJJK7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:55:50 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41303 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727761AbfJJKzt (ORCPT
+        Thu, 10 Oct 2019 06:59:20 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:14518 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725601AbfJJK7T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:55:49 -0400
-Received: by mail-ed1-f67.google.com with SMTP id f20so5029611edv.8;
-        Thu, 10 Oct 2019 03:55:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MKKhvnX8RUfvjd7XqlUJvJa6PAylZIB/SGsvMUWzdfs=;
-        b=Bvv2TJW8EnbStBJDHoWd3YAKOcDgrCgpQ5G8m7iO/Jk4b820qygV/ZTxqRSAvq8RC4
-         NP7nXhAHsTvOF9acTskruxWPu5qzQHVzDXNcHRILEER5aVxtMW4V+ohXf416UTFzb8JB
-         CFNsE+i8gH9uIx+tryg8AChDHHO+L8T6giYb48PzMtHKdwWE5AADqkZJ6qJVuKWBuH0X
-         4JhT193MZ4vv8pdMd6rPL33q8wKLDxeOSt4kSyx0aKnRtRLZfCz+Q1+DTMzR8PpMY68J
-         l7Q8y9GNyrjfLrIMTULHNaa6jZ2xQsmnztzTNO93KwLh8d/rfi1sZK9qmAeOfvMnUAZu
-         I5Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MKKhvnX8RUfvjd7XqlUJvJa6PAylZIB/SGsvMUWzdfs=;
-        b=Q5H2V8+08a+8tttIfWP/UOTqmiurjoQE7f0b1HHJYMNH9c3B6sikwru3EENyuRk7Qo
-         3aFrkA+C5ul5rqPtq0rJILLAn4mWa/yGHNvNaumSevYG/7cGwQ3hR6sba3KfRnawimIy
-         AeanQ6ozeZH4zknYh9UZF4kg4/tIRxwFI29PVXr7pvtkKOa2C/t2vnxSPD4M2gFatOgC
-         kjJofuFec3vLW4PDYdeDl3YTMrHsEBvmyA9Zcw6vOXwKLjk5nE7QqsRM7VIrP0kj1dAS
-         GqFXrq2g8NRqx3Ysy5X2WNzi6FzYy4060M7/f8UjcWdSg3Klwn3L+rXI12l/ewOkYDJg
-         caGg==
-X-Gm-Message-State: APjAAAV9Mts/Vey7HGn/y5RA7lP2c0N6VDA/r/PBNPLud1PlLTKu+0CT
-        DzWbOpx19ZQX0q2TuI4UK8Q=
-X-Google-Smtp-Source: APXvYqyoHTR9kC/Gbi3eiCrgqTCy4+sQW0K9Ipw61U1NI7YRM2OGdnOD+4oxZv6kTa/p4s6qL7sUuQ==
-X-Received: by 2002:a17:906:5051:: with SMTP id e17mr7309123ejk.139.1570704947866;
-        Thu, 10 Oct 2019 03:55:47 -0700 (PDT)
-Received: from Limone ([46.114.37.24])
-        by smtp.gmail.com with ESMTPSA id x17sm870206edl.64.2019.10.10.03.55.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 03:55:47 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 12:55:44 +0200
-From:   Gon Solo <gonsolo@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] media: si2168: use bits instead of bool for flags
-Message-ID: <20191010105544.GA6507@Limone>
-References: <20191004090855.14e418ed@coco.lan>
- <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
+        Thu, 10 Oct 2019 06:59:19 -0400
+X-UUID: dcde47880f39407097ccbc0295c84ea6-20191010
+X-UUID: dcde47880f39407097ccbc0295c84ea6-20191010
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 770940995; Thu, 10 Oct 2019 18:59:07 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 10 Oct
+ 2019 18:59:05 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 10 Oct 2019 18:59:05 +0800
+Message-ID: <1570705147.22261.13.camel@mhfsdcap03>
+Subject: Re: [PATCH] usb: mtk-xhci: Set the XHCI_NO_64BIT_SUPPORT quirk
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Changqi Hu <Changqi.Hu@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Shik Chen <shik@chromium.org>
+Date:   Thu, 10 Oct 2019 18:59:07 +0800
+In-Reply-To: <CAAFQd5AU53=BRUrK_i-0dRYueVoSd3Bg3AtvZUMHgFv3hLuNug@mail.gmail.com>
+References: <20191010075004.192818-1-tfiga@chromium.org>
+         <1570697118.32135.20.camel@mhfsdcap03>
+         <CAAFQd5AU53=BRUrK_i-0dRYueVoSd3Bg3AtvZUMHgFv3hLuNug@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 22103D692A22632CE9D6326047F5847FE331FD0A1A6C3940FCDD3CC5289A2D152000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 10:15:22AM -0300, Mauro Carvalho Chehab wrote:
-> Using bool on struct is not recommended, as it wastes lots of
-> space. So, instead, let's use bits.
+On Thu, 2019-10-10 at 18:00 +0900, Tomasz Figa wrote:
+> Hi Chunfeng,
+> 
+> On Thu, Oct 10, 2019 at 5:45 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> >
+> > Hi, Tomasz,
+> >
+> > On Thu, 2019-10-10 at 16:50 +0900, Tomasz Figa wrote:
+> > > MediaTek XHCI host controller does not support 64-bit addressing despite
+> > > the AC64 bit of HCCPARAMS1 register being set. The platform-specific
+> > > glue sets the DMA mask to 32 bits on its own, but it has no effect,
+> > > because xhci_gen_setup() overrides it according to hardware
+> > > capabilities.
+Yes, this is what I want to do, maybe need remove DMA mask setting in
+platform-specific.
 
-Wouldn't "bool b:1;" even be better? I performed a little test:
+> > >
+> > > Use the XHCI_NO_64BIT_SUPPORT quirk to tell the XHCI core to force
+> > > 32-bit DMA mask instead.
+> > >
+> > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> > > ---
+> > >  drivers/usb/host/xhci-mtk.c | 10 +++++-----
+> > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+> > > index b18a6baef204a..4d101d52cc11b 100644
+> > > --- a/drivers/usb/host/xhci-mtk.c
+> > > +++ b/drivers/usb/host/xhci-mtk.c
+> > > @@ -395,6 +395,11 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
+> > >       xhci->quirks |= XHCI_SPURIOUS_SUCCESS;
+> > >       if (mtk->lpm_support)
+> > >               xhci->quirks |= XHCI_LPM_SUPPORT;
+> > > +     /*
+> > > +      * MTK host controller does not support 64-bit addressing, despite
+> > > +      * having the AC64 bit of the HCCPARAMS1 register set.
+> > > +      */
+> > > +     xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+> > Somes SoCs support 64bits in fact, so can't support this quirk, do you
+> > encounter any issues without this quirk?
+> >
+> 
+> Thanks for taking a look at this patch.
+> 
+> Yes, on MT8183 the DMA mask ended up being set to 64 bits, but
+> according to the information I received from MediaTek, the controller
+> on that SoC only supports 32 bits.
+As I know, mt8183 doesn't support memory greater than 4G mode.
 
-#include <stdbool.h>
-#include <stdio.h>
+> 
+> If some SoCs support only 32 bits and some support 64 bits, we may
+> either need to use different DT compatible string for them or add a DT
+> property and set the quirk based on that. Right now in upstream we
+> have:
+> 
+> 1) "mediatek,mt8173-xhci", used by:
+> MT8173
+> 
+> 2)"mediatek,mtk-xhci", used by:
+> MT2712
+> MT7622
+> MT8183 (not yet upstream, but I suppose it's on the mailing lists)
+> 
+> Would you be able to check which of the SoCs above report 64 bits but
+> support only 32? (and so would need this quirk)
+I'm afraid I can't, almost all MTK SoCs supporting xHCI are using this
+driver, AC64 should be set rightly according to addressing capability.
 
-struct uints {
-	unsigned int a0;
-	unsigned int a1;
-	unsigned int a2;
-	unsigned int a3;
-	unsigned int a4;
-	unsigned int a5;
-	unsigned int a6;
-	unsigned int a7;
-};
+ 
+> 
+> Best regards,
+> Tomasz
+> 
+> > >  }
+> >
+> > >
+> > >  /* called during probe() after chip reset completes */
+> > > @@ -488,11 +493,6 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+> > >               goto disable_clk;
+> > >       }
+> > >
+> > > -     /* Initialize dma_mask and coherent_dma_mask to 32-bits */
+> > > -     ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> > > -     if (ret)
+> > > -             goto disable_clk;
+> > > -
+> > >       hcd = usb_create_hcd(driver, dev, dev_name(dev));
+> > >       if (!hcd) {
+> > >               ret = -ENOMEM;
+> >
+> >
 
-struct bools {
-	bool a0;
-	bool a1;
-	bool a2;
-	bool a3;
-	bool a4;
-	bool a5;
-	bool a6;
-	bool a7;
-};
-
-struct bit_uints {
-	unsigned int a0:1;
-	unsigned int a1:1;
-	unsigned int a2:1;
-	unsigned int a3:1;
-	unsigned int a4:1;
-	unsigned int a5:1;
-	unsigned int a6:1;
-	unsigned int a7:1;
-};
-
-struct bit_bools {
-	bool a0:1;
-	bool a1:1;
-	bool a2:1;
-	bool a3:1;
-	bool a4:1;
-	bool a5:1;
-	bool a6:1;
-	bool a7:1;
-};
-
-int main() {
-	printf("bit_uints: %ld\n", sizeof(struct bit_uints));
-	printf("bit_bools: %ld\n", sizeof(struct bit_bools));
-	printf("uints: %ld\n", sizeof(struct uints));
-	printf("bools: %ld\n", sizeof(struct bools));
-}
-
-Result:
-
-bit_uints: 4
-bit_bools: 1
-uints: 32
-bools: 8
-
-I know with different types within the struct it looks different, but
-still.
-
-g
 
