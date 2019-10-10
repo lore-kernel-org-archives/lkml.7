@@ -2,333 +2,361 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E39C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92677C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA0E220650
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:26:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="B+6aWpCb";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="vbt0vgKc"
+	by mail.kernel.org (Postfix) with ESMTP id 52D8120650
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfJJU0a (ORCPT
+        id S1726786AbfJJU3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:26:30 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:58572 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726533AbfJJU03 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:26:29 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9AKKdOw030238;
-        Thu, 10 Oct 2019 13:25:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=N2uqu+Qnba3IswTa1pnNNPslszam59IMkKuf3/phQfM=;
- b=B+6aWpCbgDkjKX5zsddxVEMSXfEiUEASxna7auJdpfbi7U5Ctuhotk8vjqLXJZBDuExn
- EIrFLntFOAmTTHAVBmV0xlnZzA1US58r5zTzfEQiy1CkVTB/caJFDrS5BmwTXGcrCgF/
- ynLHeEo4t5DxmgNbQYZgELooW9oJL49FdP3gQq32PgQ0X20TgVgPoAWNB85gvFcuFL5j
- YgGVPapzpQwL2y2n/wW9HyTea9ZdM1nvtDrd0UhYpEhXT8OGH9sQxv3AtFCMBag029yR
- tjDVD/xIlcEolkZOnIiGUuyhRZEoMtDdVyreNBE1F0EmzOdgwfCMbaNkMPqrNljUcDAx kg== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2vj66h1gd1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 10 Oct 2019 13:25:25 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 10 Oct
- 2019 13:25:24 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (104.47.49.59) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 10 Oct 2019 13:25:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ov5rqz2kQndidzt1QgGLwk734nsPdzgVRSX3uIlc9NpfnKqKz7Xfj+Xk+QQqJ4qM6fUjSuPlOcIQaegEQR6Xyb3fqAMudkjrVRK38Sq2koaa6qeBvmrdI6Om8CsCFkcSyULLDVv6ZIkmBhmJSNKGaKE+VVYfRxMWE0u9aToyTT4vqHha5D1WpNnWSCrFek534lZH0IjYJ9xv/gdWlPVwEyjjWcfs0rqZmO9QO38qOVfGNvWEARHPW+o1UzEHLd346N5bKwyirkBsMy9NMzDc699Dbh6x6FYMn4Jw49aWoINh05U4zPzgFA0mCUA2RZNmY/UgIbgtHHUK/D9MYtPTYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N2uqu+Qnba3IswTa1pnNNPslszam59IMkKuf3/phQfM=;
- b=C3kbCJEkE72G04tMOJigbWVcLtdULTH05SxwZwfif5ykqyCyxxFGk+Y15pr0iJnOUfWIfO7PRswoTn/lWhXsU9tv6RXIqjRi9Wz4nlrg5iGlJbFEkcLTtbD/eqZe8RdILSkWk4wDY3jEyZiTKW8M7CdA9jUHPguEjAQOU0TrmalAOlJTXpr0zcHPvDjcw7rnIH+rkPKAi2TTWYbm74qHrqQPhsPAOjpIjecLVV08M6VVWOv9JvQGzhMsXXkuDQ07IR21CKWaQWSTcGgP/aalYyLAZgCCakmt+dQ713+C91K+37u/uSqoydlkBYXs7H7pq8gmCmQMB9vRQFSqvvL7tQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N2uqu+Qnba3IswTa1pnNNPslszam59IMkKuf3/phQfM=;
- b=vbt0vgKcekfcdnBzfq0ynUWZ2USYaZD9CkmrKyorL6wl7hq5RoIQmu1oGZzVrTr+48kKN2sQXjjJJoaMsbKFFAxZMVF9aoTIQqC2R/4p1kZOSJFhuD4DrlPcEWJXpNDTwRSDiTApXrYX8le7MYWmhlSAS6CL5GyYfZgUv4jmvig=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB2447.namprd18.prod.outlook.com (20.179.82.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Thu, 10 Oct 2019 20:25:22 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763%3]) with mapi id 15.20.2327.026; Thu, 10 Oct 2019
- 20:25:22 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-CC:     James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 09/19] EDAC, mc: Reorder functions edac_mc_alloc*()
-Thread-Topic: [PATCH 09/19] EDAC, mc: Reorder functions edac_mc_alloc*()
-Thread-Index: AQHVf6jX2nV+CnUHXEebQWDfti6qOQ==
-Date:   Thu, 10 Oct 2019 20:25:22 +0000
-Message-ID: <20191010202418.25098-10-rrichter@marvell.com>
-References: <20191010202418.25098-1-rrichter@marvell.com>
-In-Reply-To: <20191010202418.25098-1-rrichter@marvell.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0336.eurprd05.prod.outlook.com
- (2603:10a6:7:92::31) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cad8a9fa-0e9d-4960-9223-08d74dbff9dd
-x-ms-traffictypediagnostic: MN2PR18MB2447:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB244712A612B76638A7939A4BD9940@MN2PR18MB2447.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2276;
-x-forefront-prvs: 018632C080
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(366004)(346002)(136003)(199004)(189003)(6512007)(476003)(8936002)(25786009)(50226002)(8676002)(81156014)(81166006)(7736002)(305945005)(256004)(486006)(14454004)(2616005)(6436002)(86362001)(66066001)(36756003)(66946007)(66476007)(66556008)(64756008)(66446008)(11346002)(446003)(71190400001)(71200400001)(6486002)(186003)(478600001)(5660300002)(386003)(316002)(3846002)(26005)(4326008)(6116002)(2906002)(52116002)(76176011)(99286004)(54906003)(110136005)(6506007)(102836004)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2447;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zR7AhDaRQvSuL6E5NbQYDh4jCzINr/jzLlHlmyMejgsmi9SyQZzYMlf6emcNqrDfAtiRDd6L6OB8yr7XC0OkdNorHT3Pcm9I/vAwa1obE0gxLwJ7WftGQfMOMPNccON2r9reg5X/l5DR6v/iy8d4hSTmZ5l774qNFSLNem1o/Mw8Erbn23VT9S76mQ6Gs6SRfQ7yHMVAR36Zf3ZZCfPtGYBdCDw5mHoSb/UmHllhxwrswegipXGjyBPEau2THw4a17XF+nCBHkpbkXAC02glOHObnoXGYABW/jEXwbUO6IWBnAvQw6vLnAFXP3/FWooOAT6srDcZOpuzza9ApGK8LC/PnM+53AGx6CqPJlvECsNHmFoydXbDjgupvTL2km+njKliXfs4TM3vmeOa8snA7/iFeb+0ouPWN2vNQvO4swQ=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: cad8a9fa-0e9d-4960-9223-08d74dbff9dd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 20:25:22.6312
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hllZnEMuLvDy8RbggeKLJBVOwTei8PcxV3c1ypaxqs0HUoBNWBF4hFC5MMXMd8m1cuOTaoLYyPloMovlVPtyhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2447
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-10_07:2019-10-10,2019-10-10 signatures=0
+        Thu, 10 Oct 2019 16:29:54 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42451 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfJJU3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 16:29:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 13:29:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,281,1566889200"; 
+   d="scan'208";a="277902041"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by orsmga001.jf.intel.com with ESMTP; 10 Oct 2019 13:29:51 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     andriy.shevchenko@intel.com
+Cc:     prarit@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [RESEND][PATCH 09/10] tools/power/x86/intel-speed-select: Implement 'perf-profile info' on CascadeLake-N
+Date:   Thu, 10 Oct 2019 13:29:44 -0700
+Message-Id: <20191010202945.73616-10-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191010202945.73616-1-srinivas.pandruvada@linux.intel.com>
+References: <20191010202945.73616-1-srinivas.pandruvada@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reorder the new created functions edac_mc_alloc_csrows() and
-edac_mc_alloc_dimms() and move them before edac_mc_alloc(). No further
-code changes.
+From: Prarit Bhargava <prarit@redhat.com>
 
-Signed-off-by: Robert Richter <rrichter@marvell.com>
+Add functionality for "perf-profile info" on CascadeLake-N.
+
+Sample output:
+intel-speed-select perf-profile info
+Intel(R) Speed Select Technology
+Executing on CPU model:85[0x55]
+ package-0
+  die-0
+    cpu-0
+      perf-profile-level-0
+        cpu-count:20
+        enable-cpu-mask:00000000,000fffff
+        enable-cpu-list:0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+        thermal-design-power-ratio:23
+        base-frequency(MHz):2300
+        speed-select-turbo-freq:unsupported
+        speed-select-base-freq:enabled
+        speed-select-base-freq
+          high-priority-base-frequency(MHz):2700000
+          high-priority-cpu-mask:00000000,0000e8c0
+          high-priority-cpu-list:6,7,11,13,14,15
+          low-priority-base-frequency(MHz):2100000
+ package-1
+  die-0
+    cpu-20
+      perf-profile-level-0
+        cpu-count:20
+        enable-cpu-mask:000000ff,fff00000
+        enable-cpu-list:20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39
+        thermal-design-power-ratio:23
+        base-frequency(MHz):2300
+        speed-select-turbo-freq:unsupported
+        speed-select-base-freq:enabled
+        speed-select-base-freq
+          high-priority-base-frequency(MHz):2700000
+          high-priority-cpu-mask:0000000e,8c000000
+          high-priority-cpu-list:26,27,31,33,34,35
+          low-priority-base-frequency(MHz):2100000
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/edac/edac_mc.c | 171 ++++++++++++++++++++---------------------
- 1 file changed, 84 insertions(+), 87 deletions(-)
+ .../x86/intel-speed-select/isst-config.c      | 163 +++++++++++++++++-
+ .../x86/intel-speed-select/isst-display.c     |  14 +-
+ tools/power/x86/intel-speed-select/isst.h     |   3 +
+ 3 files changed, 173 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 0db504cb3419..6d880cf4d599 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -305,93 +305,6 @@ static void _edac_mc_free(struct mem_ctl_info *mci)
- 	kfree(mci);
- }
-=20
--static int edac_mc_alloc_csrows(struct mem_ctl_info *mci);
--static int edac_mc_alloc_dimms(struct mem_ctl_info *mci);
--
--struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
--				   unsigned int n_layers,
--				   struct edac_mc_layer *layers,
--				   unsigned int sz_pvt)
--{
--	struct mem_ctl_info *mci;
--	struct edac_mc_layer *layer;
--	unsigned int idx, size, tot_dimms =3D 1;
--	unsigned int tot_csrows =3D 1, tot_channels =3D 1;
--	void *pvt, *ptr =3D NULL;
--	bool per_rank =3D false;
--
--	if (WARN_ON(n_layers > EDAC_MAX_LAYERS || n_layers =3D=3D 0))
--		return NULL;
--
--	/*
--	 * Calculate the total amount of dimms and csrows/cschannels while
--	 * in the old API emulation mode
--	 */
--	for (idx =3D 0; idx < n_layers; idx++) {
--		tot_dimms *=3D layers[idx].size;
--		if (layers[idx].is_virt_csrow)
--			tot_csrows *=3D layers[idx].size;
--		else
--			tot_channels *=3D layers[idx].size;
--
--		if (layers[idx].type =3D=3D EDAC_MC_LAYER_CHIP_SELECT)
--			per_rank =3D true;
--	}
--
--	/* Figure out the offsets of the various items from the start of an mc
--	 * structure.  We want the alignment of each item to be at least as
--	 * stringent as what the compiler would provide if we could simply
--	 * hardcode everything into a single struct.
--	 */
--	mci	=3D edac_align_ptr(&ptr, sizeof(*mci), 1);
--	layer	=3D edac_align_ptr(&ptr, sizeof(*layer), n_layers);
--	pvt	=3D edac_align_ptr(&ptr, sz_pvt, 1);
--	size	=3D ((unsigned long)pvt) + sz_pvt;
--
--	edac_dbg(1, "allocating %u bytes for mci data (%d %s, %d csrows/channels)=
-\n",
--		 size,
--		 tot_dimms,
--		 per_rank ? "ranks" : "dimms",
--		 tot_csrows * tot_channels);
--
--	mci =3D kzalloc(size, GFP_KERNEL);
--	if (mci =3D=3D NULL)
--		return NULL;
--
--	/* Adjust pointers so they point within the memory we just allocated
--	 * rather than an imaginary chunk of memory located at address 0.
--	 */
--	layer =3D (struct edac_mc_layer *)(((char *)mci) + ((unsigned long)layer)=
-);
--	pvt =3D sz_pvt ? (((char *)mci) + ((unsigned long)pvt)) : NULL;
--
--	/* setup index and various internal pointers */
--	mci->mc_idx =3D mc_num;
--	mci->tot_dimms =3D tot_dimms;
--	mci->pvt_info =3D pvt;
--	mci->n_layers =3D n_layers;
--	mci->layers =3D layer;
--	memcpy(mci->layers, layers, sizeof(*layer) * n_layers);
--	mci->nr_csrows =3D tot_csrows;
--	mci->num_cschannel =3D tot_channels;
--	mci->csbased =3D per_rank;
--
--	if (edac_mc_alloc_csrows(mci))
--		goto error;
--
--	if (edac_mc_alloc_dimms(mci))
--		goto error;
--
--	mci->op_state =3D OP_ALLOC;
--
--	return mci;
--
--error:
--	_edac_mc_free(mci);
--
--	return NULL;
--}
--EXPORT_SYMBOL_GPL(edac_mc_alloc);
--
- static int edac_mc_alloc_csrows(struct mem_ctl_info *mci)
- {
- 	unsigned int tot_csrows =3D mci->nr_csrows;
-@@ -520,6 +433,90 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mc=
-i)
- 	return 0;
- }
-=20
-+struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
-+				   unsigned int n_layers,
-+				   struct edac_mc_layer *layers,
-+				   unsigned int sz_pvt)
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 449025c6ea46..3c0eb4240df4 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -750,6 +750,152 @@ _get_tdp_level("get-config-current_level", levels, current_level,
+ 	       "Current TDP Level");
+ _get_tdp_level("get-lock-status", levels, locked, "TDP lock status");
+ 
++struct isst_pkg_ctdp clx_n_pkg_dev;
++
++static int clx_n_get_base_ratio(void)
 +{
-+	struct mem_ctl_info *mci;
-+	struct edac_mc_layer *layer;
-+	unsigned int idx, size, tot_dimms =3D 1;
-+	unsigned int tot_csrows =3D 1, tot_channels =3D 1;
-+	void *pvt, *ptr =3D NULL;
-+	bool per_rank =3D false;
++	FILE *fp;
++	char *begin, *end, *line = NULL;
++	char number[5];
++	float value = 0;
++	size_t n = 0;
 +
-+	if (WARN_ON(n_layers > EDAC_MAX_LAYERS || n_layers =3D=3D 0))
-+		return NULL;
++	fp = fopen("/proc/cpuinfo", "r");
++	if (!fp)
++		err(-1, "cannot open /proc/cpuinfo\n");
 +
-+	/*
-+	 * Calculate the total amount of dimms and csrows/cschannels while
-+	 * in the old API emulation mode
-+	 */
-+	for (idx =3D 0; idx < n_layers; idx++) {
-+		tot_dimms *=3D layers[idx].size;
-+		if (layers[idx].is_virt_csrow)
-+			tot_csrows *=3D layers[idx].size;
-+		else
-+			tot_channels *=3D layers[idx].size;
++	while (getline(&line, &n, fp) > 0) {
++		if (strstr(line, "model name")) {
++			/* this is true for CascadeLake-N */
++			begin = strstr(line, "@ ") + 2;
++			end = strstr(line, "GHz");
++			strncpy(number, begin, end - begin);
++			value = atof(number) * 10;
++			break;
++		}
++	}
++	free(line);
++	fclose(fp);
 +
-+		if (layers[idx].type =3D=3D EDAC_MC_LAYER_CHIP_SELECT)
-+			per_rank =3D true;
++	return (int)(value);
++}
++
++static int clx_n_config(int cpu)
++{
++	int i, ret, pkg_id, die_id;
++	unsigned long cpu_bf;
++	struct isst_pkg_ctdp_level_info *ctdp_level;
++	struct isst_pbf_info *pbf_info;
++
++	ctdp_level = &clx_n_pkg_dev.ctdp_level[0];
++	pbf_info = &ctdp_level->pbf_info;
++	ctdp_level->core_cpumask_size =
++			alloc_cpu_set(&ctdp_level->core_cpumask);
++
++	/* find the frequency base ratio */
++	ctdp_level->tdp_ratio = clx_n_get_base_ratio();
++	if (ctdp_level->tdp_ratio == 0) {
++		debug_printf("CLX: cn base ratio is zero\n");
++		ret = -1;
++		goto error_ret;
 +	}
 +
-+	/* Figure out the offsets of the various items from the start of an mc
-+	 * structure.  We want the alignment of each item to be at least as
-+	 * stringent as what the compiler would provide if we could simply
-+	 * hardcode everything into a single struct.
-+	 */
-+	mci	=3D edac_align_ptr(&ptr, sizeof(*mci), 1);
-+	layer	=3D edac_align_ptr(&ptr, sizeof(*layer), n_layers);
-+	pvt	=3D edac_align_ptr(&ptr, sz_pvt, 1);
-+	size	=3D ((unsigned long)pvt) + sz_pvt;
++	/* find the high and low priority frequencies */
++	pbf_info->p1_high = 0;
++	pbf_info->p1_low = ~0;
 +
-+	edac_dbg(1, "allocating %u bytes for mci data (%d %s, %d csrows/channels)=
-\n",
-+		 size,
-+		 tot_dimms,
-+		 per_rank ? "ranks" : "dimms",
-+		 tot_csrows * tot_channels);
++	pkg_id = get_physical_package_id(cpu);
++	die_id = get_physical_die_id(cpu);
 +
-+	mci =3D kzalloc(size, GFP_KERNEL);
-+	if (mci =3D=3D NULL)
-+		return NULL;
++	for (i = 0; i < topo_max_cpus; i++) {
++		if (!CPU_ISSET_S(i, present_cpumask_size, present_cpumask))
++			continue;
 +
-+	/* Adjust pointers so they point within the memory we just allocated
-+	 * rather than an imaginary chunk of memory located at address 0.
-+	 */
-+	layer =3D (struct edac_mc_layer *)(((char *)mci) + ((unsigned long)layer)=
-);
-+	pvt =3D sz_pvt ? (((char *)mci) + ((unsigned long)pvt)) : NULL;
++		if (pkg_id != get_physical_package_id(i) ||
++		    die_id != get_physical_die_id(i))
++			continue;
 +
-+	/* setup index and various internal pointers */
-+	mci->mc_idx =3D mc_num;
-+	mci->tot_dimms =3D tot_dimms;
-+	mci->pvt_info =3D pvt;
-+	mci->n_layers =3D n_layers;
-+	mci->layers =3D layer;
-+	memcpy(mci->layers, layers, sizeof(*layer) * n_layers);
-+	mci->nr_csrows =3D tot_csrows;
-+	mci->num_cschannel =3D tot_channels;
-+	mci->csbased =3D per_rank;
++		CPU_SET_S(i, ctdp_level->core_cpumask_size,
++			  ctdp_level->core_cpumask);
 +
-+	if (edac_mc_alloc_csrows(mci))
-+		goto error;
++		cpu_bf = parse_int_file(1,
++			"/sys/devices/system/cpu/cpu%d/cpufreq/base_frequency",
++					i);
++		if (cpu_bf > pbf_info->p1_high)
++			pbf_info->p1_high = cpu_bf;
++		if (cpu_bf < pbf_info->p1_low)
++			pbf_info->p1_low = cpu_bf;
++	}
 +
-+	if (edac_mc_alloc_dimms(mci))
-+		goto error;
++	if (pbf_info->p1_high == ~0UL) {
++		debug_printf("CLX: maximum base frequency not set\n");
++		ret = -1;
++		goto error_ret;
++	}
 +
-+	mci->op_state =3D OP_ALLOC;
++	if (pbf_info->p1_low == 0) {
++		debug_printf("CLX: minimum base frequency not set\n");
++		ret = -1;
++		goto error_ret;
++	}
 +
-+	return mci;
++	/* convert frequencies back to ratios */
++	pbf_info->p1_high = pbf_info->p1_high / DISP_FREQ_MULTIPLIER;
++	pbf_info->p1_low = pbf_info->p1_low / DISP_FREQ_MULTIPLIER;
 +
-+error:
-+	_edac_mc_free(mci);
++	/* create high priority cpu mask */
++	pbf_info->core_cpumask_size = alloc_cpu_set(&pbf_info->core_cpumask);
++	for (i = 0; i < topo_max_cpus; i++) {
++		if (!CPU_ISSET_S(i, present_cpumask_size, present_cpumask))
++			continue;
 +
-+	return NULL;
++		if (pkg_id != get_physical_package_id(i) ||
++		    die_id != get_physical_die_id(i))
++			continue;
++
++		cpu_bf = parse_int_file(1,
++			"/sys/devices/system/cpu/cpu%d/cpufreq/base_frequency",
++					i);
++		cpu_bf = cpu_bf / DISP_FREQ_MULTIPLIER;
++		if (cpu_bf == pbf_info->p1_high)
++			CPU_SET_S(i, pbf_info->core_cpumask_size,
++				  pbf_info->core_cpumask);
++	}
++
++	/* extra ctdp & pbf struct parameters */
++	ctdp_level->processed = 1;
++	ctdp_level->pbf_support = 1; /* PBF is always supported and enabled */
++	ctdp_level->pbf_enabled = 1;
++	ctdp_level->fact_support = 0; /* FACT is never supported */
++	ctdp_level->fact_enabled = 0;
++
++	return 0;
++
++error_ret:
++	free_cpu_set(ctdp_level->core_cpumask);
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(edac_mc_alloc);
 +
- void edac_mc_free(struct mem_ctl_info *mci)
++static void dump_clx_n_config_for_cpu(int cpu, void *arg1, void *arg2,
++				   void *arg3, void *arg4)
++{
++	int ret;
++
++	ret = clx_n_config(cpu);
++	if (ret) {
++		perror("isst_get_process_ctdp");
++	} else {
++		struct isst_pkg_ctdp_level_info *ctdp_level;
++		struct isst_pbf_info *pbf_info;
++
++		ctdp_level = &clx_n_pkg_dev.ctdp_level[0];
++		pbf_info = &ctdp_level->pbf_info;
++		isst_ctdp_display_information(cpu, outf, tdp_level, &clx_n_pkg_dev);
++		free_cpu_set(ctdp_level->core_cpumask);
++		free_cpu_set(pbf_info->core_cpumask);
++	}
++}
++
+ static void dump_isst_config_for_cpu(int cpu, void *arg1, void *arg2,
+ 				     void *arg3, void *arg4)
  {
- 	edac_dbg(1, "\n");
---=20
-2.20.1
+@@ -768,6 +914,8 @@ static void dump_isst_config_for_cpu(int cpu, void *arg1, void *arg2,
+ 
+ static void dump_isst_config(int arg)
+ {
++	void *fn;
++
+ 	if (cmd_help) {
+ 		fprintf(stderr,
+ 			"Print Intel(R) Speed Select Technology Performance profile configuration\n");
+@@ -779,14 +927,17 @@ static void dump_isst_config(int arg)
+ 		exit(0);
+ 	}
+ 
++	if (!is_clx_n_platform())
++		fn = dump_isst_config_for_cpu;
++	else
++		fn = dump_clx_n_config_for_cpu;
++
+ 	isst_ctdp_display_information_start(outf);
+ 
+ 	if (max_target_cpus)
+-		for_each_online_target_cpu_in_set(dump_isst_config_for_cpu,
+-						  NULL, NULL, NULL, NULL);
++		for_each_online_target_cpu_in_set(fn, NULL, NULL, NULL, NULL);
+ 	else
+-		for_each_online_package_in_set(dump_isst_config_for_cpu, NULL,
+-					       NULL, NULL, NULL);
++		for_each_online_package_in_set(fn, NULL, NULL, NULL, NULL);
+ 
+ 	isst_ctdp_display_information_end(outf);
+ }
+@@ -1611,6 +1762,7 @@ static void get_clos_assoc(int arg)
+ }
+ 
+ static struct process_cmd_struct clx_n_cmds[] = {
++	{ "perf-profile", "info", dump_isst_config, 0 },
+ 	{ NULL, NULL, NULL, 0 }
+ };
+ 
+@@ -1888,7 +2040,8 @@ void process_command(int argc, char **argv,
+ 		}
+ 	}
+ 
+-	create_cpu_map();
++	if (!is_clx_n_platform())
++		create_cpu_map();
+ 
+ 	i = 0;
+ 	while (cmds[i].feature) {
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index 40346d534f78..8309810e7425 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -6,8 +6,6 @@
+ 
+ #include "isst.h"
+ 
+-#define DISP_FREQ_MULTIPLIER 100
+-
+ static void printcpulist(int str_len, char *str, int mask_size,
+ 			 cpu_set_t *cpu_mask)
+ {
+@@ -204,6 +202,9 @@ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
+ 		 pbf_info->p1_low * DISP_FREQ_MULTIPLIER);
+ 	format_and_print(outf, disp_level + 1, header, value);
+ 
++	if (is_clx_n_platform())
++		return;
++
+ 	snprintf(header, sizeof(header), "tjunction-temperature(C)");
+ 	snprintf(value, sizeof(value), "%d", pbf_info->t_prochot);
+ 	format_and_print(outf, disp_level + 1, header, value);
+@@ -377,6 +378,15 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 			snprintf(value, sizeof(value), "unsupported");
+ 		format_and_print(outf, base_level + 4, header, value);
+ 
++		if (is_clx_n_platform()) {
++			if (ctdp_level->pbf_support)
++				_isst_pbf_display_information(cpu, outf,
++							      tdp_level,
++							  &ctdp_level->pbf_info,
++							      base_level + 4);
++			continue;
++		}
++
+ 		snprintf(header, sizeof(header), "thermal-design-power(W)");
+ 		snprintf(value, sizeof(value), "%d", ctdp_level->pkg_tdp);
+ 		format_and_print(outf, base_level + 4, header, value);
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index d280b27d600d..bef27bd6138e 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -69,6 +69,8 @@
+ #define PM_CLOS_OFFSET				0x08
+ #define PQR_ASSOC_OFFSET			0x20
+ 
++#define DISP_FREQ_MULTIPLIER 100
++
+ struct isst_clos_config {
+ 	int pkg_id;
+ 	int die_id;
+@@ -237,4 +239,5 @@ extern void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
+ extern int isst_clos_get_clos_information(int cpu, int *enable, int *type);
+ extern void isst_clos_display_clos_information(int cpu, FILE *outf,
+ 					       int clos_enable, int type);
++extern int is_clx_n_platform(void);
+ #endif
+-- 
+2.17.2
 
