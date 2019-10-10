@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61425ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608BDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCBC208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A89B21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697190;
-	bh=yKGquLgQJM6xHAVIyQdIcYLEBg8ctH6tGylCXrJKmP4=;
+	s=default; t=1570697193;
+	bh=Psok01rb9VQ9VEznPEyjc5+rXwjlQFDg2BvagxWZhyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x4TS+figGkqQKZpirIXfwH1Z7og4IVDeF0LNsh2cnpghk++uEsVwhs1VDuK5Jr2n1
-	 RSkccNAIQC8o5lP33xaYCgQQM/VlUiTebsKMa1nL1ijnFKHLdtilZ+GNCna7ao4Q9J
-	 3n5ZZPmq/Vlly7vUaOXjbUJdwHX8JcLrQv5QJ8T4=
+	b=1rZrhPOC7IHKfGrVR9K5AfRDC6tEjQyWpyqqkpb5KFk7xXB5isNV1O0/sdYlzqxXe
+	 pUs6MH1Vx2aqCfku4OwgGGSsTGuu/8A5hUoZYQ/TBiOl+F6bMOQ2vKdl+IyyJu35Lu
+	 HLZo6gsV08B1Hztrk1Pb8Y5Dw3s4sM4OhyDekChM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389324AbfJJIq2 (ORCPT
+        id S2389336AbfJJIqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:46:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52176 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:46:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387615AbfJJIqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:46:24 -0400
+        id S2389325AbfJJIq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:46:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE8C0208C3;
-        Thu, 10 Oct 2019 08:46:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35DDC2064A;
+        Thu, 10 Oct 2019 08:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697182;
-        bh=yKGquLgQJM6xHAVIyQdIcYLEBg8ctH6tGylCXrJKmP4=;
+        s=default; t=1570697187;
+        bh=Psok01rb9VQ9VEznPEyjc5+rXwjlQFDg2BvagxWZhyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZf5zC9FDHKXh7Y8Abm69b9HFtdapmsduzf3waDT5Bz7Yw+1tR2f6ZMWsFxdseY5Z
-         PfM4H7LcK96BRpaRfgIoAEPIF96/iXx4QYrQwgH8K/lyLXnNXn6kOadTD35oV87Ckp
-         vSS7Xn49bdLzYV47RJJZ7AWdyzLw1c66wiGTJM/Q=
+        b=gJiEOZ7hC5Cp1pRrxSWsN0euzItOlEDt5TdeycjNMlx6UeU/SP2UlaEk9Z3ZneCVY
+         V9KWEQhO2uoh7+uAh4vqnCqjx/eKQoXBVgCyYKrrQdRmo0z172b80E6Yx0vByC09Ao
+         xWeaAtOfL16efQLJTFL8DlscsRyph7xamhQoqtoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/114] ima: always return negative code for error
-Date:   Thu, 10 Oct 2019 10:35:56 +0200
-Message-Id: <20191010083608.030280521@linuxfoundation.org>
+Subject: [PATCH 4.19 051/114] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
+Date:   Thu, 10 Oct 2019 10:35:58 +0200
+Message-Id: <20191010083608.189387989@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,42 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit f5e1040196dbfe14c77ce3dfe3b7b08d2d961e88 ]
+[ Upstream commit e2751463eaa6f9fec8fea80abbdc62dbc487b3c5 ]
 
-integrity_kernel_read() returns the number of bytes read. If this is
-a short read then this positive value is returned from
-ima_calc_file_hash_atfm(). Currently this is only indirectly called from
-ima_calc_file_hash() and this function only tests for the return value
-being zero or nonzero and also doesn't forward the return value.
-Nevertheless there's no point in returning a positive value as an error,
-so translate a short read into -EINVAL.
+In encode_attrs(), there is an if statement on line 1145 to check
+whether label is NULL:
+    if (label && (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL))
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+When label is NULL, it is used on lines 1178-1181:
+    *p++ = cpu_to_be32(label->lfs);
+    *p++ = cpu_to_be32(label->pi);
+    *p++ = cpu_to_be32(label->len);
+    p = xdr_encode_opaque_fixed(p, label->label, label->len);
+
+To fix these bugs, label is checked before being used.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_crypto.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index d9e7728027c6c..b7822d2b79736 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -271,8 +271,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
- 		rbuf_len = min_t(loff_t, i_size - offset, rbuf_size[active]);
- 		rc = integrity_kernel_read(file, offset, rbuf[active],
- 					   rbuf_len);
--		if (rc != rbuf_len)
-+		if (rc != rbuf_len) {
-+			if (rc >= 0)
-+				rc = -EINVAL;
- 			goto out3;
-+		}
- 
- 		if (rbuf[1] && offset) {
- 			/* Using two buffers, and it is not the first
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index b7bde12d8cd51..1c0227c78a7bc 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -1171,7 +1171,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
+ 		} else
+ 			*p++ = cpu_to_be32(NFS4_SET_TO_SERVER_TIME);
+ 	}
+-	if (bmval[2] & FATTR4_WORD2_SECURITY_LABEL) {
++	if (label && (bmval[2] & FATTR4_WORD2_SECURITY_LABEL)) {
+ 		*p++ = cpu_to_be32(label->lfs);
+ 		*p++ = cpu_to_be32(label->pi);
+ 		*p++ = cpu_to_be32(label->len);
 -- 
 2.20.1
 
