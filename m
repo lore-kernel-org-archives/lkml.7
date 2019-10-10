@@ -2,52 +2,52 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3BEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA10C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89AE521920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BCD2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697852;
-	bh=BpwReUT5upbxDY4KdUqv+Y7x6TYnxNaObYwjEsc7NMU=;
+	s=default; t=1570697857;
+	bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZEiaDsNKYVs7qCe8I89DNZf1/xVQWn6YcXCRhCifi9HwHb4k85IxoLGWEbbsqsHSt
-	 T76SsZDVEGqX9IYgBKEsvdStaGL8V74Fh9YxIe+L/P5DjXIqUI63/jXoiYstqVScH+
-	 j1CoC+ppPhVTThSLvMQNVAuehDKKsquDcw7N/6mU=
+	b=Z95DmgYc6sftWr8UPr4jiJpxvdrkKtuzF870vGzP3MPsa8OqBbRcGQpCSnzVRayUq
+	 FUxAYm2qZXJSTnFaC+u42CRbgZPuaKwSVJuBEKeW/oyYsBKeGlrz69PmZI5zdAD+OS
+	 ibabxmjRlqIQqc0SLE0wbHzOWU1qYLY1eCkemd8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbfJJI5b (ORCPT
+        id S2389382AbfJJI5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:57:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52536 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:57:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388292AbfJJIql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:46:41 -0400
+        id S2389330AbfJJIqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:46:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C55E8208C3;
-        Thu, 10 Oct 2019 08:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47213218AC;
+        Thu, 10 Oct 2019 08:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697201;
-        bh=BpwReUT5upbxDY4KdUqv+Y7x6TYnxNaObYwjEsc7NMU=;
+        s=default; t=1570697195;
+        bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YMajZunKvHYCvlqhL1RmcFrFva9A85YbxehUfwR4VtocFGhhPPiUz9eRIzHDubpyf
-         /gzqL3xfJ0dV09cghed/cjK+D/7m3Xa1RSvCf6O2B1iq9lHCAWsjbpF8D072zl+oXf
-         chtU/zjemixCza9KXF+86qXnROy2UNCYxdif4Odo=
+        b=1nR4odW2RfL0O7SWJ8mMRPzw78+lYNIikokeYywIhtgAiXoNZIKuMC8lyatB9qiOP
+         qk9IyKdYgRpXr+MjM1HejV2ifd4fGzC/0hGepobJ/eBtJYmeZRnUBmiikk8KxNIWLd
+         3uHgVX1MZkQSjgfjz6//jSorB/Znt/hMKCnSpHtA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>
-Subject: [PATCH 4.19 038/114] drm/msm/dsi: Fix return value check for clk_get_parent
-Date:   Thu, 10 Oct 2019 10:35:45 +0200
-Message-Id: <20191010083603.974508230@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 054/114] xen/pci: reserve MCFG areas earlier
+Date:   Thu, 10 Oct 2019 10:36:01 +0200
+Message-Id: <20191010083608.449377759@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,48 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-commit 5fb9b797d5ccf311ae4aba69e86080d47668b5f7 upstream.
+[ Upstream commit a4098bc6eed5e31e0391bcc068e61804c98138df ]
 
-clk_get_parent returns an error pointer upon failure, not NULL. So the
-checks as they exist won't catch a failure. This patch changes the
-checks and the return values to properly handle an error pointer.
+If MCFG area is not reserved in E820, Xen by default will defer its usage
+until Dom0 registers it explicitly after ACPI parser recognizes it as
+a reserved resource in DSDT. Having it reserved in E820 is not
+mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
+and firmware is free to keep a hole in E820 in that place. Xen doesn't know
+what exactly is inside this hole since it lacks full ACPI view of the
+platform therefore it's potentially harmful to access MCFG region
+without additional checks as some machines are known to provide
+inconsistent information on the size of the region.
 
-Fixes: c4d8cfe516dc ("drm/msm/dsi: add implementation for helper functions")
-Cc: Sibi Sankar <sibis@codeaurora.org>
-Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Rob Clark <robdclark@chromium.org>
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
+PCI enumeration starts exactly there as well. Trying to register a device
+prior to MCFG reservation causes multiple problems with PCIe extended
+capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
+no convenient hooks for us to subscribe to so register MCFG areas earlier
+upon the first invocation of xen_add_device(). It should be safe to do once
+since all the boot time buses must have their MCFG areas in MCFG table
+already and we don't support PCI bus hot-plug.
 
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/xen/pci.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -429,15 +429,15 @@ static int dsi_clk_init(struct msm_dsi_h
- 	}
+diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
+index 7494dbeb4409c..db58aaa4dc598 100644
+--- a/drivers/xen/pci.c
++++ b/drivers/xen/pci.c
+@@ -29,6 +29,8 @@
+ #include "../pci/pci.h"
+ #ifdef CONFIG_PCI_MMCONFIG
+ #include <asm/pci_x86.h>
++
++static int xen_mcfg_late(void);
+ #endif
  
- 	msm_host->byte_clk_src = clk_get_parent(msm_host->byte_clk);
--	if (!msm_host->byte_clk_src) {
--		ret = -ENODEV;
-+	if (IS_ERR(msm_host->byte_clk_src)) {
-+		ret = PTR_ERR(msm_host->byte_clk_src);
- 		pr_err("%s: can't find byte_clk clock. ret=%d\n", __func__, ret);
- 		goto exit;
- 	}
+ static bool __read_mostly pci_seg_supported = true;
+@@ -40,7 +42,18 @@ static int xen_add_device(struct device *dev)
+ #ifdef CONFIG_PCI_IOV
+ 	struct pci_dev *physfn = pci_dev->physfn;
+ #endif
+-
++#ifdef CONFIG_PCI_MMCONFIG
++	static bool pci_mcfg_reserved = false;
++	/*
++	 * Reserve MCFG areas in Xen on first invocation due to this being
++	 * potentially called from inside of acpi_init immediately after
++	 * MCFG table has been finally parsed.
++	 */
++	if (!pci_mcfg_reserved) {
++		xen_mcfg_late();
++		pci_mcfg_reserved = true;
++	}
++#endif
+ 	if (pci_seg_supported) {
+ 		struct {
+ 			struct physdev_pci_device_add add;
+@@ -213,7 +226,7 @@ static int __init register_xen_pci_notifier(void)
+ arch_initcall(register_xen_pci_notifier);
  
- 	msm_host->pixel_clk_src = clk_get_parent(msm_host->pixel_clk);
--	if (!msm_host->pixel_clk_src) {
--		ret = -ENODEV;
-+	if (IS_ERR(msm_host->pixel_clk_src)) {
-+		ret = PTR_ERR(msm_host->pixel_clk_src);
- 		pr_err("%s: can't find pixel_clk clock. ret=%d\n", __func__, ret);
- 		goto exit;
+ #ifdef CONFIG_PCI_MMCONFIG
+-static int __init xen_mcfg_late(void)
++static int xen_mcfg_late(void)
+ {
+ 	struct pci_mmcfg_region *cfg;
+ 	int rc;
+@@ -252,8 +265,4 @@ static int __init xen_mcfg_late(void)
  	}
+ 	return 0;
+ }
+-/*
+- * Needs to be done after acpi_init which are subsys_initcall.
+- */
+-subsys_initcall_sync(xen_mcfg_late);
+ #endif
+-- 
+2.20.1
+
 
 
