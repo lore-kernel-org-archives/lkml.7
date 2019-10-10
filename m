@@ -2,176 +2,108 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDBDC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C42DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A75218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFMhmNn6"
+	by mail.kernel.org (Postfix) with ESMTP id 70377218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:52:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387868AbfJJJvh (ORCPT
+        id S2387497AbfJJJw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:51:37 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34101 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387400AbfJJJvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:51:36 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j11so7070393wrp.1;
-        Thu, 10 Oct 2019 02:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vR/97ha/8nINLtKlRJDAXkvt7wXAGo20zdsTBey8WDA=;
-        b=TFMhmNn6fd8Y1HE/9jdGNBq/1CtQEn8SEuHZY+IeRl2wMKOOVecFJe6MvzmHxl+RrD
-         5F4uJ9KO/neqIpGzQ/csSMhvjHQ1Wkc80+Qo8IDcavhMaRfx5pzjrz6qDplsJ/d1IOa8
-         J1vPTfyIqm8kQUA8KQc8Z8RIthCeNnwwy7xJ9hNRuysUkHUsOZs/j88/Ri6fYg5iahYJ
-         kXz8IKfxSwZM2UmYdtEvhh0ep3HfktR1X4WO1J4/MJxNvo7WF9NXnBV4xkQ8/0mbr+YX
-         9/90WAoaS617Oq30MP+L3lo94v2mCjFqc4bJO0GH85PNtl4D9PXTOR9Z3v2r5yTY6JkE
-         OFxw==
+        Thu, 10 Oct 2019 05:52:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39508 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727330AbfJJJwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 05:52:55 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C03F80F83
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:52:55 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id n3so2501274wrt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:52:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vR/97ha/8nINLtKlRJDAXkvt7wXAGo20zdsTBey8WDA=;
-        b=AEl0UpMTdgyy65GdoSqWogNJdKlpNJ9bvzXFcbS6w+NubSl3+WPMykOhvxZfnD5h9g
-         bWtZNNQskSX102ZRxA2pYvgyqMy961838kAAiibGDN0DWi3Zg6yn1vsOUv2DsVlspl5k
-         WSIam7fYxz0ycHjLwGW0xhzeHe0Pb49XFYbDyZq39bRlg6tmTQn5D9K/yKCu2TQaxCR0
-         2cJqMgDFb8AU2cBgS6JN1evJiEEWYYWsZim5XgDiCmjReg4KvgrcPOGpesgzBgd8kqEy
-         BxGl4/lP7kvraSfETZj0y0TfjmWnN4IvjDjwlIMWHt/KPMGhowcmoTmr6hQfswXNMs9u
-         sH8w==
-X-Gm-Message-State: APjAAAXOSabEnQrj3CNFoCU3r5i7eW/LXzCAaCDsSB8AxSfxxW9KikV4
-        PHYsLPm39XGLag8DlgY4beI=
-X-Google-Smtp-Source: APXvYqylf9nKxM3hVAWOugW/T0Pu5gy0Ed8GhiFvEZKb4vDEJGSpBHTcvlBCKf38r+fOzZBQA9UzHg==
-X-Received: by 2002:adf:e688:: with SMTP id r8mr8260370wrm.342.1570701092960;
-        Thu, 10 Oct 2019 02:51:32 -0700 (PDT)
-Received: from localhost.localdomain ([46.114.37.24])
-        by smtp.googlemail.com with ESMTPSA id o4sm11678251wre.91.2019.10.10.02.51.31
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TqIbFc3q/Gn71WMn1cgD1WOyhahKFHqycUgmiD17c60=;
+        b=EuGu427IDiAUTOr/IDLGe6M3SNMh6lG3ugDoBlqjUBjH+N9MwyXcURlFndNTHV2nlb
+         dD4JAWt+2WpnaKiUJVaBmYW+89ClNQZKjsnKLIvri3BXse915gn4iKuW27sDnSeHR+VM
+         k2VlYZhZmDrbUsoLpTa7+TAlYKIQobtFjKP0Nu7x6xjeuz4azXc7WuMlt13Sx1Een1Ra
+         ScsHx5hzg6Sw1cFjTIVfmpIiZMOX21AIwSHyCNTsZ3JDvcaKd3GfgEcu/2ESabiGABhp
+         gDUQ+YulbileK2dfvX4gdPJXL4s/+E3OTRNEVpztU7k5xx2DGp/tc4r+CPEk1dWlj85t
+         FW0g==
+X-Gm-Message-State: APjAAAUZKtMHvqaNyMiqiNUo7ey8IopeBTFp++//Z207VLqyKTrOOoUm
+        w6Snd1WT0FlWUc75fbqHQre3fz3zreQacioHodwtHnQhaDfKXU4p1SHx9DTYZjYpUo8FMRDyLVF
+        2n/9bsibUqw6tMG0oaNgseecI
+X-Received: by 2002:a05:600c:28d:: with SMTP id 13mr198473wmk.100.1570701173969;
+        Thu, 10 Oct 2019 02:52:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqypapq2mOJT0UwRrfDwUNCu9powWRCw63cVBYVEzLpMWYF3N5fg0WGtA5sfkqGUCAP/OmrMBQ==
+X-Received: by 2002:a05:600c:28d:: with SMTP id 13mr198456wmk.100.1570701173753;
+        Thu, 10 Oct 2019 02:52:53 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id c6sm5901462wrm.71.2019.10.10.02.52.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 02:51:32 -0700 (PDT)
-From:   Gon Solo <gonsolo@gmail.com>
-To:     mchehab+samsung@kernel.org
-Cc:     linux-media@vger.kernel.org, mchehab@infradead.org, jp@jpvw.nl,
-        crope@iki.fi, sean@mess.org, linux-kernel@vger.kernel.org,
-        Gon Solo <gonsolo@gmail.com>
-Subject: [PATCH 1/4] si2168: Use bits and convert to kernel-doc format.
-Date:   Thu, 10 Oct 2019 11:51:00 +0200
-Message-Id: <20191010095103.3803-2-gonsolo@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191010091848.GA2898@Limone>
-References: <20191010091848.GA2898@Limone>
+        Thu, 10 Oct 2019 02:52:53 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 11:52:50 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 08/13] vsock: move vsock_insert_unbound() in the
+ vsock_create()
+Message-ID: <20191010095250.zmwmce7bgqgf3nv4@steredhat>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-9-sgarzare@redhat.com>
+ <20191009123423.GI5747@stefanha-x1.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009123423.GI5747@stefanha-x1.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Gon Solo <gonsolo@gmail.com>
----
- drivers/media/dvb-frontends/si2168.h      | 47 +++++++++++++----------
- drivers/media/dvb-frontends/si2168_priv.h | 10 ++---
- 2 files changed, 31 insertions(+), 26 deletions(-)
+On Wed, Oct 09, 2019 at 01:34:23PM +0100, Stefan Hajnoczi wrote:
+> On Fri, Sep 27, 2019 at 01:26:58PM +0200, Stefano Garzarella wrote:
+> > vsock_insert_unbound() was called only when 'sock' parameter of
+> > __vsock_create() was not null. This only happened when
+> > __vsock_create() was called by vsock_create().
+> > 
+> > In order to simplify the multi-transports support, this patch
+> > moves vsock_insert_unbound() at the end of vsock_create().
+> > 
+> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > ---
+> >  net/vmw_vsock/af_vsock.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> Maybe transports shouldn't call __vsock_create() directly.  They always
+> pass NULL as the parent socket, so we could have a more specific
+> function that transports call without a parent sock argument.  This
+> would eliminate any concern over moving vsock_insert_unbound() out of
+> this function.  In any case, I've checked the code and this patch is
+> correct.
 
-diff --git a/drivers/media/dvb-frontends/si2168.h b/drivers/media/dvb-frontends/si2168.h
-index 50dccb394efa..ecd21adf8950 100644
---- a/drivers/media/dvb-frontends/si2168.h
-+++ b/drivers/media/dvb-frontends/si2168.h
-@@ -9,38 +9,43 @@
- #define SI2168_H
- 
- #include <linux/dvb/frontend.h>
--/*
-- * I2C address
-- * 0x64
-+/**
-+ * struct si2168_config - configuration parameters for si2168
-+ *
-+ * @fe:
-+ *	frontend returned by driver
-+ * @i2c_adapter:
-+ *	tuner I2C adapter returned by driver
-+ * @ts_mode:
-+ *	Transport Stream mode. Can be:
-+ *	- %SI2168_TS_PARALLEL
-+ *	- %SI2168_TS_SERIAL
-+ *	- %SI2168_TS_TRISTATE
-+ *	- %SI2168_TS_CLK_MANUAL
-+ * @ts_clock_inv:
-+ *	TS clock inverted
-+ * @ts_clock_gapped:
-+ *	TS clock gapped
-+ * @spectral_inversion:
-+ *	Inverted spectrum
-+ *
-+ * Note:
-+ *	The I2C address of this demod is 0x64.
-  */
- struct si2168_config {
--	/*
--	 * frontend
--	 * returned by driver
--	 */
- 	struct dvb_frontend **fe;
--
--	/*
--	 * tuner I2C adapter
--	 * returned by driver
--	 */
- 	struct i2c_adapter **i2c_adapter;
- 
--	/* TS mode */
- #define SI2168_TS_PARALLEL	0x06
- #define SI2168_TS_SERIAL	0x03
- #define SI2168_TS_TRISTATE	0x00
- #define SI2168_TS_CLK_MANUAL	0x20
- 	u8 ts_mode;
- 
--	/* TS clock inverted */
--	bool ts_clock_inv;
--
--	/* TS clock gapped */
--	bool ts_clock_gapped;
--
--	/* Inverted spectrum */
--	bool spectral_inversion;
-+	/* Flags */
-+	unsigned int ts_clock_inv:1;
-+	unsigned int ts_clock_gapped:1;
-+	unsigned int spectral_inversion:1;
- };
- 
- #endif
-diff --git a/drivers/media/dvb-frontends/si2168_priv.h b/drivers/media/dvb-frontends/si2168_priv.h
-index 804d5b30c697..18bea5222082 100644
---- a/drivers/media/dvb-frontends/si2168_priv.h
-+++ b/drivers/media/dvb-frontends/si2168_priv.h
-@@ -34,12 +34,12 @@ struct si2168_dev {
- 	unsigned int chip_id;
- 	unsigned int version;
- 	const char *firmware_name;
--	bool active;
--	bool warm;
- 	u8 ts_mode;
--	bool ts_clock_inv;
--	bool ts_clock_gapped;
--	bool spectral_inversion;
-+	unsigned int active:1;
-+	unsigned int warm:1;
-+	unsigned int ts_clock_inv:1;
-+	unsigned int ts_clock_gapped:1;
-+	unsigned int spectral_inversion:1;
- };
- 
- /* firmware command struct */
--- 
-2.20.1
+Yes, I agree with you, I can add a new patch to do this cleaning.
 
+> 
+> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+Thanks,
+Stefano
