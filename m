@@ -2,155 +2,145 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9197CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 11:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27CCC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 11:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE342067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 11:31:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p9Wy5Rie"
+	by mail.kernel.org (Postfix) with ESMTP id AA9C32067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 11:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570707270;
+	bh=BnNjhImgan56T2ISuoSSgS/7rYu9APn6dtfOMKv/WSU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=knaRbPV60Gde5QAqaVTzvwqmFOQqbeF3W+HF2q4yJDWEYyhnd/QzJbOXMGnYue/LW
+	 ecQVgACKtWFDSgGk9K2z7iX2rzceJLpJtCcbVXWkaC16cazae6iZOG/QtvxBIwErdB
+	 PXfgco+6KGiXMnPnfqL/iOk2+MRpnTKkUTlKRci8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfJJLbt (ORCPT
+        id S1727291AbfJJLe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 07:31:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49630 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfJJLbt (ORCPT
+        Thu, 10 Oct 2019 07:34:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52996 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfJJLe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 07:31:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9ABTRun106466;
-        Thu, 10 Oct 2019 11:30:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=p9WbR0dM77WKACvOXHaAs6Uq3LQwLedHdNpHjAHMW8A=;
- b=p9Wy5RieNe/GN/fEG+J4DAt8eFi9Zim3eaUJS0Mh9TzeFuhfPtaj0naj57FJkEl3npZY
- Su+yziOblZPOTH0UFed4YHxVSppZLI7RqKBqyhIBMl0jbmYfPiVlufFYayQmIKh18wP1
- 1D3F6fGjybOFDMdNP0P0mzFos2401ntNhdpUzr7a78yHWz1NUCqIBUYsTUUdCBNrZR1O
- ERHGVL5rpIsRksinOM1DKSabsvHNnvdTYjrXkRG5xStc6W4K8tvt0hQ9UQXOsO9dYmbQ
- A6akrOj2duAHzuBtOD8DnNz5bvLx11jTFBxoFqyeXpsMmUlOlStlj+8bU1+5EhLsCfvo sw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vejkutg37-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 11:30:43 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9ABRp3x054573;
-        Thu, 10 Oct 2019 11:30:43 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2vhrxdj78u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 11:30:43 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9ABUfns026696;
-        Thu, 10 Oct 2019 11:30:42 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 10 Oct 2019 04:30:40 -0700
-Date:   Thu, 10 Oct 2019 14:30:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alexander Gordeev <a.gordeev.box@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
- for PCIe
-Message-ID: <20191010113034.GN13286@kadam>
-References: <cover.1570558807.git.a.gordeev.box@gmail.com>
- <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
- <20191009121441.GM25098@kadam>
- <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
- <20191009185323.GG13286@kadam>
- <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
+        Thu, 10 Oct 2019 07:34:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T15puKazwBt66FgQt1uCJU8HUv8ZgBQadGJIaMXHcQo=; b=l60y0UJbSOjOUb9VZ8YXtleH1
+        oc/1GSBg7c4JUqj4AgifXJsOW0BU9QkaTtl0BbQ20eNjrscNzD6PGVn6BvDol31OLP6fi+5o3qo2Q
+        cC17rlozldmfQfiBoLlXrFtu93Bw//WmC1cZd29tujKegrzBsjseO96u1LMg6Zu1dDMs0IXt2omqt
+        IgWMH1SHvt/gtgNWFkCBk7Mn71aatifvgrcC74o+VQb9zTjtwl7MsRczpZcLB77T2cfdok6pfPAFh
+        A51CgxxWmVpo15BWKR5QJ1gfW8SSlcpnygn53kK/9ltzrAfZZWwc38hdvdvxW5MxR+Cu7yhJzjfIV
+        /CmwL2E9Q==;
+Received: from 177.205.100.4.dynamic.adsl.gvt.net.br ([177.205.100.4] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIWiB-0007mf-Lf; Thu, 10 Oct 2019 11:34:28 +0000
+Date:   Thu, 10 Oct 2019 08:34:23 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Gon Solo <gonsolo@gmail.com>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] media: si2168: use bits instead of bool for flags
+Message-ID: <20191010083423.3fff672f@coco.lan>
+In-Reply-To: <20191010105544.GA6507@Limone>
+References: <20191004090855.14e418ed@coco.lan>
+        <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
+        <20191010105544.GA6507@Limone>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910100105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910100106
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:51:45AM +0200, Alexander Gordeev wrote:
-> On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
-> > > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
-> > > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
-> > > > > +	struct avalon_dma_desc *desc;
-> > > > > +	struct virt_dma_desc *vdesc;
-> > > > > +	bool rd_done;
-> > > > > +	bool wr_done;
-> > > > > +
-> > > > > +	spin_lock(lock);
-> > > > > +
-> > > > > +	rd_done = (hw->h2d_last_id < 0);
-> > > > > +	wr_done = (hw->d2h_last_id < 0);
-> > > > > +
-> > > > > +	if (rd_done && wr_done) {
-> > > > > +		spin_unlock(lock);
-> > > > > +		return IRQ_NONE;
-> > > > > +	}
-> > > > > +
-> > > > > +	do {
-> > > > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
-> > > > > +			rd_done = true;
-> > > > > +
-> > > > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
-> > > > > +			wr_done = true;
-> > > > > +	} while (!rd_done || !wr_done);
-> > > > 
-> > > > This loop is very strange.  It feels like the last_id indexes needs
-> > > > to atomic or protected from racing somehow so we don't do an out of
-> > > > bounds read.
-> 
-> [...]
-> 
-> > You're missing my point.  When we set
-> > hw->d2h_last_id = 1;
-> [1]
-> > ...
-> > hw->d2h_last_id = 2;
-> [2]
-> 
-> > There is a tiny moment where ->d2h_last_id is transitioning from 1 to 2
-> > where its value is unknown.  We're in a busy loop here so we have a
-> > decent chance of hitting that 1/1000,000th of a second.  If we happen to
-> > hit it at exactly the right time then we're reading from a random
-> > address and it will cause an oops.
-> > 
-> > We have to use atomic_t types or something to handle race conditions.
-> 
-> Err.. I am still missing the point :( In your example I do see a chance
-> for a reader to read out 1 at point in time [2] - because of SMP race.
-> But what could it be other than 1 or 2?
-> 
+Em Thu, 10 Oct 2019 12:55:44 +0200
+Gon Solo <gonsolo@gmail.com> escreveu:
 
-The 1 to 2 transition was a poorly chosen example, but a -1 to 1
-trasition is better.  The cpu could write a byte at a time.  So maybe
-it only wrote the two highest bytes so now it's 0xffff.  It's not -1 and
-it's not 1 and it's not a valid index.
+> On Fri, Oct 04, 2019 at 10:15:22AM -0300, Mauro Carvalho Chehab wrote:
+> > Using bool on struct is not recommended, as it wastes lots of
+> > space. So, instead, let's use bits.  
+> 
+> Wouldn't "bool b:1;" even be better? I performed a little test:
+> 
+> #include <stdbool.h>
+> #include <stdio.h>
+> 
+> struct uints {
+> 	unsigned int a0;
+> 	unsigned int a1;
+> 	unsigned int a2;
+> 	unsigned int a3;
+> 	unsigned int a4;
+> 	unsigned int a5;
+> 	unsigned int a6;
+> 	unsigned int a7;
+> };
+> 
+> struct bools {
+> 	bool a0;
+> 	bool a1;
+> 	bool a2;
+> 	bool a3;
+> 	bool a4;
+> 	bool a5;
+> 	bool a6;
+> 	bool a7;
+> };
+> 
+> struct bit_uints {
+> 	unsigned int a0:1;
+> 	unsigned int a1:1;
+> 	unsigned int a2:1;
+> 	unsigned int a3:1;
+> 	unsigned int a4:1;
+> 	unsigned int a5:1;
+> 	unsigned int a6:1;
+> 	unsigned int a7:1;
+> };
+> 
+> struct bit_bools {
+> 	bool a0:1;
+> 	bool a1:1;
+> 	bool a2:1;
+> 	bool a3:1;
+> 	bool a4:1;
+> 	bool a5:1;
+> 	bool a6:1;
+> 	bool a7:1;
+> };
+> 
+> int main() {
+> 	printf("bit_uints: %ld\n", sizeof(struct bit_uints));
+> 	printf("bit_bools: %ld\n", sizeof(struct bit_bools));
+> 	printf("uints: %ld\n", sizeof(struct uints));
+> 	printf("bools: %ld\n", sizeof(struct bools));
+> }
+> 
+> Result:
+> 
+> bit_uints: 4
+> bit_bools: 1
+> uints: 32
+> bools: 8
+> 
+> I know with different types within the struct it looks different, but
+> still.
 
-> Anyways, all code paths dealing with h2d_last_id and d2h_last_id indexes
-> are protected with a spinlock.
+No. In practice, the compiler will add 3 bytes of pad after bit_bools
+(on 32-bit archs), due to performance reasons.
 
-You have to protect both the writer and the reader.  (That's why this
-bug is so easy to spot).  https://lwn.net/Articles/793253/
+Using "unsigned int" makes it clearer.
 
-regards,
-dan carpenter
-
+Thanks,
+Mauro
