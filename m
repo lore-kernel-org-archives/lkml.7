@@ -2,54 +2,55 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB15C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E42FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FF021D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6819B21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697010;
-	bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
+	s=default; t=1570697012;
+	bh=wA4A798QDjor7GxSK3UoqTKS91AiqFsVdwyhDLrH9FE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwxBMYyBV6sFxgvTPwjZl75q+s9CD4U/fX5NQwTxH3PEdqeo+ln6U5HMf9ZWYAOAc
-	 xy63wMZVZGX3tCIwk6pPTBZnX1ipRH587g+JaM6v2+i5ZwGggLZrtU/bEB5p1tF/HK
-	 UXGtp0HSAlSNmdtwQ+1RrwmYlMquoSbKK2vNZJzg=
+	b=t0qngBDUldMuslpofFXHHRXxpyd/eeKgn8O+YAhu4oRCNLB1r6BlmF5OKsB1NES/R
+	 vcQ/6Kf76bweAboRlxACXET/CFsnvBXOlQZDEFhwGsm/yrd8NUGbHHSS7B5JiRaqE/
+	 EfnZsm4ne9jsQMXybYUROKmmbEH+mFHxmkC2BXxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388739AbfJJIn2 (ORCPT
+        id S2388749AbfJJInb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48242 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:43:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388001AbfJJIn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:43:26 -0400
+        id S2388735AbfJJIn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:43:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF602190F;
-        Thu, 10 Oct 2019 08:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F407E2054F;
+        Thu, 10 Oct 2019 08:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697004;
-        bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
+        s=default; t=1570697007;
+        bh=wA4A798QDjor7GxSK3UoqTKS91AiqFsVdwyhDLrH9FE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYzKSRa3MMRLJgHq8dHKJ9HOypNhv8l8D9tuAfET54JVsR5NeVcsCIwzsH5Vtqby8
-         3Run2qM0p3qYF8x3QrlwPDmJfwUFyD8OO25fOrnR2lxerQmoZW0iK1/9wmEAND0on1
-         MR2UrSuZbincpYMyRkujTs9Hor43oxf8izOi8ct0=
+        b=l3cLRArXzKNKcyzJtu6/LdjRVD8Z+LQfwUDFuHqYo0g0/iAGNys0K4XQnMzmuUg2A
+         6u5xBIFuMXr2l/WQHFg1h2gj/elbQze4tnbxxNVRoPVZQDltf9D4pYA6rLHX1vi4aw
+         8edhchoXxqkeNrOsNMXf+GNKsRBAPYfh3U8P4nbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 088/148] drivers: thermal: qcom: tsens: Fix memory leak from qfprom read
-Date:   Thu, 10 Oct 2019 10:35:49 +0200
-Message-Id: <20191010083616.685532154@linuxfoundation.org>
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 5.3 079/148] libnvdimm/altmap: Track namespace boundaries in altmap
+Date:   Thu, 10 Oct 2019 10:35:40 +0200
+Message-Id: <20191010083616.122145556@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -62,128 +63,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 6b8249abb093551ef173d13a25ed0044d5dd33e0 ]
+commit cf387d9644d8c78721cf9b77af9f67bb5b04da16 upstream.
 
-memory returned as part of nvmem_read via qfprom_read should be
-freed by the consumer once done.
-Existing code is not doing it so fix it.
+With PFN_MODE_PMEM namespace, the memmap area is allocated from the device
+area. Some architectures map the memmap area with large page size. On
+architectures like ppc64, 16MB page for memap mapping can map 262144 pfns.
+This maps a namespace size of 16G.
 
-Below memory leak detected by kmemleak
-   [<ffffff80088b7658>] kmemleak_alloc+0x50/0x84
-    [<ffffff80081df120>] __kmalloc+0xe8/0x168
-    [<ffffff80086db350>] nvmem_cell_read+0x30/0x80
-    [<ffffff8008632790>] qfprom_read+0x4c/0x7c
-    [<ffffff80086335a4>] calibrate_v1+0x34/0x204
-    [<ffffff8008632518>] tsens_probe+0x164/0x258
-    [<ffffff80084e0a1c>] platform_drv_probe+0x80/0xa0
-    [<ffffff80084de4f4>] really_probe+0x208/0x248
-    [<ffffff80084de2c4>] driver_probe_device+0x98/0xc0
-    [<ffffff80084dec54>] __device_attach_driver+0x9c/0xac
-    [<ffffff80084dca74>] bus_for_each_drv+0x60/0x8c
-    [<ffffff80084de634>] __device_attach+0x8c/0x100
-    [<ffffff80084de6c8>] device_initial_probe+0x20/0x28
-    [<ffffff80084dcbb8>] bus_probe_device+0x34/0x7c
-    [<ffffff80084deb08>] deferred_probe_work_func+0x6c/0x98
-    [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
+When populating memmap region with 16MB page from the device area,
+make sure the allocated space is not used to map resources outside this
+namespace. Such usage of device area will prevent a namespace destroy.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add resource end pnf in altmap and use that to check if the memmap area
+allocation can map pfn outside the namespace. On ppc64 in such case we fallback
+to allocation from memory.
+
+This fix kernel crash reported below:
+
+[  132.034989] WARNING: CPU: 13 PID: 13719 at mm/memremap.c:133 devm_memremap_pages_release+0x2d8/0x2e0
+[  133.464754] BUG: Unable to handle kernel data access at 0xc00c00010b204000
+[  133.464760] Faulting instruction address: 0xc00000000007580c
+[  133.464766] Oops: Kernel access of bad area, sig: 11 [#1]
+[  133.464771] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+.....
+[  133.464901] NIP [c00000000007580c] vmemmap_free+0x2ac/0x3d0
+[  133.464906] LR [c0000000000757f8] vmemmap_free+0x298/0x3d0
+[  133.464910] Call Trace:
+[  133.464914] [c000007cbfd0f7b0] [c0000000000757f8] vmemmap_free+0x298/0x3d0 (unreliable)
+[  133.464921] [c000007cbfd0f8d0] [c000000000370a44] section_deactivate+0x1a4/0x240
+[  133.464928] [c000007cbfd0f980] [c000000000386270] __remove_pages+0x3a0/0x590
+[  133.464935] [c000007cbfd0fa50] [c000000000074158] arch_remove_memory+0x88/0x160
+[  133.464942] [c000007cbfd0fae0] [c0000000003be8c0] devm_memremap_pages_release+0x150/0x2e0
+[  133.464949] [c000007cbfd0fb70] [c000000000738ea0] devm_action_release+0x30/0x50
+[  133.464955] [c000007cbfd0fb90] [c00000000073a5a4] release_nodes+0x344/0x400
+[  133.464961] [c000007cbfd0fc40] [c00000000073378c] device_release_driver_internal+0x15c/0x250
+[  133.464968] [c000007cbfd0fc80] [c00000000072fd14] unbind_store+0x104/0x110
+[  133.464973] [c000007cbfd0fcd0] [c00000000072ee24] drv_attr_store+0x44/0x70
+[  133.464981] [c000007cbfd0fcf0] [c0000000004a32bc] sysfs_kf_write+0x6c/0xa0
+[  133.464987] [c000007cbfd0fd10] [c0000000004a1dfc] kernfs_fop_write+0x17c/0x250
+[  133.464993] [c000007cbfd0fd60] [c0000000003c348c] __vfs_write+0x3c/0x70
+[  133.464999] [c000007cbfd0fd80] [c0000000003c75d0] vfs_write+0xd0/0x250
+
+djbw: Aneesh notes that this crash can likely be triggered in any kernel that
+supports 'papr_scm', so flagging that commit for -stable consideration.
+
+Fixes: b5beae5e224f ("powerpc/pseries: Add driver for PAPR SCM regions")
+Cc: <stable@vger.kernel.org>
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
+Tested-by: Santosh Sivaraj <santosh@fossix.org>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Link: https://lore.kernel.org/r/20190910062826.10041-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/thermal/qcom/tsens-8960.c |  2 ++
- drivers/thermal/qcom/tsens-v0_1.c | 12 ++++++++++--
- drivers/thermal/qcom/tsens-v1.c   |  1 +
- drivers/thermal/qcom/tsens.h      |  1 +
- 4 files changed, 14 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/init_64.c |   17 ++++++++++++++++-
+ drivers/nvdimm/pfn_devs.c |    2 ++
+ include/linux/memremap.h  |    1 +
+ 3 files changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
-index 8d9b721dadb65..e46a4e3f25c42 100644
---- a/drivers/thermal/qcom/tsens-8960.c
-+++ b/drivers/thermal/qcom/tsens-8960.c
-@@ -229,6 +229,8 @@ static int calibrate_8960(struct tsens_priv *priv)
- 	for (i = 0; i < num_read; i++, s++)
- 		s->offset = data[i];
+--- a/arch/powerpc/mm/init_64.c
++++ b/arch/powerpc/mm/init_64.c
+@@ -172,6 +172,21 @@ static __meminit void vmemmap_list_popul
+ 	vmemmap_list = vmem_back;
+ }
  
-+	kfree(data);
++static bool altmap_cross_boundary(struct vmem_altmap *altmap, unsigned long start,
++				unsigned long page_size)
++{
++	unsigned long nr_pfn = page_size / sizeof(struct page);
++	unsigned long start_pfn = page_to_pfn((struct page *)start);
 +
- 	return 0;
- }
++	if ((start_pfn + nr_pfn) > altmap->end_pfn)
++		return true;
++
++	if (start_pfn < altmap->base_pfn)
++		return true;
++
++	return false;
++}
++
+ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+ 		struct vmem_altmap *altmap)
+ {
+@@ -194,7 +209,7 @@ int __meminit vmemmap_populate(unsigned
+ 		 * fail due to alignment issues when using 16MB hugepages, so
+ 		 * fall back to system memory if the altmap allocation fail.
+ 		 */
+-		if (altmap) {
++		if (altmap && !altmap_cross_boundary(altmap, start, page_size)) {
+ 			p = altmap_alloc_block_buf(page_size, altmap);
+ 			if (!p)
+ 				pr_debug("altmap block allocation failed, falling back to system memory");
+--- a/drivers/nvdimm/pfn_devs.c
++++ b/drivers/nvdimm/pfn_devs.c
+@@ -618,9 +618,11 @@ static int __nvdimm_setup_pfn(struct nd_
+ 	struct nd_namespace_common *ndns = nd_pfn->ndns;
+ 	struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
+ 	resource_size_t base = nsio->res.start + start_pad;
++	resource_size_t end = nsio->res.end - end_trunc;
+ 	struct vmem_altmap __altmap = {
+ 		.base_pfn = init_altmap_base(base),
+ 		.reserve = init_altmap_reserve(base),
++		.end_pfn = PHYS_PFN(end),
+ 	};
  
-diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
-index 6f26fadf4c279..055647bcee67d 100644
---- a/drivers/thermal/qcom/tsens-v0_1.c
-+++ b/drivers/thermal/qcom/tsens-v0_1.c
-@@ -145,8 +145,10 @@ static int calibrate_8916(struct tsens_priv *priv)
- 		return PTR_ERR(qfprom_cdata);
- 
- 	qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
--	if (IS_ERR(qfprom_csel))
-+	if (IS_ERR(qfprom_csel)) {
-+		kfree(qfprom_cdata);
- 		return PTR_ERR(qfprom_csel);
-+	}
- 
- 	mode = (qfprom_csel[0] & MSM8916_CAL_SEL_MASK) >> MSM8916_CAL_SEL_SHIFT;
- 	dev_dbg(priv->dev, "calibration mode is %d\n", mode);
-@@ -181,6 +183,8 @@ static int calibrate_8916(struct tsens_priv *priv)
- 	}
- 
- 	compute_intercept_slope(priv, p1, p2, mode);
-+	kfree(qfprom_cdata);
-+	kfree(qfprom_csel);
- 
- 	return 0;
- }
-@@ -198,8 +202,10 @@ static int calibrate_8974(struct tsens_priv *priv)
- 		return PTR_ERR(calib);
- 
- 	bkp = (u32 *)qfprom_read(priv->dev, "calib_backup");
--	if (IS_ERR(bkp))
-+	if (IS_ERR(bkp)) {
-+		kfree(calib);
- 		return PTR_ERR(bkp);
-+	}
- 
- 	calib_redun_sel =  bkp[1] & BKP_REDUN_SEL;
- 	calib_redun_sel >>= BKP_REDUN_SHIFT;
-@@ -313,6 +319,8 @@ static int calibrate_8974(struct tsens_priv *priv)
- 	}
- 
- 	compute_intercept_slope(priv, p1, p2, mode);
-+	kfree(calib);
-+	kfree(bkp);
- 
- 	return 0;
- }
-diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
-index 10b595d4f6199..870f502f2cb6c 100644
---- a/drivers/thermal/qcom/tsens-v1.c
-+++ b/drivers/thermal/qcom/tsens-v1.c
-@@ -138,6 +138,7 @@ static int calibrate_v1(struct tsens_priv *priv)
- 	}
- 
- 	compute_intercept_slope(priv, p1, p2, mode);
-+	kfree(qfprom_cdata);
- 
- 	return 0;
- }
-diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-index 2fd94997245bf..b89083b61c383 100644
---- a/drivers/thermal/qcom/tsens.h
-+++ b/drivers/thermal/qcom/tsens.h
-@@ -17,6 +17,7 @@
- 
- #include <linux/thermal.h>
- #include <linux/regmap.h>
-+#include <linux/slab.h>
- 
- struct tsens_priv;
- 
--- 
-2.20.1
-
+ 	memcpy(res, &nsio->res, sizeof(*res));
+--- a/include/linux/memremap.h
++++ b/include/linux/memremap.h
+@@ -17,6 +17,7 @@ struct device;
+  */
+ struct vmem_altmap {
+ 	const unsigned long base_pfn;
++	const unsigned long end_pfn;
+ 	const unsigned long reserve;
+ 	unsigned long free;
+ 	unsigned long align;
 
 
