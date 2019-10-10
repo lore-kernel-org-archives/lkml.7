@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F3FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651B3ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCD02190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B30218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696721;
-	bh=pTotUuGsiYE42KjibTUMV5VXF3m8dR1DAhKoU5bIuJw=;
+	s=default; t=1570696724;
+	bh=PiLVW/DsUnOL6344RwbBLLZjLvoXyDOgI5e4SR7M1FU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AywGXEb5SjNR5kC2brQFTbC7sMt8/Rx67+xLNPpLC4FA5xyJ/wFM920LAtm/N9qNr
-	 9u3XNGCX9T5T3lD9sDAPSUVRDXmWnD3+LEhcSCU8jYd2PNJZSaNtyeUa8Omg4FVcwX
-	 PP2+GGsVxUPJR/JFXaps6w5olNh82qBRd/ocqf08=
+	b=mW4Ys7mbfxNZjlWinhL582kJypvu2rDfH7hwYsgiSOrIH7unCqm2RnkGQ8IfIQDIz
+	 ohXoHCoq9AFoNpqGjwvZrN+VIe+F0ble610tpAI2rWr5couHCXBya3a/jm2O3mbnJt
+	 uFGaN8pbd05TPR4sbFs5H8HJ6wGC+0XtZkW5Zy20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387667AbfJJIik (ORCPT
+        id S2387407AbfJJIin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:38:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41564 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:38:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387635AbfJJIii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:38:38 -0400
+        id S2387635AbfJJIim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:38:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEA4D20B7C;
-        Thu, 10 Oct 2019 08:38:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD066218AC;
+        Thu, 10 Oct 2019 08:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696718;
-        bh=pTotUuGsiYE42KjibTUMV5VXF3m8dR1DAhKoU5bIuJw=;
+        s=default; t=1570696721;
+        bh=PiLVW/DsUnOL6344RwbBLLZjLvoXyDOgI5e4SR7M1FU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iu7S14yGTUKgorBGfuzgfMyvL8DG8d7VdlBUctCwH9cp4mMRpuIlNo+JN+RB4fbRC
-         eOMkCvCEtXh9v662dURsVchh+R8c8IhW0YNOqfSr/omdN8cLogTs8Z+CPnqjAqHlQc
-         JOIuArof8UjTT5pCQWD74ea37jTJLQH1f9hYC3zs=
+        b=poEu5m5Cb9+nbI+NercR7FrqffJqatl6gYJ3Pao4XuAmhMOMborlw++JRHJGv6W6m
+         lDebfKcbiP2AF70IcUNZ6vCJ5cQ4EzQa1JaSMLB+Gs1a6mTnXs4KSfiye9VnPppMt/
+         sqv6XiKrYM/blOCS7/WFfUpI5I11z56WbptylIYc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-Subject: [PATCH 5.3 027/148] powerpc/powernv: Restrict OPAL symbol map to only be readable by root
-Date:   Thu, 10 Oct 2019 10:34:48 +0200
-Message-Id: <20191010083612.759996036@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.3 028/148] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt()
+Date:   Thu, 10 Oct 2019 10:34:49 +0200
+Message-Id: <20191010083612.818069391@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,54 +61,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Donnellan <ajd@linux.ibm.com>
+From: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 
-commit e7de4f7b64c23e503a8c42af98d56f2a7462bd6d upstream.
+commit c784be435d5dae28d3b03db31753dd7a18733f0c upstream.
 
-Currently the OPAL symbol map is globally readable, which seems bad as
-it contains physical addresses.
+The calls to arch_add_memory()/arch_remove_memory() are always made
+with the read-side cpu_hotplug_lock acquired via memory_hotplug_begin().
+On pSeries, arch_add_memory()/arch_remove_memory() eventually call
+resize_hpt() which in turn calls stop_machine() which acquires the
+read-side cpu_hotplug_lock again, thereby resulting in the recursive
+acquisition of this lock.
 
-Restrict it to root.
+In the absence of CONFIG_PROVE_LOCKING, we hadn't observed a system
+lockup during a memory hotplug operation because cpus_read_lock() is a
+per-cpu rwsem read, which, in the fast-path (in the absence of the
+writer, which in our case is a CPU-hotplug operation) simply
+increments the read_count on the semaphore. Thus a recursive read in
+the fast-path doesn't cause any problems.
 
-Fixes: c8742f85125d ("powerpc/powernv: Expose OPAL firmware symbol map")
-Cc: stable@vger.kernel.org # v3.19+
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+However, we can hit this problem in practice if there is a concurrent
+CPU-Hotplug operation in progress which is waiting to acquire the
+write-side of the lock. This will cause the second recursive read to
+block until the writer finishes. While the writer is blocked since the
+first read holds the lock. Thus both the reader as well as the writers
+fail to make any progress thereby blocking both CPU-Hotplug as well as
+Memory Hotplug operations.
+
+Memory-Hotplug				CPU-Hotplug
+CPU 0					CPU 1
+------                                  ------
+
+1. down_read(cpu_hotplug_lock.rw_sem)
+   [memory_hotplug_begin]
+					2. down_write(cpu_hotplug_lock.rw_sem)
+					[cpu_up/cpu_down]
+3. down_read(cpu_hotplug_lock.rw_sem)
+   [stop_machine()]
+
+Lockdep complains as follows in these code-paths.
+
+ swapper/0/1 is trying to acquire lock:
+ (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
+
+but task is already holding lock:
+(____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
+
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(cpu_hotplug_lock.rw_sem);
+   lock(cpu_hotplug_lock.rw_sem);
+
+  *** DEADLOCK ***
+
+  May be due to missing lock nesting notation
+
+ 3 locks held by swapper/0/1:
+  #0: (____ptrval____) (&dev->mutex){....}, at: __driver_attach+0x12c/0x1b0
+  #1: (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
+  #2: (____ptrval____) (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x54/0x1a0
+
+stack backtrace:
+ CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc5-58373-gbc99402235f3-dirty #166
+ Call Trace:
+   dump_stack+0xe8/0x164 (unreliable)
+   __lock_acquire+0x1110/0x1c70
+   lock_acquire+0x240/0x290
+   cpus_read_lock+0x64/0xf0
+   stop_machine+0x2c/0x60
+   pseries_lpar_resize_hpt+0x19c/0x2c0
+   resize_hpt_for_hotplug+0x70/0xd0
+   arch_add_memory+0x58/0xfc
+   devm_memremap_pages+0x5e8/0x8f0
+   pmem_attach_disk+0x764/0x830
+   nvdimm_bus_probe+0x118/0x240
+   really_probe+0x230/0x4b0
+   driver_probe_device+0x16c/0x1e0
+   __driver_attach+0x148/0x1b0
+   bus_for_each_dev+0x90/0x130
+   driver_attach+0x34/0x50
+   bus_add_driver+0x1a8/0x360
+   driver_register+0x108/0x170
+   __nd_driver_register+0xd0/0xf0
+   nd_pmem_driver_init+0x34/0x48
+   do_one_initcall+0x1e0/0x45c
+   kernel_init_freeable+0x540/0x64c
+   kernel_init+0x2c/0x160
+   ret_from_kernel_thread+0x5c/0x68
+
+Fix this issue by
+  1) Requiring all the calls to pseries_lpar_resize_hpt() be made
+     with cpu_hotplug_lock held.
+
+  2) In pseries_lpar_resize_hpt() invoke stop_machine_cpuslocked()
+     as a consequence of 1)
+
+  3) To satisfy 1), in hpt_order_set(), call mmu_hash_ops.resize_hpt()
+     with cpu_hotplug_lock held.
+
+Fixes: dbcf929c0062 ("powerpc/pseries: Add support for hash table resizing")
+Cc: stable@vger.kernel.org # v4.11+
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190503075253.22798-1-ajd@linux.ibm.com
+Link: https://lore.kernel.org/r/1557906352-29048-1-git-send-email-ego@linux.vnet.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/opal.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ arch/powerpc/mm/book3s64/hash_utils.c |    9 ++++++++-
+ arch/powerpc/platforms/pseries/lpar.c |    8 ++++++--
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -705,7 +705,10 @@ static ssize_t symbol_map_read(struct fi
- 				       bin_attr->size);
- }
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -34,6 +34,7 @@
+ #include <linux/libfdt.h>
+ #include <linux/pkeys.h>
+ #include <linux/hugetlb.h>
++#include <linux/cpu.h>
  
--static BIN_ATTR_RO(symbol_map, 0);
-+static struct bin_attribute symbol_map_attr = {
-+	.attr = {.name = "symbol_map", .mode = 0400},
-+	.read = symbol_map_read
-+};
+ #include <asm/debugfs.h>
+ #include <asm/processor.h>
+@@ -1931,10 +1932,16 @@ static int hpt_order_get(void *data, u64
  
- static void opal_export_symmap(void)
+ static int hpt_order_set(void *data, u64 val)
  {
-@@ -722,10 +725,10 @@ static void opal_export_symmap(void)
- 		return;
++	int ret;
++
+ 	if (!mmu_hash_ops.resize_hpt)
+ 		return -ENODEV;
  
- 	/* Setup attributes */
--	bin_attr_symbol_map.private = __va(be64_to_cpu(syms[0]));
--	bin_attr_symbol_map.size = be64_to_cpu(syms[1]);
-+	symbol_map_attr.private = __va(be64_to_cpu(syms[0]));
-+	symbol_map_attr.size = be64_to_cpu(syms[1]);
- 
--	rc = sysfs_create_bin_file(opal_kobj, &bin_attr_symbol_map);
-+	rc = sysfs_create_bin_file(opal_kobj, &symbol_map_attr);
- 	if (rc)
- 		pr_warn("Error %d creating OPAL symbols file\n", rc);
+-	return mmu_hash_ops.resize_hpt(val);
++	cpus_read_lock();
++	ret = mmu_hash_ops.resize_hpt(val);
++	cpus_read_unlock();
++
++	return ret;
  }
+ 
+ DEFINE_DEBUGFS_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n");
+--- a/arch/powerpc/platforms/pseries/lpar.c
++++ b/arch/powerpc/platforms/pseries/lpar.c
+@@ -1413,7 +1413,10 @@ static int pseries_lpar_resize_hpt_commi
+ 	return 0;
+ }
+ 
+-/* Must be called in user context */
++/*
++ * Must be called in process context. The caller must hold the
++ * cpus_lock.
++ */
+ static int pseries_lpar_resize_hpt(unsigned long shift)
+ {
+ 	struct hpt_resize_state state = {
+@@ -1467,7 +1470,8 @@ static int pseries_lpar_resize_hpt(unsig
+ 
+ 	t1 = ktime_get();
+ 
+-	rc = stop_machine(pseries_lpar_resize_hpt_commit, &state, NULL);
++	rc = stop_machine_cpuslocked(pseries_lpar_resize_hpt_commit,
++				     &state, NULL);
+ 
+ 	t2 = ktime_get();
+ 
 
 
