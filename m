@@ -2,163 +2,158 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B9DECE596
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67737ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B362120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDEB20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="MkZI6eTm"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ITKQdXgp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfJJSbR (ORCPT
+        id S1726878AbfJJSbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:31:17 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33235 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfJJSbR (ORCPT
+        Thu, 10 Oct 2019 14:31:31 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38015 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfJJSba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:31:17 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i76so4209886pgc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:31:16 -0700 (PDT)
+        Thu, 10 Oct 2019 14:31:30 -0400
+Received: by mail-oi1-f196.google.com with SMTP id m16so5793521oic.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:31:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5puI+DUvR4/SJReC5iWNrRC5yb0UPaNESP/3e3cTv9c=;
-        b=MkZI6eTmS3La1zAMkWRZvmhyLoKc8C0+QmWj2WdxWBkcUPahTXnkJlLPusjh9To197
-         Hxat8zlCruXGtldcp5C/WsZQH5HG4bC8HTDy2RnmbNhwPa8yf3YSc2sVn3C2G5qajDHa
-         oXuyROsSnNXl5J4LEDKbBlaEsdpJkyB4rtjxs=
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NlpMtJuEn229jdoiy4a5lSiNwCR7W2uBuMkIb+tS29o=;
+        b=ITKQdXgp39L1atnLKS6bIayQ9Oqf6ZZELR9iAOK+L6XNZQ850R0k4Wq+C591V98Nfl
+         eOoLYUEr529lnsG7t+CJqDOS5QKMvY3XrF/SK6+tXNJNg9BD4lbBMGkxTzS4SKyjAfE0
+         xn569nIeqCMhNH4Y4rymaQEIHqH3V4m13e6nSsG5/FZXD9RZfFwMJB/hw6j/PKD3ZN/T
+         djeRQXbH/RMf0D99jQQukYrMlxitWBZJXoV4zOuD12m3Dx19MOOY6ReMOh+CphTJycow
+         Kw4sFaD4DJMEw5ZE07VFRdG2QdsYJ/yuG3REItWbHzEMRGeorpswB7PBjNsPdMSJLG68
+         yf0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5puI+DUvR4/SJReC5iWNrRC5yb0UPaNESP/3e3cTv9c=;
-        b=NIWOsSe0JXIqmevrQven+oXSMfvffZf1USD7MGpvdAWhsRmiuHPd8F9R5CjlSPq6Zb
-         Eo23kVAh8i7RSgVMHtGEmniA57DBWfgmbHp9kEaf/FIVfjHYMpiTLOV0fX7oCzjhPPyh
-         CmBAyb5aEvOHnTlOFiqLgUQGHCnbyR1WSYOb/ar3c3vcmK/3UvIpMqapVkkMFcr1Gkis
-         qtptGaJyFv+WL1BNSDewzx7LJ0+9bPqkzCp5ZTMhqi8fwEwwweG7v3JygxgNjMKQGAXA
-         toa+wkKa2v4lfGtEDwyu0TneKmjsJYDIVfk+ypRsTglSVxis94xqxwTB5BjmtBf8JgVi
-         AcFw==
-X-Gm-Message-State: APjAAAW923iWLIOAJ6O1HGdGGcdgsEGvOVsM8ShL3Mannfc2Rl+ZZj5A
-        LXz28F8rhMbofOprh54PsSXLkw==
-X-Google-Smtp-Source: APXvYqzqTVWSe6JvJ/kb/6wa/aaxIFE0i30wB0mnU8oqMEc087kPg9LcojT5gjbi73mMECLQXOK+Cg==
-X-Received: by 2002:a17:90a:c389:: with SMTP id h9mr13255162pjt.11.1570732276108;
-        Thu, 10 Oct 2019 11:31:16 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id ce16sm5637648pjb.29.2019.10.10.11.31.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 11:31:15 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 14:31:14 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
-Message-ID: <20191010183114.GF96813@google.com>
-References: <20191009203657.6070-1-joel@joelfernandes.org>
- <20191010081251.GP2311@hirez.programming.kicks-ass.net>
- <20191010151333.GE96813@google.com>
- <20191010170949.GR2328@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NlpMtJuEn229jdoiy4a5lSiNwCR7W2uBuMkIb+tS29o=;
+        b=IpJlI7S9SksJKDZt+EOL4vhXZQnWG0Nd25NAKMiPsyU1woic2IoW+IFs5UvbW9+hU1
+         Vav5/c9yZDYPNFBSkuZ04Vz12GU5lNOevXIsjg9J1chkvVJ1UltweYK4YfkS8LN9ADAt
+         wVgwaGHnLp11b4ypjvz4GDxOoRcWUVC63ZHH1IVLgvQZfr8bj9NXVBkFLZ6KE1fxqhdV
+         0pi+7RagNl6B65SerDZWz4EvIuUTfI1I6ICTsfMLEtGJJSp48RaPfagmslr54/xCZA0M
+         I2ig6FqGxgPaQ1+jPNNGiWZIxfgTc3pMGU0G6PtBYfcva0Wm/HbJc+YWxBx5JwJt3z5Z
+         Uxag==
+X-Gm-Message-State: APjAAAXPwFQKx3aFBMPvEUkTA2vMTlriGEmdcxMY1vwauQqlezrqs95/
+        qIYbyeO9rZ6s1Y43ENDducIW3ym0riUn+WTmSCaiTw==
+X-Google-Smtp-Source: APXvYqwfCh4W4PaSkjW/YpvNKY4Zzd3H20YtYmvM1Mygk9eFcMO2ybDevOXVp5f75aYzxtnTqkn5gtQosFy/farxU40=
+X-Received: by 2002:aca:620a:: with SMTP id w10mr9068177oib.0.1570732289023;
+ Thu, 10 Oct 2019 11:31:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010170949.GR2328@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157066230358.1059972.1736585303527133478.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu8ih2RffZHdwAnHZicL_v8CxV9WnCy+uA1jSSyh58xapA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8ih2RffZHdwAnHZicL_v8CxV9WnCy+uA1jSSyh58xapA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 10 Oct 2019 11:31:18 -0700
+Message-ID: <CAPcyv4iQ5Np3dDH=-a_7gPnWKBCHXGit2PN-h=Jw_eqj7Lb2BQ@mail.gmail.com>
+Subject: Re: [PATCH v6 05/12] x86/efi: EFI soft reservation to E820 enumeration
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 07:09:49PM +0200, Peter Zijlstra wrote:
-> On Thu, Oct 10, 2019 at 11:13:33AM -0400, Joel Fernandes wrote:
-> > On Thu, Oct 10, 2019 at 10:12:51AM +0200, Peter Zijlstra wrote:
-> > > +static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
-> > >  {
-> > > -	return sysctl_perf_event_paranoid > 1;
-> > > +	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
-> > > +		return -EPERM;
-> > > +
-> > 
-> > Here the sysctl check of > -1 also is now coupled with a CAP_SYS_ADMIN check.
-> > However..
-> > 
-> > > +	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
-> > 
-> > >  }
-> > >  
-> > > --- a/kernel/events/core.c
-> > > +++ b/kernel/events/core.c
-> 
-> > > @@ -5862,14 +5859,8 @@ static int perf_mmap(struct file *file,
-> > >  	lock_limit >>= PAGE_SHIFT;
-> > >  	locked = atomic64_read(&vma->vm_mm->pinned_vm) + extra;
-> > >  
-> > > -	if (locked > lock_limit) {
-> > > -		if (perf_paranoid_tracepoint_raw() && !capable(CAP_IPC_LOCK)) {
-> > > -			ret = -EPERM;
-> > > -			goto unlock;
-> > > -		}
-> > > -
-> > > -		ret = security_perf_event_open(&event->attr,
-> > > -					       PERF_SECURITY_TRACEPOINT);
-> > > +	if (locked > lock_limit && !capable(CAP_IPC_LOCK)) {
-> > > +		ret = perf_allow_tracepoint(&event->attr);
-> > 
-> > In previous code, this check did not involve a check for CAP_SYS_ADMIN.
-> > 
-> > I am Ok with adding the CAP_SYS_ADMIN check as well which does make sense to
-> > me for tracepoint access. But it is still a change in the logic so I wanted
-> > to bring it up.
-> > 
-> > Let me know any other thoughts and then I'll post a new patch.
-> 
-> Yes, I did notice, I found it weird.
-> 
-> If you have CAP_IPC_LIMIT you should be able to bust mlock memory
-> limits, so I don't see why we should further relate that to paranoid.
-> 
-> The way I wrote it, we also allow to bust the limit if we have disabled
-> all paranoid checks. Which makes some sense I suppose.
-> 
-> The original commit is this:
-> 
->   459ec28ab404 ("perf_counter: Allow mmap if paranoid checks are turned off")
+On Wed, Oct 9, 2019 at 11:45 PM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+>
+> On Thu, 10 Oct 2019 at 01:19, Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > interpretation of the EFI Memory Types as "reserved for a specific
+> > purpose".
+> >
+> > The proposed Linux behavior for specific purpose memory is that it is
+> > reserved for direct-access (device-dax) by default and not available for
+> > any kernel usage, not even as an OOM fallback.  Later, through udev
+> > scripts or another init mechanism, these device-dax claimed ranges can
+> > be reconfigured and hot-added to the available System-RAM with a unique
+> > node identifier. This device-dax management scheme implements "soft" in
+> > the "soft reserved" designation by allowing some or all of the
+> > reservation to be recovered as typical memory. This policy can be
+> > disabled at compile-time with CONFIG_EFI_SOFT_RESERVE=n, or runtime with
+> > efi=nosoftreserve.
+> >
+> > This patch introduces 2 new concepts at once given the entanglement
+> > between early boot enumeration relative to memory that can optionally be
+> > reserved from the kernel page allocator by default. The new concepts
+> > are:
+> >
+> > - E820_TYPE_SOFT_RESERVED: Upon detecting the EFI_MEMORY_SP
+> >   attribute on EFI_CONVENTIONAL memory, update the E820 map with this
+> >   new type. Only perform this classification if the
+> >   CONFIG_EFI_SOFT_RESERVE=y policy is enabled, otherwise treat it as
+> >   typical ram.
+> >
+> > - IORES_DESC_SOFT_RESERVED: Add a new I/O resource descriptor for
+> >   a device driver to search iomem resources for application specific
+> >   memory. Teach the iomem code to identify such ranges as "Soft Reserved".
+> >
+> > A follow-on change integrates parsing of the ACPI HMAT to identify the
+> > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
+> > now, just identify and reserve memory of this type.
+> >
+> > Cc: <x86@kernel.org>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Darren Hart <dvhart@infradead.org>
+> > Cc: Andy Shevchenko <andy@infradead.org>
+> > Cc: Andy Lutomirski <luto@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> For the EFI changes
+>
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>
+> although I must admit I don't follow the enum add_efi_mode logic 100%
 
-I am thinking we can just a new function perf_is_paranoid() that has nothing
-to do with the CAP_SYS_ADMIN check and doesn't have tracepoint wording:
+I'm open to suggestions as I'm not sure it's the best possible
+organization. The do_add_efi_memmap() routine has the logic to
+translate EFI to E820, but unless "add_efi_memmap" is specified on the
+kernel command line the EFI memory map is ignored. For
+soft-reservation support I want to reuse do_add_efi_memmap(), but
+otherwise avoid any other side effects of considering the EFI map.
+What I'm missing is the rationale for why "add_efi_memmap" is required
+before considering the EFI memory map.
 
-static inline int perf_is_paranoid(void)
-{
-	return sysctl_perf_event_paranoid > -1;
-}
+If there is a negative side effect to always using the EFI map then
+the new "add_efi_mode" designation constrains it to just the
+soft-reservation case.
 
-And then call that from the mmap() code:
-if (locked > lock_limit && perf_is_paranoid() && !capable(CAP_IPC_LOCK)) {
-	return -EPERM;
-}
+It seems for historical reasons the full EFI memmap requires explicit opt-in:
 
-I don't think we need to add selinux security checks here since we are
-already adding security checks earlier in mmap(). This will make the code and
-its intention more clear and in line with the commit 459ec28ab404 you
-mentioned. Thoughts?
-
-thanks,
-
- - Joel
-
+200001eb140e x86 boot: only pick up additional EFI memmap if add_efi_memmap flag
