@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2076C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14F6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABEE218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F09218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696850;
-	bh=Ie0By+KUnOkwmDWpsFLRzWys8/g/MupAZOH9aBYUGdI=;
+	s=default; t=1570696852;
+	bh=U7gRGV/O4IvB29cLMdvtxm+jQ0J8p2tK9b/FYOCtQDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oTK+vAtyTjlq8yTu9m4f1uqFHE7X593cDBHE3ojnu3oDKd7HGt6d6TBXbc2MawC8i
-	 4T0luBCX/uis49neuKxjXSFMp0T1WGU36yJ7x6DB6HdEff8I/LsaH9CdTVNShNF7lf
-	 9mvnAufBb43zl1YtRQSoXUimzn4HPOm65MuajRUg=
+	b=K2bAgogAoBarmOpuSWkmLLXAHv+i0bbtv8JlBSj4AvRPsQMdbeUfxtPr8P1TCTL2R
+	 umxld4JPOrgZkZdjzJAMVM5ZCdQeSIWHsElZvYVc1xqXisSOSAIGa5vZ0WTEWrVTEb
+	 sr+9FXupQ5nMmqQlVW6nPW9NTGONc5MmtuvtY7F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388192AbfJJIkt (ORCPT
+        id S2388202AbfJJIkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:40:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44916 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:40:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387545AbfJJIkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:40:47 -0400
+        id S2387576AbfJJIkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:40:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A5A2218AC;
-        Thu, 10 Oct 2019 08:40:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA83420B7C;
+        Thu, 10 Oct 2019 08:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696846;
-        bh=Ie0By+KUnOkwmDWpsFLRzWys8/g/MupAZOH9aBYUGdI=;
+        s=default; t=1570696849;
+        bh=U7gRGV/O4IvB29cLMdvtxm+jQ0J8p2tK9b/FYOCtQDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QWHS2UrZ6biemLVcSOwyoF/VqKcFkhMETxBG67bxQLkrolstDaPPPSE2AWiEzvBi4
-         +5fBbI0belrBJNkoX6WWmdtxk7gmFOTl8QfLmAA8EjwB/dIUTjrplyL+xy7l43rV/E
-         SZGuBjo3ZsEbCLf+E5X0zxvn+ku+MriSIHpMe+Js=
+        b=GpNh+JMBon3ubE7i29mMMoEqt2MoETxx49L12acv5kbLp9fg58ndv2OKJuJwQTh0X
+         1sHZk/gPZ6DJnlBgSX/63X/V/UjTFbLuFPxmGmyj389RLFjwxNd4Yu3kcd1HHp5V1i
+         K7Gh6V85sTXIx3XRZ3G/zELfHK6m/A9j8j5IrlKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaolin Zhang <xiaolin.zhang@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.3 072/148] drm/i915: to make vgpu ppgtt notificaiton as atomic operation
-Date:   Thu, 10 Oct 2019 10:35:33 +0200
-Message-Id: <20191010083615.760135349@linuxfoundation.org>
+        stable@vger.kernel.org, Aaron Hill <aa1ronham@gmail.com>,
+        Lukas Redlinger <rel+kernel@agilox.net>,
+        Oleksii Shevchuk <alxchk@gmail.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.3 073/148] mac80211: keep BHs disabled while calling drv_tx_wake_queue()
+Date:   Thu, 10 Oct 2019 10:35:34 +0200
+Message-Id: <20191010083615.810908484@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,89 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolin Zhang <xiaolin.zhang@intel.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 9e77f5001b9833a6bdd3940df245053c2212a32b upstream.
+commit d8dec42b5c2d2b273bc30b0e073cfbe832d69902 upstream.
 
-vgpu ppgtt notification was split into 2 steps, the first step is to
-update PVINFO's pdp register and then write PVINFO's g2v_notify register
-with action code to tirgger ppgtt notification to GVT side.
+Drivers typically expect this, as it's the case for almost all cases
+where this is called (i.e. from the TX path). Also, the code in mac80211
+itself (if the driver calls ieee80211_tx_dequeue()) expects this as it
+uses this_cpu_ptr() without additional protection.
 
-currently these steps were not atomic operations due to no any protection,
-so it is easy to enter race condition state during the MTBF, stress and
-IGT test to cause GPU hang.
-
-the solution is to add a lock to make vgpu ppgtt notication as atomic
-operation.
+This should fix various reports of the problem:
+https://bugzilla.kernel.org/show_bug.cgi?id=204127
+https://lore.kernel.org/linux-wireless/CAN5HydrWb3o_FE6A1XDnP1E+xS66d5kiEuhHfiGKkLNQokx13Q@mail.gmail.com/
+https://lore.kernel.org/lkml/nycvar.YFH.7.76.1909111238470.473@cbobk.fhfr.pm/
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Xiaolin Zhang <xiaolin.zhang@intel.com>
-Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/1566543451-13955-1-git-send-email-xiaolin.zhang@intel.com
-(cherry picked from commit 52988009843160c5b366b4082ed6df48041c655c)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Reported-and-tested-by: Jiri Kosina <jkosina@suse.cz>
+Reported-by: Aaron Hill <aa1ronham@gmail.com>
+Reported-by: Lukas Redlinger <rel+kernel@agilox.net>
+Reported-by: Oleksii Shevchuk <alxchk@gmail.com>
+Fixes: 21a5d4c3a45c ("mac80211: add stop/start logic for software TXQs")
+Link: https://lore.kernel.org/r/1569928763-I3e8838c5ecad878e59d4a94eb069a90f6641461a@changeid
+Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_drv.h     |    1 +
- drivers/gpu/drm/i915/i915_gem_gtt.c |   12 +++++++-----
- drivers/gpu/drm/i915/i915_vgpu.c    |    1 +
- 3 files changed, 9 insertions(+), 5 deletions(-)
+ net/mac80211/util.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_drv.h
-+++ b/drivers/gpu/drm/i915/i915_drv.h
-@@ -1073,6 +1073,7 @@ struct i915_frontbuffer_tracking {
- };
- 
- struct i915_virtual_gpu {
-+	struct mutex lock; /* serialises sending of g2v_notify command pkts */
- 	bool active;
- 	u32 caps;
- };
---- a/drivers/gpu/drm/i915/i915_gem_gtt.c
-+++ b/drivers/gpu/drm/i915/i915_gem_gtt.c
-@@ -1248,14 +1248,15 @@ free_scratch_page:
- 	return ret;
- }
- 
--static int gen8_ppgtt_notify_vgt(struct i915_ppgtt *ppgtt, bool create)
-+static void gen8_ppgtt_notify_vgt(struct i915_ppgtt *ppgtt, bool create)
- {
--	struct i915_address_space *vm = &ppgtt->vm;
--	struct drm_i915_private *dev_priv = vm->i915;
-+	struct drm_i915_private *dev_priv = ppgtt->vm.i915;
- 	enum vgt_g2v_type msg;
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -247,7 +247,8 @@ static void __ieee80211_wake_txqs(struct
+ 	struct sta_info *sta;
  	int i;
  
--	if (i915_vm_is_4lvl(vm)) {
-+	mutex_lock(&dev_priv->vgpu.lock);
-+
-+	if (i915_vm_is_4lvl(&ppgtt->vm)) {
- 		const u64 daddr = px_dma(ppgtt->pd);
+-	spin_lock_bh(&fq->lock);
++	local_bh_disable();
++	spin_lock(&fq->lock);
  
- 		I915_WRITE(vgtif_reg(pdp[0].lo), lower_32_bits(daddr));
-@@ -1275,9 +1276,10 @@ static int gen8_ppgtt_notify_vgt(struct
- 				VGT_G2V_PPGTT_L3_PAGE_TABLE_DESTROY);
+ 	if (sdata->vif.type == NL80211_IFTYPE_AP)
+ 		ps = &sdata->bss->ps;
+@@ -273,9 +274,9 @@ static void __ieee80211_wake_txqs(struct
+ 						&txqi->flags))
+ 				continue;
+ 
+-			spin_unlock_bh(&fq->lock);
++			spin_unlock(&fq->lock);
+ 			drv_wake_tx_queue(local, txqi);
+-			spin_lock_bh(&fq->lock);
++			spin_lock(&fq->lock);
+ 		}
  	}
  
-+	/* g2v_notify atomically (via hv trap) consumes the message packet. */
- 	I915_WRITE(vgtif_reg(g2v_notify), msg);
+@@ -288,12 +289,14 @@ static void __ieee80211_wake_txqs(struct
+ 	    (ps && atomic_read(&ps->num_sta_ps)) || ac != vif->txq->ac)
+ 		goto out;
  
--	return 0;
-+	mutex_unlock(&dev_priv->vgpu.lock);
+-	spin_unlock_bh(&fq->lock);
++	spin_unlock(&fq->lock);
+ 
+ 	drv_wake_tx_queue(local, txqi);
++	local_bh_enable();
+ 	return;
+ out:
+-	spin_unlock_bh(&fq->lock);
++	spin_unlock(&fq->lock);
++	local_bh_enable();
  }
  
- static void gen8_free_scratch(struct i915_address_space *vm)
---- a/drivers/gpu/drm/i915/i915_vgpu.c
-+++ b/drivers/gpu/drm/i915/i915_vgpu.c
-@@ -79,6 +79,7 @@ void i915_check_vgpu(struct drm_i915_pri
- 	dev_priv->vgpu.caps = __raw_uncore_read32(uncore, vgtif_reg(vgt_caps));
- 
- 	dev_priv->vgpu.active = true;
-+	mutex_init(&dev_priv->vgpu.lock);
- 	DRM_INFO("Virtual GPU for Intel GVT-g detected.\n");
- }
- 
+ static void
 
 
