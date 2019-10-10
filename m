@@ -2,120 +2,129 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6B7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EADC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A662190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570726397;
-	bh=nxVFzpKNnJa6eBtiEg+aozlkkMTDk8SF/QKlbfycR+Y=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=JDxo28CXSORF02VD7VW218CnGuOEaQKtfkWi6BlEwq51/SAuhVWEZPBVm/8sICXwa
-	 HQhl+gXaCvbw5jhz7Koqhw5yw0ngn91om84KB7EUYCeuKyKRRc8u7xu1OBjrVU104k
-	 280MzRW3DYpwrlJ3/tXngvC15mKYdK6EHQBtl1iE=
+	by mail.kernel.org (Postfix) with ESMTP id 1779C21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfJJQxQ (ORCPT
+        id S1726530AbfJJQ7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 12:53:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34276 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 12:59:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfJJQxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 12:53:15 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        id S1726038AbfJJQ7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 12:59:18 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22CD4218AC;
-        Thu, 10 Oct 2019 16:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570726395;
-        bh=nxVFzpKNnJa6eBtiEg+aozlkkMTDk8SF/QKlbfycR+Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uThvuy/vCnNc2jRV+yuQxInOEGiwCdkQvb8M6+JLtpWVOPKEPK18ejWpL+XxVBB13
-         6FFY0BHYjMlT864bbWDfAVNr9wU7/drA49TWU1v3PPWqlVBmmNM0mrGGrVbnFDFu3U
-         3/983kViEZtaGAfktbWfaxPPq31/pDbZhfAq42oE=
-Date:   Thu, 10 Oct 2019 09:53:14 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: fixes for 5.4-rc3
-Message-ID: <20191010165314.GP1473994@magnolia>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B402214E0;
+        Thu, 10 Oct 2019 16:59:17 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 12:59:15 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] ftrace/module: Allow ftrace to make only loaded module
+ text read-write
+Message-ID: <20191010125915.34a2cfdf@gandalf.local.home>
+In-Reply-To: <20191010105515.5eba7f31@gandalf.local.home>
+References: <20191009223638.60b78727@oasis.local.home>
+        <20191010073121.GN2311@hirez.programming.kicks-ass.net>
+        <20191010093329.GI2359@hirez.programming.kicks-ass.net>
+        <20191010093650.GJ2359@hirez.programming.kicks-ass.net>
+        <20191010122909.GK2359@hirez.programming.kicks-ass.net>
+        <20191010105515.5eba7f31@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, 10 Oct 2019 10:55:15 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Please pull this set of changes for 5.4-rc3.  There are a couple of
-small code cleanups and bug fixes for rounding errors, metadata logging
-errors, and an extra layer of safeguards against leaking memory
-contents.
+I'll try to add more detail (mapping to functions)
 
-The branch has survived a round of xfstests runs and merges cleanly with
-this morning's master.  Please let me know if anything strange happens.
+> 
+> OK, so basically this moves the enabling of function tracing from
+> within the ftrace_module_enable() code without releasing the
+> ftrace_lock mutex.
+> 
+> But we have an issue with the state of the module here, as it is still
+> set as MODULE_STATE_UNFORMED. Let's look at what happens if we have:
+> 
+> 
+> 	CPU0				CPU1
+> 	----				----
+>  echo function > current_tracer
 
---D
+Just need to know that the above will now have all loaded modules have
+their functions being traced. That is ftrace_startup > 0.
 
-The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
 
-  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+> 				modprobe foo
+> 				  enable foo functions to be traced
+> 				  (foo function records not disabled)
 
-are available in the Git repository at:
+In your code, we have here:
+				load_module()
+				  foo->state == UNFORMED
 
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.4-fixes-3
+				  ftrace_module_init()
+				    ftrace_process_locs()
+				      mutex_lock(ftrace_lock);
+				       __ftrace_replace_code(rec, 1)
+				      /* Enabling foo's functions */
+				      mutex_unlock(ftrace_lock);
 
-for you to fetch changes up to aeea4b75f045294e1c026acc380466daa43afc65:
+				  
 
-  xfs: move local to extent inode logging into bmap helper (2019-10-09 08:54:30 -0700)
+>  echo nop > current_tracer
+> 
+>    disable all functions being
+>    traced including foo functions
 
-----------------------------------------------------------------
-Changes since last update:
-- Fix a rounding error in the fallocate code
-- Minor code cleanups
-- Make sure to zero memory buffers before formatting metadata blocks
-- Fix a few places where we forgot to log an inode metadata update
-- Remove broken error handling that tried to clean up after a failure
-  but still got it wrong
+ftrace_shutdown()
+  ftrace_run_update_code()
+    ftrace_arch_code_modify_prepare()
 
-----------------------------------------------------------------
-Aliasgar Surti (1):
-      xfs: removed unused error variable from xchk_refcountbt_rec
+    [ on arm and nds32 ]
+> 
+>    arch calls set_all_modules_text_rw()
+>     [skips UNFORMED modules, which foo still is ]
+> 
+> 				  set foo's text to read-only
+> 				  foo's state to COMING
 
-Bill O'Donnell (1):
-      xfs: assure zeroed memory buffers for certain kmem allocations
+				  complete_formation()
+				    module_enable_ro()
 
-Brian Foster (3):
-      xfs: log the inode on directory sf to block format change
-      xfs: remove broken error handling on failed attr sf to leaf change
-      xfs: move local to extent inode logging into bmap helper
+> 
+>    tries to disable foo's functions
+>    foo's text is read-only
 
-Eric Sandeen (1):
-      xfs: remove unused flags arg from xfs_get_aghdr_buf()
+    arch_ftrace_update_code()
+      ftrace_modify_all_code()
 
-Max Reitz (1):
-      xfs: Fix tail rounding in xfs_alloc_file_space()
+      [ Includes foo's functions ]
 
- fs/xfs/libxfs/xfs_ag.c         |  5 ++---
- fs/xfs/libxfs/xfs_attr_leaf.c  | 21 +++------------------
- fs/xfs/libxfs/xfs_bmap.c       |  6 ++++--
- fs/xfs/libxfs/xfs_bmap.h       |  3 ++-
- fs/xfs/libxfs/xfs_dir2_block.c |  2 +-
- fs/xfs/scrub/refcount.c        |  3 +--
- fs/xfs/xfs_bmap_util.c         |  4 +++-
- fs/xfs/xfs_buf.c               | 12 +++++++++++-
- fs/xfs/xfs_log.c               |  2 +-
- fs/xfs/xfs_log_recover.c       |  2 +-
- 10 files changed, 29 insertions(+), 31 deletions(-)
+> 
+>    BUG trying to write to ro text!!!
+
+Hope that makes more sense.
+
+-- Steve
+
+> 
+> 
+> Like I said, this is very subtle. It may no longer be a bug on x86
+> with your patches, but it will bug on ARM or anything else that still
+> uses set_all_modules_text_rw() in the ftrace prepare code.
