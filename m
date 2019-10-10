@@ -2,202 +2,179 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67EAC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2652DECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CFAC206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5EDF206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:36:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q34QMYZd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfJJUgd (ORCPT
+        id S1727295AbfJJUgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:36:33 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:42067 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfJJUgd (ORCPT
+        Thu, 10 Oct 2019 16:36:39 -0400
+Received: from mail-io1-f53.google.com ([209.85.166.53]:34089 "EHLO
+        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfJJUgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:36:33 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MYLqs-1ieCBJ1q2k-00VSwa; Thu, 10 Oct 2019 22:36:15 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Cc:     linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 10/36] ARM: s5pv210: use private pm save/restore
-Date:   Thu, 10 Oct 2019 22:29:54 +0200
-Message-Id: <20191010203043.1241612-10-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
+        Thu, 10 Oct 2019 16:36:39 -0400
+Received: by mail-io1-f53.google.com with SMTP id q1so16816560ion.1;
+        Thu, 10 Oct 2019 13:36:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j6sP383Qyl95I8Z25iYfBokkV8+qGYi/AFX1IOAtUrQ=;
+        b=Q34QMYZdc+pG/I0r+KiZJAKEidQQcZ2vbxo8k9oDD4D6VIPmYiq55Vl8FsfktvflZ1
+         geL58/bUA0mtFR47tlZu2j4y5nyoh6nr3nbLTNHkg1ELYWX+/603QIlIc6C9qGTvJEVH
+         /OV01/zQ0gJm86BrSxhYKIRGDmGIZ/QFs10Q63SPCEM7VSvHNWPiuruDhU0z8hBKWlr0
+         ut+GGyVUAUwLhs0eDZ8tDj8rMnUgzUkpLsCtWwDLAVPG2wXubGVbOU4TaIDXm+L9JdEg
+         aKivN5ksqTd7qzsgKDhbNZ1zxa9gBHJr8qTDucMKj/bW+/2NV5zDDIbA5y2vAKGmTK0f
+         MzWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j6sP383Qyl95I8Z25iYfBokkV8+qGYi/AFX1IOAtUrQ=;
+        b=J/8jAk8g+MmC6g3jNTBu/YP/HvAOj2luS8HRMbqlbRXVVH2CXloMKmo6MEsf2cB5HX
+         giNbesO9qTHG8VT/TGIORXwVyFLFpVs5lRxGvMwTVk520r4Xdkh3x8B1U4msCo9sM9eD
+         bJzIHcbH0kuQMAheEKCdPHZGGu5TuJAmP0wFIVBrEpHNy0fOVMRuQ0liamHOvCHSEpX8
+         h0WeGepC3qRmCoR5mcpYqQgKmZjqc2YohK47LWQi6TsW8JD2VnoB4jSX0NjzKkCzYMa/
+         1IPMNvCGa0Z0EWCF+xvyRco2MmMRPesPOwTHSV0M2STFU1M3NJIsHd/zyi0YLdttpmkj
+         xm2Q==
+X-Gm-Message-State: APjAAAVXe8uagK0/pzxRGsVJ4gV5OPZ3goanxykdmyiRwnvu6W752sLF
+        nsove5nTO+to6JUB7ZXLXXWOxyQl+WoXs6pJ15DHQ6f5
+X-Google-Smtp-Source: APXvYqzkmsXfTfl7HoZDw6+IGIW9qLazyM4wbybRpN2KG5iGlsQrQr34VW4QNZUtyUVWWSac/24naMiXdyfmk6TwusI=
+X-Received: by 2002:a6b:6605:: with SMTP id a5mr13224254ioc.237.1570739797276;
+ Thu, 10 Oct 2019 13:36:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:t06pj45vMcSDoEbxSCss3f5CI4Q0mCvmon4HXQKdFVgc3CZE2SZ
- 6GDEv57UdL2pMT9oYaML5s6k6H4an0hD0vSPqL1TK9QhIqAiZ3JXJGQRYiLA10kdPybEDLM
- LkmdsIkBh+fEfuZ4qKsBYg1p1Ya6B3jCBopYbIsgcd7xLrXfT9D/yReO3ELSeGlzG11eU+v
- IdbSm0rP+MzyF0ya7wCxQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XV+MPK70w7E=:BhQ4bhqXydFKuIa+TPbyId
- A5KmTH4/XxVCeHb+3+T5c/+c9wqtBBLomtafNUtbfL7geLlXVDKW10N4L6+AuH1WBjanj7LvJ
- dUFJ4oNaE75ImwWCooDU1IX6BtFBbqMzAypBLcYxMKc7pEA7se7MiEXiGET8BD7NWCYy+Gm4v
- xo32t0jwcI1xZ2hc4rrG7kLEvVfDZ2YUZsJI8Ad4oolmeZVJy//p5Cv5VLW6KYTXCG2TrDC67
- LoQVDf0jAV616OOAAF+jKJIsMqu6Cq2rlSVykk2ZZbKHmByhbdRjqPiUhVpY+ffdMkC7yHUgx
- YLgRrU20ShewwEukIpbl+B7KfZ0zmaawX8Z9CdSYrRKnru5ohJTg3S4SxjyE2WnxZGOBRtFot
- p6i+CXENZsa4rgfp6x9GEoNZj4Rof+xn0WxjqpNP7dNHQECpVls3CHZj7rzGc8TIPzzSqq+1I
- xVHhIuSLdGsq8xL6n8JaiwDD6yqNVPhfeFiSF0SA9MyJulhLZF6n0cQ3zCSauqUSDR7w8XIzf
- O+QLobMdBq81IEEue1nmPN8WlMjIgCZxSjj1H7V2a1hBItJcRp5uCwDjv1vhqM/Yvbj1qkKEt
- lwPpFZ7VPrCtQYmHXOiSDZVRplbPgeD8reNkF4ylUttAds+sCpXi7XwkW/amkRCCjLH5K3bsw
- iksEKWMxTuKZznLo8ThpwcjNdmN6ylK+eBLvmzhHhiW50uLoKZ4wk3YHFRG5ZZyiVoTN++Hji
- IxFdNsp/402JjDicaaBR3WlWnjX586w7YTzQ1x9LvCYrPuIJ8TclTw1NYrMFqu9I8qwXxzJBn
- S3rdkwTgwAzhDmBBaDAvDU72X8nw5Z3tHJ4YIHgDtsFRGEnslYRbRuv+aPzqpybQqwnBOsODv
- 44eaAD7nyQxBDF6tZyig==
+References: <20190812131235.27244-1-nitesh@redhat.com> <20190812131235.27244-2-nitesh@redhat.com>
+In-Reply-To: <20190812131235.27244-2-nitesh@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 10 Oct 2019 13:36:26 -0700
+Message-ID: <CAKgT0UeKxCYtg6+aCPyxJcAGrBgvCWziUpZM6Tmw-9PSChcGVA@mail.gmail.com>
+Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        Pankaj Gupta <pagupta@redhat.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
+        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pm save/restore code is fairly small, so in order to
-separate the s3c and s5p platforms, adding an s5p specific
-copy instead of sharing it is actually easier.
+On Mon, Aug 12, 2019 at 6:13 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-s5pv210/Makefile     |  7 -----
- arch/arm/mach-s5pv210/pm.c         | 45 ++++++++++++++++++++++++++++--
- arch/arm/mach-s5pv210/regs-clock.h |  2 +-
- arch/arm/mach-s5pv210/s5pv210.c    |  2 --
- arch/arm/plat-samsung/Makefile     |  4 +--
- 5 files changed, 45 insertions(+), 15 deletions(-)
+<snip>
 
-diff --git a/arch/arm/mach-s5pv210/Makefile b/arch/arm/mach-s5pv210/Makefile
-index e7b551e18e5c..aa0a1f091daf 100644
---- a/arch/arm/mach-s5pv210/Makefile
-+++ b/arch/arm/mach-s5pv210/Makefile
-@@ -3,12 +3,5 @@
- # Copyright (c) 2010 Samsung Electronics Co., Ltd.
- # 		http://www.samsung.com/
- 
--ccflags-$(CONFIG_ARCH_MULTIPLATFORM) += -I$(srctree)/arch/arm/plat-samsung/include
--
--# Core
--
- obj-$(CONFIG_PM_SLEEP)		+= pm.o sleep.o
--
--# machine support
--
- obj-y				+= s5pv210.o
-diff --git a/arch/arm/mach-s5pv210/pm.c b/arch/arm/mach-s5pv210/pm.c
-index efdb5a27c060..d59c094cdea8 100644
---- a/arch/arm/mach-s5pv210/pm.c
-+++ b/arch/arm/mach-s5pv210/pm.c
-@@ -13,15 +13,56 @@
- #include <linux/suspend.h>
- #include <linux/syscore_ops.h>
- #include <linux/io.h>
-+#include <linux/soc/samsung/s3c-pm.h>
- 
- #include <asm/cacheflush.h>
- #include <asm/suspend.h>
- 
--#include <plat/pm-common.h>
--
- #include "common.h"
- #include "regs-clock.h"
- 
-+/* helper functions to save and restore register state */
-+struct sleep_save {
-+	void __iomem	*reg;
-+	unsigned long	val;
-+};
-+
-+#define SAVE_ITEM(x) \
-+	{ .reg = (x) }
-+
-+/**
-+ * s3c_pm_do_save() - save a set of registers for restoration on resume.
-+ * @ptr: Pointer to an array of registers.
-+ * @count: Size of the ptr array.
-+ *
-+ * Run through the list of registers given, saving their contents in the
-+ * array for later restoration when we wakeup.
-+ */
-+static void s3c_pm_do_save(struct sleep_save *ptr, int count)
-+{
-+	for (; count > 0; count--, ptr++) {
-+		ptr->val = readl_relaxed(ptr->reg);
-+		S3C_PMDBG("saved %p value %08lx\n", ptr->reg, ptr->val);
-+	}
-+}
-+
-+/**
-+ * s3c_pm_do_restore() - restore register values from the save list.
-+ * @ptr: Pointer to an array of registers.
-+ * @count: Size of the ptr array.
-+ *
-+ * Restore the register values saved from s3c_pm_do_save().
-+ *
-+ * WARNING: Do not put any debug in here that may effect memory or use
-+ * peripherals, as things may be changing!
-+*/
-+
-+static void s3c_pm_do_restore_core(const struct sleep_save *ptr, int count)
-+{
-+	for (; count > 0; count--, ptr++)
-+		writel_relaxed(ptr->val, ptr->reg);
-+}
-+
- static struct sleep_save s5pv210_core_save[] = {
- 	/* Clock ETC */
- 	SAVE_ITEM(S5P_MDNIE_SEL),
-diff --git a/arch/arm/mach-s5pv210/regs-clock.h b/arch/arm/mach-s5pv210/regs-clock.h
-index 2a35c831a9b0..8c7530614e37 100644
---- a/arch/arm/mach-s5pv210/regs-clock.h
-+++ b/arch/arm/mach-s5pv210/regs-clock.h
-@@ -9,7 +9,7 @@
- #ifndef __ASM_ARCH_REGS_CLOCK_H
- #define __ASM_ARCH_REGS_CLOCK_H __FILE__
- 
--#include <plat/map-base.h>
-+#define S3C_VA_SYS		((void __iomem __force *)0xF6100000)
- 
- #define S5P_CLKREG(x)		(S3C_VA_SYS + (x))
- 
-diff --git a/arch/arm/mach-s5pv210/s5pv210.c b/arch/arm/mach-s5pv210/s5pv210.c
-index 868f9c20419d..a21ed3bb992a 100644
---- a/arch/arm/mach-s5pv210/s5pv210.c
-+++ b/arch/arm/mach-s5pv210/s5pv210.c
-@@ -13,8 +13,6 @@
- #include <asm/mach/map.h>
- #include <asm/system_misc.h>
- 
--#include <plat/map-base.h>
--
- #include "common.h"
- #include "regs-clock.h"
- 
-diff --git a/arch/arm/plat-samsung/Makefile b/arch/arm/plat-samsung/Makefile
-index d88b9b84f3a9..025ce22876c1 100644
---- a/arch/arm/plat-samsung/Makefile
-+++ b/arch/arm/plat-samsung/Makefile
-@@ -24,9 +24,7 @@ obj-$(CONFIG_GPIO_SAMSUNG)     += gpio-samsung.o
- 
- # PM support
- 
--obj-$(CONFIG_PM_SLEEP)		+= pm-common.o
--obj-$(CONFIG_EXYNOS_CPU_SUSPEND) += pm-common.o
--obj-$(CONFIG_SAMSUNG_PM)	+= pm.o
-+obj-$(CONFIG_SAMSUNG_PM)	+= pm.o pm-common.o
- obj-$(CONFIG_SAMSUNG_PM_GPIO)	+= pm-gpio.o
- 
- obj-$(CONFIG_SAMSUNG_WAKEMASK)	+= wakeup-mask.o
--- 
-2.20.0
+> +static int process_free_page(struct page *page,
+> +                            struct page_reporting_config *phconf, int count)
+> +{
+> +       int mt, order, ret = 0;
+> +
+> +       mt = get_pageblock_migratetype(page);
+> +       order = page_private(page);
+> +       ret = __isolate_free_page(page, order);
+> +
+> +       if (ret) {
+> +               /*
+> +                * Preserving order and migratetype for reuse while
+> +                * releasing the pages back to the buddy.
+> +                */
+> +               set_pageblock_migratetype(page, mt);
+> +               set_page_private(page, order);
+> +
+> +               sg_set_page(&phconf->sg[count++], page,
+> +                           PAGE_SIZE << order, 0);
+> +       }
+> +
+> +       return count;
+> +}
+> +
+> +/**
+> + * scan_zone_bitmap - scans the bitmap for the requested zone.
+> + * @phconf: page reporting configuration object initialized by the backend.
+> + * @zone: zone for which page reporting is requested.
+> + *
+> + * For every page marked in the bitmap it checks if it is still free if so it
+> + * isolates and adds them to a scatterlist. As soon as the number of isolated
+> + * pages reach the threshold set by the backend, they are reported to the
+> + * hypervisor by the backend. Once the hypervisor responds after processing
+> + * they are returned back to the buddy for reuse.
+> + */
+> +static void scan_zone_bitmap(struct page_reporting_config *phconf,
+> +                            struct zone *zone)
+> +{
+> +       unsigned long setbit;
+> +       struct page *page;
+> +       int count = 0;
+> +
+> +       sg_init_table(phconf->sg, phconf->max_pages);
+> +
+> +       for_each_set_bit(setbit, zone->bitmap, zone->nbits) {
+> +               /* Process only if the page is still online */
+> +               page = pfn_to_online_page((setbit << PAGE_REPORTING_MIN_ORDER) +
+> +                                         zone->base_pfn);
+> +               if (!page)
+> +                       continue;
+> +
+> +               spin_lock(&zone->lock);
+> +
+> +               /* Ensure page is still free and can be processed */
+> +               if (PageBuddy(page) && page_private(page) >=
+> +                   PAGE_REPORTING_MIN_ORDER)
+> +                       count = process_free_page(page, phconf, count);
+> +
+> +               spin_unlock(&zone->lock);
+> +               /* Page has been processed, adjust its bit and zone counter */
+> +               clear_bit(setbit, zone->bitmap);
+> +               atomic_dec(&zone->free_pages);
+> +
+> +               if (count == phconf->max_pages) {
+> +                       /* Report isolated pages to the hypervisor */
+> +                       phconf->report(phconf, count);
+> +
+> +                       /* Return processed pages back to the buddy */
+> +                       return_isolated_page(zone, phconf);
+> +
+> +                       /* Reset for next reporting */
+> +                       sg_init_table(phconf->sg, phconf->max_pages);
+> +                       count = 0;
+> +               }
+> +       }
+> +       /*
+> +        * If the number of isolated pages does not meet the max_pages
+> +        * threshold, we would still prefer to report them as we have already
+> +        * isolated them.
+> +        */
+> +       if (count) {
+> +               sg_mark_end(&phconf->sg[count - 1]);
+> +               phconf->report(phconf, count);
+> +
+> +               return_isolated_page(zone, phconf);
+> +       }
+> +}
+> +
 
+So one thing that occurred to me is that this code is missing checks
+so that it doesn't try to hint isolated pages. With the bitmap
+approach you need an additional check so that you aren't pulling
+isolated pages out and reporting them.
