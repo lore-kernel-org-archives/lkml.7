@@ -2,252 +2,349 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7827EC47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ADCECE58C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9CA20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BE0206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l8g4s4ed"
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="iscNzzWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732604AbfJJAoJ (ORCPT
+        id S1732481AbfJJAqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:44:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50502 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731553AbfJJAoI (ORCPT
+        Wed, 9 Oct 2019 20:46:07 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:45792 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731134AbfJJAqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:44:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=50od/B3PK0CJO1ZT1qu05XYWV3Ldcc+kIxtp//OtB+E=; b=l8g4s4edagE05Kh3Sqcy98sH/
-        gqt8BJzo0AvezCil0cCxfu/nx/SPgwTNbirqwkXY8R3Bytw6iwSB/OnGeJ+wqIUm/KRszl5rreync
-        a1pTNC/xuTjMuDTU1PjRRP5L2zheXEFBeTJ222Rm3U4uVaTMTziHaI3cvZkeNekDOMam+0au0EcCp
-        pAwJFZEqGuZlrFqxUSVPJ9eD3Zqtsh4qAsIe6tyYul6B8holW4Q+Y4xEGStBngYYpw3SsQnKYpACI
-        PpHpLMRnvH530lUGesEr3FJg5n45i/MHelHXF3oTJtvD0yPbhkLZziAkkA2SVcNwRYAEi0wj29cFX
-        i1TviFx+Q==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIMYG-0002Wz-Q9; Thu, 10 Oct 2019 00:43:32 +0000
-Subject: Re: [PATCH v3 1/3] x86/boot: Introduce the kernel_info
-To:     Daniel Kiper <daniel.kiper@oracle.com>, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
-        hpa@zytor.com, jgross@suse.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
-References: <20191009105358.32256-1-daniel.kiper@oracle.com>
- <20191009105358.32256-2-daniel.kiper@oracle.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <181249b6-5833-6f29-7d38-6dacc3f8ee62@infradead.org>
-Date:   Wed, 9 Oct 2019 17:43:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 9 Oct 2019 20:46:06 -0400
+Received: by mail-vs1-f67.google.com with SMTP id d204so2746313vsc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 17:46:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jd6zv/jgUFv6Uo+8CynzJPGldhXHqgBv+Ky1v1k+Nuk=;
+        b=iscNzzWLWcx0oCVq1jhdfQtsoDvqWFROyVb3ddID00ajMaSJM0Zy1lVPyfOO2TRGhU
+         KLMncCT2yWC8FBys7/HgUv++l0GbRIAaSK0/gpNiFDWrcEyIz2N20E4LETCqJxFmjPn9
+         g3ToYb+fEXGn1OUznhDaoTDSDZPmasSagoHCYHJoit7KuaiEYCwaYT/GYYVQZOFboT7U
+         t95ukRhgcbt9VKjrrzQIAdIb92yS7W1Wlmq+4UIYcBc27Z4biow8ODlLc1BMw5rRWwka
+         ahAt9hZoSKvavOjpNaYlfE5orR49QfNrLA9aQK7oLCrKK2rd/xB6H4HJ42U8pSifyIzT
+         4wcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jd6zv/jgUFv6Uo+8CynzJPGldhXHqgBv+Ky1v1k+Nuk=;
+        b=n33O91K9mH9FCaFmvGV09kEwzH9vryUIdrYwShYfpTHzstI14sNFHbTTl0+ayzxl3L
+         pb9c9S+KQlO4d1oXC/6LE7cC8NGlzC+1FWtUXh2Cm/Eq4hztLG9HRCWIDdZuyGSdxeap
+         aiX9E3wJ407aPDI39ORfTayugFj0hG04vJqzxpe3bIXMHpH5ZgAPtzqe1oxEggLnK1m/
+         WWuam5wTQflEbHhaY6OEDXMLBcv5pHbicCUXPbQULi+FFdMcjrr1obFcCHZLv4m9HM0L
+         XSbtt43+Eh83haVC/RQYwXVIyxjdSbV/VBoQDoW0WY4MMS4/9HXsE9vnURy9jvzXjZmf
+         HHNA==
+X-Gm-Message-State: APjAAAX9tdcksbY7TKiJwvBg7AoIOG/tP0CnirhgJDkEqTxff1ZZLluG
+        W2KCGnwpH2Milmygm2Haj1itF5z12KRua8Dx/8dhKw==
+X-Google-Smtp-Source: APXvYqy0hr+gzGjZPMkosJiHcRGhgxWhmhs8dGdGo9Ng0LSLTb9Rzsa72w7qjVcDpCLRLk6Q2CTmValXnPQLm0zjvv4=
+X-Received: by 2002:a05:6102:115c:: with SMTP id j28mr3730813vsg.105.1570668365198;
+ Wed, 09 Oct 2019 17:46:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191009105358.32256-2-daniel.kiper@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191008230038.24037-1-ezequiel@collabora.com>
+ <20191008230038.24037-3-ezequiel@collabora.com> <20191009180136.GE85762@art_vandelay>
+In-Reply-To: <20191009180136.GE85762@art_vandelay>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Wed, 9 Oct 2019 21:45:54 -0300
+Message-ID: <CAAEAJfDP0PsGAoRfGyDyWj7DxgP6nwwwA1_gwLQuVy-fRDa-UA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] drm/rockchip: Add optional support for CRTC gamma LUT
+To:     Sean Paul <sean@poorly.run>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello Sean,
 
-Questions and comments below...
-Thanks.
+Thanks for the thourough review.
 
+On Wed, 9 Oct 2019 at 15:01, Sean Paul <sean@poorly.run> wrote:
+>
+> On Tue, Oct 08, 2019 at 08:00:37PM -0300, Ezequiel Garcia wrote:
+> > Add an optional CRTC gamma LUT support, and enable it on RK3288.
+> > This is currently enabled via a separate address resource,
+> > which needs to be specified in the devicetree.
+> >
+> > The address resource is required because on some SoCs, such as
+> > RK3288, the LUT address is after the MMU address, and the latter
+> > is supported by a different driver. This prevents the DRM driver
+> > from requesting an entire register space.
+> >
+> > The current implementation works for RGB 10-bit tables, as that
+> > is what seems to work on RK3288.
+> >
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+>
+> Hey Ezequiel,
+> Just a few comments on the actual content of the patch as opposed to my higher
+> level comments yesterday. I think we're almost there, thanks for sticking this
+> out!
+>
+> > ---
+> > Changes from v3:
+> > * Move to atomic_enable and atomic_begin,
+> >   as discussed with Sean Paul.
+> > * Dropped the Reviewed-bys.
+> > Changes from v2:
+> > * None.
+> > Changes from v1:
+> > * drop explicit linear LUT after finding a proper
+> >   way to disable gamma correction.
+> > * avoid setting gamma is the CRTC is not active.
+> > * s/int/unsigned int as suggested by Jacopo.
+> > * only enable color management and set gamma size
+> >   if gamma LUT is supported, suggested by Doug.
+> > * drop the reg-names usage, and instead just use indexed reg
+> >   specifiers, suggested by Doug.
+> > Changes from RFC:
+> > * Request (an optional) address resource for the LUT.
+> > * Drop support for RK3399, which doesn't seem to work
+> >   out of the box and needs more research.
+> > * Support pass-thru setting when GAMMA_LUT is NULL.
+> > * Add a check for the gamma size, as suggested by Ilia.
+> > * Move gamma setting to atomic_commit_tail, as pointed
+> >   out by Jacopo/Laurent, is the correct way.
+> > ---
+> >  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   1 +
+> >  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 125 ++++++++++++++++++++
+> >  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   5 +
+> >  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
+> >  4 files changed, 133 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > index ca01234c037c..697ee04b85cf 100644
+> > --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+> > @@ -17,6 +17,7 @@
+> >  #include "rockchip_drm_drv.h"
+> >  #include "rockchip_drm_fb.h"
+> >  #include "rockchip_drm_gem.h"
+> > +#include "rockchip_drm_vop.h"
+>
+> Leftover from the previous version?
+>
 
-On 10/9/19 3:53 AM, Daniel Kiper wrote:
+Yup.
 
-> Suggested-by: H. Peter Anvin <hpa@zytor.com>
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> Reviewed-by: Ross Philipson <ross.philipson@oracle.com>
-> ---
+> >
+> >  static const struct drm_framebuffer_funcs rockchip_drm_fb_funcs = {
+> >       .destroy       = drm_gem_fb_destroy,
+> > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> > index 613404f86668..85c1269a1218 100644
+> > --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> > @@ -139,6 +139,7 @@ struct vop {
+> >
+> >       uint32_t *regsbak;
+> >       void __iomem *regs;
+> > +     void __iomem *lut_regs;
+> >
+> >       /* physical map length of vop register */
+> >       uint32_t len;
+> > @@ -1048,6 +1049,84 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+> >       return true;
+> >  }
+> >
+> > +static bool vop_dsp_lut_is_enable(struct vop *vop)
+>
+> *enabled
+>
 
-> ---
->  Documentation/x86/boot.rst             | 121 +++++++++++++++++++++++++++++++++
->  arch/x86/boot/Makefile                 |   2 +-
->  arch/x86/boot/compressed/Makefile      |   4 +-
->  arch/x86/boot/compressed/kernel_info.S |  17 +++++
->  arch/x86/boot/header.S                 |   1 +
->  arch/x86/boot/tools/build.c            |   5 ++
->  arch/x86/include/uapi/asm/bootparam.h  |   1 +
->  7 files changed, 148 insertions(+), 3 deletions(-)
->  create mode 100644 arch/x86/boot/compressed/kernel_info.S
-> 
-> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
-> index 08a2f100c0e6..d5323a39f5e3 100644
-> --- a/Documentation/x86/boot.rst
-> +++ b/Documentation/x86/boot.rst
-> @@ -68,8 +68,25 @@ Protocol 2.12	(Kernel 3.8) Added the xloadflags field and extension fields
->  Protocol 2.13	(Kernel 3.14) Support 32- and 64-bit flags being set in
->  		xloadflags to support booting a 64-bit kernel from 32-bit
->  		EFI
-> +
-> +Protocol 2.14:	BURNT BY INCORRECT COMMIT ae7e1238e68f2a472a125673ab506d49158c1889
-> +		(x86/boot: Add ACPI RSDP address to setup_header)
-> +		DO NOT USE!!! ASSUME SAME AS 2.13.
-> +
-> +Protocol 2.15:	(Kernel 5.5) Added the kernel_info.
->  =============	============================================================
->  
-> +.. note::
-> +     The protocol version number should be changed only if the setup header
-> +     is changed. There is no need to update the version number if boot_params
-> +     or kernel_info are changed. Additionally, it is recommended to use
-> +     xloadflags (in this case the protocol version number should not be
-> +     updated either) or kernel_info to communicate supported Linux kernel
-> +     features to the boot loader. Due to very limited space available in
-> +     the original setup header every update to it should be considered
-> +     with great care. Starting from the protocol 2.15 the primary way to
-> +     communicate things to the boot loader is the kernel_info.
-> +
->  
->  Memory Layout
->  =============
-> @@ -207,6 +224,7 @@ Offset/Size	Proto		Name			Meaning
->  0258/8		2.10+		pref_address		Preferred loading address
->  0260/4		2.10+		init_size		Linear memory required during initialization
->  0264/4		2.11+		handover_offset		Offset of handover entry point
-> +0268/4		2.15+		kernel_info_offset	Offset of the kernel_info
->  ===========	========	=====================	============================================
->  
->  .. note::
-> @@ -855,6 +873,109 @@ Offset/size:	0x264/4
->  
->    See EFI HANDOVER PROTOCOL below for more details.
->  
-> +============	==================
-> +Field name:	kernel_info_offset
-> +Type:		read
-> +Offset/size:	0x268/4
-> +Protocol:	2.15+
-> +============	==================
-> +
-> +  This field is the offset from the beginning of the kernel image to the
-> +  kernel_info. It is embedded in the Linux image in the uncompressed
-                  ^^
-   What does      It   refer to, please?
+Good catch.
 
-> +  protected mode region.
-> +
-> +
-> +The kernel_info
-> +===============
-> +
-> +The relationships between the headers are analogous to the various data
-> +sections:
-> +
-> +  setup_header = .data
-> +  boot_params/setup_data = .bss
-> +
-> +What is missing from the above list? That's right:
-> +
-> +  kernel_info = .rodata
-> +
-> +We have been (ab)using .data for things that could go into .rodata or .bss for
-> +a long time, for lack of alternatives and -- especially early on -- inertia.
-> +Also, the BIOS stub is responsible for creating boot_params, so it isn't
-> +available to a BIOS-based loader (setup_data is, though).
-> +
-> +setup_header is permanently limited to 144 bytes due to the reach of the
-> +2-byte jump field, which doubles as a length field for the structure, combined
-> +with the size of the "hole" in struct boot_params that a protected-mode loader
-> +or the BIOS stub has to copy it into. It is currently 119 bytes long, which
-> +leaves us with 25 very precious bytes. This isn't something that can be fixed
-> +without revising the boot protocol entirely, breaking backwards compatibility.
-> +
-> +boot_params proper is limited to 4096 bytes, but can be arbitrarily extended
-> +by adding setup_data entries. It cannot be used to communicate properties of
-> +the kernel image, because it is .bss and has no image-provided content.
-> +
-> +kernel_info solves this by providing an extensible place for information about
-> +the kernel image. It is readonly, because the kernel cannot rely on a
-> +bootloader copying its contents anywhere, but that is OK; if it becomes
-> +necessary it can still contain data items that an enabled bootloader would be
-> +expected to copy into a setup_data chunk.
-> +
-> +All kernel_info data should be part of this structure. Fixed size data have to
-> +be put before kernel_info_var_len_data label. Variable size data have to be put
-> +behind kernel_info_var_len_data label. Each chunk of variable size data has to
+> > +{
+> > +     return vop_read_reg(vop, 0, &vop->data->common->dsp_lut_en);
+> > +}
+> > +
+> > +static void vop_crtc_write_gamma_lut(struct vop *vop, struct drm_crtc *crtc)
+> > +{
+> > +     struct drm_color_lut *lut = crtc->state->gamma_lut->data;
+> > +     unsigned int i;
+> > +
+> > +     for (i = 0; i < crtc->gamma_size; i++) {
+> > +             u32 word;
+> > +
+> > +             word = (drm_color_lut_extract(lut[i].red, 10) << 20) |
+> > +                    (drm_color_lut_extract(lut[i].green, 10) << 10) |
+> > +                     drm_color_lut_extract(lut[i].blue, 10);
+> > +             writel(word, vop->lut_regs + i * 4);
+> > +     }
+> > +}
+> > +
+> > +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
+> > +                            struct drm_crtc_state *old_crtc_state)
+> > +{
+> > +     unsigned int idle;
+> > +     int ret;
+> > +
+>
+> How about:
+>
+>         if (!vop->lut_regs)
+>                 return;
+>
+> here and then you can remove that condition above the 2 callsites
+>
 
-   s/behind/after/
+Yes, sounds good.
 
-> +be prefixed with header/magic and its size, e.g.:
-> +
-> +  kernel_info:
-> +          .ascii  "LToP"          /* Header, Linux top (structure). */
-> +          .long   kernel_info_var_len_data - kernel_info
-> +          .long   kernel_info_end - kernel_info
-> +          .long   0x01234567      /* Some fixed size data for the bootloaders. */
-> +  kernel_info_var_len_data:
-> +  example_struct:                 /* Some variable size data for the bootloaders. */
-> +          .ascii  "EsTT"          /* Header/Magic. */
-> +          .long   example_struct_end - example_struct
-> +          .ascii  "Struct"
-> +          .long   0x89012345
-> +  example_struct_end:
-> +  example_strings:                /* Some variable size data for the bootloaders. */
-> +          .ascii  "EsTs"          /* Header/Magic. */
+> > +     /*
+> > +      * In order to write the LUT to the internal memory,
+> > +      * we need to first make sure the dsp_lut_en bit is cleared.
+> > +      */
+> > +     spin_lock(&vop->reg_lock);
+> > +     VOP_REG_SET(vop, common, dsp_lut_en, 0);
+> > +     vop_cfg_done(vop);
+> > +     spin_unlock(&vop->reg_lock);
+> > +
+> > +     /*
+> > +      * If the CRTC is not active, dsp_lut_en will not get cleared.
+> > +      * Apparently we still need to do the above step to for
+> > +      * gamma correction to be disabled.
+> > +      */
+> > +     if (!crtc->state->active)
+> > +             return;
+> > +
 
-Where do the Magic values "EsTT" and "EsTs" come from?
-where are they defined?
+I have realized that the above might no longer be needed,
+given we are now using atomic_enable and atomic_begin.
 
-> +          .long   example_strings_end - example_strings
-> +          .asciz  "String_0"
-> +          .asciz  "String_1"
-> +  example_strings_end:
-> +  kernel_info_end:
-> +
-> +This way the kernel_info is self-contained blob.
-> +
-> +
-> +Details of the kernel_info Fields
-> +=================================
-> +
-> +============	========
-> +Field name:	header
-> +Offset/size:	0x0000/4
-> +============	========
-> +
-> +  Contains the magic number "LToP" (0x506f544c).
-> +
-> +============	========
-> +Field name:	size
-> +Offset/size:	0x0004/4
-> +============	========
-> +
-> +  This field contains the size of the kernel_info including kernel_info.header.
-> +  It does not count kernel_info.kernel_info_var_len_data size. This field should be
-> +  used by the bootloaders to detect supported fixed size fields in the kernel_info
-> +  and beginning of kernel_info.kernel_info_var_len_data.
-> +
-> +============	========
-> +Field name:	size_total
-> +Offset/size:	0x0008/4
-> +============	========
-> +
-> +  This field contains the size of the kernel_info including kernel_info.header
-> +  and kernel_info.kernel_info_var_len_data.
-> +
->  
->  The Image Checksum
->  ==================
+Not sure if the CRTC is supposed to clear its GAMMA
+when disabled.
 
+> > +     ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
+> > +                              idle, !idle, 5, 30 * 1000);
+> > +     if (ret) {
+> > +             DRM_DEV_ERROR(vop->dev, "display LUT RAM enable timeout!\n");
+> > +             return;
+> > +     }
+> > +
+> > +     if (crtc->state->gamma_lut &&
+> > +        (!old_crtc_state->gamma_lut || (crtc->state->gamma_lut->base.id !=
+> > +                                     old_crtc_state->gamma_lut->base.id))) {
+>
+> Silly question, but isn't the second part of this check redundant since you need
+> color_mgmt_changed || active_changed to get into this function?
+>
+> So maybe invert the conditional here and exit early (to save a level of
+> indentation in the block below):
+>
 
--- 
-~Randy
+I took this from malidp_atomic_commit_update_gamma. I _believe_
+the rational for this is that color_mgmt_changed can be set by re-setting
+the gamma property, to the same property. But I admit I haven't
+tested it's the case.
+
+OTOH, it won't really affect much to re-write the table, if the user
+requested a change.
+
+>         if (!crtc->state->gamma_lut)
+>                 return;
+>
+
+In any case, inverting the condition makes sense.
+
+>         spin_lock(&vop->reg_lock);
+>
+>         vop_crtc_write_gamma_lut(vop, crtc);
+>         VOP_REG_SET(vop, common, dsp_lut_en, 1);
+>         vop_cfg_done(vop);
+>
+>         spin_unlock(&vop->reg_lock);
+>
+> > +
+> > +             spin_lock(&vop->reg_lock);
+> > +
+> > +             vop_crtc_write_gamma_lut(vop, crtc);
+> > +             VOP_REG_SET(vop, common, dsp_lut_en, 1);
+> > +             vop_cfg_done(vop);
+> > +
+> > +             spin_unlock(&vop->reg_lock);
+> > +     }
+> > +}
+> > +
+> > +static void vop_crtc_atomic_begin(struct drm_crtc *crtc,
+> > +                                struct drm_crtc_state *old_crtc_state)
+> > +{
+> > +     struct vop *vop = to_vop(crtc);
+> > +
+> > +     /*
+> > +      * Only update GAMMA if the 'active' flag is not changed,
+> > +      * otherwise it's updated by .atomic_enable.
+> > +      */
+> > +     if (vop->lut_regs && crtc->state->color_mgmt_changed &&
+> > +         !crtc->state->active_changed)
+> > +             vop_crtc_gamma_set(vop, crtc, old_crtc_state);
+> > +}
+> > +
+> >  static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
+> >                                  struct drm_crtc_state *old_state)
+> >  {
+> > @@ -1075,6 +1154,14 @@ static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
+> >               return;
+> >       }
+> >
+> > +     /*
+> > +      * If we have a GAMMA LUT in the state, then let's make sure
+> > +      * it's updated. We might be coming out of suspend,
+> > +      * which means the LUT internal memory needs to be re-written.
+> > +      */
+> > +     if (vop->lut_regs && crtc->state->gamma_lut)
+> > +             vop_crtc_gamma_set(vop, crtc, old_state);
+> > +
+> >       mutex_lock(&vop->vop_lock);
+> >
+> >       WARN_ON(vop->event);
+> > @@ -1191,6 +1278,26 @@ static void vop_wait_for_irq_handler(struct vop *vop)
+> >       synchronize_irq(vop->irq);
+> >  }
+> >
+> > +static int vop_crtc_atomic_check(struct drm_crtc *crtc,
+> > +                              struct drm_crtc_state *crtc_state)
+> > +{
+> > +     struct vop *vop = to_vop(crtc);
+> > +
+> > +     if (vop->lut_regs && crtc_state->color_mgmt_changed &&
+> > +         crtc_state->gamma_lut) {
+> > +             unsigned int len;
+> > +
+> > +             len = drm_color_lut_size(crtc_state->gamma_lut);
+> > +             if (len != crtc->gamma_size) {
+> > +                     DRM_DEBUG_KMS("Invalid LUT size; got %d, expected %d\n",
+> > +                                   len, crtc->gamma_size);
+> > +                     return -EINVAL;
+> > +             }
+>
+> Overflow is avoided in drm_mode_gamma_set_ioctl(), so I don't think you need
+> this function.
+>
+
+But that only applies to the legacy path. Isn't this needed to ensure
+a gamma blob
+has the right size?
+
+Thanks,
+Ezequiel
