@@ -2,153 +2,132 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FC2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AB8C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B492067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I9lwiD04"
+	by mail.kernel.org (Postfix) with ESMTP id A2E9120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfJJVHD (ORCPT
+        id S1727284AbfJJVI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:07:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43120 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJVHD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:07:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a2so4673638pfo.10;
-        Thu, 10 Oct 2019 14:07:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qC40adZXU/tV5QzYgkBZx24z9et5UNUWBE0VYT7PPKM=;
-        b=I9lwiD04t1jKp5V8AgRfsBgUtqOqxbP2i2vMH/gvkQdGrPNFU8oba65acyXERV2WxY
-         v22XAjePeSNoSnuHvvSA3n0sZueH/ek4qoDsV1mF5gUidtlh0f9FoQfVDAR/jhkOcGhB
-         rnykdBOTlPwXGv1tJqfm+muTrjPsvtCHqZ6NIxprQmcBoo3Q1X3BOiJAKexs+98gGLXI
-         gy3kJH4Zzmx8dl5/AWZaZXQWidW/uMELQ+Df4m0RopDxA1X73CcmKuvV8DuDVa+IPveD
-         5JW71HSCGxBV95p5y9yuhCfuGDL78Qh7kwGviirnVfRQLpsrBLlk1ua2yXpUwA+5aM6b
-         ks0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qC40adZXU/tV5QzYgkBZx24z9et5UNUWBE0VYT7PPKM=;
-        b=bw55MY9Jn/eIZI2SJwlgas2/5GdWLFFbDwN4o5fzJxvsmRlxyk/wsAz3PqaN9Fu0Tp
-         8J3DCWvhdOLFm2MDogWGzqpv662ROZXN8juCcLz+Knin2ZejoETzo5GE7LItFNuh+X3j
-         jMVHKJKp9Ta+wrRjH9SFis+HNCUfOkfsHbz1mS/eoBT/aVek6pOOXVSvrNYe4tMqlG9+
-         mZaC5IbAngmwK5Qhwys+eP/wNxurcn817N/y1qcEdpjxt5t7FwUPvPJIUPCmCYMYZIxD
-         reX/AlFicatSmth9u8WG9KRMAgL0YRLsqssdQRvKC52ephAPsDx0HYxCw7+/UYZvpbeL
-         cazA==
-X-Gm-Message-State: APjAAAUQmSB9eBqoM7cVEOmeC1ilvh0Yf49BLn1rIaErBb3mCGuMLjm7
-        lARtDftMXIyqvzS8i9KirQs=
-X-Google-Smtp-Source: APXvYqxHvLlCmq0oZPemzFhc9sfBvjJdNcYUNGHxi4jnZ2DaNVAPm7JpzEYskIcPh0DGt6hKAW5iCg==
-X-Received: by 2002:aa7:8ece:: with SMTP id b14mr12791904pfr.113.1570741622461;
-        Thu, 10 Oct 2019 14:07:02 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id v68sm7898208pfv.47.2019.10.10.14.07.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 14:07:02 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
-        daniel@ffwll.ch, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] dt-bindings: display: Convert sharp,ld-d5116z01b panel to DT schema
-Date:   Thu, 10 Oct 2019 14:06:54 -0700
-Message-Id: <20191010210654.37426-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 10 Oct 2019 17:08:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:44919 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726804AbfJJVI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 17:08:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 14:08:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,281,1566889200"; 
+   d="scan'208";a="395535274"
+Received: from spandruv-mobl3.jf.intel.com ([10.251.26.188])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Oct 2019 14:08:55 -0700
+Message-ID: <e41580784d8f5a1806250f4daed528304976cf15.camel@linux.intel.com>
+Subject: Re: [PATCH] x86/mce: Lower throttling MCE messages to warnings
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>, Benjamin Berg <bberg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+Date:   Thu, 10 Oct 2019 14:08:55 -0700
+In-Reply-To: <20191009175608.GK10395@zn.tnic>
+References: <20191009155424.249277-1-bberg@redhat.com>
+         <20191009175608.GK10395@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the sharp,ld-d5116z01b panel binding to DT schema.
+Hi Benjamin,
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- .../display/panel/sharp,ld-d5116z01b.txt      | 26 ----------------
- .../display/panel/sharp,ld-d5116z01b.yaml     | 30 +++++++++++++++++++
- 2 files changed, 30 insertions(+), 26 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.yaml
+On Wed, 2019-10-09 at 19:56 +0200, Borislav Petkov wrote:
+> On Wed, Oct 09, 2019 at 05:54:24PM +0200, Benjamin Berg wrote:
+> > On modern CPUs it is quite normal that the temperature limits are
+> > reached and the CPU is throttled. In fact, often the thermal design
+> > is
+> > not sufficient to cool the CPU at full load and limits can quickly
+> > be
+> > reached when a burst in load happens. This will even happen with
+> > technologies like RAPL limitting the long term power consumption of
+> > the package.
+> > 
+> > So these messages do not usually indicate a hardware issue (e.g.
+> > insufficient cooling). Log them as warnings to avoid confusion
+> > about
+> > their severity.
+> > 
+I have a patch to address this. Instead of avoiding any critical
+warnings or wait for 300 seconds for next one, the warning is based on
+how long the system is working on throttled condition. If for example
+the fan broke, then the throttling is extended for a long time. Then we
+better warn.
+I am waiting for internal review, and hope to post by tomorrow.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
-deleted file mode 100644
-index fd9cf39bde77..000000000000
---- a/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
-+++ /dev/null
-@@ -1,26 +0,0 @@
--Sharp LD-D5116Z01B 12.3" WUXGA+ eDP panel
--
--Required properties:
--- compatible: should be "sharp,ld-d5116z01b"
--- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
--
--This binding is compatible with the simple-panel binding.
--
--The device node can contain one 'port' child node with one child
--'endpoint' node, according to the bindings defined in [1]. This
--node should describe panel's video bus.
--
--[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
--
--Example:
--
--	panel: panel {
--		compatible = "sharp,ld-d5116z01b";
--		power-supply = <&vlcd_3v3>;
--
--		port {
--			panel_ep: endpoint {
--				remote-endpoint = <&bridge_out_ep>;
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.yaml b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.yaml
-new file mode 100644
-index 000000000000..fbb647eb33c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.yaml
-@@ -0,0 +1,30 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/sharp,ld-d5116z01b.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sharp LD-D5116Z01B 12.3" WUXGA+ eDP panel
-+
-+maintainers:
-+  - Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: sharp,ld-d5116z01b
-+
-+  power-supply: true
-+  backlight: true
-+  port: true
-+  no-hpd: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - power-supply
-+
-+...
--- 
-2.17.1
+Thanks
+Srinivas
+
+> > Signed-off-by: Benjamin Berg <bberg@redhat.com>
+> > Tested-by: Christian Kellner <ckellner@redhat.com>
+> > ---
+> >  arch/x86/kernel/cpu/mce/therm_throt.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c
+> > b/arch/x86/kernel/cpu/mce/therm_throt.c
+> > index 6e2becf547c5..bc441d68d060 100644
+> > --- a/arch/x86/kernel/cpu/mce/therm_throt.c
+> > +++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+> > @@ -188,7 +188,7 @@ static void therm_throt_process(bool new_event,
+> > int event, int level)
+> >  	/* if we just entered the thermal event */
+> >  	if (new_event) {
+> >  		if (event == THERMAL_THROTTLING_EVENT)
+> > -			pr_crit("CPU%d: %s temperature above threshold,
+> > cpu clock throttled (total events = %lu)\n",
+> > +			pr_warn("CPU%d: %s temperature above threshold,
+> > cpu clock throttled (total events = %lu)\n",
+> >  				this_cpu,
+> >  				level == CORE_LEVEL ? "Core" :
+> > "Package",
+> >  				state->count);
+> > -- 
+> 
+> This has carried over since its very first addition in
+> 
+> commit 3867eb75b9279c7b0f6840d2ad9f27694ba6c4e4
+> Author: Dave Jones <davej@suse.de>
+> Date:   Tue Apr 2 20:02:27 2002 -0800
+> 
+>     [PATCH] x86 bluesmoke update.
+>     
+>     o  Make MCE compile time optional       (Paul Gortmaker)
+>     o  P4 thermal trip monitoring.          (Zwane Mwaikambo)
+>     o  Non-fatal MCE logging.               (Me)
+> 
+> 
+> It used to be KERN_EMERG back then, though.
+> 
+> And yes, this issue has come up in the past already so I think I'll
+> take
+> it. I'll just give Intel folks a couple of days to object should
+> there
+> be anything to object to.
+> 
+> Thx.
+> 
 
