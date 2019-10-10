@@ -7,46 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4445C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61943ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F13721D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B4921D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697933;
-	bh=AeqJ5tmv4YwVwMSoBXqkp2XYljEqJPW8+tr6/fYaEbg=;
+	s=default; t=1570697936;
+	bh=2zuuBILVBCcqXDaiw/iKTe4cR80FAkibiEk1vK9tmdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRHzaVRWG8nHAhJmDrZOa6mt7euxKBXr3oTolmdfX9oN8YNUcj2CvCOMG+E554Hvs
-	 K1H9wtJsbO9crHsxBO1Rwh2xH0K0mIubA5BcgoS2aRJ91sTw+tGbZvRG0TOrJQXK50
-	 v3MIz6fVU9dyaANahKQS+Jr4qaaqIstJCxXPqrdA=
+	b=1Smx3QNVZEUy7YKAi6AvWZmk1HCgz8BolnDqnBoKn5AH5NLXsKKA1YJJidFW87s21
+	 w3Ivao9JMdhdxlmqaHsAGfMaFKhLKTOJrSsX31O0yQco40DzAMESs2zW1gtEgqrfkS
+	 LRM+yhBuS0UMDMb0PECab0vRGVaHi/u9UOz+2GGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389096AbfJJIpR (ORCPT
+        id S2389078AbfJJIpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50782 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389081AbfJJIpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:11 -0400
+        id S2389055AbfJJIpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B555B2190F;
-        Thu, 10 Oct 2019 08:45:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A3321929;
+        Thu, 10 Oct 2019 08:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697111;
-        bh=AeqJ5tmv4YwVwMSoBXqkp2XYljEqJPW8+tr6/fYaEbg=;
+        s=default; t=1570697105;
+        bh=2zuuBILVBCcqXDaiw/iKTe4cR80FAkibiEk1vK9tmdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hEtkKtTW9Wv6AxM7eZS5LoBKl/KQG9IEGHs5IW7CQnr+eym6AMvqSMzqPQBtCbvJi
-         GqST7V998OcFyJQQjh88FsWA1S8/3abzUTfQAvvW0L7be3Iy1QekMzT0Xj7BiNW+Eq
-         s8BbWGQJlzo2iOwMk4LOdLldqTfx80eJPYW/8Mxc=
+        b=GziLrO9QLhIvYzJjYElnqW/xDDCojTYL1ZWSYrzqIapcRuE54XtyZmi3/Ipf6dvuV
+         TbUmP8Dw+IOqpOmrpisWxr+lvA3E5pymuWSolpPweV5eRZyQ79BkYexetXhQYP7V+P
+         o52qU2C7tl3CR4NEmWlrDM3qH60xURcgGdXcwGRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 022/114] crypto: skcipher - Unmap pages after an external error
-Date:   Thu, 10 Oct 2019 10:35:29 +0200
-Message-Id: <20191010083554.519074263@linuxfoundation.org>
+        stable@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        He Kuang <hekuang@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
+        Michal rarek <mmarek@suse.com>, Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 020/114] tools lib traceevent: Fix "robust" test of do_generate_dynamic_list_file
+Date:   Thu, 10 Oct 2019 10:35:27 +0200
+Message-Id: <20191010083553.429261317@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -59,121 +68,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 0ba3c026e685573bd3534c17e27da7c505ac99c4 upstream.
+commit 82a2f88458d70704be843961e10b5cef9a6e95d3 upstream.
 
-skcipher_walk_done may be called with an error by internal or
-external callers.  For those internal callers we shouldn't unmap
-pages but for external callers we must unmap any pages that are
-in use.
+The tools/lib/traceevent/Makefile had a test added to it to detect a failure
+of the "nm" when making the dynamic list file (whatever that is). The
+problem is that the test sorts the values "U W w" and some versions of sort
+will place "w" ahead of "W" (even though it has a higher ASCII value, and
+break the test.
 
-This patch distinguishes between the two cases by checking whether
-walk->nbytes is zero or not.  For internal callers, we now set
-walk->nbytes to zero prior to the call.  For external callers,
-walk->nbytes has always been non-zero (as zero is used to indicate
-the termination of a walk).
+Add 'tr "w" "W"' to merge the two and not worry about the ordering.
 
-Reported-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Fixes: 5cde0af2a982 ("[CRYPTO] cipher: Added block cipher type")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Tested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: He Kuang <hekuang@huawei.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Michal rarek <mmarek@suse.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: stable@vger.kernel.org
+Fixes: 6467753d61399 ("tools lib traceevent: Robustify do_generate_dynamic_list_file")
+Link: http://lkml.kernel.org/r/20190805130150.25acfeb1@gandalf.local.home
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/skcipher.c |   42 +++++++++++++++++++++++-------------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
+ tools/lib/traceevent/Makefile |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/skcipher.c
-+++ b/crypto/skcipher.c
-@@ -95,7 +95,7 @@ static inline u8 *skcipher_get_spot(u8 *
- 	return max(start, end_page);
- }
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -259,8 +259,8 @@ endef
  
--static void skcipher_done_slow(struct skcipher_walk *walk, unsigned int bsize)
-+static int skcipher_done_slow(struct skcipher_walk *walk, unsigned int bsize)
- {
- 	u8 *addr;
- 
-@@ -103,19 +103,21 @@ static void skcipher_done_slow(struct sk
- 	addr = skcipher_get_spot(addr, bsize);
- 	scatterwalk_copychunks(addr, &walk->out, bsize,
- 			       (walk->flags & SKCIPHER_WALK_PHYS) ? 2 : 1);
-+	return 0;
- }
- 
- int skcipher_walk_done(struct skcipher_walk *walk, int err)
- {
--	unsigned int n; /* bytes processed */
--	bool more;
-+	unsigned int n = walk->nbytes;
-+	unsigned int nbytes = 0;
- 
--	if (unlikely(err < 0))
-+	if (!n)
- 		goto finish;
- 
--	n = walk->nbytes - err;
--	walk->total -= n;
--	more = (walk->total != 0);
-+	if (likely(err >= 0)) {
-+		n -= err;
-+		nbytes = walk->total - n;
-+	}
- 
- 	if (likely(!(walk->flags & (SKCIPHER_WALK_PHYS |
- 				    SKCIPHER_WALK_SLOW |
-@@ -131,7 +133,7 @@ unmap_src:
- 		memcpy(walk->dst.virt.addr, walk->page, n);
- 		skcipher_unmap_dst(walk);
- 	} else if (unlikely(walk->flags & SKCIPHER_WALK_SLOW)) {
--		if (err) {
-+		if (err > 0) {
- 			/*
- 			 * Didn't process all bytes.  Either the algorithm is
- 			 * broken, or this was the last step and it turned out
-@@ -139,27 +141,29 @@ unmap_src:
- 			 * the algorithm requires it.
- 			 */
- 			err = -EINVAL;
--			goto finish;
--		}
--		skcipher_done_slow(walk, n);
--		goto already_advanced;
-+			nbytes = 0;
-+		} else
-+			n = skcipher_done_slow(walk, n);
- 	}
- 
-+	if (err > 0)
-+		err = 0;
-+
-+	walk->total = nbytes;
-+	walk->nbytes = 0;
-+
- 	scatterwalk_advance(&walk->in, n);
- 	scatterwalk_advance(&walk->out, n);
--already_advanced:
--	scatterwalk_done(&walk->in, 0, more);
--	scatterwalk_done(&walk->out, 1, more);
-+	scatterwalk_done(&walk->in, 0, nbytes);
-+	scatterwalk_done(&walk->out, 1, nbytes);
- 
--	if (more) {
-+	if (nbytes) {
- 		crypto_yield(walk->flags & SKCIPHER_WALK_SLEEP ?
- 			     CRYPTO_TFM_REQ_MAY_SLEEP : 0);
- 		return skcipher_walk_next(walk);
- 	}
--	err = 0;
--finish:
--	walk->nbytes = 0;
- 
-+finish:
- 	/* Short-circuit for the common/fast path. */
- 	if (!((unsigned long)walk->buffer | (unsigned long)walk->page))
- 		goto out;
+ define do_generate_dynamic_list_file
+ 	symbol_type=`$(NM) -u -D $1 | awk 'NF>1 {print $$1}' | \
+-	xargs echo "U W w" | tr ' ' '\n' | sort -u | xargs echo`;\
+-	if [ "$$symbol_type" = "U W w" ];then				\
++	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
++	if [ "$$symbol_type" = "U W" ];then				\
+ 		(echo '{';						\
+ 		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
+ 		echo '};';						\
 
 
