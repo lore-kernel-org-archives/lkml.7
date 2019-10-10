@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626C3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E8EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33773218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D3121D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696818;
-	bh=2KO0PQV+YfYTOs5nrDmOcGrwFcq5NKyOlH5jzXPiB0c=;
+	s=default; t=1570696821;
+	bh=FKN6GgjEc2Xsq4iSoKh6flNLodHoKiq5qSZMb+7cG9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZsPhEPlJ0U5uhV8/laqRTXZpfs+ZeaZRQcw3Z6FsKuM3PRCbxiW6dTlNjmzmSX2Z
-	 se84tCCBUqj5zR9X/s+oYn+TLRbhGbgTBiZARZVkKuSVXdP/msuTuLXzeMvixHSZ4c
-	 RoYlBzKwQsdhzYNHpWZRNeu6sh7+vgvY7YmX5SZw=
+	b=QJT751jZ6KZpDnQ5mB8zkXqoNbzf2AOmZ6XS2+N55inOOJM9zAyPh1Qx/XuYyQKH9
+	 LffZ4M6YJ6YDyecP48TKb6J5axAQvvf4/9ntVnGHonenN2JeUukRNdZEDcCv2OU2ed
+	 e8ITIOratz4EsnKgxSDz3Iz7iAj+7QwhjcSoCnvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388069AbfJJIkQ (ORCPT
+        id S2388078AbfJJIkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44230 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:40:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387411AbfJJIkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:40:15 -0400
+        id S2388068AbfJJIkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:40:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 463FB21D56;
-        Thu, 10 Oct 2019 08:40:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19F4521D7A;
+        Thu, 10 Oct 2019 08:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696813;
-        bh=2KO0PQV+YfYTOs5nrDmOcGrwFcq5NKyOlH5jzXPiB0c=;
+        s=default; t=1570696816;
+        bh=FKN6GgjEc2Xsq4iSoKh6flNLodHoKiq5qSZMb+7cG9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRns0Dxnc64qiJX3bJI0f3mLv0nfeJfYVNC9dwecSiBaBjNulE4blBUjGmZFo7vxf
-         iphXXfzAJ2bPxA+E/Qyz1UhhBoFIawG+kE2XZKOUS9olvmWIdHQiQ1+c1K+LkNvndb
-         4sM0McFV1UPFs3Y841Gk90eqTxBt3xVsaBKWga7c=
+        b=1cH1ELTlUL9/gGimthYIeF6UEZvsE82KMcxI2zGIGeWMJ1sDgLq8Un8FOyPh2LDDx
+         wRL5K4pOkUldSfx76ky24RjSV+DXKRK5Vkkic+SZiXsrRlXcSBtSo2bps1jI9b0IV2
+         a+20keWl70biu5/iBldgLLyuQAg82sb/d9emqO9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: [PATCH 5.3 061/148] perf stat: Fix a segmentation fault when using repeat forever
-Date:   Thu, 10 Oct 2019 10:35:22 +0200
-Message-Id: <20191010083614.848736651@linuxfoundation.org>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.3 062/148] drm/i915/dp: Fix dsc bpp calculations, v5.
+Date:   Thu, 10 Oct 2019 10:35:23 +0200
+Message-Id: <20191010083614.987696114@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -64,104 +63,345 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 
-commit 443f2d5ba13d65ccfd879460f77941875159d154 upstream.
+commit cffb4c3ea37248c4fc2f4ce747e5c24af88aec76 upstream.
 
-Observe a segmentation fault when 'perf stat' is asked to repeat forever
-with the interval option.
+There was a integer wraparound when mode_clock became too high,
+and we didn't correct for the FEC overhead factor when dividing,
+with the calculations breaking at HBR3.
 
-Without fix:
+As a result our calculated bpp was way too high, and the link width
+limitation never came into effect.
 
-  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
-  #           time             counts unit events
-       5.000211692  3,13,89,82,34,157      cycles
-      10.000380119  1,53,98,52,22,294      cycles
-      10.040467280       17,16,79,265      cycles
-  Segmentation fault
+Print out the resulting bpp calcululations as a sanity check, just
+in case we ever have to debug it later on again.
 
-This problem was only observed when we use forever option aka -r 0 and
-works with limited repeats. Calling print_counter with ts being set to
-NULL, is not a correct option when interval is set. Hence avoid
-print_counter(NULL,..)  if interval is set.
+We also used the wrong factor for FEC. While bspec mentions 2.4%,
+all the calculations use 1/0.972261, and the same ratio should be
+applied to data M/N as well, so use it there when FEC is enabled.
 
-With fix:
+This fixes the FIFO underrun we are seeing with FEC enabled.
 
-  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
-   #           time             counts unit events
-       5.019866622  3,15,14,43,08,697      cycles
-      10.039865756  3,15,16,31,95,261      cycles
-      10.059950628     1,26,05,47,158      cycles
-       5.009902655  3,14,52,62,33,932      cycles
-      10.019880228  3,14,52,22,89,154      cycles
-      10.030543876       66,90,18,333      cycles
-       5.009848281  3,14,51,98,25,437      cycles
-      10.029854402  3,15,14,93,04,918      cycles
-       5.009834177  3,14,51,95,92,316      cycles
+Changes since v2:
+- Handle fec_enable in intel_link_compute_m_n, so only data M/N is adjusted. (Ville)
+- Fix initial hardware readout for FEC. (Ville)
+Changes since v3:
+- Remove bogus fec_to_mode_clock. (Ville)
+Changes since v4:
+- Use the correct register for icl. (Ville)
+- Split hw readout to a separate patch.
 
-Committer notes:
-
-Did the 'git bisect' to find the cset introducing the problem to add the
-Fixes tag below, and at that time the problem reproduced as:
-
-  (gdb) run stat -r0 -I500 sleep 1
-  <SNIP>
-  Program received signal SIGSEGV, Segmentation fault.
-  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
-  866		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, csv_sep);
-  (gdb) bt
-  #0  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
-  #1  0x000000000041860a in print_counters (ts=ts@entry=0x0, argc=argc@entry=2, argv=argv@entry=0x7fffffffd640) at builtin-stat.c:938
-  #2  0x0000000000419a7f in cmd_stat (argc=2, argv=0x7fffffffd640, prefix=<optimized out>) at builtin-stat.c:1411
-  #3  0x000000000045c65a in run_builtin (p=p@entry=0x6291b8 <commands+216>, argc=argc@entry=5, argv=argv@entry=0x7fffffffd640) at perf.c:370
-  #4  0x000000000045c893 in handle_internal_command (argc=5, argv=0x7fffffffd640) at perf.c:429
-  #5  0x000000000045c8f1 in run_argv (argcp=argcp@entry=0x7fffffffd4ac, argv=argv@entry=0x7fffffffd4a0) at perf.c:473
-  #6  0x000000000045cac9 in main (argc=<optimized out>, argv=<optimized out>) at perf.c:588
-  (gdb)
-
-Mostly the same as just before this patch:
-
-  Program received signal SIGSEGV, Segmentation fault.
-  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
-  964		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, config->csv_sep);
-  (gdb) bt
-  #0  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
-  #1  0x0000000000588047 in perf_evlist__print_counters (evlist=0xbc9b90, config=0xa1f2a0 <stat_config>, _target=0xa1f0c0 <target>, ts=0x0, argc=2, argv=0x7fffffffd670)
-      at util/stat-display.c:1172
-  #2  0x000000000045390f in print_counters (ts=0x0, argc=2, argv=0x7fffffffd670) at builtin-stat.c:656
-  #3  0x0000000000456bb5 in cmd_stat (argc=2, argv=0x7fffffffd670) at builtin-stat.c:1960
-  #4  0x00000000004dd2e0 in run_builtin (p=0xa30e00 <commands+288>, argc=5, argv=0x7fffffffd670) at perf.c:310
-  #5  0x00000000004dd54d in handle_internal_command (argc=5, argv=0x7fffffffd670) at perf.c:362
-  #6  0x00000000004dd694 in run_argv (argcp=0x7fffffffd4cc, argv=0x7fffffffd4c0) at perf.c:406
-  #7  0x00000000004dda11 in main (argc=5, argv=0x7fffffffd670) at perf.c:531
-  (gdb)
-
-Fixes: d4f63a4741a8 ("perf stat: Introduce print_counters function")
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org # v4.2+
-Link: http://lore.kernel.org/lkml/20190904094738.9558-3-srikar@linux.vnet.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Fixes: d9218c8f6cf4 ("drm/i915/dp: Add helpers for Compressed BPP and Slice Count for DSC")
+Cc: <stable@vger.kernel.org> # v5.0+
+Cc: Manasi Navare <manasi.d.navare@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190925082110.17439-1-maarten.lankhorst@linux.intel.com
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+(cherry picked from commit ed06efb801bd291e935238d3fba46fa03d098f0e)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/builtin-stat.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/display/intel_display.c |   12 +
+ drivers/gpu/drm/i915/display/intel_display.h |    2 
+ drivers/gpu/drm/i915/display/intel_dp.c      |  184 +++++++++++++--------------
+ drivers/gpu/drm/i915/display/intel_dp.h      |    6 
+ drivers/gpu/drm/i915/display/intel_dp_mst.c  |    2 
+ 5 files changed, 107 insertions(+), 99 deletions(-)
 
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1962,7 +1962,7 @@ int cmd_stat(int argc, const char **argv
- 				run_idx + 1);
+--- a/drivers/gpu/drm/i915/display/intel_display.c
++++ b/drivers/gpu/drm/i915/display/intel_display.c
+@@ -7132,7 +7132,7 @@ retry:
+ 	pipe_config->fdi_lanes = lane;
  
- 		status = run_perf_stat(argc, argv, run_idx);
--		if (forever && status != -1) {
-+		if (forever && status != -1 && !interval) {
- 			print_counters(NULL, argc, argv);
- 			perf_stat__reset_stats();
- 		}
+ 	intel_link_compute_m_n(pipe_config->pipe_bpp, lane, fdi_dotclock,
+-			       link_bw, &pipe_config->fdi_m_n, false);
++			       link_bw, &pipe_config->fdi_m_n, false, false);
+ 
+ 	ret = ironlake_check_fdi_lanes(dev, intel_crtc->pipe, pipe_config);
+ 	if (ret == -EDEADLK)
+@@ -7379,11 +7379,15 @@ void
+ intel_link_compute_m_n(u16 bits_per_pixel, int nlanes,
+ 		       int pixel_clock, int link_clock,
+ 		       struct intel_link_m_n *m_n,
+-		       bool constant_n)
++		       bool constant_n, bool fec_enable)
+ {
+-	m_n->tu = 64;
++	u32 data_clock = bits_per_pixel * pixel_clock;
++
++	if (fec_enable)
++		data_clock = intel_dp_mode_to_fec_clock(data_clock);
+ 
+-	compute_m_n(bits_per_pixel * pixel_clock,
++	m_n->tu = 64;
++	compute_m_n(data_clock,
+ 		    link_clock * nlanes * 8,
+ 		    &m_n->gmch_m, &m_n->gmch_n,
+ 		    constant_n);
+--- a/drivers/gpu/drm/i915/display/intel_display.h
++++ b/drivers/gpu/drm/i915/display/intel_display.h
+@@ -351,7 +351,7 @@ struct intel_link_m_n {
+ void intel_link_compute_m_n(u16 bpp, int nlanes,
+ 			    int pixel_clock, int link_clock,
+ 			    struct intel_link_m_n *m_n,
+-			    bool constant_n);
++			    bool constant_n, bool fec_enable);
+ bool is_ccs_modifier(u64 modifier);
+ void lpt_disable_clkout_dp(struct drm_i915_private *dev_priv);
+ u32 intel_plane_fb_max_stride(struct drm_i915_private *dev_priv,
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -76,8 +76,8 @@
+ #define DP_DSC_MAX_ENC_THROUGHPUT_0		340000
+ #define DP_DSC_MAX_ENC_THROUGHPUT_1		400000
+ 
+-/* DP DSC FEC Overhead factor = (100 - 2.4)/100 */
+-#define DP_DSC_FEC_OVERHEAD_FACTOR		976
++/* DP DSC FEC Overhead factor = 1/(0.972261) */
++#define DP_DSC_FEC_OVERHEAD_FACTOR		972261
+ 
+ /* Compliance test status bits  */
+ #define INTEL_DP_RESOLUTION_SHIFT_MASK	0
+@@ -526,6 +526,97 @@ int intel_dp_get_link_train_fallback_val
+ 	return 0;
+ }
+ 
++u32 intel_dp_mode_to_fec_clock(u32 mode_clock)
++{
++	return div_u64(mul_u32_u32(mode_clock, 1000000U),
++		       DP_DSC_FEC_OVERHEAD_FACTOR);
++}
++
++static u16 intel_dp_dsc_get_output_bpp(u32 link_clock, u32 lane_count,
++				       u32 mode_clock, u32 mode_hdisplay)
++{
++	u32 bits_per_pixel, max_bpp_small_joiner_ram;
++	int i;
++
++	/*
++	 * Available Link Bandwidth(Kbits/sec) = (NumberOfLanes)*
++	 * (LinkSymbolClock)* 8 * (TimeSlotsPerMTP)
++	 * for SST -> TimeSlotsPerMTP is 1,
++	 * for MST -> TimeSlotsPerMTP has to be calculated
++	 */
++	bits_per_pixel = (link_clock * lane_count * 8) /
++			 intel_dp_mode_to_fec_clock(mode_clock);
++	DRM_DEBUG_KMS("Max link bpp: %u\n", bits_per_pixel);
++
++	/* Small Joiner Check: output bpp <= joiner RAM (bits) / Horiz. width */
++	max_bpp_small_joiner_ram = DP_DSC_MAX_SMALL_JOINER_RAM_BUFFER / mode_hdisplay;
++	DRM_DEBUG_KMS("Max small joiner bpp: %u\n", max_bpp_small_joiner_ram);
++
++	/*
++	 * Greatest allowed DSC BPP = MIN (output BPP from available Link BW
++	 * check, output bpp from small joiner RAM check)
++	 */
++	bits_per_pixel = min(bits_per_pixel, max_bpp_small_joiner_ram);
++
++	/* Error out if the max bpp is less than smallest allowed valid bpp */
++	if (bits_per_pixel < valid_dsc_bpp[0]) {
++		DRM_DEBUG_KMS("Unsupported BPP %u, min %u\n",
++			      bits_per_pixel, valid_dsc_bpp[0]);
++		return 0;
++	}
++
++	/* Find the nearest match in the array of known BPPs from VESA */
++	for (i = 0; i < ARRAY_SIZE(valid_dsc_bpp) - 1; i++) {
++		if (bits_per_pixel < valid_dsc_bpp[i + 1])
++			break;
++	}
++	bits_per_pixel = valid_dsc_bpp[i];
++
++	/*
++	 * Compressed BPP in U6.4 format so multiply by 16, for Gen 11,
++	 * fractional part is 0
++	 */
++	return bits_per_pixel << 4;
++}
++
++static u8 intel_dp_dsc_get_slice_count(struct intel_dp *intel_dp,
++				       int mode_clock, int mode_hdisplay)
++{
++	u8 min_slice_count, i;
++	int max_slice_width;
++
++	if (mode_clock <= DP_DSC_PEAK_PIXEL_RATE)
++		min_slice_count = DIV_ROUND_UP(mode_clock,
++					       DP_DSC_MAX_ENC_THROUGHPUT_0);
++	else
++		min_slice_count = DIV_ROUND_UP(mode_clock,
++					       DP_DSC_MAX_ENC_THROUGHPUT_1);
++
++	max_slice_width = drm_dp_dsc_sink_max_slice_width(intel_dp->dsc_dpcd);
++	if (max_slice_width < DP_DSC_MIN_SLICE_WIDTH_VALUE) {
++		DRM_DEBUG_KMS("Unsupported slice width %d by DP DSC Sink device\n",
++			      max_slice_width);
++		return 0;
++	}
++	/* Also take into account max slice width */
++	min_slice_count = min_t(u8, min_slice_count,
++				DIV_ROUND_UP(mode_hdisplay,
++					     max_slice_width));
++
++	/* Find the closest match to the valid slice count values */
++	for (i = 0; i < ARRAY_SIZE(valid_dsc_slicecount); i++) {
++		if (valid_dsc_slicecount[i] >
++		    drm_dp_dsc_sink_max_slice_count(intel_dp->dsc_dpcd,
++						    false))
++			break;
++		if (min_slice_count  <= valid_dsc_slicecount[i])
++			return valid_dsc_slicecount[i];
++	}
++
++	DRM_DEBUG_KMS("Unsupported Slice Count %d\n", min_slice_count);
++	return 0;
++}
++
+ static enum drm_mode_status
+ intel_dp_mode_valid(struct drm_connector *connector,
+ 		    struct drm_display_mode *mode)
+@@ -2248,7 +2339,7 @@ intel_dp_compute_config(struct intel_enc
+ 			       adjusted_mode->crtc_clock,
+ 			       pipe_config->port_clock,
+ 			       &pipe_config->dp_m_n,
+-			       constant_n);
++			       constant_n, pipe_config->fec_enable);
+ 
+ 	if (intel_connector->panel.downclock_mode != NULL &&
+ 		dev_priv->drrs.type == SEAMLESS_DRRS_SUPPORT) {
+@@ -2258,7 +2349,7 @@ intel_dp_compute_config(struct intel_enc
+ 					       intel_connector->panel.downclock_mode->clock,
+ 					       pipe_config->port_clock,
+ 					       &pipe_config->dp_m2_n2,
+-					       constant_n);
++					       constant_n, pipe_config->fec_enable);
+ 	}
+ 
+ 	if (!HAS_DDI(dev_priv))
+@@ -4345,91 +4436,6 @@ intel_dp_get_sink_irq_esi(struct intel_d
+ 		DP_DPRX_ESI_LEN;
+ }
+ 
+-u16 intel_dp_dsc_get_output_bpp(int link_clock, u8 lane_count,
+-				int mode_clock, int mode_hdisplay)
+-{
+-	u16 bits_per_pixel, max_bpp_small_joiner_ram;
+-	int i;
+-
+-	/*
+-	 * Available Link Bandwidth(Kbits/sec) = (NumberOfLanes)*
+-	 * (LinkSymbolClock)* 8 * ((100-FECOverhead)/100)*(TimeSlotsPerMTP)
+-	 * FECOverhead = 2.4%, for SST -> TimeSlotsPerMTP is 1,
+-	 * for MST -> TimeSlotsPerMTP has to be calculated
+-	 */
+-	bits_per_pixel = (link_clock * lane_count * 8 *
+-			  DP_DSC_FEC_OVERHEAD_FACTOR) /
+-		mode_clock;
+-
+-	/* Small Joiner Check: output bpp <= joiner RAM (bits) / Horiz. width */
+-	max_bpp_small_joiner_ram = DP_DSC_MAX_SMALL_JOINER_RAM_BUFFER /
+-		mode_hdisplay;
+-
+-	/*
+-	 * Greatest allowed DSC BPP = MIN (output BPP from avaialble Link BW
+-	 * check, output bpp from small joiner RAM check)
+-	 */
+-	bits_per_pixel = min(bits_per_pixel, max_bpp_small_joiner_ram);
+-
+-	/* Error out if the max bpp is less than smallest allowed valid bpp */
+-	if (bits_per_pixel < valid_dsc_bpp[0]) {
+-		DRM_DEBUG_KMS("Unsupported BPP %d\n", bits_per_pixel);
+-		return 0;
+-	}
+-
+-	/* Find the nearest match in the array of known BPPs from VESA */
+-	for (i = 0; i < ARRAY_SIZE(valid_dsc_bpp) - 1; i++) {
+-		if (bits_per_pixel < valid_dsc_bpp[i + 1])
+-			break;
+-	}
+-	bits_per_pixel = valid_dsc_bpp[i];
+-
+-	/*
+-	 * Compressed BPP in U6.4 format so multiply by 16, for Gen 11,
+-	 * fractional part is 0
+-	 */
+-	return bits_per_pixel << 4;
+-}
+-
+-u8 intel_dp_dsc_get_slice_count(struct intel_dp *intel_dp,
+-				int mode_clock,
+-				int mode_hdisplay)
+-{
+-	u8 min_slice_count, i;
+-	int max_slice_width;
+-
+-	if (mode_clock <= DP_DSC_PEAK_PIXEL_RATE)
+-		min_slice_count = DIV_ROUND_UP(mode_clock,
+-					       DP_DSC_MAX_ENC_THROUGHPUT_0);
+-	else
+-		min_slice_count = DIV_ROUND_UP(mode_clock,
+-					       DP_DSC_MAX_ENC_THROUGHPUT_1);
+-
+-	max_slice_width = drm_dp_dsc_sink_max_slice_width(intel_dp->dsc_dpcd);
+-	if (max_slice_width < DP_DSC_MIN_SLICE_WIDTH_VALUE) {
+-		DRM_DEBUG_KMS("Unsupported slice width %d by DP DSC Sink device\n",
+-			      max_slice_width);
+-		return 0;
+-	}
+-	/* Also take into account max slice width */
+-	min_slice_count = min_t(u8, min_slice_count,
+-				DIV_ROUND_UP(mode_hdisplay,
+-					     max_slice_width));
+-
+-	/* Find the closest match to the valid slice count values */
+-	for (i = 0; i < ARRAY_SIZE(valid_dsc_slicecount); i++) {
+-		if (valid_dsc_slicecount[i] >
+-		    drm_dp_dsc_sink_max_slice_count(intel_dp->dsc_dpcd,
+-						    false))
+-			break;
+-		if (min_slice_count  <= valid_dsc_slicecount[i])
+-			return valid_dsc_slicecount[i];
+-	}
+-
+-	DRM_DEBUG_KMS("Unsupported Slice Count %d\n", min_slice_count);
+-	return 0;
+-}
+-
+ static void
+ intel_pixel_encoding_setup_vsc(struct intel_dp *intel_dp,
+ 			       const struct intel_crtc_state *crtc_state)
+--- a/drivers/gpu/drm/i915/display/intel_dp.h
++++ b/drivers/gpu/drm/i915/display/intel_dp.h
+@@ -102,10 +102,6 @@ bool intel_dp_source_supports_hbr2(struc
+ bool intel_dp_source_supports_hbr3(struct intel_dp *intel_dp);
+ bool
+ intel_dp_get_link_status(struct intel_dp *intel_dp, u8 *link_status);
+-u16 intel_dp_dsc_get_output_bpp(int link_clock, u8 lane_count,
+-				int mode_clock, int mode_hdisplay);
+-u8 intel_dp_dsc_get_slice_count(struct intel_dp *intel_dp, int mode_clock,
+-				int mode_hdisplay);
+ 
+ bool intel_dp_read_dpcd(struct intel_dp *intel_dp);
+ bool intel_dp_get_colorimetry_status(struct intel_dp *intel_dp);
+@@ -120,4 +116,6 @@ static inline unsigned int intel_dp_unus
+ 	return ~((1 << lane_count) - 1) & 0xf;
+ }
+ 
++u32 intel_dp_mode_to_fec_clock(u32 mode_clock);
++
+ #endif /* __INTEL_DP_H__ */
+--- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+@@ -81,7 +81,7 @@ static int intel_dp_mst_compute_link_con
+ 			       adjusted_mode->crtc_clock,
+ 			       crtc_state->port_clock,
+ 			       &crtc_state->dp_m_n,
+-			       constant_n);
++			       constant_n, crtc_state->fec_enable);
+ 	crtc_state->dp_m_n.tu = slots;
+ 
+ 	return 0;
 
 
