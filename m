@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972CDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801A2C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6FF218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D0821A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697099;
-	bh=9pTsZgJYKzYaJpGRoPCHOlQj6CAvL14Yhn+Sb4cz79E=;
+	s=default; t=1570697103;
+	bh=xwdNqheqcRTQQsny3ZQqe8QpW7olZHVgeXvOo9Dm6CA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tkv6SEyraY4UV8MNTwccxCvIUqVfAhgsFwckGXD43j8v1Ws2WnZ7He1R9fmN4mbQS
-	 kYptldJ4XuGYso+FABmOcsxfiU2S6S7rPLeMN4VkXTdtr4bR6FI0ku4okcPVn9i8a7
-	 CwFymFSHvklF26WL0dQWtbiFGgU42zNFEh3AAtKk=
+	b=dBzWhFXNNqfha0+Y2zXBzQT9sRHhQKvOfZ1byFVbhO5N7cv6NeR+ikffbVwM1xyRn
+	 OeaIPHLau9UQkzJ/nEgR0KSJ59GJLi0Cm0MlicKF2hgUt4IDoHU14fnvRNBrk6gsk9
+	 9VgpQdax5PO5R3i9JzzudFI8NGRN22OvcYHlbBNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389034AbfJJIo5 (ORCPT
+        id S2389050AbfJJIpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50254 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387967AbfJJIot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:44:49 -0400
+        id S2389031AbfJJIo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:44:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE0E521929;
-        Thu, 10 Oct 2019 08:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0C8321A4A;
+        Thu, 10 Oct 2019 08:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697089;
-        bh=9pTsZgJYKzYaJpGRoPCHOlQj6CAvL14Yhn+Sb4cz79E=;
+        s=default; t=1570697097;
+        bh=xwdNqheqcRTQQsny3ZQqe8QpW7olZHVgeXvOo9Dm6CA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fG8GX85lPMbWkNYGN41gqH7mJYywsF/vm4rSJENVoj2NXmkE740/rxgNLXTVJ4j04
-         enJYS+61kWttx3iAHPdHprA/ZWtvjed5+m3SXdD/VintUP/X8J6xIYCVXmlRqyij8a
-         QGJKrWNCVUnE6grSkx0Sul3Gij5l9Ibw4AUSuuDQ=
+        b=EUzXHc8cG51g2Cr3DDqfghmjemtUJTlGtEF+oBpY2vHZ8WpRsZQ7uJOlATD96fSCF
+         xRDfbLnVgFRTUu2pVnF9CG5KBQjt+1By5FLDTHE6S+2QOlByfITn89ajhMISUA7Dg6
+         LUwOBA1DF2ZoIFzey1iG6MRkS4Uph491TXGThd94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 015/114] powerpc/mce: Schedule work from irq_work
-Date:   Thu, 10 Oct 2019 10:35:22 +0200
-Message-Id: <20191010083551.274985599@linuxfoundation.org>
+Subject: [PATCH 4.19 018/114] powerpc/book3s64/mm: Dont do tlbie fixup for some hardware revisions
+Date:   Thu, 10 Oct 2019 10:35:25 +0200
+Message-Id: <20191010083552.455982468@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -63,67 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Santosh Sivaraj <santosh@fossix.org>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit b5bda6263cad9a927e1a4edb7493d542da0c1410 upstream.
+commit 677733e296b5c7a37c47da391fc70a43dc40bd67 upstream.
 
-schedule_work() cannot be called from MCE exception context as MCE can
-interrupt even in interrupt disabled context.
+The store ordering vs tlbie issue mentioned in commit
+a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on
+POWER9") is fixed for Nimbus 2.3 and Cumulus 1.3 revisions. We don't
+need to apply the fixup if we are running on them
 
-Fixes: 733e4a4c4467 ("powerpc/mce: hookup memory_failure for UE errors")
-Cc: stable@vger.kernel.org # v4.15+
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+We can only do this on PowerNV. On pseries guest with KVM we still
+don't support redoing the feature fixup after migration. So we should
+be enabling all the workarounds needed, because whe can possibly
+migrate between DD 2.3 and DD 2.2
+
+Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190820081352.8641-2-santosh@fossix.org
+Link: https://lore.kernel.org/r/20190924035254.24612-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/mce.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/dt_cpu_ftrs.c |   30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kernel/mce.c
-+++ b/arch/powerpc/kernel/mce.c
-@@ -45,6 +45,7 @@ static DEFINE_PER_CPU(struct machine_che
- 					mce_ue_event_queue);
- 
- static void machine_check_process_queued_event(struct irq_work *work);
-+static void machine_check_ue_irq_work(struct irq_work *work);
- void machine_check_ue_event(struct machine_check_event *evt);
- static void machine_process_ue_event(struct work_struct *work);
- 
-@@ -52,6 +53,10 @@ static struct irq_work mce_event_process
-         .func = machine_check_process_queued_event,
- };
- 
-+static struct irq_work mce_ue_event_irq_work = {
-+	.func = machine_check_ue_irq_work,
-+};
-+
- DECLARE_WORK(mce_ue_event_work, machine_process_ue_event);
- 
- static void mce_set_error_info(struct machine_check_event *mce,
-@@ -208,6 +213,10 @@ void release_mce_event(void)
- 	get_mce_event(NULL, true);
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -694,9 +694,35 @@ static bool __init cpufeatures_process_f
+ 	return true;
  }
  
-+static void machine_check_ue_irq_work(struct irq_work *work)
++/*
++ * Handle POWER9 broadcast tlbie invalidation issue using
++ * cpu feature flag.
++ */
++static __init void update_tlbie_feature_flag(unsigned long pvr)
 +{
-+	schedule_work(&mce_ue_event_work);
++	if (PVR_VER(pvr) == PVR_POWER9) {
++		/*
++		 * Set the tlbie feature flag for anything below
++		 * Nimbus DD 2.3 and Cumulus DD 1.3
++		 */
++		if ((pvr & 0xe000) == 0) {
++			/* Nimbus */
++			if ((pvr & 0xfff) < 0x203)
++				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++		} else if ((pvr & 0xc000) == 0) {
++			/* Cumulus */
++			if ((pvr & 0xfff) < 0x103)
++				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++		} else {
++			WARN_ONCE(1, "Unknown PVR");
++			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++		}
++	}
 +}
++
+ static __init void cpufeatures_cpu_quirks(void)
+ {
+-	int version = mfspr(SPRN_PVR);
++	unsigned long version = mfspr(SPRN_PVR);
  
- /*
-  * Queue up the MCE event which then can be handled later.
-@@ -225,7 +234,7 @@ void machine_check_ue_event(struct machi
- 	memcpy(this_cpu_ptr(&mce_ue_event_queue[index]), evt, sizeof(*evt));
+ 	/*
+ 	 * Not all quirks can be derived from the cpufeatures device tree.
+@@ -715,10 +741,10 @@ static __init void cpufeatures_cpu_quirk
  
- 	/* Queue work to process this event later. */
--	schedule_work(&mce_ue_event_work);
-+	irq_work_queue(&mce_ue_event_irq_work);
- }
+ 	if ((version & 0xffff0000) == 0x004e0000) {
+ 		cur_cpu_spec->cpu_features &= ~(CPU_FTR_DAWR);
+-		cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
+ 		cur_cpu_spec->cpu_features |= CPU_FTR_P9_TIDR;
+ 	}
  
- /*
++	update_tlbie_feature_flag(version);
+ 	/*
+ 	 * PKEY was not in the initial base or feature node
+ 	 * specification, but it should become optional in the next
 
 
