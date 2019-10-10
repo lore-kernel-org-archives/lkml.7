@@ -4,165 +4,188 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1B9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F67FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B913208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6849E214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfJJUss (ORCPT
+        id S1727450AbfJJUtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:48:48 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:52543 "EHLO
+        Thu, 10 Oct 2019 16:49:18 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:49133 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJUsr (ORCPT
+        with ESMTP id S1726643AbfJJUtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:48:47 -0400
+        Thu, 10 Oct 2019 16:49:17 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MTfgb-1ifaUZ33Ur-00U5u3; Thu, 10 Oct 2019 22:48:34 +0200
+ 1MmQUL-1hrtCu1NLt-00iTUZ; Thu, 10 Oct 2019 22:49:09 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>
 Cc:     linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 24/36] ARM: s3c: include mach/irqs.h where needed
-Date:   Thu, 10 Oct 2019 22:30:08 +0200
-Message-Id: <20191010203043.1241612-24-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: [PATCH 25/36] ARM: s3c: spi: avoid hardcoding fiq number in driver
+Date:   Thu, 10 Oct 2019 22:30:09 +0200
+Message-Id: <20191010203043.1241612-25-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
 References: <20191010202802.1132272-1-arnd@arndb.de>
  <20191010203043.1241612-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mxR2atMIkFLn1IgJFwrmFpipyrqnk7641DccCJyjICtC4J7j5YR
- 9EAWFeoHeBXLUfhhhmvgttKCxljJ1ys2sQ/cCilSl03dwLrvgwxuIv3Tn5d3RVHQ5nPsfWT
- 7MJ/qMgYYvU+7VhT2As0ZvQBR/EoIkJP7+4lawhMfXBrDNlqi0LMDyfzWD/m/sekrGpwW1j
- QfuwcSrnJpeH014Y8jFAg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Z61gxMjaFVs=:Ih3uXFePxNcmJWJvunNRK+
- a42+5Emq9WsBlyCKcwMEIv11ikzptUKw4hOu5fy2eKjYFbAMpbi4fwf6xj09eu0vA1btJainS
- SrYfAPCG8WEWT4Wc570ENO4HD90TYXP/N8QxnGBxz6W6I/3kOdqUVwYILzPGXlwi2gSPiXAwV
- k2ADuuG+gihtNHztSjDrL9LCviLd6gB4chSZnOni7uRd2tWNyZQy3zQhvw8zojzli/i8Aj2j5
- 8Eieqryg2oXn7d8Xns1DXcz4sJgJbyuYLhZL1Nhc1FDjMfXu7KDnilQbM48YpvFCO1O7IXzfb
- V9GjsePa4oXqxrpaDq3Kh72WUsDtVR5s7f+GcTcp22zvoAIBHHWOSRZmw2GWNe/YHJXr+9MVu
- 8p8GGywKQuNDCz/buIFiRvuA/O4KETGSPsqLyk7YGzQ2SxAK6R3ZHu+/C+9HdryTJyhhr0Sjx
- k0M4NgTxZpqGOCbbANBGbUAVMQi8yrx4IpEuJuEL3c1obC28/BGwZrtsp9whpxkKLtdi/KyTH
- wHj4x1g87s43AAzEJouRQuoTO8LFspykPuz87PQPVDcnNtpb3hhj3Ecrc+qnQAMrSiqeDrwVH
- zV/a2TvN4zP7bgKoDR3EqUB2Wosl3m9UjLPae3ZYIrs46V5OpriIBCJuMxqEjMxbJHlKnXZJ+
- IPBGoMZV+HOdQOUynXx0ZQLP9SWlay5GKFPOSz16SLrdt64gN101rs3euTyDiTi8DpI8oOqz6
- DkUkqPGIQ1OJXO9sAEkGJXoTXfB1JfUInfzMTqslQDEBT5Wgc10njpsCMGC1qFq82YJCQOWDE
- 3gSrhRFy2QnjnhvQJGRn21flQXQ/+1RlVYKo/F5OEW5TnLJCFZSaAulG/4aQbA1OvGfEwQ39P
- hP1/CjFjJ20Fe7d9iNkA==
+X-Provags-ID: V03:K1:s0CwvLUh0Zt1aNpPMIdJtPmyIE+SbFYN5oqxY6XwHzTwnI47DgP
+ uoljIHRqhWICxbKhJ3Dy+1+bu0FYJTFGu/+ZCpSR80FWv7/E3LWo79CZLild1X6EkhmA2po
+ VHPUq5C+3BzgWtzLxHk1KNXpvPBXxxQSkABs9SWef4/Ls/Dg/a91FmPdRUfuWv8a9TUza+7
+ KgM+bsyOeLgUpJTP6GE8A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4CkTuF8oOdw=:85gFcnpN2VJXr2f5InQsnA
+ VNxi7IexHlaXQVNxbACwbr9wFnDR6vQVm3FLC+fZpbvKHddPWYm2A0MZAT5wySowUafjGqErL
+ yiFIeJ18+6C1jX17EwyZEtw5rlPx2zCulYdiPdk5s0UB3FDo6X/8CWGKHNVS6jDKyUlJKA4aJ
+ GyB5XHhh8sJyCaFqljrEsvf8AMUc2pzjElCVAJJ2wGfTZotQUDxlMRkgCSxX98eIZANU1584E
+ aKwfTGZvXJeYIp2ozFvJL72lvXHzY00Ul4MKHhOtYwt8KrK29KH+5Dy0qMp9b5yWABORy7LXW
+ cgs0Q9CciwS7bxa5GhfrGgcwU3S1pl8WcbKW0I0fqqAFV4CxEtmdo+JEi2EzIBigVhzCXXWab
+ vM8asAqtDMhZqmORz64vPD+KM0hFATjmGNXUyJAI1eTFKT1Hw7ffngX02fJynbAIV+iaPJAwk
+ uPRFvSKqblOKGGJ9iA3kal/NiO9euAnsL2eZ/HyW8fmeUYxTxn8jpkLrPz+T85y+vs9J8gY5C
+ u5ojweam7qNeSsictVCH2zACJhdUQnBK6fWNhmlFgFrLfP23sw1gW8FLuN7slUmBKSSRWDHDY
+ U2EEP0CZPm/uFoKDvOPjrrYNTrkDcKsR4EBBVQsnU9k4Vaz0dIaraWvvmDvY+dg5aMbCd8lhX
+ WlcTBOnrKQ23759pdqLM9JV+QSXmJBoO8Tan67RQxsdF92HFR5E+Ku3MRBEOZkH3XkwlJIuaD
+ zpHBLMdH9+Hh0Odt+wc1DFCtI4FXeJtAN89h/YNMOwoIvUYWfsKduh8fzVTzg0wjwgMUbjhwp
+ z6vRFs5gDeJtNrKFqprqpQE5tPD1IPLe69c81tQu7OWntE78TNoJT4JpPgoz7HuHZYQ0KBKv2
+ Af15ynf6YXKickTItCFQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Preparing for a later conversion to sparse IRQs, this ensures that
-the mach/irqs.h header is still visible in files that reference
-an IRQ number.
+The IRQ_EINT0 constant is a platform detail that is
+defined in mach/irqs.h and not visible to drivers once
+that header is made private.
+
+Since the same calculation already happens in s3c24xx_set_fiq,
+just return the value from there.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mach-s3c24xx/bast-ide.c    | 1 +
- arch/arm/mach-s3c24xx/bast-irq.c    | 1 +
- arch/arm/mach-s3c24xx/common.h      | 1 +
- arch/arm/mach-s3c24xx/irq-s3c24xx.c | 1 +
- arch/arm/mach-s3c24xx/pm-s3c2412.c  | 2 ++
- arch/arm/mach-s3c24xx/s3c2443.c     | 1 +
- arch/arm/mach-s3c24xx/simtec-usb.c  | 1 +
- 7 files changed, 8 insertions(+)
+ arch/arm/mach-s3c24xx/irq-s3c24xx.c | 12 +++++++++---
+ drivers/spi/spi-s3c24xx.c           | 18 ++----------------
+ include/linux/spi/s3c24xx.h         |  2 +-
+ 3 files changed, 12 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm/mach-s3c24xx/bast-ide.c b/arch/arm/mach-s3c24xx/bast-ide.c
-index 067944398f46..ee6fbb407640 100644
---- a/arch/arm/mach-s3c24xx/bast-ide.c
-+++ b/arch/arm/mach-s3c24xx/bast-ide.c
-@@ -20,6 +20,7 @@
- #include <asm/mach/irq.h>
- 
- #include <mach/map.h>
-+#include <mach/irqs.h>
- 
- #include "bast.h"
- 
-diff --git a/arch/arm/mach-s3c24xx/bast-irq.c b/arch/arm/mach-s3c24xx/bast-irq.c
-index 03728058d58d..4cec084ae443 100644
---- a/arch/arm/mach-s3c24xx/bast-irq.c
-+++ b/arch/arm/mach-s3c24xx/bast-irq.c
-@@ -17,6 +17,7 @@
- 
- #include <mach/hardware.h>
- #include <mach/regs-irq.h>
-+#include <mach/irqs.h>
- 
- #include "bast.h"
- 
-diff --git a/arch/arm/mach-s3c24xx/common.h b/arch/arm/mach-s3c24xx/common.h
-index d087b20e8857..97eb72f1d8bf 100644
---- a/arch/arm/mach-s3c24xx/common.h
-+++ b/arch/arm/mach-s3c24xx/common.h
-@@ -10,6 +10,7 @@
- #define __ARCH_ARM_MACH_S3C24XX_COMMON_H __FILE__
- 
- #include <linux/reboot.h>
-+#include <mach/irqs.h>
- 
- struct s3c2410_uartcfg;
- 
 diff --git a/arch/arm/mach-s3c24xx/irq-s3c24xx.c b/arch/arm/mach-s3c24xx/irq-s3c24xx.c
-index d2031fecc386..b0e879ee14c1 100644
+index b0e879ee14c1..3965347cacf0 100644
 --- a/arch/arm/mach-s3c24xx/irq-s3c24xx.c
 +++ b/arch/arm/mach-s3c24xx/irq-s3c24xx.c
-@@ -25,6 +25,7 @@
- #include <asm/exception.h>
- #include <asm/mach/irq.h>
+@@ -376,14 +376,17 @@ asmlinkage void __exception_irq_entry s3c24xx_handle_irq(struct pt_regs *regs)
+ /**
+  * s3c24xx_set_fiq - set the FIQ routing
+  * @irq: IRQ number to route to FIQ on processor.
++ * @ack_ptr: pointer to a location for storing the bit mask
+  * @on: Whether to route @irq to the FIQ, or to remove the FIQ routing.
+  *
+  * Change the state of the IRQ to FIQ routing depending on @irq and @on. If
+  * @on is true, the @irq is checked to see if it can be routed and the
+  * interrupt controller updated to route the IRQ. If @on is false, the FIQ
+  * routing is cleared, regardless of which @irq is specified.
++ *
++ * returns the mask value for the register.
+  */
+-int s3c24xx_set_fiq(unsigned int irq, bool on)
++int s3c24xx_set_fiq(unsigned int irq, u32 *ack_ptr, bool on)
+ {
+ 	u32 intmod;
+ 	unsigned offs;
+@@ -391,15 +394,18 @@ int s3c24xx_set_fiq(unsigned int irq, bool on)
+ 	if (on) {
+ 		offs = irq - FIQ_START;
+ 		if (offs > 31)
+-			return -EINVAL;
++			return 0;
  
-+#include <mach/irqs.h>
- #include <mach/regs-irq.h>
- #include <mach/regs-gpio.h>
+ 		intmod = 1 << offs;
+ 	} else {
+ 		intmod = 0;
+ 	}
  
-diff --git a/arch/arm/mach-s3c24xx/pm-s3c2412.c b/arch/arm/mach-s3c24xx/pm-s3c2412.c
-index 2dfdaab0aa1f..1ad9c61f9253 100644
---- a/arch/arm/mach-s3c24xx/pm-s3c2412.c
-+++ b/arch/arm/mach-s3c24xx/pm-s3c2412.c
-@@ -20,6 +20,8 @@
- #include <asm/irq.h>
- 
- #include <mach/hardware.h>
-+#include <mach/irqs.h>
++	if (ack_ptr)
++		*ack_ptr = intmod;
+ 	writel_relaxed(intmod, S3C2410_INTMOD);
+-	return 0;
 +
- #include <mach/regs-gpio.h>
++	return intmod;
+ }
  
- #include <plat/cpu.h>
-diff --git a/arch/arm/mach-s3c24xx/s3c2443.c b/arch/arm/mach-s3c24xx/s3c2443.c
-index 313e369c3ddd..f404ecac4baf 100644
---- a/arch/arm/mach-s3c24xx/s3c2443.c
-+++ b/arch/arm/mach-s3c24xx/s3c2443.c
-@@ -25,6 +25,7 @@
+ EXPORT_SYMBOL_GPL(s3c24xx_set_fiq);
+diff --git a/drivers/spi/spi-s3c24xx.c b/drivers/spi/spi-s3c24xx.c
+index 464146fc8420..58025876a081 100644
+--- a/drivers/spi/spi-s3c24xx.c
++++ b/drivers/spi/spi-s3c24xx.c
+@@ -229,17 +229,6 @@ struct spi_fiq_code {
+ 	u8	data[0];
+ };
  
- #include <mach/hardware.h>
- #include <mach/gpio-samsung.h>
-+#include <mach/irqs.h>
- #include <asm/irq.h>
- #include <asm/system_misc.h>
+-/**
+- * ack_bit - turn IRQ into IRQ acknowledgement bit
+- * @irq: The interrupt number
+- *
+- * Returns the bit to write to the interrupt acknowledge register.
+- */
+-static inline u32 ack_bit(unsigned int irq)
+-{
+-	return 1 << (irq - IRQ_EINT0);
+-}
+-
+ /**
+  * s3c24xx_spi_tryfiq - attempt to claim and setup FIQ for transfer
+  * @hw: The hardware state.
+@@ -256,6 +245,7 @@ static void s3c24xx_spi_tryfiq(struct s3c24xx_spi *hw)
+ 	struct pt_regs regs;
+ 	enum spi_fiq_mode mode;
+ 	struct spi_fiq_code *code;
++	u32 *ack_ptr = NULL;
+ 	int ret;
  
-diff --git a/arch/arm/mach-s3c24xx/simtec-usb.c b/arch/arm/mach-s3c24xx/simtec-usb.c
-index dc1016ffed94..b15e0c49fa11 100644
---- a/arch/arm/mach-s3c24xx/simtec-usb.c
-+++ b/arch/arm/mach-s3c24xx/simtec-usb.c
-@@ -25,6 +25,7 @@
+ 	if (!hw->fiq_claimed) {
+@@ -282,8 +272,6 @@ static void s3c24xx_spi_tryfiq(struct s3c24xx_spi *hw)
+ 	set_fiq_regs(&regs);
  
- #include <mach/hardware.h>
- #include <mach/gpio-samsung.h>
-+#include <mach/irqs.h>
- #include <asm/irq.h>
+ 	if (hw->fiq_mode != mode) {
+-		u32 *ack_ptr;
+-
+ 		hw->fiq_mode = mode;
  
- #include <linux/platform_data/usb-ohci-s3c2410.h>
+ 		switch (mode) {
+@@ -303,12 +291,10 @@ static void s3c24xx_spi_tryfiq(struct s3c24xx_spi *hw)
+ 		BUG_ON(!code);
+ 
+ 		ack_ptr = (u32 *)&code->data[code->ack_offset];
+-		*ack_ptr = ack_bit(hw->irq);
+-
+ 		set_fiq_handler(&code->data, code->length);
+ 	}
+ 
+-	s3c24xx_set_fiq(hw->irq, true);
++	s3c24xx_set_fiq(hw->irq, ack_ptr, true);
+ 
+ 	hw->fiq_mode = mode;
+ 	hw->fiq_inuse = 1;
+diff --git a/include/linux/spi/s3c24xx.h b/include/linux/spi/s3c24xx.h
+index c91d10b82f08..440a71593162 100644
+--- a/include/linux/spi/s3c24xx.h
++++ b/include/linux/spi/s3c24xx.h
+@@ -20,6 +20,6 @@ struct s3c2410_spi_info {
+ 	void (*set_cs)(struct s3c2410_spi_info *spi, int cs, int pol);
+ };
+ 
+-extern int s3c24xx_set_fiq(unsigned int irq, bool on);
++extern int s3c24xx_set_fiq(unsigned int irq, u32 *ack_ptr, bool on);
+ 
+ #endif /* __LINUX_SPI_S3C24XX_H */
 -- 
 2.20.0
 
