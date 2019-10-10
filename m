@@ -2,180 +2,198 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B2BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56B8C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF649206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98ACE206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9a96MVj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SH+HoBZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfJJUGC (ORCPT
+        id S1726479AbfJJUJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:06:02 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41804 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJUGB (ORCPT
+        Thu, 10 Oct 2019 16:09:21 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45998 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJUJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:06:01 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t3so4341182pga.8;
-        Thu, 10 Oct 2019 13:05:59 -0700 (PDT)
+        Thu, 10 Oct 2019 16:09:20 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r134so5337316lff.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 13:09:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=br9hyO7JC3RSUTqbjhJbUfqMlwXApKkFxnX4w1MXGCQ=;
-        b=K9a96MVjtsfhN/5/PSh9815fkbwuUhBF24bQLz9szxD5g2p0w0NZhm4HWjamqOYwjG
-         S9G4M5z//7QfhaRRsGVziP09/yTLaJUvOCFQWmsL/ysexyuFlAmtBWUixfs881Qxt0Q1
-         Bbt298OQ6nXnT46qo4Fg80lz/PO8ifbkdzit6mDcUieNTREzg5tsMzXU+hXZIMWaXQSa
-         Wb7chnXQ0jJxReJ+tIkeqGMJZnZuL/6YIc8+pAx5r9hNBZuagzZ0RmP+wNCjonLBAeBX
-         HdVghMcgctQST0rW3EPM+h/bSC4XN50OTEiKH56QdJMjf9aRxORy4DYFpuyxptAXAncv
-         90Bw==
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=30hz3u6HKVQsiTqmh/RFo8C++yvFx01bv6SBJxIy2V8=;
+        b=SH+HoBZRgBKYncT5ELFt9CejheKjs+0Ekv4JGeAw5r6KbOR5CB5WsrhKvxcb+JBSFX
+         wLduQNQTvNPiFvzQ9cmhENZaegY9EvdapgVvRmcCHI/dHFAIvs8n4rad8UIARmpVzARm
+         7Gk3udm9WhelqGOhjiEA/4N6fJwMVdkz8Y3RinmWx6E3ohR6v6ENlcVV9NgIiBfMg08q
+         o+bbwChuzjoFyLcO0aPRXNykVBqohh+qhnkVD4lmewA00dJ1lLcngLsyqJON33nzg9Ll
+         iJunuE0/pJ3V6NGDnZATvkDOUwA+rvt5dz7pNDWIYQ+TBRftcEPqExkOZbiV6Uu7XF0n
+         Mayw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=br9hyO7JC3RSUTqbjhJbUfqMlwXApKkFxnX4w1MXGCQ=;
-        b=VwVPW6tLAaLXVm42myl1vsbY01RwVSqxCb0RanKAVV59D3DYgbYLokATpwHaJ3PMcy
-         7kMC1zbRkAOP3O68ZYdA3Mmj2BGsp++55KnsPO5S53/4aBdLxHsFuyvC/PjN0r1tvj05
-         Q3ayUT9tPI5NIuv6dgVA8srdSGagBNx5ouWviFbxu5HDkDDkdvtnoA2jipdDadiZPJOS
-         w1AiIytZm48ZmLdOYNIV06WkIZLiad/LHMFTZYlbrCDFnNh1sFnEkdRH++cx+0VGmPcF
-         sB3DiHkeFr7HI1VVhWrNHhZZk5vgmLMkV9t0J/W5Sr2uCGoUbEv3gt8/J/yZpA+6CnSu
-         lDhA==
-X-Gm-Message-State: APjAAAVibnGO6VPG3TX5DCET7R3OUzsuzTYfWweT4f3PZyY+J0zZGnk6
-        sMfe4D6vWNcmNNOlA1FkD2o=
-X-Google-Smtp-Source: APXvYqyVU1Vm9EDwG+OZHYYBBR6Tbgz+4AtT9Ka2aCz7uhvoY1VbvLnRYoYtNmBwnQX5YGVYv59rYA==
-X-Received: by 2002:a63:4e10:: with SMTP id c16mr12745671pgb.136.1570737959330;
-        Thu, 10 Oct 2019 13:05:59 -0700 (PDT)
-Received: from ?IPv6:2601:641:c100:83a0:7d35:e452:d420:a5d1? ([2601:641:c100:83a0:7d35:e452:d420:a5d1])
-        by smtp.gmail.com with ESMTPSA id i74sm7230784pfe.28.2019.10.10.13.05.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 13:05:57 -0700 (PDT)
-Subject: Re: [PATCH 0/3] eldie generated code for folded p4d/pud
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Nick Piggin <npiggin@gmail.com>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-snps-arc@lists.infradead.org, Will Deacon <will@kernel.org>
-References: <20191009222658.961-1-vgupta@synopsys.com>
- <20191010085609.xgwkrbzea253wmfg@black.fi.intel.com>
-From:   Vineet Gupta <vineetg76@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vineetg76@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- deE0Dvw98SWmZSNtdOPnJZ0D
-Message-ID: <8ba067a6-8b6a-2414-0f04-b251cd6bb47c@gmail.com>
-Date:   Thu, 10 Oct 2019 13:05:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191010085609.xgwkrbzea253wmfg@black.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=30hz3u6HKVQsiTqmh/RFo8C++yvFx01bv6SBJxIy2V8=;
+        b=qR+qKrKzNoJHOM9oDQrHBFMu4HfD9bMMZTrMAZTcs5yhnhG7qWwdrTCGCxwKgreqbd
+         7XoKAZr1d96gtDKSPKcubEswL7oQAQYzZnobn29EWFyCgcQ1lAzJWa/o023mGnR+Gkz8
+         0xGwD55vMNR5PCGKkqOAhSTEQDgqh0YAcm10gzky9SnEq7jG3DxpKmgvUq63SKp/zZfS
+         L4V5SGeo8uA8HZFR2LjMXa/ADQwo4mhyeFsjyCHnEpweRkvzAWzc2w6JlU7aEJbKYKie
+         CK1fFbk8B+pxeFoEjpWh/Pudrs+MexDnLXJCrXGUL6iq8yZGVixeXEkZtTJ19aqSLeGg
+         u9XQ==
+X-Gm-Message-State: APjAAAWse5awmT0D+tpLKvmuXnQ2v5RG6D4H0nn53Wa8xGyrOKH2DGqM
+        orXo5MK+uqes0FssWFyC3zk=
+X-Google-Smtp-Source: APXvYqyi5UGtrwouzNPae0v9xOAN80h6C1gzyxknZjfPCdeHHIFdBqki6pp7lhHiVirvOhINpJdMtA==
+X-Received: by 2002:ac2:5924:: with SMTP id v4mr6919119lfi.29.1570738157797;
+        Thu, 10 Oct 2019 13:09:17 -0700 (PDT)
+Received: from vitaly-Dell-System-XPS-L322X (c188-150-241-161.bredband.comhem.se. [188.150.241.161])
+        by smtp.gmail.com with ESMTPSA id i6sm1501422lfo.83.2019.10.10.13.09.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 13:09:16 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 23:09:15 +0300
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Minchan Kim <minchan@kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Shakeel Butt <shakeelb@google.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Theodore Ts'o <tytso@thunk.org>
+Subject: [PATCH 1/3] zpool: extend API to match zsmalloc
+Message-Id: <20191010230915.f68401e9c9e0fa053dcbe199@gmail.com>
+In-Reply-To: <20191010230414.647c29f34665ca26103879c4@gmail.com>
+References: <20191010230414.647c29f34665ca26103879c4@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch adds the following functions to the zpool API:
+- zpool_compact()
+- zpool_get_num_compacted()
+- zpool_huge_class_size()
 
-Hi Kirill,
+The first one triggers compaction for the underlying allocator, the
+second retrieves the number of pages migrated due to compaction for
+the whole time of this pool's existence and the third one returns
+the huge class size.
 
-On 10/10/19 1:56 AM, Kirill A. Shutemov wrote:
-> On Wed, Oct 09, 2019 at 10:26:55PM +0000, Vineet Gupta wrote:
->>
->> This series elides extraneous generate code for folded p4d/pud.
->> This came up when trying to remove __ARCH_USE_5LEVEL_HACK from ARC port.
->> The code saving are not a while lot, but still worthwhile IMHO.
-> 
-> Agreed.
+This API extension is done to align zpool API with zsmalloc API.
 
-Thx.
+Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
+---
+ include/linux/zpool.h | 14 +++++++++++++-
+ mm/zpool.c            | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 1 deletion(-)
 
-So given we are folding pmd too, it seemed we could do the following as well.
-
-+#ifndef __PAGETABLE_PMD_FOLDED
- void pmd_clear_bad(pmd_t *);
-+#else
-+#define pmd_clear_bad(pmd)        do { } while (0)
-+#endif
-
-+#ifndef __PAGETABLE_PMD_FOLDED
- void pmd_clear_bad(pmd_t *pmd)
- {
-        pmd_ERROR(*pmd);
-        pmd_clear(pmd);
+diff --git a/include/linux/zpool.h b/include/linux/zpool.h
+index 51bf43076165..31f0c1360569 100644
+--- a/include/linux/zpool.h
++++ b/include/linux/zpool.h
+@@ -61,8 +61,13 @@ void *zpool_map_handle(struct zpool *pool, unsigned long handle,
+ 
+ void zpool_unmap_handle(struct zpool *pool, unsigned long handle);
+ 
++unsigned long zpool_compact(struct zpool *pool);
++
++unsigned long zpool_get_num_compacted(struct zpool *pool);
++
+ u64 zpool_get_total_size(struct zpool *pool);
+ 
++size_t zpool_huge_class_size(struct zpool *zpool);
+ 
+ /**
+  * struct zpool_driver - driver implementation for zpool
+@@ -75,7 +80,10 @@ u64 zpool_get_total_size(struct zpool *pool);
+  * @shrink:	shrink the pool.
+  * @map:	map a handle.
+  * @unmap:	unmap a handle.
+- * @total_size:	get total size of a pool.
++ * @compact:	try to run compaction over a pool
++ * @get_num_compacted:	get amount of compacted pages for a pool
++ * @total_size:	get total size of a pool
++ * @huge_class_size: huge class threshold for pool pages.
+  *
+  * This is created by a zpool implementation and registered
+  * with zpool.
+@@ -104,7 +112,11 @@ struct zpool_driver {
+ 				enum zpool_mapmode mm);
+ 	void (*unmap)(void *pool, unsigned long handle);
+ 
++	unsigned long (*compact)(void *pool);
++	unsigned long (*get_num_compacted)(void *pool);
++
+ 	u64 (*total_size)(void *pool);
++	size_t (*huge_class_size)(void *pool);
+ };
+ 
+ void zpool_register_driver(struct zpool_driver *driver);
+diff --git a/mm/zpool.c b/mm/zpool.c
+index 863669212070..55e69213c2eb 100644
+--- a/mm/zpool.c
++++ b/mm/zpool.c
+@@ -362,6 +362,30 @@ void zpool_unmap_handle(struct zpool *zpool, unsigned long handle)
+ 	zpool->driver->unmap(zpool->pool, handle);
  }
-+#endif
-
-I stared at generated code and it seems a bit wrong.
-free_pgd_range() -> pgd_none_or_clear_bad() is no longer checking for unmapped pgd
-entries as pgd_none/pgd_bad are all stubs returning 0.
-
-This whole pmd folding is a bit confusing considering I only revisit it every few
-years :-) Abstraction wise, __PAGETABLE_PMD_FOLDED only has pgd, pte but even in
-this regime bunch of pmd macros are still valid
-
-    pmd_set(pmdp, ptep) {
-        *pmdp.pud.p4d.pgd = (unsigned long)ptep
-    }
-
-Is there a better way to make a mental model of this code folding.
-
-In an ideal world pmd folded would have meant pmd_* routines just vanish - poof.
-So in that sense I like your implementation under #[45]LEVEL_HACK where the level
-simply vanishes by code like #define p4d_t pgd_t. Perhaps there is lot of historic
-baggage, proliferated into arch code so hard to untangle.
-
-Thx,
--Vineet
+ 
++ /**
++ * zpool_compact() - try to run compaction over zpool
++ * @pool       The zpool to compact
++ *
++ * Returns: the number of migrated pages
++ */
++unsigned long zpool_compact(struct zpool *zpool)
++{
++	return zpool->driver->compact ? zpool->driver->compact(zpool->pool) : 0;
++}
++
++
++/**
++ * zpool_get_num_compacted() - get the number of migrated/compacted pages
++ * @pool       The zpool to get compaction statistic for
++ *
++ * Returns: the total number of migrated pages for the pool
++ */
++unsigned long zpool_get_num_compacted(struct zpool *zpool)
++{
++	return zpool->driver->get_num_compacted ?
++		zpool->driver->get_num_compacted(zpool->pool) : 0;
++}
++
+ /**
+  * zpool_get_total_size() - The total size of the pool
+  * @zpool:	The zpool to check
+@@ -375,6 +399,18 @@ u64 zpool_get_total_size(struct zpool *zpool)
+ 	return zpool->driver->total_size(zpool->pool);
+ }
+ 
++/**
++ * zpool_huge_class_size() - get size for the "huge" class
++ * @pool	The zpool to check
++ *
++ * Returns: size of the huge class
++ */
++size_t zpool_huge_class_size(struct zpool *zpool)
++{
++	return zpool->driver->huge_class_size ?
++		zpool->driver->huge_class_size(zpool->pool) : 0;
++}
++
+ /**
+  * zpool_evictable() - Test if zpool is potentially evictable
+  * @zpool:	The zpool to test
+-- 
+2.20.1
