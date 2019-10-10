@@ -2,57 +2,54 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561DAC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ADDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6E8208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD9B21D71
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697457;
-	bh=ltpmpVIfpVjSRY1nFe8HZMAvP9cNBcb938J+Gx1/Yr0=;
+	s=default; t=1570697459;
+	bh=gT/n4oqc6OGEqUUO2qysr1qAGttbCYzxG2DAiUEliRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sK7YeW1fkLDHGb1JrkoHIjB1dMRxSqiIARnEutmBXPallRMONOTZUTD7vFtK5aZ5H
-	 ZgmVz2n/o+w1yQEIp0ozwk465iZ/Y8zEQubOIuKheL/2+q0xniiIcytUoJh/s/o/Hp
-	 Z2mT9cnejncnd5U4J8jJiS4RCEss8GV1Z0BYgMqE=
+	b=mZRl2Q9Os4KLL4lINZaQmHYHwaBEOmHu+5M3O0yYj1EkRqHDblGaLxHANqV06dGyN
+	 bvD5DfvfsJom6saPeLlbe2AYbB2Xozn4mP5+ZbTxDJsBlaCrDAWOUGlXJedGemSUu1
+	 /F62K8cg+zMyI6iE1MVG/PMrF7xWdxJdFnu1IMts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390040AbfJJIuz (ORCPT
+        id S2390049AbfJJIu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58068 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:50:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390029AbfJJIuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:50 -0400
+        id S2389631AbfJJIuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECE2421929;
-        Thu, 10 Oct 2019 08:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BDF32190F;
+        Thu, 10 Oct 2019 08:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697449;
-        bh=ltpmpVIfpVjSRY1nFe8HZMAvP9cNBcb938J+Gx1/Yr0=;
+        s=default; t=1570697454;
+        bh=gT/n4oqc6OGEqUUO2qysr1qAGttbCYzxG2DAiUEliRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vX92p1J7yuEQP9GK9I1pWdepkhoMDqVkOaYcFrqjP0cA7yZLvz5/orzfQ1+IQwqB9
-         0wdn6ZHJCYBRxLQZ8uIAvxj3geVncRvgGOhDl+luFdQY94HDLA7r/uGxv1PkCjA62c
-         hVAdm67hXUw2OY5APigUENdKU3VCvSoktxHauav0=
+        b=uFt3PLnPUg1jwwTaJExPsgYsxWZBs5sX5SCN5y1PIx4vcJbXwN1zdO/vG9S7IKVCw
+         da+6KIXT7XoDyA5AmwzNQqeXkD7Kj+UbzlONtH4uVb3zWCtawX1E3GjkHfX3RVthVz
+         WS3Q+BRJsIWnh67dxCQa7BeWzPvif6Hz35PhoVlk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, loobinliu@tencent.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Subject: [PATCH 4.14 24/61] Revert "locking/pvqspinlock: Dont wait if vCPU is preempted"
-Date:   Thu, 10 Oct 2019 10:36:49 +0200
-Message-Id: <20191010083504.491883659@linuxfoundation.org>
+        stable@vger.kernel.org, Ryan Chen <ryan_chen@aspeedtech.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 34/61] watchdog: aspeed: Add support for AST2600
+Date:   Thu, 10 Oct 2019 10:36:59 +0200
+Message-Id: <20191010083511.720058544@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -65,65 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Ryan Chen <ryan_chen@aspeedtech.com>
 
-commit 89340d0935c9296c7b8222b6eab30e67cb57ab82 upstream.
+[ Upstream commit b3528b4874480818e38e4da019d655413c233e6a ]
 
-This patch reverts commit 75437bb304b20 (locking/pvqspinlock: Don't
-wait if vCPU is preempted).  A large performance regression was caused
-by this commit.  on over-subscription scenarios.
+The ast2600 can be supported by the same code as the ast2500.
 
-The test was run on a Xeon Skylake box, 2 sockets, 40 cores, 80 threads,
-with three VMs of 80 vCPUs each.  The score of ebizzy -M is reduced from
-13000-14000 records/s to 1700-1800 records/s:
-
-          Host                Guest                score
-
-vanilla w/o kvm optimizations     upstream    1700-1800 records/s
-vanilla w/o kvm optimizations     revert      13000-14000 records/s
-vanilla w/ kvm optimizations      upstream    4500-5000 records/s
-vanilla w/ kvm optimizations      revert      14000-15500 records/s
-
-Exit from aggressive wait-early mechanism can result in premature yield
-and extra scheduling latency.
-
-Actually, only 6% of wait_early events are caused by vcpu_is_preempted()
-being true.  However, when one vCPU voluntarily releases its vCPU, all
-the subsequently waiters in the queue will do the same and the cascading
-effect leads to bad performance.
-
-kvm optimizations:
-[1] commit d73eb57b80b (KVM: Boost vCPUs that are delivering interrupts)
-[2] commit 266e85a5ec9 (KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption)
-
-Tested-by: loobinliu@tencent.com
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: loobinliu@tencent.com
-Cc: stable@vger.kernel.org
-Fixes: 75437bb304b20 (locking/pvqspinlock: Don't wait if vCPU is preempted)
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20190819051738.17370-3-joel@jms.id.au
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/qspinlock_paravirt.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/aspeed_wdt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/kernel/locking/qspinlock_paravirt.h
-+++ b/kernel/locking/qspinlock_paravirt.h
-@@ -247,7 +247,7 @@ pv_wait_early(struct pv_node *prev, int
- 	if ((loop & PV_PREV_CHECK_MASK) != 0)
- 		return false;
+diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+index fd91007b4e41b..cee7334b2a000 100644
+--- a/drivers/watchdog/aspeed_wdt.c
++++ b/drivers/watchdog/aspeed_wdt.c
+@@ -38,6 +38,7 @@ static const struct aspeed_wdt_config ast2500_config = {
+ static const struct of_device_id aspeed_wdt_of_table[] = {
+ 	{ .compatible = "aspeed,ast2400-wdt", .data = &ast2400_config },
+ 	{ .compatible = "aspeed,ast2500-wdt", .data = &ast2500_config },
++	{ .compatible = "aspeed,ast2600-wdt", .data = &ast2500_config },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
+@@ -257,7 +258,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+ 		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
+ 	}
  
--	return READ_ONCE(prev->state) != vcpu_running || vcpu_is_preempted(prev->cpu);
-+	return READ_ONCE(prev->state) != vcpu_running;
- }
+-	if (of_device_is_compatible(np, "aspeed,ast2500-wdt")) {
++	if ((of_device_is_compatible(np, "aspeed,ast2500-wdt")) ||
++		(of_device_is_compatible(np, "aspeed,ast2600-wdt"))) {
+ 		u32 reg = readl(wdt->base + WDT_RESET_WIDTH);
  
- /*
+ 		reg &= config->ext_pulse_width_mask;
+-- 
+2.20.1
+
 
 
