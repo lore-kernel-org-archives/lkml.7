@@ -2,151 +2,252 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE78ECE58C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7827EC47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E46218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9CA20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="m4iCbyyu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l8g4s4ed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731542AbfJJAnz (ORCPT
+        id S1732604AbfJJAoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:43:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35544 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732555AbfJJAnz (ORCPT
+        Wed, 9 Oct 2019 20:44:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50502 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731553AbfJJAoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:43:55 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c3so1903425plo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 17:43:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XTaq5/1iuX7y8HNzbxl3CPoidWluv+Gq3TUzaOzRrgc=;
-        b=m4iCbyyuGcBMekG4jEeTZ+JSwscPAmHNJrKiyykzCU1YYzbgLoypNsggMRiKoIm+nq
-         S94I27UoURdArgHG6X2igS+CAXa4Fex07lm5t/Gak6VIgPLHp4AhbQBSr1I9gD/yScq1
-         sX3jOQ4l8OhZyiYgWGZ3s2KKWz5jWGoWQdUfA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XTaq5/1iuX7y8HNzbxl3CPoidWluv+Gq3TUzaOzRrgc=;
-        b=bzx11+dkbo6NTcdqoLdW2dOQ46jP1Oam/X7cAQENk/kF9bLS0LHzteRrwGKqjCcdMz
-         eC6tiem+9UGujMumbPmdHwNFKyQ/U8ImCuu1KEeja7RoY6ocgZfUTnPEkIB6eZECXKlI
-         btGll4jNq2B4yt7h1UGszK0hocCa9CgOjhfh4Hpf14hFQlPK4iRPtG6zFGUZlZhX8qTD
-         s8Fz7Rkr/s6m3Kj77X5SAfFerEonc421tR1bMgf7wp+XZbonzGQRXDd8IgupntWlMQTN
-         0AxaHuhcosiXA2NPRnosONm7rE54aI4ukvBBLv411dssKsjmi2dcfJ3FacKn6w38xt/s
-         RMkQ==
-X-Gm-Message-State: APjAAAXH9zHDFtmpJdXD5Tr5zqP46wvMdkk0yX/Cu6YdE32jf90Guedr
-        9beVHV4pvrmp9hmfGYDVp1m2eQ==
-X-Google-Smtp-Source: APXvYqwYcwFV08f82JUgcEcWcaOEQCDSgJsWNG9DOwYNRCdMDvFp2biCtXO4IjsvieIMMljYoBvAyQ==
-X-Received: by 2002:a17:902:524:: with SMTP id 33mr6045429plf.123.1570668234782;
-        Wed, 09 Oct 2019 17:43:54 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d76sm3624114pfd.185.2019.10.09.17.43.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 17:43:54 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 20:43:53 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     James Morris <jmorris@namei.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
-Message-ID: <20191010004353.GD96813@google.com>
-References: <20191009203657.6070-1-joel@joelfernandes.org>
- <alpine.LRH.2.21.1910100908260.29840@namei.org>
+        Wed, 9 Oct 2019 20:44:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=50od/B3PK0CJO1ZT1qu05XYWV3Ldcc+kIxtp//OtB+E=; b=l8g4s4edagE05Kh3Sqcy98sH/
+        gqt8BJzo0AvezCil0cCxfu/nx/SPgwTNbirqwkXY8R3Bytw6iwSB/OnGeJ+wqIUm/KRszl5rreync
+        a1pTNC/xuTjMuDTU1PjRRP5L2zheXEFBeTJ222Rm3U4uVaTMTziHaI3cvZkeNekDOMam+0au0EcCp
+        pAwJFZEqGuZlrFqxUSVPJ9eD3Zqtsh4qAsIe6tyYul6B8holW4Q+Y4xEGStBngYYpw3SsQnKYpACI
+        PpHpLMRnvH530lUGesEr3FJg5n45i/MHelHXF3oTJtvD0yPbhkLZziAkkA2SVcNwRYAEi0wj29cFX
+        i1TviFx+Q==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iIMYG-0002Wz-Q9; Thu, 10 Oct 2019 00:43:32 +0000
+Subject: Re: [PATCH v3 1/3] x86/boot: Introduce the kernel_info
+To:     Daniel Kiper <daniel.kiper@oracle.com>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
+        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
+        hpa@zytor.com, jgross@suse.com, konrad.wilk@oracle.com,
+        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
+References: <20191009105358.32256-1-daniel.kiper@oracle.com>
+ <20191009105358.32256-2-daniel.kiper@oracle.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <181249b6-5833-6f29-7d38-6dacc3f8ee62@infradead.org>
+Date:   Wed, 9 Oct 2019 17:43:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.1910100908260.29840@namei.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191009105358.32256-2-daniel.kiper@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 09:11:39AM +1100, James Morris wrote:
-> On Wed, 9 Oct 2019, Joel Fernandes (Google) wrote:
+Hi,
+
+Questions and comments below...
+Thanks.
+
+
+On 10/9/19 3:53 AM, Daniel Kiper wrote:
+
+> Suggested-by: H. Peter Anvin <hpa@zytor.com>
+> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> Reviewed-by: Ross Philipson <ross.philipson@oracle.com>
+> ---
+
+> ---
+>  Documentation/x86/boot.rst             | 121 +++++++++++++++++++++++++++++++++
+>  arch/x86/boot/Makefile                 |   2 +-
+>  arch/x86/boot/compressed/Makefile      |   4 +-
+>  arch/x86/boot/compressed/kernel_info.S |  17 +++++
+>  arch/x86/boot/header.S                 |   1 +
+>  arch/x86/boot/tools/build.c            |   5 ++
+>  arch/x86/include/uapi/asm/bootparam.h  |   1 +
+>  7 files changed, 148 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/x86/boot/compressed/kernel_info.S
 > 
-> >  
-> > +#ifdef CONFIG_SECURITY
-> > +	err = security_perf_event_alloc(event);
-> > +	if (err)
-> > +		goto err_security;
-> > +#endif
-> 
-> You should not need this ifdef.
+> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+> index 08a2f100c0e6..d5323a39f5e3 100644
+> --- a/Documentation/x86/boot.rst
+> +++ b/Documentation/x86/boot.rst
+> @@ -68,8 +68,25 @@ Protocol 2.12	(Kernel 3.8) Added the xloadflags field and extension fields
+>  Protocol 2.13	(Kernel 3.14) Support 32- and 64-bit flags being set in
+>  		xloadflags to support booting a 64-bit kernel from 32-bit
+>  		EFI
+> +
+> +Protocol 2.14:	BURNT BY INCORRECT COMMIT ae7e1238e68f2a472a125673ab506d49158c1889
+> +		(x86/boot: Add ACPI RSDP address to setup_header)
+> +		DO NOT USE!!! ASSUME SAME AS 2.13.
+> +
+> +Protocol 2.15:	(Kernel 5.5) Added the kernel_info.
+>  =============	============================================================
+>  
+> +.. note::
+> +     The protocol version number should be changed only if the setup header
+> +     is changed. There is no need to update the version number if boot_params
+> +     or kernel_info are changed. Additionally, it is recommended to use
+> +     xloadflags (in this case the protocol version number should not be
+> +     updated either) or kernel_info to communicate supported Linux kernel
+> +     features to the boot loader. Due to very limited space available in
+> +     the original setup header every update to it should be considered
+> +     with great care. Starting from the protocol 2.15 the primary way to
+> +     communicate things to the boot loader is the kernel_info.
+> +
+>  
+>  Memory Layout
+>  =============
+> @@ -207,6 +224,7 @@ Offset/Size	Proto		Name			Meaning
+>  0258/8		2.10+		pref_address		Preferred loading address
+>  0260/4		2.10+		init_size		Linear memory required during initialization
+>  0264/4		2.11+		handover_offset		Offset of handover entry point
+> +0268/4		2.15+		kernel_info_offset	Offset of the kernel_info
+>  ===========	========	=====================	============================================
+>  
+>  .. note::
+> @@ -855,6 +873,109 @@ Offset/size:	0x264/4
+>  
+>    See EFI HANDOVER PROTOCOL below for more details.
+>  
+> +============	==================
+> +Field name:	kernel_info_offset
+> +Type:		read
+> +Offset/size:	0x268/4
+> +Protocol:	2.15+
+> +============	==================
+> +
+> +  This field is the offset from the beginning of the kernel image to the
+> +  kernel_info. It is embedded in the Linux image in the uncompressed
+                  ^^
+   What does      It   refer to, please?
 
-Fixed.
+> +  protected mode region.
+> +
+> +
+> +The kernel_info
+> +===============
+> +
+> +The relationships between the headers are analogous to the various data
+> +sections:
+> +
+> +  setup_header = .data
+> +  boot_params/setup_data = .bss
+> +
+> +What is missing from the above list? That's right:
+> +
+> +  kernel_info = .rodata
+> +
+> +We have been (ab)using .data for things that could go into .rodata or .bss for
+> +a long time, for lack of alternatives and -- especially early on -- inertia.
+> +Also, the BIOS stub is responsible for creating boot_params, so it isn't
+> +available to a BIOS-based loader (setup_data is, though).
+> +
+> +setup_header is permanently limited to 144 bytes due to the reach of the
+> +2-byte jump field, which doubles as a length field for the structure, combined
+> +with the size of the "hole" in struct boot_params that a protected-mode loader
+> +or the BIOS stub has to copy it into. It is currently 119 bytes long, which
+> +leaves us with 25 very precious bytes. This isn't something that can be fixed
+> +without revising the boot protocol entirely, breaking backwards compatibility.
+> +
+> +boot_params proper is limited to 4096 bytes, but can be arbitrarily extended
+> +by adding setup_data entries. It cannot be used to communicate properties of
+> +the kernel image, because it is .bss and has no image-provided content.
+> +
+> +kernel_info solves this by providing an extensible place for information about
+> +the kernel image. It is readonly, because the kernel cannot rely on a
+> +bootloader copying its contents anywhere, but that is OK; if it becomes
+> +necessary it can still contain data items that an enabled bootloader would be
+> +expected to copy into a setup_data chunk.
+> +
+> +All kernel_info data should be part of this structure. Fixed size data have to
+> +be put before kernel_info_var_len_data label. Variable size data have to be put
+> +behind kernel_info_var_len_data label. Each chunk of variable size data has to
 
-> > diff --git a/security/security.c b/security/security.c
-> > index 1bc000f834e2..7639bca1db59 100644
-> > --- a/security/security.c
-> > +++ b/security/security.c
-> > @@ -2373,26 +2373,32 @@ int security_bpf(int cmd, union bpf_attr *attr, unsigned int size)
-> >  {
-> >  	return call_int_hook(bpf, 0, cmd, attr, size);
-> >  }
-> > +
-> >  int security_bpf_map(struct bpf_map *map, fmode_t fmode)
-> >  {
-> >  	return call_int_hook(bpf_map, 0, map, fmode);
-> >  }
-> > +
-> >  int security_bpf_prog(struct bpf_prog *prog)
-> >  {
-> >  	return call_int_hook(bpf_prog, 0, prog);
-> >  }
-> > +
-> >  int security_bpf_map_alloc(struct bpf_map *map)
-> >  {
-> >  	return call_int_hook(bpf_map_alloc_security, 0, map);
-> >  }
-> > +
-> >  int security_bpf_prog_alloc(struct bpf_prog_aux *aux)
-> >  {
-> >  	return call_int_hook(bpf_prog_alloc_security, 0, aux);
-> >  }
-> > +
-> >  void security_bpf_map_free(struct bpf_map *map)
-> >  {
-> >  	call_void_hook(bpf_map_free_security, map);
-> >  }
-> > +
-> >  void security_bpf_prog_free(struct bpf_prog_aux *aux)
-> >  {
-> >  	call_void_hook(bpf_prog_free_security, aux);
-> > @@ -2404,3 +2410,30 @@ int security_locked_down(enum lockdown_reason what)
-> >  	return call_int_hook(locked_down, 0, what);
-> >  }
-> >  EXPORT_SYMBOL(security_locked_down);
-> 
-> Please avoid unrelated whitespace changes.
+   s/behind/after/
 
-The author of the BPF security hooks forgot to add a newline between function
-definitions and I was just cleaning the style issue since it is very close to
-the parts I touched. But I will drop it from the patch per your suggestion.
+> +be prefixed with header/magic and its size, e.g.:
+> +
+> +  kernel_info:
+> +          .ascii  "LToP"          /* Header, Linux top (structure). */
+> +          .long   kernel_info_var_len_data - kernel_info
+> +          .long   kernel_info_end - kernel_info
+> +          .long   0x01234567      /* Some fixed size data for the bootloaders. */
+> +  kernel_info_var_len_data:
+> +  example_struct:                 /* Some variable size data for the bootloaders. */
+> +          .ascii  "EsTT"          /* Header/Magic. */
+> +          .long   example_struct_end - example_struct
+> +          .ascii  "Struct"
+> +          .long   0x89012345
+> +  example_struct_end:
+> +  example_strings:                /* Some variable size data for the bootloaders. */
+> +          .ascii  "EsTs"          /* Header/Magic. */
 
-thanks,
+Where do the Magic values "EsTT" and "EsTs" come from?
+where are they defined?
 
- - Joel
+> +          .long   example_strings_end - example_strings
+> +          .asciz  "String_0"
+> +          .asciz  "String_1"
+> +  example_strings_end:
+> +  kernel_info_end:
+> +
+> +This way the kernel_info is self-contained blob.
+> +
+> +
+> +Details of the kernel_info Fields
+> +=================================
+> +
+> +============	========
+> +Field name:	header
+> +Offset/size:	0x0000/4
+> +============	========
+> +
+> +  Contains the magic number "LToP" (0x506f544c).
+> +
+> +============	========
+> +Field name:	size
+> +Offset/size:	0x0004/4
+> +============	========
+> +
+> +  This field contains the size of the kernel_info including kernel_info.header.
+> +  It does not count kernel_info.kernel_info_var_len_data size. This field should be
+> +  used by the bootloaders to detect supported fixed size fields in the kernel_info
+> +  and beginning of kernel_info.kernel_info_var_len_data.
+> +
+> +============	========
+> +Field name:	size_total
+> +Offset/size:	0x0008/4
+> +============	========
+> +
+> +  This field contains the size of the kernel_info including kernel_info.header
+> +  and kernel_info.kernel_info_var_len_data.
+> +
+>  
+>  The Image Checksum
+>  ==================
 
+
+-- 
+~Randy
