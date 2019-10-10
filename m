@@ -2,135 +2,136 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE21C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C21C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79BB8218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QDprH0Zr"
+	by mail.kernel.org (Postfix) with ESMTP id A33372190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570697909;
+	bh=Cbulkmm9GwC8jvTTwza+47Jdqbj9EpfMt2YzOG0dxZc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zVIH9iyra/6ZI0fjviVoaz7jW+vbeK1XxDKq0u+OUf44XKCecEMAgame0hTiX6JWd
+	 yLgOogBEODMpXwGygOhMiGNG9hb37VYVfbcpR5St2sQSCIGFR1BduFc3sH0WvsT4gz
+	 koewy8lI7fMyMEumGrZxmjXe13Y2EEa/6PYor8Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389730AbfJJI6S (ORCPT
+        id S2389203AbfJJIps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:58:18 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58928 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388555AbfJJI6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:58:14 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A8vvZA171461;
-        Thu, 10 Oct 2019 08:58:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=qgO5nIjtEA5M7rpWm5uYekrXGaVEyZKGlFAp0lWFa1I=;
- b=QDprH0ZroOSvHkn7uHQUIF+ffXhDgtxsjV+SMa9Se+qqjHdDEchr2SYVh/MxtQVppOzP
- BukBgJwbX8awsCHomiHgunYbIcRid0jDQ82XhYyX+oDzPm1StUyyjjh1xHkA1cK35b2N
- veA8utDGrDlfvklhuQPpWoo/WLexod7WDtjtbjFtMM5+WOGrM/2sPJrdESs9+Jp0njul
- tEeg5hTnNVzZmory2OzfHvzEv+w2R5HkMo26yHy7Q+m871zEu5lC9a+8FIyRHAGdazgE
- eKrlJ9d96mNPYDM+KqL8AHh1UX2TaVn6yPigGY6uLO6V/L9wUvrykhZBRfKaklEZwiAG ag== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2vektrsk4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 08:58:08 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A8qnWn078202;
-        Thu, 10 Oct 2019 08:58:08 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vhrxd8tps-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 08:58:08 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9A8w6PJ023258;
-        Thu, 10 Oct 2019 08:58:06 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 10 Oct 2019 01:58:05 -0700
-Date:   Thu, 10 Oct 2019 11:57:55 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] staging: rtl8723bs: Remove comparisons to booleans
- in conditionals.
-Message-ID: <20191010085755.GD20470@kadam>
-References: <cover.1570678371.git.wambui.karugax@gmail.com>
- <4af8981347a05f0a25fa1540d8753e7040ea2d85.1570678371.git.wambui.karugax@gmail.com>
+        Thu, 10 Oct 2019 04:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389181AbfJJIpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 792082190F;
+        Thu, 10 Oct 2019 08:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570697141;
+        bh=Cbulkmm9GwC8jvTTwza+47Jdqbj9EpfMt2YzOG0dxZc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=duiBEXZlgIvRQGEbjwj58XRN6Xl7LO6KUPN6PuNDc78Ejx+GAqOA2mRejFEfLvhro
+         unsqfvQCqOIhkP/oDM/2gThzeUjlsRo018F5/f5V5P8k+4TnnocYe/kcTGfFvrir+D
+         8hmTm28DAzipl//eaE0UjOWvvQM2+kbRlAPzR1j0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Liang ZhiCheng <liangzhicheng@baidu.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 032/114] timer: Read jiffies once when forwarding base clk
+Date:   Thu, 10 Oct 2019 10:35:39 +0200
+Message-Id: <20191010083600.488625019@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
+References: <20191010083544.711104709@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4af8981347a05f0a25fa1540d8753e7040ea2d85.1570678371.git.wambui.karugax@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910100082
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910100082
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 06:39:23AM +0300, Wambui Karuga wrote:
->  	if (is_primary_adapter(adapter))
->  		DBG_871X("IsBtDisabled =%d, IsBtControlLps =%d\n", hal_btcoex_IsBtDisabled(adapter), hal_btcoex_IsBtControlLps(adapter));
->  
-> -	if ((adapter_to_pwrctl(adapter)->bFwCurrentInPSMode == true)
-> -		&& (hal_btcoex_IsBtControlLps(adapter) == false)
-> +	if ((adapter_to_pwrctl(adapter)->bFwCurrentInPSMode)
-> +		&& !(hal_btcoex_IsBtControlLps(adapter))
+From: Li RongQing <lirongqing@baidu.com>
 
-Delete the extra parentheses as well, because they don't make sense when
-we remove the == false comparison.  It's part of doing "one thing" is to
-the whole thing and not leave bits undone.
+commit e430d802d6a3aaf61bd3ed03d9404888a29b9bf9 upstream.
 
-		&& !hal_btcoex_IsBtControlLps(adapter)
+The timer delayed for more than 3 seconds warning was triggered during
+testing.
 
->  		) {
->  		u8 bEnterPS;
->  
-> @@ -2047,7 +2047,7 @@ static int rtw_check_join_candidate(struct mlme_priv *mlme
->  
->  
->  	/* check bssid, if needed */
-> -	if (mlme->assoc_by_bssid == true) {
-> +	if (mlme->assoc_by_bssid) {
->  		if (memcmp(competitor->network.MacAddress, mlme->assoc_bssid, ETH_ALEN))
->  			goto exit;
->  	}
-> @@ -2805,7 +2805,6 @@ void rtw_update_ht_cap(struct adapter *padapter, u8 *pie, uint ie_len, u8 channe
->  	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
->  	u8 cbw40_enable = 0;
->  
-> -
->  	if (!phtpriv->ht_option)
->  		return;
->  
-> @@ -2815,7 +2814,7 @@ void rtw_update_ht_cap(struct adapter *padapter, u8 *pie, uint ie_len, u8 channe
->  	DBG_871X("+rtw_update_ht_cap()\n");
->  
->  	/* maybe needs check if ap supports rx ampdu. */
-> -	if ((phtpriv->ampdu_enable == false) && (pregistrypriv->ampdu_enable == 1)) {
-> +	if (!(phtpriv->ampdu_enable) && pregistrypriv->ampdu_enable == 1) {
+  Workqueue: events_unbound sched_tick_remote
+  RIP: 0010:sched_tick_remote+0xee/0x100
+  ...
+  Call Trace:
+   process_one_work+0x18c/0x3a0
+   worker_thread+0x30/0x380
+   kthread+0x113/0x130
+   ret_from_fork+0x22/0x40
 
-Same.
+The reason is that the code in collect_expired_timers() uses jiffies
+unprotected:
 
->  		if (pregistrypriv->wifi_spec == 1) {
->  			/* remove this part because testbed AP should disable RX AMPDU */
->  			/* phtpriv->ampdu_enable = false; */
+    if (next_event > jiffies)
+        base->clk = jiffies;
 
-regards,
-dan carpenter
+As the compiler is allowed to reload the value base->clk can advance
+between the check and the store and in the worst case advance farther than
+next event. That causes the timer expiry to be delayed until the wheel
+pointer wraps around.
+
+Convert the code to use READ_ONCE()
+
+Fixes: 236968383cf5 ("timers: Optimize collect_expired_timers() for NOHZ")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Liang ZhiCheng <liangzhicheng@baidu.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1568894687-14499-1-git-send-email-lirongqing@baidu.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/time/timer.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1590,24 +1590,26 @@ void timer_clear_idle(void)
+ static int collect_expired_timers(struct timer_base *base,
+ 				  struct hlist_head *heads)
+ {
++	unsigned long now = READ_ONCE(jiffies);
++
+ 	/*
+ 	 * NOHZ optimization. After a long idle sleep we need to forward the
+ 	 * base to current jiffies. Avoid a loop by searching the bitfield for
+ 	 * the next expiring timer.
+ 	 */
+-	if ((long)(jiffies - base->clk) > 2) {
++	if ((long)(now - base->clk) > 2) {
+ 		unsigned long next = __next_timer_interrupt(base);
+ 
+ 		/*
+ 		 * If the next timer is ahead of time forward to current
+ 		 * jiffies, otherwise forward to the next expiry time:
+ 		 */
+-		if (time_after(next, jiffies)) {
++		if (time_after(next, now)) {
+ 			/*
+ 			 * The call site will increment base->clk and then
+ 			 * terminate the expiry loop immediately.
+ 			 */
+-			base->clk = jiffies;
++			base->clk = now;
+ 			return 0;
+ 		}
+ 		base->clk = next;
+
 
