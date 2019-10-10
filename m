@@ -2,139 +2,163 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25BBC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BBFC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABF720B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E5D20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T9t2ShH9"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="LK3c4rVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfJJRqX (ORCPT
+        id S1726867AbfJJRrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:46:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40474 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfJJRqW (ORCPT
+        Thu, 10 Oct 2019 13:47:43 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:33892 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726091AbfJJRrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:46:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZN+OUN9W8FzXlO76uCvRGIEqVKcVuqua8JKE2EZMJ8k=; b=T9t2ShH9YEa7GRPS2i5zKMxqL
-        Up4FY734dGyKukcNThLLksD1ud2bx5e1aJlTdt1GpuT0u2E8oMFXrOsR3Zp0YeD9+r3InYv0ITmwh
-        0KGsWFSyiisY5zluyf4KjOAw0TKJ7hT0UyzfnbLzuH+xmpZlUkD7vZdwAOy7DthZKqQ3NsS3OKn1s
-        1JQyPpj8wJ6KMu93vwCA9grfTfJ9c1Wt8WinQPN6wxmkWnv94VRoUB3yktGVlLxFQBrHP0oaQwBFz
-        kZTAHn6LybajHMqkZWoj+oQreu1xw5p26DUasKxzI/lyvQeTcRlZev9sujJp8fxFilf1KrdTZPhTG
-        FhyYDlsMw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIcW4-0004Ih-EP; Thu, 10 Oct 2019 17:46:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 31D3F3013A4;
-        Thu, 10 Oct 2019 19:45:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 86909220F94C4; Thu, 10 Oct 2019 19:46:18 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 19:46:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexei Starovoitov <ast@fb.com>
-Cc:     Song Liu <songliubraving@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf-next 2/2] bpf/stackmap: fix A-A deadlock in
- bpf_get_stack()
-Message-ID: <20191010174618.GT2328@hirez.programming.kicks-ass.net>
-References: <20191010061916.198761-1-songliubraving@fb.com>
- <20191010061916.198761-3-songliubraving@fb.com>
- <20191010073608.GO2311@hirez.programming.kicks-ass.net>
- <a1d30b11-2759-0293-5612-48150db92775@fb.com>
+        Thu, 10 Oct 2019 13:47:42 -0400
+Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9AHZd5Y007859;
+        Thu, 10 Oct 2019 13:47:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=smtpout1;
+ bh=L5GXx3mox0EzVbNJGhVgnlBj3HadmPIkaxN59aZroN4=;
+ b=LK3c4rVQkg3CJXSFZZxvhAyiBoT0FHlcOxrKUXhSlFfVE0B8Q3UCdPlz2vLBgsAwfo6Q
+ DdWAsDrvwB+JKss4T9iLAgaApwIZpEhns1LLYBEnTJ7gfXHqqFB4VUtU63IsPjJ4uelV
+ iVIHmsstcUxEtbGpdUR93VFglQ6Vt7OQVRdbAWRqWlwkSCmgT7Tw4v2vgIIe2NGbIJ34
+ MvfGSo1uzUXloODPAKItCljn+xqbLk4jkWsLfA2JHOhHAzyg+ALet3V2Z+TrZmD33w9U
+ ODMS7YH9bHjKyeAi5CCqKE6LLRlusP2WYKZ4XbUzbq6B1dTU8ysbO+eQpTPzF47xEaeX MQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 2vj8kwg8hy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Oct 2019 13:47:37 -0400
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9AHcUBp028792;
+        Thu, 10 Oct 2019 13:47:36 -0400
+Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
+        by mx0a-00154901.pphosted.com with ESMTP id 2vj7m7t5m8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 13:47:36 -0400
+X-LoopCount0: from 10.166.132.133
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="472812424"
+From:   <Narendra.K@dell.com>
+To:     <ard.biesheuvel@linaro.org>
+CC:     <linux-efi@vger.kernel.org>, <Mario.Limonciello@dell.com>,
+        <geert@linux-m68k.org>, <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <james.morse@arm.com>,
+        <mingo@kernel.org>
+Subject: Re: [PATCH] Ask user input only when CONFIG_X86 or
+ CONFIG_COMPILE_TEST is set to y
+Thread-Topic: [PATCH] Ask user input only when CONFIG_X86 or
+ CONFIG_COMPILE_TEST is set to y
+Thread-Index: AQHVeVm8hd3/NfhPNEW1ErxPMn2a1adSB94AgAHOtgA=
+Date:   Thu, 10 Oct 2019 17:47:30 +0000
+Message-ID: <20191010174710.GA2405@localhost.localdomain>
+References: <20191002194346.GA3792@localhost.localdomain>
+ <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
+In-Reply-To: <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.242.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CDDA16D306AADF4A96E170322B65887B@dell.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a1d30b11-2759-0293-5612-48150db92775@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-10_06:2019-10-10,2019-10-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501
+ adultscore=0 clxscore=1015 malwarescore=0 spamscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1910100155
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 mlxscore=0
+ malwarescore=0 adultscore=0 spamscore=0 mlxlogscore=999 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1910100155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 05:19:01PM +0000, Alexei Starovoitov wrote:
-> On 10/10/19 12:36 AM, Peter Zijlstra wrote:
-> > On Wed, Oct 09, 2019 at 11:19:16PM -0700, Song Liu wrote:
-> >> bpf stackmap with build-id lookup (BPF_F_STACK_BUILD_ID) can trigger A-A
-> >> deadlock on rq_lock():
-> >>
-> >> rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> >> [...]
-> >> Call Trace:
-> >>   try_to_wake_up+0x1ad/0x590
-> >>   wake_up_q+0x54/0x80
-> >>   rwsem_wake+0x8a/0xb0
-> >>   bpf_get_stack+0x13c/0x150
-> >>   bpf_prog_fbdaf42eded9fe46_on_event+0x5e3/0x1000
-> >>   bpf_overflow_handler+0x60/0x100
-> >>   __perf_event_overflow+0x4f/0xf0
-> >>   perf_swevent_overflow+0x99/0xc0
-> >>   ___perf_sw_event+0xe7/0x120
-> >>   __schedule+0x47d/0x620
-> >>   schedule+0x29/0x90
-> >>   futex_wait_queue_me+0xb9/0x110
-> >>   futex_wait+0x139/0x230
-> >>   do_futex+0x2ac/0xa50
-> >>   __x64_sys_futex+0x13c/0x180
-> >>   do_syscall_64+0x42/0x100
-> >>   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >>
-> > 
-> >> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> >> index 052580c33d26..3b278f6b0c3e 100644
-> >> --- a/kernel/bpf/stackmap.c
-> >> +++ b/kernel/bpf/stackmap.c
-> >> @@ -287,7 +287,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
-> >>   	bool irq_work_busy = false;
-> >>   	struct stack_map_irq_work *work = NULL;
-> >>
-> >> -	if (in_nmi()) {
-> >> +	if (in_nmi() || this_rq_is_locked()) {
-> >>   		work = this_cpu_ptr(&up_read_work);
-> >>   		if (work->irq_work.flags & IRQ_WORK_BUSY)
-> >>   			/* cannot queue more up_read, fallback */
-> > 
-> > This is horrific crap. Just say no to that get_build_id_offset()
-> > trainwreck.
-> 
-> this is not a helpful comment.
-> What issues do you see with this approach?
+Hi Ard,
 
-It will still generate deadlocks if I place a tracepoint inside a lock
-that nests inside rq->lock, and it won't ever be able to detect that.
-Say do the very same thing on trace_hrtimer_start(), which is under
-cpu_base->lock, which nests inside rq->lock. That should give you an
-AB-BA.
+Thank you for the review comments.=20
 
-tracepoints / perf-overflow should _never_ take locks.
+On Wed, Oct 09, 2019 at 04:11:04PM +0200, Ard Biesheuvel wrote:
+> On Wed, 2 Oct 2019 at 21:44, <Narendra.K@dell.com> wrote:
+> >
+> > From: Narendra K <Narendra.K@dell.com>
+> >
+> > For the EFI_RCI2_TABLE kconfig option, 'make oldconfig' asks the user
+> > for input as it is a new kconfig option in kernel version 5.4. This pat=
+ch
+> > modifies the kconfig option to ask the user for input only when CONFIG_=
+X86
+> > or CONFIG_COMPILE_TEST is set to y.
+> >
+> > The patch also makes EFI_RCI2_TABLE kconfig option depend on CONFIG_EFI=
+.
+> >
+> > Signed-off-by: Narendra K <Narendra.K@dell.com>
+> > ---
+> > The patch is created on kernel version 5.4-rc1.
+> >
+> > Hi Ard, I have made following changes -
+> >
+> > - changed the prompt string from "EFI Runtime Configuration
+> > Interface Table Version 2 Support" to "EFI RCI Table Version 2 Support"
+> > as the string crossed 80 char limit.
+> >
+> > - added "depends on EFI" so that code builds only when CONFIG_EFI is
+> > set to y.
+> >
+> > - added 'default n' for ease of understanding though default is set to =
+n.
+> >
+>=20
+> None of these changes are necessary, tbh. 'depends on EFI' is implied
+> by the placement of the option, and default n is indeed the default.
 
-All of stack_map_get_build_id_offset() is just disguisting games; I did
-tell you guys how to do lockless vma lookups a few years ago -- and yes,
-that is invasive core mm surgery. But this is just disguisting hacks for
-not wanting to do it right.
+I will drop the changes in the next version of the patch.
 
-Basically the only semi-sane thing to do with that trainwreck is
-s/in_nmi()/true/ and pray.
+>=20
+>=20
+> >  drivers/firmware/efi/Kconfig | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfi=
+g
+> > index 178ee8106828..6e4c46e8a954 100644
+> > --- a/drivers/firmware/efi/Kconfig
+> > +++ b/drivers/firmware/efi/Kconfig
+> > @@ -181,7 +181,10 @@ config RESET_ATTACK_MITIGATION
+> >           reboots.
+> >
+> >  config EFI_RCI2_TABLE
+> > -       bool "EFI Runtime Configuration Interface Table Version 2 Suppo=
+rt"
+> > +       bool
+> > +       prompt "EFI RCI Table Version 2 Support" if X86 || COMPILE_TEST
+>=20
+> You can drop the || COMPILE_TEST as well.
 
-On top of that I just hate buildids in general.
+I will drop this part of the change in the next version of the patch.=20
 
+--=20
+With regards,
+Narendra K=
