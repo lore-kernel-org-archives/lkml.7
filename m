@@ -2,377 +2,121 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FA3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52322C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28194206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:26:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="asP87uat"
+	by mail.kernel.org (Postfix) with ESMTP id 2062B206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfJJT02 (ORCPT
+        id S1727179AbfJJT2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 15:26:28 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:51420 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbfJJT01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 15:26:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vBDZ4I8NTV42WPi7AyESKx5pnQKRtdLHSgkPktBzObE=; b=asP87uathdjToLsLerUKVJOioB
-        A60RTTl7iz1vTtzQO3lvuod6PS9HrEU7wTm9eTlC6NAIL9su/cH7OuVq+TOvntvij87O36tppMqQZ
-        QqQiMROnp9A73gErynQU47zuHsPyc1GZdiAUGSZJ61Q/pk5pgNqIgU6VM32FyTcSOLRg=;
-Received: from p200300ccff13bb001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff13:bb00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iIe4n-0007Ks-BO; Thu, 10 Oct 2019 21:26:17 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iIe4n-0007Gf-1U; Thu, 10 Oct 2019 21:26:17 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
-        andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3 3/3] ARM: dts: imx: add devicetree for Kobo Clara HD
-Date:   Thu, 10 Oct 2019 21:23:57 +0200
-Message-Id: <20191010192357.27884-4-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191010192357.27884-1-andreas@kemnade.info>
-References: <20191010192357.27884-1-andreas@kemnade.info>
+        Thu, 10 Oct 2019 15:28:18 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:58486 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726526AbfJJT2R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 15:28:17 -0400
+Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9AJLr9G025187;
+        Thu, 10 Oct 2019 19:27:44 GMT
+Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2vj9bvsgdd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Oct 2019 19:27:44 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g9t5009.houston.hpe.com (Postfix) with ESMTP id E6E475C;
+        Thu, 10 Oct 2019 19:27:43 +0000 (UTC)
+Received: from swahl-linux (swahl-linux.americas.hpqcorp.net [10.33.153.21])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 7E30748;
+        Thu, 10 Oct 2019 19:27:42 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 14:27:42 -0500
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Jordan Borgner <mail@jordan-borgner.de>,
+        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Cc:     Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
+        dimitri.sivanich@hpe.com, mike.travis@hpe.com
+Subject: Re: [PATCH v3 0/2] x86/boot/64: Avoid mapping reserved ranges in
+ early page tables.
+Message-ID: <20191010192742.GX2113@swahl-linux>
+References: <cover.1569358538.git.steve.wahl@hpe.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1569358538.git.steve.wahl@hpe.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-10_06:2019-10-10,2019-10-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ impostorscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0
+ adultscore=0 bulkscore=0 phishscore=0 mlxscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910100163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a devicetree for the Kobo Clara HD Ebook reader. It
-is on based on boards called "e60k02". It is equipped with an
-imx6sll SoC.
+It's been a while on this patch set; two weeks ago Kirill added acks,
+no movement since.  Is there anything I need to be doing on my part to
+move this forward?
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- arch/arm/boot/dts/Makefile                 |   3 +-
- arch/arm/boot/dts/imx6sll-kobo-clarahd.dts | 279 +++++++++++++++++++++
- 2 files changed, 281 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/imx6sll-kobo-clarahd.dts
+Thanks!
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9159fa2cea90c..a8a235c74c37f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -551,7 +551,8 @@ dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-evk.dtb \
- 	imx6sl-warp.dtb
- dtb-$(CONFIG_SOC_IMX6SLL) += \
--	imx6sll-evk.dtb
-+	imx6sll-evk.dtb \
-+	imx6sll-kobo-clarahd.dtb
- dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-nitrogen6sx.dtb \
- 	imx6sx-sabreauto.dtb \
-diff --git a/arch/arm/boot/dts/imx6sll-kobo-clarahd.dts b/arch/arm/boot/dts/imx6sll-kobo-clarahd.dts
-new file mode 100644
-index 0000000000000..c2df2a567585f
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sll-kobo-clarahd.dts
-@@ -0,0 +1,279 @@
-+// SPDX-License-Identifier: (GPL-2.0)
-+/*
-+ * Device tree for the Kobo Clara HD ebook reader
-+ *
-+ * Name on mainboard is: 37NB-E60K00+4A4
-+ * Serials start with: E60K02 (a number also seen in
-+ * vendor kernel sources)
-+ *
-+ * This mainboard seems to be equipped with different SoCs.
-+ * In the Kobo Clara HD ebook reader it is an i.MX6SLL
-+ *
-+ * Copyright 2019 Andreas Kemnade
-+ * based on works
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "imx6sll.dtsi"
-+#include "e60k02.dtsi"
-+
-+/ {
-+	model = "Kobo Clara HD";
-+	compatible = "kobo,clarahd", "fsl,imx6sll";
-+};
-+
-+&clks {
-+	assigned-clocks = <&clks IMX6SLL_CLK_PLL4_AUDIO_DIV>;
-+	assigned-clock-rates = <393216000>;
-+};
-+
-+&cpu0 {
-+	arm-supply = <&dcdc3_reg>;
-+	soc-supply = <&dcdc1_reg>;
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	imx6sll-lpddr3-arm2 {
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				MX6SLL_PAD_LCD_DATA00__GPIO2_IO20	0x79
-+				MX6SLL_PAD_LCD_DATA01__GPIO2_IO21	0x79
-+				MX6SLL_PAD_LCD_DATA02__GPIO2_IO22	0x79
-+				MX6SLL_PAD_LCD_DATA03__GPIO2_IO23	0x79
-+				MX6SLL_PAD_LCD_DATA04__GPIO2_IO24	0x79
-+				MX6SLL_PAD_LCD_DATA05__GPIO2_IO25	0x79
-+				MX6SLL_PAD_LCD_DATA06__GPIO2_IO26	0x79
-+				MX6SLL_PAD_LCD_DATA07__GPIO2_IO27	0x79
-+				MX6SLL_PAD_LCD_DATA08__GPIO2_IO28	0x79
-+				MX6SLL_PAD_LCD_DATA09__GPIO2_IO29	0x79
-+				MX6SLL_PAD_LCD_DATA10__GPIO2_IO30	0x79
-+				MX6SLL_PAD_LCD_DATA11__GPIO2_IO31	0x79
-+				MX6SLL_PAD_LCD_DATA12__GPIO3_IO00	0x79
-+				MX6SLL_PAD_LCD_DATA13__GPIO3_IO01	0x79
-+				MX6SLL_PAD_LCD_DATA14__GPIO3_IO02	0x79
-+				MX6SLL_PAD_LCD_DATA15__GPIO3_IO03	0x79
-+				MX6SLL_PAD_LCD_DATA16__GPIO3_IO04	0x79
-+				MX6SLL_PAD_LCD_DATA17__GPIO3_IO05	0x79
-+				MX6SLL_PAD_LCD_DATA18__GPIO3_IO06	0x79
-+				MX6SLL_PAD_LCD_DATA19__GPIO3_IO07	0x79
-+				MX6SLL_PAD_LCD_DATA20__GPIO3_IO08	0x79
-+				MX6SLL_PAD_LCD_DATA21__GPIO3_IO09	0x79
-+				MX6SLL_PAD_LCD_DATA22__GPIO3_IO10	0x79
-+				MX6SLL_PAD_LCD_DATA23__GPIO3_IO11	0x79
-+				MX6SLL_PAD_LCD_CLK__GPIO2_IO15		0x79
-+				MX6SLL_PAD_LCD_ENABLE__GPIO2_IO16	0x79
-+				MX6SLL_PAD_LCD_HSYNC__GPIO2_IO17	0x79
-+				MX6SLL_PAD_LCD_VSYNC__GPIO2_IO18	0x79
-+				MX6SLL_PAD_LCD_RESET__GPIO2_IO19	0x79
-+				MX6SLL_PAD_KEY_COL3__GPIO3_IO30		0x79
-+				MX6SLL_PAD_KEY_ROW7__GPIO4_IO07		0x79
-+				MX6SLL_PAD_ECSPI2_MOSI__GPIO4_IO13	0x79
-+				MX6SLL_PAD_KEY_COL5__GPIO4_IO02		0x79
-+				MX6SLL_PAD_KEY_ROW6__GPIO4_IO05		0x79
-+			>;
-+		};
-+
-+		pinctrl_wifi_reset: wifi_reset_grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD2_DATA7__GPIO5_IO00	0x10059		/* WIFI_RST */
-+			>;
-+		};
-+
-+		pinctrl_wifi_power: wifi_power_grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD2_DATA6__GPIO4_IO29	0x10059		/* WIFI_3V3_ON */
-+			>;
-+		};
-+
-+		pinctrl_audmux3: audmux3grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_AUD_TXC__AUD3_TXC		0x4130b0
-+				MX6SLL_PAD_AUD_TXFS__AUD3_TXFS		0x4130b0
-+				MX6SLL_PAD_AUD_TXD__AUD3_TXD		0x4110b0
-+				MX6SLL_PAD_AUD_RXD__AUD3_RXD		0x4130b0
-+				MX6SLL_PAD_AUD_MCLK__AUDIO_CLK_OUT	0x4130b0
-+			>;
-+		};
-+
-+		pinctrl_led: ledgrp {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD1_DATA6__GPIO5_IO07 0x17059
-+			>;
-+		};
-+
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_UART1_TXD__UART1_DCE_TX 0x1b0b1
-+				MX6SLL_PAD_UART1_RXD__UART1_DCE_RX 0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_usdhc2: usdhc2grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD2_CMD__SD2_CMD		0x17059
-+				MX6SLL_PAD_SD2_CLK__SD2_CLK		0x13059
-+				MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x17059
-+				MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x17059
-+				MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x17059
-+				MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x17059
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_100mhz: usdhc2grp_100mhz {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170b9
-+				MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130b9
-+				MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170b9
-+				MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170b9
-+				MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170b9
-+				MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170b9
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_200mhz: usdhc2grp_200mhz {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170f9
-+				MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130f9
-+				MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170f9
-+				MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170f9
-+				MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170f9
-+				MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170f9
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_sleep: usdhc2grp_sleep {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD2_CMD__GPIO5_IO04		0x100f9
-+				MX6SLL_PAD_SD2_CLK__GPIO5_IO05		0x100f9
-+				MX6SLL_PAD_SD2_DATA0__GPIO5_IO01	0x100f9
-+				MX6SLL_PAD_SD2_DATA1__GPIO4_IO30	0x100f9
-+				MX6SLL_PAD_SD2_DATA2__GPIO5_IO03	0x100f9
-+				MX6SLL_PAD_SD2_DATA3__GPIO4_IO28	0x100f9
-+			>;
-+		};
-+
-+		pinctrl_usdhc3: usdhc3grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD3_CMD__SD3_CMD	0x11059
-+				MX6SLL_PAD_SD3_CLK__SD3_CLK	0x11059
-+				MX6SLL_PAD_SD3_DATA0__SD3_DATA0	0x11059
-+				MX6SLL_PAD_SD3_DATA1__SD3_DATA1	0x11059
-+				MX6SLL_PAD_SD3_DATA2__SD3_DATA2	0x11059
-+				MX6SLL_PAD_SD3_DATA3__SD3_DATA3	0x11059
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_100mhz: usdhc3grp_100mhz {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD3_CMD__SD3_CMD	0x170b9
-+				MX6SLL_PAD_SD3_CLK__SD3_CLK	0x170b9
-+				MX6SLL_PAD_SD3_DATA0__SD3_DATA0	0x170b9
-+				MX6SLL_PAD_SD3_DATA1__SD3_DATA1	0x170b9
-+				MX6SLL_PAD_SD3_DATA2__SD3_DATA2	0x170b9
-+				MX6SLL_PAD_SD3_DATA3__SD3_DATA3	0x170b9
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_200mhz: usdhc3grp_200mhz {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD3_CMD__SD3_CMD	0x170f9
-+				MX6SLL_PAD_SD3_CLK__SD3_CLK	0x170f9
-+				MX6SLL_PAD_SD3_DATA0__SD3_DATA0	0x170f9
-+				MX6SLL_PAD_SD3_DATA1__SD3_DATA1	0x170f9
-+				MX6SLL_PAD_SD3_DATA2__SD3_DATA2	0x170f9
-+				MX6SLL_PAD_SD3_DATA3__SD3_DATA3	0x170f9
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_sleep: usdhc3grp_sleep {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD3_CMD__GPIO5_IO21	0x100c1
-+				MX6SLL_PAD_SD3_CLK__GPIO5_IO18	0x100c1
-+				MX6SLL_PAD_SD3_DATA0__GPIO5_IO19	0x100c1
-+				MX6SLL_PAD_SD3_DATA1__GPIO5_IO20	0x100c1
-+				MX6SLL_PAD_SD3_DATA2__GPIO5_IO16	0x100c1
-+				MX6SLL_PAD_SD3_DATA3__GPIO5_IO17	0x100c1
-+			>;
-+		};
-+
-+		pinctrl_usbotg1: usbotg1grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID 0x17059
-+			>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_I2C1_SCL__I2C1_SCL	 0x4001f8b1
-+				MX6SLL_PAD_I2C1_SDA__I2C1_SDA	 0x4001f8b1
-+			>;
-+		};
-+
-+		pinctrl_i2c1_sleep: i2c1grp_sleep {
-+			fsl,pins = <
-+				MX6SLL_PAD_I2C1_SCL__I2C1_SCL	 0x400108b1
-+				MX6SLL_PAD_I2C1_SDA__I2C1_SDA	 0x400108b1
-+			>;
-+		};
-+
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_I2C2_SCL__I2C2_SCL	 0x4001f8b1
-+				MX6SLL_PAD_I2C2_SDA__I2C2_SDA	 0x4001f8b1
-+			>;
-+		};
-+
-+		pinctrl_i2c2_sleep: i2c2grp_sleep {
-+			fsl,pins = <
-+				MX6SLL_PAD_I2C2_SCL__I2C2_SCL	 0x400108b1
-+				MX6SLL_PAD_I2C2_SDA__I2C2_SDA	 0x400108b1
-+			>;
-+		};
-+
-+		pinctrl_i2c3: i2c3grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_REF_CLK_24M__I2C3_SCL  0x4001f8b1
-+				MX6SLL_PAD_REF_CLK_32K__I2C3_SDA  0x4001f8b1
-+			>;
-+		};
-+
-+		pinctrl_ecspi1: ecspi1grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_ECSPI1_MISO__ECSPI1_MISO	 0x100b1
-+				MX6SLL_PAD_ECSPI1_MOSI__ECSPI1_MOSI	 0x100b1
-+				MX6SLL_PAD_ECSPI1_SCLK__ECSPI1_SCLK	 0x100b1
-+				MX6SLL_PAD_ECSPI1_SS0__GPIO4_IO11	 0x100b1
-+			>;
-+		};
-+
-+		pinctrl_lm3630a_bl_gpio: lm3630a_bl_gpio_grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_EPDC_PWR_CTRL3__GPIO2_IO10	0x10059 /* HWEN */
-+			>;
-+		};
-+
-+		pinctrl_ricoh_gpio: ricoh_gpio_grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD1_CLK__GPIO5_IO15	0x1b8b1 /* ricoh619 chg */
-+				MX6SLL_PAD_SD1_DATA0__GPIO5_IO11 0x1b8b1 /* ricoh619 irq */
-+				MX6SLL_PAD_KEY_COL2__GPIO3_IO28	0x1b8b1 /* ricoh619 bat_low_int */
-+			>;
-+		};
-+
-+		pinctrl_gpio_keys: gpio_keys_grp {
-+			fsl,pins = <
-+				MX6SLL_PAD_SD1_DATA1__GPIO5_IO08	0x17059	/* PWR_SW */
-+				MX6SLL_PAD_SD1_DATA4__GPIO5_IO12	0x17059	/* HALL_EN */
-+			>;
-+		};
-+
-+	};
-+};
-+
+--> Steve Wahl 
+
+On Tue, Sep 24, 2019 at 04:03:22PM -0500, Steve Wahl wrote:
+> This patch set narrows the valid space addressed by the page table
+> level2_kernel_pgt to only contain ranges checked against the "usable
+> RAM" list provided by the BIOS.
+> 
+> Prior to this, some larger than needed mappings were occasionally
+> crossing over into spaces marked reserved, allowing the processor to
+> access these reserved spaces, which were caught by the hardware and
+> caused BIOS to halt on our platform (UV).
+> 
+> Changes since v1:
+> 
+> * Cover letter added because there's now two patches.
+> 
+> * Patch 1: Added comment and re-worked changelog text.
+> 
+> * Patch 2: New change requested by Dave Hansen to handle the case that
+>   the mapping of the last PMD page for the kernel image could cross a
+>   reserved region boundary.
+> 
+> Changes since v2:
+> 
+> * Patch 1: Added further inline comments.
+> * Patch 2: None.
+> 
+> Steve Wahl (2):
+>   x86/boot/64: Make level2_kernel_pgt pages invalid outside kernel area.
+>   x86/boot/64: round memory hole size up to next PMD page.
+> 
+>  arch/x86/boot/compressed/misc.c | 25 +++++++++++++++++++------
+>  arch/x86/kernel/head64.c        | 22 ++++++++++++++++++++--
+>  2 files changed, 39 insertions(+), 8 deletions(-)
+> 
+> -- 
+> 2.21.0
+> 
+> 
+> -- 
+> Steve Wahl, Hewlett Packard Enterprise
+
 -- 
-2.20.1
-
+Steve Wahl, Hewlett Packard Enterprise
