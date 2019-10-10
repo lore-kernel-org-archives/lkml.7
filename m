@@ -2,111 +2,134 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A254EECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EDAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7316721835
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:45:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YdUcl4Np"
+	by mail.kernel.org (Postfix) with ESMTP id 9FD5A2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570744120;
+	bh=hifUZxsX5VGlTXfZ+bhT293TXm5jAM0AyRmySJehGKI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HB+neyGlcCxX7L70C7EyFy8KqAq6CQkmLWgLl4RtAjRHPL85zjiIrWy8VZ9F6NopZ
+	 K0Fsw9fYcCU2Oc+4GxOf/QhDTINU6N+nPt+q4iPrJ917oRRr9tGYzzD/yv6y7OF/ig
+	 4Uf7akGfIYk5dhMGdVRplJAJ5Ge2Mef6ZIFRcqYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfJJVpl (ORCPT
+        id S1727308AbfJJVsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:45:41 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34851 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfJJVpl (ORCPT
+        Thu, 10 Oct 2019 17:48:39 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34703 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJVsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:45:41 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 205so4762118pfw.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 14:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YIwBZ8aS6SvSsNGLqbHbhINAaz2ab0wlA9dmvdVVM4A=;
-        b=YdUcl4NpTdqvCC+9YJ3lFg0qzAfx6ZRf8kViaCgvniR+b8+UvLDqd3k+90T23fv/WX
-         Zdvb5//zmBY2tUQXJsZ9a+4FyAx60YmQRgRVoK94H2lPS6yClkYtg4tuYEE5rdMz9Hoq
-         dhxs59xRlrAPfLKOPTb8hzuUkOgnAiOEUI96Q=
+        Thu, 10 Oct 2019 17:48:39 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m19so6268940otp.1;
+        Thu, 10 Oct 2019 14:48:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YIwBZ8aS6SvSsNGLqbHbhINAaz2ab0wlA9dmvdVVM4A=;
-        b=mBO6FiyYcn/MfrvZS3VkcIAWnaBt1cOrV+C4gcH/2l1SZa96MBSv73nCcd4cxctZah
-         0pm7EXAJVIE7MIh9ceUyiReZvlVUgjhPAh9mi7AQ7mfZOv588UdoyhpmlAcpet5Bqa3d
-         zEqy3wIrkywqmV4WaI+HMzNORRhoinieCDpdS0dTcvrPO0xBSmnhsu2ChXuvqScLdMzf
-         s+ZvJ5yjbjbZYCFnN16z0ZW2FV7DzUvYE6iuvDARDDIz+vxlxJjImGhNZeT/J/CQ2qMQ
-         9TtdfRXjFzS9/MZdjH4C+NCMY5h9EMqqlO1OqnAqPJwDfJgHkl39T5usLkUjt7uKpIHf
-         wIbg==
-X-Gm-Message-State: APjAAAXp67v4CBFNgFM41i6/1pkNjK5Qq3/cFbIpn8icZHE9ReCbbv6B
-        ZZBZjRNvsMOQPSAnKMfVukbnEQ==
-X-Google-Smtp-Source: APXvYqyQf310R9Gl7pU6wEC+GhqsWKyvknakgQyAn5yPpF0unj06W2k6/h/uG4GXF1QJH/R7hOEkjQ==
-X-Received: by 2002:a62:1b43:: with SMTP id b64mr12428894pfb.56.1570743940731;
-        Thu, 10 Oct 2019 14:45:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z189sm6230165pgz.53.2019.10.10.14.45.39
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TYfTmULpptQFnm79PdIINv8ysFiQ3dFmgzNIv1T7qTk=;
+        b=GpYBHSkyDqs+WUwqL2ULVAWjEHztVMp/iIXlvL5mB8OS5U/cOEjANjsY/lWsTqzaxZ
+         QPhXuyK4s7MAmxf+qfG1cmpsGE9hjOjq43LInV8f5w0cmFdFB85Dn2L3+CWyb9V0rJ+9
+         bxUVTqr2LsT21dy8Q2s12q9P8ZW52L2YQiZq2JMT8xBHIvryIVTYKVsDJje1d5jJilDZ
+         2njDBamYIivOsb2iGeYfxNXdoVuM6xBI2hTyQ+7EsBmBAYTbScdIpLS/xyigH76rkPLK
+         sKYbAwNM30wCVxjBo3PkgcgaVQ+wY1RK5YDYfnqPuPyc8+0OhAUIx2Rv5Bt8B4Dr9189
+         KYoA==
+X-Gm-Message-State: APjAAAWZhIWAzWAcgCCHKfQsBizk0DfeG6bTn6haZBBi6DdsD4lp0gWz
+        rNttzXHAgtwltBKA0hw3UQ==
+X-Google-Smtp-Source: APXvYqxECu31goFts3ashMmwgeYTiD3iatbSbg6PFYYV5QA+CSiUobjI4SjbAkfq5ICCGt0uV6Nyfg==
+X-Received: by 2002:a9d:61cd:: with SMTP id h13mr176279otk.264.1570744117843;
+        Thu, 10 Oct 2019 14:48:37 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 67sm2107233otq.34.2019.10.10.14.48.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 14:45:39 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 14:45:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     luto@amacapital.net, jannh@google.com, wad@chromium.org,
-        shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Tycho Andersen <tycho@tycho.ws>,
-        Tyler Hicks <tyhicks@canonical.com>
-Subject: Re: [PATCH v2 1/3] seccomp: add SECCOMP_USER_NOTIF_FLAG_CONTINUE
-Message-ID: <201910101440.17A13952@keescook>
-References: <20190920083007.11475-1-christian.brauner@ubuntu.com>
- <20190920083007.11475-2-christian.brauner@ubuntu.com>
+        Thu, 10 Oct 2019 14:48:36 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 16:48:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com
+Subject: Re: [RFC PATCHv2 1/3] dt-bindings: misc: Add dt bindings for flex
+ noc Performance Monitor
+Message-ID: <20191010214835.GA4523@bogus>
+References: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190920083007.11475-2-christian.brauner@ubuntu.com>
+In-Reply-To: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 10:30:05AM +0200, Christian Brauner wrote:
-> + * Similar precautions should be applied when stacking SECCOMP_RET_USER_NOTIF.
-> + * For SECCOMP_RET_USER_NOTIF filters acting on the same syscall the uppermost
-> + * filter takes precedence. This means that the uppermost
-> + * SECCOMP_RET_USER_NOTIF filter can override any SECCOMP_IOCTL_NOTIF_SEND from
-> + * lower filters essentially allowing all syscalls to pass by using
-> + * SECCOMP_USER_NOTIF_FLAG_CONTINUE. Note that SECCOMP_RET_USER_NOTIF can
-                                                          ^^^^^^^^^^^^^^
-This is meant to read RET_TRACE, yes?
+On Thu, Sep 26, 2019 at 10:46:24AM +0530, Shubhrajyoti Datta wrote:
+> Add dt bindings for flexnoc Performance Monitor.
+> The flexnoc counters for read and write response and requests are
+> supported.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+>  .../devicetree/bindings/misc/xlnx,flexnoc.txt      | 24 ++++++++++++++++++++++
 
-> + * equally be overriden by SECCOMP_USER_NOTIF_FLAG_CONTINUE.
+bindings/perf/
 
-I rewrote this paragraph with that corrected and swapping some
-"upper/lower" to "most recently added" etc:
+Please convert this to a schema. See 
+Documentation/devicetree/writing-schema.rst.
 
-+ * Similar precautions should be applied when stacking SECCOMP_RET_USER_NOTIF
-+ * or SECCOMP_RET_TRACE. For SECCOMP_RET_USER_NOTIF filters acting on the
-+ * same syscall, the most recently added filter takes precedence. This means
-+ * that the new SECCOMP_RET_USER_NOTIF filter can override any
-+ * SECCOMP_IOCTL_NOTIF_SEND from earlier filters, essentially allowing all
-+ * such filtered syscalls to be executed by sending the response
-+ * SECCOMP_USER_NOTIF_FLAG_CONTINUE. Note that SECCOMP_RET_TRACE can equally
-+ * be overriden by SECCOMP_USER_NOTIF_FLAG_CONTINUE.
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt b/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> new file mode 100644
+> index 0000000..6b533bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> @@ -0,0 +1,24 @@
+> +* Xilinx Flexnoc Performance Monitor driver
 
+Bindings are for h/w blocks, not drivers.
 
-Ultimately, I think this caveat is fine. RET_USER_NOTIF and RET_TRACE are
-both used from the "process manager" use-case. The benefits of "continue"
-semantics here outweighs the RET_USER_NOTIF and RET_TRACE "bypass". If
-we end up in a situation where we need to deal with some kind of
-nesting where this is a problem in practice, we can revisit this.
+> +
+> +The FlexNoc Performance Monitor has counters for monitoring
+> +the read and the write transaction counter.
+> +
+> +Required properties:
+> +- compatible: "xlnx,flexnoc-pm-2.7"
+> +- reg : Address and length of register sets for each device in
+> +       "reg-names"
+> +- reg-names : The names of the register addresses corresponding to the
+> +               registers filled in "reg"
+> +               - funnel: base address of the funnel registers
+> +               - baselpd: base address of the LPD PM registers
+> +               - basefpd: base address FPD PM registers
 
-Applied to my for-next/seccomp. Thanks!
+Is this really all one h/w block.
 
--- 
-Kees Cook
+FlexNoC is an interconnect, right? Is there more to it than just 
+perfmon?
+
+> +
+> +Example:
+> +++++++++
+> +performance-monitor@f0920000 {
+> +               compatible = "xlnx,flexnoc-pm-2.7";
+> +               reg-names = "funnel", "baselpd", "basefpd";
+> +               reg = <0x0 0xf0920000 0x0 0x1000>,
+> +                       <0x0 0xf0980000 0x0 0x9000>,
+> +                       <0x0 0xf0b80000 0x0 0x9000>;
+> +};
+> --
+> 2.1.1
+> 
+> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+
+We can't accept confidential emails.
+
+Rob
