@@ -2,176 +2,101 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C4EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6A4C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE992208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4245A208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkLd84++"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BC/XV+18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfJJN5O (ORCPT
+        id S1726162AbfJJN6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:57:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34693 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfJJN5N (ORCPT
+        Thu, 10 Oct 2019 09:58:30 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37314 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfJJN63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:57:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j11so8054712wrp.1;
-        Thu, 10 Oct 2019 06:57:11 -0700 (PDT)
+        Thu, 10 Oct 2019 09:58:29 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y5so3972740pfo.4
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 06:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kKpm7XM1AgpSN1jrhyWVldr2l3miF1XGBH1EW5loxxI=;
-        b=hkLd84++mfI8DFZArVwjpGXEap9gVCEvxtrIk2GCAec5fJlbZnrJ+fF/5b5qtRAxBN
-         7zu8N3Hq7k8saPoZ4+41pnq1iymTz58A9wVpJnOr3Y/VCaIBlvYrkiP6iod1wtgWphGj
-         8qisHK3qM0yiViWyXPI/tsulamhgLzVovb7CjWPxjkeRw1ySUyPAHqUSMVI3uszMbRGS
-         OjfZEfFPffXnbZUYgYGiyCgBj+1igbTyVHWVLqmj4JNND6Dv525BL0Y1CgB6+2Nm/wqX
-         0lND4FVUjZ1UfiTpwa/MrT+MUE5UsVx5qIAwSO4UzaG9jSlgAHCAgDF4VkkUn1frOTkM
-         GHtw==
+        h=from:to:cc:subject:date:message-id;
+        bh=lYhH0LhqbaaCqPvzQECTErqO/n6x+8fxYPTtkfuF5nc=;
+        b=BC/XV+18pfXBfiKPMugpZLBYfkXW6VdNQ5qg6f4xeK3k3Pkoi6UYM7UNl5zmS1Zhaf
+         9UdOf/5lKg5VzuBn+2C3LSlgQiQz7OIxyV0xpvFiIDNZCDve9eNp5m91zCK0krGIFSw1
+         x33b/ClbyCOK8kbQ0f4suVrNLIwD0T9IdjGGqLxiJ1+ISE1fLw2tfr3Tnd6zn6k1ylXN
+         5GH8YcMcIT0s/XPJpR+ARfDynztK5wVJSm4e/WR57vmm4NgpQ0hAE8CeuI0BcQ9fO9M8
+         mZ0ofIOB4+hpppkniBAzkVPzj5Bl4hPntSu6i9OjT6e/GOomRBctmf0GzzgpxQG1Hzsc
+         BRYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kKpm7XM1AgpSN1jrhyWVldr2l3miF1XGBH1EW5loxxI=;
-        b=RyM8G3/z93S+sFkizwS0DnOGo+3xj3WJmWMShYWNLtLFT2U/mnxnYOe/JJt/TrrGrW
-         ycV69jQrzmBbbFrZmcM6qeVmowNUw0Ckz3Vktg3yGJUueg9k8AZkB6hIjy4bwevObBI4
-         3ZHfVP3ld7DN1XTZYCprqWcpN80hZbiMPvJvf3eOCDkgXfDMRG+lsHm8/FuXvX/S+QtR
-         9YzoElfg6MZy+JsaaVt+S+NZoIZwmB0EjGsq0zGxLhCSi8vKcfPRaSWk/tA/CABHK3zn
-         WA/tTIGGDKTLRETqhmjvRFL+AFA2uePhlfeQPGkDMcac5itZt6nTKLU8+GL+qIs+/CY7
-         ykoA==
-X-Gm-Message-State: APjAAAXJyMR1YZnD4wopAMRzNOhAg86ejKeZAux3N5sfkvJyvY/4V5p0
-        quQZPBeUTJzzbpxQgWmoEGz8n6hQngQ=
-X-Google-Smtp-Source: APXvYqxnSQAklQr786Hn4Cib+9+4j5ERR7EwmEMJDisBGjMLS8ap04iHd53VBJcDXdLnQjFxNU2sTw==
-X-Received: by 2002:a5d:540e:: with SMTP id g14mr8988389wrv.177.1570715830595;
-        Thu, 10 Oct 2019 06:57:10 -0700 (PDT)
-Received: from localhost ([194.105.145.90])
-        by smtp.gmail.com with ESMTPSA id u4sm9088089wmg.41.2019.10.10.06.57.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 10 Oct 2019 06:57:10 -0700 (PDT)
-From:   Igor Opaniuk <igor.opaniuk@gmail.com>
-To:     linux-usb@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Li Jun <jun.li@nxp.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] usb: phy: mxs: optimize disconnect line condition
-Date:   Thu, 10 Oct 2019 16:56:56 +0300
-Message-Id: <20191010135656.3264-3-igor.opaniuk@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191010135656.3264-1-igor.opaniuk@gmail.com>
-References: <20191010135656.3264-1-igor.opaniuk@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lYhH0LhqbaaCqPvzQECTErqO/n6x+8fxYPTtkfuF5nc=;
+        b=CB+lMreLFZaTBUqhgyseediHnyuZjZ7SUV0dpXmGW6ROIRoyASpha8bibddq3vhdz8
+         ggYSjT96feA/0RHDh0FYpNHyxpm8umKH0ouMLmlGUwSJgL+bEBozwj7Rp+WdtWYFotpn
+         UncUBKSBbpjgOl6qbTlU71nzvdCH/04EyKaoM/1ovWgoqCARafkp+Nek4nxe3riU5iDk
+         rg50U1CcGC07HcF+LsSLqCTnVtpWR/vwTPLA+fmtmPIW8Njhq6KjKZkVNnENb0SoJjUh
+         1H+eK91S6nOskOaMD3vCq0szJ0UlExtgvaCPicrk+oj95RqyXpj/ihAksKNjTXvwKPcs
+         k/Cw==
+X-Gm-Message-State: APjAAAV2WqMBDpo7cueWfl9vYaBdnIKZuVY89EeT2+5/tXLC7GL8Xiso
+        uOAsR0nJcA469beQhZ96/q8=
+X-Google-Smtp-Source: APXvYqyR8QeCaeGE//rK0N9nzobokZvJPylfXCJvsurrYX8lFWpSqUDVdPzmgNZe+IVX99thk2ifOw==
+X-Received: by 2002:a17:90a:2ec5:: with SMTP id h5mr11689675pjs.87.1570715909114;
+        Thu, 10 Oct 2019 06:58:29 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id b14sm6040303pfi.95.2019.10.10.06.58.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 06:58:28 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH v3] mtd: maps: l440gx: Avoid printing address to dmesg
+Date:   Thu, 10 Oct 2019 21:58:09 +0800
+Message-Id: <20191010135809.11932-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Jun <jun.li@nxp.com>
+Avoid printing the address of l440gx_map.virt every time l440gx init.
 
-We only have below cases to disconnect line when suspend:
-1. Device mode without connection to any host/charger(no vbus).
-2. Device mode connect to a charger, usb suspend when
-system is entering suspend.
-
-This patch can fix cases, when usb phy wrongly does disconnect
-line in case usb host enters suspend but vbus is off.
-
-Fixes: 7b09e67639("usb: phy: mxs: refine mxs_phy_disconnect_line")
-Signed-off-by: Li Jun <jun.li@nxp.com>
-Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
+Changes in v3:
+  -- use pr_debug instead of printk(KERN_DEBUG)
 
-v2:
-- restored original commit author
-- fixed build for multi_v7
+ drivers/mtd/maps/l440gx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/usb/phy/phy-mxs-usb.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 70b8c8248caf..f58ea923c7eb 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -204,6 +204,7 @@ struct mxs_phy {
- 	int port_id;
- 	u32 tx_reg_set;
- 	u32 tx_reg_mask;
-+	enum usb_current_mode mode;
- };
+diff --git a/drivers/mtd/maps/l440gx.c b/drivers/mtd/maps/l440gx.c
+index 876f12f40018..0eeadfeb620d 100644
+--- a/drivers/mtd/maps/l440gx.c
++++ b/drivers/mtd/maps/l440gx.c
+@@ -86,7 +86,7 @@ static int __init init_l440gx(void)
+ 		return -ENOMEM;
+ 	}
+ 	simple_map_init(&l440gx_map);
+-	printk(KERN_NOTICE "window_addr = 0x%08lx\n", (unsigned long)l440gx_map.virt);
++	pr_debug("window_addr = %p\n", l440gx_map.virt);
  
- static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
-@@ -386,17 +387,6 @@ static void __mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool disconnect)
- 		usleep_range(500, 1000);
- }
- 
--static bool mxs_phy_is_otg_host(struct mxs_phy *mxs_phy)
--{
--	void __iomem *base = mxs_phy->phy.io_priv;
--	u32 phyctrl = readl(base + HW_USBPHY_CTRL);
--
--	if (IS_ENABLED(CONFIG_USB_OTG) &&
--			!(phyctrl & BM_USBPHY_CTRL_OTG_ID_VALUE))
--		return true;
--
--	return false;
--}
- 
- static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
- {
-@@ -412,13 +402,26 @@ static void mxs_phy_disconnect_line(struct mxs_phy *mxs_phy, bool on)
- 
- 	vbus_is_on = mxs_phy_get_vbus_status(mxs_phy);
- 
--	if (on && !vbus_is_on && !mxs_phy_is_otg_host(mxs_phy))
-+	if (on && ((!vbus_is_on && mxs_phy->mode != USB_CURRENT_MODE_HOST)))
- 		__mxs_phy_disconnect_line(mxs_phy, true);
- 	else
- 		__mxs_phy_disconnect_line(mxs_phy, false);
- 
- }
- 
-+/*
-+ * Set the usb current role for phy.
-+ */
-+static int mxs_phy_set_mode(struct usb_phy *phy,
-+		enum usb_current_mode mode)
-+{
-+	struct mxs_phy *mxs_phy = to_mxs_phy(phy);
-+
-+	mxs_phy->mode = mode;
-+
-+	return 0;
-+}
-+
- static int mxs_phy_init(struct usb_phy *phy)
- {
- 	int ret;
-@@ -796,6 +799,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 	mxs_phy->phy.notify_disconnect	= mxs_phy_on_disconnect;
- 	mxs_phy->phy.type		= USB_PHY_TYPE_USB2;
- 	mxs_phy->phy.set_wakeup		= mxs_phy_set_wakeup;
-+	mxs_phy->phy.set_mode		= mxs_phy_set_mode;
- 	mxs_phy->phy.charger_detect	= mxs_phy_charger_detect;
- 
- 	mxs_phy->clk = clk;
+ 	/* Setup the pm iobase resource
+ 	 * This code should move into some kind of generic bridge
 -- 
-2.17.1
+2.11.0
 
