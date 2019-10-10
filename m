@@ -2,138 +2,250 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3920BC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145ADC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B41218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D605C218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:32:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="02o6A4zX"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OSvqdGd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388014AbfJJJb4 (ORCPT
+        id S2387946AbfJJJc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:31:56 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43079 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727683AbfJJJb4 (ORCPT
+        Thu, 10 Oct 2019 05:32:27 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38214 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727320AbfJJJc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:31:56 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j18so6952048wrq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:31:54 -0700 (PDT)
+        Thu, 10 Oct 2019 05:32:27 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u28so3842388lfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:32:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MyHkItq+3f5f6XhOQmBQDuPqwsiCso3hU6AV8azXpM4=;
-        b=02o6A4zXXVQPLJFPGLnJEDV3VsW1W70MzX6dlz1pjQ+Qb2wdhVDMnYSMobJxi8LnuV
-         a5uPRcWzXinFQkKps6GqXd4Jt6NyWP5StYYkL9H33r1eVc3Iq6f9d9sYkiJk6i6XUznC
-         OvHLaOB+G1ejSBcyaydjAKIWezdy1kcvs3rcQwXJzNl1WrS1Yd1RAHLSRbm3OqkbRwCX
-         UbZ8V2bPp0tSSUUl+74AiD1avzMcuhbQTwbUh09pA4i/+iBIvASw0mDLPFZ01sSVswzl
-         K+vnfirFrR5wAkpky47pnUgiopTBOIg9lENMAeM45E/g33umdHE/YFHRA5yY+l0ZAyiA
-         Mttw==
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C/wkh/GnDCqsZNIodlB9tNbqA2+NzVOROU2ZLiYiw8c=;
+        b=OSvqdGd/HH6LNxUtzlPkUEUmkHKnfJuBpTU/F2JyAocadOJvBk5t0cXMz76yLL4go6
+         q8m/7SsAuhyIDIVwgqaReMcIBjgl4nokwNaxHKB3Inyr+4Tdx+9B59EIbEJHwa01MSbo
+         fbIs1WZOlrgRXsMwy4NdS17VYdPXkHiPE3qgk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MyHkItq+3f5f6XhOQmBQDuPqwsiCso3hU6AV8azXpM4=;
-        b=PP3IuXpZeHj668dAtVWkkEArQCFfZiGwmQl2kB59fm90b8QWv3GHdfRQQBkGuu+1ob
-         w+ym8mMDPpl5RwsXqt/by0Mdm7cG+NhCCBFU/DXOrWeRi548HDGpOEPdCkLJ/Fw4EoBX
-         LZBHEzyWmgwbGhOw2a3dRXeixdmY2KoNoFImWDIyu7LepgOnNIQAzrCYzcOiFLAlkl2o
-         PoIdmWtXOy9qWMuuieyFdP225f0Q2LWSKygf3wA8lG7NMgMAPpaivhOG8BauNA9o1IoW
-         JXd4Lb0V4duW3Nqd+NSgNdx37JK6uWu9YcFot8BS7i0BiHomBpD3dFODH4Mqob6nHWxj
-         ykvg==
-X-Gm-Message-State: APjAAAX4cTSaYUyKQ5KZCyFhP1fULb9CVC3hRRSibklXkZAU8gmVOfDt
-        dn8WhhT2j0VRd9viTJe1rDfNqw==
-X-Google-Smtp-Source: APXvYqyJMVy8NWJi3linHyfYh4c37lJsuAOqVBceajAGlAq6CFQgyZVlDa7J0Y8TEd1uLefC1Trv/g==
-X-Received: by 2002:adf:f50b:: with SMTP id q11mr4045559wro.310.1570699914005;
-        Thu, 10 Oct 2019 02:31:54 -0700 (PDT)
-Received: from localhost ([85.163.43.78])
-        by smtp.gmail.com with ESMTPSA id l13sm5415316wmj.25.2019.10.10.02.31.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 02:31:53 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 11:31:53 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] genetlink: do not parse attributes for families
- with zero maxattr
-Message-ID: <20191010093153.GG2223@nanopsycho>
-References: <20191009164432.AD5D1E3785@unicorn.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C/wkh/GnDCqsZNIodlB9tNbqA2+NzVOROU2ZLiYiw8c=;
+        b=Z+ZPChPo8xbEwPFKkMJ5ngPOIc5cfTmPvOpk3AH8+xGDwqrAZCwX87YZwVbGn4rOh5
+         WPz7TvnvtUuxv8RMI9Dc1vh4R2lJSjX60e9WUA0+8Mvjv/9a5uzbTh5gj73YKvhRUITE
+         ERyEyJN7+I+kHikoixZQJfunPxrXo4UfSJ5GdIMF34zKIfUCFz2G4S1phx0cMLJKqyG4
+         4OpEojLm3MWhd/7JHaXKxeDg63mM1hNxn+YKo7YjfEQbJqZ3ETGiRVK8upqP/GMLdTSI
+         M4F/2TadeVPfq9yMp961BiGRvKuyKLMSKrdTqb+33hZXC4GHCaEesbjSYSq4FzudQkTx
+         vW6Q==
+X-Gm-Message-State: APjAAAUFM06R1ZFW6RFm5QCxTkRSmPE63U0qOWz+i32FwWZbFXUalDi5
+        2ZU6PREfeQXgP4Of2rfz9lwg6byMVxo6HYwbPoRaLg==
+X-Google-Smtp-Source: APXvYqx9u+tBp+tunckOnU4ovHq/Lwxq2h7DFjTIyiy3FX+VTE6GQYYQgqljs/51buL58PMOEZjAGOIA3WDm2xfSISc=
+X-Received: by 2002:a19:23cc:: with SMTP id j195mr5332104lfj.91.1570699944121;
+ Thu, 10 Oct 2019 02:32:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009164432.AD5D1E3785@unicorn.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1569825869-30640-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <1569825869-30640-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Date:   Thu, 10 Oct 2019 15:02:13 +0530
+Message-ID: <CAHO=5PFSTomeNm4vAKyPmRZXNPBKGT4ck3mB8uOY395uwuVdNg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] i2c: iproc: Add i2c repeated start capability
+To:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Michael Cheng <ccheng@broadcom.com>,
+        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Icarus Chau <icarus.chau@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Shivaraj Shetty <sshetty1@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Oct 09, 2019 at 06:44:32PM CEST, mkubecek@suse.cz wrote:
->Commit c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing
->to a separate function") moved attribute buffer allocation and attribute
->parsing from genl_family_rcv_msg_doit() into a separate function
->genl_family_rcv_msg_attrs_parse() which, unlike the previous code, calls
->__nlmsg_parse() even if family->maxattr is 0 (i.e. the family does its own
->parsing). The parser error is ignored and does not propagate out of
->genl_family_rcv_msg_attrs_parse() but an error message ("Unknown attribute
->type") is set in extack and if further processing generates no error or
->warning, it stays there and is interpreted as a warning by userspace.
+Hi Wolfram,
+
+Did you get a chance to review this patch.
+
+Best regards,
+Rayagonda
+
+
+On Mon, Sep 30, 2019 at 12:19 PM Rayagonda Kokatanur
+<rayagonda.kokatanur@broadcom.com> wrote:
 >
->Dumpit requests are not affected as genl_family_rcv_msg_dumpit() bypasses
->the call of genl_family_rcv_msg_doit() if family->maxattr is zero. Do the
->same also in genl_family_rcv_msg_doit().
+> From: Lori Hikichi <lori.hikichi@broadcom.com>
 >
->Fixes: c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing to a separate function")
->Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
->---
-> net/netlink/genetlink.c | 6 ++++--
-> 1 file changed, 4 insertions(+), 2 deletions(-)
+> Enable handling of i2c repeated start. The current code
+> handles a multi msg i2c transfer as separate i2c bus
+> transactions. This change will now handle this case
+> using the i2c repeated start protocol. The number of msgs
+> in a transfer is limited to two, and must be a write
+> followed by a read.
 >
->diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
->index ecc2bd3e73e4..c4bf8830eedf 100644
->--- a/net/netlink/genetlink.c
->+++ b/net/netlink/genetlink.c
->@@ -639,21 +639,23 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
-> 				    const struct genl_ops *ops,
-> 				    int hdrlen, struct net *net)
-> {
->-	struct nlattr **attrbuf;
->+	struct nlattr **attrbuf = NULL;
-> 	struct genl_info info;
-> 	int err;
-> 
-> 	if (!ops->doit)
-> 		return -EOPNOTSUPP;
-> 
->+	if (!family->maxattr)
->+		goto no_attrs;
-> 	attrbuf = genl_family_rcv_msg_attrs_parse(family, nlh, extack,
-> 						  ops, hdrlen,
-> 						  GENL_DONT_VALIDATE_STRICT,
->-						  family->maxattr &&
-> 						  family->parallel_ops);
-
-Please also adjust genl_family_rcv_msg_attrs_free() call arg
-below in this function in the similar way.
-
-
-
-> 	if (IS_ERR(attrbuf))
-> 		return PTR_ERR(attrbuf);
-> 
->+no_attrs:
-> 	info.snd_seq = nlh->nlmsg_seq;
-> 	info.snd_portid = NETLINK_CB(skb).portid;
-> 	info.nlhdr = nlh;
->-- 
->2.23.0
+> Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Signed-off-by: Icarus Chau <icarus.chau@broadcom.com>
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Shivaraj Shetty <sshetty1@broadcom.com>
+> ---
+> changes from v1:
+>  - Address following review comments from Wolfarm Sang,
+>    Use i2c_8bit_addr_from_msg() api instead of decoding i2c_msg struct and
+>    remove check against number of i2c message as it will be taken care
+>    by core using quirks flags.
+>
+>  drivers/i2c/busses/i2c-bcm-iproc.c | 63 ++++++++++++++++++++++++++++++--------
+>  1 file changed, 50 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+> index d7fd76b..e478db7 100644
+> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
+> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+> @@ -81,6 +81,7 @@
+>  #define M_CMD_PROTOCOL_MASK          0xf
+>  #define M_CMD_PROTOCOL_BLK_WR        0x7
+>  #define M_CMD_PROTOCOL_BLK_RD        0x8
+> +#define M_CMD_PROTOCOL_PROCESS       0xa
+>  #define M_CMD_PEC_SHIFT              8
+>  #define M_CMD_RD_CNT_SHIFT           0
+>  #define M_CMD_RD_CNT_MASK            0xff
+> @@ -675,13 +676,20 @@ static int bcm_iproc_i2c_xfer_wait(struct bcm_iproc_i2c_dev *iproc_i2c,
+>         return 0;
+>  }
+>
+> -static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+> -                                        struct i2c_msg *msg)
+> +/*
+> + * If 'process_call' is true, then this is a multi-msg transfer that requires
+> + * a repeated start between the messages.
+> + * More specifically, it must be a write (reg) followed by a read (data).
+> + * The i2c quirks are set to enforce this rule.
+> + */
+> +static int bcm_iproc_i2c_xfer_internal(struct bcm_iproc_i2c_dev *iproc_i2c,
+> +                                       struct i2c_msg *msgs, bool process_call)
+>  {
+>         int i;
+>         u8 addr;
+>         u32 val, tmp, val_intr_en;
+>         unsigned int tx_bytes;
+> +       struct i2c_msg *msg = &msgs[0];
+>
+>         /* check if bus is busy */
+>         if (!!(iproc_i2c_rd_reg(iproc_i2c,
+> @@ -707,14 +715,29 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+>                         val = msg->buf[i];
+>
+>                         /* mark the last byte */
+> -                       if (i == msg->len - 1)
+> -                               val |= BIT(M_TX_WR_STATUS_SHIFT);
+> +                       if (!process_call && (i == msg->len - 1))
+> +                               val |= 1 << M_TX_WR_STATUS_SHIFT;
+>
+>                         iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
+>                 }
+>                 iproc_i2c->tx_bytes = tx_bytes;
+>         }
+>
+> +       /* Process the read message if this is process call */
+> +       if (process_call) {
+> +               msg++;
+> +               iproc_i2c->msg = msg;  /* point to second msg */
+> +
+> +               /*
+> +                * The last byte to be sent out should be a slave
+> +                * address with read operation
+> +                */
+> +               addr = i2c_8bit_addr_from_msg(msg);
+> +               /* mark it the last byte out */
+> +               val = addr | (1 << M_TX_WR_STATUS_SHIFT);
+> +               iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
+> +       }
+> +
+>         /* mark as incomplete before starting the transaction */
+>         if (iproc_i2c->irq)
+>                 reinit_completion(&iproc_i2c->done);
+> @@ -733,7 +756,7 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+>          * underrun interrupt, which will be triggerred when the TX FIFO is
+>          * empty. When that happens we can then pump more data into the FIFO
+>          */
+> -       if (!(msg->flags & I2C_M_RD) &&
+> +       if (!process_call && !(msg->flags & I2C_M_RD) &&
+>             msg->len > iproc_i2c->tx_bytes)
+>                 val_intr_en |= BIT(IE_M_TX_UNDERRUN_SHIFT);
+>
+> @@ -743,6 +766,8 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+>          */
+>         val = BIT(M_CMD_START_BUSY_SHIFT);
+>         if (msg->flags & I2C_M_RD) {
+> +               u32 protocol;
+> +
+>                 iproc_i2c->rx_bytes = 0;
+>                 if (msg->len > M_RX_FIFO_MAX_THLD_VALUE)
+>                         iproc_i2c->thld_bytes = M_RX_FIFO_THLD_VALUE;
+> @@ -758,7 +783,10 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+>                 /* enable the RX threshold interrupt */
+>                 val_intr_en |= BIT(IE_M_RX_THLD_SHIFT);
+>
+> -               val |= (M_CMD_PROTOCOL_BLK_RD << M_CMD_PROTOCOL_SHIFT) |
+> +               protocol = process_call ?
+> +                               M_CMD_PROTOCOL_PROCESS : M_CMD_PROTOCOL_BLK_RD;
+> +
+> +               val |= (protocol << M_CMD_PROTOCOL_SHIFT) |
+>                        (msg->len << M_CMD_RD_CNT_SHIFT);
+>         } else {
+>                 val |= (M_CMD_PROTOCOL_BLK_WR << M_CMD_PROTOCOL_SHIFT);
+> @@ -774,17 +802,24 @@ static int bcm_iproc_i2c_xfer(struct i2c_adapter *adapter,
+>                               struct i2c_msg msgs[], int num)
+>  {
+>         struct bcm_iproc_i2c_dev *iproc_i2c = i2c_get_adapdata(adapter);
+> -       int ret, i;
+> +       bool process_call = false;
+> +       int ret;
+>
+> -       /* go through all messages */
+> -       for (i = 0; i < num; i++) {
+> -               ret = bcm_iproc_i2c_xfer_single_msg(iproc_i2c, &msgs[i]);
+> -               if (ret) {
+> -                       dev_dbg(iproc_i2c->device, "xfer failed\n");
+> -                       return ret;
+> +       if (num == 2) {
+> +               /* Repeated start, use process call */
+> +               process_call = true;
+> +               if (msgs[1].flags & I2C_M_NOSTART) {
+> +                       dev_err(iproc_i2c->device, "Invalid repeated start\n");
+> +                       return -EOPNOTSUPP;
+>                 }
+>         }
+>
+> +       ret = bcm_iproc_i2c_xfer_internal(iproc_i2c, msgs, process_call);
+> +       if (ret) {
+> +               dev_dbg(iproc_i2c->device, "xfer failed\n");
+> +               return ret;
+> +       }
+> +
+>         return num;
+>  }
+>
+> @@ -806,6 +841,8 @@ static uint32_t bcm_iproc_i2c_functionality(struct i2c_adapter *adap)
+>  };
+>
+>  static struct i2c_adapter_quirks bcm_iproc_i2c_quirks = {
+> +       .flags = I2C_AQ_COMB_WRITE_THEN_READ,
+> +       .max_comb_1st_msg_len = M_TX_RX_FIFO_SIZE,
+>         .max_read_len = M_RX_MAX_READ_LEN,
+>  };
+>
+> --
+> 1.9.1
 >
