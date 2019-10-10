@@ -2,115 +2,89 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170ABC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668B6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC89F20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:50:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yb24pgwv"
+	by mail.kernel.org (Postfix) with ESMTP id 42FCE206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732095AbfJJKuY (ORCPT
+        id S1732994AbfJJKur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:50:24 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38081 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfJJKuY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:50:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w12so7281560wro.5;
-        Thu, 10 Oct 2019 03:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=nq8aTTwxoQayVKhvN2A/zAYVKjb3yhvqqfb15ovxI+M=;
-        b=Yb24pgwv0com25khkQ7ORavf/pBJRJm3rpESqTdZkOZtcXq+ARHRuW+CRxkr1sJsWR
-         KE6YW+UzKirDnW0aIcPiVPt1kM3xQuxe9FLmpwRkOEIbvRIz2WFALGdAK/UIgoIDiu9t
-         em7GV6TWc4GphRF9D12b5S/BEhygUD3xcY8qR31ht7A8mAwHAFFLzt9FhCUurF/l8zBG
-         okEmUb+TZiaXsP/7OByG0ZtGpNCeCko+fxF9IWuCKAhKnI3+DbNLrpfLW39WFJWuwWYL
-         hQRdMB5eKvDS6YzE/fUs/VxQhyHDom4p0tQ3Z1+g36Mds6PGcJjK4tlb1vTjuKPnqUgF
-         Hulw==
+        Thu, 10 Oct 2019 06:50:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55564 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732317AbfJJKuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 06:50:46 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ABEE980F81
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:50:46 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id z17so2564754wru.13
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 03:50:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=nq8aTTwxoQayVKhvN2A/zAYVKjb3yhvqqfb15ovxI+M=;
-        b=RsrfSRZ09sRN74NA9XKO6PsxyYMTv0f+w+G+Xq9e4KorbqXNP21J6EnId2BTaFaUYr
-         6HH6w1vGUNz/9MSNA3kVOgWPirlDDlzTcfUUKP5Q9Ojrf7NKrBCFpHhhVxe8c2c09vGj
-         kcIm9se0j99/LtG3y4hptFt+NLP7GyNXSeFflZxKSaPgQw/G2BHTwO6tT0Qvi8FPhW3n
-         rc3LlFJsXDVK3RE0v/+EdO0VdYssXhG8kRN8B5QYcgHPkVtUx7Ry8WOjuVXR9F7DjOC6
-         He8kYGsqiCrWd/h7Kbo+Z+SbELKpRY1tUXqpBSXp1b6qGkptuRHBVKDMTNE0nfYB+kMD
-         TxwA==
-X-Gm-Message-State: APjAAAXiw38Qy4tL+3PpZaHrI+fppozq3Iwjrzaye+QmU4AdtmBdjh4B
-        5y9tgwxukLbCExzuzMrlYuL3cF3F
-X-Google-Smtp-Source: APXvYqxNdZDbsK/iylAAYtWtc/CfhmfYlIQCb8cl6+RLKC/VLgmHbsWHZm5/d3QSMOjUDMV90ZJnyw==
-X-Received: by 2002:adf:e3cb:: with SMTP id k11mr8573250wrm.80.1570704620325;
-        Thu, 10 Oct 2019 03:50:20 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id r13sm8259118wrn.0.2019.10.10.03.50.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 03:50:18 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2JdVNcJHcx/QcdzRfb4YJuuCrnXrMcDI8HLU35hMmQI=;
+        b=J2u3AIBG1+FKM8piBmzRiMndZ+LvAkerC+KLs3qm7EGBPLGSlRB0ENvurrbjaulCUw
+         3pyz7kEgBsf3BavD00M42UZF4MQhqJLPW+ItFjVgjn+LXT3tzasnesamKPfbE/WndgG/
+         G+hgH25SpWjp08Na8pA4H150BQdMiEGwz5bLojGUjhyoWa7QoXTKn9mom92v7WWMFOy/
+         1sr+cT31spwIDur2S84AuFAKUi9oECwfq89l3TCCgpCVwKndYsEKYer8vRHz6ZZxI44I
+         VC/1KTzgu2P6RyVWZ8gWHxpRYG5eZ+FZXpClzWt/7pTYNweC2EpBrkUihcDdqX8L2Nds
+         VA2A==
+X-Gm-Message-State: APjAAAWE7fkZI2t01c/So4gx5vnYczvrpAbH7TchnGHBeM+TgBDESMIx
+        dHFc3UOJHzPUV24H5wylNw0/zuPb9nfgVdXij2ZPTIh/ZdwKbiBX+ONF/FlxKnSF4VPS3ALNHiw
+        IeU9MjGwxQ62K98MlLhnlspv1
+X-Received: by 2002:a5d:49c4:: with SMTP id t4mr7614238wrs.242.1570704645362;
+        Thu, 10 Oct 2019 03:50:45 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyAUpvDxsejwxKs/FKoQEGqKcCFjQ2DOCIheMbyTXCS7dsfl/Lhw3da0uewQazR2XTE22w4PQ==
+X-Received: by 2002:a5d:49c4:: with SMTP id t4mr7614227wrs.242.1570704645151;
+        Thu, 10 Oct 2019 03:50:45 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id u11sm4393311wmd.32.2019.10.10.03.50.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2019 03:50:44 -0700 (PDT)
+Subject: Re: [RFC v2 1/2] kvm: Mechanism to copy host timekeeping parameters
+ into guest.
+To:     Suleiman Souhlal <suleiman@google.com>, rkrcmar@redhat.com,
+        tglx@linutronix.de
+Cc:     john.stultz@linaro.org, sboyd@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        ssouhlal@freebsd.org, tfiga@chromium.org, vkuznets@redhat.com
+References: <20191010073055.183635-1-suleiman@google.com>
+ <20191010073055.183635-2-suleiman@google.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, suleiman@google.com
-Subject: [PATCH] kvm: clear kvmclock MSR on reset
-Date:   Thu, 10 Oct 2019 12:50:17 +0200
-Message-Id: <1570704617-32285-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+Openpgp: preference=signencrypt
+Message-ID: <e436f19b-8ff9-9442-897d-07fed3b424a4@redhat.com>
+Date:   Thu, 10 Oct 2019 12:50:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191010073055.183635-2-suleiman@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After resetting the vCPU, the kvmclock MSR keeps the previous value but it is
-not enabled.  This can be confusing, so fix it.
+On 10/10/19 09:30, Suleiman Souhlal wrote:
+>  	kvmclock_reset(vcpu);
+>  
+> +	if (vcpu->arch.pv_timekeeper_enabled)
+> +		atomic_dec(&pv_timekeepers_nr);
+> +
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/x86.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Please make the new MSR systemwide, there's no need to have one copy per
+vCPU.  Also, it has to be cleared on reset.  I have just sent a patch
+"[PATCH] kvm: clear kvmclock MSR on reset" and CCed you, you can add the
+clearing to kvmclock_reset with that patch applied.
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f26f8be4e621..a55252c69118 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2533,6 +2533,7 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
- static void kvmclock_reset(struct kvm_vcpu *vcpu)
- {
- 	vcpu->arch.pv_time_enabled = false;
-+	vcpu->arch.time = 0;
- }
- 
- static void kvm_vcpu_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
-@@ -2698,8 +2699,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_KVM_SYSTEM_TIME: {
- 		struct kvm_arch *ka = &vcpu->kvm->arch;
- 
--		kvmclock_reset(vcpu);
--
- 		if (vcpu->vcpu_id == 0 && !msr_info->host_initiated) {
- 			bool tmp = (msr == MSR_KVM_SYSTEM_TIME);
- 
-@@ -2713,14 +2712,13 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		kvm_make_request(KVM_REQ_GLOBAL_CLOCK_UPDATE, vcpu);
- 
- 		/* we verify if the enable bit is set... */
-+		vcpu->arch.pv_time_enabled = false;
- 		if (!(data & 1))
- 			break;
- 
- 		if (kvm_gfn_to_hva_cache_init(vcpu->kvm,
- 		     &vcpu->arch.pv_time, data & ~1ULL,
- 		     sizeof(struct pvclock_vcpu_time_info)))
--			vcpu->arch.pv_time_enabled = false;
--		else
- 			vcpu->arch.pv_time_enabled = true;
- 
- 		break;
--- 
-1.8.3.1
-
+Paolo
