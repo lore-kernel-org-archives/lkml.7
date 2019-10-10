@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298A5C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4874C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0081820B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1F320B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696741;
-	bh=9cScITfbpyOvujzZJWa7wm9Lu6lCEye1LkZVrNiM3BI=;
+	s=default; t=1570696744;
+	bh=TsbFjjj0pO0yLV3H0oyCsZrNK77KX6ZYSuHEraysTRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apuApcUSaodR3VWvrbpIt2icpVRls1fVw7eQOcG4pQcnx+H+J9gPtVSMjzp0R796i
-	 /GT2KufOejAsxKHuDtXWyHlG2J8fbXehFRRaHtsdnHeczKPDqzYvIecC37bSYjz2/J
-	 TFHBvCYXOLe5EsA67UflNndF46XAA2BVq/c0Sojs=
+	b=apejuPsNYIiF2GUR3cBDyOAIPOV84/5X/PxyVYwEw6s5oAYA3Pg3l0w+SklmvV7dl
+	 tplFPvhbWuE9ACF64X+RliiqCwCiLQWirDZRhTgYnc/Uop9KH04trG1I+oSwPVi8z/
+	 4Tq5cMovJmgOBQqDCtxM/2kCCqPCoR3oxzbAYhXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387754AbfJJIi7 (ORCPT
+        id S2387768AbfJJIjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42078 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387712AbfJJIi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:38:58 -0400
+        id S2387712AbfJJIjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:39:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3E6A20B7C;
-        Thu, 10 Oct 2019 08:38:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDB3621BE5;
+        Thu, 10 Oct 2019 08:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696737;
-        bh=9cScITfbpyOvujzZJWa7wm9Lu6lCEye1LkZVrNiM3BI=;
+        s=default; t=1570696740;
+        bh=TsbFjjj0pO0yLV3H0oyCsZrNK77KX6ZYSuHEraysTRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UVrR55yVyqzEv0M5iEjaItjUcRpQa37ODWTsKrrlyfiJT+0k7X7MOpaHyR6nffGi8
-         RoCd+8ow08oQAcJSPzr9/xrZXWDyA0yVNVfs9W5DiMPYtyA5oYN/guXps4FETFz2bK
-         j1S8HQw/9qZhbpATG1mxBP9eJgW+9abyHAmIHYoQ=
+        b=xy7hr3+KMyX1pB4Z1OQe49LF6C/RIYqRWGXmZCcNjo1h7QIeA/rAV4l2aOOVTpGXI
+         ueimHUjUmstOdC+lJeu2e/RDeJo9T4+nLCIWR4vbe4draDUehB5g6EA98sRkKnYkKj
+         U55m0sRUYYda9gOm8ljag9makPd2erfoTEEJywH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.3 006/148] s390/cio: exclude subchannels with no parent from pseudo check
-Date:   Thu, 10 Oct 2019 10:34:27 +0200
-Message-Id: <20191010083610.960464096@linuxfoundation.org>
+        stable@vger.kernel.org, Frank Heimes <frank.heimes@canonical.com>,
+        =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.3 007/148] s390/dasd: Fix error handling during online processing
+Date:   Thu, 10 Oct 2019 10:34:28 +0200
+Message-Id: <20191010083611.206491471@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,54 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Jan Höppner <hoeppner@linux.ibm.com>
 
-commit ab5758848039de9a4b249d46e4ab591197eebaf2 upstream.
+commit dd45483981ac62f432e073fea6e5e11200b9070d upstream.
 
-ccw console is created early in start_kernel and used before css is
-initialized or ccw console subchannel is registered. Until then console
-subchannel does not have a parent. For that reason assume subchannels
-with no parent are not pseudo subchannels. This fixes the following
-kasan finding:
+It is possible that the CCW commands for reading volume and extent pool
+information are not supported, either by the storage server (for
+dedicated DASDs) or by z/VM (for virtual devices, such as MDISKs).
 
-BUG: KASAN: global-out-of-bounds in sch_is_pseudo_sch+0x8e/0x98
-Read of size 8 at addr 00000000000005e8 by task swapper/0/0
+As a command reject will occur in such a case, the current error
+handling leads to a failing online processing and thus the DASD can't be
+used at all.
 
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc8-07370-g6ac43dd12538 #2
-Hardware name: IBM 2964 NC9 702 (z/VM 6.4.0)
-Call Trace:
-([<000000000012cd76>] show_stack+0x14e/0x1e0)
- [<0000000001f7fb44>] dump_stack+0x1a4/0x1f8
- [<00000000007d7afc>] print_address_description+0x64/0x3c8
- [<00000000007d75f6>] __kasan_report+0x14e/0x180
- [<00000000018a2986>] sch_is_pseudo_sch+0x8e/0x98
- [<000000000189b950>] cio_enable_subchannel+0x1d0/0x510
- [<00000000018cac7c>] ccw_device_recognition+0x12c/0x188
- [<0000000002ceb1a8>] ccw_device_enable_console+0x138/0x340
- [<0000000002cf1cbe>] con3215_init+0x25e/0x300
- [<0000000002c8770a>] console_init+0x68a/0x9b8
- [<0000000002c6a3d6>] start_kernel+0x4fe/0x728
- [<0000000000100070>] startup_continue+0x70/0xd0
+Since the data being read is not essential for an fully operational
+DASD, the error handling can be removed. Information about the failing
+command is sent to the s390dbf debug feature.
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: c729696bcf8b ("s390/dasd: Recognise data for ESE volumes")
+Cc: <stable@vger.kernel.org> # 5.3
+Reported-by: Frank Heimes <frank.heimes@canonical.com>
+Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/cio/css.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/s390/block/dasd_eckd.c |   24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -1388,6 +1388,8 @@ device_initcall(cio_settle_init);
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -1553,8 +1553,8 @@ static int dasd_eckd_read_vol_info(struc
+ 	if (rc == 0) {
+ 		memcpy(&private->vsq, vsq, sizeof(*vsq));
+ 	} else {
+-		dev_warn(&device->cdev->dev,
+-			 "Reading the volume storage information failed with rc=%d\n", rc);
++		DBF_EVENT_DEVID(DBF_WARNING, device->cdev,
++				"Reading the volume storage information failed with rc=%d", rc);
+ 	}
  
- int sch_is_pseudo_sch(struct subchannel *sch)
- {
-+	if (!sch->dev.parent)
-+		return 0;
- 	return sch == to_css(sch->dev.parent)->pseudo_subchannel;
- }
+ 	if (useglobal)
+@@ -1737,8 +1737,8 @@ static int dasd_eckd_read_ext_pool_info(
+ 	if (rc == 0) {
+ 		dasd_eckd_cpy_ext_pool_data(device, lcq);
+ 	} else {
+-		dev_warn(&device->cdev->dev,
+-			 "Reading the logical configuration failed with rc=%d\n", rc);
++		DBF_EVENT_DEVID(DBF_WARNING, device->cdev,
++				"Reading the logical configuration failed with rc=%d", rc);
+ 	}
  
+ 	dasd_sfree_request(cqr, cqr->memdev);
+@@ -2020,14 +2020,10 @@ dasd_eckd_check_characteristics(struct d
+ 	dasd_eckd_read_features(device);
+ 
+ 	/* Read Volume Information */
+-	rc = dasd_eckd_read_vol_info(device);
+-	if (rc)
+-		goto out_err3;
++	dasd_eckd_read_vol_info(device);
+ 
+ 	/* Read Extent Pool Information */
+-	rc = dasd_eckd_read_ext_pool_info(device);
+-	if (rc)
+-		goto out_err3;
++	dasd_eckd_read_ext_pool_info(device);
+ 
+ 	/* Read Device Characteristics */
+ 	rc = dasd_generic_read_dev_chars(device, DASD_ECKD_MAGIC,
+@@ -5663,14 +5659,10 @@ static int dasd_eckd_restore_device(stru
+ 	dasd_eckd_read_features(device);
+ 
+ 	/* Read Volume Information */
+-	rc = dasd_eckd_read_vol_info(device);
+-	if (rc)
+-		goto out_err2;
++	dasd_eckd_read_vol_info(device);
+ 
+ 	/* Read Extent Pool Information */
+-	rc = dasd_eckd_read_ext_pool_info(device);
+-	if (rc)
+-		goto out_err2;
++	dasd_eckd_read_ext_pool_info(device);
+ 
+ 	/* Read Device Characteristics */
+ 	rc = dasd_generic_read_dev_chars(device, DASD_ECKD_MAGIC,
 
 
