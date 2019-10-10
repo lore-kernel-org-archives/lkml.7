@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CF6C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F5BC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CF921A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DD42054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696893;
-	bh=iqzG08jXsqIalfCrOb0Aw/LP+MoyhvRy0gqBfWrP+Q8=;
+	s=default; t=1570696897;
+	bh=Hi/MFaaJ5GWhVSa+IqBly6KzXkJMtUWh1MbotqnxbIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SBhcG3uHqni0QssmVzX8iAcscCeB95C01luSsn9yT7TlCObhHAhOuShUiLJayf0ST
-	 j7HaiQuIa5MVXTPOGbJxnHXiK1abgeGmnrimz6zpjIDi8lYDTtoQeZQjY2jmsrL+3b
-	 vlpu6NlYtCJYTzuoGpNpvvdCAhJ2DL7aEPd81UFQ=
+	b=bpuW8+06XhcuCQpDUX7gmj8vZ9RfMuAKPR59XfCIOX8rZlcsJnf5IoVOnqGha/2UP
+	 GrwNPct/HKU/lbDKbi7JvuQOzpZJoIuRwn2R0anL1QQ84eiBYuOVpuxwzy+9bWgpAz
+	 v21bMBnelt3FkbYne+oxCzMVkNJt1jwmh3EKb7hU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388364AbfJJIlc (ORCPT
+        id S2387676AbfJJIlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:41:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45914 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:41:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388348AbfJJIla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:41:30 -0400
+        id S2388366AbfJJIld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:41:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91ABB2054F;
-        Thu, 10 Oct 2019 08:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64E892054F;
+        Thu, 10 Oct 2019 08:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696890;
-        bh=iqzG08jXsqIalfCrOb0Aw/LP+MoyhvRy0gqBfWrP+Q8=;
+        s=default; t=1570696892;
+        bh=Hi/MFaaJ5GWhVSa+IqBly6KzXkJMtUWh1MbotqnxbIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I2yIbwTVX9/iMileneQxCdgEKfWcOhKGb4QA1MtZrOg6A7AQQWvSkWOpxv2+01qGJ
-         6UkxVz+fXWRluXjQzkoFdMnDzK7a4/xvSqj4LTbOnKCdyQYq1aSspOVTi8TiVo0/Gi
-         44LUB3qx20ukzBg7urfEX11aJY8ZjTQDfKbvrkD0=
+        b=YaTr99hNFC+k42qmaqCPZt+PeStcD/bDJGyZEhLeAcNNjWZIslves+PswKLCUDoTr
+         +aXelasMQy60mlrJSqklRKXJhluprUh0T5uA9/Bl/qvZO2bd69sE4oZHe3FDXIxH91
+         Zi2vkZ8z/zqu4BrRMNYrxa5B5UTsscWmDJIs5Qm0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 091/148] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
-Date:   Thu, 10 Oct 2019 10:35:52 +0200
-Message-Id: <20191010083616.838476759@linuxfoundation.org>
+Subject: [PATCH 5.3 092/148] xprtrdma: Toggle XPRT_CONGESTED in xprtrdmas slot methods
+Date:   Thu, 10 Oct 2019 10:35:53 +0200
+Message-Id: <20191010083616.889035683@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,44 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit e2751463eaa6f9fec8fea80abbdc62dbc487b3c5 ]
+[ Upstream commit 395790566eec37706dedeb94779045adc3a7581e ]
 
-In encode_attrs(), there is an if statement on line 1145 to check
-whether label is NULL:
-    if (label && (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL))
+Commit 48be539dd44a ("xprtrdma: Introduce ->alloc_slot call-out for
+xprtrdma") added a separate alloc_slot and free_slot to the RPC/RDMA
+transport. Later, commit 75891f502f5f ("SUNRPC: Support for
+congestion control when queuing is enabled") modified the generic
+alloc/free_slot methods, but neglected the methods in xprtrdma.
 
-When label is NULL, it is used on lines 1178-1181:
-    *p++ = cpu_to_be32(label->lfs);
-    *p++ = cpu_to_be32(label->pi);
-    *p++ = cpu_to_be32(label->len);
-    p = xdr_encode_opaque_fixed(p, label->label, label->len);
+Found via code review.
 
-To fix these bugs, label is checked before being used.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Fixes: 75891f502f5f ("SUNRPC: Support for congestion control ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4xdr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/transport.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 46a8d636d151e..ab07db0f07cde 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -1174,7 +1174,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
- 		} else
- 			*p++ = cpu_to_be32(NFS4_SET_TO_SERVER_TIME);
- 	}
--	if (bmval[2] & FATTR4_WORD2_SECURITY_LABEL) {
-+	if (label && (bmval[2] & FATTR4_WORD2_SECURITY_LABEL)) {
- 		*p++ = cpu_to_be32(label->lfs);
- 		*p++ = cpu_to_be32(label->pi);
- 		*p++ = cpu_to_be32(label->len);
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 2ec349ed47702..f4763e8a67617 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -571,6 +571,7 @@ xprt_rdma_alloc_slot(struct rpc_xprt *xprt, struct rpc_task *task)
+ 	return;
+ 
+ out_sleep:
++	set_bit(XPRT_CONGESTED, &xprt->state);
+ 	rpc_sleep_on(&xprt->backlog, task, NULL);
+ 	task->tk_status = -EAGAIN;
+ }
+@@ -589,7 +590,8 @@ xprt_rdma_free_slot(struct rpc_xprt *xprt, struct rpc_rqst *rqst)
+ 
+ 	memset(rqst, 0, sizeof(*rqst));
+ 	rpcrdma_buffer_put(&r_xprt->rx_buf, rpcr_to_rdmar(rqst));
+-	rpc_wake_up_next(&xprt->backlog);
++	if (unlikely(!rpc_wake_up_next(&xprt->backlog)))
++		clear_bit(XPRT_CONGESTED, &xprt->state);
+ }
+ 
+ static bool rpcrdma_check_regbuf(struct rpcrdma_xprt *r_xprt,
 -- 
 2.20.1
 
