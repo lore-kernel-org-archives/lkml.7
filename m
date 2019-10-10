@@ -6,76 +6,148 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C0BC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2A0C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB88120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF2020B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfJJTzI (ORCPT
+        id S1726519AbfJJUAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 15:55:08 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:40740 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJTzI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 15:55:08 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIeWe-00034C-H8; Thu, 10 Oct 2019 19:55:05 +0000
-Date:   Thu, 10 Oct 2019 20:55:04 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191010195504.GI26530@ZenIV.linux.org.uk>
-References: <5f06c138-d59a-d811-c886-9e73ce51924c@roeck-us.net>
- <CAHk-=whAQWEMADgxb_qAw=nEY4OnuDn6HU4UCSDMNT5ULKvg3g@mail.gmail.com>
- <20191007012437.GK26530@ZenIV.linux.org.uk>
- <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk>
- <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
- <20191008032912.GQ26530@ZenIV.linux.org.uk>
- <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
- <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
+        Thu, 10 Oct 2019 16:00:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52856 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725867AbfJJUAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 16:00:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 682D2AF05;
+        Thu, 10 Oct 2019 20:00:33 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 94D07E378C; Thu, 10 Oct 2019 22:00:32 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 22:00:32 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        Jiri Pirko <jiri@resnulli.us>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v7 09/17] ethtool: generic handlers for GET
+ requests
+Message-ID: <20191010200032.GH22163@unicorn.suse.cz>
+References: <cover.1570654310.git.mkubecek@suse.cz>
+ <b000e461e348ba1a0af30f2e8493618bce11ec12.1570654310.git.mkubecek@suse.cz>
+ <20191010135639.GJ2223@nanopsycho>
+ <20191010180401.GD22163@unicorn.suse.cz>
+ <eb6cb68ff77eb4f2c680809e11142150f0d83007.camel@sipsolutions.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <eb6cb68ff77eb4f2c680809e11142150f0d83007.camel@sipsolutions.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 09:24:17PM -0700, Linus Torvalds wrote:
-> On Mon, Oct 7, 2019 at 9:09 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Try the attached patch, and then count the number of "rorx"
-> > instructions in the kernel. Hint: not many. On my personal config,
-> > this triggers 15 times in the whole kernel build (not counting
-> > modules).
+On Thu, Oct 10, 2019 at 08:18:05PM +0200, Johannes Berg wrote:
+> On Thu, 2019-10-10 at 20:04 +0200, Michal Kubecek wrote:
+> > 
+> > The only thing I don't like about the genetlink infrastructure is the
+> > design decision that policy and corresponding maxattr is an attribute of
+> > the family rather than a command. This forces anyone who wants to use it
+> > to essentially have one common message format for all commands and if
+> > that is not possible, to do what you suggest above, hide the actual
+> > request into a nest.
+> > 
+> > Whether you use one common attribute type for "command specific nest" or
+> > different attribute for each request type, you do not actually make
+> > things simpler, you just move the complexity one level lower. You will
+> > still have to do your own (per request) parsing of the actual request,
+> > the only difference is that you will do it in a different place and use
+> > nla_parse_nested() rather than nlmsg_parse().
+> > 
+> > Rather than bending the message layout to fit into the limitations of
+> > unified genetlink parsing, I prefer to keep the logical message
+> > structure and do the parsing on my own.
 > 
-> .. and four of them are in perf_callchain_user(), and are due to those
-> "__copy_from_user_nmi()" with either 4-byte or 8-byte copies.
+> I can't really agree with this.
 > 
-> It might as well just use __get_user() instead.
+> Having a common format is way more accessible. Generic netlink (now)
+> even exposes the policy (if set) and all of its nested sub-policies to
+> userspace (if you use NLA_POLICY_NESTED), so it's very easy to discover
+> what's in the policy and how it'll be interpreted.
+
+This, however, would require a different design that Jiri proposed. What
+he proposed was one attribute type for "request specific attributes".
+But to be able to perform nested validation of the whole message and
+export all policies would, with current genetlink design, require having
+one such attribute type for each request type (command).
+
+But that would also require an extra check that the request message
+contains only the attribute matching its command (request type) so that
+the validation performed by genetlink would still be incomplete (it will
+always be incomplete as there are lots of strange constraints which
+cannot be described by a policy).
+
+Unless you suggest to effectively have just one command and determine
+the request type based on which of these request specific attributes is
+present (and define what to do if there is more than one).
+
+> This makes it really easy to have tools for introspection, or have
+> common debugging tools that just understand the message format based on
+> the kernel's policy.
 > 
-> The point being that the silly code in the header files is just
-> pointless. We shouldn't do it.
+> It's also much easier this way to not mess up things like "attribute # 7
+> always means a netdev index". You solved that by nesting the common
+> bits, though the part about ETHTOOL_A_HEADER_RFLAGS actually seems ...
+> wrong? Shouldn't that have been somewhere else? Or does that mean each
+> and every request_policy has to have this at the same index? That sounds
+> error prone ...
 
-FWIW, the one that looks the most potentiall sensitive in that bunch is
-arch/x86/kvm/paging_tmpl.h:388:         if (unlikely(__copy_from_user(&pte, ptep_user, sizeof(pte))))
-in the bowels of KVM page fault handling.  I would be very surprised if
-the rest would be detectable...
+ETHTOOL_A_HEADER_RFLAGS is a constant, it's always the same. Yes,
+logically it would rather belong outside header and maybe should be
+replaced by a (possibly empty) set of NLA_FLAG attributes. If having it
+in the common header is such a big problem, I'll move it out.
 
-Anyway, another question you way: what do you think of try/catch approaches
-to __get_user() blocks, like e.g. restore_sigcontext() is doing?
+> But you even have *two* policies for each kind of message, one for the
+> content and one for the header...?
 
-Should that be available outside of arch/*?  For that matter, would
-it be a good idea to convert get_user_ex() users in arch/x86 to
-unsafe_get_user()?
+As I said in reply to another patch, it turns out that the only reason
+for having a per request header policy was rejecting
+ETHTOOL_A_HEADER_RFLAGS for requests which do not define any request
+flags but that's probably an overkill so that one universal header
+policy would be sufficient.
+
+> It almost seems though that your argument isn't so much on the actual
+> hierarchy/nesting structure of the message itself, but the easy of
+> parsing it?
+
+It's both. I still feel that from logical point of view it makes much
+more sense to use top level attributes for what the message is actually
+about. Nothing you said convinced me otherwise, rather the opposite: it
+only confirmed that the only reason for hiding the actual request
+contents one level below is to work around the consequences of the
+decision to make policy in genetlink per family rather than per command.
+
+> I have thought previous that it might make sense to create a
+> hierarchical representation of the message, with the nested TBs pre-
+> parsed too in generic netlink, so you wouldn't just have a common
+> attrbuf but (optionally) allocate nested attrbufs for those nested
+> attributes that are present, and give a way of accessing those.
+> 
+> I really do think that a single policy that's exposed for introspection
+> and links its nested sub-policies for the different sub-commands (which
+> are then also exposed to introspection) is much superior to having it
+> all just driven by the code like this.
+
+I still don't see any reason why all this could not work with per
+command policies and would be principially dependent on having one
+universal policy for the whole family.
+
+Michal Kubecek
