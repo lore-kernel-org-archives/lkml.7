@@ -5,74 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7464C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21C8C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9852720B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82B720B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="dZgCLK1c";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GWl/lLxc"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="NwmmRozZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="syn9HLHh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732808AbfJJCKE (ORCPT
+        id S1732795AbfJJCKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 9 Oct 2019 22:10:04 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:35361 "EHLO
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:50173 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726469AbfJJCIC (ORCPT
+        by vger.kernel.org with ESMTP id S1732599AbfJJCH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 22:08:02 -0400
+        Wed, 9 Oct 2019 22:07:58 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 063B921C24;
-        Wed,  9 Oct 2019 22:07:05 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 53F3D20963;
+        Wed,  9 Oct 2019 22:06:58 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 09 Oct 2019 22:07:05 -0400
+  by compute4.internal (MEProxy); Wed, 09 Oct 2019 22:06:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
         :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=/ZpOKiZozizLe
-        7jyQflbx5yKpx8pRHgLZdXkZKFa2Hg=; b=dZgCLK1cVP859GF3NSW/Y0RSrwbC+
-        FN6WHktScdyypzOyLWvLPfer0xRg+AccUNGHtweQbl0V/7rEA6A2z8RgwxWlRppf
-        8S8oQR1B+zrbyMIf8BOWXeyVLjJWpVcoP5tp1Kl2zW1UVM6BiPrN1tC8C/T3EPbJ
-        zoH+XdMD4RNeL2vj/WCVYPPERAXhPee3x1xABwjcYtyMHQ5MpO4GgALNv7vLNAfJ
-        WoGSeTEuUTuDBRahmsFtEp1ACAPzIXPeh8p6RIrahJZMUrwuqUyBmm1fPGaCmD/Q
-        kS9g/whN7xNNayUDLGIDx2cTd+UkAnkk1d/YHUSY47PqqjPjn5jSY5BNg==
+        :mime-version:content-transfer-encoding; s=fm3; bh=0W/usZNXhyMNI
+        sw8q7SzfZokc2ewQzqfo920euFsCVM=; b=NwmmRozZlTgjttXStjhFwzJWXVL3w
+        /yYViPG7a3iKaq9FfF5mxMlb54iHBgjUio5gPYOUy5uOVzuy50BeTJ1I8x4fTja8
+        GRaBpaDz3SRELmBtLfmZnzxRXHhK+gKwwgFhEaU2nOIbXQYHo7Atd0x5LQXg4Y3X
+        bVs+AQvSJhteiTpHjvWworuxA+k7uGTWWyH7oDhNWPSCkGreOycXCl81k0j38444
+        eUBwQO+CFZvD9gQfRLrUu7iRywH80YVAbKzI9i683YsoLM1uYshI1Aa39a4boQnL
+        B2wVQv65AIjS7OCS2ud/QAXNmhxHT6aq7WBYXk7vWescUU+8hmCu1ZqUA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=/ZpOKiZozizLe7jyQflbx5yKpx8pRHgLZdXkZKFa2Hg=; b=GWl/lLxc
-        bDwDADwW7Gay8uPl9LYFTy/HJmEiOslDOI7Ya6VxBCzU1anE7GzrKA5/bgU7XKmi
-        MYRJa/+z0xg7z+u7ZVU7JRnWRplo1BK/YqhSvTxFwKt08o569jAaJZlboXxRCIC2
-        5fvVbsGfe+aji3txbJcfMZfbeoGXVZTy8TQ6kGSztUFh7G16s/zbHTwxDHPgRVYF
-        IEpCo1RsN0JKLc7z63ihfSU36419lAi6YyDpAiVB9vWV66CP4g2DjRV8QfP8ZSV0
-        ekWJ8sjUUbAlaawn/E0AGkUFMdq2LK5jP3brOdCJhLJkv4WN3YFCN1+ovESHkY3/
-        Tb5OvO3WwiRMhg==
-X-ME-Sender: <xms:SJKeXRCDD2boWRBZ06LxfDjlEw_q9PncQjxGkElCbdhbBVBYTOkHDw>
+        fm1; bh=0W/usZNXhyMNIsw8q7SzfZokc2ewQzqfo920euFsCVM=; b=syn9HLHh
+        nQhZND7rdrUgRaKPfCfJZjLhA9wmm+7rQcd0b9nSZVKZcpgyIWZDCucgE8SVAH36
+        w3jyRW01JN0To/1gqQfNc4FHF7hx/jT/b0SlrrU+YvFnc0ofM+55j2T21kAdFnRY
+        cbGzttoxdRfnsSSbp+Qe2R0cW+SbRwMYozQxR9AvVFZaJj1gnnlu1LGwKWs3Zaw+
+        0FFMtYbADKv0CORqnkVaIlRC75zs7yA0J1dKKVJJ1smWbPc4CHfZnwiD1UTj6VpM
+        7LBrNOiAoVkMeKeAo6u/DcJctFCRkGXBcHjI8i2pHKyfDtE2xtF357BZcvqnd0zC
+        gjio90VO77Jw+Q==
+X-ME-Sender: <xms:QpKeXUq8ROxqBkOMtvkEUi_3e9hH5sFCXYkOlwZBf1lIaH2rJ6wO3w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedriedvgdehjecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
     ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
     rdhiugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrih
     hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
-    he
-X-ME-Proxy: <xmx:SZKeXb4ML-jLRL_CgJSaGQz-KUMz2dttoul9go8GTa6Xks3FUKnWPA>
-    <xmx:SZKeXfYNjeSU9jK663vzR-J5NZG5PbGSa0Sc9TKHw3AE3tOizsMu2Q>
-    <xmx:SZKeXa3rV6bSfAAbSxYoiVckK-CUyJnghswk9lTdZFR0KK2AJIj_bQ>
-    <xmx:SZKeXUAV6NAvOGMh1n6aLPgOSbYNwieJ8c5gYee5QWfC6XVgLr_CsQ>
+    ge
+X-ME-Proxy: <xmx:QpKeXRHjJ2DmUpEbaY8TEK1LNOpyvzrePzz81mRCM6nqMnds7Hw4og>
+    <xmx:QpKeXSAHQ8N0wPR65BF6Za8XwTBIGdSQr3NyQjVG-myAreUru4HwgQ>
+    <xmx:QpKeXeyt3LGeQuA2zQM05oJKv0iX1tzpEsU8SPEON7fR0itzWsVRNg>
+    <xmx:QpKeXTl-UyZhm2le3voM-zgsOUS9UOAVdw_HBLtUy9aybRJAaNgP9A>
 Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id ECAA080059;
-        Wed,  9 Oct 2019 22:07:01 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3272D80059;
+        Wed,  9 Oct 2019 22:06:54 -0400 (EDT)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     netdev@vger.kernel.org
 Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         joel@jms.id.au, benh@kernel.crashing.org,
         linux-aspeed@lists.ozlabs.org
-Subject: [PATCH v2 3/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED MACs
-Date:   Thu, 10 Oct 2019 12:37:56 +1030
-Message-Id: <20191010020756.4198-4-andrew@aj.id.au>
+Subject: [PATCH v2 1/3] dt-bindings: net: ftgmac100: Document AST2600 compatible
+Date:   Thu, 10 Oct 2019 12:37:54 +1030
+Message-Id: <20191010020756.4198-2-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191010020756.4198-1-andrew@aj.id.au>
 References: <20191010020756.4198-1-andrew@aj.id.au>
@@ -83,112 +83,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 50MHz RCLK has to be enabled before the RMII interface will function.
+The AST2600 contains an FTGMAC100-compatible MAC, although the MDIO
+controller previously embedded in the MAC has been moved out to a
+dedicated MDIO block.
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Acked-by: Joel Stanley <joel@jms.id.au>
 ---
-v2: Mainly a rework of error case handling, some changes to comments
+ Documentation/devicetree/bindings/net/ftgmac100.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/net/ethernet/faraday/ftgmac100.c | 50 +++++++++++++++++++-----
- 1 file changed, 40 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-index 9b7af94a40bb..824310253099 100644
---- a/drivers/net/ethernet/faraday/ftgmac100.c
-+++ b/drivers/net/ethernet/faraday/ftgmac100.c
-@@ -90,6 +90,9 @@ struct ftgmac100 {
- 	struct mii_bus *mii_bus;
- 	struct clk *clk;
+diff --git a/Documentation/devicetree/bindings/net/ftgmac100.txt b/Documentation/devicetree/bindings/net/ftgmac100.txt
+index 72e7aaf7242e..04cc0191b7dd 100644
+--- a/Documentation/devicetree/bindings/net/ftgmac100.txt
++++ b/Documentation/devicetree/bindings/net/ftgmac100.txt
+@@ -9,6 +9,7 @@ Required properties:
  
-+	/* AST2500/AST2600 RMII ref clock gate */
-+	struct clk *rclk;
-+
- 	/* Link management */
- 	int cur_speed;
- 	int cur_duplex;
-@@ -1718,20 +1721,41 @@ static void ftgmac100_ncsi_handler(struct ncsi_dev *nd)
- 		   nd->link_up ? "up" : "down");
- }
+      - "aspeed,ast2400-mac"
+      - "aspeed,ast2500-mac"
++     - "aspeed,ast2600-mac"
  
--static void ftgmac100_setup_clk(struct ftgmac100 *priv)
-+static int ftgmac100_setup_clk(struct ftgmac100 *priv)
- {
--	priv->clk = devm_clk_get(priv->dev, NULL);
--	if (IS_ERR(priv->clk))
--		return;
-+	struct clk *clk;
-+	int rc;
- 
--	clk_prepare_enable(priv->clk);
-+	clk = devm_clk_get(priv->dev, NULL /* MACCLK */);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+	priv->clk = clk;
-+	rc = clk_prepare_enable(priv->clk);
-+	if (rc)
-+		return rc;
- 
- 	/* Aspeed specifies a 100MHz clock is required for up to
- 	 * 1000Mbit link speeds. As NCSI is limited to 100Mbit, 25MHz
- 	 * is sufficient
- 	 */
--	clk_set_rate(priv->clk, priv->use_ncsi ? FTGMAC_25MHZ :
--			FTGMAC_100MHZ);
-+	rc = clk_set_rate(priv->clk, priv->use_ncsi ? FTGMAC_25MHZ :
-+			  FTGMAC_100MHZ);
-+	if (rc)
-+		goto cleanup_clk;
-+
-+	/* RCLK is for RMII, typically used for NCSI. Optional because its not
-+	 * necessary if it's the AST2400 MAC, or the MAC is configured for
-+	 * RGMII, or the controller is not an ASPEED-based controller.
-+	 */
-+	priv->rclk = devm_clk_get_optional(priv->dev, "RCLK");
-+	rc = clk_prepare_enable(priv->rclk);
-+	if (!rc)
-+		return 0;
-+
-+cleanup_clk:
-+	clk_disable_unprepare(priv->clk);
-+
-+	return rc;
- }
- 
- static int ftgmac100_probe(struct platform_device *pdev)
-@@ -1853,8 +1877,11 @@ static int ftgmac100_probe(struct platform_device *pdev)
- 			goto err_setup_mdio;
- 	}
- 
--	if (priv->is_aspeed)
--		ftgmac100_setup_clk(priv);
-+	if (priv->is_aspeed) {
-+		err = ftgmac100_setup_clk(priv);
-+		if (err)
-+			goto err_ncsi_dev;
-+	}
- 
- 	/* Default ring sizes */
- 	priv->rx_q_entries = priv->new_rx_q_entries = DEF_RX_QUEUE_ENTRIES;
-@@ -1886,8 +1913,10 @@ static int ftgmac100_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
--err_ncsi_dev:
- err_register_netdev:
-+	clk_disable_unprepare(priv->rclk);
-+	clk_disable_unprepare(priv->clk);
-+err_ncsi_dev:
- 	ftgmac100_destroy_mdio(netdev);
- err_setup_mdio:
- 	iounmap(priv->base);
-@@ -1909,6 +1938,7 @@ static int ftgmac100_remove(struct platform_device *pdev)
- 
- 	unregister_netdev(netdev);
- 
-+	clk_disable_unprepare(priv->rclk);
- 	clk_disable_unprepare(priv->clk);
- 
- 	/* There's a small chance the reset task will have been re-queued,
+ - reg: Address and length of the register set for the device
+ - interrupts: Should contain ethernet controller interrupt
 -- 
 2.20.1
 
