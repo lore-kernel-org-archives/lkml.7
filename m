@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181FEC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EFDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E241821D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C01E2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697068;
-	bh=o8YQWDq9izhWPzGb6JCcR7h6l1EMb//vReFY9UK3M6Q=;
+	s=default; t=1570697072;
+	bh=ESmn47NdpDrnRFhWFMS6oHzR/zZ0XeYN/LYzXWP7Urs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eUZd4+MZhW1UabvnMovS9c3mZPMRocG1rhA6AMHfEsUwMzqY8lXY7dLGUeGOEz1T0
-	 /n5JxCofw/YPUS9YpMERUJJDcUPQ4bmZEecagnFu5Kj7RB1C2XAdPxLl2xe5YZe+5F
-	 gc729U93q8hgid4iRtGzzD7Lg9JP2Tf+ESQQzJ9A=
+	b=DY4kz/NNXV54IccxOsJRqTjXWv03dMku3VJ8cHNuOfkuoj1KxxTfJ/WKMexKtzSqj
+	 8qWvUg/PQIss7xd2ZFZowuuq2U2lg72fJBAsKA0plD6V5wto1AuJBCBql0EizFqdrB
+	 V7r3xnacwZkCloYwdXio7l5HfqaYzDBMEzPSKyD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388938AbfJJIo1 (ORCPT
+        id S2388947AbfJJIoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49604 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:44:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388932AbfJJIoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:44:25 -0400
+        id S2388932AbfJJIo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:44:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E3042054F;
-        Thu, 10 Oct 2019 08:44:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02B4D2054F;
+        Thu, 10 Oct 2019 08:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697064;
-        bh=o8YQWDq9izhWPzGb6JCcR7h6l1EMb//vReFY9UK3M6Q=;
+        s=default; t=1570697067;
+        bh=ESmn47NdpDrnRFhWFMS6oHzR/zZ0XeYN/LYzXWP7Urs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iHW89rmjIzeQeY9royUtBl2WX5umbo/mLmFfVoBcygSxcNdPXoVc38CllcQSPZwKs
-         6LW6OJq2Z0p94mclJT6KmOIBv5H0VRjIggQNMmuEASF6x3uchVfG5E1Qk52xa3OoY2
-         BL6JTeiqbCshZvjXnUuUjlKAlj5qqqZU7F0BJffo=
+        b=SOqxFBWkKsW+csOq3eB7yI2602UkkrJAmMrMhdg7NAqRx/6xNyIEAEPMFpiUECYD/
+         E3pnk/cWM4Jjnsq1PUfuzQMeTtBxpWDwU5Eb9/o5bJhPXtEzYG3EzwoLoDTkYSfAHk
+         5f84E9YEVKhE9tN1y9iiJrxEOU/pphozqdR7+VWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 134/148] nfp: abm: fix memory leak in nfp_abm_u32_knode_replace
-Date:   Thu, 10 Oct 2019 10:36:35 +0200
-Message-Id: <20191010083620.492534065@linuxfoundation.org>
+Subject: [PATCH 5.3 135/148] drm/radeon: Bail earlier when radeon.cik_/si_support=0 is passed
+Date:   Thu, 10 Oct 2019 10:36:36 +0200
+Message-Id: <20191010083620.545054451@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -61,67 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 78beef629fd95be4ed853b2d37b832f766bd96ca ]
+[ Upstream commit 9dbc88d013b79c62bd845cb9e7c0256e660967c5 ]
 
-In nfp_abm_u32_knode_replace if the allocation for match fails it should
-go to the error handling instead of returning. Updated other gotos to
-have correct errno returned, too.
+Bail from the pci_driver probe function instead of from the drm_driver
+load function.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This avoid /dev/dri/card0 temporarily getting registered and then
+unregistered again, sending unwanted add / remove udev events to
+userspace.
+
+Specifically this avoids triggering the (userspace) bug fixed by this
+plymouth merge-request:
+https://gitlab.freedesktop.org/plymouth/plymouth/merge_requests/59
+
+Note that despite that being an userspace bug, not sending unnecessary
+udev events is a good idea in general.
+
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1490490
+Reviewed-by: Michel Dänzer <mdaenzer@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/abm/cls.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 31 +++++++++++++++++++++++++++++
+ drivers/gpu/drm/radeon/radeon_kms.c | 25 -----------------------
+ 2 files changed, 31 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-index 23ebddfb95325..9f8a1f69c0c4c 100644
---- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
-+++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-@@ -176,8 +176,10 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
- 	u8 mask, val;
- 	int err;
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 15d7bebe17294..5cc0fbb04ab14 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -325,8 +325,39 @@ bool radeon_device_is_virtual(void);
+ static int radeon_pci_probe(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
++	unsigned long flags = 0;
+ 	int ret;
  
--	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack))
-+	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack)) {
-+		err = -EOPNOTSUPP;
- 		goto err_delete;
-+	}
- 
- 	tos_off = proto == htons(ETH_P_IP) ? 16 : 20;
- 
-@@ -198,14 +200,18 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
- 		if ((iter->val & cmask) == (val & cmask) &&
- 		    iter->band != knode->res->classid) {
- 			NL_SET_ERR_MSG_MOD(extack, "conflict with already offloaded filter");
-+			err = -EOPNOTSUPP;
- 			goto err_delete;
- 		}
- 	}
- 
- 	if (!match) {
- 		match = kzalloc(sizeof(*match), GFP_KERNEL);
--		if (!match)
--			return -ENOMEM;
-+		if (!match) {
-+			err = -ENOMEM;
-+			goto err_delete;
-+		}
++	if (!ent)
++		return -ENODEV; /* Avoid NULL-ptr deref in drm_get_pci_dev */
 +
- 		list_add(&match->list, &alink->dscp_map);
- 	}
- 	match->handle = knode->handle;
-@@ -221,7 +227,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
++	flags = ent->driver_data;
++
++	if (!radeon_si_support) {
++		switch (flags & RADEON_FAMILY_MASK) {
++		case CHIP_TAHITI:
++		case CHIP_PITCAIRN:
++		case CHIP_VERDE:
++		case CHIP_OLAND:
++		case CHIP_HAINAN:
++			dev_info(&pdev->dev,
++				 "SI support disabled by module param\n");
++			return -ENODEV;
++		}
++	}
++	if (!radeon_cik_support) {
++		switch (flags & RADEON_FAMILY_MASK) {
++		case CHIP_KAVERI:
++		case CHIP_BONAIRE:
++		case CHIP_HAWAII:
++		case CHIP_KABINI:
++		case CHIP_MULLINS:
++			dev_info(&pdev->dev,
++				 "CIK support disabled by module param\n");
++			return -ENODEV;
++		}
++	}
++
+ 	if (vga_switcheroo_client_probe_defer(pdev))
+ 		return -EPROBE_DEFER;
  
- err_delete:
- 	nfp_abm_u32_knode_delete(alink, knode);
--	return -EOPNOTSUPP;
-+	return err;
- }
+diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
+index 07f7ace42c4ba..e85c554eeaa94 100644
+--- a/drivers/gpu/drm/radeon/radeon_kms.c
++++ b/drivers/gpu/drm/radeon/radeon_kms.c
+@@ -100,31 +100,6 @@ int radeon_driver_load_kms(struct drm_device *dev, unsigned long flags)
+ 	struct radeon_device *rdev;
+ 	int r, acpi_status;
  
- static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
+-	if (!radeon_si_support) {
+-		switch (flags & RADEON_FAMILY_MASK) {
+-		case CHIP_TAHITI:
+-		case CHIP_PITCAIRN:
+-		case CHIP_VERDE:
+-		case CHIP_OLAND:
+-		case CHIP_HAINAN:
+-			dev_info(dev->dev,
+-				 "SI support disabled by module param\n");
+-			return -ENODEV;
+-		}
+-	}
+-	if (!radeon_cik_support) {
+-		switch (flags & RADEON_FAMILY_MASK) {
+-		case CHIP_KAVERI:
+-		case CHIP_BONAIRE:
+-		case CHIP_HAWAII:
+-		case CHIP_KABINI:
+-		case CHIP_MULLINS:
+-			dev_info(dev->dev,
+-				 "CIK support disabled by module param\n");
+-			return -ENODEV;
+-		}
+-	}
+-
+ 	rdev = kzalloc(sizeof(struct radeon_device), GFP_KERNEL);
+ 	if (rdev == NULL) {
+ 		return -ENOMEM;
 -- 
 2.20.1
 
