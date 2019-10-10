@@ -2,258 +2,105 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4966BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC652C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0860E20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:44:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="WUPj4IFo"
+	by mail.kernel.org (Postfix) with ESMTP id C51C72064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570711497;
+	bh=YMmXtb2JLA8hWzDQQfOgQycNtJFOok7eUnehOSyP+pA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aqzg2oDIUpCPw+qnd9IrPK3OJl+bbkP/C99rSi8UO/UgxQltqb+gbSPe+ll8rmxeu
+	 QzDGYtoxenr0C1lXrGHKUfC2OcstO3lHg57k5ofTw+jTUi4DQuVXcOORy2MExHpj90
+	 j00JZwFKlNgi/5LC0xnWnnPEo8MXywMCzXPE9CxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387943AbfJJMn7 (ORCPT
+        id S2387962AbfJJMo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:43:59 -0400
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:46864 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733284AbfJJMn6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:43:58 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 994483F72B;
-        Thu, 10 Oct 2019 14:43:31 +0200 (CEST)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=WUPj4IFo;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1Rupmn_c-ZPu; Thu, 10 Oct 2019 14:43:25 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 81B8F3F3BA;
-        Thu, 10 Oct 2019 14:43:23 +0200 (CEST)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 363D53610CE;
-        Thu, 10 Oct 2019 14:43:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1570711403; bh=LnuSYh0CbmyFz+uFpFwRCzsueR5ZGZ5doaj/D7L9BdQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUPj4IFos+giBChffmsMTvRNHlyO8829Yn+9nuF+1U5jctlxKoDiqjpDTUjwffJOA
-         MVbHT1U4Np3Qp7EookU6Twh/3vkyYMurm/y2YnmLnxQ/slzN+JFp5Ew0CAyV00tj2U
-         unUqjiqcrXgf79NMT+Wi3VsOWOmZB7lR3yIWsDeg=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        torvalds@linux-foundation.org, kirill@shutemov.name
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>
-Subject: [PATCH v5 3/8] mm: Add a walk_page_mapping() function to the pagewalk code
-Date:   Thu, 10 Oct 2019 14:43:09 +0200
-Message-Id: <20191010124314.40067-4-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191010124314.40067-1-thomas_os@shipmail.org>
-References: <20191010124314.40067-1-thomas_os@shipmail.org>
+        Thu, 10 Oct 2019 08:44:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733191AbfJJMo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:44:56 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90E2220B7C;
+        Thu, 10 Oct 2019 12:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570711495;
+        bh=YMmXtb2JLA8hWzDQQfOgQycNtJFOok7eUnehOSyP+pA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LriOz2qFhwWE9p03RxfAw5yzayh07CQZffd0SfcdLfaXfS1Hb+hO+G+Ur4d8nIH2U
+         YUi80UntVX2mzkp6yJoMMQACXHvwShAcvMC9S+12N4YJh/0pHQreeOohE4Q6wtkfZl
+         DVaHHWkcbwGe2dd3mvLAoEPm1Dt2tS+Te6oBNxKI=
+Received: by mail-qt1-f178.google.com with SMTP id c21so8416191qtj.12;
+        Thu, 10 Oct 2019 05:44:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAWlJkM4VLHaTcCORsHsZm3X8OWfzZb/ex5imGi+ufwn7x2xELFT
+        bAIfhqmGxtako1nHMXQ7cVVDu042JoIiNGnNdg==
+X-Google-Smtp-Source: APXvYqwNvmWSytFEH52LryQ2mgDyEBuHBeeq3gQeZfuuroZ1Dr7vv+ZkYoV5zzwGc/l367nh1bLcdlmGVo4hk6usLJc=
+X-Received: by 2002:a0c:e606:: with SMTP id z6mr9343421qvm.135.1570711494582;
+ Thu, 10 Oct 2019 05:44:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191009234648.2271-1-robh@kernel.org> <alpine.DEB.2.21.9999.1910091657240.11044@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1910091657240.11044@viisi.sifive.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 10 Oct 2019 07:44:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK==+6QPrx3NDobYfWQwRg9m-t0LZgL=KzqfhAfbu+xTg@mail.gmail.com>
+Message-ID: <CAL_JsqK==+6QPrx3NDobYfWQwRg9m-t0LZgL=KzqfhAfbu+xTg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+On Wed, Oct 9, 2019 at 7:08 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> On Wed, 9 Oct 2019, Rob Herring wrote:
+>
+> > Fix the errors in the RiscV CPU DT schema:
+> >
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
+> > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> >
+> > The DT spec allows for 'timebase-frequency' to be in 'cpu' or 'cpus' node
+> > and RiscV is doing nothing special with it, so just drop the definition
+> > here and don't make it required.
+>
+> The RISC-V kernel code does in fact parse it and use it, and we currently
+> rely on it being under /cpus:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/time.c#n19
+>
+> The RISC-V user ISA specification also constrains the timebase-frequency
+> to be the same across all CPUs, in section 10.1:
+>
+>   https://github.com/riscv/riscv-isa-manual/releases/download/draft-20190608-f467e5d/riscv-spec.pdf
+>
+> So the right thing is to require 'timebase-frequency' at /cpus, and forbid
+> it in the individual CPU nodes.
 
-For users that want to travers all page table entries pointing into a
-region of a struct address_space mapping, introduce a walk_page_mapping()
-function.
+Yes, but this schema only deals with 'cpu' nodes and we can't check
+/cpus here. We'd need to write another schema matching on a child cpu
+node having a RiscV compatible.
 
-The walk_page_mapping() function will be initially be used for dirty-
-tracking in virtual graphics drivers.
+I can change this to 'timebase-frequency: false' to ban it here. That
+doesn't add too much as any undefined name is still allowed such as
+'timbase-frequency'. There's a way to address this in json-schema
+draft8 with 'unevaluatedProperties', but that's not ready yet.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
----
- include/linux/pagewalk.h |  9 ++++
- mm/pagewalk.c            | 94 +++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 102 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-index bddd9759bab9..6ec82e92c87f 100644
---- a/include/linux/pagewalk.h
-+++ b/include/linux/pagewalk.h
-@@ -24,6 +24,9 @@ struct mm_walk;
-  *			"do page table walk over the current vma", returning
-  *			a negative value means "abort current page table walk
-  *			right now" and returning 1 means "skip the current vma"
-+ * @pre_vma:            if set, called before starting walk on a non-null vma.
-+ * @post_vma:           if set, called after a walk on a non-null vma, provided
-+ *                      that @pre_vma and the vma walk succeeded.
-  */
- struct mm_walk_ops {
- 	int (*pud_entry)(pud_t *pud, unsigned long addr,
-@@ -39,6 +42,9 @@ struct mm_walk_ops {
- 			     struct mm_walk *walk);
- 	int (*test_walk)(unsigned long addr, unsigned long next,
- 			struct mm_walk *walk);
-+	int (*pre_vma)(unsigned long start, unsigned long end,
-+		       struct mm_walk *walk);
-+	void (*post_vma)(struct mm_walk *walk);
- };
- 
- /**
-@@ -62,5 +68,8 @@ int walk_page_range(struct mm_struct *mm, unsigned long start,
- 		void *private);
- int walk_page_vma(struct vm_area_struct *vma, const struct mm_walk_ops *ops,
- 		void *private);
-+int walk_page_mapping(struct address_space *mapping, pgoff_t first_index,
-+		      pgoff_t nr, const struct mm_walk_ops *ops,
-+		      void *private);
- 
- #endif /* _LINUX_PAGEWALK_H */
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index c5fa42cab14f..ea0b9e606ad1 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -254,13 +254,23 @@ static int __walk_page_range(unsigned long start, unsigned long end,
- {
- 	int err = 0;
- 	struct vm_area_struct *vma = walk->vma;
-+	const struct mm_walk_ops *ops = walk->ops;
-+
-+	if (vma && ops->pre_vma) {
-+		err = ops->pre_vma(start, end, walk);
-+		if (err)
-+			return err;
-+	}
- 
- 	if (vma && is_vm_hugetlb_page(vma)) {
--		if (walk->ops->hugetlb_entry)
-+		if (ops->hugetlb_entry)
- 			err = walk_hugetlb_range(start, end, walk);
- 	} else
- 		err = walk_pgd_range(start, end, walk);
- 
-+	if (vma && ops->post_vma)
-+		ops->post_vma(walk);
-+
- 	return err;
- }
- 
-@@ -291,6 +301,11 @@ static int __walk_page_range(unsigned long start, unsigned long end,
-  * its vm_flags. walk_page_test() and @ops->test_walk() are used for this
-  * purpose.
-  *
-+ * If operations need to be staged before and committed after a vma is walked,
-+ * there are two callbacks, pre_vma() and post_vma(). Note that post_vma(),
-+ * since it is intended to handle commit-type operations, can't return any
-+ * errors.
-+ *
-  * struct mm_walk keeps current values of some common data like vma and pmd,
-  * which are useful for the access from callbacks. If you want to pass some
-  * caller-specific data to callbacks, @private should be helpful.
-@@ -377,3 +392,80 @@ int walk_page_vma(struct vm_area_struct *vma, const struct mm_walk_ops *ops,
- 		return err;
- 	return __walk_page_range(vma->vm_start, vma->vm_end, &walk);
- }
-+
-+/**
-+ * walk_page_mapping - walk all memory areas mapped into a struct address_space.
-+ * @mapping: Pointer to the struct address_space
-+ * @first_index: First page offset in the address_space
-+ * @nr: Number of incremental page offsets to cover
-+ * @ops:	operation to call during the walk
-+ * @private:	private data for callbacks' usage
-+ *
-+ * This function walks all memory areas mapped into a struct address_space.
-+ * The walk is limited to only the given page-size index range, but if
-+ * the index boundaries cross a huge page-table entry, that entry will be
-+ * included.
-+ *
-+ * Also see walk_page_range() for additional information.
-+ *
-+ * Locking:
-+ *   This function can't require that the struct mm_struct::mmap_sem is held,
-+ *   since @mapping may be mapped by multiple processes. Instead
-+ *   @mapping->i_mmap_rwsem must be held. This might have implications in the
-+ *   callbacks, and it's up tho the caller to ensure that the
-+ *   struct mm_struct::mmap_sem is not needed.
-+ *
-+ *   Also this means that a caller can't rely on the struct
-+ *   vm_area_struct::vm_flags to be constant across a call,
-+ *   except for immutable flags. Callers requiring this shouldn't use
-+ *   this function.
-+ *
-+ * Return: 0 on success, negative error code on failure, positive number on
-+ * caller defined premature termination.
-+ */
-+int walk_page_mapping(struct address_space *mapping, pgoff_t first_index,
-+		      pgoff_t nr, const struct mm_walk_ops *ops,
-+		      void *private)
-+{
-+	struct mm_walk walk = {
-+		.ops		= ops,
-+		.private	= private,
-+	};
-+	struct vm_area_struct *vma;
-+	pgoff_t vba, vea, cba, cea;
-+	unsigned long start_addr, end_addr;
-+	int err = 0;
-+
-+	lockdep_assert_held(&mapping->i_mmap_rwsem);
-+	vma_interval_tree_foreach(vma, &mapping->i_mmap, first_index,
-+				  first_index + nr - 1) {
-+		/* Clip to the vma */
-+		vba = vma->vm_pgoff;
-+		vea = vba + vma_pages(vma);
-+		cba = first_index;
-+		cba = max(cba, vba);
-+		cea = first_index + nr;
-+		cea = min(cea, vea);
-+
-+		start_addr = ((cba - vba) << PAGE_SHIFT) + vma->vm_start;
-+		end_addr = ((cea - vba) << PAGE_SHIFT) + vma->vm_start;
-+		if (start_addr >= end_addr)
-+			continue;
-+
-+		walk.vma = vma;
-+		walk.mm = vma->vm_mm;
-+
-+		err = walk_page_test(vma->vm_start, vma->vm_end, &walk);
-+		if (err > 0) {
-+			err = 0;
-+			break;
-+		} else if (err < 0)
-+			break;
-+
-+		err = __walk_page_range(start_addr, end_addr, &walk);
-+		if (err)
-+			break;
-+	}
-+
-+	return err;
-+}
--- 
-2.21.0
-
+Rob
