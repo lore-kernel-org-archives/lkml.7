@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2111C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F29EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AED921929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CD32064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697486;
-	bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
+	s=default; t=1570697492;
+	bh=Y23TjM0hjddnmgQIVXC+pSQ1rOsnJxop3LEWD+le870=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cAzL/SUeb2aZFy2cIVhOp9FIH44JieN1+iqZg2NqpYy239IrH9GC8xGfPmL1JDmgP
-	 16Ah4CH6uWZzPR6SnrjwY0t00k+p0cPxVwaXBbjERo3hWA3sp6ptLqKgGjJ26S9SNq
-	 HubGiOAicCS2b/0oVhvixQk/1BZ/pYqX2NUPp3Y0=
+	b=A93WdMc/bzKh+DbFLa8tGtlANVc4JZyCbO4uMu79dXdjNcQgtoOPBH5Tv5WIdTggg
+	 oLYwJiz0q5q8YLcWMvOA9KI9ioXn8KSnMaZ5mG17TUTZJGFyFHMOS8judzk0nQ06Jr
+	 0brC/viKrqPMoE9gh2QCQdCKddunCwDJopn3xTjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390112AbfJJIvZ (ORCPT
+        id S2390125AbfJJIva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58810 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:51:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390097AbfJJIvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:23 -0400
+        id S2390103AbfJJIv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2CB22064A;
-        Thu, 10 Oct 2019 08:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 308E52190F;
+        Thu, 10 Oct 2019 08:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697482;
-        bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
+        s=default; t=1570697487;
+        bh=Y23TjM0hjddnmgQIVXC+pSQ1rOsnJxop3LEWD+le870=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dvzE2zaaaAUM7JGJ5e/AGD1R7TJ3grBEKORU80eaNngpxFiqIMMC8wOA+OB10R1ux
-         HIqSxMXkdLJ4A7tR5t5uJakg+MzR2JpBNVz7Hf0PiGr0y7WVIvfTyxe3zrjDqyW9UQ
-         xmrvKTuBTv1LDZzOVvLx0G7YK5Xq7dt4BlIr0Qb8=
+        b=QAIlGujK9TzKLuEw25xGc4QGJYTXXTe7zTwG4aGr2fKJs1XYmSVOrN5yBlcCs6KBg
+         6H746Z6LU5u2wmf/4I9bwULD7dtVWZM+BKpfzaTLA8JO/e1VLrXjar6QcdKTGza0fg
+         UAJ77LpNI8d0fc2D29SViiqwbue+qd5z6okxQqF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 43/61] kernel/elfcore.c: include proper prototypes
-Date:   Thu, 10 Oct 2019 10:37:08 +0200
-Message-Id: <20191010083517.361237711@linuxfoundation.org>
+Subject: [PATCH 4.14 45/61] KVM: PPC: Book3S HV: XIVE: Free escalation interrupts before disabling the VP
+Date:   Thu, 10 Oct 2019 10:37:10 +0200
+Message-Id: <20191010083517.850678947@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -61,49 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+From: Cédric Le Goater <clg@kaod.org>
 
-[ Upstream commit 0f74914071ab7e7b78731ed62bf350e3a344e0a5 ]
+[ Upstream commit 237aed48c642328ff0ab19b63423634340224a06 ]
 
-When building with W=1, gcc properly complains that there's no prototypes:
+When a vCPU is brought done, the XIVE VP (Virtual Processor) is first
+disabled and then the event notification queues are freed. When freeing
+the queues, we check for possible escalation interrupts and free them
+also.
 
-  CC      kernel/elfcore.o
-kernel/elfcore.c:7:17: warning: no previous prototype for 'elf_core_extra_phdrs' [-Wmissing-prototypes]
-    7 | Elf_Half __weak elf_core_extra_phdrs(void)
-      |                 ^~~~~~~~~~~~~~~~~~~~
-kernel/elfcore.c:12:12: warning: no previous prototype for 'elf_core_write_extra_phdrs' [-Wmissing-prototypes]
-   12 | int __weak elf_core_write_extra_phdrs(struct coredump_params *cprm, loff_t offset)
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
-kernel/elfcore.c:17:12: warning: no previous prototype for 'elf_core_write_extra_data' [-Wmissing-prototypes]
-   17 | int __weak elf_core_write_extra_data(struct coredump_params *cprm)
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~
-kernel/elfcore.c:22:15: warning: no previous prototype for 'elf_core_extra_data_size' [-Wmissing-prototypes]
-   22 | size_t __weak elf_core_extra_data_size(void)
-      |               ^~~~~~~~~~~~~~~~~~~~~~~~
+But when a XIVE VP is disabled, the underlying XIVE ENDs also are
+disabled in OPAL. When an END (Event Notification Descriptor) is
+disabled, its ESB pages (ESn and ESe) are disabled and loads return all
+1s. Which means that any access on the ESB page of the escalation
+interrupt will return invalid values.
 
-Provide the include file so gcc is happy, and we don't have potential code drift
+When an interrupt is freed, the shutdown handler computes a 'saved_p'
+field from the value returned by a load in xive_do_source_set_mask().
+This value is incorrect for escalation interrupts for the reason
+described above.
 
-Link: http://lkml.kernel.org/r/29875.1565224705@turing-police
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This has no impact on Linux/KVM today because we don't make use of it
+but we will introduce in future changes a xive_get_irqchip_state()
+handler. This handler will use the 'saved_p' field to return the state
+of an interrupt and 'saved_p' being incorrect, softlockup will occur.
+
+Fix the vCPU cleanup sequence by first freeing the escalation interrupts
+if any, then disable the XIVE VP and last free the queues.
+
+Fixes: 90c73795afa2 ("KVM: PPC: Book3S HV: Add a new KVM device for the XIVE native exploitation mode")
+Fixes: 5af50993850a ("KVM: PPC: Book3S HV: Native usage of the XIVE interrupt controller")
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190806172538.5087-1-clg@kaod.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/elfcore.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kvm/book3s_xive.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/elfcore.c b/kernel/elfcore.c
-index fc482c8e0bd88..57fb4dcff4349 100644
---- a/kernel/elfcore.c
-+++ b/kernel/elfcore.c
-@@ -3,6 +3,7 @@
- #include <linux/fs.h>
- #include <linux/mm.h>
- #include <linux/binfmts.h>
-+#include <linux/elfcore.h>
+diff --git a/arch/powerpc/kvm/book3s_xive.c b/arch/powerpc/kvm/book3s_xive.c
+index 3c75eee45edf9..46f99fc1901c8 100644
+--- a/arch/powerpc/kvm/book3s_xive.c
++++ b/arch/powerpc/kvm/book3s_xive.c
+@@ -1001,20 +1001,22 @@ void kvmppc_xive_cleanup_vcpu(struct kvm_vcpu *vcpu)
+ 	/* Mask the VP IPI */
+ 	xive_vm_esb_load(&xc->vp_ipi_data, XIVE_ESB_SET_PQ_01);
  
- Elf_Half __weak elf_core_extra_phdrs(void)
- {
+-	/* Disable the VP */
+-	xive_native_disable_vp(xc->vp_id);
+-
+-	/* Free the queues & associated interrupts */
++	/* Free escalations */
+ 	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
+-		struct xive_q *q = &xc->queues[i];
+-
+-		/* Free the escalation irq */
+ 		if (xc->esc_virq[i]) {
+ 			free_irq(xc->esc_virq[i], vcpu);
+ 			irq_dispose_mapping(xc->esc_virq[i]);
+ 			kfree(xc->esc_virq_names[i]);
+ 		}
+-		/* Free the queue */
++	}
++
++	/* Disable the VP */
++	xive_native_disable_vp(xc->vp_id);
++
++	/* Free the queues */
++	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
++		struct xive_q *q = &xc->queues[i];
++
+ 		xive_native_disable_queue(xc->vp_id, q, i);
+ 		if (q->qpage) {
+ 			free_pages((unsigned long)q->qpage,
 -- 
 2.20.1
 
