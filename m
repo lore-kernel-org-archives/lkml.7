@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83D3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C317C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B47212054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA68B22479
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696908;
-	bh=kjBBx1owjHoHOHK+PfnP7vwaB5MJ/Cp+vuwoeSfQum4=;
+	s=default; t=1570696911;
+	bh=AGKVJITybppG06fs8nTR/rKh/OuQGQsCKDpZoorvQhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zsLf7KJBy/A27yVic9aBlDLEFwoBziUjy9wodN+trIXvWjHpPRV+eIhb2fAaQINYQ
-	 pfkhZG8Ze5JV/EZRdHxf6Wv1V6aJODFfLL55VzyS0VFwaXivmQfb6MsLorJdlxGBD+
-	 6DjaRlgPTWyDOIQ7ZJqHV6GUOk+RG6X/ZNpjjIbk=
+	b=hMUSXMYZrsPl6wuiWBHQHGai2tNj1tQg2ZT7EyGubeSSvLBQvit2rAIBct8zDOMno
+	 29MUaRcNv46VV+e1PrKx283uoWrexU1r8kTHzUfIbuwaIHq3u6fJROP6Ca/KGMVANh
+	 9g/MBWM9kcmlQJ8Hgal6U9nPCOsAQ6cqpGWM8AXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388405AbfJJIlr (ORCPT
+        id S2388416AbfJJIlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46160 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:41:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388383AbfJJIll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:41:41 -0400
+        id S2388404AbfJJIlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:41:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 888812054F;
-        Thu, 10 Oct 2019 08:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 152432190F;
+        Thu, 10 Oct 2019 08:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696901;
-        bh=kjBBx1owjHoHOHK+PfnP7vwaB5MJ/Cp+vuwoeSfQum4=;
+        s=default; t=1570696906;
+        bh=AGKVJITybppG06fs8nTR/rKh/OuQGQsCKDpZoorvQhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NYi+1K+i+QfW6NbtVQGi50s5uI5KdhlkmLeyXnvS+NWXyEapPFPmiezEWz7RNjBVB
-         +Lrq0+uOVdrrLG7Lo9RwJB3vIgXcMRMn9aNFb1GtSeZp9jJSnV08u8HSYzx++ptKJ/
-         hTu1CHJVfccf0cynC/qNqn5ii0BAhcmYcA6IIYs8=
+        b=DkbegiTOAXQfBYNqnWNnhU1b44fH/n51lr/IcLQB923sg7iqmMVXoetzvP9oUPJq1
+         SAth44jeE3Lg8KvFKQF1hyEI3OlibPLYCyl8cBPswhfPvudzSgwTl7dpzL2tl/Z8Ng
+         KeK9cJrr0WACDsZXN/xY1ERjhQHnZHFeZYuA6c4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@zoho.com.cn>,
-        Dominique Martinet <dominique.martinet@cea.fr>,
+        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 095/148] 9p: avoid attaching writeback_fid on mmap with type PRIVATE
-Date:   Thu, 10 Oct 2019 10:35:56 +0200
-Message-Id: <20191010083617.043759883@linuxfoundation.org>
+Subject: [PATCH 5.3 097/148] fuse: fix request limit
+Date:   Thu, 10 Oct 2019 10:35:58 +0200
+Message-Id: <20191010083617.145392705@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,45 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@zoho.com.cn>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit c87a37ebd40b889178664c2c09cc187334146292 ]
+[ Upstream commit f22f812d5ce75a18b56073a7a63862e6ea764070 ]
 
-Currently on mmap cache policy, we always attach writeback_fid
-whether mmap type is SHARED or PRIVATE. However, in the use case
-of kata-container which combines 9p(Guest OS) with overlayfs(Host OS),
-this behavior will trigger overlayfs' copy-up when excute command
-inside container.
+The size of struct fuse_req was reduced from 392B to 144B on a non-debug
+config, thus the sanitize_global_limit() helper was setting a larger
+default limit.  This doesn't really reflect reduction in the memory used by
+requests, since the fields removed from fuse_req were added to fuse_args
+derived structs; e.g. sizeof(struct fuse_writepages_args) is 248B, thus
+resulting in slightly more memory being used for writepage requests
+overalll (due to using 256B slabs).
 
-Link: http://lkml.kernel.org/r/20190820100325.10313-1-cgxu519@zoho.com.cn
-Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Make the calculatation ignore the size of fuse_req and use the old 392B
+value.
+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/vfs_file.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/fuse/inode.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
-index 4cc966a31cb37..fe7f0bd2048e4 100644
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -513,6 +513,7 @@ v9fs_mmap_file_mmap(struct file *filp, struct vm_area_struct *vma)
- 	v9inode = V9FS_I(inode);
- 	mutex_lock(&v9inode->v_mutex);
- 	if (!v9inode->writeback_fid &&
-+	    (vma->vm_flags & VM_SHARED) &&
- 	    (vma->vm_flags & VM_WRITE)) {
- 		/*
- 		 * clone a fid and add it to writeback_fid
-@@ -614,6 +615,8 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
- 			(vma->vm_end - vma->vm_start - 1),
- 	};
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 987877860c019..f3104db3de83a 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -823,9 +823,12 @@ static const struct super_operations fuse_super_operations = {
  
-+	if (!(vma->vm_flags & VM_SHARED))
-+		return;
+ static void sanitize_global_limit(unsigned *limit)
+ {
++	/*
++	 * The default maximum number of async requests is calculated to consume
++	 * 1/2^13 of the total memory, assuming 392 bytes per request.
++	 */
+ 	if (*limit == 0)
+-		*limit = ((totalram_pages() << PAGE_SHIFT) >> 13) /
+-			 sizeof(struct fuse_req);
++		*limit = ((totalram_pages() << PAGE_SHIFT) >> 13) / 392;
  
- 	p9_debug(P9_DEBUG_VFS, "9p VMA close, %p, flushing", vma);
- 
+ 	if (*limit >= 1 << 16)
+ 		*limit = (1 << 16) - 1;
 -- 
 2.20.1
 
