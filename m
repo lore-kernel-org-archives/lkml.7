@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4484C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4445C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6EE21D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F13721D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697927;
-	bh=TwhRtVwj2d8olyfgirCJIBvL/72xC1NpXJeOfgfd5OA=;
+	s=default; t=1570697933;
+	bh=AeqJ5tmv4YwVwMSoBXqkp2XYljEqJPW8+tr6/fYaEbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCYxnLCBHyAzKueyA5KczDCY8bOe1R/2n468WRhTSxTqwMHk5ChRue+2sNsS1mzQ6
-	 2VTdDXgxrphFBtEIVjNMVaiUCDaL1fgU7naNpdcYEX3F/5JclXuRt09kf3vDDhceSv
-	 nznk7sE7WE7zfT4rAKHY2GfzMHFuvemuERuPeH5s=
+	b=nRHzaVRWG8nHAhJmDrZOa6mt7euxKBXr3oTolmdfX9oN8YNUcj2CvCOMG+E554Hvs
+	 K1H9wtJsbO9crHsxBO1Rwh2xH0K0mIubA5BcgoS2aRJ91sTw+tGbZvRG0TOrJQXK50
+	 v3MIz6fVU9dyaANahKQS+Jr4qaaqIstJCxXPqrdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389127AbfJJIpX (ORCPT
+        id S2389096AbfJJIpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389093AbfJJIpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Oct 2019 04:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389081AbfJJIpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13C132054F;
-        Thu, 10 Oct 2019 08:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B555B2190F;
+        Thu, 10 Oct 2019 08:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697116;
-        bh=TwhRtVwj2d8olyfgirCJIBvL/72xC1NpXJeOfgfd5OA=;
+        s=default; t=1570697111;
+        bh=AeqJ5tmv4YwVwMSoBXqkp2XYljEqJPW8+tr6/fYaEbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l6yRvVI4TStyJ58XpTVcy05rsCOIByZhS3fsxdHOYCBFk2trf9TGwPL7oEWbio6u2
-         JbS+e9McbsF4GYaMxXomS4ShfgFHB4ctHlWaH/B4wVfQXBxeUQMKtbuavaNj6nEr8X
-         5HAnJ0SUqbt1JscXNAqJ82YQGhQkv9O8unlKnPlU=
+        b=hEtkKtTW9Wv6AxM7eZS5LoBKl/KQG9IEGHs5IW7CQnr+eym6AMvqSMzqPQBtCbvJi
+         GqST7V998OcFyJQQjh88FsWA1S8/3abzUTfQAvvW0L7be3Iy1QekMzT0Xj7BiNW+Eq
+         s8BbWGQJlzo2iOwMk4LOdLldqTfx80eJPYW/8Mxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 024/114] crypto: caam - fix concurrency issue in givencrypt descriptor
-Date:   Thu, 10 Oct 2019 10:35:31 +0200
-Message-Id: <20191010083555.042181193@linuxfoundation.org>
+Subject: [PATCH 4.19 022/114] crypto: skcipher - Unmap pages after an external error
+Date:   Thu, 10 Oct 2019 10:35:29 +0200
+Message-Id: <20191010083554.519074263@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,92 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 48f89d2a2920166c35b1c0b69917dbb0390ebec7 upstream.
+commit 0ba3c026e685573bd3534c17e27da7c505ac99c4 upstream.
 
-IV transfer from ofifo to class2 (set up at [29][30]) is not guaranteed
-to be scheduled before the data transfer from ofifo to external memory
-(set up at [38]:
+skcipher_walk_done may be called with an error by internal or
+external callers.  For those internal callers we shouldn't unmap
+pages but for external callers we must unmap any pages that are
+in use.
 
-[29] 10FA0004           ld: ind-nfifo (len=4) imm
-[30] 81F00010               <nfifo_entry: ofifo->class2 type=msg len=16>
-[31] 14820004           ld: ccb2-datasz len=4 offs=0 imm
-[32] 00000010               data:0x00000010
-[33] 8210010D    operation: cls1-op aes cbc init-final enc
-[34] A8080B04         math: (seqin + math0)->vseqout len=4
-[35] 28000010    seqfifold: skip len=16
-[36] A8080A04         math: (seqin + math0)->vseqin len=4
-[37] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
-[38] 69300000   seqfifostr: msg len=vseqoutsz
-[39] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
+This patch distinguishes between the two cases by checking whether
+walk->nbytes is zero or not.  For internal callers, we now set
+walk->nbytes to zero prior to the call.  For external callers,
+walk->nbytes has always been non-zero (as zero is used to indicate
+the termination of a walk).
 
-If ofifo -> external memory transfer happens first, DECO will hang
-(issuing a Watchdog Timeout error, if WDOG is enabled) waiting for
-data availability in ofifo for the ofifo -> c2 ififo transfer.
-
-Make sure IV transfer happens first by waiting for all CAAM internal
-transfers to end before starting payload transfer.
-
-New descriptor with jump command inserted at [37]:
-
-[..]
-[36] A8080A04         math: (seqin + math0)->vseqin len=4
-[37] A1000401         jump: jsl1 all-match[!nfifopend] offset=[01] local->[38]
-[38] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
-[39] 69300000   seqfifostr: msg len=vseqoutsz
-[40] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
-
-[Note: the issue is present in the descriptor from the very beginning
-(cf. Fixes tag). However I've marked it v4.19+ since it's the oldest
-maintained kernel that the patch applies clean against.]
-
-Cc: <stable@vger.kernel.org> # v4.19+
-Fixes: 1acebad3d8db8 ("crypto: caam - faster aead implementation")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Reported-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Fixes: 5cde0af2a982 ("[CRYPTO] cipher: Added block cipher type")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Tested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg_desc.c |    9 +++++++++
- drivers/crypto/caam/caamalg_desc.h |    2 +-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ crypto/skcipher.c |   42 +++++++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
 
---- a/drivers/crypto/caam/caamalg_desc.c
-+++ b/drivers/crypto/caam/caamalg_desc.c
-@@ -509,6 +509,7 @@ void cnstr_shdsc_aead_givencap(u32 * con
- 			       const bool is_qi, int era)
+--- a/crypto/skcipher.c
++++ b/crypto/skcipher.c
+@@ -95,7 +95,7 @@ static inline u8 *skcipher_get_spot(u8 *
+ 	return max(start, end_page);
+ }
+ 
+-static void skcipher_done_slow(struct skcipher_walk *walk, unsigned int bsize)
++static int skcipher_done_slow(struct skcipher_walk *walk, unsigned int bsize)
  {
- 	u32 geniv, moveiv;
-+	u32 *wait_cmd;
+ 	u8 *addr;
  
- 	/* Note: Context registers are saved. */
- 	init_sh_desc_key_aead(desc, cdata, adata, is_rfc3686, nonce, era);
-@@ -604,6 +605,14 @@ copy_iv:
+@@ -103,19 +103,21 @@ static void skcipher_done_slow(struct sk
+ 	addr = skcipher_get_spot(addr, bsize);
+ 	scatterwalk_copychunks(addr, &walk->out, bsize,
+ 			       (walk->flags & SKCIPHER_WALK_PHYS) ? 2 : 1);
++	return 0;
+ }
  
- 	/* Will read cryptlen */
- 	append_math_add(desc, VARSEQINLEN, SEQINLEN, REG0, CAAM_CMD_SZ);
+ int skcipher_walk_done(struct skcipher_walk *walk, int err)
+ {
+-	unsigned int n; /* bytes processed */
+-	bool more;
++	unsigned int n = walk->nbytes;
++	unsigned int nbytes = 0;
+ 
+-	if (unlikely(err < 0))
++	if (!n)
+ 		goto finish;
+ 
+-	n = walk->nbytes - err;
+-	walk->total -= n;
+-	more = (walk->total != 0);
++	if (likely(err >= 0)) {
++		n -= err;
++		nbytes = walk->total - n;
++	}
+ 
+ 	if (likely(!(walk->flags & (SKCIPHER_WALK_PHYS |
+ 				    SKCIPHER_WALK_SLOW |
+@@ -131,7 +133,7 @@ unmap_src:
+ 		memcpy(walk->dst.virt.addr, walk->page, n);
+ 		skcipher_unmap_dst(walk);
+ 	} else if (unlikely(walk->flags & SKCIPHER_WALK_SLOW)) {
+-		if (err) {
++		if (err > 0) {
+ 			/*
+ 			 * Didn't process all bytes.  Either the algorithm is
+ 			 * broken, or this was the last step and it turned out
+@@ -139,27 +141,29 @@ unmap_src:
+ 			 * the algorithm requires it.
+ 			 */
+ 			err = -EINVAL;
+-			goto finish;
+-		}
+-		skcipher_done_slow(walk, n);
+-		goto already_advanced;
++			nbytes = 0;
++		} else
++			n = skcipher_done_slow(walk, n);
+ 	}
+ 
++	if (err > 0)
++		err = 0;
 +
-+	/*
-+	 * Wait for IV transfer (ofifo -> class2) to finish before starting
-+	 * ciphertext transfer (ofifo -> external memory).
-+	 */
-+	wait_cmd = append_jump(desc, JUMP_JSL | JUMP_TEST_ALL | JUMP_COND_NIFP);
-+	set_jump_tgt_here(desc, wait_cmd);
++	walk->total = nbytes;
++	walk->nbytes = 0;
 +
- 	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_BOTH | KEY_VLF |
- 			     FIFOLD_TYPE_MSG1OUT2 | FIFOLD_TYPE_LASTBOTH);
- 	append_seq_fifo_store(desc, 0, FIFOST_TYPE_MESSAGE_DATA | KEY_VLF);
---- a/drivers/crypto/caam/caamalg_desc.h
-+++ b/drivers/crypto/caam/caamalg_desc.h
-@@ -12,7 +12,7 @@
- #define DESC_AEAD_BASE			(4 * CAAM_CMD_SZ)
- #define DESC_AEAD_ENC_LEN		(DESC_AEAD_BASE + 11 * CAAM_CMD_SZ)
- #define DESC_AEAD_DEC_LEN		(DESC_AEAD_BASE + 15 * CAAM_CMD_SZ)
--#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 7 * CAAM_CMD_SZ)
-+#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 8 * CAAM_CMD_SZ)
- #define DESC_QI_AEAD_ENC_LEN		(DESC_AEAD_ENC_LEN + 3 * CAAM_CMD_SZ)
- #define DESC_QI_AEAD_DEC_LEN		(DESC_AEAD_DEC_LEN + 3 * CAAM_CMD_SZ)
- #define DESC_QI_AEAD_GIVENC_LEN		(DESC_AEAD_GIVENC_LEN + 3 * CAAM_CMD_SZ)
+ 	scatterwalk_advance(&walk->in, n);
+ 	scatterwalk_advance(&walk->out, n);
+-already_advanced:
+-	scatterwalk_done(&walk->in, 0, more);
+-	scatterwalk_done(&walk->out, 1, more);
++	scatterwalk_done(&walk->in, 0, nbytes);
++	scatterwalk_done(&walk->out, 1, nbytes);
+ 
+-	if (more) {
++	if (nbytes) {
+ 		crypto_yield(walk->flags & SKCIPHER_WALK_SLEEP ?
+ 			     CRYPTO_TFM_REQ_MAY_SLEEP : 0);
+ 		return skcipher_walk_next(walk);
+ 	}
+-	err = 0;
+-finish:
+-	walk->nbytes = 0;
+ 
++finish:
+ 	/* Short-circuit for the common/fast path. */
+ 	if (!((unsigned long)walk->buffer | (unsigned long)walk->page))
+ 		goto out;
 
 
