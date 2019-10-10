@@ -2,89 +2,134 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668B6C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BACAC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42FCE206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F31A20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732994AbfJJKur (ORCPT
+        id S1733049AbfJJKus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:50:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55564 "EHLO mx1.redhat.com"
+        Thu, 10 Oct 2019 06:50:48 -0400
+Received: from mx2a.mailbox.org ([80.241.60.219]:31951 "EHLO mx2a.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732317AbfJJKuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:50:46 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726201AbfJJKur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 06:50:47 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ABEE980F81
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:50:46 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id z17so2564754wru.13
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 03:50:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2JdVNcJHcx/QcdzRfb4YJuuCrnXrMcDI8HLU35hMmQI=;
-        b=J2u3AIBG1+FKM8piBmzRiMndZ+LvAkerC+KLs3qm7EGBPLGSlRB0ENvurrbjaulCUw
-         3pyz7kEgBsf3BavD00M42UZF4MQhqJLPW+ItFjVgjn+LXT3tzasnesamKPfbE/WndgG/
-         G+hgH25SpWjp08Na8pA4H150BQdMiEGwz5bLojGUjhyoWa7QoXTKn9mom92v7WWMFOy/
-         1sr+cT31spwIDur2S84AuFAKUi9oECwfq89l3TCCgpCVwKndYsEKYer8vRHz6ZZxI44I
-         VC/1KTzgu2P6RyVWZ8gWHxpRYG5eZ+FZXpClzWt/7pTYNweC2EpBrkUihcDdqX8L2Nds
-         VA2A==
-X-Gm-Message-State: APjAAAWE7fkZI2t01c/So4gx5vnYczvrpAbH7TchnGHBeM+TgBDESMIx
-        dHFc3UOJHzPUV24H5wylNw0/zuPb9nfgVdXij2ZPTIh/ZdwKbiBX+ONF/FlxKnSF4VPS3ALNHiw
-        IeU9MjGwxQ62K98MlLhnlspv1
-X-Received: by 2002:a5d:49c4:: with SMTP id t4mr7614238wrs.242.1570704645362;
-        Thu, 10 Oct 2019 03:50:45 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyAUpvDxsejwxKs/FKoQEGqKcCFjQ2DOCIheMbyTXCS7dsfl/Lhw3da0uewQazR2XTE22w4PQ==
-X-Received: by 2002:a5d:49c4:: with SMTP id t4mr7614227wrs.242.1570704645151;
-        Thu, 10 Oct 2019 03:50:45 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id u11sm4393311wmd.32.2019.10.10.03.50.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2019 03:50:44 -0700 (PDT)
-Subject: Re: [RFC v2 1/2] kvm: Mechanism to copy host timekeeping parameters
- into guest.
-To:     Suleiman Souhlal <suleiman@google.com>, rkrcmar@redhat.com,
-        tglx@linutronix.de
-Cc:     john.stultz@linaro.org, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        ssouhlal@freebsd.org, tfiga@chromium.org, vkuznets@redhat.com
-References: <20191010073055.183635-1-suleiman@google.com>
- <20191010073055.183635-2-suleiman@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <e436f19b-8ff9-9442-897d-07fed3b424a4@redhat.com>
-Date:   Thu, 10 Oct 2019 12:50:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mx2a.mailbox.org (Postfix) with ESMTPS id 21E47A1A7B;
+        Thu, 10 Oct 2019 12:50:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id oW1bKVSmI81Q; Thu, 10 Oct 2019 12:50:41 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 21:50:31 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] bpf: use check_zeroed_user() in
+ bpf_check_uarg_tail_zero()
+Message-ID: <20191010105031.eadc7baldnnufxjf@yavin.dot.cyphar.com>
+References: <20191009160907.10981-1-christian.brauner@ubuntu.com>
+ <20191009160907.10981-2-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-In-Reply-To: <20191010073055.183635-2-suleiman@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yrlewcij3x6slscb"
+Content-Disposition: inline
+In-Reply-To: <20191009160907.10981-2-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/19 09:30, Suleiman Souhlal wrote:
->  	kvmclock_reset(vcpu);
->  
-> +	if (vcpu->arch.pv_timekeeper_enabled)
-> +		atomic_dec(&pv_timekeepers_nr);
-> +
 
-Please make the new MSR systemwide, there's no need to have one copy per
-vCPU.  Also, it has to be cleared on reset.  I have just sent a patch
-"[PATCH] kvm: clear kvmclock MSR on reset" and CCed you, you can add the
-clearing to kvmclock_reset with that patch applied.
+--yrlewcij3x6slscb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Paolo
+On 2019-10-09, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> In v5.4-rc2 we added a new helper (cf. [1]) check_zeroed_user() which
+> does what bpf_check_uarg_tail_zero() is doing generically. We're slowly
+> switching such codepaths over to use check_zeroed_user() instead of
+> using their own hand-rolled version.
+>=20
+> [1]: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+
+Acked-by: Aleksa Sarai <cyphar@cyphar.com>
+
+> ---
+>  kernel/bpf/syscall.c | 22 +++++++---------------
+>  1 file changed, 7 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 82eabd4e38ad..78790778f101 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -63,30 +63,22 @@ int bpf_check_uarg_tail_zero(void __user *uaddr,
+>  			     size_t expected_size,
+>  			     size_t actual_size)
+>  {
+> -	unsigned char __user *addr;
+> -	unsigned char __user *end;
+> -	unsigned char val;
+> +	size_t size =3D min(expected_size, actual_size);
+> +	size_t rest =3D max(expected_size, actual_size) - size;
+>  	int err;
+> =20
+>  	if (unlikely(actual_size > PAGE_SIZE))	/* silly large */
+>  		return -E2BIG;
+> =20
+> -	if (unlikely(!access_ok(uaddr, actual_size)))
+> -		return -EFAULT;
+> -
+>  	if (actual_size <=3D expected_size)
+>  		return 0;
+> =20
+> -	addr =3D uaddr + expected_size;
+> -	end  =3D uaddr + actual_size;
+> +	err =3D check_zeroed_user(uaddr + expected_size, rest);
+> +	if (err < 0)
+> +		return err;
+> =20
+> -	for (; addr < end; addr++) {
+> -		err =3D get_user(val, addr);
+> -		if (err)
+> -			return err;
+> -		if (val)
+> -			return -E2BIG;
+> -	}
+> +	if (err)
+> +		return -E2BIG;
+> =20
+>  	return 0;
+>  }
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--yrlewcij3x6slscb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZ8M9AAKCRCdlLljIbnQ
+Epr/AQCyrkQQbHuqCW5VkNaIJxIvHI5/ShmQM9ev+h5OCSYKvwEAhqXnMkhCZMnZ
+6Y4CZGrZrNvytbxMMC7EDJEagjZPLQo=
+=MUrF
+-----END PGP SIGNATURE-----
+
+--yrlewcij3x6slscb--
