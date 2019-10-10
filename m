@@ -2,82 +2,120 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C617C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F1DC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F33214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4876214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="tlyhI/dg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D51UL9rR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfJJXXy (ORCPT
+        id S1727145AbfJJXYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 19:23:54 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]:40657 "EHLO
-        mail-qk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbfJJXXy (ORCPT
+        Thu, 10 Oct 2019 19:24:00 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43137 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfJJXX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 19:23:54 -0400
-Received: by mail-qk1-f176.google.com with SMTP id y144so7228845qkb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 16:23:54 -0700 (PDT)
+        Thu, 10 Oct 2019 19:23:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i32so4630268pgl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 16:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=fUaQ6WoSH6XzjkSQgTq8RJcJ124XJflOmu0VJ/xFwSM=;
-        b=tlyhI/dgeHfL8cy/la9LnR3LBzP5aNKC+skbXWUYHxVngx4Qd2VBY3gUiuLPtHuB4g
-         anHx/g6Anr9byMffHo4hxd6lmH53cSpO7ltUqSgfQg1bHnuWRVyw6pjPA+wmP1rkEdjv
-         gD92kwNTkgLBLijQMbrhUWNg4bkE17FJ+JSqvjeWK7K1u3dgGjLNvzdlbl2YZUQAVoRo
-         wPoSW8JjoMVy/5XKsXMSOHnzvOz6ExxfvvKik1zQy+7aPKJUDpAY6+O+CMVj1YYZlx4p
-         bKOsnZezhAD+0rEb6beB8jxaAnzzW5aH8UrZC5G0HOHtpe/ZjFUKfgDcOr92Vw/fkvTX
-         M4EQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qKUfU/s6VNCMjI6UpTZnmPGQRCLUuGC/0Ur+XQYjYn4=;
+        b=D51UL9rR9U7OMRC5kU/1LTr0ek5QCAdhAcQxhNohfHmGY1xfQuGmsaX43izG0+lrE0
+         ylCyES33CwISf98T+j7OteRdsjztl0mPIJJyaZTX072VBYlsYPO47quZ4flLQdBfNjVz
+         zjCmXjZDOX7lIGxFeth+TOG2oD33SESzGVRI8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=fUaQ6WoSH6XzjkSQgTq8RJcJ124XJflOmu0VJ/xFwSM=;
-        b=DaNZJHZk2Rf/UyqMAlbPxoc0vOmyX8jj8Q2+q33iyUjuO/UW90QAK5fWO7QYwe3lhi
-         j//CuIAQXxBGl/0LQUnTWP2USxny94iQ/aj4MqTwCP9tzzoGleDOe3sDieDbyYYhjKlx
-         aeZqQvZX4h29YaD3NHJGtfRzDA8pfFr5ycIn1H5XnQ4fQ7R2HXHSSjRQ9lyQmQJxDUoC
-         ncSvOH4TVlJTs0T9ccUecDeDFhPC+P081JbaMrrNbtq7eU3saFDYaYJVMLBY5D8Oux+z
-         jkIFNIYLNo/IbOOlHMWzu4ME4uI+BKjRLypFJz6QlZFx22gNIN66+lsU0ZUn75q0+giV
-         C8/g==
-X-Gm-Message-State: APjAAAUitE7Pg/SoYjOtCeYc+wnsfVqi++2pI+0Qq40GxFuKBjyJXaP4
-        IevT3cJtjdvzKj2sLz1G6jeGeA==
-X-Google-Smtp-Source: APXvYqzMYq0NiWofLSStCkmGWGdyZv7L0Qj9i1dRTXNZ2atw4FNlU6Csd0E1t8EKDOgbujFaY0yzrA==
-X-Received: by 2002:a37:9007:: with SMTP id s7mr12407714qkd.384.1570749833573;
-        Thu, 10 Oct 2019 16:23:53 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id o28sm2868621qkk.106.2019.10.10.16.23.52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=qKUfU/s6VNCMjI6UpTZnmPGQRCLUuGC/0Ur+XQYjYn4=;
+        b=WLN4fITSlV2FWwBVNo3OZfUTp3r0a6dxrQI2GkeMA3ZYJg4VYUqvOMQA8uE78P3uwW
+         Z+dfxQxCKZw7uCn5GQOi3pkTVo6SX7MQ6eGVBjl6HO+4NrlrnkrfJFoQtbsNtVAOylJw
+         2GX4zRJkxDbFReM+Av7DJOkEC4Ue8ARvd69+4Piq0/VhSK1e0r7BZ7wIH2+uwS3gn0+B
+         AIbJlfNW+g4jPnRheJNON/8M0/9Fg+a1dn1KW3BkNNdDPn/BvH4A4ri9tgFPn0PHVjp7
+         MF7htMEMtXOD0jMZMgnQya2RNrVfqAjFrBQsciMrMFmtxGxI65SM+Rtlszd4Ji+rmqps
+         kkWw==
+X-Gm-Message-State: APjAAAUPbBnKZWVGWTGt7yZspeL8J4q3i0mjX7hlh9MgSPKYfB07QcLt
+        5l4ju8SjKq0AUAUJp5BFZbdauQ==
+X-Google-Smtp-Source: APXvYqzKvAiLNIuxwJuj4wKQhF4ru4G8rWSNTC6EJdJa6fnz989nt0l/p9guk494hejHp/ITyXIR/w==
+X-Received: by 2002:a63:8b:: with SMTP id 133mr3725412pga.183.1570749838835;
+        Thu, 10 Oct 2019 16:23:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p1sm10658112pfb.112.2019.10.10.16.23.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 16:23:53 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 16:23:38 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <richardcochran@gmail.com>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] ptp: ptp_dte: use
- devm_platform_ioremap_resource() to simplify code
-Message-ID: <20191010162338.66e975c1@cakuba.netronome.com>
-In-Reply-To: <20191009150325.12736-1-yuehaibing@huawei.com>
-References: <20191009150325.12736-1-yuehaibing@huawei.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 10 Oct 2019 16:23:57 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        netdev@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 1/4] MIPS: OCTEON: Replace SIZEOF_FIELD() macro
+Date:   Thu, 10 Oct 2019 16:23:42 -0700
+Message-Id: <20191010232345.26594-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191010232345.26594-1-keescook@chromium.org>
+References: <20191010232345.26594-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Oct 2019 23:03:25 +0800, YueHaibing wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
 
-Applied to net-next
+In preparation for switching to a standard sizeof_member() macro to find the
+size of a member of a struct, remove the custom SIZEOF_FIELD() macro and use
+the more common FIELD_SIZEOF() instead. Later patches will globally replace
+FIELD_SIZEOF() and sizeof_field() with the more accurate sizeof_member().
+
+Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+Link: https://lore.kernel.org/r/20190924105839.110713-4-pankaj.laxminarayan.bharadiya@intel.com
+Co-developed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/mips/cavium-octeon/executive/cvmx-bootmem.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/arch/mips/cavium-octeon/executive/cvmx-bootmem.c b/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
+index ba8f82a29a81..44b506a14666 100644
+--- a/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
++++ b/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
+@@ -44,13 +44,6 @@ static struct cvmx_bootmem_desc *cvmx_bootmem_desc;
+ 
+ /* See header file for descriptions of functions */
+ 
+-/**
+- * This macro returns the size of a member of a structure.
+- * Logically it is the same as "sizeof(s::field)" in C++, but
+- * C lacks the "::" operator.
+- */
+-#define SIZEOF_FIELD(s, field) sizeof(((s *)NULL)->field)
+-
+ /**
+  * This macro returns a member of the
+  * cvmx_bootmem_named_block_desc_t structure. These members can't
+@@ -65,7 +58,7 @@ static struct cvmx_bootmem_desc *cvmx_bootmem_desc;
+ #define CVMX_BOOTMEM_NAMED_GET_FIELD(addr, field)			\
+ 	__cvmx_bootmem_desc_get(addr,					\
+ 		offsetof(struct cvmx_bootmem_named_block_desc, field),	\
+-		SIZEOF_FIELD(struct cvmx_bootmem_named_block_desc, field))
++		FIELD_SIZEOF(struct cvmx_bootmem_named_block_desc, field))
+ 
+ /**
+  * This function is the implementation of the get macros defined
+-- 
+2.17.1
+
