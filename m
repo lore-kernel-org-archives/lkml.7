@@ -2,161 +2,144 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0BFC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23905C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B893208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD6E20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:50:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iyr9x20G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfJJUuC (ORCPT
+        id S1727486AbfJJUuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:50:02 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:52031 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJUuC (ORCPT
+        Thu, 10 Oct 2019 16:50:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36302 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJUuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:50:02 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mv3M8-1i100L05ya-00r230; Thu, 10 Oct 2019 22:49:49 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 27/36] ARM: s3c: fix mmc gpio lookup tables
-Date:   Thu, 10 Oct 2019 22:30:11 +0200
-Message-Id: <20191010203043.1241612-27-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
+        Thu, 10 Oct 2019 16:50:16 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so4660228pfr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 13:50:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gTe8iNaxaDxo3Ior1zBkaqpJB3M8k9IqOsu5lEyzZ6c=;
+        b=iyr9x20GP1WU8DN+/0xoZwBSMlPw9mrEynzZlnzafLl5NPpDb004gL2BV4OZC7paoq
+         GyZ7dgkYsaZ1hlPMHou7/tr3rROSUsdi52RYluXDXLrwapl4nS+Eyx7bNpw4pSGVDzRU
+         YMp5InHddbXjyo4Yde7NO5MQSBXLXHfSLN3U8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gTe8iNaxaDxo3Ior1zBkaqpJB3M8k9IqOsu5lEyzZ6c=;
+        b=tOUXum+uNQQPxXIJ91NHPvDF1mA1KtjECrQoB9CkQITsV2A1qVL8AR03e17H8jN9Q3
+         Wu+caX3p4r9ZCYFmW7gaIJ8TAqCKbfrAbY/N6xBhhHeaTyuE2s+Pp6XjW1rpSp8tNyoX
+         LgPtemQYCxW3IQPUDc9LRcyhZLUHSKiXmyj9arD35VALQG4VkY7hLEjO8n+dfA1E+04+
+         Zo+PlT9NdCZake7GZHIWPeaoxvZFKH4NwFppXasCIqH8vr1c4aiCehBoZ1Hu8Kr69haH
+         2dJGY4NZde/bZLfVZRkWOaJfFp1gGYCPq1fFCzk93X4405qNApzRHqnCHaDAEoL5It9X
+         AQxg==
+X-Gm-Message-State: APjAAAWRrzVosa4Ar4EC47pkVAUxehqz37ddDL6Xe1UGz//v6i/RYh78
+        DigQ51rUgLTQVx/hAwu5OUKXSQ==
+X-Google-Smtp-Source: APXvYqwfVW1rYKresV0WxEAKYTz7345kuA+YHn4SzfLAFmKTbOFrrWCKrVBFa8+o+/WUfP7VOKfEow==
+X-Received: by 2002:a63:1417:: with SMTP id u23mr12704993pgl.279.1570740615870;
+        Thu, 10 Oct 2019 13:50:15 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c62sm8370453pfa.92.2019.10.10.13.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 13:50:15 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 13:50:14 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>
+Subject: Re: [PATCH v3 09/10] lib/refcount: Remove unused
+ 'refcount_error_report()' function
+Message-ID: <201910101349.9400E7D0@keescook>
+References: <20191007154703.5574-1-will@kernel.org>
+ <20191007154703.5574-10-will@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:miEEBn8EyX3iXwAoHLbyo0Rw0t54e4gFtO4RuqFzuUUZsdSYYFe
- mkYXMoFATZbZnQ2AfYowuUP0fX+ZeGzayu62CMMllRNxC7eRWkNDSvECtwhssqt/cuhlHif
- lc6V7Z+awRWzKiKiG3VAE/QPRyGYyTVbjxGiVwQ1ROxYKb3Z+z+lhdpcJXOYpxsADIWDkFe
- 1OgpbGkn+Mj6daDqqBDJQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dpz0F10rdwI=:gmQ4hYjc+doONpW56zCV1G
- duTMmQ1Tm+ujSzt1fdGRjwhjXsUNt0bWwVVQU3e4kieVQYr6zzVTmQhNADmMr+zmqbSaXkFHY
- wM0nBs4lSyLwzEdKXSmybyeBMfSyqSAYGyf3gDrQ6z1LKZOIA7z8kNsLyvzn4lSRlB9pyWXgl
- kFo8IHBIIk0YixwQj6UB3RFkmm5O5X1rrOwcJEinLRdvvciFLqajbFpSGq3K5eY+pMm9tVYmV
- VInU+edA8Qv8N7PLcHnIqRX+OtUEhgYp2HIc3+HSjAfbSMwnCptI+GqC8bb+WjYrolz5d+iyK
- fBCty6rdXpG+DpiKyyr5rhQOuuf/KTrIAD2Wnph1Gl4xxQZn67jAZrM4VFpkZYdcMU6bH3kUY
- T8T3yBrxIcGpeasXYxVh1lyfS/WO/18LZ19MM8jjPGnMyNj8Os4ja9Q9JmgKbrXj2WvuL3h7H
- NwqR6SiJUy62gadTpK1gy7hF1NMaEFKwZlK1KT6+D5RPAic95Mf+xI11Vtbl8uhuXAK+1CBsk
- 5iiwUMNIXwk5FWQrnoBhH6PVWyUlogHhNAgOJ8bS4G53Y2Ak21dmJoBj4dL0Jp4hnYDfV6ps4
- WoqLWNZkJcizg+W+w59NVyWSdRjZctWCokmYIyIz11BtlzM70VKDPhfgJsLEXRasa7M2J5yIr
- w3xs73amS0zikViui4mN862kG8mfSsKNoC0YBxGbWKZewd6qUM+qnsTHS7F5TK2ImJEMAs6ya
- 868k4DO2Tmhv5usrXry8JINWNWVZrE+W/iV0CetPkSYT5z8lexHi+hHg1EzZRSm1f12Kz/Qwa
- Ynit5/TE1rRLFDe8NHWCsn1eUxf80G7wcieXmFGgXPb7b5JPDRs5pxNqe3rEoFbrW0TM5Ic5+
- dDnV2mMl4vG6j9O3beMA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007154703.5574-10-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The gpio controller names differ between s3c24xx and s3c64xx,
-and it seems that these all got the wrong names, using GPx instead
-of GPIOx.
+On Mon, Oct 07, 2019 at 04:47:02PM +0100, Will Deacon wrote:
+> 'refcount_error_report()' has no callers. Remove it.
 
-Fixes: d2951dfa070d ("mmc: s3cmci: Use the slot GPIO descriptor")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-s3c24xx/mach-at2440evb.c | 2 +-
- arch/arm/mach-s3c24xx/mach-h1940.c     | 4 ++--
- arch/arm/mach-s3c24xx/mach-mini2440.c  | 4 ++--
- arch/arm/mach-s3c24xx/mach-n30.c       | 4 ++--
- arch/arm/mach-s3c24xx/mach-rx1950.c    | 4 ++--
- 5 files changed, 9 insertions(+), 9 deletions(-)
+Seems like this could be collapsed into patch 8? Either way:
 
-diff --git a/arch/arm/mach-s3c24xx/mach-at2440evb.c b/arch/arm/mach-s3c24xx/mach-at2440evb.c
-index 3a793aaf2cba..b2199906e678 100644
---- a/arch/arm/mach-s3c24xx/mach-at2440evb.c
-+++ b/arch/arm/mach-s3c24xx/mach-at2440evb.c
-@@ -143,7 +143,7 @@ static struct gpiod_lookup_table at2440evb_mci_gpio_table = {
- 	.dev_id = "s3c2410-sdi",
- 	.table = {
- 		/* Card detect S3C2410_GPG(10) */
--		GPIO_LOOKUP("GPG", 10, "cd", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("GPIOG", 10, "cd", GPIO_ACTIVE_LOW),
- 		/* bus pins */
- 		GPIO_LOOKUP_IDX("GPIOE",  5, "bus", 0, GPIO_ACTIVE_HIGH),
- 		GPIO_LOOKUP_IDX("GPIOE",  6, "bus", 1, GPIO_ACTIVE_HIGH),
-diff --git a/arch/arm/mach-s3c24xx/mach-h1940.c b/arch/arm/mach-s3c24xx/mach-h1940.c
-index 24f785da7659..446891e23511 100644
---- a/arch/arm/mach-s3c24xx/mach-h1940.c
-+++ b/arch/arm/mach-s3c24xx/mach-h1940.c
-@@ -469,9 +469,9 @@ static struct gpiod_lookup_table h1940_mmc_gpio_table = {
- 	.dev_id = "s3c2410-sdi",
- 	.table = {
- 		/* Card detect S3C2410_GPF(5) */
--		GPIO_LOOKUP("GPF", 5, "cd", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("GPIOF", 5, "cd", GPIO_ACTIVE_LOW),
- 		/* Write protect S3C2410_GPH(8) */
--		GPIO_LOOKUP("GPH", 8, "wp", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("GPIOH", 8, "wp", GPIO_ACTIVE_LOW),
- 		/* bus pins */
- 		GPIO_LOOKUP_IDX("GPIOE",  5, "bus", 0, GPIO_ACTIVE_HIGH),
- 		GPIO_LOOKUP_IDX("GPIOE",  6, "bus", 1, GPIO_ACTIVE_HIGH),
-diff --git a/arch/arm/mach-s3c24xx/mach-mini2440.c b/arch/arm/mach-s3c24xx/mach-mini2440.c
-index 5c000efdf0e8..d73167f615b8 100644
---- a/arch/arm/mach-s3c24xx/mach-mini2440.c
-+++ b/arch/arm/mach-s3c24xx/mach-mini2440.c
-@@ -244,9 +244,9 @@ static struct gpiod_lookup_table mini2440_mmc_gpio_table = {
- 	.dev_id = "s3c2410-sdi",
- 	.table = {
- 		/* Card detect S3C2410_GPG(8) */
--		GPIO_LOOKUP("GPG", 8, "cd", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("GPIOG", 8, "cd", GPIO_ACTIVE_LOW),
- 		/* Write protect S3C2410_GPH(8) */
--		GPIO_LOOKUP("GPH", 8, "wp", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("GPIOH", 8, "wp", GPIO_ACTIVE_HIGH),
- 		/* bus pins */
- 		GPIO_LOOKUP_IDX("GPIOE",  5, "bus", 0, GPIO_ACTIVE_HIGH),
- 		GPIO_LOOKUP_IDX("GPIOE",  6, "bus", 1, GPIO_ACTIVE_HIGH),
-diff --git a/arch/arm/mach-s3c24xx/mach-n30.c b/arch/arm/mach-s3c24xx/mach-n30.c
-index 8d7ad61e9930..f283abab0761 100644
---- a/arch/arm/mach-s3c24xx/mach-n30.c
-+++ b/arch/arm/mach-s3c24xx/mach-n30.c
-@@ -362,9 +362,9 @@ static struct gpiod_lookup_table n30_mci_gpio_table = {
- 	.dev_id = "s3c2410-sdi",
- 	.table = {
- 		/* Card detect S3C2410_GPF(1) */
--		GPIO_LOOKUP("GPF", 1, "cd", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("GPIOF", 1, "cd", GPIO_ACTIVE_LOW),
- 		/* Write protect S3C2410_GPG(10) */
--		GPIO_LOOKUP("GPG", 10, "wp", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("GPIOG", 10, "wp", GPIO_ACTIVE_LOW),
- 		{ },
- 		/* bus pins */
- 		GPIO_LOOKUP_IDX("GPIOE",  5, "bus", 0, GPIO_ACTIVE_HIGH),
-diff --git a/arch/arm/mach-s3c24xx/mach-rx1950.c b/arch/arm/mach-s3c24xx/mach-rx1950.c
-index 820e626f5129..7752203fd9cd 100644
---- a/arch/arm/mach-s3c24xx/mach-rx1950.c
-+++ b/arch/arm/mach-s3c24xx/mach-rx1950.c
-@@ -569,9 +569,9 @@ static struct gpiod_lookup_table rx1950_mmc_gpio_table = {
- 	.dev_id = "s3c2410-sdi",
- 	.table = {
- 		/* Card detect S3C2410_GPF(5) */
--		GPIO_LOOKUP("GPF", 5, "cd", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("GPIOF", 5, "cd", GPIO_ACTIVE_LOW),
- 		/* Write protect S3C2410_GPH(8) */
--		GPIO_LOOKUP("GPH", 8, "wp", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("GPIOH", 8, "wp", GPIO_ACTIVE_LOW),
- 		/* bus pins */
- 		GPIO_LOOKUP_IDX("GPIOE",  5, "bus", 0, GPIO_ACTIVE_HIGH),
- 		GPIO_LOOKUP_IDX("GPIOE",  6, "bus", 1, GPIO_ACTIVE_HIGH),
+Acked-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> 
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Elena Reshetova <elena.reshetova@intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  include/linux/kernel.h |  7 -------
+>  kernel/panic.c         | 11 -----------
+>  2 files changed, 18 deletions(-)
+> 
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index d83d403dac2e..09f759228e3f 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -328,13 +328,6 @@ extern int oops_may_print(void);
+>  void do_exit(long error_code) __noreturn;
+>  void complete_and_exit(struct completion *, long) __noreturn;
+>  
+> -#ifdef CONFIG_ARCH_HAS_REFCOUNT
+> -void refcount_error_report(struct pt_regs *regs, const char *err);
+> -#else
+> -static inline void refcount_error_report(struct pt_regs *regs, const char *err)
+> -{ }
+> -#endif
+> -
+>  /* Internal, do not use. */
+>  int __must_check _kstrtoul(const char *s, unsigned int base, unsigned long *res);
+>  int __must_check _kstrtol(const char *s, unsigned int base, long *res);
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 47e8ebccc22b..10d05fd4f9c3 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -670,17 +670,6 @@ EXPORT_SYMBOL(__stack_chk_fail);
+>  
+>  #endif
+>  
+> -#ifdef CONFIG_ARCH_HAS_REFCOUNT
+> -void refcount_error_report(struct pt_regs *regs, const char *err)
+> -{
+> -	WARN_RATELIMIT(1, "refcount_t %s at %pB in %s[%d], uid/euid: %u/%u\n",
+> -		err, (void *)instruction_pointer(regs),
+> -		current->comm, task_pid_nr(current),
+> -		from_kuid_munged(&init_user_ns, current_uid()),
+> -		from_kuid_munged(&init_user_ns, current_euid()));
+> -}
+> -#endif
+> -
+>  core_param(panic, panic_timeout, int, 0644);
+>  core_param(panic_print, panic_print, ulong, 0644);
+>  core_param(pause_on_oops, pause_on_oops, int, 0644);
+> -- 
+> 2.23.0.581.g78d2f28ef7-goog
+> 
+
 -- 
-2.20.0
-
+Kees Cook
