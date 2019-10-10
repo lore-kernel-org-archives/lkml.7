@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D23CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E02C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2850121929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2008F21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696999;
-	bh=6aJTqbREb2X6AGt6ZSLFhTjF2AAoUGnOEamyy4LHoCI=;
+	s=default; t=1570697002;
+	bh=pBeAS6A7LRD8yPJsSSTWTnoFfgaLOPqFv1K1vsCt9L0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z+FxWSPiCmIzoXh8wfXwuYqtN6eFRSeif98jvJRs2bhcO3zJBjxQ/vEaDFhmBiJLh
-	 qqub+liD6mjZHZHCI0onR21BpYdKcxNm1fmwzzbu6oK2lmlV3l2VRBrITjV8Vfa+/a
-	 izfyiqxCK7CjFL/V8ee7GRbN/lctKvnCcXsb8XDg=
+	b=u8VEl1ZJNuViDBnATO41iGG8mX9z0l+GYpiJAZZYjNgX/Lz5ZKy1huj+vSrCR+uty
+	 aaFahWEBjmrnuOFa2so2ckWmS9rajxEuDXZlSRx8qoxeWlOucaAcJRIwxX/VXRY/YQ
+	 HFJejU6i3QUVdMJaF1mLba3WDu/QsEVT7o+uU+j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388711AbfJJInR (ORCPT
+        id S2388720AbfJJInU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:43:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387767AbfJJInP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:43:15 -0400
+        id S2388704AbfJJInR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:43:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A6D121D6C;
-        Thu, 10 Oct 2019 08:43:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0993421A4A;
+        Thu, 10 Oct 2019 08:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696993;
-        bh=6aJTqbREb2X6AGt6ZSLFhTjF2AAoUGnOEamyy4LHoCI=;
+        s=default; t=1570696996;
+        bh=pBeAS6A7LRD8yPJsSSTWTnoFfgaLOPqFv1K1vsCt9L0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGsdosJV8HA42rSJqlnHTyQmrrZK7i6anZriQQY7D17boVifKwjtIP23yTrnAQ2Pi
-         ge1JfRuTAxi4DuOm7M3ihzX6z0ZwtR8hRKLYQkmLgYQkIhoSSt7nPGE4ovnPzgF0OV
-         7hQbGGvRzGOyfv9LeP548hwKhmWHKXPhVtvhYJvw=
+        b=auwbJ5d40hn4WWn0+nxtrXTItijZl60q+XZVr7k8n9kSI5YDHdivbQq7037sSm7B1
+         XprNStjzMPaO3J7yGfxUTw19Jah0mg2wsMafdbs/+4PDSlLrOVtL2NQ7SgkaUyMDOD
+         uowkZQhrPuEGXplCTHo5h27PYj8aCTAlPE0UhOf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Aring <alex.aring@gmail.com>,
-        syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>,
-        Stefan Schmidt <stefan@datenfreihafen.org>
-Subject: [PATCH 5.3 084/148] ieee802154: atusb: fix use-after-free at disconnect
-Date:   Thu, 10 Oct 2019 10:35:45 +0200
-Message-Id: <20191010083616.434288544@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.3 085/148] nl80211: validate beacon head
+Date:   Thu, 10 Oct 2019 10:35:46 +0200
+Message-Id: <20191010083616.514723385@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -61,39 +58,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 7fd25e6fc035f4b04b75bca6d7e8daa069603a76 upstream.
+commit f88eb7c0d002a67ef31aeb7850b42ff69abc46dc upstream.
 
-The disconnect callback was accessing the hardware-descriptor private
-data after having having freed it.
+We currently don't validate the beacon head, i.e. the header,
+fixed part and elements that are to go in front of the TIM
+element. This means that the variable elements there can be
+malformed, e.g. have a length exceeding the buffer size, but
+most downstream code from this assumes that this has already
+been checked.
 
-Fixes: 7490b008d123 ("ieee802154: add support for atusb transceiver")
-Cc: stable <stable@vger.kernel.org>     # 4.2
-Cc: Alexander Aring <alex.aring@gmail.com>
-Reported-by: syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Add the necessary checks to the netlink policy.
+
+Cc: stable@vger.kernel.org
+Fixes: ed1b6cc7f80f ("cfg80211/nl80211: add beacon settings")
+Link: https://lore.kernel.org/r/1569009255-I7ac7fbe9436e9d8733439eab8acbbd35e55c74ef@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ieee802154/atusb.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/wireless/nl80211.c |   37 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 35 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ieee802154/atusb.c
-+++ b/drivers/net/ieee802154/atusb.c
-@@ -1137,10 +1137,11 @@ static void atusb_disconnect(struct usb_
- 
- 	ieee802154_unregister_hw(atusb->hw);
- 
-+	usb_put_dev(atusb->usb_dev);
-+
- 	ieee802154_free_hw(atusb->hw);
- 
- 	usb_set_intfdata(interface, NULL);
--	usb_put_dev(atusb->usb_dev);
- 
- 	pr_debug("%s done\n", __func__);
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -201,6 +201,38 @@ cfg80211_get_dev_from_info(struct net *n
+ 	return __cfg80211_rdev_from_attrs(netns, info->attrs);
  }
+ 
++static int validate_beacon_head(const struct nlattr *attr,
++				struct netlink_ext_ack *extack)
++{
++	const u8 *data = nla_data(attr);
++	unsigned int len = nla_len(attr);
++	const struct element *elem;
++	const struct ieee80211_mgmt *mgmt = (void *)data;
++	unsigned int fixedlen = offsetof(struct ieee80211_mgmt,
++					 u.beacon.variable);
++
++	if (len < fixedlen)
++		goto err;
++
++	if (ieee80211_hdrlen(mgmt->frame_control) !=
++	    offsetof(struct ieee80211_mgmt, u.beacon))
++		goto err;
++
++	data += fixedlen;
++	len -= fixedlen;
++
++	for_each_element(elem, data, len) {
++		/* nothing */
++	}
++
++	if (for_each_element_completed(elem, data, len))
++		return 0;
++
++err:
++	NL_SET_ERR_MSG_ATTR(extack, attr, "malformed beacon head");
++	return -EINVAL;
++}
++
+ static int validate_ie_attr(const struct nlattr *attr,
+ 			    struct netlink_ext_ack *extack)
+ {
+@@ -322,8 +354,9 @@ const struct nla_policy nl80211_policy[N
+ 
+ 	[NL80211_ATTR_BEACON_INTERVAL] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_DTIM_PERIOD] = { .type = NLA_U32 },
+-	[NL80211_ATTR_BEACON_HEAD] = { .type = NLA_BINARY,
+-				       .len = IEEE80211_MAX_DATA_LEN },
++	[NL80211_ATTR_BEACON_HEAD] =
++		NLA_POLICY_VALIDATE_FN(NLA_BINARY, validate_beacon_head,
++				       IEEE80211_MAX_DATA_LEN),
+ 	[NL80211_ATTR_BEACON_TAIL] =
+ 		NLA_POLICY_VALIDATE_FN(NLA_BINARY, validate_ie_attr,
+ 				       IEEE80211_MAX_DATA_LEN),
 
 
