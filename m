@@ -2,115 +2,103 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5595EC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E80C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB6C218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QrtsacxT"
+	by mail.kernel.org (Postfix) with ESMTP id 60906218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbfJJKdQ (ORCPT
+        id S1732756AbfJJKeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:33:16 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:46030 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfJJKdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:33:15 -0400
-Received: from zn.tnic (p200300EC2F0A6300C5CFCA1B921AC096.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6300:c5cf:ca1b:921a:c096])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 606201EC090E;
-        Thu, 10 Oct 2019 12:33:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570703593;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=61VcXOO6OC0TSDKYRbLOk7EXig9eCgXyOc1Sw8qjbMo=;
-        b=QrtsacxT1YtNlQnr0l29ht/E0oAvW+TPvKSyK2g0/hm1JIpJUv3weRvTAKtk5um+tIL7NZ
-        sMKAq2cd3qZJrCB8QeMiLz+W0PHOQeM7u7ISY1ucpnilVubyTseLgfkDcEzyeyNOoeMuUd
-        DvcpBmRi6/Jkc81xIBQiQ4XT3IX11oI=
-Date:   Thu, 10 Oct 2019 12:33:05 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/29] x86: Restore "text" Program Header with dummy
- section
-Message-ID: <20191010103305.GD7658@zn.tnic>
-References: <20190926175602.33098-1-keescook@chromium.org>
- <20190926175602.33098-8-keescook@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190926175602.33098-8-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 10 Oct 2019 06:34:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52624 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726298AbfJJKeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 06:34:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1557CB187;
+        Thu, 10 Oct 2019 10:34:03 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 36408E378C; Thu, 10 Oct 2019 12:34:02 +0200 (CEST)
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next v2] genetlink: do not parse attributes for families
+ with zero maxattr
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Jiri Pirko <jiri@mellanox.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <20191010103402.36408E378C@unicorn.suse.cz>
+Date:   Thu, 10 Oct 2019 12:34:02 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 10:55:40AM -0700, Kees Cook wrote:
-> Instead of depending on markings in the section following NOTES to
-> restore the associated Program Header, use a dummy section, as done
-> in other architectures.
+Commit c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing
+to a separate function") moved attribute buffer allocation and attribute
+parsing from genl_family_rcv_msg_doit() into a separate function
+genl_family_rcv_msg_attrs_parse() which, unlike the previous code, calls
+__nlmsg_parse() even if family->maxattr is 0 (i.e. the family does its own
+parsing). The parser error is ignored and does not propagate out of
+genl_family_rcv_msg_attrs_parse() but an error message ("Unknown attribute
+type") is set in extack and if further processing generates no error or
+warning, it stays there and is interpreted as a warning by userspace.
 
-This is very laconic and after some staring at ld.info, I think you mean
-this:
+Dumpit requests are not affected as genl_family_rcv_msg_dumpit() bypasses
+the call of genl_family_rcv_msg_doit() if family->maxattr is zero. Do the
+same also in genl_family_rcv_msg_doit().
 
-"   If you place a section in one or more segments using ':PHDR', then
-the linker will place all subsequent allocatable sections which do not
-specify ':PHDR' in the same segments."
+Fixes: c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing to a separate function")
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ net/netlink/genetlink.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-but I could be way off. Yes, no?
-
-IOW, please write in the commit messages first what the problem is
-you're addressing.
-
-> This is preparation for moving NOTES into the
-> RO_DATA macro.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/kernel/vmlinux.lds.S | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index e2feacf921a0..788e78978030 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -147,8 +147,9 @@ SECTIONS
->  	} :text = 0x9090
->  
->  	NOTES :text :note
-> +	.dummy : { *(.dummy) } :text
->  
-> -	EXCEPTION_TABLE(16) :text = 0x9090
-> +	EXCEPTION_TABLE(16)
-
-This is killing the filler byte but I have a suspicion that'll change
-eventually to INT3... :)
-
+diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
+index ecc2bd3e73e4..1f14e55ad3ad 100644
+--- a/net/netlink/genetlink.c
++++ b/net/netlink/genetlink.c
+@@ -639,21 +639,23 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
+ 				    const struct genl_ops *ops,
+ 				    int hdrlen, struct net *net)
+ {
+-	struct nlattr **attrbuf;
++	struct nlattr **attrbuf = NULL;
+ 	struct genl_info info;
+ 	int err;
+ 
+ 	if (!ops->doit)
+ 		return -EOPNOTSUPP;
+ 
++	if (!family->maxattr)
++		goto no_attrs;
+ 	attrbuf = genl_family_rcv_msg_attrs_parse(family, nlh, extack,
+ 						  ops, hdrlen,
+ 						  GENL_DONT_VALIDATE_STRICT,
+-						  family->maxattr &&
+ 						  family->parallel_ops);
+ 	if (IS_ERR(attrbuf))
+ 		return PTR_ERR(attrbuf);
+ 
++no_attrs:
+ 	info.snd_seq = nlh->nlmsg_seq;
+ 	info.snd_portid = NETLINK_CB(skb).portid;
+ 	info.nlhdr = nlh;
+@@ -676,8 +678,7 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
+ 		family->post_doit(ops, skb, &info);
+ 
+ out:
+-	genl_family_rcv_msg_attrs_free(family, attrbuf,
+-				       family->maxattr && family->parallel_ops);
++	genl_family_rcv_msg_attrs_free(family, attrbuf, family->parallel_ops);
+ 
+ 	return err;
+ }
 -- 
-Regards/Gruss,
-    Boris.
+2.23.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
