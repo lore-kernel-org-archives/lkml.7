@@ -2,176 +2,115 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BB4C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1162C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5237A20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A77920659
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:24:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HI5JYbO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfJJSY0 (ORCPT
+        id S1727172AbfJJSYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:24:26 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:51122 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727032AbfJJSYH (ORCPT
+        Thu, 10 Oct 2019 14:24:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33919 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfJJSYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:24:07 -0400
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from webmail.solarflare.com (webmail.solarflare.com [12.187.104.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us4.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 43149B4006A;
-        Thu, 10 Oct 2019 18:24:05 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ocex03.SolarFlarecom.com
- (10.20.40.36) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 10 Oct
- 2019 11:24:00 -0700
-Subject: Re: [PATCH net-next1/2] net: core: use listified Rx for GRO_NORMAL in
- napi_gro_receive()
-To:     Alexander Lobakin <alobakin@dlink.ru>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     Jiri Pirko <jiri@mellanox.com>, Eric Dumazet <edumazet@google.com>,
-        "Ido Schimmel" <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191010144226.4115-1-alobakin@dlink.ru>
- <20191010144226.4115-2-alobakin@dlink.ru>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <bb454c3c-1d86-f81e-a03e-86f8de3e9822@solarflare.com>
-Date:   Thu, 10 Oct 2019 19:23:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 10 Oct 2019 14:24:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y135so7716797wmc.1;
+        Thu, 10 Oct 2019 11:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gDfhtZCLPDiZh+UMPgLmWJp3cqUK6R/GqJrZEV/WY7A=;
+        b=HI5JYbO/+oZvLigOOYZezrKnK2wJFmO0mHsbk13fKijaG3qdFAaIy1TsftNv21OH/N
+         OIMx019JiO3prdIC14IbegQokiWc4CCJ9v1bBZ4S8naddle7FrqwrkYvlHP/1U40vh9z
+         OwdGudcVfrS+CqvK/qAo6+vVfbeNDVta4hL0rGwnKPMTWjzKxvBZaqMY6VTM8rDKR9o6
+         ifj82BC91rW1kt2iQI/osiH7aPtseWFRDklGVUZMBkk4eA4Bbi4ctEY6WfWwumA+/hkw
+         YgT3VnkisKTK4FExdA7JnwUX8K57ZGzJ75VUfSfM5QxTCl0fZaYb4UsoyEgGfRGwoxhV
+         eJ1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gDfhtZCLPDiZh+UMPgLmWJp3cqUK6R/GqJrZEV/WY7A=;
+        b=X/a1yRkHc4Txm5Vw6QZsKXXBxIf+fEx5YyolwMS4q3i4PXMdIJfsf+XvxY8HWCMN1a
+         hH9ob9jnXs2reaNRtksrY+FfTQ+9dEDSXzx4Xk+RLLcRTO5o33o6WENxkRTbS5ma7JoR
+         yZRqO+oBmDNYPhZDFL5sjLcV81Dzs12m5PUY0akoqjUYT44Snf3ZnoUnbjKvlUGSPy7B
+         RVd7Hox5mRnKqzQxADB+UIIHXUVfd3lwYJBPf4KYgoa7nfIB8tyW1eDS6UoIhX5vzi+i
+         Z+gWU3XUgmyI21pgSoQMKHgV4hAFPWF79VJwaAxTjG6k658Al9rStD/vnQwxFrGZRtSL
+         pc2g==
+X-Gm-Message-State: APjAAAULbodwqK5pZqAZ/cjHRr/uCAa3SKRYLn7c3jGEUWK1YX11SNnE
+        L3nYETugFqfGSOu0WrTUyLU=
+X-Google-Smtp-Source: APXvYqzeZD0H1oDK7XStvFyndivwViMv2OhtPKWW65Oxrr3rQ6RL+LdyP7zHHPxkZS+5ICVwKvG2hg==
+X-Received: by 2002:a05:600c:2549:: with SMTP id e9mr8090591wma.74.1570731839866;
+        Thu, 10 Oct 2019 11:23:59 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id y186sm11367664wmb.41.2019.10.10.11.23.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 11:23:59 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     catalin.marinas@arm.com, davem@davemloft.net,
+        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, will@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v3 05/11] ARM: dts: sun8i: H3: Add Crypto Engine node
+Date:   Thu, 10 Oct 2019 20:23:22 +0200
+Message-Id: <20191010182328.15826-6-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191010182328.15826-1-clabbe.montjoie@gmail.com>
+References: <20191010182328.15826-1-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191010144226.4115-2-alobakin@dlink.ru>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-24966.005
-X-TM-AS-Result: No-6.587700-4.000000-10
-X-TMASE-MatchedRID: oTBA/+sdKab4ECMHJTM/ufZvT2zYoYOwC/ExpXrHizwZFDQxUvPcmL6Y
-        VRYkPkYCSCF6HRRH3gIN25tj8sME0ixppiUy9o4cA9lly13c/gFdxx6WRf+5sFVkJxysad/I8oM
-        fiEarrJBNrsF/gvwvK4N86bMbdBNQb6wZx1ul0pxNa4UOfkJSNKoxpAjnRFPjrnl6TLi5UmyDuU
-        30s68UO6DNllOetTaoD3T/GOCyXu2jxYyRBa/qJQPTK4qtAgwIAYt5KiTiutkLbigRnpKlKTpcQ
-        TtiHDgWl4w8bbXrRbUSd6OLRiQRmKej9k22410aJe5hZF11Za4I9un48LXJsdrC0b+bkMFDjgPx
-        tWMuY/VOcEc3FZeduqDOZC1kUEQa4vn0zMfSmjYrbLOj1GuP3A+hgLflG6KEo9QjuF9BKnl4IFx
-        QIbVomJRMZUCEHkRt
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--6.587700-4.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-24966.005
-X-MDID: 1570731846-sucjTvnwbKCl
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/2019 15:42, Alexander Lobakin wrote:
-> Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
-> skbs") made use of listified skb processing for the users of
-> napi_gro_frags().
-> The same technique can be used in a way more common napi_gro_receive()
-> to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers,
-> including gro_cells and mac80211 users.
->
-> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-> ---
->  net/core/dev.c | 49 +++++++++++++++++++++++++------------------------
->  1 file changed, 25 insertions(+), 24 deletions(-)
->
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index 8bc3dce71fc0..a33f56b439ce 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -5884,6 +5884,26 @@ struct packet_offload *gro_find_complete_by_type(__be16 type)
->  }
->  EXPORT_SYMBOL(gro_find_complete_by_type);
->  
-> +/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
-> +static void gro_normal_list(struct napi_struct *napi)
-> +{
-> +	if (!napi->rx_count)
-> +		return;
-> +	netif_receive_skb_list_internal(&napi->rx_list);
-> +	INIT_LIST_HEAD(&napi->rx_list);
-> +	napi->rx_count = 0;
-> +}
-> +
-> +/* Queue one GRO_NORMAL SKB up for list processing.  If batch size exceeded,
-> + * pass the whole batch up to the stack.
-> + */
-> +static void gro_normal_one(struct napi_struct *napi, struct sk_buff *skb)
-> +{
-> +	list_add_tail(&skb->list, &napi->rx_list);
-> +	if (++napi->rx_count >= gro_normal_batch)
-> +		gro_normal_list(napi);
-> +}
-> +
->  static void napi_skb_free_stolen_head(struct sk_buff *skb)
->  {
->  	skb_dst_drop(skb);
-> @@ -5891,12 +5911,13 @@ static void napi_skb_free_stolen_head(struct sk_buff *skb)
->  	kmem_cache_free(skbuff_head_cache, skb);
->  }
->  
-> -static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff *skb)
-> +static gro_result_t napi_skb_finish(struct napi_struct *napi,
-> +				    struct sk_buff *skb,
-> +				    gro_result_t ret)
-Any reason why the argument order here is changed around?
+The Crypto Engine is a hardware cryptographic accelerator that supports
+many algorithms.
+It could be found on most Allwinner SoCs.
 
--Ed
->  {
->  	switch (ret) {
->  	case GRO_NORMAL:
-> -		if (netif_receive_skb_internal(skb))
-> -			ret = GRO_DROP;
-> +		gro_normal_one(napi, skb);
->  		break;
->  
->  	case GRO_DROP:
-> @@ -5928,7 +5949,7 @@ gro_result_t napi_gro_receive(struct napi_struct *napi, struct sk_buff *skb)
->  
->  	skb_gro_reset_offset(skb);
->  
-> -	ret = napi_skb_finish(dev_gro_receive(napi, skb), skb);
-> +	ret = napi_skb_finish(napi, skb, dev_gro_receive(napi, skb));
->  	trace_napi_gro_receive_exit(ret);
->  
->  	return ret;
-> @@ -5974,26 +5995,6 @@ struct sk_buff *napi_get_frags(struct napi_struct *napi)
->  }
->  EXPORT_SYMBOL(napi_get_frags);
->  
-> -/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
-> -static void gro_normal_list(struct napi_struct *napi)
-> -{
-> -	if (!napi->rx_count)
-> -		return;
-> -	netif_receive_skb_list_internal(&napi->rx_list);
-> -	INIT_LIST_HEAD(&napi->rx_list);
-> -	napi->rx_count = 0;
-> -}
-> -
-> -/* Queue one GRO_NORMAL SKB up for list processing.  If batch size exceeded,
-> - * pass the whole batch up to the stack.
-> - */
-> -static void gro_normal_one(struct napi_struct *napi, struct sk_buff *skb)
-> -{
-> -	list_add_tail(&skb->list, &napi->rx_list);
-> -	if (++napi->rx_count >= gro_normal_batch)
-> -		gro_normal_list(napi);
-> -}
-> -
->  static gro_result_t napi_frags_finish(struct napi_struct *napi,
->  				      struct sk_buff *skb,
->  				      gro_result_t ret)
+This patch enables the Crypto Engine on the Allwinner H3 SoC Device-tree.
+
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ arch/arm/boot/dts/sun8i-h3.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index e37c30e811d3..046a32540b73 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -153,6 +153,16 @@
+ 			allwinner,sram = <&ve_sram 1>;
+ 		};
+ 
++		crypto: crypto@1c15000 {
++			compatible = "allwinner,sun8i-h3-crypto";
++			reg = <0x01c15000 0x1000>;
++			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_CE>;
++			reset-names = "bus";
++		};
++
+ 		mali: gpu@1c40000 {
+ 			compatible = "allwinner,sun8i-h3-mali", "arm,mali-400";
+ 			reg = <0x01c40000 0x10000>;
+-- 
+2.21.0
 
