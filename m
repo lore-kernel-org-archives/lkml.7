@@ -2,126 +2,97 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDC4ECE58C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0034CC47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03952086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5422086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:26:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EhPM9H9C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5DYis7u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732221AbfJJAW4 (ORCPT
+        id S1732395AbfJJA0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:22:56 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43827 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731553AbfJJAW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:22:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46pWy251BKz9s7T;
-        Thu, 10 Oct 2019 11:22:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570666973;
-        bh=7+fjtYqa172Ftzt3UBW5VOoZd1S9i31z/HZVdVxdAZ0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EhPM9H9Cwzep0HCSliuIfx+P2uR+uy6coKqispWQSTVxbJW5kvWl81W0ZL5R19dT4
-         TLfMrbeITvv0MkitjTxaA/tb+y2u59dmaZ/eRaa3rdZ6ODWDrH9jq9Eu2WpXFYfPXO
-         Pet0clnSfsaiLvL0Calao53LlLEffJeLTny6B69ZbWb2rO6hTw7JEOJnHQYM092iFL
-         NggyZaab0LLrn/6Y0688JJBf3MlBMcHXz+uN1DcQCZ2Ii3+QoDhqGOGRRP6IOqezxy
-         U//FxX5Z+0N7hC219Z5py2S2/AoaGbxukj23BDrv1RiwKJFhb1ebdOAN59w/pb5xjQ
-         hECYVDcP6oLwQ==
-Date:   Thu, 10 Oct 2019 11:22:49 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: build failure after merge of the drm tree
-Message-ID: <20191010112249.720989aa@canb.auug.org.au>
+        Wed, 9 Oct 2019 20:26:49 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36609 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731542AbfJJA0s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 20:26:48 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y189so3999685qkc.3;
+        Wed, 09 Oct 2019 17:26:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hJVRzApWUSHgdNBRH3SUZ0/qd5E2CCfr2UoORKNjRa8=;
+        b=N5DYis7uPKipl0cDXvFbCowOIVqJOHtHkPbbgeuPBKtiej1Ij51lQaKh+Gy7hRp2ra
+         EIu8aTLliFZcetEYjur8WYm1n75nqJ+Hy0/aSL4snbMcyzqEHLslTZ1taRJpxDOwmkdh
+         mka1E6M9BOtuGsHqgOWKYdcDpMXT80IiOMMgWxIYOug1zlnw9yW5u0k8Vrfz4TJ3sNab
+         oKPjjN2sdBqYWw343JKpsqRR6YyU/3ZfYMwUcA4RPkQHbj0SBF1iMh0lheHJDnslaoS3
+         bqWRJozkJtU4I5P/Iw1sf4VOSXmJDL5v9G7oF2TFPU14AxdJN85h3fC8fJ3uRil6Md4m
+         ZbLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hJVRzApWUSHgdNBRH3SUZ0/qd5E2CCfr2UoORKNjRa8=;
+        b=XiHDSMs/+PN+fnWYOnhnHO4skVy86hFrdKUUc5PJ7LudhcmuJFRq9tJUPUEHyfWN1D
+         D+yalBfFTa7HMPzDuo/vMfnZh7xe7dW7botD4ovvx9HLJukrgRnjXKNRt/9Sd40BUhl1
+         P+bHPILgWscu8LOzGNTF3TmZ3VJpaWhfar7lzq70mw1kSe3DFh33BFDWhWxm9VcXDbvh
+         fB70PX6CPD9Jyal3jU++0KMnN4/dtz1OSb2aqzlspZhaMenYoWeIbcrtbyN8WZRDOjs3
+         8l7snMwuPkC/RLj8/UnzDdJM7BLrWvKNOxrbexAhAvsU0dwno975ypUXM7WofjrWNpQr
+         KKyw==
+X-Gm-Message-State: APjAAAV6rkDNwRRkYxxs2QnB/BagKLrSOt+yVspQ3jPG6BgRi1cfnw2X
+        90jUl0Tw3TFezuzv0sk/mPPx3KCwf7jDp5eAFU0=
+X-Google-Smtp-Source: APXvYqxUSe0DseUwlExqerpeDVzqzpbZSaxkzseSPt9wfk83oiom+qzJWnHqrY7tZz8n93L9Dc5K57DvbXGqR3ZFumg=
+X-Received: by 2002:a37:4c13:: with SMTP id z19mr6820886qka.449.1570667207415;
+ Wed, 09 Oct 2019 17:26:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lIT/TpjrrNf6nF9Pwa/PMRX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191009204134.26960-1-ivan.khoronzhuk@linaro.org> <20191009204134.26960-12-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20191009204134.26960-12-ivan.khoronzhuk@linaro.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 9 Oct 2019 17:26:36 -0700
+Message-ID: <CAEf4BzZ=-DYoP0yPttx9WWwqZe10q+=nxAer7V_S0WRY47tp9Q@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 11/15] libbpf: don't use cxx to test_libpf target
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org,
+        sergei.shtylyov@cogentembedded.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lIT/TpjrrNf6nF9Pwa/PMRX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Oct 9, 2019 at 1:43 PM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> No need to use C++ for test_libbpf target when libbpf is on C and it
+> can be tested with C, after this change the CXXFLAGS in makefiles can
+> be avoided, at least in bpf samples, when sysroot is used, passing
+> same C/LDFLAGS as for lib.
+>
+> Add "return 0" in test_libbpf to void warn, but also remove spaces at
+> start of the lines to keep same style and avoid warns while apply.
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
 
-Hi all,
+Thanks for the clean up!
 
-After merging the drm tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-In file included from drivers/gpu/drm/i915/i915_vma.h:35,
-                 from drivers/gpu/drm/i915/gt/uc/intel_guc.h:17,
-                 from drivers/gpu/drm/i915/gt/uc/intel_uc.h:9,
-                 from drivers/gpu/drm/i915/gt/intel_gt_types.h:16,
-                 from drivers/gpu/drm/i915/i915_drv.h:81,
-                 from drivers/gpu/drm/i915/i915_getparam.c:7:
-drivers/gpu/drm/i915/gem/i915_gem_object.h:174:1: error: redefinition of 'i=
-915_gem_object_never_bind_ggtt'
-  174 | i915_gem_object_never_bind_ggtt(const struct drm_i915_gem_object *o=
-bj)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/i915/gem/i915_gem_object.h:168:1: note: previous definition=
- of 'i915_gem_object_never_bind_ggtt' was here
-  168 | i915_gem_object_never_bind_ggtt(const struct drm_i915_gem_object *o=
-bj)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Caused by the automatic merge of commit
-
-  3a1fea6d2353 ("drm/i915/userptr: Never allow userptr into the mappable GG=
-TT")
-
-from the drm-intel-fixes tree and commits
-
-  a4311745bba9 ("drm/i915/userptr: Never allow userptr into the mappable GG=
-TT")
-  3cbad5d77749 ("drm/i915/gem: Refactor tests on obj->ops->flags")
-
-from the drm tree.
-
-I fixed it up by removing the extra definition.  This sort of thing will
-keep happening as longs as bugs are fixed in your development trees
-and then cherry-picked back into your -fixes trees.  This practise also
-causes quite a few unnecessary conflicts that each have to be checked
-and merged by hand.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/lIT/TpjrrNf6nF9Pwa/PMRX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2eedkACgkQAVBC80lX
-0GyOYgf/f4qvlGy3OVWVxHDAOJjjxnAAWRG3u5oxfmagSZsi3NjqV9aGPzQXJk0P
-YoPfZv35qqfSSTB3Ao9XTUbij2nI5/76mq7oPp/0/43MLyeun+/pPQlyZ4sPp7qi
-eddvMCPvRfF6PjH2R12zeopTsT6HtXp5Gfo2E+tLxGrxjWEKQbq8HZFsZEnN3sZx
-T88Nu7zJ4grx8043pf8ZqVAMTQmKkaNHtZC33ZPNKsiFSt2UzyNxiD8ukKnkm1st
-6iVAcfe3Mw/ZVWIQHt2z8KWMPrBzhZo7LXoJtD2bem1LlP0bLC9E4WmQWIjzvWcu
-IfMKQdFmfnpWffH5pe/C5OPucH10ng==
-=3MwN
------END PGP SIGNATURE-----
-
---Sig_/lIT/TpjrrNf6nF9Pwa/PMRX--
+[...]
