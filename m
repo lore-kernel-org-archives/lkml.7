@@ -2,127 +2,112 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,WEIRD_QUOTING autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F917C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBED6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F982067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:08:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aXFXLXf9"
+	by mail.kernel.org (Postfix) with ESMTP id A1E872067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387412AbfJJJIL (ORCPT
+        id S2387498AbfJJJI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:08:11 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43400 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733144AbfJJJIL (ORCPT
+        Thu, 10 Oct 2019 05:08:26 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:39835 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733144AbfJJJI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:08:11 -0400
-Received: by mail-qk1-f195.google.com with SMTP id h126so4886737qke.10
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:08:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xx/5ivC8+wB4MKu4yR0Ppryr6BtLEmc7x2YuwNcfbiU=;
-        b=aXFXLXf9WNQKvFcjlU5MlohqPWQ9c1GEapMUp8kn9Ji0Nf0Y2DalUZ21YIV5w9Yoek
-         jS5WJkBJ73QscZEwUM1J3bb+pqYpmN6gNG+8hziyOILEc/Cv2klTVlREuWhXT94Mgm7+
-         7xvF6ObloyQdvyA9Vj0umU7uNASrYs6sHJAp0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xx/5ivC8+wB4MKu4yR0Ppryr6BtLEmc7x2YuwNcfbiU=;
-        b=pNPMUOqvWBC7BdMcL5X5p6Ccbzv2cxj+4Cd+nXfOZdLggWVy4zDH6SNUyCxPhQ/Dhr
-         Du7YLjiI9qpPUejLcYE17f4EEn0uvcyqoEMh2f5LS0tt2ItJwAHHrZgSgrkHsKtitEIg
-         9mFo3pnpytZonkILqF27Qpz0B+VA97PdLUzSG5wWs4CxcIK3HW+fiDTDiW7ZodyMsc8z
-         +VtruJ/un/G3rQFJBDQkCDQrzrIy2eQSruRO2FeNM/DGq6VkR2khxxWy6wYWdxUStZ5G
-         z6t1hR0EbS/nKeh92ZdeI1N9NgHWLY+LBhDxy61ag/v9BZfdyB/LPpg47JrZXi8eecx+
-         uI3Q==
-X-Gm-Message-State: APjAAAUWZssxaSj1cTCSeO340UmuDBvlHYeBfEFYqIISojEsNg9DjXdz
-        CdXaJLC0dP48HYjlw71WnLy0CobrTpW5d4c8N48UPQ==
-X-Google-Smtp-Source: APXvYqzwoJTTh6/AyzHZ9HDk0OjkJqyS/iSBZyH2/vPu+Dl7wuQU45eTBfY0lkl/AHWiFgvhaZ9+YLGWn+ZXBdZQ++A=
-X-Received: by 2002:a37:342:: with SMTP id 63mr8915746qkd.144.1570698489815;
- Thu, 10 Oct 2019 02:08:09 -0700 (PDT)
+        Thu, 10 Oct 2019 05:08:26 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46plcR3d7hz1rQCD;
+        Thu, 10 Oct 2019 11:08:23 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46plcR0bYQz1qqkQ;
+        Thu, 10 Oct 2019 11:08:23 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id GACLg3BAFslI; Thu, 10 Oct 2019 11:08:20 +0200 (CEST)
+X-Auth-Info: 3yv9RJi5v/uCUl5RBM3UxIXknte+Kate4wyyjunP9RI=
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu, 10 Oct 2019 11:08:20 +0200 (CEST)
+From:   Lukasz Majewski <lukma@denx.de>
+To:     linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Lukasz Majewski <lukma@denx.de>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH v2] dts: Disable DMA support on the BK4 vf610 device's fsl_lpuart driver
+Date:   Thu, 10 Oct 2019 11:08:02 +0200
+Message-Id: <20191010090802.16383-1-lukma@denx.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191010075004.192818-1-tfiga@chromium.org>
-In-Reply-To: <20191010075004.192818-1-tfiga@chromium.org>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 10 Oct 2019 17:07:58 +0800
-Message-ID: <CANMq1KAA+nqcOqiE_g=vA8DC=_t=FqSRtR5kk=1XqSsgZGj+_A@mail.gmail.com>
-Subject: Re: [PATCH] usb: mtk-xhci: Set the XHCI_NO_64BIT_SUPPORT quirk
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Changqi Hu <Changqi.Hu@mediatek.com>,
-        Shik Chen <shik@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 3:50 PM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> MediaTek XHCI host controller does not support 64-bit addressing despite
-> the AC64 bit of HCCPARAMS1 register being set. The platform-specific
-> glue sets the DMA mask to 32 bits on its own, but it has no effect,
-> because xhci_gen_setup() overrides it according to hardware
-> capabilities.
->
-> Use the XHCI_NO_64BIT_SUPPORT quirk to tell the XHCI core to force
-> 32-bit DMA mask instead.
->
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+This change disables the DMA support (RX/TX) on the NXP's fsl_lpuart
+driver - the PIO mode is used instead. This change is necessary for better
+robustness of BK4's device use cases with many potentially interrupted
+short serial transfers.
 
-Can we add a Fixes: tag for stable backports?
-(after addressing the other comments of course)
+Without it the driver hangs when some distortion happens on UART lines.
 
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
 
-> ---
->  drivers/usb/host/xhci-mtk.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-> index b18a6baef204a..4d101d52cc11b 100644
-> --- a/drivers/usb/host/xhci-mtk.c
-> +++ b/drivers/usb/host/xhci-mtk.c
-> @@ -395,6 +395,11 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
->         xhci->quirks |= XHCI_SPURIOUS_SUCCESS;
->         if (mtk->lpm_support)
->                 xhci->quirks |= XHCI_LPM_SUPPORT;
-> +       /*
-> +        * MTK host controller does not support 64-bit addressing, despite
-> +        * having the AC64 bit of the HCCPARAMS1 register set.
-> +        */
-> +       xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
->  }
->
->  /* called during probe() after chip reset completes */
-> @@ -488,11 +493,6 @@ static int xhci_mtk_probe(struct platform_device *pdev)
->                 goto disable_clk;
->         }
->
-> -       /* Initialize dma_mask and coherent_dma_mask to 32-bits */
-> -       ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-> -       if (ret)
-> -               goto disable_clk;
-> -
->         hcd = usb_create_hcd(driver, dev, dev_name(dev));
->         if (!hcd) {
->                 ret = -ENOMEM;
-> --
-> 2.23.0.581.g78d2f28ef7-goog
->
+---
+Changes for v2:
+- Use /delete-property/dma-names; instead of dma-names = "","";
+---
+ arch/arm/boot/dts/vf610-bk4.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
+index 0f3870d3b099..830c85476b3d 100644
+--- a/arch/arm/boot/dts/vf610-bk4.dts
++++ b/arch/arm/boot/dts/vf610-bk4.dts
+@@ -259,24 +259,28 @@
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart0>;
++	/delete-property/dma-names;
+ 	status = "okay";
+ };
+ 
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
++	/delete-property/dma-names;
+ 	status = "okay";
+ };
+ 
+ &uart2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart2>;
++	/delete-property/dma-names;
+ 	status = "okay";
+ };
+ 
+ &uart3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart3>;
++	/delete-property/dma-names;
+ 	status = "okay";
+ };
+ 
+-- 
+2.20.1
+
