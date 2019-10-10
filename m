@@ -2,231 +2,166 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEE4ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0703AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF58120679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:36:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="cAWnWxoF"
+	by mail.kernel.org (Postfix) with ESMTP id DBA4420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732836AbfJJFgg (ORCPT
+        id S1732874AbfJJFhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 01:36:36 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56024 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbfJJFgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 01:36:35 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46pfw06HQhz9tyfl;
-        Thu, 10 Oct 2019 07:36:32 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=cAWnWxoF; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 5tENno9LtAKd; Thu, 10 Oct 2019 07:36:32 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46pfw05FDkz9tyfk;
-        Thu, 10 Oct 2019 07:36:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1570685792; bh=YYm9/1TIHCKV74jWgKmfH9CH0AXN+FWFle7ZWxDf4Jk=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=cAWnWxoFE2dxXWkpdEJoOOp+daDEmH+J0aci0a4lCwp8IoJnE/Y8ICXdlCICUFm4u
-         7qgfgv1w1zQpl+Fu/yw/hOvNkhlHaQdHgGSyd1mAZLzWYLyLIZSN5K0eZ67LhprH3n
-         Pq3L2G8i8LS1VnhPhAQyvmciCkotb1GXLVo9mWNE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 847478B788;
-        Thu, 10 Oct 2019 07:36:33 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id GfVFPb1KVR-A; Thu, 10 Oct 2019 07:36:33 +0200 (CEST)
-Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 38D788B754;
-        Thu, 10 Oct 2019 07:36:33 +0200 (CEST)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2404368D6E; Thu, 10 Oct 2019 05:36:33 +0000 (UTC)
-Message-Id: <5ca6639b7c1c21ee4b4138b7cfb31d6245c4195c.1570684298.git.christophe.leroy@c-s.fr>
-In-Reply-To: <f12fb9a6cc52d83ee9ddf15a36ee12ac77e6379f.1570684298.git.christophe.leroy@c-s.fr>
-References: <f12fb9a6cc52d83ee9ddf15a36ee12ac77e6379f.1570684298.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v4 2/2] powerpc/irq: inline call_do_irq() and
- call_do_softirq()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        segher@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 10 Oct 2019 05:36:33 +0000 (UTC)
+        Thu, 10 Oct 2019 01:37:07 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:10089
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726612AbfJJFhH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 01:37:07 -0400
+X-IronPort-AV: E=Sophos;i="5.67,279,1566856800"; 
+   d="scan'208";a="322222603"
+Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 07:37:03 +0200
+Date:   Thu, 10 Oct 2019 07:37:03 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Joe Perches <joe@perches.com>
+cc:     Jules Irenge <jbi.octave@gmail.com>,
+        outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [Outreachy kernel] [PATCH] staging: qlge: Fix multiple assignments
+ warning by splitting the assignement into two each
+In-Reply-To: <f9bdcaeccc9dd131f28a64f4b19136d1c92a27e2.camel@perches.com>
+Message-ID: <alpine.DEB.2.21.1910100734330.3287@hadrien>
+References: <20191009204311.7988-1-jbi.octave@gmail.com>  <alpine.DEB.2.21.1910092248170.2570@hadrien> <f9bdcaeccc9dd131f28a64f4b19136d1c92a27e2.camel@perches.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-call_do_irq() and call_do_softirq() are quite similar on PPC32 and
-PPC64 and are simple enough to be worth inlining.
 
-Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
 
-This is inspired from S390 arch. Several other arches do more or
-less the same. The way sparc arch does seems odd thought.
+On Wed, 9 Oct 2019, Joe Perches wrote:
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+> On Wed, 2019-10-09 at 22:48 +0200, Julia Lawall wrote:
+> > On Wed, 9 Oct 2019, Jules Irenge wrote:
+> > > Fix multiple assignments warning " check
+> > >  issued by checkpatch.pl tool:
+> > > "CHECK: multiple assignments should be avoided".
+> []
+> > > diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+> []
+> > > @@ -141,8 +141,10 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+> > >  	u32 *direct_ptr, temp;
+> > >  	u32 *indirect_ptr;
+> > >
+> > > -	xfi_direct_valid = xfi_indirect_valid = 0;
+> > > -	xaui_direct_valid = xaui_indirect_valid = 1;
+> > > +	xfi_indirect_valid = 0;
+> > > +	xfi_direct_valid = xfi_indirect_valid;
+> > > +	xaui_indirect_valid = 1;
+> > > +	xaui_direct_valid = xaui_indirect_valid
+> >
+> > Despite checkpatch, I think that the original code was easier to
+> > understand.
+>
+> It'd likely be easier to understand if all the
+> <foo>_valid uses were bool and the ql_get_both_serdes
+> <foo>_valid arguments were change to bool from
+> unsigned int as well.
 
----
-v2: no change.
-v3: no change.
-v4:
-- comment reminding the purpose of the inline asm block.
-- added r2 as clobbered reg
----
- arch/powerpc/include/asm/irq.h |  2 --
- arch/powerpc/kernel/irq.c      | 32 ++++++++++++++++++++++++++++++++
- arch/powerpc/kernel/misc_32.S  | 25 -------------------------
- arch/powerpc/kernel/misc_64.S  | 22 ----------------------
- 4 files changed, 32 insertions(+), 49 deletions(-)
+Indeed, given the names and the values, bool would be much better.
 
-diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
-index 0c6469983c66..10476d5283dc 100644
---- a/arch/powerpc/include/asm/irq.h
-+++ b/arch/powerpc/include/asm/irq.h
-@@ -57,8 +57,6 @@ extern void *mcheckirq_ctx[NR_CPUS];
- extern void *hardirq_ctx[NR_CPUS];
- extern void *softirq_ctx[NR_CPUS];
- 
--void call_do_softirq(void *sp);
--void call_do_irq(struct pt_regs *regs, void *sp);
- extern void do_IRQ(struct pt_regs *regs);
- extern void __init init_IRQ(void);
- extern void __do_irq(struct pt_regs *regs);
-diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
-index 04204be49577..d62fe18405a0 100644
---- a/arch/powerpc/kernel/irq.c
-+++ b/arch/powerpc/kernel/irq.c
-@@ -642,6 +642,22 @@ void __do_irq(struct pt_regs *regs)
- 	irq_exit();
- }
- 
-+static inline void call_do_irq(struct pt_regs *regs, void *sp)
-+{
-+	register unsigned long r3 asm("r3") = (unsigned long)regs;
-+
-+	/* Temporarily switch r1 to sp, call __do_irq() then restore r1 */
-+	asm volatile(
-+		"	"PPC_STLU"	1, %2(%1);\n"
-+		"	mr		1, %1;\n"
-+		"	bl		%3;\n"
-+		"	"PPC_LL"	1, 0(1);\n" :
-+		"+r"(r3) :
-+		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_irq) :
-+		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
-+		"r0", "r2", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
-+}
-+
- void do_IRQ(struct pt_regs *regs)
- {
- 	struct pt_regs *old_regs = set_irq_regs(regs);
-@@ -686,6 +702,22 @@ void *mcheckirq_ctx[NR_CPUS] __read_mostly;
- void *softirq_ctx[NR_CPUS] __read_mostly;
- void *hardirq_ctx[NR_CPUS] __read_mostly;
- 
-+static inline void call_do_softirq(const void *sp)
-+{
-+	register unsigned long ret asm("r3");
-+
-+	/* Temporarily switch r1 to sp, call __do_softirq() then restore r1 */
-+	asm volatile(
-+		"	"PPC_STLU"	1, %2(%1);\n"
-+		"	mr		1, %1;\n"
-+		"	bl		%3;\n"
-+		"	"PPC_LL"	1, 0(1);\n" :
-+		"=r"(ret) :
-+		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_softirq) :
-+		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
-+		"r0", "r2", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
-+}
-+
- void do_softirq_own_stack(void)
- {
- 	void *irqsp = softirq_ctx[smp_processor_id()];
-diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index a5422f7782b3..307307b57743 100644
---- a/arch/powerpc/kernel/misc_32.S
-+++ b/arch/powerpc/kernel/misc_32.S
-@@ -33,31 +33,6 @@
- 
- 	.text
- 
--_GLOBAL(call_do_softirq)
--	mflr	r0
--	stw	r0,4(r1)
--	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
--	mr	r1,r3
--	bl	__do_softirq
--	lwz	r1,0(r1)
--	lwz	r0,4(r1)
--	mtlr	r0
--	blr
--
--/*
-- * void call_do_irq(struct pt_regs *regs, void *sp);
-- */
--_GLOBAL(call_do_irq)
--	mflr	r0
--	stw	r0,4(r1)
--	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r4)
--	mr	r1,r4
--	bl	__do_irq
--	lwz	r1,0(r1)
--	lwz	r0,4(r1)
--	mtlr	r0
--	blr
--
- /*
-  * This returns the high 64 bits of the product of two 64-bit numbers.
-  */
-diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-index b55a7b4cb543..69fd714a5236 100644
---- a/arch/powerpc/kernel/misc_64.S
-+++ b/arch/powerpc/kernel/misc_64.S
-@@ -27,28 +27,6 @@
- 
- 	.text
- 
--_GLOBAL(call_do_softirq)
--	mflr	r0
--	std	r0,16(r1)
--	stdu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
--	mr	r1,r3
--	bl	__do_softirq
--	ld	r1,0(r1)
--	ld	r0,16(r1)
--	mtlr	r0
--	blr
--
--_GLOBAL(call_do_irq)
--	mflr	r0
--	std	r0,16(r1)
--	stdu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r4)
--	mr	r1,r4
--	bl	__do_irq
--	ld	r1,0(r1)
--	ld	r0,16(r1)
--	mtlr	r0
--	blr
--
- 	.section	".toc","aw"
- PPC64_CACHES:
- 	.tc		ppc64_caches[TC],ppc64_caches
--- 
-2.13.3
+> btw: qlge likely is going to be deleted and not updated.
 
+OK.  Jules, if you want to make this change, you can, but it could be
+better to move on to some other driver.
+
+thanks,
+julia
+
+>
+> ---
+>  drivers/staging/qlge/qlge_dbg.c | 22 ++++++++++------------
+>  1 file changed, 10 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+> index 7e16066a3527..90ab37d4c49d 100644
+> --- a/drivers/staging/qlge/qlge_dbg.c
+> +++ b/drivers/staging/qlge/qlge_dbg.c
+> @@ -112,7 +112,7 @@ static int ql_read_serdes_reg(struct ql_adapter *qdev, u32 reg, u32 *data)
+>
+>  static void ql_get_both_serdes(struct ql_adapter *qdev, u32 addr,
+>  			u32 *direct_ptr, u32 *indirect_ptr,
+> -			unsigned int direct_valid, unsigned int indirect_valid)
+> +			bool direct_valid, bool indirect_valid)
+>  {
+>  	unsigned int status;
+>
+> @@ -136,14 +136,12 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+>  				struct ql_mpi_coredump *mpi_coredump)
+>  {
+>  	int status;
+> -	unsigned int xfi_direct_valid, xfi_indirect_valid, xaui_direct_valid;
+> -	unsigned int xaui_indirect_valid, i;
+> +	bool xfi_direct_valid = false, xfi_indirect_valid = false;
+> +	bool xaui_direct_valid = true, xaui_indirect_valid = true;
+> +	unsigned int i;
+>  	u32 *direct_ptr, temp;
+>  	u32 *indirect_ptr;
+>
+> -	xfi_direct_valid = xfi_indirect_valid = 0;
+> -	xaui_direct_valid = xaui_indirect_valid = 1;
+> -
+>  	/* The XAUI needs to be read out per port */
+>  	status = ql_read_other_func_serdes_reg(qdev,
+>  			XG_SERDES_XAUI_HSS_PCS_START, &temp);
+> @@ -152,7 +150,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+>
+>  	if ((temp & XG_SERDES_ADDR_XAUI_PWR_DOWN) ==
+>  				XG_SERDES_ADDR_XAUI_PWR_DOWN)
+> -		xaui_indirect_valid = 0;
+> +		xaui_indirect_valid = false;
+>
+>  	status = ql_read_serdes_reg(qdev, XG_SERDES_XAUI_HSS_PCS_START, &temp);
+>
+> @@ -161,7 +159,7 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+>
+>  	if ((temp & XG_SERDES_ADDR_XAUI_PWR_DOWN) ==
+>  				XG_SERDES_ADDR_XAUI_PWR_DOWN)
+> -		xaui_direct_valid = 0;
+> +		xaui_direct_valid = false;
+>
+>  	/*
+>  	 * XFI register is shared so only need to read one
+> @@ -176,18 +174,18 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
+>  		/* now see if i'm NIC 1 or NIC 2 */
+>  		if (qdev->func & 1)
+>  			/* I'm NIC 2, so the indirect (NIC1) xfi is up. */
+> -			xfi_indirect_valid = 1;
+> +			xfi_indirect_valid = true;
+>  		else
+> -			xfi_direct_valid = 1;
+> +			xfi_direct_valid = true;
+>  	}
+>  	if ((temp & XG_SERDES_ADDR_XFI2_PWR_UP) ==
+>  					XG_SERDES_ADDR_XFI2_PWR_UP) {
+>  		/* now see if i'm NIC 1 or NIC 2 */
+>  		if (qdev->func & 1)
+>  			/* I'm NIC 2, so the indirect (NIC1) xfi is up. */
+> -			xfi_direct_valid = 1;
+> +			xfi_direct_valid = true;
+>  		else
+> -			xfi_indirect_valid = 1;
+> +			xfi_indirect_valid = true;
+>  	}
+>
+>  	/* Get XAUI_AN register block. */
+>
+>
