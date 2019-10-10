@@ -2,66 +2,68 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0447ECE58C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856BFECE58C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7999B20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFE020B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:08:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="IkjsmFJD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xopbKxbv"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="RjaegqIh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lgrKLx3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732684AbfJJCIX (ORCPT
+        id S1732702AbfJJCI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 22:08:23 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:60763 "EHLO
+        Wed, 9 Oct 2019 22:08:27 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:54009 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726465AbfJJCGW (ORCPT
+        by vger.kernel.org with ESMTP id S1732157AbfJJCG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 22:06:22 -0400
+        Wed, 9 Oct 2019 22:06:26 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 80EF421E90;
-        Wed,  9 Oct 2019 22:06:21 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 3D5CC21F5A;
+        Wed,  9 Oct 2019 22:06:25 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 09 Oct 2019 22:06:21 -0400
+  by compute4.internal (MEProxy); Wed, 09 Oct 2019 22:06:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=BbKe8lAB6aLlCjfJZgxJtnIxN4
-        5+vPNsWUwa92cPHoM=; b=IkjsmFJDTlGNZMhcdiYMZUiNjofp+H76r88IYAzXiN
-        WuTBqVVhfNGstxu50I3HT4g3wnANmqXqGnHN7lMrjfRe6QZOj6UqI8vA/N/CDJlT
-        /9KQfZ37JV1y92ZVwV51YzXAF2EKohI3H/PGpsexi2NNQEoYPQsDrXM4W0m26B+h
-        P8z2Jws7+5JFGcahZGYX9KNUe6XJtH94F2+B7hoQTfswArnzbBnVmzg1mc4Q8pdR
-        bsFyXaZ4yw+Nxqkaep0r7JoWva0TrUL0V3ihhpKGXSIQi7JVIVsW/TrTNvr/Z/nm
-        EQfR4cC//S5UvMj5T2FHWFypJtQw/6B9UESI+yMj8m4A==
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=KDItDJsFBQom2
+        Sf6FH9mRJIzJqOmoka2T+mY3RP2gCM=; b=RjaegqIhn6V4Zt4cnx4uS4cdLpbfn
+        ryAhRPfao/9aKkwIjisqSrX6TdaM9NEkH6Plsvtiok/i9uKURq3zOG/a2JFngjaC
+        deki3bF3YOKQqhJZUjF13JvExcrGpkfGS7u+KDzRxUgl7UEXcnvfu42gNU7yMWub
+        1+Q/zx4GMvbSmh09TSYoESFjdF6e5wcGsC6Oi68joyYjcXZPrXG1Xw3cAZyVW8IE
+        6FkdLCLeUKYLBDkbqBJP7eeYykC9lSu9/iFFKYiDvTuKTEOn6E3N56/nIkkOXs2N
+        +hyjnjd4bdlWJUiorMr0f2DTL/mD3npoYXqtJ1aih45FqGaUQr+0hX/iA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=BbKe8lAB6aLlCjfJZ
-        gxJtnIxN45+vPNsWUwa92cPHoM=; b=xopbKxbvIBWIRZ2xt2xLRt6jYHaIeBghS
-        uxIRxQk+aXuQIzqAqNbEgpy1mtAuUH3vRP21B2tC3O3YXUSdIFoIBDr+ATx5OAM7
-        s0ur2yMDmvuhfCN0tuMsJjGkRpfJ9O1kd9WJX2/Q2XZqu2KTegLI2MBlOpHk6pT5
-        +hJs8pCPEzjrvVgQzO5YaNsvD2V9DaztoJ9/FefK/Qc6jlWGuI5CfOIgEKya8nWw
-        PTt2kRHj1Kq18+5PBIFtYxSc6iUhz6sG/nwSA5nJMSEexiej/knNZ2IaLXcUAixS
-        1jfOFdrpl9dTftpXayl4ynrGqhjZyFXlvXofJVv42LqoPpCt6fUrA==
-X-ME-Sender: <xms:HZKeXQII42Z69vCLC3eQl4QskYdZGdvDyYSNlH8kP8f6mr2Cih8c7A>
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=KDItDJsFBQom2Sf6FH9mRJIzJqOmoka2T+mY3RP2gCM=; b=lgrKLx3T
+        Hi1Z09ZVQ04453umwSVXmkcM8rPzleABmLS9RzGzEV09BQzIPgQLNEsPM6WG1ZzP
+        XwMgAT3DULxIMtxYZuFmDAALhQZxm2pLefsOBGDrt2btwa2aJYeUPfmHnaHsp1Q2
+        +ccVkEm222Pn5zjFk1VgscWqqnIbki+1lGu3obvu2yA18VZpZeFaKcSM8HnlEG5f
+        C/YQLGjnc61WzREOWrT63sfffvgfyF8lQueuBLEZvpGCPSte18HsCsF8ljT32vfn
+        fxyMWhlK4u9fu00eQTD1w1Yh4xEUupixt7zCi13apucxocEI0coitL8bcFgQak8y
+        zrCnk4P2W1XdOg==
+X-ME-Sender: <xms:IZKeXcEnjHcV79PDuAnKbgf1T8EPepXIPIE3Z5gM_iRCrQMSJ1_OlA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedriedvgdehjecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
-    dtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghjrdhi
-    ugdrrghuqeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvtddvrdekud
-    drudekrdeftdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgu
-    rdgruhenucevlhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:HZKeXatCnlPNFR-ESBZ4AC0xo6CjE9-Q-CtPma4Z6E1NciFDbKvWBA>
-    <xmx:HZKeXdQSDGMF0a4wjnCwi5-NKVucxhimWnp-RD3cB_lvE_4-To8-Fg>
-    <xmx:HZKeXQOyv-U6SiPDk-1uTm6J8yuVjUuooDJdNCCdOeyB4ACqj-GwSA>
-    <xmx:HZKeXVzii6CfDaNDRUM0xX_ObCob9TA4uzy6bETopK6S16Y8g5R5-w>
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
+    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
+    rdhiugdrrghuqeenucfkphepvddtvddrkedurddukedrfedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgep
+    vd
+X-ME-Proxy: <xmx:IZKeXZlIdXdQ6xA39TGEW6Y75K1Su2jknNhwnbWMmYIBlD9yR-avhg>
+    <xmx:IZKeXRJM4JjJWZWj-8d0zaNar4vj8MmrZB46gtM8WF8esrnwymVjhw>
+    <xmx:IZKeXSaZb2f4g9gbnz6SQrKFHwM3-_7y3o4x-iMT30ZiLV7j3_l9fA>
+    <xmx:IZKeXXPpTThZZiexiCDrU3DFYN_r6UI1vi7-ukS1sW6BmHn5Xh2SZg>
 Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 02CF580061;
-        Wed,  9 Oct 2019 22:06:17 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id C2E6A80061;
+        Wed,  9 Oct 2019 22:06:21 -0400 (EDT)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-clk@vger.kernel.org
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, joel@jms.id.au,
@@ -69,10 +71,12 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org, joel@jms.id.au,
         linux-arm-kernel@lists.infradead.org,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 0/2] clk: ast2600: Expose RMII RCLK for MACs 1-4
-Date:   Thu, 10 Oct 2019 12:37:23 +1030
-Message-Id: <20191010020725.3990-1-andrew@aj.id.au>
+Subject: [PATCH v2 1/2] dt-bindings: clock: Add AST2600 RMII RCLK gate definitions
+Date:   Thu, 10 Oct 2019 12:37:24 +1030
+Message-Id: <20191010020725.3990-2-andrew@aj.id.au>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191010020725.3990-1-andrew@aj.id.au>
+References: <20191010020725.3990-1-andrew@aj.id.au>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,38 +84,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The AST2600 has an explicit gate for the RMII RCLK for each of the four
+MACs.
 
-This series is similar to that for the AST2500 but I've split the patches out
-as the AST2600 driver is new for 5.4 and I'm hoping we have a chance of
-slipping them in. Maybe we can get both series in, but I thought decoupling
-them might make it more manageable if not.
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ include/dt-bindings/clock/ast2600-clock.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Regardless, the blurb:
-
-This series is two small changes enable kernel support for controlling the RMII
-RCLK gate on AST2600-based systems. RMII is commonly used for NCSI, which
-itself is commonly used for BMC-based designs to reduce cabling requirements
-for the platform. NCSI support for the AST2600 is not yet implemented in
-u-boot and so unlike the AST2500 the kernel can't rely on RCLK already being
-ungated.
-
-v2: Rename some macros and clocks based on feedback from Joel
-
-v1 can be found here: https://lore.kernel.org/linux-clk/20191008113553.13662-1-andrew@aj.id.au/
-
-Please review!
-
-Andrew
-
-Andrew Jeffery (2):
-  dt-bindings: clock: Add AST2600 RMII RCLK gate definitions
-  clk: ast2600: Add RMII RCLK gates for all four MACs
-
- drivers/clk/clk-ast2600.c                 | 47 ++++++++++++++++++++++-
- include/dt-bindings/clock/ast2600-clock.h |  4 ++
- 2 files changed, 50 insertions(+), 1 deletion(-)
-
+diff --git a/include/dt-bindings/clock/ast2600-clock.h b/include/dt-bindings/clock/ast2600-clock.h
+index 38074a5f7296..62b9520a00fd 100644
+--- a/include/dt-bindings/clock/ast2600-clock.h
++++ b/include/dt-bindings/clock/ast2600-clock.h
+@@ -83,6 +83,10 @@
+ #define ASPEED_CLK_MAC12		64
+ #define ASPEED_CLK_MAC34		65
+ #define ASPEED_CLK_USBPHY_40M		66
++#define ASPEED_CLK_MAC1RCLK		67
++#define ASPEED_CLK_MAC2RCLK		68
++#define ASPEED_CLK_MAC3RCLK		69
++#define ASPEED_CLK_MAC4RCLK		70
+ 
+ /* Only list resets here that are not part of a gate */
+ #define ASPEED_RESET_ADC		55
 -- 
 2.20.1
 
