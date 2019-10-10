@@ -2,97 +2,59 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072AFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587C6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D703020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T/Cwil/s"
+	by mail.kernel.org (Postfix) with ESMTP id 3AB5D206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfJJXpg (ORCPT
+        id S1726672AbfJJXqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 19:45:36 -0400
-Received: from ozlabs.org ([203.11.71.1]:36939 "EHLO ozlabs.org"
+        Thu, 10 Oct 2019 19:46:34 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:34436 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbfJJXpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 19:45:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46q74X3b6Qz9sN1;
-        Fri, 11 Oct 2019 10:45:32 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570751133;
-        bh=AGVX3lJUAZT3jOSx8id9ksoYbtfMhHjY4TOLZ84JZB4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=T/Cwil/sQE+i0dPQ2JMjjjHTFcL/fdlxW0EsfKTCrSMARwesIb/SyrAtfGVNxOhD+
-         PB61J/Ziw/JWwGAd2Ed3wRIKJHeuQzSi7I6SVR/hXvQpQhCdeBOVSyxbn9VpYUOZLh
-         xEC2mWw7zeGuBk6jnQ5czRTbk5SUl2chkMcEtFpCPuLc5eG0QL3xq3grGrtiyhHZkE
-         KxQ6uYsfX6KbjomwUU95oK4HjJPO3FEdK4ZHsp/H+xCoUEd29zg8j8C5wHiOjpl/7u
-         VgC006DexGmtoYiwGCkRj2Hfr335WKWHa/7q2zGx/ftIFeKAntq26ANfPR9xSJkqKB
-         eDytpoAkJ5Ywg==
-Date:   Fri, 11 Oct 2019 10:45:31 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>
-Subject: linux-next: build warning after merge of the drm-misc tree
-Message-ID: <20191011104531.6a5878fa@canb.auug.org.au>
+        id S1725951AbfJJXqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 19:46:33 -0400
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iIi8a-0007dV-Is; Fri, 11 Oct 2019 01:46:28 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Nickey Yang <nickey.yang@rock-chips.com>
+Cc:     hjc@rock-chips.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, seanpaul@chromium.org,
+        laurent.pinchart@ideasonboard.com
+Subject: Re: [PATCH 1/1] drm/rockchip: vop: add the definition of dclk_pol
+Date:   Fri, 11 Oct 2019 01:46:28 +0200
+Message-ID: <6985432.6H6HJzKCHW@diego>
+In-Reply-To: <20191010034452.20260-2-nickey.yang@rock-chips.com>
+References: <20191010034452.20260-1-nickey.yang@rock-chips.com> <20191010034452.20260-2-nickey.yang@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/VV0kRJMJDScfqR3BJY0WTT5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/VV0kRJMJDScfqR3BJY0WTT5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Am Donnerstag, 10. Oktober 2019, 05:44:52 CEST schrieb Nickey Yang:
+> Some VOP's (such as px30) dclk_pol bit is at the last.
+> So it is necessary to distinguish dclk_pol and pin_pol.
+> 
+> Signed-off-by: Nickey Yang <nickey.yang@rock-chips.com>
 
-Hi all,
+on
+- px30 with dsi ... fixing the display issue I had
+- rk3328 with hdmi
+- rk3288 with edp
+- rk3399 with edp
 
-After merging the drm-misc tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+Tested-by: Heiko Stuebner <heiko@sntech.de>
 
-drivers/gpu/drm/drm_dp_mst_topology.c: In function 'drm_atomic_get_mst_topo=
-logy_state':
-drivers/gpu/drm/drm_dp_mst_topology.c:4187:21: warning: unused variable 'de=
-v' [-Wunused-variable]
- 4187 |  struct drm_device *dev =3D mgr->dev;
-      |                     ^~~
 
-Introduced by commit
-
-  83fa9842afe7 ("drm/dp-mst: Drop connection_mutex check")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/VV0kRJMJDScfqR3BJY0WTT5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2fwpsACgkQAVBC80lX
-0Gw9kgf/QV93DF+u8j5jQ/OYHhRIS+sgmExFSoK1Vdl7mw+9pLyOa0b1eL4RTFP6
-zJPv6OjCtdhEOIUCA5WnavMetwxYvluCtlRgR1cxv1VIfkQx+QUJ+srs7JDt5CfS
-YXT4ye/pSWJ5qCcHXm4rJfdnj6dCe1I7k5+TSiwSPbOVg9xOxku2OCxlfXwKKlgd
-xAtgjdgfDW9xQPymguZiCXyqDEIRMHX7LrGagxlrOltrh83Tc5RcpV36o2vqVOac
-BiPcGo073CFfLwYQG2rx9eaY14bZejeoII+Qcw27mqi4Q5tjqKG9Snz3KmssaYoq
-et+4SPxbZ8lmdKCHezJvF8rG5SJ1Mg==
-=vSnO
------END PGP SIGNATURE-----
-
---Sig_/VV0kRJMJDScfqR3BJY0WTT5--
