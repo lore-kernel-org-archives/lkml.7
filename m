@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DCCC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F494C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6058521A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4DC2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697120;
-	bh=VRTYunhUV9afr/tTCD6DJ8MgAzp+H1ZkWoEb2EMleVQ=;
+	s=default; t=1570697122;
+	bh=ZwsGgjl9+rpPm+dqONwrfFcqeSGtvnpm4WmFQaz5YAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=scGhW+o17I8BNE3Lgf1bD7olXjI9PpDMmI377MMyTXDfF8/eMZNpEuuy8V8IWT+DS
-	 JHANk8zlZJJAs7F1lPuDofGQl84Mu6o10g+CaGjxEtKgqDMGafVrp0qYFY4hm2S47f
-	 z6ot0lQGMG+mdQJLR6roCRDeEQ6+P1nRpQU0PhKE=
+	b=2ZWKXPltbB/ltO22dKueZWthkzxehf/rEg82xuonn+w5YDd293VMgP3ebj4j0h+JC
+	 xH5+p/3VnQw7jR9u5uKK4tAvNZ64Hg4BzC087sRYd5BGVzS1f/Q34iFNmbDS3ncYmX
+	 Qgwe9neL9kboGJ4IVKA/0YnI+SwVpZbTRykfWBoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388400AbfJJIpS (ORCPT
+        id S2389115AbfJJIpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50810 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388040AbfJJIpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:14 -0400
+        id S2388040AbfJJIpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A66B21A4A;
-        Thu, 10 Oct 2019 08:45:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B32082190F;
+        Thu, 10 Oct 2019 08:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697113;
-        bh=VRTYunhUV9afr/tTCD6DJ8MgAzp+H1ZkWoEb2EMleVQ=;
+        s=default; t=1570697119;
+        bh=ZwsGgjl9+rpPm+dqONwrfFcqeSGtvnpm4WmFQaz5YAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vwqA2OYLupTHdqwspQjFxH9IkUpnIQtG3/ARvu++Nl9HmsGcJmziuKb2ViJmnD+0h
-         CAqY9kLeurAkyeSfrxOplt3S62oGMwHuxr5XzDO3K4xq7+wzCcyKmmB5al5OGaFD1j
-         i/f70UvOdtINYWJmrUKTJMtSHuWAOJ7rHXuyN5ig=
+        b=OSToX5ToT7bCOOYatyymi+59f8TuFk6CFvXEr5XVvSKjAorhg/Dv2t3MrkwxC3myj
+         IQkuyn0IaBO62FoE8Dpch/TwYf6mK8egKcWaW4hFrod8vM3q9Kw5E57Uu+ZQDrPBlO
+         wJyua5buN0fG+LgyWIpw89abo4k61xz5XaW6mbK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 023/114] crypto: cavium/zip - Add missing single_release()
-Date:   Thu, 10 Oct 2019 10:35:30 +0200
-Message-Id: <20191010083554.686449141@linuxfoundation.org>
+Subject: [PATCH 4.19 025/114] crypto: ccree - account for TEE not ready to report
+Date:   Thu, 10 Oct 2019 10:35:32 +0200
+Message-Id: <20191010083555.614023425@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -59,48 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit c552ffb5c93d9d65aaf34f5f001c4e7e8484ced1 upstream.
+commit 76a95bd8f9e10cade9c4c8df93b5c20ff45dc0f5 upstream.
 
-When using single_open() for opening, single_release() should be
-used instead of seq_release(), otherwise there is a memory leak.
+When ccree driver runs it checks the state of the Trusted Execution
+Environment CryptoCell driver before proceeding. We did not account
+for cases where the TEE side is not ready or not available at all.
+Fix it by only considering TEE error state after sync with the TEE
+side driver.
 
-Fixes: 09ae5d37e093 ("crypto: zip - Add Compression/Decompression statistics")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Fixes: ab8ec9658f5a ("crypto: ccree - add FIPS support")
+CC: stable@vger.kernel.org # v4.17+
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/cavium/zip/zip_main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/crypto/ccree/cc_fips.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/cavium/zip/zip_main.c
-+++ b/drivers/crypto/cavium/zip/zip_main.c
-@@ -593,6 +593,7 @@ static const struct file_operations zip_
- 	.owner = THIS_MODULE,
- 	.open  = zip_stats_open,
- 	.read  = seq_read,
-+	.release = single_release,
- };
+--- a/drivers/crypto/ccree/cc_fips.c
++++ b/drivers/crypto/ccree/cc_fips.c
+@@ -21,7 +21,13 @@ static bool cc_get_tee_fips_status(struc
+ 	u32 reg;
  
- static int zip_clear_open(struct inode *inode, struct file *file)
-@@ -604,6 +605,7 @@ static const struct file_operations zip_
- 	.owner = THIS_MODULE,
- 	.open  = zip_clear_open,
- 	.read  = seq_read,
-+	.release = single_release,
- };
+ 	reg = cc_ioread(drvdata, CC_REG(GPR_HOST));
+-	return (reg == (CC_FIPS_SYNC_TEE_STATUS | CC_FIPS_SYNC_MODULE_OK));
++	/* Did the TEE report status? */
++	if (reg & CC_FIPS_SYNC_TEE_STATUS)
++		/* Yes. Is it OK? */
++		return (reg & CC_FIPS_SYNC_MODULE_OK);
++
++	/* No. It's either not in use or will be reported later */
++	return true;
+ }
  
- static int zip_regs_open(struct inode *inode, struct file *file)
-@@ -615,6 +617,7 @@ static const struct file_operations zip_
- 	.owner = THIS_MODULE,
- 	.open  = zip_regs_open,
- 	.read  = seq_read,
-+	.release = single_release,
- };
- 
- /* Root directory for thunderx_zip debugfs entry */
+ /*
 
 
