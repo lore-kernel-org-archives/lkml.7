@@ -2,51 +2,55 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C89C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280A9C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 445A921929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0181021A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697042;
-	bh=wWycjSe87ABTArlAOL+ByNftzpQs1CTCAGwPbq6zjpw=;
+	s=default; t=1570697045;
+	bh=V9YzdNPN6AFK80kaYRmWSmcCKiuPRnSwCqA6BHrZ6nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7Pg/v2x/N4bBxxYTbc9B5WlA9QD3hdtVOy5+nD75FTpvKuVRvfCk2v4nltq652rV
-	 vtyDmOAaSiHqCt0+zsp9R9rZ1i0MTs9u49XqLEIWYXNcjQutTBUVfHYQl4CmvGk/ve
-	 eijWqB7wFY75bHgOdPOwkIVVqXiNW+Qdz62tzigQ=
+	b=kn2mHC8uyI8qjqI1581/8xSmYPeU49g80dgxa44TLjkF43kFEiyv+3uGo7K1N3iDU
+	 5hHbFZ/rkSzzxgIrH3fNVWpLswBjEiCBCLPeQHoBywmNrhynsUXhFnFm5k4glQz3yz
+	 0FGFAli2OnVmViOZxnWNeH+NpK7M85zOmFbqESfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387735AbfJJIoA (ORCPT
+        id S2387874AbfJJIoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:44:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48934 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388809AbfJJIn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:43:58 -0400
+        id S2388850AbfJJIoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:44:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD6DB21A4A;
-        Thu, 10 Oct 2019 08:43:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D652054F;
+        Thu, 10 Oct 2019 08:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697037;
-        bh=wWycjSe87ABTArlAOL+ByNftzpQs1CTCAGwPbq6zjpw=;
+        s=default; t=1570697040;
+        bh=V9YzdNPN6AFK80kaYRmWSmcCKiuPRnSwCqA6BHrZ6nM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t5EAKk90js6e4OdjR1ZNh/ySa6lkP8Fjdcz4StJBH4Tig3PJ6N2iXAM82LW3RuRn3
-         Kj91BeTIks52P5UONG9whGYqAASnI2pj0JJ2G5QOUSucGuZoZamlbklFwd2uATPV/i
-         n5P2SdkDG2QNswbHfJ2un+HXRUZjWKnEscmHgeVs=
+        b=KfV2exs3INcu4pdHODkny7QrsDySE56JCoYbb1biriT7UJlfiR/4MhRjQ+n7mAZKt
+         6Q+Qach8OCisW7jxsKAK4AolNvYOLcvJurG8t54bHTpEVbWdTs8q6Q31D3dboF4NaO
+         aXdI+WtIRD1D7W3ArIm18v4TGbITsVVVxnNDBx5E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 5.3 145/148] staging: erofs: add two missing erofs_workgroup_put for corrupted images
-Date:   Thu, 10 Oct 2019 10:36:46 +0200
-Message-Id: <20191010083621.070554441@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 128/148] blk-mq: move lockdep_assert_held() into elevator_exit
+Date:   Thu, 10 Oct 2019 10:36:29 +0200
+Message-Id: <20191010083620.131266351@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,45 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit 138e1a0990e80db486ab9f6c06bd5c01f9a97999 upstream.
+[ Upstream commit 284b94be1925dbe035ce5218d8b5c197321262c7 ]
 
-As reported by erofs-utils fuzzer, these error handling
-path will be entered to handle corrupted images.
+Commit c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
+removes q->sysfs_lock from elevator_init_mq(), but forgot to deal with
+lockdep_assert_held() called in blk_mq_sched_free_requests() which is
+run in failure path of elevator_init_mq().
 
-Lack of erofs_workgroup_puts will cause unmounting
-unsuccessfully.
+blk_mq_sched_free_requests() is called in the following 3 functions:
 
-Fix these return values to EFSCORRUPTED as well.
+	elevator_init_mq()
+	elevator_exit()
+	blk_cleanup_queue()
 
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Link: https://lore.kernel.org/r/20190819103426.87579-4-gaoxiang25@huawei.com
-[ Gao Xiang: Older kernel versions don't have length validity check
-             and EFSCORRUPTED, thus backport pageofs check for now. ]
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In blk_cleanup_queue(), blk_mq_sched_free_requests() is followed exactly
+by 'mutex_lock(&q->sysfs_lock)'.
+
+So moving the lockdep_assert_held() from blk_mq_sched_free_requests()
+into elevator_exit() for fixing the report by syzbot.
+
+Reported-by: syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com
+Fixed: c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/erofs/unzip_vle.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ block/blk-mq-sched.c | 2 --
+ block/blk.h          | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -393,7 +393,11 @@ z_erofs_vle_work_lookup(const struct z_e
- 	/* if multiref is disabled, `primary' is always true */
- 	primary = true;
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index c9d183d6c4999..ca22afd47b3dc 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -555,8 +555,6 @@ void blk_mq_sched_free_requests(struct request_queue *q)
+ 	struct blk_mq_hw_ctx *hctx;
+ 	int i;
  
--	DBG_BUGON(work->pageofs != f->pageofs);
-+	if (work->pageofs != f->pageofs) {
-+		DBG_BUGON(1);
-+		erofs_workgroup_put(egrp);
-+		return ERR_PTR(-EIO);
-+	}
- 
- 	/*
- 	 * lock must be taken first to avoid grp->next == NIL between
+-	lockdep_assert_held(&q->sysfs_lock);
+-
+ 	queue_for_each_hw_ctx(q, hctx, i) {
+ 		if (hctx->sched_tags)
+ 			blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i);
+diff --git a/block/blk.h b/block/blk.h
+index d5edfd73d45ea..0685c45e3d96e 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -201,6 +201,8 @@ void elv_unregister_queue(struct request_queue *q);
+ static inline void elevator_exit(struct request_queue *q,
+ 		struct elevator_queue *e)
+ {
++	lockdep_assert_held(&q->sysfs_lock);
++
+ 	blk_mq_sched_free_requests(q);
+ 	__elevator_exit(q, e);
+ }
+-- 
+2.20.1
+
 
 
