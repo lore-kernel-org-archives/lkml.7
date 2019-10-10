@@ -2,80 +2,95 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F61C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A86C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C2F20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371AB2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:51:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="AcworK71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfJJNu4 (ORCPT
+        id S1726052AbfJJNvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:50:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfJJNuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:50:55 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 456AE2067B;
-        Thu, 10 Oct 2019 13:43:55 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 09:43:52 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Petr Mladek <pmladek@suse.com>, jikos@kernel.org,
-        Joe Lawrence <joe.lawrence@redhat.com>, jpoimboe@redhat.com,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH 0/3] ftrace: Introduce PERMANENT ftrace_ops flag
-Message-ID: <20191010094352.35056c84@gandalf.local.home>
-In-Reply-To: <alpine.LSU.2.21.1910101535310.32665@pobox.suse.cz>
-References: <20191007081714.20259-1-mbenes@suse.cz>
-        <20191008193534.GA16675@redhat.com>
-        <20191009112234.bi7lvp4pvmna26vz@pathway.suse.cz>
-        <20191009102654.501ad7c3@gandalf.local.home>
-        <20191010085035.emsdks6xecazqc6k@pathway.suse.cz>
-        <20191010091403.5ecf0fdb@gandalf.local.home>
-        <alpine.LSU.2.21.1910101535310.32665@pobox.suse.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 10 Oct 2019 09:51:16 -0400
+Received: from smtp.domeneshop.no ([194.63.252.55]:60773 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbfJJNvP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 09:51:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds201810; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Z9kT8deS5roy+K52zZTsn6tV5HXJkoAJ1yAla/8rmZU=; b=AcworK715AEXg5eIsIVd5jDN9O
+        9PJ+TZmcl1xkVfpSlXl+071b3lkDENK0W6/fevePDKMd2zFClxy1B+AAuBIK2/yDAEoNvqGm7XTg2
+        zvi768iIkqezp/ohhS9tyfEfrhI6dBtG+o4afnxOUH8ZnYyR2qeuv17yISXpu64CkYd/Hf8poQrb5
+        VZuZvyRiEaTtProqjGunHzXDrS8cSuscJAOlRazRz7IvTTwGhdFGDrOwBlaAKw+Ca+vbbv6eZJgRM
+        F+mhx8shxX/zzaMGDu5uPExZbH9YSYzJsd/YFWJgxCXtJ/x4kwz0MrNNB7d0nkZXaxhfcpJQndrxB
+        DG1+b2vA==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:58426 helo=[192.168.10.177])
+        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <noralf@tronnes.org>)
+        id 1iIYqT-00083M-Tc; Thu, 10 Oct 2019 15:51:09 +0200
+Subject: Re: [PATCH] drm/tiny: Kconfig: Remove always-y THERMAL dep. from
+ TINYDRM_REPAPER
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+To:     Ulf Magnusson <ulfalizer@gmail.com>, linux-kbuild@vger.kernel.org,
+        yamada.masahiro@socionext.com
+Cc:     david@lechnology.com, airlied@linux.ie,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        hdegoede@redhat.com, tglx@linutronix.de, sam@ravnborg.org,
+        Jason Gunthorpe <jgg@ziepe.ca>
+References: <20190927174218.GA32085@huvuddator>
+ <c3b41a7b-ef3b-7960-13a1-d4b8dd6f15b6@tronnes.org>
+Message-ID: <10f6225f-89c0-268e-8ef9-7a6b7c22e911@tronnes.org>
+Date:   Thu, 10 Oct 2019 15:51:06 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <c3b41a7b-ef3b-7960-13a1-d4b8dd6f15b6@tronnes.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 15:38:20 +0200 (CEST)
-Miroslav Benes <mbenes@suse.cz> wrote:
 
-> On Thu, 10 Oct 2019, Steven Rostedt wrote:
+
+Den 01.10.2019 12.58, skrev Noralf Trønnes:
 > 
-> > On Thu, 10 Oct 2019 10:50:35 +0200
-> > Petr Mladek <pmladek@suse.com> wrote:
-> >   
-> > > It will make the flag unusable for other ftrace users. But it
-> > > will be already be the case when it can't be disabled.  
-> > 
-> > Honestly, I hate that flag. Most people don't even know about it. It
-> > was added in the beginning of ftrace as a way to stop function tracing
-> > in the latency tracer. But that use case has been obsoleted by
-> > 328df4759c03e ("tracing: Add function-trace option to disable function
-> > tracing of latency tracers"). I may just remove the damn thing and only
-> > add it back if somebody complains about it.  
 > 
-> That would of course solve the issue too and code removal is always 
-> better.
->
+> Den 27.09.2019 19.42, skrev Ulf Magnusson:
+>> Commit 554b3529fe01 ("thermal/drivers/core: Remove the module Kconfig's
+>> option") changed the type of THERMAL from tristate to bool, so
+>> THERMAL || !THERMAL is now always y. Remove the redundant dependency.
+>>
+>> Discovered through Kconfiglib detecting a dependency loop. The C tools
+>> simplify the expression to y before running dependency loop detection,
+>> and so don't see it. Changing the type of THERMAL back to tristate makes
+>> the C tools detect the same loop.
+>>
+>> Not sure if running dep. loop detection after simplification can be
+>> called a bug. Fixing this nit unbreaks Kconfiglib on the kernel at
+>> least.
+>>
+>> Signed-off-by: Ulf Magnusson <ulfalizer@gmail.com>
+>> ---
+> 
+> Thanks, applied to drm-misc-next.
+> 
 
-Yes, but let's still add the patch that does the permanent check. And
-then I'll put the "remove this flag" patch on top (and revert
-everything else). This way, if somebody complains, and Linus reverts
-the removal patch, we don't end up breaking live kernel patching
-again ;-)
+This has now been queued for the next -rc pull.
 
--- Steve
+Discussion: https://patchwork.freedesktop.org/patch/319826/
+
+Noralf.
