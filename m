@@ -2,54 +2,53 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8753ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D63BECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8255421929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AE021D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697248;
-	bh=Ssy2G1RYYjVy0ZSes0pBTBlvxbNL8z8gD+60zY8RVcY=;
+	s=default; t=1570697252;
+	bh=rl7ZIeGi2KWZp1Bkg/Y0Ga7FW5CfX8TJo1HQJxkG2+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E4Tnib8s5LN8oP3WASRpeKl43GS7HGVfebP9GnDnbFLVQA1Y/RCbobj6TI4aPyVdF
-	 Dc/gdL1l90h499sQEPadeTNP+0XOb4Fl+udF+ab54NYlMmDttAylrnlAZw1vy9RK1u
-	 /fTQ7l70m9RGUhpPZ6pMCbPaOdZmAW7x6of2LUKA=
+	b=y1ITENEM8EYMU7iiLLIMsEJhXr+Z5xnST6Bh0rtSWmurxjkrphxTG4tD6eKzVbcWH
+	 9AunbwCJopGbTq0lz4yuuYOf3/0PFueHWm1sxK1nFTpP0rQe2o3sc4UNwaZTm0AwaR
+	 /nESFP6iPvRGbe3qdy5dQqz5VIhT7XjzqAUBkV7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389476AbfJJIr1 (ORCPT
+        id S2388261AbfJJIrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:47:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388915AbfJJIrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389457AbfJJIrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Oct 2019 04:47:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA6121929;
-        Thu, 10 Oct 2019 08:47:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8A19218AC;
+        Thu, 10 Oct 2019 08:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697242;
-        bh=Ssy2G1RYYjVy0ZSes0pBTBlvxbNL8z8gD+60zY8RVcY=;
+        s=default; t=1570697239;
+        bh=rl7ZIeGi2KWZp1Bkg/Y0Ga7FW5CfX8TJo1HQJxkG2+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cPmEuluYWW/npWyBaXiSMLXd0dOKWQrgkqlR1EkPIBS4ArNDIgbxSqSGMKS7Glm6V
-         9ak7sIki6fDaa79SQ9rconP6jgUl3yfLm7cLQ2F8F6UDipVIJrq4w/EzbbYz+uEtTX
-         YFgl2HMsz9jUBs35MQD5kPwlZkBJKJADvs+5LXmE=
+        b=Q43UK2QYNOIqvFIeQWGcqeODcL2yi3yiGezM8jSOPuIMI0rlPK9NtdoXaV+07aHGU
+         p8TcuR0rHvR/zBtzw94ouvUOb20ba78Pw4VPGMFgjj9gH9ov/ZuTk43AI5yL+RITGL
+         uLG8rm5fcth113wsnTy+lp8xAGF6jC9ogSQgJW/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/114] libnvdimm/nfit_test: Fix acpi_handle redefinition
-Date:   Thu, 10 Oct 2019 10:36:16 +0200
-Message-Id: <20191010083611.246124635@linuxfoundation.org>
+Subject: [PATCH 4.19 068/114] fuse: fix memleak in cuse_channel_open
+Date:   Thu, 10 Oct 2019 10:36:15 +0200
+Message-Id: <20191010083610.960408349@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -62,68 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 59f08896f058a92f03a0041b397a1a227c5e8529 ]
+[ Upstream commit 9ad09b1976c562061636ff1e01bfc3a57aebe56b ]
 
-After commit 62974fc389b3 ("libnvdimm: Enable unit test infrastructure
-compile checks"), clang warns:
+If cuse_send_init fails, need to fuse_conn_put cc->fc.
 
-In file included from
-../drivers/nvdimm/../../tools/testing/nvdimm/test/iomap.c:15:
-../drivers/nvdimm/../../tools/testing/nvdimm/test/nfit_test.h:206:15:
-warning: redefinition of typedef 'acpi_handle' is a C11 feature
-[-Wtypedef-redefinition]
-typedef void *acpi_handle;
-              ^
-../include/acpi/actypes.h:424:15: note: previous definition is here
-typedef void *acpi_handle;      /* Actually a ptr to a NS Node */
-              ^
-1 warning generated.
+cuse_channel_open->fuse_conn_init->refcount_set(&fc->count, 1)
+                 ->fuse_dev_alloc->fuse_conn_get
+                 ->fuse_dev_free->fuse_conn_put
 
-The include chain:
-
-iomap.c ->
-    linux/acpi.h ->
-        acpi/acpi.h ->
-            acpi/actypes.h
-    nfit_test.h
-
-Avoid this by including linux/acpi.h in nfit_test.h, which allows us to
-remove both the typedef and the forward declaration of acpi_object.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/660
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Link: https://lore.kernel.org/r/20190918042148.77553-1-natechancellor@gmail.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fixes: cc080e9e9be1 ("fuse: introduce per-instance fuse_dev structure")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/nvdimm/test/nfit_test.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/fuse/cuse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/nvdimm/test/nfit_test.h b/tools/testing/nvdimm/test/nfit_test.h
-index 33752e06ff8d0..3de57cc8716b9 100644
---- a/tools/testing/nvdimm/test/nfit_test.h
-+++ b/tools/testing/nvdimm/test/nfit_test.h
-@@ -12,6 +12,7 @@
-  */
- #ifndef __NFIT_TEST_H__
- #define __NFIT_TEST_H__
-+#include <linux/acpi.h>
- #include <linux/list.h>
- #include <linux/uuid.h>
- #include <linux/ioport.h>
-@@ -234,9 +235,6 @@ struct nd_intel_lss {
- 	__u32 status;
- } __packed;
- 
--union acpi_object;
--typedef void *acpi_handle;
--
- typedef struct nfit_test_resource *(*nfit_test_lookup_fn)(resource_size_t);
- typedef union acpi_object *(*nfit_test_evaluate_dsm_fn)(acpi_handle handle,
- 		 const guid_t *guid, u64 rev, u64 func,
+diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
+index 8f68181256c00..f057c213c453a 100644
+--- a/fs/fuse/cuse.c
++++ b/fs/fuse/cuse.c
+@@ -518,6 +518,7 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
+ 	rc = cuse_send_init(cc);
+ 	if (rc) {
+ 		fuse_dev_free(fud);
++		fuse_conn_put(&cc->fc);
+ 		return rc;
+ 	}
+ 	file->private_data = fud;
 -- 
 2.20.1
 
