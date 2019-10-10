@@ -2,106 +2,191 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB2BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E61C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D125206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:03:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nU1pP2YS"
+	by mail.kernel.org (Postfix) with ESMTP id 9E12E214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfJJSDf (ORCPT
+        id S1726911AbfJJSEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:03:35 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55890 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbfJJSDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:03:35 -0400
-Received: from zn.tnic (p200300EC2F0A6300D1C0EB70E9B309BA.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6300:d1c0:eb70:e9b3:9ba])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9C0E51EC090E;
-        Thu, 10 Oct 2019 20:03:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570730613;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=1UJ85wrxUTh6ZjmKP+WxNvKm5uhVcmHwuihzVVphUA0=;
-        b=nU1pP2YSMQ1D+YbJ1lqIUj3fIbqXmRei9IrwE7casgVZ3bf6uvckQOYFEy6VxgMByJdLas
-        gfLhF2deNPAW3vJXpynsBSp1uVNCkCK3TGs2a02YYiWnywAPZqOojj1vdVy9ucSV/QlrU6
-        X6II6ljlFaBt+0oSrDlytkAJMAR1SFQ=
-Date:   Thu, 10 Oct 2019 20:03:31 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        Thu, 10 Oct 2019 14:04:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36686 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726323AbfJJSEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 14:04:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 78D69AD69;
+        Thu, 10 Oct 2019 18:04:02 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id A6537E378C; Thu, 10 Oct 2019 20:04:01 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 20:04:01 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/29] vmlinux.lds.h: Refactor EXCEPTION_TABLE and NOTES
-Message-ID: <20191010180331.GI7658@zn.tnic>
-References: <20190926175602.33098-1-keescook@chromium.org>
+Subject: Re: [PATCH net-next v7 09/17] ethtool: generic handlers for GET
+ requests
+Message-ID: <20191010180401.GD22163@unicorn.suse.cz>
+References: <cover.1570654310.git.mkubecek@suse.cz>
+ <b000e461e348ba1a0af30f2e8493618bce11ec12.1570654310.git.mkubecek@suse.cz>
+ <20191010135639.GJ2223@nanopsycho>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190926175602.33098-1-keescook@chromium.org>
+In-Reply-To: <20191010135639.GJ2223@nanopsycho>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 10:55:33AM -0700, Kees Cook wrote:
-> This series works to move the linker sections for NOTES and
-> EXCEPTION_TABLE into the RO_DATA area, where they belong on most
-> (all?) architectures. The problem being addressed was the discovery
-> by Rick Edgecombe that the exception table was accidentally marked
-> executable while he was developing his execute-only-memory series. When
-> permissions were flipped from readable-and-executable to only-executable,
-> the exception table became unreadable, causing things to explode rather
-> badly. :)
+On Thu, Oct 10, 2019 at 03:56:39PM +0200, Jiri Pirko wrote:
+> Wed, Oct 09, 2019 at 10:59:27PM CEST, mkubecek@suse.cz wrote:
+> >+/**
+> >+ * ethnl_std_parse() - Parse request message
+> >+ * @req_info:    pointer to structure to put data into
+> >+ * @nlhdr:       pointer to request message header
+> >+ * @net:         request netns
+> >+ * @request_ops: struct request_ops for request type
+> >+ * @extack:      netlink extack for error reporting
+> >+ * @require_dev: fail if no device identified in header
+> >+ *
+> >+ * Parse universal request header and call request specific ->parse_request()
+> >+ * callback (if defined) to parse the rest of the message.
+> >+ *
+> >+ * Return: 0 on success or negative error code
+> >+ */
+> >+static int ethnl_std_parse(struct ethnl_req_info *req_info,
 > 
-> Roughly speaking, the steps are:
+> "std" sounds a bit odd. Perhaps "common"?
+
+It could be "common". The reason I used "standard" was that this parser
+is only used by (GET) request types which use the standard doit/dumpit
+handlers. Request types using their own (nonstandard) handlers will also
+do parsing on their own.
+
+> >+			   const struct nlmsghdr *nlhdr, struct net *net,
+> >+			   const struct get_request_ops *request_ops,
+> >+			   struct netlink_ext_ack *extack, bool require_dev)
+> >+{
+> >+	struct nlattr **tb;
+> >+	int ret;
+> >+
+> >+	tb = kmalloc_array(request_ops->max_attr + 1, sizeof(tb[0]),
+> >+			   GFP_KERNEL);
+> >+	if (!tb)
+> >+		return -ENOMEM;
+> >+
+> >+	ret = nlmsg_parse(nlhdr, GENL_HDRLEN, tb, request_ops->max_attr,
+> >+			  request_ops->request_policy, extack);
+> >+	if (ret < 0)
+> >+		goto out;
+> >+	ret = ethnl_parse_header(req_info, tb[request_ops->hdr_attr], net,
+> >+				 extack, request_ops->header_policy,
+> >+				 require_dev);
 > 
-> - regularize the linker names for PT_NOTE and PT_LOAD program headers
->   (to "note" and "text" respectively)
-> - regularize restoration of linker section to program header assignment
->   (when PT_NOTE exists)
-> - move NOTES into RO_DATA
-> - finish macro naming conversions for RO_DATA and RW_DATA
-> - move EXCEPTION_TABLE into RO_DATA on architectures where this is clear
-> - clean up some x86-specific reporting of kernel memory resources
-> - switch x86 linker fill byte from x90 (NOP) to 0xcc (INT3), just because
->   I finally realized what that trailing ": 0x9090" meant -- and we should
->   trap, not slide, if execution lands in section padding
+> This is odd. It's the other way around in compare what I would expect.
+> There is a request-specific header attr that contains common header
+> attributes parsed in ethnl_parse_header.
+> 
+> Why don't you have the common header as a root then then have one nested
+> attr that would carry the request-specific attrs?
+> 
+> Similar to how it is done in rtnl IFLA_INFO_KIND.
 
-Yap, nice patchset overall.
+To me, what you suggest feels much more odd. I thought about it last
+time, I thought about it now and the only reason for such layout I could
+come with would be to work around the unfortunate design flaw of the way
+validation and parsing is done in genetlink (see below).
 
-> Since these changes are treewide, I'd love to get architecture-maintainer
-> Acks and either have this live in x86 -tip or in my own tree, however
-> people think it should go.
+The situation with IFLA_INFO_KIND is a bit different, what you suggest
+would rather correspond to having only attributes common for all RTNL on
+top level and hiding all IFLA_* attributes into a nest (and the same
+with attributes specific to "ip addr", "ip route", "ip rule" etc.)
 
-Sure, I don't mind taking v2 through tip once I get ACKs from the
-respective arch maintainers.
+> You can parse the common stuff in pre_doit/start genl ops and you
+> don't have to explicitly call ethnl_parse_header.
+> Also, that would allow you to benefit from the genl doit/dumpit initial
+> attr parsing and save basically this whole function (alloc,parse).
+> 
+> Code would be much more simple to follow then.
+> 
+> Still seems to me that you use the generic netlink but you don't like
+> the infra too much so you make it up yourself again in parallel - that is
+> my feeling reading the code. I get the argument about the similarities
+> of the individual requests and why you have this request_ops (alhough I
+> don't like it too much).
 
-Thx.
+The only thing I don't like about the genetlink infrastructure is the
+design decision that policy and corresponding maxattr is an attribute of
+the family rather than a command. This forces anyone who wants to use it
+to essentially have one common message format for all commands and if
+that is not possible, to do what you suggest above, hide the actual
+request into a nest.
 
--- 
-Regards/Gruss,
-    Boris.
+Whether you use one common attribute type for "command specific nest" or
+different attribute for each request type, you do not actually make
+things simpler, you just move the complexity one level lower. You will
+still have to do your own (per request) parsing of the actual request,
+the only difference is that you will do it in a different place and use
+nla_parse_nested() rather than nlmsg_parse().
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Rather than bending the message layout to fit into the limitations of
+unified genetlink parsing, I prefer to keep the logical message
+structure and do the parsing on my own.
+
+> >+static void ethnl_init_reply_data(struct ethnl_reply_data *reply_data,
+> >+				  const struct get_request_ops *ops,
+> >+				  struct net_device *dev)
+> >+{
+> >+	memset(reply_data, '\0', ops->reply_data_size);
+> 
+> Just "0" would do too.
+
+OK
+
+> >+
+> >+err_msg:
+> >+	WARN_ONCE(ret == -EMSGSIZE,
+> 
+> No need to wrap here (and in other similar cases)
+
+OK 
+
+> >+		  "calculated message payload length (%d) not sufficient\n",
+> >+		  reply_len);
+...
+> >+ * @prepare_data:
+> >+ *	Retrieve and prepare data needed to compose a reply message. Calls to
+> >+ *	ethtool_ops handlers should be limited to this callback. Common reply
+> >+ *	data (struct ethnl_reply_data) is filled on entry, type specific part
+> >+ *	after it is zero initialized. This callback should only modify the
+> >+ *	type specific part of reply data. Device identification from struct
+> >+ *	ethnl_reply_data is to be used as for dump requests, it iterates
+> >+ *	through network devices which common_req_info::dev points to the
+> 
+> First time I see this notation. Is "::" something common in kernel code?
+
+It's sometimes used to denote a struct member but I don't know if it's
+common in kernel documentation. I'll write it explicitly.
+
+> >+struct get_request_ops {
+> 
+> Could you please have "ethnl_" prefix for things like this.
+> "get_request_ops" sounds way to generic.
+
+OK
+
+Michal
