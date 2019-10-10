@@ -2,89 +2,162 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BC5C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4040AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05E22067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D1820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387872AbfJJMzT (ORCPT
+        id S2387954AbfJJMz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:55:19 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37638 "EHLO fornost.hmeau.com"
+        Thu, 10 Oct 2019 08:55:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51314 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbfJJMzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:55:18 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1iIXy9-0001sw-7h; Thu, 10 Oct 2019 23:55:02 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Oct 2019 23:55:00 +1100
-Date:   Thu, 10 Oct 2019 23:55:00 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        id S1728274AbfJJMz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:55:26 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AA54E81DF1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 12:55:25 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id q9so2579818wmj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 05:55:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nq/uA9hbiLadGUMtvDysqPg6doejpIGdIlN33a9wYx0=;
+        b=iRG88cT8jfz7lLd8qbhMlzJRCH9YkZqmxAbUC2bT/IsXZ8NPXnXCdjLIUkv9glHcjJ
+         I72W6KzwyOfEprmScsyiORVjccmOIowjh6iBwIwDr8jWZ4wRVwSBiSdkIrZ2bOz+n6YL
+         hhNW5nVBLa34n5+zR2wT7H1kj90gukeAGflz2LJGPa7zKt8N4h0k7u/KwyAt8m2uyjUU
+         NInbKzBAsJXfAJqHp4nyuSUMjwa6fc44jJwWn03Y+9iXo6M7mjeTD32EqkaedXMy2Ixw
+         IFhidAxPEmxjjpx0dnZfHhvdufOkQDf5oBRX04PyJ4Yq1R31a4FvvaFOoE7dAzz4auCm
+         m30A==
+X-Gm-Message-State: APjAAAWcRfD0zgahvtKilhRcKQDMfnsrqfozgMhL9HVP7DZOG8o0p31z
+        etbUOiPIfvJ4dgxjII0cUbNOaBe9vTvQqqRqM/NN8oObo4c0OGfOGOqKIU05zRkBFHZ88iHEEEW
+        AeOyD/4xn0LMO66VjnujklX9d
+X-Received: by 2002:a05:600c:2291:: with SMTP id 17mr7030804wmf.171.1570712124316;
+        Thu, 10 Oct 2019 05:55:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyHOfBhX3Ib0GwJrD9aqpSGkSJYDsUzMmEl6DpZun/qWkG6+vpHW5DvYVap0QI8aDPovc/J9Q==
+X-Received: by 2002:a05:600c:2291:: with SMTP id 17mr7030775wmf.171.1570712124033;
+        Thu, 10 Oct 2019 05:55:24 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id u68sm8140030wmu.12.2019.10.10.05.55.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 05:55:23 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 14:55:21 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
-        Pascal van Leeuwen <pascalvanl@gmail.com>,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] crypto: inside-secure - Remove #ifdef checks
-Message-ID: <20191010125500.GE31566@gondor.apana.org.au>
-References: <20190930121520.1388317-1-arnd@arndb.de>
- <20190930121520.1388317-3-arnd@arndb.de>
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 10/13] vsock: add multi-transports support
+Message-ID: <20191010125521.mf7elqjpwhwjhwpo@steredhat>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-11-sgarzare@redhat.com>
+ <20191009131123.GK5747@stefanha-x1.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190930121520.1388317-3-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191009131123.GK5747@stefanha-x1.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 02:14:35PM +0200, Arnd Bergmann wrote:
-> When both PCI and OF are disabled, no drivers are registered, and
-> we get some unused-function warnings:
+On Wed, Oct 09, 2019 at 02:11:23PM +0100, Stefan Hajnoczi wrote:
+> On Fri, Sep 27, 2019 at 01:27:00PM +0200, Stefano Garzarella wrote:
+> > RFC:
+> > - I'd like to move MODULE_ALIAS_NETPROTO(PF_VSOCK) to af_vsock.c.
+> >   @Jorgen could this break the VMware products?
 > 
-> drivers/crypto/inside-secure/safexcel.c:1221:13: error: unused function 'safexcel_unregister_algorithms' [-Werror,-Wunused-function]
-> static void safexcel_unregister_algorithms(struct safexcel_crypto_priv *priv)
-> drivers/crypto/inside-secure/safexcel.c:1307:12: error: unused function 'safexcel_probe_generic' [-Werror,-Wunused-function]
-> static int safexcel_probe_generic(void *pdev,
-> drivers/crypto/inside-secure/safexcel.c:1531:13: error: unused function 'safexcel_hw_reset_rings' [-Werror,-Wunused-function]
-> static void safexcel_hw_reset_rings(struct safexcel_crypto_priv *priv)
-> 
-> It's better to make the compiler see what is going on and remove
-> such ifdef checks completely. In case of PCI, this is trivial since
-> pci_register_driver() is defined to an empty function that makes the
-> compiler subsequently drop all unused code silently.
-> 
-> The global pcireg_rc/ofreg_rc variables are not actually needed here
-> since the driver registration does not fail in ways that would make
-> it helpful.
-> 
-> For CONFIG_OF, an IS_ENABLED() check is still required, since platform
-> drivers can exist both with and without it.
-> 
-> A little change to linux/pci.h is needed to ensure that
-> pcim_enable_device() is visible to the driver. Moving the declaration
-> outside of ifdef would be sufficient here, but for consistency with the
-> rest of the file, adding an inline helper is probably best.
-> 
-> Fixes: 212ef6f29e5b ("crypto: inside-secure - Fix unused variable warning when CONFIG_PCI=n")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/crypto/inside-secure/safexcel.c | 49 ++++++-------------------
->  include/linux/pci.h                     |  1 +
->  2 files changed, 13 insertions(+), 37 deletions(-)
+> What will cause the vmw_vsock_vmci_transport.ko module to be loaded
+> after you remove MODULE_ALIAS_NETPROTO(PF_VSOCK)?  Perhaps
+> drivers/misc/vmw_vmci/vmci_guest.c:vmci_guest_probe_device() could do
+> something when the guest driver loads.
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Good idea, maybe we can call some function provided by vmci_transport
+to register it as a guest (I'll remove the type from the transport
+and I add it as a parameter of vsock_core_register())
+
+>                                         There would need to be something
+> equivalent for the host side too.
+
+Maybe in the vmci_host_do_init_context().
+
+> 
+> This will solve another issue too.  Today the VMCI transport can be
+> loaded if an application creates an AF_VSOCK socket during early boot
+> before the virtio transport has been probed.  This happens because the
+> VMCI transport uses MODULE_ALIAS_NETPROTO(PF_VSOCK) *and* it does not
+> probe whether this system is actually a VMware guest.
+> 
+> If we instead load the core af_vsock.ko module and transports are only
+> loaded based on hardware feature probing (e.g. the presence of VMware
+> guest mode, a virtio PCI adapter, etc) then transports will be
+> well-behaved.
+
+Yes, I completely agree with you. I'll try to follow your suggestion,
+
+> 
+> > - DGRAM sockets are handled as before, I don't know if make sense work
+> >   on it now, or when another transport will support DGRAM. The big
+> >   issues here is that we cannot link 1-1 a socket to transport as
+> >   for stream sockets since DGRAM is not connection-oriented.
+> 
+> Let's ignore DGRAM for now since only VMCI supports it and we therefore
+> do not require multi-transpor) support.
+
+Okay :)
+
+> 
+> > diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> > index 86f8f463e01a..2a081d19e20d 100644
+> > --- a/include/net/af_vsock.h
+> > +++ b/include/net/af_vsock.h
+> > @@ -94,7 +94,13 @@ struct vsock_transport_send_notify_data {
+> >  	u64 data2; /* Transport-defined. */
+> >  };
+> >  
+> > +#define VSOCK_TRANSPORT_F_H2G		0x00000001
+> > +#define VSOCK_TRANSPORT_F_G2H		0x00000002
+> > +#define VSOCK_TRANSPORT_F_DGRAM		0x00000004
+> 
+> Documentation comments, please.
+
+I'll fix!
+
+> 
+> > +void vsock_core_unregister(const struct vsock_transport *t)
+> > +{
+> > +	mutex_lock(&vsock_register_mutex);
+> > +
+> > +	/* RFC-TODO: maybe we should check if there are open sockets
+> > +	 * assigned to that transport and avoid the unregistration
+> > +	 */
+> 
+> If unregister() is only called from module_exit() functions then holding
+> a reference to the transport module would be enough to prevent this
+> case.  The transport could only be removed once all sockets have been
+> destroyed (and dropped their transport module reference).
+
+Yes. I did this in
+"[RFC PATCH 12/13] vsock: prevent transport modules unloading".
+
+Maybe I can merge it in this patch...
+
+Thanks,
+Stefano
