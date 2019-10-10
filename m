@@ -2,76 +2,99 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B294CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9656C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844122190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570750376;
-	bh=KRCPJlJhWjHuztpYIBRMiPsZRR2NVPVkumUYRq8JVHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vM01gXbOJl/GFGYIMeIuFnSFmbyQduziWCWsdrmB8w/ch9bqyP+AUaNHT8G/yZ93Q
-	 1hYpJlEFD1NmR6WO0jUDFZOcoBFta+WExTZkmO27DVlAvD+g8vHlXOd9X/9u9mcj1o
-	 mghUeCnpKuHIINXY5TJzYgG+hj8xzgcWwxNWxOhk=
+	by mail.kernel.org (Postfix) with ESMTP id A71CB20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:34:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izvtbYCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfJJXcz (ORCPT
+        id S1726992AbfJJXel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 19:32:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbfJJXcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 19:32:55 -0400
-Received: from localhost (unknown [131.107.174.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87D9B20B7C;
-        Thu, 10 Oct 2019 23:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570750374;
-        bh=KRCPJlJhWjHuztpYIBRMiPsZRR2NVPVkumUYRq8JVHQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AywgrSp6EqiAXSIoqsvT5tF9H83nvlRDj4Tgxb7U6c8o2P7KLBH//KgvnQOVwVQQ5
-         dQo6/ZAxguheD8qN4spE0QxENwCz21Gq+umSoGM6R41JfoQ2RcCLji5dBVxt1fk5qE
-         nfvzJMbrBy7iNegnxuWOLlR3hnE44hUzBWD7EVlg=
-Date:   Thu, 10 Oct 2019 19:32:54 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     "niveditas98 ." <nivedita@alum.mit.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 5.3 111/148] x86/purgatory: Disable the stackleak GCC
- plugin for the purgatory
-Message-ID: <20191010233254.GA2635@sasha-vm>
-References: <20191010083609.660878383@linuxfoundation.org>
- <20191010083617.862786246@linuxfoundation.org>
- <BYAPR04MB62468F03E52BCE23B5CD1C91AA940@BYAPR04MB6246.namprd04.prod.outlook.com>
+        Thu, 10 Oct 2019 19:34:41 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45834 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfJJXel (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 19:34:41 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r134so5648695lff.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 16:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=OzTCu5I04s+EnaAbwN6eYgKI0KQPTUphwOlhf37qoKM=;
+        b=izvtbYCZRJQnH6TCdDLZC0uFGCK4uHtEx+/NINpDi8P3ng/wp/4lWDOs1Ho2AcBdel
+         p44UhCtPD/wH3Ki3TQO2pdYGeWEvn9ZaAwZRqJavX9Lma5Ui52o+XaWM9V8LMugdQu3e
+         uYGmbCd3fmn9g4FT7i9cWMQKZ6H9Gq4N6uYmpJoTg/pf40KsMGPFVThGECBAQrrokBKN
+         UyMS54tT1I3yHtxknsQ5BAfgn3N61ZZWp+/HyY3tgubshEQ4/7keFfPTnNZh11e+BnMB
+         uihu0MMw4yZRFuBcmQXMrRsTesF7+P1t0dzGpnhsTxkjyCS2Xi65uniSlNJ4WdvwTnzW
+         yPmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=OzTCu5I04s+EnaAbwN6eYgKI0KQPTUphwOlhf37qoKM=;
+        b=PO+Cxv3vymGVrn7zCfxRyUXVeGruAjWFNdd1o8APswlY7Uda/S18k3USqMTpnKXfaS
+         pK+gHnxDyITq0LhQnsZlF9hv8FRZKG7dvKXzpIFKYq61e8V9FlugIXITyMj074k2D8Y2
+         8hGhtPGeCt9RaZV65RPFsbRI0hqXiRo2sBBRoh+HSq7W366BFgJLdyR5MiQIlr9xMBdp
+         83vd2X8nkML2PBBhrN5GgAyEW5wX3cw50w3/eLADT6oE85gm5DrWR0nH2brJrRJ5N3fm
+         7a6jnaDbuGkQpaiASqDkqH/bt2pyUpmgeTxqoT/T08nCgdlVFczKjdpxkid54chiqq6F
+         1oMA==
+X-Gm-Message-State: APjAAAX1ovGqdi9KJJ7EQAUAtCslk/6eob0+iEqKN23h5SI4scp6Iki1
+        J4eBg1NtCnJArn+kHz1N3aJt/xPz42KtY8a1WOqUaIHiZg==
+X-Google-Smtp-Source: APXvYqy3SIYI31R+EmdX4s4IYa//aTqrlhyKysAJJuq8mJhKiFdjY7189S10bJX2gMIbWgAlvDqUgkSl4Q+4KdktoKk=
+X-Received: by 2002:ac2:424c:: with SMTP id m12mr7351197lfl.140.1570750478898;
+ Thu, 10 Oct 2019 16:34:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <BYAPR04MB62468F03E52BCE23B5CD1C91AA940@BYAPR04MB6246.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Gabriel C <nix.or.die@gmail.com>
+Date:   Fri, 11 Oct 2019 01:34:08 +0200
+Message-ID: <CAEJqkgi-9_1D91GUm_MbS-=RRRwMZjqEYWhCCdk+STvc0PeYXw@mail.gmail.com>
+Subject: [amdgpu] ASSERT()'s in write_i2c*retimer_setting() functions
+To:     LKML <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Zeyu Fan <Zeyu.Fan@amd.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 04:22:20PM +0000, niveditas98 . wrote:
->Is it applied to 5.2 as well? Only saw mails for 4.19 and 5.3.
+Hello,
 
-5.2 is EOL.
+I've built recently a new box with a Ryzen3 2200G APU.
 
--- 
-Thanks,
-Sasha
+Each time I plug in an HDMI cable ( to a TV or Monitor ),
+or boot with HDMI connected a lot ASSERT()'s from
+write_i2c*retimer_setting() functions are triggered.
+
+I see the same on a Laptop with a Ryzen7 3750H with
+hybrid GPU configuration.
+
+Besides the noise in dmesg and the delay on boot,
+everything is working fine. I cannot find anything wrong
+or broken.
+
+Since the write errors seem to not be fatal, I think a friendly message
+would help more instead of flooding the dmesg with dumps while
+everything is working properly.
+
+Why is ASSERT() used there?
+
+I have a dmesg from the Ryzen3 box with drm.debug and a snipped
+from the Laptop ( not near me right now ) uploaded there:
+
+https://crazy.dev.frugalware.org/amdgpu/
+
+Please let me know if you need more information,
+If needed I can upload a dmesg from the Laptop with drm.debug too.
+
+
+Best Regards,
+
+Gabriel C
