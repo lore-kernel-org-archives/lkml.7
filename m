@@ -2,157 +2,321 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06381ECE596
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF07ECE597
 	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3FE21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DAF21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C/ywy926"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733158AbfJJHiL (ORCPT
+        id S1733256AbfJJHiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:38:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36558 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727362AbfJJH1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:27:35 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 676E2877A61;
-        Thu, 10 Oct 2019 07:27:34 +0000 (UTC)
-Received: from [10.36.117.125] (ovpn-117-125.ams2.redhat.com [10.36.117.125])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 16A5D19D70;
-        Thu, 10 Oct 2019 07:27:32 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
- memmaps in memory_failure()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191009142435.3975-1-david@redhat.com>
- <20191009142435.3975-3-david@redhat.com>
- <20191009144323.GH6681@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <5a626821-77e9-e26b-c2ee-219670283bf0@redhat.com>
-Date:   Thu, 10 Oct 2019 09:27:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191009144323.GH6681@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 10 Oct 2019 07:27:34 +0000 (UTC)
+        Thu, 10 Oct 2019 03:38:18 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:51381 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733063AbfJJHbK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:31:10 -0400
+Received: by mail-qk1-f202.google.com with SMTP id h4so4579331qkd.18
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 00:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=cqfOgbBFq1cuCJ9mBVUN432MN6WUG2Cztrp58NLs2Vw=;
+        b=C/ywy926tafCeZE7HfHuO7rwVEIl1bPrxo0phIi3BlyVKKzbYBsdlulXvZwVmVv152
+         pSDnC5TXL5u/rIOqk5sCwwe9zTponYR5613RtFPYKxAnp1P2hQy46QRdfWSTvAyKgHxT
+         +s8OWL8JsfxGoGswhx87REvg1bxy6UD5+Z5N5/cwKMK++NsW9zmTgwvwrmXvdsO+RD46
+         /CW3FiWNnaeM+/a58dWILDDj6hT3tHScRgNcUFz14HaFjyNfynJpHIgxuskOLZUyUB3u
+         A58hwqSvLbz9Bz6p6Nydy/epNL3Cu9kha1GvBWk/w8LyVjBW7G6GiF68ffWwZtt7wfWn
+         Xjlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=cqfOgbBFq1cuCJ9mBVUN432MN6WUG2Cztrp58NLs2Vw=;
+        b=mzIQ3zzbQc6UTi+H5OXrp6a2qMeewhAUviaahAPgDfBZUKYeP924TotDkhdlI0ZyHh
+         8j/XQMjIFUvsMHlSKYlDcsBiRhcSYjat1ZUrD4gG6X/b2YsZFql/1ar+UOqAGd8wd8DN
+         O6liEXhUnTEEsumRTatg+MW+uJ+yJiBI2TDffia7a9BTUZwlqE66a4BJGeJZ8X+2nHx4
+         IB1ZXSr92SCAFpvKI0XDB6g9sppHbWG+0QjarYgB5hltsLPjfIkjG8FzJZzv2ZiNSNSM
+         nGz5qS58rv0GZf9pD8R7i0xWYon915b/aaoTffExDfkVka2HMN9whC+rxSWJc9OIejCX
+         bu5A==
+X-Gm-Message-State: APjAAAUIKtrsxA8bjKZwRs8UJKfTAtRSOfx/EhTCd7SeDQsxGXWRSEnY
+        TxJG8XkgBOD6lbugJA09bO6GuXKhH31Czw==
+X-Google-Smtp-Source: APXvYqwCqV1V0a/8Ms8j/bNzW6sJqTHXo4TnK3h/ScttMp4kqMIWGm+wYIgZKsfhzUHRlf4rOEsV57bcyS0uBw==
+X-Received: by 2002:a05:620a:136e:: with SMTP id d14mr8147013qkl.393.1570692668234;
+ Thu, 10 Oct 2019 00:31:08 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 16:30:54 +0900
+In-Reply-To: <20191010073055.183635-1-suleiman@google.com>
+Message-Id: <20191010073055.183635-2-suleiman@google.com>
+Mime-Version: 1.0
+References: <20191010073055.183635-1-suleiman@google.com>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+Subject: [RFC v2 1/2] kvm: Mechanism to copy host timekeeping parameters into guest.
+From:   Suleiman Souhlal <suleiman@google.com>
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de
+Cc:     john.stultz@linaro.org, sboyd@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        ssouhlal@freebsd.org, tfiga@chromium.org, vkuznets@redhat.com,
+        Suleiman Souhlal <suleiman@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.10.19 16:43, Michal Hocko wrote:
-> On Wed 09-10-19 16:24:35, David Hildenbrand wrote:
->> We should check for pfn_to_online_page() to not access uninitialized
->> memmaps. Reshuffle the code so we don't have to duplicate the error
->> message.
->>
->> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  mm/memory-failure.c | 14 ++++++++------
->>  1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->> index 7ef849da8278..e866e6e5660b 100644
->> --- a/mm/memory-failure.c
->> +++ b/mm/memory-failure.c
->> @@ -1253,17 +1253,19 @@ int memory_failure(unsigned long pfn, int flags)
->>  	if (!sysctl_memory_failure_recovery)
->>  		panic("Memory failure on page %lx", pfn);
->>  
->> -	if (!pfn_valid(pfn)) {
->> +	p = pfn_to_online_page(pfn);
->> +	if (!p) {
->> +		if (pfn_valid(pfn)) {
->> +			pgmap = get_dev_pagemap(pfn, NULL);
->> +			if (pgmap)
->> +				return memory_failure_dev_pagemap(pfn, flags,
->> +								  pgmap);
->> +		}
->>  		pr_err("Memory failure: %#lx: memory outside kernel control\n",
->>  			pfn);
->>  		return -ENXIO;
-> 
-> Don't we need that earlier at hwpoison_inject level?
-> 
+This is used to synchronize time between host and guest.
+The guest can request the (guest) physical address it wants the
+data in through the MSR_KVM_TIMEKEEPER_EN MSR.
 
-Theoretically yes, this is another instance. But pfn_to_online_page(pfn)
-alone would not be sufficient as discussed. We would, again, have to
-special-case ZONE_DEVICE via things like get_dev_pagemap() ...
+It currently assumes the host timekeeper is "tsc".
 
-But mm/hwpoison-inject.c:hwpoison_inject() is a pure debug feature either way:
+Signed-off-by: Suleiman Souhlal <suleiman@google.com>
+---
+ arch/x86/include/asm/kvm_host.h      |   3 +
+ arch/x86/include/asm/pvclock-abi.h   |  27 ++++++
+ arch/x86/include/uapi/asm/kvm_para.h |   1 +
+ arch/x86/kvm/x86.c                   | 121 +++++++++++++++++++++++++++
+ 4 files changed, 152 insertions(+)
 
-	/*
-	 * Note that the below poison/unpoison interfaces do not involve
-	 * hardware status change, hence do not require hardware support.
-	 * They are mainly for testing hwpoison in software level.
-	 */
-
-So it's not that bad compared to memory_failure() called from real HW or
-drivers/base/memory.c:soft_offline_page_store()/hard_offline_page_store()
-
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 50eb430b0ad8..4d622450cb4a 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -659,7 +659,10 @@ struct kvm_vcpu_arch {
+ 	struct pvclock_vcpu_time_info hv_clock;
+ 	unsigned int hw_tsc_khz;
+ 	struct gfn_to_hva_cache pv_time;
++	struct gfn_to_hva_cache pv_timekeeper_g2h;
++	struct pvclock_timekeeper pv_timekeeper;
+ 	bool pv_time_enabled;
++	bool pv_timekeeper_enabled;
+ 	/* set guest stopped flag in pvclock flags field */
+ 	bool pvclock_set_guest_stopped_request;
+ 
+diff --git a/arch/x86/include/asm/pvclock-abi.h b/arch/x86/include/asm/pvclock-abi.h
+index 1436226efe3e..2809008b9b26 100644
+--- a/arch/x86/include/asm/pvclock-abi.h
++++ b/arch/x86/include/asm/pvclock-abi.h
+@@ -40,6 +40,33 @@ struct pvclock_wall_clock {
+ 	u32   nsec;
+ } __attribute__((__packed__));
+ 
++struct pvclock_read_base {
++	u64 mask;
++	u64 cycle_last;
++	u32 mult;
++	u32 shift;
++	u64 xtime_nsec;
++	u64 base;
++} __attribute__((__packed__));
++
++struct pvclock_timekeeper {
++	u64 gen;
++	u64 flags;
++	struct pvclock_read_base tkr_mono;
++	struct pvclock_read_base tkr_raw;
++	u64 xtime_sec;
++	u64 ktime_sec;
++	u64 wall_to_monotonic_sec;
++	u64 wall_to_monotonic_nsec;
++	u64 offs_real;
++	u64 offs_boot;
++	u64 offs_tai;
++	u64 raw_sec;
++	u64 tsc_offset;
++} __attribute__((__packed__));
++
++#define	PVCLOCK_TIMEKEEPER_ENABLED (1 << 0)
++
+ #define PVCLOCK_TSC_STABLE_BIT	(1 << 0)
+ #define PVCLOCK_GUEST_STOPPED	(1 << 1)
+ /* PVCLOCK_COUNTS_FROM_ZERO broke ABI and can't be used anymore. */
+diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+index 2a8e0b6b9805..3ebb1d87db3a 100644
+--- a/arch/x86/include/uapi/asm/kvm_para.h
++++ b/arch/x86/include/uapi/asm/kvm_para.h
+@@ -50,6 +50,7 @@
+ #define MSR_KVM_STEAL_TIME  0x4b564d03
+ #define MSR_KVM_PV_EOI_EN      0x4b564d04
+ #define MSR_KVM_POLL_CONTROL	0x4b564d05
++#define MSR_KVM_TIMEKEEPER_EN	0x4b564d06
+ 
+ struct kvm_steal_time {
+ 	__u64 steal;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 661e2bf38526..937f83cdda4b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -157,6 +157,8 @@ module_param(force_emulation_prefix, bool, S_IRUGO);
+ int __read_mostly pi_inject_timer = -1;
+ module_param(pi_inject_timer, bint, S_IRUGO | S_IWUSR);
+ 
++static atomic_t pv_timekeepers_nr;
++
+ #define KVM_NR_SHARED_MSRS 16
+ 
+ struct kvm_shared_msrs_global {
+@@ -2729,6 +2731,16 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 
+ 		break;
+ 	}
++	case MSR_KVM_TIMEKEEPER_EN:
++		if (kvm_gfn_to_hva_cache_init(vcpu->kvm,
++		    &vcpu->arch.pv_timekeeper_g2h, data,
++		    sizeof(struct pvclock_timekeeper)))
++			vcpu->arch.pv_timekeeper_enabled = false;
++		else {
++			vcpu->arch.pv_timekeeper_enabled = true;
++			atomic_inc(&pv_timekeepers_nr);
++		}
++		break;
+ 	case MSR_KVM_ASYNC_PF_EN:
+ 		if (kvm_pv_enable_async_pf(vcpu, data))
+ 			return 1;
+@@ -7097,6 +7109,109 @@ static struct perf_guest_info_callbacks kvm_guest_cbs = {
+ };
+ 
+ #ifdef CONFIG_X86_64
++static DEFINE_SPINLOCK(shadow_pvtk_lock);
++static struct pvclock_timekeeper shadow_pvtk;
++
++static void
++pvclock_copy_read_base(struct pvclock_read_base *pvtkr,
++    struct tk_read_base *tkr)
++{
++	pvtkr->cycle_last = tkr->cycle_last;
++	pvtkr->mult = tkr->mult;
++	pvtkr->shift = tkr->shift;
++	pvtkr->mask = tkr->mask;
++	pvtkr->xtime_nsec = tkr->xtime_nsec;
++	pvtkr->base = tkr->base;
++}
++
++static void
++kvm_copy_into_pvtk(struct kvm_vcpu *vcpu)
++{
++	struct pvclock_timekeeper *pvtk;
++	unsigned long flags;
++
++	if (!vcpu->arch.pv_timekeeper_enabled)
++		return;
++
++	pvtk = &vcpu->arch.pv_timekeeper;
++	if (pvclock_gtod_data.clock.vclock_mode == VCLOCK_TSC) {
++		pvtk->flags |= PVCLOCK_TIMEKEEPER_ENABLED;
++		spin_lock_irqsave(&shadow_pvtk_lock, flags);
++		pvtk->tkr_mono = shadow_pvtk.tkr_mono;
++		pvtk->tkr_raw = shadow_pvtk.tkr_raw;
++
++		pvtk->xtime_sec = shadow_pvtk.xtime_sec;
++		pvtk->ktime_sec = shadow_pvtk.ktime_sec;
++		pvtk->wall_to_monotonic_sec =
++		    shadow_pvtk.wall_to_monotonic_sec;
++		pvtk->wall_to_monotonic_nsec =
++		    shadow_pvtk.wall_to_monotonic_nsec;
++		pvtk->offs_real = shadow_pvtk.offs_real;
++		pvtk->offs_boot = shadow_pvtk.offs_boot;
++		pvtk->offs_tai = shadow_pvtk.offs_tai;
++		pvtk->raw_sec = shadow_pvtk.raw_sec;
++		spin_unlock_irqrestore(&shadow_pvtk_lock, flags);
++
++		pvtk->tsc_offset = kvm_x86_ops->read_l1_tsc_offset(vcpu);
++	} else
++		pvtk->flags &= ~PVCLOCK_TIMEKEEPER_ENABLED;
++
++	BUILD_BUG_ON(offsetof(struct pvclock_timekeeper, gen) != 0);
++
++	/*
++	 * Make the gen count odd to indicate we are in the process of
++	 * updating.
++	 */
++	vcpu->arch.pv_timekeeper.gen++;
++	vcpu->arch.pv_timekeeper.gen |= 1;
++
++	/*
++	 * See comment in kvm_guest_time_update() for why we have to do
++	 * multiple writes.
++	 */
++	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.pv_timekeeper_g2h,
++	    &vcpu->arch.pv_timekeeper, sizeof(vcpu->arch.pv_timekeeper.gen));
++
++	smp_wmb();
++
++	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.pv_timekeeper_g2h,
++	    &vcpu->arch.pv_timekeeper, sizeof(vcpu->arch.pv_timekeeper));
++
++	smp_wmb();
++
++	vcpu->arch.pv_timekeeper.gen++;
++
++	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.pv_timekeeper_g2h,
++	    &vcpu->arch.pv_timekeeper, sizeof(vcpu->arch.pv_timekeeper.gen));
++}
++
++static void
++update_shadow_pvtk(struct timekeeper *tk)
++{
++	struct pvclock_timekeeper *pvtk;
++	unsigned long flags;
++
++	pvtk = &shadow_pvtk;
++
++	if (atomic_read(&pv_timekeepers_nr) == 0 ||
++	    pvclock_gtod_data.clock.vclock_mode != VCLOCK_TSC)
++		return;
++
++	spin_lock_irqsave(&shadow_pvtk_lock, flags);
++	pvclock_copy_read_base(&pvtk->tkr_mono, &tk->tkr_mono);
++	pvclock_copy_read_base(&pvtk->tkr_raw, &tk->tkr_raw);
++
++	pvtk->xtime_sec = tk->xtime_sec;
++	pvtk->ktime_sec = tk->ktime_sec;
++	pvtk->wall_to_monotonic_sec = tk->wall_to_monotonic.tv_sec;
++	pvtk->wall_to_monotonic_nsec = tk->wall_to_monotonic.tv_nsec;
++	pvtk->offs_real = tk->offs_real;
++	pvtk->offs_boot = tk->offs_boot;
++	pvtk->offs_tai = tk->offs_tai;
++	pvtk->raw_sec = tk->raw_sec;
++	spin_unlock_irqrestore(&shadow_pvtk_lock, flags);
++}
++
+ static void pvclock_gtod_update_fn(struct work_struct *work)
+ {
+ 	struct kvm *kvm;
+@@ -7124,6 +7239,7 @@ static int pvclock_gtod_notify(struct notifier_block *nb, unsigned long unused,
+ 	struct timekeeper *tk = priv;
+ 
+ 	update_pvclock_gtod(tk);
++	update_shadow_pvtk(tk);
+ 
+ 	/* disable master clock if host does not trust, or does not
+ 	 * use, TSC based clocksource.
+@@ -7940,6 +8056,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 
+ 	bool req_immediate_exit = false;
+ 
++	kvm_copy_into_pvtk(vcpu);
++
+ 	if (kvm_request_pending(vcpu)) {
+ 		if (kvm_check_request(KVM_REQ_GET_VMCS12_PAGES, vcpu))
+ 			kvm_x86_ops->get_vmcs12_pages(vcpu);
+@@ -9020,6 +9138,9 @@ void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
+ 
+ 	kvmclock_reset(vcpu);
+ 
++	if (vcpu->arch.pv_timekeeper_enabled)
++		atomic_dec(&pv_timekeepers_nr);
++
+ 	kvm_x86_ops->vcpu_free(vcpu);
+ 	free_cpumask_var(wbinvd_dirty_mask);
+ }
 -- 
+2.23.0.581.g78d2f28ef7-goog
 
-Thanks,
-
-David / dhildenb
