@@ -2,98 +2,140 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC1DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDA4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 327B1208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VWoUIcV5"
+	by mail.kernel.org (Postfix) with ESMTP id 0B41020673
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733198AbfJJKvz (ORCPT
+        id S1731155AbfJJKzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:51:55 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53748 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfJJKvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:51:54 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9AAppY3025712;
-        Thu, 10 Oct 2019 05:51:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570704711;
-        bh=XliUJLuFlKaXm7moRyemAIXwBCYUezk8mD1oOP4tL/4=;
-        h=From:To:CC:Subject:Date;
-        b=VWoUIcV5P1Q0lX2rGonFyGrhv6XlFshYs58FpzK97RH28zdf4vVZqIeoBpUWGcq6c
-         9JltJReyowpcs8/UgWVeMJewMVSxAq0mpLEilPcrVY9365Zs8LOLMSCvEpIl/1bJYb
-         yxfMRyPcWQK7XAK16Hv5u17pFBQAmi0OvMPA+YDo=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9AApoqG125211
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Oct 2019 05:51:51 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 10
- Oct 2019 05:51:50 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 10 Oct 2019 05:51:47 -0500
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9AApmvE122351;
-        Thu, 10 Oct 2019 05:51:49 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
-        <kishon@ti.com>, <faiz_abbas@ti.com>
-Subject: [PATCH] mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
-Date:   Thu, 10 Oct 2019 16:22:30 +0530
-Message-ID: <20191010105230.16736-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
+        Thu, 10 Oct 2019 06:55:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33696 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbfJJKzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 06:55:31 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2A77B9B294
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:55:31 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id k9so2455139wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 03:55:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cSwY5qjlZoDMf13ZGbgpfesejkb6FeuV+G9YLcC+7pQ=;
+        b=HoIyCvWijjKIoDPVh3EtegnjMH0P2cn9sIwTC/sL1xW/rsvNbmMU+dnByw4yIxMcly
+         fHKEngIMRudvF7hcgEuAa8o02ceLYzPcCB7bkVJrP6nY7vx7R1n0apYAxVKpN9zGVXXE
+         MN9CN+8i6VPnNR9xHPsVmWMlyh+Zkz+QJGrJfICW4GIZffwTc3hBMlkcXi5K7IIbqjbb
+         dSF1svCexzsrS9oY0wUM/sssokNexyIRs5gb54G7kebSROfEyNBsnLscEf3DH31Jrxx5
+         6wR+Hs+hNnAWdwH5PhklV8DJ9gc2jYUXvGCUjHDO2H8mVhn98cZaBFuPOwCWSoJIdX0R
+         PZAg==
+X-Gm-Message-State: APjAAAXFZCVLe2C8ns5cf5NJ2pIF2hwMliXllOHbQEmWuHN+CTnPSRBa
+        uYxwFN+BgKCJzHLs9Lmkzrr/KEldL7bCpUJGdSy0XvFRS1+Rc8z9PJxyLMukh0ddNVd2kQm11nT
+        XFd2BmcG2Us9DGLINt7445zda
+X-Received: by 2002:a05:6000:1043:: with SMTP id c3mr7968476wrx.83.1570704929566;
+        Thu, 10 Oct 2019 03:55:29 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqySoMN1eIJ4n2ryWs4xEqq8Fh+ttgSXxTH/uhDp/leaeEOfqnPg5ZQvlgCz4zJ9qa7KIWjzuw==
+X-Received: by 2002:a05:6000:1043:: with SMTP id c3mr7968447wrx.83.1570704929313;
+        Thu, 10 Oct 2019 03:55:29 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id c9sm4798935wrt.7.2019.10.10.03.55.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2019 03:55:28 -0700 (PDT)
+Subject: Re: [RFC v2 2/2] x86/kvmclock: Introduce kvm-hostclock clocksource.
+To:     Suleiman Souhlal <suleiman@google.com>, rkrcmar@redhat.com,
+        tglx@linutronix.de
+Cc:     john.stultz@linaro.org, sboyd@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        ssouhlal@freebsd.org, tfiga@chromium.org, vkuznets@redhat.com
+References: <20191010073055.183635-1-suleiman@google.com>
+ <20191010073055.183635-3-suleiman@google.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <2e6e5b14-fa68-67bd-1436-293659c8d92c@redhat.com>
+Date:   Thu, 10 Oct 2019 12:55:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191010073055.183635-3-suleiman@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the App note[1] detailing the tuning algorithm, for
-temperatures < -20C, the initial tuning value should be min(largest
-value in LPW - 24, ceil(13/16 ratio of LPW)). The largest value in
-LPW is (max_window + 4 * (max_len - 1)) and not (max_window + 4 * max_len)
-itself. Fix this implementation.
+On 10/10/19 09:30, Suleiman Souhlal wrote:
+> +kvm_hostclock_enable(struct clocksource *cs)
+> +{
+> +	pv_timekeeper_enabled = 1;
+> +
+> +	old_vclock_mode = kvm_clock.archdata.vclock_mode;
+> +	kvm_clock.archdata.vclock_mode = VCLOCK_TSC;
+> +	return 0;
+> +}
+> +
+> +static void
+> +kvm_hostclock_disable(struct clocksource *cs)
+> +{
+> +	pv_timekeeper_enabled = 0;
+> +	kvm_clock.archdata.vclock_mode = old_vclock_mode;
+> +}
+> +
 
-[1] http://www.ti.com/lit/an/spraca9b/spraca9b.pdf
+Why do you poke at kvm_clock?  Instead you should add
 
-Fixes: 961de0a856e3 ("mmc: sdhci-omap: Workaround errata regarding
-SDR104/HS200 tuning failures (i929)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- drivers/mmc/host/sdhci-omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	.archdata               = { .vclock_mode = VCLOCK_TSC },
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 41c2677c587f..083e7e053c95 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -372,7 +372,7 @@ static int sdhci_omap_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 	 * on temperature
- 	 */
- 	if (temperature < -20000)
--		phase_delay = min(max_window + 4 * max_len - 24,
-+		phase_delay = min(max_window + 4 * (max_len - 1) - 24,
- 				  max_window +
- 				  DIV_ROUND_UP(13 * max_len, 16) * 4);
- 	else if (temperature < 20000)
--- 
-2.19.2
+to the kvm_hostclock declaration.
 
+Please also check that the invariant TSC CPUID bit
+CPUID[0x80000007].EDX[8] is set before enabling this feature.
+
+Paolo
+
+> +	pvtk = &pv_timekeeper;
+> +	do {
+> +		gen = pvtk_read_begin(pvtk);
+> +		if (!(pv_timekeeper.flags & PVCLOCK_TIMEKEEPER_ENABLED))
+> +			return;
+> +
+> +		pvclock_copy_into_read_base(pvtk, &tk->tkr_mono,
+> +		    &pvtk->tkr_mono);
+> +		pvclock_copy_into_read_base(pvtk, &tk->tkr_raw, &pvtk->tkr_raw);
+> +
+> +		tk->xtime_sec = pvtk->xtime_sec;
+> +		tk->ktime_sec = pvtk->ktime_sec;
+> +		tk->wall_to_monotonic.tv_sec = pvtk->wall_to_monotonic_sec;
+> +		tk->wall_to_monotonic.tv_nsec = pvtk->wall_to_monotonic_nsec;
+> +		tk->offs_real = pvtk->offs_real;
+> +		tk->offs_boot = pvtk->offs_boot;
+> +		tk->offs_tai = pvtk->offs_tai;
+> +		tk->raw_sec = pvtk->raw_sec;
+> +	} while (pvtk_read_retry(pvtk, gen));
+> +}
+> +
+
+Should you write an "enabled value" (basically the flags) into pvtk as well?
+
+> 
+> +kvm_hostclock_init(void)
+> +{
+> +	unsigned long pa;
+> +
+> +	pa = __pa(&pv_timekeeper);
+> +	wrmsrl(MSR_KVM_TIMEKEEPER_EN, pa);
+
+
+As Vitaly said, a new CPUID bit must be defined in
+Documentation/virt/kvm/cpuid.txt, and used here.  Also please make bit 0
+an enable bit.
