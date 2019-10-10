@@ -2,44 +2,87 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEE8C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426F2C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3512190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5EC20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:22:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="adWal0lR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfJJKVH (ORCPT
+        id S1727207AbfJJKWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:21:07 -0400
-Received: from mtaout.hs-regensburg.de ([194.95.104.10]:54442 "EHLO
-        mtaout.hs-regensburg.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfJJKVG (ORCPT
+        Thu, 10 Oct 2019 06:22:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24027 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725971AbfJJKWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:21:06 -0400
-Received: from pluto.lfdr (im-mob-039.hs-regensburg.de [172.20.37.154])
-        by mtaout.hs-regensburg.de (Postfix) with ESMTP id 46pnDG5M8TzyD1;
-        Thu, 10 Oct 2019 12:21:02 +0200 (CEST)
-From:   Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        jailhouse-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v6 0/2] x86/jailhouse: improve probing of platform UARTs
-Date:   Thu, 10 Oct 2019 12:21:00 +0200
-Message-Id: <20191010102102.421035-1-ralf.ramsauer@oth-regensburg.de>
-X-Mailer: git-send-email 2.23.0
+        Thu, 10 Oct 2019 06:22:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570702967;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=763TboRhwbFAPE8Tn1DDSJS6cQFbIRSIWcu9+jRDeSw=;
+        b=adWal0lRF3lcO40xwnXiT2qS3BwNW4OXIIdNvypYSvan4baDj4NzzFr7U674FjjLXrjckV
+        rfo5/pPZH5ZgPh+VbqLmqFGnxPhBmRsck5tyY21TLwL6ADrjTTfh6ErRvUkF8jqhGvZWkB
+        3dbiai68V4yGlUvuVkeh8bQC6dfmORk=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-95-mfY-4LF9NViKHPaOt2-A0Q-1; Thu, 10 Oct 2019 06:22:45 -0400
+Received: by mail-ed1-f72.google.com with SMTP id d7so3289452edp.23
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 03:22:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+suHDuntDF5i1uewtQAOqzeVn7++Q9V4dkvIc6Lm+UU=;
+        b=RtByz1JA9ptZl2NM67MsKGEIsUmtyvuT432eGLaxwsD9+AsgxmAb1jp+MPWWoWN7v7
+         5+SS1N4tLsz+xnY2UHobaN7YokuqmStbRMFC2CaXoAYvGkmLTmGlOzDV3a3IJGfULLDh
+         zyNUorSgqoShNaZWEFiJv8pv1pvSGlMquaNJFkIlNrgzFGEilMasUzwQojNW8TDDyxff
+         f27MVO226exZJvfA1h0Q2t7+f7Vdm2EEy/sQXl9yI20q7URPDnjCtLGN7my7LCdmk4GS
+         h42IpreG53mIPPac+GU4tC2STMbYvjhTKF2PhUEt4KzY7QrseXeJUfylwD6/8fjPf9go
+         hN4A==
+X-Gm-Message-State: APjAAAVlBtWyj2Cr2neWG1qogBS6EAU7T5emRqbiGrv00oKoh1M3Fvpd
+        AE0mhmtIfwV53cCqq0q+7lcuhfZju8ZEP2MIO1O8ar1oC0fDAq9q/HUCRjcO5QesXVXJECHZg1E
+        Mczh4pGELKhiBeTG/W/wfIESb
+X-Received: by 2002:a50:ed0b:: with SMTP id j11mr7481334eds.50.1570702964246;
+        Thu, 10 Oct 2019 03:22:44 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwf6PwtzYiLj0NiaSMAUZxbEnhQsSzIhn4y0fznpU9qn8twvN5iMNsQaK5QBv+HbJxfqQFIEQ==
+X-Received: by 2002:a50:ed0b:: with SMTP id j11mr7481313eds.50.1570702963988;
+        Thu, 10 Oct 2019 03:22:43 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
+        by smtp.gmail.com with ESMTPSA id my6sm621204ejb.55.2019.10.10.03.22.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2019 03:22:43 -0700 (PDT)
+Subject: Re: [PATCH v2] serdev: Add ACPI devices by ResourceSource field
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Johan Hovold <johan@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-serial@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190924162226.1493407-1-luzmaximilian@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <03d11e04-aaad-4851-c7d6-feaf62793670@redhat.com>
+Date:   Thu, 10 Oct 2019 12:22:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PMX-Version: 6.4.8.2820816, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.10.10.101216, AntiVirus-Engine: 5.65.0, AntiVirus-Data: 2019.10.10.5650000
-X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
- MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODYTEXTP_SIZE_3000_LESS 0, BODY_SIZE_2000_2999 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, LEGITIMATE_SIGNS 0, MULTIPLE_REAL_RCPTS 0, URI_ENDS_IN_HTML 0, URI_WITH_PATH_ONLY 0, __ANY_URI 0, __BODY_NO_MAILTO 0, __CC_NAME 0, __CC_NAME_DIFF_FROM_ACC 0, __CC_REAL_NAMES 0, __CP_URI_IN_BODY 0, __CTE 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_X_MAILER 0, __HTTPS_URI 0, __INVOICE_MULTILINGUAL 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MULTIPLE_RCPTS_CC_X2 0, __MULTIPLE_RCPTS_TO_X5 0, __MULTIPLE_URI_TEXT 0, __NO_HTML_TAG_RAW 0, __SANE_MSGID 0, __SUBJ_ALPHA_END 0, __TO_MALFORMED_2 0, __TO_NAME 0, __TO_NAME_DIFF_FROM_ACC 0, __TO_REAL_NAMES 0, __URI_IN_BODY 0, __URI_NOT_IMG 0, __URI_NS , __URI_WITH_PATH 0'
+In-Reply-To: <20190924162226.1493407-1-luzmaximilian@gmail.com>
+Content-Language: en-US
+X-MC-Unique: mfY-4LF9NViKHPaOt2-A0Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -47,60 +90,229 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-probing of platform UARTs is a problem for x86 Jailhouse non-root
-cells: Linux doesn't know which UARTs belong to the cell and will probe
-for all platform UARTs. This crashes the guest if access isn't
-permitted. Current workarounds (tuning via 8250.nr_uarts) are hacky and
-limited.
+On 24-09-2019 18:22, Maximilian Luz wrote:
+> When registering a serdev controller, ACPI needs to be checked for
+> devices attached to it. Currently, all immediate children of the ACPI
+> node of the controller are assumed to be UART client devices for this
+> controller. Furthermore, these devices are not searched elsewhere.
+>=20
+> This is incorrect: Similar to SPI and I2C devices, the UART client
+> device definition (via UARTSerialBusV2) can reside anywhere in the ACPI
+> namespace as resource definition inside the _CRS method and points to
+> the controller via its ResourceSource field. This field may either
+> contain a fully qualified or relative path, indicating the controller
+> device. To address this, we need to walk over the whole ACPI namespace,
+> looking at each resource definition, and match the client device to the
+> controller via this field.
+>=20
+> This patch is based on the existing acpi serial bus implementations in
+> drivers/i2c/i2c-core-acpi.c and drivers/spi/spi.c, specifically commit
+> 4c3c59544f33e97cf8557f27e05a9904ead16363 ("spi/acpi: enumerate all SPI
+> slaves in the namespace").
+>=20
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-Jailhouse now comes with flags inside setup_data that indicate
-availability of UARTs, so simply use it.
+Thank you for the new version.
 
-  Ralf
+This patch looks good to me and it works on my test hw with serial
+attached BT HCI:
 
-since v5:
-  - Link: https://lore.kernel.org/r/20191007123819.161432-1-ralf.ramsauer@oth-regensburg.de
-          alt: https://www.mail-archive.com/jailhouse-dev@googlegroups.com/msg07568.html
-  - Address Borislav's comments:
-    - Improve commit messages
-    - 1/2: Use min_t instead of min
-    - 2/2: Add __init attribute to jailhouse_serial_workaround 
-    - 2/2: Remove __initdata from setup_data, as it it is used by
-      jailhouse_serial_fixup(), which can not become __init. It is
-      passed over to serial8250_set_isa_configurator and can be used
-      after bootup.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
 
-since v4:
-  - Link: https://lore.kernel.org/r/20190909151030.152012-1-ralf.ramsauer@oth-regensburg.de
-          alt: https://www.mail-archive.com/jailhouse-dev@googlegroups.com/msg07483.html
-  - rebase and test on latest master and resolve conflicts
-  - Add linux-kernel ML
+Regards,
 
-since v3:
-  - Link: https://lore.kernel.org/r/20190819183408.988013-1-ralf.ramsauer@oth-regensburg.de
-          alt: https://www.mail-archive.com/jailhouse-dev@googlegroups.com/msg07365.html
-  - Address Thomas' comments (and it really looks nicer)
-  - Address Jan's comment on patch 1 and add his Reviewed-by tag
+Hans
 
-since v2:
-  - Link: https://lore.kernel.org/r/20190812110650.631305-1-ralf.ramsauer@oth-regensburg.de
-          alt: https://www.mail-archive.com/jailhouse-dev@googlegroups.com/msg07334.html
-  - avoid imbalances of early_memremap and early_memunmap
 
-since v1:
-  - Link: https://lore.kernel.org/r/20190802123333.4008-1-ralf.ramsauer@oth-regensburg.de
-  -       alt: https://www.mail-archive.com/jailhouse-dev@googlegroups.com/msg07283.html
-  - setup data version check wasn't really prepared for extensions of
-    the structure. Add a patch that improves the checks.
 
-Ralf Ramsauer (2):
-  x86/jailhouse: improve setup data version comparison
-  x86/jailhouse: Only enable platform UARTs if available
-
- arch/x86/include/uapi/asm/bootparam.h |  25 +++--
- arch/x86/kernel/jailhouse.c           | 136 ++++++++++++++++++++------
- 2 files changed, 120 insertions(+), 41 deletions(-)
-
--- 
-2.23.0
+> ---
+> Changes compared to v1:
+> - Patch now reflects the behavior of the existing ACPI serial bus
+>    implementations (drivers/i2c/i2c-core-acpi.c and drivers/spi/spi.c),
+>    with a maximum of one serdev client device per ACPI device node
+>    allocated.
+>=20
+> - Ignores and continues on errors from AML code execution and resource
+>    parsing.
+>=20
+> Notes:
+>    The resource lookup is kept generic (similarly to the implementations
+>    it is based on), meaning that it should be fairly simple to extend
+>    acpi_serdev_parse_resource and acpi_serdev_check_resources to get and
+>    return more information about the serdev client device (e.g. initial
+>    baud rate) once this is required.
+>=20
+>    If multiple device definitions inside a single _CRS block ever become
+>    a concern, the lookup function can be instructed as to which
+>    UARTSerialBusV2 resource should be considered by spefifying its index
+>    in acpi_serdev_lookup.index. This is again based on the I2C
+>    implementation. Currently the last resource definition is chosen (i.e.
+>    index =3D -1) to reflect the behavior of the other ACPI serial bus
+>    implementations.
+> ---
+>   drivers/tty/serdev/core.c | 111 +++++++++++++++++++++++++++++++++-----
+>   1 file changed, 99 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index a0ac16ee6575..226adeec2aed 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -552,16 +552,97 @@ static int of_serdev_register_devices(struct serdev=
+_controller *ctrl)
+>   }
+>  =20
+>   #ifdef CONFIG_ACPI
+> +
+> +#define SERDEV_ACPI_MAX_SCAN_DEPTH 32
+> +
+> +struct acpi_serdev_lookup {
+> +=09acpi_handle device_handle;
+> +=09acpi_handle controller_handle;
+> +=09int n;
+> +=09int index;
+> +};
+> +
+> +static int acpi_serdev_parse_resource(struct acpi_resource *ares, void *=
+data)
+> +{
+> +=09struct acpi_serdev_lookup *lookup =3D data;
+> +=09struct acpi_resource_uart_serialbus *sb;
+> +=09acpi_status status;
+> +
+> +=09if (ares->type !=3D ACPI_RESOURCE_TYPE_SERIAL_BUS)
+> +=09=09return 1;
+> +
+> +=09if (ares->data.common_serial_bus.type !=3D ACPI_RESOURCE_SERIAL_TYPE_=
+UART)
+> +=09=09return 1;
+> +
+> +=09if (lookup->index !=3D -1 && lookup->n++ !=3D lookup->index)
+> +=09=09return 1;
+> +
+> +=09sb =3D &ares->data.uart_serial_bus;
+> +
+> +=09status =3D acpi_get_handle(lookup->device_handle,
+> +=09=09=09=09 sb->resource_source.string_ptr,
+> +=09=09=09=09 &lookup->controller_handle);
+> +=09if (ACPI_FAILURE(status))
+> +=09=09return 1;
+> +
+> +=09/*
+> +=09 * NOTE: Ideally, we would also want to retreive other properties her=
+e,
+> +=09 * once setting them before opening the device is supported by serdev=
+.
+> +=09 */
+> +
+> +=09return 1;
+> +}
+> +
+> +static int acpi_serdev_do_lookup(struct acpi_device *adev,
+> +                                 struct acpi_serdev_lookup *lookup)
+> +{
+> +=09struct list_head resource_list;
+> +=09int ret;
+> +
+> +=09lookup->device_handle =3D acpi_device_handle(adev);
+> +=09lookup->controller_handle =3D NULL;
+> +=09lookup->n =3D 0;
+> +
+> +=09INIT_LIST_HEAD(&resource_list);
+> +=09ret =3D acpi_dev_get_resources(adev, &resource_list,
+> +=09=09=09=09     acpi_serdev_parse_resource, lookup);
+> +=09acpi_dev_free_resource_list(&resource_list);
+> +
+> +=09if (ret < 0)
+> +=09=09return -EINVAL;
+> +
+> +=09return 0;
+> +}
+> +
+> +static int acpi_serdev_check_resources(struct serdev_controller *ctrl,
+> +=09=09=09=09       struct acpi_device *adev)
+> +{
+> +=09struct acpi_serdev_lookup lookup;
+> +=09int ret;
+> +
+> +=09if (acpi_bus_get_status(adev) || !adev->status.present)
+> +=09=09return -EINVAL;
+> +
+> +=09/* Look for UARTSerialBusV2 resource */
+> +=09lookup.index =3D -1;=09// we only care for the last device
+> +
+> +=09ret =3D acpi_serdev_do_lookup(adev, &lookup);
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09/* Make sure controller and ResourceSource handle match */
+> +=09if (ACPI_HANDLE(ctrl->dev.parent) !=3D lookup.controller_handle)
+> +=09=09return -ENODEV;
+> +
+> +=09return 0;
+> +}
+> +
+>   static acpi_status acpi_serdev_register_device(struct serdev_controller=
+ *ctrl,
+> -=09=09=09=09=09    struct acpi_device *adev)
+> +=09=09=09=09=09       struct acpi_device *adev)
+>   {
+> -=09struct serdev_device *serdev =3D NULL;
+> +=09struct serdev_device *serdev;
+>   =09int err;
+>  =20
+> -=09if (acpi_bus_get_status(adev) || !adev->status.present ||
+> -=09    acpi_device_enumerated(adev))
+> -=09=09return AE_OK;
+> -
+>   =09serdev =3D serdev_device_alloc(ctrl);
+>   =09if (!serdev) {
+>   =09=09dev_err(&ctrl->dev, "failed to allocate serdev device for %s\n",
+> @@ -583,7 +664,7 @@ static acpi_status acpi_serdev_register_device(struct=
+ serdev_controller *ctrl,
+>   }
+>  =20
+>   static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level=
+,
+> -=09=09=09=09       void *data, void **return_value)
+> +=09=09=09=09=09  void *data, void **return_value)
+>   {
+>   =09struct serdev_controller *ctrl =3D data;
+>   =09struct acpi_device *adev;
+> @@ -591,22 +672,28 @@ static acpi_status acpi_serdev_add_device(acpi_hand=
+le handle, u32 level,
+>   =09if (acpi_bus_get_device(handle, &adev))
+>   =09=09return AE_OK;
+>  =20
+> +=09if (acpi_device_enumerated(adev))
+> +=09=09return AE_OK;
+> +
+> +=09if (acpi_serdev_check_resources(ctrl, adev))
+> +=09=09return AE_OK;
+> +
+>   =09return acpi_serdev_register_device(ctrl, adev);
+>   }
+>  =20
+> +
+>   static int acpi_serdev_register_devices(struct serdev_controller *ctrl)
+>   {
+>   =09acpi_status status;
+> -=09acpi_handle handle;
+>  =20
+> -=09handle =3D ACPI_HANDLE(ctrl->dev.parent);
+> -=09if (!handle)
+> +=09if (!has_acpi_companion(ctrl->dev.parent))
+>   =09=09return -ENODEV;
+>  =20
+> -=09status =3D acpi_walk_namespace(ACPI_TYPE_DEVICE, handle, 1,
+> +=09status =3D acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
+> +=09=09=09=09     SERDEV_ACPI_MAX_SCAN_DEPTH,
+>   =09=09=09=09     acpi_serdev_add_device, NULL, ctrl, NULL);
+>   =09if (ACPI_FAILURE(status))
+> -=09=09dev_dbg(&ctrl->dev, "failed to enumerate serdev slaves\n");
+> +=09=09dev_warn(&ctrl->dev, "failed to enumerate serdev slaves\n");
+>  =20
+>   =09if (!ctrl->serdev)
+>   =09=09return -ENODEV;
+>=20
 
