@@ -2,353 +2,168 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856D9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E0FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5819220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5D0218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570696682;
+	bh=raS58zjEO0d4OUgosOAfUEsip1VV7XjzrU5IMfwIKJw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mjKEQsbJgqU0+Uzoi8wvDB7K5tapb6RB7a5M/ULnbMmojhBh5VcV6Hmges74pnvok
+	 rUnoskRWJSZCgLI916dOW2uzmVcc6+FjalELqLzAkwRt5+fosbsZReYL2YAgF9H5Nr
+	 jZIQbfHva7lZvcr2mdelD0mnGewInSYsdVHy3y7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387475AbfJJIh7 (ORCPT
+        id S2387489AbfJJIiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:37:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45214 "EHLO mx1.redhat.com"
+        Thu, 10 Oct 2019 04:38:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387444AbfJJIh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:37:56 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1733242AbfJJIh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:37:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9AF3B83F3D
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:37:55 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id w2so2402637wrn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 01:37:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=xW15s2NstXaaA3qdwg/G4PRC3BhEpCuhnmS8SSNGd2E=;
-        b=ZEI4ZcLU5eu6Ot6ycTt9EqVt6k8OJpB97bZFcIyHlURbSuv9UJTind/XYBuJTHa7v/
-         olUmZJLmjHmkRkaAg/cyHPPu7YWmJ68FzqY4/nZOM7oaK7X3xmCd+lDuyEEeaD0kFu+K
-         Tp3VZyR9PLQ4PvZ6tmCplsSeat2+1UDO1lXJRL3VU/WrgcPO7WXWeG/BGrDGVqjflx6j
-         2f0rncE+Y78t5upYpAE8r1InNw9lkq9KtTe9uc2k94TFnYZukXtcq219c7zXxxX5/Tp7
-         W7chpnyBZcIi4PVYwyDRFDDCDAHeVA/S12E2Szkznm8nZxFbxQepwQIuDUzDrZltyMTQ
-         govg==
-X-Gm-Message-State: APjAAAVcJWd6emZpmqwGTF1h0eCDkVN4CeryWmxHieP11i1TRKb+PTkm
-        yVMMy3Z7lzkIc9h/Jwd4NnIfLId7g4+lPqotyHhvKp8OYt0ugIj9wlDV9cLWCNvnXlXXnlp2ARs
-        UK6Dv/nFWJc5jvSvJmUEryiSN
-X-Received: by 2002:a5d:4a07:: with SMTP id m7mr7739420wrq.389.1570696674231;
-        Thu, 10 Oct 2019 01:37:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxX3dQkfZobzxCD/uNXx+pfT2b43hKsJ8wqZ40NKUE007l3b910aZ/I2gB9Hnb4Akljql5TDQ==
-X-Received: by 2002:a5d:4a07:: with SMTP id m7mr7739394wrq.389.1570696673901;
-        Thu, 10 Oct 2019 01:37:53 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id k24sm10444181wmi.1.2019.10.10.01.37.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 01:37:53 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Suleiman Souhlal <suleiman@google.com>
-Cc:     john.stultz@linaro.org, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        ssouhlal@freebsd.org, tfiga@chromium.org,
-        Suleiman Souhlal <suleiman@google.com>, pbonzini@redhat.com,
-        tglx@linutronix.de
-Subject: Re: [RFC v2 2/2] x86/kvmclock: Introduce kvm-hostclock clocksource.
-In-Reply-To: <20191010073055.183635-3-suleiman@google.com>
-References: <20191010073055.183635-1-suleiman@google.com> <20191010073055.183635-3-suleiman@google.com>
-Date:   Thu, 10 Oct 2019 10:37:52 +0200
-Message-ID: <87wodd6lnj.fsf@vitty.brq.redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2536A2196E;
+        Thu, 10 Oct 2019 08:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570696677;
+        bh=raS58zjEO0d4OUgosOAfUEsip1VV7XjzrU5IMfwIKJw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NcaN9G/wn+4qTSn9QB8wfdVCuAKY18HPFNMtE59UAl5TRTRXgn99OOKUCjeDoA+uV
+         ybo+RpMHSIQAyjm+OlwGUR07aQA8NIyJApXyoqXS53gcN06Xjy18CpgPqYIJUquXB/
+         0t7y6N0eqxP0tfGRkCTadIARbbGGB38T9D1V4O4U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.3 013/148] KVM: PPC: Book3S HV: Fix race in re-enabling XIVE escalation interrupts
+Date:   Thu, 10 Oct 2019 10:34:34 +0200
+Message-Id: <20191010083611.908464353@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
+References: <20191010083609.660878383@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Suleiman Souhlal <suleiman@google.com> writes:
+From: Paul Mackerras <paulus@ozlabs.org>
 
-> When kvm-hostclock is selected, and the host supports it, update our
-> timekeeping parameters to be the same as the host.
-> This lets us have our time synchronized with the host's,
-> even in the presence of host NTP or suspend.
->
-> Signed-off-by: Suleiman Souhlal <suleiman@google.com>
-> ---
->  arch/x86/Kconfig                    |   9 ++
->  arch/x86/include/asm/kvmclock.h     |  12 +++
->  arch/x86/kernel/Makefile            |   2 +
->  arch/x86/kernel/kvmclock.c          |   5 +-
->  arch/x86/kernel/kvmhostclock.c      | 130 ++++++++++++++++++++++++++++
->  include/linux/timekeeper_internal.h |   8 ++
->  kernel/time/timekeeping.c           |   2 +
->  7 files changed, 167 insertions(+), 1 deletion(-)
->  create mode 100644 arch/x86/kernel/kvmhostclock.c
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index d6e1faa28c58..c5b1257ea969 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -839,6 +839,15 @@ config PARAVIRT_TIME_ACCOUNTING
->  config PARAVIRT_CLOCK
->  	bool
->  
-> +config KVM_HOSTCLOCK
-> +	bool "kvmclock uses host timekeeping"
-> +	depends on KVM_GUEST
-> +	help
-> +	  Select this option to make the guest use the same timekeeping
-> +	  parameters as the host. This means that time will be almost
-> +	  exactly the same between the two. Only works if the host uses "tsc"
-> +	  clocksource.
-> +
->  config JAILHOUSE_GUEST
->  	bool "Jailhouse non-root cell support"
->  	depends on X86_64 && PCI
-> diff --git a/arch/x86/include/asm/kvmclock.h b/arch/x86/include/asm/kvmclock.h
-> index eceea9299097..de1a590ff97e 100644
-> --- a/arch/x86/include/asm/kvmclock.h
-> +++ b/arch/x86/include/asm/kvmclock.h
-> @@ -2,6 +2,18 @@
->  #ifndef _ASM_X86_KVM_CLOCK_H
->  #define _ASM_X86_KVM_CLOCK_H
->  
-> +#include <linux/timekeeper_internal.h>
-> +
->  extern struct clocksource kvm_clock;
->  
-> +unsigned long kvm_get_tsc_khz(void);
-> +
-> +#ifdef CONFIG_KVM_HOSTCLOCK
-> +void kvm_hostclock_init(void);
-> +#else
-> +static inline void kvm_hostclock_init(void)
-> +{
-> +}
-> +#endif /* KVM_HOSTCLOCK */
-> +
->  #endif /* _ASM_X86_KVM_CLOCK_H */
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index 3578ad248bc9..bc7be935fc5e 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -17,6 +17,7 @@ CFLAGS_REMOVE_tsc.o = -pg
->  CFLAGS_REMOVE_paravirt-spinlocks.o = -pg
->  CFLAGS_REMOVE_pvclock.o = -pg
->  CFLAGS_REMOVE_kvmclock.o = -pg
-> +CFLAGS_REMOVE_kvmhostclock.o = -pg
->  CFLAGS_REMOVE_ftrace.o = -pg
->  CFLAGS_REMOVE_early_printk.o = -pg
->  CFLAGS_REMOVE_head64.o = -pg
-> @@ -112,6 +113,7 @@ obj-$(CONFIG_AMD_NB)		+= amd_nb.o
->  obj-$(CONFIG_DEBUG_NMI_SELFTEST) += nmi_selftest.o
->  
->  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvmclock.o
-> +obj-$(CONFIG_KVM_HOSTCLOCK)	+= kvmhostclock.o
->  obj-$(CONFIG_PARAVIRT)		+= paravirt.o paravirt_patch.o
->  obj-$(CONFIG_PARAVIRT_SPINLOCKS)+= paravirt-spinlocks.o
->  obj-$(CONFIG_PARAVIRT_CLOCK)	+= pvclock.o
-> diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-> index 904494b924c1..4ab862de9777 100644
-> --- a/arch/x86/kernel/kvmclock.c
-> +++ b/arch/x86/kernel/kvmclock.c
-> @@ -125,7 +125,7 @@ static inline void kvm_sched_clock_init(bool stable)
->   * poll of guests can be running and trouble each other. So we preset
->   * lpj here
->   */
-> -static unsigned long kvm_get_tsc_khz(void)
-> +unsigned long kvm_get_tsc_khz(void)
->  {
->  	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
->  	return pvclock_tsc_khz(this_cpu_pvti());
-> @@ -366,5 +366,8 @@ void __init kvmclock_init(void)
->  		kvm_clock.rating = 299;
->  
->  	clocksource_register_hz(&kvm_clock, NSEC_PER_SEC);
-> +
-> +	kvm_hostclock_init();
-> +
->  	pv_info.name = "KVM";
->  }
-> diff --git a/arch/x86/kernel/kvmhostclock.c b/arch/x86/kernel/kvmhostclock.c
-> new file mode 100644
-> index 000000000000..9971343c2bed
-> --- /dev/null
-> +++ b/arch/x86/kernel/kvmhostclock.c
-> @@ -0,0 +1,130 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * KVM clocksource that uses host timekeeping.
-> + * Copyright (c) 2019 Suleiman Souhlal, Google LLC
-> + */
-> +
-> +#include <linux/clocksource.h>
-> +#include <linux/kvm_para.h>
-> +#include <asm/pvclock.h>
-> +#include <asm/msr.h>
-> +#include <asm/kvmclock.h>
-> +#include <linux/timekeeper_internal.h>
-> +
-> +struct pvclock_timekeeper pv_timekeeper;
-> +
-> +static bool pv_timekeeper_enabled;
-> +static bool pv_timekeeper_present;
-> +static int old_vclock_mode;
-> +
-> +static u64
-> +kvm_hostclock_get_cycles(struct clocksource *cs)
-> +{
-> +	return rdtsc_ordered();
-> +}
-> +
-> +static int
-> +kvm_hostclock_enable(struct clocksource *cs)
-> +{
-> +	pv_timekeeper_enabled = 1;
-> +
-> +	old_vclock_mode = kvm_clock.archdata.vclock_mode;
-> +	kvm_clock.archdata.vclock_mode = VCLOCK_TSC;
-> +	return 0;
-> +}
-> +
-> +static void
-> +kvm_hostclock_disable(struct clocksource *cs)
-> +{
-> +	pv_timekeeper_enabled = 0;
-> +	kvm_clock.archdata.vclock_mode = old_vclock_mode;
-> +}
-> +
-> +struct clocksource kvm_hostclock = {
-> +	.name = "kvm-hostclock",
-> +	.read = kvm_hostclock_get_cycles,
-> +	.enable = kvm_hostclock_enable,
-> +	.disable = kvm_hostclock_disable,
-> +	.rating = 401, /* Higher than kvm-clock */
+commit 959c5d5134786b4988b6fdd08e444aa67d1667ed upstream.
 
-I would've offload the decision which clock is better to the host. If I
-understand corectly the new clock is not compatible with live migration,
-right? So how can the guest know if the host plans to migrate it or not?
-I'd suggest adding two separate CPUID bits:
-- kvm-hostclock present and enabled
-- kvm-hostclock is prefered over kvm-clock.
+Escalation interrupts are interrupts sent to the host by the XIVE
+hardware when it has an interrupt to deliver to a guest VCPU but that
+VCPU is not running anywhere in the system.  Hence we disable the
+escalation interrupt for the VCPU being run when we enter the guest
+and re-enable it when the guest does an H_CEDE hypercall indicating
+it is idle.
 
-> +	.mask = CLOCKSOURCE_MASK(64),
-> +	.flags = CLOCK_SOURCE_IS_CONTINUOUS,
-> +};
-> +
-> +static void
-> +pvclock_copy_into_read_base(struct pvclock_timekeeper *pvtk,
-> +    struct tk_read_base *tkr, struct pvclock_read_base *pvtkr)
-> +{
-> +	int shift_diff;
-> +
-> +	tkr->mask = pvtkr->mask;
-> +	tkr->cycle_last = pvtkr->cycle_last + pvtk->tsc_offset;
-> +	tkr->mult = pvtkr->mult;
-> +	shift_diff = tkr->shift - pvtkr->shift;
-> +	tkr->shift = pvtkr->shift;
-> +	tkr->xtime_nsec = pvtkr->xtime_nsec;
-> +	tkr->base = pvtkr->base;
-> +}
-> +
-> +static u64
-> +pvtk_read_begin(struct pvclock_timekeeper *pvtk)
-> +{
-> +	u64 gen;
-> +
-> +	gen = pvtk->gen & ~1;
-> +	/* Make sure that the gen count is read before the data. */
-> +	virt_rmb();
-> +
-> +	return gen;
-> +}
-> +
-> +static bool
-> +pvtk_read_retry(struct pvclock_timekeeper *pvtk, u64 gen)
-> +{
-> +	/* Make sure that the gen count is re-read after the data. */
-> +	virt_rmb();
-> +	return unlikely(gen != pvtk->gen);
-> +}
-> +
-> +void
-> +kvm_clock_copy_into_tk(struct timekeeper *tk)
-> +{
-> +	struct pvclock_timekeeper *pvtk;
-> +	u64 gen;
-> +
-> +	if (!pv_timekeeper_enabled)
-> +		return;
-> +
-> +	pvtk = &pv_timekeeper;
-> +	do {
-> +		gen = pvtk_read_begin(pvtk);
-> +		if (!(pv_timekeeper.flags & PVCLOCK_TIMEKEEPER_ENABLED))
-> +			return;
-> +
-> +		pvclock_copy_into_read_base(pvtk, &tk->tkr_mono,
-> +		    &pvtk->tkr_mono);
-> +		pvclock_copy_into_read_base(pvtk, &tk->tkr_raw, &pvtk->tkr_raw);
-> +
-> +		tk->xtime_sec = pvtk->xtime_sec;
-> +		tk->ktime_sec = pvtk->ktime_sec;
-> +		tk->wall_to_monotonic.tv_sec = pvtk->wall_to_monotonic_sec;
-> +		tk->wall_to_monotonic.tv_nsec = pvtk->wall_to_monotonic_nsec;
-> +		tk->offs_real = pvtk->offs_real;
-> +		tk->offs_boot = pvtk->offs_boot;
-> +		tk->offs_tai = pvtk->offs_tai;
-> +		tk->raw_sec = pvtk->raw_sec;
-> +	} while (pvtk_read_retry(pvtk, gen));
-> +}
-> +
-> +void __init
-> +kvm_hostclock_init(void)
-> +{
-> +	unsigned long pa;
-> +
-> +	pa = __pa(&pv_timekeeper);
-> +	wrmsrl(MSR_KVM_TIMEKEEPER_EN, pa);
+It is possible that an escalation interrupt gets generated just as we
+are entering the guest.  In that case the escalation interrupt may be
+using a queue entry in one of the interrupt queues, and that queue
+entry may not have been processed when the guest exits with an H_CEDE.
+The existing entry code detects this situation and does not clear the
+vcpu->arch.xive_esc_on flag as an indication that there is a pending
+queue entry (if the queue entry gets processed, xive_esc_irq() will
+clear the flag).  There is a comment in the code saying that if the
+flag is still set on H_CEDE, we have to abort the cede rather than
+re-enabling the escalation interrupt, lest we end up with two
+occurrences of the escalation interrupt in the interrupt queue.
 
-Shouldn't you check for the presence of the MSR somehow? (CPUID bit probably)
+However, the exit code doesn't do that; it aborts the cede in the sense
+that vcpu->arch.ceded gets cleared, but it still enables the escalation
+interrupt by setting the source's PQ bits to 00.  Instead we need to
+set the PQ bits to 10, indicating that an interrupt has been triggered.
+We also need to avoid setting vcpu->arch.xive_esc_on in this case
+(i.e. vcpu->arch.xive_esc_on seen to be set on H_CEDE) because
+xive_esc_irq() will run at some point and clear it, and if we race with
+that we may end up with an incorrect result (i.e. xive_esc_on set when
+the escalation interrupt has just been handled).
 
-> +	if (pv_timekeeper.flags & PVCLOCK_TIMEKEEPER_ENABLED) {
-> +		pv_timekeeper_present = 1;
-> +
-> +		clocksource_register_khz(&kvm_hostclock, kvm_get_tsc_khz());
-> +	}
-> +}
-> diff --git a/include/linux/timekeeper_internal.h b/include/linux/timekeeper_internal.h
-> index 84ff2844df2a..43b036375cdc 100644
-> --- a/include/linux/timekeeper_internal.h
-> +++ b/include/linux/timekeeper_internal.h
-> @@ -153,4 +153,12 @@ static inline void update_vsyscall_tz(void)
->  }
->  #endif
->  
-> +#ifdef CONFIG_KVM_HOSTCLOCK
-> +void kvm_clock_copy_into_tk(struct timekeeper *tk);
-> +#else
-> +static inline void kvm_clock_copy_into_tk(struct timekeeper *tk)
-> +{
-> +}
-> +#endif
-> +
->  #endif /* _LINUX_TIMEKEEPER_INTERNAL_H */
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index ca69290bee2a..09bcf13b2334 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -2107,6 +2107,8 @@ static void timekeeping_advance(enum timekeeping_adv_mode mode)
->  	clock_set |= accumulate_nsecs_to_secs(tk);
->  
->  	write_seqcount_begin(&tk_core.seq);
-> +	kvm_clock_copy_into_tk(tk);
-> +
->  	/*
->  	 * Update the real timekeeper.
->  	 *
+It is extremely unlikely that having two queue entries would cause
+observable problems; theoretically it could cause queue overflow, but
+the CPU would have to have thousands of interrupts targetted to it for
+that to be possible.  However, this fix will also make it possible to
+determine accurately whether there is an unhandled escalation
+interrupt in the queue, which will be needed by the following patch.
 
--- 
-Vitaly
+Fixes: 9b9b13a6d153 ("KVM: PPC: Book3S HV: Keep XIVE escalation interrupt masked unless ceded")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190813100349.GD9567@blackberry
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S |   36 ++++++++++++++++++++------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
+
+--- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
++++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+@@ -2833,29 +2833,39 @@ kvm_cede_prodded:
+ kvm_cede_exit:
+ 	ld	r9, HSTATE_KVM_VCPU(r13)
+ #ifdef CONFIG_KVM_XICS
+-	/* Abort if we still have a pending escalation */
++	/* are we using XIVE with single escalation? */
++	ld	r10, VCPU_XIVE_ESC_VADDR(r9)
++	cmpdi	r10, 0
++	beq	3f
++	li	r6, XIVE_ESB_SET_PQ_00
++	/*
++	 * If we still have a pending escalation, abort the cede,
++	 * and we must set PQ to 10 rather than 00 so that we don't
++	 * potentially end up with two entries for the escalation
++	 * interrupt in the XIVE interrupt queue.  In that case
++	 * we also don't want to set xive_esc_on to 1 here in
++	 * case we race with xive_esc_irq().
++	 */
+ 	lbz	r5, VCPU_XIVE_ESC_ON(r9)
+ 	cmpwi	r5, 0
+-	beq	1f
++	beq	4f
+ 	li	r0, 0
+ 	stb	r0, VCPU_CEDED(r9)
+-1:	/* Enable XIVE escalation */
+-	li	r5, XIVE_ESB_SET_PQ_00
++	li	r6, XIVE_ESB_SET_PQ_10
++	b	5f
++4:	li	r0, 1
++	stb	r0, VCPU_XIVE_ESC_ON(r9)
++	/* make sure store to xive_esc_on is seen before xive_esc_irq runs */
++	sync
++5:	/* Enable XIVE escalation */
+ 	mfmsr	r0
+ 	andi.	r0, r0, MSR_DR		/* in real mode? */
+ 	beq	1f
+-	ld	r10, VCPU_XIVE_ESC_VADDR(r9)
+-	cmpdi	r10, 0
+-	beq	3f
+-	ldx	r0, r10, r5
++	ldx	r0, r10, r6
+ 	b	2f
+ 1:	ld	r10, VCPU_XIVE_ESC_RADDR(r9)
+-	cmpdi	r10, 0
+-	beq	3f
+-	ldcix	r0, r10, r5
++	ldcix	r0, r10, r6
+ 2:	sync
+-	li	r0, 1
+-	stb	r0, VCPU_XIVE_ESC_ON(r9)
+ #endif /* CONFIG_KVM_XICS */
+ 3:	b	guest_exit_cont
+ 
+
+
