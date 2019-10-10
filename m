@@ -2,126 +2,82 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 977DAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092D1ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6759F2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:20:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0DCp3yN"
+	by mail.kernel.org (Postfix) with ESMTP id D75C12190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfJJQUD (ORCPT
+        id S1726473AbfJJQUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 12:20:03 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44476 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfJJQUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 12:20:02 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u12so3971599pgb.11;
-        Thu, 10 Oct 2019 09:20:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WOI17RVGbI/w51ir7nAk3XroLrQM2mN4WZvCvlZ8MNU=;
-        b=e0DCp3yNn0FtATTxbmW5vF8GxiAtc+QPlcqLOWf+CGuY9BNBNpMCpjx8z/sh3CA/Km
-         g5Fp7m8mhwvJt9S2DaLOlkHRSy8LIawmIQ888gUHOKmdlwo0yTdzJjo/pCyxVUCQ2VW+
-         qvsBoyVdUZbRMDKI806TJc4pv8h1LqWfhUocaLCxCv04h7Kr1/kCv+sxv3hOzANnXWj9
-         OGr7khGQhkIUNNm8zSPo8aC0ox2R+1PxpzP3T0CWkB94M2GQ/uVYwMxvHp+RpvE1s0pq
-         Is3RiXDMFUSnOxjUGgFdx4bUnS8xgWCNhHhuV6oikNbgH/CxqutSOueFNREdKT42890X
-         jDWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WOI17RVGbI/w51ir7nAk3XroLrQM2mN4WZvCvlZ8MNU=;
-        b=jhauw9psoZXgKJTWV0KKSOpmbj7ubAKOeRE+Rs9+BhN4gIY/gxxy36qrxeBtoW5CKY
-         SeL7fmhR9mTswWgERKGoZvvgYrJKQxzLghNPWY1IVGPPH/YtsBnQ+yRtLpomPcZMqvln
-         h2oi+gEdCg7OEZpbxbs4lD6dd14izEBUjqyOVUbuVUONt98tWRWznDTYiP7RumQHsIlV
-         6OV+NdI+laUt5S4gfYsbWA+kPbNUT/9j879s/JGYOfTbm4B+UKj2X0tvxz4U2iHGEdcG
-         nVRvKwpYP7EUz/v0kThL3vooBvbRfrGOhNj+/2yxHXKen1AjvHZEVFns/Bb2MmRABpag
-         w3iw==
-X-Gm-Message-State: APjAAAU7ovspD56KucTEUx5R92AwO/UOht4fb8LDlLOfo1A5bILGRnS2
-        8hCJ1zuJMzSe1ehzhqo8avIYECbc
-X-Google-Smtp-Source: APXvYqzepYAA7e2pZPdfvzZSVSsHjXDmo+jiyyY3NneGZ8E3oU70oI0UQBisr7KutWK4BlZxXm24eQ==
-X-Received: by 2002:a17:90a:9a92:: with SMTP id e18mr12506055pjp.87.1570724401424;
-        Thu, 10 Oct 2019 09:20:01 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j128sm6653385pfg.51.2019.10.10.09.19.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 10 Oct 2019 09:19:59 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 09:19:58 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wdt: bd70528: Trivial function documentation fix
-Message-ID: <20191010161958.GA22086@roeck-us.net>
-References: <20191010060733.GA9979@localhost.localdomain>
+        Thu, 10 Oct 2019 12:20:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60084 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726184AbfJJQUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 12:20:12 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 39DF618CB8EB;
+        Thu, 10 Oct 2019 16:20:12 +0000 (UTC)
+Received: from krava (unknown [10.40.205.67])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7B0F26061E;
+        Thu, 10 Oct 2019 16:20:07 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 18:20:06 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 27/36] libperf: Add perf_evlist__for_each_mmap function
+Message-ID: <20191010162006.GA6795@krava>
+References: <20191007125344.14268-1-jolsa@kernel.org>
+ <20191007125344.14268-28-jolsa@kernel.org>
+ <20191010160622.GC11638@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010060733.GA9979@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191010160622.GC11638@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Thu, 10 Oct 2019 16:20:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 09:07:33AM +0300, Matti Vaittinen wrote:
-> The function documentation for the exported  ROHM BD70528 WDG control
-> functions used old argument names. Fix the names.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+On Thu, Oct 10, 2019 at 01:06:22PM -0300, Arnaldo Carvalho de Melo wrote:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+SNIP
 
-> ---
->  drivers/watchdog/bd70528_wdt.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> > diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
+> > index be0b25a70730..513a85cb7bfe 100644
+> > --- a/tools/perf/lib/include/internal/evlist.h
+> > +++ b/tools/perf/lib/include/internal/evlist.h
+> > @@ -25,6 +25,8 @@ struct perf_evlist {
+> >  	struct hlist_head	 heads[PERF_EVLIST__HLIST_SIZE];
+> >  	struct perf_mmap	*mmap;
+> >  	struct perf_mmap	*mmap_ovw;
+> > +	struct perf_mmap	*mmap0;
+> > +	struct perf_mmap	*mmap_ovw0;
 > 
-> diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-> index b0152fef4fc7..439f9920978a 100644
-> --- a/drivers/watchdog/bd70528_wdt.c
-> +++ b/drivers/watchdog/bd70528_wdt.c
-> @@ -97,7 +97,7 @@ EXPORT_SYMBOL(bd70528_wdt_set);
->  /**
->   * bd70528_wdt_lock - take WDT lock
->   *
-> - * @bd70528:	device data for the PMIC instance we want to operate on
-> + * @data:	device data for the PMIC instance we want to operate on
->   *
->   * Lock WDT for arming/disarming in order to avoid race condition caused
->   * by WDT state changes initiated by WDT and RTC drivers.
-> @@ -114,7 +114,7 @@ EXPORT_SYMBOL(bd70528_wdt_lock);
->  /**
->   * bd70528_wdt_unlock - unlock WDT lock
->   *
-> - * @bd70528:	device data for the PMIC instance we want to operate on
-> + * @data:	device data for the PMIC instance we want to operate on
->   *
->   * Unlock WDT lock which has previously been taken by call to
->   * bd70528_wdt_lock.
-> -- 
-> 2.21.0
+> Why do you use this funny name? Using this "0" suffix? Please pick
+> something more informative and add a comment on the struct perf_evlist
+> definiton.
+
+it's the first mmap.. I can spell it ;-)
+
 > 
-> 
-> -- 
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
-> 
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =] 
+> I've processed up to the previous patch, pushed to acme/tmp.perf/core.
+
+great, I'll rebase and continue from there
+
+thanks,
+jirka
