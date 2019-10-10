@@ -2,93 +2,168 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1405CC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EA4C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E824F218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7232190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570697891;
+	bh=W6M92Isb+KlYhkiKSEa2YPDNu0yiewClyIA+sBF8Ks8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=18kPn2ya5k7G+SPgURzyYu6JUrwsmLDqSCgP67yN5zN8ZsxDHTEiIbkjYHjSsWjOw
+	 DsHrvPXPG++1YxCzF1CndLX3hJaFYY/R5Z8bupjcKZnEGk39ReKGRHxMN6Kvt1EtSs
+	 Bxfet03+Fchm7CpxqGwdbwMGThMHQt7KGfZIQuAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389300AbfJJI6I (ORCPT
+        id S2388537AbfJJIqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:58:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54122 "EHLO mx1.redhat.com"
+        Thu, 10 Oct 2019 04:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389237AbfJJIqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:46:04 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2389195AbfJJIpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1CFE1796EE
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:46:04 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id r21so1471723wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 01:46:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tR/b93II6w98Y1JcW5QoZrFBl2Ih7JvmORnV8m5CDsk=;
-        b=DOrZ8wYqi+0zPaLCJQvgap/jXVgPclrIrxQz3hVXmi7Qdmnazkfpyhy7tDTv0Hnb9K
-         V0SJVn1hVZRyNbgjX4ls3JBcd6Amtsw+X6GfuDyP1aNVRYRLjl9wHL3bxnSzZlb+R74+
-         11MxRZ9WJecuN9lQUHIms/i6mOrn+CGk4EWJplZwgXYDrCuAvpR7KzeCYjPs0trCoasn
-         VLUpxK/1vTisBGyHwLsZoU/5pXspkK4+8BKLXWgEHZTOA+u9/PmaTvvQV9A89TAOszZT
-         jyX1aadSpAwtuRzM04OWqDBPDAp3ITvI8jCIE/TGEwGmcaN24vKd8bf3jyr8zpdnA6J+
-         1ZKg==
-X-Gm-Message-State: APjAAAX1a6fx0f5dotvkWapDA5diTCdNHnvxI3aiYIEUgY2PMmI+VGHq
-        lHmv8bLu2TnB8YsRf7l7kN2bug5TskiUd01X4i4+LVT/BR9lP+Qi9fac5mtYM0q3eVrynbNF7Wy
-        7/JzVoJfV2XqZSS4hCQr0lR0r
-X-Received: by 2002:adf:e401:: with SMTP id g1mr5700484wrm.211.1570697162834;
-        Thu, 10 Oct 2019 01:46:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyrGXBfAqLL3DSANixqvzd6znc5l0D4LZnBiMcWibn1Ag6PBFlGAQzLidI7EwNDBrIbfhWgrA==
-X-Received: by 2002:adf:e401:: with SMTP id g1mr5700471wrm.211.1570697162619;
-        Thu, 10 Oct 2019 01:46:02 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id q124sm8324726wma.5.2019.10.10.01.46.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 01:46:01 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 10:45:59 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 00/13] vsock: add multi-transports support
-Message-ID: <20191010084559.a4t6v7dopeqffn55@steredhat>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20191009132952.GO5747@stefanha-x1.localdomain>
+        by mail.kernel.org (Postfix) with ESMTPSA id 474BE208C3;
+        Thu, 10 Oct 2019 08:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570697154;
+        bh=W6M92Isb+KlYhkiKSEa2YPDNu0yiewClyIA+sBF8Ks8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ywHehLUtcPYZ3+wyeBYEdzhE318g0BAxA1R7vv2f4QOGFnAmCZGXpi54/cBvHURnz
+         rL0mW8rELZk/hgKCXQ6e0SbQJX2eJ3yTGcbR6tavtuVqit3ijX4rHnBgCUPi09B0fO
+         ld7URGXQ9/c66zuNLJNJz1/68Q9ilYO8vpAKFE5c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 005/114] KVM: PPC: Book3S HV: Fix race in re-enabling XIVE escalation interrupts
+Date:   Thu, 10 Oct 2019 10:35:12 +0200
+Message-Id: <20191010083546.420986718@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
+References: <20191010083544.711104709@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009132952.GO5747@stefanha-x1.localdomain>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 02:29:52PM +0100, Stefan Hajnoczi wrote:
-> On Fri, Sep 27, 2019 at 01:26:50PM +0200, Stefano Garzarella wrote:
-> > Hi all,
-> > this series adds the multi-transports support to vsock, following
-> > this proposal:
-> > https://www.spinics.net/lists/netdev/msg575792.html
-> 
-> Nice series!  I have left a few comments but overall it looks promising.
+From: Paul Mackerras <paulus@ozlabs.org>
 
-Thank you very much for the comments!
+commit 959c5d5134786b4988b6fdd08e444aa67d1667ed upstream.
 
-I'll follow them and respin.
+Escalation interrupts are interrupts sent to the host by the XIVE
+hardware when it has an interrupt to deliver to a guest VCPU but that
+VCPU is not running anywhere in the system.  Hence we disable the
+escalation interrupt for the VCPU being run when we enter the guest
+and re-enable it when the guest does an H_CEDE hypercall indicating
+it is idle.
 
-Cheers,
-Stefano
+It is possible that an escalation interrupt gets generated just as we
+are entering the guest.  In that case the escalation interrupt may be
+using a queue entry in one of the interrupt queues, and that queue
+entry may not have been processed when the guest exits with an H_CEDE.
+The existing entry code detects this situation and does not clear the
+vcpu->arch.xive_esc_on flag as an indication that there is a pending
+queue entry (if the queue entry gets processed, xive_esc_irq() will
+clear the flag).  There is a comment in the code saying that if the
+flag is still set on H_CEDE, we have to abort the cede rather than
+re-enabling the escalation interrupt, lest we end up with two
+occurrences of the escalation interrupt in the interrupt queue.
+
+However, the exit code doesn't do that; it aborts the cede in the sense
+that vcpu->arch.ceded gets cleared, but it still enables the escalation
+interrupt by setting the source's PQ bits to 00.  Instead we need to
+set the PQ bits to 10, indicating that an interrupt has been triggered.
+We also need to avoid setting vcpu->arch.xive_esc_on in this case
+(i.e. vcpu->arch.xive_esc_on seen to be set on H_CEDE) because
+xive_esc_irq() will run at some point and clear it, and if we race with
+that we may end up with an incorrect result (i.e. xive_esc_on set when
+the escalation interrupt has just been handled).
+
+It is extremely unlikely that having two queue entries would cause
+observable problems; theoretically it could cause queue overflow, but
+the CPU would have to have thousands of interrupts targetted to it for
+that to be possible.  However, this fix will also make it possible to
+determine accurately whether there is an unhandled escalation
+interrupt in the queue, which will be needed by the following patch.
+
+Fixes: 9b9b13a6d153 ("KVM: PPC: Book3S HV: Keep XIVE escalation interrupt masked unless ceded")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190813100349.GD9567@blackberry
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S |   36 ++++++++++++++++++++------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
+
+--- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
++++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+@@ -2903,29 +2903,39 @@ kvm_cede_prodded:
+ kvm_cede_exit:
+ 	ld	r9, HSTATE_KVM_VCPU(r13)
+ #ifdef CONFIG_KVM_XICS
+-	/* Abort if we still have a pending escalation */
++	/* are we using XIVE with single escalation? */
++	ld	r10, VCPU_XIVE_ESC_VADDR(r9)
++	cmpdi	r10, 0
++	beq	3f
++	li	r6, XIVE_ESB_SET_PQ_00
++	/*
++	 * If we still have a pending escalation, abort the cede,
++	 * and we must set PQ to 10 rather than 00 so that we don't
++	 * potentially end up with two entries for the escalation
++	 * interrupt in the XIVE interrupt queue.  In that case
++	 * we also don't want to set xive_esc_on to 1 here in
++	 * case we race with xive_esc_irq().
++	 */
+ 	lbz	r5, VCPU_XIVE_ESC_ON(r9)
+ 	cmpwi	r5, 0
+-	beq	1f
++	beq	4f
+ 	li	r0, 0
+ 	stb	r0, VCPU_CEDED(r9)
+-1:	/* Enable XIVE escalation */
+-	li	r5, XIVE_ESB_SET_PQ_00
++	li	r6, XIVE_ESB_SET_PQ_10
++	b	5f
++4:	li	r0, 1
++	stb	r0, VCPU_XIVE_ESC_ON(r9)
++	/* make sure store to xive_esc_on is seen before xive_esc_irq runs */
++	sync
++5:	/* Enable XIVE escalation */
+ 	mfmsr	r0
+ 	andi.	r0, r0, MSR_DR		/* in real mode? */
+ 	beq	1f
+-	ld	r10, VCPU_XIVE_ESC_VADDR(r9)
+-	cmpdi	r10, 0
+-	beq	3f
+-	ldx	r0, r10, r5
++	ldx	r0, r10, r6
+ 	b	2f
+ 1:	ld	r10, VCPU_XIVE_ESC_RADDR(r9)
+-	cmpdi	r10, 0
+-	beq	3f
+-	ldcix	r0, r10, r5
++	ldcix	r0, r10, r6
+ 2:	sync
+-	li	r0, 1
+-	stb	r0, VCPU_XIVE_ESC_ON(r9)
+ #endif /* CONFIG_KVM_XICS */
+ 3:	b	guest_exit_cont
+ 
+
+
