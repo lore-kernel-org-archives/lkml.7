@@ -2,53 +2,55 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A0FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D52AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 130992064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4562064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697645;
-	bh=Hocc63BL0I0Fgrn+QymLAblajZc0ZEE1HFWH9U3eyJs=;
+	s=default; t=1570697651;
+	bh=I6/6pJHbXOXxKmeOfdPcM5EIQbL1be+Fe2jPyAx4KTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IvDEmg5LCtAMFpOTg2RFuhds/OIFXzdNJgo3YfS4jz2/KPw3wqfX+bAC8eohRM4pH
-	 S8zrhUzzM61Jqs0dtXgoEjybSckpFn6Qmc9023x/BR3I9zvHWNx937WLV2oY83fopD
-	 AQksqo809QWwxtUydRZt4NfFE8FHjM2lFjLYEDsQ=
+	b=AWbstqIT/w+8zoYXKaZ9BZxd63On/dWSVWNzENfoSFLsHp2b9A7T3Qy0MgkMc19wY
+	 FIvrKx64EwFw6GxFbxDAv06B6h20CeNf49rtJk+BEphb1HQADybQoQ40xATy85WZG0
+	 TI9quNTwTxndw5ImnfHOOoamLXaZkrrvxaX2T+Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389896AbfJJIyE (ORCPT
+        id S2389989AbfJJIyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:54:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58128 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:54:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389179AbfJJIuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:52 -0400
+        id S2390020AbfJJIuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99B5921D71;
-        Thu, 10 Oct 2019 08:50:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DCFD222BE;
+        Thu, 10 Oct 2019 08:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697452;
-        bh=Hocc63BL0I0Fgrn+QymLAblajZc0ZEE1HFWH9U3eyJs=;
+        s=default; t=1570697444;
+        bh=I6/6pJHbXOXxKmeOfdPcM5EIQbL1be+Fe2jPyAx4KTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1cvn4SUAVbO8KHqpE3GhW+Sy2b8oa78Afbc+DFTcApKV6z7IAcXRZppJGbhmwnAFQ
-         l/qskYLlVowfDTqLDxmw3aADFnllDtbhaZIQWRduvaxJtBHHHxzK9KWek8tIXsp2Aw
-         0crxabwsYY78D7GjhQfe2htwqZLDtlraCbiprMv8=
+        b=plIX2m7QfVGCNdZqo6OZiRR6ziBFPKb1fkJ9iqMJMRqo1Gwk3qhF2xBCL3Q+jZiVM
+         CZBkDfLIBW6qnfgzKA0gnR5airfWzqwQzvkQMpSxKatDA/xEbNjOK6xYNgMSPdfvi+
+         KveS5DylkDandLko4+/W07RI1xb/UzkPSWg1WQB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 33/61] ceph: reconnect connection if session hang in opening state
-Date:   Thu, 10 Oct 2019 10:36:58 +0200
-Message-Id: <20191010083510.605813829@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 09/61] ASoC: Define a set of DAPM pre/post-up events
+Date:   Thu, 10 Oct 2019 10:36:34 +0200
+Message-Id: <20191010083454.834064082@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -61,46 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erqi Chen <chenerqi@gmail.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-[ Upstream commit 71a228bc8d65900179e37ac309e678f8c523f133 ]
+commit cfc8f568aada98f9608a0a62511ca18d647613e2 upstream.
 
-If client mds session is evicted in CEPH_MDS_SESSION_OPENING state,
-mds won't send session msg to client, and delayed_work skip
-CEPH_MDS_SESSION_OPENING state session, the session hang forever.
+Prepare to use SND_SOC_DAPM_PRE_POST_PMU definition to
+reduce coming code size and make it more readable.
 
-Allow ceph_con_keepalive to reconnect a session in OPENING to avoid
-session hang. Also, ensure that we skip sessions in RESTARTING and
-REJECTED states since those states can't be resurrected by issuing
-a keepalive.
+Cc: stable@vger.kernel.org
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-2-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: https://tracker.ceph.com/issues/41551
-Signed-off-by: Erqi Chen chenerqi@gmail.com
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/sound/soc-dapm.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index e1ded4bd61154..b968334f841e8 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3543,7 +3543,9 @@ static void delayed_work(struct work_struct *work)
- 				pr_info("mds%d hung\n", s->s_mds);
- 			}
- 		}
--		if (s->s_state < CEPH_MDS_SESSION_OPEN) {
-+		if (s->s_state == CEPH_MDS_SESSION_NEW ||
-+		    s->s_state == CEPH_MDS_SESSION_RESTARTING ||
-+		    s->s_state == CEPH_MDS_SESSION_REJECTED) {
- 			/* this mds is failed or recovering, just wait */
- 			ceph_put_mds_session(s);
- 			continue;
--- 
-2.20.1
-
+--- a/include/sound/soc-dapm.h
++++ b/include/sound/soc-dapm.h
+@@ -349,6 +349,8 @@ struct device;
+ #define SND_SOC_DAPM_WILL_PMD   0x80    /* called at start of sequence */
+ #define SND_SOC_DAPM_PRE_POST_PMD \
+ 				(SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD)
++#define SND_SOC_DAPM_PRE_POST_PMU \
++				(SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU)
+ 
+ /* convenience event type detection */
+ #define SND_SOC_DAPM_EVENT_ON(e)	\
 
 
