@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33113C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FDEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A34221920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E20C20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696783;
-	bh=kXRkOfBAkQq2qSRWaYK/tWRsdccPsnNMDtyWyCDnW3I=;
+	s=default; t=1570696785;
+	bh=lcfvZg2D+nWX4tQ0Ktw0J8gXOf+V1tNFCWd1K6KLb5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MMBoJdzo87aMiKeyuJUYEFb88AKeEgnK5lK+Ah9eVD9i3pVNUI1r16aPFFXgWZ/lZ
-	 pdr8DCBKjdX4tAjVDcb1oiIz3AB170udG5B9kCNLS1CWOk7NFIYD+g4083bbEjmI6D
-	 V6/Nj26Y16w58z2tqANHIs+5VFJIMRbJnfN3+B50=
+	b=mMkf50ou0MLAnuGTlTkhdYBE9dzzgL7JMocqBhdGH64MY4wr8MgfNkfMLw1TMfbG9
+	 8mCsu4WpFpvP+WWidcmftnjkCZdGI7jUXePYEn8Q9AZib2hCY5cp3B5SpqwQGPK01y
+	 17Hm0/EzeYAdcoNZTHheXSgN/LjA4B3wUre5/ZkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387935AbfJJIjl (ORCPT
+        id S2387947AbfJJIjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:39:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43334 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:39:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387917AbfJJIjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:39:39 -0400
+        id S2387932AbfJJIjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:39:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA0CC2196E;
-        Thu, 10 Oct 2019 08:39:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 920D220B7C;
+        Thu, 10 Oct 2019 08:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696778;
-        bh=kXRkOfBAkQq2qSRWaYK/tWRsdccPsnNMDtyWyCDnW3I=;
+        s=default; t=1570696781;
+        bh=lcfvZg2D+nWX4tQ0Ktw0J8gXOf+V1tNFCWd1K6KLb5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I4jktegz18/1QO8eDyBNL6kVjborOoCmYU2Sun9IYFFMrsdS1P362z9WLfxuzPrIr
-         IVQ4vtlV99HFcyHD7GTUMkAmTUdjzr2GZ9uiJlucyLmExZ+1ha1Bl/x4JtLp5l0K6L
-         zXVwQVEcpIWBZf4mIGdTiDni+WdsEDXZALoT/xUE=
+        b=V6HJcqa5/S3bjVKGlSZlboCxwR2G6lscrz1Q0AcmfgLS+mxbBp5oYlq1nssPy7mnR
+         5wSpEHidhPcqjHzhcnJ9MztHsY68mGyi5hFO7p6k1dSeGjOVEI3iQ+rZlMxo6Kbnxy
+         tRdIvzOCd8cqTS4Dkwp+AnDIKqPPrDAufloiH6KM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH 5.3 050/148] tracing: Make sure variable reference alias has correct var_ref_idx
-Date:   Thu, 10 Oct 2019 10:35:11 +0200
-Message-Id: <20191010083614.182158465@linuxfoundation.org>
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.3 033/148] powerpc/book3s64/radix: Rename CPU_FTR_P9_TLBIE_BUG feature flag
+Date:   Thu, 10 Oct 2019 10:34:54 +0200
+Message-Id: <20191010083613.161863899@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -62,97 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit 17f8607a1658a8e70415eef67909f990d13017b5 upstream.
+commit 09ce98cacd51fcd0fa0af2f79d1e1d3192f4cbb0 upstream.
 
-Original changelog from Steve Rostedt (except last sentence which
-explains the problem, and the Fixes: tag):
+Rename the #define to indicate this is related to store vs tlbie
+ordering issue. In the next patch, we will be adding another feature
+flag that is used to handles ERAT flush vs tlbie ordering issue.
 
-I performed a three way histogram with the following commands:
-
-echo 'irq_lat u64 lat pid_t pid' > synthetic_events
-echo 'wake_lat u64 lat u64 irqlat pid_t pid' >> synthetic_events
-echo 'hist:keys=common_pid:irqts=common_timestamp.usecs if function == 0xffffffff81200580' > events/timer/hrtimer_start/trigger
-echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$irqts:onmatch(timer.hrtimer_start).irq_lat($lat,pid) if common_flags & 1' > events/sched/sched_waking/trigger
-echo 'hist:keys=pid:wakets=common_timestamp.usecs,irqlat=lat' > events/synthetic/irq_lat/trigger
-echo 'hist:keys=next_pid:lat=common_timestamp.usecs-$wakets,irqlat=$irqlat:onmatch(synthetic.irq_lat).wake_lat($lat,$irqlat,next_pid)' > events/sched/sched_switch/trigger
-echo 1 > events/synthetic/wake_lat/enable
-
-Basically I wanted to see:
-
- hrtimer_start (calling function tick_sched_timer)
-
-Note:
-
-  # grep tick_sched_timer /proc/kallsyms
-ffffffff81200580 t tick_sched_timer
-
-And save the time of that, and then record sched_waking if it is called
-in interrupt context and with the same pid as the hrtimer_start, it
-will record the latency between that and the waking event.
-
-I then look at when the task that is woken is scheduled in, and record
-the latency between the wakeup and the task running.
-
-At the end, the wake_lat synthetic event will show the wakeup to
-scheduled latency, as well as the irq latency in from hritmer_start to
-the wakeup. The problem is that I found this:
-
-          <idle>-0     [007] d...   190.485261: wake_lat: lat=27 irqlat=190485230 pid=698
-          <idle>-0     [005] d...   190.485283: wake_lat: lat=40 irqlat=190485239 pid=10
-          <idle>-0     [002] d...   190.488327: wake_lat: lat=56 irqlat=190488266 pid=335
-          <idle>-0     [005] d...   190.489330: wake_lat: lat=64 irqlat=190489262 pid=10
-          <idle>-0     [003] d...   190.490312: wake_lat: lat=43 irqlat=190490265 pid=77
-          <idle>-0     [005] d...   190.493322: wake_lat: lat=54 irqlat=190493262 pid=10
-          <idle>-0     [005] d...   190.497305: wake_lat: lat=35 irqlat=190497267 pid=10
-          <idle>-0     [005] d...   190.501319: wake_lat: lat=50 irqlat=190501264 pid=10
-
-The irqlat seemed quite large! Investigating this further, if I had
-enabled the irq_lat synthetic event, I noticed this:
-
-          <idle>-0     [002] d.s.   249.429308: irq_lat: lat=164968 pid=335
-          <idle>-0     [002] d...   249.429369: wake_lat: lat=55 irqlat=249429308 pid=335
-
-Notice that the timestamp of the irq_lat "249.429308" is awfully
-similar to the reported irqlat variable. In fact, all instances were
-like this. It appeared that:
-
-  irqlat=$irqlat
-
-Wasn't assigning the old $irqlat to the new irqlat variable, but
-instead was assigning the $irqts to it.
-
-The issue is that assigning the old $irqlat to the new irqlat variable
-creates a variable reference alias, but the alias creation code
-forgets to make sure the alias uses the same var_ref_idx to access the
-reference.
-
-Link: http://lkml.kernel.org/r/1567375321.5282.12.camel@kernel.org
-
-Cc: Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Cc: linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 7e8b88a30b085 ("tracing: Add hist trigger support for variable reference aliases")
-Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190924035254.24612-2-aneesh.kumar@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_hist.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/include/asm/cputable.h    |    4 ++--
+ arch/powerpc/kernel/dt_cpu_ftrs.c      |    6 +++---
+ arch/powerpc/kvm/book3s_hv_rm_mmu.c    |    2 +-
+ arch/powerpc/mm/book3s64/hash_native.c |    2 +-
+ arch/powerpc/mm/book3s64/radix_tlb.c   |    4 ++--
+ 5 files changed, 9 insertions(+), 9 deletions(-)
 
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -2785,6 +2785,8 @@ static struct hist_field *create_alias(s
- 		return NULL;
+--- a/arch/powerpc/include/asm/cputable.h
++++ b/arch/powerpc/include/asm/cputable.h
+@@ -213,7 +213,7 @@ static inline void cpu_feature_keys_init
+ #define CPU_FTR_POWER9_DD2_1		LONG_ASM_CONST(0x0000080000000000)
+ #define CPU_FTR_P9_TM_HV_ASSIST		LONG_ASM_CONST(0x0000100000000000)
+ #define CPU_FTR_P9_TM_XER_SO_BUG	LONG_ASM_CONST(0x0000200000000000)
+-#define CPU_FTR_P9_TLBIE_BUG		LONG_ASM_CONST(0x0000400000000000)
++#define CPU_FTR_P9_TLBIE_STQ_BUG	LONG_ASM_CONST(0x0000400000000000)
+ #define CPU_FTR_P9_TIDR			LONG_ASM_CONST(0x0000800000000000)
+ 
+ #ifndef __ASSEMBLY__
+@@ -461,7 +461,7 @@ static inline void cpu_feature_keys_init
+ 	    CPU_FTR_CFAR | CPU_FTR_HVMODE | CPU_FTR_VMX_COPY | \
+ 	    CPU_FTR_DBELL | CPU_FTR_HAS_PPR | CPU_FTR_ARCH_207S | \
+ 	    CPU_FTR_TM_COMP | CPU_FTR_ARCH_300 | CPU_FTR_PKEY | \
+-	    CPU_FTR_P9_TLBIE_BUG | CPU_FTR_P9_TIDR)
++	    CPU_FTR_P9_TLBIE_STQ_BUG | CPU_FTR_P9_TIDR)
+ #define CPU_FTRS_POWER9_DD2_0 CPU_FTRS_POWER9
+ #define CPU_FTRS_POWER9_DD2_1 (CPU_FTRS_POWER9 | CPU_FTR_POWER9_DD2_1)
+ #define CPU_FTRS_POWER9_DD2_2 (CPU_FTRS_POWER9 | CPU_FTR_POWER9_DD2_1 | \
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -705,14 +705,14 @@ static __init void update_tlbie_feature_
+ 		if ((pvr & 0xe000) == 0) {
+ 			/* Nimbus */
+ 			if ((pvr & 0xfff) < 0x203)
+-				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
+ 		} else if ((pvr & 0xc000) == 0) {
+ 			/* Cumulus */
+ 			if ((pvr & 0xfff) < 0x103)
+-				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
+ 		} else {
+ 			WARN_ONCE(1, "Unknown PVR");
+-			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
++			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_STQ_BUG;
+ 		}
  	}
- 
-+	alias->var_ref_idx = var_ref->var_ref_idx;
-+
- 	return alias;
  }
+--- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
++++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+@@ -451,7 +451,7 @@ static void do_tlbies(struct kvm *kvm, u
+ 				     "r" (rbvalues[i]), "r" (kvm->arch.lpid));
+ 		}
  
+-		if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
++		if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+ 			/*
+ 			 * Need the extra ptesync to make sure we don't
+ 			 * re-order the tlbie
+--- a/arch/powerpc/mm/book3s64/hash_native.c
++++ b/arch/powerpc/mm/book3s64/hash_native.c
+@@ -199,7 +199,7 @@ static inline unsigned long  ___tlbie(un
+ 
+ static inline void fixup_tlbie(unsigned long vpn, int psize, int apsize, int ssize)
+ {
+-	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+ 		/* Need the extra ptesync to ensure we don't reorder tlbie*/
+ 		asm volatile("ptesync": : :"memory");
+ 		___tlbie(vpn, psize, apsize, ssize);
+--- a/arch/powerpc/mm/book3s64/radix_tlb.c
++++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+@@ -216,7 +216,7 @@ static inline void fixup_tlbie(void)
+ 	unsigned long pid = 0;
+ 	unsigned long va = ((1UL << 52) - 1);
+ 
+-	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+ 		asm volatile("ptesync": : :"memory");
+ 		__tlbie_va(va, pid, mmu_get_ap(MMU_PAGE_64K), RIC_FLUSH_TLB);
+ 	}
+@@ -226,7 +226,7 @@ static inline void fixup_tlbie_lpid(unsi
+ {
+ 	unsigned long va = ((1UL << 52) - 1);
+ 
+-	if (cpu_has_feature(CPU_FTR_P9_TLBIE_BUG)) {
++	if (cpu_has_feature(CPU_FTR_P9_TLBIE_STQ_BUG)) {
+ 		asm volatile("ptesync": : :"memory");
+ 		__tlbie_lpid_va(va, lpid, mmu_get_ap(MMU_PAGE_64K), RIC_FLUSH_TLB);
+ 	}
 
 
