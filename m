@@ -2,55 +2,132 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE88AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF745C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3852064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8953F21D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570697292;
+	bh=t+HdTbbkCkwQ95nWKK5u36vN1oC0oIOhLtTWfHxY+dg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=F66tTplx8CKGN7YT418cF6P64B/FqosG5vHQJaetcwghr1S0ld9GQeautY+wxMgU5
+	 l+ucw4eY1zDzt8GTwIm2UFLPStlIRt0bY8gQZ6r9MB2oaaJ6szRheYvUERpa3CNSdI
+	 ySvSA1w2ZrQSiNSYQCjUAsAOG/Z/Rv2YCw5KrqQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389603AbfJJIsJ (ORCPT
+        id S2389613AbfJJIsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:48:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42578 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389583AbfJJIsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EA6BFAE7F;
-        Thu, 10 Oct 2019 08:48:01 +0000 (UTC)
-Subject: Re: [PATCH] xen/grant-table: remove unnecessary printing
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-kernel@vger.kernel.org
-References: <20191010083209.4702-1-huangfq.daxian@gmail.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <2666dce3-0897-961c-548c-8f4bbbc63dc1@suse.com>
-Date:   Thu, 10 Oct 2019 10:48:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 10 Oct 2019 04:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389598AbfJJIsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 658D02064A;
+        Thu, 10 Oct 2019 08:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570697285;
+        bh=t+HdTbbkCkwQ95nWKK5u36vN1oC0oIOhLtTWfHxY+dg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=s32WX3y3uCv1CzG7A/slP850/ccNVQVKUoJldLtmwr6JuzflrCAgHCN29tHd79XSn
+         aU5j2AFOY4Xe+sOQuqyW8WRRbjB10JxSe9AKr94b11hmasTDaj47kY6a33h+hjPJ8q
+         mlc635fyeOhaGawJOFVMcKMYkfS1+TN2goKPXv64=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 042/114] mmc: sdhci-of-esdhc: set DMA snooping based on DMA coherence
+Date:   Thu, 10 Oct 2019 10:35:49 +0200
+Message-Id: <20191010083606.273817881@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
+References: <20191010083544.711104709@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191010083209.4702-1-huangfq.daxian@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.10.19 10:32, Fuqian Huang wrote:
-> xen_auto_xlat_grant_frames.vaddr is definitely NULL in this case.
-> So the address printing is unnecessary.
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+commit 121bd08b029e03404c451bb237729cdff76eafed upstream.
+
+We must not unconditionally set the DMA snoop bit; if the DMA API is
+assuming that the device is not DMA coherent, and the device snoops the
+CPU caches, the device can see stale cache lines brought in by
+speculative prefetch.
+
+This leads to the device seeing stale data, potentially resulting in
+corrupted data transfers.  Commonly, this results in a descriptor fetch
+error such as:
+
+mmc0: ADMA error
+mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
+mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
+mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
+mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
+mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
+mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
+mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
+mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
+mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
+mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
+mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
+mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
+mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
+mmc0: sdhci: Host ctl2: 0x00000000
+mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
+mmc0: sdhci: ============================================
+mmc0: error -5 whilst initialising SD card
+
+but can lead to other errors, and potentially direct the SDHCI
+controller to read/write data to other memory locations (e.g. if a valid
+descriptor is visible to the device in a stale cache line.)
+
+Fix this by ensuring that the DMA snoop bit corresponds with the
+behaviour of the DMA API.  Since the driver currently only supports DT,
+use of_dma_is_coherent().  Note that device_get_dma_attr() can not be
+used as that risks re-introducing this bug if/when the driver is
+converted to ACPI.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/mmc/host/sdhci-of-esdhc.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -480,7 +480,12 @@ static int esdhc_of_enable_dma(struct sd
+ 		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(40));
+ 
+ 	value = sdhci_readl(host, ESDHC_DMA_SYSCTL);
+-	value |= ESDHC_DMA_SNOOP;
++
++	if (of_dma_is_coherent(dev->of_node))
++		value |= ESDHC_DMA_SNOOP;
++	else
++		value &= ~ESDHC_DMA_SNOOP;
++
+ 	sdhci_writel(host, value, ESDHC_DMA_SYSCTL);
+ 	return 0;
+ }
 
 
-Juergen
