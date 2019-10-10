@@ -2,166 +2,338 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F5CECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DC5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA20820B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABECF2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:13:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KoIGkvzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733138AbfJJIH7 (ORCPT
+        id S1733146AbfJJINO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:07:59 -0400
-Received: from mga04.intel.com ([192.55.52.120]:43656 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733089AbfJJIH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:07:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 01:07:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,279,1566889200"; 
-   d="scan'208";a="197171942"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 10 Oct 2019 01:07:53 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1iITUE-0002L7-QG; Thu, 10 Oct 2019 11:07:50 +0300
-Date:   Thu, 10 Oct 2019 11:07:50 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Phil Reid <preid@electromag.com.au>,
-        Lukas Wunner <lukas@wunner.de>, sean.nyekjaer@prevas.dk,
-        morten.tiljeset@prevas.dk, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v17 01/14] bitops: Introduce the for_each_set_clump8 macro
-Message-ID: <20191010080750.GN32742@smile.fi.intel.com>
-References: <cover.1570633189.git.vilhelm.gray@gmail.com>
- <893c3b4f03266c9496137cc98ac2b1bd27f92c73.1570633189.git.vilhelm.gray@gmail.com>
- <CAK7LNATgW7bXUmqV=3QAaJ0Qu73Kox-TgDCQJb=s0=mwewSCUg@mail.gmail.com>
- <20191009170917.GG32742@smile.fi.intel.com>
- <CAMuHMdXyyrL4ibKvjMV6r8TuxpmK73=JxsWNEfcRk1NjwsnOjA@mail.gmail.com>
- <CAK7LNASVdqU_6+_iinWStb9ALqLw494pnZKr46fLW+WJ9nUo6A@mail.gmail.com>
- <CAHp75VeLkfNZkqhD8tedJdav81L+VA3Z50Kwcd9h4R7zMwjtvA@mail.gmail.com>
- <CAMuHMdVs=PgET6=-fKgznETOye_Bxqt6h16Ok0nu6J2vXG-r_w@mail.gmail.com>
- <CAHp75Vc8HX=hs2F2R_wOaFM7cFjaX0k_kENybdxSh742PpVkjw@mail.gmail.com>
- <CAMuHMdVrQyt=VJ8outiGEXW78-cY=YUWyeVXN-_MFg75erJ=Yg@mail.gmail.com>
+        Thu, 10 Oct 2019 04:13:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45434 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732980AbfJJINO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:13:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Mf764AdfZwnie4a40/S03SR1BO+wuVvW4KkBz9Ae3Ak=; b=KoIGkvzrOqRBQybp5YMzHwehN
+        pTgVc6riV0bao+s26drY2H4Fvr/7bie91IerrISfRw6rPwx2g8vLxb04Dd0b97RJpn7LLyR6AkyI/
+        hRX6HP0MFFoRq9L+11YPASIDFLc9xl7yt0Pd1g6XCUNayYDe78zfuPoiHjSyLg06XPVCxLlG8A8zq
+        0OpQezjxw6TprtHyM6m30UPL6oRg/Ly+qXsmlSr/ZW567cv9qre5ubl1ksDpzcJUJMvO6oW5YJTuU
+        OZscaHfrofSO13mkfQG8ZCWNcv1DPjEbDkj/Tz5duBK9CvBJI6VTXJUz5Cr4VjtjMcdY18cQbCwA6
+        kfZgVCiNg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iITZ8-0001dw-Bj; Thu, 10 Oct 2019 08:12:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 20D193013A4;
+        Thu, 10 Oct 2019 10:11:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2D97A213C6CDD; Thu, 10 Oct 2019 10:12:51 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 10:12:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        primiano@google.com, rsavitski@google.com, jeffv@google.com,
+        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
+Message-ID: <20191010081251.GP2311@hirez.programming.kicks-ass.net>
+References: <20191009203657.6070-1-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVrQyt=VJ8outiGEXW78-cY=YUWyeVXN-_MFg75erJ=Yg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20191009203657.6070-1-joel@joelfernandes.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 09:49:51AM +0200, Geert Uytterhoeven wrote:
-> On Thu, Oct 10, 2019 at 9:42 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Oct 10, 2019 at 9:29 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Thu, Oct 10, 2019 at 7:49 AM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Thu, Oct 10, 2019 at 5:31 AM Masahiro Yamada
-> > > > <yamada.masahiro@socionext.com> wrote:
-> > > > > On Thu, Oct 10, 2019 at 3:54 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > > On Wed, Oct 9, 2019 at 7:09 PM Andy Shevchenko
-> > > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > > On Thu, Oct 10, 2019 at 01:28:08AM +0900, Masahiro Yamada wrote:
-> > > > > > > > On Thu, Oct 10, 2019 at 12:27 AM William Breathitt Gray
-> > > > > > > > <vilhelm.gray@gmail.com> wrote:
-
-> > > > > > > > Why is the return type "unsigned long" where you know
-> > > > > > > > it return the 8-bit value ?
-> > > > > > >
-> > > > > > > Because bitmap API operates on unsigned long type. This is not only
-> > > > > > > consistency, but for sake of flexibility in case we would like to introduce
-> > > > > > > more calls like clump16 or so.
-> > > > > >
-> > > > > > TBH, that doesn't convince me: those functions explicitly take/return an
-> > > > > > 8-bit value, and have "8" in their name.  The 8-bit value is never
-> > > > > > really related to, retrieved from, or stored in a full "unsigned long"
-> > > > > > element of a bitmap, only to/from/in a part (byte) of it.
-> > > > > >
-> > > > > > Following your rationale, all of iowrite{8,16,32,64}*() should take an
-> > > > > > "unsigned long" value, too.
-> > > > >
-> > > > > Using u8/u16/u32/u64 looks more consistent with other bitmap helpers.
-> > > > >
-> > > > > void bitmap_from_arr32(unsigned long *bitmap, const u32 *buf, unsigned
-> > > > > int nbits);
-> > > > > void bitmap_to_arr32(u32 *buf, const unsigned long *bitmap, unsigned int nbits);
-> > > > > static inline void bitmap_from_u64(unsigned long *dst, u64 mask);
-> > > > >
-> > > > > If you want to see more examples from other parts,
-> > > >
-> > > > Geert's and yours examples both are not related. They are about
-> > > > fixed-width properies when we know that is the part of protocol.
-> > > > Here we have no protocol which stricts us to the mentioned fixed-width types.
-> > >
-> > > Yes you have: they are functions to store/retrieve an 8-bit value from
-> > > the middle of the bitmap, which is reflected in their names ("clump8",
-> > > "value8").
-> > > The input/output value is clearly separated from the actual bitmap,
-> > > which is referenced by the "unsigned long *".
-> > >
-> > > If you add new "value16" functions, they will be intended to store/retrieve
-> > > 16-bit values.
-> >
-> > And if I add 4-bit, 12-bit or 24-bit values, what should I use?
+On Wed, Oct 09, 2019 at 04:36:57PM -0400, Joel Fernandes (Google) wrote:
+> In currentl mainline, the degree of access to perf_event_open(2) system
+> call depends on the perf_event_paranoid sysctl.  This has a number of
+> limitations:
 > 
-> Whatever is needed to store that?
-> I agree "unsigned long" is appropriate for a generic function to extract a
-> bit field of 1 to BITS_PER_LONG bits.
+> 1. The sysctl is only a single value. Many types of accesses are controlled
+>    based on the single value thus making the control very limited and
+>    coarse grained.
+> 2. The sysctl is global, so if the sysctl is changed, then that means
+>    all processes get access to perf_event_open(2) opening the door to
+>    security issues.
 > 
-> > > Besides, if retrieving an 8-bit value requires passing an
-> > > "unsigned long *", the caller needs two variables: one unsigned long to
-> > > pass the address of, and one u8 to copy the returned value into.
-> >
-> > Why do you need a temporary variable? In some cases it might make
-> > sense, but in general simple cases I don't see what you may achieve
-> > with it.
+> This patch adds LSM and SELinux access checking which will be used in
+> Android to access perf_event_open(2) for the purposes of attaching BPF
+> programs to tracepoints, perf profiling and other operations from
+> userspace. These operations are intended for production systems.
 > 
-> Because find_next_clump8() takes a pointer to store the output value.
-
-So does regmap_read().
-
-8 appeared there during review when it has been proposed to optimize to 8-bit
-clumps as most of the current users utilize it. The initial idea was to be
-bit-width agnostic. And with current API it's possible to easy convert to other
-formats later if we need.
-
-> > I looked at bitmap.h and see few functions may have benefited of
-> > actually eliminating a use of long -> u8 -> long conversion.
-> >
-> > Here is the question what we are mostly doing after we got a clump out
-> > of bitmap.
+> 5 new LSM hooks are added:
+> 1. perf_event_open: This controls access during the perf_event_open(2)
+>    syscall itself. The hook is called from all the places that the
+>    perf_event_paranoid sysctl is checked to keep it consistent with the
+>    systctl. The hook gets passed a 'type' argument which controls CPU,
+>    kernel and tracepoint accesses (in this context, CPU, kernel and
+>    tracepoint have the same semantics as the perf_event_paranoid sysctl).
+>    Additionally, I added an 'open' type which is similar to
+>    perf_event_paranoid sysctl == 3 patch carried in Android and several other
+>    distros but was rejected in mainline [1] in 2016.
 > 
-> If I call find_next_clump8() to extract a byte, I guess I want to process an u8
-> aftwerwards?
+> 2. perf_event_alloc: This allocates a new security object for the event
+>    which stores the current SID within the event. It will be useful when
+>    the perf event's FD is passed through IPC to another process which may
+>    try to read the FD. Appropriate security checks will limit access.
+> 
+> 3. perf_event_free: Called when the event is closed.
+> 
+> 4. perf_event_read: Called from the read(2) system call path for the event.
 
-Some functions may expect a width-(semi-)dependent types, like regmap_write().
-Yes, it's possible to supply u8 there and have an implicit type cast.
+	+ mmap()
+> 
+> 5. perf_event_write: Called from the read(2) system call path for the event.
 
--- 
-With Best Regards,
-Andy Shevchenko
+	- read() + ioctl()
 
+fresh from the keyboard.. but maybe consoldate things a little.
 
+---
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -14,7 +14,6 @@
+ #include <linux/debugfs.h>
+ #include <linux/device.h>
+ #include <linux/coredump.h>
+-#include <linux/security.h>
+ 
+ #include <linux/sizes.h>
+ #include <asm/perf_event.h>
+@@ -550,13 +549,11 @@ static int bts_event_init(struct perf_ev
+ 	 * Note that the default paranoia setting permits unprivileged
+ 	 * users to profile the kernel.
+ 	 */
+-	if (event->attr.exclude_kernel && perf_paranoid_kernel() &&
+-	    !capable(CAP_SYS_ADMIN))
+-		return -EACCES;
+-
+-	ret = security_perf_event_open(&event->attr, PERF_SECURITY_KERNEL);
+-	if (ret)
+-		return ret;
++	if (event->attr.exclude_kernel) {
++		ret = perf_allow_kernel(&event->attr);
++		if (ret)
++			return ret;
++	}
+ 
+ 	if (x86_add_exclusive(x86_lbr_exclusive_bts))
+ 		return -EBUSY;
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -11,7 +11,6 @@
+ #include <linux/stddef.h>
+ #include <linux/types.h>
+ #include <linux/init.h>
+-#include <linux/security.h>
+ #include <linux/slab.h>
+ #include <linux/export.h>
+ #include <linux/nmi.h>
+@@ -3316,10 +3315,7 @@ static int intel_pmu_hw_config(struct pe
+ 	if (x86_pmu.version < 3)
+ 		return -EINVAL;
+ 
+-	if (perf_paranoid_cpu() && !capable(CAP_SYS_ADMIN))
+-		return -EACCES;
+-
+-	ret = security_perf_event_open(&event->attr, PERF_SECURITY_CPU);
++	ret = perf_allow_cpu(&event->attr);
+ 	if (ret)
+ 		return ret;
+ 
+--- a/arch/x86/events/intel/p4.c
++++ b/arch/x86/events/intel/p4.c
+@@ -8,7 +8,6 @@
+  */
+ 
+ #include <linux/perf_event.h>
+-#include <linux/security.h>
+ 
+ #include <asm/perf_event_p4.h>
+ #include <asm/hardirq.h>
+@@ -777,10 +776,7 @@ static int p4_validate_raw_event(struct
+ 	 * the user needs special permissions to be able to use it
+ 	 */
+ 	if (p4_ht_active() && p4_event_bind_map[v].shared) {
+-		if (perf_paranoid_cpu() && !capable(CAP_SYS_ADMIN))
+-			return -EACCES;
+-
+-		v = security_perf_event_open(&event->attr, PERF_SECURITY_CPU);
++		v = perf_allow_cpu(&event->attr);
+ 		if (v)
+ 			return v;
+ 	}
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -56,6 +56,7 @@ struct perf_guest_info_callbacks {
+ #include <linux/perf_regs.h>
+ #include <linux/cgroup.h>
+ #include <linux/refcount.h>
++#include <linux/security.h>
+ #include <asm/local.h>
+ 
+ struct perf_callchain_entry {
+@@ -1244,19 +1245,28 @@ extern int perf_cpu_time_max_percent_han
+ int perf_event_max_stack_handler(struct ctl_table *table, int write,
+ 				 void __user *buffer, size_t *lenp, loff_t *ppos);
+ 
+-static inline bool perf_paranoid_tracepoint_raw(void)
++static inline int perf_allow_kernel(struct perf_event_attr *attr)
+ {
+-	return sysctl_perf_event_paranoid > -1;
++	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
++		return -EACCES;
++
++	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+ }
+ 
+-static inline bool perf_paranoid_cpu(void)
++static inline int perf_allow_cpu(struct perf_event_attr *attr)
+ {
+-	return sysctl_perf_event_paranoid > 0;
++	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
++		return -EACCES;
++
++	return security_perf_event_open(attr, PERF_SECURITY_CPU);
+ }
+ 
+-static inline bool perf_paranoid_kernel(void)
++static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+ {
+-	return sysctl_perf_event_paranoid > 1;
++	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
+ }
+ 
+ extern void perf_event_init(void);
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4229,10 +4229,7 @@ find_get_context(struct pmu *pmu, struct
+ 
+ 	if (!task) {
+ 		/* Must be root to operate on a CPU event: */
+-		if (perf_paranoid_cpu() && !capable(CAP_SYS_ADMIN))
+-			return ERR_PTR(-EACCES);
+-
+-		err = security_perf_event_open(&event->attr, PERF_SECURITY_CPU);
++		err = perf_allow_cpu(&event->attr);
+ 		if (err)
+ 			return ERR_PTR(err);
+ 
+@@ -5862,14 +5859,8 @@ static int perf_mmap(struct file *file,
+ 	lock_limit >>= PAGE_SHIFT;
+ 	locked = atomic64_read(&vma->vm_mm->pinned_vm) + extra;
+ 
+-	if (locked > lock_limit) {
+-		if (perf_paranoid_tracepoint_raw() && !capable(CAP_IPC_LOCK)) {
+-			ret = -EPERM;
+-			goto unlock;
+-		}
+-
+-		ret = security_perf_event_open(&event->attr,
+-					       PERF_SECURITY_TRACEPOINT);
++	if (locked > lock_limit && !capable(CAP_IPC_LOCK)) {
++		ret = perf_allow_tracepoint(&event->attr);
+ 		if (ret)
+ 			goto unlock;
+ 	}
+@@ -10702,11 +10693,7 @@ static int perf_copy_attr(struct perf_ev
+ 		}
+ 		/* privileged levels capture (kernel, hv): check permissions */
+ 		if (mask & PERF_SAMPLE_BRANCH_PERM_PLM) {
+-			if (perf_paranoid_kernel() && !capable(CAP_SYS_ADMIN))
+-				return -EACCES;
+-
+-			ret = security_perf_event_open(attr,
+-						       PERF_SECURITY_KERNEL);
++			ret = perf_allow_kernel(attr);
+ 			if (ret)
+ 				return ret;
+ 		}
+@@ -10932,10 +10919,7 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		return err;
+ 
+ 	if (!attr.exclude_kernel) {
+-		if (perf_paranoid_kernel() && !capable(CAP_SYS_ADMIN))
+-			return -EACCES;
+-
+-		err = security_perf_event_open(&attr, PERF_SECURITY_KERNEL);
++		err = perf_allow_kernel(&attr);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -10954,9 +10938,11 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	}
+ 
+ 	/* Only privileged users can get physical addresses */
+-	if ((attr.sample_type & PERF_SAMPLE_PHYS_ADDR) &&
+-	    perf_paranoid_kernel() && !capable(CAP_SYS_ADMIN))
+-		return -EACCES;
++	if ((attr.sample_type & PERF_SAMPLE_PHYS_ADDR)) {
++		err = perf_allow_kernel(&attr);
++		if (err)
++			return err;
++	}
+ 
+ 	err = security_locked_down(LOCKDOWN_PERF);
+ 	if (err && (attr.sample_type & PERF_SAMPLE_REGS_INTR))
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -49,11 +49,7 @@ static int perf_trace_event_perm(struct
+ 
+ 	/* The ftrace function trace is allowed only for root. */
+ 	if (ftrace_event_is_function(tp_event)) {
+-		if (perf_paranoid_tracepoint_raw() && !capable(CAP_SYS_ADMIN))
+-			return -EPERM;
+-
+-		ret = security_perf_event_open(&p_event->attr,
+-					       PERF_SECURITY_TRACEPOINT);
++		ret = perf_allow_tracepoint(&p->event->attr);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -90,11 +86,7 @@ static int perf_trace_event_perm(struct
+ 	 * ...otherwise raw tracepoint data can be a severe data leak,
+ 	 * only allow root to have these.
+ 	 */
+-	if (perf_paranoid_tracepoint_raw() && !capable(CAP_SYS_ADMIN))
+-		return -EPERM;
+-
+-	ret = security_perf_event_open(&p_event->attr,
+-				       PERF_SECURITY_TRACEPOINT);
++	ret = perf_allow_tracepoint(&p_event->attr);
+ 	if (ret)
+ 		return ret;
+ 
