@@ -2,309 +2,193 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E41C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A5EECE596
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FDB20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:06:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlD1y8wm"
+	by mail.kernel.org (Postfix) with ESMTP id 29887208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570676927;
+	bh=SJDqa0XQ8PdlsODmYo3N8u85qF3dUXq8O5FOKsqgHyc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=LZkPZR0q28GAUPZGzbFs+P+WJiWWcE7dt4VnulHQ4Vf4JTlaGw3eC4om2LL6Nyba6
+	 uPhyraNvTp8RlX2UUCEqW81K9Yl8+RJjNfP5OLX3shmKPp/+7sza9XIjNSOJ4vxURV
+	 3kfzptsx1HgiMb5/wfp5jKAhsUc9Gx1C9SZk6shU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732715AbfJJDGE (ORCPT
+        id S1732454AbfJJDIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 23:06:04 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:36170 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfJJDGD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 23:06:03 -0400
-Received: by mail-yb1-f196.google.com with SMTP id r2so1465030ybg.3;
-        Wed, 09 Oct 2019 20:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=du5XLT8pa/Vecc4kyIA7OYvXG3RWkw/01+yrJTx73RE=;
-        b=BlD1y8wmAxqB9WtN1a5syp5fkDC0ZRDqF6McNTn8P2OIEvnU4srqpCZiNgwNIxX/Ht
-         O7c0qukRUkx/VB9L5QOevY3flnaj3Zuc+TcAPurzCthvFhrqlLOEhdquOxcdPiZWZmD0
-         dN9Ma+cfRBWAZPhaIO4NKtTlp/Zm8Tp6zNfYzedzq9DwxmXDs08ubmwIJ8V/OD00XflH
-         gT3WsFr/ThbT8gKimUjIfpdCjAyYMJS2Fmc7ZGV/AP36iJKjmJI7RAOrCeGMFA+GQNhB
-         voYk54H8dOgUhSKdLauOBTFSOhCTA6GXvVPZj4qC4f6Hr+MT/y/JkVSTv5k5crMMUgnH
-         aCVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=du5XLT8pa/Vecc4kyIA7OYvXG3RWkw/01+yrJTx73RE=;
-        b=B6n0R9XmWAUrabjZ+3Z3pZOJ7vzBdgK+Kl9vpgHS+i0pjMBl/o7CpzWkNv2F9XXaJJ
-         5pzmAW2p2ecCvGlDEPUdYmQ0nQKWBX9OpLrdiKB0kpQqiQfK6tUrea53LFpua+GN36Qr
-         v8G9psPHPEm+rHOJWpfgUX7AY++1hdturnn6ZPxXWNPK6AuyMpID06D1YqsR7TE/OBMJ
-         iKQED5r8wjIPOQnC4e7eCVCivv71S9jQe8UhV7hxE1JJJeQm9J3NqaiX2YRsW0mWpa2W
-         1XnOboY6QiHFDE9e4gA5EZKNXP0eStbjPFVsQKN7wNhjCRU0pdKhCeuKVBqwfG6NJBRH
-         0ahw==
-X-Gm-Message-State: APjAAAXV9HHa1AxBsaftC/VpXb2Q7cC+D1/d5v7n+qiVmECMUudWl+I8
-        EfIUXkIbEa2Bd+1VfNRWTs8LRO/yno11vyV6pfg=
-X-Google-Smtp-Source: APXvYqwzMKyQgYxGmT4eIcZKC7Uuo+IJHgMjHNVS+48H3vC5H/tqh4JszQM6/H/9e/qTD1X1hyZzu0etCR+ND/9WhPA=
-X-Received: by 2002:a25:cc56:: with SMTP id l83mr4757137ybf.69.1570676762398;
- Wed, 09 Oct 2019 20:06:02 -0700 (PDT)
+        Wed, 9 Oct 2019 23:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726478AbfJJDIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 23:08:45 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [12.12.162.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9239420650;
+        Thu, 10 Oct 2019 03:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570676924;
+        bh=SJDqa0XQ8PdlsODmYo3N8u85qF3dUXq8O5FOKsqgHyc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=0PwYQfX5xZeASc8Kl+Bk0hXaqGBi+ZTFqIdRqJpCNt8+3vxaSG8AnEYtQTPhxjqSs
+         WXUnRYWpsGjosXhc8clJ7bPEq7nkUqhRGtklv4tB1WFDTg0T5seigOgzEZbIxv4Iw3
+         3MZrXEtPjtE6jQXNsz6GtWi9eoQDVZe6mJovgnpw=
+Date:   Wed, 9 Oct 2019 20:08:39 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>, rcu@vger.kernel.org
+Subject: Re: [PATCH] rcu: Fix data-race due to atomic_t copy-by-value
+Message-ID: <20191010030838.GC2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191009155743.202142-1-elver@google.com>
 MIME-Version: 1.0
-References: <1570625609-11083-1-git-send-email-candlesea@gmail.com> <d739f691b677fb3ed88a23476d221527a87c363d.camel@suse.de>
-In-Reply-To: <d739f691b677fb3ed88a23476d221527a87c363d.camel@suse.de>
-From:   Candle Sun <candlesea@gmail.com>
-Date:   Thu, 10 Oct 2019 11:05:50 +0800
-Message-ID: <CAPnx3XPDA_n_yjyiAqwX05ee0ez3tUrJz=2tQ95VeiA_dRA-xA@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: core: check whether usage page item is after
- usage id item
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        orson.zhai@unisoc.com,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009155743.202142-1-elver@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 1:01 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> On Wed, 2019-10-09 at 20:53 +0800, Candle Sun wrote:
-> > From: Candle Sun <candle.sun@unisoc.com>
-> >
-> > Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-> > to Main item") adds support for Usage Page item after Usage ID items
-> > (such as keyboards manufactured by Primax).
-> >
-> > Usage Page concatenation in Main item works well for following report
-> > descriptor patterns:
-> >
-> >     USAGE_PAGE (Keyboard)                   05 07
-> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (8)                        95 08
-> >     INPUT (Data,Var,Abs)                    81 02
-> >
-> > -------------
-> >
-> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (8)                        95 08
-> >     USAGE_PAGE (Keyboard)                   05 07
-> >     INPUT (Data,Var,Abs)                    81 02
-> >
-> > But it makes the parser act wrong for the following report
-> > descriptor pattern(such as some Gamepads):
-> >
-> >     USAGE_PAGE (Button)                     05 09
-> >     USAGE (Button 1)                        09 01
-> >     USAGE (Button 2)                        09 02
-> >     USAGE (Button 4)                        09 04
-> >     USAGE (Button 5)                        09 05
-> >     USAGE (Button 7)                        09 07
-> >     USAGE (Button 8)                        09 08
-> >     USAGE (Button 14)                       09 0E
-> >     USAGE (Button 15)                       09 0F
-> >     USAGE (Button 13)                       09 0D
-> >     USAGE_PAGE (Consumer Devices)           05 0C
-> >     USAGE (Back)                            0a 24 02
-> >     USAGE (HomePage)                        0a 23 02
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (11)                       95 0B
-> >     INPUT (Data,Var,Abs)                    81 02
-> >
-> > With Usage Page concatenation in Main item, parser recognizes all the
-> > 11 Usages as consumer keys, it is not the HID device's real intention.
-> >
-> > This patch adds usage_page_last to flag whether Usage Page is after
-> > Usage ID items. usage_page_last is false default, it is set as true
-> > once Usage Page item is encountered and is reverted by next Usage ID
-> > item.
-> >
-> > Usage Page concatenation on the currently defined Usage Page will do
-> > firstly in Local parsing when Usage ID items encountered.
-> >
-> > When Main item is parsing, concatenation will do again with last
-> > defined Usage Page if usage_page_last flag is true.
->
-> Functionally I think this is the right approach. Sadly I don't have access to
-> any  Primax device anymore so I can't test it. But I suggest you update
-> hid-tools' parser and add a new unit test to verify we aren't missing anything.
->
-> You can base your code on this:
->
-> https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/37/commits
->
+On Wed, Oct 09, 2019 at 05:57:43PM +0200, Marco Elver wrote:
+> This fixes a data-race where `atomic_t dynticks` is copied by value. The
+> copy is performed non-atomically, resulting in a data-race if `dynticks`
+> is updated concurrently.
+> 
+> This data-race was found with KCSAN:
+> ==================================================================
+> BUG: KCSAN: data-race in dyntick_save_progress_counter / rcu_irq_enter
+> 
+> write to 0xffff989dbdbe98e0 of 4 bytes by task 10 on cpu 3:
+>  atomic_add_return include/asm-generic/atomic-instrumented.h:78 [inline]
+>  rcu_dynticks_snap kernel/rcu/tree.c:310 [inline]
+>  dyntick_save_progress_counter+0x43/0x1b0 kernel/rcu/tree.c:984
+>  force_qs_rnp+0x183/0x200 kernel/rcu/tree.c:2286
+>  rcu_gp_fqs kernel/rcu/tree.c:1601 [inline]
+>  rcu_gp_fqs_loop+0x71/0x880 kernel/rcu/tree.c:1653
+>  rcu_gp_kthread+0x22c/0x3b0 kernel/rcu/tree.c:1799
+>  kthread+0x1b5/0x200 kernel/kthread.c:255
+>  <snip>
+> 
+> read to 0xffff989dbdbe98e0 of 4 bytes by task 154 on cpu 7:
+>  rcu_nmi_enter_common kernel/rcu/tree.c:828 [inline]
+>  rcu_irq_enter+0xda/0x240 kernel/rcu/tree.c:870
+>  irq_enter+0x5/0x50 kernel/softirq.c:347
+>  <snip>
+> 
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 7 PID: 154 Comm: kworker/7:1H Not tainted 5.3.0+ #5
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> Workqueue: kblockd blk_mq_run_work_fn
+> ==================================================================
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
 
-Thanks Nicolas. I will check and try to do it.
+Good catch, queued for review and testing.
 
-Candle
+							Thanx, Paul
 
-> > Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> > Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
-> > ---
-> > Changes in v2:
-> > - Update patch title
-> > - Add GET_COMPLETE_USAGE macro
-> > - Change the logic of checking whether to concatenate usage page again
-> >   in main parsing
-> > ---
-> >  drivers/hid/hid-core.c | 31 +++++++++++++++++++++++++------
-> >  include/linux/hid.h    |  1 +
-> >  2 files changed, 26 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> > index 3eaee2c..3394222 100644
-> > --- a/drivers/hid/hid-core.c
-> > +++ b/drivers/hid/hid-core.c
-> > @@ -35,6 +35,8 @@
-> >
-> >  #include "hid-ids.h"
-> >
-> > +#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xffff))
->
-> Not sure I like the macro. I'd rather have the explicit code. That said, lets
-> see what Benjamin has to say.
->
-> > +
-> >  /*
-> >   * Version Information
-> >   */
-> > @@ -221,7 +223,15 @@ static int hid_add_usage(struct hid_parser *parser,
-> > unsigned usage, u8 size)
-> >               hid_err(parser->device, "usage index exceeded\n");
-> >               return -1;
-> >       }
-> > -     parser->local.usage[parser->local.usage_index] = usage;
-> > +
-> > +     if (size <= 2) {
-> > +             parser->local.usage_page_last = false;
-> > +             parser->local.usage[parser->local.usage_index] =
-> > +                     GET_COMPLETE_USAGE(parser->global.usage_page, usage);
-> > +     } else {
-> > +             parser->local.usage[parser->local.usage_index] = usage;
-> > +     }
-> > +
-> >       parser->local.usage_size[parser->local.usage_index] = size;
-> >       parser->local.collection_index[parser->local.usage_index] =
-> >               parser->collection_stack_ptr ?
-> > @@ -366,6 +376,7 @@ static int hid_parser_global(struct hid_parser *parser,
-> > struct hid_item *item)
-> >
-> >       case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
-> >               parser->global.usage_page = item_udata(item);
-> > +             parser->local.usage_page_last = true;
-> >               return 0;
-> >
-> >       case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-> > @@ -543,13 +554,21 @@ static int hid_parser_local(struct hid_parser *parser,
-> > struct hid_item *item)
-> >   * usage value."
-> >   */
->
-> I'd expand the comment above to further explain what we're doing here.
->
-
-OK, some comment here is better, I will add it.
-
-Candle
-
-> >
-> > -static void hid_concatenate_usage_page(struct hid_parser *parser)
-> > +static void hid_concatenate_last_usage_page(struct hid_parser *parser)
-> >  {
-> >       int i;
-> > +     unsigned int usage;
-> > +     unsigned int usage_page = parser->global.usage_page;
-> > +
-> > +     if (!parser->local.usage_page_last)
-> > +             return;
-> >
-> >       for (i = 0; i < parser->local.usage_index; i++)
->
-> Technically correct but it's preferred if you use braces here.
->
-
-Nicolas, do you mean this:
-
-@@ -563,12 +563,13 @@ static void
-hid_concatenate_last_usage_page(struct hid_parser *parser)
-        if (!parser->local.usage_page_last)
-                return;
-
--       for (i = 0; i < parser->local.usage_index; i++)
-+       for (i = 0; i < parser->local.usage_index; i++) {
-                if (parser->local.usage_size[i] <= 2) {
-                        usage = parser->local.usage[i];
-                        parser->local.usage[i] =
-                                GET_COMPLETE_USAGE(usage_page, usage);
-                }
-+       }
- }
-
-Candle
-
-> > -             if (parser->local.usage_size[i] <= 2)
-> > -                     parser->local.usage[i] += parser->global.usage_page <<
-> > 16;
-> > +             if (parser->local.usage_size[i] <= 2) {
-> > +                     usage = parser->local.usage[i];
-> > +                     parser->local.usage[i] =
-> > +                             GET_COMPLETE_USAGE(usage_page, usage);
-> > +             }
-> >  }
-> >
-> >  /*
-> > @@ -561,7 +580,7 @@ static int hid_parser_main(struct hid_parser *parser,
-> > struct hid_item *item)
-> >       __u32 data;
-> >       int ret;
-> >
-> > -     hid_concatenate_usage_page(parser);
-> > +     hid_concatenate_last_usage_page(parser);
-> >
-> >       data = item_udata(item);
-> >
-> > @@ -772,7 +791,7 @@ static int hid_scan_main(struct hid_parser *parser, struct
-> > hid_item *item)
-> >       __u32 data;
-> >       int i;
-> >
-> > -     hid_concatenate_usage_page(parser);
-> > +     hid_concatenate_last_usage_page(parser);
-> >
-> >       data = item_udata(item);
-> >
-> > diff --git a/include/linux/hid.h b/include/linux/hid.h
-> > index cd41f20..2e0ea2f7 100644
-> > --- a/include/linux/hid.h
-> > +++ b/include/linux/hid.h
-> > @@ -412,6 +412,7 @@ struct hid_local {
-> >       unsigned usage_minimum;
-> >       unsigned delimiter_depth;
-> >       unsigned delimiter_branch;
-> > +     bool usage_page_last;      /* whether usage page is after usage id */
-> >  };
-> >
-> >  /*
->
-> Regards,
-> Nicolas
->
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Josh Triplett <josh@joshtriplett.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: rcu@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  include/trace/events/rcu.h |  4 ++--
+>  kernel/rcu/tree.c          | 11 ++++++-----
+>  2 files changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> index 694bd040cf51..fdd31c5fd126 100644
+> --- a/include/trace/events/rcu.h
+> +++ b/include/trace/events/rcu.h
+> @@ -442,7 +442,7 @@ TRACE_EVENT_RCU(rcu_fqs,
+>   */
+>  TRACE_EVENT_RCU(rcu_dyntick,
+>  
+> -	TP_PROTO(const char *polarity, long oldnesting, long newnesting, atomic_t dynticks),
+> +	TP_PROTO(const char *polarity, long oldnesting, long newnesting, int dynticks),
+>  
+>  	TP_ARGS(polarity, oldnesting, newnesting, dynticks),
+>  
+> @@ -457,7 +457,7 @@ TRACE_EVENT_RCU(rcu_dyntick,
+>  		__entry->polarity = polarity;
+>  		__entry->oldnesting = oldnesting;
+>  		__entry->newnesting = newnesting;
+> -		__entry->dynticks = atomic_read(&dynticks);
+> +		__entry->dynticks = dynticks;
+>  	),
+>  
+>  	TP_printk("%s %lx %lx %#3x", __entry->polarity,
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 81105141b6a8..62e59596a30a 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -576,7 +576,7 @@ static void rcu_eqs_enter(bool user)
+>  	}
+>  
+>  	lockdep_assert_irqs_disabled();
+> -	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, rdp->dynticks);
+> +	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, atomic_read(&rdp->dynticks));
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	rdp = this_cpu_ptr(&rcu_data);
+>  	do_nocb_deferred_wakeup(rdp);
+> @@ -649,14 +649,15 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+>  	 * leave it in non-RCU-idle state.
+>  	 */
+>  	if (rdp->dynticks_nmi_nesting != 1) {
+> -		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2, rdp->dynticks);
+> +		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
+> +				  atomic_read(&rdp->dynticks));
+>  		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+>  			   rdp->dynticks_nmi_nesting - 2);
+>  		return;
+>  	}
+>  
+>  	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+> -	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, rdp->dynticks);
+> +	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+>  
+>  	if (irq)
+> @@ -743,7 +744,7 @@ static void rcu_eqs_exit(bool user)
+>  	rcu_dynticks_task_exit();
+>  	rcu_dynticks_eqs_exit();
+>  	rcu_cleanup_after_idle();
+> -	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, rdp->dynticks);
+> +	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+>  	WRITE_ONCE(rdp->dynticks_nesting, 1);
+>  	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+> @@ -827,7 +828,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+>  	}
+>  	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
+>  			  rdp->dynticks_nmi_nesting,
+> -			  rdp->dynticks_nmi_nesting + incby, rdp->dynticks);
+> +			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
+>  	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* Prevent store tearing. */
+>  		   rdp->dynticks_nmi_nesting + incby);
+>  	barrier();
+> -- 
+> 2.23.0.581.g78d2f28ef7-goog
+> 
