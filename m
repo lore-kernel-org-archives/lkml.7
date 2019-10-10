@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D52AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18816C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF4562064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E662F2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697651;
-	bh=I6/6pJHbXOXxKmeOfdPcM5EIQbL1be+Fe2jPyAx4KTc=;
+	s=default; t=1570697656;
+	bh=atpRPWQ8qwYkROn+LNS/DUOg/9/j3Q0ATKT7b689G24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AWbstqIT/w+8zoYXKaZ9BZxd63On/dWSVWNzENfoSFLsHp2b9A7T3Qy0MgkMc19wY
-	 FIvrKx64EwFw6GxFbxDAv06B6h20CeNf49rtJk+BEphb1HQADybQoQ40xATy85WZG0
-	 TI9quNTwTxndw5ImnfHOOoamLXaZkrrvxaX2T+Kc=
+	b=tLY9J1Ef9mcvRXUGw3CuBGucLiNnqzLV3Z3EfYR30N3fLdWAyOpsL330HysBx/DOw
+	 EPFrDWGlm7mr8lH559IUMWuSIAC52pt8+tOdwScF3Q5Ht9zAwKvf1N7p54g2ATfDtY
+	 hKYhYy1eg6iQwlaEqB6u6qVcMloppTDvT9AcqJzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389989AbfJJIyK (ORCPT
+        id S2390017AbfJJIyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:54:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57956 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390020AbfJJIuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:44 -0400
+        id S2389549AbfJJIul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DCFD222BE;
-        Thu, 10 Oct 2019 08:50:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1C5F20B7C;
+        Thu, 10 Oct 2019 08:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697444;
-        bh=I6/6pJHbXOXxKmeOfdPcM5EIQbL1be+Fe2jPyAx4KTc=;
+        s=default; t=1570697441;
+        bh=atpRPWQ8qwYkROn+LNS/DUOg/9/j3Q0ATKT7b689G24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=plIX2m7QfVGCNdZqo6OZiRR6ziBFPKb1fkJ9iqMJMRqo1Gwk3qhF2xBCL3Q+jZiVM
-         CZBkDfLIBW6qnfgzKA0gnR5airfWzqwQzvkQMpSxKatDA/xEbNjOK6xYNgMSPdfvi+
-         KveS5DylkDandLko4+/W07RI1xb/UzkPSWg1WQB8=
+        b=Pet0gr8Fb3Dwdem/X9CYTMdZczRY54NaMKRu3x8GF5p751vnL7Z/Su3GrSWuW3lRW
+         U1ZJ4+E7+KppFVhOU0yQAZvptaUsQGABudeY96E4FzORPBcDeYI9FIyQh7XQBHSjL9
+         1qNTx55LSzagnCdP4Zt27Mr57CofVwa0cgMxuTag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 09/61] ASoC: Define a set of DAPM pre/post-up events
-Date:   Thu, 10 Oct 2019 10:36:34 +0200
-Message-Id: <20191010083454.834064082@linuxfoundation.org>
+        stable@vger.kernel.org, Steev Klimaszewski <steev@kali.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: [PATCH 4.14 08/61] PM / devfreq: tegra: Fix kHz to Hz conversion
+Date:   Thu, 10 Oct 2019 10:36:33 +0200
+Message-Id: <20191010083454.260004216@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -63,36 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit cfc8f568aada98f9608a0a62511ca18d647613e2 upstream.
+commit 62bacb06b9f08965c4ef10e17875450490c948c0 upstream.
 
-Prepare to use SND_SOC_DAPM_PRE_POST_PMU definition to
-reduce coming code size and make it more readable.
+The kHz to Hz is incorrectly converted in a few places in the code,
+this results in a wrong frequency being calculated because devfreq core
+uses OPP frequencies that are given in Hz to clamp the rate, while
+tegra-devfreq gives to the core value in kHz and then it also expects to
+receive value in kHz from the core. In a result memory freq is always set
+to a value which is close to ULONG_MAX because of the bug. Hence the EMC
+frequency is always capped to the maximum and the driver doesn't do
+anything useful. This patch was tested on Tegra30 and Tegra124 SoC's, EMC
+frequency scaling works properly now.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/20190719100524.23300-2-oleksandr.suvorov@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: <stable@vger.kernel.org> # 4.14+
+Tested-by: Steev Klimaszewski <steev@kali.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/soc-dapm.h |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/devfreq/tegra-devfreq.c |   12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
---- a/include/sound/soc-dapm.h
-+++ b/include/sound/soc-dapm.h
-@@ -349,6 +349,8 @@ struct device;
- #define SND_SOC_DAPM_WILL_PMD   0x80    /* called at start of sequence */
- #define SND_SOC_DAPM_PRE_POST_PMD \
- 				(SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD)
-+#define SND_SOC_DAPM_PRE_POST_PMU \
-+				(SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU)
+--- a/drivers/devfreq/tegra-devfreq.c
++++ b/drivers/devfreq/tegra-devfreq.c
+@@ -485,11 +485,11 @@ static int tegra_devfreq_target(struct d
+ {
+ 	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
+ 	struct dev_pm_opp *opp;
+-	unsigned long rate = *freq * KHZ;
++	unsigned long rate;
  
- /* convenience event type detection */
- #define SND_SOC_DAPM_EVENT_ON(e)	\
+-	opp = devfreq_recommended_opp(dev, &rate, flags);
++	opp = devfreq_recommended_opp(dev, freq, flags);
+ 	if (IS_ERR(opp)) {
+-		dev_err(dev, "Failed to find opp for %lu KHz\n", *freq);
++		dev_err(dev, "Failed to find opp for %lu Hz\n", *freq);
+ 		return PTR_ERR(opp);
+ 	}
+ 	rate = dev_pm_opp_get_freq(opp);
+@@ -498,8 +498,6 @@ static int tegra_devfreq_target(struct d
+ 	clk_set_min_rate(tegra->emc_clock, rate);
+ 	clk_set_rate(tegra->emc_clock, 0);
+ 
+-	*freq = rate;
+-
+ 	return 0;
+ }
+ 
+@@ -509,7 +507,7 @@ static int tegra_devfreq_get_dev_status(
+ 	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
+ 	struct tegra_devfreq_device *actmon_dev;
+ 
+-	stat->current_frequency = tegra->cur_freq;
++	stat->current_frequency = tegra->cur_freq * KHZ;
+ 
+ 	/* To be used by the tegra governor */
+ 	stat->private_data = tegra;
+@@ -564,7 +562,7 @@ static int tegra_governor_get_target(str
+ 		target_freq = max(target_freq, dev->target_freq);
+ 	}
+ 
+-	*freq = target_freq;
++	*freq = target_freq * KHZ;
+ 
+ 	return 0;
+ }
 
 
