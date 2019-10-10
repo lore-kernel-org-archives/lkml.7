@@ -2,112 +2,124 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB24C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3D3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DA1214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:08:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="XPQ801Ez"
+	by mail.kernel.org (Postfix) with ESMTP id CD2C2214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfJJXI2 (ORCPT
+        id S1726980AbfJJXJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 19:08:28 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44231 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfJJXI2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 19:08:28 -0400
-Received: by mail-qk1-f196.google.com with SMTP id u22so7170207qkk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 16:08:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=dYnCAzmD3179JkW0E6N8o5l09Fg+PCFocJZQOrrariI=;
-        b=XPQ801EzPkG17GtmU1S/+KK8zhmpjyB/xBW0Sd4RJf7vwIJ0liylR5xxzgUrkN/0h2
-         uJW87DASagG5yucss5IrAV9YQQtALoM4cIMNoEZRZ7w2KBG9h7Hs9saBiMarbioO0QRq
-         Vq3mb1n0ru5sD65vh5SpkmMJnpgylTemb7Agl3N9cG+hxckq7RNt9B92uNS6QHP4Kh5N
-         rpQPLfnAfc2o8c2TXqIfdD3yYaO43G9A4A3Ip2Nz5QU4keuiWDiUcrn7Ko/IavpjzswR
-         nB1YnXUEmcjwdELpAVxgPoqqz+xSu90qzzFOksFXZ1xzbPjljVxuY3xbEeKKrCLHJCbF
-         OQ5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=dYnCAzmD3179JkW0E6N8o5l09Fg+PCFocJZQOrrariI=;
-        b=jTMycr8u5vATKFIhDoPtkjMG+fWqjQ6YyolDu90XhK3l+37WWekcS4Xp+SrGSbWMmr
-         sE6ydJLSnPSL7gXqbMxgtYXilpMfb/WX85EFgSt6GWwva9RstmVI3dHW71OO5o97ZOP9
-         FJQyraq4vvNNf/UapdZN0oPIB2TKOZJHVcxR6Cbb68Cagj/g4sgYmFMfn9QBTIyuwdHJ
-         1R6ZrZWa1+YujG91vhVogr4kqP9L+KZ1wKAHkMmmAmudZ7kpQGjsU0nzOoMM9cTLj19n
-         cGMzr6opW8OxGe81vUchUpVW/W469kmPGWq6c5NpTg/TFl7YhOzv47BytqvfPAArqs7I
-         f1aQ==
-X-Gm-Message-State: APjAAAXy772OG7sHPQb14aSM9MTsmL8zFD3PpjXXHhS37Dnmu4B3f+FR
-        n6YzTo1Dm/jplzfKk0RDVJPVPg==
-X-Google-Smtp-Source: APXvYqztP1NwgbTUNMTAexqMx7k7mNZOl8NRi9r+CxEBp0bOefbFFYfYnsoJG+J8zntnZLr9pg5fhA==
-X-Received: by 2002:a37:bd03:: with SMTP id n3mr12653858qkf.47.1570748907378;
-        Thu, 10 Oct 2019 16:08:27 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id x76sm3228371qkb.29.2019.10.10.16.08.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 16:08:27 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 16:08:11 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     fugang.duan@nxp.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, andy.shevchenko@gmail.com,
-        rafael.j.wysocki@intel.com, swboyd@chromium.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] net: fec_main: Use
- platform_get_irq_byname_optional() to avoid error message
-Message-ID: <20191010160811.7775c819@cakuba.netronome.com>
-In-Reply-To: <1570616148-11571-1-git-send-email-Anson.Huang@nxp.com>
-References: <1570616148-11571-1-git-send-email-Anson.Huang@nxp.com>
-Organization: Netronome Systems, Ltd.
+        Thu, 10 Oct 2019 19:09:26 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45304 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfJJXJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 19:09:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 16:09:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,281,1566889200"; 
+   d="scan'208";a="197403278"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 10 Oct 2019 16:09:23 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id C3F7D5802B9;
+        Thu, 10 Oct 2019 16:09:23 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH 1/3] PCI/ATS: Remove unused PRI and PASID stubs
+To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc:     Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20191009225354.181018-1-helgaas@kernel.org>
+ <20191009225354.181018-2-helgaas@kernel.org>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <2f3804d1-ad85-b54f-9fd3-788f35121fac@linux.intel.com>
+Date:   Thu, 10 Oct 2019 16:07:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191009225354.181018-2-helgaas@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  9 Oct 2019 18:15:47 +0800, Anson Huang wrote:
-> Failed to get irq using name is NOT fatal as driver will use index
-> to get irq instead, use platform_get_irq_byname_optional() instead
-> of platform_get_irq_byname() to avoid below error message during
-> probe:
->=20
-> [    0.819312] fec 30be0000.ethernet: IRQ int0 not found
-> [    0.824433] fec 30be0000.ethernet: IRQ int1 not found
-> [    0.829539] fec 30be0000.ethernet: IRQ int2 not found
->=20
-> Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to plat=
-form_get_irq*()")
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Hi Anson,
+On 10/9/19 3:53 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> The following functions are only used by amd_iommu.c and intel-iommu.c
+> (when CONFIG_INTEL_IOMMU_SVM is enabled).  CONFIG_PCI_PRI and
+> CONFIG_PCI_PASID are always defined in those cases, so there's no need for
+> the stubs.
+>
+>    pci_enable_pri()
+>    pci_disable_pri()
+>    pci_reset_pri()
+>    pci_prg_resp_pasid_required()
+>    pci_enable_pasid()
+>    pci_disable_pasid()
+>
+> Remove the unused stubs.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Looks good to me.
 
-looks like there may be some dependency which haven't landed in the
-networking tree yet?  Because this doesn't build:
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>   include/linux/pci-ats.h | 10 ----------
+>   1 file changed, 10 deletions(-)
+>
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index 67de3a9499bb..963c11f7c56b 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -27,14 +27,7 @@ void pci_restore_pri_state(struct pci_dev *pdev);
+>   int pci_reset_pri(struct pci_dev *pdev);
+>   int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+>   #else /* CONFIG_PCI_PRI */
+> -static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+> -{ return -ENODEV; }
+> -static inline void pci_disable_pri(struct pci_dev *pdev) { }
+>   static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
+> -static inline int pci_reset_pri(struct pci_dev *pdev)
+> -{ return -ENODEV; }
+> -static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> -{ return 0; }
+>   #endif /* CONFIG_PCI_PRI */
+>   
+>   #ifdef CONFIG_PCI_PASID
+> @@ -44,9 +37,6 @@ void pci_restore_pasid_state(struct pci_dev *pdev);
+>   int pci_pasid_features(struct pci_dev *pdev);
+>   int pci_max_pasids(struct pci_dev *pdev);
+>   #else /* CONFIG_PCI_PASID */
+> -static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
+> -{ return -EINVAL; }
+> -static inline void pci_disable_pasid(struct pci_dev *pdev) { }
+>   static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
+>   static inline int pci_pasid_features(struct pci_dev *pdev)
+>   { return -EINVAL; }
 
-drivers/net/ethernet/freescale/fec_main.c: In function =E2=80=98fec_probe=
-=E2=80=99:
-drivers/net/ethernet/freescale/fec_main.c:3561:9: error: implicit declarati=
-on of function =E2=80=98platform_get_irq_byname_optional=E2=80=99; did you =
-mean =E2=80=98platform_get_irq_optional=E2=80=99? [-Werror=3Dimplicit-funct=
-ion-declaration]
- 3561 |   irq =3D platform_get_irq_byname_optional(pdev, irq_name);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |         platform_get_irq_optional
-cc1: some warnings being treated as errors
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
-Could you please repost once that's resolved?  Please add Andy's and
-Stephen's acks when reposting.
-
-Thank you!
