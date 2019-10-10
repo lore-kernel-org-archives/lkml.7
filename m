@@ -2,54 +2,51 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA74C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AAFC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681A22067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F82A2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698054;
-	bh=NuHhHXw4QZBdglT0kxOOBHpNOn1XLOOMc9cyecLOYBc=;
+	s=default; t=1570698064;
+	bh=8Zflg7lZGju3znOPM11CWJ5ivnYcOP2oM1Gv3T3aW9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pxTY9zyibqV1Ebt2Iu074ANy6tmAIvMPyCQYxr32sWdlvvglJjePp33JZa2MweLgj
-	 lVCCc1YdrptCv9M5Ezt6ZeFNlrw+6y8YzZCvU2FEDm9CwJw0ZlF4KVEopTfCAKatwo
-	 SW8ncAumoJZFbV9q6dRzuRR2vXIxjVlLUuxvAaS4=
+	b=Uf6L8k9wz9mBMWeTVTwa5nfuEyLlGqqLi7f5hY1Hvi8yOV4kPtDtFFWXi4wVDP9k/
+	 KNGUtcGk9FqYjxPqNRXN/2wglePZELLFJqFqvmyJBWmRhSk4G7904GPe4+2i1LTiyB
+	 rtfgcvqNkZ+JWDrHvNx/pNLUvfNWEk1EAe8FuRSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388516AbfJJImR (ORCPT
+        id S2388453AbfJJImA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:42:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46780 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:42:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388505AbfJJImO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:42:14 -0400
+        id S2388411AbfJJIlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:41:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5564921A4C;
-        Thu, 10 Oct 2019 08:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6802054F;
+        Thu, 10 Oct 2019 08:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696933;
-        bh=NuHhHXw4QZBdglT0kxOOBHpNOn1XLOOMc9cyecLOYBc=;
+        s=default; t=1570696912;
+        bh=8Zflg7lZGju3znOPM11CWJ5ivnYcOP2oM1Gv3T3aW9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VXmdMV5T0Blg5SknT5F4OCZkGgelj1rw0yKIcvs1uExynIJmYuh2bHAElvy9sLAjq
-         PG0whQ2LKffoa9Ri4IaeEdKNNbHlQwA9ZISjGTDMOi495Fj0r33h8dXVy7OUCH6tRj
-         qCPB+DyJ1EKt91gBFVnt/8fd5ddPYAQZwjeZ3ZTk=
+        b=JuoItyXtBDpl+MsVf+au2XXu+aTcSNuGVPGWf9uGYCJlQkEPAvBQB7Ad4VBr8KnWL
+         nShsFiYIhXy+21pzzTDdoHqXAZHvnkMBdcRFOrFB9f7q/nw8icyKICfrwf7ZZHXwO/
+         tienev9MqaoZ2iUoR+AIV0BTMWKqH0sQMl/6xHv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 106/148] perf probe: Fix to clear tev->nargs in clear_probe_trace_event()
-Date:   Thu, 10 Oct 2019 10:36:07 +0200
-Message-Id: <20191010083617.608325655@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.3 081/148] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+Date:   Thu, 10 Oct 2019 10:35:42 +0200
+Message-Id: <20191010083616.242624592@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -62,66 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-[ Upstream commit 9e6124d9d635957b56717f85219a88701617253f ]
+commit f1f028ff89cb0d37db299d48e7b2ce19be040d52 upstream.
 
-Since add_probe_trace_event() can reuse tf->tevs[i] after calling
-clear_probe_trace_event(), this can make perf-probe crash if the 1st
-attempt of probe event finding fails to find an event argument, and the
-2nd attempt fails to find probe point.
+commit 6953c57ab172 "gpio: of: Handle SPI chipselect legacy bindings"
 
-E.g.
-  $ perf probe -D "task_pid_nr tsk"
-  Failed to find 'tsk' in this function.
-  Failed to get entry address of warn_bad_vsyscall
-  Segmentation fault (core dumped)
+did introduce logic to centrally handle the legacy spi-cs-high property
+in combination with cs-gpios. This assumes that the polarity
+of the CS has to be inverted if spi-cs-high is missing, even
+and especially if non-legacy GPIO_ACTIVE_HIGH is specified.
 
-Committer testing:
+The DTS for the GTA04 was orginally introduced under the assumption
+that there is no need for spi-cs-high if the gpio is defined with
+proper polarity GPIO_ACTIVE_HIGH.
 
-After the patch:
+This was not a problem until gpiolib changed the interpretation of
+GPIO_ACTIVE_HIGH and missing spi-cs-high.
 
-  $ perf probe -D "task_pid_nr tsk"
-  Failed to find 'tsk' in this function.
-  Failed to get entry address of warn_bad_vsyscall
-  Failed to get entry address of signal_fault
-  Failed to get entry address of show_signal
-  Failed to get entry address of umip_printk
-  Failed to get entry address of __bad_area_nosemaphore
-  <SNIP>
-  Failed to get entry address of sock_set_timeout
-  Failed to get entry address of tcp_recvmsg
-  Probe point 'task_pid_nr' not found.
-    Error: Failed to add events.
-  $
+The effect is that the missing spi-cs-high is now interpreted as CS being
+low (despite GPIO_ACTIVE_HIGH) which turns off the SPI interface when the
+panel is to be programmed by the panel driver.
 
-Fixes: 092b1f0b5f9f ("perf probe: Clear probe_trace_event when add_probe_trace_event() fails")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lore.kernel.org/lkml/156856587999.25775.5145779959474477595.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Therefore, we have to add the redundant and legacy spi-cs-high property
+to properly activate CS.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/util/probe-event.c | 1 +
+ arch/arm/boot/dts/omap3-gta04.dtsi |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 8394d48f8b32e..3355c445abedf 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -2329,6 +2329,7 @@ void clear_probe_trace_event(struct probe_trace_event *tev)
- 		}
- 	}
- 	zfree(&tev->args);
-+	tev->nargs = 0;
- }
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -120,6 +120,7 @@
+ 			spi-max-frequency = <100000>;
+ 			spi-cpol;
+ 			spi-cpha;
++			spi-cs-high;
  
- struct kprobe_blacklist_node {
--- 
-2.20.1
-
+ 			backlight= <&backlight>;
+ 			label = "lcd";
 
 
