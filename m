@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709F9C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA74C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA952067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681A22067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698049;
-	bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
+	s=default; t=1570698054;
+	bh=NuHhHXw4QZBdglT0kxOOBHpNOn1XLOOMc9cyecLOYBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XEGz/vBW22hihed+mlVXIikyWkvD4DTfGmh9vaHozHsF4bdXAWNpSPW1kf6m5kGa2
-	 Vs0EZVyihl0dgxuHDzLTbQNCbNk+VO74i1n9BfHE978IhhKYG/e0sYRG7xkm9SkLsO
-	 Et2Pqd5p4j+dHUlOqUAKdxuJuirjara5K7RHv2Rc=
+	b=pxTY9zyibqV1Ebt2Iu074ANy6tmAIvMPyCQYxr32sWdlvvglJjePp33JZa2MweLgj
+	 lVCCc1YdrptCv9M5Ezt6ZeFNlrw+6y8YzZCvU2FEDm9CwJw0ZlF4KVEopTfCAKatwo
+	 SW8ncAumoJZFbV9q6dRzuRR2vXIxjVlLUuxvAaS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389132AbfJJJAr (ORCPT
+        id S2388516AbfJJImR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:00:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47096 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:42:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387745AbfJJIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:42:30 -0400
+        id S2388505AbfJJImO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:42:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80C7A2054F;
-        Thu, 10 Oct 2019 08:42:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5564921A4C;
+        Thu, 10 Oct 2019 08:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696950;
-        bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
+        s=default; t=1570696933;
+        bh=NuHhHXw4QZBdglT0kxOOBHpNOn1XLOOMc9cyecLOYBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HKafgU4jWSkcVJs6EoFNkzj2+Fc8CYuqilGhz+ksiALot9lmg08I5ADQODJHr2C1D
-         MgCSseWUEVHhA3wtzGvMWzjRZ9QswFfCKW3soDI92BwgLoc32ZJWreQmIdt5jJBuiU
-         dtRfUCFmaR7nKJ+jCPZYtI17Pjh/7xaOgxcboGTg=
+        b=VXmdMV5T0Blg5SknT5F4OCZkGgelj1rw0yKIcvs1uExynIJmYuh2bHAElvy9sLAjq
+         PG0whQ2LKffoa9Ri4IaeEdKNNbHlQwA9ZISjGTDMOi495Fj0r33h8dXVy7OUCH6tRj
+         qCPB+DyJ1EKt91gBFVnt/8fd5ddPYAQZwjeZ3ZTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 111/148] x86/purgatory: Disable the stackleak GCC plugin for the purgatory
-Date:   Thu, 10 Oct 2019 10:36:12 +0200
-Message-Id: <20191010083617.862786246@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 106/148] perf probe: Fix to clear tev->nargs in clear_probe_trace_event()
+Date:   Thu, 10 Oct 2019 10:36:07 +0200
+Message-Id: <20191010083617.608325655@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -65,51 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit ca14c996afe7228ff9b480cf225211cc17212688 ]
+[ Upstream commit 9e6124d9d635957b56717f85219a88701617253f ]
 
-Since commit:
+Since add_probe_trace_event() can reuse tf->tevs[i] after calling
+clear_probe_trace_event(), this can make perf-probe crash if the 1st
+attempt of probe event finding fails to find an event argument, and the
+2nd attempt fails to find probe point.
 
-  b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
+E.g.
+  $ perf probe -D "task_pid_nr tsk"
+  Failed to find 'tsk' in this function.
+  Failed to get entry address of warn_bad_vsyscall
+  Segmentation fault (core dumped)
 
-kexec breaks if GCC_PLUGIN_STACKLEAK=y is enabled, as the purgatory
-contains undefined references to stackleak_track_stack.
+Committer testing:
 
-Attempting to load a kexec kernel results in this failure:
+After the patch:
 
-  kexec: Undefined symbol: stackleak_track_stack
-  kexec-bzImage64: Loading purgatory failed
+  $ perf probe -D "task_pid_nr tsk"
+  Failed to find 'tsk' in this function.
+  Failed to get entry address of warn_bad_vsyscall
+  Failed to get entry address of signal_fault
+  Failed to get entry address of show_signal
+  Failed to get entry address of umip_printk
+  Failed to get entry address of __bad_area_nosemaphore
+  <SNIP>
+  Failed to get entry address of sock_set_timeout
+  Failed to get entry address of tcp_recvmsg
+  Probe point 'task_pid_nr' not found.
+    Error: Failed to add events.
+  $
 
-Fix this by disabling the stackleak plugin for the purgatory.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
-Link: https://lkml.kernel.org/r/20190923171753.GA2252517@rani.riverdale.lan
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 092b1f0b5f9f ("perf probe: Clear probe_trace_event when add_probe_trace_event() fails")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lore.kernel.org/lkml/156856587999.25775.5145779959474477595.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/purgatory/Makefile | 1 +
+ tools/perf/util/probe-event.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 10fb42da0007e..b81b5172cf994 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -23,6 +23,7 @@ KCOV_INSTRUMENT := n
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 8394d48f8b32e..3355c445abedf 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -2329,6 +2329,7 @@ void clear_probe_trace_event(struct probe_trace_event *tev)
+ 		}
+ 	}
+ 	zfree(&tev->args);
++	tev->nargs = 0;
+ }
  
- PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
- PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-+PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
- 
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+ struct kprobe_blacklist_node {
 -- 
 2.20.1
 
