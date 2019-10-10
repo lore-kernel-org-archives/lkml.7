@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D62DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C709C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72BB821929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50EAF20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697479;
-	bh=heI1w7nY6McwTvjkvsOTZmwnaKryPkblh2fn31KdwDI=;
+	s=default; t=1570697483;
+	bh=GfMU6NPelHlvFmGORedtTXOGNLXmUvHgoBCKH6STcto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rGZdVTHxJHkIP3iVO2XRphQ7jOpYumklmLKiKkZnOJPREDGUHI0OAjI77RziRuKKG
-	 DSu9Re5HG78lHQsbUysqbvSEy0fLG24n2MmQHz/8eIOExhyGSk9N6dn0Ite4yQ8RZx
-	 Rla9byvPyAzdTv4bKz4KBFMNLGPqyLQ1T+GdUNM4=
+	b=cudE7LdohxoieEe8ymH17vjrZGI94uoedtFJ/L/MBehc1mBafej3CFw8CAuU0ymj6
+	 QL5Un5ccynW/rbKLplQCjOtPlk4+XISgcLhfgWPrLxkVQ2yxw94Eb2UGyXrarZOsXQ
+	 JFcW/SmUcERBmK+pCY2gJ/3Me8ph/XZqgUd70uVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390095AbfJJIvS (ORCPT
+        id S2389737AbfJJIvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58438 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:51:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390075AbfJJIvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:06 -0400
+        id S2388950AbfJJIvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C4B620679;
-        Thu, 10 Oct 2019 08:51:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 876B020679;
+        Thu, 10 Oct 2019 08:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697465;
-        bh=heI1w7nY6McwTvjkvsOTZmwnaKryPkblh2fn31KdwDI=;
+        s=default; t=1570697474;
+        bh=GfMU6NPelHlvFmGORedtTXOGNLXmUvHgoBCKH6STcto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7P8GNIHfW5r6Zhq0cNHzb2M0ybqOpwxgimysyeKk0bEoDUpn6P/GPOOh5YPzxAbr
-         AIR55CrM0/V5IKv1Ya3laeucuoZICtEQ1ahZrTNtZZx963arQX061vGs0BldXHzpmg
-         IkNuKKNBLKUUAwBsDnbO8BriLC4B3f2xiWZWeh28=
+        b=lXyzP2POCc/r64pJB4+72lyjP+9ikg1qKBMiWeyhZkMIRowHGvb/lHUkSf3KWrAOH
+         RUMIR7KGfsbpC96S37/bHoO34OtBjCPti19QurylU88kj6OVpayuThpT4khrnJoMm2
+         XTpIhuYoiexa8ccaoWc5qKxOakvPCCcPOcVwoNgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 38/61] pwm: stm32-lp: Add check in case requested period cannot be achieved
-Date:   Thu, 10 Oct 2019 10:37:03 +0200
-Message-Id: <20191010083514.363248246@linuxfoundation.org>
+        stable@vger.kernel.org, KeMeng Shi <shikemeng@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 41/61] sched/core: Fix migration to invalid CPU in __set_cpus_allowed_ptr()
+Date:   Thu, 10 Oct 2019 10:37:06 +0200
+Message-Id: <20191010083516.222902799@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -62,44 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: KeMeng Shi <shikemeng@huawei.com>
 
-[ Upstream commit c91e3234c6035baf5a79763cb4fcd5d23ce75c2b ]
+[ Upstream commit 714e501e16cd473538b609b3e351b2cc9f7f09ed ]
 
-LPTimer can use a 32KHz clock for counting. It depends on clock tree
-configuration. In such a case, PWM output frequency range is limited.
-Although unlikely, nothing prevents user from requesting a PWM frequency
-above counting clock (32KHz for instance):
-- This causes (prd - 1) = 0xffff to be written in ARR register later in
-the apply() routine.
-This results in badly configured PWM period (and also duty_cycle).
-Add a check to report an error is such a case.
+An oops can be triggered in the scheduler when running qemu on arm64:
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+ Unable to handle kernel paging request at virtual address ffff000008effe40
+ Internal error: Oops: 96000007 [#1] SMP
+ Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
+ pstate: 20000085 (nzCv daIf -PAN -UAO)
+ pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+ lr : move_queued_task.isra.21+0x124/0x298
+ ...
+ Call trace:
+  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+  __migrate_task+0xc8/0xe0
+  migration_cpu_stop+0x170/0x180
+  cpu_stopper_thread+0xec/0x178
+  smpboot_thread_fn+0x1ac/0x1e8
+  kthread+0x134/0x138
+  ret_from_fork+0x10/0x18
+
+__set_cpus_allowed_ptr() will choose an active dest_cpu in affinity mask to
+migrage the process if process is not currently running on any one of the
+CPUs specified in affinity mask. __set_cpus_allowed_ptr() will choose an
+invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if
+CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
+check. cpumask_test_cpu() of dest_cpu afterwards is overflown and may pass if
+corresponding bit is coincidentally set. As a consequence, kernel will
+access an invalid rq address associate with the invalid CPU in
+migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
+
+The reproduce the crash:
+
+  1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
+  sched_setaffinity.
+
+  2) A shell script repeatedly does "echo 0 > /sys/devices/system/cpu/cpu1/online"
+  and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
+
+  3) Oops appears if the invalid CPU is set in memory after tested cpumask.
+
+Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1568616808-16808-1-git-send-email-shikemeng@huawei.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-stm32-lp.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/sched/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 9793b296108ff..3f2e4ef695d75 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -59,6 +59,12 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	/* Calculate the period and prescaler value */
- 	div = (unsigned long long)clk_get_rate(priv->clk) * state->period;
- 	do_div(div, NSEC_PER_SEC);
-+	if (!div) {
-+		/* Clock is too slow to achieve requested period. */
-+		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
-+		return -EINVAL;
-+	}
-+
- 	prd = div;
- 	while (div > STM32_LPTIM_MAX_ARR) {
- 		presc++;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3d24d401b9d42..32ba789c544ca 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1111,7 +1111,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 	if (cpumask_equal(&p->cpus_allowed, new_mask))
+ 		goto out;
+ 
+-	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
++	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
++	if (dest_cpu >= nr_cpu_ids) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+@@ -1132,7 +1133,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 	if (cpumask_test_cpu(task_cpu(p), new_mask))
+ 		goto out;
+ 
+-	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
+ 	if (task_running(rq, p) || p->state == TASK_WAKING) {
+ 		struct migration_arg arg = { p, dest_cpu };
+ 		/* Need help from migration thread: drop lock and wait. */
 -- 
 2.20.1
 
