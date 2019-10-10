@@ -2,79 +2,93 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAD7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403F9C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84074206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1163D206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:50:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SzGg1Snp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="TQZ07FMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbfJJNpu (ORCPT
+        id S1726044AbfJJNut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:45:50 -0400
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:42771 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfJJNpt (ORCPT
+        Thu, 10 Oct 2019 09:50:49 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42916 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfJJNus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:45:49 -0400
-Received: by mail-ed1-f54.google.com with SMTP id y91so5503658ede.9
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 06:45:48 -0700 (PDT)
+        Thu, 10 Oct 2019 09:50:48 -0400
+Received: by mail-ed1-f65.google.com with SMTP id y91so5519251ede.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 06:50:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=sender:date:from:to:cc:subject:message-id:mail-followup-to
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m/eFFXn0vur3dPmxW/iwC62E4sqoVqpwELmzMg990o4=;
-        b=SzGg1Snpvro/ax8XbsReNLXCcQ7xMcVrZVaTG+BtPXx0xM09HqnNEaPaf187SrkLA5
-         1tCRCyg04PdbAjuHlRlEdiQ9FdDWRXihCtDYZCKcOiocErL1waORxcIx+qP0wjlWt0x9
-         JdgBsOo3wevXUV/HA2mxbAtugYD/3OGXFhWRk=
+        bh=o898Z3trs0jH/OlBQbiOm8e/1sEfrvM2Vk3WyyK56M4=;
+        b=TQZ07FMvCXrWciJ7O9lR+yonpxUCVIcHnhmodCVsy5Dh/Y5im2arlnqViBllsFZMoz
+         FX1zMJwHMqtbjlVh/VFK76TKJ5qMTJkhvErbbOvUl3k+Ss1ZPSUdmEOoFoKO4bV2Iigr
+         iZ9kCTkHefQMk+aqix6L1jZn0EltF9d/5eWS4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=m/eFFXn0vur3dPmxW/iwC62E4sqoVqpwELmzMg990o4=;
-        b=KvzL/q8guRQ6J6q2yWmCosHULOHKCWUPskezqB52ag+mwyPC9vvAGGh+SdlweaYFC9
-         ar4S4eY44KXnXpEkqpF/kGkxJNMBwtGgRPWvLPuCRi0ilG62ctNIA4AAB0lCn35qgsL6
-         qirT1UMU3MaTDqPxIJAN7bBtTcRgQ7XuUNqOBxKdOj1r+5lby6KwUHZ0B5/wjujtqL8B
-         eHNIcyZdi1LYPy4goLHAL3n7mFElkGJmUcuyFnmvAn0uGMnXAoBNEyRgNY1SHcRXSqQ+
-         HU20p83wb9D46GB6pVQKtzKhugjAatZBZ6qZ+AlRD/5mlqDLXbtwE248+o9ez/BcIQBb
-         2jOw==
-X-Gm-Message-State: APjAAAXwqUd29H1X9j/CkHmMpF1iFDxgYxOXm+0GcjrCZ9DkwcYDEk/z
-        Ftb6SqneReqtlDkrh7GHCZOQaQ==
-X-Google-Smtp-Source: APXvYqyuWp2Bw2sOuzsNu3Opsr6/6mUt7Z18v3AUK3CH32gupRxBQK38MTAyggaQcsUO8idYoi/bvQ==
-X-Received: by 2002:a17:906:6d89:: with SMTP id h9mr7954865ejt.169.1570715148116;
-        Thu, 10 Oct 2019 06:45:48 -0700 (PDT)
+        bh=o898Z3trs0jH/OlBQbiOm8e/1sEfrvM2Vk3WyyK56M4=;
+        b=jXXN8erfClgIss90vCLxhZvqT1FO7wZv4UOy/S0AwCSRrKNGTPbIyWpjsRG8875C5r
+         nhoN0B6IzXwfwTP3RUw4q+IvPLFm9gDDkRqkZfeWx/8qN+ahaeBWfY1oate6mpVm6ZBz
+         82q7iEZjecYhxO0f4YY9HHXCpPcnjfPdOY+Lw48SuBwyBtrXbt8xWkOaep35RFoWBmnI
+         wNM0dDpT4xJsV59DVUOz85jNxanXRucnhm9PKucUnHA5f2lW7vByfLffF+QPFVxfzIR2
+         rJD/dwMN360uEB6nTYTwT2cTnnWTTSI3XGwnTH9FeMkBQycS8ONNxvowTCEE3sAJyT0W
+         PHuQ==
+X-Gm-Message-State: APjAAAXvjYexhVr8b/5F25NNgv8+cF33mMUcLlN1ERsjQBTK3bxfUr1i
+        ZbGWWawxmMlYn9FiqitQaWhwMg==
+X-Google-Smtp-Source: APXvYqwDTtGo4w8HEdRUZir73TR7uahsebmS6NjOfoevZfEYTOWdmz2kjDkxMdcPaAEi5/omDEtt/g==
+X-Received: by 2002:a17:906:7e17:: with SMTP id e23mr374597ejr.205.1570715446752;
+        Thu, 10 Oct 2019 06:50:46 -0700 (PDT)
 Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id q2sm923864edh.41.2019.10.10.06.45.47
+        by smtp.gmail.com with ESMTPSA id 36sm988776edz.92.2019.10.10.06.50.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 06:45:47 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 15:45:45 +0200
+        Thu, 10 Oct 2019 06:50:45 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 15:50:43 +0200
 From:   Daniel Vetter <daniel@ffwll.ch>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
         David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] drm/vkms: Remove duplicated include from vkms_drv.c
-Message-ID: <20191010134545.GZ16989@phenom.ffwll.local>
-Mail-Followup-To: YueHaibing <yuehaibing@huawei.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20191010115213.115706-1-yuehaibing@huawei.com>
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 0/4] treewide: fix interrupted release
+Message-ID: <20191010135043.GA16989@phenom.ffwll.local>
+Mail-Followup-To: Johan Hovold <johan@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20191010131333.23635-1-johan@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010115213.115706-1-yuehaibing@huawei.com>
+In-Reply-To: <20191010131333.23635-1-johan@kernel.org>
 X-Operating-System: Linux phenom 5.2.0-2-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,34 +96,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:52:13AM +0000, YueHaibing wrote:
-> Remove duplicated include.
+On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
+> Two old USB drivers had a bug in them which could lead to memory leaks
+> if an interrupted process raced with a disconnect event.
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Turns out we had a few more driver in other subsystems with the same
+> kind of bug in them.
+> 
+> Note that all but the s390 patch have only been compile tested, while
+> the s390 one has not even been built.
 
-Applied, thanks.
+Random funny idea: Could we do some debug annotations (akin to
+might_sleep) that splats when you might_sleep_interruptible somewhere
+where interruptible sleeps are generally a bad idea? Like in
+fops->release?
+
+Something like non_block_start/end that I've recently done, but for
+interruptible sleeps only? Would need might_sleep_interruptibly()
+annotations and non_interruptly_sleep_start/end annotations.
 -Daniel
 
-> ---
->  drivers/gpu/drm/vkms/vkms_drv.c | 1 -
->  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-> index 54703463d966..d1fe144aa289 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> @@ -19,7 +19,6 @@
->  #include <drm/drm_drv.h>
->  #include <drm/drm_fb_helper.h>
->  #include <drm/drm_file.h>
-> -#include <drm/drm_gem.h>
->  #include <drm/drm_gem_framebuffer_helper.h>
->  #include <drm/drm_ioctl.h>
->  #include <drm/drm_probe_helper.h>
+> Johan
 > 
 > 
+> Johan Hovold (4):
+>   drm/msm: fix memleak on release
+>   media: bdisp: fix memleak on release
+>   media: radio: wl1273: fix interrupt masking on release
+>   s390/zcrypt: fix memleak at release
 > 
+>  drivers/gpu/drm/msm/msm_debugfs.c             | 6 +-----
+>  drivers/media/platform/sti/bdisp/bdisp-v4l2.c | 3 +--
+>  drivers/media/radio/radio-wl1273.c            | 3 +--
+>  drivers/s390/crypto/zcrypt_api.c              | 3 +--
+>  4 files changed, 4 insertions(+), 11 deletions(-)
 > 
+> -- 
+> 2.23.0
 > 
 
 -- 
