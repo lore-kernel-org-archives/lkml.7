@@ -2,164 +2,124 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADFBC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C3DC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A638620B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:33:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uutwVOyx"
+	by mail.kernel.org (Postfix) with ESMTP id 261BC20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733312AbfJJId5 (ORCPT
+        id S2387419AbfJJIeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:33:57 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43210 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731959AbfJJId4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:33:56 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9A8XjtI127735;
-        Thu, 10 Oct 2019 03:33:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570696425;
-        bh=FhquN/1OPnzSIofRbpd8657kQgDexsa7zYHjkstaN0g=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uutwVOyxz7Ybc/SgJ+e6Z205PIhRuMyH0VWQfwYt4A4zognI4AwKqlLik3KXwGkQE
-         MRCR8QTtQllth9LMA8AxVQxaCKFKAWsG3yV27/L6xoUCIRsPyUgcLwQRwKqJ+JHldT
-         3fcnnLkXE6Ga+8lAu1fwT24WtdMPH6DBGLd2Bvtk=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9A8Xjsw043983
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Oct 2019 03:33:45 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 10
- Oct 2019 03:33:41 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 10 Oct 2019 03:33:41 -0500
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9A8XaSa019061;
-        Thu, 10 Oct 2019 03:33:41 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <jejb@linux.ibm.com>,
-        Martin K Petersen <martin.petersen@oracle.com>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Janek Kotas <jank@cadence.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <nsekhar@ti.com>
-Subject: [PATCH v2 1/2] dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding for TI UFS wrapper
-Date:   Thu, 10 Oct 2019 14:03:56 +0530
-Message-ID: <20191010083357.28982-2-vigneshr@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083357.28982-1-vigneshr@ti.com>
-References: <20191010083357.28982-1-vigneshr@ti.com>
+        Thu, 10 Oct 2019 04:34:02 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45608 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731959AbfJJIeB (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:34:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 01:34:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,279,1566889200"; 
+   d="scan'208";a="369007657"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.143]) ([10.239.196.143])
+  by orsmga005.jf.intel.com with ESMTP; 10 Oct 2019 01:33:58 -0700
+Subject: Re: [PATCH v1 0/2] perf stat: Support --all-kernel and --all-user
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20190925020218.8288-1-yao.jin@linux.intel.com>
+ <20190929151022.GA16309@krava> <20190930182136.GD8560@tassilo.jf.intel.com>
+ <20190930192800.GA13904@kernel.org>
+ <20191001021755.GF8560@tassilo.jf.intel.com>
+ <8a1cbcf6-2de7-3036-1c86-f3af6af077e2@linux.intel.com>
+ <20191010080052.GB9616@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <9df9e60f-4998-32f2-f743-ebb0fdea4c0a@linux.intel.com>
+Date:   Thu, 10 Oct 2019 16:33:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191010080052.GB9616@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation of TI wrapper for Cadence UFS Controller.
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
 
-v2:
-Define Cadence UFS controller as child node of the wrapper as suggested
-by Rob H
+On 10/10/2019 4:00 PM, Jiri Olsa wrote:
+> On Thu, Oct 10, 2019 at 02:46:36PM +0800, Jin, Yao wrote:
+>>
+>>
+>> On 10/1/2019 10:17 AM, Andi Kleen wrote:
+>>>>> I think it's useful. Makes it easy to do kernel/user break downs.
+>>>>> perf record should support the same.
+>>>>
+>>>> Don't we have this already with:
+>>>>
+>>>> [root@quaco ~]# perf stat -e cycles:u,instructions:u,cycles:k,instructions:k -a -- sleep 1
+>>>
+>>> This only works for simple cases. Try it for --topdown or multiple -M metrics.
+>>>
+>>> -Andi
+>>>
+>>
+>> Hi Arnaldo, Jiri,
+>>
+>> We think it should be very useful if --all-user / --all-kernel can be
+>> specified together, so that we can get a break down between user and kernel
+>> easily.
+>>
+>> But yes, the patches for supporting this new semantics is much complicated
+>> than the patch which just follows original perf-record behavior. I fully
+>> understand this concern.
+>>
+>> So if this new semantics can be accepted, that would be very good. But if
+>> you think the new semantics is too complicated, I'm also fine for posting a
+>> new patch which just follows the perf-record behavior.
+> 
+> I still need to think a bit more about this.. did you consider
+> other options like cloning of the perf_evlist/perf_evsel and
+> changing just the exclude* bits? might be event worse actualy ;-)
+> 
 
- .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 68 +++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+That should be another approach, but it might be a bit more complicated 
+than just appending ":u"/":k" modifiers to the event name string.
 
-diff --git a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-new file mode 100644
-index 000000000000..c8a2a92074df
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ufs/ti,j721e-ufs.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI J721e UFS Host Controller Glue Driver
-+
-+maintainers:
-+  - Vignesh Raghavendra <vigneshr@ti.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: ti,j721e-ufs
-+
-+  reg:
-+    maxItems: 1
-+    description: address of TI UFS glue registers
-+
-+  clocks:
-+    maxItems: 1
-+    description: phandle to the M-PHY clock
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - power-domains
-+
-+patternProperties:
-+  "^ufs@[0-9a-f]+$":
-+    type: object
-+    description: |
-+      Cadence UFS controller node must be the child node. Refer
-+      Documentation/devicetree/bindings/ufs/cdns,ufshc.txt for binding
-+      documentation of child node
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    ufs_wrapper: ufs-wrapper@4e80000 {
-+       compatible = "ti,j721e-ufs";
-+       reg = <0x0 0x4e80000 0x0 0x100>;
-+       power-domains = <&k3_pds 277>;
-+       clocks = <&k3_clks 277 1>;
-+       assigned-clocks = <&k3_clks 277 1>;
-+       assigned-clock-parents = <&k3_clks 277 4>;
-+       #address-cells = <2>;
-+       #size-cells = <2>;
-+
-+       ufs@4e84000 {
-+          compatible = "cdns,ufshc-m31-16nm", "jedec,ufs-2.0";
-+          reg = <0x0 0x4e84000 0x0 0x10000>;
-+          interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+          freq-table-hz = <19200000 19200000>;
-+          power-domains = <&k3_pds 277>;
-+          clocks = <&k3_clks 277 1>;
-+          assigned-clocks = <&k3_clks 277 1>;
-+          assigned-clock-parents = <&k3_clks 277 4>;
-+          clock-names = "core_clk";
-+       };
-+    };
--- 
-2.23.0
+> or maybe if we add modifier we could add extra events/groups
+> within the parser.. like:
+> 
+>    "{cycles,instructions}:A,{cache-misses,cache-references}:A,cycles:A"
+> 
+> but that might be still more complicated then what you did
+> 
 
+Yes agree.
+
+> also please add the perf record changes so we have same code
+> and logic for both if we are going to change it
+> 
+
+If this new semantics can be accepted, I'd like to add perf record 
+supporting as well. :)
+
+Another difficulty for the new semantics is we need to create user and 
+kernel stat type in runtime_stat rblist (see patch "perf stat: Support 
+topdown with --all-kernel/--all-user"). That has to bring extra complexity.
+
+Thanks
+Jin Yao
+
+> jirka
+> 
