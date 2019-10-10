@@ -2,251 +2,139 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ABFC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851E4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06DB208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A94A208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s+ewWJ1a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NH+owc3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733139AbfJJM3N (ORCPT
+        id S1733287AbfJJM3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:29:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55404 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbfJJM3N (ORCPT
+        Thu, 10 Oct 2019 08:29:14 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40947 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733082AbfJJM3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Oct 2019 08:29:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cyGuSzlLK8Ww0fG0pIigUmbAo7iv2JCMlIrCcI1UaGw=; b=s+ewWJ1aI+0TvhFWpyoUsiS8j
-        BQ3MdBlHPwvCQPSMpBcX75ijEm1UAiMKA0sclLRnU/HBpyrhRzW7XfExwcxzXdAuxz+rqlUkyzk4K
-        Q6iypNrLimKvAn6+moYHZI7vs7kOh3pPZRfZNYcoWLfirOOnO1+YNu+JwRlzaKWMys+K4C6MiHVVf
-        kZ+LGZfoMZTVawVqs+r3yb8JIE50VcGoPmPQCCOetVeVgNw9edAp0eheyOkiYDCx9FaPN8UmlV2Vr
-        2363XWsvvHe/0Bo2KY71OQ2RmF2VB+TdmzKceHvnOPVtGeW4D5TJoUYSw2kTkBH+mIAQrLEV+ItC4
-        YAKIR6ZGg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIXZ9-00069s-8n; Thu, 10 Oct 2019 12:29:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 461BB301224;
-        Thu, 10 Oct 2019 14:28:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4D96C202F4F4F; Thu, 10 Oct 2019 14:29:09 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 14:29:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] ftrace/module: Allow ftrace to make only loaded module
- text read-write
-Message-ID: <20191010122909.GK2359@hirez.programming.kicks-ass.net>
-References: <20191009223638.60b78727@oasis.local.home>
- <20191010073121.GN2311@hirez.programming.kicks-ass.net>
- <20191010093329.GI2359@hirez.programming.kicks-ass.net>
- <20191010093650.GJ2359@hirez.programming.kicks-ass.net>
+Received: by mail-qt1-f193.google.com with SMTP id m61so8390327qte.7
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 05:29:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=23//cENVQiVYoGQZus1cpePnZWSeYRa3XeMxkFD7WQg=;
+        b=NH+owc3Bkdk66rd2oxnrLG1lU03Niv3N/GUBSt1/9dRSfQRuHfW4W1igS07q2DzsED
+         fiQrQlVCnB6RH1zol5ooTAqAkk4Xsuck4130IKNNILzVnR6dN+APBVrTF3gt0uibSGgD
+         REgXmU/yULmLNMrOnM+eAoYoNE5cZ/yj3rOWgPhBgTAsd1uDptCc1neDWiXY9TsuUizx
+         bdjyqsenan6mAiId/xeorNg/BvGaBC7aZxP6eqKDfiV8jP3HVR62eHRnxnDBCTnQPotz
+         /ChHSep613KsdqBbI6DYZASrvDT7F3+conY9cWnCzQAvoYhTBLOfZarBcIdBVrbFnPgR
+         g5jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=23//cENVQiVYoGQZus1cpePnZWSeYRa3XeMxkFD7WQg=;
+        b=Xz3uUUWUEz+DenY2WOyFiEmgokJgvJQyQ2+iYJEkXuRHC0nfQ0mde5vm+RXvpR3NmZ
+         6EQz2bhSo4Yqeup9EMpNQ37750yojA1J7TRbptnuEBv7jBh67fLEW8dyBOracXcLcGO9
+         V0vxz5iPell+duKUurrfC08JVq2XHufNa4GAZqoLnD3Ek3Fosd1g8Ujz5zKKGdRfaXKe
+         FUCrSuMiJ5GeNCnd/LZloxtEOWHI0yXIJ3qBGdlR+B+bemJQhH0k9Y3kgbodtG2zLiuL
+         gd9vHGBYcJ66WvqZD+IZbzPxWCeCRT//DwM/mAFQwTfLB0Yo5Kvs5P7tDaQ0DE2zz2NG
+         t5Pg==
+X-Gm-Message-State: APjAAAVt1LKnpENWzQ7gERY1NzPbTdSLaEXYFahFUs2lCD9QkArLDzuc
+        ou20Pp7VC1DHSzTtt2DX/JE=
+X-Google-Smtp-Source: APXvYqwQH5Jlb64oqJ1zXF4YJOVldcOTFNRXzDkOo7N4G+q3ydZkfiZFyUgO93pSNrWeN0FYBF31hw==
+X-Received: by 2002:a0c:814d:: with SMTP id 71mr9689628qvc.220.1570710552657;
+        Thu, 10 Oct 2019 05:29:12 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id t64sm2491824qkc.70.2019.10.10.05.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 05:29:11 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 175E641199; Thu, 10 Oct 2019 09:29:08 -0300 (-03)
+Date:   Thu, 10 Oct 2019 09:29:08 -0300
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Guo Ren <guoren@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Mao Han <han_mao@c-sky.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3] perf tools: avoid sample_reg_masks being const + weak
+Message-ID: <20191010122908.GA19434@kernel.org>
+References: <20190927214341.170683-1-irogers@google.com>
+ <20191001003623.255186-1-irogers@google.com>
+ <20191008123104.GA16241@krava>
+ <CAP-5=fUSgjyLkZJaHTvdFbzZijy6Gzmx5UZHK_brxVEhFpMG8g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010093650.GJ2359@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAP-5=fUSgjyLkZJaHTvdFbzZijy6Gzmx5UZHK_brxVEhFpMG8g@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:36:50AM +0200, Peter Zijlstra wrote:
-> On Thu, Oct 10, 2019 at 11:33:29AM +0200, Peter Zijlstra wrote:
+Em Wed, Oct 09, 2019 at 04:07:37PM -0700, Ian Rogers escreveu:
+> On Tue, Oct 8, 2019 at 5:31 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > On Mon, Sep 30, 2019 at 05:36:23PM -0700, Ian Rogers wrote:
+> > > Being const + weak breaks with some compilers that constant-propagate
+> > > from the weak symbol. This behavior is outside of the specification, but
+> > > in LLVM is chosen to match GCC's behavior.
+> > >
+> > > LLVM's implementation was set in this patch:
+> > > https://github.com/llvm/llvm-project/commit/f49573d1eedcf1e44893d5a062ac1b72c8419646
+> > > A const + weak symbol is set to be weak_odr:
+> > > https://llvm.org/docs/LangRef.html
+> > > ODR is one definition rule, and given there is one constant definition
+> > > constant-propagation is possible. It is possible to get this code to
+> > > miscompile with LLVM when applying link time optimization. As compilers
+> > > become more aggressive, this is likely to break in more instances.
 
-> > I don't see any reason what so ever..
-> > 
-> > load_module()
-> >   ...
-> >   complete_formation()
-> >     mutex_lock(&module_mutex);
-> >     ...
-> >     module_enable_ro();
-> >     module_enable_nx();
-> >     module_enable_x();
-> > 
-> >     mod->state = MODULE_STATE_COMING;
-> >     mutex_unlock(&module_mutex);
-> > 
-> >   prepare_coming_module()
-> >     ftrace_module_enable();
-> >     ...
-> > 
-> > IOW, we're doing ftrace_module_enable() immediately after we flip it
-> > RO+X. There is nothing in between that we can possibly rely on.
-> > 
-> > I was going to put:
-> > 
-> >   blocking_notifier_call_chain(&module_notify_list,
-> > 			       MODULE_STATE_UNFORMED, mod);
-> > 
-> > right before module_enable_ro(), in complete_formation(), for jump_label
-> > and static_call. It looks like ftrace (and possibly klp) want that too.
-> 
-> Also, you already have ftrace_module_init() right before that. The only
-> thing inbetween ftrace_module_init() and ftrace_module_enable() is
-> verify_exported_symbols() and module_bug_finalize().
-> 
-> Do you really need that for patching stuff?
-
-If you rework the locking slightly, such that you have to call
-ftrace_process_locs() with ftrace_lock already held, then it looks like
-you can squash ftrace_module_enable() right in there.
-
-There is absolutely no fundamental reason you cannot patch it from
-ftrace_module_init().
-
-Yes, your code is anal about checking the NOPs, so you first have to
-write NOPs before you can write CALLs, if it is enabled. But afaict you
-really can do all that from ftrace_module_init(), as long as you do it
-all under the same ftrace_lock section.
-
-If you have two sections, like now, then there is indeed that race that
-ftrace can get enabled in between, and all the confusion that that
-brings.
-
-That is, what's fundamentally buggered about something like this?
-
----
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 62a50bf399d6..5f7113f100ce 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5626,6 +5626,48 @@ static int ftrace_process_locs(struct module *mod,
- 	ftrace_update_code(mod, start_pg);
- 	if (!mod)
- 		local_irq_restore(flags);
-+
-+	if (ftrace_disabled || !mod)
-+		goto out_loop;
-+
-+	do_for_each_ftrace_rec(pg, rec) {
-+		int cnt;
-+		/*
-+		 * do_for_each_ftrace_rec() is a double loop.
-+		 * module text shares the pg. If a record is
-+		 * not part of this module, then skip this pg,
-+		 * which the "break" will do.
-+		 */
-+		if (!within_module_core(rec->ip, mod) &&
-+		    !within_module_init(rec->ip, mod))
-+			break;
-+
-+		cnt = 0;
-+
-+		/*
-+		 * When adding a module, we need to check if tracers are
-+		 * currently enabled and if they are, and can trace this record,
-+		 * we need to enable the module functions as well as update the
-+		 * reference counts for those function records.
-+		 */
-+		if (ftrace_start_up)
-+			cnt += referenced_filters(rec);
-+
-+		/* This clears FTRACE_FL_DISABLED */
-+		rec->flags = cnt;
-+
-+		if (ftrace_start_up && cnt) {
-+			int failed = __ftrace_replace_code(rec, 1);
-+			if (failed) {
-+				ftrace_bug(failed, rec);
-+				goto out_loop;
-+			}
-+		}
-+
-+	} while_for_each_ftrace_rec();
-+
-+ out_loop:
-+
- 	ret = 0;
-  out:
- 	mutex_unlock(&ftrace_lock);
-@@ -5793,73 +5835,6 @@ void ftrace_release_mod(struct module *mod)
+> > is this just aprecaution or you actualy saw some breakage?
  
- void ftrace_module_enable(struct module *mod)
- {
--	struct dyn_ftrace *rec;
--	struct ftrace_page *pg;
--
--	mutex_lock(&ftrace_lock);
--
--	if (ftrace_disabled)
--		goto out_unlock;
--
--	/*
--	 * If the tracing is enabled, go ahead and enable the record.
--	 *
--	 * The reason not to enable the record immediately is the
--	 * inherent check of ftrace_make_nop/ftrace_make_call for
--	 * correct previous instructions.  Making first the NOP
--	 * conversion puts the module to the correct state, thus
--	 * passing the ftrace_make_call check.
--	 *
--	 * We also delay this to after the module code already set the
--	 * text to read-only, as we now need to set it back to read-write
--	 * so that we can modify the text.
--	 */
--	if (ftrace_start_up)
--		ftrace_arch_code_modify_prepare();
--
--	do_for_each_ftrace_rec(pg, rec) {
--		int cnt;
--		/*
--		 * do_for_each_ftrace_rec() is a double loop.
--		 * module text shares the pg. If a record is
--		 * not part of this module, then skip this pg,
--		 * which the "break" will do.
--		 */
--		if (!within_module_core(rec->ip, mod) &&
--		    !within_module_init(rec->ip, mod))
--			break;
--
--		cnt = 0;
--
--		/*
--		 * When adding a module, we need to check if tracers are
--		 * currently enabled and if they are, and can trace this record,
--		 * we need to enable the module functions as well as update the
--		 * reference counts for those function records.
--		 */
--		if (ftrace_start_up)
--			cnt += referenced_filters(rec);
--
--		/* This clears FTRACE_FL_DISABLED */
--		rec->flags = cnt;
--
--		if (ftrace_start_up && cnt) {
--			int failed = __ftrace_replace_code(rec, 1);
--			if (failed) {
--				ftrace_bug(failed, rec);
--				goto out_loop;
--			}
--		}
--
--	} while_for_each_ftrace_rec();
--
-- out_loop:
--	if (ftrace_start_up)
--		ftrace_arch_code_modify_post_process();
--
-- out_unlock:
--	mutex_unlock(&ftrace_lock);
--
- 	process_cached_mods(mod->name);
- }
+> We saw a breakage with clang with thinlto enabled for linking. Our
+> compiler team had recently seen, and were surprised by, a similar
+> issue and were able to dig out the weak ODR issue.
+
+This is useful info, I'll add it to the commit log message.
  
+> > > Move the definition of sample_reg_masks to the conditional part of
+> > > perf_regs.h and guard usage with HAVE_PERF_REGS_SUPPORT. This avoids the
+> > > weak symbol.
+
+> > > Fix an issue when HAVE_PERF_REGS_SUPPORT isn't defined from patch v1.
+> > > In v3, add perf_regs.c for architectures that HAVE_PERF_REGS_SUPPORT but
+> > > don't declare sample_regs_masks.
+
+> > looks good to me (again ;-)), let's see if it passes Arnaldo's farm
+
+It passed a few of the usual places where things like this break, I'll
+submit it to a full set of build environments soon, together with what
+is sitting in acme/perf/core.
+
+Thanks,
+
+- Arnaldo
