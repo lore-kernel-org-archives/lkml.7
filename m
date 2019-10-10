@@ -2,197 +2,95 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242C5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F1C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F8320B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FCA6214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570740813;
+	bh=wl/uGZ9CpZbMZpU/RjjOTiQ/Pa9E1SN6Z8QAD08grPc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tKfif912DRys8zz9PNWWePHFzOedEvzwswjiiGVmFOtR+Lx0LmPE21gFSAkVAvniG
+	 QfjXnRLva8N+Bxb1j6NlKfbTyatnrZtLnpgGLjfXbED1GGwRTA7wd2KoZdpACzeOaS
+	 1aHMD0gFOSJPkWIrgzzF6b8SB34ga3/32cnzFNUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfJJUv6 (ORCPT
+        id S1727114AbfJJUxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:51:58 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:43081 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJUv6 (ORCPT
+        Thu, 10 Oct 2019 16:53:32 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37091 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfJJUxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:51:58 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MElhb-1iK3Fg1ttL-00GGXZ; Thu, 10 Oct 2019 22:51:47 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org,
+        Thu, 10 Oct 2019 16:53:32 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k32so6129189otc.4;
+        Thu, 10 Oct 2019 13:53:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e/t0HF/wqJSfNrnwPhBS9XOByD4MLCYu+o03s9uJ830=;
+        b=GFwDQAPTrh/GqeLSUNm8F8lmG/fju0FWQPkCkSh5BL+yThASJMolLaAmYB82YHDsB3
+         pBrwV1mM3VzVlW/5MEDDWDai5CNFCIzvxdMfPdtfdq5wGWcvqz4t5HJq9TvMnci44Udj
+         Pmgke18S1fv7qjznHTzNZWv7EheklQzxh2bdzo0FM68Qm1ZRf4kJZHOUOMvGmh7Mm7sX
+         7eH0ETYfoDb7mNHnX45QOH8/aPoMNh/K/P//8OZaTauL3umBPOW3iEX3iumzCwVy46HC
+         BEpC9oxzTvyj72CaHZYsc0qRY8RSnYBdngPfCfJ+5oFU1NkF8f1q2gkfncZ3xOyd2ZaK
+         x3BA==
+X-Gm-Message-State: APjAAAVa+O+nq86qNc16OkSrGF5pCY06IlDs06eaMMnwnBqVGIPXqT4L
+        TZz/+ydkuERRdeF17deZww==
+X-Google-Smtp-Source: APXvYqws/sj2QT0mQsX1yIjAarwMmwwPfrIx/IFWvphM/0AsdleqskzJS1FEccZSdmd6jvq0Sm7mbw==
+X-Received: by 2002:a9d:6e1a:: with SMTP id e26mr9651172otr.307.1570740809810;
+        Thu, 10 Oct 2019 13:53:29 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k204sm2029360oif.33.2019.10.10.13.53.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 13:53:29 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 15:53:28 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 29/36] ARM: s3c: cpufreq: split out registers
-Date:   Thu, 10 Oct 2019 22:30:13 +0200
-Message-Id: <20191010203043.1241612-29-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
+Subject: Re: [PATCH v3] dt-bindings: iio: maxbotix,mb1232.yaml: transform to
+ yaml
+Message-ID: <20191010205328.GA19956@bogus>
+References: <20191007170219.xfipsry5nk4raiem@arbad>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:bYQlhXWih+C+Vcg6wO+eWmRG6N2NRKtj6W4Hj2uqCeTtCslL0ZM
- 9F8De2sKc7IKBqRY2Nooec09SugipJalqwYSBuom/M0Q7jMOU80rbBavRj/rupElvHljI9R
- 7wVD6N+xlArvPcXU7uItBt/J/DMkMKw+rjtCrZ6Dvks52NCAIf/R/bydDOuefGky+4kj3uG
- 5FzyYB+d0Q7IUdCX/eR3w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2I5d1BQgx7M=:/O1F8DhCPGZVpo6kO5MbB/
- qMPymzDv9efv3DZA3gPjkQK1K3WnXOpZs8B/HcC7sj9w95ARoeV5v//SqkJ/2bc0oxufpc4uV
- Udphzs7KpKDwHAQaSUw8X7PcsBoIjtBencMvhaDlS0ac+pqCSoHLx81VaNagzEnjlGR466nyo
- Y7BT3EJ3TnYITjiEYYhD9N1ikODxKBNDCopdUAVhSY+ljf5ecCiQf9SM0us40TuIQ8y2k6ENf
- UWacDF3jEYZfZIBnFX1pUOKWQYUA3ogZ22s0JCT9m0RBW6IHejwo9Q3Gl8EGZpoUdFLryWLqU
- Cl1dzvkaQ59rkGl+LgVqZF/67QhRhp1qaZQuJyIcvi4ooCmZ2efq3JY4HMAijLAf4jY9soaAz
- sP9PIhvkudaX1CfiRIjwiovnkg2HtpVt8Z6w9kpEZzQolrzZff/strXT7rRG6OiWa/Qhude6O
- gW3ahYATIlh4MsukJGXTxDN/GdjzuaYyr9pP7OEpMIYPqAldBUXZHH3yRKvbyCII27zAW2SBR
- yjIylHgLS98O67iGjD6hLQLgRWMd4CxH12bJXckcZwwco9rbVtOKblDUlFH3bExyPj+5+bmAq
- LbbUSesRDUasSBaaJcs/R+LOAmGiUjX7tJQQ26drw9NqRu0D3AaB1v1b4KnswjhV63TBmIrqv
- lEeEiEStguiEVr218efJgCJu9BsJAopwwmhq4hh3JYwurzqeXQ2zVd/0DpW48FzAS61Z3IdRs
- NPKMd2BAn+/iM/8I7XmpPAEtQHrgXC9r0f422rSDMG4thRdLPiAFpk66T/cAQuZonxIRLUR86
- vZOOG31X8p5OoyumdQtQIEpd3ef2mVWOHU2KCwOURMkByefla25RlWmrS4bSwVMHFXxAGEhUJ
- 1lpOGF9ABUlW1DKygohw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007170219.xfipsry5nk4raiem@arbad>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each of the cpufreq drivers uses a fixed set of register
-bits, copy those definitions into the drivers to avoid
-including mach/regs-clock.h.
+On Mon, 7 Oct 2019 19:02:20 +0200, Andreas Klinger wrote:
+> transform existing documentation of maxbotix,mb1232 ultrasonic ranger
+> from text documentation format into yaml.
+> 
+> Changes in v3:
+> - add a i2c node around device node to set up #address-cells and
+>   #size-cells for omitting error during make dt_binding_check
+> 
+> Changes in v2:
+> - removed description of reg property
+> - added a line:
+>   additionalProperties: false
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
+>  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 60 ++++++++++++++++++++++
+>  2 files changed, 60 insertions(+), 29 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+> 
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/cpufreq/s3c2410-cpufreq.c | 11 +++++++++--
- drivers/cpufreq/s3c2412-cpufreq.c | 20 +++++++++++++++++++-
- drivers/cpufreq/s3c2440-cpufreq.c | 24 ++++++++++++++++++++++--
- drivers/cpufreq/s3c24xx-cpufreq.c |  4 +++-
- 4 files changed, 53 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/cpufreq/s3c2410-cpufreq.c b/drivers/cpufreq/s3c2410-cpufreq.c
-index 0c4f2ccd7e22..5c6cb590b63f 100644
---- a/drivers/cpufreq/s3c2410-cpufreq.c
-+++ b/drivers/cpufreq/s3c2410-cpufreq.c
-@@ -20,11 +20,18 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/regs-clock.h>
--
- #include <plat/cpu.h>
- #include <plat/cpu-freq-core.h>
- 
-+#include <mach/map.h>
-+
-+#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
-+
-+#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
-+
-+#define S3C2410_CLKDIVN_PDIVN	     (1<<0)
-+#define S3C2410_CLKDIVN_HDIVN	     (1<<1)
-+
- /* Note, 2410A has an extra mode for 1:4:4 ratio, bit 2 of CLKDIV */
- 
- static void s3c2410_cpufreq_setdivs(struct s3c_cpufreq_config *cfg)
-diff --git a/drivers/cpufreq/s3c2412-cpufreq.c b/drivers/cpufreq/s3c2412-cpufreq.c
-index 53385a9ab957..d922d0d47c80 100644
---- a/drivers/cpufreq/s3c2412-cpufreq.c
-+++ b/drivers/cpufreq/s3c2412-cpufreq.c
-@@ -23,12 +23,30 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/regs-clock.h>
- #include <mach/s3c2412.h>
- 
- #include <plat/cpu.h>
- #include <plat/cpu-freq-core.h>
- 
-+#include <mach/map.h>
-+
-+#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
-+
-+#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
-+
-+#define S3C2412_CLKDIVN_PDIVN		(1<<2)
-+#define S3C2412_CLKDIVN_HDIVN_MASK	(3<<0)
-+#define S3C2412_CLKDIVN_ARMDIVN		(1<<3)
-+#define S3C2412_CLKDIVN_DVSEN		(1<<4)
-+#define S3C2412_CLKDIVN_HALFHCLK	(1<<5)
-+#define S3C2412_CLKDIVN_USB48DIV	(1<<6)
-+#define S3C2412_CLKDIVN_UARTDIV_MASK	(15<<8)
-+#define S3C2412_CLKDIVN_UARTDIV_SHIFT	(8)
-+#define S3C2412_CLKDIVN_I2SDIV_MASK	(15<<12)
-+#define S3C2412_CLKDIVN_I2SDIV_SHIFT	(12)
-+#define S3C2412_CLKDIVN_CAMDIV_MASK	(15<<16)
-+#define S3C2412_CLKDIVN_CAMDIV_SHIFT	(16)
-+
- /* our clock resources. */
- static struct clk *xtal;
- static struct clk *fclk;
-diff --git a/drivers/cpufreq/s3c2440-cpufreq.c b/drivers/cpufreq/s3c2440-cpufreq.c
-index 3f772ba8896e..5fe7a891fa13 100644
---- a/drivers/cpufreq/s3c2440-cpufreq.c
-+++ b/drivers/cpufreq/s3c2440-cpufreq.c
-@@ -24,11 +24,31 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
--#include <mach/regs-clock.h>
--
- #include <plat/cpu.h>
- #include <plat/cpu-freq-core.h>
- 
-+#include <mach/map.h>
-+
-+#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
-+#define S3C2410_CLKDIVN	    S3C2410_CLKREG(0x14)
-+#define S3C2440_CAMDIVN	    S3C2410_CLKREG(0x18)
-+
-+#define S3C2440_CLKDIVN_PDIVN	     (1<<0)
-+#define S3C2440_CLKDIVN_HDIVN_MASK   (3<<1)
-+#define S3C2440_CLKDIVN_HDIVN_1      (0<<1)
-+#define S3C2440_CLKDIVN_HDIVN_2      (1<<1)
-+#define S3C2440_CLKDIVN_HDIVN_4_8    (2<<1)
-+#define S3C2440_CLKDIVN_HDIVN_3_6    (3<<1)
-+#define S3C2440_CLKDIVN_UCLK         (1<<3)
-+
-+#define S3C2440_CAMDIVN_CAMCLK_MASK  (0xf<<0)
-+#define S3C2440_CAMDIVN_CAMCLK_SEL   (1<<4)
-+#define S3C2440_CAMDIVN_HCLK3_HALF   (1<<8)
-+#define S3C2440_CAMDIVN_HCLK4_HALF   (1<<9)
-+#define S3C2440_CAMDIVN_DVSEN        (1<<12)
-+
-+#define S3C2442_CAMDIVN_CAMCLK_DIV3  (1<<5)
-+
- static struct clk *xtal;
- static struct clk *fclk;
- static struct clk *hclk;
-diff --git a/drivers/cpufreq/s3c24xx-cpufreq.c b/drivers/cpufreq/s3c24xx-cpufreq.c
-index ed0e713b1b57..c786e1197d3c 100644
---- a/drivers/cpufreq/s3c24xx-cpufreq.c
-+++ b/drivers/cpufreq/s3c24xx-cpufreq.c
-@@ -28,9 +28,11 @@
- #include <plat/cpu.h>
- #include <plat/cpu-freq-core.h>
- 
--#include <mach/regs-clock.h>
-+#include <mach/map.h>
- 
- /* note, cpufreq support deals in kHz, no Hz */
-+#define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
-+#define S3C2410_MPLLCON     S3C2410_CLKREG(0x04)
- 
- static struct cpufreq_driver s3c24xx_driver;
- static struct s3c_cpufreq_config cpu_cur;
--- 
-2.20.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
