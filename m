@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328FBC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA2FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCC7218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E960C20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696843;
-	bh=96FtM7irNPIaBVtqL8BGe3vDnYg8ARuZ5kTyXkvGf70=;
+	s=default; t=1570696846;
+	bh=y2bEQBdf2i+65jKxhqGXFchMma96qIpxAeXE0iW0uOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S2+h+LeWFp1ZCTBAIo2h+hcv87iIkgnUR1U8itvFNDw62hjnAwdsCRsAI15VlsP+i
-	 jhdt5S+FCfGu0VI78TB/UVjeNfUamDxV3ykB0zXuHWmogFtCE9HZcvmQjb7l1LCyqH
-	 KRrZQGMBTtFrz48DkCvAZnL+yR1Sm04Mk9X4WO2U=
+	b=YiDcIdt6uyBRqj0WJ2Cx3BJd8uShn/uck/bqxC0Y/q47eR4EtwLlEwSv+ZJvL2HHL
+	 ikadkAsIR9ScUHmuz5W4/21gBwR18UE7J8mq1F/goDBCNEH6AqRUXB6x1w1bZyyeD+
+	 d5etcG8wSXYgWt51SsWplcb6ibH17uemcFpfD8AM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388158AbfJJIkl (ORCPT
+        id S2388169AbfJJIko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44762 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:40:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388148AbfJJIkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:40:39 -0400
+        id S2387545AbfJJIkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:40:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E53A020B7C;
-        Thu, 10 Oct 2019 08:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92F1220B7C;
+        Thu, 10 Oct 2019 08:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696838;
-        bh=96FtM7irNPIaBVtqL8BGe3vDnYg8ARuZ5kTyXkvGf70=;
+        s=default; t=1570696841;
+        bh=y2bEQBdf2i+65jKxhqGXFchMma96qIpxAeXE0iW0uOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A1lUSkjQLmZlziq1h8htFjfldpf0R/Y3FMXxafAxRCVqdaadBU79YIr0aC01lhNw7
-         uekkgkWg9XGqkcMQSlQ7X7DnX+xOjPr7yeXN9WIw1gWLRSCb3JhO4CYXNIVGQKUW3w
-         wJhjhHTuRbfMoV1AfS1mSluSsckWYgIYTpayGBd8=
+        b=fnQtQx3qDS+J3joXAziQevLwnEksmf6rQNHk2L0kZ9/zyhmsfU+/WTqgSgfdCPWqD
+         998po47xJS5sLGuPIJznijFAn1zSC4sLmQcDoEqjzeMvIWkiabl0Mhs9XM2tFvNtaw
+         XBsjW28k6nnDnRXkEAFUzcb5w2LxrJZuxcFMUIk8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaolin Zhang <xiaolin.zhang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH 5.3 070/148] drm/i915/gvt: update vgpu workload head pointer correctly
-Date:   Thu, 10 Oct 2019 10:35:31 +0200
-Message-Id: <20191010083615.656859584@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.3 035/148] powerpc/mm: Fix an Oops in kasan_mmu_init()
+Date:   Thu, 10 Oct 2019 10:34:56 +0200
+Message-Id: <20191010083613.280565075@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,80 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolin Zhang <xiaolin.zhang@intel.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 0a3242bdb47713e09cb004a0ba4947d3edf82d8a upstream.
+commit cbd18991e24fea2c31da3bb117c83e4a3538cd11 upstream.
 
-when creating a vGPU workload, the guest context head pointer should
-be updated correctly by comparing with the exsiting workload in the
-guest worklod queue including the current running context.
+Uncompressing Kernel Image ... OK
+   Loading Device Tree to 01ff7000, end 01fff74f ... OK
+[    0.000000] printk: bootconsole [udbg0] enabled
+[    0.000000] BUG: Unable to handle kernel data access at 0xf818c000
+[    0.000000] Faulting instruction address: 0xc0013c7c
+[    0.000000] Thread overran stack, or stack corrupted
+[    0.000000] Oops: Kernel access of bad area, sig: 11 [#1]
+[    0.000000] BE PAGE_SIZE=16K PREEMPT
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc4-s3k-dev-00743-g5abe4a3e8fd3-dirty #2080
+[    0.000000] NIP:  c0013c7c LR: c0013310 CTR: 00000000
+[    0.000000] REGS: c0c5ff38 TRAP: 0300   Not tainted  (5.3.0-rc4-s3k-dev-00743-g5abe4a3e8fd3-dirty)
+[    0.000000] MSR:  00001032 <ME,IR,DR,RI>  CR: 99033955  XER: 80002100
+[    0.000000] DAR: f818c000 DSISR: 82000000
+[    0.000000] GPR00: c0013310 c0c5fff0 c0ad6ac0 c0c600c0 f818c031 82000000 00000000 ffffffff
+[    0.000000] GPR08: 00000000 f1f1f1f1 c0013c2c c0013304 99033955 00400008 00000000 07ff9598
+[    0.000000] GPR16: 00000000 07ffb94c 00000000 00000000 00000000 00000000 00000000 f818cfb2
+[    0.000000] GPR24: 00000000 00000000 00001000 ffffffff 00000000 c07dbf80 00000000 f818c000
+[    0.000000] NIP [c0013c7c] do_page_fault+0x50/0x904
+[    0.000000] LR [c0013310] handle_page_fault+0xc/0x38
+[    0.000000] Call Trace:
+[    0.000000] Instruction dump:
+[    0.000000] be010080 91410014 553fe8fe 3d40c001 3d20f1f1 7d800026 394a3c2c 3fffe000
+[    0.000000] 6129f1f1 900100c4 9181007c 91410018 <913f0000> 3d2001f4 6129f4f4 913f0004
 
-in some situation, there is a running context A and then received 2 new
-vGPU workload context B and A. in the new workload context A, it's head
-pointer should be updated with the running context A's tail.
+Don't map the early shadow page read-only yet when creating the new
+page tables for the real shadow memory, otherwise the memblock
+allocations that immediately follows to create the real shadow pages
+that are about to replace the early shadow page trigger a page fault
+if they fall into the region being worked on at the moment.
 
-v2: walk through guest workload list in backward way.
-
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
 Cc: stable@vger.kernel.org
-Signed-off-by: Xiaolin Zhang <xiaolin.zhang@intel.com>
-Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/fe86886fb8db44360417cee0dc515ad47ca6ef72.1566382750.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gvt/scheduler.c |   28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ arch/powerpc/mm/kasan/kasan_init_32.c |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/gvt/scheduler.c
-+++ b/drivers/gpu/drm/i915/gvt/scheduler.c
-@@ -1424,9 +1424,6 @@ static int prepare_mm(struct intel_vgpu_
- #define same_context(a, b) (((a)->context_id == (b)->context_id) && \
- 		((a)->lrca == (b)->lrca))
- 
--#define get_last_workload(q) \
--	(list_empty(q) ? NULL : container_of(q->prev, \
--	struct intel_vgpu_workload, list))
- /**
-  * intel_vgpu_create_workload - create a vGPU workload
-  * @vgpu: a vGPU
-@@ -1446,7 +1443,7 @@ intel_vgpu_create_workload(struct intel_
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -34,7 +34,7 @@ static int __ref kasan_init_shadow_page_
  {
- 	struct intel_vgpu_submission *s = &vgpu->submission;
- 	struct list_head *q = workload_q_head(vgpu, ring_id);
--	struct intel_vgpu_workload *last_workload = get_last_workload(q);
-+	struct intel_vgpu_workload *last_workload = NULL;
- 	struct intel_vgpu_workload *workload = NULL;
- 	struct drm_i915_private *dev_priv = vgpu->gvt->dev_priv;
- 	u64 ring_context_gpa;
-@@ -1472,15 +1469,20 @@ intel_vgpu_create_workload(struct intel_
- 	head &= RB_HEAD_OFF_MASK;
- 	tail &= RB_TAIL_OFF_MASK;
+ 	pmd_t *pmd;
+ 	unsigned long k_cur, k_next;
+-	pgprot_t prot = kasan_prot_ro();
++	pgprot_t prot = slab_is_available() ? kasan_prot_ro() : PAGE_KERNEL;
  
--	if (last_workload && same_context(&last_workload->ctx_desc, desc)) {
--		gvt_dbg_el("ring id %d cur workload == last\n", ring_id);
--		gvt_dbg_el("ctx head %x real head %lx\n", head,
--				last_workload->rb_tail);
--		/*
--		 * cannot use guest context head pointer here,
--		 * as it might not be updated at this time
--		 */
--		head = last_workload->rb_tail;
-+	list_for_each_entry_reverse(last_workload, q, list) {
+ 	pmd = pmd_offset(pud_offset(pgd_offset_k(k_start), k_start), k_start);
+ 
+@@ -110,9 +110,22 @@ static int __ref kasan_init_region(void
+ static void __init kasan_remap_early_shadow_ro(void)
+ {
+ 	pgprot_t prot = kasan_prot_ro();
++	unsigned long k_start = KASAN_SHADOW_START;
++	unsigned long k_end = KASAN_SHADOW_END;
++	unsigned long k_cur;
++	phys_addr_t pa = __pa(kasan_early_shadow_page);
+ 
+ 	kasan_populate_pte(kasan_early_shadow_pte, prot);
+ 
++	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
++		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
++		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
 +
-+		if (same_context(&last_workload->ctx_desc, desc)) {
-+			gvt_dbg_el("ring id %d cur workload == last\n",
-+					ring_id);
-+			gvt_dbg_el("ctx head %x real head %lx\n", head,
-+					last_workload->rb_tail);
-+			/*
-+			 * cannot use guest context head pointer here,
-+			 * as it might not be updated at this time
-+			 */
-+			head = last_workload->rb_tail;
-+			break;
-+		}
- 	}
++		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
++			continue;
++
++		__set_pte_at(&init_mm, k_cur, ptep, pfn_pte(PHYS_PFN(pa), prot), 0);
++	}
+ 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
+ }
  
- 	gvt_dbg_el("ring id %d begin a new workload\n", ring_id);
 
 
