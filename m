@@ -2,136 +2,142 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74C5C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEC9C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF63218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490CD218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 06:55:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ke7VzbDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732987AbfJJGyl (ORCPT
+        id S1733024AbfJJGzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 02:54:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44048 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfJJGyl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 02:54:41 -0400
-Received: from dhcp-172-31-174-146.wireless.concordia.ca (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 111722905BC;
-        Thu, 10 Oct 2019 07:54:38 +0100 (BST)
-Date:   Thu, 10 Oct 2019 08:54:35 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     <Tudor.Ambarus@microchip.com>
-Cc:     <vigneshr@ti.com>, <marek.vasut@gmail.com>,
-        <linux-mtd@lists.infradead.org>, <geert+renesas@glider.be>,
-        <jonas@norrbonn.se>, linux-aspeed@lists.ozlabs.org,
-        andrew@aj.id.au, richard@nod.at, linux-kernel@vger.kernel.org,
-        vz@mleia.com, linux-mediatek@lists.infradead.org, joel@jms.id.au,
-        miquel.raynal@bootlin.com, matthias.bgg@gmail.com,
-        computersforpeace@gmail.com, dwmw2@infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 03/22] mtd: spi-nor: cadence-quadspi: Fix
- cqspi_command_read() definition
-Message-ID: <20191010085435.67b08ab5@dhcp-172-31-174-146.wireless.concordia.ca>
-In-Reply-To: <20190924074533.6618-4-tudor.ambarus@microchip.com>
-References: <20190924074533.6618-1-tudor.ambarus@microchip.com>
-        <20190924074533.6618-4-tudor.ambarus@microchip.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 10 Oct 2019 02:55:09 -0400
+Received: from mail-eopbgr80081.outbound.protection.outlook.com ([40.107.8.81]:40695
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726840AbfJJGzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 02:55:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U2Axo0tBiuzEgKIHAh7bh/oSPClWx2K6H4Z0ZuFqwZ4ie9nRGvosB7lluW9wi1Eo2LqG1wy5WOZtLoT3qSkt9HALaMMlzuCJAS1UDVOSUy0zM5DEAWnzaEJ6XacZI8jkLqzlwzBttQfUvC/gsrPbWn4lyvXmjE5XV11ljMiDZz+dm5aV1ycmyZgAv7NkXEyxabj51DUCSHZVilVR6wdHpwQxB3uZqv45KsVTcrvhmKdF5j+hLifu+E9kYGyZQA+qZCU/G0Y7oeeGBVNnlns4dXpEsYThle/6ARAY+Ceue0myZQwSzWIMfBHTB2hOLSzaVRoegyd/zJxIpWuhX4JD5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RNAsWnubDpx7pJMgSstDQIOwJ0Xw3RLpk6m684MYQic=;
+ b=WT1zVhBB7Ta+bxMTniSks7EXIf8T9tyhSICuyhSBsHr6VQ7PW7pOr6uwwKD7GapuSIDByMqTt+s3odEwPw+nTKPe2LjFH9GGFp0S+UlG1ZmHk7FoRG5nkXvNXpe1kOzCFC+1DzhtQ8ibsaxvvVzQw9inpHPKRFifqHRuWUgrAfU9WJCCTkUuZh0QjD57tamAJ1NExPchjtJ3woFt7N6znSN53y7fdkiSX2w+kdBg9EG3Iwi4cKNbjUo32G4kh7vJeG5YmUThEbneEhsMg65GzthlL0wY6EhcNxG0A2r0/lrtH7i7QAQRtLW3P5qcBWfA4cvf7iy9EL0fi2GMNC1ZmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RNAsWnubDpx7pJMgSstDQIOwJ0Xw3RLpk6m684MYQic=;
+ b=Ke7VzbDmH4aC4LiMocR3q2H6W4CVBhslEH0oAmD/Rrxs+MY8kh19UV72otKob0i5r9mVp9h+dfmxte4S72CXZKOdgy4bmXx2iR1+34qGu9VJeEcQrmgJ+4KL4KOgjxLFI5ltHlflbhjaEQT6ohekAo/8I+houRGG4kG4qzYw2wI=
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
+ VI1PR0402MB2925.eurprd04.prod.outlook.com (10.175.24.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.23; Thu, 10 Oct 2019 06:55:05 +0000
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::9024:93e:5c3:44b2]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::9024:93e:5c3:44b2%7]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
+ 06:55:05 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+        "swboyd@chromium.org" <swboyd@chromium.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] net: fec_main: Use platform_get_irq_byname_optional()
+ to avoid error message
+Thread-Topic: [PATCH 1/2] net: fec_main: Use
+ platform_get_irq_byname_optional() to avoid error message
+Thread-Index: AQHVforZmuVq6TTHS0KnaARU9zwWm6dTcdBA
+Date:   Thu, 10 Oct 2019 06:55:04 +0000
+Message-ID: <VI1PR0402MB3600008424832B5A8145F3BFFF940@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <1570616148-11571-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1570616148-11571-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 11b8935c-3364-444b-a6e4-08d74d4ec7c4
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VI1PR0402MB2925:|VI1PR0402MB2925:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB29257B3CE5E559C5042FB696FF940@VI1PR0402MB2925.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 018632C080
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(396003)(366004)(39860400002)(189003)(199004)(229853002)(446003)(7736002)(66066001)(55016002)(11346002)(64756008)(76176011)(9686003)(7696005)(2501003)(15650500001)(66446008)(14454004)(186003)(478600001)(305945005)(26005)(74316002)(486006)(476003)(52536014)(110136005)(6436002)(71200400001)(71190400001)(8936002)(81166006)(81156014)(66476007)(33656002)(86362001)(14444005)(2201001)(4326008)(25786009)(6506007)(8676002)(5660300002)(66556008)(3846002)(316002)(66946007)(76116006)(99286004)(6116002)(102836004)(2906002)(6246003)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2925;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kpGAF2tNjCoYpYpXOO6B71ajjQnlhVkL2vVUkWiRCsfFXwR1dDNuWcl14jFZJVpGOmqkulDTpCosemMh6oJRwS5cCWcVHagikAtYVfxKafDevHXb3TXa7r+KOy7sVAh4BuVI18Vrriqth1T1/EUK2YbFmfteb+t5ViWHfMxIsRy9f3jogN/1zOriXa3+/c0jTHf+fUltUvA/05x1pjc/qY3nJ8UDwoUZgRBjUKYsJbx1+evO7OVN/WzHf0ROnJNZypqvu9s0ZgvbELsdrB78eNeXfSK5CI4+OzFJPiuxsL5KRBN+Vnrg7tW78Q9g2D5Ko7V6+v7jR5XD3e/hD1aTaiRLXbF629G/1wHt2kKN2ViJ+l7YJsuJ4CkirNmI4Ub2t6M4Lcjpv5HHJU+ErXleAyOVPNqMVsi3PAB5dG/9XOY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11b8935c-3364-444b-a6e4-08d74d4ec7c4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 06:55:04.9017
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ia1c0wh0DcycR2wwLaXyfnF/z/cMAlJYdj+1dmSi5g5eA+Tr0PkdSf/qS9/PL2mblm/0I3+VywJdjFiH0ckC+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2925
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Sep 2019 07:45:58 +0000
-<Tudor.Ambarus@microchip.com> wrote:
+From: Anson Huang <Anson.Huang@nxp.com> Sent: Wednesday, October 9, 2019 6:=
+16 PM
+> Failed to get irq using name is NOT fatal as driver will use index to get=
+ irq
+> instead, use platform_get_irq_byname_optional() instead of
+> platform_get_irq_byname() to avoid below error message during
+> probe:
+>=20
+> [    0.819312] fec 30be0000.ethernet: IRQ int0 not found
+> [    0.824433] fec 30be0000.ethernet: IRQ int1 not found
+> [    0.829539] fec 30be0000.ethernet: IRQ int2 not found
+>=20
+> Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to
+> platform_get_irq*()")
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
-> 
-> n_tx was never used, drop it. Replace 'const u8 *txbuf' with 'u8 opcode',
-> to comply with the SPI NOR int (*read_reg)() method. The 'const'
-> qualifier has no meaning for parameters passed by value, drop it.
-> Going furher, the opcode was passed to cqspi_calc_rdreg() and never used,
-> drop it.
-> 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Acked-by: Fugang Duan <fugang.duan@nxp.com>
 
 > ---
->  drivers/mtd/spi-nor/cadence-quadspi.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
-> index ebda612641a4..22008fecd326 100644
-> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
-> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
-> @@ -285,7 +285,7 @@ static irqreturn_t cqspi_irq_handler(int this_irq, void *dev)
->  	return IRQ_HANDLED;
->  }
->  
-> -static unsigned int cqspi_calc_rdreg(struct spi_nor *nor, const u8 opcode)
-> +static unsigned int cqspi_calc_rdreg(struct spi_nor *nor)
->  {
->  	struct cqspi_flash_pdata *f_pdata = nor->priv;
->  	u32 rdreg = 0;
-> @@ -354,8 +354,7 @@ static int cqspi_exec_flash_cmd(struct cqspi_st *cqspi, unsigned int reg)
->  	return cqspi_wait_idle(cqspi);
->  }
->  
-> -static int cqspi_command_read(struct spi_nor *nor,
-> -			      const u8 *txbuf, const unsigned n_tx,
-> +static int cqspi_command_read(struct spi_nor *nor, u8 opcode,
->  			      u8 *rxbuf, size_t n_rx)
->  {
->  	struct cqspi_flash_pdata *f_pdata = nor->priv;
-> @@ -373,9 +372,9 @@ static int cqspi_command_read(struct spi_nor *nor,
->  		return -EINVAL;
->  	}
->  
-> -	reg = txbuf[0] << CQSPI_REG_CMDCTRL_OPCODE_LSB;
-> +	reg = opcode << CQSPI_REG_CMDCTRL_OPCODE_LSB;
->  
-> -	rdreg = cqspi_calc_rdreg(nor, txbuf[0]);
-> +	rdreg = cqspi_calc_rdreg(nor);
->  	writel(rdreg, reg_base + CQSPI_REG_RD_INSTR);
->  
->  	reg |= (0x1 << CQSPI_REG_CMDCTRL_RD_EN_LSB);
-> @@ -471,7 +470,7 @@ static int cqspi_read_setup(struct spi_nor *nor)
->  	unsigned int reg;
->  
->  	reg = nor->read_opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
-> -	reg |= cqspi_calc_rdreg(nor, nor->read_opcode);
-> +	reg |= cqspi_calc_rdreg(nor);
->  
->  	/* Setup dummy clock cycles */
->  	dummy_clk = nor->read_dummy;
-> @@ -604,7 +603,7 @@ static int cqspi_write_setup(struct spi_nor *nor)
->  	/* Set opcode. */
->  	reg = nor->program_opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
->  	writel(reg, reg_base + CQSPI_REG_WR_INSTR);
-> -	reg = cqspi_calc_rdreg(nor, nor->program_opcode);
-> +	reg = cqspi_calc_rdreg(nor);
->  	writel(reg, reg_base + CQSPI_REG_RD_INSTR);
->  
->  	reg = readl(reg_base + CQSPI_REG_SIZE);
-> @@ -1087,7 +1086,7 @@ static int cqspi_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf, size_t len)
->  
->  	ret = cqspi_set_protocol(nor, 0);
->  	if (!ret)
-> -		ret = cqspi_command_read(nor, &opcode, 1, buf, len);
-> +		ret = cqspi_command_read(nor, opcode, buf, len);
->  
->  	return ret;
->  }
+>  drivers/net/ethernet/freescale/fec_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c
+> b/drivers/net/ethernet/freescale/fec_main.c
+> index d4d4c72..22c01b2 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -3558,7 +3558,7 @@ fec_probe(struct platform_device *pdev)
+>=20
+>  	for (i =3D 0; i < irq_cnt; i++) {
+>  		snprintf(irq_name, sizeof(irq_name), "int%d", i);
+> -		irq =3D platform_get_irq_byname(pdev, irq_name);
+> +		irq =3D platform_get_irq_byname_optional(pdev, irq_name);
+>  		if (irq < 0)
+>  			irq =3D platform_get_irq(pdev, i);
+>  		if (irq < 0) {
+> --
+> 2.7.4
 
