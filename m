@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2312C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99110C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A954C218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE05218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696710;
-	bh=CrByy6AiiNIBc0tpoJVDjGCyRJO9uiveU3kjBybQo3I=;
+	s=default; t=1570696715;
+	bh=Y/QyNHs1wlYM1xMfQDCExXh+qkkSoISEJqkmaUOHBMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GtPNnxNcRV2gF2EoJEyO8cz1FcBIYDAdbB5dF0h1VyX1GQzZ99VZ8E2yjjN8849Gk
-	 6vpUU/2UEAoh9ARPWGv/F8+KV3PKtyhZUSiRW7+CddQfwxfBa478CIIrzR36cuwWeu
-	 QF8SopXODbOjgX8vQGgetyN4+kC7RXcUkZc1PxO8=
+	b=v8d5rY8HXfd0hfiGGl3roXG0vZZnUM4shvabbD2wd80+B7DhPIrDYIDa+F1U/OYVZ
+	 Hl0ypK2d+TkBdM0ftqA2p7nLIshCVLNKdTogsLXmF3oHTbJUbOdg9JJ5OflDTIFH68
+	 RPdvrCnemn+J1Y8SS6GhOMsGzuX8McmWiQ4pUVDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387631AbfJJIi3 (ORCPT
+        id S2387646AbfJJIie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:38:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387588AbfJJIi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:38:28 -0400
+        id S2387588AbfJJIia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:38:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17300218AC;
-        Thu, 10 Oct 2019 08:38:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2F9820B7C;
+        Thu, 10 Oct 2019 08:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696707;
-        bh=CrByy6AiiNIBc0tpoJVDjGCyRJO9uiveU3kjBybQo3I=;
+        s=default; t=1570696710;
+        bh=Y/QyNHs1wlYM1xMfQDCExXh+qkkSoISEJqkmaUOHBMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eyEIlrBoGeX4CZFFqjbct+Aa8I1S6C/aDpkLPOs/oOz9aDsOWvwDTmYvs01Q8CCTp
-         ZTbO9fXciPXue/Rb1KJ7qX/qO36tCgs1OFkgrdYb24/UdjPhPVL+sRFBHxjajaYGO/
-         /r3SsQ2jArtpzsO7OM2V5xDBDYidbPHPYFlvrcC8=
+        b=hshTWCovWok4V9fGNKHRwlSQ2sKP4wJVm7sHEQabuTlsaCuwI5/hjPgR7Dnkmed0C
+         HgGk20XNq/xUeiJ8wZHI6J6orydooIIK9Ortcw9YiVz/UApPlO3Db3P/kwtNMeMIQe
+         W7vp1e0u46VnfnZr30/UIXMY3jqodEKRSNVStM3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
+        Doug Crawford <doug.crawford@intelight-its.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.3 023/148] powerpc/mce: Schedule work from irq_work
-Date:   Thu, 10 Oct 2019 10:34:44 +0200
-Message-Id: <20191010083612.521688817@linuxfoundation.org>
+Subject: [PATCH 5.3 024/148] powerpc/603: Fix handling of the DIRTY flag
+Date:   Thu, 10 Oct 2019 10:34:45 +0200
+Message-Id: <20191010083612.586850852@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -63,67 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Santosh Sivaraj <santosh@fossix.org>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit b5bda6263cad9a927e1a4edb7493d542da0c1410 upstream.
+commit 415480dce2ef03bb8335deebd2f402f475443ce0 upstream.
 
-schedule_work() cannot be called from MCE exception context as MCE can
-interrupt even in interrupt disabled context.
+If a page is already mapped RW without the DIRTY flag, the DIRTY
+flag is never set and a TLB store miss exception is taken forever.
 
-Fixes: 733e4a4c4467 ("powerpc/mce: hookup memory_failure for UE errors")
-Cc: stable@vger.kernel.org # v4.15+
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
+This is easily reproduced with the following app:
+
+void main(void)
+{
+	volatile char *ptr = mmap(0, 4096, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+
+	*ptr = *ptr;
+}
+
+When DIRTY flag is not set, bail out of TLB miss handler and take
+a minor page fault which will set the DIRTY flag.
+
+Fixes: f8b58c64eaef ("powerpc/603: let's handle PAGE_DIRTY directly")
+Cc: stable@vger.kernel.org # v5.1+
+Reported-by: Doug Crawford <doug.crawford@intelight-its.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190820081352.8641-2-santosh@fossix.org
+Link: https://lore.kernel.org/r/80432f71194d7ee75b2f5043ecf1501cf1cca1f3.1566196646.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/mce.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/head_32.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kernel/mce.c
-+++ b/arch/powerpc/kernel/mce.c
-@@ -33,6 +33,7 @@ static DEFINE_PER_CPU(struct machine_che
- 					mce_ue_event_queue);
- 
- static void machine_check_process_queued_event(struct irq_work *work);
-+static void machine_check_ue_irq_work(struct irq_work *work);
- void machine_check_ue_event(struct machine_check_event *evt);
- static void machine_process_ue_event(struct work_struct *work);
- 
-@@ -40,6 +41,10 @@ static struct irq_work mce_event_process
-         .func = machine_check_process_queued_event,
- };
- 
-+static struct irq_work mce_ue_event_irq_work = {
-+	.func = machine_check_ue_irq_work,
-+};
-+
- DECLARE_WORK(mce_ue_event_work, machine_process_ue_event);
- 
- static void mce_set_error_info(struct machine_check_event *mce,
-@@ -199,6 +204,10 @@ void release_mce_event(void)
- 	get_mce_event(NULL, true);
- }
- 
-+static void machine_check_ue_irq_work(struct irq_work *work)
-+{
-+	schedule_work(&mce_ue_event_work);
-+}
- 
- /*
-  * Queue up the MCE event which then can be handled later.
-@@ -216,7 +225,7 @@ void machine_check_ue_event(struct machi
- 	memcpy(this_cpu_ptr(&mce_ue_event_queue[index]), evt, sizeof(*evt));
- 
- 	/* Queue work to process this event later. */
--	schedule_work(&mce_ue_event_work);
-+	irq_work_queue(&mce_ue_event_irq_work);
- }
- 
- /*
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -557,9 +557,9 @@ DataStoreTLBMiss:
+ 	cmplw	0,r1,r3
+ 	mfspr	r2, SPRN_SPRG_PGDIR
+ #ifdef CONFIG_SWAP
+-	li	r1, _PAGE_RW | _PAGE_PRESENT | _PAGE_ACCESSED
++	li	r1, _PAGE_RW | _PAGE_DIRTY | _PAGE_PRESENT | _PAGE_ACCESSED
+ #else
+-	li	r1, _PAGE_RW | _PAGE_PRESENT
++	li	r1, _PAGE_RW | _PAGE_DIRTY | _PAGE_PRESENT
+ #endif
+ 	bge-	112f
+ 	lis	r2, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
 
 
