@@ -2,158 +2,138 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68771C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F337CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D854218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570693124;
-	bh=ONnjNQ/BE3Y87O2Nbh43gybuTe6P9oqx2EwNBllyCB8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yKgjbQbSjPDMkNqwISekAOEAQWHfFf+3+uBCK8xOdgz9xipAOsYr5ErY8AmmAfpI0
-	 tSuJsikIfwCIdhOmktKBcGKUkR5yXXrZT3KtPvc04/gDDb6Gw+R0OUBepddEqXLKJS
-	 N4Og/kwJmzrIgbUwAdYW7+W8I3QxpVoMtZxXtO6o=
+	by mail.kernel.org (Postfix) with ESMTP id C9A8E218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oXEBvVog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733286AbfJJHiZ (ORCPT
+        id S1733241AbfJJHiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:38:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43888 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733070AbfJJHc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:32:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D59DAABE3;
-        Thu, 10 Oct 2019 07:32:20 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 09:32:12 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
-        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20191010073212.GB18412@dhcp22.suse.cz>
-References: <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
- <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 10 Oct 2019 03:38:16 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:41501 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733061AbfJJHbD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:31:03 -0400
+Received: by mail-qk1-f201.google.com with SMTP id z128so4611937qke.8
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 00:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=v+LLFtvEckUzputJIuZrPxx3By/lN1gL3OtSQmwVR94=;
+        b=oXEBvVog+GYUFdZS6nbRFPX4kM5tulvoNbWDK0JlCK400aDOdG4fx5K78mB6fw1Fnb
+         Fm/aDMafzZO4rtJf0joBPsIyrpFyATrh7QSU+3AYy74LjXVida1xyOxzXn7UrGELefsV
+         lwHyei54XzSIN3/WPOjeNgX5yGAXeNFQtmWh8R7eBTihLnIqZV6YLz9yitStMSbpsVzY
+         7IjUa8EkxXDbtnvlL7uTVehZkq+NCKBweJxZtau7cCa5rFxix2DPSA9XYlPJg3E4sgJb
+         Ua07w0RDFseYndhi1zZK7z4vSrkgzhswMZOjck1bNu0VR4HLdJ6U3ZQlVflHjxLdUqPZ
+         tyeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=v+LLFtvEckUzputJIuZrPxx3By/lN1gL3OtSQmwVR94=;
+        b=Z6zVWoboKOtG0xuvwd/VZgUE6fdpFtDUH+4I8XXgW+dfsU475lXOqVOnnFsgatnLEZ
+         dWzuhIYnGUK6FDRRNRMHeRZaKgxqokUUR62D5NkxPKZbrC5GvrOgUtou7D/hDWsyFmHT
+         6RpWn89c+8kFl1W8OFrQdUcCSPkajnWoTfH60Tk6O9Xjz/x+9pJSG6B/zt69BVDCSmnO
+         5qBeyx/3c0HOkksf/Sa0JaHXI/8i4iQogvMGIyX788rbYMnkX2OjiTeswoCMc/ObIcyk
+         1eUwkIByYiy+EVRAlQ9eitXAv99pOywaQmBYRemqvuK/bWdhI1sChhipy7WGE6ys66Hs
+         X8+g==
+X-Gm-Message-State: APjAAAWwTUpXMRJg9/MVGojNx0g1eiBzddVOG69Ln2RqGyYTTmVEFsz3
+        fCu+KDFd4SUc73f4Y7PAFRhxJ4dt+z/kVQ==
+X-Google-Smtp-Source: APXvYqyD9HKOtk0SarlzT8pp42sYiLkFHwAn9eUk83sA8rOiisTkHGAPdmKoPBCuQTQeRxenoJbZZHPVIHB7Jw==
+X-Received: by 2002:ac8:3158:: with SMTP id h24mr8582490qtb.370.1570692662399;
+ Thu, 10 Oct 2019 00:31:02 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 16:30:53 +0900
+Message-Id: <20191010073055.183635-1-suleiman@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
+Subject: [RFC v2 0/2] kvm: Use host timekeeping in guest.
+From:   Suleiman Souhlal <suleiman@google.com>
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de
+Cc:     john.stultz@linaro.org, sboyd@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        ssouhlal@freebsd.org, tfiga@chromium.org, vkuznets@redhat.com,
+        Suleiman Souhlal <suleiman@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 10-10-19 14:07:21, Yunsheng Lin wrote:
-> On 2019/10/9 20:25, Robin Murphy wrote:
-> > On 2019-10-08 9:38 am, Yunsheng Lin wrote:
-> >> On 2019/9/25 18:41, Peter Zijlstra wrote:
-> >>> On Wed, Sep 25, 2019 at 05:14:20PM +0800, Yunsheng Lin wrote:
-> >>>>  From the discussion above, It seems making the node_to_cpumask_map()
-> >>>> NUMA_NO_NODE aware is the most feasible way to move forwad.
-> >>>
-> >>> That's still wrong.
-> >>
-> >> Hi, Peter
-> >>
-> >> It seems this has trapped in the dead circle.
-> >>
-> >>  From my understanding, NUMA_NO_NODE which means not node numa preference
-> >> is the state to describe the node of virtual device or the physical device
-> >> that has equal distance to all cpu.
-> >>
-> >> We can be stricter if the device does have a nearer node, but we can not
-> >> deny that a device does not have a node numa preference or node affinity,
-> >> which also means the control or data buffer can be allocated at the node where
-> >> the process is running.
-> >>
-> >> As you has proposed, making it -2 and have dev_to_node() warn if the device does
-> >> have a nearer node and not set by the fw is a way to be stricter.
-> >>
-> >> But I think maybe being stricter is not really relevant to NUMA_NO_NODE, because
-> >> we does need a state to describe the device that have equal distance to all node,
-> >> even if it is not physically scalable.
-> >>
-> >> Any better suggestion to move this forward?
-> > 
-> > FWIW (since this is in my inbox), it sounds like the fundamental issue is that NUMA_NO_NODE is conflated for at least two different purposes, so trying to sort that out would be a good first step. AFAICS we have genuine "don't care" cases like alloc_pages_node(), where if the producer says it doesn't matter then the consumer is free to make its own judgement on what to do, and fundamentally different "we expect this thing to have an affinity but it doesn't, so we can't say what's appropriate" cases which could really do with some separate indicator like "NUMA_INVALID_NODE".
-> > 
-> > The tricky part is then bestowed on the producers to decide whether they can downgrade "invalid" to "don't care". You can technically build 'a device' whose internal logic is distributed between nodes and thus appears to have equal affinity - interrupt controllers, for example, may have per-CPU or per-node interfaces that end up looking like that - so although it's unlikely it's not outright nonsensical. Similarly a 'device' that's actually emulated behind a firmware call interface may well effectively have no real affinity.
-> 
-> We may set node of the physical device to NUMA_INVALID_NODE when fw does not
-> provide one.
-> 
-> But what do we do about NUMA_INVALID_NODE when alloc_pages_node() is called
-> with nid being NUMA_INVALID_NODE?
+This RFC is to try to solve the following problem:
 
-There is nothing sensible the allocator can do. The only point of
-NUMA_INVALID_NODE would be to catch potential misconfiguration and
-report them to users so they can complain to their HW/FS suppliers.
+We have some applications that are currently running in their
+own namespace, that still talk to other processes on the
+machine, using IPC, and expect to run on the same machine.
 
-Pushing it to other susbystem doesn't make much sense IMHO because there
-is nothing really actionable. Refusing an allocation altogether sounds
-like a bad plan to me.
- 
-> If we change the node to default one(like node 0) when node of device is
-> NUMA_INVALID_NODE in device_add(), how do we know the default one(like node 0)
-> is the right one to choose?
+We want to move them into a virtual machine, for the usual
+benefits of virtualization.
 
-Exactly. We cannot really assume any node in that situation.
- 
-> >From the privous disccusion, the below seems not get to consensus yet:
-> 1) Do we need a state like NUMA_NO_NODE to describe that the device does not
->    have any numa preference?
+However, some of these programs use CLOCK_MONOTONIC and
+CLOCK_BOOTTIME timestamps, as part of their protocol, when talking
+to the host.
 
-This is a traditional meaning MM subsystem is using.
+Generally speaking, we have multiple event sources, for example
+sensors, input devices, display controller vsync, etc and we would
+like to rely on them in the guest for various scenarios.
 
-> 2) What do we do if the fw does not provide a node for the device? Should
->    we guess and pick one for it and how do we do the guessing? Or leave it
->    as it is and handle it as NUMA_NO_NODE?
+As a specific example, we are trying to run some wayland clients
+(in the guest) who talk to the server (in the host), and the server
+gives input events based on host time. Additionally, there are also
+vsync events that the clients use for timing their rendering.
 
-As already pointed several times, picking any node is rather error
-prone. You can never assume topology. We used to assume that there
-always be node 0 but that is not really the case (see 3e8589963773
-("memcg: make it work on sparse non-0-node systems")). Nodes might also
-come and go so this might just lead to all sorts of subtle problems.
+Another use case we have are timestamps from IIO sensors and cameras.
+There are applications that need to determine how the timestamps
+relate to the current time and the only way to get current time is
+clock_gettime(), which would return a value from a different time
+domain than the timestamps.
 
-On the other hand using NUMA_NO_NODE as no preference could only lead to
-slightly sub optimal performance.
+In this case, it is not feasible to change these programs, due to
+the number of the places we would have to change.
 
-I do agree with Peter that reporting a lack of affinity might be useful
-but we shouldn't really try to clever and make up the affinity nilly
-willy.
+We spent some time thinking about this, and the best solution we
+could come up with was the following:
+
+Make the guest kernel return the same CLOCK_MONOTONIC and
+CLOCK_GETTIME timestamps as the host.
+
+To do that, I am changing kvmclock to request to the host to copy
+its timekeeping parameters (mult, base, cycle_last, etc), so that
+the guest timekeeper can use the same values, so that time can
+be synchronized between the guest and the host.
+
+Any suggestions or feedback would be highly appreciated.
+
+Changes in v2:
+- Move out of kvmclock and into its own clocksource and file.
+- Remove timekeeping.c #ifdefs.
+- Fix i386 build.
+
+Suleiman Souhlal (2):
+  kvm: Mechanism to copy host timekeeping parameters into guest.
+  x86/kvmclock: Introduce kvm-hostclock clocksource.
+
+ arch/x86/Kconfig                     |   9 ++
+ arch/x86/include/asm/kvm_host.h      |   3 +
+ arch/x86/include/asm/kvmclock.h      |  12 +++
+ arch/x86/include/asm/pvclock-abi.h   |  27 ++++++
+ arch/x86/include/uapi/asm/kvm_para.h |   1 +
+ arch/x86/kernel/Makefile             |   2 +
+ arch/x86/kernel/kvmclock.c           |   5 +-
+ arch/x86/kernel/kvmhostclock.c       | 130 +++++++++++++++++++++++++++
+ arch/x86/kvm/x86.c                   | 121 +++++++++++++++++++++++++
+ include/linux/timekeeper_internal.h  |   8 ++
+ kernel/time/timekeeping.c            |   2 +
+ 11 files changed, 319 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/kernel/kvmhostclock.c
+
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0.581.g78d2f28ef7-goog
+
