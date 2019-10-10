@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EA9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8BDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC4F2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633C221929
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697343;
-	bh=FwfZPGAk5k2aXhVoQMbOGLDLpIQ+GKcriv79nfKQ7mo=;
+	s=default; t=1570697349;
+	bh=AlzBdA8/4AmqnMFPRJWpA+uiooPBTPN0m2UkF6AWhYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L6Igf7h1E7EdmSg6GcrjVVY4gUjKjHeo+S6cnPfACXoUouQllOciPIcdocNgjF9Kr
-	 rtHs8PdH35T38sKufd1wIEQhjosF+P/pLMCv4Hf7F+ivEsXaonpRfBnWY50DfyKbxw
-	 LShynQcpkbxnF1hj7xLZ5Ao5EHf6HqnIeIHdz3Lc=
+	b=nrqyIQC0Ytii3P8AR3PP2un7+bqz1xT9xCIn4XWQZVHKQOyHZhmlagT4ZxjAz9z/l
+	 DObkAoLXLtbraN3JQclNsQD83zV4HMAh8PB0QgOYqiJBQlr55DW4tYocR6O+seSyht
+	 Mvp3YdUMoHITt9R1I+ZG/0oQhpa91q9UhRbYYzig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389741AbfJJItC (ORCPT
+        id S2389758AbfJJItI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55350 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389731AbfJJIs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:59 -0400
+        id S2388165AbfJJItA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:49:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1908D218AC;
-        Thu, 10 Oct 2019 08:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E243F2064A;
+        Thu, 10 Oct 2019 08:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697337;
-        bh=FwfZPGAk5k2aXhVoQMbOGLDLpIQ+GKcriv79nfKQ7mo=;
+        s=default; t=1570697340;
+        bh=AlzBdA8/4AmqnMFPRJWpA+uiooPBTPN0m2UkF6AWhYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g2irBCh9gSyiqTT7y7h49ILL6lbUX5su3w+GZGTjrmhYwXz++wsx/LNhfY46eyo7P
-         fCjwmbRf4GgZVrWKzCzjrcQQkuZlPNMVvBY4sWZSHaBhrJXf2ZL7MrbRTyaLF3P3ze
-         8uYxZXsmL+34cOhujsPzMkqtWJET/7ssjOMyEdMQ=
+        b=HquXPDhJpjAPX2ik2T0iOCJInKwDu987PyCz2MnQ4viivlq8eEf2ailMvCB0WNszc
+         yxnFwByQmcjdPGQUALF2njn0n1epup1+pajh+1yCQ9RWuseySItnPzdOV1YWDP3SwW
+         j31UI5ea4LgWf/HTxqC6/xpCuaMvVPXr1BNY1+yc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.19 105/114] arm64/speculation: Support mitigations= cmdline option
-Date:   Thu, 10 Oct 2019 10:36:52 +0200
-Message-Id: <20191010083613.783241526@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 106/114] vfs: Fix EOVERFLOW testing in put_compat_statfs64
+Date:   Thu, 10 Oct 2019 10:36:53 +0200
+Message-Id: <20191010083613.843593568@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,116 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Eric Sandeen <sandeen@redhat.com>
 
-commit a111b7c0f20e13b54df2fa959b3dc0bdf1925ae6 upstream.
+commit cc3a7bfe62b947b423fcb2cfe89fcba92bf48fa3 upstream.
 
-Configure arm64 runtime CPU speculation bug mitigations in accordance
-with the 'mitigations=' cmdline option.  This affects Meltdown, Spectre
-v2, and Speculative Store Bypass.
+Today, put_compat_statfs64() disallows nearly any field value over
+2^32 if f_bsize is only 32 bits, but that makes no sense.
+compat_statfs64 is there for the explicit purpose of providing 64-bit
+fields for f_files, f_ffree, etc.  And f_bsize is always only 32 bits.
 
-The default behavior is unchanged.
+As a result, 32-bit userspace gets -EOVERFLOW for i.e.  large file
+counts even with -D_FILE_OFFSET_BITS=64 set.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-[will: reorder checks so KASLR implies KPTI and SSBS is affected by cmdline]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+In reality, only f_bsize and f_frsize can legitimately overflow
+(fields like f_type and f_namelen should never be large), so test
+only those fields.
+
+This bug was discussed at length some time ago, and this is the proposal
+Al suggested at https://lkml.org/lkml/2018/8/6/640.  It seemed to get
+dropped amid the discussion of other related changes, but this
+part seems obviously correct on its own, so I've picked it up and
+sent it, for expediency.
+
+Fixes: 64d2ab32efe3 ("vfs: fix put_compat_statfs64() does not handle errors")
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/admin-guide/kernel-parameters.txt |    8 +++++---
- arch/arm64/kernel/cpu_errata.c                  |    6 +++++-
- arch/arm64/kernel/cpufeature.c                  |    8 +++++++-
- 3 files changed, 17 insertions(+), 5 deletions(-)
+ fs/statfs.c |   17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2503,8 +2503,8 @@
- 			http://repo.or.cz/w/linux-2.6/mini2440.git
- 
- 	mitigations=
--			[X86,PPC,S390] Control optional mitigations for CPU
--			vulnerabilities.  This is a set of curated,
-+			[X86,PPC,S390,ARM64] Control optional mitigations for
-+			CPU vulnerabilities.  This is a set of curated,
- 			arch-independent options, each of which is an
- 			aggregation of existing arch-specific options.
- 
-@@ -2513,12 +2513,14 @@
- 				improves system performance, but it may also
- 				expose users to several CPU vulnerabilities.
- 				Equivalent to: nopti [X86,PPC]
-+					       kpti=0 [ARM64]
- 					       nospectre_v1 [PPC]
- 					       nobp=0 [S390]
- 					       nospectre_v1 [X86]
--					       nospectre_v2 [X86,PPC,S390]
-+					       nospectre_v2 [X86,PPC,S390,ARM64]
- 					       spectre_v2_user=off [X86]
- 					       spec_store_bypass_disable=off [X86,PPC]
-+					       ssbd=force-off [ARM64]
- 					       l1tf=off [X86]
- 					       mds=off [X86]
- 
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -19,6 +19,7 @@
- #include <linux/arm-smccc.h>
- #include <linux/psci.h>
- #include <linux/types.h>
-+#include <linux/cpu.h>
- #include <asm/cpu.h>
- #include <asm/cputype.h>
- #include <asm/cpufeature.h>
-@@ -355,6 +356,9 @@ static bool has_ssbd_mitigation(const st
- 
- 	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
- 
-+	if (cpu_mitigations_off())
-+		ssbd_state = ARM64_SSBD_FORCE_DISABLE;
+--- a/fs/statfs.c
++++ b/fs/statfs.c
+@@ -304,19 +304,10 @@ COMPAT_SYSCALL_DEFINE2(fstatfs, unsigned
+ static int put_compat_statfs64(struct compat_statfs64 __user *ubuf, struct kstatfs *kbuf)
+ {
+ 	struct compat_statfs64 buf;
+-	if (sizeof(ubuf->f_bsize) == 4) {
+-		if ((kbuf->f_type | kbuf->f_bsize | kbuf->f_namelen |
+-		     kbuf->f_frsize | kbuf->f_flags) & 0xffffffff00000000ULL)
+-			return -EOVERFLOW;
+-		/* f_files and f_ffree may be -1; it's okay
+-		 * to stuff that into 32 bits */
+-		if (kbuf->f_files != 0xffffffffffffffffULL
+-		 && (kbuf->f_files & 0xffffffff00000000ULL))
+-			return -EOVERFLOW;
+-		if (kbuf->f_ffree != 0xffffffffffffffffULL
+-		 && (kbuf->f_ffree & 0xffffffff00000000ULL))
+-			return -EOVERFLOW;
+-	}
 +
- 	/* delay setting __ssb_safe until we get a firmware response */
- 	if (is_midr_in_range_list(read_cpuid_id(), entry->midr_range_list))
- 		this_cpu_safe = true;
-@@ -600,7 +604,7 @@ check_branch_predictor(const struct arm6
- 	}
- 
- 	/* forced off */
--	if (__nospectre_v2) {
-+	if (__nospectre_v2 || cpu_mitigations_off()) {
- 		pr_info_once("spectrev2 mitigation disabled by command line option\n");
- 		__hardenbp_enab = false;
- 		return false;
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -24,6 +24,7 @@
- #include <linux/stop_machine.h>
- #include <linux/types.h>
- #include <linux/mm.h>
-+#include <linux/cpu.h>
- #include <asm/cpu.h>
- #include <asm/cpufeature.h>
- #include <asm/cpu_ops.h>
-@@ -907,7 +908,7 @@ static bool unmap_kernel_at_el0(const st
- 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
- 		{ /* sentinel */ }
- 	};
--	char const *str = "command line option";
-+	char const *str = "kpti command line option";
- 	bool meltdown_safe;
- 
- 	meltdown_safe = is_midr_in_range_list(read_cpuid_id(), kpti_safe_list);
-@@ -937,6 +938,11 @@ static bool unmap_kernel_at_el0(const st
- 		}
- 	}
- 
-+	if (cpu_mitigations_off() && !__kpti_forced) {
-+		str = "mitigations=off";
-+		__kpti_forced = -1;
-+	}
++	if ((kbuf->f_bsize | kbuf->f_frsize) & 0xffffffff00000000ULL)
++		return -EOVERFLOW;
 +
- 	if (!IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0)) {
- 		pr_info_once("kernel page table isolation disabled by kernel configuration\n");
- 		return false;
+ 	memset(&buf, 0, sizeof(struct compat_statfs64));
+ 	buf.f_type = kbuf->f_type;
+ 	buf.f_bsize = kbuf->f_bsize;
 
 
