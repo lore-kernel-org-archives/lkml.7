@@ -2,111 +2,93 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92033C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1405CC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62196218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697886;
-	bh=6sBvMm2Nw7U7LT3LmRh9xLUiLq7DSI/hufiVDue5SYw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yoWtqqHRLY6BUge/fRvhwxlpJrj0/AFgzRAqLJN6b8vZKVfK2tmMouffwwC/GH0aB
-	 9LECbXGHzlXXW0kY+E0dasAInM4kVrvSrVkK3rdOmPCqqLI6jjJGtf60ze4fBYw9l6
-	 34X26ASBSSlxCfOMw4Zn9S0zxNZgqA5D+7kZ6djo=
+	by mail.kernel.org (Postfix) with ESMTP id E824F218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389242AbfJJIqE (ORCPT
+        id S2389300AbfJJI6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:58:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54122 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389221AbfJJIpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2389237AbfJJIqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:46:04 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F5BB2054F;
-        Thu, 10 Oct 2019 08:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697151;
-        bh=6sBvMm2Nw7U7LT3LmRh9xLUiLq7DSI/hufiVDue5SYw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lRohm8QD82Ma77T9xAYGZePXRZ/nd5BeH3R+tZxvftiH33XQlZARXnwxwpaTojRNS
-         V4gkQ986NaU0SELOLn06cncmuGj1amSAhNq1hmbza25h6KQtGlEqs5cRSmNghwiael
-         wcqhI9styfg4ENLGTw8YGkiIEUE6I2QRvrM7dJ+Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.19 004/114] s390/cio: exclude subchannels with no parent from pseudo check
-Date:   Thu, 10 Oct 2019 10:35:11 +0200
-Message-Id: <20191010083546.147426763@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
-References: <20191010083544.711104709@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 1CFE1796EE
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:46:04 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id r21so1471723wme.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 01:46:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tR/b93II6w98Y1JcW5QoZrFBl2Ih7JvmORnV8m5CDsk=;
+        b=DOrZ8wYqi+0zPaLCJQvgap/jXVgPclrIrxQz3hVXmi7Qdmnazkfpyhy7tDTv0Hnb9K
+         V0SJVn1hVZRyNbgjX4ls3JBcd6Amtsw+X6GfuDyP1aNVRYRLjl9wHL3bxnSzZlb+R74+
+         11MxRZ9WJecuN9lQUHIms/i6mOrn+CGk4EWJplZwgXYDrCuAvpR7KzeCYjPs0trCoasn
+         VLUpxK/1vTisBGyHwLsZoU/5pXspkK4+8BKLXWgEHZTOA+u9/PmaTvvQV9A89TAOszZT
+         jyX1aadSpAwtuRzM04OWqDBPDAp3ITvI8jCIE/TGEwGmcaN24vKd8bf3jyr8zpdnA6J+
+         1ZKg==
+X-Gm-Message-State: APjAAAX1a6fx0f5dotvkWapDA5diTCdNHnvxI3aiYIEUgY2PMmI+VGHq
+        lHmv8bLu2TnB8YsRf7l7kN2bug5TskiUd01X4i4+LVT/BR9lP+Qi9fac5mtYM0q3eVrynbNF7Wy
+        7/JzVoJfV2XqZSS4hCQr0lR0r
+X-Received: by 2002:adf:e401:: with SMTP id g1mr5700484wrm.211.1570697162834;
+        Thu, 10 Oct 2019 01:46:02 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyrGXBfAqLL3DSANixqvzd6znc5l0D4LZnBiMcWibn1Ag6PBFlGAQzLidI7EwNDBrIbfhWgrA==
+X-Received: by 2002:adf:e401:: with SMTP id g1mr5700471wrm.211.1570697162619;
+        Thu, 10 Oct 2019 01:46:02 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id q124sm8324726wma.5.2019.10.10.01.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 01:46:01 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 10:45:59 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 00/13] vsock: add multi-transports support
+Message-ID: <20191010084559.a4t6v7dopeqffn55@steredhat>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20191009132952.GO5747@stefanha-x1.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009132952.GO5747@stefanha-x1.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+On Wed, Oct 09, 2019 at 02:29:52PM +0100, Stefan Hajnoczi wrote:
+> On Fri, Sep 27, 2019 at 01:26:50PM +0200, Stefano Garzarella wrote:
+> > Hi all,
+> > this series adds the multi-transports support to vsock, following
+> > this proposal:
+> > https://www.spinics.net/lists/netdev/msg575792.html
+> 
+> Nice series!  I have left a few comments but overall it looks promising.
 
-commit ab5758848039de9a4b249d46e4ab591197eebaf2 upstream.
+Thank you very much for the comments!
 
-ccw console is created early in start_kernel and used before css is
-initialized or ccw console subchannel is registered. Until then console
-subchannel does not have a parent. For that reason assume subchannels
-with no parent are not pseudo subchannels. This fixes the following
-kasan finding:
+I'll follow them and respin.
 
-BUG: KASAN: global-out-of-bounds in sch_is_pseudo_sch+0x8e/0x98
-Read of size 8 at addr 00000000000005e8 by task swapper/0/0
-
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc8-07370-g6ac43dd12538 #2
-Hardware name: IBM 2964 NC9 702 (z/VM 6.4.0)
-Call Trace:
-([<000000000012cd76>] show_stack+0x14e/0x1e0)
- [<0000000001f7fb44>] dump_stack+0x1a4/0x1f8
- [<00000000007d7afc>] print_address_description+0x64/0x3c8
- [<00000000007d75f6>] __kasan_report+0x14e/0x180
- [<00000000018a2986>] sch_is_pseudo_sch+0x8e/0x98
- [<000000000189b950>] cio_enable_subchannel+0x1d0/0x510
- [<00000000018cac7c>] ccw_device_recognition+0x12c/0x188
- [<0000000002ceb1a8>] ccw_device_enable_console+0x138/0x340
- [<0000000002cf1cbe>] con3215_init+0x25e/0x300
- [<0000000002c8770a>] console_init+0x68a/0x9b8
- [<0000000002c6a3d6>] start_kernel+0x4fe/0x728
- [<0000000000100070>] startup_continue+0x70/0xd0
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/s390/cio/css.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -1213,6 +1213,8 @@ device_initcall(cio_settle_init);
- 
- int sch_is_pseudo_sch(struct subchannel *sch)
- {
-+	if (!sch->dev.parent)
-+		return 0;
- 	return sch == to_css(sch->dev.parent)->pseudo_subchannel;
- }
- 
-
-
+Cheers,
+Stefano
