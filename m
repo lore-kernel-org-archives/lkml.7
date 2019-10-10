@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C99C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A0FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784272064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130992064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697634;
-	bh=dlc0JlRrIOsnSsI/+Cz3XpuH095SGIxEnhFSsQV/UwY=;
+	s=default; t=1570697645;
+	bh=Hocc63BL0I0Fgrn+QymLAblajZc0ZEE1HFWH9U3eyJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUX8nD2eVykw0zY08a7PRcM6lR8HCcWKOWYa4Ankzg0rM7K8gAl6YevqtEnhuBHKi
-	 beW2zyNQXUN8KP+N2Nov+NCWnsW0HmpYAto0JCXnwy3IHtHzQeVYfJzV+XKZA6kQ6y
-	 0czXp+Emv+vuWOLk2iBlmopGpHMUSMbBiyUWOwcs=
+	b=IvDEmg5LCtAMFpOTg2RFuhds/OIFXzdNJgo3YfS4jz2/KPw3wqfX+bAC8eohRM4pH
+	 S8zrhUzzM61Jqs0dtXgoEjybSckpFn6Qmc9023x/BR3I9zvHWNx937WLV2oY83fopD
+	 AQksqo809QWwxtUydRZt4NfFE8FHjM2lFjLYEDsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389802AbfJJIxx (ORCPT
+        id S2389896AbfJJIyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:53:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58592 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389302AbfJJIvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:11 -0400
+        id S2389179AbfJJIuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D872F21929;
-        Thu, 10 Oct 2019 08:51:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99B5921D71;
+        Thu, 10 Oct 2019 08:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697471;
-        bh=dlc0JlRrIOsnSsI/+Cz3XpuH095SGIxEnhFSsQV/UwY=;
+        s=default; t=1570697452;
+        bh=Hocc63BL0I0Fgrn+QymLAblajZc0ZEE1HFWH9U3eyJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LmzF1Gb6IXFZx9DKoesCCL6bEzCsZKM+TzAHT05jyqwMp7Wsd36ZjparsO8vzQlWT
-         eCM6CfYrzB+kNHcDQAVWiW2FiwIA9Yg8PyqmLvpb3SPL+nbgTvZ3CHAtLUsWz9ZuxD
-         8ete85CbrXRqf3Z7jwFDVAtzqH2v+0gKZODOadS0=
+        b=1cvn4SUAVbO8KHqpE3GhW+Sy2b8oa78Afbc+DFTcApKV6z7IAcXRZppJGbhmwnAFQ
+         l/qskYLlVowfDTqLDxmw3aADFnllDtbhaZIQWRduvaxJtBHHHxzK9KWek8tIXsp2Aw
+         0crxabwsYY78D7GjhQfe2htwqZLDtlraCbiprMv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 40/61] fuse: fix memleak in cuse_channel_open
-Date:   Thu, 10 Oct 2019 10:37:05 +0200
-Message-Id: <20191010083515.693357951@linuxfoundation.org>
+Subject: [PATCH 4.14 33/61] ceph: reconnect connection if session hang in opening state
+Date:   Thu, 10 Oct 2019 10:36:58 +0200
+Message-Id: <20191010083510.605813829@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -61,37 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Erqi Chen <chenerqi@gmail.com>
 
-[ Upstream commit 9ad09b1976c562061636ff1e01bfc3a57aebe56b ]
+[ Upstream commit 71a228bc8d65900179e37ac309e678f8c523f133 ]
 
-If cuse_send_init fails, need to fuse_conn_put cc->fc.
+If client mds session is evicted in CEPH_MDS_SESSION_OPENING state,
+mds won't send session msg to client, and delayed_work skip
+CEPH_MDS_SESSION_OPENING state session, the session hang forever.
 
-cuse_channel_open->fuse_conn_init->refcount_set(&fc->count, 1)
-                 ->fuse_dev_alloc->fuse_conn_get
-                 ->fuse_dev_free->fuse_conn_put
+Allow ceph_con_keepalive to reconnect a session in OPENING to avoid
+session hang. Also, ensure that we skip sessions in RESTARTING and
+REJECTED states since those states can't be resurrected by issuing
+a keepalive.
 
-Fixes: cc080e9e9be1 ("fuse: introduce per-instance fuse_dev structure")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Link: https://tracker.ceph.com/issues/41551
+Signed-off-by: Erqi Chen chenerqi@gmail.com
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/cuse.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ceph/mds_client.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
-index e9e97803442a6..55db06c7c587e 100644
---- a/fs/fuse/cuse.c
-+++ b/fs/fuse/cuse.c
-@@ -513,6 +513,7 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
- 	rc = cuse_send_init(cc);
- 	if (rc) {
- 		fuse_dev_free(fud);
-+		fuse_conn_put(&cc->fc);
- 		return rc;
- 	}
- 	file->private_data = fud;
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index e1ded4bd61154..b968334f841e8 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3543,7 +3543,9 @@ static void delayed_work(struct work_struct *work)
+ 				pr_info("mds%d hung\n", s->s_mds);
+ 			}
+ 		}
+-		if (s->s_state < CEPH_MDS_SESSION_OPEN) {
++		if (s->s_state == CEPH_MDS_SESSION_NEW ||
++		    s->s_state == CEPH_MDS_SESSION_RESTARTING ||
++		    s->s_state == CEPH_MDS_SESSION_REJECTED) {
+ 			/* this mds is failed or recovering, just wait */
+ 			ceph_put_mds_session(s);
+ 			continue;
 -- 
 2.20.1
 
