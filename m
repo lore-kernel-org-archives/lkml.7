@@ -2,97 +2,98 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51388C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ED3C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276472190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB11218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:51:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qflmHPMW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PTeYKlvj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfJJQuu (ORCPT
+        id S1726668AbfJJQvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 12:50:50 -0400
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:32858 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfJJQut (ORCPT
+        Thu, 10 Oct 2019 12:51:33 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44751 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfJJQvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 12:50:49 -0400
-Received: by mail-wr1-f48.google.com with SMTP id b9so8792565wrs.0;
-        Thu, 10 Oct 2019 09:50:47 -0700 (PDT)
+        Thu, 10 Oct 2019 12:51:32 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z9so8749497wrl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:51:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=N67GlwHUX6GtWi46USbMqkhjoeZO4P1qdN1iV3c4afE=;
-        b=qflmHPMW5aXypqwCgOilRC5ytwg1yWAP5C5dwjaCHPjSyGHDExALRPgWUvkIsaWEyK
-         Zn3o///qtDGQl6a3RK75f6H/h/CjBdDb/4RLPA1hQqeR9N+JG1UC9y5ISMg52lRVJz8P
-         cXIU7qtl8jd1p6xWDhsm63vSbrEguoaBU3q4V7OMtw8zYKBWgKvMbW7JXwfOOzd347iT
-         MgzLhmbr1NrUogstC8eDjOo84/H7apLiCJBQ/hVro3eAGldAULZ9JDa7aAz2vGsEuxP5
-         m2Ty9hV6PrCf4vUj3380RqBNcbRnBalk2Xx8nPLE1ieRvp5X1ZIgD6uWfAmgtEI1VZS+
-         xIlg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7bu/p1V/jPBVukNh0HzQltOIjl5iBAhuyWFtm99yZ2M=;
+        b=PTeYKlvjW/Mo8h5FYVG1JpGMdBacSGeS1LH4pBUSwmp5OwJXPe6UwEDxq1ax1LPek8
+         9pjVrtmUrmuz1OpOOP4TR7Kb9Qssjw6lwq8y5GorqmLXqAKH4Y2qVaIY2mfTL31YiGn7
+         DczwZWj0zyKBsnc/vLKGCSC6UVeXsNO03NDfzW+MlKnpuq3x9PgEsP6+P9NtikqhObqd
+         vTH/0umRJUAKt5yh5JsXN8LLFXeOb1xo0Xvf+mxkBuPnddm74mc21EyStWmLcLpFIE7b
+         rsE2UJd30z31HZuNXKM6TFecvUF3zkYiNv8XdHwELQRw+flhyLeOI8diV462eevYPqvI
+         Vyjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=N67GlwHUX6GtWi46USbMqkhjoeZO4P1qdN1iV3c4afE=;
-        b=PhuuB2nooqaTugC45/LdgoDK0gKR9R28hYOq/omP3gUXjUT051vquZaDIafDJg6s2r
-         i6qHEUkciOF03kcu5dFQCjTY650lnAekuZe7sutkrfnaOe04jRjRlvMFTvCjf+uhQnKA
-         Hudog8o+hXBmwK4wvHBakmk2sX9ALAKye+2ygOr4o/lmA25ajTJbcQb5rTCnVuHn7F5+
-         Em2XdfAq8taB9Bl7+2rNuwTDJycIXEbHp/7cbX5nikh5k6gFk5LatKyl5W1VQ6fbSoRu
-         vscY45sNiJp7YClqFqzhS7dUdvEfSCDRu4UwF4PWEVYTHND0RFG489Kec+BHRuU28iP8
-         NzbQ==
-X-Gm-Message-State: APjAAAWQTBUhzcET5p2jcg1WhbNzH38pBgC403limeVaMCb9jfiVlYtb
-        8Tu43GZurhZWpjEnpvt2NZo=
-X-Google-Smtp-Source: APXvYqxPDPYHTErerTKVW/UmfLwO9xJ9NzreaiuR07FLKp5Ho8RyNEghqgv16DMhtyV/n1v9/y6gyw==
-X-Received: by 2002:a5d:6b52:: with SMTP id x18mr9302702wrw.66.1570726246497;
-        Thu, 10 Oct 2019 09:50:46 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f26:6400:c8c2:fca8:3f74:726d? (p200300EA8F266400C8C2FCA83F74726D.dip0.t-ipconnect.de. [2003:ea:8f26:6400:c8c2:fca8:3f74:726d])
-        by smtp.googlemail.com with ESMTPSA id t18sm7160199wmi.44.2019.10.10.09.50.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 09:50:45 -0700 (PDT)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Module loading problem since 5.3
-Message-ID: <8132cf72-0ae1-48ae-51fb-1a01cf00c693@gmail.com>
-Date:   Thu, 10 Oct 2019 18:50:38 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7bu/p1V/jPBVukNh0HzQltOIjl5iBAhuyWFtm99yZ2M=;
+        b=O+ucFIdUbxVox+jTUD9UCTBAs0G6a8IkQSGX3MH7HiHVt3JOgEvvFvFUwSWr/TGVy6
+         05NxWHRMkaV5ODC5Mkqbq+pO93M2XBotyo3V1jXbwqAm423DuQRHzwtjYYN1nI4U15Uo
+         M6j2VAh6AK+UmqvTfGsiP0Eax75mcByV+K6SFRjkCuxe9b9kQhaQWa51XSwJXEho/b+Q
+         ARADCNrsdKTan51sjzrotpiYApGBTkwKm2N9kHXxCX4DfetlAVc0oJIKuEc8u21pgAf3
+         HHrq29VniN0HWoaYUwue8anT6owNwbL+sKhSzPV6c08tOpfBsqYuz0YyYxDNSJkk7Vxb
+         FVqg==
+X-Gm-Message-State: APjAAAVG8rbJq3IUsPCaCNIWOCNcaepcykjFZiSKQlVbv5CvZq9J4rhT
+        IpfEKD2oDAGJqQEuWXxdy2XWtA==
+X-Google-Smtp-Source: APXvYqx+JMkN3tC8wFFueYa7ICq4JDkKxjd8DhWTdlw1o8w+B0UKdW2izWlRVtwxrOVVrS4Puqf1tA==
+X-Received: by 2002:a05:6000:44:: with SMTP id k4mr9905117wrx.121.1570726290338;
+        Thu, 10 Oct 2019 09:51:30 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id a10sm6846042wrm.52.2019.10.10.09.51.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 09:51:29 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 17:51:27 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] kdb: Fixes for btc
+Message-ID: <20191010165127.sms6kanpkivda5rp@holly.lan>
+References: <20190925200220.157670-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925200220.157670-1-dianders@chromium.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
+On Wed, Sep 25, 2019 at 01:02:16PM -0700, Douglas Anderson wrote:
+> 
+> This series has a few kdb fixes for back tracing on CPUs.  The
+> previous version[1] had only one patch, but while making v3 I found a
+> few cleanups that made sense to break into other pieces.
+> 
+> As with all things kdb / kgdb, this patch set tries to inch us towards
+> a better state of the world but doesn't attempt to solve all known
+> problems.
+> 
+> Please enjoy.
+ 
+Applied.
 
-as maintainer of the r8169 network driver I got user reports that
-since 5.3 they get errors due to the needed PHY driver module
-not being loaded. See e.g. following bug ticket:
-https://bugzilla.kernel.org/show_bug.cgi?id=204343
+Note: Given this series alters a very long standing behaviour I've queued
+      it for v5.5 rather than add it to a fixes branch. It should land
+      in linux-next shortly.
 
-As mentioned in comment 7 the PHY driver module should be loaded
-at two places in the code:
-1. phylib when probing the PHY (based on PHY ID)
-2. r8169 driver uses the following to ensure PHY driver gets loaded before:
-   MODULE_SOFTDEP("pre: realtek")
 
-The issue doesn't exist on all systems, e.g. my test system loads
-the PHY driver module normally. On affected systems manually adding
-a softdep works around the issue and loads the PHY driver module
-properly. Are you aware of any current issues with module loading
-that could cause this problem?
-
-Heiner
+Daniel.
