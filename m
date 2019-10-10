@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ED6C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC79C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F77320679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072DF2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697824;
-	bh=Cez3G1xpq9uAnPPHn4QnceEd5nNP9L8MGjyZtdnK1fg=;
+	s=default; t=1570697838;
+	bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aA7TGs5y+jqIKzPEBA99uR+L7xrQzl8MtveYEXhcl7lk4iKhBLQOEprNfNF4vBWSk
-	 utH/dId3tKcDDJWOu4zU6jUkyP4pzB0H1OUQ9+lwqgj5aw0hnvr1est8NpCY32sIwb
-	 N8qHlTXgnX0X4LVGBZqgEylx58SblVd/ghbF77Ug=
+	b=r7R6NJt9u4All8dDU6E73OQpFVuhzB0dasYYg17OEWYpVhRXx1KzRtSW9XRoMXFwb
+	 zK23zTtWZ+NfGp9s9Ma4AnMruexApnKCaT69k2hMsI25+P2n/oNsf6S5wuWlVbJ65/
+	 aKzl5afEZ47lxeBz3DikD2ky6k+SloARi5SGXwV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387775AbfJJI5D (ORCPT
+        id S2389369AbfJJI5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53510 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:57:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389481AbfJJIra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:30 -0400
+        id S2387660AbfJJIrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A0AE21929;
-        Thu, 10 Oct 2019 08:47:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78853218AC;
+        Thu, 10 Oct 2019 08:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697250;
-        bh=Cez3G1xpq9uAnPPHn4QnceEd5nNP9L8MGjyZtdnK1fg=;
+        s=default; t=1570697223;
+        bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yag4bNBCB8uOcAqnKGAWRg8Nz5fc9M5L4b50a3lYXEUrpG3r7m+IMr5M7MBYd4RQ6
-         zs/nKZn9PhowMFO4hvUS85xNd2dUTeUk8fbxnNxIowptEZP0sZibTDwW3KVzW6c9UT
-         VrEbZl0K6SbYcd0eH4+0Efx/P/8VY8NPFujZLeUo=
+        b=inGKHgFlGGWVDtXUFxkfOmv3HkuY/YBpORsGv3H4TNaM6wQEBBib8iWalBB0bmbah
+         d1S9DFSf4emTNB3D48bxoeOuap27J8CyJVs+DmLk3WQGEut+07LUurEGj+ShMYj7P9
+         M3HxkUNoQgLp1ngcIVXvDq9UxW5qp53+Xzm5g9p0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, KeMeng Shi <shikemeng@huawei.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 072/114] sched/core: Fix migration to invalid CPU in __set_cpus_allowed_ptr()
-Date:   Thu, 10 Oct 2019 10:36:19 +0200
-Message-Id: <20191010083611.705257114@linuxfoundation.org>
+Subject: [PATCH 4.19 063/114] x86/purgatory: Disable the stackleak GCC plugin for the purgatory
+Date:   Thu, 10 Oct 2019 10:36:10 +0200
+Message-Id: <20191010083609.872858848@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -63,83 +65,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KeMeng Shi <shikemeng@huawei.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 714e501e16cd473538b609b3e351b2cc9f7f09ed ]
+[ Upstream commit ca14c996afe7228ff9b480cf225211cc17212688 ]
 
-An oops can be triggered in the scheduler when running qemu on arm64:
+Since commit:
 
- Unable to handle kernel paging request at virtual address ffff000008effe40
- Internal error: Oops: 96000007 [#1] SMP
- Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
- pstate: 20000085 (nzCv daIf -PAN -UAO)
- pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
- lr : move_queued_task.isra.21+0x124/0x298
- ...
- Call trace:
-  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
-  __migrate_task+0xc8/0xe0
-  migration_cpu_stop+0x170/0x180
-  cpu_stopper_thread+0xec/0x178
-  smpboot_thread_fn+0x1ac/0x1e8
-  kthread+0x134/0x138
-  ret_from_fork+0x10/0x18
+  b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
 
-__set_cpus_allowed_ptr() will choose an active dest_cpu in affinity mask to
-migrage the process if process is not currently running on any one of the
-CPUs specified in affinity mask. __set_cpus_allowed_ptr() will choose an
-invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if
-CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
-check. cpumask_test_cpu() of dest_cpu afterwards is overflown and may pass if
-corresponding bit is coincidentally set. As a consequence, kernel will
-access an invalid rq address associate with the invalid CPU in
-migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
+kexec breaks if GCC_PLUGIN_STACKLEAK=y is enabled, as the purgatory
+contains undefined references to stackleak_track_stack.
 
-The reproduce the crash:
+Attempting to load a kexec kernel results in this failure:
 
-  1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
-  sched_setaffinity.
+  kexec: Undefined symbol: stackleak_track_stack
+  kexec-bzImage64: Loading purgatory failed
 
-  2) A shell script repeatedly does "echo 0 > /sys/devices/system/cpu/cpu1/online"
-  and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
+Fix this by disabling the stackleak plugin for the purgatory.
 
-  3) Oops appears if the invalid CPU is set in memory after tested cpumask.
-
-Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1568616808-16808-1-git-send-email-shikemeng@huawei.com
+Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
+Link: https://lkml.kernel.org/r/20190923171753.GA2252517@rani.riverdale.lan
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/purgatory/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index f4e050681ba1c..78ecdfae25b69 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1077,7 +1077,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_equal(&p->cpus_allowed, new_mask))
- 		goto out;
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 10fb42da0007e..b81b5172cf994 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -23,6 +23,7 @@ KCOV_INSTRUMENT := n
  
--	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
-+	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
-+	if (dest_cpu >= nr_cpu_ids) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -1098,7 +1099,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_test_cpu(task_cpu(p), new_mask))
- 		goto out;
+ PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
+ PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
++PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
  
--	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
- 	if (task_running(rq, p) || p->state == TASK_WAKING) {
- 		struct migration_arg arg = { p, dest_cpu };
- 		/* Need help from migration thread: drop lock and wait. */
+ # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+ # in turn leaves some undefined symbols like __fentry__ in purgatory and not
 -- 
 2.20.1
 
