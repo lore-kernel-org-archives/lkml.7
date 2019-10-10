@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B175FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539BCC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C08621A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246D220B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697508;
-	bh=e+TI/1OfcOrCYF9xwtLecH9ZYoaL93k0XwSgE+QMVBo=;
+	s=default; t=1570697511;
+	bh=gIvY/jYPB98Ex3XhQU52QQHGDF7nkbITWsP9epN1HRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ubswnyGEOp466919ZkrtlbT+cqiyHDC6SvOoCFO6G3YsWD93Zlpu9SFsUB/VlkcOL
-	 FRDxLfUQQF4dYIhGQOa+EYBlHiY8nQTWZZ3jUsI7uDigdi2cYLfURAR2GwC3tGtPJl
-	 PUz9Iz9ehNM705Ka632pkzYiud+pELUsPp4mLYx8=
+	b=je3I60Cd/U7aePXRgpSeK/26QPTayQKvnDcaX+1xZ4p0TSY7EpX6REIDFG5mvW/5r
+	 JDhC2EhHRd9HvwgQcpjc9hCxtuU63zU2iBjtpF1/F7+wwqP8ImMJTKuPqLRspuT7af
+	 iRC+0hLU1tOlbS+9NFrn7bPP6dowCGLlX4Yr4HHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390146AbfJJIvq (ORCPT
+        id S2390159AbfJJIvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59214 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:51:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390128AbfJJIvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:36 -0400
+        id S2390144AbfJJIvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33A2C2064A;
-        Thu, 10 Oct 2019 08:51:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FBC02064A;
+        Thu, 10 Oct 2019 08:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697495;
-        bh=e+TI/1OfcOrCYF9xwtLecH9ZYoaL93k0XwSgE+QMVBo=;
+        s=default; t=1570697504;
+        bh=gIvY/jYPB98Ex3XhQU52QQHGDF7nkbITWsP9epN1HRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SsWp6lc3q59CKJCATn+XnSeVy+c8a8KT+lZiosw/2KFPBiIie96Hx6paYsv4V+RjJ
-         kJDeFnPj5iJG1FFixCJ94IcQ6iPgO7ad8/do2t2R/6fKR1wTqKNSJ8Uv+mDBT9NB5g
-         6pI+m0DCBrU+telMC5S8lBHnGzYXMM09NY8asTkQ=
+        b=iKLvzQS/IqVUSEtI/b0BO0nd8ieq9jgkX3zjAfoS+9BIN8BhbvCffmGIWLnhFex/S
+         26qGxyaj7wWSt8f1hGkO4QoRbSFFsW4iBuZIwi21S4Zf7Q0XfoTEvdmL5nLT6vDu1x
+         ttW589cW9SW6QOU9JXohacXJgs4AfCjBTGER+FbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Mike Christie <mchristi@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 48/61] nbd: fix max number of supported devs
-Date:   Thu, 10 Oct 2019 10:37:13 +0200
-Message-Id: <20191010083519.876334933@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 51/61] tick: broadcast-hrtimer: Fix a race in bc_set_next
+Date:   Thu, 10 Oct 2019 10:37:16 +0200
+Message-Id: <20191010083521.639499190@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -60,159 +62,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <mchristi@redhat.com>
+From: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
 
-[ Upstream commit e9e006f5fcf2bab59149cb38a48a4817c1b538b4 ]
+[ Upstream commit b9023b91dd020ad7e093baa5122b6968c48cc9e0 ]
 
-This fixes a bug added in 4.10 with commit:
+When a cpu requests broadcasting, before starting the tick broadcast
+hrtimer, bc_set_next() checks if the timer callback (bc_handler) is active
+using hrtimer_try_to_cancel(). But hrtimer_try_to_cancel() does not provide
+the required synchronization when the callback is active on other core.
 
-commit 9561a7ade0c205bc2ee035a2ac880478dcc1a024
-Author: Josef Bacik <jbacik@fb.com>
-Date:   Tue Nov 22 14:04:40 2016 -0500
+The callback could have already executed tick_handle_oneshot_broadcast()
+and could have also returned. But still there is a small time window where
+the hrtimer_try_to_cancel() returns -1. In that case bc_set_next() returns
+without doing anything, but the next_event of the tick broadcast clock
+device is already set to a timeout value.
 
-    nbd: add multi-connection support
+In the race condition diagram below, CPU #1 is running the timer callback
+and CPU #2 is entering idle state and so calls bc_set_next().
 
-that limited the number of devices to 256. Before the patch we could
-create 1000s of devices, but the patch switched us from using our
-own thread to using a work queue which has a default limit of 256
-active works.
+In the worst case, the next_event will contain an expiry time, but the
+hrtimer will not be started which happens when the racing callback returns
+HRTIMER_NORESTART. The hrtimer might never recover if all further requests
+from the CPUs to subscribe to tick broadcast have timeout greater than the
+next_event of tick broadcast clock device. This leads to cascading of
+failures and finally noticed as rcu stall warnings
 
-The problem is that our recv_work function sits in a loop until
-disconnection but only handles IO for one connection. The work is
-started when the connection is started/restarted, but if we end up
-creating 257 or more connections, the queue_work call just queues
-connection257+'s recv_work and that waits for connection 1 - 256's
-recv_work to be disconnected and that work instance completing.
+Here is a depiction of the race condition
 
-Instead of reverting back to kthreads, this has us allocate a
-workqueue_struct per device, so we can block in the work.
+CPU #1 (Running timer callback)                   CPU #2 (Enter idle
+                                                  and subscribe to
+                                                  tick broadcast)
+---------------------                             ---------------------
 
+__run_hrtimer()                                   tick_broadcast_enter()
+
+  bc_handler()                                      __tick_broadcast_oneshot_control()
+
+    tick_handle_oneshot_broadcast()
+
+      raw_spin_lock(&tick_broadcast_lock);
+
+      dev->next_event = KTIME_MAX;                  //wait for tick_broadcast_lock
+      //next_event for tick broadcast clock
+      set to KTIME_MAX since no other cores
+      subscribed to tick broadcasting
+
+      raw_spin_unlock(&tick_broadcast_lock);
+
+    if (dev->next_event == KTIME_MAX)
+      return HRTIMER_NORESTART
+    // callback function exits without
+       restarting the hrtimer                      //tick_broadcast_lock acquired
+                                                   raw_spin_lock(&tick_broadcast_lock);
+
+                                                   tick_broadcast_set_event()
+
+                                                     clockevents_program_event()
+
+                                                       dev->next_event = expires;
+
+                                                       bc_set_next()
+
+                                                         hrtimer_try_to_cancel()
+                                                         //returns -1 since the timer
+                                                         callback is active. Exits without
+                                                         restarting the timer
+  cpu_base->running = NULL;
+
+The comment that hrtimer cannot be armed from within the callback is
+wrong. It is fine to start the hrtimer from within the callback. Also it is
+safe to start the hrtimer from the enter/exit idle code while the broadcast
+handler is active. The enter/exit idle code and the broadcast handler are
+synchronized using tick_broadcast_lock. So there is no need for the
+existing try to cancel logic. All this can be removed which will eliminate
+the race condition as well.
+
+Fixes: 5d1638acb9f6 ("tick: Introduce hrtimer based broadcast")
+Originally-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lkml.kernel.org/r/20190926135101.12102-2-balasubramani_vivekanandan@mentor.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 39 +++++++++++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
+ kernel/time/tick-broadcast-hrtimer.c | 57 ++++++++++++++--------------
+ 1 file changed, 29 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 14b491c5cf7b6..a234600849558 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -106,6 +106,7 @@ struct nbd_device {
- 	struct nbd_config *config;
- 	struct mutex config_lock;
- 	struct gendisk *disk;
-+	struct workqueue_struct *recv_workq;
- 
- 	struct list_head list;
- 	struct task_struct *task_recv;
-@@ -136,7 +137,6 @@ static struct dentry *nbd_dbg_dir;
- 
- static unsigned int nbds_max = 16;
- static int max_part = 16;
--static struct workqueue_struct *recv_workqueue;
- static int part_shift;
- 
- static int nbd_dev_dbg_init(struct nbd_device *nbd);
-@@ -1015,7 +1015,7 @@ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
- 		/* We take the tx_mutex in an error path in the recv_work, so we
- 		 * need to queue_work outside of the tx_mutex.
- 		 */
--		queue_work(recv_workqueue, &args->work);
-+		queue_work(nbd->recv_workq, &args->work);
- 
- 		atomic_inc(&config->live_connections);
- 		wake_up(&config->conn_wait);
-@@ -1120,6 +1120,10 @@ static void nbd_config_put(struct nbd_device *nbd)
- 		kfree(nbd->config);
- 		nbd->config = NULL;
- 
-+		if (nbd->recv_workq)
-+			destroy_workqueue(nbd->recv_workq);
-+		nbd->recv_workq = NULL;
-+
- 		nbd->tag_set.timeout = 0;
- 		queue_flag_clear_unlocked(QUEUE_FLAG_DISCARD, nbd->disk->queue);
- 
-@@ -1145,6 +1149,14 @@ static int nbd_start_device(struct nbd_device *nbd)
- 		return -EINVAL;
- 	}
- 
-+	nbd->recv_workq = alloc_workqueue("knbd%d-recv",
-+					  WQ_MEM_RECLAIM | WQ_HIGHPRI |
-+					  WQ_UNBOUND, 0, nbd->index);
-+	if (!nbd->recv_workq) {
-+		dev_err(disk_to_dev(nbd->disk), "Could not allocate knbd recv work queue.\n");
-+		return -ENOMEM;
-+	}
-+
- 	blk_mq_update_nr_hw_queues(&nbd->tag_set, config->num_connections);
- 	nbd->task_recv = current;
- 
-@@ -1175,7 +1187,7 @@ static int nbd_start_device(struct nbd_device *nbd)
- 		INIT_WORK(&args->work, recv_work);
- 		args->nbd = nbd;
- 		args->index = i;
--		queue_work(recv_workqueue, &args->work);
-+		queue_work(nbd->recv_workq, &args->work);
- 	}
- 	nbd_size_update(nbd);
- 	return error;
-@@ -1195,8 +1207,10 @@ static int nbd_start_device_ioctl(struct nbd_device *nbd, struct block_device *b
- 	mutex_unlock(&nbd->config_lock);
- 	ret = wait_event_interruptible(config->recv_wq,
- 					 atomic_read(&config->recv_threads) == 0);
--	if (ret)
-+	if (ret) {
- 		sock_shutdown(nbd);
-+		flush_workqueue(nbd->recv_workq);
-+	}
- 	mutex_lock(&nbd->config_lock);
- 	bd_set_size(bdev, 0);
- 	/* user requested, ignore socket errors */
-@@ -1836,6 +1850,12 @@ static void nbd_disconnect_and_put(struct nbd_device *nbd)
- 	mutex_lock(&nbd->config_lock);
- 	nbd_disconnect(nbd);
- 	mutex_unlock(&nbd->config_lock);
-+	/*
-+	 * Make sure recv thread has finished, so it does not drop the last
-+	 * config ref and try to destroy the workqueue from inside the work
-+	 * queue.
-+	 */
-+	flush_workqueue(nbd->recv_workq);
- 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
- 			       &nbd->config->runtime_flags))
- 		nbd_config_put(nbd);
-@@ -2216,20 +2236,12 @@ static int __init nbd_init(void)
- 
- 	if (nbds_max > 1UL << (MINORBITS - part_shift))
- 		return -EINVAL;
--	recv_workqueue = alloc_workqueue("knbd-recv",
--					 WQ_MEM_RECLAIM | WQ_HIGHPRI |
--					 WQ_UNBOUND, 0);
--	if (!recv_workqueue)
--		return -ENOMEM;
- 
--	if (register_blkdev(NBD_MAJOR, "nbd")) {
--		destroy_workqueue(recv_workqueue);
-+	if (register_blkdev(NBD_MAJOR, "nbd"))
- 		return -EIO;
+diff --git a/kernel/time/tick-broadcast-hrtimer.c b/kernel/time/tick-broadcast-hrtimer.c
+index 58045eb976c38..c750c80570e88 100644
+--- a/kernel/time/tick-broadcast-hrtimer.c
++++ b/kernel/time/tick-broadcast-hrtimer.c
+@@ -44,34 +44,39 @@ static int bc_shutdown(struct clock_event_device *evt)
+  */
+ static int bc_set_next(ktime_t expires, struct clock_event_device *bc)
+ {
+-	int bc_moved;
+ 	/*
+-	 * We try to cancel the timer first. If the callback is on
+-	 * flight on some other cpu then we let it handle it. If we
+-	 * were able to cancel the timer nothing can rearm it as we
+-	 * own broadcast_lock.
++	 * This is called either from enter/exit idle code or from the
++	 * broadcast handler. In all cases tick_broadcast_lock is held.
+ 	 *
+-	 * However we can also be called from the event handler of
+-	 * ce_broadcast_hrtimer itself when it expires. We cannot
+-	 * restart the timer because we are in the callback, but we
+-	 * can set the expiry time and let the callback return
+-	 * HRTIMER_RESTART.
++	 * hrtimer_cancel() cannot be called here neither from the
++	 * broadcast handler nor from the enter/exit idle code. The idle
++	 * code can run into the problem described in bc_shutdown() and the
++	 * broadcast handler cannot wait for itself to complete for obvious
++	 * reasons.
+ 	 *
+-	 * Since we are in the idle loop at this point and because
+-	 * hrtimer_{start/cancel} functions call into tracing,
+-	 * calls to these functions must be bound within RCU_NONIDLE.
++	 * Each caller tries to arm the hrtimer on its own CPU, but if the
++	 * hrtimer callbback function is currently running, then
++	 * hrtimer_start() cannot move it and the timer stays on the CPU on
++	 * which it is assigned at the moment.
++	 *
++	 * As this can be called from idle code, the hrtimer_start()
++	 * invocation has to be wrapped with RCU_NONIDLE() as
++	 * hrtimer_start() can call into tracing.
+ 	 */
+-	RCU_NONIDLE({
+-			bc_moved = hrtimer_try_to_cancel(&bctimer) >= 0;
+-			if (bc_moved)
+-				hrtimer_start(&bctimer, expires,
+-					      HRTIMER_MODE_ABS_PINNED);});
+-	if (bc_moved) {
+-		/* Bind the "device" to the cpu */
+-		bc->bound_on = smp_processor_id();
+-	} else if (bc->bound_on == smp_processor_id()) {
+-		hrtimer_set_expires(&bctimer, expires);
 -	}
++	RCU_NONIDLE( {
++		hrtimer_start(&bctimer, expires, HRTIMER_MODE_ABS_PINNED);
++		/*
++		 * The core tick broadcast mode expects bc->bound_on to be set
++		 * correctly to prevent a CPU which has the broadcast hrtimer
++		 * armed from going deep idle.
++		 *
++		 * As tick_broadcast_lock is held, nothing can change the cpu
++		 * base which was just established in hrtimer_start() above. So
++		 * the below access is safe even without holding the hrtimer
++		 * base lock.
++		 */
++		bc->bound_on = bctimer.base->cpu_base->cpu;
++	} );
+ 	return 0;
+ }
  
- 	if (genl_register_family(&nbd_genl_family)) {
- 		unregister_blkdev(NBD_MAJOR, "nbd");
--		destroy_workqueue(recv_workqueue);
- 		return -EINVAL;
- 	}
- 	nbd_dbg_init();
-@@ -2271,7 +2283,6 @@ static void __exit nbd_cleanup(void)
+@@ -97,10 +102,6 @@ static enum hrtimer_restart bc_handler(struct hrtimer *t)
+ {
+ 	ce_broadcast_hrtimer.event_handler(&ce_broadcast_hrtimer);
  
- 	idr_destroy(&nbd_index_idr);
- 	genl_unregister_family(&nbd_genl_family);
--	destroy_workqueue(recv_workqueue);
- 	unregister_blkdev(NBD_MAJOR, "nbd");
+-	if (clockevent_state_oneshot(&ce_broadcast_hrtimer))
+-		if (ce_broadcast_hrtimer.next_event != KTIME_MAX)
+-			return HRTIMER_RESTART;
+-
+ 	return HRTIMER_NORESTART;
  }
  
 -- 
