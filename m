@@ -2,142 +2,142 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32554C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E5AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFE82064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89881218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Mi+LBXie"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="rukj2oPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387970AbfJJJaa (ORCPT
+        id S2387786AbfJJJbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:30:30 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:35411 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727320AbfJJJaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:30:30 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46pm5t70dPz9tyg3;
-        Thu, 10 Oct 2019 11:30:26 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Mi+LBXie; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id bGdkoNBMdE8L; Thu, 10 Oct 2019 11:30:26 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46pm5t5kgwz9tyfl;
-        Thu, 10 Oct 2019 11:30:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1570699826; bh=AykK97M7er2vvsv5jIrpdgMqJu5mfszKCg1SulVxerg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Mi+LBXieYs1bXqMMcVBxGt0xJEsWJQxna+rH76Uo5f8WlQ8yvbgQynDlslYkEmKP9
-         wDxkjFiEtlOjZhz9hE2b1rpXa76g7GNgWkt39bnymL7AWiPXOQZMJWSfZu1GfSkHTc
-         BjMG7D4v7nWbpz3LA4ZXlm7AUWOSWU8hwKG6rFTA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DE7468B7B2;
-        Thu, 10 Oct 2019 11:30:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id vHcJKjrjLiae; Thu, 10 Oct 2019 11:30:27 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4699B8B78B;
-        Thu, 10 Oct 2019 11:30:27 +0200 (CEST)
-Subject: Re: [PATCH v4 0/5] Powerpc/Watchpoint: Few important fixes
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, npiggin@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org,
-        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20190925040630.6948-1-ravi.bangoria@linux.ibm.com>
- <19b222ce-3013-7de5-1c04-48c6fd00fe81@linux.ibm.com>
- <0d98e256-44ee-f920-cb2f-f79545584769@c-s.fr>
- <3e31e5f7-f948-512a-054c-9ad10103ccc0@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <b77485b4-39ea-aeb7-432f-44ec4963d25f@c-s.fr>
-Date:   Thu, 10 Oct 2019 11:30:27 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 10 Oct 2019 05:31:55 -0400
+Received: from mail-eopbgr770104.outbound.protection.outlook.com ([40.107.77.104]:20961
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727320AbfJJJby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 05:31:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h+fjN8W0MF40MyMgExkDwXM5lg3OdWpYf37L8hswIqQfuWsN0ZZtAIeU6WpSOwXEIvTPKn7Q7mOywifU8gpDqUwEWjHaJ1jhE44VQXT/2Vxi52NqVcX4GJtuf7vjombfEbiXp+01JKNEQNvHH1tjbyUy4nJUiD5TPykbxeNElasgK44yz2sX3B4OxTIgYwqqQ1oy4jR4ndA6RAvvBWGzKJWmYZuouYkzpFRttUfIA5DGdvvusQRw5zxY0jiQhrjk151SUW8H1G5W4ULMNQXVFfH1p3RgBjMrraa7x3gHXO54XmbpOZ8/xmzZ/qehExF+vwfOeA2tEMEI7y5VchsdcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vMPvfG55FZUqtBg6uq+Nf2D/eTESknfNUSOnWMpsW5Q=;
+ b=cKebEemjgleE1w6gd1wV4BstUQME1xUl69WR4k90PtpEvcTs3KjjPfxMGlG+AC5zkVlgHG4wrmuezkvJ5xXN1UqfeTPt+HEVBpOAho7i6sohw/8GDH5wX/mDpru8e0zCWo8aVm1Cgk8qOKunriPq0HZZdT340PmeRRPqQQLNe+zcpJKYEWgIT0qosaQAHxeS0HVrd2B5NvUJfyhnXX+kHe3llo4b7FXPQ00TMLtlP2WNC0/gEhJaUzLAaEMPLlh5ImEk8loBLU2zIIuyQ0NEtmeR9N96fdqFLiJYanYL8JDA6bOyEWNpP+i404dk/SFXXWtOsa63OaplDy+DuAlobg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vMPvfG55FZUqtBg6uq+Nf2D/eTESknfNUSOnWMpsW5Q=;
+ b=rukj2oPXM+SC/zcECLFaZhCtKf+I9PeJdBeIDOACb8kRGPs8VXyAYjqAP1K22+gpvxKURvboudwxfB4AfycjaO4vsC+UM9IHIslz0mbVjTc7fsNjmDozmMCDYl0sQmSD3JMzsUG6JX3RPqbCEWzAQ3T6IP0U+ier/fOeikQVkTE=
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com (52.135.120.29) by
+ SN6PR04MB5374.namprd04.prod.outlook.com (20.178.6.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.18; Thu, 10 Oct 2019 09:31:51 +0000
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::c55e:6c70:adbb:cf87]) by SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::c55e:6c70:adbb:cf87%5]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
+ 09:31:51 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v2 0/2] Add initial support for slimport anx7625
+Thread-Topic: [PATCH v2 0/2] Add initial support for slimport anx7625
+Thread-Index: AQHVf02Lgtx0676fOUSsX2pXrX7r4g==
+Date:   Thu, 10 Oct 2019 09:31:51 +0000
+Message-ID: <cover.1570699576.git.xji@analogixsemi.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR03CA0066.apcprd03.prod.outlook.com
+ (2603:1096:203:52::30) To SN6PR04MB4543.namprd04.prod.outlook.com
+ (2603:10b6:805:a8::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 593adf43-d261-42f0-e6ad-08d74d64ae1a
+x-ms-traffictypediagnostic: SN6PR04MB5374:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR04MB53741CBB8E2E59BB3BF90C22C7940@SN6PR04MB5374.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 018632C080
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(39840400004)(136003)(346002)(376002)(199004)(53754006)(189003)(99286004)(4326008)(71200400001)(71190400001)(6506007)(14444005)(256004)(52116002)(386003)(316002)(305945005)(2906002)(7736002)(186003)(102836004)(478600001)(25786009)(26005)(14454004)(66066001)(8676002)(86362001)(6436002)(5660300002)(8936002)(2501003)(81166006)(81156014)(4744005)(6512007)(486006)(54906003)(110136005)(7416002)(6116002)(3846002)(2616005)(6486002)(476003)(66556008)(66946007)(66476007)(107886003)(64756008)(66446008)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5374;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Lu9lPA8AdBRq+fzdpGE0KCtNyxe8Bs886wV+6yHDQuCrGyO6pCpRx+7LYDTVzeE1agMH+G99cvqK1Usv98T1/3z8kIkyF2SfZvPDZMRpkDar2k1OPLC4xXA0ZA2dd8BmCZXGzoj2aolujot1QXkTF6LoXbvVDpcVFmgz/Q09pVS4FPTvuz9i+BPAmv9otDixiuLb2WmY/KfvlYjbrkF98mIF7/zSGcSHOmeBQUihm53r1CvfrutCuY2HJ2fEm8fBsD018Ao+DrY3rEtitlXGVm9RPz2jHDmLnlMq63JkbZAAmiWDPOl58JrNWol4QnU/qeYPpfDAGlAPr8IDrf3Kx09R0R51pPIOkvHVbwJo/8xBmgVLzO9CDnrdoHQY2DCgon1NOBIsZEDI+ikjoStq8SaQnRDl+cYjQQMTmjolZaA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A0B40718F7C5ED4A8177B42D35AC70E0@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <3e31e5f7-f948-512a-054c-9ad10103ccc0@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 593adf43-d261-42f0-e6ad-08d74d64ae1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 09:31:51.0800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PkcuvLzHXpJSZDQdjv1oAB78qcudGcsNPEN1Rm4gjVK+jddTuE0OCUcEBq4rnLi4Zg+OxKF1wGf9S3YUJdr7+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5374
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
+
+The following series add initial support for the Slimport ANX7625 transmitt=
+er, a
+ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable dev=
+ice.
+
+This is the initial version, any mistakes, please let me know, I will fix i=
+t in
+the next series.
+
+Thanks,
+Xin
 
 
-Le 10/10/2019 à 06:44, Ravi Bangoria a écrit :
-> 
->>> @Christophe, Is patch5 works for you on 8xx?
->>>
->>
->> Getting the following :
->>
->> root@vgoip:~# ./ptrace-hwbreak
->> test: ptrace-hwbreak
->> tags: git_version:v5.4-rc2-710-gf0082e173fe4-dirty
->> PTRACE_SET_DEBUGREG, WO, len: 1: Ok
->> PTRACE_SET_DEBUGREG, WO, len: 2: Ok
->> PTRACE_SET_DEBUGREG, WO, len: 4: Ok
->> PTRACE_SET_DEBUGREG, WO, len: 8: Ok
->> PTRACE_SET_DEBUGREG, RO, len: 1: Ok
->> PTRACE_SET_DEBUGREG, RO, len: 2: Ok
->> PTRACE_SET_DEBUGREG, RO, len: 4: Ok
->> PTRACE_SET_DEBUGREG, RO, len: 8: Ok
->> PTRACE_SET_DEBUGREG, RW, len: 1: Ok
->> PTRACE_SET_DEBUGREG, RW, len: 2: Ok
->> PTRACE_SET_DEBUGREG, RW, len: 4: Ok
->> PTRACE_SET_DEBUGREG, RW, len: 8: Ok
->> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
->> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
->> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
->> PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO, len: 6: Ok
->> PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RO, len: 6: Fail
->> failure: ptrace-hwbreak
->>
-> 
-> Thanks Christophe. I don't have any 8xx box. I checked qemu and it seems
-> qemu emulation for 8xx is not yet supported. So I can't debug this. Can
-> you please check why it's failing?
-> 
+Xin Ji (2):
+  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
+  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP bridge driver
 
-First issue: we get a mismatch between the parent and the child, because 
-len 8 test generates two reads/writes while the parent installs the 
-breakpoint only once.
+ .../bindings/display/bridge/anx7625.yaml           |   96 +
+ drivers/gpu/drm/bridge/Makefile                    |    2 +-
+ drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
+ drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+ drivers/gpu/drm/bridge/analogix/anx7625.c          | 2155 ++++++++++++++++=
+++++
+ drivers/gpu/drm/bridge/analogix/anx7625.h          |  406 ++++
+ 6 files changed, 2665 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
+5.yaml
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
 
-Changing glvar from __u64 to unsigned long fixes the problem.
+--=20
+2.7.4
 
-Then I get:
-
-test: ptrace-hwbreak
-tags: git_version:v5.4-rc2-710-gf0082e173fe4-dirty
-PTRACE_SET_DEBUGREG, WO, len: 1: Ok
-PTRACE_SET_DEBUGREG, WO, len: 2: Ok
-PTRACE_SET_DEBUGREG, WO, len: 4: Ok
-PTRACE_SET_DEBUGREG, RO, len: 1: Ok
-PTRACE_SET_DEBUGREG, RO, len: 2: Ok
-PTRACE_SET_DEBUGREG, RO, len: 4: Ok
-PTRACE_SET_DEBUGREG, RW, len: 1: Ok
-PTRACE_SET_DEBUGREG, RW, len: 2: Ok
-PTRACE_SET_DEBUGREG, RW, len: 4: Ok
-PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
-PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
-PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
-PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO, len: 6: Fail
-failure: ptrace-hwbreak
-
-Which shows that PPC_PTRACE_SETHWDEBUG doesn't work in MODE_RANGE
-
-Christophe
