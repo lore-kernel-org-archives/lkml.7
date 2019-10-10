@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA2FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2076C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E960C20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BABEE218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696846;
-	bh=y2bEQBdf2i+65jKxhqGXFchMma96qIpxAeXE0iW0uOM=;
+	s=default; t=1570696850;
+	bh=Ie0By+KUnOkwmDWpsFLRzWys8/g/MupAZOH9aBYUGdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YiDcIdt6uyBRqj0WJ2Cx3BJd8uShn/uck/bqxC0Y/q47eR4EtwLlEwSv+ZJvL2HHL
-	 ikadkAsIR9ScUHmuz5W4/21gBwR18UE7J8mq1F/goDBCNEH6AqRUXB6x1w1bZyyeD+
-	 d5etcG8wSXYgWt51SsWplcb6ibH17uemcFpfD8AM=
+	b=oTK+vAtyTjlq8yTu9m4f1uqFHE7X593cDBHE3ojnu3oDKd7HGt6d6TBXbc2MawC8i
+	 4T0luBCX/uis49neuKxjXSFMp0T1WGU36yJ7x6DB6HdEff8I/LsaH9CdTVNShNF7lf
+	 9mvnAufBb43zl1YtRQSoXUimzn4HPOm65MuajRUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388169AbfJJIko (ORCPT
+        id S2388192AbfJJIkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:40:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44810 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:40:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387545AbfJJIkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:40:42 -0400
+        id S2387545AbfJJIkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:40:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92F1220B7C;
-        Thu, 10 Oct 2019 08:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A5A2218AC;
+        Thu, 10 Oct 2019 08:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696841;
-        bh=y2bEQBdf2i+65jKxhqGXFchMma96qIpxAeXE0iW0uOM=;
+        s=default; t=1570696846;
+        bh=Ie0By+KUnOkwmDWpsFLRzWys8/g/MupAZOH9aBYUGdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fnQtQx3qDS+J3joXAziQevLwnEksmf6rQNHk2L0kZ9/zyhmsfU+/WTqgSgfdCPWqD
-         998po47xJS5sLGuPIJznijFAn1zSC4sLmQcDoEqjzeMvIWkiabl0Mhs9XM2tFvNtaw
-         XBsjW28k6nnDnRXkEAFUzcb5w2LxrJZuxcFMUIk8=
+        b=QWHS2UrZ6biemLVcSOwyoF/VqKcFkhMETxBG67bxQLkrolstDaPPPSE2AWiEzvBi4
+         +5fBbI0belrBJNkoX6WWmdtxk7gmFOTl8QfLmAA8EjwB/dIUTjrplyL+xy7l43rV/E
+         SZGuBjo3ZsEbCLf+E5X0zxvn+ku+MriSIHpMe+Js=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.3 035/148] powerpc/mm: Fix an Oops in kasan_mmu_init()
-Date:   Thu, 10 Oct 2019 10:34:56 +0200
-Message-Id: <20191010083613.280565075@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaolin Zhang <xiaolin.zhang@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.3 072/148] drm/i915: to make vgpu ppgtt notificaiton as atomic operation
+Date:   Thu, 10 Oct 2019 10:35:33 +0200
+Message-Id: <20191010083615.760135349@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,84 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Xiaolin Zhang <xiaolin.zhang@intel.com>
 
-commit cbd18991e24fea2c31da3bb117c83e4a3538cd11 upstream.
+commit 9e77f5001b9833a6bdd3940df245053c2212a32b upstream.
 
-Uncompressing Kernel Image ... OK
-   Loading Device Tree to 01ff7000, end 01fff74f ... OK
-[    0.000000] printk: bootconsole [udbg0] enabled
-[    0.000000] BUG: Unable to handle kernel data access at 0xf818c000
-[    0.000000] Faulting instruction address: 0xc0013c7c
-[    0.000000] Thread overran stack, or stack corrupted
-[    0.000000] Oops: Kernel access of bad area, sig: 11 [#1]
-[    0.000000] BE PAGE_SIZE=16K PREEMPT
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-rc4-s3k-dev-00743-g5abe4a3e8fd3-dirty #2080
-[    0.000000] NIP:  c0013c7c LR: c0013310 CTR: 00000000
-[    0.000000] REGS: c0c5ff38 TRAP: 0300   Not tainted  (5.3.0-rc4-s3k-dev-00743-g5abe4a3e8fd3-dirty)
-[    0.000000] MSR:  00001032 <ME,IR,DR,RI>  CR: 99033955  XER: 80002100
-[    0.000000] DAR: f818c000 DSISR: 82000000
-[    0.000000] GPR00: c0013310 c0c5fff0 c0ad6ac0 c0c600c0 f818c031 82000000 00000000 ffffffff
-[    0.000000] GPR08: 00000000 f1f1f1f1 c0013c2c c0013304 99033955 00400008 00000000 07ff9598
-[    0.000000] GPR16: 00000000 07ffb94c 00000000 00000000 00000000 00000000 00000000 f818cfb2
-[    0.000000] GPR24: 00000000 00000000 00001000 ffffffff 00000000 c07dbf80 00000000 f818c000
-[    0.000000] NIP [c0013c7c] do_page_fault+0x50/0x904
-[    0.000000] LR [c0013310] handle_page_fault+0xc/0x38
-[    0.000000] Call Trace:
-[    0.000000] Instruction dump:
-[    0.000000] be010080 91410014 553fe8fe 3d40c001 3d20f1f1 7d800026 394a3c2c 3fffe000
-[    0.000000] 6129f1f1 900100c4 9181007c 91410018 <913f0000> 3d2001f4 6129f4f4 913f0004
+vgpu ppgtt notification was split into 2 steps, the first step is to
+update PVINFO's pdp register and then write PVINFO's g2v_notify register
+with action code to tirgger ppgtt notification to GVT side.
 
-Don't map the early shadow page read-only yet when creating the new
-page tables for the real shadow memory, otherwise the memblock
-allocations that immediately follows to create the real shadow pages
-that are about to replace the early shadow page trigger a page fault
-if they fall into the region being worked on at the moment.
+currently these steps were not atomic operations due to no any protection,
+so it is easy to enter race condition state during the MTBF, stress and
+IGT test to cause GPU hang.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
+the solution is to add a lock to make vgpu ppgtt notication as atomic
+operation.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/fe86886fb8db44360417cee0dc515ad47ca6ef72.1566382750.git.christophe.leroy@c-s.fr
+Signed-off-by: Xiaolin Zhang <xiaolin.zhang@intel.com>
+Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/1566543451-13955-1-git-send-email-xiaolin.zhang@intel.com
+(cherry picked from commit 52988009843160c5b366b4082ed6df48041c655c)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/kasan/kasan_init_32.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/i915/i915_drv.h     |    1 +
+ drivers/gpu/drm/i915/i915_gem_gtt.c |   12 +++++++-----
+ drivers/gpu/drm/i915/i915_vgpu.c    |    1 +
+ 3 files changed, 9 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -34,7 +34,7 @@ static int __ref kasan_init_shadow_page_
+--- a/drivers/gpu/drm/i915/i915_drv.h
++++ b/drivers/gpu/drm/i915/i915_drv.h
+@@ -1073,6 +1073,7 @@ struct i915_frontbuffer_tracking {
+ };
+ 
+ struct i915_virtual_gpu {
++	struct mutex lock; /* serialises sending of g2v_notify command pkts */
+ 	bool active;
+ 	u32 caps;
+ };
+--- a/drivers/gpu/drm/i915/i915_gem_gtt.c
++++ b/drivers/gpu/drm/i915/i915_gem_gtt.c
+@@ -1248,14 +1248,15 @@ free_scratch_page:
+ 	return ret;
+ }
+ 
+-static int gen8_ppgtt_notify_vgt(struct i915_ppgtt *ppgtt, bool create)
++static void gen8_ppgtt_notify_vgt(struct i915_ppgtt *ppgtt, bool create)
  {
- 	pmd_t *pmd;
- 	unsigned long k_cur, k_next;
--	pgprot_t prot = kasan_prot_ro();
-+	pgprot_t prot = slab_is_available() ? kasan_prot_ro() : PAGE_KERNEL;
+-	struct i915_address_space *vm = &ppgtt->vm;
+-	struct drm_i915_private *dev_priv = vm->i915;
++	struct drm_i915_private *dev_priv = ppgtt->vm.i915;
+ 	enum vgt_g2v_type msg;
+ 	int i;
  
- 	pmd = pmd_offset(pud_offset(pgd_offset_k(k_start), k_start), k_start);
- 
-@@ -110,9 +110,22 @@ static int __ref kasan_init_region(void
- static void __init kasan_remap_early_shadow_ro(void)
- {
- 	pgprot_t prot = kasan_prot_ro();
-+	unsigned long k_start = KASAN_SHADOW_START;
-+	unsigned long k_end = KASAN_SHADOW_END;
-+	unsigned long k_cur;
-+	phys_addr_t pa = __pa(kasan_early_shadow_page);
- 
- 	kasan_populate_pte(kasan_early_shadow_pte, prot);
- 
-+	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
-+		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
-+		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
+-	if (i915_vm_is_4lvl(vm)) {
++	mutex_lock(&dev_priv->vgpu.lock);
 +
-+		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
-+			continue;
-+
-+		__set_pte_at(&init_mm, k_cur, ptep, pfn_pte(PHYS_PFN(pa), prot), 0);
-+	}
- 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
++	if (i915_vm_is_4lvl(&ppgtt->vm)) {
+ 		const u64 daddr = px_dma(ppgtt->pd);
+ 
+ 		I915_WRITE(vgtif_reg(pdp[0].lo), lower_32_bits(daddr));
+@@ -1275,9 +1276,10 @@ static int gen8_ppgtt_notify_vgt(struct
+ 				VGT_G2V_PPGTT_L3_PAGE_TABLE_DESTROY);
+ 	}
+ 
++	/* g2v_notify atomically (via hv trap) consumes the message packet. */
+ 	I915_WRITE(vgtif_reg(g2v_notify), msg);
+ 
+-	return 0;
++	mutex_unlock(&dev_priv->vgpu.lock);
+ }
+ 
+ static void gen8_free_scratch(struct i915_address_space *vm)
+--- a/drivers/gpu/drm/i915/i915_vgpu.c
++++ b/drivers/gpu/drm/i915/i915_vgpu.c
+@@ -79,6 +79,7 @@ void i915_check_vgpu(struct drm_i915_pri
+ 	dev_priv->vgpu.caps = __raw_uncore_read32(uncore, vgtif_reg(vgt_caps));
+ 
+ 	dev_priv->vgpu.active = true;
++	mutex_init(&dev_priv->vgpu.lock);
+ 	DRM_INFO("Virtual GPU for Intel GVT-g detected.\n");
  }
  
 
