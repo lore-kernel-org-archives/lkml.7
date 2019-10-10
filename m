@@ -2,90 +2,92 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B62AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B58FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3634206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A3C206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="yqmdtRH7"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LAgwFwzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfJJXvG (ORCPT
+        id S1727418AbfJJXwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 19:51:06 -0400
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21449 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfJJXvF (ORCPT
+        Thu, 10 Oct 2019 19:52:23 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43427 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfJJXwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 19:51:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1570751433; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=hT7cVdAi4Ogoe87/LMc1zcAwrULZmjt3BrSAcC8PTLi07sakUdVtriCqJoMc8eG8HQHYo4+w4+QQ6xqExcbY8gnq3xk1Rjl1RWd+Dv9ifEABjZ7MDrvS4WPl6FXW6Kx3M4UUM6Ut8lnwhVZm+q1rFOrVTbjmvW2XMItcdTTI7UM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1570751433; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=yN70WGu1foiEfKceIyoLTb0NvXxZwFhRCRnJxip6P9M=; 
-        b=LtfdSbYVp3wu5n2pzvkIEkD5k4Kx7UJ8qfMvP6QoJ8lC7mx46tXDaStWpTq1eJkM+M/2njPtPz3XWf4pWeCyCjBInvwt051H63fiz89kkL3LHi5boGEEsfg9PgAZU8vrzIh+AHS6nIVRuyDdMy5zHdClC3pzceM6H/HIs+WC8bY=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=didiksetiawan.com;
-        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
-        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570751433;
-        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        l=864; bh=yN70WGu1foiEfKceIyoLTb0NvXxZwFhRCRnJxip6P9M=;
-        b=yqmdtRH7FQ66gm9S6CGLpMoqbJsb3LmjRr0fRpv2T08/63b9EGONtJftxBIO9g3h
-        D+DUIyiUl3vE8z766vmnmyYtd1FnM1sB1QnswbDQmnAqgMwWpXCiCzmldZcSCiuflWW
-        2KBtrZqjcDZ6bKcXA42voazzZAdo4978ureT2heE=
-Received: from thinkpad-e420s (120.188.6.98 [120.188.6.98]) by mx.zohomail.com
-        with SMTPS id 1570751432403510.0797825909775; Thu, 10 Oct 2019 16:50:32 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 06:50:20 +0700
-From:   Didik Setiawan <ds@didiksetiawan.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 00/61] 4.14.149-stable review
-Message-ID: <20191010235020.GA23813@thinkpad-e420s>
-References: <20191010083449.500442342@linuxfoundation.org>
+        Thu, 10 Oct 2019 19:52:23 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a2so4915568pfo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 16:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cCuaMw8m9UN/5q2abRR9qC4VK+02/Hh9rek8kBa5scw=;
+        b=LAgwFwzKergbnZXxEXYPb1hXuvSekkTrC7KSzmPpq8N7Tlm/RwZaow6B1x/INdMzEb
+         C5hY+EqJPnF+5j4jsbSW1GWM9YdNluPvijodi0lOH5sqI+AWQQx11PduIVqWBJSjL2/o
+         beCGM9mc9uU+o3G2HPcp3dtBZUP9hu7IcFIl5SovfeVSPGnabvT1iXqbi/vFEDIwFME1
+         Vt01jRmATApNrsO2Q4d46DUnaDLJELIkbzZGDKs6AA+FZjbNTt6AB5RfonnH0H5C24+c
+         tsG93YSJfM/GsTQw5Li0P118Ia0EHr9cxWw+kchqsVT99CnLtJflhFFUvY+66wAYvl8i
+         1SQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cCuaMw8m9UN/5q2abRR9qC4VK+02/Hh9rek8kBa5scw=;
+        b=Kumh7odagDkK/zliA0ehx9aRK+DiNzkvhuLG8eTmseOz+Np6Nx5zcOFECYw6JPK+Fo
+         2Z9INy2Mcot6s8ABjdMmIvnZDr5OX+4VUXLYSSumUYQoDbkefAOJtsbvWWd770MuWggN
+         FBCpNEaxZj/j5Cp32n8TDc1NqU9CC9Px5uZznirLBqo0arumrkBfMAhmbHrILPR7I6Jy
+         +ozMVKw8ZH+CyAALRwA73o9QQsoXOOeunzASpgiZtmqBcMQFCNyf+Rvgr6/8APt0z5Z6
+         aRSvt8U1MYsiu7MhSlTO1p4KlQCdmQjxwRjrl+UyLHy4wMYhDzvUoNNFGoQC3MAfRABt
+         TrbA==
+X-Gm-Message-State: APjAAAWPyF68cgFWxW2G8Bob4d7m2gmuDxn6pCgEUQenHJoOxt5awQVy
+        5Qv9Ty5dvHmTVTWBPmTJQk8Yxw==
+X-Google-Smtp-Source: APXvYqwD95JGqzibrj0+hiJ53FXfYwlzs+Nax94WXn3QiMp2CttxGXrUPGbM/+RXAYcNMz6EYxabWQ==
+X-Received: by 2002:a17:90a:b902:: with SMTP id p2mr13370504pjr.62.1570751542284;
+        Thu, 10 Oct 2019 16:52:22 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id t68sm6043305pgt.61.2019.10.10.16.52.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 16:52:21 -0700 (PDT)
+Subject: Re: [PATCH] block: account statistics for passthrough requests
+To:     Logan Gunthorpe <logang@deltatee.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Stephen Bates <sbates@raithlin.com>, Christoph Hellwig <hch@lst.de>
+References: <20191010233626.15998-1-logang@deltatee.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <303a3cd8-e95f-651d-83c2-d283a89a8208@kernel.dk>
+Date:   Thu, 10 Oct 2019 17:52:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191010233626.15998-1-logang@deltatee.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ZohoMailClient: External
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:36:25AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.149 release.
-> There are 61 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 10/10/19 5:36 PM, Logan Gunthorpe wrote:
+> Presently, passthrough requests are not accounted for because
+> blk_do_io_stat() expressly rejects them. Based on some digging
+> in the history, this doesn't seem like a concious decision but
+> one that evolved from the change from blk_fs_request() to
+> blk_rq_is_passthrough().
 > 
-> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.149-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
- 
-Compiled, booted, and no regressions found on my x86_64 system.
+> To support this, call blk_account_io_start() in blk_execute_rq_nowait()
+> and remove the passthrough check in blk_do_io_stat().
 
-Thanks,
-Didik Setiawan
+Looks good to me, applied.
+
+-- 
+Jens Axboe
 
