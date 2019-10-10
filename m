@@ -2,113 +2,142 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E0DECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0EEC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787032067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:53:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C2jVvEnj"
+	by mail.kernel.org (Postfix) with ESMTP id D3973206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfJJVx1 (ORCPT
+        id S1727469AbfJJVxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:53:27 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39020 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJVx1 (ORCPT
+        Thu, 10 Oct 2019 17:53:36 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39694 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJVxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:53:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id s17so3441249plp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 14:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eZ5a1UrQhKc0eFrayHNWPPaPzIDNm8Pl4fc7UtzEcwI=;
-        b=C2jVvEnjI3cDO6vB/Rft3tcJex85MLNmn0DKywgUaA+JqHl5XVj8PXi/cisN6F6y3c
-         jEyND9KgFacuQi0DUApP9FWNA9RdjSaH2p6/y3f9VUjJTyU7C7G4tqBJKEoaMJdm2xc7
-         cC3Xwkvz83wYVon/M1YaWoXbhEZ1L27sCVrzM=
+        Thu, 10 Oct 2019 17:53:35 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 4so7064788qki.6;
+        Thu, 10 Oct 2019 14:53:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eZ5a1UrQhKc0eFrayHNWPPaPzIDNm8Pl4fc7UtzEcwI=;
-        b=FnQhSbGS2fYd0hjy5lmQDGf6hRHvyRxIXtrypRkwnf0upwqW8lo3eKaVOZAsTFXY6N
-         A0DpjuSWmend0D6dpom7BFItob3dvrRihsSS1Fe+lAsp1WJiGe7H1zDMbGMZ51fdsTIt
-         jb2BDJANMgMd1mVL+0pxNQIT4bPJMiHGZLGHAGT4R11BXtEGVZkUruDQ9fZB7hLfntwU
-         guuffU1C8e7xpwdRaKg0z0/+O3cTl/BMzID+cL/CAqstvF0dGA7hllkFKiAL8an7V4So
-         Obcx3CkS7UEy2pfIFZNheQpr80LCYhsGO0cE5tbvK4h0aHow0yLzclgnkgEMwJFDFBhW
-         Epqw==
-X-Gm-Message-State: APjAAAXVh7nvwdwt5XeoW0Af/FhS87lcUOH/DW+Mikoh+jwyOK2m9UsA
-        5PgPAkIhs/EsaFFJhq/QSKe/Pw==
-X-Google-Smtp-Source: APXvYqzvP9DPNQm4eEFwpmDjtjMePiabTkC2OLVsNO4cce1OJAtguBuNxerHNmLTKublc5lHaVGkBg==
-X-Received: by 2002:a17:902:8bc4:: with SMTP id r4mr11153280plo.341.1570744406496;
-        Thu, 10 Oct 2019 14:53:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y4sm23629pfr.118.2019.10.10.14.53.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 14:53:25 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 14:53:24 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-um@lists.infradead.org, luto@kernel.org, oleg@redhat.com,
-        tglx@linutronix.de, wad@chromium.org, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v1] seccomp: simplify secure_computing()
-Message-ID: <201910101450.0B13B7F@keescook>
-References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
- <20190924064420.6353-1-christian.brauner@ubuntu.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5KUJrhrPz34prZHQPwuRHd4WWImJkzkCSryx5fAKFeY=;
+        b=sqfZoSPYvhJdBSFx66TubOXenl7vwDwrcMjXHOEXQIQmPdExbFoRcOt+j/4P9JjLQ2
+         S/42IHla/cnpX3Gy8uyjOIWmrJWfquHaf8lVX/Oapb6+fzR25cnW+2gPJ6dj7TUJrhRI
+         /+xXH02sl3/edXhLXYcaxataXcwMo7yu51pG7MReQwO4wmc0Ydow+bBrm36EUIyTdZaM
+         zO7EAioFfp7/TJtsdhCnY9nZBSyzuzAG5NUcgukakBoWpj7HLaHCDJWezEgEpajGw5M7
+         YdijZqozE0IjOPV3OE49ppP2esKu1/mn3GNt/6KwHTzYcETyvhbDCew2iUR6cDw2NGtq
+         WK6A==
+X-Gm-Message-State: APjAAAW2ZKl1wNeiJsNUirxt6Yc98UpOQZOw0qedSemwaer8OhbMdIhi
+        Cpet7MfqD3EwdekjoOLmdRikz3mzPGf9RUf2OyM=
+X-Google-Smtp-Source: APXvYqwI5aZHDA5AQ5r7nRWW4bmOM1FPEwqypeNgqzsA4zDVqF3VF9ai0AW+gXH8pRsYBpeg659n6diW29XFvF8Ul3Q=
+X-Received: by 2002:a05:620a:218f:: with SMTP id g15mr12031339qka.3.1570744414547;
+ Thu, 10 Oct 2019 14:53:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924064420.6353-1-christian.brauner@ubuntu.com>
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-34-arnd@arndb.de> <20191010210208.GK25745@shell.armlinux.org.uk>
+In-Reply-To: <20191010210208.GK25745@shell.armlinux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 10 Oct 2019 23:53:18 +0200
+Message-ID: <CAK8P3a2HTrxhncNbFtGA3itsZU6hfvRm6bW5ikx-PMFpVKcwdg@mail.gmail.com>
+Subject: Re: [PATCH 34/36] ARM: s3c: stop including mach/hardware.h from mach/io.h
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 08:44:20AM +0200, Christian Brauner wrote:
-> Afaict, the struct seccomp_data argument to secure_computing() is unused
-> by all current callers. So let's remove it.
-> The argument was added in [1]. It was added because having the arch
-> supply the syscall arguments used to be faster than having it done by
-> secure_computing() (cf. Andy's comment in [2]). This is not true anymore
-> though.
+On Thu, Oct 10, 2019 at 11:02 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Thu, Oct 10, 2019 at 10:30:18PM +0200, Arnd Bergmann wrote:
+> > diff --git a/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h b/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h
+> > index 2ad22b2d459b..f8a114891f16 100644
+> > --- a/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h
+> > +++ b/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h
+> > @@ -14,6 +14,8 @@
+> >  #ifndef GPIO_SAMSUNG_S3C24XX_H
+> >  #define GPIO_SAMSUNG_S3C24XX_H
+> >
+> > +#include <mach/map.h>
+> > +
+>
+> Why?  Nothing in this file uses anything from mach/map.h
 
-Yes; thanks for cleaning this up!
+Good point, I don't recall how this happened, most likely either
+edited the wrong file after a build regression, or I had moved some
+definition into this file in a patch that I later discarded and this
+change got left behind.
 
-> diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-> index ad71132374f0..ed80bdfbf5fe 100644
-> --- a/arch/s390/kernel/ptrace.c
-> +++ b/arch/s390/kernel/ptrace.c
-> @@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
->  long arch_ptrace(struct task_struct *child, long request,
->  		 unsigned long addr, unsigned long data)
->  {
-> -	ptrace_area parea; 
-> +	ptrace_area parea;
->  	int copied, ret;
->  
->  	switch (request) {
+> > diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-clock.h b/arch/arm/mach-s3c24xx/include/mach/regs-clock.h
+> > index 7ca3dd4f13c0..da4e7b3aeba6 100644
+> > --- a/arch/arm/mach-s3c24xx/include/mach/regs-clock.h
+> > +++ b/arch/arm/mach-s3c24xx/include/mach/regs-clock.h
+> > @@ -9,6 +9,8 @@
+> >  #ifndef __ASM_ARM_REGS_CLOCK
+> >  #define __ASM_ARM_REGS_CLOCK
+> >
+> > +#include <mach/map.h>
+> > +
+>
+> Why?  Nothing in this file uses anything from mach/map.h
 
-If this were whitespace cleanup in kernel/seccomp.c, I'd take it without
-flinching. As this is only tangentially related and in an arch
-directory, I've dropped this hunk out of a cowardly fear of causing
-(a likely very unlikely) merge conflict.
+I think I added this one for S3C24XX_VA_CLKPWR, which is in
+plat/map-s3c.h
 
-I'd rather we globally clean up trailing whitespace at the end of -rc1
-and ask Linus to run some crazy script. :)
+> > diff --git a/drivers/spi/spi-s3c24xx-regs.h b/drivers/spi/spi-s3c24xx-regs.h
+> > index 37b93ff7c7fe..b76d591eba8c 100644
+> > --- a/drivers/spi/spi-s3c24xx-regs.h
+> > +++ b/drivers/spi/spi-s3c24xx-regs.h
+> > @@ -8,6 +8,8 @@
+> >  #ifndef __ASM_ARCH_REGS_SPI_H
+> >  #define __ASM_ARCH_REGS_SPI_H
+> >
+> > +#include <mach/map.h>
+> > +
+>
+> If this is outside of arch/arm, it shouldn't need anything from
+> mach/map.h - mach/map.h is not for driver use.
 
-So, with that hunk removed, I've applied this to for-next/seccomp. :)
+This was the result of a botched rebase: The patch was initially
+at the start of the series where the #include was still required
+but later moved to the end behind the patch that used to remove
+it again.
 
-Thanks!
+> > diff --git a/drivers/usb/gadget/udc/s3c2410_udc_regs.h b/drivers/usb/gadget/udc/s3c2410_udc_regs.h
+> > index d8d2eeaca088..4df279342cdd 100644
+> > --- a/drivers/usb/gadget/udc/s3c2410_udc_regs.h
+> > +++ b/drivers/usb/gadget/udc/s3c2410_udc_regs.h
+> > @@ -6,6 +6,8 @@
+> >  #ifndef __ASM_ARCH_REGS_UDC_H
+> >  #define __ASM_ARCH_REGS_UDC_H
+> >
+> > +#include <mach/map.h>
+> > +
+>
+> If this is outside of arch/arm, it shouldn't need anything from
+> mach/map.h - mach/map.h is not for driver use.
 
--- 
-Kees Cook
+Same here.
+
+Thanks for taking a look, I'll fix it all up tomorrow.
+
+          Arnd
