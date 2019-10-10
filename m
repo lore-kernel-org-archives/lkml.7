@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328CBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F05C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AAA822459
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A93D22459
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697756;
-	bh=JTeskSJEsytwnsbhj0g3kb2jBcSdMn7bs2/OemONbdE=;
+	s=default; t=1570697761;
+	bh=xCPrH/diVEoglFjDTV/JzAWK6WNrbC+4JHj+gxzkQF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uvNMlsxwNy8XhPQTpvG+438N1FHmRYQxDz0gq+opOfwS4HFoq8L3HteHDHtZyShCq
-	 VEHAAOzNZRhaTaXI7ocozeLyk6Ob2g9oAOMrpQTQADJo/utXT0NEIjyTgDZdycHd2G
-	 QZu2nf5GDbbyZJZcnlH13xftsoZw6Q+MrwOhw9FM=
+	b=OS+Su6+NuKVU/1JPVQBy7WqECcmudX0hg8eX0eVMBeh6LmDzT6MP+noqrg0hDaRX4
+	 kjbsh9BGcrJw6EFZHlOc8cpaweqyt632zTS7IN+YfHel55qz0SphiC8akaFJxM/StA
+	 9UtYKQ56/ESEmUmPDjXJ9eAaXdhIEfAzGNbQ/oCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389712AbfJJIsz (ORCPT
+        id S2389695AbfJJIz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:48:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:55:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387657AbfJJIsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:45 -0400
+        id S2389178AbfJJIsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85A192064A;
-        Thu, 10 Oct 2019 08:48:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0871218AC;
+        Thu, 10 Oct 2019 08:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697324;
-        bh=JTeskSJEsytwnsbhj0g3kb2jBcSdMn7bs2/OemONbdE=;
+        s=default; t=1570697332;
+        bh=xCPrH/diVEoglFjDTV/JzAWK6WNrbC+4JHj+gxzkQF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QRYg/2yNrBa1fcpxo1+U0m+F1ucdiKufH2wm27F+f8WV5h4iJ6637p2LrRNeTi3KE
-         /7Mpfmj5u/KCDiw3uIklHH0akNiRIZN+5vnRkbRS1zUPTVnZTpV78GsYioTnNzS5uc
-         OG/NZGGviUTYO1QpSQP/6LvG9Zdlda29GrG97c4U=
+        b=U0FkIhGs5R4JgpGlpZNFnGrFJ5jMaeS1a88CzrzKuUuZDcHAHpIhIXmkDm7d4V4iV
+         daTcbwqCa2z4BdM2EYvGDcJL1t/uAzOcB05/SB1necZJVbxrI5Qu446HEQ+fDiUYYJ
+         fXqfbBcJRx+kWCyMpA5NwNx15oYAUNb5d8V+tFH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.19 101/114] arm64: add sysfs vulnerability show for speculative store bypass
-Date:   Thu, 10 Oct 2019 10:36:48 +0200
-Message-Id: <20191010083613.546505028@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH 4.19 103/114] arm64: Force SSBS on context switch
+Date:   Thu, 10 Oct 2019 10:36:50 +0200
+Message-Id: <20191010083613.664531794@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,145 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit 526e065dbca6df0b5a130b84b836b8b3c9f54e21 ]
+[ Upstream commit cbdf8a189a66001c36007bf0f5c975d0376c5c3a ]
 
-Return status based on ssbd_state and __ssb_safe. If the
-mitigation is disabled, or the firmware isn't responding then
-return the expected machine state based on a whitelist of known
-good cores.
+On a CPU that doesn't support SSBS, PSTATE[12] is RES0.  In a system
+where only some of the CPUs implement SSBS, we end-up losing track of
+the SSBS bit across task migration.
 
-Given a heterogeneous machine, the overall machine vulnerability
-defaults to safe but is reset to unsafe when we miss the whitelist
-and the firmware doesn't explicitly tell us the core is safe.
-In order to make that work we delay transitioning to vulnerable
-until we know the firmware isn't responding to avoid a case
-where we miss the whitelist, but the firmware goes ahead and
-reports the core is not vulnerable. If all the cores in the
-machine have SSBS, then __ssb_safe will remain true.
+To address this issue, let's force the SSBS bit on context switch.
 
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Fixes: 8f04e8e6e29c ("arm64: ssbd: Add support for PSTATE.SSBS rather than trapping to EL3")
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+[will: inverted logic and added comments]
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/cpu_errata.c |   42 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/arm64/include/asm/processor.h |   14 ++++++++++++--
+ arch/arm64/kernel/process.c        |   29 ++++++++++++++++++++++++++++-
+ 2 files changed, 40 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -233,6 +233,7 @@ static int detect_harden_bp_fw(void)
- DEFINE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
- 
- int ssbd_state __read_mostly = ARM64_SSBD_KERNEL;
-+static bool __ssb_safe = true;
- 
- static const struct ssbd_options {
- 	const char	*str;
-@@ -336,6 +337,7 @@ static bool has_ssbd_mitigation(const st
- 	struct arm_smccc_res res;
- 	bool required = true;
- 	s32 val;
-+	bool this_cpu_safe = false;
- 
- 	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
- 
-@@ -344,8 +346,14 @@ static bool has_ssbd_mitigation(const st
- 		goto out_printmsg;
- 	}
- 
-+	/* delay setting __ssb_safe until we get a firmware response */
-+	if (is_midr_in_range_list(read_cpuid_id(), entry->midr_range_list))
-+		this_cpu_safe = true;
-+
- 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0) {
- 		ssbd_state = ARM64_SSBD_UNKNOWN;
-+		if (!this_cpu_safe)
-+			__ssb_safe = false;
- 		return false;
- 	}
- 
-@@ -362,6 +370,8 @@ static bool has_ssbd_mitigation(const st
- 
- 	default:
- 		ssbd_state = ARM64_SSBD_UNKNOWN;
-+		if (!this_cpu_safe)
-+			__ssb_safe = false;
- 		return false;
- 	}
- 
-@@ -370,14 +380,18 @@ static bool has_ssbd_mitigation(const st
- 	switch (val) {
- 	case SMCCC_RET_NOT_SUPPORTED:
- 		ssbd_state = ARM64_SSBD_UNKNOWN;
-+		if (!this_cpu_safe)
-+			__ssb_safe = false;
- 		return false;
- 
-+	/* machines with mixed mitigation requirements must not return this */
- 	case SMCCC_RET_NOT_REQUIRED:
- 		pr_info_once("%s mitigation not required\n", entry->desc);
- 		ssbd_state = ARM64_SSBD_MITIGATED;
- 		return false;
- 
- 	case SMCCC_RET_SUCCESS:
-+		__ssb_safe = false;
- 		required = true;
- 		break;
- 
-@@ -387,6 +401,8 @@ static bool has_ssbd_mitigation(const st
- 
- 	default:
- 		WARN_ON(1);
-+		if (!this_cpu_safe)
-+			__ssb_safe = false;
- 		return false;
- 	}
- 
-@@ -427,6 +443,14 @@ out_printmsg:
- 	return required;
+--- a/arch/arm64/include/asm/processor.h
++++ b/arch/arm64/include/asm/processor.h
+@@ -177,6 +177,16 @@ static inline void start_thread_common(s
+ 	regs->pc = pc;
  }
  
-+/* known invulnerable cores */
-+static const struct midr_range arm64_ssb_cpus[] = {
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
-+	{},
-+};
-+
- #ifdef CONFIG_ARM64_ERRATUM_1463225
- DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
- 
-@@ -748,6 +772,7 @@ const struct arm64_cpu_capabilities arm6
- 		.capability = ARM64_SSBD,
- 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
- 		.matches = has_ssbd_mitigation,
-+		.midr_range_list = arm64_ssb_cpus,
- 	},
- #ifdef CONFIG_ARM64_ERRATUM_1463225
- 	{
-@@ -778,3 +803,20 @@ ssize_t cpu_show_spectre_v2(struct devic
- 
- 	return sprintf(buf, "Vulnerable\n");
- }
-+
-+ssize_t cpu_show_spec_store_bypass(struct device *dev,
-+		struct device_attribute *attr, char *buf)
++static inline void set_ssbs_bit(struct pt_regs *regs)
 +{
-+	if (__ssb_safe)
-+		return sprintf(buf, "Not affected\n");
-+
-+	switch (ssbd_state) {
-+	case ARM64_SSBD_KERNEL:
-+	case ARM64_SSBD_FORCE_ENABLE:
-+		if (IS_ENABLED(CONFIG_ARM64_SSBD))
-+			return sprintf(buf,
-+			    "Mitigation: Speculative Store Bypass disabled via prctl\n");
-+	}
-+
-+	return sprintf(buf, "Vulnerable\n");
++	regs->pstate |= PSR_SSBS_BIT;
 +}
++
++static inline void set_compat_ssbs_bit(struct pt_regs *regs)
++{
++	regs->pstate |= PSR_AA32_SSBS_BIT;
++}
++
+ static inline void start_thread(struct pt_regs *regs, unsigned long pc,
+ 				unsigned long sp)
+ {
+@@ -184,7 +194,7 @@ static inline void start_thread(struct p
+ 	regs->pstate = PSR_MODE_EL0t;
+ 
+ 	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
+-		regs->pstate |= PSR_SSBS_BIT;
++		set_ssbs_bit(regs);
+ 
+ 	regs->sp = sp;
+ }
+@@ -203,7 +213,7 @@ static inline void compat_start_thread(s
+ #endif
+ 
+ 	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
+-		regs->pstate |= PSR_AA32_SSBS_BIT;
++		set_compat_ssbs_bit(regs);
+ 
+ 	regs->compat_sp = sp;
+ }
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -360,7 +360,7 @@ int copy_thread(unsigned long clone_flag
+ 			childregs->pstate |= PSR_UAO_BIT;
+ 
+ 		if (arm64_get_ssbd_state() == ARM64_SSBD_FORCE_DISABLE)
+-			childregs->pstate |= PSR_SSBS_BIT;
++			set_ssbs_bit(childregs);
+ 
+ 		p->thread.cpu_context.x19 = stack_start;
+ 		p->thread.cpu_context.x20 = stk_sz;
+@@ -402,6 +402,32 @@ void uao_thread_switch(struct task_struc
+ }
+ 
+ /*
++ * Force SSBS state on context-switch, since it may be lost after migrating
++ * from a CPU which treats the bit as RES0 in a heterogeneous system.
++ */
++static void ssbs_thread_switch(struct task_struct *next)
++{
++	struct pt_regs *regs = task_pt_regs(next);
++
++	/*
++	 * Nothing to do for kernel threads, but 'regs' may be junk
++	 * (e.g. idle task) so check the flags and bail early.
++	 */
++	if (unlikely(next->flags & PF_KTHREAD))
++		return;
++
++	/* If the mitigation is enabled, then we leave SSBS clear. */
++	if ((arm64_get_ssbd_state() == ARM64_SSBD_FORCE_ENABLE) ||
++	    test_tsk_thread_flag(next, TIF_SSBD))
++		return;
++
++	if (compat_user_mode(regs))
++		set_compat_ssbs_bit(regs);
++	else if (user_mode(regs))
++		set_ssbs_bit(regs);
++}
++
++/*
+  * We store our current task in sp_el0, which is clobbered by userspace. Keep a
+  * shadow copy so that we can restore this upon entry from userspace.
+  *
+@@ -429,6 +455,7 @@ __notrace_funcgraph struct task_struct *
+ 	contextidr_thread_switch(next);
+ 	entry_task_switch(next);
+ 	uao_thread_switch(next);
++	ssbs_thread_switch(next);
+ 
+ 	/*
+ 	 * Complete any pending TLB or cache maintenance on this CPU in case
 
 
