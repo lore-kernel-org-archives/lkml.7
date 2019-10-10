@@ -4,49 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCF5C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9761C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC56C222D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCCA21D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696873;
-	bh=ew0MqeqxkZeCjlz7MmeD69SyuCnfBxiZvDklep9KzFE=;
+	s=default; t=1570696877;
+	bh=UFac5e5D1Otmrjuz4+CHUdFyycKp6DL19+o5YDGMP0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KL055j1hyWq6S6DPWVop7/h1KBI1LHRgYbvbejI79uLdoG0RBSYpdse4PcXA1GpA0
-	 6HApQPlKcOh7M0XRcE63sSaDCPJdej7Ff8vPyqfscmQcPMLO+H1yDj8HulFscmXwIf
-	 4YrB4ZhSewesgbkQjUd0rfuY2Jz2PvuwodeHK/2Q=
+	b=K751ov5VP3B8/MY4dmkYCpdN/q2FG4wyHksrK//yQ1pXYcTNjFHOm/zD08bixe1iR
+	 ivCLlvu82efW7LZB8sljgJsT6WX8BojajkWYqwFmmix424BUVK2ZPb97nULR26QHp9
+	 c4hQcZWlEw58etXxbuE102dopQqkl9JwXpGCQUik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388273AbfJJIlK (ORCPT
+        id S2388284AbfJJIlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:41:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45424 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:41:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388266AbfJJIlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:41:09 -0400
+        id S2388275AbfJJIlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:41:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D010321D7C;
-        Thu, 10 Oct 2019 08:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D90821D80;
+        Thu, 10 Oct 2019 08:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696868;
-        bh=ew0MqeqxkZeCjlz7MmeD69SyuCnfBxiZvDklep9KzFE=;
+        s=default; t=1570696870;
+        bh=UFac5e5D1Otmrjuz4+CHUdFyycKp6DL19+o5YDGMP0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CE5bN0KQnlVB7vHq6LNBmAqYhNUrcuhTVHC9iXf3fxzN7b3NsRwFAG1Rh3QYbFX1y
-         rzZENlgtJMVqNWnfu2fyDxqh5Pza6uP1LaBOTrBbXzR22SFlxQz2plqRsdp4aNCzkr
-         ZFR2sMvg4u232IIOEa+AlNKWMpf1kHzRsKxyhrAE=
+        b=KG5fIMQS6IE0vyOQ3b1n5EufLrY/0/bmwENrTL6xaj5fH3KQJnSfOXHTzSlenxjg8
+         BX5AloOGTqZDNNTlw3EGaojNFyT1KFV2e9k11QEbbos4IrVaA2d4DyUD08AhhUDGsz
+         MXvmn4TAbp91Uet2vmqn3t9psv0sMxfJFn9pEuC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.3 037/148] can: mcp251x: mcp251x_hw_reset(): allow more time after a reset
-Date:   Thu, 10 Oct 2019 10:34:58 +0200
-Message-Id: <20191010083613.400234335@linuxfoundation.org>
+        stable@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        He Kuang <hekuang@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
+        Michal rarek <mmarek@suse.com>, Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.3 038/148] tools lib traceevent: Fix "robust" test of do_generate_dynamic_list_file
+Date:   Thu, 10 Oct 2019 10:34:59 +0200
+Message-Id: <20191010083613.461857258@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,57 +68,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit d84ea2123f8d27144e3f4d58cd88c9c6ddc799de upstream.
+commit 82a2f88458d70704be843961e10b5cef9a6e95d3 upstream.
 
-Some boards take longer than 5ms to power up after a reset, so allow
-some retries attempts before giving up.
+The tools/lib/traceevent/Makefile had a test added to it to detect a failure
+of the "nm" when making the dynamic list file (whatever that is). The
+problem is that the test sorts the values "U W w" and some versions of sort
+will place "w" ahead of "W" (even though it has a higher ASCII value, and
+break the test.
 
-Fixes: ff06d611a31c ("can: mcp251x: Improve mcp251x_hw_reset()")
-Cc: linux-stable <stable@vger.kernel.org>
-Tested-by: Sean Nyekjaer <sean@geanix.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Add 'tr "w" "W"' to merge the two and not worry about the ordering.
+
+Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: He Kuang <hekuang@huawei.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Michal rarek <mmarek@suse.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: stable@vger.kernel.org
+Fixes: 6467753d61399 ("tools lib traceevent: Robustify do_generate_dynamic_list_file")
+Link: http://lkml.kernel.org/r/20190805130150.25acfeb1@gandalf.local.home
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/spi/mcp251x.c |   19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ tools/lib/traceevent/Makefile |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -612,7 +612,7 @@ static int mcp251x_setup(struct net_devi
- static int mcp251x_hw_reset(struct spi_device *spi)
- {
- 	struct mcp251x_priv *priv = spi_get_drvdata(spi);
--	u8 reg;
-+	unsigned long timeout;
- 	int ret;
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -266,8 +266,8 @@ endef
  
- 	/* Wait for oscillator startup timer after power up */
-@@ -626,10 +626,19 @@ static int mcp251x_hw_reset(struct spi_d
- 	/* Wait for oscillator startup timer after reset */
- 	mdelay(MCP251X_OST_DELAY_MS);
- 
--	reg = mcp251x_read_reg(spi, CANSTAT);
--	if ((reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF)
--		return -ENODEV;
--
-+	/* Wait for reset to finish */
-+	timeout = jiffies + HZ;
-+	while ((mcp251x_read_reg(spi, CANSTAT) & CANCTRL_REQOP_MASK) !=
-+	       CANCTRL_REQOP_CONF) {
-+		usleep_range(MCP251X_OST_DELAY_MS * 1000,
-+			     MCP251X_OST_DELAY_MS * 1000 * 2);
-+
-+		if (time_after(jiffies, timeout)) {
-+			dev_err(&spi->dev,
-+				"MCP251x didn't enter in conf mode after reset\n");
-+			return -EBUSY;
-+		}
-+	}
- 	return 0;
- }
- 
+ define do_generate_dynamic_list_file
+ 	symbol_type=`$(NM) -u -D $1 | awk 'NF>1 {print $$1}' | \
+-	xargs echo "U W w" | tr ' ' '\n' | sort -u | xargs echo`;\
+-	if [ "$$symbol_type" = "U W w" ];then				\
++	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
++	if [ "$$symbol_type" = "U W" ];then				\
+ 		(echo '{';						\
+ 		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
+ 		echo '};';						\
 
 
