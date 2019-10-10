@@ -2,62 +2,75 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5AAC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10959C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0AC62067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C952067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbfJJMyB (ORCPT
+        id S2387803AbfJJMyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:54:01 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37592 "EHLO fornost.hmeau.com"
+        Thu, 10 Oct 2019 08:54:39 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:37610 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733300AbfJJMyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:54:01 -0400
+        id S1728339AbfJJMyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:54:39 -0400
 Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
         by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1iIXx6-0001nl-6n; Thu, 10 Oct 2019 23:53:57 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Oct 2019 23:53:53 +1100
-Date:   Thu, 10 Oct 2019 23:53:53 +1100
+        id 1iIXxg-0001rW-Lx; Thu, 10 Oct 2019 23:54:33 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Oct 2019 23:54:32 +1100
+Date:   Thu, 10 Oct 2019 23:54:32 +1100
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Laurent Vivier <lvivier@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Matt Mackall <mpm@selenic.com>
-Subject: Re: [PATCH] hw_random: move add_early_randomness() out of rng_mutex
-Message-ID: <20191010125353.GA31566@gondor.apana.org.au>
-References: <20190912133022.14870-1-lvivier@redhat.com>
+To:     Zaibo Xu <xuzaibo@huawei.com>
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxarm@huawei.com,
+        forest.zhouchang@huawei.com
+Subject: Re: [PATCH 0/5] crypto: hisilicon - add HPRE support
+Message-ID: <20191010125432.GC31566@gondor.apana.org.au>
+References: <1569835209-44326-1-git-send-email-xuzaibo@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190912133022.14870-1-lvivier@redhat.com>
+In-Reply-To: <1569835209-44326-1-git-send-email-xuzaibo@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 03:30:22PM +0200, Laurent Vivier wrote:
-> add_early_randomness() is called every time a new rng backend is added
-> and every time it is set as the current rng provider.
+On Mon, Sep 30, 2019 at 05:20:04PM +0800, Zaibo Xu wrote:
+> This series adds HiSilicon high performance RSA engine(HPRE) driver
+> in crypto subsystem. HPRE driver provides PCIe hardware device initiation
+> with RSA and DH algorithms registered to Crypto. Meanwhile, some debug
+> supporting of DebugFS is given.
 > 
-> add_early_randomness() is called from functions locking rng_mutex,
-> and if it hangs all the hw_random framework hangs: we can't read sysfs,
-> add or remove a backend.
+> Zaibo Xu (5):
+>   crypto: hisilicon - add HiSilicon HPRE accelerator
+>   crypto: hisilicon - add SRIOV support for HPRE
+>   Documentation: Add debugfs doc for hisi_hpre
+>   crypto: hisilicon: Add debugfs for HPRE
+>   MAINTAINERS: Add maintainer for HiSilicon HPRE driver
 > 
-> This patch move add_early_randomness() out of the rng_mutex zone.
-> It only needs the reading_mutex.
-> 
-> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
-> ---
->  drivers/char/hw_random/core.c | 60 +++++++++++++++++++++++++----------
->  1 file changed, 44 insertions(+), 16 deletions(-)
+>  Documentation/ABI/testing/debugfs-hisi-hpre |   57 ++
+>  MAINTAINERS                                 |    9 +
+>  drivers/crypto/hisilicon/Kconfig            |   11 +
+>  drivers/crypto/hisilicon/Makefile           |    1 +
+>  drivers/crypto/hisilicon/hpre/Makefile      |    2 +
+>  drivers/crypto/hisilicon/hpre/hpre.h        |   83 ++
+>  drivers/crypto/hisilicon/hpre/hpre_crypto.c | 1137 +++++++++++++++++++++++++++
+>  drivers/crypto/hisilicon/hpre/hpre_main.c   | 1052 +++++++++++++++++++++++++
+>  8 files changed, 2352 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/debugfs-hisi-hpre
+>  create mode 100644 drivers/crypto/hisilicon/hpre/Makefile
+>  create mode 100644 drivers/crypto/hisilicon/hpre/hpre.h
+>  create mode 100644 drivers/crypto/hisilicon/hpre/hpre_crypto.c
+>  create mode 100644 drivers/crypto/hisilicon/hpre/hpre_main.c
 
-Patch applied.  Thanks.
+All applied.  Thanks.
 -- 
 Email: Herbert Xu <herbert@gondor.apana.org.au>
 Home Page: http://gondor.apana.org.au/~herbert/
