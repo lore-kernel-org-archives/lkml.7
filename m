@@ -2,115 +2,73 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EA2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2309BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F291206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9894206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfJJUVb (ORCPT
+        id S1726767AbfJJUWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:21:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59574 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726533AbfJJUVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:21:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2CE76AC6E;
-        Thu, 10 Oct 2019 20:21:29 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id CAA94E378C; Thu, 10 Oct 2019 22:21:28 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 22:21:28 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] genetlink: do not parse attributes for
- families with zero maxattr
-Message-ID: <20191010202128.GJ22163@unicorn.suse.cz>
-References: <20191010103402.36408E378C@unicorn.suse.cz>
- <20191010102102.3bc8515d@cakuba.netronome.com>
+        Thu, 10 Oct 2019 16:22:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52276 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfJJUWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 16:22:20 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5A6E418C8918;
+        Thu, 10 Oct 2019 20:22:20 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-84.rdu2.redhat.com [10.10.121.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C82A196B2;
+        Thu, 10 Oct 2019 20:22:19 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <a0ec09f1-20e0-c0d6-ae90-f088514e7895@gmail.com>
+References: <a0ec09f1-20e0-c0d6-ae90-f088514e7895@gmail.com> <157072715575.11228.4215410314199958755.stgit@warthog.procyon.org.uk>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Add manpages for move_mount(2) and open_tree(2)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010102102.3bc8515d@cakuba.netronome.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <27445.1570738938.1@warthog.procyon.org.uk>
+Date:   Thu, 10 Oct 2019 21:22:18 +0100
+Message-ID: <27446.1570738938@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Thu, 10 Oct 2019 20:22:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:21:02AM -0700, Jakub Kicinski wrote:
-> On Thu, 10 Oct 2019 12:34:02 +0200 (CEST), Michal Kubecek wrote:
-> > Commit c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing
-> > to a separate function") moved attribute buffer allocation and attribute
-> > parsing from genl_family_rcv_msg_doit() into a separate function
-> > genl_family_rcv_msg_attrs_parse() which, unlike the previous code, calls
-> > __nlmsg_parse() even if family->maxattr is 0 (i.e. the family does its own
-> > parsing). The parser error is ignored and does not propagate out of
-> > genl_family_rcv_msg_attrs_parse() but an error message ("Unknown attribute
-> > type") is set in extack and if further processing generates no error or
-> > warning, it stays there and is interpreted as a warning by userspace.
-> > 
-> > Dumpit requests are not affected as genl_family_rcv_msg_dumpit() bypasses
-> > the call of genl_family_rcv_msg_doit() if family->maxattr is zero. Do the
-> > same also in genl_family_rcv_msg_doit().
-> > 
-> > Fixes: c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing to a separate function")
-> > Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-> > ---
-> >  net/netlink/genetlink.c | 9 +++++----
-> >  1 file changed, 5 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
-> > index ecc2bd3e73e4..1f14e55ad3ad 100644
-> > --- a/net/netlink/genetlink.c
-> > +++ b/net/netlink/genetlink.c
-> > @@ -639,21 +639,23 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
-> >  				    const struct genl_ops *ops,
-> >  				    int hdrlen, struct net *net)
-> >  {
-> > -	struct nlattr **attrbuf;
-> > +	struct nlattr **attrbuf = NULL;
-> >  	struct genl_info info;
-> >  	int err;
-> >  
-> >  	if (!ops->doit)
-> >  		return -EOPNOTSUPP;
-> >  
-> > +	if (!family->maxattr)
-> > +		goto no_attrs;
-> >  	attrbuf = genl_family_rcv_msg_attrs_parse(family, nlh, extack,
-> >  						  ops, hdrlen,
-> >  						  GENL_DONT_VALIDATE_STRICT,
-> > -						  family->maxattr &&
-> >  						  family->parallel_ops);
-> >  	if (IS_ERR(attrbuf))
-> >  		return PTR_ERR(attrbuf);
-> >  
-> > +no_attrs:
-> 
-> The use of a goto statement as a replacement for an if is making me
-> uncomfortable. 
+Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
 
-I used instead of a simple if because (1) it's what the dumpit code does
-and (2) the function call arguments are already quite pressed to the
-80-character barrier.
- 
-> Looks like both callers of genl_family_rcv_msg_attrs_parse() jump
-> around it if !family->maxattr and then check the result with IS_ERR().
-> 
-> Would it not make more sense to have genl_family_rcv_msg_attrs_parse()
-> return NULL if !family->maxattr?
+> [MANPAGE] fsopen.2, fsmount.2
+> [MANPAGE] fspick.2
+> [MANPAGE] fsconfig.2
+> [MANPAGE] open_tree.2
+> [MANPAGE] move_mount.2
 
-This sounds like a good solution. I'll check again in the morning and
-send v3.
+Those were really aimed at non-doccy people to have a look over without
+needing to apply the patch or strip the diff metadata.
 
-Michal
+Roff is hard enough to read as it is ;-)
+
+> [PATCH 1/2] Add manpages for move_mount(2) and open_tree(2)
+> [PATCH 2/2] Add manpage for fsopen(2), fspick(2) and fsmount(2)
+
+Those were aimed specifically at you.
+
+If it's okay with you, I'll wait a bit before splitting and resending the
+patches, just in case anyone points out any problems.
+
+David
