@@ -2,74 +2,91 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1D9C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF43C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E542190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D4C2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570696092;
+	bh=v6x9hYKXzHtTOXwGSjqSfQkeGOgIPJcA2WPsi3ZTt0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vdoUm7GIYXDXwnu9FFCIHd64DeBauSuWdroLywZc0qi1AFkVAPZQFzAOJrCyIJjOh
+	 JWwIGYHYYG0PrsRWoa+ao4lbeb5un15FY2Q4YK22adVstT2iixNR4JeB3icYMX/uhc
+	 Hn/jsFb5JhUY6nOupt4DC23zi0Sq9Wm1YD8xxuro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733274AbfJJI2G (ORCPT
+        id S1733304AbfJJI2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:28:06 -0400
-Received: from mga04.intel.com ([192.55.52.120]:45151 "EHLO mga04.intel.com"
+        Thu, 10 Oct 2019 04:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbfJJI2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:28:06 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 01:28:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,279,1566889200"; 
-   d="scan'208";a="198274137"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 10 Oct 2019 01:28:04 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 4B00822C; Thu, 10 Oct 2019 11:28:03 +0300 (EEST)
-Date:   Thu, 10 Oct 2019 11:28:03 +0300
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v3] ARC: mm: remove __ARCH_USE_5LEVEL_HACK
-Message-ID: <20191010082803.biaon6gq7yxvrvrq@black.fi.intel.com>
-References: <20191009184350.18323-1-vgupta@synopsys.com>
- <20191009185731.25814-1-vgupta@synopsys.com>
+        id S1726864AbfJJI2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:28:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614C22196E;
+        Thu, 10 Oct 2019 08:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570696089;
+        bh=v6x9hYKXzHtTOXwGSjqSfQkeGOgIPJcA2WPsi3ZTt0Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QjBy2pkNARCq2i29cBpWjpkAPLIaaml+eMrPwAMzYbztrPUttSf4jeyaIYGz8xI8s
+         ieRTP69U+zlH9HB4FRYpUCIPDoKHTfY3sM5abBRW7UKRAeh10TpbkB+7Wk2Mij1C5h
+         ZU1pt1XIw6gcX+dYtEjL1eOHj47/lU/gQ+sPsiiU=
+Date:   Thu, 10 Oct 2019 10:28:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-stable@vger.kernel.org,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent
+ future TPM operations
+Message-ID: <20191010082807.GC326087@kroah.com>
+References: <20191009212831.29081-1-jarkko.sakkinen@linux.intel.com>
+ <20191009212831.29081-4-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191009185731.25814-1-vgupta@synopsys.com>
-User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
+In-Reply-To: <20191009212831.29081-4-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 06:57:31PM +0000, Vineet Gupta wrote:
-> Add the intermediate p4d accessors to make it 5 level compliant.
+On Thu, Oct 10, 2019 at 12:28:31AM +0300, Jarkko Sakkinen wrote:
+> From: Vadim Sukhomlinov <sukhomlinov@google.com>
 > 
-> This is a non-functional change anyways since ARC has software page walker
-> with 2 lookup levels (pgd -> pte)
+> commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
 > 
-> There is slight code bloat due to pulling in needless p*d_free_tlb()
-> macros which needs to be addressed seperately.
+> TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+> future TPM operations. TPM 1.2 behavior was different, future TPM
+> operations weren't disabled, causing rare issues. This patch ensures
+> that future TPM operations are disabled.
 > 
-> | bloat-o-meter2 vmlinux-with-5LEVEL_HACK vmlinux-patched
-> | add/remove: 0/0 grow/shrink: 2/0 up/down: 128/0 (128)
-> | function                                     old     new   delta
-> | free_pgd_range                               546     656    +110
-> | p4d_clear_bad                                  2      20     +18
-> | Total: Before=4137148, After=4137276, chg 0.000000%
-> 
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+> Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+> [dianders: resolved merge conflicts with mainline]
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  drivers/char/tpm/tpm-chip.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+This is already in the 4.14.148 4.19.78 5.1.18 5.2.1 5.3 releases.
 
--- 
- Kirill A. Shutemov
+thansk,
+
+greg k-h
