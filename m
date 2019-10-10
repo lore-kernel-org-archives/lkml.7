@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438ADC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6642EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1995220679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C584218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697713;
-	bh=PtwfxrY3qGfEkoS0hbLCZk9IvD+Q3DudzZOkh7MLpI0=;
+	s=default; t=1570697721;
+	bh=65FrNbLESZ8v+zraZfQvP46y83UiFJA0O6qpT20PisE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PqAyp2h+IAj1xupftVjaCmOhDv/CPbR6n6lN7UIAgjopTYHhbCi33s18RCZHFP+e7
-	 sSP9ZWzBMMNeHp4TfoGJE95LM1apWckP01G8YI0EOrHBvGZOhBCFegyFyD4Te1c9sZ
-	 ILCl078EkgKktfBqGCI26ULGX+AJpJMC0uocOsH4=
+	b=lAYd/cLGWnFrP5r8aUWqQbxyE34GZtCb2z7ibVbtjE719PefI41gBqrqAuN8iV1Gs
+	 7vKtSGj3b8ltinShQn+aiI/SQXY5HAFHBEoVmtUmZF/Dbzcei5WZ+x5ZPH3QOXfMIJ
+	 tCAYboutHn6uwCQG3gUgb7CTCheoPlX5WNrwHhE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390055AbfJJIzL (ORCPT
+        id S2389837AbfJJIzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:55:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389850AbfJJIto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:49:44 -0400
+        id S2389824AbfJJIta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:49:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA8B218AC;
-        Thu, 10 Oct 2019 08:49:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2130218AC;
+        Thu, 10 Oct 2019 08:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697384;
-        bh=PtwfxrY3qGfEkoS0hbLCZk9IvD+Q3DudzZOkh7MLpI0=;
+        s=default; t=1570697370;
+        bh=65FrNbLESZ8v+zraZfQvP46y83UiFJA0O6qpT20PisE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pXJoTDlgie8a0r/oap6oWs32jzJAZ8h0CAKId1hA/bzrrgpA/hkek+SKVS9rczipD
-         /jv1KAlbCr7r5jryQxqfqEV51WGkWwtHeHsfL6j63W6lNvq+Yzo9YSxWmwlYaIBcnZ
-         y1bpQhEMvbXQ5t87G2skCQsWbPxvrLfP3PtvmOVg=
+        b=S9V3g4RNqdV6SfBc0gPm2i2kBCVq2eTF07IBg1VghzMhg4TTLAyqYsTbaqXbkT38I
+         QXos9BKf5Qgc6dN+bGqi3ICGTvccv+8eHAiEJ4fVsTuMQ5EXXYFgyAIEy9vaSgqvqQ
+         fu3TjTjdoQfQeiHnMj1T7MSdH9QqhUv+Nj3hPcKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 083/114] tools lib traceevent: Do not free tep->cmdlines in add_new_comm() on failure
-Date:   Thu, 10 Oct 2019 10:36:30 +0200
-Message-Id: <20191010083612.408800292@linuxfoundation.org>
+Subject: [PATCH 4.19 088/114] riscv: Avoid interrupts being erroneously enabled in handle_exception()
+Date:   Thu, 10 Oct 2019 10:36:35 +0200
+Message-Id: <20191010083612.720750989@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -65,54 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Vincent Chen <vincent.chen@sifive.com>
 
-[ Upstream commit e0d2615856b2046c2e8d5bfd6933f37f69703b0b ]
+[ Upstream commit c82dd6d078a2bb29d41eda032bb96d05699a524d ]
 
-If the re-allocation of tep->cmdlines succeeds, then the previous
-allocation of tep->cmdlines will be freed. If we later fail in
-add_new_comm(), we must not free cmdlines, and also should assign
-tep->cmdlines to the new allocation. Otherwise when freeing tep, the
-tep->cmdlines will be pointing to garbage.
+When the handle_exception function addresses an exception, the interrupts
+will be unconditionally enabled after finishing the context save. However,
+It may erroneously enable the interrupts if the interrupts are disabled
+before entering the handle_exception.
 
-Fixes: a6d2a61ac653a ("tools lib traceevent: Remove some die() calls")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-trace-devel@vger.kernel.org
+For example, one of the WARN_ON() condition is satisfied in the scheduling
+where the interrupt is disabled and rq.lock is locked. The WARN_ON will
+trigger a break exception and the handle_exception function will enable the
+interrupts before entering do_trap_break function. During the procedure, if
+a timer interrupt is pending, it will be taken when interrupts are enabled.
+In this case, it may cause a deadlock problem if the rq.lock is locked
+again in the timer ISR.
+
+Hence, the handle_exception() can only enable interrupts when the state of
+sstatus.SPIE is 1.
+
+This patch is tested on HiFive Unleashed board.
+
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+[paul.walmsley@sifive.com: updated to apply]
+Fixes: bcae803a21317 ("RISC-V: Enable IRQ during exception handling")
+Cc: David Abdurachmanov <david.abdurachmanov@sifive.com>
 Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190828191819.970121417@goodmis.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/riscv/kernel/entry.S | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 6ccfd13d5cf9c..382e476629fb1 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -254,10 +254,10 @@ static int add_new_comm(struct tep_handle *pevent, const char *comm, int pid)
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	pevent->cmdlines = cmdlines;
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index fa2c08e3c05e6..a03821b2656aa 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -171,9 +171,13 @@ ENTRY(handle_exception)
+ 	move a1, s4 /* scause */
+ 	tail do_IRQ
+ 1:
+-	/* Exceptions run with interrupts enabled */
++	/* Exceptions run with interrupts enabled or disabled
++	   depending on the state of sstatus.SR_SPIE */
++	andi t0, s1, SR_SPIE
++	beqz t0, 1f
+ 	csrs sstatus, SR_SIE
  
- 	cmdlines[pevent->cmdline_count].comm = strdup(comm);
- 	if (!cmdlines[pevent->cmdline_count].comm) {
--		free(cmdlines);
- 		errno = ENOMEM;
- 		return -1;
- 	}
-@@ -268,7 +268,6 @@ static int add_new_comm(struct tep_handle *pevent, const char *comm, int pid)
- 		pevent->cmdline_count++;
- 
- 	qsort(cmdlines, pevent->cmdline_count, sizeof(*cmdlines), cmdline_cmp);
--	pevent->cmdlines = cmdlines;
- 
- 	return 0;
- }
++1:
+ 	/* Handle syscalls */
+ 	li t0, EXC_SYSCALL
+ 	beq s4, t0, handle_syscall
 -- 
 2.20.1
 
