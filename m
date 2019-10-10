@@ -2,140 +2,150 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDA4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9A8C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B41020673
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35AF120673
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:55:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bvv2TJW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbfJJKzb (ORCPT
+        id S1732933AbfJJKzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:55:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33696 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfJJKzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:55:31 -0400
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2A77B9B294
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:55:31 +0000 (UTC)
-Received: by mail-wm1-f71.google.com with SMTP id k9so2455139wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 03:55:31 -0700 (PDT)
+        Thu, 10 Oct 2019 06:55:50 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41303 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727761AbfJJKzt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 06:55:49 -0400
+Received: by mail-ed1-f67.google.com with SMTP id f20so5029611edv.8;
+        Thu, 10 Oct 2019 03:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MKKhvnX8RUfvjd7XqlUJvJa6PAylZIB/SGsvMUWzdfs=;
+        b=Bvv2TJW8EnbStBJDHoWd3YAKOcDgrCgpQ5G8m7iO/Jk4b820qygV/ZTxqRSAvq8RC4
+         NP7nXhAHsTvOF9acTskruxWPu5qzQHVzDXNcHRILEER5aVxtMW4V+ohXf416UTFzb8JB
+         CFNsE+i8gH9uIx+tryg8AChDHHO+L8T6giYb48PzMtHKdwWE5AADqkZJ6qJVuKWBuH0X
+         4JhT193MZ4vv8pdMd6rPL33q8wKLDxeOSt4kSyx0aKnRtRLZfCz+Q1+DTMzR8PpMY68J
+         l7Q8y9GNyrjfLrIMTULHNaa6jZ2xQsmnztzTNO93KwLh8d/rfi1sZK9qmAeOfvMnUAZu
+         I5Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cSwY5qjlZoDMf13ZGbgpfesejkb6FeuV+G9YLcC+7pQ=;
-        b=HoIyCvWijjKIoDPVh3EtegnjMH0P2cn9sIwTC/sL1xW/rsvNbmMU+dnByw4yIxMcly
-         fHKEngIMRudvF7hcgEuAa8o02ceLYzPcCB7bkVJrP6nY7vx7R1n0apYAxVKpN9zGVXXE
-         MN9CN+8i6VPnNR9xHPsVmWMlyh+Zkz+QJGrJfICW4GIZffwTc3hBMlkcXi5K7IIbqjbb
-         dSF1svCexzsrS9oY0wUM/sssokNexyIRs5gb54G7kebSROfEyNBsnLscEf3DH31Jrxx5
-         6wR+Hs+hNnAWdwH5PhklV8DJ9gc2jYUXvGCUjHDO2H8mVhn98cZaBFuPOwCWSoJIdX0R
-         PZAg==
-X-Gm-Message-State: APjAAAXFZCVLe2C8ns5cf5NJ2pIF2hwMliXllOHbQEmWuHN+CTnPSRBa
-        uYxwFN+BgKCJzHLs9Lmkzrr/KEldL7bCpUJGdSy0XvFRS1+Rc8z9PJxyLMukh0ddNVd2kQm11nT
-        XFd2BmcG2Us9DGLINt7445zda
-X-Received: by 2002:a05:6000:1043:: with SMTP id c3mr7968476wrx.83.1570704929566;
-        Thu, 10 Oct 2019 03:55:29 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqySoMN1eIJ4n2ryWs4xEqq8Fh+ttgSXxTH/uhDp/leaeEOfqnPg5ZQvlgCz4zJ9qa7KIWjzuw==
-X-Received: by 2002:a05:6000:1043:: with SMTP id c3mr7968447wrx.83.1570704929313;
-        Thu, 10 Oct 2019 03:55:29 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id c9sm4798935wrt.7.2019.10.10.03.55.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2019 03:55:28 -0700 (PDT)
-Subject: Re: [RFC v2 2/2] x86/kvmclock: Introduce kvm-hostclock clocksource.
-To:     Suleiman Souhlal <suleiman@google.com>, rkrcmar@redhat.com,
-        tglx@linutronix.de
-Cc:     john.stultz@linaro.org, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        ssouhlal@freebsd.org, tfiga@chromium.org, vkuznets@redhat.com
-References: <20191010073055.183635-1-suleiman@google.com>
- <20191010073055.183635-3-suleiman@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <2e6e5b14-fa68-67bd-1436-293659c8d92c@redhat.com>
-Date:   Thu, 10 Oct 2019 12:55:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MKKhvnX8RUfvjd7XqlUJvJa6PAylZIB/SGsvMUWzdfs=;
+        b=Q5H2V8+08a+8tttIfWP/UOTqmiurjoQE7f0b1HHJYMNH9c3B6sikwru3EENyuRk7Qo
+         3aFrkA+C5ul5rqPtq0rJILLAn4mWa/yGHNvNaumSevYG/7cGwQ3hR6sba3KfRnawimIy
+         AeanQ6ozeZH4zknYh9UZF4kg4/tIRxwFI29PVXr7pvtkKOa2C/t2vnxSPD4M2gFatOgC
+         kjJofuFec3vLW4PDYdeDl3YTMrHsEBvmyA9Zcw6vOXwKLjk5nE7QqsRM7VIrP0kj1dAS
+         GqFXrq2g8NRqx3Ysy5X2WNzi6FzYy4060M7/f8UjcWdSg3Klwn3L+rXI12l/ewOkYDJg
+         caGg==
+X-Gm-Message-State: APjAAAV9Mts/Vey7HGn/y5RA7lP2c0N6VDA/r/PBNPLud1PlLTKu+0CT
+        DzWbOpx19ZQX0q2TuI4UK8Q=
+X-Google-Smtp-Source: APXvYqyoHTR9kC/Gbi3eiCrgqTCy4+sQW0K9Ipw61U1NI7YRM2OGdnOD+4oxZv6kTa/p4s6qL7sUuQ==
+X-Received: by 2002:a17:906:5051:: with SMTP id e17mr7309123ejk.139.1570704947866;
+        Thu, 10 Oct 2019 03:55:47 -0700 (PDT)
+Received: from Limone ([46.114.37.24])
+        by smtp.gmail.com with ESMTPSA id x17sm870206edl.64.2019.10.10.03.55.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 03:55:47 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 12:55:44 +0200
+From:   Gon Solo <gonsolo@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        JP <jp@jpvw.nl>, crope@iki.fi, Sean Young <sean@mess.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] media: si2168: use bits instead of bool for flags
+Message-ID: <20191010105544.GA6507@Limone>
+References: <20191004090855.14e418ed@coco.lan>
+ <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191010073055.183635-3-suleiman@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2942b7ca9ecf86b6bff75c10ccfca25c173c3f0d.1570194906.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/19 09:30, Suleiman Souhlal wrote:
-> +kvm_hostclock_enable(struct clocksource *cs)
-> +{
-> +	pv_timekeeper_enabled = 1;
-> +
-> +	old_vclock_mode = kvm_clock.archdata.vclock_mode;
-> +	kvm_clock.archdata.vclock_mode = VCLOCK_TSC;
-> +	return 0;
-> +}
-> +
-> +static void
-> +kvm_hostclock_disable(struct clocksource *cs)
-> +{
-> +	pv_timekeeper_enabled = 0;
-> +	kvm_clock.archdata.vclock_mode = old_vclock_mode;
-> +}
-> +
+On Fri, Oct 04, 2019 at 10:15:22AM -0300, Mauro Carvalho Chehab wrote:
+> Using bool on struct is not recommended, as it wastes lots of
+> space. So, instead, let's use bits.
 
-Why do you poke at kvm_clock?  Instead you should add
+Wouldn't "bool b:1;" even be better? I performed a little test:
 
-	.archdata               = { .vclock_mode = VCLOCK_TSC },
+#include <stdbool.h>
+#include <stdio.h>
 
-to the kvm_hostclock declaration.
+struct uints {
+	unsigned int a0;
+	unsigned int a1;
+	unsigned int a2;
+	unsigned int a3;
+	unsigned int a4;
+	unsigned int a5;
+	unsigned int a6;
+	unsigned int a7;
+};
 
-Please also check that the invariant TSC CPUID bit
-CPUID[0x80000007].EDX[8] is set before enabling this feature.
+struct bools {
+	bool a0;
+	bool a1;
+	bool a2;
+	bool a3;
+	bool a4;
+	bool a5;
+	bool a6;
+	bool a7;
+};
 
-Paolo
+struct bit_uints {
+	unsigned int a0:1;
+	unsigned int a1:1;
+	unsigned int a2:1;
+	unsigned int a3:1;
+	unsigned int a4:1;
+	unsigned int a5:1;
+	unsigned int a6:1;
+	unsigned int a7:1;
+};
 
-> +	pvtk = &pv_timekeeper;
-> +	do {
-> +		gen = pvtk_read_begin(pvtk);
-> +		if (!(pv_timekeeper.flags & PVCLOCK_TIMEKEEPER_ENABLED))
-> +			return;
-> +
-> +		pvclock_copy_into_read_base(pvtk, &tk->tkr_mono,
-> +		    &pvtk->tkr_mono);
-> +		pvclock_copy_into_read_base(pvtk, &tk->tkr_raw, &pvtk->tkr_raw);
-> +
-> +		tk->xtime_sec = pvtk->xtime_sec;
-> +		tk->ktime_sec = pvtk->ktime_sec;
-> +		tk->wall_to_monotonic.tv_sec = pvtk->wall_to_monotonic_sec;
-> +		tk->wall_to_monotonic.tv_nsec = pvtk->wall_to_monotonic_nsec;
-> +		tk->offs_real = pvtk->offs_real;
-> +		tk->offs_boot = pvtk->offs_boot;
-> +		tk->offs_tai = pvtk->offs_tai;
-> +		tk->raw_sec = pvtk->raw_sec;
-> +	} while (pvtk_read_retry(pvtk, gen));
-> +}
-> +
+struct bit_bools {
+	bool a0:1;
+	bool a1:1;
+	bool a2:1;
+	bool a3:1;
+	bool a4:1;
+	bool a5:1;
+	bool a6:1;
+	bool a7:1;
+};
 
-Should you write an "enabled value" (basically the flags) into pvtk as well?
+int main() {
+	printf("bit_uints: %ld\n", sizeof(struct bit_uints));
+	printf("bit_bools: %ld\n", sizeof(struct bit_bools));
+	printf("uints: %ld\n", sizeof(struct uints));
+	printf("bools: %ld\n", sizeof(struct bools));
+}
 
-> 
-> +kvm_hostclock_init(void)
-> +{
-> +	unsigned long pa;
-> +
-> +	pa = __pa(&pv_timekeeper);
-> +	wrmsrl(MSR_KVM_TIMEKEEPER_EN, pa);
+Result:
 
+bit_uints: 4
+bit_bools: 1
+uints: 32
+bools: 8
 
-As Vitaly said, a new CPUID bit must be defined in
-Documentation/virt/kvm/cpuid.txt, and used here.  Also please make bit 0
-an enable bit.
+I know with different types within the struct it looks different, but
+still.
+
+g
+
