@@ -2,129 +2,120 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0CFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2971AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 418D6206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F247E206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fs9PDWsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbfJJOEP (ORCPT
+        id S1726277AbfJJOF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 10:04:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1921 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbfJJOEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 10:04:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 07:04:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,280,1566889200"; 
-   d="scan'208";a="194016809"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Oct 2019 07:04:09 -0700
-Date:   Thu, 10 Oct 2019 22:03:49 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Shakeel Butt <shakeelb@google.com>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: "reuse mergeable anon_vma as parent when fork" causes a crash on
- s390
-Message-ID: <20191010140349.GA28204@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <1570656570.5937.24.camel@lca.pw>
- <CALvZod4psOEyYwPOF1UcJoK96LbYBccYhsG0DrKD+CCf8Sc-Yg@mail.gmail.com>
- <20191010023601.GA4793@richard>
- <20191010031516.GA5060@richard>
- <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
+        Thu, 10 Oct 2019 10:05:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38186 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfJJOF1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 10:05:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HJMGdIDUdqLVB8qB2dHYqoNPThFa3sgfwA+s8un0WcY=; b=Fs9PDWsAxkehwhcU+Ti/MUQD/
+        ekjV9O6rcSKqtxEMU7oKyYOCFTVpGRDf1ZPMuNpZSfbhNZCM2saoVQ4Ds3vVgxByZSXBovof6gK/N
+        nfSd7z9A/bFSO11guf7om2NJ/4kd62RpoHejk33XI1K9Ok5TnPDdy/BfhescQ7VlTvDPSfOdhjwMl
+        scGT852MF+OMcWlg1epmnMBBAvYHRQSUIV6jdyylD0Nqo+EMHZTkT/FsOeNsqanNotKBRYPxWh2m8
+        dZioEXAZoe7tcOslHEyHAOm5HUFT7eHjfxkhkUS7wMDwpdb4gR60MXLv38xHNnVSVSnWMMqiND70h
+        1zxMHSRmA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIZ48-00072M-CE; Thu, 10 Oct 2019 14:05:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 39855301224;
+        Thu, 10 Oct 2019 16:04:21 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 41952202F4F4F; Thu, 10 Oct 2019 16:05:13 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 16:05:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191010140513.GT2311@hirez.programming.kicks-ass.net>
+References: <20191007081716.07616230.8@infradead.org>
+ <20191007081945.10951536.8@infradead.org>
+ <20191008104335.6fcd78c9@gandalf.local.home>
+ <20191009224135.2dcf7767@oasis.local.home>
+ <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+ <20191010091956.48fbcf42@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191010091956.48fbcf42@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:29:44AM +0300, Konstantin Khlebnikov wrote:
->On 10/10/2019 06.15, Wei Yang wrote:
->> On Thu, Oct 10, 2019 at 10:36:01AM +0800, Wei Yang wrote:
->> > Hi, Qian, Shakeel
->> > 
->> > Thanks for testing.
->> > 
->> > Sounds I missed some case to handle. anon_vma_clone() now would be called in
->> > vma_adjust, which is a different case when it is introduced.
->> > 
->> 
->> Well, I have to correct my statement. The reason is we may did something more
->> in anon_vma_clone().
->> 
->> Here is a quick fix, while I need to go through all the cases carefully.
->
->Oops, I've overlooked this case too.
->
->You have to check src->anon_vma
->otherwise in  __split_vma or copy_vma dst could pick completely random anon_vma.
->
+On Thu, Oct 10, 2019 at 09:19:56AM -0400, Steven Rostedt wrote:
+> On Thu, 10 Oct 2019 11:20:54 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Wed, Oct 09, 2019 at 10:41:35PM -0400, Steven Rostedt wrote:
+> > > On Tue, 8 Oct 2019 10:43:35 -0400
+> > > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > 
+> > >   
+> > > > BTW, I'd really like to take this patch series through my tree. That
+> > > > way I can really hammer it, as well as I have code that will be built
+> > > > on top of it.  
+> > > 
+> > > I did a bit of hammering and found two bugs. One I sent a patch to fix
+> > > (adding a module when tracing is enabled), but the other bug I
+> > > triggered, I'm too tired to debug right now. But figured I'd mention it
+> > > anyway.  
+> > 
+> > I'm thinking this should fix it... Just not sure this is the right plce,
+> > then again, we're doing the same thing in jump_label and static_call, so
+> > perhaps we should do it like this.
+> > 
+> > --- a/arch/x86/kernel/alternative.c
+> > +++ b/arch/x86/kernel/alternative.c
+> > @@ -1230,10 +1230,15 @@ void text_poke_queue(void *addr, const v
+> >   * dynamically allocated memory. This function should be used when it is
+> >   * not possible to allocate memory.
+> >   */
+> > -void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
+> > +void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
+> >  {
+> >  	struct text_poke_loc tp;
+> >  
+> > +	if (unlikely(system_state == SYSTEM_BOOTING)) {
+> > +		text_poke_early(addr, opcode, len);
+> > +		return;
+> > +	}
+> 
+> We need a new system state. SYSTEM_UP ? (Arg, that name is confusing,
+> SYSTEM_BOOTING_SMP?) Or perhaps just test num_online_cpus()?
+> 
+> 	if (unlikely(system_state == SYSTEM_BOOTING &&
+> 		     num_online_cpus() == 1)
+> 
+> ?
+> 
+> Because we can't do the above once we have more than one CPU running.
 
-Per my understanding, the root cause is commit 7a3ef208e662 did a little
-further for the reuse case.
-
-We intend to reuse anon_vma on fork, but we also did this when we just want a
-copy of src, like __split_vma(), copy_vma() and __vma_split(). This will lead
-to a random anon_vma and not what we expect.
-
-A fix patch is sent for this.
-
->Also checking prev will not hurt, just to be sure.
->
->So, something like this should work:
->
- >if (!dst->anon_vma && src->anon_vma &&
->    prev && pprev && pprev->anon_vma == src->anon_vma)
->      dst->anon_vma = prev->anon_vma;
->
->> 
->> diff --git a/mm/rmap.c b/mm/rmap.c
->> index 12f6c3d7fd9d..2844f442208d 100644
->> --- a/mm/rmap.c
->> +++ b/mm/rmap.c
->> @@ -271,7 +271,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->>           * 1. Parent has vm_prev, which implies we have vm_prev.
->>           * 2. Parent and its vm_prev have the same anon_vma.
->>           */
->> -       if (pprev && pprev->anon_vma == src->anon_vma)
->> +       if (!dst->anon_vma && pprev && pprev->anon_vma == src->anon_vma)
->>                  dst->anon_vma = prev->anon_vma;
->>          list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
->> 
->> > BTW, do you have the specific test case? So that I could verify my change. The
->> > kernel build test doesn't trigger this.
->> > 
->> > Thanks a lot :-)
->> > 
->> > On Wed, Oct 09, 2019 at 03:21:11PM -0700, Shakeel Butt wrote:
->> > -- 
->> > Wei Yang
->> > Help you, Help me
->> 
-
--- 
-Wei Yang
-Help you, Help me
+We loose BOOTING _long_ before we gain SMP.
