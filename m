@@ -2,270 +2,132 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B083BC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA6AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C6120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1419208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:32:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nzzPZFBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfJJUcI (ORCPT
+        id S1727090AbfJJUc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:32:08 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:55959 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfJJUcI (ORCPT
+        Thu, 10 Oct 2019 16:32:28 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40828 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfJJUc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:32:08 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M7NaW-1iAwvS3qYe-007hQ6; Thu, 10 Oct 2019 22:31:59 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH 04/36] usb: gadget: s3c-hsudc: remove platform header dependency
-Date:   Thu, 10 Oct 2019 22:29:48 +0200
-Message-Id: <20191010203043.1241612-4-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
+        Thu, 10 Oct 2019 16:32:28 -0400
+Received: by mail-ot1-f68.google.com with SMTP id y39so6067439ota.7;
+        Thu, 10 Oct 2019 13:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fWk3YhiiJHg8k8ptjSkAx7ItL9F1legAJpF+beihn+4=;
+        b=nzzPZFByrpOo0NvlBOUhGFQUZP2Zqe60DgnyztdpxgMoIpUWkyzpl5Z+TrlaDdjzRi
+         3NCJrGLGAb77NBhiFeC3ttL8yXBov+S8RXCOTej35+cZIUWTtSSc//r2RD4HD5Jfapcv
+         AvFTqMtDmnKbTguqLzRt76FOxK6iU7fhJdWPiPSNZcA5Nhay/TWmbiQn7moWj9jsEwPq
+         tka0fyspeegLizi+iUZSnwGF3Wyvv4G8HsUmOkPnfw2HFjvrEiFoTDAsKWrp6RLXmO3z
+         qs451Dr7MiITaSUZs9icAnNS5Y2nghpjMfHmV10zro8sq+SaayVxdvZ0AuFlXrGg96Br
+         PQ6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fWk3YhiiJHg8k8ptjSkAx7ItL9F1legAJpF+beihn+4=;
+        b=WMFaB94NjRL48tFhnbXF898YXn+IuO4Hs53HFPT5EppSvbRij9jNIvDr9i/BYbSrK1
+         Vj2jKUwGSoFW7izP3QJ7p8p0R6U2bTKU8hPLvyg+Ei8mtGCi3jd0x59Zr5QKl2MKG++V
+         0JRroIIqiwXzGMO4Hj8N/YAJ5DTqce8TNiulxNSLeyy6YYAFw144QGzSFr6TBmwWuV96
+         wCo+d9jGuMaqKC7lM1RjV+tXkhor2ZB4pciodc347ra8D1HPWqmofLsw54aiV82Zdrhv
+         FOyOPQXP0pYMXuHa30zH7K/frx7uInzevyMOfR0jxzxM8U7x2C54UGGZCvmMvlkUkNTP
+         avng==
+X-Gm-Message-State: APjAAAXkeCj9m5wwLiFJLs2tU8RDCHNY41q4stRHuJoQ7K8cJzYm7JNm
+        /VviRobJczkrL9SJoXDEfJ4=
+X-Google-Smtp-Source: APXvYqzrg7UULLxw4lPwCZO1r2RsOUHQycSN8nXrqfNDK/es35HP7CtBAATV5kvUXSHuW7tGYPg5cg==
+X-Received: by 2002:a9d:5605:: with SMTP id e5mr9056238oti.150.1570739546944;
+        Thu, 10 Oct 2019 13:32:26 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id l17sm1726636oic.24.2019.10.10.13.32.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 13:32:26 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] mips: Fix unroll macro when building with Clang
+Date:   Thu, 10 Oct 2019 13:31:59 -0700
+Message-Id: <20191010203159.20565-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:gBYTvSDyXkD66KPU2oG2uSqWCzyZ+9MjOjjxZ7K1N8Jdtu5VAm9
- uBzrgOaZe47hxTJxPzxfWHiIy8u8IzO8gV3LN31u/Mqjy7tZzaSLxGgnqoVKuPXVg+B9ijX
- 7uUylmjPbZZ8xFBX62B8oZxkFcyv1U72ayUgQ7JNqWG8QE9yRihdJHWcmaZf1EWLj6XiOa4
- YePja6N9Vkc5nD00s37Cw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ta5J2cCemyk=:WC7a/cOxyD9j1Hsk7CU2BR
- c8Bcn5Ut8kEPonusAYC4tFsN8m7KP8vLaNaKNq1AiT1/Nb/mkE6wX5QsfGTLFSlP4U7aGQ5aj
- fb0CLfLMkKIVVbrAi4tZWR+d2JagUt8UA1qtKFQntU2ahzSdIxE0bzsoiA6jfJ4Edh9ND3oXE
- hItiPa5woepT9kql4/kAqrFg5Ljzjtnx+IHl8uXx2TjneZfSBrQ+AAgRJcjiDVvngJQo6Avs8
- Ugz2+YFPMgRmc2AOsP2YkrwJEcmFJAfNTDbEo6TTFOFsJhKVQuJ1JI19mVOUpgzeZkIE1obwG
- 6I0Tmem3DvqCNBm3BE1kVa4XrNqAmeKSxBX9m0gFMq44g1pia38XPBtOXARWkuCf1sh8KaS7Z
- +Ywc2ZWyu4IYS6aPinB5ybTc7a/V+hzmAKc2Sl4cp+Fcd8tYe8rQ+id9A6sKt99j4Sdm5bmDh
- 94Zqm3uGjvegg/hM9dlScH8JxxcxD4YhXuHQZun5BaAVAQShPtiIEbPc6MIYBX1mro06iCwJQ
- Jlg0wQzS/u9C5DQDIUvIX8UYU+KVOZIswLRFKWQ+ESPBZaX2QSZ7szyac3KuKTyJE0XYxpLXv
- wgcR3MGIwhTYn1aDWI9Rxdh7lZJehyoxFUDoKlomUlZhw+lY5INuM24qrjYL/56BlSP1Raljt
- nHAttXZK2y03Se8Sp8QxslircyBig3045s2XS56DExqvaNJ4/6qI30UGSV21AWVo7MPOuPZao
- W2sW8RBcoMKKD4zaBTARDqx4/Wpnf66KuOVY4Hi2Hb6IVBJg1t7fusc0hG984/sZsToIBhbOh
- BhjM1YF5FJe0Bjhp+GM0oq4V3QyzcGRzbRuoTMKIbHTHTDTRXiqqu2gBRFRalsFzlwhXaJBLg
- gyCntWSDfESeaa0IVhqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no real phy driver, so s3c-hsudc just pokes the registers
-itself. Improve this a little by making it a platform data callback
-like we do for gpios.
+Building with Clang errors after commit 6baaeadae911 ("MIPS: Provide
+unroll() macro, use it for cache ops") since the GCC_VERSION macro
+is defined in include/linux/compiler-gcc.h, which is only included
+in compiler.h when using GCC:
 
-There is only one board using this driver, and it's unlikely
-that another would be added, so this is a minimal workaround.
+In file included from arch/mips/kernel/mips-mt.c:20:
+./arch/mips/include/asm/r4kcache.h:254:1: error: use of undeclared
+identifier 'GCC_VERSION'; did you mean 'S_VERSION'?
+__BUILD_BLAST_CACHE(i, icache, Index_Invalidate_I, Hit_Invalidate_I, 32,
+)
+^
+./arch/mips/include/asm/r4kcache.h:219:4: note: expanded from macro
+'__BUILD_BLAST_CACHE'
+                        cache_unroll(32, kernel_cache, indexop,
+                        ^
+./arch/mips/include/asm/r4kcache.h:203:2: note: expanded from macro
+'cache_unroll'
+        unroll(times, _cache_op, insn, op, (addr) + (i++ * (lsize)));
+        ^
+./arch/mips/include/asm/unroll.h:28:15: note: expanded from macro
+'unroll'
+        BUILD_BUG_ON(GCC_VERSION >= 40700 &&                    \
+                     ^
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Use CONFIG_GCC_VERSION, which will always be set by Kconfig.
+Additionally, Clang 8 had improvements around __builtin_constant_p so
+use that as a lower limit for this check with Clang (although MIPS
+wasn't buildable until Clang 9); building a kernel with Clang 9.0.0
+has no issues after this change.
+
+Fixes: 6baaeadae911 ("MIPS: Provide unroll() macro, use it for cache ops")
+Link: https://github.com/ClangBuiltLinux/linux/issues/736
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- .../include/mach/regs-s3c2443-clock.h         | 49 +++++++++++++++++
- arch/arm/plat-samsung/devs.c                  |  3 +
- drivers/usb/gadget/udc/s3c-hsudc.c            | 55 ++-----------------
- include/linux/platform_data/s3c-hsudc.h       |  2 +
- 4 files changed, 58 insertions(+), 51 deletions(-)
+ arch/mips/include/asm/unroll.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h b/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
-index 6bf924612b06..682759549e63 100644
---- a/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
-+++ b/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
-@@ -10,6 +10,8 @@
- #ifndef __ASM_ARM_REGS_S3C2443_CLOCK
- #define __ASM_ARM_REGS_S3C2443_CLOCK
- 
-+#include <linux/delay.h>
-+
- #define S3C2443_CLKREG(x)		((x) + S3C24XX_VA_CLKPWR)
- 
- #define S3C2443_PLLCON_MDIVSHIFT	16
-@@ -184,5 +186,52 @@ s3c2443_get_epll(unsigned int pllval, unsigned int baseclk)
- 	return (unsigned int)fvco;
- }
- 
-+static inline void s3c_hsudc_init_phy(void)
-+{
-+	u32 cfg;
-+
-+	cfg = readl(S3C2443_PWRCFG) | S3C2443_PWRCFG_USBPHY;
-+	writel(cfg, S3C2443_PWRCFG);
-+
-+	cfg = readl(S3C2443_URSTCON);
-+	cfg |= (S3C2443_URSTCON_FUNCRST | S3C2443_URSTCON_PHYRST);
-+	writel(cfg, S3C2443_URSTCON);
-+	mdelay(1);
-+
-+	cfg = readl(S3C2443_URSTCON);
-+	cfg &= ~(S3C2443_URSTCON_FUNCRST | S3C2443_URSTCON_PHYRST);
-+	writel(cfg, S3C2443_URSTCON);
-+
-+	cfg = readl(S3C2443_PHYCTRL);
-+	cfg &= ~(S3C2443_PHYCTRL_CLKSEL | S3C2443_PHYCTRL_DSPORT);
-+	cfg |= (S3C2443_PHYCTRL_EXTCLK | S3C2443_PHYCTRL_PLLSEL);
-+	writel(cfg, S3C2443_PHYCTRL);
-+
-+	cfg = readl(S3C2443_PHYPWR);
-+	cfg &= ~(S3C2443_PHYPWR_FSUSPEND | S3C2443_PHYPWR_PLL_PWRDN |
-+		S3C2443_PHYPWR_XO_ON | S3C2443_PHYPWR_PLL_REFCLK |
-+		S3C2443_PHYPWR_ANALOG_PD);
-+	cfg |= S3C2443_PHYPWR_COMMON_ON;
-+	writel(cfg, S3C2443_PHYPWR);
-+
-+	cfg = readl(S3C2443_UCLKCON);
-+	cfg |= (S3C2443_UCLKCON_DETECT_VBUS | S3C2443_UCLKCON_FUNC_CLKEN |
-+		S3C2443_UCLKCON_TCLKEN);
-+	writel(cfg, S3C2443_UCLKCON);
-+}
-+
-+static inline void s3c_hsudc_uninit_phy(void)
-+{
-+	u32 cfg;
-+
-+	cfg = readl(S3C2443_PWRCFG) & ~S3C2443_PWRCFG_USBPHY;
-+	writel(cfg, S3C2443_PWRCFG);
-+
-+	writel(S3C2443_PHYPWR_FSUSPEND, S3C2443_PHYPWR);
-+
-+	cfg = readl(S3C2443_UCLKCON) & ~S3C2443_UCLKCON_FUNC_CLKEN;
-+	writel(cfg, S3C2443_UCLKCON);
-+}
-+
- #endif /*  __ASM_ARM_REGS_S3C2443_CLOCK */
- 
-diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
-index 1d1fa068d228..6e4c1cb07104 100644
---- a/arch/arm/plat-samsung/devs.c
-+++ b/arch/arm/plat-samsung/devs.c
-@@ -40,6 +40,7 @@
- #include <mach/dma.h>
- #include <mach/irqs.h>
- #include <mach/map.h>
-+#include <mach/regs-s3c2443-clock.h>
- 
- #include <plat/cpu.h>
- #include <plat/devs.h>
-@@ -1038,6 +1039,8 @@ struct platform_device s3c_device_usb_hsudc = {
- void __init s3c24xx_hsudc_set_platdata(struct s3c24xx_hsudc_platdata *pd)
- {
- 	s3c_set_platdata(pd, sizeof(*pd), &s3c_device_usb_hsudc);
-+	pd->phy_init = s3c_hsudc_init_phy;
-+	pd->phy_uninit = s3c_hsudc_uninit_phy;
- }
- #endif /* CONFIG_PLAT_S3C24XX */
- 
-diff --git a/drivers/usb/gadget/udc/s3c-hsudc.c b/drivers/usb/gadget/udc/s3c-hsudc.c
-index 858993c73442..d482cbb4bb4d 100644
---- a/drivers/usb/gadget/udc/s3c-hsudc.c
-+++ b/drivers/usb/gadget/udc/s3c-hsudc.c
-@@ -30,8 +30,6 @@
- #include <linux/regulator/consumer.h>
- #include <linux/pm_runtime.h>
- 
--#include <mach/regs-s3c2443-clock.h>
--
- #define S3C_HSUDC_REG(x)	(x)
- 
- /* Non-Indexed Registers */
-@@ -186,53 +184,6 @@ static inline void __orr32(void __iomem *ptr, u32 val)
- 	writel(readl(ptr) | val, ptr);
- }
- 
--static void s3c_hsudc_init_phy(void)
--{
--	u32 cfg;
--
--	cfg = readl(S3C2443_PWRCFG) | S3C2443_PWRCFG_USBPHY;
--	writel(cfg, S3C2443_PWRCFG);
--
--	cfg = readl(S3C2443_URSTCON);
--	cfg |= (S3C2443_URSTCON_FUNCRST | S3C2443_URSTCON_PHYRST);
--	writel(cfg, S3C2443_URSTCON);
--	mdelay(1);
--
--	cfg = readl(S3C2443_URSTCON);
--	cfg &= ~(S3C2443_URSTCON_FUNCRST | S3C2443_URSTCON_PHYRST);
--	writel(cfg, S3C2443_URSTCON);
--
--	cfg = readl(S3C2443_PHYCTRL);
--	cfg &= ~(S3C2443_PHYCTRL_CLKSEL | S3C2443_PHYCTRL_DSPORT);
--	cfg |= (S3C2443_PHYCTRL_EXTCLK | S3C2443_PHYCTRL_PLLSEL);
--	writel(cfg, S3C2443_PHYCTRL);
--
--	cfg = readl(S3C2443_PHYPWR);
--	cfg &= ~(S3C2443_PHYPWR_FSUSPEND | S3C2443_PHYPWR_PLL_PWRDN |
--		S3C2443_PHYPWR_XO_ON | S3C2443_PHYPWR_PLL_REFCLK |
--		S3C2443_PHYPWR_ANALOG_PD);
--	cfg |= S3C2443_PHYPWR_COMMON_ON;
--	writel(cfg, S3C2443_PHYPWR);
--
--	cfg = readl(S3C2443_UCLKCON);
--	cfg |= (S3C2443_UCLKCON_DETECT_VBUS | S3C2443_UCLKCON_FUNC_CLKEN |
--		S3C2443_UCLKCON_TCLKEN);
--	writel(cfg, S3C2443_UCLKCON);
--}
--
--static void s3c_hsudc_uninit_phy(void)
--{
--	u32 cfg;
--
--	cfg = readl(S3C2443_PWRCFG) & ~S3C2443_PWRCFG_USBPHY;
--	writel(cfg, S3C2443_PWRCFG);
--
--	writel(S3C2443_PHYPWR_FSUSPEND, S3C2443_PHYPWR);
--
--	cfg = readl(S3C2443_UCLKCON) & ~S3C2443_UCLKCON_FUNC_CLKEN;
--	writel(cfg, S3C2443_UCLKCON);
--}
--
- /**
-  * s3c_hsudc_complete_request - Complete a transfer request.
-  * @hsep: Endpoint to which the request belongs.
-@@ -1188,7 +1139,8 @@ static int s3c_hsudc_start(struct usb_gadget *gadget,
- 
- 	pm_runtime_get_sync(hsudc->dev);
- 
--	s3c_hsudc_init_phy();
-+	if (hsudc->pd->phy_init)
-+		hsudc->pd->gpio_init();
- 	if (hsudc->pd->gpio_init)
- 		hsudc->pd->gpio_init();
- 
-@@ -1210,7 +1162,8 @@ static int s3c_hsudc_stop(struct usb_gadget *gadget)
- 
- 	spin_lock_irqsave(&hsudc->lock, flags);
- 	hsudc->gadget.speed = USB_SPEED_UNKNOWN;
--	s3c_hsudc_uninit_phy();
-+	if (hsudc->pd->phy_uninit)
-+		hsudc->pd->phy_uninit();
- 
- 	pm_runtime_put(hsudc->dev);
- 
-diff --git a/include/linux/platform_data/s3c-hsudc.h b/include/linux/platform_data/s3c-hsudc.h
-index 4dc9b8760166..a170939832d5 100644
---- a/include/linux/platform_data/s3c-hsudc.h
-+++ b/include/linux/platform_data/s3c-hsudc.h
-@@ -26,6 +26,8 @@ struct s3c24xx_hsudc_platdata {
- 	unsigned int	epnum;
- 	void		(*gpio_init)(void);
- 	void		(*gpio_uninit)(void);
-+	void		(*phy_init)(void);
-+	void		(*phy_uninit)(void);
- };
- 
- #endif	/* __LINUX_USB_S3C_HSUDC_H */
+diff --git a/arch/mips/include/asm/unroll.h b/arch/mips/include/asm/unroll.h
+index df1cdcfc5a47..c628747d4ecd 100644
+--- a/arch/mips/include/asm/unroll.h
++++ b/arch/mips/include/asm/unroll.h
+@@ -25,7 +25,8 @@
+ 	 * generate reasonable code for the switch statement,	\
+ 	 * so we skip the sanity check for those compilers.	\
+ 	 */							\
+-	BUILD_BUG_ON(GCC_VERSION >= 40700 &&			\
++	BUILD_BUG_ON((CONFIG_GCC_VERSION >= 40700 ||		\
++		      CONFIG_CLANG_VERSION >= 80000) &&		\
+ 		     !__builtin_constant_p(times));		\
+ 								\
+ 	switch (times) {					\
 -- 
-2.20.0
+2.23.0
 
