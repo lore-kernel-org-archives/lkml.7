@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15CAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18783C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93AC20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E674B218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696727;
-	bh=yEwwN4aCrDKN7M8R+26m8PSL7h3DXKhMA0QOudOPcF4=;
+	s=default; t=1570696730;
+	bh=yWUB2eFyF+kAE8u9QcoZelZzL2qmlHqCLVLd+kbIucg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rA7dbtA7rK3M6wiLWrkRrcbgWgbvu9/lILLb4o1TDYEORcqrKB4nfdZtwwHXgORME
-	 CHny7QsLseE8UyvLbRR6pwfe9urMzrzGe/WBv5W4D4gcJtU/K+ND7kkrI3qT7CeXdx
-	 JleMSPupCefqVJWybRp5mWQAk1WrwQyOIH+9L+DE=
+	b=j76GobFP8oe61Y3VjEJBqSloCAUQTyXljZl69nyhWS+Pr/edjnEDWDNw9vD3JM2mc
+	 h4fezpMWsyUP/PyjLFKNoB1/wBVXXoDlugdAGSP7GhKyaEb5ANQYfvdrbWfvP4sPJd
+	 zb1/v6LvcaNB/PFMwaIfZhTWnaHBJHo6x2MbIItM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387691AbfJJIiq (ORCPT
+        id S2387704AbfJJIit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:38:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41708 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:38:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387635AbfJJIio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:38:44 -0400
+        id S2387635AbfJJIir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:38:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C36820B7C;
-        Thu, 10 Oct 2019 08:38:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F448218AC;
+        Thu, 10 Oct 2019 08:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696723;
-        bh=yEwwN4aCrDKN7M8R+26m8PSL7h3DXKhMA0QOudOPcF4=;
+        s=default; t=1570696726;
+        bh=yWUB2eFyF+kAE8u9QcoZelZzL2qmlHqCLVLd+kbIucg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UMCky3TDbAMbMYJ8/ZaifeiHgoMdhrdC1j1t2LaOvA4lrv1cPPBEN8VSXYZmQ6Zu3
-         Tjuo/ZsiNnNgRAszuTtpRSY8m8eIjIX5zWwyFFus/i6h/Nx786KedDaPrazZuxAUyw
-         AAonsQBvRnDXW9mV+u2OsRu7e1J3/pxWtmORQxJQ=
+        b=Zsu7SMD+12c7LlAgFf6Xydvng47bmiWaIWY7NMjrPv//1AslQLNrOX/VYcH6NOUwg
+         Ngz50/fr49ognbmlclNF6CCPORW9sYQyBMRNcDuG7nBZbOGOeuoU8eO+1KauXKz5X4
+         uzVkuaDhP/76pbpBa+4BJ9R2vRgVv8t3ODlrRMK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.3 029/148] powerpc/powernv/ioda: Fix race in TCE level allocation
-Date:   Thu, 10 Oct 2019 10:34:50 +0200
-Message-Id: <20191010083612.888985844@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 5.3 003/148] KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
+Date:   Thu, 10 Oct 2019 10:34:24 +0200
+Message-Id: <20191010083610.398134531@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,72 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Thomas Huth <thuth@redhat.com>
 
-commit 56090a3902c80c296e822d11acdb6a101b322c52 upstream.
+commit a13b03bbb4575b350b46090af4dfd30e735aaed1 upstream.
 
-pnv_tce() returns a pointer to a TCE entry and originally a TCE table
-would be pre-allocated. For the default case of 2GB window the table
-needs only a single level and that is fine. However if more levels are
-requested, it is possible to get a race when 2 threads want a pointer
-to a TCE entry from the same page of TCEs.
+If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
+then there is certainly a bug in the calling userspace application.
+We check for wrong access registers, but only if the vCPU was already
+in the access register mode before (i.e. the SIE block has recorded
+it). The check is also buried somewhere deep in the calling chain (in
+the function ar_translation()), so this is somewhat hard to find.
 
-This adds cmpxchg to handle the race. Note that once TCE is non-zero,
-it cannot become zero again.
+It's better to always report an error to the userspace in case this
+field is set wrong, and it's safer in the KVM code if we block wrong
+values here early instead of relying on a check somewhere deep down
+the calling chain, so let's add another check to kvm_s390_guest_mem_op()
+directly.
 
-Fixes: a68bd1267b72 ("powerpc/powernv/ioda: Allocate indirect TCE levels on demand")
-CC: stable@vger.kernel.org # v4.19+
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190718051139.74787-2-aik@ozlabs.ru
+We also should check that the "size" is non-zero here (thanks to Janosch
+Frank for the hint!). If we do not check the size, we could call vmalloc()
+with this 0 value, and this will cause a kernel warning.
+
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+Link: https://lkml.kernel.org/r/20190829122517.31042-1-thuth@redhat.com
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/pci-ioda-tce.c |   18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ arch/s390/kvm/kvm-s390.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-@@ -49,6 +49,9 @@ static __be64 *pnv_alloc_tce_level(int n
- 	return addr;
- }
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -4257,7 +4257,7 @@ static long kvm_s390_guest_mem_op(struct
+ 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
+ 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
  
-+static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
-+		unsigned long size, unsigned int levels);
-+
- static __be64 *pnv_tce(struct iommu_table *tbl, bool user, long idx, bool alloc)
- {
- 	__be64 *tmp = user ? tbl->it_userspace : (__be64 *) tbl->it_base;
-@@ -58,9 +61,9 @@ static __be64 *pnv_tce(struct iommu_tabl
+-	if (mop->flags & ~supported_flags)
++	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
+ 		return -EINVAL;
  
- 	while (level) {
- 		int n = (idx & mask) >> (level * shift);
--		unsigned long tce;
-+		unsigned long oldtce, tce = be64_to_cpu(READ_ONCE(tmp[n]));
- 
--		if (tmp[n] == 0) {
-+		if (!tce) {
- 			__be64 *tmp2;
- 
- 			if (!alloc)
-@@ -71,10 +74,15 @@ static __be64 *pnv_tce(struct iommu_tabl
- 			if (!tmp2)
- 				return NULL;
- 
--			tmp[n] = cpu_to_be64(__pa(tmp2) |
--					TCE_PCI_READ | TCE_PCI_WRITE);
-+			tce = __pa(tmp2) | TCE_PCI_READ | TCE_PCI_WRITE;
-+			oldtce = be64_to_cpu(cmpxchg(&tmp[n], 0,
-+					cpu_to_be64(tce)));
-+			if (oldtce) {
-+				pnv_pci_ioda2_table_do_free_pages(tmp2,
-+					ilog2(tbl->it_level_size) + 3, 1);
-+				tce = oldtce;
-+			}
- 		}
--		tce = be64_to_cpu(tmp[n]);
- 
- 		tmp = __va(tce & ~(TCE_PCI_READ | TCE_PCI_WRITE));
- 		idx &= ~mask;
+ 	if (mop->size > MEM_OP_MAX_SIZE)
 
 
