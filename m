@@ -2,179 +2,140 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2652DECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD16C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5EDF206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C9D206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q34QMYZd"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YFrQ9Kr4";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="bcfq+yK5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfJJUgj (ORCPT
+        id S1727312AbfJJUgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:36:39 -0400
-Received: from mail-io1-f53.google.com ([209.85.166.53]:34089 "EHLO
-        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfJJUgj (ORCPT
+        Thu, 10 Oct 2019 16:36:49 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:12438 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726710AbfJJUgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:36:39 -0400
-Received: by mail-io1-f53.google.com with SMTP id q1so16816560ion.1;
-        Thu, 10 Oct 2019 13:36:37 -0700 (PDT)
+        Thu, 10 Oct 2019 16:36:48 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9AKYSuB020527;
+        Thu, 10 Oct 2019 13:36:34 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=JQPRpQKqlFRuh2fQTa9U3ta5TRgZo081T1imlkpPhu4=;
+ b=YFrQ9Kr4Bb01XnjFc8Z9O4AXjDH+Z6jsapYPIsqth0Ygv0myJ2uml5ql1IEr48XfqllZ
+ TvXQiGqY0+2AQPUpLvQqcdO7VUfLc+8gorq+DbHruqkqqsHRA9HVNXmEZrG1HkCH87Ih
+ JPokbf0pcfutYCzvTRfq4mHvXXuCaoUwdWRuNaXqcaPoSZraVcHtw9bQhoQBAGcXNWum
+ ZflRP0W8aDcMSL/4HDYjetw7ErRAY9vpTLj+rKlTfxsbdFYD1k8Xqtq3II8LCQ/6SvPY
+ DdpW3twUjI95ft5LPMlkDPi8yk9D573gR0y2Df3BcGY2UBIAIgs/17rtol/YG075RHoQ Vw== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2vj66h1hjc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 10 Oct 2019 13:36:34 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 10 Oct
+ 2019 13:36:33 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.50) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 10 Oct 2019 13:36:33 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mJNW8ZkcE5uoIcSurj8JNcFsbcL3hKRUnZW3UN/+UoQ2WcPxOYm4iFGZ+XIKsc1DdTdUB4gKvQ47ZJYAxWok1l03/OM2y9/FN1tj4PJw1Onw79tPqcBKwp3ZElGp0jXcKGmtPGbYxZG9F9ffs3tqSykavvdiiCDD0kRpdprulY8pvf4/hxvl8QQCRHK4ureG32biwMXSae8FknI62YzrmZWL5Gm0lEdmey7gTp7MiKhwkdmz3zPpZTXU/r+Ynzy58HpEP58W2hEcp1L2mOOvB6KVFlwaqfWuBLJBKeRC5ltLm/JrLWa7ldhV49fipb4xjYZkkZnf9gJcwsFRPX+2rg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JQPRpQKqlFRuh2fQTa9U3ta5TRgZo081T1imlkpPhu4=;
+ b=YINj5bS4opv1J4gJS+H31f7u+uAFZ5cbu+4IZfeddjb0jJDks4VTOR+fulRCjlpLIigCO8GIB2fWXUoWGMAZZegIVfvPXB/slrBIWlVOBNI6/MovsUMOJSix603M1+F6KaQivlqZNbGImxV6eLWHdpavR4GEIdsxb9YHhXdNTI5Zc0FLHS5hKkGJ5gO2hd3I7Ajm+n/g3CFc+TTcOXyLBXchoa9Bzhx0VBKatabJGICwRbLnv92pcnAfhEuIwgEFlfNoSEXYcMhPm8vm3sOq4Px0+J7KbAvnpFdVXdoil5jwB7wg6bEQG2WSSXE540UcO7mLJlUiEfJ8UNL9Kgw1Pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j6sP383Qyl95I8Z25iYfBokkV8+qGYi/AFX1IOAtUrQ=;
-        b=Q34QMYZdc+pG/I0r+KiZJAKEidQQcZ2vbxo8k9oDD4D6VIPmYiq55Vl8FsfktvflZ1
-         geL58/bUA0mtFR47tlZu2j4y5nyoh6nr3nbLTNHkg1ELYWX+/603QIlIc6C9qGTvJEVH
-         /OV01/zQ0gJm86BrSxhYKIRGDmGIZ/QFs10Q63SPCEM7VSvHNWPiuruDhU0z8hBKWlr0
-         ut+GGyVUAUwLhs0eDZ8tDj8rMnUgzUkpLsCtWwDLAVPG2wXubGVbOU4TaIDXm+L9JdEg
-         aKivN5ksqTd7qzsgKDhbNZ1zxa9gBHJr8qTDucMKj/bW+/2NV5zDDIbA5y2vAKGmTK0f
-         MzWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j6sP383Qyl95I8Z25iYfBokkV8+qGYi/AFX1IOAtUrQ=;
-        b=J/8jAk8g+MmC6g3jNTBu/YP/HvAOj2luS8HRMbqlbRXVVH2CXloMKmo6MEsf2cB5HX
-         giNbesO9qTHG8VT/TGIORXwVyFLFpVs5lRxGvMwTVk520r4Xdkh3x8B1U4msCo9sM9eD
-         bJzIHcbH0kuQMAheEKCdPHZGGu5TuJAmP0wFIVBrEpHNy0fOVMRuQ0liamHOvCHSEpX8
-         h0WeGepC3qRmCoR5mcpYqQgKmZjqc2YohK47LWQi6TsW8JD2VnoB4jSX0NjzKkCzYMa/
-         1IPMNvCGa0Z0EWCF+xvyRco2MmMRPesPOwTHSV0M2STFU1M3NJIsHd/zyi0YLdttpmkj
-         xm2Q==
-X-Gm-Message-State: APjAAAVXe8uagK0/pzxRGsVJ4gV5OPZ3goanxykdmyiRwnvu6W752sLF
-        nsove5nTO+to6JUB7ZXLXXWOxyQl+WoXs6pJ15DHQ6f5
-X-Google-Smtp-Source: APXvYqzkmsXfTfl7HoZDw6+IGIW9qLazyM4wbybRpN2KG5iGlsQrQr34VW4QNZUtyUVWWSac/24naMiXdyfmk6TwusI=
-X-Received: by 2002:a6b:6605:: with SMTP id a5mr13224254ioc.237.1570739797276;
- Thu, 10 Oct 2019 13:36:37 -0700 (PDT)
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JQPRpQKqlFRuh2fQTa9U3ta5TRgZo081T1imlkpPhu4=;
+ b=bcfq+yK5cjy/5lMejT1RZ8fH5w1wpIRs/raDGKAyHTal6ZA6a13C6fvPSKS2ASk13NRImA27TOJmv3pvhTEKN8t2b9nN9tJq3RTILPnyxUINiYwhQBMjYUftF8Pmrg5FnUMl9fwzIvQqFLe7qVJVOJ+UvUgP/YwarfyTOvl5a3k=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB2765.namprd18.prod.outlook.com (20.179.22.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Thu, 10 Oct 2019 20:36:32 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d16d:8855:c030:2763]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d16d:8855:c030:2763%3]) with mapi id 15.20.2327.026; Thu, 10 Oct 2019
+ 20:36:32 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>
+CC:     James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/19] EDAC: Rework edac_mc and ghes drivers
+Thread-Topic: [PATCH 00/19] EDAC: Rework edac_mc and ghes drivers
+Thread-Index: AQHVf6jLshPLJWnlTE6zMo1DcW8g6KdUVXCA
+Date:   Thu, 10 Oct 2019 20:36:32 +0000
+Message-ID: <20191010203623.z4u6dhxdv7kp2na5@rric.localdomain>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+In-Reply-To: <20191010202418.25098-1-rrichter@marvell.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0301CA0011.eurprd03.prod.outlook.com
+ (2603:10a6:3:76::21) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: be9f38a2-e3bc-456f-9490-08d74dc18906
+x-ms-traffictypediagnostic: MN2PR18MB2765:
+x-microsoft-antispam-prvs: <MN2PR18MB2765B7474469AEB35886D361D9940@MN2PR18MB2765.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 018632C080
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39850400004)(396003)(366004)(136003)(199004)(189003)(66066001)(9686003)(71190400001)(6512007)(64756008)(71200400001)(6486002)(66446008)(8936002)(1076003)(305945005)(8676002)(81166006)(81156014)(6246003)(4744005)(66556008)(66476007)(66946007)(99286004)(4326008)(5660300002)(76176011)(229853002)(52116002)(86362001)(7736002)(186003)(478600001)(3846002)(102836004)(6116002)(386003)(6506007)(316002)(486006)(2906002)(14454004)(14444005)(45080400002)(256004)(26005)(53546011)(11346002)(446003)(25786009)(6436002)(54906003)(110136005)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2765;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ALL1BehWy8+EUvuof8AuAZZ+rt8uAieusnB8yN5VYHl/WCK+M8/KLQNIpLur/mX8hTOoNHOOWVBCYdfAokUMS0TU5hF4B/f3pNbmeMXdDVllMREKHKDOCY9jRF2uKx2WQCEyK4x+i++z9vaipkUWkRndLajPoWeZE4faHAFHtlHIbDU0vu9kxFmWjQoO8gvmciZ3jMpPM6tmyMx81w0Spm7Jc9rXXD9R2UV7JSfEJVKTxeunqt4xbkelwBvFG2LZGXz9dcYJq1pVH1vbuoJSyYil088ZBZU59Nnf4VbP4nvqCAcR0cqMmsOH8paXJQbbjYHJHD75mcFdGPjoEm6eurFL+zg8TKp/G5AKUROUVqWoqd2j5MYTmqekJc3Un4FSuD/RYedHZtKGyZOVGR4cWIpqGf7jerG3bNpFktwLnsY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1CFE2099D8BD0F40B4F53008557AFA20@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190812131235.27244-1-nitesh@redhat.com> <20190812131235.27244-2-nitesh@redhat.com>
-In-Reply-To: <20190812131235.27244-2-nitesh@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 10 Oct 2019 13:36:26 -0700
-Message-ID: <CAKgT0UeKxCYtg6+aCPyxJcAGrBgvCWziUpZM6Tmw-9PSChcGVA@mail.gmail.com>
-Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        Pankaj Gupta <pagupta@redhat.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
-        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
-        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: be9f38a2-e3bc-456f-9490-08d74dc18906
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 20:36:32.0820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rA4YLW9XENquj5xIybUg9ppGRyL1UKl8XU2TYyu3CjFg5O7Njk/r9t/Xhiz4PTpC6pCReATw9JeXJ0sQcRwEGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2765
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-10_07:2019-10-10,2019-10-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 6:13 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->
+On 10.10.19 20:25:01, Robert Richter wrote:
+> This patch set is a rework of the ghes_edac and edac_mc driver. It
+> addresses issues found during code review and while working with the
+> code. The changes include:
 
-<snip>
+Sorry for the:
 
-> +static int process_free_page(struct page *page,
-> +                            struct page_reporting_config *phconf, int count)
-> +{
-> +       int mt, order, ret = 0;
-> +
-> +       mt = get_pageblock_migratetype(page);
-> +       order = page_private(page);
-> +       ret = __isolate_free_page(page, order);
-> +
-> +       if (ret) {
-> +               /*
-> +                * Preserving order and migratetype for reuse while
-> +                * releasing the pages back to the buddy.
-> +                */
-> +               set_pageblock_migratetype(page, mt);
-> +               set_page_private(page, order);
-> +
-> +               sg_set_page(&phconf->sg[count++], page,
-> +                           PAGE_SIZE << order, 0);
-> +       }
-> +
-> +       return count;
-> +}
-> +
-> +/**
-> + * scan_zone_bitmap - scans the bitmap for the requested zone.
-> + * @phconf: page reporting configuration object initialized by the backend.
-> + * @zone: zone for which page reporting is requested.
-> + *
-> + * For every page marked in the bitmap it checks if it is still free if so it
-> + * isolates and adds them to a scatterlist. As soon as the number of isolated
-> + * pages reach the threshold set by the backend, they are reported to the
-> + * hypervisor by the backend. Once the hypervisor responds after processing
-> + * they are returned back to the buddy for reuse.
-> + */
-> +static void scan_zone_bitmap(struct page_reporting_config *phconf,
-> +                            struct zone *zone)
-> +{
-> +       unsigned long setbit;
-> +       struct page *page;
-> +       int count = 0;
-> +
-> +       sg_init_table(phconf->sg, phconf->max_pages);
-> +
-> +       for_each_set_bit(setbit, zone->bitmap, zone->nbits) {
-> +               /* Process only if the page is still online */
-> +               page = pfn_to_online_page((setbit << PAGE_REPORTING_MIN_ORDER) +
-> +                                         zone->base_pfn);
-> +               if (!page)
-> +                       continue;
-> +
-> +               spin_lock(&zone->lock);
-> +
-> +               /* Ensure page is still free and can be processed */
-> +               if (PageBuddy(page) && page_private(page) >=
-> +                   PAGE_REPORTING_MIN_ORDER)
-> +                       count = process_free_page(page, phconf, count);
-> +
-> +               spin_unlock(&zone->lock);
-> +               /* Page has been processed, adjust its bit and zone counter */
-> +               clear_bit(setbit, zone->bitmap);
-> +               atomic_dec(&zone->free_pages);
-> +
-> +               if (count == phconf->max_pages) {
-> +                       /* Report isolated pages to the hypervisor */
-> +                       phconf->report(phconf, count);
-> +
-> +                       /* Return processed pages back to the buddy */
-> +                       return_isolated_page(zone, phconf);
-> +
-> +                       /* Reset for next reporting */
-> +                       sg_init_table(phconf->sg, phconf->max_pages);
-> +                       count = 0;
-> +               }
-> +       }
-> +       /*
-> +        * If the number of isolated pages does not meet the max_pages
-> +        * threshold, we would still prefer to report them as we have already
-> +        * isolated them.
-> +        */
-> +       if (count) {
-> +               sg_mark_end(&phconf->sg[count - 1]);
-> +               phconf->report(phconf, count);
-> +
-> +               return_isolated_page(zone, phconf);
-> +       }
-> +}
-> +
+  Content-Transfer-Encoding: quoted-printable
 
-So one thing that occurred to me is that this code is missing checks
-so that it doesn't try to hint isolated pages. With the bitmap
-approach you need an additional check so that you aren't pulling
-isolated pages out and reporting them.
+I definitely sent it out 8bit, but thanks to office365 this was
+converted (IMO this is according to RFC but still a pain).
+
+I will switch to another account for sending patches in the future.
+
+-Robert
