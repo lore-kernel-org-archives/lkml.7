@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F32C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C544C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77E121929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50EA2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697421;
-	bh=w1PhsVc2NzNNsICY5Y3TgMZHDcsd8nJISnDVyMqOqn4=;
+	s=default; t=1570697426;
+	bh=85ImHd+iC/uz5AhcNCsQYGkHH6IrmsgFjvEXApBTSiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zl8CwjX/gySgzHZW/y2R+Xqiw8Hbc+qdDVJlA6n5i82+mk/faOFv8J4a3E6M0dlCs
-	 fJQ8AlR9skGRD6I/AkoCTxGhK7BI4ai4AJt+U0YZC7PhGJwxcv6rIwTD069fvnUdnt
-	 oSTVaHICqK5ZaGcnqJw27ecVpGOOZuraqdeDjNgQ=
+	b=cwjiELxTG+c/yKtrD/OMrY326Gm585pJTDh3vHJs0rOgjD72qFGhiC3ZKl05MevxW
+	 t/IXXRWBPqZhrCcjRK7z8u4EiCY03ar/4sje4bQKcoobB0tZcsHIw/Idpy9qx6pc2e
+	 jQLIFBlK57aLcf7m893UlA1wqzD5zOJQpid8v0Sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389948AbfJJIuU (ORCPT
+        id S2389953AbfJJIuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57176 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389934AbfJJIuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:17 -0400
+        id S2389110AbfJJIuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41EF2208C3;
-        Thu, 10 Oct 2019 08:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3FED21BE5;
+        Thu, 10 Oct 2019 08:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697416;
-        bh=w1PhsVc2NzNNsICY5Y3TgMZHDcsd8nJISnDVyMqOqn4=;
+        s=default; t=1570697419;
+        bh=85ImHd+iC/uz5AhcNCsQYGkHH6IrmsgFjvEXApBTSiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kprpTS/N7jeYIrq850CJ7b4Qj8WUkXtT7HR9cY9QV46W4nCuBt8wPLNq8hToM+G0N
-         gnSM8BuC1bh7o9xVX9hRpjIBiVcF9zf6AYSJtrovE38BPFb5P0AuHdxMFPcqw1Q53o
-         IrSChHMTOvFclXdEkEAilcvBpdlOU/ZcLPuhqshE=
+        b=EpRhk0NHbLKSS+4CF+0cK8c4q0c+kc6PPR1DTC3GdxMK3/5GczgZBq1LKXuUeC9wb
+         psqu1Cq/dLrwJqPUnK49/zK7tA4qK9bdbKYt+awR9uj30LJOqhvwdhJYQWrglPxsGL
+         t7ZzV3+gRIdCwH37aB7Jf3wg9tbRtNr6J8bKvD+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4.14 02/61] KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
-Date:   Thu, 10 Oct 2019 10:36:27 +0200
-Message-Id: <20191010083450.699295630@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 4.14 20/61] watchdog: imx2_wdt: fix min() calculation in imx2_wdt_set_timeout
+Date:   Thu, 10 Oct 2019 10:36:45 +0200
+Message-Id: <20191010083501.872489536@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -62,50 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Huth <thuth@redhat.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-commit a13b03bbb4575b350b46090af4dfd30e735aaed1 upstream.
+commit 144783a80cd2cbc45c6ce17db649140b65f203dd upstream.
 
-If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
-then there is certainly a bug in the calling userspace application.
-We check for wrong access registers, but only if the vCPU was already
-in the access register mode before (i.e. the SIE block has recorded
-it). The check is also buried somewhere deep in the calling chain (in
-the function ar_translation()), so this is somewhat hard to find.
+Converting from ms to s requires dividing by 1000, not multiplying. So
+this is currently taking the smaller of new_timeout and 1.28e8,
+i.e. effectively new_timeout.
 
-It's better to always report an error to the userspace in case this
-field is set wrong, and it's safer in the KVM code if we block wrong
-values here early instead of relying on a check somewhere deep down
-the calling chain, so let's add another check to kvm_s390_guest_mem_op()
-directly.
+The driver knows what it set max_hw_heartbeat_ms to, so use that
+value instead of doing a division at run-time.
 
-We also should check that the "size" is non-zero here (thanks to Janosch
-Frank for the hint!). If we do not check the size, we could call vmalloc()
-with this 0 value, and this will cause a kernel warning.
+FWIW, this can easily be tested by booting into a busybox shell and
+doing "watchdog -t 5 -T 130 /dev/watchdog" - without this patch, the
+watchdog fires after 130&127 == 2 seconds.
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
-Link: https://lkml.kernel.org/r/20190829122517.31042-1-thuth@redhat.com
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: b07e228eee69 "watchdog: imx2_wdt: Fix set_timeout for big timeout values"
+Cc: stable@vger.kernel.org # 5.2 plus anything the above got backported to
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20190812131356.23039-1-linux@rasmusvillemoes.dk
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/kvm-s390.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/imx2_wdt.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3658,7 +3658,7 @@ static long kvm_s390_guest_mem_op(struct
- 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
- 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
+--- a/drivers/watchdog/imx2_wdt.c
++++ b/drivers/watchdog/imx2_wdt.c
+@@ -58,7 +58,7 @@
  
--	if (mop->flags & ~supported_flags)
-+	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
- 		return -EINVAL;
+ #define IMX2_WDT_WMCR		0x08		/* Misc Register */
  
- 	if (mop->size > MEM_OP_MAX_SIZE)
+-#define IMX2_WDT_MAX_TIME	128
++#define IMX2_WDT_MAX_TIME	128U
+ #define IMX2_WDT_DEFAULT_TIME	60		/* in seconds */
+ 
+ #define WDOG_SEC_TO_COUNT(s)	((s * 2 - 1) << 8)
+@@ -183,7 +183,7 @@ static int imx2_wdt_set_timeout(struct w
+ {
+ 	unsigned int actual;
+ 
+-	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
++	actual = min(new_timeout, IMX2_WDT_MAX_TIME);
+ 	__imx2_wdt_set_timeout(wdog, actual);
+ 	wdog->timeout = new_timeout;
+ 	return 0;
 
 
