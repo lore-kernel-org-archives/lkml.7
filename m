@@ -2,92 +2,153 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD68C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723EDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19D420679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CAE920679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:18:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XDWKo5u6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfJJKRT (ORCPT
+        id S1726973AbfJJKSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:17:19 -0400
-Received: from mga02.intel.com ([134.134.136.20]:51926 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbfJJKRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:17:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 03:17:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,279,1566889200"; 
-   d="scan'208";a="369031774"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga005.jf.intel.com with ESMTP; 10 Oct 2019 03:17:15 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Roger Quadros <rogerq@ti.com>, Pawel Laszczak <pawell@cadence.com>,
-        Peter Chen <peter.chen@nxp.com>
-Cc:     "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel\@ti.com" <jbergsagel@ti.com>,
-        "nsekhar\@ti.com" <nsekhar@ti.com>, "nm\@ti.com" <nm@ti.com>,
-        Suresh Punnoose <sureshp@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>
-Subject: Re: [PATCH] usb:cdns3: Fix for CV CH9 running with g_zero driver.
-In-Reply-To: <80047a82-4b01-8f54-7efa-c32f696ced43@ti.com>
-References: <1570430355-26118-1-git-send-email-pawell@cadence.com> <20191008065619.GE5670@b29397-desktop> <87a7abv1f2.fsf@gmail.com> <BYAPR07MB4709490136F8F65A008C219EDD950@BYAPR07MB4709.namprd07.prod.outlook.com> <80047a82-4b01-8f54-7efa-c32f696ced43@ti.com>
-Date:   Thu, 10 Oct 2019 13:17:15 +0300
-Message-ID: <87a7a8vr9w.fsf@gmail.com>
+        Thu, 10 Oct 2019 06:18:25 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:2443 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfJJKSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 06:18:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1570702703; x=1602238703;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=gzt3BjERRKwc4CaUYcTEPU+kmi2VWRj9rm7SI3fPcl0=;
+  b=XDWKo5u6/miMwRab6aFZ6FGzvh7T3HN5XcjBrtpFQ0kiryTUkENJ6qRQ
+   WZ6lWHn4o8Ht0GEwZh+ef69RggH39k3epeS26wpAmxyre6gw/4ftKtL/T
+   Tb/X6PkGR4fafEMM4DXY1UL3PN099mcCX4e+T8U8f7+1KAd8lMB/A/Iiw
+   M=;
+X-IronPort-AV: E=Sophos;i="5.67,279,1566864000"; 
+   d="scan'208";a="421467619"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 10 Oct 2019 10:18:18 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 9360FC5A7D;
+        Thu, 10 Oct 2019 10:18:17 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 10 Oct 2019 10:18:17 +0000
+Received: from [10.125.238.52] (10.43.160.180) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 10 Oct
+ 2019 10:18:08 +0000
+Subject: Re: [PATCH v3 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
+ Labs Memory Controller EDAC
+To:     Rob Herring <robh@kernel.org>
+CC:     <mark.rutland@arm.com>, <bp@alien8.de>, <mchehab@kernel.org>,
+        <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <paulmck@linux.ibm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
+        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <amirkl@amazon.com>, <barakw@amazon.com>
+References: <1570103363-21486-1-git-send-email-talel@amazon.com>
+ <1570103363-21486-2-git-send-email-talel@amazon.com>
+ <20191009191625.GA8179@bogus>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <645f7af1-cefc-0af2-9fbd-e73e5305a268@amazon.com>
+Date:   Thu, 10 Oct 2019 13:18:03 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191009191625.GA8179@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.160.180]
+X-ClientProxiedBy: EX13D08UWC002.ant.amazon.com (10.43.162.168) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-hi,
-
-Roger Quadros <rogerq@ti.com> writes:
->>> Peter Chen <peter.chen@nxp.com> writes:
->>>> On 19-10-07 07:39:11, Pawel Laszczak wrote:
->>>>> Patch fixes issue with Halt Endnpoint Test observed
->>>>
->>>> %s/Endnpoint/Endpoint
->>>>
->>>>>
->>>>> during using g_zero
->>>>> driver as DUT. Bug occurred only on some testing board.
->>>>
->>>> g_zero is legacy, please use configfs function source_sink or loopback
->>>> instead.
->>>
->>> We still want fixes for those ;-)
->> 
->> So, if my understanding is correct in new production systems
->> using legacy gadget drivers is not recommended and we are not going to fix
->> any more bugs there.
+On 10/9/2019 10:16 PM, Rob Herring wrote:
+> On Thu, Oct 03, 2019 at 02:49:22PM +0300, Talel Shenhar wrote:
+>> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> ---
+>>   .../bindings/edac/amazon,al-mc-edac.yaml           | 40 ++++++++++++++++++++++
+>>   1 file changed, 40 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>> new file mode 100644
+>> index 0000000..33da051
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>> @@ -0,0 +1,40 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Amazon's Annapurna Labs Memory Controller EDAC
+>> +
+>> +maintainers:
+>> +  - Talel Shenhar <talel@amazon.com>
+>> +  - Talel Shenhar <talelshenhar@gmail.com>
+>> +
+>> +description: |
+>> +  EDAC node is defined to describe on-chip error detection and correction for
+>> +  Amazon's Annapurna Labs Memory Controller.
+>> +
+>> +properties:
+>> +
+>> +  compatible:
+>> +    - const: "amazon,al-mc-edac"
+> Fails 'make dt_binding_check'. Drop the '-' as a property is not a list.
 >
-> We can't really control who uses what. So we need to support legacy
-> drivers as well.
+> The "" are also unnecessary.
+ack, shall be part of v4
 >
-> The issue detected by using g_zero is a controller driver issue and not an
-> issue with g_zero itself.
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +examples:
+>> +  - |
+>> +    edac@f0080000 {
+>> +      compatible = "amazon,al-mc-edac";
+>> +      reg = <0x0 0xf0080000 0x0 0x00010000>;
+>> +      interrupt-parent = <&amazon_al_system_fabric>;
+>> +      interrupt-names = "ue";
+> Need to document the name or drop as -names on a single entry is
+> pointless.
 
-thanks for clarifying, Roger.
+actually, there are 2 interrupts possible here. so will also fix the 
+maxItems of interrupts. will also add the documentation.
 
-Pawel, Roger is correct here. But in any case, if *real* bugs are found
-on the legacy gadget drivers, let's see if they happen with
-configfs-based interface as well. They should behave exactly the same
-nowadays since legacy driver were converted to simply programmatically
-spawn the configfs interface.
+shall be part of v4.
 
-If there are bugs in legacy gadget drivers, we *WANT* to fix those.
-
--- 
-balbi
+>
+>> +      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+>> +    };
+>> -- 
+>> 2.7.4
+>>
