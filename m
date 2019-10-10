@@ -2,96 +2,77 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13749C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B713C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC904214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2z0f4LO"
+	by mail.kernel.org (Postfix) with ESMTP id 59F06206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbfJJWT5 (ORCPT
+        id S1726597AbfJJWUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 18:19:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44673 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfJJWT5 (ORCPT
+        Thu, 10 Oct 2019 18:20:34 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:65011 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfJJWUe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 18:19:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q21so4778060pfn.11;
-        Thu, 10 Oct 2019 15:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=u/5ZAJi0CkaRF5CIqKAmErm1uNaTzftysAnpXOCQ4TE=;
-        b=A2z0f4LOwBhmMX4jddgyhcUB/VZUTbh8H+nGIfVACuLYL+Eq+xeITL+KE+rEh/gOia
-         4tX3ATOjWcCyGTUQSUJGKdjCkQcQx9d47JFIAGG2biK9f3Ltc7oX0VED5LQDgp6xDurl
-         p9n7lKf7BAl05bekR1Cq+tRIYaFY8o9jZUae7yl95tsapcKhcWkmoCCN/aqZKpEWD9dt
-         PoBPBJlMGEyr4hQJy5Q6j/m9EqFNQp3PjMC0hU6L9g50zJPkOQHLfFJZCFohU3PwPpgt
-         HAogy+0wZiAfPIoSSlUeGTREkv9qpkXJ+mdwTTVCkDOOW5wju8YP7YmyPZXPaloJx+cW
-         Wq2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u/5ZAJi0CkaRF5CIqKAmErm1uNaTzftysAnpXOCQ4TE=;
-        b=YQvDzm899m5EsHQFQheLxUnqZYEz8GiVeZ5rdTDasOP32GatTGna7bO/HKqiPhdpIt
-         r9QWorMJSso2GiC0Q5Uo0Cl50WfBGra4xbhyi12/tICCpVRdeajvP2A460e2ORQqbB1V
-         q0VMVpekYy3fkBwgJQn7uaArEm7nGKpU0pGndbAVZuXNwWy55jRBBY1NdQfCtNzJ+c/d
-         CrGhJHJDyqqT1zNiudW/WaDvKBXBJ9sxpnDcA1IUgUJn+SeKNOdtctVPMFz3G7YSHMoJ
-         pl1HzY8teXZ/48bCEoU4Aqpb2rvZtw9DZ6i7Jy7Yo7oraNv+bCkIAP+fbwntfWpmEduq
-         ZugA==
-X-Gm-Message-State: APjAAAXztPQUTmHQCEsaXkN+2Uf/L7DbBt2+Kn+lzZFAS8hfoCiSb8+5
-        wt4eexF1XeI/dO6w+7jufv7akzED
-X-Google-Smtp-Source: APXvYqxeHjtcq4foYX5DcFATVwXRg6fe0+qh5TltNfiFa9simogficKStnIOe3se0YRFvmQwqDEjVA==
-X-Received: by 2002:a62:b616:: with SMTP id j22mr12829747pff.55.1570745996365;
-        Thu, 10 Oct 2019 15:19:56 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 127sm8329205pfw.6.2019.10.10.15.19.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 15:19:55 -0700 (PDT)
-Subject: Re: [PATCH 5.3 000/148] 5.3.6-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191010083609.660878383@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e72a6562-bc33-643a-ae28-705256fb5b3d@roeck-us.net>
-Date:   Thu, 10 Oct 2019 15:19:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 10 Oct 2019 18:20:34 -0400
+Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 86c559199dc39aa4; Fri, 11 Oct 2019 00:20:31 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Daniel Black <daniel@linux.ibm.com>
+Cc:     Len Brown <lenb@kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] acpi/hmat: ACPI_HMAT_MEMORY_PD_VALID is deprecated in ACPI-6.3
+Date:   Fri, 11 Oct 2019 00:20:31 +0200
+Message-ID: <5172949.9bKdBNxvUS@kreacher>
+In-Reply-To: <20190806042440.16445-1-daniel@linux.ibm.com>
+References: <20190806042440.16445-1-daniel@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/19 1:34 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.6 release.
-> There are 148 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tuesday, August 6, 2019 6:24:39 AM CEST Daniel Black wrote:
+> ACPI-6.3 corresponds to when hmat revision was bumped from
+> 1 to 2. In this version ACPI_HMAT_MEMORY_PD_VALID was
+> deprecated and made reserved.
 > 
-> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
-> Anything received after that time might be too late.
+> As such in revision 2+ we shouldn't be testing this flag.
+> 
+> This is as per ACPI-6.3, 5.2.27.3, Table 5-145
+> "Memory Proximity Domain Attributes Structure"
+> for Flags.
+> 
+> Signed-off-by: Daniel Black <daniel@linux.ibm.com>
+> ---
+>  drivers/acpi/hmat/hmat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+> index 96b7d39a97c6..e938e34673d9 100644
+> --- a/drivers/acpi/hmat/hmat.c
+> +++ b/drivers/acpi/hmat/hmat.c
+> @@ -382,7 +382,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
+>  		pr_info("HMAT: Memory Flags:%04x Processor Domain:%d Memory Domain:%d\n",
+>  			p->flags, p->processor_PD, p->memory_PD);
+>  
+> -	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
+> +	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
+>  		target = find_mem_target(p->memory_PD);
+>  		if (!target) {
+>  			pr_debug("HMAT: Memory Domain missing from SRAT\n");
 > 
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 391 pass: 391 fail: 0
+Applied as a fix for 5.4, thanks!
 
-Guenter
+
+
