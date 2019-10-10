@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0D0C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388C8C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E1F218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1202E208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697278;
-	bh=HYJ6TBJCDPcKIy71M87pqTGMonT+AGK/9LfEE7RF5CY=;
+	s=default; t=1570697281;
+	bh=ncORTQ1kXiPJ1Jmsvk7yXBPI49kGK5AYSv8Z5rGFzJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FPvDIXxYY243uSNJ262tgur1fSxFnQw6hdyHM6fIQXILRg4+fbcsrTnMY6noVlgy3
-	 sSkjN5YKD7Joeol9l8imLzspm1d4w//uYK0Mz4uxTRYpKMVklA9h0K/R29hfANzlwl
-	 ebamNclKutBYOHoMVazQR0P3+DsVorQjZB8LwebM=
+	b=E4vHxvNeJ1WuqQM/3wUqVJkDOCzk1w0pv2mr0x6Ku39ngahkySpFAKUiJT4BL4k9Z
+	 /8yGnIFd0gVCZwKfV9O7VBCtjdLDmPrRvidTgIMFu6v98t1jiFE43ARTQyOHLBo528
+	 JsyOLC2rp52h8gqGZyZ+XB0ayGfWHfWkeu861iK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389566AbfJJIr5 (ORCPT
+        id S2389577AbfJJIr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53956 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:47:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388762AbfJJIrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:52 -0400
+        id S2389557AbfJJIrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5317208C3;
-        Thu, 10 Oct 2019 08:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C746218AC;
+        Thu, 10 Oct 2019 08:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697272;
-        bh=HYJ6TBJCDPcKIy71M87pqTGMonT+AGK/9LfEE7RF5CY=;
+        s=default; t=1570697274;
+        bh=ncORTQ1kXiPJ1Jmsvk7yXBPI49kGK5AYSv8Z5rGFzJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sX3Z1aqgQkLkljJG6UD1JQQOlJLa88JzqnxvfSm7ABAo0SFvpSMUV9iuC5q19XgO/
-         0AYLJZQaCHqw9yKLq/oaKqbBw6XqstRx/+JorKW7VFHUds4U5Rw2wfyf0mi4FTAmP6
-         xws/0rSllijgEhAme/Hd7XBK4u+aQfCqtZ9iCkW4=
+        b=CJTSBrLW2q9aqONzQBZZ4LvW98BitXJYOThBobD0pOv4S96yvGsvcpJrl5VDXjgOT
+         rOle5Viq1GE/Q73uV5Q4rJk+fX8VPutbYNlDxqWhHsmCbqYSBt2KZMsvNPZHD2Qa+K
+         iRfKwioeF+Mn8KAbypNPYeYe03Dq8okepXuenXaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/114] KVM: nVMX: Fix consistency check on injected exception error code
-Date:   Thu, 10 Oct 2019 10:36:26 +0200
-Message-Id: <20191010083612.158518676@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Xiubo Li <xiubli@redhat.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 080/114] nbd: fix crash when the blksize is zero
+Date:   Thu, 10 Oct 2019 10:36:27 +0200
+Message-Id: <20191010083612.222117801@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -62,46 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit 567926cca99ba1750be8aae9c4178796bf9bb90b ]
+[ Upstream commit 553768d1169a48c0cd87c4eb4ab57534ee663415 ]
 
-Current versions of Intel's SDM incorrectly state that "bits 31:15 of
-the VM-Entry exception error-code field" must be zero.  In reality, bits
-31:16 must be zero, i.e. error codes are 16-bit values.
+This will allow the blksize to be set zero and then use 1024 as
+default.
 
-The bogus error code check manifests as an unexpected VM-Entry failure
-due to an invalid code field (error number 7) in L1, e.g. when injecting
-a #GP with error_code=0x9f00.
-
-Nadav previously reported the bug[*], both to KVM and Intel, and fixed
-the associated kvm-unit-test.
-
-[*] https://patchwork.kernel.org/patch/11124749/
-
-Reported-by: Nadav Amit <namit@vmware.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+[fix to use goto out instead of return in genl_connect]
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/nbd.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index d3a900a4fa0e7..6f7b3acdab263 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -12574,7 +12574,7 @@ static int check_vmentry_prereqs(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 21f54c7946a0e..bc2fa4e85f0ca 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -133,6 +133,8 @@ static struct dentry *nbd_dbg_dir;
  
- 		/* VM-entry exception error code */
- 		if (has_error_code &&
--		    vmcs12->vm_entry_exception_error_code & GENMASK(31, 15))
-+		    vmcs12->vm_entry_exception_error_code & GENMASK(31, 16))
- 			return VMXERR_ENTRY_INVALID_CONTROL_FIELD;
+ #define NBD_MAGIC 0x68797548
  
- 		/* VM-entry interruption-info field: reserved bits */
++#define NBD_DEF_BLKSIZE 1024
++
+ static unsigned int nbds_max = 16;
+ static int max_part = 16;
+ static int part_shift;
+@@ -1241,6 +1243,14 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
+ 		nbd_config_put(nbd);
+ }
+ 
++static bool nbd_is_valid_blksize(unsigned long blksize)
++{
++	if (!blksize || !is_power_of_2(blksize) || blksize < 512 ||
++	    blksize > PAGE_SIZE)
++		return false;
++	return true;
++}
++
+ /* Must be called with config_lock held */
+ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+ 		       unsigned int cmd, unsigned long arg)
+@@ -1256,8 +1266,9 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+ 	case NBD_SET_SOCK:
+ 		return nbd_add_socket(nbd, arg, false);
+ 	case NBD_SET_BLKSIZE:
+-		if (!arg || !is_power_of_2(arg) || arg < 512 ||
+-		    arg > PAGE_SIZE)
++		if (!arg)
++			arg = NBD_DEF_BLKSIZE;
++		if (!nbd_is_valid_blksize(arg))
+ 			return -EINVAL;
+ 		nbd_size_set(nbd, arg,
+ 			     div_s64(config->bytesize, arg));
+@@ -1337,7 +1348,7 @@ static struct nbd_config *nbd_alloc_config(void)
+ 	atomic_set(&config->recv_threads, 0);
+ 	init_waitqueue_head(&config->recv_wq);
+ 	init_waitqueue_head(&config->conn_wait);
+-	config->blksize = 1024;
++	config->blksize = NBD_DEF_BLKSIZE;
+ 	atomic_set(&config->live_connections, 0);
+ 	try_module_get(THIS_MODULE);
+ 	return config;
+@@ -1773,6 +1784,12 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+ 	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
+ 		u64 bsize =
+ 			nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
++		if (!bsize)
++			bsize = NBD_DEF_BLKSIZE;
++		if (!nbd_is_valid_blksize(bsize)) {
++			ret = -EINVAL;
++			goto out;
++		}
+ 		nbd_size_set(nbd, bsize, div64_u64(config->bytesize, bsize));
+ 	}
+ 	if (info->attrs[NBD_ATTR_TIMEOUT]) {
 -- 
 2.20.1
 
