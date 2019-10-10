@@ -2,218 +2,194 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B4EC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CD0C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11523214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:43:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ux6mXJAj"
+	by mail.kernel.org (Postfix) with ESMTP id 47C682053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfJJSnA (ORCPT
+        id S1726946AbfJJSov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:43:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50593 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfJJSnA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:43:00 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 5so8015740wmg.0;
-        Thu, 10 Oct 2019 11:42:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nIWIITr28i6KbyOyO87MIlIpYz5kcwfm7f7WnksAVIY=;
-        b=Ux6mXJAjmffQ/0lVNbiGdeZ8TLd8LEJnk7LUi/x8WpWU6TocItMTaDfwLfI/eUyCdf
-         Frxofqg0Pv23Ibctq+MzKyh4MoWlmln10hDuszJVE0jugYOaBQF2MtB7nEJI7+M1L9Hr
-         JrwEYUaLeUbScAq5PuMpNSPR8wE1U/+oyINGErWMdJtPnnxkMAB19d2y7kjWP4jmVc1U
-         xMbDqhTYg4E2JClwniAlRLoYtgHzm2trSVXFXnhVpiZsGbUCTqFj0Gm0Zyfl7rQMrpG8
-         7VOexWqAvplM7V5Be+AWYJOkga7CN9PZXICCQM8iW+2vZ/kiQj02NsZ6MRfQPLSvYRdr
-         d/uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=nIWIITr28i6KbyOyO87MIlIpYz5kcwfm7f7WnksAVIY=;
-        b=EfOXF8F9Ze8b26UqXS8wB3tdPpe2eYSecgv/vYcUDFZVl9+Ugk8uPMMs3DTK18wnbd
-         B0783cli93RmwfkTpHORHpwbLv10sCYy5a9hw1h6pIer1fuFNmFiIGL/evBPrf+ZElnS
-         E1IOyGfjC3i5fkLu3ZnQtCODT+7xOISjqCo+YyB+ZYkW1yfw6eOJ0XmNwg2rPIRyo9DO
-         MB5fBt53MRqJQCyNEjuPwE05EUdAwJr7B9wO7R+mfy2wBN3Ac8wQSN7QoMmJ5CL1eNMi
-         9NsesisDo5e+s2M7/W6bqo4DmXx/9/8ME5R70fuZ/jDE2EMyX62BYpntTZiJWp6s/OYJ
-         5F5A==
-X-Gm-Message-State: APjAAAXSXmQcuCSmtb45CiTYERrwRQoBIe+RGNW5CdMcnqPaHiTSSUYA
-        21u/Y4/5xJMjAxDmQYndcHdfxe5L
-X-Google-Smtp-Source: APXvYqz6gNCnFend5AFxlJA12xqK71Ro5ZuLDWRY0mL9QugtJXE+VPdqG73Kj+uA4L2rMyZztEHhZQ==
-X-Received: by 2002:a1c:2e4c:: with SMTP id u73mr14940wmu.94.1570732976973;
-        Thu, 10 Oct 2019 11:42:56 -0700 (PDT)
-Received: from [192.168.1.19] (bkt243.neoplus.adsl.tpnet.pl. [83.28.187.243])
-        by smtp.gmail.com with ESMTPSA id 79sm8157164wmb.7.2019.10.10.11.42.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 11:42:56 -0700 (PDT)
-Subject: Re: [PATCH v11 01/16] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191008204800.19870-1-dmurphy@ti.com>
- <20191008204800.19870-2-dmurphy@ti.com>
- <487f2425-1570-c946-c4a6-3da60ad21f2c@gmail.com>
- <fc2de5ad-5dd6-0ea0-5ec6-2dfdd7429c09@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <63197144-11e1-f6bb-f1aa-13b33435f2f2@gmail.com>
-Date:   Thu, 10 Oct 2019 20:42:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <fc2de5ad-5dd6-0ea0-5ec6-2dfdd7429c09@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 10 Oct 2019 14:44:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:38218 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726007AbfJJSou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 14:44:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF0FF28;
+        Thu, 10 Oct 2019 11:44:49 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E14733F703;
+        Thu, 10 Oct 2019 11:44:46 -0700 (PDT)
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Jones <drjones@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Sudakshina Das <sudi.das@arm.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 00/12] arm64: ARMv8.5-A: Branch Target Identification support
+Date:   Thu, 10 Oct 2019 19:44:28 +0100
+Message-Id: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+This patch implements support for ARMv8.5-A Branch Target Identification
+(BTI), which is a control flow integrity protection feature introduced
+as part of the ARMv8.5-A extensions.
 
-On 10/10/19 2:49 AM, Dan Murphy wrote:
-> Jacek
-> 
-> On 10/9/19 5:07 PM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 10/8/19 10:47 PM, Dan Murphy wrote:
->>> Add DT bindings for the LEDs multicolor class framework.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>   .../bindings/leds/leds-class-multicolor.txt   | 98 +++++++++++++++++++
->>>   1 file changed, 98 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>> b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>> new file mode 100644
->>> index 000000000000..8619c9bf1811
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>> @@ -0,0 +1,98 @@
->>> +* Multicolor LED properties
->>> +
->>> +Bindings for multi color LEDs show how to describe current outputs of
->>> +either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
->>> +etc.) or standalone LEDs, to achieve logically grouped multi-color LED
->>> +modules. This is achieved by adding multi-led nodes layer to the
->>> +monochrome LED bindings.
->>> +
->>> +The nodes and properties defined in this document are unique to the
->>> multicolor
->>> +LED class.  Common LED nodes and properties are inherited from the
->>> common.txt
->>> +within this documentation directory.
->>> +
->>> +Required LED Child properties:
->> s/Child/child/
-> 
-> Ack
-> 
-> 
->>
->>> +    - color : For multicolor LED support this property should be
->>> defined as
->>> +          LED_COLOR_ID_MULTI and further definition can be found in
->>> +          include/linux/leds/common.h.
->>> +
->>> +led-controller@30 {
->>> +    #address-cells = <1>;
->>> +    #size-cells = <0>;
->>> +    compatible = "ti,lp5024";
->>> +    reg = <0x29>;
->>> +
->>> +    multi-led@1 {
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
->>> +        reg = <1>;
->>> +        color = <LED_COLOR_ID_MULTI>;
->>> +        function = LED_FUNCTION_STATUS;
->> Status is not too fancy function for multi color LED ;-)
->> I'd skip it entirely for this example if we don't have
->> anything suitable at the moment for our disposal.
-> 
-> Not sure I understand.  Status is a good example as a RGB module can be
-> used to present charging status
+The series is based on v5.4-rc2.
 
-So, maybe LED_FUNCTION_CHARGING ? This implies that color can change
-gradually during charging. However me might think of adding
-LED_FUNCTION_VBAT or so.
+A branch for this series is available in Git [4].
+
+This series supersedes the previous posting [1], and also incorporates
+my proposed ELF GNU property parsing implementation, previously posted
+separately [2] (see [3] for the ABI spec describing
+NT_GNU_PROPERTY_TYPE_0).
+
+Changes:
+
+ * Mostly minor cleanups, renaming of #defines, renumbering of HWCAPs
+   that lost the race for upstream etc.
+
+   See the individual patches for details.
+
+
+Potential open issues:
+
+ * Not tested with hugepages yet.  (If anyone has any suggestions about
+   how best to do that, please shout!)
+
+   Possibly this series is missing some hugepage related #define updates
+   to allow the GP bit to be taken into account when merging/shattering
+   hugepages -- anyone who understands this stuff, please comment :)
+
+ * The VM_ARM64_BTI flag (i.e., the intenal vma flag corresponding to
+   PROT_BTI) currently reads out in /proc/<pid>/smaps as the generic
+   string "ar".  Perhaps we should have a dedicated string for this,
+   and/or use a dedicated VM_HIGH_ARCH_BIT_* flag instead of VM_ARCH_1.
+
+ * This series does not add BTI protection in the vDSO, so user code can
+   still jump to random locations in there via function pointers.  This
+   doesn't break anything, but it would be a good idea to close it down,
+   to minimise the number of potentially accessible JOP gadgets for
+   userspace.
+
+   This could be added in a later patch.
+
+Tested on the ARM Fast Model.
+
+Notes:
+
+ * GCC 9 can compile backwards-compatible BTI-enabled code with
+   -mbranch-protection=bti or -mbranch-protection=standard.
+
+ * Binutils trunk supports the new ELF note, but this wasn't in a release
+   the last time I posted this series.  (The situation _might_ have changed
+   in the meantime...)
+
+   Creation of a BTI-enabled binary requires _everything_ linked in to
+   be BTI-enabled.  For now ld --force-bti can be used to override this,
+   but some things may break until the required C library support is in
+   place.
+
+   There is no straightforward way to mark a .s file as BTI-enabled:
+   scraping the output from gcc -S works as a quick hack for now.
+
+   readelf -n can be used to examing the program properties in an ELF
+   file.
+
+ * Runtime mmap() and mprotect() can be used to enable BTI on a
+   page-by-page basis using the new PROT_BTI, but the code in the
+   affected pages still needs to be written or compiled to contain the
+   appopriate BTI landing pads.
+
+
+[1] [PATCH 0/8] arm64: ARMv8.5-A: Branch Target Identification support
+https://lore.kernel.org/linux-arm-kernel/1558693533-13465-1-git-send-email-Dave.Martin@arm.com/
+
+[2] [RFC PATCH v2 0/2] ELF: Alternate program property parser
+https://lore.kernel.org/lkml/1566581020-9953-1-git-send-email-Dave.Martin@arm.com/
+
+[3] Linux Extensions to gABI
+https://github.com/hjl-tools/linux-abi/wiki/Linux-Extensions-to-gABI
+
+[4] Git branch:
+git://linux-arm.org/linux-dm.git arm64/bti/v2/head
+http://linux-arm.org/git?p=linux-dm.git;a=shortlog;h=refs/heads/arm64/bti/v2/head
+
+
+Dave Martin (12):
+  ELF: UAPI and Kconfig additions for ELF program properties
+  ELF: Add ELF program property parsing support
+  mm: Reserve asm-generic prot flag 0x10 for arch use
+  arm64: docs: cpu-feature-registers: Document ID_AA64PFR1_EL1
+  arm64: Basic Branch Target Identification support
+  elf: Allow arch to tweak initial mmap prot flags
+  arm64: elf: Enable BTI at exec based on ELF program properties
+  arm64: BTI: Decode BYTPE bits when printing PSTATE
+  arm64: traps: Fix inconsistent faulting instruction skipping
+  arm64: traps: Shuffle code to eliminate forward declarations
+  arm64: BTI: Reset BTYPE when skipping emulated instructions
+  KVM: arm64: BTI: Reset BTYPE when skipping emulated instructions
+
+ Documentation/arm64/cpu-feature-registers.rst |  17 ++-
+ Documentation/arm64/elf_hwcaps.rst            |   4 +
+ arch/arm64/Kconfig                            |  26 +++++
+ arch/arm64/include/asm/cpucaps.h              |   3 +-
+ arch/arm64/include/asm/cpufeature.h           |   6 ++
+ arch/arm64/include/asm/elf.h                  |  50 +++++++++
+ arch/arm64/include/asm/esr.h                  |   2 +-
+ arch/arm64/include/asm/hwcap.h                |   1 +
+ arch/arm64/include/asm/kvm_emulate.h          |   4 +-
+ arch/arm64/include/asm/mman.h                 |  33 ++++++
+ arch/arm64/include/asm/pgtable-hwdef.h        |   1 +
+ arch/arm64/include/asm/pgtable.h              |   2 +-
+ arch/arm64/include/asm/ptrace.h               |   8 ++
+ arch/arm64/include/asm/sysreg.h               |   4 +
+ arch/arm64/include/uapi/asm/hwcap.h           |   1 +
+ arch/arm64/include/uapi/asm/mman.h            |   9 ++
+ arch/arm64/include/uapi/asm/ptrace.h          |   1 +
+ arch/arm64/kernel/cpufeature.c                |  33 ++++++
+ arch/arm64/kernel/cpuinfo.c                   |   1 +
+ arch/arm64/kernel/entry.S                     |  11 ++
+ arch/arm64/kernel/process.c                   |  36 ++++++-
+ arch/arm64/kernel/ptrace.c                    |   2 +-
+ arch/arm64/kernel/signal.c                    |   5 +
+ arch/arm64/kernel/syscall.c                   |  18 ++++
+ arch/arm64/kernel/traps.c                     | 126 +++++++++++-----------
+ fs/Kconfig.binfmt                             |   6 ++
+ fs/binfmt_elf.c                               | 145 ++++++++++++++++++++++++--
+ fs/compat_binfmt_elf.c                        |   4 +
+ include/linux/elf.h                           |  43 ++++++++
+ include/linux/mm.h                            |   3 +
+ include/uapi/asm-generic/mman-common.h        |   1 +
+ include/uapi/linux/elf.h                      |  11 ++
+ 32 files changed, 539 insertions(+), 78 deletions(-)
+ create mode 100644 arch/arm64/include/asm/mman.h
+ create mode 100644 arch/arm64/include/uapi/asm/mman.h
 
 -- 
-Best regards,
-Jacek Anaszewski
+2.1.4
+
