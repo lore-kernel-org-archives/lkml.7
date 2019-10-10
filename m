@@ -6,349 +6,194 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF6AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D34C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0018208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189CD208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfJJUbO (ORCPT
+        id S1727383AbfJJUbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:31:14 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:33625 "EHLO
+        Thu, 10 Oct 2019 16:31:43 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:37625 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfJJUbN (ORCPT
+        with ESMTP id S1726666AbfJJUbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:31:13 -0400
+        Thu, 10 Oct 2019 16:31:42 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MLAZe-1iZmX01Cba-00IFWi; Thu, 10 Oct 2019 22:31:00 +0200
+ 1MS1G7-1ig9Fo3Vvv-00TYCf; Thu, 10 Oct 2019 22:31:31 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/36] ARM: s3c: simplify mach/io.h
-Date:   Thu, 10 Oct 2019 22:29:46 +0200
-Message-Id: <20191010203043.1241612-2-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [PATCH 03/36] usb: gadget: s3c: use platform resources
+Date:   Thu, 10 Oct 2019 22:29:47 +0200
+Message-Id: <20191010203043.1241612-3-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
 References: <20191010202802.1132272-1-arnd@arndb.de>
  <20191010203043.1241612-1-arnd@arndb.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:0tiKXBin+zV2d6A7Bkn+koMgOjLf4/3gPok0KUKFj4mdDaZb1Ch
- DVIyDqx8gGg8jZN9LAt63DdUtnBWHO0wn0k38AzhTVaPnmXaAK9bcpUNb9YAyZD1MvKkOqX
- uWa3/J2p4PMy7/qyDGsjhnAG8Z4xWkVY+iXvu8qgF0qwT1FLBydauk+BJXoZk+bumsB1vHj
- 614BbmslkcUWjl9rF9zlg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:d08sluXfzGk=:gcOUeL87/3jzbCSd3lREPB
- VRPMtbF8PUwppjwKBZ8Zq9KU4r8wrO0QbRffGfv34yHWStyoAvPVRpSGBTfkDMvj4/UCnQUOq
- JwmNLOuKSDaobAd/Hn1VDsvmyJutlSZEkKdULn6MUjNHKmc9Zl9exsF9BJm7lMvgYiWwHagWN
- dbkdXbD4dl92Cjot6heIZnPgQc1/Eq+kS3PT4qJOuljULyOhLYlwW2ItUp78STo6Pj26NcaG9
- bVJuQZmoZmALP3HwQPOFbCOIq7QsSM9sutbgJDEs/Ptr+1FG5NhWyuYEg/12xNPOb1B/Qxbxc
- k2Jfcb8oS6rRwhgvyT7lQ15VHw43/O4gPv1TsY+LKhVTrCnKUWNPBngtM/OASPLeFjMB/sUo/
- uCsOlzbdxYsWJOuiMJVEKHNW+Fe2jDT4ZdaU5vqAM6UQbQyPotHcpQXWxrqjWpn40UNihd4dr
- YaAmBUq5QlYuCGyECpiZYCZ9lW+hGX9Y3KrXixTccvAwhIdTHIyi7bf9mECx6X3sk3PY7NpPT
- c90ra+gr3Oo3XJ8/gchw3IMFXkV+iyTZNBsIjhZLpptkb4z3NxrsYY/pz8oaz7pLleJOi8UVB
- vmQp7MkuaLQ0L2qShWdk4lvsRd0HSWizZw7nQf/DSfo5etaQi5LANEyKZoB6wzmgKsbPUF+ga
- g/LTT788WpLoKwZZ2+vjvcAvzv3y4DlGNmMKud0QL+XFqcLjcpUhLrLrVN7Hex64TEgEaRlGh
- Vcwy342h5If2+Z3GZE7OrmM5AZ9RK5PVpC3JYeg7S/P59uKjhDEw0EWBCWsaBS2MPVolM/RL9
- H1aav/1fBDsU0cQa2vDGH40S0xTlFFpkCPGwkXGzdrc1bqd4AKUYCH7uOxLUgXEUcVSVLB1au
- hggybic8E/lSvA/iwn8A==
+X-Provags-ID: V03:K1:iwNwd1cVxFxCrms7c8C5XzuQmcy9u/dn0xzTwy3RMzXW1HxHseW
+ IktW/Os21uQmVtkwkRfdK8qY77KGxRXzPq9asnOccmpMKGioJurl5rwTvNROCMQ0hv7uHM1
+ 5n3b0f1Gq1uQp5GkmFlZaHhavVkQl4zYOZ06/7iFrVU7yhx4YAWQB741n54+opUgSOKqapx
+ Uqd7p7XE5W4DODvUhpdkg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/KCtwZvm948=:MjTG6wQH6Bxkes8aciFuXb
+ wupIQgdWQkr5jGLLinWtBtmLJ2v2beVp77GUTiiOxUYG6E8z5XEN47Fg5bXASQZeY78NP+X28
+ cuF+YJlcr9ywwhZamJFnQv8guj15mlGyx1EHNB+ZC5Dj2ob/Lmh+lo4+vK61tQsonzDlO0DvC
+ qs7fRaIZeBcRWlPX75oaPOBrcGGoQN8+CTB7LemcVNUxkBUFKLtSB+OU+d1hbjT1vRgsXztYw
+ GN7CJbrxCk4nLJ9+XwC4en0QBzhQ2Dl/wlyO1vRAVjPE8W/OS4SJSXNW8Nym8gE+PNpJwveDb
+ qhbuXxK65AEu9ev0p6t4voIPYRdP2yo8g/comURhSF+9CpGPrxsoPb0TlD2JvRt6IgPxxTV83
+ 3SlyGem/ISFtWbADtVkvTPwGxi6UPb33hVZF4A0XJfGRDrTOQ/+DOm1AfByNGebaPk++ZU4Ea
+ LimmQYfyqNq4cxGUFua7x3Wx6PyPUhyyAJgJsJYu64uyDP3Hl/eLjV5kQ6nu/Wb6A+5oUkzXA
+ Jl8FyQRkuwZP6zKUZC6moi3BtS6nOUpVieam8Xjao9HN5Fn7/t/Gs0o6aUoKhUGuGKBR19A9q
+ n8kEG8c5zJJ36ptDqdr7XBFzFsvhSipybIw44e+YZZmojMFTusmcexy17QfjG4fTYnpR9ipCG
+ taBNgRpoSESiUXenE+9ZFSjQ0sV8YLIR4wOs9Ml/wWbVND+oPHTEEzInk/73Av+ppsgtPa9fw
+ 2U1M7pDIYSarTkneuXbiBHGIDID1b+Vh+9srUMkHEz3IRWIdD2QoiHZkuwi882ECwm4/w5Ny/
+ a2RxIEEXJ+5AVS9XPQh5C3rdadtoJUIwQdrPPcQKEhJB8OoJzkEwYN8XmML3GnFjITtOZzc0Y
+ 2akHoI5CkL2+FlbMBIpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-s3c24xx has a custom implementation of the inb/outb family of I/O
-accessors, implementing both general register access and ISA I/O port
-through a multiplexer.
-
-As far as I can tell, the first case has never been needed, and certainly
-is not used now, as drivers only use inb/outb to actually driver ISA or
-PCI port I/O.
-
-Similarly, the special ISA support is limited to a single machine, the
-Simtec Electronics BAST (EB2410ITX) with its PC/104 expansion connector,
-all other machines could simply use the generic implementation from
-asm/io.h that expects a single memory-mapped address range for byte,
-word and dword access. As no other machines besides BAST actually selects
-CONFIG_ISA, this is likely not even necessary.
-
-As a cleanup, remove suport for the non-ISA access from the helpers,
-and make the ISA access use the virtual address window that we use
-elsewhere for PCI I/O ports. In configurations without the BAST machine,
-this now falls back on the generic implementation from asm/io.h, but
-the mach/io.h header is still relied on to include a number of other
-header files implicitly.
+The resources are correctly initialized, so just use them
+instead of relying on hardcoded data from platform headers.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mach-s3c24xx/include/mach/io.h      | 209 +++----------------
- arch/arm/plat-samsung/include/plat/map-s3c.h |  10 +-
- 2 files changed, 26 insertions(+), 193 deletions(-)
+ drivers/usb/gadget/udc/s3c2410_udc.c          | 31 +++++++------------
+ drivers/usb/gadget/udc/s3c2410_udc.h          |  1 +
+ .../usb/gadget/udc/s3c2410_udc_regs.h         |  0
+ 3 files changed, 12 insertions(+), 20 deletions(-)
+ rename arch/arm/plat-samsung/include/plat/regs-udc.h => drivers/usb/gadget/udc/s3c2410_udc_regs.h (100%)
 
-diff --git a/arch/arm/mach-s3c24xx/include/mach/io.h b/arch/arm/mach-s3c24xx/include/mach/io.h
-index f960e6d10114..3e8bff26cdd5 100644
---- a/arch/arm/mach-s3c24xx/include/mach/io.h
-+++ b/arch/arm/mach-s3c24xx/include/mach/io.h
-@@ -12,201 +12,40 @@
+diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
+index f82208fbc249..e411d27b79fc 100644
+--- a/drivers/usb/gadget/udc/s3c2410_udc.c
++++ b/drivers/usb/gadget/udc/s3c2410_udc.c
+@@ -36,15 +36,11 @@
+ #include <asm/byteorder.h>
+ #include <asm/irq.h>
+ #include <asm/unaligned.h>
+-#include <mach/irqs.h>
  
- #include <mach/hardware.h>
+-#include <mach/hardware.h>
+-
+-#include <plat/regs-udc.h>
+ #include <linux/platform_data/usb-s3c2410_udc.h>
  
--#define IO_SPACE_LIMIT 0xffffffff
+-
+ #include "s3c2410_udc.h"
++#include "s3c2410_udc_regs.h"
  
+ #define DRIVER_DESC	"S3C2410 USB Device Controller Gadget"
+ #define DRIVER_AUTHOR	"Herbert Pötzl <herbert@13thfloor.at>, " \
+@@ -57,6 +53,7 @@ static struct s3c2410_udc	*the_controller;
+ static struct clk		*udc_clock;
+ static struct clk		*usb_bus_clock;
+ static void __iomem		*base_addr;
++static int			irq_usbd;
+ static u64			rsrc_start;
+ static u64			rsrc_len;
+ static struct dentry		*s3c2410_udc_debugfs_root;
+@@ -839,8 +836,6 @@ static void s3c2410_udc_handle_ep(struct s3c2410_ep *ep)
+ 	}
+ }
+ 
+-#include <mach/regs-irq.h>
+-
  /*
-- * We use two different types of addressing - PC style addresses, and ARM
-- * addresses.  PC style accesses the PC hardware with the normal PC IO
-- * addresses, eg 0x3f8 for serial#1.  ARM addresses are above A28
-- * and are translated to the start of IO.  Note that all addresses are
-- * not shifted left!
-+ * ISA style IO, for each machine to sort out mappings for,
-+ * if it implements it. We reserve two 16M regions for ISA,
-+ * so the PC/104 can use separate addresses for 8-bit and
-+ * 16-bit port I/O.
+  *	s3c2410_udc_irq - interrupt handler
   */
-+#define PCIO_BASE		S3C_ADDR(0x02000000)
-+#define IO_SPACE_LIMIT		0x00ffffff
-+#define S3C24XX_VA_ISA_WORD	(PCIO_BASE)
-+#define S3C24XX_VA_ISA_BYTE	(PCIO_BASE + 0x01000000)
+@@ -981,7 +976,7 @@ static irqreturn_t s3c2410_udc_irq(int dummy, void *_dev)
+ 		}
+ 	}
  
--#define __PORT_PCIO(x)	((x) < (1<<28))
-+#ifdef CONFIG_ISA
+-	dprintk(DEBUG_VERBOSE, "irq: %d s3c2410_udc_done.\n", IRQ_USBD);
++	dprintk(DEBUG_VERBOSE, "irq: %d s3c2410_udc_done.\n", irq_usbd);
  
--#define PCIO_BASE	 (S3C24XX_VA_ISA_WORD)
--#define PCIO_BASE_b	 (S3C24XX_VA_ISA_BYTE)
--#define PCIO_BASE_w	 (S3C24XX_VA_ISA_WORD)
--#define PCIO_BASE_l	 (S3C24XX_VA_ISA_WORD)
--/*
-- * Dynamic IO functions - let the compiler
-- * optimize the expressions
-- */
--
--#define DECLARE_DYN_OUT(sz,fnsuffix,instr) \
--static inline void __out##fnsuffix (unsigned int val, unsigned int port) \
--{ \
--	unsigned long temp;				      \
--	__asm__ __volatile__(				      \
--	"cmp	%2, #(1<<28)\n\t"			      \
--	"mov	%0, %2\n\t"				      \
--	"addcc	%0, %0, %3\n\t"				      \
--	"str" instr " %1, [%0, #0 ]	@ out" #fnsuffix      \
--	: "=&r" (temp)					      \
--	: "r" (val), "r" (port), "Ir" (PCIO_BASE_##fnsuffix)  \
--	: "cc");					      \
--}
--
--
--#define DECLARE_DYN_IN(sz,fnsuffix,instr)				\
--static inline unsigned sz __in##fnsuffix (unsigned int port)		\
--{									\
--	unsigned long temp, value;					\
--	__asm__ __volatile__(						\
--	"cmp	%2, #(1<<28)\n\t"					\
--	"mov	%0, %2\n\t"						\
--	"addcc	%0, %0, %3\n\t"						\
--	"ldr" instr "	%1, [%0, #0 ]	@ in" #fnsuffix		\
--	: "=&r" (temp), "=r" (value)					\
--	: "r" (port), "Ir" (PCIO_BASE_##fnsuffix)	\
--	: "cc");							\
--	return (unsigned sz)value;					\
--}
-+#define inb(p)		readb(S3C24XX_VA_ISA_BYTE + (p))
-+#define inw(p)		readw(S3C24XX_VA_ISA_WORD + (p))
-+#define inl(p)		readl(S3C24XX_VA_ISA_WORD + (p))
+ 	/* Restore old index */
+ 	udc_write(idx, S3C2410_UDC_INDEX_REG);
+@@ -1784,13 +1779,7 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
+ 	spin_lock_init(&udc->lock);
+ 	udc_info = dev_get_platdata(&pdev->dev);
  
--static inline void __iomem *__ioaddr (unsigned long port)
--{
--	return __PORT_PCIO(port) ? (PCIO_BASE + port) : (void __iomem *)port;
--}
-+#define outb(v,p)	writeb((v), S3C24XX_VA_ISA_BYTE + (p))
-+#define outw(v,p)	writew((v), S3C24XX_VA_ISA_WORD + (p))
-+#define outl(v,p)	writel((v), S3C24XX_VA_ISA_WORD + (p))
+-	rsrc_start = S3C2410_PA_USBDEV;
+-	rsrc_len   = S3C24XX_SZ_USBDEV;
+-
+-	if (!request_mem_region(rsrc_start, rsrc_len, gadget_name))
+-		return -EBUSY;
+-
+-	base_addr = ioremap(rsrc_start, rsrc_len);
++	base_addr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (!base_addr) {
+ 		retval = -ENOMEM;
+ 		goto err_mem;
+@@ -1802,17 +1791,19 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
+ 	s3c2410_udc_disable(udc);
+ 	s3c2410_udc_reinit(udc);
  
--#define DECLARE_IO(sz,fnsuffix,instr)	\
--	DECLARE_DYN_IN(sz,fnsuffix,instr) \
--	DECLARE_DYN_OUT(sz,fnsuffix,instr)
-+#define insb(p,d,l)	readsb(S3C24XX_VA_ISA_BYTE + (p),d,l)
-+#define insw(p,d,l)	readsw(S3C24XX_VA_ISA_WORD + (p),d,l)
-+#define insl(p,d,l)	readsl(S3C24XX_VA_ISA_WORD + (p),d,l)
- 
--DECLARE_IO(char,b,"b")
--DECLARE_IO(short,w,"h")
--DECLARE_IO(int,l,"")
-+#define outsb(p,d,l)	writesb(S3C24XX_VA_ISA_BYTE + (p),d,l)
-+#define outsw(p,d,l)	writesw(S3C24XX_VA_ISA_WORD + (p),d,l)
-+#define outsl(p,d,l)	writesl(S3C24XX_VA_ISA_WORD + (p),d,l)
- 
--#undef DECLARE_IO
--#undef DECLARE_DYN_IN
--
--/*
-- * Constant address IO functions
-- *
-- * These have to be macros for the 'J' constraint to work -
-- * +/-4096 immediate operand.
-- */
--#define __outbc(value,port)						\
--({									\
--	if (__PORT_PCIO((port)))					\
--		__asm__ __volatile__(					\
--		"strb	%0, [%1, %2]	@ outbc"			\
--		: : "r" (value), "r" (PCIO_BASE), "Jr" ((port)));	\
--	else								\
--		__asm__ __volatile__(					\
--		"strb	%0, [%1, #0]	@ outbc"			\
--		: : "r" (value), "r" ((port)));				\
--})
-+#else
- 
--#define __inbc(port)							\
--({									\
--	unsigned char result;						\
--	if (__PORT_PCIO((port)))					\
--		__asm__ __volatile__(					\
--		"ldrb	%0, [%1, %2]	@ inbc"				\
--		: "=r" (result) : "r" (PCIO_BASE), "Jr" ((port)));	\
--	else								\
--		__asm__ __volatile__(					\
--		"ldrb	%0, [%1, #0]	@ inbc"				\
--		: "=r" (result) : "r" ((port)));			\
--	result;								\
--})
-+#define __io(x) (PCIO_BASE + (x))
- 
--#define __outwc(value,port)						\
--({									\
--	unsigned long v = value;					\
--	if (__PORT_PCIO((port))) {					\
--		if ((port) < 256 && (port) > -256)			\
--			__asm__ __volatile__(				\
--			"strh	%0, [%1, %2]	@ outwc"		\
--			: : "r" (v), "r" (PCIO_BASE), "Jr" ((port)));	\
--		else if ((port) > 0)					\
--			__asm__ __volatile__(				\
--			"strh	%0, [%1, %2]	@ outwc"		\
--			: : "r" (v),					\
--			    "r" (PCIO_BASE + ((port) & ~0xff)),		\
--			     "Jr" (((port) & 0xff)));			\
--		else							\
--			__asm__ __volatile__(				\
--			"strh	%0, [%1, #0]	@ outwc"		\
--			: : "r" (v),					\
--			    "r" (PCIO_BASE + (port)));			\
--	} else								\
--		__asm__ __volatile__(					\
--		"strh	%0, [%1, #0]	@ outwc"			\
--		: : "r" (v), "r" ((port)));				\
--})
--
--#define __inwc(port)							\
--({									\
--	unsigned short result;						\
--	if (__PORT_PCIO((port))) {					\
--		if ((port) < 256 && (port) > -256 )			\
--			__asm__ __volatile__(				\
--			"ldrh	%0, [%1, %2]	@ inwc"			\
--			: "=r" (result)					\
--			: "r" (PCIO_BASE),				\
--			  "Jr" ((port)));				\
--		else if ((port) > 0)					\
--			__asm__ __volatile__(				\
--			"ldrh	%0, [%1, %2]	@ inwc"			\
--			: "=r" (result)					\
--			: "r" (PCIO_BASE + ((port) & ~0xff)),		\
--			  "Jr" (((port) & 0xff)));			\
--		else							\
--			__asm__ __volatile__(				\
--			"ldrh	%0, [%1, #0]	@ inwc"			\
--			: "=r" (result)					\
--			: "r" (PCIO_BASE + ((port))));			\
--	} else								\
--		__asm__ __volatile__(					\
--		"ldrh	%0, [%1, #0]	@ inwc"				\
--		: "=r" (result) : "r" ((port)));			\
--	result;								\
--})
--
--#define __outlc(value,port)						\
--({									\
--	unsigned long v = value;					\
--	if (__PORT_PCIO((port)))					\
--		__asm__ __volatile__(					\
--		"str	%0, [%1, %2]	@ outlc"			\
--		: : "r" (v), "r" (PCIO_BASE), "Jr" ((port)));	\
--	else								\
--		__asm__ __volatile__(					\
--		"str	%0, [%1, #0]	@ outlc"			\
--		: : "r" (v), "r" ((port)));		\
--})
--
--#define __inlc(port)							\
--({									\
--	unsigned long result;						\
--	if (__PORT_PCIO((port)))					\
--		__asm__ __volatile__(					\
--		"ldr	%0, [%1, %2]	@ inlc"				\
--		: "=r" (result) : "r" (PCIO_BASE), "Jr" ((port)));	\
--	else								\
--		__asm__ __volatile__(					\
--		"ldr	%0, [%1, #0]	@ inlc"				\
--		: "=r" (result) : "r" ((port)));		\
--	result;								\
--})
--
--#define __ioaddrc(port)	((__PORT_PCIO(port) ? PCIO_BASE + (port) : (void __iomem *)0 + (port)))
--
--#define inb(p)		(__builtin_constant_p((p)) ? __inbc(p)	   : __inb(p))
--#define inw(p)		(__builtin_constant_p((p)) ? __inwc(p)	   : __inw(p))
--#define inl(p)		(__builtin_constant_p((p)) ? __inlc(p)	   : __inl(p))
--#define outb(v,p)	(__builtin_constant_p((p)) ? __outbc(v,p) : __outb(v,p))
--#define outw(v,p)	(__builtin_constant_p((p)) ? __outwc(v,p) : __outw(v,p))
--#define outl(v,p)	(__builtin_constant_p((p)) ? __outlc(v,p) : __outl(v,p))
--#define __ioaddr(p)	(__builtin_constant_p((p)) ? __ioaddr(p)  : __ioaddrc(p))
--
--#define insb(p,d,l)	__raw_readsb(__ioaddr(p),d,l)
--#define insw(p,d,l)	__raw_readsw(__ioaddr(p),d,l)
--#define insl(p,d,l)	__raw_readsl(__ioaddr(p),d,l)
--
--#define outsb(p,d,l)	__raw_writesb(__ioaddr(p),d,l)
--#define outsw(p,d,l)	__raw_writesw(__ioaddr(p),d,l)
--#define outsl(p,d,l)	__raw_writesl(__ioaddr(p),d,l)
-+#endif
- 
- #endif
-diff --git a/arch/arm/plat-samsung/include/plat/map-s3c.h b/arch/arm/plat-samsung/include/plat/map-s3c.h
-index 4244acbf4b65..bf247d836684 100644
---- a/arch/arm/plat-samsung/include/plat/map-s3c.h
-+++ b/arch/arm/plat-samsung/include/plat/map-s3c.h
-@@ -9,6 +9,8 @@
- #ifndef __ASM_PLAT_MAP_S3C_H
- #define __ASM_PLAT_MAP_S3C_H __FILE__
- 
-+#include <mach/map.h>
++	irq_usbd = platform_get_irq(pdev, 0);
 +
- #define S3C24XX_VA_IRQ		S3C_VA_IRQ
- #define S3C24XX_VA_MEMCTRL	S3C_VA_MEM
- #define S3C24XX_VA_UART		S3C_VA_UART
-@@ -45,16 +47,8 @@
+ 	/* irq setup after old hardware state is cleaned up */
+-	retval = request_irq(IRQ_USBD, s3c2410_udc_irq,
++	retval = request_irq(irq_usbd, s3c2410_udc_irq,
+ 			     0, gadget_name, udc);
  
- #define S3C_VA_USB_HSPHY	S3C64XX_VA_USB_HSPHY
+ 	if (retval != 0) {
+-		dev_err(dev, "cannot get irq %i, err %d\n", IRQ_USBD, retval);
++		dev_err(dev, "cannot get irq %i, err %d\n", irq_usbd, retval);
+ 		retval = -EBUSY;
+ 		goto err_map;
+ 	}
  
--/*
-- * ISA style IO, for each machine to sort out mappings for,
-- * if it implements it. We reserve two 16M regions for ISA.
-- */
--
- #define S3C2410_ADDR(x)		S3C_ADDR(x)
+-	dev_dbg(dev, "got irq %i\n", IRQ_USBD);
++	dev_dbg(dev, "got irq %i\n", irq_usbd);
  
--#define S3C24XX_VA_ISA_WORD	S3C2410_ADDR(0x02000000)
--#define S3C24XX_VA_ISA_BYTE	S3C2410_ADDR(0x03000000)
--
- /* deal with the registers that move under the 2412/2413 */
+ 	if (udc_info && udc_info->vbus_pin > 0) {
+ 		retval = gpio_request(udc_info->vbus_pin, "udc vbus");
+@@ -1879,7 +1870,7 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
+ 	if (udc_info && udc_info->vbus_pin > 0)
+ 		gpio_free(udc_info->vbus_pin);
+ err_int:
+-	free_irq(IRQ_USBD, udc);
++	free_irq(irq_usbd, udc);
+ err_map:
+ 	iounmap(base_addr);
+ err_mem:
+@@ -1913,7 +1904,7 @@ static int s3c2410_udc_remove(struct platform_device *pdev)
+ 		free_irq(irq, udc);
+ 	}
  
- #if defined(CONFIG_CPU_S3C2412)
+-	free_irq(IRQ_USBD, udc);
++	free_irq(irq_usbd, udc);
+ 
+ 	iounmap(base_addr);
+ 	release_mem_region(rsrc_start, rsrc_len);
+diff --git a/drivers/usb/gadget/udc/s3c2410_udc.h b/drivers/usb/gadget/udc/s3c2410_udc.h
+index bdcaa8dd300f..68bdf3e5aac2 100644
+--- a/drivers/usb/gadget/udc/s3c2410_udc.h
++++ b/drivers/usb/gadget/udc/s3c2410_udc.h
+@@ -90,6 +90,7 @@ struct s3c2410_udc {
+ 	unsigned			req_pending : 1;
+ 	u8				vbus;
+ 	struct dentry			*regs_info;
++	int				irq;
+ };
+ #define to_s3c2410(g)	(container_of((g), struct s3c2410_udc, gadget))
+ 
+diff --git a/arch/arm/plat-samsung/include/plat/regs-udc.h b/drivers/usb/gadget/udc/s3c2410_udc_regs.h
+similarity index 100%
+rename from arch/arm/plat-samsung/include/plat/regs-udc.h
+rename to drivers/usb/gadget/udc/s3c2410_udc_regs.h
 -- 
 2.20.0
 
