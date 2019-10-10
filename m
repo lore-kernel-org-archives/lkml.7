@@ -2,101 +2,97 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39525C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8BEC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B85A20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CDB20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:01:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nopcsrkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733132AbfJJIA4 (ORCPT
+        id S1733142AbfJJIBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:00:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44146 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732980AbfJJIAz (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:00:55 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 18C0A60ACD;
-        Thu, 10 Oct 2019 08:00:55 +0000 (UTC)
-Received: from krava (unknown [10.40.205.67])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1B1B35DA8D;
-        Thu, 10 Oct 2019 08:00:52 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 10:00:52 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v1 0/2] perf stat: Support --all-kernel and --all-user
-Message-ID: <20191010080052.GB9616@krava>
-References: <20190925020218.8288-1-yao.jin@linux.intel.com>
- <20190929151022.GA16309@krava>
- <20190930182136.GD8560@tassilo.jf.intel.com>
- <20190930192800.GA13904@kernel.org>
- <20191001021755.GF8560@tassilo.jf.intel.com>
- <8a1cbcf6-2de7-3036-1c86-f3af6af077e2@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a1cbcf6-2de7-3036-1c86-f3af6af077e2@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 10 Oct 2019 08:00:55 +0000 (UTC)
+        Thu, 10 Oct 2019 04:01:54 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32833 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733062AbfJJIBy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:01:54 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i76so3162811pgc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 01:01:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yRXE4lgk6VKA0SzChNSURLfGUKIVW/iDRtWVwE8XS0I=;
+        b=NopcsrkwHtz44y+FYo1Jk24rTELMBAhpD7oSUVmNudaJ+4CODqzIz+B+ZU+sH3CKMU
+         aWo4quo2GWPvJ1IzP475StNoOf38jVCayq9Rzld/TiwstDbeeBKvDBgHM4F+cneoUsuq
+         Jvw0AeJwOE2TjJeiojzh/sPaqtoz1zS4nNws+q8tfGwNUQFq1OFtJ5TJxGgdA+LiBA/q
+         2LDL5X9h2dnvQdiIcvJY3F65jIZN8YpWoy4tS+h8SZ3FzRwkwXNpaxDNNkztjoFCAXGE
+         z4UxpDNqiW5dgqf5h/YY9qqAhpVP122dI7ncioXBC9gw5rLmjoScvMNBKiY0XmvDAgnd
+         7Jng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yRXE4lgk6VKA0SzChNSURLfGUKIVW/iDRtWVwE8XS0I=;
+        b=inqPK+TH/3hptAeqYPsQSPlTsU69fqbHWBCA7Sarn4CyaZBiSSTbgHoKbdtwkQzOA8
+         AfCnhaO9T5AVnAWaks4Nu4aCqmyg5Qyp1EYn0cpjQ5We/t2mGLRMpSLV/7Bi5iDLvH2E
+         iYOLwHSyZgz5k/e0gTIPjjTE+B7Al//MJ7EdM0GEjj1TOm3My9D1cnEL4Njb6gndcu8j
+         RMcdcgl5yxVlcC1QCZXeSz8I+PzOUIIr9QipozK7Dp2y/BEao11QFMv7+JzxLbRSNYae
+         s0B3KjJn/uM3c4txXMNkPTjg1WuTzzam6NrQr1L3XAah9sM96FbFDy2mb3HcpivSk12E
+         s0vw==
+X-Gm-Message-State: APjAAAXuqSNeqrodc7nsbysXOy3Zg+g82B10Za0lmJbXwpPz7dv5YrGk
+        L64SDYKRVnOglapaHWc0yPT7Az36
+X-Google-Smtp-Source: APXvYqycvb2atxrRD8WJF8cZ15pQBiu+eEti0S/n3JRj4sNhaTbtEl33EEpHOKISfg4OovEYWoccAg==
+X-Received: by 2002:a17:90a:a604:: with SMTP id c4mr9885538pjq.48.1570694512313;
+        Thu, 10 Oct 2019 01:01:52 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id ep10sm10628639pjb.2.2019.10.10.01.01.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 01:01:51 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH] mtd: maps: l440gx: Avoid print address to dmesg
+Date:   Thu, 10 Oct 2019 16:01:30 +0800
+Message-Id: <20191010080130.25402-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 02:46:36PM +0800, Jin, Yao wrote:
-> 
-> 
-> On 10/1/2019 10:17 AM, Andi Kleen wrote:
-> > > > I think it's useful. Makes it easy to do kernel/user break downs.
-> > > > perf record should support the same.
-> > > 
-> > > Don't we have this already with:
-> > > 
-> > > [root@quaco ~]# perf stat -e cycles:u,instructions:u,cycles:k,instructions:k -a -- sleep 1
-> > 
-> > This only works for simple cases. Try it for --topdown or multiple -M metrics.
-> > 
-> > -Andi
-> > 
-> 
-> Hi Arnaldo, Jiri,
-> 
-> We think it should be very useful if --all-user / --all-kernel can be
-> specified together, so that we can get a break down between user and kernel
-> easily.
-> 
-> But yes, the patches for supporting this new semantics is much complicated
-> than the patch which just follows original perf-record behavior. I fully
-> understand this concern.
-> 
-> So if this new semantics can be accepted, that would be very good. But if
-> you think the new semantics is too complicated, I'm also fine for posting a
-> new patch which just follows the perf-record behavior.
+Avoid print the address of l440gx_map.virt every time l440gx init.
 
-I still need to think a bit more about this.. did you consider
-other options like cloning of the perf_evlist/perf_evsel and
-changing just the exclude* bits? might be event worse actualy ;-)
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/mtd/maps/l440gx.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-or maybe if we add modifier we could add extra events/groups
-within the parser.. like:
+diff --git a/drivers/mtd/maps/l440gx.c b/drivers/mtd/maps/l440gx.c
+index 876f12f40018..e7e40bca82d1 100644
+--- a/drivers/mtd/maps/l440gx.c
++++ b/drivers/mtd/maps/l440gx.c
+@@ -86,7 +86,6 @@ static int __init init_l440gx(void)
+ 		return -ENOMEM;
+ 	}
+ 	simple_map_init(&l440gx_map);
+-	printk(KERN_NOTICE "window_addr = 0x%08lx\n", (unsigned long)l440gx_map.virt);
+ 
+ 	/* Setup the pm iobase resource
+ 	 * This code should move into some kind of generic bridge
+-- 
+2.11.0
 
-  "{cycles,instructions}:A,{cache-misses,cache-references}:A,cycles:A"
-
-but that might be still more complicated then what you did
-
-also please add the perf record changes so we have same code
-and logic for both if we are going to change it
-
-jirka
