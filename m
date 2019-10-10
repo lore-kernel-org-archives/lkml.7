@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6274EC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709F9C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3982721D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA952067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698040;
-	bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
+	s=default; t=1570698049;
+	bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oRKVTQ8BLUBiEkJV7ZtdKr2XNh2H+JC9ZiAwCqWl2cLK8t1NASCqqmE0RuLEDfZ9n
-	 OKBqMC+EQzkggxMafPxxuzRzXkyEvqMd2EWji4/RHJxYMmaeZbXgj9T11W7xAAspIT
-	 tXs60Y5F/WyL5JtJzxA/gEJzjCkIV4SemwmqjwzY=
+	b=XEGz/vBW22hihed+mlVXIikyWkvD4DTfGmh9vaHozHsF4bdXAWNpSPW1kf6m5kGa2
+	 Vs0EZVyihl0dgxuHDzLTbQNCbNk+VO74i1n9BfHE978IhhKYG/e0sYRG7xkm9SkLsO
+	 Et2Pqd5p4j+dHUlOqUAKdxuJuirjara5K7RHv2Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388599AbfJJImm (ORCPT
+        id S2389132AbfJJJAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:42:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47274 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 05:00:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387910AbfJJImj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:42:39 -0400
+        id S2387745AbfJJIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:42:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5AE12190F;
-        Thu, 10 Oct 2019 08:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80C7A2054F;
+        Thu, 10 Oct 2019 08:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696958;
-        bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
+        s=default; t=1570696950;
+        bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1gPhiCXjMVmiajjck1Ei6eMXm8PuC3l3A1HnRH4CLB01+jQ78X87/1LIhCWfa8eCa
-         kiV5alLGx8qSnY+47uP1ee9qlL6mHfeVejRjKzq0ukH2z80zYRvtAj3HduQWxEMAYl
-         JzPf9Sj8BpdvcC93q/j8HOPczlDOyqQYCaeDuJwg=
+        b=HKafgU4jWSkcVJs6EoFNkzj2+Fc8CYuqilGhz+ksiALot9lmg08I5ADQODJHr2C1D
+         MgCSseWUEVHhA3wtzGvMWzjRZ9QswFfCKW3soDI92BwgLoc32ZJWreQmIdt5jJBuiU
+         dtRfUCFmaR7nKJ+jCPZYtI17Pjh/7xaOgxcboGTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Mavrodiev <stefan@olimex.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 114/148] thermal_hwmon: Sanitize thermal_zone type
-Date:   Thu, 10 Oct 2019 10:36:15 +0200
-Message-Id: <20191010083618.018135079@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 111/148] x86/purgatory: Disable the stackleak GCC plugin for the purgatory
+Date:   Thu, 10 Oct 2019 10:36:12 +0200
+Message-Id: <20191010083617.862786246@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,51 +65,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Mavrodiev <stefan@olimex.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 8c7aa184281c01fc26f319059efb94725012921d ]
+[ Upstream commit ca14c996afe7228ff9b480cf225211cc17212688 ]
 
-When calling thermal_add_hwmon_sysfs(), the device type is sanitized by
-replacing '-' with '_'. However tz->type remains unsanitized. Thus
-calling thermal_hwmon_lookup_by_type() returns no device. And if there is
-no device, thermal_remove_hwmon_sysfs() fails with "hwmon device lookup
-failed!".
+Since commit:
 
-The result is unregisted hwmon devices in the sysfs.
+  b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
 
-Fixes: 409ef0bacacf ("thermal_hwmon: Sanitize attribute name passed to hwmon")
+kexec breaks if GCC_PLUGIN_STACKLEAK=y is enabled, as the purgatory
+contains undefined references to stackleak_track_stack.
 
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Attempting to load a kexec kernel results in this failure:
+
+  kexec: Undefined symbol: stackleak_track_stack
+  kexec-bzImage64: Loading purgatory failed
+
+Fix this by disabling the stackleak plugin for the purgatory.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
+Link: https://lkml.kernel.org/r/20190923171753.GA2252517@rani.riverdale.lan
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/thermal_hwmon.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/purgatory/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/thermal/thermal_hwmon.c b/drivers/thermal/thermal_hwmon.c
-index 40c69a533b240..dd5d8ee379287 100644
---- a/drivers/thermal/thermal_hwmon.c
-+++ b/drivers/thermal/thermal_hwmon.c
-@@ -87,13 +87,17 @@ static struct thermal_hwmon_device *
- thermal_hwmon_lookup_by_type(const struct thermal_zone_device *tz)
- {
- 	struct thermal_hwmon_device *hwmon;
-+	char type[THERMAL_NAME_LENGTH];
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 10fb42da0007e..b81b5172cf994 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -23,6 +23,7 @@ KCOV_INSTRUMENT := n
  
- 	mutex_lock(&thermal_hwmon_list_lock);
--	list_for_each_entry(hwmon, &thermal_hwmon_list, node)
--		if (!strcmp(hwmon->type, tz->type)) {
-+	list_for_each_entry(hwmon, &thermal_hwmon_list, node) {
-+		strcpy(type, tz->type);
-+		strreplace(type, '-', '_');
-+		if (!strcmp(hwmon->type, type)) {
- 			mutex_unlock(&thermal_hwmon_list_lock);
- 			return hwmon;
- 		}
-+	}
- 	mutex_unlock(&thermal_hwmon_list_lock);
+ PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
+ PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
++PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
  
- 	return NULL;
+ # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+ # in turn leaves some undefined symbols like __fentry__ in purgatory and not
 -- 
 2.20.1
 
