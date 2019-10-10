@@ -2,187 +2,403 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3308ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9167AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81815214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4827B21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:35:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJeXf3az"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lz5P/abn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfJJWdb (ORCPT
+        id S1726437AbfJJWfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 18:33:31 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44350 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfJJWda (ORCPT
+        Thu, 10 Oct 2019 18:35:45 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43477 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfJJWfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 18:33:30 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m13so7800263ljj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 15:33:28 -0700 (PDT)
+        Thu, 10 Oct 2019 18:35:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i32so4561799pgl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 15:35:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TAvn4d+6F76ruJCv+xI5LO/P/Y+59nUm5AGlvaTi8Qw=;
-        b=vJeXf3azUyrJDmPHgSurrI5ADTbYih+86/WFbg8dxAp7IHN3cdZWYjBLR60qwZ5WDv
-         +7zEknqFxZF8ZKQBs5ulbxKt9GQz6IiGJO4107AQWREr75bdRb2+pqZd/WouJkMySosy
-         bKzS9qmyQq++va8SBxc+B05JbhbbfSnBoXlPzP2MUzc6PpJRFps+LbQwi54hbrdNemyi
-         yv6YVRDj33bT3RROfu4d77Ug71GRpwU1E83SVN+5W9BgV9wJpPu15TrVAkYRIRQ8QLdk
-         NH9pWVNjc6mgh14iNXiBtnqiZzq6toTZsDPEw08v3Wr48zoh3VWbDh8ejlHbntKinseP
-         4aQw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kKkjBwmRgdKaP+QdUpDRKfmefYo+As9im43CVKLg+Ag=;
+        b=Lz5P/abn3ebpkWGpjmx6GI1kly9Gg+3I/PqnAV4euZWhGAMoHS066X//Hn789MGSh6
+         YAtrloY6r5eulKqWQmWuVPii/DkGMfXDmyMxXQYe6mS9+crXJT/DrdozS5Cgpcqw9O8g
+         ViIXQ75qVGtRFOtwYRwcafu3h3BTMwO1TFe7I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TAvn4d+6F76ruJCv+xI5LO/P/Y+59nUm5AGlvaTi8Qw=;
-        b=m2fw6CpZFVx5/iqHEiCV2ltgCFRXIal7axJfxltqIr4JzFV5rooQNDojgYBLD8mVRA
-         PvLf35E3RE4DD7ZuDO2N75/Q5TcVhuQl/3BjzR2h7mgL6ru1lE+4h007PTmr9lY1esmJ
-         0ECoU9GP8iiRHrne1pGlR/1ye9R93xZ5neNVHzAryHesP7hfYM3ektdGDQhcp7xd8v3u
-         Lo+dZTusBUAHZNnD1kN/L1QfpZSoUkAfL2mKXUK8mHfBWtqLSEdZaiZjCNQSHTpyVMWN
-         hkevyZU0IGO4VRR1U5pYXh72LFS6dcVAmBmjiCch9kEfzrBj6+gbch0NGsM378OtQgNE
-         QFSg==
-X-Gm-Message-State: APjAAAXj2ow1QJCa5Ykisq2mx0LRIPco7h1dq8JTIkDSBzSzIVeAExuc
-        UNKVWFO3osA0ybafeFmIXAg=
-X-Google-Smtp-Source: APXvYqwLfOoXtt3G/Kcf9WrLtPl4oTNYwUgcoETwkfA3rEAYZyw4U95S9dGoHtCwrxFX6ktf3C6YvQ==
-X-Received: by 2002:a2e:9d56:: with SMTP id y22mr7786051ljj.37.1570746807968;
-        Thu, 10 Oct 2019 15:33:27 -0700 (PDT)
-Received: from pc636.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id h2sm1530033ljm.26.2019.10.10.15.33.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kKkjBwmRgdKaP+QdUpDRKfmefYo+As9im43CVKLg+Ag=;
+        b=OtRzLU7hfp86WmllEFtnXirLelqnJZ4OVd/qPpWxo67ud4keJDQH+LHgQ68wLZKFuQ
+         9cgepoQfJVU2p7fn6Ni+GyyYKiq3u89HImohlNibTkMPysH1pyoY9LPc+Tc7v1+HBFWy
+         3k1MGnXYac1cNBFUA6/lHM5A+y9qRhyBoHTh/yzRKBC2Vkse7EesJMHuxsI5ZpO7Af1w
+         fUSKHpYvorKZPmwXnk2ukIMBPXBfCbaHGlfyMnshbwDMAYRkhzm6ORVi03blEi/RbJwX
+         OjeguKnyQfCh8L+fDbCurexQM7dxH/novg6IEZQBryumubwgfW2YRhUyaqw3HRDnDsR6
+         l8mA==
+X-Gm-Message-State: APjAAAVwwnUZML6pKby+lOSur/LYhYQ8dMN1bf+xGO2Gp17aTqLMozxk
+        AWb8MvrXXR/EzWDeBORL2ZSsGw==
+X-Google-Smtp-Source: APXvYqwjzlMQTZTw53K4l1RqNlvc080BBhjA9ODkg3ZclJaQGnvk2BdKPlX3msFnFcC2wPNBu7iNAQ==
+X-Received: by 2002:a62:d408:: with SMTP id a8mr102474pfh.250.1570746943399;
+        Thu, 10 Oct 2019 15:35:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 206sm6294942pge.80.2019.10.10.15.35.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 15:33:26 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v2 1/1] mm/vmalloc: remove preempt_disable/enable when do preloading
-Date:   Fri, 11 Oct 2019 00:33:18 +0200
-Message-Id: <20191010223318.28115-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 10 Oct 2019 15:35:42 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 15:35:41 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: misc: xilinx_sdfec: Actually add documentation
+Message-ID: <201910101535.1804FC6@keescook>
+References: <201910021000.5E421A6F8F@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201910021000.5E421A6F8F@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get rid of preempt_disable() and preempt_enable() when the
-preload is done for splitting purpose. The reason is that
-calling spin_lock() with disabled preemtion is forbidden in
-CONFIG_PREEMPT_RT kernel.
+On Wed, Oct 02, 2019 at 10:03:55AM -0700, Kees Cook wrote:
+> From: Derek Kiernan <derek.kiernan@xilinx.com>
+> 
+> Add SD-FEC driver documentation.
+> 
+> Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+> Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+> Link: https://lore.kernel.org/r/1560274185-264438-11-git-send-email-dragan.cvetic@xilinx.com
+> [kees: extracted from v7 as it was missing in the commit for v8]
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> As mentioned[1], this file went missing and causes a warning in ReST
+> parsing, so I've extracted the patch and am sending it directly to Jon.
+> [1] https://lore.kernel.org/lkml/201909231450.4C6CF32@keescook/
+> ---
 
-Therefore, we do not guarantee that a CPU is preloaded, instead
-we minimize the case when it is not with this change.
+friendly ping! :)
 
-For example i run the special test case that follows the preload
-pattern and path. 20 "unbind" threads run it and each does
-1000000 allocations. Only 3.5 times among 1000000 a CPU was
-not preloaded. So it can happen but the number is negligible.
+-Kees
 
-V1 -> V2:
-  - move __this_cpu_cmpxchg check when spin_lock is taken,
-    as proposed by Andrew Morton
-  - add more explanation in regard of preloading
-  - adjust and move some comments
+>  Documentation/misc-devices/xilinx_sdfec.rst | 291 ++++++++++++++++++++
+>  1 file changed, 291 insertions(+)
+>  create mode 100644 Documentation/misc-devices/xilinx_sdfec.rst
+> 
+> diff --git a/Documentation/misc-devices/xilinx_sdfec.rst b/Documentation/misc-devices/xilinx_sdfec.rst
+> new file mode 100644
+> index 000000000000..87966e3aa5fe
+> --- /dev/null
+> +++ b/Documentation/misc-devices/xilinx_sdfec.rst
+> @@ -0,0 +1,291 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +====================
+> +Xilinx SD-FEC Driver
+> +====================
+> +
+> +Overview
+> +========
+> +
+> +This driver supports SD-FEC Integrated Block for Zynq |Ultrascale+ (TM)| RFSoCs.
+> +
+> +.. |Ultrascale+ (TM)| unicode:: Ultrascale+ U+2122
+> +   .. with trademark sign
+> +
+> +For a full description of SD-FEC core features, see the `SD-FEC Product Guide (PG256) <https://www.xilinx.com/cgi-bin/docs/ipdoc?c=sd_fec;v=latest;d=pg256-sdfec-integrated-block.pdf>`_
+> +
+> +This driver supports the following features:
+> +
+> +  - Retrieval of the Integrated Block configuration and status information
+> +  - Configuration of LDPC codes
+> +  - Configuration of Turbo decoding
+> +  - Monitoring errors
+> +
+> +Missing features, known issues, and limitations of the SD-FEC driver are as
+> +follows:
+> +
+> +  - Only allows a single open file handler to any instance of the driver at any time
+> +  - Reset of the SD-FEC Integrated Block is not controlled by this driver
+> +  - Does not support shared LDPC code table wraparound
+> +
+> +The device tree entry is described in:
+> +`linux-xlnx/Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt <https://github.com/Xilinx/linux-xlnx/blob/master/Documentation/devicetree/bindings/misc/xlnx%2Csd-fec.txt>`_
+> +
+> +
+> +Modes of Operation
+> +------------------
+> +
+> +The driver works with the SD-FEC core in two modes of operation:
+> +
+> +  - Run-time configuration
+> +  - Programmable Logic (PL) initialization
+> +
+> +
+> +Run-time Configuration
+> +~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +For Run-time configuration the role of driver is to allow the software application to do the following:
+> +
+> +	- Load the configuration parameters for either Turbo decode or LDPC encode or decode
+> +	- Activate the SD-FEC core
+> +	- Monitor the SD-FEC core for errors
+> +	- Retrieve the status and configuration of the SD-FEC core
+> +
+> +Programmable Logic (PL) Initialization
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +For PL initialization, supporting logic loads configuration parameters for either
+> +the Turbo decode or LDPC encode or decode.  The role of the driver is to allow
+> +the software application to do the following:
+> +
+> +	- Activate the SD-FEC core
+> +	- Monitor the SD-FEC core for errors
+> +	- Retrieve the status and configuration of the SD-FEC core
+> +
+> +
+> +Driver Structure
+> +================
+> +
+> +The driver provides a platform device where the ``probe`` and ``remove``
+> +operations are provided.
+> +
+> +  - probe: Updates configuration register with device-tree entries plus determines the current activate state of the core, for example, is the core bypassed or has the core been started.
+> +
+> +
+> +The driver defines the following driver file operations to provide user
+> +application interfaces:
+> +
+> +  - open: Implements restriction that only a single file descriptor can be open per SD-FEC instance at any time
+> +  - release: Allows another file descriptor to be open, that is after current file descriptor is closed
+> +  - poll: Provides a method to monitor for SD-FEC Error events
+> +  - unlocked_ioctl: Provides the the following ioctl commands that allows the application configure the SD-FEC core:
+> +
+> +		- :c:macro:`XSDFEC_START_DEV`
+> +		- :c:macro:`XSDFEC_STOP_DEV`
+> +		- :c:macro:`XSDFEC_GET_STATUS`
+> +		- :c:macro:`XSDFEC_SET_IRQ`
+> +		- :c:macro:`XSDFEC_SET_TURBO`
+> +		- :c:macro:`XSDFEC_ADD_LDPC_CODE_PARAMS`
+> +		- :c:macro:`XSDFEC_GET_CONFIG`
+> +		- :c:macro:`XSDFEC_SET_ORDER`
+> +		- :c:macro:`XSDFEC_SET_BYPASS`
+> +		- :c:macro:`XSDFEC_IS_ACTIVE`
+> +		- :c:macro:`XSDFEC_CLEAR_STATS`
+> +		- :c:macro:`XSDFEC_SET_DEFAULT_CONFIG`
+> +
+> +
+> +Driver Usage
+> +============
+> +
+> +
+> +Overview
+> +--------
+> +
+> +After opening the driver, the user should find out what operations need to be
+> +performed to configure and activate the SD-FEC core and determine the
+> +configuration of the driver.
+> +The following outlines the flow the user should perform:
+> +
+> +  - Determine Configuration
+> +  - Set the order, if not already configured as desired
+> +  - Set Turbo decode, LPDC encode or decode parameters, depending on how the
+> +    SD-FEC core is configured plus if the SD-FEC has not been configured for PL
+> +    initialization
+> +  - Enable interrupts, if not already enabled
+> +  - Bypass the SD-FEC core, if required
+> +  - Start the SD-FEC core if not already started
+> +  - Get the SD-FEC core status
+> +  - Monitor for interrupts
+> +  - Stop the SD-FEC core
+> +
+> +
+> +Note: When monitoring for interrupts if a critical error is detected where a reset is required, the driver will be required to load the default configuration.
+> +
+> +
+> +Determine Configuration
+> +-----------------------
+> +
+> +Determine the configuration of the SD-FEC core by using the ioctl
+> +:c:macro:`XSDFEC_GET_CONFIG`.
+> +
+> +Set the Order
+> +-------------
+> +
+> +Setting the order determines how the order of Blocks can change from input to output.
+> +
+> +Setting the order is done by using the ioctl :c:macro:`XSDFEC_SET_ORDER`
+> +
+> +Setting the order can only be done if the following restrictions are met:
+> +
+> +	- The ``state`` member of struct :c:type:`xsdfec_status <xsdfec_status>` filled by the ioctl :c:macro:`XSDFEC_GET_STATUS` indicates the SD-FEC core has not STARTED
+> +
+> +
+> +Add LDPC Codes
+> +--------------
+> +
+> +The following steps indicate how to add LDPC codes to the SD-FEC core:
+> +
+> +	- Use the auto-generated parameters to fill the :c:type:`struct xsdfec_ldpc_params <xsdfec_ldpc_params>` for the desired LDPC code.
+> +	- Set the SC, QA, and LA table offsets for the LPDC parameters and the parameters in the structure :c:type:`struct xsdfec_ldpc_params <xsdfec_ldpc_params>`
+> +	- Set the desired Code Id value in the structure :c:type:`struct xsdfec_ldpc_params <xsdfec_ldpc_params>`
+> +	- Add the LPDC Code Parameters using the ioctl :c:macro:`XSDFEC_ADD_LDPC_CODE_PARAMS`
+> +	- For the applied LPDC Code Parameter use the function :c:func:`xsdfec_calculate_shared_ldpc_table_entry_size` to calculate the size of shared LPDC code tables. This allows the user to determine the shared table usage so when selecting the table offsets for the next LDPC code parameters unused table areas can be selected.
+> +	- Repeat for each LDPC code parameter.
+> +
+> +Adding LDPC codes can only be done if the following restrictions are met:
+> +
+> +	- The ``code`` member of :c:type:`struct xsdfec_config <xsdfec_config>` filled by the ioctl :c:macro:`XSDFEC_GET_CONFIG` indicates the SD-FEC core is configured as LDPC
+> +	- The ``code_wr_protect`` of :c:type:`struct xsdfec_config <xsdfec_config>` filled by the ioctl :c:macro:`XSDFEC_GET_CONFIG` indicates that write protection is not enabled
+> +	- The ``state`` member of struct :c:type:`xsdfec_status <xsdfec_status>` filled by the ioctl :c:macro:`XSDFEC_GET_STATUS` indicates the SD-FEC core has not started
+> +
+> +Set Turbo Decode
+> +----------------
+> +
+> +Configuring the Turbo decode parameters is done by using the ioctl :c:macro:`XSDFEC_SET_TURBO` using auto-generated parameters to fill the :c:type:`struct xsdfec_turbo <xsdfec_turbo>` for the desired Turbo code.
+> +
+> +Adding Turbo decode can only be done if the following restrictions are met:
+> +
+> +	- The ``code`` member of :c:type:`struct xsdfec_config <xsdfec_config>` filled by the ioctl :c:macro:`XSDFEC_GET_CONFIG` indicates the SD-FEC core is configured as TURBO
+> +	- The ``state`` member of struct :c:type:`xsdfec_status <xsdfec_status>` filled by the ioctl :c:macro:`XSDFEC_GET_STATUS` indicates the SD-FEC core has not STARTED
+> +
+> +Enable Interrupts
+> +-----------------
+> +
+> +Enabling or disabling interrupts is done by using the ioctl :c:macro:`XSDFEC_SET_IRQ`. The members of the parameter passed, :c:type:`struct xsdfec_irq <xsdfec_irq>`, to the ioctl are used to set and clear different categories of interrupts. The category of interrupt is controlled as following:
+> +
+> +  - ``enable_isr`` controls the ``tlast`` interrupts
+> +  - ``enable_ecc_isr`` controls the ECC interrupts
+> +
+> +If the ``code`` member of :c:type:`struct xsdfec_config <xsdfec_config>` filled by the ioctl :c:macro:`XSDFEC_GET_CONFIG` indicates the SD-FEC core is configured as TURBO then the enabling ECC errors is not required.
+> +
+> +Bypass the SD-FEC
+> +-----------------
+> +
+> +Bypassing the SD-FEC is done by using the ioctl :c:macro:`XSDFEC_SET_BYPASS`
+> +
+> +Bypassing the SD-FEC can only be done if the following restrictions are met:
+> +
+> +	- The ``state`` member of :c:type:`struct xsdfec_status <xsdfec_status>` filled by the ioctl :c:macro:`XSDFEC_GET_STATUS` indicates the SD-FEC core has not STARTED
+> +
+> +Start the SD-FEC core
+> +---------------------
+> +
+> +Start the SD-FEC core by using the ioctl :c:macro:`XSDFEC_START_DEV`
+> +
+> +Get SD-FEC Status
+> +-----------------
+> +
+> +Get the SD-FEC status of the device by using the ioctl :c:macro:`XSDFEC_GET_STATUS`, which will fill the :c:type:`struct xsdfec_status <xsdfec_status>`
+> +
+> +Monitor for Interrupts
+> +----------------------
+> +
+> +	- Use the poll system call to monitor for an interrupt. The poll system call waits for an interrupt to wake it up or times out if no interrupt occurs.
+> +	- On return Poll ``revents`` will indicate whether stats and/or state have been updated
+> +		- ``POLLPRI`` indicates a critical error and the user should use :c:macro:`XSDFEC_GET_STATUS` and :c:macro:`XSDFEC_GET_STATS` to confirm
+> +		- ``POLLRDNORM`` indicates a non-critical error has occurred and the user should use  :c:macro:`XSDFEC_GET_STATS` to confirm
+> +	- Get stats by using the ioctl :c:macro:`XSDFEC_GET_STATS`
+> +		- For critical error the ``isr_err_count`` or ``uecc_count`` member  of :c:type:`struct xsdfec_stats <xsdfec_stats>` is non-zero
+> +		- For non-critical errors the ``cecc_count`` member of :c:type:`struct xsdfec_stats <xsdfec_stats>` is non-zero
+> +	- Get state by using the ioctl :c:macro:`XSDFEC_GET_STATUS`
+> +		- For a critical error the ``state`` of :c:type:`xsdfec_status <xsdfec_status>` will indicate a Reset Is Required
+> +	- Clear stats by using the ioctl :c:macro:`XSDFEC_CLEAR_STATS`
+> +
+> +If a critical error is detected where a reset is required. The application is required to call the ioctl :c:macro:`XSDFEC_SET_DEFAULT_CONFIG`, after the reset and it is not required to call the ioctl :c:macro:`XSDFEC_STOP_DEV`
+> +
+> +Note: Using poll system call prevents busy looping using :c:macro:`XSDFEC_GET_STATS` and :c:macro:`XSDFEC_GET_STATUS`
+> +
+> +Stop the SD-FEC Core
+> +---------------------
+> +
+> +Stop the device by using the ioctl :c:macro:`XSDFEC_STOP_DEV`
+> +
+> +Set the Default Configuration
+> +-----------------------------
+> +
+> +Load default configuration by using the ioctl :c:macro:`XSDFEC_SET_DEFAULT_CONFIG` to restore the driver.
+> +
+> +Limitations
+> +-----------
+> +
+> +Users should not duplicate SD-FEC device file handlers, for example fork() or dup() a process that has a created an SD-FEC file handler.
+> +
+> +Driver IOCTLs
+> +==============
+> +
+> +.. c:macro:: XSDFEC_START_DEV
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_START_DEV
+> +
+> +.. c:macro:: XSDFEC_STOP_DEV
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_STOP_DEV
+> +
+> +.. c:macro:: XSDFEC_GET_STATUS
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_GET_STATUS
+> +
+> +.. c:macro:: XSDFEC_SET_IRQ
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_SET_IRQ
+> +
+> +.. c:macro:: XSDFEC_SET_TURBO
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_SET_TURBO
+> +
+> +.. c:macro:: XSDFEC_ADD_LDPC_CODE_PARAMS
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_ADD_LDPC_CODE_PARAMS
+> +
+> +.. c:macro:: XSDFEC_GET_CONFIG
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_GET_CONFIG
+> +
+> +.. c:macro:: XSDFEC_SET_ORDER
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_SET_ORDER
+> +
+> +.. c:macro:: XSDFEC_SET_BYPASS
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_SET_BYPASS
+> +
+> +.. c:macro:: XSDFEC_IS_ACTIVE
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_IS_ACTIVE
+> +
+> +.. c:macro:: XSDFEC_CLEAR_STATS
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_CLEAR_STATS
+> +
+> +.. c:macro:: XSDFEC_GET_STATS
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_GET_STATS
+> +
+> +.. c:macro:: XSDFEC_SET_DEFAULT_CONFIG
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :doc: XSDFEC_SET_DEFAULT_CONFIG
+> +
+> +Driver Type Definitions
+> +=======================
+> +
+> +.. kernel-doc:: include/uapi/misc/xilinx_sdfec.h
+> +   :internal:
+> \ No newline at end of file
+> -- 
+> 2.17.1
+> 
+> 
+> -- 
+> Kees Cook
 
-Fixes: 82dd23e84be3 ("mm/vmalloc.c: preload a CPU with one object for split purpose")
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- mm/vmalloc.c | 50 +++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 33 insertions(+), 17 deletions(-)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index e92ff5f7dd8b..f48cd0711478 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -969,6 +969,19 @@ adjust_va_to_fit_type(struct vmap_area *va,
- 			 * There are a few exceptions though, as an example it is
- 			 * a first allocation (early boot up) when we have "one"
- 			 * big free space that has to be split.
-+			 *
-+			 * Also we can hit this path in case of regular "vmap"
-+			 * allocations, if "this" current CPU was not preloaded.
-+			 * See the comment in alloc_vmap_area() why. If so, then
-+			 * GFP_NOWAIT is used instead to get an extra object for
-+			 * split purpose. That is rare and most time does not
-+			 * occur.
-+			 *
-+			 * What happens if an allocation gets failed. Basically,
-+			 * an "overflow" path is triggered to purge lazily freed
-+			 * areas to free some memory, then, the "retry" path is
-+			 * triggered to repeat one more time. See more details
-+			 * in alloc_vmap_area() function.
- 			 */
- 			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
- 			if (!lva)
-@@ -1078,31 +1091,34 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
- 
- retry:
- 	/*
--	 * Preload this CPU with one extra vmap_area object to ensure
--	 * that we have it available when fit type of free area is
--	 * NE_FIT_TYPE.
-+	 * Preload this CPU with one extra vmap_area object. It is used
-+	 * when fit type of free area is NE_FIT_TYPE. Please note, it
-+	 * does not guarantee that an allocation occurs on a CPU that
-+	 * is preloaded, instead we minimize the case when it is not.
-+	 * It can happen because of migration, because there is a race
-+	 * until the below spinlock is taken.
- 	 *
- 	 * The preload is done in non-atomic context, thus it allows us
- 	 * to use more permissive allocation masks to be more stable under
--	 * low memory condition and high memory pressure.
-+	 * low memory condition and high memory pressure. In rare case,
-+	 * if not preloaded, GFP_NOWAIT is used.
- 	 *
--	 * Even if it fails we do not really care about that. Just proceed
--	 * as it is. "overflow" path will refill the cache we allocate from.
-+	 * Set "pva" to NULL here, because of "retry" path.
- 	 */
--	preempt_disable();
--	if (!__this_cpu_read(ne_fit_preload_node)) {
--		preempt_enable();
--		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
--		preempt_disable();
-+	pva = NULL;
- 
--		if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
--			if (pva)
--				kmem_cache_free(vmap_area_cachep, pva);
--		}
--	}
-+	if (!this_cpu_read(ne_fit_preload_node))
-+		/*
-+		 * Even if it fails we do not really care about that.
-+		 * Just proceed as it is. If needed "overflow" path
-+		 * will refill the cache we allocate from.
-+		 */
-+		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
- 
- 	spin_lock(&vmap_area_lock);
--	preempt_enable();
-+
-+	if (pva && __this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva))
-+		kmem_cache_free(vmap_area_cachep, pva);
- 
- 	/*
- 	 * If an allocation fails, the "vend" address is
 -- 
-2.20.1
-
+Kees Cook
