@@ -4,106 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0248C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9026ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E5D205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FCC20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MzCP3JEh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mHXoFaiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfJJQiV (ORCPT
+        id S1726396AbfJJQn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 12:38:21 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41462 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfJJQiV (ORCPT
+        Thu, 10 Oct 2019 12:43:29 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40218 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfJJQn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 12:38:21 -0400
-Received: by mail-io1-f65.google.com with SMTP id n26so15108892ioj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:38:20 -0700 (PDT)
+        Thu, 10 Oct 2019 12:43:29 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x127so4256857pfb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:43:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ph+cM1wqiv/orbsFFGXeEKlbXh51icoHvALffiLcYf0=;
-        b=MzCP3JEh+/LlXlx0pBedozlo0FoZD5596/N3hdLGFXDY7yle3Gbnuy0SOR+2tzLqTW
-         pJ7aFSAUD2tSeLCAS1SLIU1wJoZQJF33bVsjoTDQT19NMIzC/vf8WRVb7YA7dh79T3wO
-         NU8cD67l6lYlGFfxwNY3bs1mg5iGsqMN1C34M=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WcFO8qPZ/AFTCPgcIosbPBf6WzJZhu5LC0txwMdDqq0=;
+        b=mHXoFaiWr2KtDyo6AUfULISKrSL60dcxTqzjwiK6Uaub6ukWcxzvR35aRbJ/vlu4UK
+         btOqmAHm7PlUoeM5gAlSvg067gi9jVrpkKoXlKtP6V0vU2ST37HIbIHFg92Bf8qEYVHH
+         +sfpnRnP7n2dw4DiSrshnBTPiQgOvR4ZRzhEw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ph+cM1wqiv/orbsFFGXeEKlbXh51icoHvALffiLcYf0=;
-        b=jKELnuxKbTM/aNGOWwtoH7AOD0YhbA78XyaNBJiueh7lhwbfk6+7jSVFJrsMa+ClNV
-         YVTz4wISCCo/EOQZXhiGB/ZBsMUYOVUCIZMcT/TUN0l1M2lHcL3XySGpgbm34cFMOiOR
-         vrxyTMh7CqdPcx74BkUbpoAiAxbUdfdaMTa0nc8ETo/0KgaWRMqq8ALCPitBFw+r+8Kv
-         l/3XguC5tuKW3KNdyfh5huuiTD72cXqF+h644QXa9yAUfy22D7aWkPH2mS1kN+psaoH/
-         k3mE9JxzpsrmHyZ24s74rP3h0ov8YlQVpkix8ZbMLRhJxfIGLLJjzsQxOMqnvi2s2jdz
-         Notg==
-X-Gm-Message-State: APjAAAX5QM1d2l5vvNyvvhjkJMMhD2RUh1v0QSudULddaIoGVR+66NGQ
-        lk8BQP01g712mYSkSjv2OcxkIzMhhRM=
-X-Google-Smtp-Source: APXvYqzmK8JBKD+E+Ty9wyra12u8uq2W95ROdDI6/mP5v6fLutcTsEz7kZ9TlfVS9GFdT00F3JARog==
-X-Received: by 2002:a02:893:: with SMTP id 141mr11136425jac.36.1570725499971;
-        Thu, 10 Oct 2019 09:38:19 -0700 (PDT)
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com. [209.85.166.47])
-        by smtp.gmail.com with ESMTPSA id a14sm3557914ioo.85.2019.10.10.09.38.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2019 09:38:19 -0700 (PDT)
-Received: by mail-io1-f47.google.com with SMTP id b19so15191283iob.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:38:18 -0700 (PDT)
-X-Received: by 2002:a02:90c7:: with SMTP id c7mr11362682jag.12.1570725498188;
- Thu, 10 Oct 2019 09:38:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WcFO8qPZ/AFTCPgcIosbPBf6WzJZhu5LC0txwMdDqq0=;
+        b=CKP9q1YEGDkxm3tQgkDMWyMAiL4bTM0qGorHa+GZm5FQpO74G6zlZdR+UwNR44Inja
+         dVfnzvWG/BmIWEoz06fSFVOWw5+xndbnuIXu9kuRfQPbroF91JlDADa3vq49HhhYXojm
+         K3Jin8fDGOsndKSUEJ84Rw94o1AumlC3BpjQKcQ+Gv+AgRZoUcyTzJ8ORd1I+ACWoagg
+         wq4DohyzXjfr1ff/Q/9JKSVmrn+YVXXxzY373G+B326nkgjaNeWLyBKz7ZchhVfVF6Qx
+         OJN/2av7lku3GyftDfP9+SRcWnYqQd0d4CgVzWQie0HxSpKSeQ7FrpjU2iNySfdyUee6
+         WsXA==
+X-Gm-Message-State: APjAAAUH9Qa7Y74zFw9FdDOhhICIcNyW7WcsqHMQ/PPBVTpV0Pndbjyj
+        xWL0Pl/j6w4mDnE3ZAzbhEvRfA==
+X-Google-Smtp-Source: APXvYqxsqHZmX3PXU0VomobcpD35C37svv1v7Kpb0+mVbvks+MlYD9SD3jPPE8rJ5DviVJ/s9RX1pQ==
+X-Received: by 2002:a62:ed01:: with SMTP id u1mr11730140pfh.122.1570725808519;
+        Thu, 10 Oct 2019 09:43:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l62sm8332515pfl.167.2019.10.10.09.43.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 09:43:27 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 09:43:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] lib: introduce copy_struct_from_user() helper
+Message-ID: <201910100943.4C6AB66@keescook>
+References: <20191001011055.19283-1-cyphar@cyphar.com>
+ <20191001011055.19283-2-cyphar@cyphar.com>
+ <87eezkx2y7.fsf@mpe.ellerman.id.au>
+ <20191010114007.o3bygjf4jlfk242e@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-References: <20190925200220.157670-1-dianders@chromium.org>
- <20190925125811.v3.3.Id33c06cbd1516b49820faccd80da01c7c4bf15c7@changeid>
- <20191007135459.lj3qc2tqzcv3xcia@holly.lan> <CAD=FV=Vqj9JqGCQX_Foij8EkFtSy8r2wB3uoXNae6PECwNV+CQ@mail.gmail.com>
- <20191010150735.dhrj3pbjgmjrdpwr@holly.lan>
-In-Reply-To: <20191010150735.dhrj3pbjgmjrdpwr@holly.lan>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 10 Oct 2019 09:38:04 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VuOVpvEB60-prMxuPyjcrJ-9O2hyaLKf86c-r9BVocdg@mail.gmail.com>
-Message-ID: <CAD=FV=VuOVpvEB60-prMxuPyjcrJ-9O2hyaLKf86c-r9BVocdg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] kdb: Fix "btc <cpu>" crash if the CPU didn't round up
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010114007.o3bygjf4jlfk242e@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Oct 10, 2019 at 10:40:07PM +1100, Aleksa Sarai wrote:
+> Yeah, it takes about 5-10s on my laptop. We could switch it to just
+> everything within a 4K block, but the main reason for testing with
+> 2*PAGE_SIZE is to make sure that check_nonzero_user() works across page
+> boundaries. Though we could only do check_nonzero_user() in the region
+> of the page boundary (maybe i E (PAGE_SIZE-512,PAGE_SIZE+512]?)
 
-On Thu, Oct 10, 2019 at 8:07 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
-> > Reading through other control flows of the various backtrace commands,
-> > it looks like it is intentional to leave the current task changed when
-> > you explicitly do an action on that task (or a CPU).
-> >
-> > Actually, though, it wasn't clear to me that it ever made sense for
-> > any of these commands to implicitly leave the current task changed.
-> > If you agree, I can send a follow-up patch to change this behavior.
->
-> Personally I don't like implicit changes of state but I might need a bit
-> more thinking to agree (or disagree ;-) ).
+Yeah, I like this idea: just poke at the specific edge-case.
 
-I can post up a followup after this series lands and change it.  I
-have a feeling nobody is relying on the old behavior and thus nobody
-will notice but it would be nice to get this cleaner.
-
-BTW: if you want me to spin to fix the commit message typo that Will
-found or add his Ack to the series, let me know.  Otherwise I'll
-assume that the typo can be fixed and Acks added when the patch is
-applied.
-
--Doug
+-- 
+Kees Cook
