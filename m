@@ -2,63 +2,119 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7093ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92588ECE596
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A64C206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B25020B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570713279;
+	bh=FQX0xMB6lROMcqP/mnVeH32i9L3hg21Y95t5o1X1K6g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l7F1zxOimOGRMETdSIiw2SitDQu/0HcJKs4kJgKrtd27T1Guplqke2Ji7HNy5uSyZ
+	 lEzzDjW/reJRSgLaQGbt46nO6bg0XQmukFMZu36vUnVqEvAZEcAaDDVcs+dpdVbc4b
+	 /A7qeyFEDKii4bMyhOnaA9C+qK3w+mXEIS6gbheU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388007AbfJJNOG (ORCPT
+        id S2388096AbfJJNOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbfJJNOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:14:06 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07647206A1;
-        Thu, 10 Oct 2019 13:14:04 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 09:14:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     jikos@kernel.org, Joe Lawrence <joe.lawrence@redhat.com>,
-        jpoimboe@redhat.com, mingo@redhat.com,
-        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH 0/3] ftrace: Introduce PERMANENT ftrace_ops flag
-Message-ID: <20191010091403.5ecf0fdb@gandalf.local.home>
-In-Reply-To: <20191010085035.emsdks6xecazqc6k@pathway.suse.cz>
-References: <20191007081714.20259-1-mbenes@suse.cz>
-        <20191008193534.GA16675@redhat.com>
-        <20191009112234.bi7lvp4pvmna26vz@pathway.suse.cz>
-        <20191009102654.501ad7c3@gandalf.local.home>
-        <20191010085035.emsdks6xecazqc6k@pathway.suse.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 10 Oct 2019 09:14:38 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39234 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbfJJNOi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 09:14:38 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y3so6161668ljj.6;
+        Thu, 10 Oct 2019 06:14:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7uV6DWb+5d+72lobYH9RlUHuo93UKxieqoJDmd2AkLE=;
+        b=oXQr5K5AknmV7WOzIin2s0bc0UXSpL0sEbz5ZC7mWHK/Bna1bF0mswJNeGG1izrqEk
+         HglDUe5pmeQk75c8IwkKyig/ND+fh+zwNHC1twqSJuHX4cvleN+woZqaMPzW1MIG3L7a
+         bCEeIWmT+CuCv/I3uxDoiq9/NHRPo2uZQi9wWwnZk+W71el3Bl0C4Bh3E116gT49eZgr
+         YCZrwzJFxS0DOju8ct9fGhAGby2z+Y4cnCN5GO34He4NKhcAgD1BCjFAOw84RE1OUX/u
+         POxbm/sRphFQ+PJqP3RcneVkT3b+MVOHx/wx2H7ljYLexVweplYDx3jyNDhJWnh7Knrf
+         +jnA==
+X-Gm-Message-State: APjAAAWzC/PNl+MBM3Z6U+4v3lAPhG2whTyBVZ+VMo8aM9O7I36g5CUj
+        0Hvq9Ffa025jCOkbtoVUpeI=
+X-Google-Smtp-Source: APXvYqzFKhC+O0enYQEtd6+xCyXriydLhbwo0jiMAK6X/4MJHrEhzIRCF056ErjC0uEfoKkbTLxJHw==
+X-Received: by 2002:a2e:8ec2:: with SMTP id e2mr5820909ljl.126.1570713275165;
+        Thu, 10 Oct 2019 06:14:35 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id k7sm1184634lja.19.2019.10.10.06.14.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 06:14:34 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@xi.terra>)
+        id 1iIYHF-0006Ak-Dh; Thu, 10 Oct 2019 15:14:45 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+Subject: [PATCH 1/4] drm/msm: fix memleak on release
+Date:   Thu, 10 Oct 2019 15:13:30 +0200
+Message-Id: <20191010131333.23635-2-johan@kernel.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010131333.23635-1-johan@kernel.org>
+References: <20191010131333.23635-1-johan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 10:50:35 +0200
-Petr Mladek <pmladek@suse.com> wrote:
+If a process is interrupted while accessing the "gpu" debugfs file and
+the drm device struct_mutex is contended, release() could return early
+and fail to free related resources.
 
-> It will make the flag unusable for other ftrace users. But it
-> will be already be the case when it can't be disabled.
+Note that the return value from release() is ignored.
 
-Honestly, I hate that flag. Most people don't even know about it. It
-was added in the beginning of ftrace as a way to stop function tracing
-in the latency tracer. But that use case has been obsoleted by
-328df4759c03e ("tracing: Add function-trace option to disable function
-tracing of latency tracers"). I may just remove the damn thing and only
-add it back if somebody complains about it.
+Fixes: 4f776f4511c7 ("drm/msm/gpu: Convert the GPU show function to use the GPU state")
+Cc: stable <stable@vger.kernel.org>     # 4.18
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/gpu/drm/msm/msm_debugfs.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
--- Steve
+diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+index 6be879578140..1c74381a4fc9 100644
+--- a/drivers/gpu/drm/msm/msm_debugfs.c
++++ b/drivers/gpu/drm/msm/msm_debugfs.c
+@@ -47,12 +47,8 @@ static int msm_gpu_release(struct inode *inode, struct file *file)
+ 	struct msm_gpu_show_priv *show_priv = m->private;
+ 	struct msm_drm_private *priv = show_priv->dev->dev_private;
+ 	struct msm_gpu *gpu = priv->gpu;
+-	int ret;
+-
+-	ret = mutex_lock_interruptible(&show_priv->dev->struct_mutex);
+-	if (ret)
+-		return ret;
+ 
++	mutex_lock(&show_priv->dev->struct_mutex);
+ 	gpu->funcs->gpu_state_put(show_priv->state);
+ 	mutex_unlock(&show_priv->dev->struct_mutex);
+ 
+-- 
+2.23.0
+
