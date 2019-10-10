@@ -2,165 +2,152 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6AAC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA643C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48DE20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A344E2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l3hTUmRw"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="n63q47Oi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732989AbfJJHEy (ORCPT
+        id S1733003AbfJJHFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:04:54 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39294 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbfJJHEy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:04:54 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191010070452euoutp01a8f2a396ad497448df2aa068fe49e4e2~MNzoS57X53271832718euoutp01Q
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 07:04:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191010070452euoutp01a8f2a396ad497448df2aa068fe49e4e2~MNzoS57X53271832718euoutp01Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1570691092;
-        bh=IcYxKHi2Xesm/jrMZDTKLhWj1oXp7N/IpwBAwGTZE3I=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=l3hTUmRw7+YtnUgTw8WBf3k5wL80B4GPq0OZNEP1q1O1NqjWmqLyFrm0Tm+gUhDul
-         Tsj6brbJr9Ty0HVownVILTMZcN83SeDmNUpDS82Toz9thMqMWGwWgpywPNO33Zuybz
-         5YbM/NGv5a/EWEsplhY/SKh59Cu1eYx1d3dSrDW0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191010070452eucas1p2536e7967a31f117344e66eeb02092173~MNzn4iXeq0392803928eucas1p2C;
-        Thu, 10 Oct 2019 07:04:52 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 86.B6.04374.418DE9D5; Thu, 10
-        Oct 2019 08:04:52 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191010070451eucas1p1c05d72ce4c3709a82de805e38a087813~MNznRCSDS2845628456eucas1p1E;
-        Thu, 10 Oct 2019 07:04:51 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191010070451eusmtrp100dc99bc5b07635c96c8270177c2b855~MNznQVugT2943929439eusmtrp1V;
-        Thu, 10 Oct 2019 07:04:51 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-67-5d9ed8148456
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 59.11.04117.318DE9D5; Thu, 10
-        Oct 2019 08:04:51 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191010070450eusmtip29f024496be5d307d3780b94a00b1b2f2~MNzmyPmvx1878018780eusmtip2c;
-        Thu, 10 Oct 2019 07:04:50 +0000 (GMT)
-Subject: Re: [PATCH RESEND] gpu: drm: bridge: analogix-anx78xx: convert to
- i2c_new_dummy_device
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-i2c@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <97111f38-0820-edf5-8316-58fef6b065cf@samsung.com>
-Date:   Thu, 10 Oct 2019 09:04:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Thu, 10 Oct 2019 03:05:19 -0400
+Received: from cmta18.telus.net ([209.171.16.91]:42139 "EHLO cmta18.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727296AbfJJHFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:05:19 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id ISVciThHlgu2QISVdixnlj; Thu, 10 Oct 2019 01:05:17 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1570691117; bh=yJAIubNgABwo5FHn45HxGvP11hFlYI+7AOXWX2KntCU=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=n63q47Oi4q9isHW8WZIYigmJPMJsghFIMSvQP74roEYi5UfvRcdSg5Xomw4Q0DmrQ
+         fMtiLUGORJXAWyrY2iEBNJOfyHWqYja/agKlt+FeqF5ydZJ0r2UOVLpL7wsE0FxQAb
+         MXNi6Z+5R/RcCVPCTZx3TxjuEcOs4a7525MUdw27IhavwR+KZ37Ac0cI4BTyGPyTE2
+         l+otz52ja4nuIDjYOdyToEUBIrNIUu8RxhI7FuMDE7UwkH0HepOvL6l0E0L821pqfp
+         jHAi3bVkpJgOcIEwz+Va+zhh7p0tisSDGcQqiNZKoVkWDKyS4CmXNQJcUv5sRYLBw8
+         6aqPZopvpvxQg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=QIcWuTDL c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=aatUQebYAAAA:8 a=VCGl1-TQkrmU9ILRUbUA:9
+ a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=B-rJQ6SmICdiGdTV:21 a=MI_Jn2f3h0BHA_FJ:21
+ a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=7715FyvI7WU-l6oqrZBK:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Frederic Weisbecker'" <frederic@kernel.org>,
+        "'Mel Gorman'" <mgorman@suse.de>,
+        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
+        "'Chen, Hu'" <hu1.chen@intel.com>,
+        "'Quentin Perret'" <quentin.perret@arm.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>
+References: <001601d57487$e1029ef0$a307dcd0$@net> <CAJZ5v0jvusVBcKECBueDHk5KQGda=GGuSGPO3F4wCvk3cro56A@mail.gmail.com> <1574317.FFykgJKpNH@kreacher> <3490479.2dnHFFeJIp@kreacher>
+In-Reply-To: <3490479.2dnHFFeJIp@kreacher>
+Subject: RE: [RFC/RFT][PATCH v8] cpuidle: New timer events oriented governor for tickless systems
+Date:   Thu, 10 Oct 2019 00:05:11 -0700
+Message-ID: <000b01d57f39$11868670$34939350$@net>
 MIME-Version: 1.0
-In-Reply-To: <20191008203145.3159-1-wsa+renesas@sang-engineering.com>
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUgUYRju25mdnV1dGVfFN5WihSIlj9QfQ4dmdMyPfgRBSJvYpINr6aq7
-        alqUkprmhavQ4qampWlKeZ9gh4K6mEe5phke1BYqiZBnkZrrKPnveZ/neY8HXhKTvRc6kKGq
-        aE6tYsPkhARv6vo94Go7WhTgsVGH01n9BgG90aTFaOPSPEEPr8xgtOHnME4/1JaK6LS1RUQP
-        tRUQdEe2gs7uP39KwsyPpoiY9uVinHmcli9kenI+Cpjm5SkhM5nRLWB+lFTjzNusPJxZqNt3
-        UXxFciKYCwuN5dTuPtckynZdLxHZaBGnzcjBE9FzcToSk0B5w5uFT0Q6kpAyqgJB7YsqEV8s
-        Ilgt78P5YgHB1LBJtNOyvJaJeKEcQdKYcbuYQ6DNStx0kaQNxUKD3svcYEtdhq6U0q1JGFUj
-        gMrUWcwsEJQzrNV/JsxYSvlAf+v4Fo9TB2HgS/IWb0f5w6+pTiHvsQZDvgk3YzF1FrTGR1se
-        jNoPzXMFGI/tYcz0RGBeBtSMCJbaSrbPPgODrbUCHtvAbHfDNu8EvXmZOI8TYLIiGeOb0xA0
-        1rRivHAcOrs/CM3JsM2rq9vcedoPhqbbCTMNlBWMzlnzN1hBbpMO42kppD2Q8e4DMNnXuD3Q
-        HsoGl4gcJNfvSqbflUa/K43+/95ihFciey5GEx7CabxU3C03DRuuiVGFuAVFhNehzR/rXe9e
-        akGv/17vQBSJ5JZSpaEwQCZkYzXx4R0ISExuK32qLwiQSYPZ+NucOiJQHRPGaTqQI4nL7aV3
-        9kwpZFQIG83d5LhITr2jCkixQyJSKFJtZRdspvNXXo3b+Rf0OB/72mWhRWUeUYKklD9xjnEr
-        I+r4EafvE13uurvWFsrMrD6lb1VQW6pnXeXpl+cuuZxMaJ+tz74q9PaMKjvcYCg0VjVNBPrl
-        HnFdfPJs/Ibu/mq1ad5zZsKg+3aIbrnX6GtpeNdgXFfNhbJFe2MmFXJco2SPumBqDfsPKKmD
-        dl8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xe7rCN+bFGpz4L2HRe+4kk8X/bROZ
-        La58fc9mcfX7S2aLk2+uslh0TlzCbtHx9wujxeVdc9gsDvVFW/Sdc3fg8nh/o5XdY++3BSwe
-        sztmsnqcmHCJyWP7twesHve7jzN5PFu4nsXjQO9kFo/Pm+QCOKP0bIryS0tSFTLyi0tslaIN
-        LYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0MvZOP81WsJW7YmL3BJYGxmWcXYyc
-        HBICJhLf/vYwdjFycQgJLGWUuLNuJzNEQlxi9/y3ULawxJ9rXWwQRa8ZJf4caWXpYuTgEBZI
-        lNgyyxikRkQgTOLqnDnsIDXMAhuYJP53f2WFaJjBKHHmSzsbSBWbgKbE3803wWxeATuJczvv
-        gm1gEVCVOH+7BSwuKhAhcXjHLEaIGkGJkzOfsIDYnAKuEhOvTAOrYRZQl/gz7xIzhC0vsf3t
-        HChbXOLWk/lMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQI
-        jNxtx35u2cHY9S74EKMAB6MSD++B03NjhVgTy4orcw8xSnAwK4nwLpo1J1aINyWxsiq1KD++
-        qDQntfgQoynQcxOZpUST84FJJa8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoR
-        TB8TB6dUA2PF37CefzeluSfXhyYtjU//36igdVX3ZL1o2af3vj2vRK+uztZVK10pXb/j9DuR
-        ZcsY6ndc+X5zj9IhRRsz8/olKpb3bz5UYFzD9ThKK9fll7Zp/K8tHw3l2+7fm83pI7rdbcJX
-        7gXTzKSnXn9YsGblqoY7mz8LVjF3L/nekXD0pD27z63529uVWIozEg21mIuKEwGJ8XFX8gIA
-        AA==
-X-CMS-MailID: 20191010070451eucas1p1c05d72ce4c3709a82de805e38a087813
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191008203222epcas4p4a9ab2b8dd10759e61ce9b1ec4547d13f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191008203222epcas4p4a9ab2b8dd10759e61ce9b1ec4547d13f
-References: <CGME20191008203222epcas4p4a9ab2b8dd10759e61ce9b1ec4547d13f@epcas4p4.samsung.com>
-        <20191008203145.3159-1-wsa+renesas@sang-engineering.com>
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdV+pp2JiVhEa0slQqie26B61DVX/QAen1OQ
+X-CMAE-Envelope: MS4wfHu/z7mA1YA3SYaJTrB79W1+Hvz5mXZEHAV9A0H5Yb2QfZmOXHloVuMAGicA3jv4YKjw5f8LPgM3NASyR9Sx1iMm/gwU+t8YVPcN/1B7/Y/3rUTU86s1
+ PbZfXc9ANZBvN3N9PMuNhZoh640kHWAUwzEmrvaWtRQ49kdo1HVse3fZuj67cVZpPs/CQ8umW5O5DKg+6GAipXVdXe0qhBmrk71fMbnZkYHR9PLdLBsiG7LP
+ NVTb00xopsaXvDkhmsBdFtpl2W+0Y0LrH1jnacso3k9gwpTi+rYNIVSZbea62oa2NVjuqkhG9WcbONcG8S6+Jv0ChmzTq8Job1H/Va9LyTurtWK46E4Z40+P
+ oNdaYnGJKPc9W79vWw7L1ZXSAWa/nY0U5VUSJ9iCdvhsd8745qalIdmZ/DD4tla1UuiP3K7yXoEdMRt7/CIlQMAlW6j+OvIjSOhHBjUbAsZUicqhs1d10T1Q
+ PpEbEYEgJygSPDalElqLyAJTglPOtMTHgxwOqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.10.2019 22:31, Wolfram Sang wrote:
-> Move from the deprecated i2c_new_dummy() to i2c_new_dummy_device(). We
-> now get an ERRPTR which we use in error handling.
+On 2019.10.09 06:37 Rafael J. Wysocki wrote:
+> On Wednesday, October 9, 2019 1:19:51 AM CEST Rafael J. Wysocki wrote:
+>> On Tuesday, October 8, 2019 12:49:01 PM CEST Rafael J. Wysocki wrote:
+>>> On Tue, Oct 8, 2019 at 11:51 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>>> On Tue, Oct 8, 2019 at 8:20 AM Doug Smythies <dsmythies@telus.net> wrote:
+>>>>> O.K. Thanks for your quick reply, and insight.
+>>>>>
+>>>>> I think long durations always need to be counted, but currently if
+>>>>> the deepest idle state is disabled, they are not.
+...
+>>>> AFAICS, adding early_hits to count is not a mistake if there are still
+>>>> enabled states deeper than the current one.
+>>> 
+>>> And the mistake appears to be that the "hits" and "misses" metrics
+>>> aren't handled in analogy with the "early_hits" one when the current
+>>> state is disabled.
+
+I only know how to exploit and test the "hits" and "misses" path
+that should use the deepest available idle state upon transition
+to an idle system. Even so, the test has a low probability of
+failing, and so needs to be run many times.
+
+I do not know how to demonstrate and/or test any "early_hits" path
+to confirm that an issue exists or that it is fixed.
+
+>>> 
+>>> Let me try to cut a patch to address that.
+>> 
+>> Appended below, not tested.
+
+Reference as: rjw1
+
+>> 
+>> It is meant to address two problems, one of which is that the "hits" and
+>> "misses" metrics of disabled states need to be taken into account too in
+>> some cases, and the other is an issue with the handling of "early hits"
+>> which may lead to suboptimal state selection if some states are disabled.
 >
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-
-Brian's patch is already applied.
-
-
-Regards
-
-Andrzej
-
-
-> ---
+> Well, it still misses a couple of points.
 >
-> Rebased to v5.4-rc2 since last time. One of the last two users of the
-> old API, so please apply soon, so I can remove the old interface. Only
-> build tested.
+> First, disable states that are too deep should not be taken into consideration
+> at all.
 >
->  drivers/gpu/drm/bridge/analogix-anx78xx.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Second, the "hits" and "misses" metrics of disabled states need to be used for
+> idle duration ranges corresponding to them regardless of whether or not the
+> "hits" value is greater than the "misses" one.
 >
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> index 3c7cc5af735c..be7756280e41 100644
-> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> @@ -1350,10 +1350,10 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
->  
->  	/* Map slave addresses of ANX7814 */
->  	for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
-> -		anx78xx->i2c_dummy[i] = i2c_new_dummy(client->adapter,
-> +		anx78xx->i2c_dummy[i] = i2c_new_dummy_device(client->adapter,
->  						anx78xx_i2c_addresses[i] >> 1);
-> -		if (!anx78xx->i2c_dummy[i]) {
-> -			err = -ENOMEM;
-> +		if (IS_ERR(anx78xx->i2c_dummy[i])) {
-> +			err = PTR_ERR(anx78xx->i2c_dummy[i]);
->  			DRM_ERROR("Failed to reserve I2C bus %02x\n",
->  				  anx78xx_i2c_addresses[i]);
->  			goto err_unregister_i2c;
+> Updated patch is below (still not tested), but it tries to do too much in one
+> go, so I need to split it into a series of smaller changes.
+
+Thanks for your continued look at this.
+
+Reference as: rjw2
+
+Test 1, hack job statistical test (old tests re-stated):
+
+Kernel  tests  	         fail rate
+5.4-rc1		 6616		13.45%
+5.3			 2376		 4.50%
+5.3-teov7		12136		 0.00%  <<< teo.c reverted and teov7 put in its place.
+5.4-rc1-ds		11168		 0.00%  <<< [old] ds proposed patch (> 7 hours test time)
+5.4-rc1-ds12	 4224		 0.00% <<< [old] new ds proposed patch
+5.4-rc2-rjw1	11280		 0.00%
+5.4-rc2-rjw2	  640		 0.00%  <<< Will be run again, for longer.
+
+Test 2: I also looked at every possible enable/disable idle combination,
+and they all seemed O.K.
+
+No other tests have been run yet.
+
+System:
+Processor: i7-2600K
+Deepest idle state: 4 (C6)
+
+... Doug
 
 
