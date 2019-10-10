@@ -2,141 +2,97 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B163C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C48C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E223C206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:39:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H3tKHjAt"
+	by mail.kernel.org (Postfix) with ESMTP id C6E14206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfJJUjJ (ORCPT
+        id S1727307AbfJJUjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:39:09 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44353 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfJJUjJ (ORCPT
+        Thu, 10 Oct 2019 16:39:41 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54880 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfJJUjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:39:09 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e10so403926pgd.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 13:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=S6k3ViNzJ7YzSO4Rk6x02I91FS8Fe+dk8MkxjwLqK8Q=;
-        b=H3tKHjAt+i0+CQTvoADnXR7F0rxl5YFxMCX0FbptG8IPZY7dVhLhq+z4nTwr3xlJsm
-         NZCxMoKJQ66Pdcz8X9EMKBKlUFSL7NpNQB19aZgVH1zs9Tid11Hci9H3uXP9wcfKvMVB
-         l1buCrnseYmvSt9KY1GGS9m7ffX+mHlOyjQV8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S6k3ViNzJ7YzSO4Rk6x02I91FS8Fe+dk8MkxjwLqK8Q=;
-        b=fBguylBGtlVLj5pw+KK4iDYHWA670LHxHYtZoUuJyp5u98x7eDUDmDZDQ3Fqzvfk5H
-         ATq6QANZMCR4oCMzK+uPsP0BGGq6kF8k8K3NG36byYqJh5NIzMLwrxKXrzu80jJKG0Pi
-         2YsW9tA85LFqjuQX9DMwbqt6BLZHBBRAsRIxPJD+4DHA6X+tgUmnl/s1KTDtA/SKENJg
-         0HBpfpHu6tjofikl+OR3XKZQfFX4yc45zWXo4PpdUvWTpfdl7+02hmCwF4WbqLljpuWx
-         oYm9p/gYHzux1SlKktVwlTGBdFm/FrN20F5fgXw3IqrOE3mr+fPnyaXBAYtu33/CEEJ5
-         FT4w==
-X-Gm-Message-State: APjAAAW9BWmrMSOyy3cBlWEO42zySP//Ez1JfPFJO2P28dAjnakANkC4
-        NxIGy5WO9+JEQ5ncom87tBgD+A==
-X-Google-Smtp-Source: APXvYqy5p9hU263vrnIMDOktaRZ6ou916sxO2v+ayu3IHxX6tjjtY4ecaAh+JfCCcvfW9uZFmT1dnA==
-X-Received: by 2002:a63:5516:: with SMTP id j22mr12913251pgb.201.1570739948545;
-        Thu, 10 Oct 2019 13:39:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f65sm6116366pgc.90.2019.10.10.13.39.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 13:39:07 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 13:39:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH 4/4] scripts/cvt_style.pl: Tool to reformat sources in
- various ways
-Message-ID: <201910101338.59F36A33@keescook>
-References: <cover.1570292505.git.joe@perches.com>
- <4a904777303fbaea75fe0875b7984c33824f4b68.1570292505.git.joe@perches.com>
- <CANiq72nwDgMgXNczW=JRANzH72=f0ukwVoPaud1d7J4YQLQX=w@mail.gmail.com>
- <52794b248ba13e88ab4c30c9b6ea55a7be30df5d.camel@perches.com>
+        Thu, 10 Oct 2019 16:39:41 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 12F2128D04A
+Subject: Re: [PATCH v2 1/1] blk-mq: fill header with kernel-doc
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        axboe@kernel.dk, kernel@collabora.com
+References: <20191008001416.12656-1-andrealmeid@collabora.com>
+ <854l0j19go.fsf@collabora.com> <6aa48cd2-5f23-a4be-f777-d65bf755a976@acm.org>
+ <85zhibyt14.fsf@collabora.com> <86de2c88-5812-4a87-b5d8-1b7b1808d013@acm.org>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <8e20f2c6-c165-5b5f-7497-9472913d0ba8@collabora.com>
+Date:   Thu, 10 Oct 2019 17:38:18 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <52794b248ba13e88ab4c30c9b6ea55a7be30df5d.camel@perches.com>
+In-Reply-To: <86de2c88-5812-4a87-b5d8-1b7b1808d013@acm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 11:35:42PM -0700, Joe Perches wrote:
-> On Sat, 2019-10-05 at 19:31 +0200, Miguel Ojeda wrote:
-> > Hi Joe,
+On 10/8/19 5:01 PM, Bart Van Assche wrote:
+> On 10/8/19 11:46 AM, Gabriel Krisman Bertazi wrote:
+>> Hmm, sorry, but I'm confused.  I'm sure I'm missing something simple,
+>> since I haven't touched this in a while, so maybe you can quickly point
+>> me in the right direction?
+>>
+>> I see blk_mq_requeue_request() being used by device drivers to retry
+>> requests that failed, but if I read the code correctly, the flushed
+>> queue seems to be moved to hctx->dispatch when the device
+>> driver returned BLK_STS_RESOURCE or BLK_STS_DEV_RESOURCE to
+>> blk_mq_dispatch_rq_list(). I thought BLK_STS_RESOURCE was returned by
+>> the driver on .queue_rq() to signal there was no more resources on the
+>> hardware to service further requests.
 > 
-> Hello.
+> Hi Gabriel,
 > 
-> > On Sat, Oct 5, 2019 at 6:47 PM Joe Perches <joe@perches.com> wrote:
-> []
-> > > As for the commit itself: while I am sure this tool is very useful
-> > (and certainly you put a *lot* of effort into this tool), I don't see
-> > how it is related to the fallthrough remapping (at least the
-> > non-fallthrough parts).
+> The simplified version of how requests are requeued as follows:
+> * A block driver calls blk_mq_requeue_request().
+> * blk_mq_requeue_request() calls blk_mq_add_to_requeue_list()
+> * blk_mq_add_to_requeue_list() executes the following code:
+>     list_add_tail(&rq->queuelist, &q->requeue_list)
+> * A block driver or the block layer core calls
+>   blk_mq_kick_requeue_list() or blk_mq_delay_kick_requeue_list(). Both
+>   functions trigger a call of blk_mq_requeue_work().
+> * blk_mq_requeue_work() processes q->requeue_list.
 > 
-> It's not particularly related.
+> Bart.
 > 
-> It's a 10 year old script that I just extended because it's
-> convenient for me.
 > 
-> I think I first posted it in 2011, but I started it as a
-> complement to checkpatch in 2010.
-> 
-> https://lwn.net/Articles/380161/
-> 
-> Doing the regexes for the fallthrough conversions took me
-> a couple hours.
-> 
-> > Also, we should consider whether we want more tools like this now or
-> > simply put the efforts into moving to clang-format.
-> 
-> I think clang-format could not do this sort of conversion.
-> Nor could coccinelle or checkpatch.
-> 
-> Anyway, it's not really necessary for this particular patch
-> to be applied, but it's a convenient way to show the script
-> has the capability to do fallthrough comment conversions.
-> 
-> I think it does conversions fairly reasonably but likely
-> some files could not compile without adding an #include
-> like:
-> 
-> #include <linux/compiler.h>
 
-I think this is a nice tool to add -- at the very least it serves as
-infrastructure for future similar conversions. And small cleanups can be
-generated from it for people looking to clean up subsystems, etc.
+Hello Bart,
 
--- 
-Kees Cook
+Seems that it's not clear for me the role of these members. Could you
+please check if those definitions make sense for you?
+
+- hctx->dispatch: This queue is used for requests that are ready to be
+dispatched to the hardware but for some reason (e.g. lack of resources,
+the hardware is to busy and can't get more requests) could not be sent
+to the hardware. As soon as the driver can send new requests, those
+queued at this list will be sent first for a more fair dispatch. Since
+those requests are at the hctx, they can't be requeued or rescheduled
+anymore.
+
+- request_queue->requeue_list: This list is used when it's not possible
+to send the request to the associated hctx. This can happen if the
+associated CPU or hctx is not available anymore. When requeueing those
+requests, it will be possible to send them to new and function queues.
+
+Thanks,
+	André
