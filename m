@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18816C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92139C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E662F2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD9920679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697656;
-	bh=atpRPWQ8qwYkROn+LNS/DUOg/9/j3Q0ATKT7b689G24=;
+	s=default; t=1570697667;
+	bh=OrPEpdqwd733jdhoGK9h+vv1s9G3mOo9wyJbXWHjDiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tLY9J1Ef9mcvRXUGw3CuBGucLiNnqzLV3Z3EfYR30N3fLdWAyOpsL330HysBx/DOw
-	 EPFrDWGlm7mr8lH559IUMWuSIAC52pt8+tOdwScF3Q5Ht9zAwKvf1N7p54g2ATfDtY
-	 hKYhYy1eg6iQwlaEqB6u6qVcMloppTDvT9AcqJzo=
+	b=N55I9wuSTa0BSatwrOb23HbPR3T/n3aMBAsiRzNTv6fPyebsiNZoc8DFkLf0NP4Et
+	 pdCgkO9v2zfSZbaJYkdDyh3L3Lm4iaPKnqQRH9sLDa3FjA3JVL7rV1xNGKMiqqi0Fm
+	 NpBWeQ9qES6Jhsavh0t+gPSRIBj240HLNuMBaQms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390017AbfJJIyO (ORCPT
+        id S2389928AbfJJIy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:54:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57860 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:54:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389549AbfJJIul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:41 -0400
+        id S2389979AbfJJIub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1C5F20B7C;
-        Thu, 10 Oct 2019 08:50:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D684E21929;
+        Thu, 10 Oct 2019 08:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697441;
-        bh=atpRPWQ8qwYkROn+LNS/DUOg/9/j3Q0ATKT7b689G24=;
+        s=default; t=1570697430;
+        bh=OrPEpdqwd733jdhoGK9h+vv1s9G3mOo9wyJbXWHjDiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pet0gr8Fb3Dwdem/X9CYTMdZczRY54NaMKRu3x8GF5p751vnL7Z/Su3GrSWuW3lRW
-         U1ZJ4+E7+KppFVhOU0yQAZvptaUsQGABudeY96E4FzORPBcDeYI9FIyQh7XQBHSjL9
-         1qNTx55LSzagnCdP4Zt27Mr57CofVwa0cgMxuTag=
+        b=FwpJHG7eQHyB/ydKb/o9upqVhOKvNSiS+SgqMAKkK5ToFhArGOeB0T9yeAk2OR7Jl
+         cto3uUALBodFCTEBKlpQ+0ubKqaABpfhHtzdKpJefQO7wdlHDI4pxzhKLrVtX2MHSL
+         IT5DxZNjwVpd/br89T8yKbbAnTLxVv/k3270hG+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steev Klimaszewski <steev@kali.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: [PATCH 4.14 08/61] PM / devfreq: tegra: Fix kHz to Hz conversion
-Date:   Thu, 10 Oct 2019 10:36:33 +0200
-Message-Id: <20191010083454.260004216@linuxfoundation.org>
+        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.14 04/61] s390/cio: avoid calling strlen on null pointer
+Date:   Thu, 10 Oct 2019 10:36:29 +0200
+Message-Id: <20191010083452.173115242@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -62,75 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit 62bacb06b9f08965c4ef10e17875450490c948c0 upstream.
+commit ea298e6ee8b34b3ed4366be7eb799d0650ebe555 upstream.
 
-The kHz to Hz is incorrectly converted in a few places in the code,
-this results in a wrong frequency being calculated because devfreq core
-uses OPP frequencies that are given in Hz to clamp the rate, while
-tegra-devfreq gives to the core value in kHz and then it also expects to
-receive value in kHz from the core. In a result memory freq is always set
-to a value which is close to ULONG_MAX because of the bug. Hence the EMC
-frequency is always capped to the maximum and the driver doesn't do
-anything useful. This patch was tested on Tegra30 and Tegra124 SoC's, EMC
-frequency scaling works properly now.
+Fix the following kasan finding:
+BUG: KASAN: global-out-of-bounds in ccwgroup_create_dev+0x850/0x1140
+Read of size 1 at addr 0000000000000000 by task systemd-udevd.r/561
 
-Cc: <stable@vger.kernel.org> # 4.14+
-Tested-by: Steev Klimaszewski <steev@kali.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+CPU: 30 PID: 561 Comm: systemd-udevd.r Tainted: G    B
+Hardware name: IBM 3906 M04 704 (LPAR)
+Call Trace:
+([<0000000231b3db7e>] show_stack+0x14e/0x1a8)
+ [<0000000233826410>] dump_stack+0x1d0/0x218
+ [<000000023216fac4>] print_address_description+0x64/0x380
+ [<000000023216f5a8>] __kasan_report+0x138/0x168
+ [<00000002331b8378>] ccwgroup_create_dev+0x850/0x1140
+ [<00000002332b618a>] group_store+0x3a/0x50
+ [<00000002323ac706>] kernfs_fop_write+0x246/0x3b8
+ [<00000002321d409a>] vfs_write+0x132/0x450
+ [<00000002321d47da>] ksys_write+0x122/0x208
+ [<0000000233877102>] system_call+0x2a6/0x2c8
+
+Triggered by:
+openat(AT_FDCWD, "/sys/bus/ccwgroup/drivers/qeth/group",
+		O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 16
+write(16, "0.0.bd00,0.0.bd01,0.0.bd02", 26) = 26
+
+The problem is that __get_next_id in ccwgroup_create_dev might set "buf"
+buffer pointer to NULL and explicit check for that is required.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/devfreq/tegra-devfreq.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/s390/cio/ccwgroup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/devfreq/tegra-devfreq.c
-+++ b/drivers/devfreq/tegra-devfreq.c
-@@ -485,11 +485,11 @@ static int tegra_devfreq_target(struct d
- {
- 	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
- 	struct dev_pm_opp *opp;
--	unsigned long rate = *freq * KHZ;
-+	unsigned long rate;
- 
--	opp = devfreq_recommended_opp(dev, &rate, flags);
-+	opp = devfreq_recommended_opp(dev, freq, flags);
- 	if (IS_ERR(opp)) {
--		dev_err(dev, "Failed to find opp for %lu KHz\n", *freq);
-+		dev_err(dev, "Failed to find opp for %lu Hz\n", *freq);
- 		return PTR_ERR(opp);
+--- a/drivers/s390/cio/ccwgroup.c
++++ b/drivers/s390/cio/ccwgroup.c
+@@ -369,7 +369,7 @@ int ccwgroup_create_dev(struct device *p
+ 		goto error;
  	}
- 	rate = dev_pm_opp_get_freq(opp);
-@@ -498,8 +498,6 @@ static int tegra_devfreq_target(struct d
- 	clk_set_min_rate(tegra->emc_clock, rate);
- 	clk_set_rate(tegra->emc_clock, 0);
- 
--	*freq = rate;
--
- 	return 0;
- }
- 
-@@ -509,7 +507,7 @@ static int tegra_devfreq_get_dev_status(
- 	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
- 	struct tegra_devfreq_device *actmon_dev;
- 
--	stat->current_frequency = tegra->cur_freq;
-+	stat->current_frequency = tegra->cur_freq * KHZ;
- 
- 	/* To be used by the tegra governor */
- 	stat->private_data = tegra;
-@@ -564,7 +562,7 @@ static int tegra_governor_get_target(str
- 		target_freq = max(target_freq, dev->target_freq);
+ 	/* Check for trailing stuff. */
+-	if (i == num_devices && strlen(buf) > 0) {
++	if (i == num_devices && buf && strlen(buf) > 0) {
+ 		rc = -EINVAL;
+ 		goto error;
  	}
- 
--	*freq = target_freq;
-+	*freq = target_freq * KHZ;
- 
- 	return 0;
- }
 
 
