@@ -2,52 +2,52 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91444C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33BDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E73F21A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 713BD21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696886;
-	bh=EnWOWXgtHqr3dAFC04IlHKFxsfEX7VQ3jS4M3PIxfbA=;
+	s=default; t=1570696888;
+	bh=6vs+mxOj8LdnxQhig/ZrlnZJRypReXhz9Lk/p8RpLM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9SPdZ8Jkc2t/+khIeO9n/O5IJ5aaD5Fwk2NSfLY51dFEw3ff5Ujv5r07Q932WgdI
-	 i98ErwFjb6rBD1Uwl3Ebe397ytOPQ5gnsdH7WKDuI8ZPVi7HOMvwhIzB7rdWat8Ucb
-	 byv+6EMpCxlPvaS/u91bgMR909lB51u1SOcDArsw=
+	b=Eu0JkfwTu6rIMgfP0b/+TWSSiyJR8u1uvyqfvIwcnKKaX3t2sYJ8J32FYB+1JCGIZ
+	 73Mw40hIQHPdZQcTsC84u5yMsqdNYR55CQrt5xjQrID/Tav0ZjI7ttY7Srkvt2z6ed
+	 EYaKhdhAlp410yG9w4/g771D5elz5nsW7UwYeE88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387650AbfJJIlZ (ORCPT
+        id S2388341AbfJJIl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45778 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:41:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388308AbfJJIlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:41:22 -0400
+        id S2388326AbfJJIlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:41:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B332054F;
-        Thu, 10 Oct 2019 08:41:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 349372054F;
+        Thu, 10 Oct 2019 08:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696882;
-        bh=EnWOWXgtHqr3dAFC04IlHKFxsfEX7VQ3jS4M3PIxfbA=;
+        s=default; t=1570696884;
+        bh=6vs+mxOj8LdnxQhig/ZrlnZJRypReXhz9Lk/p8RpLM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fyo+w8nWTDuxTYaUcJJ59o2qCAB87VhbU16r3d1uSjKCN11oBmjZeEOCusSONlM58
-         W8SjGN69Bxs94l9/P8gWTUN3HG5iBageBg9pp8V/jsNt2cLolMBkDzRZWLfNu42oL9
-         0Qi+ZCUZL8U1KcwhaVrBZemQCQfQvr0kzj7oYLek=
+        b=2WRu0AWdb6GqRdpEgs62x7KcfLoHw8nT/Ei3c+/XNtecRuIt9a/LZZBiHw4+Qn4pu
+         rdxipnIlZCEzLjqe2mwGdX3lyJvERnVUFZRhctkC9DN32OcKU6jrg/1r53QUMynHx0
+         Yv1RNrEbLIfa3S8mQnZqNYcHULO+BPScdIxwCwQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 5.3 080/148] sched: Add __ASSEMBLY__ guards around struct clone_args
-Date:   Thu, 10 Oct 2019 10:35:41 +0200
-Message-Id: <20191010083616.174108522@linuxfoundation.org>
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 089/148] ima: always return negative code for error
+Date:   Thu, 10 Oct 2019 10:35:50 +0200
+Message-Id: <20191010083616.736538919@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,43 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seth Forshee <seth.forshee@canonical.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-commit 61129dd29f7962f278b618a2a3e8fdb986a66dc8 upstream.
+[ Upstream commit f5e1040196dbfe14c77ce3dfe3b7b08d2d961e88 ]
 
-The addition of struct clone_args to uapi/linux/sched.h is not protected
-by __ASSEMBLY__ guards, causing a failure to build from source for glibc
-on RISC-V. Add the guards to fix this.
+integrity_kernel_read() returns the number of bytes read. If this is
+a short read then this positive value is returned from
+ima_calc_file_hash_atfm(). Currently this is only indirectly called from
+ima_calc_file_hash() and this function only tests for the return value
+being zero or nonzero and also doesn't forward the return value.
+Nevertheless there's no point in returning a positive value as an error,
+so translate a short read into -EINVAL.
 
-Fixes: 7f192e3cd316 ("fork: add clone3")
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
-Cc: <stable@vger.kernel.org>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20190917071853.12385-1-seth.forshee@canonical.com
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/sched.h |    2 ++
- 1 file changed, 2 insertions(+)
+ security/integrity/ima/ima_crypto.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/include/uapi/linux/sched.h
-+++ b/include/uapi/linux/sched.h
-@@ -33,6 +33,7 @@
- #define CLONE_NEWNET		0x40000000	/* New network namespace */
- #define CLONE_IO		0x80000000	/* Clone io context */
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index d4c7b8e1b083d..7532b062be594 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -268,8 +268,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
+ 		rbuf_len = min_t(loff_t, i_size - offset, rbuf_size[active]);
+ 		rc = integrity_kernel_read(file, offset, rbuf[active],
+ 					   rbuf_len);
+-		if (rc != rbuf_len)
++		if (rc != rbuf_len) {
++			if (rc >= 0)
++				rc = -EINVAL;
+ 			goto out3;
++		}
  
-+#ifndef __ASSEMBLY__
- /*
-  * Arguments for the clone3 syscall
-  */
-@@ -46,6 +47,7 @@ struct clone_args {
- 	__aligned_u64 stack_size;
- 	__aligned_u64 tls;
- };
-+#endif
- 
- /*
-  * Scheduling policies
+ 		if (rbuf[1] && offset) {
+ 			/* Using two buffers, and it is not the first
+-- 
+2.20.1
+
 
 
