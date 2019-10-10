@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A920C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B794C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148D12067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3510721A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="XJ9AzqJr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="X+y/07DC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388108AbfJJNlV (ORCPT
+        id S2388268AbfJJNlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:41:21 -0400
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:51172 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbfJJNlU (ORCPT
+        Thu, 10 Oct 2019 09:41:24 -0400
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:44104 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733228AbfJJNlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:41:20 -0400
+        Thu, 10 Oct 2019 09:41:21 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id A5BEB3F32B;
-        Thu, 10 Oct 2019 15:41:18 +0200 (CEST)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=XJ9AzqJr;
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 590523F598;
+        Thu, 10 Oct 2019 15:41:19 +0200 (CEST)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="X+y/07DC";
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PvCIW3Nwcj92; Thu, 10 Oct 2019 15:41:17 +0200 (CEST)
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Wl0QoKF-zCWb; Thu, 10 Oct 2019 15:41:18 +0200 (CEST)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 9D2A63F260;
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id E9AE93F58C;
         Thu, 10 Oct 2019 15:41:17 +0200 (CEST)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 658F43610CE;
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 7D18E36016C;
         Thu, 10 Oct 2019 15:41:17 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1570714877; bh=I43d2BTecvoJPXAN1AxjOTn1uEK1Ks5L6V9rF+kVywU=;
+        t=1570714877; bh=PbaGuh2AWzgR/QobTlpM3PYlJJowJXX6P7DMUtKFhwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XJ9AzqJrkAVMR4RNVKFniF4BTgPqdLa+jiit+c4NumrcPH91KNui0QgSnvzaT0h1b
-         Enxl+sJfziYIHP/L28Sv0vj8uxgmRM2AahsWxj9JoVctrzhjNVkJE+FO9HLi2E7dhY
-         lXbUSY8Vh8b7YI3Shl123a996WCXuLCV5pRMl4V0=
+        b=X+y/07DCYti5qO8GpDRx7v6qmNnd1qY4d+px/dYzGwT/xp4RIn7PYIWspQ0IqSV5k
+         T4E+F8ZdO3cy4VxhktQQac/74KLcQaOPnohGoQXODFsAYS7v5WSu25HzRX1Bxm9r4R
+         qTMpmKo7XQMCwVieRVRZ2yPsEEPBimGYbC3+eQ7M=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         torvalds@linux-foundation.org, kirill@shutemov.name
 Cc:     Thomas Hellstrom <thellstrom@vmware.com>
-Subject: [RFC PATCH 3/4] mm: pagewalk: Disallow user positive callback return values and use them for walk control
-Date:   Thu, 10 Oct 2019 15:40:57 +0200
-Message-Id: <20191010134058.11949-4-thomas_os@shipmail.org>
+Subject: [RFC PATCH 4/4] mm: mapping_dirty_helpers: Handle huge pmds correctly
+Date:   Thu, 10 Oct 2019 15:40:58 +0200
+Message-Id: <20191010134058.11949-5-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191010134058.11949-1-thomas_os@shipmail.org>
 References: <20191010134058.11949-1-thomas_os@shipmail.org>
@@ -64,66 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-When we have both a pmd_entry() and a pte_entry() callback, in some
-siutaions it is desirable not to traverse the pte level.
-Reserve positive callback return values for walk control and define a
-return value PAGE_WALK_CONTINUE that means skip lower level traversal
-and continue the walk.
+We always do dirty tracking on the PTE level. This means that any huge
+pmds we encounter should be read-only and not dirty: We can just skip
+those. Write-enabled huge pmds should not exist. They should have been
+split when made write-enabled. Warn and attempt to split them.
 
-Co-developed-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 ---
- include/linux/pagewalk.h | 6 ++++++
- mm/pagewalk.c            | 9 ++++++---
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ mm/mapping_dirty_helpers.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-index 6ec82e92c87f..d9e5d1927315 100644
---- a/include/linux/pagewalk.h
-+++ b/include/linux/pagewalk.h
-@@ -4,6 +4,12 @@
+diff --git a/mm/mapping_dirty_helpers.c b/mm/mapping_dirty_helpers.c
+index 799b9154b48f..f61bb9de1530 100644
+--- a/mm/mapping_dirty_helpers.c
++++ b/mm/mapping_dirty_helpers.c
+@@ -115,11 +115,18 @@ static int clean_record_pte(pte_t *pte, unsigned long addr,
+ static int wp_clean_pmd_entry(pmd_t *pmd, unsigned long addr, unsigned long end,
+ 			      struct mm_walk *walk)
+ {
+-	/* Dirty-tracking should be handled on the pte level */
+ 	pmd_t pmdval = pmd_read_atomic(pmd);
  
- #include <linux/mm.h>
+-	if (pmd_trans_huge(pmdval) || pmd_devmap(pmdval))
+-		WARN_ON(pmd_write(pmdval) || pmd_dirty(pmdval));
++	/*
++	 * Dirty-tracking should be handled on the pte level, and write-
++	 * enabled huge PMDS should never have been created. Warn on those.
++	 * Read-only huge PMDS can't be dirty so we just skip them.
++	 */
++	if (pmd_trans_huge(pmdval) || pmd_devmap(pmdval)) {
++		if (WARN_ON(pmd_write(pmdval) || pmd_dirty(pmdval)))
++			return 0;
++		return PAGE_WALK_CONTINUE;
++	}
  
-+/*
-+ * pmd_entry() Return code meaning skip to next entry.
-+ * Don't look for lower levels
-+ */
-+#define PAGE_WALK_CONTINUE 1
-+
- struct mm_walk;
- 
- /**
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index ea0b9e606ad1..d2483d432fda 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -52,8 +52,12 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 		 */
- 		if (ops->pmd_entry)
- 			err = ops->pmd_entry(pmd, addr, next, walk);
--		if (err)
-+		if (err < 0)
- 			break;
-+		if (err == PAGE_WALK_CONTINUE) {
-+			err = 0;
-+			continue;
-+		}
- 
- 		/*
- 		 * Check this here so we only break down trans_huge
-@@ -291,8 +295,7 @@ static int __walk_page_range(unsigned long start, unsigned long end,
-  *
-  *  - 0  : succeeded to handle the current entry, and if you don't reach the
-  *         end address yet, continue to walk.
-- *  - >0 : succeeded to handle the current entry, and return to the caller
-- *         with caller specific value.
-+ *  - >0 : Reserved for walk control. Use only PAGE_WALK_XX values.
-  *  - <0 : failed to handle the current entry, and return to the caller
-  *         with error code.
-  *
+ 	return 0;
+ }
 -- 
 2.21.0
 
