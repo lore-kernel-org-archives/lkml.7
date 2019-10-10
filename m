@@ -2,52 +2,52 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17448C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52141C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBEB2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2743321920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698088;
-	bh=uOi64M7D10KweumGcEk7pWtgTYT8TAKC8lUsJlYhmAQ=;
+	s=default; t=1570698093;
+	bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oMsppJlzE97VGoqSAo6L3IP6sn68EX8usNBPOM814GOEpVUGQqyzJqNMQbkFamZ5P
-	 hpI2VSJlNiPax4FALR7JjsiURgOJsZGaPPOqGxwNDbiLIKJtOj8tTkfHUvBDgV0Kw2
-	 +fC33tOLbPdKf34Vj0gNoJSJLTjphYrJmQ6WgI+Y=
+	b=Ek3jL8ygy7DuBcojGhjpT+2tfxlGBNIpdV4+w5dP1w3HzsVj6TPh2ke+IMSvDWBz9
+	 4fugwqQRZrJp5Aj+Iu76MzjajN9NUaq5IY5foUewq/DQZrzUK+9ghhkteb9yO5wTdu
+	 ywuH4y/8crFe6XqvK2gQIpd4b23DJZgVNqtPSg0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388355AbfJJIlb (ORCPT
+        id S2388317AbfJJIlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:41:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45858 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388342AbfJJIl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:41:27 -0400
+        id S2388291AbfJJIlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:41:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8C962054F;
-        Thu, 10 Oct 2019 08:41:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02B9621BE5;
+        Thu, 10 Oct 2019 08:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696887;
-        bh=uOi64M7D10KweumGcEk7pWtgTYT8TAKC8lUsJlYhmAQ=;
+        s=default; t=1570696876;
+        bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ThLi2d0wp4X+T8lrazxv4xx30X2qVZfotrmxuv3n80op3O94BftpIV9Py1/FmFMiJ
-         a4PtTrojpYDsXHnIWYpmYBO1CjI0HdLQJsC0EczyHbfC3BXLMsBjVioVVq0ektmISc
-         tCme/6b+QsZwMr8UA4IaOjoiQtrE5CblvNM2rI08=
+        b=tZLBhkN0mMhcgcn2CnbcGm3aLnJWm9fM3pJr1/yhtPGvKhYHm8tTagGIgnN3yML7J
+         RLHbCaDBlOSvoAEEHksp3ht5ugXQFCuctILeUgEOxlCWp0ek8LpORqj50VRiWvW5WQ
+         gs5c93NXpwRqBpue5C2drxf4j7KV83ZbnhinArKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 090/148] ima: fix freeing ongoing ahash_request
-Date:   Thu, 10 Oct 2019 10:35:51 +0200
-Message-Id: <20191010083616.787812636@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.3 040/148] crypto: qat - Silence smp_processor_id() warning
+Date:   Thu, 10 Oct 2019 10:35:01 +0200
+Message-Id: <20191010083613.576179416@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,42 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-[ Upstream commit 4ece3125f21b1d42b84896c5646dbf0e878464e1 ]
+commit 1b82feb6c5e1996513d0fb0bbb475417088b4954 upstream.
 
-integrity_kernel_read() can fail in which case we forward to call
-ahash_request_free() on a currently running request. We have to wait
-for its completion before we can free the request.
+It seems that smp_processor_id() is only used for a best-effort
+load-balancing, refer to qat_crypto_get_instance_node(). It's not feasible
+to disable preemption for the duration of the crypto requests. Therefore,
+just silence the warning. This commit is similar to e7a9b05ca4
+("crypto: cavium - Fix smp_processor_id() warnings").
 
-This was observed by interrupting a "find / -type f -xdev -print0 | xargs -0
-cat 1>/dev/null" with ctrl-c on an IMA enabled filesystem.
+Silences the following splat:
+BUG: using smp_processor_id() in preemptible [00000000] code: cryptomgr_test/2904
+caller is qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
+CPU: 1 PID: 2904 Comm: cryptomgr_test Tainted: P           O    4.14.69 #1
+...
+Call Trace:
+ dump_stack+0x5f/0x86
+ check_preemption_disabled+0xd3/0xe0
+ qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
+ skcipher_setkey_ablkcipher+0x2b/0x40
+ __test_skcipher+0x1f3/0xb20
+ ? cpumask_next_and+0x26/0x40
+ ? find_busiest_group+0x10e/0x9d0
+ ? preempt_count_add+0x49/0xa0
+ ? try_module_get+0x61/0xf0
+ ? crypto_mod_get+0x15/0x30
+ ? __kmalloc+0x1df/0x1f0
+ ? __crypto_alloc_tfm+0x116/0x180
+ ? crypto_skcipher_init_tfm+0xa6/0x180
+ ? crypto_create_tfm+0x4b/0xf0
+ test_skcipher+0x21/0xa0
+ alg_test_skcipher+0x3f/0xa0
+ alg_test.part.6+0x126/0x2a0
+ ? finish_task_switch+0x21b/0x260
+ ? __schedule+0x1e9/0x800
+ ? __wake_up_common+0x8d/0x140
+ cryptomgr_test+0x40/0x50
+ kthread+0xff/0x130
+ ? cryptomgr_notify+0x540/0x540
+ ? kthread_create_on_node+0x70/0x70
+ ret_from_fork+0x24/0x50
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ed8ccaef52 ("crypto: qat - Add support for SRIOV")
+Cc: stable@vger.kernel.org
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- security/integrity/ima/ima_crypto.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/crypto/qat/qat_common/adf_common_drv.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 7532b062be594..73044fc6a9521 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -271,6 +271,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
- 		if (rc != rbuf_len) {
- 			if (rc >= 0)
- 				rc = -EINVAL;
-+			/*
-+			 * Forward current rc, do not overwrite with return value
-+			 * from ahash_wait()
-+			 */
-+			ahash_wait(ahash_rc, &wait);
- 			goto out3;
- 		}
+--- a/drivers/crypto/qat/qat_common/adf_common_drv.h
++++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
+@@ -95,7 +95,7 @@ struct service_hndl {
  
--- 
-2.20.1
-
+ static inline int get_current_node(void)
+ {
+-	return topology_physical_package_id(smp_processor_id());
++	return topology_physical_package_id(raw_smp_processor_id());
+ }
+ 
+ int adf_service_register(struct service_hndl *service);
 
 
