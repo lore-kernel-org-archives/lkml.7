@@ -2,137 +2,91 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147E8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A02C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00F321929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697266;
-	bh=X4xLrAkXyRmsntZUR3zLVRvy/Ws925/vFkVLcH1FPww=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZGJD9oUrAO9fJbOji2hNi8uWCzI8UfckIn1HtXOBVFK3avn4uEF1pQBLa0U7FyUZx
-	 mIB2l5IkY1ipe+lSf84LfmtcL2RPl3qx/CKa5vCsDBXFfRl//WU68T86racCBN+GwP
-	 VkFoAdPBNVCyKgFb/g8FpOTUr0qE6v/QeCO4BdC8=
+	by mail.kernel.org (Postfix) with ESMTP id 72E8A2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388469AbfJJIrp (ORCPT
+        id S2389545AbfJJIrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:47:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53774 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:47:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:23141 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387775AbfJJIrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2389525AbfJJIrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:49 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9A32224BD;
-        Thu, 10 Oct 2019 08:47:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697261;
-        bh=X4xLrAkXyRmsntZUR3zLVRvy/Ws925/vFkVLcH1FPww=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X7PLzsIJ91oijFLSciaGO7vz8jj4vKvIu5c1+nSMZwB9u4MS0j9+EYlSt2SzuxNbC
-         FUC4dkl08zIL2kpqDPfhqkoaujh51aO2DjRdirxmLatmHsXpYUISFWc/beBYqLErcr
-         UG+mab2PHQR1gPM8iY5KRtX0pf/N+2CfMZwimUgg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaolin Zhang <xiaolin.zhang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH 4.19 040/114] drm/i915/gvt: update vgpu workload head pointer correctly
-Date:   Thu, 10 Oct 2019 10:35:47 +0200
-Message-Id: <20191010083605.378337441@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
-References: <20191010083544.711104709@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 0B63A75704
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:47:49 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id w8so2415723wrm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 01:47:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yMEA1vwAxxDR9KMsFNEltEDGLvMYr7N57Wh6Y66WRc0=;
+        b=Q0PHALrzz7qhpLZtfY7tFckoj2EONf+aIXTctf8NsWIm9AiQ5G4O4HAqh+oKl+X2Gy
+         PUZTkYUvORdNg/KUxgPKmaiyBP82LZdxMVtT39gqmtGApIJGRpvPKzQu81MQySJq9Fxw
+         uUjGoctZ7/zieGiyrR8AEBLlxPYpifvUSD71Sszom2tkeVu4B+g+AYOyIxJIzPQXZ7KF
+         Myc7tyEXDhUOISJ38Eahj0CFAXGIJ+XZqSdpXCm7ilcBs/ZWKADhl8GeWw62//d2ToXk
+         nXmEMdgNOfFS21UqqkOCXjYzzDA1C7TwWUduJNk3kLNkFkeRUqLwXQEZ+eTk5/A+PBYV
+         ucww==
+X-Gm-Message-State: APjAAAWwBII3PWuQsadUULPogld0+CvLre3E78JvoNUmDtb0vf+q8Cma
+        h7nYKqnNE0tfDah+rQUb7E5NLzwRm3Wo7fKgbNcx214bVvivkrmJZSSnTmBRxqxtQhU+Fw3vFRW
+        2FUa0qNsbCQNBzXqFr21ub68b
+X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr6460273wmk.135.1570697267773;
+        Thu, 10 Oct 2019 01:47:47 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwGlOe+0u6KXBMrN0A6Ztn9RSeVar+fTIwwT5kQa51LZTkc+efRSchIZ3bkrYo/CFxMwyo8bg==
+X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr6460257wmk.135.1570697267541;
+        Thu, 10 Oct 2019 01:47:47 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id z9sm5103737wrp.26.2019.10.10.01.47.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 01:47:46 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 10:47:44 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     netdev@vger.kernel.org, kvm <kvm@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        virtualization@lists.linux-foundation.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 07/11] VSOCK: add AF_VSOCK test cases
+Message-ID: <20191010084744.n46t3ryv7rilkpk2@steredhat>
+References: <20190801152541.245833-1-sgarzare@redhat.com>
+ <20190801152541.245833-8-sgarzare@redhat.com>
+ <CAGxU2F4N5ACePf6YLQCBFMHPu8wDLScF+AGQ2==JAuBUj0GB-A@mail.gmail.com>
+ <20191009151503.GA13568@stefanha-x1.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009151503.GA13568@stefanha-x1.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolin Zhang <xiaolin.zhang@intel.com>
+On Wed, Oct 09, 2019 at 04:15:03PM +0100, Stefan Hajnoczi wrote:
+> On Wed, Oct 09, 2019 at 12:03:53PM +0200, Stefano Garzarella wrote:
+> > Hi Stefan,
+> > I'm thinking about dividing this test into single applications, one
+> > for each test, do you think it makes sense?
+> > Or is it just a useless complication?
+> 
+> I don't mind either way but personally I would leave it as a single
+> program.
+> 
 
-commit 0a3242bdb47713e09cb004a0ba4947d3edf82d8a upstream.
+Okay, since I had the doubt it was a useless complication and you prefer
+a single application, I continue on this way :-)
 
-when creating a vGPU workload, the guest context head pointer should
-be updated correctly by comparing with the exsiting workload in the
-guest worklod queue including the current running context.
-
-in some situation, there is a running context A and then received 2 new
-vGPU workload context B and A. in the new workload context A, it's head
-pointer should be updated with the running context A's tail.
-
-v2: walk through guest workload list in backward way.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Xiaolin Zhang <xiaolin.zhang@intel.com>
-Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpu/drm/i915/gvt/scheduler.c |   28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
-
---- a/drivers/gpu/drm/i915/gvt/scheduler.c
-+++ b/drivers/gpu/drm/i915/gvt/scheduler.c
-@@ -1276,9 +1276,6 @@ static int prepare_mm(struct intel_vgpu_
- #define same_context(a, b) (((a)->context_id == (b)->context_id) && \
- 		((a)->lrca == (b)->lrca))
- 
--#define get_last_workload(q) \
--	(list_empty(q) ? NULL : container_of(q->prev, \
--	struct intel_vgpu_workload, list))
- /**
-  * intel_vgpu_create_workload - create a vGPU workload
-  * @vgpu: a vGPU
-@@ -1297,7 +1294,7 @@ intel_vgpu_create_workload(struct intel_
- {
- 	struct intel_vgpu_submission *s = &vgpu->submission;
- 	struct list_head *q = workload_q_head(vgpu, ring_id);
--	struct intel_vgpu_workload *last_workload = get_last_workload(q);
-+	struct intel_vgpu_workload *last_workload = NULL;
- 	struct intel_vgpu_workload *workload = NULL;
- 	struct drm_i915_private *dev_priv = vgpu->gvt->dev_priv;
- 	u64 ring_context_gpa;
-@@ -1320,15 +1317,20 @@ intel_vgpu_create_workload(struct intel_
- 	head &= RB_HEAD_OFF_MASK;
- 	tail &= RB_TAIL_OFF_MASK;
- 
--	if (last_workload && same_context(&last_workload->ctx_desc, desc)) {
--		gvt_dbg_el("ring id %d cur workload == last\n", ring_id);
--		gvt_dbg_el("ctx head %x real head %lx\n", head,
--				last_workload->rb_tail);
--		/*
--		 * cannot use guest context head pointer here,
--		 * as it might not be updated at this time
--		 */
--		head = last_workload->rb_tail;
-+	list_for_each_entry_reverse(last_workload, q, list) {
-+
-+		if (same_context(&last_workload->ctx_desc, desc)) {
-+			gvt_dbg_el("ring id %d cur workload == last\n",
-+					ring_id);
-+			gvt_dbg_el("ctx head %x real head %lx\n", head,
-+					last_workload->rb_tail);
-+			/*
-+			 * cannot use guest context head pointer here,
-+			 * as it might not be updated at this time
-+			 */
-+			head = last_workload->rb_tail;
-+			break;
-+		}
- 	}
- 
- 	gvt_dbg_el("ring id %d begin a new workload\n", ring_id);
-
-
+Thanks,
+Stefano
