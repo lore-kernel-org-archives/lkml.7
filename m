@@ -2,143 +2,108 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F094FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0248C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9F7205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E5D205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:38:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="MStOefh8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MzCP3JEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfJJQhU (ORCPT
+        id S1726514AbfJJQiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 12:37:20 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36462 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfJJQhU (ORCPT
+        Thu, 10 Oct 2019 12:38:21 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41462 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfJJQiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 12:37:20 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v24so6902008ljj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:37:18 -0700 (PDT)
+        Thu, 10 Oct 2019 12:38:21 -0400
+Received: by mail-io1-f65.google.com with SMTP id n26so15108892ioj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:38:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:organization:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yfyOriptMBDiaNAXMAHeFqoD+N162h27NUaqIbiMn8g=;
-        b=MStOefh8juSpz0SHnnQad09QT4Fa6DBUzzsFT+0kynCLK95vCaQjDcLVS5v/xzigeU
-         qCpyG75sS7RxMUxZmmOhdOl/epXfJeRXXOfrA4nvR6kFbjPVCgFF5evbfVSP37qQYDxS
-         fUfhRHIyYZrsNsXMHDHxL4hZCXSQD0rD3FYGQzoGBdIjSAdGPgN/CndJNspJ5TzDDt/V
-         8+qfJjBselXWOwch9wHOBIMAbn0EM7xsyXfWJ/thT94GFR5K4sF+VRWYQS6DzF1vJIP6
-         xnmDEvdwh7CsQgLndLAdyoT8cjr1XKTH1qVG3y9nHq3AYOlQ6yv2IxOHCjUIx8V4D+Gg
-         6lxQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ph+cM1wqiv/orbsFFGXeEKlbXh51icoHvALffiLcYf0=;
+        b=MzCP3JEh+/LlXlx0pBedozlo0FoZD5596/N3hdLGFXDY7yle3Gbnuy0SOR+2tzLqTW
+         pJ7aFSAUD2tSeLCAS1SLIU1wJoZQJF33bVsjoTDQT19NMIzC/vf8WRVb7YA7dh79T3wO
+         NU8cD67l6lYlGFfxwNY3bs1mg5iGsqMN1C34M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yfyOriptMBDiaNAXMAHeFqoD+N162h27NUaqIbiMn8g=;
-        b=awmtP2uCdXAU8eL7HcHMDOc8BETeCgfPa4U0yve06Ki+ilxw5v76LzeVP2dFCAcUKU
-         Fc5QMDkdcBwV8DQd4cAzb24xUunbk6OWI3Bcfln+ehkwJXm1MZQt1fD9TU70D/V6nrV9
-         gvE40yv3Nkzq02+ObFpRoUXq9aQSpTEEH69L9KxTsAdLUkpm7YSi5dzU4oWXiTI84DUM
-         JUJFzYvNgC+Him15i1VEKopp+mLotgWoHXyyJigGwfHELSiifdk+/1nkWLRKIYaU+nMo
-         kzVq/EjuDh1jH68LvyIUTjj9UFj0Y9HHSSg0Yypw9L2yDsj5aEvbdsNIdlGlOK6vugYf
-         3QWA==
-X-Gm-Message-State: APjAAAU0Uw+iFcWtR5TqSGbcFZrU8uuUge/E6TdJ9oIOmR1wI/4ASbNj
-        f/dD76tP48uenS+4xDhd8VrwBw==
-X-Google-Smtp-Source: APXvYqxQzg7PeYXEqZES/u8aJpwejbzcaBWpM2ZrtmNSR43Do+7YWdlXHee3xVamjDLKq3Nb1NVijA==
-X-Received: by 2002:a2e:9119:: with SMTP id m25mr6930040ljg.106.1570725438077;
-        Thu, 10 Oct 2019 09:37:18 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:46de:289:1600:123:1371:e3f7])
-        by smtp.gmail.com with ESMTPSA id b20sm1328867ljo.106.2019.10.10.09.37.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 09:37:17 -0700 (PDT)
-Subject: Re: [PATCH v9 5/5] MIPS: SGI-IP27: Enable ethernet phy on second
- Origin 200 module
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-References: <20191010145953.21327-1-tbogendoerfer@suse.de>
- <20191010145953.21327-6-tbogendoerfer@suse.de>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <102db20a-0c37-3e28-2d14-e9c6eaa55f5c@cogentembedded.com>
-Date:   Thu, 10 Oct 2019 19:37:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ph+cM1wqiv/orbsFFGXeEKlbXh51icoHvALffiLcYf0=;
+        b=jKELnuxKbTM/aNGOWwtoH7AOD0YhbA78XyaNBJiueh7lhwbfk6+7jSVFJrsMa+ClNV
+         YVTz4wISCCo/EOQZXhiGB/ZBsMUYOVUCIZMcT/TUN0l1M2lHcL3XySGpgbm34cFMOiOR
+         vrxyTMh7CqdPcx74BkUbpoAiAxbUdfdaMTa0nc8ETo/0KgaWRMqq8ALCPitBFw+r+8Kv
+         l/3XguC5tuKW3KNdyfh5huuiTD72cXqF+h644QXa9yAUfy22D7aWkPH2mS1kN+psaoH/
+         k3mE9JxzpsrmHyZ24s74rP3h0ov8YlQVpkix8ZbMLRhJxfIGLLJjzsQxOMqnvi2s2jdz
+         Notg==
+X-Gm-Message-State: APjAAAX5QM1d2l5vvNyvvhjkJMMhD2RUh1v0QSudULddaIoGVR+66NGQ
+        lk8BQP01g712mYSkSjv2OcxkIzMhhRM=
+X-Google-Smtp-Source: APXvYqzmK8JBKD+E+Ty9wyra12u8uq2W95ROdDI6/mP5v6fLutcTsEz7kZ9TlfVS9GFdT00F3JARog==
+X-Received: by 2002:a02:893:: with SMTP id 141mr11136425jac.36.1570725499971;
+        Thu, 10 Oct 2019 09:38:19 -0700 (PDT)
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com. [209.85.166.47])
+        by smtp.gmail.com with ESMTPSA id a14sm3557914ioo.85.2019.10.10.09.38.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2019 09:38:19 -0700 (PDT)
+Received: by mail-io1-f47.google.com with SMTP id b19so15191283iob.4
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:38:18 -0700 (PDT)
+X-Received: by 2002:a02:90c7:: with SMTP id c7mr11362682jag.12.1570725498188;
+ Thu, 10 Oct 2019 09:38:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191010145953.21327-6-tbogendoerfer@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+References: <20190925200220.157670-1-dianders@chromium.org>
+ <20190925125811.v3.3.Id33c06cbd1516b49820faccd80da01c7c4bf15c7@changeid>
+ <20191007135459.lj3qc2tqzcv3xcia@holly.lan> <CAD=FV=Vqj9JqGCQX_Foij8EkFtSy8r2wB3uoXNae6PECwNV+CQ@mail.gmail.com>
+ <20191010150735.dhrj3pbjgmjrdpwr@holly.lan>
+In-Reply-To: <20191010150735.dhrj3pbjgmjrdpwr@holly.lan>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 10 Oct 2019 09:38:04 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VuOVpvEB60-prMxuPyjcrJ-9O2hyaLKf86c-r9BVocdg@mail.gmail.com>
+Message-ID: <CAD=FV=VuOVpvEB60-prMxuPyjcrJ-9O2hyaLKf86c-r9BVocdg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] kdb: Fix "btc <cpu>" crash if the CPU didn't round up
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/2019 05:59 PM, Thomas Bogendoerfer wrote:
+Hi,
 
-> PROM only enables ethernet PHY on first Origin 200 module, so we must
-> do it ourselves for the second module.
-> 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> ---
->  arch/mips/pci/pci-ip27.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/mips/pci/pci-ip27.c b/arch/mips/pci/pci-ip27.c
-> index 441eb9383b20..7cc784cb299b 100644
-> --- a/arch/mips/pci/pci-ip27.c
-> +++ b/arch/mips/pci/pci-ip27.c
-> @@ -7,6 +7,11 @@
->   * Copyright (C) 1999, 2000, 04 Ralf Baechle (ralf@linux-mips.org)
->   * Copyright (C) 1999, 2000 Silicon Graphics, Inc.
->   */
-> +#include <asm/sn/addrs.h>
-> +#include <asm/sn/types.h>
-> +#include <asm/sn/klconfig.h>
-> +#include <asm/sn/hub.h>
-> +#include <asm/sn/ioc3.h>
->  #include <asm/pci/bridge.h>
->  
->  dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
-> @@ -31,3 +36,20 @@ int pcibus_to_node(struct pci_bus *bus)
->  }
->  EXPORT_SYMBOL(pcibus_to_node);
->  #endif /* CONFIG_NUMA */
-> +
-> +static void ip29_fixup_phy(struct pci_dev *dev)
-> +{
-> +	int nasid = pcibus_to_node(dev->bus);
-> +	u32 sid;
-> +
-> +	if (nasid != 1)
-> +		return; /* only needed on second module */
-> +
-> +	/* enable ethernet PHY on IP29 systemboard */
-> +	pci_read_config_dword(dev, PCI_SUBSYSTEM_VENDOR_ID, &sid);
-> +	if (sid == ((PCI_VENDOR_ID_SGI << 16) | IOC3_SUBSYS_IP29_SYSBOARD))
+On Thu, Oct 10, 2019 at 8:07 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+> > Reading through other control flows of the various backtrace commands,
+> > it looks like it is intentional to leave the current task changed when
+> > you explicitly do an action on that task (or a CPU).
+> >
+> > Actually, though, it wasn't clear to me that it ever made sense for
+> > any of these commands to implicitly leave the current task changed.
+> > If you agree, I can send a follow-up patch to change this behavior.
+>
+> Personally I don't like implicit changes of state but I might need a bit
+> more thinking to agree (or disagree ;-) ).
 
-   I thought PCI was little endian, thuis vendor ID at offset 0 and device ID
-at offset 2?
+I can post up a followup after this series lands and change it.  I
+have a feeling nobody is relying on the old behavior and thus nobody
+will notice but it would be nice to get this cleaner.
 
-[...]
+BTW: if you want me to spin to fix the commit message typo that Will
+found or add his Ack to the series, let me know.  Otherwise I'll
+assume that the typo can be fixed and Acks added when the patch is
+applied.
 
-MBR, Sergei
+-Doug
