@@ -2,100 +2,198 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6492BECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568A4C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210FC206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:42:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J9fW37+b"
+	by mail.kernel.org (Postfix) with ESMTP id 19BA8206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfJJUmr (ORCPT
+        id S1727225AbfJJUmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:42:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54777 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfJJUmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:42:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46q31b2707z9s7T;
-        Fri, 11 Oct 2019 07:42:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570740163;
-        bh=qtc1L2zwADd9HeaO41rnLWdsx91qAZrQvTXFUpW/6xA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=J9fW37+bGgkr39aHkWqlrS4qo8fh52uQbHxsfeP9DGcq81a42ccQ6OXJpcLqQFmIP
-         PYuDOj6iVns8dg/3DzPi+BFtdFf4ZInirllYrhOgc9fxAhsU9OFpiyK+h73QvbwAhB
-         vV01OdfWM3ig1PHXsmtpqFb5Apr9sPBeoR+dhIJkQidWvuiOmVTV/HoecY9hmwiSyJ
-         4oS65i7ugI/Vxw9dZumHCTL876wTxcmYEH9XRWb1bAyGKJn71pbl2okD6dSQ3kbZls
-         8kr5+Tlhwz28E8/FAqPDYKVSKos0RDRDrOI9rNaZIkQKH7CpiWDxZ6eLHG5ERJITZm
-         FNsBYq2xIWfSg==
-Date:   Fri, 11 Oct 2019 07:42:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: linux-next: Fixes tag needs some work in the staging.current tree
-Message-ID: <20191011074242.3d78c336@canb.auug.org.au>
+        Thu, 10 Oct 2019 16:42:50 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:33937 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfJJUmu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 16:42:50 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MODeL-1iTRpR0sAL-00OXyt; Thu, 10 Oct 2019 22:42:40 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>, Andi Shyti <andi@etezian.org>
+Cc:     linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: [PATCH 16/36] ARM: s3c: move spi fiq handler into platform
+Date:   Thu, 10 Oct 2019 22:30:00 +0200
+Message-Id: <20191010203043.1241612-16-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9Xgc_Yg8o_=SwmYIH8dZrkT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:pxNso9pqaCSa7Erxdl+xcM2PSbR6QNBafZTkg7d8WZ6ZRjnAavq
+ bIdBaNH5u5C/jlBjKRugdunCELCvWTNlyvuxHzHOLMHArPk2SuoQlSIqD/7R1neOpzmWMWI
+ 0DV7s4wfoUqZSuf6Dp6JgN+UCwj36OGLtI9kkZ3a+54hEyhCfQOSwICRyYNzOVxS0OIhW7A
+ SzzuJAAtT0Ron3uPw6JqA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SpuTVFWAlTg=:0lOQSUoQNKsa4xu/euVKIe
+ tZ+7Lxfv70jhBAaNTwCjGIH0MY3yk+Q/buWIDUtbSvDzFO0ISdzyt9vNAWUKHUMoQsDb+TyyU
+ DTSUopqMe6xTBcVKRD+ipnM2POhQ4n039t30HsyuuQqlFiEnCz1vm3Xqpo3Akj2k5aWH6xclM
+ ke/nOD/Kysa38CC4hMStGdW0vJYwTw0Migelq19C8m4+aIARd9Rv2nPpPNAFTztr9Y87wfTVE
+ yc+1pKCK/j91QnbIFz01MbGRgEnN643BNpeBgE1i2WRRjMaBgatSDvEjlrpXZMYA2HSyrGCqM
+ bStqT9LuLV6frmnUK51XFDAjlrDn6l4AdMBYJVuWZ8R+Ae68E/qN2BHwBsjochs/I+J0rbAe9
+ SH+6eCvv6DSKpj4NA2YHrYGlbJndP7OwNzRtjuKHELva0JsN3BNJQ8AG18HOF3yun2uwqTe5J
+ dUQgfFmn8Ps+8KvlEw3/ij4oiaVmGeusbFmAgLvoyxNvGq3c93wLsg7su7lbXc04r2/X377hG
+ 1SgLYf/frqvkdb6ZdFxZtPCyNJ2ZHxnywuBqOTO3ly5nTX2U9y8M0mw9xxJ3jUDaYxCg9MdSe
+ ydgTPyPSV1vadFC0N34d6oTfGjpd6PUS/yNdu8AlMq7pNRv8Hdc/LUKQR6+n0v0jOzJEXCS+n
+ sdN5Y7Nmi6IalHiUvkWX/CruoNEUmlFiU3nK0JkcaXZ0zp3J3ygxxeuUmWGeJKCXw6pTu4DYL
+ h+cAHE515cBJqLJFCZXMkyvv6fE0ATfkRG5cWao0qaCoy3M+prvh7WqfB8d0Wz9RV7Bqkt0qB
+ NAQa/UZbz3bjRoV428dxPKy3MO1X3hHYqibglP4+AaclKmXrT+8W8gP6mBAhNpvOxCzziLVVs
+ L4R+ilKkeT5O4etuhUqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9Xgc_Yg8o_=SwmYIH8dZrkT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The fiq handler needs access to some register definitions that
+should not be used directly by device drivers.
 
-Hi all,
+Since this is closely related to the irqchip driver anyway,
+move it into the same place.
 
-In commit
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/mach-s3c24xx/Makefile                           | 2 ++
+ arch/arm/mach-s3c24xx/irq-s3c24xx-fiq-exports.c          | 9 +++++++++
+ .../arm/mach-s3c24xx/irq-s3c24xx-fiq.S                   | 2 +-
+ drivers/spi/Makefile                                     | 1 -
+ drivers/spi/spi-s3c24xx.c                                | 7 +------
+ .../spi-s3c24xx-fiq.h => include/linux/spi/s3c24xx-fiq.h | 5 +++++
+ 6 files changed, 18 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm/mach-s3c24xx/irq-s3c24xx-fiq-exports.c
+ rename drivers/spi/spi-s3c24xx-fiq.S => arch/arm/mach-s3c24xx/irq-s3c24xx-fiq.S (98%)
+ rename drivers/spi/spi-s3c24xx-fiq.h => include/linux/spi/s3c24xx-fiq.h (78%)
 
-  85ae3aeedecc ("iio: imu: st_lsm6dsx: forbid 0 sensor sensitivity")
+diff --git a/arch/arm/mach-s3c24xx/Makefile b/arch/arm/mach-s3c24xx/Makefile
+index 8c31f84f8c97..695573df00b1 100644
+--- a/arch/arm/mach-s3c24xx/Makefile
++++ b/arch/arm/mach-s3c24xx/Makefile
+@@ -9,6 +9,8 @@
+ 
+ obj-y				+= common.o
+ obj-y				+= irq-s3c24xx.o
++obj-$(CONFIG_SPI_S3C24XX_FIQ)	+= irq-s3c24xx-fiq.o
++obj-$(CONFIG_SPI_S3C24XX_FIQ)	+= irq-s3c24xx-fiq-exports.o
+ 
+ obj-$(CONFIG_CPU_S3C2410)	+= s3c2410.o
+ obj-$(CONFIG_S3C2410_PLL)	+= pll-s3c2410.o
+diff --git a/arch/arm/mach-s3c24xx/irq-s3c24xx-fiq-exports.c b/arch/arm/mach-s3c24xx/irq-s3c24xx-fiq-exports.c
+new file mode 100644
+index 000000000000..ef2d1f664e67
+--- /dev/null
++++ b/arch/arm/mach-s3c24xx/irq-s3c24xx-fiq-exports.c
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#include <linux/stddef.h>
++#include <linux/export.h>
++#include <linux/spi/s3c24xx-fiq.h>
++
++EXPORT_SYMBOL(s3c24xx_spi_fiq_rx);
++EXPORT_SYMBOL(s3c24xx_spi_fiq_txrx);
++EXPORT_SYMBOL(s3c24xx_spi_fiq_tx);
+diff --git a/drivers/spi/spi-s3c24xx-fiq.S b/arch/arm/mach-s3c24xx/irq-s3c24xx-fiq.S
+similarity index 98%
+rename from drivers/spi/spi-s3c24xx-fiq.S
+rename to arch/arm/mach-s3c24xx/irq-s3c24xx-fiq.S
+index 9d5f8f1e5e81..2a84535a14fd 100644
+--- a/drivers/spi/spi-s3c24xx-fiq.S
++++ b/arch/arm/mach-s3c24xx/irq-s3c24xx-fiq.S
+@@ -13,7 +13,7 @@
+ #include <mach/map.h>
+ #include <mach/regs-irq.h>
+ 
+-#include "spi-s3c24xx-fiq.h"
++#include <linux/spi/s3c24xx-fiq.h>
+ 
+ #define S3C2410_SPTDAT           (0x10)
+ #define S3C2410_SPRDAT           (0x14)
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index bb49c9e6d0a0..4bcbbd35d2e8 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -89,7 +89,6 @@ obj-$(CONFIG_SPI_RB4XX)			+= spi-rb4xx.o
+ obj-$(CONFIG_SPI_RSPI)			+= spi-rspi.o
+ obj-$(CONFIG_SPI_S3C24XX)		+= spi-s3c24xx-hw.o
+ spi-s3c24xx-hw-y			:= spi-s3c24xx.o
+-spi-s3c24xx-hw-$(CONFIG_SPI_S3C24XX_FIQ) += spi-s3c24xx-fiq.o
+ obj-$(CONFIG_SPI_S3C64XX)		+= spi-s3c64xx.o
+ obj-$(CONFIG_SPI_SC18IS602)		+= spi-sc18is602.o
+ obj-$(CONFIG_SPI_SH)			+= spi-sh.o
+diff --git a/drivers/spi/spi-s3c24xx.c b/drivers/spi/spi-s3c24xx.c
+index 2f395e4861f6..464146fc8420 100644
+--- a/drivers/spi/spi-s3c24xx.c
++++ b/drivers/spi/spi-s3c24xx.c
+@@ -19,12 +19,12 @@
+ #include <linux/spi/spi.h>
+ #include <linux/spi/spi_bitbang.h>
+ #include <linux/spi/s3c24xx.h>
++#include <linux/spi/s3c24xx-fiq.h>
+ #include <linux/module.h>
+ 
+ #include <asm/fiq.h>
+ 
+ #include "spi-s3c24xx-regs.h"
+-#include "spi-s3c24xx-fiq.h"
+ 
+ /**
+  * s3c24xx_spi_devstate - per device data
+@@ -229,10 +229,6 @@ struct spi_fiq_code {
+ 	u8	data[0];
+ };
+ 
+-extern struct spi_fiq_code s3c24xx_spi_fiq_txrx;
+-extern struct spi_fiq_code s3c24xx_spi_fiq_tx;
+-extern struct spi_fiq_code s3c24xx_spi_fiq_rx;
+-
+ /**
+  * ack_bit - turn IRQ into IRQ acknowledgement bit
+  * @irq: The interrupt number
+@@ -282,7 +278,6 @@ static void s3c24xx_spi_tryfiq(struct s3c24xx_spi *hw)
+ 	regs.uregs[fiq_rrx]  = (long)hw->rx;
+ 	regs.uregs[fiq_rtx]  = (long)hw->tx + 1;
+ 	regs.uregs[fiq_rcount] = hw->len - 1;
+-	regs.uregs[fiq_rirq] = (long)S3C24XX_VA_IRQ;
+ 
+ 	set_fiq_regs(&regs);
+ 
+diff --git a/drivers/spi/spi-s3c24xx-fiq.h b/include/linux/spi/s3c24xx-fiq.h
+similarity index 78%
+rename from drivers/spi/spi-s3c24xx-fiq.h
+rename to include/linux/spi/s3c24xx-fiq.h
+index 7786b0ea56ec..954452618dfe 100644
+--- a/drivers/spi/spi-s3c24xx-fiq.h
++++ b/include/linux/spi/s3c24xx-fiq.h
+@@ -12,6 +12,11 @@
+ #ifdef __ASSEMBLY__
+ #define __REG_NR(x)     r##x
+ #else
++
++extern struct spi_fiq_code s3c24xx_spi_fiq_txrx;
++extern struct spi_fiq_code s3c24xx_spi_fiq_tx;
++extern struct spi_fiq_code s3c24xx_spi_fiq_rx;
++
+ #define __REG_NR(x)     (x)
+ #endif
+ 
+-- 
+2.20.0
 
-Fixes tag
-
-  Fixes: c8d4066c7246 ("iio: imu: st_lsm6dsx: remove invalid gain value for=
- LSM9DS1")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: 0f7e17286b45 ("iio: imu: st_lsm6dsx: remove invalid gain value for L=
-SM9DS1")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/9Xgc_Yg8o_=SwmYIH8dZrkT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2fl8IACgkQAVBC80lX
-0GzPSgf/Y835Kb3HaLqwCX3Inv5fcce69drQlBXOZjvdEmsqgIvVDHtpSYbYnwHW
-I+/eT3Oe4IxvKA1hm+6Lib7p0vQJ446hnP7RVZxdfGg1UwVjSKFH9AEyQgsk9vEc
-laLz5/YzeIdbpUjm6yTv268bvc8+GivTZ6dI393+v3z8anRD1Qkm81Jox0m/I1oc
-AjzMIP/2L97nF/RK9fRoDSDoyKl1b2MwXGvQfTV11ICJLJrUfZoyCuSuVaJ0+muE
-vj8ZO2FvKdUi0xlCGVCAjfG9BRc8QAfg8JiVJDWDr8OKz9OUONEJEqeMwR8ZHWG6
-r/5/sM+HeUTlLJP9UqNJ84T9JRhwQA==
-=wB8a
------END PGP SIGNATURE-----
-
---Sig_/9Xgc_Yg8o_=SwmYIH8dZrkT--
