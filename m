@@ -2,366 +2,166 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A00C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96140C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876EC21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1708208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V3Y/aolF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="lrZnZWs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387814AbfJJKMw (ORCPT
+        id S1726506AbfJJKPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:12:52 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:40103 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfJJKMw (ORCPT
+        Thu, 10 Oct 2019 06:15:21 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.163]:9438 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfJJKPV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:12:52 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191010101249euoutp02d8197fdf1794d8893071c24812c4de55~MQXu8MJ9S0095100951euoutp02u
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:12:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191010101249euoutp02d8197fdf1794d8893071c24812c4de55~MQXu8MJ9S0095100951euoutp02u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1570702369;
-        bh=v/JaXaj0MgNSUEFrqPEXnp0yrg+UKF6YfGXKsGqn7A4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=V3Y/aolFJQcJLckIeP8HKMuYpjx9O1cwnNxXQDDJjgum6Gl8oUf9l1gSu0sA2GxKF
-         7NpV4ZI3JWQbwBpr4zLIN3yaUs1NusiP/81sSsrycZ5bqpOdSMTe4l24Xmm6E/nQZv
-         3hpfifjTLcTXbrej/xcfqq4KZPqrkI15ZdhNrjMw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191010101249eucas1p2945fa9eb685d5600b328d2d102d5981f~MQXun2CRm2185721857eucas1p2z;
-        Thu, 10 Oct 2019 10:12:49 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id BD.07.04374.1240F9D5; Thu, 10
-        Oct 2019 11:12:49 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191010101248eucas1p16377c1679740640841c177e6f208e1fb~MQXuK1iCH1474414744eucas1p18;
-        Thu, 10 Oct 2019 10:12:48 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191010101248eusmtrp298797c9a2d7dafabab74d1adf62d871d~MQXuKEMf52297922979eusmtrp2d;
-        Thu, 10 Oct 2019 10:12:48 +0000 (GMT)
-X-AuditID: cbfec7f5-4ddff70000001116-9a-5d9f0421add7
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 23.1C.04166.0240F9D5; Thu, 10
-        Oct 2019 11:12:48 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191010101248eusmtip18ab155154d9d9e489f6ad82342337dde~MQXtdloxx0886308863eusmtip1d;
-        Thu, 10 Oct 2019 10:12:48 +0000 (GMT)
-Subject: Re: [PATCH v2 1/4] drm/bridge: dw-hdmi: Add Dynamic Range and
- Mastering InfoFrame support
-To:     Jonas Karlman <jonas@kwiboo.se>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko Stubner <heiko@sntech.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <ced39de1-fc69-4e9b-550f-f3fe7d73a434@samsung.com>
-Date:   Thu, 10 Oct 2019 12:12:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Thu, 10 Oct 2019 06:15:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570702519;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=9OBtSARrynOincT+6Aqsk3Vnc/FgMoCKd+vrgqEcf4o=;
+        b=lrZnZWs6net8LIdiNTcN22k/6GP++DHj8RKTvhIj7Zk9gvKtElZs35f+/t3zBxV/Wi
+        zjxSdDaO+9caAjkWfQZI1Uo6X1RIzcqZHIVoZ18FUpsT4QCvlih3NOMMZCd/LUceH7HA
+        fXmaj+JjwTmgJzyrHgy7nfgj6JmKbTST7b6YGanwrX5r8zMg3/N1OMA98JaLymFNIh2A
+        uAaElVXVmVKyMc0q6GaoVZAVegpLcw7+YV4BF+ylDBLsBzdZF/1nIk50SKnPzntRcLPy
+        S43ImqRi7cdoQqAB3AOqSzpbpzKXRJnaye54e49G3ChOwhUGF0xZOKKNjMpD8KpFLPgO
+        zNPQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJBG388B1M="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 44.28.0 AUTH)
+        with ESMTPSA id L0811cv9AAFJKCO
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 10 Oct 2019 12:15:19 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 12:15:09 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] extcon: sm5502: Clear pending interrupts during
+ initialization
+Message-ID: <20191010101509.GA122066@gerhold.net>
+References: <CGME20191008105726epcas3p178e8421ce5062b6955475199efa130e1@epcas3p1.samsung.com>
+ <20191008105434.119346-1-stephan@gerhold.net>
+ <328ccd73-2ceb-2e3f-524c-3fd950ccbf09@samsung.com>
+ <a4e6c33d-b715-34af-67c7-f9a3afc21e05@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <HE1PR06MB4011D7B916CBF8B740ACC45FAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJKsWRmVeSWpSXmKPExsWy7djP87qKLPNjDdZ/ErK48vU9m8X/R69Z
-        LeZOqrW4+v0ls8XJN1dZLH62b2Gy6Jy4hN3i8q45bBZtnctYLQ71RVv8PHSeyWJ9i74Dj8f7
-        G63sHhserWb1mN0xk9Vj06pONo8TEy4xedzvPs7k8XfWfhaPA72TWTy2X5vH7PF5k1wAVxSX
-        TUpqTmZZapG+XQJXxquuS0wFD7wqjn6dwNjA2G7RxcjJISFgInH57SZ2EFtIYAWjRMNh7S5G
-        LiD7C6PEwetTGSGcz4wSh+feZYfpONZylh0isZxR4u3rZjYI5y1Qe9MFsCphgRSJE8/mMIPY
-        IgL+En+774AVMQtcZpbYsOopWBGbgKbE38032UBsXgE7iT/LPzCB2CwCqhIvlk1hBbFFBSIk
-        Pj04zApRIyhxcuYTFhCbUyBWYtncTWC9zALyEs1bZzND2OISt57MZwJZJiHwk13i/4XfTBB3
-        u0h8/76REcIWlnh1fAvUPzIS/3fOh6qpl7i/ooUZormDUWLrhp3MEAlricPHLwJdwQG0QVNi
-        /S59EFNCwFGi80MVhMknceOtIMQJfBKTtk1nhgjzSnS0CUHMUJS4f3Yr1DxxiaUXvrJNYFSa
-        heSxWUiemYXkmVkIaxcwsqxiFE8tLc5NTy02zkst1ytOzC0uzUvXS87P3cQITHCn/x3/uoNx
-        35+kQ4wCHIxKPLwZJ+fGCrEmlhVX5h5ilOBgVhLhXTRrTqwQb0piZVVqUX58UWlOavEhRmkO
-        FiVx3mqGB9FCAumJJanZqakFqUUwWSYOTqkGxh3OIbMnee73Yfv0XKyy7iWvncKsZQYut53v
-        5Am5vYxYX6Qct0hqH1f587uTtxxq4PMK0OBwOX4wQH1P9btv9Zvsp3yRPFP2d8G8PYIz5xYc
-        qeneuLBcOL5mag/veT73OcW2DXcLi31mOni1+0rqzXiaaPJbdHFzmPFatvkvU0/9S2g819Fs
-        qMRSnJFoqMVcVJwIAJLgo3NsAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsVy+t/xu7oKLPNjDab/0Le48vU9m8X/R69Z
-        LeZOqrW4+v0ls8XJN1dZLH62b2Gy6Jy4hN3i8q45bBZtnctYLQ71RVv8PHSeyWJ9i74Dj8f7
-        G63sHhserWb1mN0xk9Vj06pONo8TEy4xedzvPs7k8XfWfhaPA72TWTy2X5vH7PF5k1wAV5Se
-        TVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexquuS0wF
-        D7wqjn6dwNjA2G7RxcjJISFgInGs5Sx7FyMXh5DAUkaJ8yfesUIkxCV2z3/LDGELS/y51sUG
-        UfSaUWLdoYNsIAlhgRSJE8/mgBWJCPhKtD/+xQxSxCxwlVli2oNXUB3NTBKXpv8A62AT0JT4
-        u/kmmM0rYCfxZ/kHJhCbRUBV4sWyKWCrRQUiJA7vmMUIUSMocXLmExYQm1MgVmLZ3E1gvcwC
-        6hJ/5l1ihrDlJZq3zoayxSVuPZnPNIFRaBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc9NxiQ73i
-        xNzi0rx0veT83E2MwLjeduzn5h2MlzYGH2IU4GBU4uHNODk3Vog1say4MvcQowQHs5II76JZ
-        c2KFeFMSK6tSi/Lji0pzUosPMZoCPTeRWUo0OR+YcvJK4g1NDc0tLA3Njc2NzSyUxHk7BA7G
-        CAmkJ5akZqemFqQWwfQxcXBKNTC2JeezbJlzPMn92qdlKbWbuy5xnLHRazsvF3/r2OZ5C9Zu
-        uS63+6B1cHhx79EFIet8z/27e/7Vm59zqhM+rQ9yuBw4X/PAxNWhOdp3ago2B/bPXL35sPUn
-        Zfebrgeeb0+VcWCUqQ6rY2Nawut3ksNa5Pe6hd+EyhYd31553dboS+Ua9tsBSgsuK7EUZyQa
-        ajEXFScCAO/Vc/kBAwAA
-X-CMS-MailID: 20191010101248eucas1p16377c1679740640841c177e6f208e1fb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191007192154epcas4p32fbfbce564847de5dac47a5e99972644
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191007192154epcas4p32fbfbce564847de5dac47a5e99972644
-References: <HE1PR06MB401113BF395C06E96503344FAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-        <CGME20191007192154epcas4p32fbfbce564847de5dac47a5e99972644@epcas4p3.samsung.com>
-        <HE1PR06MB4011D7B916CBF8B740ACC45FAC9B0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+In-Reply-To: <a4e6c33d-b715-34af-67c7-f9a3afc21e05@samsung.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.10.2019 21:21, Jonas Karlman wrote:
-> Add support for configuring Dynamic Range and Mastering InfoFrame from
-> the hdr_output_metadata connector property.
->
-> This patch adds a use_drm_infoframe flag to dw_hdmi_plat_data that platform
-> drivers use to signal when Dynamic Range and Mastering infoframes is supported.
-> This flag is needed because Amlogic GXBB and GXL report same DW-HDMI version,
-> and only GXL support DRM InfoFrame.
->
-> These changes were based on work done by Zheng Yang <zhengyang@rock-chips.com>
-> to support DRM InfoFrame on the Rockchip 4.4 BSP kernel at [1] and [2]
->
-> [1] https://github.com/rockchip-linux/kernel/tree/develop-4.4
-> [2] https://github.com/rockchip-linux/kernel/commit/d1943fde81ff41d7cca87f4a42f03992e90bddd5
->
-> Cc: Zheng Yang <zhengyang@rock-chips.com>
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Hi Chanwoo,
 
+thank you for your suggestions!
 
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+On Thu, Oct 10, 2019 at 04:46:56PM +0900, Chanwoo Choi wrote:
+> On 19. 10. 10. 오후 4:33, Chanwoo Choi wrote:
+> > It is not proper. Instead, initialize the SM5502_RET_INT1/2 with zero.
 
+Sorry about that. I don't have a datasheet, so I wasn't sure what's the
+best way to fix the problem.
 
-Neil, since you want to take care of patch3/4, will you take care of the
-whole patchset?
+> > 
+> > The reset value of SM5502_RET_INT1/2 are zero (0x00) as following:
+> > If you can test it with h/w, please try to test it and then
+> > send the modified patch. 
+> > 
+> > diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
+> > index c897f1aa4bf5..e168f77a18ba 100644
+> > --- a/drivers/extcon/extcon-sm5502.c
+> > +++ b/drivers/extcon/extcon-sm5502.c
+> > @@ -68,6 +68,14 @@ static struct reg_data sm5502_reg_data[] = {
+> >                 .reg = SM5502_REG_CONTROL,
+> >                 .val = SM5502_REG_CONTROL_MASK_INT_MASK,
+> >                 .invert = false,
+> > +       }, {
+> > +               .reg = SM5502_REG_INT1,
+> > +               .val = SM5502_RET_INT1_MASK,
+> > +               .invert = true,
+> > +       }, {
+> > +               .reg = SM5502_REG_INT2,
+> > +               .val = SM5502_RET_INT1_MASK,
+> > +               .invert = true,
+> >         }, {
+> >                 .reg = SM5502_REG_INTMASK1,
+> >                 .val = SM5502_REG_INTM1_KP_MASK
+> > diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
+> > index 9dbb634d213b..5c4edb3e7fce 100644
+> > --- a/drivers/extcon/extcon-sm5502.h
+> > +++ b/drivers/extcon/extcon-sm5502.h
+> > @@ -93,6 +93,8 @@ enum sm5502_reg {
+> >  #define SM5502_REG_CONTROL_RAW_DATA_MASK       (0x1 << SM5502_REG_CONTROL_RAW_DATA_SHIFT)
+> >  #define SM5502_REG_CONTROL_SW_OPEN_MASK                (0x1 << SM5502_REG_CONTROL_SW_OPEN_SHIFT)
+> >  
+> > +#define SM5502_RET_INT1_MASK                   (0xff)
+> > +
+> >  #define SM5502_REG_INTM1_ATTACH_SHIFT          0
+> >  #define SM5502_REG_INTM1_DETACH_SHIFT          1
+> >  #define SM5502_REG_INTM1_KP_SHIFT              2
+> > 
+> >>  }
+> >>  
+> >>  static int sm5022_muic_i2c_probe(struct i2c_client *i2c,
+> >>
+> > 
+> > 
 
+This patch (i.e. writing to SM5502_REG_INT1 and SM5502_REG_INT2)
+does not result in any difference.
+There are still no interrupts being sent.
 
- --
-Regards
-Andrzej
+On the other hand, your other suggestion fixes the problem:
 
+> 
+> When write 0x1 to SM5502_REG_RESET, reset the device.
+> So, you can reset the all registers by writing 1 to SM5502_REG_RESET as following:
+> 
 
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 81 +++++++++++++++++++++++
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h | 37 +++++++++++
->  include/drm/bridge/dw_hdmi.h              |  1 +
->  3 files changed, 119 insertions(+)
->
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index a15fbf71b9d7..fdc29869d75a 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -25,6 +25,7 @@
->  #include <uapi/linux/videodev2.h>
->  
->  #include <drm/bridge/dw_hdmi.h>
-> +#include <drm/drm_atomic.h>
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_bridge.h>
->  #include <drm/drm_edid.h>
-> @@ -1743,6 +1744,41 @@ static void hdmi_config_vendor_specific_infoframe(struct dw_hdmi *hdmi,
->  			HDMI_FC_DATAUTO0_VSD_MASK);
->  }
->  
-> +static void hdmi_config_drm_infoframe(struct dw_hdmi *hdmi)
-> +{
-> +	const struct drm_connector_state *conn_state = hdmi->connector.state;
-> +	struct hdmi_drm_infoframe frame;
-> +	u8 buffer[30];
-> +	ssize_t err;
-> +	int i;
-> +
-> +	if (!hdmi->plat_data->use_drm_infoframe)
-> +		return;
-> +
-> +	hdmi_modb(hdmi, HDMI_FC_PACKET_TX_EN_DRM_DISABLE,
-> +		  HDMI_FC_PACKET_TX_EN_DRM_MASK, HDMI_FC_PACKET_TX_EN);
-> +
-> +	err = drm_hdmi_infoframe_set_hdr_metadata(&frame, conn_state);
-> +	if (err < 0)
-> +		return;
-> +
-> +	err = hdmi_drm_infoframe_pack(&frame, buffer, sizeof(buffer));
-> +	if (err < 0) {
-> +		dev_err(hdmi->dev, "Failed to pack drm infoframe: %zd\n", err);
-> +		return;
-> +	}
-> +
-> +	hdmi_writeb(hdmi, frame.version, HDMI_FC_DRM_HB0);
-> +	hdmi_writeb(hdmi, frame.length, HDMI_FC_DRM_HB1);
-> +
-> +	for (i = 0; i < frame.length; i++)
-> +		hdmi_writeb(hdmi, buffer[4 + i], HDMI_FC_DRM_PB0 + i);
-> +
-> +	hdmi_writeb(hdmi, 1, HDMI_FC_DRM_UP);
-> +	hdmi_modb(hdmi, HDMI_FC_PACKET_TX_EN_DRM_ENABLE,
-> +		  HDMI_FC_PACKET_TX_EN_DRM_MASK, HDMI_FC_PACKET_TX_EN);
-> +}
-> +
->  static void hdmi_av_composer(struct dw_hdmi *hdmi,
->  			     const struct drm_display_mode *mode)
->  {
-> @@ -2064,6 +2100,7 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
->  		/* HDMI Initialization Step F - Configure AVI InfoFrame */
->  		hdmi_config_AVI(hdmi, mode);
->  		hdmi_config_vendor_specific_infoframe(hdmi, mode);
-> +		hdmi_config_drm_infoframe(hdmi);
->  	} else {
->  		dev_dbg(hdmi->dev, "%s DVI mode\n", __func__);
->  	}
-> @@ -2230,6 +2267,45 @@ static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
->  	return ret;
->  }
->  
-> +static bool hdr_metadata_equal(const struct drm_connector_state *old_state,
-> +			       const struct drm_connector_state *new_state)
-> +{
-> +	struct drm_property_blob *old_blob = old_state->hdr_output_metadata;
-> +	struct drm_property_blob *new_blob = new_state->hdr_output_metadata;
-> +
-> +	if (!old_blob || !new_blob)
-> +		return old_blob == new_blob;
-> +
-> +	if (old_blob->length != new_blob->length)
-> +		return false;
-> +
-> +	return !memcmp(old_blob->data, new_blob->data, old_blob->length);
-> +}
-> +
-> +static int dw_hdmi_connector_atomic_check(struct drm_connector *connector,
-> +					  struct drm_atomic_state *state)
-> +{
-> +	struct drm_connector_state *old_state =
-> +		drm_atomic_get_old_connector_state(state, connector);
-> +	struct drm_connector_state *new_state =
-> +		drm_atomic_get_new_connector_state(state, connector);
-> +	struct drm_crtc *crtc = new_state->crtc;
-> +	struct drm_crtc_state *crtc_state;
-> +
-> +	if (!crtc)
-> +		return 0;
-> +
-> +	if (!hdr_metadata_equal(old_state, new_state)) {
-> +		crtc_state = drm_atomic_get_crtc_state(state, crtc);
-> +		if (IS_ERR(crtc_state))
-> +			return PTR_ERR(crtc_state);
-> +
-> +		crtc_state->mode_changed = true;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void dw_hdmi_connector_force(struct drm_connector *connector)
->  {
->  	struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
-> @@ -2254,6 +2330,7 @@ static const struct drm_connector_funcs dw_hdmi_connector_funcs = {
->  
->  static const struct drm_connector_helper_funcs dw_hdmi_connector_helper_funcs = {
->  	.get_modes = dw_hdmi_connector_get_modes,
-> +	.atomic_check = dw_hdmi_connector_atomic_check,
->  };
->  
->  static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
-> @@ -2274,6 +2351,10 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
->  				    DRM_MODE_CONNECTOR_HDMIA,
->  				    hdmi->ddc);
->  
-> +	if (hdmi->version >= 0x200a && hdmi->plat_data->use_drm_infoframe)
-> +		drm_object_attach_property(&connector->base,
-> +			connector->dev->mode_config.hdr_output_metadata_property, 0);
-> +
->  	drm_connector_attach_encoder(connector, encoder);
->  
->  	cec_fill_conn_info_from_drm(&conn_info, connector);
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> index fcff5059db24..1999db05bc3b 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> @@ -254,6 +254,7 @@
->  #define HDMI_FC_POL2                            0x10DB
->  #define HDMI_FC_PRCONF                          0x10E0
->  #define HDMI_FC_SCRAMBLER_CTRL                  0x10E1
-> +#define HDMI_FC_PACKET_TX_EN                    0x10E3
->  
->  #define HDMI_FC_GMD_STAT                        0x1100
->  #define HDMI_FC_GMD_EN                          0x1101
-> @@ -289,6 +290,37 @@
->  #define HDMI_FC_GMD_PB26                        0x111F
->  #define HDMI_FC_GMD_PB27                        0x1120
->  
-> +#define HDMI_FC_DRM_UP                          0x1167
-> +#define HDMI_FC_DRM_HB0                         0x1168
-> +#define HDMI_FC_DRM_HB1                         0x1169
-> +#define HDMI_FC_DRM_PB0                         0x116A
-> +#define HDMI_FC_DRM_PB1                         0x116B
-> +#define HDMI_FC_DRM_PB2                         0x116C
-> +#define HDMI_FC_DRM_PB3                         0x116D
-> +#define HDMI_FC_DRM_PB4                         0x116E
-> +#define HDMI_FC_DRM_PB5                         0x116F
-> +#define HDMI_FC_DRM_PB6                         0x1170
-> +#define HDMI_FC_DRM_PB7                         0x1171
-> +#define HDMI_FC_DRM_PB8                         0x1172
-> +#define HDMI_FC_DRM_PB9                         0x1173
-> +#define HDMI_FC_DRM_PB10                        0x1174
-> +#define HDMI_FC_DRM_PB11                        0x1175
-> +#define HDMI_FC_DRM_PB12                        0x1176
-> +#define HDMI_FC_DRM_PB13                        0x1177
-> +#define HDMI_FC_DRM_PB14                        0x1178
-> +#define HDMI_FC_DRM_PB15                        0x1179
-> +#define HDMI_FC_DRM_PB16                        0x117A
-> +#define HDMI_FC_DRM_PB17                        0x117B
-> +#define HDMI_FC_DRM_PB18                        0x117C
-> +#define HDMI_FC_DRM_PB19                        0x117D
-> +#define HDMI_FC_DRM_PB20                        0x117E
-> +#define HDMI_FC_DRM_PB21                        0x117F
-> +#define HDMI_FC_DRM_PB22                        0x1180
-> +#define HDMI_FC_DRM_PB23                        0x1181
-> +#define HDMI_FC_DRM_PB24                        0x1182
-> +#define HDMI_FC_DRM_PB25                        0x1183
-> +#define HDMI_FC_DRM_PB26                        0x1184
-> +
->  #define HDMI_FC_DBGFORCE                        0x1200
->  #define HDMI_FC_DBGAUD0CH0                      0x1201
->  #define HDMI_FC_DBGAUD1CH0                      0x1202
-> @@ -744,6 +776,11 @@ enum {
->  	HDMI_FC_PRCONF_OUTPUT_PR_FACTOR_MASK = 0x0F,
->  	HDMI_FC_PRCONF_OUTPUT_PR_FACTOR_OFFSET = 0,
->  
-> +/* FC_PACKET_TX_EN field values */
-> +	HDMI_FC_PACKET_TX_EN_DRM_MASK = 0x80,
-> +	HDMI_FC_PACKET_TX_EN_DRM_ENABLE = 0x80,
-> +	HDMI_FC_PACKET_TX_EN_DRM_DISABLE = 0x00,
-> +
->  /* FC_AVICONF0-FC_AVICONF3 field values */
->  	HDMI_FC_AVICONF0_PIX_FMT_MASK = 0x03,
->  	HDMI_FC_AVICONF0_PIX_FMT_RGB = 0x00,
-> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-> index 4b3e863c4f8a..fbf3812c4326 100644
-> --- a/include/drm/bridge/dw_hdmi.h
-> +++ b/include/drm/bridge/dw_hdmi.h
-> @@ -126,6 +126,7 @@ struct dw_hdmi_plat_data {
->  					   const struct drm_display_mode *mode);
->  	unsigned long input_bus_format;
->  	unsigned long input_bus_encoding;
-> +	bool use_drm_infoframe;
->  
->  	/* Vendor PHY support */
->  	const struct dw_hdmi_phy_ops *phy_ops;
+Writing 0x1 to SM5502_REG_RESET seems to make interrupts work, so writing
+to SM5502_REG_INT1 and SM5502_REG_INT2 is not even necessary in this case.
 
+Would you still prefer initializing SM5502_REG_INT1/2 or is the patch
+below enough?
 
+diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
+index dc43847ad2b0..b3d93baf4fc5 100644
+--- a/drivers/extcon/extcon-sm5502.c
++++ b/drivers/extcon/extcon-sm5502.c
+@@ -65,6 +65,10 @@ struct sm5502_muic_info {
+ /* Default value of SM5502 register to bring up MUIC device. */
+ static struct reg_data sm5502_reg_data[] = {
+ 	{
++		.reg = SM5502_REG_RESET,
++		.val = SM5502_REG_RESET_MASK,
++		.invert = true,
++	}, {
+ 		.reg = SM5502_REG_CONTROL,
+ 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
+ 		.invert = false,
+diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
+index 9dbb634d213b..2ea1bc01be0a 100644
+--- a/drivers/extcon/extcon-sm5502.h
++++ b/drivers/extcon/extcon-sm5502.h
+@@ -237,6 +237,8 @@ enum sm5502_reg {
+ #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
+ 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
+ 
++#define SM5502_REG_RESET_MASK		    (0x1)
++
+ /* SM5502 Interrupts */
+ enum sm5502_irq {
+ 	/* INT1 */
