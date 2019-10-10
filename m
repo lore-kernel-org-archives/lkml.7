@@ -2,52 +2,53 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DAFC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55053C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3AE2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226612064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697559;
-	bh=9Mgja6JsCu6bg1X38vpFg/o8YQLDgD7d4hwCN/gzp+g=;
+	s=default; t=1570697563;
+	bh=iYquV7rnSBLN4fz1yz+JjspIOWP43YtxMzKycPphq00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PY1ykfGu6gC3xgvuOT40+JQTR2vju5r5anZEkdjkg3fXMvpvBG5oi4eqMSlHV7H2t
-	 tQLKtx8TA/wc5Qqgu6e0Nw4DoV7qvnCepQNHPP6kvofi4x14v6HFs2CWhBDiZyXVBm
-	 bq1TP9NpiaaeRd4/wyqM7MTHIRE9JAuwhH4O/Pu0=
+	b=KfUkQMhasfb7dWYG6r1OkxOdeEFoWrOBOY3PyyKBuE5toJHE76JmFZenAEHtdDTE2
+	 p5WQv43QPqobJ2DWpNJ2P4A4CKYq9Jlfqns1iIXoj+z7vs2fiRTqNuY0WLfji/V38q
+	 93dRyMb7VjqfGliEa8hXS+koa1k2TpyB/ljuFQ4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390293AbfJJIwh (ORCPT
+        id S2388337AbfJJIwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60480 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:52:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389972AbfJJIwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:52:35 -0400
+        id S2389156AbfJJIwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:52:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CF6021D56;
-        Thu, 10 Oct 2019 08:52:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCE8A21A4C;
+        Thu, 10 Oct 2019 08:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697553;
-        bh=9Mgja6JsCu6bg1X38vpFg/o8YQLDgD7d4hwCN/gzp+g=;
+        s=default; t=1570697550;
+        bh=iYquV7rnSBLN4fz1yz+JjspIOWP43YtxMzKycPphq00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fquxh5aNeZPuqLUKXOioNeCtfs9xHlvavnH1nDF/NCAL1HjMPMiWR9P0ENbSh19DM
-         CKSTp5pEF/sMko2oWICURK22IZtrfSmQIILu44joxjMUwXeAjgZQoHzA5E6mJl4GiI
-         Ktnz5TqK+BTi0CrcjLVHzQTVRk+MervTRdr3MhXw=
+        b=VMq+9aIgOOMc2EtFpariFvVtQViDKJyZ2KF3fluNvwluMDlKT0jg+xusKAeX17EBg
+         q8CLE9CbZflfh2hYlhfXCoYEY7ApTEXg0AcNn4w2bnwh8Nq4/N6fl39A7PN0Sz04FU
+         NisKWZj0wslBbmZz4fU5fUWLu9JKbdCMq4on9/bY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 23/61] mmc: sdhci-of-esdhc: set DMA snooping based on DMA coherence
-Date:   Thu, 10 Oct 2019 10:36:48 +0200
-Message-Id: <20191010083503.250941866@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 32/61] ceph: fix directories inode i_blkbits initialization
+Date:   Thu, 10 Oct 2019 10:36:57 +0200
+Message-Id: <20191010083509.551622651@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -60,74 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Luis Henriques <lhenriques@suse.com>
 
-commit 121bd08b029e03404c451bb237729cdff76eafed upstream.
+[ Upstream commit 750670341a24cb714e624e0fd7da30900ad93752 ]
 
-We must not unconditionally set the DMA snoop bit; if the DMA API is
-assuming that the device is not DMA coherent, and the device snoops the
-CPU caches, the device can see stale cache lines brought in by
-speculative prefetch.
+When filling an inode with info from the MDS, i_blkbits is being
+initialized using fl_stripe_unit, which contains the stripe unit in
+bytes.  Unfortunately, this doesn't make sense for directories as they
+have fl_stripe_unit set to '0'.  This means that i_blkbits will be set
+to 0xff, causing an UBSAN undefined behaviour in i_blocksize():
 
-This leads to the device seeing stale data, potentially resulting in
-corrupted data transfers.  Commonly, this results in a descriptor fetch
-error such as:
+  UBSAN: Undefined behaviour in ./include/linux/fs.h:731:12
+  shift exponent 255 is too large for 32-bit type 'int'
 
-mmc0: ADMA error
-mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
-mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
-mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
-mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
-mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
-mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
-mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
-mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
-mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
-mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
-mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
-mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
-mmc0: sdhci: Host ctl2: 0x00000000
-mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
-mmc0: sdhci: ============================================
-mmc0: error -5 whilst initialising SD card
+Fix this by initializing i_blkbits to CEPH_BLOCK_SHIFT if fl_stripe_unit
+is zero.
 
-but can lead to other errors, and potentially direct the SDHCI
-controller to read/write data to other memory locations (e.g. if a valid
-descriptor is visible to the device in a stale cache line.)
-
-Fix this by ensuring that the DMA snoop bit corresponds with the
-behaviour of the DMA API.  Since the driver currently only supports DT,
-use of_dma_is_coherent().  Note that device_get_dma_attr() can not be
-used as that risks re-introducing this bug if/when the driver is
-converted to ACPI.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-esdhc.c |    7 ++++++-
+ fs/ceph/inode.c | 7 ++++++-
  1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -435,7 +435,12 @@ static int esdhc_of_enable_dma(struct sd
- 		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(40));
- 
- 	value = sdhci_readl(host, ESDHC_DMA_SYSCTL);
--	value |= ESDHC_DMA_SNOOP;
-+
-+	if (of_dma_is_coherent(dev->of_node))
-+		value |= ESDHC_DMA_SNOOP;
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 9bda8c7a80a05..879bc08250931 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -789,7 +789,12 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+ 	ci->i_version = le64_to_cpu(info->version);
+ 	inode->i_version++;
+ 	inode->i_rdev = le32_to_cpu(info->rdev);
+-	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
++	/* directories have fl_stripe_unit set to zero */
++	if (le32_to_cpu(info->layout.fl_stripe_unit))
++		inode->i_blkbits =
++			fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
 +	else
-+		value &= ~ESDHC_DMA_SNOOP;
-+
- 	sdhci_writel(host, value, ESDHC_DMA_SYSCTL);
- 	return 0;
- }
++		inode->i_blkbits = CEPH_BLOCK_SHIFT;
+ 
+ 	if ((new_version || (new_issued & CEPH_CAP_AUTH_SHARED)) &&
+ 	    (issued & CEPH_CAP_AUTH_EXCL) == 0) {
+-- 
+2.20.1
+
 
 
