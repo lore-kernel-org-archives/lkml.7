@@ -5,54 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC79C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F233DC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072DF2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DEA20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697838;
-	bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
+	s=default; t=1570697842;
+	bh=9KK+zWA/y/bDSujiZFJZWo7AuGxM4XHwDzPBWNMWyak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r7R6NJt9u4All8dDU6E73OQpFVuhzB0dasYYg17OEWYpVhRXx1KzRtSW9XRoMXFwb
-	 zK23zTtWZ+NfGp9s9Ma4AnMruexApnKCaT69k2hMsI25+P2n/oNsf6S5wuWlVbJ65/
-	 aKzl5afEZ47lxeBz3DikD2ky6k+SloARi5SGXwV0=
+	b=FNIAH/gF+88wTtSTmZdtK8RWoinzr20Do7rbcXxI9cF7foOeHWKUoTpgdYiNXeZCt
+	 dwY3lz+Iz3IdSDMeRgrrfBzbS7GL2qBoHdmLAWAuod7gGFDP4obO6fBycJsObuJuSV
+	 Fp7EKjh5hvpKRO50abu74JR1fWDIPBzm4bRXnjco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389369AbfJJI5Q (ORCPT
+        id S2389398AbfJJIq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52914 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387660AbfJJIrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:04 -0400
+        id S2389383AbfJJIqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:46:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78853218AC;
-        Thu, 10 Oct 2019 08:47:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6B62218AC;
+        Thu, 10 Oct 2019 08:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697223;
-        bh=WIl6W8ebQcojUGSsK88TdAJ9kurCE2C5egXd6emtgqY=;
+        s=default; t=1570697212;
+        bh=9KK+zWA/y/bDSujiZFJZWo7AuGxM4XHwDzPBWNMWyak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=inGKHgFlGGWVDtXUFxkfOmv3HkuY/YBpORsGv3H4TNaM6wQEBBib8iWalBB0bmbah
-         d1S9DFSf4emTNB3D48bxoeOuap27J8CyJVs+DmLk3WQGEut+07LUurEGj+ShMYj7P9
-         M3HxkUNoQgLp1ngcIVXvDq9UxW5qp53+Xzm5g9p0=
+        b=crjeCEYhwIO8ztkHGm5Brpe2RokHfu2KpQWdGY3c/9xRl150gA72CPE4aL0YdQJ8A
+         4oTxVnwVIydxL3Vlf0OaOrnAnhul0la3/WTOqUnZoClOGsuvZ3Pn4IqRUgy9PX9A6w
+         EcOAj9P5me+1QAN/rPSIXVcZFjNYQenjiM0/2Mfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/114] x86/purgatory: Disable the stackleak GCC plugin for the purgatory
-Date:   Thu, 10 Oct 2019 10:36:10 +0200
-Message-Id: <20191010083609.872858848@linuxfoundation.org>
+        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 059/114] drm/amdgpu: Fix KFD-related kernel oops on Hawaii
+Date:   Thu, 10 Oct 2019 10:36:06 +0200
+Message-Id: <20191010083609.241241569@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -65,51 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Felix Kuehling <Felix.Kuehling@amd.com>
 
-[ Upstream commit ca14c996afe7228ff9b480cf225211cc17212688 ]
+[ Upstream commit dcafbd50f2e4d5cc964aae409fb5691b743fba23 ]
 
-Since commit:
+Hawaii needs to flush caches explicitly, submitting an IB in a user
+VMID from kernel mode. There is no s_fence in this case.
 
-  b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
-
-kexec breaks if GCC_PLUGIN_STACKLEAK=y is enabled, as the purgatory
-contains undefined references to stackleak_track_stack.
-
-Attempting to load a kexec kernel results in this failure:
-
-  kexec: Undefined symbol: stackleak_track_stack
-  kexec-bzImage64: Loading purgatory failed
-
-Fix this by disabling the stackleak plugin for the purgatory.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
-Link: https://lkml.kernel.org/r/20190923171753.GA2252517@rani.riverdale.lan
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: eb3961a57424 ("drm/amdgpu: remove fence context from the job")
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/purgatory/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 10fb42da0007e..b81b5172cf994 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -23,6 +23,7 @@ KCOV_INSTRUMENT := n
- 
- PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
- PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-+PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN)
- 
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
+index 51b5e977ca885..f4e9d1b10e3ed 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
+@@ -139,7 +139,8 @@ int amdgpu_ib_schedule(struct amdgpu_ring *ring, unsigned num_ibs,
+ 	/* ring tests don't use a job */
+ 	if (job) {
+ 		vm = job->vm;
+-		fence_ctx = job->base.s_fence->scheduled.context;
++		fence_ctx = job->base.s_fence ?
++			job->base.s_fence->scheduled.context : 0;
+ 	} else {
+ 		vm = NULL;
+ 		fence_ctx = 0;
 -- 
 2.20.1
 
