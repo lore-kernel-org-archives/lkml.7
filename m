@@ -2,186 +2,121 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D43C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A402BC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9BB21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE34218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9XnX277"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbfJJHwY (ORCPT
+        id S1733025AbfJJH5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:52:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41280 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732928AbfJJHwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:52:24 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6DBFA308FBA6;
-        Thu, 10 Oct 2019 07:52:23 +0000 (UTC)
-Received: from [10.36.117.125] (ovpn-117-125.ams2.redhat.com [10.36.117.125])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B6545C1B5;
-        Thu, 10 Oct 2019 07:52:21 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
- memmaps in memory_failure()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191009142435.3975-1-david@redhat.com>
- <20191009142435.3975-3-david@redhat.com>
- <20191009144323.GH6681@dhcp22.suse.cz>
- <5a626821-77e9-e26b-c2ee-219670283bf0@redhat.com>
- <20191010073526.GC18412@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <18383432-c74a-9ce5-a3c6-1e57d54cb629@redhat.com>
-Date:   Thu, 10 Oct 2019 09:52:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 10 Oct 2019 03:57:43 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43990 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfJJH5n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:57:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r9so4556649edl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 00:57:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=abZRbHtx5iae3osvif2/XET2yXd88kPrNl4NEXaM0H8=;
+        b=r9XnX277LTpf7y0OwaeUmdL7TPJb44sg1GG0+Tz2Q8tSweblfMVFwsjE55CnbRbBWe
+         /qnOwBACZtBt0HW8bItxWWfe7OCuxSyt+F5X9WUTj/rUTYwYUSVRtjixCCUr1y5JL4Lt
+         RC2AqdRz46xKNoF82mIqpXp2fiW6OyuhByYfObVCIYHiEKkf6S7+iyAFM0P07H7+YaeD
+         2ziYzqRu8hLDWFAdhO4XtnS4O1Oyx2QHx63pjl8w80sxWhSrBHcJtPAYrrEfkSpE3WXG
+         vea2xUjE+DjiBwBudQG3TyrUd5+tPoc5PDsvv5cy8jkHTheiu5qQXE2+rGs8E6bf/0ZL
+         DxvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=abZRbHtx5iae3osvif2/XET2yXd88kPrNl4NEXaM0H8=;
+        b=qx317RcLVFKaYFCfg4BjLc1n74f2xjdQ8u4toqFxJAUBdjWAVZ5FEhF3zQhV/4e8T+
+         ntbUrj6loyoOKtotlpkLGSKjqRA3S86kyjjmeMFNzVqFG4TmToqIL8KDIqnhHzaEMCuD
+         bJLRvky1skzbv/2AYoQHWDAt9jo5ZALLS6twNJECR67e/CXjevCOkTGj1nxZAOPbG/tZ
+         8oHCHs4qk8anNQUjvrQ5mAcgrzFIxsp/5kyzheowkjUJZFX9Qshgf//DBEEi1Tfi3rUD
+         VPPklgcF8ccTU2tiHzk6fnL71NNLerX33cH+HL/XyCcrjhVYxaPUDmRMtEs6Wg9pVm+/
+         cCJg==
+X-Gm-Message-State: APjAAAWWAeukIjHtLr6H0iuD17XOXpyM0ZBPGeoNUvF0UBqiJiGc8Iel
+        wys1jGkbAWjnlkYQ0usRo/Zt7CM3hDmTTpyQzg==
+X-Google-Smtp-Source: APXvYqwmEWgwvP25pdFXR/b7axk7PZGebrq9+ISuMjYmYXb+fFKqTjdRU+5bcRMveO8dou1dM4qt4eh/NyzH3otnpmo=
+X-Received: by 2002:a17:906:2410:: with SMTP id z16mr6889645eja.120.1570694262042;
+ Thu, 10 Oct 2019 00:57:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191010073526.GC18412@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 10 Oct 2019 07:52:23 +0000 (UTC)
+References: <20191008220824.7911-1-viktor.rosendahl@gmail.com>
+ <20191008220824.7911-5-viktor.rosendahl@gmail.com> <20191009141114.GC143258@google.com>
+ <CAPQh3wP93yF4R4LOabmBf8zqTgM7ZVT=_eZRPwgq5WKEESjnyw@mail.gmail.com> <20191009140804.74d9ab1f@gandalf.local.home>
+In-Reply-To: <20191009140804.74d9ab1f@gandalf.local.home>
+From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
+Date:   Thu, 10 Oct 2019 09:57:31 +0200
+Message-ID: <CAPQh3wO1zvwQf0zmb9_ro1spUo+CCxJFCgB2aQJWVW8KZoXQdA@mail.gmail.com>
+Subject: Re: [PATCH v8 4/4] ftrace: Add an option for tracing console latencies
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.10.19 09:35, Michal Hocko wrote:
-> On Thu 10-10-19 09:27:32, David Hildenbrand wrote:
->> On 09.10.19 16:43, Michal Hocko wrote:
->>> On Wed 09-10-19 16:24:35, David Hildenbrand wrote:
->>>> We should check for pfn_to_online_page() to not access uninitialized
->>>> memmaps. Reshuffle the code so we don't have to duplicate the error
->>>> message.
->>>>
->>>> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>> Cc: Michal Hocko <mhocko@kernel.org>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>>  mm/memory-failure.c | 14 ++++++++------
->>>>  1 file changed, 8 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->>>> index 7ef849da8278..e866e6e5660b 100644
->>>> --- a/mm/memory-failure.c
->>>> +++ b/mm/memory-failure.c
->>>> @@ -1253,17 +1253,19 @@ int memory_failure(unsigned long pfn, int flags)
->>>>  	if (!sysctl_memory_failure_recovery)
->>>>  		panic("Memory failure on page %lx", pfn);
->>>>  
->>>> -	if (!pfn_valid(pfn)) {
->>>> +	p = pfn_to_online_page(pfn);
->>>> +	if (!p) {
->>>> +		if (pfn_valid(pfn)) {
->>>> +			pgmap = get_dev_pagemap(pfn, NULL);
->>>> +			if (pgmap)
->>>> +				return memory_failure_dev_pagemap(pfn, flags,
->>>> +								  pgmap);
->>>> +		}
->>>>  		pr_err("Memory failure: %#lx: memory outside kernel control\n",
->>>>  			pfn);
->>>>  		return -ENXIO;
->>>
->>> Don't we need that earlier at hwpoison_inject level?
->>>
->>
->> Theoretically yes, this is another instance. But pfn_to_online_page(pfn)
->> alone would not be sufficient as discussed. We would, again, have to
->> special-case ZONE_DEVICE via things like get_dev_pagemap() ...
->>
->> But mm/hwpoison-inject.c:hwpoison_inject() is a pure debug feature either way:
->>
->> 	/*
->> 	 * Note that the below poison/unpoison interfaces do not involve
->> 	 * hardware status change, hence do not require hardware support.
->> 	 * They are mainly for testing hwpoison in software level.
->> 	 */
->>
->> So it's not that bad compared to memory_failure() called from real HW or
->> drivers/base/memory.c:soft_offline_page_store()/hard_offline_page_store()
-> 
-> Yes, this is just a toy. And yes we need to handle zone device pages
-> here because a) people likely want to test MCE behavior even on these
-> pages and b) HW can really trigger MCEs there as well. I was just
-> pointing that the patch is likely incomplete.
-> 
+Den ons 9 okt. 2019 kl 20:08 skrev Steven Rostedt <rostedt@goodmis.org>:
+>
+> On Wed, 9 Oct 2019 16:51:07 +0200
+> Viktor Rosendahl <viktor.rosendahl@gmail.com> wrote:
+>
+> > Apologies, I should have replied there but I have been a bit busy the
+> > last few days with other topics, and I felt a bit indecisive about
+> > that point, so I just sloppily addressed the issue in the cover letter
+> > of this new series:
+> >
+> > "I have retained the fourth patch, although it was suggested that is becoming
+> > obsolete soon. I have retained it only because I do not know the status of
+> > the code that will make it obsolete. It's the last patch of the series and
+> > if there indeed is some code that will remove the latency issues from the
+> > printk code, then of course it makes sense to drop it. The first three patches
+> > will work without it."
+> >
+> > I thought that, since it's the last in the series, it would be
+> > possible for maintainers to just take the first three if the last one
+> > is not wanted.
+> >
+> > For me it solves a rather important problem though, so if the code
+> > that will make it obsolete isn't available for some time, then perhaps
+> > it should be considered as a temporary solution.
+> >
+> > Of course, if there is a commitment to never remove any knobs from
+> > /sys/kernel/debug/tracing/trace_options, then I can easily understand
+> > that it's not wanted as a temporary fix.
+>
+> There isn't quite a commitment to not remove knobs, but if a tool
+> starts relying on a knob, then, the answer is yes there is :-p
+>
+> As this will hopefully become something we don't worry about in the
+> future, I would rather have this be a kernel command line option. This
+> way, it wont be something that tools can really check for.
+>
+> If you add a trace_console_latency option to the kernel command line,
+> we can enable it that way. And then when it becomes obsolete, we can
+> simply remove it, without breaking any tools.
+>
+> Would that work for you?
+>
 
-I rather think this deserves a separate patch as it is a separate
-interface :)
+Sounds good to me. I will try to adjust the patch accordingly within a few days.
 
-I do wonder why hwpoison_inject() has to perform so much extra work
-compared to other memory_failure() users. This smells like legacy
-leftovers to me, but I might be wrong. The interface is fairly old,
-though. Does anybody know why we need this magic? I can spot quite some
-duplicate checks/things getting performed.
+best regards,
 
-Naiive me would just make the interface perform the same as
-hard_offline_page_store(). But most probably I am not getting the real
-purpose of both different interfaces.
+Viktor
 
-HWPOISON_INJECT is only selected for DEBUG_KERNEL, so I would have
-guessed that fixing this is not urgent.
-
-BTW: mm/memory-failure.c:soft_offline_page() also looks wrong and needs
-fixing to make sure we access initialized memmaps.
-
--- 
-
-Thanks,
-
-David / dhildenb
+> -- Steve
