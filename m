@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B33AECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86CDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A6A218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4AE205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:15:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfJJRPj (ORCPT
+        id S1726834AbfJJRPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:15:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:36356 "EHLO foss.arm.com"
+        Thu, 10 Oct 2019 13:15:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:36362 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbfJJRPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:15:37 -0400
+        id S1726800AbfJJRPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 13:15:38 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC89C1570;
-        Thu, 10 Oct 2019 10:15:36 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E279E1597;
+        Thu, 10 Oct 2019 10:15:37 -0700 (PDT)
 Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AA6B13F71A;
-        Thu, 10 Oct 2019 10:15:35 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E02AE3F71A;
+        Thu, 10 Oct 2019 10:15:36 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, will@kernel.org,
         mark.rutland@arm.com, catalin.marinas@arm.com, dave.martin@arm.com,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 2/3] arm64: nofpsmid: Clear TIF_FOREIGN_FPSTATE flag for early tasks
-Date:   Thu, 10 Oct 2019 18:15:16 +0100
-Message-Id: <20191010171517.28782-3-suzuki.poulose@arm.com>
+Subject: [PATCH 3/3] arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
+Date:   Thu, 10 Oct 2019 18:15:17 +0100
+Message-Id: <20191010171517.28782-4-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191010171517.28782-1-suzuki.poulose@arm.com>
 References: <20191010171517.28782-1-suzuki.poulose@arm.com>
@@ -43,77 +43,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We detect the absence of FP/SIMD after we boot the SMP CPUs, and by then
-we have kernel threads running already with TIF_FOREIGN_FPSTATE set which
-could be inherited by early userspace applications (e.g, modprobe triggered
-from initramfs). This could end up in the applications stuck in
-do_nofity_resume() as we never clear the TIF flag, once we now know that
-we don't support FP.
-
-Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
-for tasks which may have them set, as we would have done in the normal
-case, but avoiding touching the hardware state (since we don't support any).
+We set the compat_elf_hwcap bits unconditionally on arm64 to
+include the VFP and NEON support. However, the FP/SIMD unit
+is optional on Arm v8 and thus could be missing. We already
+handle this properly in the kernel, but still advertise to
+the COMPAT applications that the VFP is available. Fix this
+to make sure we only advertise when we really have them.
 
 Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
 Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm64/kernel/fpsimd.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+Changes since v1:
+  - Switch to using cpuid_feature_extract_unsigned_field() rather than
+    hard coding field extraction.
+---
+ arch/arm64/kernel/cpufeature.c | 37 +++++++++++++++++++++++++++++++---
+ 1 file changed, 34 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index 37d3912cfe06..dfcdd077aeca 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -1128,12 +1128,19 @@ void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *st, void *sve_state,
-  */
- void fpsimd_restore_current_state(void)
- {
--	if (!system_supports_fpsimd())
--		return;
--
- 	get_cpu_fpsimd_context();
--
--	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE)) {
-+	/*
-+	 * For the tasks that were created before we detected the absence of
-+	 * FP/SIMD, the TIF_FOREIGN_FPSTATE could be set via fpsimd_thread_switch()
-+	 * and/or could be inherited from the parent(init_task has this set). Even
-+	 * though userspace has not run yet, this could be inherited by the
-+	 * processes forked from one of those tasks (e.g, modprobe from initramfs).
-+	 * If the system doesn't support FP/SIMD, we must clear the flag for the
-+	 * tasks mentioned above, to indicate that the FPSTATE is clean (as we
-+	 * can't have one) to avoid looping for ever to clear the flag.
-+	 */
-+	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE) &&
-+	    system_supports_fpsimd()) {
- 		task_fpsimd_load();
- 		fpsimd_bind_task_to_cpu();
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 0f9eace6c64b..d260e3bdf07b 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -32,9 +32,7 @@ static unsigned long elf_hwcap __read_mostly;
+ #define COMPAT_ELF_HWCAP_DEFAULT	\
+ 				(COMPAT_HWCAP_HALF|COMPAT_HWCAP_THUMB|\
+ 				 COMPAT_HWCAP_FAST_MULT|COMPAT_HWCAP_EDSP|\
+-				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_VFP|\
+-				 COMPAT_HWCAP_VFPv3|COMPAT_HWCAP_VFPv4|\
+-				 COMPAT_HWCAP_NEON|COMPAT_HWCAP_IDIV|\
++				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_IDIV|\
+ 				 COMPAT_HWCAP_LPAE)
+ unsigned int compat_elf_hwcap __read_mostly = COMPAT_ELF_HWCAP_DEFAULT;
+ unsigned int compat_elf_hwcap2 __read_mostly;
+@@ -1589,6 +1587,12 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.match_list = list,						\
  	}
-@@ -1148,17 +1155,16 @@ void fpsimd_restore_current_state(void)
-  */
- void fpsimd_update_current_state(struct user_fpsimd_state const *state)
- {
--	if (!system_supports_fpsimd())
--		return;
--
- 	get_cpu_fpsimd_context();
  
- 	current->thread.uw.fpsimd_state = *state;
- 	if (system_supports_sve() && test_thread_flag(TIF_SVE))
- 		fpsimd_to_sve(current);
- 
--	task_fpsimd_load();
--	fpsimd_bind_task_to_cpu();
-+	if (system_supports_fpsimd()) {
-+		task_fpsimd_load();
-+		fpsimd_bind_task_to_cpu();
++#define HWCAP_CAP_MATCH(match, cap_type, cap)					\
++	{									\
++		__HWCAP_CAP(#cap, cap_type, cap)				\
++		.matches = match,						\
 +	}
++
+ #ifdef CONFIG_ARM64_PTR_AUTH
+ static const struct arm64_cpu_capabilities ptr_auth_hwcap_addr_matches[] = {
+ 	{
+@@ -1662,8 +1666,35 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+ 	{},
+ };
  
- 	clear_thread_flag(TIF_FOREIGN_FPSTATE);
- 
++#ifdef CONFIG_COMPAT
++static bool compat_has_neon(const struct arm64_cpu_capabilities *cap, int scope)
++{
++	/*
++	 * Check that all of MVFR1_EL1.{SIMDSP, SIMDInt, SIMDLS} are available,
++	 * in line with that of arm32 as in vfp_init(). We make sure that the
++	 * check is future proof, by making sure value is non-zero.
++	 */
++	u32 mvfr1;
++
++	WARN_ON(scope == SCOPE_LOCAL_CPU && preemptible());
++	if (scope == SCOPE_SYSTEM)
++		mvfr1 = read_sanitised_ftr_reg(SYS_MVFR1_EL1);
++	else
++		mvfr1 = read_sysreg_s(SYS_MVFR1_EL1);
++
++	return cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDSP_SHIFT) &&
++		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDINT_SHIFT) &&
++		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDLS_SHIFT);
++}
++#endif
++
+ static const struct arm64_cpu_capabilities compat_elf_hwcaps[] = {
+ #ifdef CONFIG_COMPAT
++	HWCAP_CAP_MATCH(compat_has_neon, CAP_COMPAT_HWCAP, COMPAT_HWCAP_NEON),
++	HWCAP_CAP(SYS_MVFR1_EL1, MVFR1_SIMDFMAC_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv4),
++	/* Arm v8 mandates MVFR0.FPDP == {0, 2}. So, piggy back on this for the presence of VFP support */
++	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFP),
++	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv3),
+ 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_PMULL),
+ 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_AES),
+ 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA1_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA1),
 -- 
 2.21.0
 
