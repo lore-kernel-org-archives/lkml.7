@@ -2,57 +2,57 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B0FECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD616C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F0621D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD7521929
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697075;
-	bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
+	s=default; t=1570697076;
+	bh=xrIMtIE+YhjG+enQpvDvu/NudS9247b2MyytPiXsrgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cK7mdSDUep83wEadrOfei4B/KFKXVAtm6uUSI7HdzAXa/R37poVljCrhgGPBVJEYl
-	 02rHwjoM6K9VusJ9UPIjRr5+NGociDXTC8xMnkIrhYnkdbe41UwF7SVFF8jjtUC027
-	 XLFUXeZKRm1lYpkGQn04QCkzhruXF01X3lAs9/DY=
+	b=H/8ue7UPCYNpaC9nAChJ6C1NWVYzXBZwDnFIbOzr1V4UJJEjjs0zNuo8nad6r+Ci1
+	 wQ0VO8+oZ+lzN6vcJjsICxEomMN+1nQj6ToPT1kCcz7CNqwY/apTsq4Im4mp8gUgq5
+	 oKLV+ADBtTCAhYTUURPZoESg8gK+QnqKSWuHE7c4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388954AbfJJIod (ORCPT
+        id S2388966AbfJJIof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:44:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49756 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:44:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388949AbfJJIob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:44:31 -0400
+        id S2388944AbfJJIod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:44:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2F4F21929;
-        Thu, 10 Oct 2019 08:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6433B21BE5;
+        Thu, 10 Oct 2019 08:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697070;
-        bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
+        s=default; t=1570697072;
+        bh=xrIMtIE+YhjG+enQpvDvu/NudS9247b2MyytPiXsrgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ltCFWw71eab1LvbsQzZyYEfGa0srBinnJ1Y2owDbH4a3v74i7wnok+4TVFmUJcbPJ
-         SFbtgDPjcwM+XtmIOXZaji8jwboU+c3j2w1YUFuNhKqI95fizd6XzSj0BGS0GFgvUf
-         +qoX4yCBoLKd8F9ce8FuUztOLufCSEDh/Onva80I=
+        b=k/w3HsC7CJzZPRHkXDTxXE3LD3wyc9C/6ch557c9D61yzI73+EBzT5k4GjzPlkXyX
+         GdP/hvKx3neMRyvrkIOdkBDHf/JFDKc1aQMRGFVggkS3cjRS+g0vLf0eaMMj9hSH3x
+         rq/sx3jthLZqA0OQMcL/wA01th75aUIqf9tSChmk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 126/148] kernel/elfcore.c: include proper prototypes
-Date:   Thu, 10 Oct 2019 10:36:27 +0200
-Message-Id: <20191010083618.678356038@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.19 001/114] s390/process: avoid potential reading of freed stack
+Date:   Thu, 10 Oct 2019 10:35:08 +0200
+Message-Id: <20191010083545.164292114@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
-References: <20191010083609.660878383@linuxfoundation.org>
+In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
+References: <20191010083544.711104709@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,51 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 0f74914071ab7e7b78731ed62bf350e3a344e0a5 ]
+commit 8769f610fe6d473e5e8e221709c3ac402037da6c upstream.
 
-When building with W=1, gcc properly complains that there's no prototypes:
+With THREAD_INFO_IN_TASK (which is selected on s390) task's stack usage
+is refcounted and should always be protected by get/put when touching
+other task's stack to avoid race conditions with task's destruction code.
 
-  CC      kernel/elfcore.o
-kernel/elfcore.c:7:17: warning: no previous prototype for 'elf_core_extra_phdrs' [-Wmissing-prototypes]
-    7 | Elf_Half __weak elf_core_extra_phdrs(void)
-      |                 ^~~~~~~~~~~~~~~~~~~~
-kernel/elfcore.c:12:12: warning: no previous prototype for 'elf_core_write_extra_phdrs' [-Wmissing-prototypes]
-   12 | int __weak elf_core_write_extra_phdrs(struct coredump_params *cprm, loff_t offset)
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
-kernel/elfcore.c:17:12: warning: no previous prototype for 'elf_core_write_extra_data' [-Wmissing-prototypes]
-   17 | int __weak elf_core_write_extra_data(struct coredump_params *cprm)
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~
-kernel/elfcore.c:22:15: warning: no previous prototype for 'elf_core_extra_data_size' [-Wmissing-prototypes]
-   22 | size_t __weak elf_core_extra_data_size(void)
-      |               ^~~~~~~~~~~~~~~~~~~~~~~~
+Fixes: d5c352cdd022 ("s390: move thread_info into task_struct")
+Cc: stable@vger.kernel.org # v4.10+
+Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Provide the include file so gcc is happy, and we don't have potential code drift
-
-Link: http://lkml.kernel.org/r/29875.1565224705@turing-police
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/elfcore.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/s390/kernel/process.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/elfcore.c b/kernel/elfcore.c
-index fc482c8e0bd88..57fb4dcff4349 100644
---- a/kernel/elfcore.c
-+++ b/kernel/elfcore.c
-@@ -3,6 +3,7 @@
- #include <linux/fs.h>
- #include <linux/mm.h>
- #include <linux/binfmts.h>
-+#include <linux/elfcore.h>
+--- a/arch/s390/kernel/process.c
++++ b/arch/s390/kernel/process.c
+@@ -183,20 +183,30 @@ unsigned long get_wchan(struct task_stru
  
- Elf_Half __weak elf_core_extra_phdrs(void)
- {
--- 
-2.20.1
-
+ 	if (!p || p == current || p->state == TASK_RUNNING || !task_stack_page(p))
+ 		return 0;
++
++	if (!try_get_task_stack(p))
++		return 0;
++
+ 	low = task_stack_page(p);
+ 	high = (struct stack_frame *) task_pt_regs(p);
+ 	sf = (struct stack_frame *) p->thread.ksp;
+-	if (sf <= low || sf > high)
+-		return 0;
++	if (sf <= low || sf > high) {
++		return_address = 0;
++		goto out;
++	}
+ 	for (count = 0; count < 16; count++) {
+ 		sf = (struct stack_frame *) sf->back_chain;
+-		if (sf <= low || sf > high)
+-			return 0;
++		if (sf <= low || sf > high) {
++			return_address = 0;
++			goto out;
++		}
+ 		return_address = sf->gprs[8];
+ 		if (!in_sched_functions(return_address))
+-			return return_address;
++			goto out;
+ 	}
+-	return 0;
++out:
++	put_task_stack(p);
++	return return_address;
+ }
+ 
+ unsigned long arch_align_stack(unsigned long sp)
 
 
