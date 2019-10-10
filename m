@@ -6,194 +6,266 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D34C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B083BC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189CD208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C6120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfJJUbn (ORCPT
+        id S1727391AbfJJUcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:31:43 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:37625 "EHLO
+        Thu, 10 Oct 2019 16:32:08 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:55959 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfJJUbm (ORCPT
+        with ESMTP id S1726132AbfJJUcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:31:42 -0400
+        Thu, 10 Oct 2019 16:32:08 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MS1G7-1ig9Fo3Vvv-00TYCf; Thu, 10 Oct 2019 22:31:31 +0200
+ 1M7NaW-1iAwvS3qYe-007hQ6; Thu, 10 Oct 2019 22:31:59 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [PATCH 03/36] usb: gadget: s3c: use platform resources
-Date:   Thu, 10 Oct 2019 22:29:47 +0200
-Message-Id: <20191010203043.1241612-3-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH 04/36] usb: gadget: s3c-hsudc: remove platform header dependency
+Date:   Thu, 10 Oct 2019 22:29:48 +0200
+Message-Id: <20191010203043.1241612-4-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
 References: <20191010202802.1132272-1-arnd@arndb.de>
  <20191010203043.1241612-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:iwNwd1cVxFxCrms7c8C5XzuQmcy9u/dn0xzTwy3RMzXW1HxHseW
- IktW/Os21uQmVtkwkRfdK8qY77KGxRXzPq9asnOccmpMKGioJurl5rwTvNROCMQ0hv7uHM1
- 5n3b0f1Gq1uQp5GkmFlZaHhavVkQl4zYOZ06/7iFrVU7yhx4YAWQB741n54+opUgSOKqapx
- Uqd7p7XE5W4DODvUhpdkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/KCtwZvm948=:MjTG6wQH6Bxkes8aciFuXb
- wupIQgdWQkr5jGLLinWtBtmLJ2v2beVp77GUTiiOxUYG6E8z5XEN47Fg5bXASQZeY78NP+X28
- cuF+YJlcr9ywwhZamJFnQv8guj15mlGyx1EHNB+ZC5Dj2ob/Lmh+lo4+vK61tQsonzDlO0DvC
- qs7fRaIZeBcRWlPX75oaPOBrcGGoQN8+CTB7LemcVNUxkBUFKLtSB+OU+d1hbjT1vRgsXztYw
- GN7CJbrxCk4nLJ9+XwC4en0QBzhQ2Dl/wlyO1vRAVjPE8W/OS4SJSXNW8Nym8gE+PNpJwveDb
- qhbuXxK65AEu9ev0p6t4voIPYRdP2yo8g/comURhSF+9CpGPrxsoPb0TlD2JvRt6IgPxxTV83
- 3SlyGem/ISFtWbADtVkvTPwGxi6UPb33hVZF4A0XJfGRDrTOQ/+DOm1AfByNGebaPk++ZU4Ea
- LimmQYfyqNq4cxGUFua7x3Wx6PyPUhyyAJgJsJYu64uyDP3Hl/eLjV5kQ6nu/Wb6A+5oUkzXA
- Jl8FyQRkuwZP6zKUZC6moi3BtS6nOUpVieam8Xjao9HN5Fn7/t/Gs0o6aUoKhUGuGKBR19A9q
- n8kEG8c5zJJ36ptDqdr7XBFzFsvhSipybIw44e+YZZmojMFTusmcexy17QfjG4fTYnpR9ipCG
- taBNgRpoSESiUXenE+9ZFSjQ0sV8YLIR4wOs9Ml/wWbVND+oPHTEEzInk/73Av+ppsgtPa9fw
- 2U1M7pDIYSarTkneuXbiBHGIDID1b+Vh+9srUMkHEz3IRWIdD2QoiHZkuwi882ECwm4/w5Ny/
- a2RxIEEXJ+5AVS9XPQh5C3rdadtoJUIwQdrPPcQKEhJB8OoJzkEwYN8XmML3GnFjITtOZzc0Y
- 2akHoI5CkL2+FlbMBIpQ==
+X-Provags-ID: V03:K1:gBYTvSDyXkD66KPU2oG2uSqWCzyZ+9MjOjjxZ7K1N8Jdtu5VAm9
+ uBzrgOaZe47hxTJxPzxfWHiIy8u8IzO8gV3LN31u/Mqjy7tZzaSLxGgnqoVKuPXVg+B9ijX
+ 7uUylmjPbZZ8xFBX62B8oZxkFcyv1U72ayUgQ7JNqWG8QE9yRihdJHWcmaZf1EWLj6XiOa4
+ YePja6N9Vkc5nD00s37Cw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Ta5J2cCemyk=:WC7a/cOxyD9j1Hsk7CU2BR
+ c8Bcn5Ut8kEPonusAYC4tFsN8m7KP8vLaNaKNq1AiT1/Nb/mkE6wX5QsfGTLFSlP4U7aGQ5aj
+ fb0CLfLMkKIVVbrAi4tZWR+d2JagUt8UA1qtKFQntU2ahzSdIxE0bzsoiA6jfJ4Edh9ND3oXE
+ hItiPa5woepT9kql4/kAqrFg5Ljzjtnx+IHl8uXx2TjneZfSBrQ+AAgRJcjiDVvngJQo6Avs8
+ Ugz2+YFPMgRmc2AOsP2YkrwJEcmFJAfNTDbEo6TTFOFsJhKVQuJ1JI19mVOUpgzeZkIE1obwG
+ 6I0Tmem3DvqCNBm3BE1kVa4XrNqAmeKSxBX9m0gFMq44g1pia38XPBtOXARWkuCf1sh8KaS7Z
+ +Ywc2ZWyu4IYS6aPinB5ybTc7a/V+hzmAKc2Sl4cp+Fcd8tYe8rQ+id9A6sKt99j4Sdm5bmDh
+ 94Zqm3uGjvegg/hM9dlScH8JxxcxD4YhXuHQZun5BaAVAQShPtiIEbPc6MIYBX1mro06iCwJQ
+ Jlg0wQzS/u9C5DQDIUvIX8UYU+KVOZIswLRFKWQ+ESPBZaX2QSZ7szyac3KuKTyJE0XYxpLXv
+ wgcR3MGIwhTYn1aDWI9Rxdh7lZJehyoxFUDoKlomUlZhw+lY5INuM24qrjYL/56BlSP1Raljt
+ nHAttXZK2y03Se8Sp8QxslircyBig3045s2XS56DExqvaNJ4/6qI30UGSV21AWVo7MPOuPZao
+ W2sW8RBcoMKKD4zaBTARDqx4/Wpnf66KuOVY4Hi2Hb6IVBJg1t7fusc0hG984/sZsToIBhbOh
+ BhjM1YF5FJe0Bjhp+GM0oq4V3QyzcGRzbRuoTMKIbHTHTDTRXiqqu2gBRFRalsFzlwhXaJBLg
+ gyCntWSDfESeaa0IVhqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The resources are correctly initialized, so just use them
-instead of relying on hardcoded data from platform headers.
+There is no real phy driver, so s3c-hsudc just pokes the registers
+itself. Improve this a little by making it a platform data callback
+like we do for gpios.
+
+There is only one board using this driver, and it's unlikely
+that another would be added, so this is a minimal workaround.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/usb/gadget/udc/s3c2410_udc.c          | 31 +++++++------------
- drivers/usb/gadget/udc/s3c2410_udc.h          |  1 +
- .../usb/gadget/udc/s3c2410_udc_regs.h         |  0
- 3 files changed, 12 insertions(+), 20 deletions(-)
- rename arch/arm/plat-samsung/include/plat/regs-udc.h => drivers/usb/gadget/udc/s3c2410_udc_regs.h (100%)
+ .../include/mach/regs-s3c2443-clock.h         | 49 +++++++++++++++++
+ arch/arm/plat-samsung/devs.c                  |  3 +
+ drivers/usb/gadget/udc/s3c-hsudc.c            | 55 ++-----------------
+ include/linux/platform_data/s3c-hsudc.h       |  2 +
+ 4 files changed, 58 insertions(+), 51 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
-index f82208fbc249..e411d27b79fc 100644
---- a/drivers/usb/gadget/udc/s3c2410_udc.c
-+++ b/drivers/usb/gadget/udc/s3c2410_udc.c
-@@ -36,15 +36,11 @@
- #include <asm/byteorder.h>
- #include <asm/irq.h>
- #include <asm/unaligned.h>
--#include <mach/irqs.h>
+diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h b/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
+index 6bf924612b06..682759549e63 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
++++ b/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
+@@ -10,6 +10,8 @@
+ #ifndef __ASM_ARM_REGS_S3C2443_CLOCK
+ #define __ASM_ARM_REGS_S3C2443_CLOCK
  
--#include <mach/hardware.h>
--
--#include <plat/regs-udc.h>
- #include <linux/platform_data/usb-s3c2410_udc.h>
++#include <linux/delay.h>
++
+ #define S3C2443_CLKREG(x)		((x) + S3C24XX_VA_CLKPWR)
  
--
- #include "s3c2410_udc.h"
-+#include "s3c2410_udc_regs.h"
- 
- #define DRIVER_DESC	"S3C2410 USB Device Controller Gadget"
- #define DRIVER_AUTHOR	"Herbert Pötzl <herbert@13thfloor.at>, " \
-@@ -57,6 +53,7 @@ static struct s3c2410_udc	*the_controller;
- static struct clk		*udc_clock;
- static struct clk		*usb_bus_clock;
- static void __iomem		*base_addr;
-+static int			irq_usbd;
- static u64			rsrc_start;
- static u64			rsrc_len;
- static struct dentry		*s3c2410_udc_debugfs_root;
-@@ -839,8 +836,6 @@ static void s3c2410_udc_handle_ep(struct s3c2410_ep *ep)
- 	}
+ #define S3C2443_PLLCON_MDIVSHIFT	16
+@@ -184,5 +186,52 @@ s3c2443_get_epll(unsigned int pllval, unsigned int baseclk)
+ 	return (unsigned int)fvco;
  }
  
--#include <mach/regs-irq.h>
--
- /*
-  *	s3c2410_udc_irq - interrupt handler
-  */
-@@ -981,7 +976,7 @@ static irqreturn_t s3c2410_udc_irq(int dummy, void *_dev)
- 		}
- 	}
- 
--	dprintk(DEBUG_VERBOSE, "irq: %d s3c2410_udc_done.\n", IRQ_USBD);
-+	dprintk(DEBUG_VERBOSE, "irq: %d s3c2410_udc_done.\n", irq_usbd);
- 
- 	/* Restore old index */
- 	udc_write(idx, S3C2410_UDC_INDEX_REG);
-@@ -1784,13 +1779,7 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
- 	spin_lock_init(&udc->lock);
- 	udc_info = dev_get_platdata(&pdev->dev);
- 
--	rsrc_start = S3C2410_PA_USBDEV;
--	rsrc_len   = S3C24XX_SZ_USBDEV;
--
--	if (!request_mem_region(rsrc_start, rsrc_len, gadget_name))
--		return -EBUSY;
--
--	base_addr = ioremap(rsrc_start, rsrc_len);
-+	base_addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (!base_addr) {
- 		retval = -ENOMEM;
- 		goto err_mem;
-@@ -1802,17 +1791,19 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
- 	s3c2410_udc_disable(udc);
- 	s3c2410_udc_reinit(udc);
- 
-+	irq_usbd = platform_get_irq(pdev, 0);
++static inline void s3c_hsudc_init_phy(void)
++{
++	u32 cfg;
 +
- 	/* irq setup after old hardware state is cleaned up */
--	retval = request_irq(IRQ_USBD, s3c2410_udc_irq,
-+	retval = request_irq(irq_usbd, s3c2410_udc_irq,
- 			     0, gadget_name, udc);
++	cfg = readl(S3C2443_PWRCFG) | S3C2443_PWRCFG_USBPHY;
++	writel(cfg, S3C2443_PWRCFG);
++
++	cfg = readl(S3C2443_URSTCON);
++	cfg |= (S3C2443_URSTCON_FUNCRST | S3C2443_URSTCON_PHYRST);
++	writel(cfg, S3C2443_URSTCON);
++	mdelay(1);
++
++	cfg = readl(S3C2443_URSTCON);
++	cfg &= ~(S3C2443_URSTCON_FUNCRST | S3C2443_URSTCON_PHYRST);
++	writel(cfg, S3C2443_URSTCON);
++
++	cfg = readl(S3C2443_PHYCTRL);
++	cfg &= ~(S3C2443_PHYCTRL_CLKSEL | S3C2443_PHYCTRL_DSPORT);
++	cfg |= (S3C2443_PHYCTRL_EXTCLK | S3C2443_PHYCTRL_PLLSEL);
++	writel(cfg, S3C2443_PHYCTRL);
++
++	cfg = readl(S3C2443_PHYPWR);
++	cfg &= ~(S3C2443_PHYPWR_FSUSPEND | S3C2443_PHYPWR_PLL_PWRDN |
++		S3C2443_PHYPWR_XO_ON | S3C2443_PHYPWR_PLL_REFCLK |
++		S3C2443_PHYPWR_ANALOG_PD);
++	cfg |= S3C2443_PHYPWR_COMMON_ON;
++	writel(cfg, S3C2443_PHYPWR);
++
++	cfg = readl(S3C2443_UCLKCON);
++	cfg |= (S3C2443_UCLKCON_DETECT_VBUS | S3C2443_UCLKCON_FUNC_CLKEN |
++		S3C2443_UCLKCON_TCLKEN);
++	writel(cfg, S3C2443_UCLKCON);
++}
++
++static inline void s3c_hsudc_uninit_phy(void)
++{
++	u32 cfg;
++
++	cfg = readl(S3C2443_PWRCFG) & ~S3C2443_PWRCFG_USBPHY;
++	writel(cfg, S3C2443_PWRCFG);
++
++	writel(S3C2443_PHYPWR_FSUSPEND, S3C2443_PHYPWR);
++
++	cfg = readl(S3C2443_UCLKCON) & ~S3C2443_UCLKCON_FUNC_CLKEN;
++	writel(cfg, S3C2443_UCLKCON);
++}
++
+ #endif /*  __ASM_ARM_REGS_S3C2443_CLOCK */
  
- 	if (retval != 0) {
--		dev_err(dev, "cannot get irq %i, err %d\n", IRQ_USBD, retval);
-+		dev_err(dev, "cannot get irq %i, err %d\n", irq_usbd, retval);
- 		retval = -EBUSY;
- 		goto err_map;
- 	}
+diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
+index 1d1fa068d228..6e4c1cb07104 100644
+--- a/arch/arm/plat-samsung/devs.c
++++ b/arch/arm/plat-samsung/devs.c
+@@ -40,6 +40,7 @@
+ #include <mach/dma.h>
+ #include <mach/irqs.h>
+ #include <mach/map.h>
++#include <mach/regs-s3c2443-clock.h>
  
--	dev_dbg(dev, "got irq %i\n", IRQ_USBD);
-+	dev_dbg(dev, "got irq %i\n", irq_usbd);
+ #include <plat/cpu.h>
+ #include <plat/devs.h>
+@@ -1038,6 +1039,8 @@ struct platform_device s3c_device_usb_hsudc = {
+ void __init s3c24xx_hsudc_set_platdata(struct s3c24xx_hsudc_platdata *pd)
+ {
+ 	s3c_set_platdata(pd, sizeof(*pd), &s3c_device_usb_hsudc);
++	pd->phy_init = s3c_hsudc_init_phy;
++	pd->phy_uninit = s3c_hsudc_uninit_phy;
+ }
+ #endif /* CONFIG_PLAT_S3C24XX */
  
- 	if (udc_info && udc_info->vbus_pin > 0) {
- 		retval = gpio_request(udc_info->vbus_pin, "udc vbus");
-@@ -1879,7 +1870,7 @@ static int s3c2410_udc_probe(struct platform_device *pdev)
- 	if (udc_info && udc_info->vbus_pin > 0)
- 		gpio_free(udc_info->vbus_pin);
- err_int:
--	free_irq(IRQ_USBD, udc);
-+	free_irq(irq_usbd, udc);
- err_map:
- 	iounmap(base_addr);
- err_mem:
-@@ -1913,7 +1904,7 @@ static int s3c2410_udc_remove(struct platform_device *pdev)
- 		free_irq(irq, udc);
- 	}
+diff --git a/drivers/usb/gadget/udc/s3c-hsudc.c b/drivers/usb/gadget/udc/s3c-hsudc.c
+index 858993c73442..d482cbb4bb4d 100644
+--- a/drivers/usb/gadget/udc/s3c-hsudc.c
++++ b/drivers/usb/gadget/udc/s3c-hsudc.c
+@@ -30,8 +30,6 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/pm_runtime.h>
  
--	free_irq(IRQ_USBD, udc);
-+	free_irq(irq_usbd, udc);
+-#include <mach/regs-s3c2443-clock.h>
+-
+ #define S3C_HSUDC_REG(x)	(x)
  
- 	iounmap(base_addr);
- 	release_mem_region(rsrc_start, rsrc_len);
-diff --git a/drivers/usb/gadget/udc/s3c2410_udc.h b/drivers/usb/gadget/udc/s3c2410_udc.h
-index bdcaa8dd300f..68bdf3e5aac2 100644
---- a/drivers/usb/gadget/udc/s3c2410_udc.h
-+++ b/drivers/usb/gadget/udc/s3c2410_udc.h
-@@ -90,6 +90,7 @@ struct s3c2410_udc {
- 	unsigned			req_pending : 1;
- 	u8				vbus;
- 	struct dentry			*regs_info;
-+	int				irq;
+ /* Non-Indexed Registers */
+@@ -186,53 +184,6 @@ static inline void __orr32(void __iomem *ptr, u32 val)
+ 	writel(readl(ptr) | val, ptr);
+ }
+ 
+-static void s3c_hsudc_init_phy(void)
+-{
+-	u32 cfg;
+-
+-	cfg = readl(S3C2443_PWRCFG) | S3C2443_PWRCFG_USBPHY;
+-	writel(cfg, S3C2443_PWRCFG);
+-
+-	cfg = readl(S3C2443_URSTCON);
+-	cfg |= (S3C2443_URSTCON_FUNCRST | S3C2443_URSTCON_PHYRST);
+-	writel(cfg, S3C2443_URSTCON);
+-	mdelay(1);
+-
+-	cfg = readl(S3C2443_URSTCON);
+-	cfg &= ~(S3C2443_URSTCON_FUNCRST | S3C2443_URSTCON_PHYRST);
+-	writel(cfg, S3C2443_URSTCON);
+-
+-	cfg = readl(S3C2443_PHYCTRL);
+-	cfg &= ~(S3C2443_PHYCTRL_CLKSEL | S3C2443_PHYCTRL_DSPORT);
+-	cfg |= (S3C2443_PHYCTRL_EXTCLK | S3C2443_PHYCTRL_PLLSEL);
+-	writel(cfg, S3C2443_PHYCTRL);
+-
+-	cfg = readl(S3C2443_PHYPWR);
+-	cfg &= ~(S3C2443_PHYPWR_FSUSPEND | S3C2443_PHYPWR_PLL_PWRDN |
+-		S3C2443_PHYPWR_XO_ON | S3C2443_PHYPWR_PLL_REFCLK |
+-		S3C2443_PHYPWR_ANALOG_PD);
+-	cfg |= S3C2443_PHYPWR_COMMON_ON;
+-	writel(cfg, S3C2443_PHYPWR);
+-
+-	cfg = readl(S3C2443_UCLKCON);
+-	cfg |= (S3C2443_UCLKCON_DETECT_VBUS | S3C2443_UCLKCON_FUNC_CLKEN |
+-		S3C2443_UCLKCON_TCLKEN);
+-	writel(cfg, S3C2443_UCLKCON);
+-}
+-
+-static void s3c_hsudc_uninit_phy(void)
+-{
+-	u32 cfg;
+-
+-	cfg = readl(S3C2443_PWRCFG) & ~S3C2443_PWRCFG_USBPHY;
+-	writel(cfg, S3C2443_PWRCFG);
+-
+-	writel(S3C2443_PHYPWR_FSUSPEND, S3C2443_PHYPWR);
+-
+-	cfg = readl(S3C2443_UCLKCON) & ~S3C2443_UCLKCON_FUNC_CLKEN;
+-	writel(cfg, S3C2443_UCLKCON);
+-}
+-
+ /**
+  * s3c_hsudc_complete_request - Complete a transfer request.
+  * @hsep: Endpoint to which the request belongs.
+@@ -1188,7 +1139,8 @@ static int s3c_hsudc_start(struct usb_gadget *gadget,
+ 
+ 	pm_runtime_get_sync(hsudc->dev);
+ 
+-	s3c_hsudc_init_phy();
++	if (hsudc->pd->phy_init)
++		hsudc->pd->gpio_init();
+ 	if (hsudc->pd->gpio_init)
+ 		hsudc->pd->gpio_init();
+ 
+@@ -1210,7 +1162,8 @@ static int s3c_hsudc_stop(struct usb_gadget *gadget)
+ 
+ 	spin_lock_irqsave(&hsudc->lock, flags);
+ 	hsudc->gadget.speed = USB_SPEED_UNKNOWN;
+-	s3c_hsudc_uninit_phy();
++	if (hsudc->pd->phy_uninit)
++		hsudc->pd->phy_uninit();
+ 
+ 	pm_runtime_put(hsudc->dev);
+ 
+diff --git a/include/linux/platform_data/s3c-hsudc.h b/include/linux/platform_data/s3c-hsudc.h
+index 4dc9b8760166..a170939832d5 100644
+--- a/include/linux/platform_data/s3c-hsudc.h
++++ b/include/linux/platform_data/s3c-hsudc.h
+@@ -26,6 +26,8 @@ struct s3c24xx_hsudc_platdata {
+ 	unsigned int	epnum;
+ 	void		(*gpio_init)(void);
+ 	void		(*gpio_uninit)(void);
++	void		(*phy_init)(void);
++	void		(*phy_uninit)(void);
  };
- #define to_s3c2410(g)	(container_of((g), struct s3c2410_udc, gadget))
  
-diff --git a/arch/arm/plat-samsung/include/plat/regs-udc.h b/drivers/usb/gadget/udc/s3c2410_udc_regs.h
-similarity index 100%
-rename from arch/arm/plat-samsung/include/plat/regs-udc.h
-rename to drivers/usb/gadget/udc/s3c2410_udc_regs.h
+ #endif	/* __LINUX_USB_S3C_HSUDC_H */
 -- 
 2.20.0
 
