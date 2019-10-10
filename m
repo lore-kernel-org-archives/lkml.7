@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 297C5C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F32C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02AFC21D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77E121929
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697419;
-	bh=sh8gHUawqEyRuW5rv6pRRrdnpSkG2b5FcNjvngrx7mU=;
+	s=default; t=1570697421;
+	bh=w1PhsVc2NzNNsICY5Y3TgMZHDcsd8nJISnDVyMqOqn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CLrbiZpOi6Ygfp4Q1bTHngXN/A+CCN8lcyGilvRS0YEKNSAMwX5Oj2feK+r8Z0aKK
-	 rvMT2Mu8TtnDcBByuhIWcTDbAEydLNnb9UmEQ7M8zvoDtqAEJklZNjVMNQ/NOMt+Dc
-	 /4s9553NLmGKifG5GqUnX1ogxeEDgQgRK403AsRo=
+	b=zl8CwjX/gySgzHZW/y2R+Xqiw8Hbc+qdDVJlA6n5i82+mk/faOFv8J4a3E6M0dlCs
+	 fJQ8AlR9skGRD6I/AkoCTxGhK7BI4ai4AJt+U0YZC7PhGJwxcv6rIwTD069fvnUdnt
+	 oSTVaHICqK5ZaGcnqJw27ecVpGOOZuraqdeDjNgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389941AbfJJIuS (ORCPT
+        id S2389948AbfJJIuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:50:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:50:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389932AbfJJIuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:14 -0400
+        id S2389934AbfJJIuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86716218AC;
-        Thu, 10 Oct 2019 08:50:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41EF2208C3;
+        Thu, 10 Oct 2019 08:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697414;
-        bh=sh8gHUawqEyRuW5rv6pRRrdnpSkG2b5FcNjvngrx7mU=;
+        s=default; t=1570697416;
+        bh=w1PhsVc2NzNNsICY5Y3TgMZHDcsd8nJISnDVyMqOqn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gAVUVbzeXieqp9FW/CO+2FPVNrrC3VvgR6pUODZkFtehrQVuwkl3x+ukQzj5BG/1z
-         hnqnj9fxDFocVnjMw2LtBLo0byCUYgedg5oEWVm2tpTCtSyRO+kNt95bdD4nxQurxB
-         fcAeKUjbinQq2S+K0qbX/BROpFBsmWM98H4wqir0=
+        b=kprpTS/N7jeYIrq850CJ7b4Qj8WUkXtT7HR9cY9QV46W4nCuBt8wPLNq8hToM+G0N
+         gnSM8BuC1bh7o9xVX9hRpjIBiVcF9zf6AYSJtrovE38BPFb5P0AuHdxMFPcqw1Q53o
+         IrSChHMTOvFclXdEkEAilcvBpdlOU/ZcLPuhqshE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Liang ZhiCheng <liangzhicheng@baidu.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 19/61] timer: Read jiffies once when forwarding base clk
-Date:   Thu, 10 Oct 2019 10:36:44 +0200
-Message-Id: <20191010083501.427571222@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 4.14 02/61] KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
+Date:   Thu, 10 Oct 2019 10:36:27 +0200
+Message-Id: <20191010083450.699295630@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -60,75 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Thomas Huth <thuth@redhat.com>
 
-commit e430d802d6a3aaf61bd3ed03d9404888a29b9bf9 upstream.
+commit a13b03bbb4575b350b46090af4dfd30e735aaed1 upstream.
 
-The timer delayed for more than 3 seconds warning was triggered during
-testing.
+If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
+then there is certainly a bug in the calling userspace application.
+We check for wrong access registers, but only if the vCPU was already
+in the access register mode before (i.e. the SIE block has recorded
+it). The check is also buried somewhere deep in the calling chain (in
+the function ar_translation()), so this is somewhat hard to find.
 
-  Workqueue: events_unbound sched_tick_remote
-  RIP: 0010:sched_tick_remote+0xee/0x100
-  ...
-  Call Trace:
-   process_one_work+0x18c/0x3a0
-   worker_thread+0x30/0x380
-   kthread+0x113/0x130
-   ret_from_fork+0x22/0x40
+It's better to always report an error to the userspace in case this
+field is set wrong, and it's safer in the KVM code if we block wrong
+values here early instead of relying on a check somewhere deep down
+the calling chain, so let's add another check to kvm_s390_guest_mem_op()
+directly.
 
-The reason is that the code in collect_expired_timers() uses jiffies
-unprotected:
+We also should check that the "size" is non-zero here (thanks to Janosch
+Frank for the hint!). If we do not check the size, we could call vmalloc()
+with this 0 value, and this will cause a kernel warning.
 
-    if (next_event > jiffies)
-        base->clk = jiffies;
-
-As the compiler is allowed to reload the value base->clk can advance
-between the check and the store and in the worst case advance farther than
-next event. That causes the timer expiry to be delayed until the wheel
-pointer wraps around.
-
-Convert the code to use READ_ONCE()
-
-Fixes: 236968383cf5 ("timers: Optimize collect_expired_timers() for NOHZ")
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Liang ZhiCheng <liangzhicheng@baidu.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+Link: https://lkml.kernel.org/r/20190829122517.31042-1-thuth@redhat.com
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1568894687-14499-1-git-send-email-lirongqing@baidu.com
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/timer.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/s390/kvm/kvm-s390.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1545,21 +1545,23 @@ void timer_clear_idle(void)
- static int collect_expired_timers(struct timer_base *base,
- 				  struct hlist_head *heads)
- {
-+	unsigned long now = READ_ONCE(jiffies);
-+
- 	/*
- 	 * NOHZ optimization. After a long idle sleep we need to forward the
- 	 * base to current jiffies. Avoid a loop by searching the bitfield for
- 	 * the next expiring timer.
- 	 */
--	if ((long)(jiffies - base->clk) > 2) {
-+	if ((long)(now - base->clk) > 2) {
- 		unsigned long next = __next_timer_interrupt(base);
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3658,7 +3658,7 @@ static long kvm_s390_guest_mem_op(struct
+ 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
+ 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
  
- 		/*
- 		 * If the next timer is ahead of time forward to current
- 		 * jiffies, otherwise forward to the next expiry time:
- 		 */
--		if (time_after(next, jiffies)) {
-+		if (time_after(next, now)) {
- 			/* The call site will increment clock! */
--			base->clk = jiffies - 1;
-+			base->clk = now - 1;
- 			return 0;
- 		}
- 		base->clk = next;
+-	if (mop->flags & ~supported_flags)
++	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
+ 		return -EINVAL;
+ 
+ 	if (mop->size > MEM_OP_MAX_SIZE)
 
 
