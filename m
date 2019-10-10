@@ -2,82 +2,120 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256AEC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6B7C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A580218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A662190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570726397;
+	bh=nxVFzpKNnJa6eBtiEg+aozlkkMTDk8SF/QKlbfycR+Y=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=JDxo28CXSORF02VD7VW218CnGuOEaQKtfkWi6BlEwq51/SAuhVWEZPBVm/8sICXwa
+	 HQhl+gXaCvbw5jhz7Koqhw5yw0ngn91om84KB7EUYCeuKyKRRc8u7xu1OBjrVU104k
+	 280MzRW3DYpwrlJ3/tXngvC15mKYdK6EHQBtl1iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfJJQws (ORCPT
+        id S1726776AbfJJQxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 12:52:48 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46558 "EHLO inva021.nxp.com"
+        Thu, 10 Oct 2019 12:53:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbfJJQwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 12:52:32 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B2882004A8;
-        Thu, 10 Oct 2019 18:52:30 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8E5B7200206;
-        Thu, 10 Oct 2019 18:52:30 +0200 (CEST)
-Received: from fsr-ub1664-026.ea.freescale.net (fsr-ub1664-026.ea.freescale.net [10.171.81.59])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D476D205FA;
-        Thu, 10 Oct 2019 18:52:29 +0200 (CEST)
-From:   Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-To:     corbet@lwn.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        gregkh@linuxfoundation.org, catalin.marinas@arm.com,
-        will@kernel.org, shawnguo@kernel.org, leoyang.li@nxp.com
-Cc:     jslaby@suse.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "Stoica Cosmin-Stefan" <cosmin.stoica@nxp.com>
-Subject: [PATCH v6 2/5] arm64: Introduce config for S32
-Date:   Thu, 10 Oct 2019 19:52:25 +0300
-Message-Id: <1570726348-6420-3-git-send-email-stefan-gabriel.mirea@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1570726348-6420-1-git-send-email-stefan-gabriel.mirea@nxp.com>
-References: <1570726348-6420-1-git-send-email-stefan-gabriel.mirea@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726387AbfJJQxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 12:53:15 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22CD4218AC;
+        Thu, 10 Oct 2019 16:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570726395;
+        bh=nxVFzpKNnJa6eBtiEg+aozlkkMTDk8SF/QKlbfycR+Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=uThvuy/vCnNc2jRV+yuQxInOEGiwCdkQvb8M6+JLtpWVOPKEPK18ejWpL+XxVBB13
+         6FFY0BHYjMlT864bbWDfAVNr9wU7/drA49TWU1v3PPWqlVBmmNM0mrGGrVbnFDFu3U
+         3/983kViEZtaGAfktbWfaxPPq31/pDbZhfAq42oE=
+Date:   Thu, 10 Oct 2019 09:53:14 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: fixes for 5.4-rc3
+Message-ID: <20191010165314.GP1473994@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mihaela Martinas <Mihaela.Martinas@freescale.com>
+Hi Linus,
 
-Add configuration option for the NXP S32 platform family in
-Kconfig.platforms. For starters, the only SoC supported will be Treerunner
-(S32V234), with a single execution target: the S32V234-EVB (rev 29288)
-board.
+Please pull this set of changes for 5.4-rc3.  There are a couple of
+small code cleanups and bug fixes for rounding errors, metadata logging
+errors, and an extra layer of safeguards against leaking memory
+contents.
 
-Signed-off-by: Mihaela Martinas <Mihaela.Martinas@freescale.com>
-Signed-off-by: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
-Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
----
- arch/arm64/Kconfig.platforms | 5 +++++
- 1 file changed, 5 insertions(+)
+The branch has survived a round of xfstests runs and merges cleanly with
+this morning's master.  Please let me know if anything strange happens.
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 16d761475a86..17f1c34ec750 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -212,6 +212,11 @@ config ARCH_ROCKCHIP
- 	  This enables support for the ARMv8 based Rockchip chipsets,
- 	  like the RK3368.
- 
-+config ARCH_S32
-+	bool "NXP S32 SoC Family"
-+	help
-+	  This enables support for the NXP S32 family of processors.
-+
- config ARCH_SEATTLE
- 	bool "AMD Seattle SoC Family"
- 	help
--- 
-2.22.0
+--D
 
+The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+
+  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.4-fixes-3
+
+for you to fetch changes up to aeea4b75f045294e1c026acc380466daa43afc65:
+
+  xfs: move local to extent inode logging into bmap helper (2019-10-09 08:54:30 -0700)
+
+----------------------------------------------------------------
+Changes since last update:
+- Fix a rounding error in the fallocate code
+- Minor code cleanups
+- Make sure to zero memory buffers before formatting metadata blocks
+- Fix a few places where we forgot to log an inode metadata update
+- Remove broken error handling that tried to clean up after a failure
+  but still got it wrong
+
+----------------------------------------------------------------
+Aliasgar Surti (1):
+      xfs: removed unused error variable from xchk_refcountbt_rec
+
+Bill O'Donnell (1):
+      xfs: assure zeroed memory buffers for certain kmem allocations
+
+Brian Foster (3):
+      xfs: log the inode on directory sf to block format change
+      xfs: remove broken error handling on failed attr sf to leaf change
+      xfs: move local to extent inode logging into bmap helper
+
+Eric Sandeen (1):
+      xfs: remove unused flags arg from xfs_get_aghdr_buf()
+
+Max Reitz (1):
+      xfs: Fix tail rounding in xfs_alloc_file_space()
+
+ fs/xfs/libxfs/xfs_ag.c         |  5 ++---
+ fs/xfs/libxfs/xfs_attr_leaf.c  | 21 +++------------------
+ fs/xfs/libxfs/xfs_bmap.c       |  6 ++++--
+ fs/xfs/libxfs/xfs_bmap.h       |  3 ++-
+ fs/xfs/libxfs/xfs_dir2_block.c |  2 +-
+ fs/xfs/scrub/refcount.c        |  3 +--
+ fs/xfs/xfs_bmap_util.c         |  4 +++-
+ fs/xfs/xfs_buf.c               | 12 +++++++++++-
+ fs/xfs/xfs_log.c               |  2 +-
+ fs/xfs/xfs_log_recover.c       |  2 +-
+ 10 files changed, 29 insertions(+), 31 deletions(-)
