@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CFFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ED6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0DF320679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F77320679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697815;
-	bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
+	s=default; t=1570697824;
+	bh=Cez3G1xpq9uAnPPHn4QnceEd5nNP9L8MGjyZtdnK1fg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OgqdPn9HSiPLazJbAY0sqMloZh8CbYSuH3nqtjz8Xv0kcw/Sd8R8HpOYNe2EjftR+
-	 AgMrrTLUTiB/I5kXIg0NcIpuf/0RBndnP8ATvP1JjFe7NmsTfkYaEhPMb8kSroe/DV
-	 L+OmdyCc6Cp0LazJRrnvyyGQRZTxqXguNQ5kovlE=
+	b=aA7TGs5y+jqIKzPEBA99uR+L7xrQzl8MtveYEXhcl7lk4iKhBLQOEprNfNF4vBWSk
+	 utH/dId3tKcDDJWOu4zU6jUkyP4pzB0H1OUQ9+lwqgj5aw0hnvr1est8NpCY32sIwb
+	 N8qHlTXgnX0X4LVGBZqgEylx58SblVd/ghbF77Ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389586AbfJJI4y (ORCPT
+        id S2387775AbfJJI5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:56:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53652 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:57:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389501AbfJJIrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:36 -0400
+        id S2389481AbfJJIra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37AA7222D2;
-        Thu, 10 Oct 2019 08:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A0AE21929;
+        Thu, 10 Oct 2019 08:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697255;
-        bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
+        s=default; t=1570697250;
+        bh=Cez3G1xpq9uAnPPHn4QnceEd5nNP9L8MGjyZtdnK1fg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J88PohXiQdW/9uLb7bFXpEAfjWuY5gOfpIstNLpYBvdZfDPNztjT8GOXGe16smi5G
-         bqLlMbf5SQ7P1puIWyQCReyHPGO5HSj80emCpUFpe1ll/e4jdVcKbEm/Wnn7K+gTmK
-         /bhRZjeH4yhjP8lsib1ZFDJgnHikUT28f3qIsOns=
+        b=Yag4bNBCB8uOcAqnKGAWRg8Nz5fc9M5L4b50a3lYXEUrpG3r7m+IMr5M7MBYd4RQ6
+         zs/nKZn9PhowMFO4hvUS85xNd2dUTeUk8fbxnNxIowptEZP0sZibTDwW3KVzW6c9UT
+         VrEbZl0K6SbYcd0eH4+0Efx/P/8VY8NPFujZLeUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, KeMeng Shi <shikemeng@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/114] kernel/elfcore.c: include proper prototypes
-Date:   Thu, 10 Oct 2019 10:36:21 +0200
-Message-Id: <20191010083611.841491973@linuxfoundation.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 072/114] sched/core: Fix migration to invalid CPU in __set_cpus_allowed_ptr()
+Date:   Thu, 10 Oct 2019 10:36:19 +0200
+Message-Id: <20191010083611.705257114@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -61,49 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+From: KeMeng Shi <shikemeng@huawei.com>
 
-[ Upstream commit 0f74914071ab7e7b78731ed62bf350e3a344e0a5 ]
+[ Upstream commit 714e501e16cd473538b609b3e351b2cc9f7f09ed ]
 
-When building with W=1, gcc properly complains that there's no prototypes:
+An oops can be triggered in the scheduler when running qemu on arm64:
 
-  CC      kernel/elfcore.o
-kernel/elfcore.c:7:17: warning: no previous prototype for 'elf_core_extra_phdrs' [-Wmissing-prototypes]
-    7 | Elf_Half __weak elf_core_extra_phdrs(void)
-      |                 ^~~~~~~~~~~~~~~~~~~~
-kernel/elfcore.c:12:12: warning: no previous prototype for 'elf_core_write_extra_phdrs' [-Wmissing-prototypes]
-   12 | int __weak elf_core_write_extra_phdrs(struct coredump_params *cprm, loff_t offset)
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
-kernel/elfcore.c:17:12: warning: no previous prototype for 'elf_core_write_extra_data' [-Wmissing-prototypes]
-   17 | int __weak elf_core_write_extra_data(struct coredump_params *cprm)
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~
-kernel/elfcore.c:22:15: warning: no previous prototype for 'elf_core_extra_data_size' [-Wmissing-prototypes]
-   22 | size_t __weak elf_core_extra_data_size(void)
-      |               ^~~~~~~~~~~~~~~~~~~~~~~~
+ Unable to handle kernel paging request at virtual address ffff000008effe40
+ Internal error: Oops: 96000007 [#1] SMP
+ Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
+ pstate: 20000085 (nzCv daIf -PAN -UAO)
+ pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+ lr : move_queued_task.isra.21+0x124/0x298
+ ...
+ Call trace:
+  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+  __migrate_task+0xc8/0xe0
+  migration_cpu_stop+0x170/0x180
+  cpu_stopper_thread+0xec/0x178
+  smpboot_thread_fn+0x1ac/0x1e8
+  kthread+0x134/0x138
+  ret_from_fork+0x10/0x18
 
-Provide the include file so gcc is happy, and we don't have potential code drift
+__set_cpus_allowed_ptr() will choose an active dest_cpu in affinity mask to
+migrage the process if process is not currently running on any one of the
+CPUs specified in affinity mask. __set_cpus_allowed_ptr() will choose an
+invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if
+CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
+check. cpumask_test_cpu() of dest_cpu afterwards is overflown and may pass if
+corresponding bit is coincidentally set. As a consequence, kernel will
+access an invalid rq address associate with the invalid CPU in
+migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
 
-Link: http://lkml.kernel.org/r/29875.1565224705@turing-police
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The reproduce the crash:
+
+  1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
+  sched_setaffinity.
+
+  2) A shell script repeatedly does "echo 0 > /sys/devices/system/cpu/cpu1/online"
+  and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
+
+  3) Oops appears if the invalid CPU is set in memory after tested cpumask.
+
+Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1568616808-16808-1-git-send-email-shikemeng@huawei.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/elfcore.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/elfcore.c b/kernel/elfcore.c
-index fc482c8e0bd88..57fb4dcff4349 100644
---- a/kernel/elfcore.c
-+++ b/kernel/elfcore.c
-@@ -3,6 +3,7 @@
- #include <linux/fs.h>
- #include <linux/mm.h>
- #include <linux/binfmts.h>
-+#include <linux/elfcore.h>
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index f4e050681ba1c..78ecdfae25b69 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1077,7 +1077,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 	if (cpumask_equal(&p->cpus_allowed, new_mask))
+ 		goto out;
  
- Elf_Half __weak elf_core_extra_phdrs(void)
- {
+-	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
++	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
++	if (dest_cpu >= nr_cpu_ids) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+@@ -1098,7 +1099,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 	if (cpumask_test_cpu(task_cpu(p), new_mask))
+ 		goto out;
+ 
+-	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
+ 	if (task_running(rq, p) || p->state == TASK_WAKING) {
+ 		struct migration_arg arg = { p, dest_cpu };
+ 		/* Need help from migration thread: drop lock and wait. */
 -- 
 2.20.1
 
