@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF745C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D15C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8953F21D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBDA218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697292;
-	bh=t+HdTbbkCkwQ95nWKK5u36vN1oC0oIOhLtTWfHxY+dg=;
+	s=default; t=1570697296;
+	bh=96xU/UJbV7dJS5rO1/HhxRqUpWrLzRq1hWiaKmwL2lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F66tTplx8CKGN7YT418cF6P64B/FqosG5vHQJaetcwghr1S0ld9GQeautY+wxMgU5
-	 l+ucw4eY1zDzt8GTwIm2UFLPStlIRt0bY8gQZ6r9MB2oaaJ6szRheYvUERpa3CNSdI
-	 ySvSA1w2ZrQSiNSYQCjUAsAOG/Z/Rv2YCw5KrqQ4=
+	b=GPQBQS1W/+v1kNQ9TctpXiFPL12Ds8P+9aE04zp8tdf7PpCywnar2rTJawGg1SvAT
+	 K5SZGx7I1Cspb4yBViUb73dkHUe9cg8553jllL8fAzj59nd5PI3G3n1RUCqdif3ovF
+	 bacgsPfcWSIP82G1pCwi4CMU8r+VXVskulzJ77Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389613AbfJJIsK (ORCPT
+        id S2388379AbfJJIsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:48:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54238 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389598AbfJJIsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:08 -0400
+        id S2389598AbfJJIsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 658D02064A;
-        Thu, 10 Oct 2019 08:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB50D2064A;
+        Thu, 10 Oct 2019 08:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697285;
-        bh=t+HdTbbkCkwQ95nWKK5u36vN1oC0oIOhLtTWfHxY+dg=;
+        s=default; t=1570697291;
+        bh=96xU/UJbV7dJS5rO1/HhxRqUpWrLzRq1hWiaKmwL2lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s32WX3y3uCv1CzG7A/slP850/ccNVQVKUoJldLtmwr6JuzflrCAgHCN29tHd79XSn
-         aU5j2AFOY4Xe+sOQuqyW8WRRbjB10JxSe9AKr94b11hmasTDaj47kY6a33h+hjPJ8q
-         mlc635fyeOhaGawJOFVMcKMYkfS1+TN2goKPXv64=
+        b=KSqtK31kyyN8WTLiyzRdbGa+s7YFdKxg/cFECCQwM1Gad+U8Xk6lshlzlZImkZouF
+         0nVzwpYJox7x+v8T7iATg7VzS3z3bI1ubD7MQGIYOod2AVCOjIqRromd8dJ8qVSwuO
+         quI+Hp0cDe22127QmUjJIOboEWybgH4VXrMOqmTU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 042/114] mmc: sdhci-of-esdhc: set DMA snooping based on DMA coherence
-Date:   Thu, 10 Oct 2019 10:35:49 +0200
-Message-Id: <20191010083606.273817881@linuxfoundation.org>
+        stable@vger.kernel.org, James Dingwall <james@dingwall.me.uk>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 4.19 044/114] xen/xenbus: fix self-deadlock after killing user process
+Date:   Thu, 10 Oct 2019 10:35:51 +0200
+Message-Id: <20191010083607.168447531@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,74 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Juergen Gross <jgross@suse.com>
 
-commit 121bd08b029e03404c451bb237729cdff76eafed upstream.
+commit a8fabb38525c51a094607768bac3ba46b3f4a9d5 upstream.
 
-We must not unconditionally set the DMA snoop bit; if the DMA API is
-assuming that the device is not DMA coherent, and the device snoops the
-CPU caches, the device can see stale cache lines brought in by
-speculative prefetch.
+In case a user process using xenbus has open transactions and is killed
+e.g. via ctrl-C the following cleanup of the allocated resources might
+result in a deadlock due to trying to end a transaction in the xenbus
+worker thread:
 
-This leads to the device seeing stale data, potentially resulting in
-corrupted data transfers.  Commonly, this results in a descriptor fetch
-error such as:
+[ 2551.474706] INFO: task xenbus:37 blocked for more than 120 seconds.
+[ 2551.492215]       Tainted: P           OE     5.0.0-29-generic #5
+[ 2551.510263] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 2551.528585] xenbus          D    0    37      2 0x80000080
+[ 2551.528590] Call Trace:
+[ 2551.528603]  __schedule+0x2c0/0x870
+[ 2551.528606]  ? _cond_resched+0x19/0x40
+[ 2551.528632]  schedule+0x2c/0x70
+[ 2551.528637]  xs_talkv+0x1ec/0x2b0
+[ 2551.528642]  ? wait_woken+0x80/0x80
+[ 2551.528645]  xs_single+0x53/0x80
+[ 2551.528648]  xenbus_transaction_end+0x3b/0x70
+[ 2551.528651]  xenbus_file_free+0x5a/0x160
+[ 2551.528654]  xenbus_dev_queue_reply+0xc4/0x220
+[ 2551.528657]  xenbus_thread+0x7de/0x880
+[ 2551.528660]  ? wait_woken+0x80/0x80
+[ 2551.528665]  kthread+0x121/0x140
+[ 2551.528667]  ? xb_read+0x1d0/0x1d0
+[ 2551.528670]  ? kthread_park+0x90/0x90
+[ 2551.528673]  ret_from_fork+0x35/0x40
 
-mmc0: ADMA error
-mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
-mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
-mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
-mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
-mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
-mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
-mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
-mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
-mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
-mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
-mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
-mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
-mmc0: sdhci: Host ctl2: 0x00000000
-mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
-mmc0: sdhci: ============================================
-mmc0: error -5 whilst initialising SD card
+Fix this by doing the cleanup via a workqueue instead.
 
-but can lead to other errors, and potentially direct the SDHCI
-controller to read/write data to other memory locations (e.g. if a valid
-descriptor is visible to the device in a stale cache line.)
-
-Fix this by ensuring that the DMA snoop bit corresponds with the
-behaviour of the DMA API.  Since the driver currently only supports DT,
-use of_dma_is_coherent().  Note that device_get_dma_attr() can not be
-used as that risks re-introducing this bug if/when the driver is
-converted to ACPI.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: James Dingwall <james@dingwall.me.uk>
+Fixes: fd8aa9095a95c ("xen: optimize xenbus driver for multiple concurrent xenstore accesses")
+Cc: <stable@vger.kernel.org> # 4.11
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-esdhc.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/xen/xenbus/xenbus_dev_frontend.c |   20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -480,7 +480,12 @@ static int esdhc_of_enable_dma(struct sd
- 		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(40));
+--- a/drivers/xen/xenbus/xenbus_dev_frontend.c
++++ b/drivers/xen/xenbus/xenbus_dev_frontend.c
+@@ -55,6 +55,7 @@
+ #include <linux/string.h>
+ #include <linux/slab.h>
+ #include <linux/miscdevice.h>
++#include <linux/workqueue.h>
  
- 	value = sdhci_readl(host, ESDHC_DMA_SYSCTL);
--	value |= ESDHC_DMA_SNOOP;
+ #include <xen/xenbus.h>
+ #include <xen/xen.h>
+@@ -116,6 +117,8 @@ struct xenbus_file_priv {
+ 	wait_queue_head_t read_waitq;
+ 
+ 	struct kref kref;
 +
-+	if (of_dma_is_coherent(dev->of_node))
-+		value |= ESDHC_DMA_SNOOP;
-+	else
-+		value &= ~ESDHC_DMA_SNOOP;
-+
- 	sdhci_writel(host, value, ESDHC_DMA_SYSCTL);
- 	return 0;
++	struct work_struct wq;
+ };
+ 
+ /* Read out any raw xenbus messages queued up. */
+@@ -300,14 +303,14 @@ static void watch_fired(struct xenbus_wa
+ 	mutex_unlock(&adap->dev_data->reply_mutex);
  }
+ 
+-static void xenbus_file_free(struct kref *kref)
++static void xenbus_worker(struct work_struct *wq)
+ {
+ 	struct xenbus_file_priv *u;
+ 	struct xenbus_transaction_holder *trans, *tmp;
+ 	struct watch_adapter *watch, *tmp_watch;
+ 	struct read_buffer *rb, *tmp_rb;
+ 
+-	u = container_of(kref, struct xenbus_file_priv, kref);
++	u = container_of(wq, struct xenbus_file_priv, wq);
+ 
+ 	/*
+ 	 * No need for locking here because there are no other users,
+@@ -333,6 +336,18 @@ static void xenbus_file_free(struct kref
+ 	kfree(u);
+ }
+ 
++static void xenbus_file_free(struct kref *kref)
++{
++	struct xenbus_file_priv *u;
++
++	/*
++	 * We might be called in xenbus_thread().
++	 * Use workqueue to avoid deadlock.
++	 */
++	u = container_of(kref, struct xenbus_file_priv, kref);
++	schedule_work(&u->wq);
++}
++
+ static struct xenbus_transaction_holder *xenbus_get_transaction(
+ 	struct xenbus_file_priv *u, uint32_t tx_id)
+ {
+@@ -652,6 +667,7 @@ static int xenbus_file_open(struct inode
+ 	INIT_LIST_HEAD(&u->watches);
+ 	INIT_LIST_HEAD(&u->read_buffers);
+ 	init_waitqueue_head(&u->read_waitq);
++	INIT_WORK(&u->wq, xenbus_worker);
+ 
+ 	mutex_init(&u->reply_mutex);
+ 	mutex_init(&u->msgbuffer_mutex);
 
 
