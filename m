@@ -2,99 +2,110 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9656C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E95ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71CB20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:34:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izvtbYCZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3AE2920B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfJJXel (ORCPT
+        id S1727381AbfJJXgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 19:34:41 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45834 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfJJXel (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 19:34:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r134so5648695lff.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 16:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=OzTCu5I04s+EnaAbwN6eYgKI0KQPTUphwOlhf37qoKM=;
-        b=izvtbYCZRJQnH6TCdDLZC0uFGCK4uHtEx+/NINpDi8P3ng/wp/4lWDOs1Ho2AcBdel
-         p44UhCtPD/wH3Ki3TQO2pdYGeWEvn9ZaAwZRqJavX9Lma5Ui52o+XaWM9V8LMugdQu3e
-         uYGmbCd3fmn9g4FT7i9cWMQKZ6H9Gq4N6uYmpJoTg/pf40KsMGPFVThGECBAQrrokBKN
-         UyMS54tT1I3yHtxknsQ5BAfgn3N61ZZWp+/HyY3tgubshEQ4/7keFfPTnNZh11e+BnMB
-         uihu0MMw4yZRFuBcmQXMrRsTesF7+P1t0dzGpnhsTxkjyCS2Xi65uniSlNJ4WdvwTnzW
-         yPmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=OzTCu5I04s+EnaAbwN6eYgKI0KQPTUphwOlhf37qoKM=;
-        b=PO+Cxv3vymGVrn7zCfxRyUXVeGruAjWFNdd1o8APswlY7Uda/S18k3USqMTpnKXfaS
-         pK+gHnxDyITq0LhQnsZlF9hv8FRZKG7dvKXzpIFKYq61e8V9FlugIXITyMj074k2D8Y2
-         8hGhtPGeCt9RaZV65RPFsbRI0hqXiRo2sBBRoh+HSq7W366BFgJLdyR5MiQIlr9xMBdp
-         83vd2X8nkML2PBBhrN5GgAyEW5wX3cw50w3/eLADT6oE85gm5DrWR0nH2brJrRJ5N3fm
-         7a6jnaDbuGkQpaiASqDkqH/bt2pyUpmgeTxqoT/T08nCgdlVFczKjdpxkid54chiqq6F
-         1oMA==
-X-Gm-Message-State: APjAAAX1ovGqdi9KJJ7EQAUAtCslk/6eob0+iEqKN23h5SI4scp6Iki1
-        J4eBg1NtCnJArn+kHz1N3aJt/xPz42KtY8a1WOqUaIHiZg==
-X-Google-Smtp-Source: APXvYqy3SIYI31R+EmdX4s4IYa//aTqrlhyKysAJJuq8mJhKiFdjY7189S10bJX2gMIbWgAlvDqUgkSl4Q+4KdktoKk=
-X-Received: by 2002:ac2:424c:: with SMTP id m12mr7351197lfl.140.1570750478898;
- Thu, 10 Oct 2019 16:34:38 -0700 (PDT)
+        Thu, 10 Oct 2019 19:36:31 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:57852 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbfJJXga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 19:36:30 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iIhyu-0006HU-S1; Thu, 10 Oct 2019 17:36:29 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iIhyt-0004Al-Fl; Thu, 10 Oct 2019 17:36:27 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@lst.de>
+Date:   Thu, 10 Oct 2019 17:36:26 -0600
+Message-Id: <20191010233626.15998-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-From:   Gabriel C <nix.or.die@gmail.com>
-Date:   Fri, 11 Oct 2019 01:34:08 +0200
-Message-ID: <CAEJqkgi-9_1D91GUm_MbS-=RRRwMZjqEYWhCCdk+STvc0PeYXw@mail.gmail.com>
-Subject: [amdgpu] ASSERT()'s in write_i2c*retimer_setting() functions
-To:     LKML <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Zeyu Fan <Zeyu.Fan@amd.com>, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, axboe@kernel.dk, sbates@raithlin.com, logang@deltatee.com, hch@lst.de
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH] block: account statistics for passthrough requests
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Presently, passthrough requests are not accounted for because
+blk_do_io_stat() expressly rejects them. Based on some digging
+in the history, this doesn't seem like a concious decision but
+one that evolved from the change from blk_fs_request() to
+blk_rq_is_passthrough().
 
-I've built recently a new box with a Ryzen3 2200G APU.
+To support this, call blk_account_io_start() in blk_execute_rq_nowait()
+and remove the passthrough check in blk_do_io_stat().
 
-Each time I plug in an HDMI cable ( to a TV or Monitor ),
-or boot with HDMI connected a lot ASSERT()'s from
-write_i2c*retimer_setting() functions are triggered.
+Link: https://lore.kernel.org/linux-block/20191010100526.GA27209@lst.de/
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>
+---
 
-I see the same on a Laptop with a Ryzen7 3750H with
-hybrid GPU configuration.
+This change is needed for the NVMe-of passthru work that is in progress.
+Christoph suggested sending it as its own patch. (See the link
+in the commit message for more information.)
 
-Besides the noise in dmesg and the delay on boot,
-everything is working fine. I cannot find anything wrong
-or broken.
+ block/blk-exec.c | 2 ++
+ block/blk.h      | 7 ++-----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-Since the write errors seem to not be fatal, I think a friendly message
-would help more instead of flooding the dmesg with dumps while
-everything is working properly.
+diff --git a/block/blk-exec.c b/block/blk-exec.c
+index 1db44ca0f4a6..e20a852ae432 100644
+--- a/block/blk-exec.c
++++ b/block/blk-exec.c
+@@ -55,6 +55,8 @@ void blk_execute_rq_nowait(struct request_queue *q, struct gendisk *bd_disk,
+ 	rq->rq_disk = bd_disk;
+ 	rq->end_io = done;
 
-Why is ASSERT() used there?
++	blk_account_io_start(rq, true);
++
+ 	/*
+ 	 * don't check dying flag for MQ because the request won't
+ 	 * be reused after dying flag is set
+diff --git a/block/blk.h b/block/blk.h
+index 47fba9362e60..2bea40180b6f 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -242,14 +242,11 @@ int blk_dev_init(void);
+  * Contribute to IO statistics IFF:
+  *
+  *	a) it's attached to a gendisk, and
+- *	b) the queue had IO stats enabled when this request was started, and
+- *	c) it's a file system request
++ *	b) the queue had IO stats enabled when this request was started
+  */
+ static inline bool blk_do_io_stat(struct request *rq)
+ {
+-	return rq->rq_disk &&
+-	       (rq->rq_flags & RQF_IO_STAT) &&
+-		!blk_rq_is_passthrough(rq);
++	return rq->rq_disk && (rq->rq_flags & RQF_IO_STAT);
+ }
 
-I have a dmesg from the Ryzen3 box with drm.debug and a snipped
-from the Laptop ( not near me right now ) uploaded there:
-
-https://crazy.dev.frugalware.org/amdgpu/
-
-Please let me know if you need more information,
-If needed I can upload a dmesg from the Laptop with drm.debug too.
-
-
-Best Regards,
-
-Gabriel C
+ static inline void req_set_nomerge(struct request_queue *q, struct request *req)
+--
+2.20.1
