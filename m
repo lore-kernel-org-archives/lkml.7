@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568D0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AABC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1747A20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CF620650
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfJJUaY (ORCPT
+        id S1726950AbfJJUaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:30:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30899 "EHLO mga17.intel.com"
+        Thu, 10 Oct 2019 16:30:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:30892 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfJJU36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726894AbfJJU36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Oct 2019 16:29:58 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 13:29:52 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,281,1566889200"; 
-   d="scan'208";a="277902023"
+   d="scan'208";a="277902019"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
   by orsmga001.jf.intel.com with ESMTP; 10 Oct 2019 13:29:51 -0700
 From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
@@ -33,237 +33,59 @@ To:     andriy.shevchenko@intel.com
 Cc:     prarit@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [RESEND][PATCH 03/10] tools/power/x86/intel-speed-select: Turbo-freq feature auto mode
-Date:   Thu, 10 Oct 2019 13:29:38 -0700
-Message-Id: <20191010202945.73616-4-srinivas.pandruvada@linux.intel.com>
+Subject: [RESEND][PATCH 01/10] tools/power/x86/intel-speed-select: Remove warning for unused result
+Date:   Thu, 10 Oct 2019 13:29:36 -0700
+Message-Id: <20191010202945.73616-2-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20191010202945.73616-1-srinivas.pandruvada@linux.intel.com>
 References: <20191010202945.73616-1-srinivas.pandruvada@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce --auto|-a option to turbo-freq enable feature, so that it
-does in one step for users who are OK by setting all passed target cores
-as high priority and set in CLOS 0 and remaining in CLOS 3. In this way,
-users don't have to take multiple steps to enable turbo-freq feature. For
-users who want more fine grain control, they can always use core-power
-feature to set custom CLOS configuration and assignment.
-
-While here also print the error to output when clos configuration fails.
-
-For example
-intel-speed-select -c 0-4 turbo-freq enable --auto
-
-The above command will enable turbo-freq and core-power feature. Also
-mark CPU 0 to CPU 4 as high priority.
+Fix warning for:
+isst-config.c: In function ‘set_cpu_online_offline’:
+isst-config.c:221:3: warning: ignoring return value of ‘write’,
+declared with attribute warn_unused_result [-Wunused-result]
+   write(fd, "1\n", 2);
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 152 ++++++++++++++----
- 1 file changed, 124 insertions(+), 28 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 82502a38446e..e1ca7c5b8037 100644
+index 2a9890c8395a..21fcfe621d3a 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1173,40 +1173,58 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	int ret;
- 	int status = *(int *)arg4;
- 
-+	if (auto_mode) {
-+		if (status) {
-+			ret = isst_pm_qos_config(cpu, 1, 1);
-+			if (ret)
-+				goto disp_results;
-+		} else {
-+			isst_pm_qos_config(cpu, 0, 0);
-+		}
-+	}
-+
- 	ret = isst_set_pbf_fact_status(cpu, 0, status);
--	if (ret)
-+	if (ret) {
- 		perror("isst_set_fact");
--	else {
--		if (status) {
--			struct isst_pkg_ctdp pkg_dev;
-+		if (auto_mode)
-+			isst_pm_qos_config(cpu, 0, 0);
- 
--			ret = isst_get_ctdp_levels(cpu, &pkg_dev);
--			if (ret) {
--				isst_display_result(cpu, outf, "turbo-freq",
--						    "enable", ret);
--				return;
--			}
-+		goto disp_results;
-+	}
-+
-+	/* Set TRL */
-+	if (status) {
-+		struct isst_pkg_ctdp pkg_dev;
-+
-+		ret = isst_get_ctdp_levels(cpu, &pkg_dev);
-+		if (!ret)
- 			ret = isst_set_trl(cpu, fact_trl);
--			isst_display_result(cpu, outf, "turbo-freq", "enable",
--					    ret);
--		} else {
--			/* Since we modified TRL during Fact enable, restore it */
--			isst_set_trl_from_current_tdp(cpu, fact_trl);
--			isst_display_result(cpu, outf, "turbo-freq", "disable",
--					    ret);
--		}
-+		if (ret && auto_mode)
-+			isst_pm_qos_config(cpu, 0, 0);
-+	}
-+
-+disp_results:
-+	if (status) {
-+		isst_display_result(cpu, outf, "turbo-freq", "enable", ret);
-+	} else {
-+		/* Since we modified TRL during Fact enable, restore it */
-+		isst_set_trl_from_current_tdp(cpu, fact_trl);
-+		isst_display_result(cpu, outf, "turbo-freq", "disable", ret);
- 	}
- }
- 
- static void set_fact_enable(void)
+@@ -169,7 +169,7 @@ int get_topo_max_cpus(void)
+ static void set_cpu_online_offline(int cpu, int state)
  {
--	int status = 1;
-+	int status = 1, i, ret;
+ 	char buffer[128];
+-	int fd;
++	int fd, ret;
  
- 	if (cmd_help) {
- 		fprintf(stderr,
- 			"Enable Intel Speed Select Technology Turbo frequency feature\n");
- 		fprintf(stderr,
- 			"Optional: -t|--trl : Specify turbo ratio limit\n");
-+		fprintf(stderr,
-+			"\tOptional Arguments: -a|--auto : Designate specified target CPUs with");
-+		fprintf(stderr, "-C|--cpu option as as high priority using core-power feature\n");
- 		exit(0);
- 	}
+ 	snprintf(buffer, sizeof(buffer),
+ 		 "/sys/devices/system/cpu/cpu%d/online", cpu);
+@@ -179,9 +179,12 @@ static void set_cpu_online_offline(int cpu, int state)
+ 		err(-1, "%s open failed", buffer);
  
-@@ -1218,6 +1236,83 @@ static void set_fact_enable(void)
- 		for_each_online_package_in_set(set_fact_for_cpu, NULL, NULL,
- 					       NULL, &status);
- 	isst_ctdp_display_information_end(outf);
+ 	if (state)
+-		write(fd, "1\n", 2);
++		ret = write(fd, "1\n", 2);
+ 	else
+-		write(fd, "0\n", 2);
++		ret = write(fd, "0\n", 2);
 +
-+	if (auto_mode) {
-+		/*
-+		 * When we adjust CLOS param, we have to set for siblings also.
-+		 * So for the each user specified CPU, also add the sibling
-+		 * in the present_cpu_mask.
-+		 */
-+		for (i = 0; i < get_topo_max_cpus(); ++i) {
-+			char buffer[128], sibling_list[128], *cpu_str;
-+			int fd, len;
-+
-+			if (!CPU_ISSET_S(i, target_cpumask_size, target_cpumask))
-+				continue;
-+
-+			snprintf(buffer, sizeof(buffer),
-+				 "/sys/devices/system/cpu/cpu%d/topology/thread_siblings_list", i);
-+
-+			fd = open(buffer, O_RDONLY);
-+			if (fd < 0)
-+				continue;
-+
-+			len = read(fd, sibling_list, sizeof(sibling_list));
-+			close(fd);
-+
-+			if (len < 0)
-+				continue;
-+
-+			cpu_str = strtok(sibling_list, ",");
-+			while (cpu_str != NULL) {
-+				int cpu;
-+
-+				sscanf(cpu_str, "%d", &cpu);
-+				CPU_SET_S(cpu, target_cpumask_size, target_cpumask);
-+				cpu_str = strtok(NULL, ",");
-+			}
-+		}
-+
-+		for (i = 0; i < get_topo_max_cpus(); ++i) {
-+			int clos;
-+
-+			if (!CPU_ISSET_S(i, present_cpumask_size, present_cpumask))
-+				continue;
-+
-+			ret = set_clos_param(i, 0, 0, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			ret = set_clos_param(i, 1, 15, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			ret = set_clos_param(i, 2, 15, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			ret = set_clos_param(i, 3, 15, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			if (CPU_ISSET_S(i, target_cpumask_size, target_cpumask))
-+				clos = 0;
-+			else
-+				clos = 3;
-+
-+			debug_printf("Associate cpu: %d clos: %d\n", i, clos);
-+			ret = isst_clos_associate(i, clos);
-+			if (ret)
-+				goto error_disp;
-+		}
-+		isst_display_result(i, outf, "turbo-freq --auto", "enable", 0);
-+	}
-+
-+	return;
-+
-+error_disp:
-+	isst_display_result(i, outf, "turbo-freq --auto", "enable", ret);
-+
++	if (ret == -1)
++		perror("Online/Offline: Operation failed\n");
+ 
+ 	close(fd);
  }
- 
- static void set_fact_disable(void)
-@@ -1229,6 +1324,8 @@ static void set_fact_disable(void)
- 			"Disable Intel Speed Select Technology turbo frequency feature\n");
- 		fprintf(stderr,
- 			"Optional: -t|--trl : Specify turbo ratio limit\n");
-+		fprintf(stderr,
-+			"\tOptional Arguments: -a|--auto : Also disable core-power associations\n");
- 		exit(0);
- 	}
- 
-@@ -1249,16 +1346,15 @@ static void enable_clos_qos_config(int cpu, void *arg1, void *arg2, void *arg3,
- 	int status = *(int *)arg4;
- 
- 	ret = isst_pm_qos_config(cpu, status, clos_priority_type);
--	if (ret) {
-+	if (ret)
- 		perror("isst_pm_qos_config");
--	} else {
--		if (status)
--			isst_display_result(cpu, outf, "core-power", "enable",
--					    ret);
--		else
--			isst_display_result(cpu, outf, "core-power", "disable",
--					    ret);
--	}
-+
-+	if (status)
-+		isst_display_result(cpu, outf, "core-power", "enable",
-+				    ret);
-+	else
-+		isst_display_result(cpu, outf, "core-power", "disable",
-+				    ret);
- }
- 
- static void set_clos_enable(void)
 -- 
 2.17.2
 
