@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C100C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B848DC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197C02054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D062054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697025;
-	bh=YsxlhSyeXrt0RJSM4nYtreNGAXgVaewxWA3inoJoUTE=;
+	s=default; t=1570697027;
+	bh=zJrZkbq56cAliUqaDa1Q7mnzYKKcOVVANYJuTaly3Kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PLZJeY17WCbzD/n/gMhM6EwUZLtoj2zGV+qg0FWzSpjgIn5l+LJbTdUDJp/lWWkIV
-	 yu9bt0cMg07b8lj+o15U+4izwUfAVq0jI1pDWS1tBD/TROkEuFxx/l9zU8+U53vG2z
-	 sx7+DB8j3JJtZwWKW91gAftiqkyovx5eRGUDA7GI=
+	b=2giZdXgNg/6oEntLiUA/Vxjn7+KtX9il1W2zJiZchPqV6r+TzGpTRTKPDWJkTYY8S
+	 A5N/yBdYhNg0pwaadMaaZ9p/qsrrAuChS3hyfBnurXX9wJ0/IZP2daHtCJ3b1PUnAj
+	 4QsDTEu92EWg/4ABAflV+ueDIbeJXvcAKCeYXenw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387534AbfJJInn (ORCPT
+        id S2388799AbfJJInq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:43:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48574 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:43:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388770AbfJJInm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:43:42 -0400
+        id S2388770AbfJJIno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:43:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 838C62054F;
-        Thu, 10 Oct 2019 08:43:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51C8221929;
+        Thu, 10 Oct 2019 08:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697021;
-        bh=YsxlhSyeXrt0RJSM4nYtreNGAXgVaewxWA3inoJoUTE=;
+        s=default; t=1570697023;
+        bh=zJrZkbq56cAliUqaDa1Q7mnzYKKcOVVANYJuTaly3Kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ViPFyQ5ePNyiloC169OrUjHg/E6qqdNnV6l58EUrANKIKK/xXJnm++hKdiX91mYmN
-         UFiJu5iWJjrpkBgPDRRInwUKOmhN4O/fGubeeOUxcNfk8ET7lRi30Eqvj2Ch+iVVPo
-         XdjNtX3uJtcMfWalPXBMEmNmzcDeavAx4P6mE6Kg=
+        b=kaIdY770oHJwvsBN2+hCIDuyjFm8lymNBNSUWWiL/kBeiWsrItYvsW+Y2Y6XfL/a1
+         r8pPwjay61bZUArpUv9YCcyeN4gJN2AImHeHHVWXyTU5XIb7Iz77O2vaDte6af4rIz
+         ZkWYMCunzMqCtsICGZP5Jwsz8Iv37ReQXFcZtWeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
+        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 139/148] perf stat: Reset previous counts on repeat with interval
-Date:   Thu, 10 Oct 2019 10:36:40 +0200
-Message-Id: <20191010083620.763187286@linuxfoundation.org>
+Subject: [PATCH 5.3 140/148] riscv: Avoid interrupts being erroneously enabled in handle_exception()
+Date:   Thu, 10 Oct 2019 10:36:41 +0200
+Message-Id: <20191010083620.814265164@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -66,166 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+From: Vincent Chen <vincent.chen@sifive.com>
 
-[ Upstream commit b63fd11cced17fcb8e133def29001b0f6aaa5e06 ]
+[ Upstream commit c82dd6d078a2bb29d41eda032bb96d05699a524d ]
 
-When using 'perf stat' with repeat and interval option, it shows wrong
-values for events.
+When the handle_exception function addresses an exception, the interrupts
+will be unconditionally enabled after finishing the context save. However,
+It may erroneously enable the interrupts if the interrupts are disabled
+before entering the handle_exception.
 
-The wrong values will be shown for the first interval on the second and
-subsequent repetitions.
+For example, one of the WARN_ON() condition is satisfied in the scheduling
+where the interrupt is disabled and rq.lock is locked. The WARN_ON will
+trigger a break exception and the handle_exception function will enable the
+interrupts before entering do_trap_break function. During the procedure, if
+a timer interrupt is pending, it will be taken when interrupts are enabled.
+In this case, it may cause a deadlock problem if the rq.lock is locked
+again in the timer ISR.
 
-Without the fix:
+Hence, the handle_exception() can only enable interrupts when the state of
+sstatus.SPIE is 1.
 
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
+This patch is tested on HiFive Unleashed board.
 
-     2.000282489                 53      faults
-     2.000282489                513      sched:sched_switch
-     4.005478208              3,721      faults
-     4.005478208              2,666      sched:sched_switch
-     5.025470933                395      faults
-     5.025470933              1,307      sched:sched_switch
-     2.009602825 1,84,46,74,40,73,70,95,47,520      faults 		<------
-     2.009602825 1,84,46,74,40,73,70,95,49,568      sched:sched_switch  <------
-     4.019612206              4,730      faults
-     4.019612206              2,746      sched:sched_switch
-     5.039615484              3,953      faults
-     5.039615484              1,496      sched:sched_switch
-     2.000274620 1,84,46,74,40,73,70,95,47,520      faults		<------
-     2.000274620 1,84,46,74,40,73,70,95,47,520      sched:sched_switch	<------
-     4.000480342              4,282      faults
-     4.000480342              2,303      sched:sched_switch
-     5.000916811              1,322      faults
-     5.000916811              1,064      sched:sched_switch
-  #
-
-prev_raw_counts is allocated when using intervals. This is used when
-calculating the difference in the counts of events when using interval.
-
-The current counts are stored in prev_raw_counts to calculate the
-differences in the next iteration.
-
-On the first interval of the second and subsequent repetitions,
-prev_raw_counts would be the values stored in the last interval of the
-previous repetitions, while the current counts will only be for the
-first interval of the current repetition.
-
-Hence there is a possibility of events showing up as big number.
-
-Fix this by resetting prev_raw_counts whenever perf stat repeats the
-command.
-
-With the fix:
-
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
-
-     2.019349347              2,597      faults
-     2.019349347              2,753      sched:sched_switch
-     4.019577372              3,098      faults
-     4.019577372              2,532      sched:sched_switch
-     5.019415481              1,879      faults
-     5.019415481              1,356      sched:sched_switch
-     2.000178813              8,468      faults
-     2.000178813              2,254      sched:sched_switch
-     4.000404621              7,440      faults
-     4.000404621              1,266      sched:sched_switch
-     5.040196079              2,458      faults
-     5.040196079                556      sched:sched_switch
-     2.000191939              6,870      faults
-     2.000191939              1,170      sched:sched_switch
-     4.000414103                541      faults
-     4.000414103                902      sched:sched_switch
-     5.000809863                450      faults
-     5.000809863                364      sched:sched_switch
-  #
-
-Committer notes:
-
-This was broken since the cset introducing the --interval feature, i.e.
---repeat + --interval wasn't tested at that point, add the Fixes tag so
-that automatic scripts can pick this up.
-
-Fixes: 13370a9b5bb8 ("perf stat: Add interval printing")
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: stable@vger.kernel.org # v3.9+
-Link: http://lore.kernel.org/lkml/20190904094738.9558-2-srikar@linux.vnet.ibm.com
-[ Fixed up conflicts with libperf, i.e. some perf_{evsel,evlist} lost the 'perf' prefix ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+[paul.walmsley@sifive.com: updated to apply]
+Fixes: bcae803a21317 ("RISC-V: Enable IRQ during exception handling")
+Cc: David Abdurachmanov <david.abdurachmanov@sifive.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-stat.c |  3 +++
- tools/perf/util/stat.c    | 17 +++++++++++++++++
- tools/perf/util/stat.h    |  1 +
- 3 files changed, 21 insertions(+)
+ arch/riscv/kernel/entry.S | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 3e13b231f2f56..8ec06bf3372c6 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1961,6 +1961,9 @@ int cmd_stat(int argc, const char **argv)
- 			fprintf(output, "[ perf stat: executing run #%d ... ]\n",
- 				run_idx + 1);
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index bc7a56e1ca6f4..9b60878a4469c 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -166,9 +166,13 @@ ENTRY(handle_exception)
+ 	move a0, sp /* pt_regs */
+ 	tail do_IRQ
+ 1:
+-	/* Exceptions run with interrupts enabled */
++	/* Exceptions run with interrupts enabled or disabled
++	   depending on the state of sstatus.SR_SPIE */
++	andi t0, s1, SR_SPIE
++	beqz t0, 1f
+ 	csrs sstatus, SR_SIE
  
-+		if (run_idx != 0)
-+			perf_evlist__reset_prev_raw_counts(evsel_list);
-+
- 		status = run_perf_stat(argc, argv, run_idx);
- 		if (forever && status != -1 && !interval) {
- 			print_counters(NULL, argc, argv);
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index db8a6cf336bed..6ce66c2727474 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -155,6 +155,15 @@ static void perf_evsel__free_prev_raw_counts(struct perf_evsel *evsel)
- 	evsel->prev_raw_counts = NULL;
- }
- 
-+static void perf_evsel__reset_prev_raw_counts(struct perf_evsel *evsel)
-+{
-+	if (evsel->prev_raw_counts) {
-+		evsel->prev_raw_counts->aggr.val = 0;
-+		evsel->prev_raw_counts->aggr.ena = 0;
-+		evsel->prev_raw_counts->aggr.run = 0;
-+       }
-+}
-+
- static int perf_evsel__alloc_stats(struct perf_evsel *evsel, bool alloc_raw)
- {
- 	int ncpus = perf_evsel__nr_cpus(evsel);
-@@ -205,6 +214,14 @@ void perf_evlist__reset_stats(struct perf_evlist *evlist)
- 	}
- }
- 
-+void perf_evlist__reset_prev_raw_counts(struct perf_evlist *evlist)
-+{
-+	struct perf_evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__reset_prev_raw_counts(evsel);
-+}
-+
- static void zero_per_pkg(struct perf_evsel *counter)
- {
- 	if (counter->per_pkg_mask)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 7032dd1eeac2f..9cd0d9cff374a 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -194,6 +194,7 @@ void perf_stat__collect_metric_expr(struct perf_evlist *);
- int perf_evlist__alloc_stats(struct perf_evlist *evlist, bool alloc_raw);
- void perf_evlist__free_stats(struct perf_evlist *evlist);
- void perf_evlist__reset_stats(struct perf_evlist *evlist);
-+void perf_evlist__reset_prev_raw_counts(struct perf_evlist *evlist);
- 
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct perf_evsel *counter);
++1:
+ 	/* Handle syscalls */
+ 	li t0, EXC_SYSCALL
+ 	beq s4, t0, handle_syscall
 -- 
 2.20.1
 
