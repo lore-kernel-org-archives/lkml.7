@@ -2,58 +2,85 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110C5ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B93BECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C7D2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063702190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570696050;
+	bh=zBl3/UkH++xKHU4rE1SLp1H9yBZ229QKvlXTCt42uCE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UmDM+BMz7hpKPH7uz48N1WlT4E0jZOKXIFymtr94PjFcmGQ1mPZU6/D8SvieZfUfe
+	 K15NpUq61R//vuV7lQmHa0gYFdcWjoeVEzgl9M1hHNxph303xYJXAOtNkiDqp+Wsxt
+	 xxKSkQbGqJL7QT3266kU+0nzg1aWDQH7ilW9cS6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731616AbfJJI1J (ORCPT
+        id S1733261AbfJJI12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:27:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56144 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733202AbfJJI1H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:27:07 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iITm9-0002M8-BR; Thu, 10 Oct 2019 10:26:21 +0200
-Date:   Thu, 10 Oct 2019 10:26:21 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/8] clocksource/drivers/timer-atmel-tcb: add sama5d2
- support
-Message-ID: <20191010082602.ytfc2tilizruwrts@linutronix.de>
-References: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
+        Thu, 10 Oct 2019 04:27:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbfJJI12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:27:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B03D2067B;
+        Thu, 10 Oct 2019 08:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570696047;
+        bh=zBl3/UkH++xKHU4rE1SLp1H9yBZ229QKvlXTCt42uCE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K1vmmrKGaItkB+sPyvIxr81CWN7nShQsRTex4j5bphWg6AOmamJaOeJR8Qw0yHDrR
+         m2ak2aD5m7/Yl5FWGgcMUjIyLvcsKn00GRvtpQtu7xNSqgtEKzvwbAC0jRV0KiEs0P
+         UXsEUtrh7t+XFWGuopiYJTpn3eXtV6KQs41DXHRo=
+Date:   Thu, 10 Oct 2019 10:27:25 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-stable@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/3] tpm: migrate pubek_show to struct tpm_buf
+Message-ID: <20191010082725.GA326087@kroah.com>
+References: <20191009212831.29081-1-jarkko.sakkinen@linux.intel.com>
+ <20191009212831.29081-2-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191009212831.29081-2-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-10 00:39:58 [+0200], Alexandre Belloni wrote:
-> This series mainly adds sama5d2 support where we need to avoid using
-> clock index 0 because that clock is never enabled by the driver.
+On Thu, Oct 10, 2019 at 12:28:29AM +0300, Jarkko Sakkinen wrote:
+> commit da379f3c1db0c9a1fd27b11d24c9894b5edc7c75 upstream
 > 
-> There is also a rework of the 32khz clock handling so it is not used for
-> clockevents on 32 bit counter because the increased rate improves the
-> resolution and doesn't have any drawback with that counter width. This
-> replaces a patch that has been carried in the linux-rt tree for a while.
+> Migrated pubek_show to struct tpm_buf and cleaned up its implementation.
+> Previously the output parameter structure was declared but left
+> completely unused. Now it is used to refer different fields of the
+> output. We can move it to tpm-sysfs.c as it does not have any use
+> outside of that file.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  drivers/char/tpm/tpm-sysfs.c | 87 ++++++++++++++++++++----------------
+>  drivers/char/tpm/tpm.h       | 13 ------
+>  2 files changed, 48 insertions(+), 52 deletions(-)
 
-Thank you for doing this!
+This is already in the 4.14.148 kernel release.
 
-Sebastian
+Why do we need it again?
+
+Also, the mailing list is stable@vger, not linux-stable@vger.
+
+thanks,
+
+greg k-h
