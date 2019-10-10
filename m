@@ -2,51 +2,52 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FD4C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF81ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D61222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAB320B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697534;
-	bh=uWYCfQmlT5KxQXn7nWo6QYGrYNwoG1CM8QcUPAxUwL0=;
+	s=default; t=1570697546;
+	bh=LZt8K+pFKJyJFvN9uH562Rpkc7q8eYhurxMZU2lrw3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RgXukkm2Mv8bb4iKXssV8S2ar6ihcmzAuA9OeJzj2oRAgkiDq8SvgNyOuwBAOIjMY
-	 udaBwbLyhiQwClVkPZCBXVQlyfptqh/H2ojgof1kRzTGI9ndHEf3LOX7T788WwH1AE
-	 uKxyQRZfXzTodFbGVSpF+qxrlsvQqKxNxDgh4fuE=
+	b=K7f3m477JSlzwULgsxXSY0DIYu3eJ+teCMc53CpyYRAntf8TnfJqb4WkdPUnE7SZl
+	 BS1iQRvcFJBgjGH0ZQHI4D9bpLTLPnZOqmHsBhDbWQFSTLX0bF6xg0bjFap7q+nQZa
+	 /Ouh62+q72LMiFjxYOutyseZ0LcF1r58qE07+uMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390230AbfJJIwM (ORCPT
+        id S2389719AbfJJIwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:52:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59950 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:52:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389884AbfJJIwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:52:08 -0400
+        id S2389485AbfJJIwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:52:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1085B20B7C;
-        Thu, 10 Oct 2019 08:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 016CC2064A;
+        Thu, 10 Oct 2019 08:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697528;
-        bh=uWYCfQmlT5KxQXn7nWo6QYGrYNwoG1CM8QcUPAxUwL0=;
+        s=default; t=1570697539;
+        bh=LZt8K+pFKJyJFvN9uH562Rpkc7q8eYhurxMZU2lrw3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BCfJrqLH/F0j6PQxRzVadTpMJUYx5hG8fvrYEfTtpiFmohP1I1JB4tb466Pywq74r
-         Lsqlha06dSjWRvHAihMnJePrjbNFqyYFwQTkHF6L4IjTrmj7iJeQS/Yv1FC8ao13t6
-         YxgO/baYI45TW3lGS18rssGLwXEOBL+jUuseWEC8=
+        b=fbLOvx0MKJ1Z0i7h9/FqXyBibLoOR2rX02IDE+mkQ57akBmLnqnIgMMLrfEKnhwC8
+         JjjTH4ZxDi0+vuCJ0YNV1fKaWR1KxEmtMRUfl5iuhwFc6wSAhjbVBZJsmQtEYD5DVe
+         Bm8tfG1Fe5Nholc6D9cePwbW5+4DPQBgrdRyeBbg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 59/61] cfg80211: Use const more consistently in for_each_element macros
-Date:   Thu, 10 Oct 2019 10:37:24 +0200
-Message-Id: <20191010083527.108834856@linuxfoundation.org>
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 28/61] ima: always return negative code for error
+Date:   Thu, 10 Oct 2019 10:36:53 +0200
+Message-Id: <20191010083507.117565530@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -59,59 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Malinen <j@w1.fi>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-commit 7388afe09143210f555bdd6c75035e9acc1fab96 upstream.
+[ Upstream commit f5e1040196dbfe14c77ce3dfe3b7b08d2d961e88 ]
 
-Enforce the first argument to be a correct type of a pointer to struct
-element and avoid unnecessary typecasts from const to non-const pointers
-(the change in validate_ie_attr() is needed to make this part work). In
-addition, avoid signed/unsigned comparison within for_each_element() and
-mark struct element packed just in case.
+integrity_kernel_read() returns the number of bytes read. If this is
+a short read then this positive value is returned from
+ima_calc_file_hash_atfm(). Currently this is only indirectly called from
+ima_calc_file_hash() and this function only tests for the return value
+being zero or nonzero and also doesn't forward the return value.
+Nevertheless there's no point in returning a positive value as an error,
+so translate a short read into -EINVAL.
 
-Signed-off-by: Jouni Malinen <j@w1.fi>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/ieee80211.h |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ security/integrity/ima/ima_crypto.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -2747,16 +2747,16 @@ struct element {
- 	u8 id;
- 	u8 datalen;
- 	u8 data[];
--};
-+} __packed;
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index af680b5b678a4..06b0ee75f34fb 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -293,8 +293,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
+ 		rbuf_len = min_t(loff_t, i_size - offset, rbuf_size[active]);
+ 		rc = integrity_kernel_read(file, offset, rbuf[active],
+ 					   rbuf_len);
+-		if (rc != rbuf_len)
++		if (rc != rbuf_len) {
++			if (rc >= 0)
++				rc = -EINVAL;
+ 			goto out3;
++		}
  
- /* element iteration helpers */
--#define for_each_element(element, _data, _datalen)			\
--	for (element = (void *)(_data);					\
--	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
--		sizeof(*element) &&					\
--	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
--		sizeof(*element) + element->datalen;			\
--	     element = (void *)(element->data + element->datalen))
-+#define for_each_element(_elem, _data, _datalen)			\
-+	for (_elem = (const struct element *)(_data);			\
-+	     (const u8 *)(_data) + (_datalen) - (const u8 *)_elem >=	\
-+		(int)sizeof(*_elem) &&					\
-+	     (const u8 *)(_data) + (_datalen) - (const u8 *)_elem >=	\
-+		(int)sizeof(*_elem) + _elem->datalen;			\
-+	     _elem = (const struct element *)(_elem->data + _elem->datalen))
- 
- #define for_each_element_id(element, _id, data, datalen)		\
- 	for_each_element(element, data, datalen)			\
-@@ -2793,7 +2793,7 @@ struct element {
- static inline bool for_each_element_completed(const struct element *element,
- 					      const void *data, size_t datalen)
- {
--	return (u8 *)element == (u8 *)data + datalen;
-+	return (const u8 *)element == (const u8 *)data + datalen;
- }
- 
- #endif /* LINUX_IEEE80211_H */
+ 		if (rbuf[1] && offset) {
+ 			/* Using two buffers, and it is not the first
+-- 
+2.20.1
+
 
 
