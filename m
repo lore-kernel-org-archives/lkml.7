@@ -2,130 +2,147 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC621ECE58C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC525C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 01:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8645B206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9992E2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 01:01:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="aDCBj+lF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="mJ6GN3nX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732593AbfJJAy2 (ORCPT
+        id S1732244AbfJJBBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:54:28 -0400
-Received: from mx4.ucr.edu ([138.23.248.66]:47616 "EHLO mx4.ucr.edu"
+        Wed, 9 Oct 2019 21:01:23 -0400
+Received: from mx3.ucr.edu ([138.23.248.64]:50292 "EHLO mx3.ucr.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731751AbfJJAy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:54:27 -0400
+        id S1731155AbfJJBBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 21:01:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1570668868; x=1602204868;
-  h=mime-version:from:date:message-id:subject:to;
-  bh=CvhoDmZeQv6rXDGqQHMAsw6y7CswFv+lDA2qhhTWvao=;
-  b=aDCBj+lFbjGUASnGfRjML0/8gcP+1mU5Uzvr7UgIocH1RB7yB505+A6e
-   jcN6IEbaH8qLa6WiOqX67GuAMlCx3vHswx/jsfdzjVr8HJpvpN2EgaAEZ
-   xVzXrgs8pUc1emJZImkuCpgx7NwB2bIvnX43yfQTlrnTxC4p0oSxpRTYL
-   O4ARhuCuCnjFz/Dt1pmx4HykGSwXBTj7mpe4G685T3uIRUFkKPIs9iD76
-   SFGMmGryHTR0T668h4ENj4lLMmWT88vpC8f4MBPySZiwujqcQkf/smUAg
-   /gV99rGXnXZHnyOhdBR2KDmGM3IiZIu/yb7erqLHgY62BByqRyIjgkc2w
-   g==;
-IronPort-SDR: y5IXnmO6MdjxkmEdLpT90KS7GP55LYYj2XhzbrkW9o54ILD2/SV2ppe/wKTaO8dmuTcpTw+aL6
- jnle2r/o1aMQY/Kj+wsUbzkUDY4kNgJRikJjzke6ukuFDXUMdmY8sE+K0FlFSLQvnqr0h/KLQo
- +FMD944ytUhzA4g9YUn0Xfq/BfQI83d+riU+WgLNJp/MDyyPw8A/rEfwzVouy2AMeKUUSVWW+/
- HfQSv95S9StgfqMrb6OD7lCbwUYQmIF8+xjRg+wUV7uQa1ztyL6NUim0nIWn26uhINFpyPTl+j
- BNQ=
-IronPort-PHdr: =?us-ascii?q?9a23=3ARLWydxUoGQwzmVOa64IUh/Air8DV8LGtZVwlr6?=
- =?us-ascii?q?E/grcLSJyIuqrYbRCGt8tkgFKBZ4jH8fUM07OQ7/m7HzJaqs3Q+Fk5M7V0Hy?=
- =?us-ascii?q?cfjssXmwFySOWkMmbcaMDQUiohAc5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFR?=
- =?us-ascii?q?rwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/IAi4oAnLt8Qan4RuJ6g1xx?=
- =?us-ascii?q?DUvnZGZuNayH9yK1mOhRj8/MCw/JBi8yRUpf0s8tNLXLv5caolU7FWFSwqPG?=
- =?us-ascii?q?8p6sLlsxnDVhaP6WAHUmoKiBpIAhPK4w/8U5zsryb1rOt92C2dPc3rUbA5XC?=
- =?us-ascii?q?mp4ql3RBP0jioMKiU0+3/LhMNukK1boQqhpx1hzI7SfIGVL+d1cqfEcd8HWW?=
- =?us-ascii?q?ZNQsNdWipcCY2+coQPFfIMMulYoYfzpFUAsAWwChW3CePz1jNFnGP60bEm3+?=
- =?us-ascii?q?kjFwzNwQwuH8gJsHTRtNj6NqYSUOG1zKnVyjXIcvBZ2Tfn54jJbxsspvGNXL?=
- =?us-ascii?q?NwccXLyEkjCx/Jg1uLpIz4IzyVzP4BvHaG4Op9TO+ijXMspQJpojW32Msglo?=
- =?us-ascii?q?3EipgWx13E7yl13po5KN6iREJmZdOpEp1dvDyAOYRsWMMtWWRotT4/yr0BpJ?=
- =?us-ascii?q?G0YjAHyI8ixx7Dc/yHdJWI4g77WOaRPzh4gHVldaq6hxmo8EigzvTwVs220F?=
- =?us-ascii?q?pXtyZFnMTAu3QP2hDJ5ciHTfx9/kil2TmRzQzc9uZEIUUsmaraLZ4u3KIwm4?=
- =?us-ascii?q?INvUjfGiL6gkb7ga+Mekk65uSl6P7rbqjiq5KeL4N0jxvxMqUqmsyxG+Q4NQ?=
- =?us-ascii?q?0OUnCb+OW91L3s50z5TKlWgvA4iaTZrYzVJd4BqqGnHgBVz54v6wyjADe+zN?=
- =?us-ascii?q?QYgX4HIUpBeBKGiYjpJl7PLOn7DfihmVSslilkx/TdM73/DZXCMGLDnK3ifb?=
- =?us-ascii?q?lj8U5czhQ8zdRF65JTELEBL6G7Zkikkd3TDhY0N0SI3vz+Fdhhyo5WDWeTH7?=
- =?us-ascii?q?WALa7OrVKg7Os+J+iGfoJTszH4fbxt3OLjlX80nxc3erillc8MYnepEtxlLl?=
- =?us-ascii?q?+fbH6qhc0ORyNCugs4Ufyvg1mBeSBcamz0XK8m4Dw/ToW8AsOLQoGrnazE3y?=
- =?us-ascii?q?qhGJBSTn5JB0rKEnrycYiAHfAWZ2baEM9ggyECHYGgQolpgQOutR7nzaNPJf?=
- =?us-ascii?q?GS5yYC85/vyY4xr8bTmBc95CE8NMOb3CnZRHpzmGwgTCRwwatl50Fx1wHQ/7?=
- =?us-ascii?q?J/hqlpFM5T+vQBYAczNNaI3v56AtGqAlnpY9yTDluqX4P1UnkKUtstzopWMA?=
- =?us-ascii?q?5GENK4g0WGhnLyDg=3D=3D?=
+  t=1570669283; x=1602205283;
+  h=from:to:cc:subject:date:message-id;
+  bh=FbXEHMrqooWbgZHGXSG3NF7G7Mhn0laqydiduZiAtMk=;
+  b=mJ6GN3nX+weJ5ALpfmUuRnfJsZK3vdeAo2irMy6VCXnrzOU6aoHXJFeN
+   zV82tYOcdkU8fKArsqdr/mfdeZ//cwZbBPOdXKAykeoJxEPPceY7uZiQs
+   IA4HwSp6qN28O4tHsX+3xkvR3vsJ0gKCFWxxcjp4GANXLcblP4JnsOt2g
+   fERvwz7+VWlZJ5J43QW8B5wAUJCPck82Uk84VqpPSJH7TS3K3GMHwDHe3
+   RHwb7q6ckrBNBN2J2zZPAfI8Mxe82n9b11wXQtRCMjavPbmRlRgeHYBBy
+   tA/olcCf4WHb25KxrUHjuNTlF79Q5x+PDZqQwH0CeAsgD5Nk8PJCgBpYO
+   Q==;
+IronPort-SDR: BuLT6TjtOFJB6fhLEvzeSLNc8eHCSL8OhbHApIJWVh/qf2WUKsTEhTh+hvIh7Ms7OgWsZWGK+M
+ WjyMfagUmW+97AlxKBySVrOHDX7KVZ42x/rDwOSca8sM0tsWCmHXo/bE4sRoS0dOB7j/RnhyB3
+ l5PzGF4zx81gXks/qGy2FI7faGT2Pg2LGZt+VzpexBxPX+y6Z4Ngdlt4ttGJNlx2TQLkslKAJE
+ qI4pgBQswTUdV2C1oVBYYawPBMALhoL0QzMC/xxrL2nAIQv4NOdQ54x88mvyQkPjD7LPuClTtq
+ 1p8=
+IronPort-PHdr: =?us-ascii?q?9a23=3Adx5aphH86XANj2HX7Cn6uZ1GYnF86YWxBRYc79?=
+ =?us-ascii?q?8ds5kLTJ7zpsWwAkXT6L1XgUPTWs2DsrQY0rGQ7fqrBTZIyK3CmUhKSIZLWR?=
+ =?us-ascii?q?4BhJdetC0bK+nBN3fGKuX3ZTcxBsVIWQwt1Xi6NU9IBJS2PAWK8TW94jEIBx?=
+ =?us-ascii?q?rwKxd+KPjrFY7OlcS30P2594HObwlSizexfL1/IA+3oAnPucUbjpVuIbstxx?=
+ =?us-ascii?q?XUpXdFZ/5Yzn5yK1KJmBb86Maw/Jp9/ClVpvks6c1OX7jkcqohVbBXAygoPG?=
+ =?us-ascii?q?4z5M3wqBnMVhCP6WcGUmUXiRVHHQ7I5wznU5jrsyv6su192DSGPcDzULs5Vy?=
+ =?us-ascii?q?iu47ttRRT1kyoMKSI3/3/LhcxxlKJboQyupxpjw47PfYqZMONycr7Bcd8GQG?=
+ =?us-ascii?q?ZMWMNRVy1aAoOnbosPCeUBNvtGoYfkulAOoxq+CheoBOzy1zREgnH70bE/3+?=
+ =?us-ascii?q?knFg7LwAItE84TvHjNsNn5KboZXeSowKTIyDnOae5d1zXg54jSah0voe+CU6?=
+ =?us-ascii?q?9+f8TSzkciDB/JgkmKpID5JT6ZyvgBvm6G5ORgT+KvjGsnphlzrTiux8Ysip?=
+ =?us-ascii?q?TJhoUIwV3D9SR4wYY1Kse5SEJnfdKpHoBdtzyGOItsWM8tXXxnuDsjx7AApJ?=
+ =?us-ascii?q?W1fzAKxYw5yxLDb/GLaYuF7xL5WOqPPDt1i2hpdK+7ihux6USs1+zxW82u3F?=
+ =?us-ascii?q?pUoCdIksPAum4M2hDJ6MWKRf1w9Vq71zmVzQDc8ORELFgxlarcNpEu3KY9lo?=
+ =?us-ascii?q?EWsUTfBi/2n1j2jLOOekUk5Oeo7+Pnb63jppCGNo90jhjyMrwqmsCiGOg4PB?=
+ =?us-ascii?q?UCUmyY9Oim273j+kr5QLpOjvIoiKXWrJfaJcEDqq64BQ9azJoj5g6hAzu61N?=
+ =?us-ascii?q?kUh3oKIVJfdB6ZkoTkNEvCLO38APq8m1islS1kx/HCPr3vGJXNKX3Dna/hfL?=
+ =?us-ascii?q?d8605T0gszwcxD659aEbwBPe78WlXruNPGExA5LhS4w/z7B9VlyoMeRWWPD7?=
+ =?us-ascii?q?edMKPTt1+I++0uL/CPZIALojb9LeYq5/r1gH8nll8SY7Op0YEUaH+mBPRmJV?=
+ =?us-ascii?q?uWYX72jtcGC2cKsVl2YvbtjQizUCxTenH6C7Mu5jg6UNr9JZrIXMagjKHXj3?=
+ =?us-ascii?q?TzJYFfem0TUgPEKnzvbYjRHqpRZQ=3D=3D?=
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HdAgD+f55dh8XQVdFmDoIzhBGETY5?=
- =?us-ascii?q?chRcBmB0BCAEBAQ4vAQGHEiM3Bg4CAwkBAQUBAQEBAQUEAQECEAEBAQgNCQg?=
- =?us-ascii?q?phUCCOikBg1URfAMMAiYCJBIBBQEiATSDAIJ4BaRZgQM8iyaBMohjAQkNgUg?=
- =?us-ascii?q?SeiiMDoIXhGGHUoJeBIE5AQEBlS+WVwEGAoIQFAOMUYhFG4IqlxaOLZlPDyO?=
- =?us-ascii?q?BRYF8MxolfwZngU9PEBSBaY1xWySRSwEB?=
-X-IPAS-Result: =?us-ascii?q?A2HdAgD+f55dh8XQVdFmDoIzhBGETY5chRcBmB0BCAEBA?=
- =?us-ascii?q?Q4vAQGHEiM3Bg4CAwkBAQUBAQEBAQUEAQECEAEBAQgNCQgphUCCOikBg1URf?=
- =?us-ascii?q?AMMAiYCJBIBBQEiATSDAIJ4BaRZgQM8iyaBMohjAQkNgUgSeiiMDoIXhGGHU?=
- =?us-ascii?q?oJeBIE5AQEBlS+WVwEGAoIQFAOMUYhFG4IqlxaOLZlPDyOBRYF8MxolfwZng?=
- =?us-ascii?q?U9PEBSBaY1xWySRSwEB?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HtEwCzgZ5dhsbWVdFmHgELHIVaTBC?=
+ =?us-ascii?q?NJYVaUQEBBospGHGFeoowAQgBAQEMAQEtAgEBhECCUiM4EwIDCQEBBQEBAQE?=
+ =?us-ascii?q?BBQQBAQIQAQEBCAsLCCmFQII6KYM1CxYVUoEVAQUBNSI5gkcBglIlpGqBAzy?=
+ =?us-ascii?q?MJTOIZAEJDYFICQEIgSKHNYRZgRCBB4ERg1CEDYNZgkoEgTkBAQGNeIc3llc?=
+ =?us-ascii?q?BBgKCEBSBeJMVJ4Q8iT+LRAGnYwIKBwYPI4FGgXtNJYFsCoFEUBAUgVsOCY5?=
+ =?us-ascii?q?DITOBCI0/glQB?=
+X-IPAS-Result: =?us-ascii?q?A2HtEwCzgZ5dhsbWVdFmHgELHIVaTBCNJYVaUQEBBospG?=
+ =?us-ascii?q?HGFeoowAQgBAQEMAQEtAgEBhECCUiM4EwIDCQEBBQEBAQEBBQQBAQIQAQEBC?=
+ =?us-ascii?q?AsLCCmFQII6KYM1CxYVUoEVAQUBNSI5gkcBglIlpGqBAzyMJTOIZAEJDYFIC?=
+ =?us-ascii?q?QEIgSKHNYRZgRCBB4ERg1CEDYNZgkoEgTkBAQGNeIc3llcBBgKCEBSBeJMVJ?=
+ =?us-ascii?q?4Q8iT+LRAGnYwIKBwYPI4FGgXtNJYFsCoFEUBAUgVsOCY5DITOBCI0/glQB?=
 X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
-   d="scan'208";a="81815426"
-Received: from mail-lj1-f197.google.com ([209.85.208.197])
-  by smtpmx4.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Oct 2019 17:54:26 -0700
-Received: by mail-lj1-f197.google.com with SMTP id j10so678825lja.21
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 17:54:26 -0700 (PDT)
+   d="scan'208";a="86422987"
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+  by smtp3.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Oct 2019 18:01:22 -0700
+Received: by mail-pl1-f198.google.com with SMTP id g11so2708543plm.22
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 18:01:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=X6658J+R/8DLtnXNsIQxFC4BQJ5LRBc5J5W674y5UAg=;
-        b=dzwqTsT/zpl7F+UQoKKiRQtWgPuUaVzvnUYdKtSKGchLUWa+GbsnV6nDumUgc920XF
-         0BDSo7bHXp2EW/kgCjl0GuXQDEyh2NWOlgiPoZnjHXZKdr9RMwjyqFwcGPpzoUZc9tLo
-         c1pD6Hmxl88iaFzmvRR78uLxc4WVi0pQRIrHRLUK2pRVwnQtnNt0OPGAJ7xtwgnkLE/N
-         BiMq8poVGV3wzucZbh3QrEdw2ef3OtprJ2x/x0RxJjP9T843j6jj3OaqKuUuCWE2VasZ
-         rRiu2a9sUC3KP5a5rTZI6bpWSZ5TQW5rA8tNmpc6GRXJhfwKNPee1CO9xDf/fnJyxzh+
-         IxGw==
-X-Gm-Message-State: APjAAAU6i7wbyxwgB4JXeAmbjslegE0vIGp+aGW5sZ6bXxhLIrDfJecx
-        67/64ZGRH0chevOrvMyJCVh9sDMaI5AlZB1bD8820i4FSo0GA5Tq6SjNa6H7nmmUXPBrcr8xpUI
-        OPKHPlUbe19zPyYQgxmzoUwMNlAWtLifdduyry5EG6w==
-X-Received: by 2002:a2e:8908:: with SMTP id d8mr4003609lji.197.1570668864408;
-        Wed, 09 Oct 2019 17:54:24 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzY65B7icoEC0DZuTwOEdfQUSKAFR9Xy0P1qnaDyFcUTJ44+DnKOYzHIZB7uhU85EAazKb8dNpcntmO+J0d0eo=
-X-Received: by 2002:a2e:8908:: with SMTP id d8mr4003596lji.197.1570668864136;
- Wed, 09 Oct 2019 17:54:24 -0700 (PDT)
-MIME-Version: 1.0
-From:   Yizhuo Zhai <yzhai003@ucr.edu>
-Date:   Wed, 9 Oct 2019 17:55:06 -0700
-Message-ID: <CABvMjLSomcm5Yi8b8YNgJGkQkc++qdCS_SQvKfmsV0CfS+GLuA@mail.gmail.com>
-Subject: Potential uninitialized variable "reg" in clk: axi-clkgen
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
-        Chengyu Song <csong@cs.ucr.edu>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MvM2jwgUKO6uz4LfxBqoaB6VDvyVvKuoyUYs0jsyz0k=;
+        b=ct6/jNuJfQ5mgQz6UuMsZK9rt+AFEAYOaaiLMcfkWO6zbxaTFU/Pi/cwCs+aWyzIEq
+         cYyujv2zGmPTgmzc0kN6iXn5B4FyjzGjtuoHAucRCJNXmfBjp1vIdCXV2X1yFsxuCl/+
+         2zltk8zKmJ+kJUF8LWOTzL3vCgJPbuPi7KMQoj2WjUNLRgXw7MXhyP641A7Udwx5jFv0
+         MClc4VD90GzGtunKk3FtxOnR8eRDYyrbwJ1ZEqFvjvVZ5aBXQV6PG3mbBE3XV8I87XwF
+         yJ3dY3IhHUAKgaxoFlBfoizu+ofi+UXy5+Tz74CRs2mwcvUG2DkW4d4qw/nnKWQ6x9WR
+         DHfg==
+X-Gm-Message-State: APjAAAX6DiRZQwdhwIf9p308lAAcLpJk/LzD+Pt+PsulAcpgaI6H3c2Z
+        SfryiNNyngILpOtTfQQ1IK2zcYZ0hvFytOXIur9LZbkOuPNml1IBXyvBRvqEFQEH6IpZirtIAmu
+        FjYu2jHgT73DVySLTpVftu84PjA==
+X-Received: by 2002:a17:902:2e:: with SMTP id 43mr6021042pla.270.1570669281481;
+        Wed, 09 Oct 2019 18:01:21 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxOXnmntkThXGYy+i9dPCuMRJzaVdG4Osex5SflPK5bvsD16OY0wpQwitsRLeTtpk5YTdBCpQ==
+X-Received: by 2002:a17:902:2e:: with SMTP id 43mr6021006pla.270.1570669281167;
+        Wed, 09 Oct 2019 18:01:21 -0700 (PDT)
+Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
+        by smtp.googlemail.com with ESMTPSA id f65sm3388103pgc.90.2019.10.09.18.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 18:01:20 -0700 (PDT)
+From:   Yizhuo <yzhai003@ucr.edu>
+Cc:     Yizhuo <yzhai003@ucr.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jan-Marek Glogowski <glogow@fbihome.de>,
+        Mathieu Malaterre <malat@debian.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] USB: core: Fix potental Null Pointer dereference
+Date:   Wed,  9 Oct 2019 18:02:02 -0700
+Message-Id: <20191010010205.25739-1-yzhai003@ucr.edu>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All:
-drivers/clk/clk-axi-clkgen.c:
+Inside function usb_device_is_owned(), usb_hub_to_struct_hub()
+could return NULL but there's no check before its dereference,
+which is potentially unsafe.
 
-Inside function axi_clkgen_recalc_rate(), variable "reg" could be
-uninitialized if axi_clkgen_mmcm_read() fails. However, "reg" is used
-to decide the control flow later in the if statement, which is
-potentially unsafe.
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+---
+ drivers/usb/core/hub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The patch for this case is not easy since the error return is not an
-acceptable return value for axi_clkgen_recalc_rate().
-
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 236313f41f4a..8d628c8e0c1b 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1977,7 +1977,7 @@ bool usb_device_is_owned(struct usb_device *udev)
+ 	if (udev->state == USB_STATE_NOTATTACHED || !udev->parent)
+ 		return false;
+ 	hub = usb_hub_to_struct_hub(udev->parent);
+-	return !!hub->ports[udev->portnum - 1]->port_owner;
++	return hub && !!hub->ports[udev->portnum - 1]->port_owner;
+ }
+ 
+ static void recursively_mark_NOTATTACHED(struct usb_device *udev)
 -- 
-Kind Regards,
+2.17.1
 
-Yizhuo Zhai
-
-Computer Science, Graduate Student
-University of California, Riverside
