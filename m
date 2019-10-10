@@ -2,175 +2,130 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099E2ECE596
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC621ECE58C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00FE206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8645B206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="srn49EN4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="aDCBj+lF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732579AbfJJAxr (ORCPT
+        id S1732593AbfJJAy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:53:47 -0400
-Received: from sonic315-22.consmr.mail.bf2.yahoo.com ([74.6.134.196]:33680
-        "EHLO sonic315-22.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731553AbfJJAxr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:53:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1570668825; bh=SSQ8Z1EQwqfaDRxNRixZXVO4/u1RC+wz2AlKOqrHGuI=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=srn49EN42/PldG4PPESAAPcxdtWOUJbRjrgX90mu4qmxnlp2AP51NSaUd4KUgSO9A1Q/5fIMGcJSLVYRz8o4AnEnc3DdKhmAISznoKNtpYT9XSSz+SXNxXmgRhC2Ol9HIM3/TaCvg4fdLOsl1FcZrUfau+VsCBwzDt1l8jiVxL0uN4WX6I+USjJaTeW1/7lrZcAtp9pgUZwZvtM6ZPkYOBNdiZliQ+IwSyfSZUG+5eBZjrGhbw8dq0rHoeRA6TJlePHTwScXc0Zu3KB7zmU+T4100+1Zc7pTj4tQfgM4YH9maf9DVJqCHH4BycFJ1B0t2tD+IDlCjeg6GUflbZNzOA==
-X-YMail-OSG: NMzIvkAVM1nnhnCXFtkwpKnljZFtd28BC8WppBeS3_hJxNn1huy3LTjY6L5hObN
- 8lXab7KrenW33ASPv62aFKsO1bGbTZBhs77g_qxbt6YRw8M52wIu86lXgH1wQj.jIQIelKKmTTh6
- 7A0JonpWFVCqhSrea0f0cI3HUq4i848rxiMsWLuCVmEDMpvK8M7EID9OONOLOGYgUqXeZ_R7YeuI
- IfZ.H_c4GG6SdZX48fBy8YKMdzNx2OfLx4FfQZYIeC1XzvxCo7fItBty7e9ZJW7SZErdCUicxS6K
- aa.np9yAqGOYa5fhOwk1DatNely3Si7FWDHv1AE.Z9shzlEcA.E07BCo44qXRQpTyIn6ZnugGOcG
- Lcbju7Rxh7kR4iBaITxXwh_84oQmXIfxAfNCmBWXupaEiWnFBalCeBce7diBLUKbTb66zmU3bWj3
- hJxbJPXu3daQIwBwZtLcGNhuj4F2ZJ0RgLiAMrsXAf8FdfDrwUUsOlUVIPUxuQUPilnNvmalXS8u
- cu56CdbnQ87HZrulsBahiWpKSrT3GhrJl0P1wvhw11fKD249uf7jH5wpE70LaBb4qtaxM_29Q.mj
- nbhLS6gEmu4Df7DnzKOUCRCtaMgn.83D8drE.nRr9SImai9FbtqqMZbrbvZEBp7TcAGrux5aVvWP
- Y_XIBbzute7y_yEGP1GWBfhRzss3IzVNYujmprN6eW7GvPePxE2bfjXPDNoDyaidTq5yFlNNw3uu
- 4cGtTIGqFNXrguc1AH2dosEtjQ3AMDIbUdv21H_MfeEJbQh3ac5VHGKaQvdJUaTYu4P7.nxv5c7F
- eiiJEH74tgjCukbwZX3dez0LTMwywHjWuKRqb2EZctX1os3bSlKCafRPrt8c3hodAPz_M0sdhxua
- qqd1XGgRNcZweEriBOR5A_aG988ZLesKLZHFEvXAuhLWD3RKMswc7LZ7z1IWqAwWnqMr1SdA1q4V
- zI3.D1FnJWYKc1iIgk61Te8ikb_pYOj_9Q96dUBJbAE_E8Z6zZW0mOtWEAY2ZYb9YtkE76liyrkT
- rx6hU1_yEwW2iP57o_1nRY0AyaRpzetW9Lld6Tx6OLAO6jJAt568nFV5l4PgqQiD96sWaTwGqXsd
- MxSSVLjqFQdZXpBpCcwqXlbMyuC7PdqQ7k8f6UEYojex4dWARORPCNqps1vMrRUx43pnuiuO5G_K
- yt7REokicu3ZThqIIkURCc4PnHh5hnolLrkwqzm2nR6G_gDG0vFzr.fT4P8rMmeLtIyu1zbZD5QG
- zHwFWbRlf65c6Zp.b8ssGQBpu0JbM3uYh9ytZH2xIPutyezCg0sRGGcEMb8XcA1yU2bf.hZMgXv0
- Qvmhn0oIRyA0tZhI_js5gFL9KjUXXdrFwSJSPSQNCUQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.bf2.yahoo.com with HTTP; Thu, 10 Oct 2019 00:53:45 +0000
-Received: by smtp427.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID b3ce68f22fa117db179b879a7855dd76;
-          Thu, 10 Oct 2019 00:53:43 +0000 (UTC)
-Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>, casey@schaufler-ca.com
-References: <20191009203657.6070-1-joel@joelfernandes.org>
- <710c5bc0-deca-2649-8351-678e177214e9@schaufler-ca.com>
- <alpine.LRH.2.21.1910100912210.29840@namei.org>
- <2b94802d-12ea-4f2d-bb65-eda3b3542bb2@schaufler-ca.com>
- <20191010004023.GC96813@google.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <ea32212d-bd45-c363-841a-f4397aafd323@schaufler-ca.com>
-Date:   Wed, 9 Oct 2019 17:53:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 9 Oct 2019 20:54:28 -0400
+Received: from mx4.ucr.edu ([138.23.248.66]:47616 "EHLO mx4.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731751AbfJJAy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 20:54:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1570668868; x=1602204868;
+  h=mime-version:from:date:message-id:subject:to;
+  bh=CvhoDmZeQv6rXDGqQHMAsw6y7CswFv+lDA2qhhTWvao=;
+  b=aDCBj+lFbjGUASnGfRjML0/8gcP+1mU5Uzvr7UgIocH1RB7yB505+A6e
+   jcN6IEbaH8qLa6WiOqX67GuAMlCx3vHswx/jsfdzjVr8HJpvpN2EgaAEZ
+   xVzXrgs8pUc1emJZImkuCpgx7NwB2bIvnX43yfQTlrnTxC4p0oSxpRTYL
+   O4ARhuCuCnjFz/Dt1pmx4HykGSwXBTj7mpe4G685T3uIRUFkKPIs9iD76
+   SFGMmGryHTR0T668h4ENj4lLMmWT88vpC8f4MBPySZiwujqcQkf/smUAg
+   /gV99rGXnXZHnyOhdBR2KDmGM3IiZIu/yb7erqLHgY62BByqRyIjgkc2w
+   g==;
+IronPort-SDR: y5IXnmO6MdjxkmEdLpT90KS7GP55LYYj2XhzbrkW9o54ILD2/SV2ppe/wKTaO8dmuTcpTw+aL6
+ jnle2r/o1aMQY/Kj+wsUbzkUDY4kNgJRikJjzke6ukuFDXUMdmY8sE+K0FlFSLQvnqr0h/KLQo
+ +FMD944ytUhzA4g9YUn0Xfq/BfQI83d+riU+WgLNJp/MDyyPw8A/rEfwzVouy2AMeKUUSVWW+/
+ HfQSv95S9StgfqMrb6OD7lCbwUYQmIF8+xjRg+wUV7uQa1ztyL6NUim0nIWn26uhINFpyPTl+j
+ BNQ=
+IronPort-PHdr: =?us-ascii?q?9a23=3ARLWydxUoGQwzmVOa64IUh/Air8DV8LGtZVwlr6?=
+ =?us-ascii?q?E/grcLSJyIuqrYbRCGt8tkgFKBZ4jH8fUM07OQ7/m7HzJaqs3Q+Fk5M7V0Hy?=
+ =?us-ascii?q?cfjssXmwFySOWkMmbcaMDQUiohAc5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFR?=
+ =?us-ascii?q?rwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/IAi4oAnLt8Qan4RuJ6g1xx?=
+ =?us-ascii?q?DUvnZGZuNayH9yK1mOhRj8/MCw/JBi8yRUpf0s8tNLXLv5caolU7FWFSwqPG?=
+ =?us-ascii?q?8p6sLlsxnDVhaP6WAHUmoKiBpIAhPK4w/8U5zsryb1rOt92C2dPc3rUbA5XC?=
+ =?us-ascii?q?mp4ql3RBP0jioMKiU0+3/LhMNukK1boQqhpx1hzI7SfIGVL+d1cqfEcd8HWW?=
+ =?us-ascii?q?ZNQsNdWipcCY2+coQPFfIMMulYoYfzpFUAsAWwChW3CePz1jNFnGP60bEm3+?=
+ =?us-ascii?q?kjFwzNwQwuH8gJsHTRtNj6NqYSUOG1zKnVyjXIcvBZ2Tfn54jJbxsspvGNXL?=
+ =?us-ascii?q?NwccXLyEkjCx/Jg1uLpIz4IzyVzP4BvHaG4Op9TO+ijXMspQJpojW32Msglo?=
+ =?us-ascii?q?3EipgWx13E7yl13po5KN6iREJmZdOpEp1dvDyAOYRsWMMtWWRotT4/yr0BpJ?=
+ =?us-ascii?q?G0YjAHyI8ixx7Dc/yHdJWI4g77WOaRPzh4gHVldaq6hxmo8EigzvTwVs220F?=
+ =?us-ascii?q?pXtyZFnMTAu3QP2hDJ5ciHTfx9/kil2TmRzQzc9uZEIUUsmaraLZ4u3KIwm4?=
+ =?us-ascii?q?INvUjfGiL6gkb7ga+Mekk65uSl6P7rbqjiq5KeL4N0jxvxMqUqmsyxG+Q4NQ?=
+ =?us-ascii?q?0OUnCb+OW91L3s50z5TKlWgvA4iaTZrYzVJd4BqqGnHgBVz54v6wyjADe+zN?=
+ =?us-ascii?q?QYgX4HIUpBeBKGiYjpJl7PLOn7DfihmVSslilkx/TdM73/DZXCMGLDnK3ifb?=
+ =?us-ascii?q?lj8U5czhQ8zdRF65JTELEBL6G7Zkikkd3TDhY0N0SI3vz+Fdhhyo5WDWeTH7?=
+ =?us-ascii?q?WALa7OrVKg7Os+J+iGfoJTszH4fbxt3OLjlX80nxc3erillc8MYnepEtxlLl?=
+ =?us-ascii?q?+fbH6qhc0ORyNCugs4Ufyvg1mBeSBcamz0XK8m4Dw/ToW8AsOLQoGrnazE3y?=
+ =?us-ascii?q?qhGJBSTn5JB0rKEnrycYiAHfAWZ2baEM9ggyECHYGgQolpgQOutR7nzaNPJf?=
+ =?us-ascii?q?GS5yYC85/vyY4xr8bTmBc95CE8NMOb3CnZRHpzmGwgTCRwwatl50Fx1wHQ/7?=
+ =?us-ascii?q?J/hqlpFM5T+vQBYAczNNaI3v56AtGqAlnpY9yTDluqX4P1UnkKUtstzopWMA?=
+ =?us-ascii?q?5GENK4g0WGhnLyDg=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2HdAgD+f55dh8XQVdFmDoIzhBGETY5?=
+ =?us-ascii?q?chRcBmB0BCAEBAQ4vAQGHEiM3Bg4CAwkBAQUBAQEBAQUEAQECEAEBAQgNCQg?=
+ =?us-ascii?q?phUCCOikBg1URfAMMAiYCJBIBBQEiATSDAIJ4BaRZgQM8iyaBMohjAQkNgUg?=
+ =?us-ascii?q?SeiiMDoIXhGGHUoJeBIE5AQEBlS+WVwEGAoIQFAOMUYhFG4IqlxaOLZlPDyO?=
+ =?us-ascii?q?BRYF8MxolfwZngU9PEBSBaY1xWySRSwEB?=
+X-IPAS-Result: =?us-ascii?q?A2HdAgD+f55dh8XQVdFmDoIzhBGETY5chRcBmB0BCAEBA?=
+ =?us-ascii?q?Q4vAQGHEiM3Bg4CAwkBAQUBAQEBAQUEAQECEAEBAQgNCQgphUCCOikBg1URf?=
+ =?us-ascii?q?AMMAiYCJBIBBQEiATSDAIJ4BaRZgQM8iyaBMohjAQkNgUgSeiiMDoIXhGGHU?=
+ =?us-ascii?q?oJeBIE5AQEBlS+WVwEGAoIQFAOMUYhFG4IqlxaOLZlPDyOBRYF8MxolfwZng?=
+ =?us-ascii?q?U9PEBSBaY1xWySRSwEB?=
+X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
+   d="scan'208";a="81815426"
+Received: from mail-lj1-f197.google.com ([209.85.208.197])
+  by smtpmx4.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Oct 2019 17:54:26 -0700
+Received: by mail-lj1-f197.google.com with SMTP id j10so678825lja.21
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 17:54:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=X6658J+R/8DLtnXNsIQxFC4BQJ5LRBc5J5W674y5UAg=;
+        b=dzwqTsT/zpl7F+UQoKKiRQtWgPuUaVzvnUYdKtSKGchLUWa+GbsnV6nDumUgc920XF
+         0BDSo7bHXp2EW/kgCjl0GuXQDEyh2NWOlgiPoZnjHXZKdr9RMwjyqFwcGPpzoUZc9tLo
+         c1pD6Hmxl88iaFzmvRR78uLxc4WVi0pQRIrHRLUK2pRVwnQtnNt0OPGAJ7xtwgnkLE/N
+         BiMq8poVGV3wzucZbh3QrEdw2ef3OtprJ2x/x0RxJjP9T843j6jj3OaqKuUuCWE2VasZ
+         rRiu2a9sUC3KP5a5rTZI6bpWSZ5TQW5rA8tNmpc6GRXJhfwKNPee1CO9xDf/fnJyxzh+
+         IxGw==
+X-Gm-Message-State: APjAAAU6i7wbyxwgB4JXeAmbjslegE0vIGp+aGW5sZ6bXxhLIrDfJecx
+        67/64ZGRH0chevOrvMyJCVh9sDMaI5AlZB1bD8820i4FSo0GA5Tq6SjNa6H7nmmUXPBrcr8xpUI
+        OPKHPlUbe19zPyYQgxmzoUwMNlAWtLifdduyry5EG6w==
+X-Received: by 2002:a2e:8908:: with SMTP id d8mr4003609lji.197.1570668864408;
+        Wed, 09 Oct 2019 17:54:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzY65B7icoEC0DZuTwOEdfQUSKAFR9Xy0P1qnaDyFcUTJ44+DnKOYzHIZB7uhU85EAazKb8dNpcntmO+J0d0eo=
+X-Received: by 2002:a2e:8908:: with SMTP id d8mr4003596lji.197.1570668864136;
+ Wed, 09 Oct 2019 17:54:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191010004023.GC96813@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+From:   Yizhuo Zhai <yzhai003@ucr.edu>
+Date:   Wed, 9 Oct 2019 17:55:06 -0700
+Message-ID: <CABvMjLSomcm5Yi8b8YNgJGkQkc++qdCS_SQvKfmsV0CfS+GLuA@mail.gmail.com>
+Subject: Potential uninitialized variable "reg" in clk: axi-clkgen
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Chengyu Song <csong@cs.ucr.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/9/2019 5:40 PM, Joel Fernandes wrote:
-> On Wed, Oct 09, 2019 at 03:41:56PM -0700, Casey Schaufler wrote:
->> On 10/9/2019 3:14 PM, James Morris wrote:
->>> On Wed, 9 Oct 2019, Casey Schaufler wrote:
->>>
->>>> Please consider making the perf_alloc security blob maintained
->>>> by the infrastructure rather than the individual modules. This
->>>> will save it having to be changed later.
->>> Is anyone planning on using this with full stacking?
->>>
->>> If not, we don't need the extra code & complexity. Stacking should on=
-ly=20
->>> cover what's concretely required by in-tree users.
->> I don't believe it's any simpler for SELinux to do the allocation
->> than for the infrastructure to do it. I don't see anyone's head
->> exploding over the existing infrastructure allocation of blobs.
->> We're likely to want it at some point, so why not avoid the hassle
->> and delay by doing it the "new" way up front?
->>
-> I don't see how it can be maintained by the users (assuming you meant
-> infrastructure as perf_event subsystem).
+Hi All:
+drivers/clk/clk-axi-clkgen.c:
 
-No, I meant allocated in security.c. Look at how file blobs are allocated=
-=2E
+Inside function axi_clkgen_recalc_rate(), variable "reg" could be
+uninitialized if axi_clkgen_mmcm_read() fails. However, "reg" is used
+to decide the control flow later in the if statement, which is
+potentially unsafe.
 
->  The blob contains a SID which as far
-> as I know, is specific to SELinux. Do you have an in-tree example of th=
-is?
->
-> Further, this is also exactly it is done for BPF objects which I used a=
-s a
-> reference.
+The patch for this case is not easy since the error return is not an
+acceptable return value for axi_clkgen_recalc_rate().
 
-There's no real harm in doing it that way, just that it is a change that
-I'll have to make at some point in the future* and it would be really nic=
-e
-if I didn't have to.
+-- 
+Kind Regards,
 
-> thanks,
->
->  - Joel
+Yizhuo Zhai
 
------
-* When? After I get the current AppArmor/SELinux stacking enabling in
-  and can get to the Smack backlong, which includes BPF and perf_events.
-=C2=A0
-
-
+Computer Science, Graduate Student
+University of California, Riverside
