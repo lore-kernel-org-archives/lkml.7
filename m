@@ -2,359 +2,217 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA08C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F50FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BF72086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:17:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="b/kwKX2g"
+	by mail.kernel.org (Postfix) with ESMTP id D15C620B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570677504;
+	bh=TMLqCptECTPCd6hDtCY+wtfhjTMZNqzCHX7UNi3pO+w=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=04ZNRWQNB9s4xpGKi4B8lvYe9S7WRazlC62jiowJd5aWREggnzQ2p8mWCWUz/aEoS
+	 l5E7eyrV0XBJ64y/9SBH7TBWzWoM2bCUC4gZytsoa1AuMyX8b9JixlOsYcGXU8hzOC
+	 QAWWmzITXH9zy1D+83Ufy+8L3LfkdvR/x/nVAKo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732766AbfJJDRa (ORCPT
+        id S1732783AbfJJDSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 23:17:30 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41112 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732616AbfJJDRa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 23:17:30 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t3so2710958pga.8
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 20:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=kY/bVM8NPPhWM5n5R/JBXuhfZP0mLRdPFxKvulfxjhE=;
-        b=b/kwKX2g8z5tQN7+hqOe5cv2MC4W999X9JBTtnsuv3jUrBD2IgpLD44BkXwS89jJI2
-         FLqDniJeEUDDc/zQfcWZFOmWgPu2g0VBMBrHzrQtMC/hm9g1fTaVq+3XqiMnj0fhaX2n
-         Bz6uTXTvKzAnEU263FeXzVs68O3EDz85BnQCnXVLpdX7SaKjOQz6NOXArlqUivDzVkys
-         4FsPNsGQRIb0i8W2oBiRKOXmiM89w72HUpALWggVVsQljAwfTm7h4sNXL6hQp7jEv/K5
-         5zEfMleJLkwvM2vzTeChPQXF2fgTDmU8yaeNW5hS7Hxb9OphWsIQsmsxypmvgGbecXnj
-         lInw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=kY/bVM8NPPhWM5n5R/JBXuhfZP0mLRdPFxKvulfxjhE=;
-        b=fR+5uGOphEYdtsFd+tHAIOJgN851WzybP5OuD2cF598N/oxmSVHNDPMc51sVriMTDW
-         q+m1A/AJP7e3O8gCQ1x5bDuda7Z0y9Hzgvhn1sqoeZm2+pK8Pq5zTMabM+3H86vjjuFy
-         hTaL6zQXQ+ueUTVSlzrnVq0jyz42IyBnIa+ow/jwyGD2uE/45EmkE28EMQX3VIVKwy5z
-         l8FQ4HDgINomhOn743gwM7N2lLMffVlEJ9PVapg4zLzIdL/k7Q0cIzjPACkkAmbAFXwA
-         22gLNmnOaxxnrUZ4VQwsGgEdiEONPolHB85xgu3n5TD13lRsjbI9Cdh7zuYrsSmdTDAQ
-         s8pA==
-X-Gm-Message-State: APjAAAWYYXhkzviMYs71jO6YdTPqNNjt5GiUb3Ssd9kXqeZk/t8CBMtb
-        oGUYnA7OBKztY9J2ZhU4ifxEgw==
-X-Google-Smtp-Source: APXvYqxt0g28r+WeOzUj3UUiSa6duhn4yPHsl+IVBqo3qzlng2jdfRfrxmVchTG8XnNUuQvQ4Xh9nQ==
-X-Received: by 2002:a17:90a:195d:: with SMTP id 29mr8564999pjh.130.1570677448982;
-        Wed, 09 Oct 2019 20:17:28 -0700 (PDT)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id s21sm3861589pgv.37.2019.10.09.20.17.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 20:17:28 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 20:17:14 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v8 3/5] mfd: ioc3: Add driver for SGI IOC3 chip
-Message-ID: <20191009201714.19296e3f@cakuba.netronome.com>
-In-Reply-To: <20191009101713.12238-4-tbogendoerfer@suse.de>
-References: <20191009101713.12238-1-tbogendoerfer@suse.de>
-        <20191009101713.12238-4-tbogendoerfer@suse.de>
-Organization: Netronome Systems, Ltd.
+        Wed, 9 Oct 2019 23:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbfJJDSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 23:18:23 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [12.12.162.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FEAE2086D;
+        Thu, 10 Oct 2019 03:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570677502;
+        bh=TMLqCptECTPCd6hDtCY+wtfhjTMZNqzCHX7UNi3pO+w=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Po9IUL4OmXdMRd/kuB52xOLXfAV7amyzF7iWzMbPDCpgjP9NF0rH0xLXH9jRXspuT
+         T6brVuNZyMojiBPhDP+2mXeww4uwYs85JVM/jJ1TwSZ8LeZLfQ1UdgCJalYxvkxGEL
+         SIvflgJSVaOUk0wA9lYSUa9XihApIORcUgt+GDso=
+Date:   Wed, 9 Oct 2019 20:18:20 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        syzbot <syzkaller@googlegroups.com>
+Subject: Re: [PATCH] rcu: avoid data-race in rcu_gp_fqs_check_wake()
+Message-ID: <20191010031820.GD2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191009212154.24709-1-edumazet@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009212154.24709-1-edumazet@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  9 Oct 2019 12:17:10 +0200, Thomas Bogendoerfer wrote:
-> SGI IOC3 chip has integrated ethernet, keyboard and mouse interface.
-> It also supports connecting a SuperIO chip for serial and parallel
-> interfaces. IOC3 is used inside various SGI systemboards and add-on
-> cards with different equipped external interfaces.
+On Wed, Oct 09, 2019 at 02:21:54PM -0700, Eric Dumazet wrote:
+> rcu_gp_fqs_check_wake() uses rcu_preempt_blocked_readers_cgp()
+> to read ->gp_tasks while otehr cpus might write over this field.
 > 
-> Support for ethernet and serial interfaces were implemented inside
-> the network driver. This patchset moves out the not network related
-> parts to a new MFD driver, which takes care of card detection,
-> setup of platform devices and interrupt distribution for the subdevices.
+> We need READ_ONCE()/WRITE_ONCE() pairs to avoid compiler
+> tricks and KCSAN splats like the following :
 > 
-> Serial portion: Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> BUG: KCSAN: data-race in rcu_gp_fqs_check_wake / rcu_preempt_deferred_qs_irqrestore
 > 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> write to 0xffffffff85a7f190 of 8 bytes by task 7317 on cpu 0:
+>  rcu_preempt_deferred_qs_irqrestore+0x43d/0x580 kernel/rcu/tree_plugin.h:507
+>  rcu_read_unlock_special+0xec/0x370 kernel/rcu/tree_plugin.h:659
+>  __rcu_read_unlock+0xcf/0xe0 kernel/rcu/tree_plugin.h:394
+>  rcu_read_unlock include/linux/rcupdate.h:645 [inline]
+>  __ip_queue_xmit+0x3b0/0xa40 net/ipv4/ip_output.c:533
+>  ip_queue_xmit+0x45/0x60 include/net/ip.h:236
+>  __tcp_transmit_skb+0xdeb/0x1cd0 net/ipv4/tcp_output.c:1158
+>  __tcp_send_ack+0x246/0x300 net/ipv4/tcp_output.c:3685
+>  tcp_send_ack+0x34/0x40 net/ipv4/tcp_output.c:3691
+>  tcp_cleanup_rbuf+0x130/0x360 net/ipv4/tcp.c:1575
+>  tcp_recvmsg+0x633/0x1a30 net/ipv4/tcp.c:2179
+>  inet_recvmsg+0xbb/0x250 net/ipv4/af_inet.c:838
+>  sock_recvmsg_nosec net/socket.c:871 [inline]
+>  sock_recvmsg net/socket.c:889 [inline]
+>  sock_recvmsg+0x92/0xb0 net/socket.c:885
+>  sock_read_iter+0x15f/0x1e0 net/socket.c:967
+>  call_read_iter include/linux/fs.h:1864 [inline]
+>  new_sync_read+0x389/0x4f0 fs/read_write.c:414
+> 
+> read to 0xffffffff85a7f190 of 8 bytes by task 10 on cpu 1:
+>  rcu_gp_fqs_check_wake kernel/rcu/tree.c:1556 [inline]
+>  rcu_gp_fqs_check_wake+0x93/0xd0 kernel/rcu/tree.c:1546
+>  rcu_gp_fqs_loop+0x36c/0x580 kernel/rcu/tree.c:1611
+>  rcu_gp_kthread+0x143/0x220 kernel/rcu/tree.c:1768
+>  kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+> 
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 1 PID: 10 Comm: rcu_preempt Not tainted 5.3.0+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> 
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Reported-by: syzbot <syzkaller@googlegroups.com>
 
-> +static int ip27_baseio6g_setup(struct ioc3_priv_data *ipd)
-> +{
-> +	int ret, io_irq;
-> +
-> +	io_irq = ioc3_map_irq(ipd->pdev, PCI_SLOT(ipd->pdev->devfn) + 2);
-> +	ret = ioc3_irq_domain_setup(ipd, io_irq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ioc3_eth_setup(ipd, false);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ioc3_serial_setup(ipd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ioc3_m48t35_setup(ipd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ioc3_kbd_setup(ipd);
-> +}
-> +
-> +static int ip27_mio_setup(struct ioc3_priv_data *ipd)
-> +{
-> +	int ret;
-> +
-> +	ret = ioc3_irq_domain_setup(ipd, ipd->pdev->irq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ioc3_serial_setup(ipd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ioc3_kbd_setup(ipd);
-> +}
-> +
-> +static int ip29_sysboard_setup(struct ioc3_priv_data *ipd)
-> +{
-> +	int ret, io_irq;
-> +
-> +	io_irq = ioc3_map_irq(ipd->pdev, PCI_SLOT(ipd->pdev->devfn) + 1);
-> +	ret = ioc3_irq_domain_setup(ipd, io_irq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ioc3_eth_setup(ipd, false);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ioc3_serial_setup(ipd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ioc3_m48t35_setup(ipd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ioc3_kbd_setup(ipd);
-> +}
-> +
-> +static int ioc3_menet_setup(struct ioc3_priv_data *ipd)
-> +{
-> +	int ret, io_irq;
-> +
-> +	io_irq = ioc3_map_irq(ipd->pdev, PCI_SLOT(ipd->pdev->devfn) + 4);
-> +	ret = ioc3_irq_domain_setup(ipd, io_irq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ioc3_eth_setup(ipd, false);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ioc3_serial_setup(ipd);
-> +}
-> +
-> +static int ioc3_menet4_setup(struct ioc3_priv_data *ipd)
-> +{
-> +	return ioc3_eth_setup(ipd, false);
-> +}
-> +
-> +static int ioc3_cad_duo_setup(struct ioc3_priv_data *ipd)
-> +{
-> +	int ret;
-> +
-> +	ret = ioc3_irq_domain_setup(ipd, ipd->pdev->irq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ioc3_eth_setup(ipd, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ioc3_kbd_setup(ipd);
-> +}
+Again, good catch, applied for review and testing, thank you!
 
-None of these setup calls have a "cleanup" or un-setup call. Is this
-really okay? I know nothing about MFD, but does mfd_add_devices() not
-require a remove for example?  Doesn't the IRQ handling need cleanup?
+I added another READ_ONCE() to dump_blkd_tasks(), which is not exercised
+unless you get an RCU CPU stall warning or some such.  The updated patch
+is below, please let me know if I messed anything up.
 
-> +/* Helper macro for filling ioc3_info array */
-> +#define IOC3_SID(_name, _sid, _setup) \
-> +	{								   \
-> +		.name = _name,						   \
-> +		.sid = (PCI_VENDOR_ID_SGI << 16) | IOC3_SUBSYS_ ## _sid,   \
-> +		.setup = _setup,					   \
-> +	}
-> +
-> +static struct {
-> +	const char *name;
-> +	u32 sid;
-> +	int (*setup)(struct ioc3_priv_data *ipd);
-> +} ioc3_infos[] = {
-> +	IOC3_SID("IP27 BaseIO6G", IP27_BASEIO6G, &ip27_baseio6g_setup),
-> +	IOC3_SID("IP27 MIO", IP27_MIO, &ip27_mio_setup),
-> +	IOC3_SID("IP27 BaseIO", IP27_BASEIO, &ip27_baseio_setup),
-> +	IOC3_SID("IP29 System Board", IP29_SYSBOARD, &ip29_sysboard_setup),
-> +	IOC3_SID("MENET", MENET, &ioc3_menet_setup),
-> +	IOC3_SID("MENET4", MENET4, &ioc3_menet4_setup)
-> +};
-> +#undef IOC3_SID
-> +
-> +static int ioc3_setup(struct ioc3_priv_data *ipd)
-> +{
-> +	u32 sid;
-> +	int i;
-> +
-> +	/* Clear IRQs */
-> +	writel(~0, &ipd->regs->sio_iec);
-> +	writel(~0, &ipd->regs->sio_ir);
-> +	writel(0, &ipd->regs->eth.eier);
-> +	writel(~0, &ipd->regs->eth.eisr);
-> +
-> +	/* Read subsystem vendor id and subsystem id */
-> +	pci_read_config_dword(ipd->pdev, PCI_SUBSYSTEM_VENDOR_ID, &sid);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ioc3_infos); i++)
-> +		if (sid == ioc3_infos[i].sid) {
-> +			pr_info("ioc3: %s\n", ioc3_infos[i].name);
-> +			return ioc3_infos[i].setup(ipd);
-> +		}
-> +
-> +	/* Treat everything not identified by PCI subid as CAD DUO */
-> +	pr_info("ioc3: CAD DUO\n");
-> +	return ioc3_cad_duo_setup(ipd);
-> +}
-> +
-> +static int ioc3_mfd_probe(struct pci_dev *pdev,
-> +			  const struct pci_device_id *pci_id)
-> +{
-> +	struct ioc3_priv_data *ipd;
-> +	struct ioc3 __iomem *regs;
-> +	int ret;
-> +
-> +	ret = pci_enable_device(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pci_write_config_byte(pdev, PCI_LATENCY_TIMER, IOC3_LATENCY);
-> +	pci_set_master(pdev);
-> +
-> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-> +	if (ret) {
-> +		dev_warn(&pdev->dev,
-> +			 "Failed to set 64-bit DMA mask, trying 32-bit\n");
-> +		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Can't set DMA mask, aborting\n");
-> +			return ret;
+							Thanx, Paul
 
-So failing here we don't care about disabling the pci deivce..
+------------------------------------------------------------------------
 
-> +		}
-> +	}
-> +
-> +	/* Set up per-IOC3 data */
-> +	ipd = devm_kzalloc(&pdev->dev, sizeof(struct ioc3_priv_data),
-> +			   GFP_KERNEL);
-> +	if (!ipd) {
-> +		ret = -ENOMEM;
-> +		goto out_disable_device;
+commit 53a6fffb998fd442e4049b145d8843fecc2bb396
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Wed Oct 9 14:21:54 2019 -0700
 
-..but here we do?
+    rcu: Avoid data-race in rcu_gp_fqs_check_wake()
+    
+    The rcu_gp_fqs_check_wake() function uses rcu_preempt_blocked_readers_cgp()
+    to read ->gp_tasks while other cpus might overwrite this field.
+    
+    We need READ_ONCE()/WRITE_ONCE() pairs to avoid compiler
+    tricks and KCSAN splats like the following :
+    
+    BUG: KCSAN: data-race in rcu_gp_fqs_check_wake / rcu_preempt_deferred_qs_irqrestore
+    
+    write to 0xffffffff85a7f190 of 8 bytes by task 7317 on cpu 0:
+     rcu_preempt_deferred_qs_irqrestore+0x43d/0x580 kernel/rcu/tree_plugin.h:507
+     rcu_read_unlock_special+0xec/0x370 kernel/rcu/tree_plugin.h:659
+     __rcu_read_unlock+0xcf/0xe0 kernel/rcu/tree_plugin.h:394
+     rcu_read_unlock include/linux/rcupdate.h:645 [inline]
+     __ip_queue_xmit+0x3b0/0xa40 net/ipv4/ip_output.c:533
+     ip_queue_xmit+0x45/0x60 include/net/ip.h:236
+     __tcp_transmit_skb+0xdeb/0x1cd0 net/ipv4/tcp_output.c:1158
+     __tcp_send_ack+0x246/0x300 net/ipv4/tcp_output.c:3685
+     tcp_send_ack+0x34/0x40 net/ipv4/tcp_output.c:3691
+     tcp_cleanup_rbuf+0x130/0x360 net/ipv4/tcp.c:1575
+     tcp_recvmsg+0x633/0x1a30 net/ipv4/tcp.c:2179
+     inet_recvmsg+0xbb/0x250 net/ipv4/af_inet.c:838
+     sock_recvmsg_nosec net/socket.c:871 [inline]
+     sock_recvmsg net/socket.c:889 [inline]
+     sock_recvmsg+0x92/0xb0 net/socket.c:885
+     sock_read_iter+0x15f/0x1e0 net/socket.c:967
+     call_read_iter include/linux/fs.h:1864 [inline]
+     new_sync_read+0x389/0x4f0 fs/read_write.c:414
+    
+    read to 0xffffffff85a7f190 of 8 bytes by task 10 on cpu 1:
+     rcu_gp_fqs_check_wake kernel/rcu/tree.c:1556 [inline]
+     rcu_gp_fqs_check_wake+0x93/0xd0 kernel/rcu/tree.c:1546
+     rcu_gp_fqs_loop+0x36c/0x580 kernel/rcu/tree.c:1611
+     rcu_gp_kthread+0x143/0x220 kernel/rcu/tree.c:1768
+     kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+     ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+    
+    Reported by Kernel Concurrency Sanitizer on:
+    CPU: 1 PID: 10 Comm: rcu_preempt Not tainted 5.3.0+ #0
+    Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+    
+    Signed-off-by: Eric Dumazet <edumazet@google.com>
+    Reported-by: syzbot <syzkaller@googlegroups.com>
+    [ paulmck:  Added another READ_ONCE() for RCU CPU stall warnings. ]
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-> +	}
-> +	ipd->pdev = pdev;
-> +
-> +	/*
-> +	 * Map all IOC3 registers.  These are shared between subdevices
-> +	 * so the main IOC3 module manages them.
-> +	 */
-> +	regs = pci_ioremap_bar(pdev, 0);
-
-This doesn't seem unmapped on error paths, nor remove?
-
-> +	if (!regs) {
-> +		dev_warn(&pdev->dev, "ioc3: Unable to remap PCI BAR for %s.\n",
-> +			 pci_name(pdev));
-> +		ret = -ENOMEM;
-> +		goto out_disable_device;
-> +	}
-> +	ipd->regs = regs;
-> +
-> +	/* Track PCI-device specific data */
-> +	pci_set_drvdata(pdev, ipd);
-> +
-> +	ret = ioc3_setup(ipd);
-> +	if (ret)
-> +		goto out_disable_device;
-> +
-> +	return 0;
-> +
-> +out_disable_device:
-> +	pci_disable_device(pdev);
-> +	return ret;
-> +}
-> +
-> +static void ioc3_mfd_remove(struct pci_dev *pdev)
-> +{
-> +	struct ioc3_priv_data *ipd;
-> +
-> +	ipd = pci_get_drvdata(pdev);
-> +
-> +	/* Clear and disable all IRQs */
-> +	writel(~0, &ipd->regs->sio_iec);
-> +	writel(~0, &ipd->regs->sio_ir);
-> +
-> +	/* Release resources */
-> +	if (ipd->domain) {
-> +		irq_domain_remove(ipd->domain);
-> +		free_irq(ipd->domain_irq, (void *)ipd);
-> +	}
-> +	pci_disable_device(pdev);
-> +}
-> +
-> +static struct pci_device_id ioc3_mfd_id_table[] = {
-> +	{ PCI_VENDOR_ID_SGI, PCI_DEVICE_ID_SGI_IOC3, PCI_ANY_ID, PCI_ANY_ID },
-> +	{ 0, },
-> +};
-> +MODULE_DEVICE_TABLE(pci, ioc3_mfd_id_table);
-> +
-> +static struct pci_driver ioc3_mfd_driver = {
-> +	.name = "IOC3",
-> +	.id_table = ioc3_mfd_id_table,
-> +	.probe = ioc3_mfd_probe,
-> +	.remove = ioc3_mfd_remove,
-> +};
-> +
-> +module_pci_driver(ioc3_mfd_driver);
-> +
-> +MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
-> +MODULE_DESCRIPTION("SGI IOC3 MFD driver");
-> +MODULE_LICENSE("GPL v2");
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index d43f4e0..56ac8a6 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -220,7 +220,7 @@ static void rcu_preempt_ctxt_queue(struct rcu_node *rnp, struct rcu_data *rdp)
+ 	 * blocked tasks.
+ 	 */
+ 	if (!rnp->gp_tasks && (blkd_state & RCU_GP_BLKD)) {
+-		rnp->gp_tasks = &t->rcu_node_entry;
++		WRITE_ONCE(rnp->gp_tasks, &t->rcu_node_entry);
+ 		WARN_ON_ONCE(rnp->completedqs == rnp->gp_seq);
+ 	}
+ 	if (!rnp->exp_tasks && (blkd_state & RCU_EXP_BLKD))
+@@ -340,7 +340,7 @@ EXPORT_SYMBOL_GPL(rcu_note_context_switch);
+  */
+ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
+ {
+-	return rnp->gp_tasks != NULL;
++	return READ_ONCE(rnp->gp_tasks) != NULL;
+ }
+ 
+ /* Bias and limit values for ->rcu_read_lock_nesting. */
+@@ -493,7 +493,7 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+ 		trace_rcu_unlock_preempted_task(TPS("rcu_preempt"),
+ 						rnp->gp_seq, t->pid);
+ 		if (&t->rcu_node_entry == rnp->gp_tasks)
+-			rnp->gp_tasks = np;
++			WRITE_ONCE(rnp->gp_tasks, np);
+ 		if (&t->rcu_node_entry == rnp->exp_tasks)
+ 			rnp->exp_tasks = np;
+ 		if (IS_ENABLED(CONFIG_RCU_BOOST)) {
+@@ -663,7 +663,7 @@ static void rcu_preempt_check_blocked_tasks(struct rcu_node *rnp)
+ 		dump_blkd_tasks(rnp, 10);
+ 	if (rcu_preempt_has_tasks(rnp) &&
+ 	    (rnp->qsmaskinit || rnp->wait_blkd_tasks)) {
+-		rnp->gp_tasks = rnp->blkd_tasks.next;
++		WRITE_ONCE(rnp->gp_tasks, rnp->blkd_tasks.next);
+ 		t = container_of(rnp->gp_tasks, struct task_struct,
+ 				 rcu_node_entry);
+ 		trace_rcu_unlock_preempted_task(TPS("rcu_preempt-GPS"),
+@@ -757,7 +757,8 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
+ 		pr_info("%s: %d:%d ->qsmask %#lx ->qsmaskinit %#lx ->qsmaskinitnext %#lx\n",
+ 			__func__, rnp1->grplo, rnp1->grphi, rnp1->qsmask, rnp1->qsmaskinit, rnp1->qsmaskinitnext);
+ 	pr_info("%s: ->gp_tasks %p ->boost_tasks %p ->exp_tasks %p\n",
+-		__func__, rnp->gp_tasks, rnp->boost_tasks, rnp->exp_tasks);
++		__func__, READ_ONCE(rnp->gp_tasks), rnp->boost_tasks,
++		rnp->exp_tasks);
+ 	pr_info("%s: ->blkd_tasks", __func__);
+ 	i = 0;
+ 	list_for_each(lhp, &rnp->blkd_tasks) {
