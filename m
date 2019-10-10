@@ -2,68 +2,138 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB79BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C4CC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFABE218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F98120679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570697794;
+	bh=1CMaj+LpTVy5pHO7YmSeoVhwnG/cUfOzjBBtOkqBePg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BBLQaygEV2ulRDyhuLROLwtlaLeayAYSeKwVUwOb6t18EE5t9+UOJF9ZTZ/zOus6L
+	 ALl8aNHofKhTybnQoDsjthwJClllCHEHYd87awFKA6ICJ7yoOqcR47tLYydaCpjH/J
+	 CKq+ZRwrNMRlpR9bQVV8UFwscF/BVQnt2KQFtZ9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389823AbfJJI4R (ORCPT
+        id S2389846AbfJJI4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:56:17 -0400
-Received: from mga01.intel.com ([192.55.52.88]:22985 "EHLO mga01.intel.com"
+        Thu, 10 Oct 2019 04:56:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387890AbfJJI4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:56:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 01:56:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,279,1566889200"; 
-   d="scan'208";a="207147582"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Oct 2019 01:56:10 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id BC1D322C; Thu, 10 Oct 2019 11:56:09 +0300 (EEST)
-Date:   Thu, 10 Oct 2019 11:56:09 +0300
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-mm@kvack.org, linux-snps-arc@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 0/3] eldie generated code for folded p4d/pud
-Message-ID: <20191010085609.xgwkrbzea253wmfg@black.fi.intel.com>
-References: <20191009222658.961-1-vgupta@synopsys.com>
+        id S2389586AbfJJIsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84CD1208C3;
+        Thu, 10 Oct 2019 08:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570697283;
+        bh=1CMaj+LpTVy5pHO7YmSeoVhwnG/cUfOzjBBtOkqBePg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KwOflXpxEhBOC3AA/3A1Is8CeL7WscXHPVHFcbrK9X4xr9lZd8JIrZAEoZf4wCuah
+         dwToeuQTegufY/zWRQJd27YgHcC/Ne3FPua03IZVTqQP6ID8MzzZrfjfqUrXjlcxQK
+         UCC3LK9nzh+cVOCQBd457JDxfCYoqZmXZfebq+WI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 041/114] mmc: sdhci: improve ADMA error reporting
+Date:   Thu, 10 Oct 2019 10:35:48 +0200
+Message-Id: <20191010083605.914102098@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
+References: <20191010083544.711104709@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009222658.961-1-vgupta@synopsys.com>
-User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 10:26:55PM +0000, Vineet Gupta wrote:
-> Hi,
-> 
-> This series elides extraneous generate code for folded p4d/pud.
-> This came up when trying to remove __ARCH_USE_5LEVEL_HACK from ARC port.
-> The code saving are not a while lot, but still worthwhile IMHO.
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Agreed.
+commit d1c536e3177390da43d99f20143b810c35433d1f upstream.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+ADMA errors are potentially data corrupting events; although we print
+the register state, we do not usefully print the ADMA descriptors.
+Worse than that, we print them by referencing their virtual address
+which is meaningless when the register state gives us the DMA address
+of the failing descriptor.
 
--- 
- Kirill A. Shutemov
+Print the ADMA descriptors giving their DMA addresses rather than their
+virtual addresses, and print them using SDHCI_DUMP() rather than DBG().
+
+We also do not show the correct value of the interrupt status register;
+the register dump shows the current value, after we have cleared the
+pending interrupts we are going to service.  What is more useful is to
+print the interrupts that _were_ pending at the time the ADMA error was
+encountered.  Fix that too.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/mmc/host/sdhci.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2720,6 +2720,7 @@ static void sdhci_cmd_irq(struct sdhci_h
+ static void sdhci_adma_show_error(struct sdhci_host *host)
+ {
+ 	void *desc = host->adma_table;
++	dma_addr_t dma = host->adma_addr;
+ 
+ 	sdhci_dumpregs(host);
+ 
+@@ -2727,18 +2728,21 @@ static void sdhci_adma_show_error(struct
+ 		struct sdhci_adma2_64_desc *dma_desc = desc;
+ 
+ 		if (host->flags & SDHCI_USE_64_BIT_DMA)
+-			DBG("%p: DMA 0x%08x%08x, LEN 0x%04x, Attr=0x%02x\n",
+-			    desc, le32_to_cpu(dma_desc->addr_hi),
++			SDHCI_DUMP("%08llx: DMA 0x%08x%08x, LEN 0x%04x, Attr=0x%02x\n",
++			    (unsigned long long)dma,
++			    le32_to_cpu(dma_desc->addr_hi),
+ 			    le32_to_cpu(dma_desc->addr_lo),
+ 			    le16_to_cpu(dma_desc->len),
+ 			    le16_to_cpu(dma_desc->cmd));
+ 		else
+-			DBG("%p: DMA 0x%08x, LEN 0x%04x, Attr=0x%02x\n",
+-			    desc, le32_to_cpu(dma_desc->addr_lo),
++			SDHCI_DUMP("%08llx: DMA 0x%08x, LEN 0x%04x, Attr=0x%02x\n",
++			    (unsigned long long)dma,
++			    le32_to_cpu(dma_desc->addr_lo),
+ 			    le16_to_cpu(dma_desc->len),
+ 			    le16_to_cpu(dma_desc->cmd));
+ 
+ 		desc += host->desc_sz;
++		dma += host->desc_sz;
+ 
+ 		if (dma_desc->cmd & cpu_to_le16(ADMA2_END))
+ 			break;
+@@ -2814,7 +2818,8 @@ static void sdhci_data_irq(struct sdhci_
+ 			!= MMC_BUS_TEST_R)
+ 		host->data->error = -EILSEQ;
+ 	else if (intmask & SDHCI_INT_ADMA_ERROR) {
+-		pr_err("%s: ADMA error\n", mmc_hostname(host->mmc));
++		pr_err("%s: ADMA error: 0x%08x\n", mmc_hostname(host->mmc),
++		       intmask);
+ 		sdhci_adma_show_error(host);
+ 		host->data->error = -EIO;
+ 		if (host->ops->adma_workaround)
+
+
