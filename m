@@ -2,232 +2,158 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD832C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213FCC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFCF2245D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697731;
-	bh=iRCYfcuP75yrAkaqOar1gJQ+Wf47LzJcu7aECkUYprg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vU+ILWo3ZHvz4dBT976QJHZm0tmw7g6zRbETSI/BuU3TOL7VxPLHmex0Y5IGqQJyv
-	 bQgrVRjj3IbFoINpjk62tEMS2cql9At5F1JJFrBKdU20Lzlz9lLV5QTLWeJ7Bl92VU
-	 2SVh5juYA7yEg/+DnGKUEKv69foXmb399OB6SZVw=
+	by mail.kernel.org (Postfix) with ESMTP id CB88B2245D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GtwMhN2K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389812AbfJJIt1 (ORCPT
+        id S2389283AbfJJIze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389253AbfJJItV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:49:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F04A0218AC;
-        Thu, 10 Oct 2019 08:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697359;
-        bh=iRCYfcuP75yrAkaqOar1gJQ+Wf47LzJcu7aECkUYprg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IpdHW4FjxypmJTezuKJ9Wrsn/0/0fnLyEq06FjPmcyUjmzn80RGiCfRR+j8Yn9Cct
-         aqwWLGAdjP0JSqNQCK5Jhn6R0TTz2AEjV6mzKzYqQ+t6/VNxzm6ghnTlSLkShPUr+7
-         OiCVuHsnxIjJWw+E+slnkBbmw6htQJ8eepX1zg4s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 086/114] perf stat: Reset previous counts on repeat with interval
-Date:   Thu, 10 Oct 2019 10:36:33 +0200
-Message-Id: <20191010083612.597359751@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
-References: <20191010083544.711104709@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 10 Oct 2019 04:55:34 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:41200 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387593AbfJJItY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:49:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Yxy1NmL9jhb0kt0QSZLJCKp5cELj9G+8v2WXfMq0H64=; b=GtwMhN2KWEOuKTLuMv0tQQwDZ
+        GaQnKrfLTi05KNPd6OAnJGQZWnOP2QhIAqO7XRc0cwP/9YJ1DKXGvGESop7J+H6aBG9kmGPnbEbDl
+        lZrFsgsD8ag/KTUu2fuhhW6jx15baV8Ym5X3B4roe9xDP5G32+ax4Ow9iPw6+wRDtMsRhGLgjqzvM
+        +Jmo0B6F6TnxGgJsgv+czSv+hr3ZVl3QAl+JrXv0KCboRhrTDOcWFr60d3EszyDAxUMpNub62Hob/
+        /qTiBSBTUyxhlxvOIhcI2jACLIGfusHy+vCZY1/oKJDg8BKkOkpd5flBFRoc+uHBaeUL58my10RYO
+        d7HmdrjRA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42302)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iIU8I-0006Yw-RN; Thu, 10 Oct 2019 09:49:15 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iIU8G-00006h-9b; Thu, 10 Oct 2019 09:49:12 +0100
+Date:   Thu, 10 Oct 2019 09:49:12 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 5.3 076/148] mmc: sdhci-of-esdhc: set DMA snooping based
+ on DMA coherence
+Message-ID: <20191010084912.GI25745@shell.armlinux.org.uk>
+References: <20191010083609.660878383@linuxfoundation.org>
+ <20191010083615.965680999@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010083615.965680999@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Hi Greg,
 
-[ Upstream commit b63fd11cced17fcb8e133def29001b0f6aaa5e06 ]
+On 5th October, Christian Zigotzky <chzigotzky@xenosoft.de> reported a
+problem with this on PowerPC (at a guess, it looks like there's a
+PowerPC user of this where the DT does not mark the device as
+dma-coherent, but the hardware requires it to be DMA coherent.)
 
-When using 'perf stat' with repeat and interval option, it shows wrong
-values for events.
+However, despite sending a reply to him within minutes of his email
+arriving, I've heard nothing since, so there's been no progress on
+working out what is really going on.
 
-The wrong values will be shown for the first interval on the second and
-subsequent repetitions.
+Given that the reporter hasn't responded to my reply, I'm not sure
+what we should be doing with this... maybe the reporter has solved
+his problem, maybe he was using an incorrect DT, we just don't know.
 
-Without the fix:
+On Thu, Oct 10, 2019 at 10:35:37AM +0200, Greg Kroah-Hartman wrote:
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+> 
+> commit 121bd08b029e03404c451bb237729cdff76eafed upstream.
+> 
+> We must not unconditionally set the DMA snoop bit; if the DMA API is
+> assuming that the device is not DMA coherent, and the device snoops the
+> CPU caches, the device can see stale cache lines brought in by
+> speculative prefetch.
+> 
+> This leads to the device seeing stale data, potentially resulting in
+> corrupted data transfers.  Commonly, this results in a descriptor fetch
+> error such as:
+> 
+> mmc0: ADMA error
+> mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
+> mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
+> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
+> mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
+> mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
+> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
+> mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
+> mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
+> mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
+> mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
+> mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
+> mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
+> mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
+> mmc0: sdhci: Host ctl2: 0x00000000
+> mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
+> mmc0: sdhci: ============================================
+> mmc0: error -5 whilst initialising SD card
+> 
+> but can lead to other errors, and potentially direct the SDHCI
+> controller to read/write data to other memory locations (e.g. if a valid
+> descriptor is visible to the device in a stale cache line.)
+> 
+> Fix this by ensuring that the DMA snoop bit corresponds with the
+> behaviour of the DMA API.  Since the driver currently only supports DT,
+> use of_dma_is_coherent().  Note that device_get_dma_attr() can not be
+> used as that risks re-introducing this bug if/when the driver is
+> converted to ACPI.
+> 
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  drivers/mmc/host/sdhci-of-esdhc.c |    7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> --- a/drivers/mmc/host/sdhci-of-esdhc.c
+> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
+> @@ -495,7 +495,12 @@ static int esdhc_of_enable_dma(struct sd
+>  		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(40));
+>  
+>  	value = sdhci_readl(host, ESDHC_DMA_SYSCTL);
+> -	value |= ESDHC_DMA_SNOOP;
+> +
+> +	if (of_dma_is_coherent(dev->of_node))
+> +		value |= ESDHC_DMA_SNOOP;
+> +	else
+> +		value &= ~ESDHC_DMA_SNOOP;
+> +
+>  	sdhci_writel(host, value, ESDHC_DMA_SYSCTL);
+>  	return 0;
+>  }
+> 
+> 
+> 
 
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
-
-     2.000282489                 53      faults
-     2.000282489                513      sched:sched_switch
-     4.005478208              3,721      faults
-     4.005478208              2,666      sched:sched_switch
-     5.025470933                395      faults
-     5.025470933              1,307      sched:sched_switch
-     2.009602825 1,84,46,74,40,73,70,95,47,520      faults 		<------
-     2.009602825 1,84,46,74,40,73,70,95,49,568      sched:sched_switch  <------
-     4.019612206              4,730      faults
-     4.019612206              2,746      sched:sched_switch
-     5.039615484              3,953      faults
-     5.039615484              1,496      sched:sched_switch
-     2.000274620 1,84,46,74,40,73,70,95,47,520      faults		<------
-     2.000274620 1,84,46,74,40,73,70,95,47,520      sched:sched_switch	<------
-     4.000480342              4,282      faults
-     4.000480342              2,303      sched:sched_switch
-     5.000916811              1,322      faults
-     5.000916811              1,064      sched:sched_switch
-  #
-
-prev_raw_counts is allocated when using intervals. This is used when
-calculating the difference in the counts of events when using interval.
-
-The current counts are stored in prev_raw_counts to calculate the
-differences in the next iteration.
-
-On the first interval of the second and subsequent repetitions,
-prev_raw_counts would be the values stored in the last interval of the
-previous repetitions, while the current counts will only be for the
-first interval of the current repetition.
-
-Hence there is a possibility of events showing up as big number.
-
-Fix this by resetting prev_raw_counts whenever perf stat repeats the
-command.
-
-With the fix:
-
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
-
-     2.019349347              2,597      faults
-     2.019349347              2,753      sched:sched_switch
-     4.019577372              3,098      faults
-     4.019577372              2,532      sched:sched_switch
-     5.019415481              1,879      faults
-     5.019415481              1,356      sched:sched_switch
-     2.000178813              8,468      faults
-     2.000178813              2,254      sched:sched_switch
-     4.000404621              7,440      faults
-     4.000404621              1,266      sched:sched_switch
-     5.040196079              2,458      faults
-     5.040196079                556      sched:sched_switch
-     2.000191939              6,870      faults
-     2.000191939              1,170      sched:sched_switch
-     4.000414103                541      faults
-     4.000414103                902      sched:sched_switch
-     5.000809863                450      faults
-     5.000809863                364      sched:sched_switch
-  #
-
-Committer notes:
-
-This was broken since the cset introducing the --interval feature, i.e.
---repeat + --interval wasn't tested at that point, add the Fixes tag so
-that automatic scripts can pick this up.
-
-Fixes: 13370a9b5bb8 ("perf stat: Add interval printing")
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: stable@vger.kernel.org # v3.9+
-Link: http://lore.kernel.org/lkml/20190904094738.9558-2-srikar@linux.vnet.ibm.com
-[ Fixed up conflicts with libperf, i.e. some perf_{evsel,evlist} lost the 'perf' prefix ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/builtin-stat.c |  3 +++
- tools/perf/util/stat.c    | 17 +++++++++++++++++
- tools/perf/util/stat.h    |  1 +
- 3 files changed, 21 insertions(+)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 11650910e089a..6aae10ff954c7 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -3090,6 +3090,9 @@ int cmd_stat(int argc, const char **argv)
- 			fprintf(output, "[ perf stat: executing run #%d ... ]\n",
- 				run_idx + 1);
- 
-+		if (run_idx != 0)
-+			perf_evlist__reset_prev_raw_counts(evsel_list);
-+
- 		status = run_perf_stat(argc, argv, run_idx);
- 		if (forever && status != -1 && !interval) {
- 			print_counters(NULL, argc, argv);
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index a0061e0b0fade..6917ba8a00240 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -154,6 +154,15 @@ static void perf_evsel__free_prev_raw_counts(struct perf_evsel *evsel)
- 	evsel->prev_raw_counts = NULL;
- }
- 
-+static void perf_evsel__reset_prev_raw_counts(struct perf_evsel *evsel)
-+{
-+	if (evsel->prev_raw_counts) {
-+		evsel->prev_raw_counts->aggr.val = 0;
-+		evsel->prev_raw_counts->aggr.ena = 0;
-+		evsel->prev_raw_counts->aggr.run = 0;
-+       }
-+}
-+
- static int perf_evsel__alloc_stats(struct perf_evsel *evsel, bool alloc_raw)
- {
- 	int ncpus = perf_evsel__nr_cpus(evsel);
-@@ -204,6 +213,14 @@ void perf_evlist__reset_stats(struct perf_evlist *evlist)
- 	}
- }
- 
-+void perf_evlist__reset_prev_raw_counts(struct perf_evlist *evlist)
-+{
-+	struct perf_evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__reset_prev_raw_counts(evsel);
-+}
-+
- static void zero_per_pkg(struct perf_evsel *counter)
- {
- 	if (counter->per_pkg_mask)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 36efb986f7fc6..e19abb1635c4e 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -158,6 +158,7 @@ void perf_stat__collect_metric_expr(struct perf_evlist *);
- int perf_evlist__alloc_stats(struct perf_evlist *evlist, bool alloc_raw);
- void perf_evlist__free_stats(struct perf_evlist *evlist);
- void perf_evlist__reset_stats(struct perf_evlist *evlist);
-+void perf_evlist__reset_prev_raw_counts(struct perf_evlist *evlist);
- 
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct perf_evsel *counter);
 -- 
-2.20.1
-
-
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
