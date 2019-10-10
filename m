@@ -2,232 +2,111 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078F0C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00768C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA31C20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86E120679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697596;
-	bh=yINAV2CDgRHj5ZeNyAcIv8gmsa7Y3vxYI4kz6Nu5sW4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOEChr1EaH/+Hq8l40BFv+f8aqMiM6WT1SVgRE0WQvSEyPCnk9KMtymIyeInBXxfC
-	 4i0U9CBMSk/LweOU89mQZZaiwy9w5I0r5ikQnZZtwJJiJxCGCDUyU7UDXmXjU8zp2y
-	 FFNeePCt6+us/Zlb8ye8P2q7vuGBbI0qqFM5dEi4=
+	s=default; t=1570697604;
+	bh=jfvznRRfXeB9IPJWd16lVCQcUbcZO/h03cSC2+aSIak=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E43fHDoJX7wQOM9uy5VO3j1IWlcA/MqbhQLt2TloEnEHvQRcoL+bISURgNkyhYGVp
+	 labkfNIEQQtPVyQlUZy479W2RmE/KuF5KIuVPHlYtjpP6xtK44UoNHuSTefgwK6/b/
+	 7mDfhIiBxM1z8vhOUVvg1nH4BQOd4QOVfKMOPJ3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389044AbfJJIxP (ORCPT
+        id S2390141AbfJJIvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:53:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390168AbfJJIvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73C7C2064A;
-        Thu, 10 Oct 2019 08:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697515;
-        bh=yINAV2CDgRHj5ZeNyAcIv8gmsa7Y3vxYI4kz6Nu5sW4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mMrHQvBmWfa1e6hfxceI75m6riyiLr77evI3s6QT6z7srtWel2ZlSrHLJzA2X1oLJ
-         J9VJp+pQziXOTUX4Tsn+nyf88OHzFfA0Pnv8snZ3d28ChxBPIfT08uVhTIkpBzVRxG
-         9SKI8QCNB3JAvEY2z1FVcXl+JWrM6VRqXkdXaLaQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 54/61] perf stat: Reset previous counts on repeat with interval
-Date:   Thu, 10 Oct 2019 10:37:19 +0200
-Message-Id: <20191010083523.606396136@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
-References: <20191010083449.500442342@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 10 Oct 2019 04:51:42 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35198 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390103AbfJJIvf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z6so4204992otb.2;
+        Thu, 10 Oct 2019 01:51:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5WNy1ElvBlIaPl/GDmtgPQ9owV2ns5U1oFv7ORu9uBU=;
+        b=daVNcE/EVKPZW/LOWlMEgA2sMtNhSisWzXtx24MPYhrcprVMg8tQSbDn9ybR9wzD4m
+         hu1h9il3eQXNkx140R02v9VoejoOMA6O0mFy2+8293nNpP9nKElFvEkJVIpzewace0WZ
+         +K3LlU6b6gi5UwOR1d1KAY3igzfB4DC0Rf7OmtneT3d0YpuN0+32HjZeeVvWoBGK0+6G
+         wrSRiy0OGBLCK+yG84B2g795q7c16DYsNX+scmUNK2oqUiJy6u6KkHEAwPXwwSaKL9pX
+         9ab63t+7oLgErHZV+Rb0HuU3+mQR/tGfe4q1rGVG6iv10N+pJl0MAhPN0mc9PSAp1fv7
+         19Og==
+X-Gm-Message-State: APjAAAWH16C6Ru5oS+trNhYXSiowmK4iF4pCgXUUMY2eoAJQHwNVRXrZ
+        yPxePIVYRx3kD19ipPp6IHHBraTi7heufZUTS8Q=
+X-Google-Smtp-Source: APXvYqybut8NGn1i7VK/T9RwJi5vdWmQ2cqbahMnWy1naHR4DNpIcCrBdMB7F4wtF7phljdYiF7/SfohwtDZ7o5VOz0=
+X-Received: by 2002:a9d:459b:: with SMTP id x27mr6529097ote.167.1570697494577;
+ Thu, 10 Oct 2019 01:51:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1569514137-2307-1-git-send-email-mario.limonciello@dell.com>
+ <97e66464-8407-fd58-21a6-aeb7736dec7b@molgen.mpg.de> <541d9bfa3ccf45b5b07e35e3eebb72ed@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <541d9bfa3ccf45b5b07e35e3eebb72ed@AUSX13MPC105.AMER.DELL.COM>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 10 Oct 2019 10:51:23 +0200
+Message-ID: <CAJZ5v0i6tApHQ-QUS3PNo8BZ7CHaqpZea+z=Layyzt0yhGjVeQ@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: PM: Revert "ACPI / PM: Blacklist Low Power S0 Idle
+ _DSM for Dell XPS13 9360"
+To:     Mario Limonciello <Mario.Limonciello@dell.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+On Tue, Oct 8, 2019 at 3:44 AM <Mario.Limonciello@dell.com> wrote:
+>
+> > On 26.09.19 18:08, Mario Limonciello wrote:
+> > > This reverts part of
+> > > commit 71630b7a832f ("ACPI / PM: Blacklist Low Power S0 Idle _DSM for
+> > > Dell XPS13 9360") to remove the S0ix blacklist for the XPS 9360.
+> > >
+> > > The problems with this system occurred in one possible NVME SSD when
+> > > putting system into s0ix.  As the NVME sleep behavior has been
+> > > adjusted in d916b1be this is expected to be now resolved.
+> >
+> > 1.  Please add, that it was the Hynix(?) SSD.
+> > 2.  Please add the commit message summary of d916b1be.
+> >
+> >      nvme-pci: use host managed power state for suspend
+> >
+>
+> Rafael, let me know if you want me to adjust the commit message and resubmit
+> or if you would just handle this task.
+>
+> > > Cc: 'Paul Menzel <pmenzel@molgen.mpg.de>'
+> > > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=196907
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> >
+> > Tag it for the stable series? d916b1be (first tag v5.3-rc1) is not tagged for stable.
+> >
+>
+> Although Dell arranged a lot of testing with partners I don't feel d916b1be is a stable
+> candidate.  Rafael found a corner case with regards to ASPM configuration last minute
+> in 5.3rcX, I found a another corner case related to order of events and timing around
+> PC10 entry that's getting fixed in 5.4.
+>
+> > > ---
+> > > The particular failing configuration was reported by only ever failed
+> > > for Paul Menzel, so hopefully he can test on his failing system.
+> >
+> > I successfully tested Linux 5.4-rc1+ with this commit last Friday on the Dell XPS
+> > 13 9360.
+> >
+> > Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> >
+>
+> Well that's great, appreciate your testing and confirmation.
 
-[ Upstream commit b63fd11cced17fcb8e133def29001b0f6aaa5e06 ]
-
-When using 'perf stat' with repeat and interval option, it shows wrong
-values for events.
-
-The wrong values will be shown for the first interval on the second and
-subsequent repetitions.
-
-Without the fix:
-
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
-
-     2.000282489                 53      faults
-     2.000282489                513      sched:sched_switch
-     4.005478208              3,721      faults
-     4.005478208              2,666      sched:sched_switch
-     5.025470933                395      faults
-     5.025470933              1,307      sched:sched_switch
-     2.009602825 1,84,46,74,40,73,70,95,47,520      faults 		<------
-     2.009602825 1,84,46,74,40,73,70,95,49,568      sched:sched_switch  <------
-     4.019612206              4,730      faults
-     4.019612206              2,746      sched:sched_switch
-     5.039615484              3,953      faults
-     5.039615484              1,496      sched:sched_switch
-     2.000274620 1,84,46,74,40,73,70,95,47,520      faults		<------
-     2.000274620 1,84,46,74,40,73,70,95,47,520      sched:sched_switch	<------
-     4.000480342              4,282      faults
-     4.000480342              2,303      sched:sched_switch
-     5.000916811              1,322      faults
-     5.000916811              1,064      sched:sched_switch
-  #
-
-prev_raw_counts is allocated when using intervals. This is used when
-calculating the difference in the counts of events when using interval.
-
-The current counts are stored in prev_raw_counts to calculate the
-differences in the next iteration.
-
-On the first interval of the second and subsequent repetitions,
-prev_raw_counts would be the values stored in the last interval of the
-previous repetitions, while the current counts will only be for the
-first interval of the current repetition.
-
-Hence there is a possibility of events showing up as big number.
-
-Fix this by resetting prev_raw_counts whenever perf stat repeats the
-command.
-
-With the fix:
-
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
-
-     2.019349347              2,597      faults
-     2.019349347              2,753      sched:sched_switch
-     4.019577372              3,098      faults
-     4.019577372              2,532      sched:sched_switch
-     5.019415481              1,879      faults
-     5.019415481              1,356      sched:sched_switch
-     2.000178813              8,468      faults
-     2.000178813              2,254      sched:sched_switch
-     4.000404621              7,440      faults
-     4.000404621              1,266      sched:sched_switch
-     5.040196079              2,458      faults
-     5.040196079                556      sched:sched_switch
-     2.000191939              6,870      faults
-     2.000191939              1,170      sched:sched_switch
-     4.000414103                541      faults
-     4.000414103                902      sched:sched_switch
-     5.000809863                450      faults
-     5.000809863                364      sched:sched_switch
-  #
-
-Committer notes:
-
-This was broken since the cset introducing the --interval feature, i.e.
---repeat + --interval wasn't tested at that point, add the Fixes tag so
-that automatic scripts can pick this up.
-
-Fixes: 13370a9b5bb8 ("perf stat: Add interval printing")
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: stable@vger.kernel.org # v3.9+
-Link: http://lore.kernel.org/lkml/20190904094738.9558-2-srikar@linux.vnet.ibm.com
-[ Fixed up conflicts with libperf, i.e. some perf_{evsel,evlist} lost the 'perf' prefix ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/builtin-stat.c |  3 +++
- tools/perf/util/stat.c    | 17 +++++++++++++++++
- tools/perf/util/stat.h    |  1 +
- 3 files changed, 21 insertions(+)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index b6c1c9939c2f1..0801e0ffba4ae 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2769,6 +2769,9 @@ int cmd_stat(int argc, const char **argv)
- 			fprintf(output, "[ perf stat: executing run #%d ... ]\n",
- 				run_idx + 1);
- 
-+		if (run_idx != 0)
-+			perf_evlist__reset_prev_raw_counts(evsel_list);
-+
- 		status = run_perf_stat(argc, argv);
- 		if (forever && status != -1 && !interval) {
- 			print_counters(NULL, argc, argv);
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index c9bae5fb8b479..d028c2786802e 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -154,6 +154,15 @@ static void perf_evsel__free_prev_raw_counts(struct perf_evsel *evsel)
- 	evsel->prev_raw_counts = NULL;
- }
- 
-+static void perf_evsel__reset_prev_raw_counts(struct perf_evsel *evsel)
-+{
-+	if (evsel->prev_raw_counts) {
-+		evsel->prev_raw_counts->aggr.val = 0;
-+		evsel->prev_raw_counts->aggr.ena = 0;
-+		evsel->prev_raw_counts->aggr.run = 0;
-+       }
-+}
-+
- static int perf_evsel__alloc_stats(struct perf_evsel *evsel, bool alloc_raw)
- {
- 	int ncpus = perf_evsel__nr_cpus(evsel);
-@@ -204,6 +213,14 @@ void perf_evlist__reset_stats(struct perf_evlist *evlist)
- 	}
- }
- 
-+void perf_evlist__reset_prev_raw_counts(struct perf_evlist *evlist)
-+{
-+	struct perf_evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__reset_prev_raw_counts(evsel);
-+}
-+
- static void zero_per_pkg(struct perf_evsel *counter)
- {
- 	if (counter->per_pkg_mask)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 96326b1f94438..bdfbed8e2df28 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -100,6 +100,7 @@ void perf_stat__collect_metric_expr(struct perf_evlist *);
- int perf_evlist__alloc_stats(struct perf_evlist *evlist, bool alloc_raw);
- void perf_evlist__free_stats(struct perf_evlist *evlist);
- void perf_evlist__reset_stats(struct perf_evlist *evlist);
-+void perf_evlist__reset_prev_raw_counts(struct perf_evlist *evlist);
- 
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct perf_evsel *counter);
--- 
-2.20.1
-
-
-
+Applying, thanks!
