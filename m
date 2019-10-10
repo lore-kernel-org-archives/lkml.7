@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61054C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE80C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0EB2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4411821BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697410;
-	bh=9On+Gu6ZEr5b3Li89PPgEiHsxO9sWN16AGhIzJ06nkQ=;
+	s=default; t=1570697415;
+	bh=H0g6wd8iHFVMW6T+O08Km+OKeHzABQybpIi8NdBKT/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9F3qlanzKNHEeXL8wglRuD53MXLNOodSCNfesm4HqcGU1AdV2rlC/p3+2KcVyTed
-	 A2V8fa2+Q7Z3SR75Mdy0Uok88xwjrqgVNSXM4+TrfAIP6HG2M+DZqlFhKL04PJKElR
-	 MWWnB2Gl6czDyTQbcOKLJm1AfZhVu31As0AYtbXo=
+	b=gWopfVDJt/IdF2zF08Cg7+z/AY+NpDm1WBlYTOMnNJ2vrYnjQzphlvd6laGTL//0s
+	 SbQiDj8NiDkAsdplSsKApc5x4a22QY4dE8ntI/0dYS2XYJpo030iDJCHuygsTCxtc4
+	 Um8+Bo3XQwCdJIbiclBAP8clcLUVpYolN2avljrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389444AbfJJIuJ (ORCPT
+        id S2389931AbfJJIuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389426AbfJJIuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:07 -0400
+        id S2389911AbfJJIuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62AA921A4C;
-        Thu, 10 Oct 2019 08:50:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0C0921A4C;
+        Thu, 10 Oct 2019 08:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697405;
-        bh=9On+Gu6ZEr5b3Li89PPgEiHsxO9sWN16AGhIzJ06nkQ=;
+        s=default; t=1570697411;
+        bh=H0g6wd8iHFVMW6T+O08Km+OKeHzABQybpIi8NdBKT/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/WDcRM/+G/FgnWVNctdJ26ziE709+tael+t+L5ll+VKcl+hpGjFIlR6lMpsSGpG5
-         ihQv/Qx5cswtZPvXUeFTTtgh65gsb2SjekQhRgv8LA1O3IhiVEqafcH4FwkX1YRK9L
-         TkTgbMDdf0hSpEiZrKLetbnEGI4NdrDHfbAvpoFM=
+        b=pwlIsCnxIGnJbviAcJqC0Bomc/EbXU4MYn60qmvQXUOrm6QoNz6/dc7zArB3KLBM0
+         pa3lvMUgBAI82KLq6xUMOilYKIk2ZJBmnvmAcgdCSHW6S958mP4d9ndklZMDG26Ngq
+         HOOAMLDMHhEEd6Nf8iSNYnciEc4LPfc5bnpoumtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 16/61] crypto: caam - fix concurrency issue in givencrypt descriptor
-Date:   Thu, 10 Oct 2019 10:36:41 +0200
-Message-Id: <20191010083458.828032360@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.14 18/61] usercopy: Avoid HIGHMEM pfn warning
+Date:   Thu, 10 Oct 2019 10:36:43 +0200
+Message-Id: <20191010083501.010966866@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -60,92 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 48f89d2a2920166c35b1c0b69917dbb0390ebec7 upstream.
+commit 314eed30ede02fa925990f535652254b5bad6b65 upstream.
 
-IV transfer from ofifo to class2 (set up at [29][30]) is not guaranteed
-to be scheduled before the data transfer from ofifo to external memory
-(set up at [38]:
+When running on a system with >512MB RAM with a 32-bit kernel built with:
 
-[29] 10FA0004           ld: ind-nfifo (len=4) imm
-[30] 81F00010               <nfifo_entry: ofifo->class2 type=msg len=16>
-[31] 14820004           ld: ccb2-datasz len=4 offs=0 imm
-[32] 00000010               data:0x00000010
-[33] 8210010D    operation: cls1-op aes cbc init-final enc
-[34] A8080B04         math: (seqin + math0)->vseqout len=4
-[35] 28000010    seqfifold: skip len=16
-[36] A8080A04         math: (seqin + math0)->vseqin len=4
-[37] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
-[38] 69300000   seqfifostr: msg len=vseqoutsz
-[39] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
+	CONFIG_DEBUG_VIRTUAL=y
+	CONFIG_HIGHMEM=y
+	CONFIG_HARDENED_USERCOPY=y
 
-If ofifo -> external memory transfer happens first, DECO will hang
-(issuing a Watchdog Timeout error, if WDOG is enabled) waiting for
-data availability in ofifo for the ofifo -> c2 ififo transfer.
+all execve()s will fail due to argv copying into kmap()ed pages, and on
+usercopy checking the calls ultimately of virt_to_page() will be looking
+for "bad" kmap (highmem) pointers due to CONFIG_DEBUG_VIRTUAL=y:
 
-Make sure IV transfer happens first by waiting for all CAAM internal
-transfers to end before starting payload transfer.
+ ------------[ cut here ]------------
+ kernel BUG at ../arch/x86/mm/physaddr.c:83!
+ invalid opcode: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC
+ CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc8 #6
+ Hardware name: Dell Inc. Inspiron 1318/0C236D, BIOS A04 01/15/2009
+ EIP: __phys_addr+0xaf/0x100
+ ...
+ Call Trace:
+  __check_object_size+0xaf/0x3c0
+  ? __might_sleep+0x80/0xa0
+  copy_strings+0x1c2/0x370
+  copy_strings_kernel+0x2b/0x40
+  __do_execve_file+0x4ca/0x810
+  ? kmem_cache_alloc+0x1c7/0x370
+  do_execve+0x1b/0x20
+  ...
 
-New descriptor with jump command inserted at [37]:
+The check is from arch/x86/mm/physaddr.c:
 
-[..]
-[36] A8080A04         math: (seqin + math0)->vseqin len=4
-[37] A1000401         jump: jsl1 all-match[!nfifopend] offset=[01] local->[38]
-[38] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
-[39] 69300000   seqfifostr: msg len=vseqoutsz
-[40] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
+	VIRTUAL_BUG_ON((phys_addr >> PAGE_SHIFT) > max_low_pfn);
 
-[Note: the issue is present in the descriptor from the very beginning
-(cf. Fixes tag). However I've marked it v4.19+ since it's the oldest
-maintained kernel that the patch applies clean against.]
+Due to the kmap() in fs/exec.c:
 
-Cc: <stable@vger.kernel.org> # v4.19+
-Fixes: 1acebad3d8db8 ("crypto: caam - faster aead implementation")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+		kaddr = kmap(kmapped_page);
+	...
+	if (copy_from_user(kaddr+offset, str, bytes_to_copy)) ...
+
+Now we can fetch the correct page to avoid the pfn check. In both cases,
+hardened usercopy will need to walk the page-span checker (if enabled)
+to do sanity checking.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Fixes: f5509cc18daa ("mm: Hardened usercopy")
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Link: https://lore.kernel.org/r/201909171056.7F2FFD17@keescook
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg_desc.c |    9 +++++++++
- drivers/crypto/caam/caamalg_desc.h |    2 +-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ mm/usercopy.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/caam/caamalg_desc.c
-+++ b/drivers/crypto/caam/caamalg_desc.c
-@@ -476,6 +476,7 @@ void cnstr_shdsc_aead_givencap(u32 * con
- 			       const bool is_qi)
- {
- 	u32 geniv, moveiv;
-+	u32 *wait_cmd;
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -15,6 +15,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
- 	/* Note: Context registers are saved. */
- 	init_sh_desc_key_aead(desc, cdata, adata, is_rfc3686, nonce);
-@@ -566,6 +567,14 @@ copy_iv:
+ #include <linux/mm.h>
++#include <linux/highmem.h>
+ #include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <linux/sched/task.h>
+@@ -203,7 +204,12 @@ static inline const char *check_heap_obj
+ 	if (!virt_addr_valid(ptr))
+ 		return NULL;
  
- 	/* Will read cryptlen */
- 	append_math_add(desc, VARSEQINLEN, SEQINLEN, REG0, CAAM_CMD_SZ);
-+
+-	page = virt_to_head_page(ptr);
 +	/*
-+	 * Wait for IV transfer (ofifo -> class2) to finish before starting
-+	 * ciphertext transfer (ofifo -> external memory).
++	 * When CONFIG_HIGHMEM=y, kmap_to_page() will give either the
++	 * highmem page or fallback to virt_to_page(). The following
++	 * is effectively a highmem-aware virt_to_head_page().
 +	 */
-+	wait_cmd = append_jump(desc, JUMP_JSL | JUMP_TEST_ALL | JUMP_COND_NIFP);
-+	set_jump_tgt_here(desc, wait_cmd);
-+
- 	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_BOTH | KEY_VLF |
- 			     FIFOLD_TYPE_MSG1OUT2 | FIFOLD_TYPE_LASTBOTH);
- 	append_seq_fifo_store(desc, 0, FIFOST_TYPE_MESSAGE_DATA | KEY_VLF);
---- a/drivers/crypto/caam/caamalg_desc.h
-+++ b/drivers/crypto/caam/caamalg_desc.h
-@@ -12,7 +12,7 @@
- #define DESC_AEAD_BASE			(4 * CAAM_CMD_SZ)
- #define DESC_AEAD_ENC_LEN		(DESC_AEAD_BASE + 11 * CAAM_CMD_SZ)
- #define DESC_AEAD_DEC_LEN		(DESC_AEAD_BASE + 15 * CAAM_CMD_SZ)
--#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 7 * CAAM_CMD_SZ)
-+#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 8 * CAAM_CMD_SZ)
- #define DESC_QI_AEAD_ENC_LEN		(DESC_AEAD_ENC_LEN + 3 * CAAM_CMD_SZ)
- #define DESC_QI_AEAD_DEC_LEN		(DESC_AEAD_DEC_LEN + 3 * CAAM_CMD_SZ)
- #define DESC_QI_AEAD_GIVENC_LEN		(DESC_AEAD_GIVENC_LEN + 3 * CAAM_CMD_SZ)
++	page = compound_head(kmap_to_page((void *)ptr));
+ 
+ 	/* Check slab allocator for flags and size. */
+ 	if (PageSlab(page))
 
 
