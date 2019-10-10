@@ -2,399 +2,129 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63386C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3232C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26B1A2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:45:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tYcFtZWv"
+	by mail.kernel.org (Postfix) with ESMTP id ADCB2218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfJJSpV (ORCPT
+        id S1727129AbfJJSpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:45:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44850 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbfJJSpO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:45:14 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e10so226824pgd.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=p2Be0C4qL+ABPGADFRkpPnXO4Go7F19pYM8Im08Sq8E=;
-        b=tYcFtZWv2yx4RwC6Nn/054maUImFg0FD0qzNZBVZPT+wtUbceF898c1iGeFO9jygRo
-         86x5wuxVeccJT/rExh9Ou731JVVyu3pLIbC4zfF6r/L5D91OLj+FofzQXVEW+b/uCTQN
-         8D1hpnH1uTCY6ADyGM/0eqYLb88Hfym304jVMk51oOM0Rz32mUj3X4t0r0Blc5hhMetF
-         yDJIfxKQJS5TmOxI6H7Bbd4g+00rswj21ajFciAL4KjYh7GHSlT88t9YbYUY23AxQiBF
-         2t/9SiE1JNezB8hzl1VypWo34eoWmQyj43ne3rSfNhDMXDYNpTXofcVmyX9I2c1u2SET
-         nJGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=p2Be0C4qL+ABPGADFRkpPnXO4Go7F19pYM8Im08Sq8E=;
-        b=LbIzhIcqeKshetksoOSezSv0HMwEGiCtqljzLUAq8u3XMafoJIjob/HCU7Z8gBcPTj
-         3AfKQRRa1cZ6LksCxTegvyPheRGyiW2D9k5JXbrv4fJOW7Lq+6gKYsRQYKMr6XgkDHVO
-         ysV3Hyci1MiV/qQlzh9tisfMCX1fFaLc3qkl9nt3P/ThxQkpCO/W6NXYb5AZZJ8QdIE6
-         qNQupTf7CehYBynGtjaknmktVQ+AJf3xTOewFy3FbSuiVhnVfP+f5GgU/LP/uFHJ6JUm
-         t3RFZ0WWBBxPZnn3mdqdKC7ZYCKkfCD7G9P6sviIo63wfHeOKHibdSSc/I8XB9AkMu8B
-         snhg==
-X-Gm-Message-State: APjAAAWv2dCeNeZNRjWuLB4rxFvZKSd1JK5eAtV//oIBB5WPAboJQHJU
-        fiE+c+6UmxJBy4Km1JuOFacDKHyZlYQ=
-X-Google-Smtp-Source: APXvYqxkJChSbMhA9CgcF4eVG1wRhxJAj55AsIEz2RRlPARXBwPAwnxiJzK2GDcXJA1z/IKVMcNYxg==
-X-Received: by 2002:a17:90b:316:: with SMTP id ay22mr12567097pjb.6.1570733113520;
-        Thu, 10 Oct 2019 11:45:13 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id w65sm7541732pfb.106.2019.10.10.11.45.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 11:45:12 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v11 5/5] kselftests: Add dma-heap test
-Date:   Thu, 10 Oct 2019 18:44:58 +0000
-Message-Id: <20191010184458.51039-6-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191010184458.51039-1-john.stultz@linaro.org>
-References: <20191010184458.51039-1-john.stultz@linaro.org>
+        Thu, 10 Oct 2019 14:45:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:38286 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726424AbfJJSpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 14:45:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9494328;
+        Thu, 10 Oct 2019 11:45:32 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E54C13F703;
+        Thu, 10 Oct 2019 11:45:29 -0700 (PDT)
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Jones <drjones@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Sudakshina Das <sudi.das@arm.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 01/12] ELF: UAPI and Kconfig additions for ELF program properties
+Date:   Thu, 10 Oct 2019 19:44:29 +0100
+Message-Id: <1570733080-21015-2-git-send-email-Dave.Martin@arm.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add very trivial allocation and import test for dma-heaps,
-utilizing the vgem driver as a test importer.
+Pull the basic ELF definitions relating to the
+NT_GNU_PROPERTY_TYPE_0 note from Yu-Cheng Yu's earlier x86 shstk
+series.
 
-A good chunk of this code taken from:
-  tools/testing/selftests/android/ion/ionmap_test.c
-  Originally by Laura Abbott <labbott@redhat.com>
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Liam Mark <lmark@codeaurora.org>
-Cc: Pratik Patel <pratikp@codeaurora.org>
-Cc: Brian Starkey <Brian.Starkey@arm.com>
-Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-Cc: Andrew F. Davis <afd@ti.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Chenbo Feng <fengc@google.com>
-Cc: Alistair Strachan <astrachan@google.com>
-Cc: Hridya Valsaraju <hridya@google.com>
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Tested-by: Ayan Kumar Halder <ayan.halder@arm.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v2:
-* Switched to use reworked dma-heap apis
-v3:
-* Add simple mmap
-* Utilize dma-buf testdev to test importing
-v4:
-* Rework to use vgem
-* Pass in fd_flags to match interface changes
-* Skip . and .. dirs
-v6:
-* Number of style/cleanups suggested by Brian
-v7:
-* Whitespace fixup for checkpatch
-v8:
-* More checkpatch whitespace fixups
-v9:
-* Better handling error returns out to main, suggested
-  by Brian Starkey
-* Switch to using snprintf, suggested by Brian
----
- tools/testing/selftests/dmabuf-heaps/Makefile |   9 +
- .../selftests/dmabuf-heaps/dmabuf-heap.c      | 238 ++++++++++++++++++
- 2 files changed, 247 insertions(+)
- create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
- create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
 
-diff --git a/tools/testing/selftests/dmabuf-heaps/Makefile b/tools/testing/selftests/dmabuf-heaps/Makefile
-new file mode 100644
-index 000000000000..8c4c36e2972d
---- /dev/null
-+++ b/tools/testing/selftests/dmabuf-heaps/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -static -O3 -Wl,-no-as-needed -Wall
-+#LDLIBS += -lrt -lpthread -lm
+Changes since RFC v2:
+
+ * Fix struct gnu_property indentation to follow the linux coding style
+---
+ fs/Kconfig.binfmt        | 3 +++
+ include/linux/elf.h      | 8 ++++++++
+ include/uapi/linux/elf.h | 1 +
+ 3 files changed, 12 insertions(+)
+
+diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+index 62dc4f5..d2cfe07 100644
+--- a/fs/Kconfig.binfmt
++++ b/fs/Kconfig.binfmt
+@@ -36,6 +36,9 @@ config COMPAT_BINFMT_ELF
+ config ARCH_BINFMT_ELF_STATE
+ 	bool
+ 
++config ARCH_USE_GNU_PROPERTY
++	bool
 +
-+# these are all "safe" tests that don't modify
-+# system time or require escalated privileges
-+TEST_GEN_PROGS = dmabuf-heap
+ config BINFMT_ELF_FDPIC
+ 	bool "Kernel support for FDPIC ELF binaries"
+ 	default y if !BINFMT_ELF
+diff --git a/include/linux/elf.h b/include/linux/elf.h
+index e3649b3..459cddc 100644
+--- a/include/linux/elf.h
++++ b/include/linux/elf.h
+@@ -2,6 +2,7 @@
+ #ifndef _LINUX_ELF_H
+ #define _LINUX_ELF_H
+ 
++#include <linux/types.h>
+ #include <asm/elf.h>
+ #include <uapi/linux/elf.h>
+ 
+@@ -56,4 +57,11 @@ static inline int elf_coredump_extra_notes_write(struct coredump_params *cprm) {
+ extern int elf_coredump_extra_notes_size(void);
+ extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
+ #endif
 +
-+include ../lib.mk
-diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-new file mode 100644
-index 000000000000..b36dd9f35c19
---- /dev/null
-+++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-@@ -0,0 +1,238 @@
-+// SPDX-License-Identifier: GPL-2.0
++/* NT_GNU_PROPERTY_TYPE_0 header */
++struct gnu_property {
++	u32 pr_type;
++	u32 pr_datasz;
++};
 +
-+#include <dirent.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <sys/ioctl.h>
-+#include <sys/mman.h>
-+#include <sys/types.h>
-+
-+#include <linux/dma-buf.h>
-+#include <drm/drm.h>
-+
-+#include "../../../../include/uapi/linux/dma-heap.h"
-+
-+#define DEVPATH "/dev/dma_heap"
-+
-+static int check_vgem(int fd)
-+{
-+	drm_version_t version = { 0 };
-+	char name[5];
-+	int ret;
-+
-+	version.name_len = 4;
-+	version.name = name;
-+
-+	ret = ioctl(fd, DRM_IOCTL_VERSION, &version);
-+	if (ret)
-+		return 0;
-+
-+	return !strcmp(name, "vgem");
-+}
-+
-+static int open_vgem(void)
-+{
-+	int i, fd;
-+	const char *drmstr = "/dev/dri/card";
-+
-+	fd = -1;
-+	for (i = 0; i < 16; i++) {
-+		char name[80];
-+
-+		snprintf(name, 80, "%s%u", drmstr, i);
-+
-+		fd = open(name, O_RDWR);
-+		if (fd < 0)
-+			continue;
-+
-+		if (!check_vgem(fd)) {
-+			close(fd);
-+			fd = -1;
-+			continue;
-+		} else {
-+			break;
-+		}
-+	}
-+	return fd;
-+}
-+
-+static int import_vgem_fd(int vgem_fd, int dma_buf_fd, uint32_t *handle)
-+{
-+	struct drm_prime_handle import_handle = {
-+		.fd = dma_buf_fd,
-+		.flags = 0,
-+		.handle = 0,
-+	 };
-+	int ret;
-+
-+	ret = ioctl(vgem_fd, DRM_IOCTL_PRIME_FD_TO_HANDLE, &import_handle);
-+	if (ret == 0)
-+		*handle = import_handle.handle;
-+	return ret;
-+}
-+
-+static void close_handle(int vgem_fd, uint32_t handle)
-+{
-+	struct drm_gem_close close = {
-+		.handle = handle,
-+	};
-+
-+	ioctl(vgem_fd, DRM_IOCTL_GEM_CLOSE, &close);
-+}
-+
-+static int dmabuf_heap_open(char *name)
-+{
-+	int ret, fd;
-+	char buf[256];
-+
-+	ret = snprintf(buf, 256, "%s/%s", DEVPATH, name);
-+	if (ret < 0) {
-+		printf("snprintf failed!\n");
-+		return ret;
-+	}
-+
-+	fd = open(buf, O_RDWR);
-+	if (fd < 0)
-+		printf("open %s failed!\n", buf);
-+	return fd;
-+}
-+
-+static int dmabuf_heap_alloc(int fd, size_t len, unsigned int flags,
-+			     int *dmabuf_fd)
-+{
-+	struct dma_heap_allocation_data data = {
-+		.len = len,
-+		.fd_flags = O_RDWR | O_CLOEXEC,
-+		.heap_flags = flags,
-+	};
-+	int ret;
-+
-+	if (!dmabuf_fd)
-+		return -EINVAL;
-+
-+	ret = ioctl(fd, DMA_HEAP_IOC_ALLOC, &data);
-+	if (ret < 0)
-+		return ret;
-+	*dmabuf_fd = (int)data.fd;
-+	return ret;
-+}
-+
-+static void dmabuf_sync(int fd, int start_stop)
-+{
-+	struct dma_buf_sync sync = {
-+		.flags = start_stop | DMA_BUF_SYNC_RW,
-+	};
-+	int ret;
-+
-+	ret = ioctl(fd, DMA_BUF_IOCTL_SYNC, &sync);
-+	if (ret)
-+		printf("sync failed %d\n", errno);
-+}
-+
-+#define ONE_MEG (1024 * 1024)
-+
-+static int do_test(char *heap_name)
-+{
-+	int heap_fd = -1, dmabuf_fd = -1, importer_fd = -1;
-+	uint32_t handle = 0;
-+	void *p = NULL;
-+	int ret;
-+
-+	printf("Testing heap: %s\n", heap_name);
-+
-+	heap_fd = dmabuf_heap_open(heap_name);
-+	if (heap_fd < 0)
-+		return;
-+
-+	printf("Allocating 1 MEG\n");
-+	ret = dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
-+	if (ret) {
-+		printf("Allocation Failed!\n");
-+		ret = -1;
-+		goto out;
-+	}
-+	/* mmap and write a simple pattern */
-+	p = mmap(NULL,
-+		 ONE_MEG,
-+		 PROT_READ | PROT_WRITE,
-+		 MAP_SHARED,
-+		 dmabuf_fd,
-+		 0);
-+	if (p == MAP_FAILED) {
-+		printf("mmap() failed: %m\n");
-+		ret = -1;
-+		goto out;
-+	}
-+	printf("mmap passed\n");
-+
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_START);
-+	memset(p, 1, ONE_MEG / 2);
-+	memset((char *)p + ONE_MEG / 2, 0, ONE_MEG / 2);
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_END);
-+
-+	importer_fd = open_vgem();
-+	if (importer_fd < 0) {
-+		ret = importer_fd;
-+		printf("Failed to open vgem\n");
-+		goto out;
-+	}
-+
-+	ret = import_vgem_fd(importer_fd, dmabuf_fd, &handle);
-+	if (ret < 0) {
-+		printf("Failed to import buffer\n");
-+		goto out;
-+	}
-+	printf("import passed\n");
-+
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_START);
-+	memset(p, 0xff, ONE_MEG);
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_END);
-+	printf("syncs passed\n");
-+
-+	close_handle(importer_fd, handle);
-+	ret = 0;
-+
-+out:
-+	if (p)
-+		munmap(p, ONE_MEG);
-+	if (importer_fd >= 0)
-+		close(importer_fd);
-+	if (dmabuf_fd >= 0)
-+		close(dmabuf_fd);
-+	if (heap_fd >= 0)
-+		close(heap_fd);
-+
-+	return ret;
-+}
-+
-+int main(void)
-+{
-+	DIR *d;
-+	struct dirent *dir;
-+	int ret = -1;
-+
-+	d = opendir(DEVPATH);
-+	if (!d) {
-+		printf("No %s directory?\n", DEVPATH);
-+		return -1;
-+	}
-+
-+	while ((dir = readdir(d)) != NULL) {
-+		if (!strncmp(dir->d_name, ".", 2))
-+			continue;
-+		if (!strncmp(dir->d_name, "..", 3))
-+			continue;
-+
-+		ret = do_test(dir->d_name);
-+		if (ret)
-+			break;
-+	}
-+	closedir(d);
-+
-+	return ret;
-+}
+ #endif /* _LINUX_ELF_H */
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index 34c02e4..c377314 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -36,6 +36,7 @@ typedef __s64	Elf64_Sxword;
+ #define PT_LOPROC  0x70000000
+ #define PT_HIPROC  0x7fffffff
+ #define PT_GNU_EH_FRAME		0x6474e550
++#define PT_GNU_PROPERTY		0x6474e553
+ 
+ #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
+ 
 -- 
-2.17.1
+2.1.4
 
