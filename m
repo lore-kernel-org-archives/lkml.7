@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CCBC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72973C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC0521D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DE121D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697139;
-	bh=kHF1T18V0B85FjA/sMNpJQV9yXiVVxa+g33YQBJI1fE=;
+	s=default; t=1570697141;
+	bh=RGbsMYw9+rLEFO5N8Q1T3vut1c+0zUuAmpw9zyAiwcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lKUSEIcgsrI2wILp3lpE0HQqN8RM2tdzyg5iFvFl4hzMsP2jELqeHN1aTjgN+M2Zz
-	 QQomuf4A5U3xYCqBpK0lAmx7Uszg66upL91BQ196Z8adqIzsTHXiHUqIPec5HNHh2o
-	 z4OyoATD/EN0FekO3/oqvdEcaG+8woQ66IP0MFZ0=
+	b=Bn2q6rDy6qkNsP2IC/xtxvOV7jNSYP4hyGmMoQ2NlhpURqHfOC1y65i8/ykhfbNZ2
+	 VMSu8fxecO0dX7f6P330s+29Zc53n7bkNq/R03GHix4buwcYTVobIqXvjSTN8YRFyt
+	 8+6IGLleeM+JwNJJ41ypVPdgBMY7kvM2KoktHMjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389172AbfJJIph (ORCPT
+        id S2388438AbfJJIpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51150 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389158AbfJJIpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:33 -0400
+        id S2387614AbfJJIpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 711A02054F;
-        Thu, 10 Oct 2019 08:45:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20482218AC;
+        Thu, 10 Oct 2019 08:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697133;
-        bh=kHF1T18V0B85FjA/sMNpJQV9yXiVVxa+g33YQBJI1fE=;
+        s=default; t=1570697135;
+        bh=RGbsMYw9+rLEFO5N8Q1T3vut1c+0zUuAmpw9zyAiwcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KogfDiq6aV4rdKwhnKawa6nJRfVjgn6fV02Y2v+bfVE2OWU3N/PoAR/VWDBSPj3k1
-         CdXTnZwPcW55E65HeJWRyVerMT3qb5eOS2dDdmhJGtXNj9F3nMB5eOMdh4cy3qfnoF
-         kYduZUhIjKxdQTUsW64l4ubE/wUm5sZm/3rznveM=
+        b=q0SgKqVO98vP3a/VG8zKQgL8PrUZI5lYxiHkpPoOwvpSkMztle2euKgp9ZCbBD5+u
+         C4iw6nrm42UkhR7e7v77dddH+5rH+lLqo5Oq8h3IVsflg40JrIsxurlL9Yl5Ve+Pc4
+         LGCyJRL35D7hYWG+gONFg/gND8sbXhnOfci7cNMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.19 003/114] s390/topology: avoid firing events before kobjs are created
-Date:   Thu, 10 Oct 2019 10:35:10 +0200
-Message-Id: <20191010083545.766494656@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH 4.19 030/114] tracing: Make sure variable reference alias has correct var_ref_idx
+Date:   Thu, 10 Oct 2019 10:35:37 +0200
+Message-Id: <20191010083559.568035880@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -59,61 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Tom Zanussi <zanussi@kernel.org>
 
-commit f3122a79a1b0a113d3aea748e0ec26f2cb2889de upstream.
+commit 17f8607a1658a8e70415eef67909f990d13017b5 upstream.
 
-arch_update_cpu_topology is first called from:
-kernel_init_freeable->sched_init_smp->sched_init_domains
+Original changelog from Steve Rostedt (except last sentence which
+explains the problem, and the Fixes: tag):
 
-even before cpus has been registered in:
-kernel_init_freeable->do_one_initcall->s390_smp_init
+I performed a three way histogram with the following commands:
 
-Do not trigger kobject_uevent change events until cpu devices are
-actually created. Fixes the following kasan findings:
+echo 'irq_lat u64 lat pid_t pid' > synthetic_events
+echo 'wake_lat u64 lat u64 irqlat pid_t pid' >> synthetic_events
+echo 'hist:keys=common_pid:irqts=common_timestamp.usecs if function == 0xffffffff81200580' > events/timer/hrtimer_start/trigger
+echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$irqts:onmatch(timer.hrtimer_start).irq_lat($lat,pid) if common_flags & 1' > events/sched/sched_waking/trigger
+echo 'hist:keys=pid:wakets=common_timestamp.usecs,irqlat=lat' > events/synthetic/irq_lat/trigger
+echo 'hist:keys=next_pid:lat=common_timestamp.usecs-$wakets,irqlat=$irqlat:onmatch(synthetic.irq_lat).wake_lat($lat,$irqlat,next_pid)' > events/sched/sched_switch/trigger
+echo 1 > events/synthetic/wake_lat/enable
 
-BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb40/0xee0
-Read of size 8 at addr 0000000000000020 by task swapper/0/1
+Basically I wanted to see:
 
-BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb36/0xee0
-Read of size 8 at addr 0000000000000018 by task swapper/0/1
+ hrtimer_start (calling function tick_sched_timer)
 
-CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B
-Hardware name: IBM 3906 M04 704 (LPAR)
-Call Trace:
-([<0000000143c6db7e>] show_stack+0x14e/0x1a8)
- [<0000000145956498>] dump_stack+0x1d0/0x218
- [<000000014429fb4c>] print_address_description+0x64/0x380
- [<000000014429f630>] __kasan_report+0x138/0x168
- [<0000000145960b96>] kobject_uevent_env+0xb36/0xee0
- [<0000000143c7c47c>] arch_update_cpu_topology+0x104/0x108
- [<0000000143df9e22>] sched_init_domains+0x62/0xe8
- [<000000014644c94a>] sched_init_smp+0x3a/0xc0
- [<0000000146433a20>] kernel_init_freeable+0x558/0x958
- [<000000014599002a>] kernel_init+0x22/0x160
- [<00000001459a71d4>] ret_from_fork+0x28/0x30
- [<00000001459a71dc>] kernel_thread_starter+0x0/0x10
+Note:
 
+  # grep tick_sched_timer /proc/kallsyms
+ffffffff81200580 t tick_sched_timer
+
+And save the time of that, and then record sched_waking if it is called
+in interrupt context and with the same pid as the hrtimer_start, it
+will record the latency between that and the waking event.
+
+I then look at when the task that is woken is scheduled in, and record
+the latency between the wakeup and the task running.
+
+At the end, the wake_lat synthetic event will show the wakeup to
+scheduled latency, as well as the irq latency in from hritmer_start to
+the wakeup. The problem is that I found this:
+
+          <idle>-0     [007] d...   190.485261: wake_lat: lat=27 irqlat=190485230 pid=698
+          <idle>-0     [005] d...   190.485283: wake_lat: lat=40 irqlat=190485239 pid=10
+          <idle>-0     [002] d...   190.488327: wake_lat: lat=56 irqlat=190488266 pid=335
+          <idle>-0     [005] d...   190.489330: wake_lat: lat=64 irqlat=190489262 pid=10
+          <idle>-0     [003] d...   190.490312: wake_lat: lat=43 irqlat=190490265 pid=77
+          <idle>-0     [005] d...   190.493322: wake_lat: lat=54 irqlat=190493262 pid=10
+          <idle>-0     [005] d...   190.497305: wake_lat: lat=35 irqlat=190497267 pid=10
+          <idle>-0     [005] d...   190.501319: wake_lat: lat=50 irqlat=190501264 pid=10
+
+The irqlat seemed quite large! Investigating this further, if I had
+enabled the irq_lat synthetic event, I noticed this:
+
+          <idle>-0     [002] d.s.   249.429308: irq_lat: lat=164968 pid=335
+          <idle>-0     [002] d...   249.429369: wake_lat: lat=55 irqlat=249429308 pid=335
+
+Notice that the timestamp of the irq_lat "249.429308" is awfully
+similar to the reported irqlat variable. In fact, all instances were
+like this. It appeared that:
+
+  irqlat=$irqlat
+
+Wasn't assigning the old $irqlat to the new irqlat variable, but
+instead was assigning the $irqts to it.
+
+The issue is that assigning the old $irqlat to the new irqlat variable
+creates a variable reference alias, but the alias creation code
+forgets to make sure the alias uses the same var_ref_idx to access the
+reference.
+
+Link: http://lkml.kernel.org/r/1567375321.5282.12.camel@kernel.org
+
+Cc: Linux Trace Devel <linux-trace-devel@vger.kernel.org>
+Cc: linux-rt-users <linux-rt-users@vger.kernel.org>
 Cc: stable@vger.kernel.org
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 7e8b88a30b085 ("tracing: Add hist trigger support for variable reference aliases")
+Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/topology.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/trace_events_hist.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/s390/kernel/topology.c
-+++ b/arch/s390/kernel/topology.c
-@@ -311,7 +311,8 @@ int arch_update_cpu_topology(void)
- 	on_each_cpu(__arch_update_dedicated_flag, NULL, 0);
- 	for_each_online_cpu(cpu) {
- 		dev = get_cpu_device(cpu);
--		kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-+		if (dev)
-+			kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -2526,6 +2526,8 @@ static struct hist_field *create_alias(s
+ 		return NULL;
  	}
- 	return rc;
+ 
++	alias->var_ref_idx = var_ref->var_ref_idx;
++
+ 	return alias;
  }
+ 
 
 
