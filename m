@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801A2C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A530C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D0821A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0452421A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697103;
-	bh=xwdNqheqcRTQQsny3ZQqe8QpW7olZHVgeXvOo9Dm6CA=;
+	s=default; t=1570697107;
+	bh=HDXKVj0kZnZoD7sKDl4RBMVc8tZMENrl1siljZP0ouI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dBzWhFXNNqfha0+Y2zXBzQT9sRHhQKvOfZ1byFVbhO5N7cv6NeR+ikffbVwM1xyRn
-	 OeaIPHLau9UQkzJ/nEgR0KSJ59GJLi0Cm0MlicKF2hgUt4IDoHU14fnvRNBrk6gsk9
-	 9VgpQdax5PO5R3i9JzzudFI8NGRN22OvcYHlbBNE=
+	b=kl++W2eem0mRGiSqpLtCyxFcMM9JehCoz6uv6XMcB7czrazIuKKgz4xTWOA+20qVh
+	 uK+r6Y/Ndo/QQQPhmbch0/eYJxFEUI9XxaOv+NU/MU7e0xZQSmRGLfKDQkjJQ5Adli
+	 fhsgBMM50mMsK7q4L6JuWjm4qvoruUx3RiTmDfKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389050AbfJJIpB (ORCPT
+        id S2388042AbfJJIpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50454 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389031AbfJJIo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:44:57 -0400
+        id S2388017AbfJJIpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C8321A4A;
-        Thu, 10 Oct 2019 08:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6326F218AC;
+        Thu, 10 Oct 2019 08:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697097;
-        bh=xwdNqheqcRTQQsny3ZQqe8QpW7olZHVgeXvOo9Dm6CA=;
+        s=default; t=1570697102;
+        bh=HDXKVj0kZnZoD7sKDl4RBMVc8tZMENrl1siljZP0ouI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EUzXHc8cG51g2Cr3DDqfghmjemtUJTlGtEF+oBpY2vHZ8WpRsZQ7uJOlATD96fSCF
-         xRDfbLnVgFRTUu2pVnF9CG5KBQjt+1By5FLDTHE6S+2QOlByfITn89ajhMISUA7Dg6
-         LUwOBA1DF2ZoIFzey1iG6MRkS4Uph491TXGThd94=
+        b=0DVzLnTizQymkUhOECflqsd2eIBgUCvhxn4RpXLDTRJFCPSJecAObVNMon4o/f/9L
+         Efvl+TFt1yXfXJn9Rt8nhCHliCKourtRQi3GlOZB5/aqxrAkI/JSHNDzruyK0H+9bu
+         rlvG6X6NkcdF/KCMb+tUirBl8vuLeY2cis7sFRUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 018/114] powerpc/book3s64/mm: Dont do tlbie fixup for some hardware revisions
-Date:   Thu, 10 Oct 2019 10:35:25 +0200
-Message-Id: <20191010083552.455982468@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 4.19 002/114] KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
+Date:   Thu, 10 Oct 2019 10:35:09 +0200
+Message-Id: <20191010083545.461298554@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,81 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Thomas Huth <thuth@redhat.com>
 
-commit 677733e296b5c7a37c47da391fc70a43dc40bd67 upstream.
+commit a13b03bbb4575b350b46090af4dfd30e735aaed1 upstream.
 
-The store ordering vs tlbie issue mentioned in commit
-a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on
-POWER9") is fixed for Nimbus 2.3 and Cumulus 1.3 revisions. We don't
-need to apply the fixup if we are running on them
+If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
+then there is certainly a bug in the calling userspace application.
+We check for wrong access registers, but only if the vCPU was already
+in the access register mode before (i.e. the SIE block has recorded
+it). The check is also buried somewhere deep in the calling chain (in
+the function ar_translation()), so this is somewhat hard to find.
 
-We can only do this on PowerNV. On pseries guest with KVM we still
-don't support redoing the feature fixup after migration. So we should
-be enabling all the workarounds needed, because whe can possibly
-migrate between DD 2.3 and DD 2.2
+It's better to always report an error to the userspace in case this
+field is set wrong, and it's safer in the KVM code if we block wrong
+values here early instead of relying on a check somewhere deep down
+the calling chain, so let's add another check to kvm_s390_guest_mem_op()
+directly.
 
-Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190924035254.24612-1-aneesh.kumar@linux.ibm.com
+We also should check that the "size" is non-zero here (thanks to Janosch
+Frank for the hint!). If we do not check the size, we could call vmalloc()
+with this 0 value, and this will cause a kernel warning.
+
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+Link: https://lkml.kernel.org/r/20190829122517.31042-1-thuth@redhat.com
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/dt_cpu_ftrs.c |   30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ arch/s390/kvm/kvm-s390.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-+++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-@@ -694,9 +694,35 @@ static bool __init cpufeatures_process_f
- 	return true;
- }
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3890,7 +3890,7 @@ static long kvm_s390_guest_mem_op(struct
+ 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
+ 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
  
-+/*
-+ * Handle POWER9 broadcast tlbie invalidation issue using
-+ * cpu feature flag.
-+ */
-+static __init void update_tlbie_feature_flag(unsigned long pvr)
-+{
-+	if (PVR_VER(pvr) == PVR_POWER9) {
-+		/*
-+		 * Set the tlbie feature flag for anything below
-+		 * Nimbus DD 2.3 and Cumulus DD 1.3
-+		 */
-+		if ((pvr & 0xe000) == 0) {
-+			/* Nimbus */
-+			if ((pvr & 0xfff) < 0x203)
-+				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+		} else if ((pvr & 0xc000) == 0) {
-+			/* Cumulus */
-+			if ((pvr & 0xfff) < 0x103)
-+				cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+		} else {
-+			WARN_ONCE(1, "Unknown PVR");
-+			cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
-+		}
-+	}
-+}
-+
- static __init void cpufeatures_cpu_quirks(void)
- {
--	int version = mfspr(SPRN_PVR);
-+	unsigned long version = mfspr(SPRN_PVR);
+-	if (mop->flags & ~supported_flags)
++	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
+ 		return -EINVAL;
  
- 	/*
- 	 * Not all quirks can be derived from the cpufeatures device tree.
-@@ -715,10 +741,10 @@ static __init void cpufeatures_cpu_quirk
- 
- 	if ((version & 0xffff0000) == 0x004e0000) {
- 		cur_cpu_spec->cpu_features &= ~(CPU_FTR_DAWR);
--		cur_cpu_spec->cpu_features |= CPU_FTR_P9_TLBIE_BUG;
- 		cur_cpu_spec->cpu_features |= CPU_FTR_P9_TIDR;
- 	}
- 
-+	update_tlbie_feature_flag(version);
- 	/*
- 	 * PKEY was not in the initial base or feature node
- 	 * specification, but it should become optional in the next
+ 	if (mop->size > MEM_OP_MAX_SIZE)
 
 
