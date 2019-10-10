@@ -5,50 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D63BECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C3FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AE021D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BF421BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697252;
-	bh=rl7ZIeGi2KWZp1Bkg/Y0Ga7FW5CfX8TJo1HQJxkG2+Q=;
+	s=default; t=1570697255;
+	bh=BMf+rEzR1w5ipbPXpmKEKTOY4qdBzIQWERfWjHJQs6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y1ITENEM8EYMU7iiLLIMsEJhXr+Z5xnST6Bh0rtSWmurxjkrphxTG4tD6eKzVbcWH
-	 9AunbwCJopGbTq0lz4yuuYOf3/0PFueHWm1sxK1nFTpP0rQe2o3sc4UNwaZTm0AwaR
-	 /nESFP6iPvRGbe3qdy5dQqz5VIhT7XjzqAUBkV7w=
+	b=m83D3h+SGxSsGF6aMLt3eY0QnU4K4gi+yuF9njXVEiWhxmCowVA2Y42I2KmIxBn5z
+	 oVTa7NC/QxilAp4XGIiUvAlY+k0YdiwYoWf0B+xOk3KBUgApj/QZgpRVAj1JTR4cAt
+	 Bn/ViPGWBed/EhD+GMVT4Aflcqg5SipA48NlXNrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388261AbfJJIrb (ORCPT
+        id S2388826AbfJJIre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53220 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389457AbfJJIrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:22 -0400
+        id S2389467AbfJJIrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8A19218AC;
-        Thu, 10 Oct 2019 08:47:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B235208C3;
+        Thu, 10 Oct 2019 08:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697239;
-        bh=rl7ZIeGi2KWZp1Bkg/Y0Ga7FW5CfX8TJo1HQJxkG2+Q=;
+        s=default; t=1570697244;
+        bh=BMf+rEzR1w5ipbPXpmKEKTOY4qdBzIQWERfWjHJQs6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q43UK2QYNOIqvFIeQWGcqeODcL2yi3yiGezM8jSOPuIMI0rlPK9NtdoXaV+07aHGU
-         p8TcuR0rHvR/zBtzw94ouvUOb20ba78Pw4VPGMFgjj9gH9ov/ZuTk43AI5yL+RITGL
-         uLG8rm5fcth113wsnTy+lp8xAGF6jC9ogSQgJW/A=
+        b=W9/8ps6wYNe9TXjTT+UM5BtzawXYJTD/Jc09vvspA1+Zz+YV2pHMhVehjKmJ1lnBx
+         4Kcda6y5aUlKisB/Lcd29rl+aMe6Fh7XaHOTFpsj1B7wTYue3vOVbHApI8QZ1gE4z2
+         Sz0T9vbufNYbQH+VA1ArsUTSUSvYszEvm+WUAwzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/114] fuse: fix memleak in cuse_channel_open
-Date:   Thu, 10 Oct 2019 10:36:15 +0200
-Message-Id: <20191010083610.960408349@linuxfoundation.org>
+        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kirill Tkhai <tkhai@yandex.ru>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Galbraith <efault@gmx.de>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 070/114] sched/membarrier: Call sync_core only before usermode for same mm
+Date:   Thu, 10 Oct 2019 10:36:17 +0200
+Message-Id: <20191010083611.479840071@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -61,37 +70,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-[ Upstream commit 9ad09b1976c562061636ff1e01bfc3a57aebe56b ]
+[ Upstream commit 2840cf02fae627860156737e83326df354ee4ec6 ]
 
-If cuse_send_init fails, need to fuse_conn_put cc->fc.
+When the prev and next task's mm change, switch_mm() provides the core
+serializing guarantees before returning to usermode. The only case
+where an explicit core serialization is needed is when the scheduler
+keeps the same mm for prev and next.
 
-cuse_channel_open->fuse_conn_init->refcount_set(&fc->count, 1)
-                 ->fuse_dev_alloc->fuse_conn_get
-                 ->fuse_dev_free->fuse_conn_put
-
-Fixes: cc080e9e9be1 ("fuse: introduce per-instance fuse_dev structure")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Suggested-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Chris Metcalf <cmetcalf@ezchip.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Kirill Tkhai <tkhai@yandex.ru>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190919173705.2181-4-mathieu.desnoyers@efficios.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/cuse.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/sched/mm.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
-index 8f68181256c00..f057c213c453a 100644
---- a/fs/fuse/cuse.c
-+++ b/fs/fuse/cuse.c
-@@ -518,6 +518,7 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
- 	rc = cuse_send_init(cc);
- 	if (rc) {
- 		fuse_dev_free(fud);
-+		fuse_conn_put(&cc->fc);
- 		return rc;
- 	}
- 	file->private_data = fud;
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 0d10b7ce0da74..e9d4e389aed93 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -330,6 +330,8 @@ enum {
+ 
+ static inline void membarrier_mm_sync_core_before_usermode(struct mm_struct *mm)
+ {
++	if (current->mm != mm)
++		return;
+ 	if (likely(!(atomic_read(&mm->membarrier_state) &
+ 		     MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE)))
+ 		return;
 -- 
 2.20.1
 
