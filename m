@@ -2,103 +2,83 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7AFC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F343DC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D81142067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570712338;
-	bh=1dj2wrbcSptv7rwRFOSmaeJnL3cw9XYOzs3YE9J3SXg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNClxYiE/zCFLe24VK+Jm8XIuUx3WXZT8BEpSyFtZ2YrjBv1E3VdPJ1bYorwJK9c+
-	 ++yLuVZlIbLemEurNjjNaddQk3CH1A/V+fFXD36aAdvI/Ox0qdoOFB9IJ9ZwvNfr2w
-	 CuI3L+Qx33Lw7U1l5qSDkMeriZJVNgHuBNHbTz+M=
+	by mail.kernel.org (Postfix) with ESMTP id D594C20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388040AbfJJM65 (ORCPT
+        id S2387742AbfJJNBi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:58:57 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43445 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbfJJM6u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:58:50 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n14so6072783ljj.10;
-        Thu, 10 Oct 2019 05:58:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sFfJKZrsZ65QHdG/a6Vjdwobjv+Fk7Z1ecZ7AQainIo=;
-        b=PFBusBVRzgPljPc+cHreTsNfSAxkcbWsYhHyRB0TI9kSHuNA+J9TFgSkZvPBF7bEhq
-         AxdKaIfzITQXUCRgNV5BcUynpqGJsdcDA6VqmlfjcSSMbCw/QvO2KtGu8tKpvAB8nkxu
-         00BMrsAUw2jOA/fAmS023KaVFGTVjj31UtjciWx4l5quuEeTylhTY+J1O7j/0gRnw6e7
-         qT+zb6UYnMjoYA7Z1ZBBq6vZOjn76pgtqe9jAUcQNZcBYMR5R288HJcI0u9RPgXvLoP9
-         iEIYCJtQ10HGosng4lOrQnzpwUTNsfggg6tRCL09mmz+vFQayTGws8QxC2gf5U64tRFA
-         urSw==
-X-Gm-Message-State: APjAAAX161qTIt014B/mIdHiMTnW3FEOrpDcGS/oUjjuKYnkXt3OpA1d
-        SuVk9KxvlB9ejMzhh+FGqzs=
-X-Google-Smtp-Source: APXvYqzrMxpqqH/x0hvuWkRUifQkU26w8tdkyxPlpaMcnr1jxd8rdd6qQGWg12N0vXP4j9dc3lkBXQ==
-X-Received: by 2002:a2e:9a43:: with SMTP id k3mr6000549ljj.70.1570712327840;
-        Thu, 10 Oct 2019 05:58:47 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id c26sm1358291ljj.45.2019.10.10.05.58.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 05:58:46 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@xi.terra>)
-        id 1iIY1x-00072r-HT; Thu, 10 Oct 2019 14:58:57 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Juergen Stuber <starblue@users.sourceforge.net>,
-        Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH 1/2] USB: ldusb: fix memleak on disconnect
-Date:   Thu, 10 Oct 2019 14:58:34 +0200
-Message-Id: <20191010125835.27031-2-johan@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010125835.27031-1-johan@kernel.org>
-References: <20191010125835.27031-1-johan@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 10 Oct 2019 09:01:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57892 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728274AbfJJNBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 09:01:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8B7CEAED6;
+        Thu, 10 Oct 2019 13:01:36 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 15:01:36 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: add support for SGI Octane (IP30)
+Message-Id: <20191010150136.a30e47b37f8c8aed9e863a5e@suse.de>
+In-Reply-To: <20191009184311.GA20261@infradead.org>
+References: <20191009155928.3047-1-tbogendoerfer@suse.de>
+        <20191009184311.GA20261@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If disconnect() races with release() after a process has been
-interrupted, release() could end up returning early and the driver would
-fail to free its driver data.
+On Wed, 9 Oct 2019 11:43:11 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/usb/misc/ldusb.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+> > +++ b/arch/mips/sgi-ip30/ip30-pci.c
+> > @@ -0,0 +1,19 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * ip30-pci.c: misc PCI related helper code for IP30 architecture
+> > + */
+> > +
+> > +#include <asm/pci/bridge.h>
+> > +
+> > +dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+> > +{
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +	struct bridge_controller *bc = BRIDGE_CONTROLLER(pdev->bus);
+> > +
+> > +	return bc->baddr + paddr;
+> > +}
+> > +
+> > +phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dma_addr)
+> > +{
+> > +	return dma_addr & ~(0xffUL << 56);
+> > +}
+> 
+> This file is duplicated from ip27.  I think we should aim to share
+> it given the common hardware even if it is mostly trivial.
 
-diff --git a/drivers/usb/misc/ldusb.c b/drivers/usb/misc/ldusb.c
-index f3108d85e768..147c90c2a4e5 100644
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -380,10 +380,7 @@ static int ld_usb_release(struct inode *inode, struct file *file)
- 		goto exit;
- 	}
- 
--	if (mutex_lock_interruptible(&dev->mutex)) {
--		retval = -ERESTARTSYS;
--		goto exit;
--	}
-+	mutex_lock(&dev->mutex);
- 
- 	if (dev->open_count != 1) {
- 		retval = -ENODEV;
+ok, as far as I can anticipate IP35 verion of this functions will be
+the same as well. So I'll move both into pci-xtalk-bridge.c in the
+next version of the patch.
+
+Thomas.
+
 -- 
-2.23.0
-
+SUSE Software Solutions Germany GmbH
+HRB 247165 (AG München)
+Geschäftsführer: Felix Imendörffer
