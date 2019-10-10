@@ -2,111 +2,179 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64524C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E139C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4436120659
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33E1214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="io5NZfnX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfJJSSX (ORCPT
+        id S1726770AbfJJSXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:18:23 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:44704 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfJJSSX (ORCPT
+        Thu, 10 Oct 2019 14:23:54 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39596 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfJJSXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:18:23 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iId0p-0002lF-Lv; Thu, 10 Oct 2019 20:18:07 +0200
-Message-ID: <eb6cb68ff77eb4f2c680809e11142150f0d83007.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next v7 09/17] ethtool: generic handlers for GET
- requests
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
-Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 10 Oct 2019 20:18:05 +0200
-In-Reply-To: <20191010180401.GD22163@unicorn.suse.cz>
-References: <cover.1570654310.git.mkubecek@suse.cz>
-         <b000e461e348ba1a0af30f2e8493618bce11ec12.1570654310.git.mkubecek@suse.cz>
-         <20191010135639.GJ2223@nanopsycho> <20191010180401.GD22163@unicorn.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 10 Oct 2019 14:23:54 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v17so7761962wml.4;
+        Thu, 10 Oct 2019 11:23:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cDdKG7BuYNC0klxFn+6EUkgCJfJh5dVTOm1e7l3a8X0=;
+        b=io5NZfnXNdyoKtTWghcI85hs4yVXyAGO1vHhUB2FceE2MUrARbpAxq+Cg3u6bM4ISL
+         NgUSOdVcQpDyARPoHhC6ycU6HiCuJxAJDjkgEnYpme2m1Cbac7GURGxhQP7bzbUbCK53
+         0luRDQPjMcAKzv32H++RmjAZ2sV+rzNsrchQa75aHDbRFKC0a5RpUlpwHoZp/Ndj2dAn
+         iSeZVz1WKfV6mBVQ2Ig5xMb/dX2nr1kmyOfOjYhcv1urZ40MQaJeNBm7d1rXHeEg4Jq5
+         xyMwwAN2UVsJThtcILRfemRsWVirGWyu9+PW09MIuuo0hzrQQyrJWaWU/tPrioSeaf7r
+         JJgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cDdKG7BuYNC0klxFn+6EUkgCJfJh5dVTOm1e7l3a8X0=;
+        b=R4fJQnaSAyIqkBN4nf9/n036WDfr0JdIKfS9mE6b+ZnDIEq1f1mFGgDrIl/uBVp8P4
+         LTY+C60czMQ1NTiOO1goRVFaW8LON0NayHqUh9P1fomy9uXT7Il84b3MWJbPkb7Iwj+g
+         ruXHHVNK6cCmPngWP69zkP9TZALixeziy4+NCar/6i/SziCZN7BAsKlwo2oSOMiqb5qB
+         mWTKo+oqMIRzlqUADGqpoffpICL/cLCeTC4NSLah11Ghz4aBhON3UOgABMkZAfhIZMXq
+         mQ7mnPuogLEbblkg63xMfMbC+a9z/2picE0N97H4kgj/a8Barfb5BWFv8jZ4t03VsPFI
+         eQjQ==
+X-Gm-Message-State: APjAAAXBouy3ZFoaUJtKWJIfjv4g/6k4PQJbKtlf5RGf62pomqLQTaIn
+        b2gZx194v3WqtE/7URa444s=
+X-Google-Smtp-Source: APXvYqzUch2MFYwpJZP8PCs0aVC6hg6H6/bb/JQCgRe9bZhljWJCK3/gs9E0yK41y1NwLVfW7XXCgg==
+X-Received: by 2002:a05:600c:490:: with SMTP id d16mr8707908wme.131.1570731831084;
+        Thu, 10 Oct 2019 11:23:51 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id y186sm11367664wmb.41.2019.10.10.11.23.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 11:23:50 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     catalin.marinas@arm.com, davem@davemloft.net,
+        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, will@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v3 00/11] crypto: add sun8i-ce driver for Allwinner crypto engine
+Date:   Thu, 10 Oct 2019 20:23:17 +0200
+Message-Id: <20191010182328.15826-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-10 at 20:04 +0200, Michal Kubecek wrote:
-> 
-> The only thing I don't like about the genetlink infrastructure is the
-> design decision that policy and corresponding maxattr is an attribute of
-> the family rather than a command. This forces anyone who wants to use it
-> to essentially have one common message format for all commands and if
-> that is not possible, to do what you suggest above, hide the actual
-> request into a nest.
-> 
-> Whether you use one common attribute type for "command specific nest" or
-> different attribute for each request type, you do not actually make
-> things simpler, you just move the complexity one level lower. You will
-> still have to do your own (per request) parsing of the actual request,
-> the only difference is that you will do it in a different place and use
-> nla_parse_nested() rather than nlmsg_parse().
-> 
-> Rather than bending the message layout to fit into the limitations of
-> unified genetlink parsing, I prefer to keep the logical message
-> structure and do the parsing on my own.
+Hello
 
-I can't really agree with this.
+This patch serie adds support for the Allwinner crypto engine.
+The Crypto Engine is the third generation of Allwinner cryptogaphic offloader.
+The first generation is the Security System already handled by the
+sun4i-ss driver.
+The second is named also Security System and is present on A80 and A83T
+SoCs, originaly this driver supported it also, but supporting both IP bringing
+too much complexity and another driver (sun8i-ss) will came for it.
 
-Having a common format is way more accessible. Generic netlink (now)
-even exposes the policy (if set) and all of its nested sub-policies to
-userspace (if you use NLA_POLICY_NESTED), so it's very easy to discover
-what's in the policy and how it'll be interpreted.
+For the moment, the driver support only DES3/AES in ECB/CBC mode.
+Patchs for CTR/CTS/XTS, RSA and RNGs will came later.
 
-This makes it really easy to have tools for introspection, or have
-common debugging tools that just understand the message format based on
-the kernel's policy.
+This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
+and tested on:
+sun50i-a64-bananapi-m64
+sun50i-a64-pine64-plus
+sun50i-h5-libretech-all-h3-cc
+sun50i-h6-pine-h64
+sun8i-h2-plus-libretech-all-h3-cc
+sun8i-h2-plus-orangepi-r1
+sun8i-h2-plus-orangepi-zero
+sun8i-h3-libretech-all-h3-cc
+sun8i-h3-orangepi-pc
+sun8i-r40-bananapi-m2-ultra
 
-It's also much easier this way to not mess up things like "attribute # 7
-always means a netdev index". You solved that by nesting the common
-bits, though the part about ETHTOOL_A_HEADER_RFLAGS actually seems ...
-wrong? Shouldn't that have been somewhere else? Or does that mean each
-and every request_policy has to have this at the same index? That sounds
-error prone ...
+Regards
 
-But you even have *two* policies for each kind of message, one for the
-content and one for the header...?
+Changes since v2:
+- changed additionalproperties
+- splited fallbacks functions out of sun8i_ce_cipher()
+- changed variant "model" to "has_t_dlen_in_bytes"
+- splited sun8i_ce_register_algs/sun8i_ce_get_clks out of sun8i_ce_probe()
 
+Changes since v1:
+- Add sun4i-ss to allwinner directory
+- Cleaned variant structure
+- Renamed clock name from ahb to bus (and mbus to ram)
+- Fixed DT bindings problem reported by mripard
+- Cleaned unneeded status = ""  in R40 DT
+- Removed old unnecessary interrupt_names in A64 DT
+- Added arm64 defconfig
+- Added support for PM functions
+- Splitted probe functions
+- Reworked clock settings
+- made reset mandatory
 
-It almost seems though that your argument isn't so much on the actual
-hierarchy/nesting structure of the message itself, but the easy of
-parsing it?
+Corentin Labbe (11):
+  crypto: Add allwinner subdirectory
+  crypto: Add Allwinner sun8i-ce Crypto Engine
+  dt-bindings: crypto: Add DT bindings documentation for sun8i-ce Crypto
+    Engine
+  ARM: dts: sun8i: R40: add crypto engine node
+  ARM: dts: sun8i: H3: Add Crypto Engine node
+  ARM64: dts: allwinner: sun50i: Add Crypto Engine node on A64
+  ARM64: dts: allwinner: sun50i: Add crypto engine node on H5
+  ARM64: dts: allwinner: sun50i: Add Crypto Engine node on H6
+  sunxi_defconfig: add new Allwinner crypto options
+  arm64: defconfig: add new Allwinner crypto options
+  crypto: sun4i-ss: Move to Allwinner directory
 
-I have thought previous that it might make sense to create a
-hierarchical representation of the message, with the nested TBs pre-
-parsed too in generic netlink, so you wouldn't just have a common
-attrbuf but (optionally) allocate nested attrbufs for those nested
-attributes that are present, and give a way of accessing those.
+ .../bindings/crypto/allwinner,sun8i-ce.yaml   |  92 +++
+ MAINTAINERS                                   |   4 +-
+ arch/arm/boot/dts/sun8i-h3.dtsi               |  10 +
+ arch/arm/boot/dts/sun8i-r40.dtsi              |  10 +
+ arch/arm/configs/sunxi_defconfig              |   2 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  10 +
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  10 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+ arch/arm64/configs/defconfig                  |   2 +
+ drivers/crypto/Kconfig                        |  28 +-
+ drivers/crypto/Makefile                       |   2 +-
+ drivers/crypto/allwinner/Kconfig              |  60 ++
+ drivers/crypto/allwinner/Makefile             |   2 +
+ .../{sunxi-ss => allwinner/sun4i-ss}/Makefile |   0
+ .../sun4i-ss}/sun4i-ss-cipher.c               |   0
+ .../sun4i-ss}/sun4i-ss-core.c                 |   0
+ .../sun4i-ss}/sun4i-ss-hash.c                 |   0
+ .../sun4i-ss}/sun4i-ss-prng.c                 |   0
+ .../sun4i-ss}/sun4i-ss.h                      |   0
+ drivers/crypto/allwinner/sun8i-ce/Makefile    |   2 +
+ .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 434 +++++++++++
+ .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 677 ++++++++++++++++++
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  | 254 +++++++
+ 23 files changed, 1580 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+ create mode 100644 drivers/crypto/allwinner/Kconfig
+ create mode 100644 drivers/crypto/allwinner/Makefile
+ rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/Makefile (100%)
+ rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss-cipher.c (100%)
+ rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss-core.c (100%)
+ rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss-hash.c (100%)
+ rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss-prng.c (100%)
+ rename drivers/crypto/{sunxi-ss => allwinner/sun4i-ss}/sun4i-ss.h (100%)
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/Makefile
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
 
-
-I really do think that a single policy that's exposed for introspection
-and links its nested sub-policies for the different sub-commands (which
-are then also exposed to introspection) is much superior to having it
-all just driven by the code like this.
-
-johannes
+-- 
+2.21.0
 
