@@ -2,64 +2,103 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55713C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 11:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6286FECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 11:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34935206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 11:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE24206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 11:08:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="EFItdW2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733022AbfJJLHk (ORCPT
+        id S1733056AbfJJLIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 07:07:40 -0400
-Received: from verein.lst.de ([213.95.11.211]:57595 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727727AbfJJLHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 07:07:39 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BF6F768C65; Thu, 10 Oct 2019 13:07:35 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 13:07:35 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH v9 08/12] nvmet-tcp: don't check data_len in
- nvmet_tcp_map_data()
-Message-ID: <20191010110735.GA28392@lst.de>
-References: <20191009192530.13079-1-logang@deltatee.com> <20191009192530.13079-10-logang@deltatee.com>
+        Thu, 10 Oct 2019 07:08:21 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:47775 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfJJLIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 07:08:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1570705699; x=1602241699;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=V2ydo28Lc6c9cItVS+fkrIUwgFv/HEZ1xtrOF0Mb1ZI=;
+  b=EFItdW2Ru5ZSIZ6EeK8LtEyyS/dzTu4Mvo9BmjjmW3dqnv7fszw61Ap0
+   /HNsY+0Eq7Pd78vCYkPv2DZ5/2JEUImxxAFNVUKYzLmpbr8FehITonUcG
+   55EmPQctJYgyKxcereFqOJuQ3n7WwMOtApKJhcHDK5mMLhix/Cglt7T8e
+   s=;
+X-IronPort-AV: E=Sophos;i="5.67,279,1566864000"; 
+   d="scan'208";a="427547040"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 10 Oct 2019 11:08:16 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id A1864A2412;
+        Thu, 10 Oct 2019 11:08:15 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 10 Oct 2019 11:08:15 +0000
+Received: from [10.125.238.52] (10.43.161.16) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 10 Oct
+ 2019 11:08:06 +0000
+Subject: Re: [PATCH v5 1/2] dt-bindings: soc: al-pos: Amazon's Annapurna Labs
+ POS
+To:     Rob Herring <robh@kernel.org>
+CC:     <maz@kernel.org>, <mark.rutland@arm.com>, <arnd@arndb.de>,
+        <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <paulmck@linux.ibm.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
+References: <1570452435-8505-1-git-send-email-talel@amazon.com>
+ <1570452435-8505-2-git-send-email-talel@amazon.com>
+ <20191009232927.GA23987@bogus>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <5c3d9e1b-0549-0609-4b4a-5edc312a3873@amazon.com>
+Date:   Thu, 10 Oct 2019 14:08:00 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009192530.13079-10-logang@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20191009232927.GA23987@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.161.16]
+X-ClientProxiedBy: EX13d09UWA004.ant.amazon.com (10.43.160.158) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 01:25:26PM -0600, Logan Gunthorpe wrote:
-> With passthru, the data_len is no longer guaranteed to be set
-> for all requests. Therefore, we should not check for it to be
-> non-zero. Instead check if the SGL length is zero and map
-> when appropriate.
-> 
-> None of the other transports check data_len which is verified
-> in core code.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Thanks for the review
 
-I think the issue here is deeper.  Yes, this patch is correct, but
-nvmet-tcp has another use of req.data_len in
-nvmet_tcp_handle_req_failure, which looks completely bogus.  Please
-try to audit that as well and send out fixes to the list separately
-from this series, as both look like potentially serious bugs.
+On 10/10/2019 2:29 AM, Rob Herring wrote:
+> On Mon, Oct 07, 2019 at 03:47:14PM +0300, Talel Shenhar wrote:
+>> Document Amazon's Annapurna Labs POS SoC binding.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> ---
+>>   .../bindings/edac/amazon,al-pos-edac.yaml          | 40 ++++++++++++++++++++++
+>>   1 file changed, 40 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-pos-edac.yaml
+> Please fix errors with 'make dt_binding_check' and resubmit.
+>
+> Error: Documentation/devicetree/bindings/edac/amazon,al-pos-edac.example.dts:21.28-29 syntax error
+> FATAL ERROR: Unable to parse input tree
+>
+> Hint: You need an include.
+
+
+Shall add to v6.
+
+By the way, I was not able to see this error by running 'make 
+dt_binding_check', but looking in to 'make dtbs_check' I was.
+
