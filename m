@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A530C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E72C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0452421A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2992190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697107;
-	bh=HDXKVj0kZnZoD7sKDl4RBMVc8tZMENrl1siljZP0ouI=;
+	s=default; t=1570697110;
+	bh=nVfH0Y+P0S0auPKi3sefQmgsK6Oeq7PNhJqG1QzuM5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kl++W2eem0mRGiSqpLtCyxFcMM9JehCoz6uv6XMcB7czrazIuKKgz4xTWOA+20qVh
-	 uK+r6Y/Ndo/QQQPhmbch0/eYJxFEUI9XxaOv+NU/MU7e0xZQSmRGLfKDQkjJQ5Adli
-	 fhsgBMM50mMsK7q4L6JuWjm4qvoruUx3RiTmDfKw=
+	b=2mrXvIlo591BbSX5WA//J0S6KGsAYWG7yFU9jfm9nAszGCkc+lMN5cbJs+4TT9zEV
+	 bVQ7DH512nBqiDDscxoHpRAR8iKVqQh6T68R9dbypyks2NelQzWOF/9oVkFLqSpqNA
+	 SFDPTRmm1UBwm5ojpgUClUzwCPo1wtZW+OR0YD1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388042AbfJJIpF (ORCPT
+        id S2389069AbfJJIpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50578 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388017AbfJJIpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:03 -0400
+        id S2388345AbfJJIpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6326F218AC;
-        Thu, 10 Oct 2019 08:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C03F521929;
+        Thu, 10 Oct 2019 08:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697102;
-        bh=HDXKVj0kZnZoD7sKDl4RBMVc8tZMENrl1siljZP0ouI=;
+        s=default; t=1570697100;
+        bh=nVfH0Y+P0S0auPKi3sefQmgsK6Oeq7PNhJqG1QzuM5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0DVzLnTizQymkUhOECflqsd2eIBgUCvhxn4RpXLDTRJFCPSJecAObVNMon4o/f/9L
-         Efvl+TFt1yXfXJn9Rt8nhCHliCKourtRQi3GlOZB5/aqxrAkI/JSHNDzruyK0H+9bu
-         rlvG6X6NkcdF/KCMb+tUirBl8vuLeY2cis7sFRUc=
+        b=SBpkl6diVaw+4HzysQYXHB8ibLd9DfxM93O++nYBs8HDFPU893PMOvPl0jTaGcse6
+         PQxH53CY+YFuXMnhXYDe57u4IFdbDML6a05E3gcMtLP7FO0gWRA4ctAChi0OHSly1o
+         11aeFmh8Z9l15mJ9VpREnULlXuRuIobPDDe0CQWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4.19 002/114] KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
-Date:   Thu, 10 Oct 2019 10:35:09 +0200
-Message-Id: <20191010083545.461298554@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.19 019/114] can: mcp251x: mcp251x_hw_reset(): allow more time after a reset
+Date:   Thu, 10 Oct 2019 10:35:26 +0200
+Message-Id: <20191010083553.031818149@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -62,50 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Huth <thuth@redhat.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-commit a13b03bbb4575b350b46090af4dfd30e735aaed1 upstream.
+commit d84ea2123f8d27144e3f4d58cd88c9c6ddc799de upstream.
 
-If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
-then there is certainly a bug in the calling userspace application.
-We check for wrong access registers, but only if the vCPU was already
-in the access register mode before (i.e. the SIE block has recorded
-it). The check is also buried somewhere deep in the calling chain (in
-the function ar_translation()), so this is somewhat hard to find.
+Some boards take longer than 5ms to power up after a reset, so allow
+some retries attempts before giving up.
 
-It's better to always report an error to the userspace in case this
-field is set wrong, and it's safer in the KVM code if we block wrong
-values here early instead of relying on a check somewhere deep down
-the calling chain, so let's add another check to kvm_s390_guest_mem_op()
-directly.
-
-We also should check that the "size" is non-zero here (thanks to Janosch
-Frank for the hint!). If we do not check the size, we could call vmalloc()
-with this 0 value, and this will cause a kernel warning.
-
-Signed-off-by: Thomas Huth <thuth@redhat.com>
-Link: https://lkml.kernel.org/r/20190829122517.31042-1-thuth@redhat.com
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: ff06d611a31c ("can: mcp251x: Improve mcp251x_hw_reset()")
+Cc: linux-stable <stable@vger.kernel.org>
+Tested-by: Sean Nyekjaer <sean@geanix.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/kvm-s390.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/can/spi/mcp251x.c |   19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3890,7 +3890,7 @@ static long kvm_s390_guest_mem_op(struct
- 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
- 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
+--- a/drivers/net/can/spi/mcp251x.c
++++ b/drivers/net/can/spi/mcp251x.c
+@@ -626,7 +626,7 @@ static int mcp251x_setup(struct net_devi
+ static int mcp251x_hw_reset(struct spi_device *spi)
+ {
+ 	struct mcp251x_priv *priv = spi_get_drvdata(spi);
+-	u8 reg;
++	unsigned long timeout;
+ 	int ret;
  
--	if (mop->flags & ~supported_flags)
-+	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
- 		return -EINVAL;
+ 	/* Wait for oscillator startup timer after power up */
+@@ -640,10 +640,19 @@ static int mcp251x_hw_reset(struct spi_d
+ 	/* Wait for oscillator startup timer after reset */
+ 	mdelay(MCP251X_OST_DELAY_MS);
  
- 	if (mop->size > MEM_OP_MAX_SIZE)
+-	reg = mcp251x_read_reg(spi, CANSTAT);
+-	if ((reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF)
+-		return -ENODEV;
+-
++	/* Wait for reset to finish */
++	timeout = jiffies + HZ;
++	while ((mcp251x_read_reg(spi, CANSTAT) & CANCTRL_REQOP_MASK) !=
++	       CANCTRL_REQOP_CONF) {
++		usleep_range(MCP251X_OST_DELAY_MS * 1000,
++			     MCP251X_OST_DELAY_MS * 1000 * 2);
++
++		if (time_after(jiffies, timeout)) {
++			dev_err(&spi->dev,
++				"MCP251x didn't enter in conf mode after reset\n");
++			return -EBUSY;
++		}
++	}
+ 	return 0;
+ }
+ 
 
 
