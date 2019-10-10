@@ -2,166 +2,231 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36019ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B43EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0468120640
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:39:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="dNzU6hrj"
+	by mail.kernel.org (Postfix) with ESMTP id 6360120640
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfJJKj6 (ORCPT
+        id S1732688AbfJJKkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:39:58 -0400
-Received: from mail-he1eur04hn2042.outbound.protection.outlook.com ([52.101.137.42]:15818
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726201AbfJJKj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 06:40:01 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44364 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726524AbfJJKj5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Oct 2019 06:39:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hBtPKlnWTVUPK177pYFOm6gjmGqzw8ufbZt+LInMYycWzeYdX6HQtI5ZrOACS6dg+nhpbfxRmeYha8M+VEWCk6eLIBvbGoXA8WLHIqWhu7vCdyCcuYHOpxTKy2GtSX/Gmp5X/l63OVfIoj1CoVmYkd+MJC0+eUqzAQXnjUlVwoTOhJd5gAth5cJOleSs+lSiVuMrRzV9dwLhRo3gzFnQRChCnUMRFkaJN+XdvC3XwChGn5rx5drai5MpNR2ZwwGO5iuSaJBRotk1qa0RF/F6WjiwH4W9rXnUAVilGpBNxkSuG9IQyFj9UB2r8TndQayxz5szhRbp0OncdWJY/ks50Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B6eBVNXImVRJ+Zn4ZBwLcdGsAa2x61fQwWnkjI78fng=;
- b=dD0DHVloyGqwpZORVeJJIXgqkydU1MEueNs7ffFzCkNDkzIDLkseL6uNOv9ADVPhjus0VVaFZ958Ql37j7+wffmdLiNVIBbJpHLO8Mlme815wqNTEFPkCSUWF0krm8iusL3lYfb11umDzdjhh7HpZPN/0mCLfn/fuGnno61CJ5h65ghh25uv//pX9N3WRpQZkKgHxLsd3prPkbSHZYX+RtcgiQ1yIE8cJmzLsWPW+wdKIW7KEmx6oaQNxbgF8gL37AmlTSJ2sXrZ+Wq8VjQO1N6MqmD7Mwek/o6oxSxvlkzs//yDQYYL0ajcbxlUvitSVgkeU/BmNXVt0FAva17Z3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B6eBVNXImVRJ+Zn4ZBwLcdGsAa2x61fQwWnkjI78fng=;
- b=dNzU6hrjPTJp7FadkEiADpDpWub5lY7VSZJj0QUCWMFRcK+0dzQO7bCQfMDIMvMbJ0ugPZdafNKMI+phC0+kU8EU+LrjSRLAW73pItuPiVRHaoDIf/C4NXTV6OiGKR2qYnGMcb3x9x8BlgnVTH9IIcSywOQNKx6aiOWFpO8asDo=
-Received: from AM0PR08MB5537.eurprd08.prod.outlook.com (20.179.36.87) by
- AM0PR08MB3588.eurprd08.prod.outlook.com (20.177.43.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Thu, 10 Oct 2019 10:39:43 +0000
-Received: from AM0PR08MB5537.eurprd08.prod.outlook.com
- ([fe80::a8ea:5223:db78:dd3]) by AM0PR08MB5537.eurprd08.prod.outlook.com
- ([fe80::a8ea:5223:db78:dd3%7]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
- 10:39:43 +0000
-From:   Roman Kagan <rkagan@virtuozzo.com>
-To:     Suleiman Souhlal <suleiman@google.com>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "ssouhlal@freebsd.org" <ssouhlal@freebsd.org>,
-        "tfiga@chromium.org" <tfiga@chromium.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>
-Subject: Re: [RFC v2 0/2] kvm: Use host timekeeping in guest.
-Thread-Topic: [RFC v2 0/2] kvm: Use host timekeeping in guest.
-Thread-Index: AQHVfz3XFkTdoUspUUGNpMNFnoCXM6dTr42A
-Date:   Thu, 10 Oct 2019 10:39:42 +0000
-Message-ID: <20191010103939.GA12088@rkaganb.sw.ru>
-References: <20191010073055.183635-1-suleiman@google.com>
-In-Reply-To: <20191010073055.183635-1-suleiman@google.com>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.12.1 (2019-06-15)
-mail-followup-to: Roman Kagan <rkagan@virtuozzo.com>,   Suleiman Souhlal
- <suleiman@google.com>, pbonzini@redhat.com,    rkrcmar@redhat.com,
- tglx@linutronix.de, john.stultz@linaro.org,    sboyd@kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,     ssouhlal@freebsd.org,
- tfiga@chromium.org, vkuznets@redhat.com
-x-originating-ip: [185.231.240.5]
-x-clientproxiedby: HE1PR02CA0089.eurprd02.prod.outlook.com
- (2603:10a6:7:29::18) To AM0PR08MB5537.eurprd08.prod.outlook.com
- (2603:10a6:208:148::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=rkagan@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bc42a1a9-cec7-4eb4-8343-08d74d6e290e
-x-ms-traffictypediagnostic: AM0PR08MB3588:|AM0PR08MB3588:|AM0PR08MB3588:
-x-microsoft-antispam-prvs: <AM0PR08MB35887AAA3B1EDE7C904996C8C9940@AM0PR08MB3588.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 018632C080
-x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(39850400004)(136003)(346002)(376002)(396003)(366004)(199004)(189003)(14454004)(7736002)(71190400001)(6116002)(3846002)(6512007)(9686003)(305945005)(71200400001)(4326008)(1076003)(478600001)(7416002)(256004)(8936002)(8676002)(54906003)(316002)(58126008)(2906002)(81156014)(14444005)(81166006)(6916009)(33656002)(446003)(11346002)(76176011)(26005)(52116002)(86362001)(186003)(102836004)(25786009)(66066001)(476003)(386003)(6506007)(99286004)(486006)(6436002)(66446008)(64756008)(66556008)(66476007)(66946007)(229853002)(5660300002)(36756003)(6246003)(6486002)(30126002);DIR:OUT;SFP:1501;SCL:5;SRVR:AM0PR08MB3588;H:AM0PR08MB5537.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-transport-forked: True
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Nrjblv7FVESy1nM0szf/Mz+f/Fa0htb7VW0DcbSyTlrASSE8G2g4kA6p1bTYNbx40D4u/9DBbMraOarfTfX7IYpjEdQUPr2/A/KvWRHZj7k5BhpFVqXlPgre2/0ghvrpzM1IEbirLSZYEEKdMrTwsuMVadCZzPTHOkw7IP/j/f7l8daTwr/MWfU46W5IhiGup026CRJMrhtv3UkF+XRtG+b15tH0rldoqW5TluDQclXEXEuwxreDxm/qn9qBB6sBHncCoVRPNhcAgOXU53Ek/tN0zR3OZUvr8DzknvoLddMD8R8ZSvP+0AWB905DRff9bXMHGcw/ACxisnd8sz6dVaLj4srXGN+7ErZxWKEhudz0WgEtYEZZxgdjkLuA/P4P55uWYOVpMnGaTi7dUzq7hP+0vMEcm96FUTlGMQJ79PnxHz0MiOG9RKCGGXfY68oYKKuXtcq8aW+TfndEFlVbGZhvCUd9rSMYT6s/Kl8xyldpwcpVL0p44c3l0Dp5wyKF
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A759E52CEAD51B4D92FA891FBABF161B@eurprd08.prod.outlook.com>
+Received: from dread.disaster.area (pa49-195-199-207.pa.nsw.optusnet.com.au [49.195.199.207])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 8EAC7363939;
+        Thu, 10 Oct 2019 21:39:50 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iIVrJ-0002Pu-Fz; Thu, 10 Oct 2019 21:39:49 +1100
+Date:   Thu, 10 Oct 2019 21:39:49 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-mm@kvack.org, Jeff Layton <jlayton@kernel.org>,
+        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: Lease semantic proposal
+Message-ID: <20191010103949.GJ16973@dread.disaster.area>
+References: <20190923190853.GA3781@iweiny-DESK2.sc.intel.com>
+ <20190923222620.GC16973@dread.disaster.area>
+ <20190925234602.GB12748@iweiny-DESK2.sc.intel.com>
+ <20190930084233.GO16973@dread.disaster.area>
+ <20191001210156.GB5500@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc42a1a9-cec7-4eb4-8343-08d74d6e290e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 10:39:42.8311
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zr6LULSiXO5e7tNpsAJlbR5LJ5mWMD9JJCOtIURDmw0H7uJVHZhBR5UtMp76FIpcHbLHFN/y3BQ/ebXK5mY7xQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3588
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001210156.GB5500@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=U3CgBz6+VuTzJ8lMfNbwVQ==:117 a=U3CgBz6+VuTzJ8lMfNbwVQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=7-415B0cAAAA:8 a=ggloQwHdSGxR348sj_4A:9 a=jAk1Iep39hKxJieh:21
+        a=cqC_HWLn8bbLdgcc:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 04:30:53PM +0900, Suleiman Souhlal wrote:
-> This RFC is to try to solve the following problem:
+On Tue, Oct 01, 2019 at 02:01:57PM -0700, Ira Weiny wrote:
+> On Mon, Sep 30, 2019 at 06:42:33PM +1000, Dave Chinner wrote:
+> > On Wed, Sep 25, 2019 at 04:46:03PM -0700, Ira Weiny wrote:
+> > > On Tue, Sep 24, 2019 at 08:26:20AM +1000, Dave Chinner wrote:
+> > > > Hence, AFIACT, the above definition of a F_RDLCK|F_LAYOUT lease
+> > > > doesn't appear to be compatible with the semantics required by
+> > > > existing users of layout leases.
+> > > 
+> > > I disagree.  Other than the addition of F_UNBREAK, I think this is consistent
+> > > with what is currently implemented.  Also, by exporting all this to user space
+> > > we can now write tests for it independent of the RDMA pinning.
+> > 
+> > The current usage of F_RDLCK | F_LAYOUT by the pNFS code allows
+> > layout changes to occur to the file while the layout lease is held.
 > 
-> We have some applications that are currently running in their
-> own namespace, that still talk to other processes on the
-> machine, using IPC, and expect to run on the same machine.
-> 
-> We want to move them into a virtual machine, for the usual
-> benefits of virtualization.
-> 
-> However, some of these programs use CLOCK_MONOTONIC and
-> CLOCK_BOOTTIME timestamps, as part of their protocol, when talking
-> to the host.
-> 
-> Generally speaking, we have multiple event sources, for example
-> sensors, input devices, display controller vsync, etc and we would
-> like to rely on them in the guest for various scenarios.
-> 
-> As a specific example, we are trying to run some wayland clients
-> (in the guest) who talk to the server (in the host), and the server
-> gives input events based on host time. Additionally, there are also
-> vsync events that the clients use for timing their rendering.
-> 
-> Another use case we have are timestamps from IIO sensors and cameras.
-> There are applications that need to determine how the timestamps
-> relate to the current time and the only way to get current time is
-> clock_gettime(), which would return a value from a different time
-> domain than the timestamps.
-> 
-> In this case, it is not feasible to change these programs, due to
-> the number of the places we would have to change.
-> 
-> We spent some time thinking about this, and the best solution we
-> could come up with was the following:
-> 
-> Make the guest kernel return the same CLOCK_MONOTONIC and
-> CLOCK_GETTIME timestamps as the host.
-> 
-> To do that, I am changing kvmclock to request to the host to copy
-> its timekeeping parameters (mult, base, cycle_last, etc), so that
-> the guest timekeeper can use the same values, so that time can
-> be synchronized between the guest and the host.
+> This was not my understanding.
 
-I wonder how feasible it is to map the host's vdso into the guest and
-thus make the guest use the *same* (as opposed to "synchronized") clock
-as the host's userspace?  Another benefit is that it's essentially an
-ABI so is not changed as liberally as internal structures like
-timekeeper, etc.  There is probably certain complication in handling the
-syscall fallback in the vdso when used in the guest kernel, though.
+These are the remote procerdeure calls that the pNFS client uses to
+map and/or allocate space in the file it has a lease on:
 
-You'll also need to ensure neither tsc scaling and nor offsetting is
-applied to the VM once this clock is enabled.
+struct export_operations {
+....
+        int (*map_blocks)(struct inode *inode, loff_t offset,
+                          u64 len, struct iomap *iomap,
+                          bool write, u32 *device_generation);
+        int (*commit_blocks)(struct inode *inode, struct iomap *iomaps,
+                             int nr_iomaps, struct iattr *iattr);
+};
 
-Roman.
+.map_blocks() allows the pnfs client to allocate blocks in the
+storage.  .commit_blocks() is called once the write is complete to
+do things like unwritten extent conversion on extents that it
+allocated. In the XFS implementation of these methods, they call
+directly into the XFS same block mapping code that the
+read/write/mmap IO paths call into.
+
+A typical pNFS use case is a HPC clusters, where thousands of nodes
+might all be writing to separate parts of a huge sparse file (e.g.
+out of core sparse matrix solver) and are reading/writing direct to
+the storage via iSER or some other low level IB/RDMA storage
+protocol.  Every write on every pNFS client needs space allocation,
+so the pNFS server is basically just providing a remote interface to
+the XFS space allocation interfaces for direct IO on the pNFS
+clients.
+
+IOWs, there can be thousands of concurrent pNFS layout leases on a
+single inode at any given time and they can all be allocating space,
+too.
+
+> > IOWs, your definition of F_RDLCK | F_LAYOUT not being allowed
+> > to change the is in direct contradition to existing users.
+> > 
+> > I've said this several times over the past few months now: shared
+> > layout leases must allow layout modifications to be made.
+> 
+> I don't understand what the point of having a layout lease is then?
+
+It's a *notification* mechanism.
+
+Multiple processes can modify the file layout at the same time -
+XFs was designed as a multi-write filesystem from the ground up and
+we make use of that with shared IO locks for direct IO writes. 
+
+The read layout lease model we've used for pNFS is essentially the
+same concurrent writer model that direct IO in XFS uses. And to
+enable concurrent writers, we use shared locking for the the layout
+leases.
+
+IOWs, the pNFS client IO model is very similar to local direct IO,
+except for the fact they can remotely cache layout mappings.  Hence
+if you do a server-side local buffered write (delayed allocation),
+truncate, punch a hole, etc, (or a remote operation through the NFS
+server that ends up in these same paths) the mappings those pNFS
+clients hold are no longer guaranteed to cover valid data and/or
+have correct physical mappings for valid data held on the server.
+
+At this point, the layouts need to be invalidated, and so the layout
+lease is broken by the filesystem operations that may cause an
+issue. The pNFS server reacts to the lease break by recalling the
+client layout(s) and the pNFS client has to request a new layout
+from the server to be able to directly access the storage again.
+
+i.e. the layout lease is primarily a *notification* mechanism to
+allow safe interop between application level direct access
+mechanisms and local filesystem access.
+
+What you are trying to do is turn this multi-writer layout lease
+notification mechanism into a single writer access control
+mechanism. i.e. F_UNBREAK is all about /control/ of the layout and
+who can and can't modify it, regardless of whether they write
+permissions have been granted or not.
+
+It seems I have been unable to get this point across despite trying
+for months now: access control is not a function provided by layout
+leases. If you need to guarantee exclusive access to a file so
+nobody else can modify it, direct access or through the filesystem,
+then that is what permission bits, ACLs, file locks, LSMs, etc are
+for. Don't try to overload a layout change notification mechanism
+with data access controls.
+
+> I apologize for not understanding this.  My reading of the code is that layout
+> changes require the read layout to be broken prior to proceeding.
+
+There's a difference between additive layout changes (such as
+allocating unwritten extents over a hole before a write) that don't
+pose any risk of uninitialised data exposure or use-after free.
+These sorts of layout changes are allowed while holding a layout
+lease.
+
+pNFS clients can only do additive changes to the layout via the
+export ops above. Further, technically speaking (because we don't
+currently implement this), local direct IO read/write is allowed
+without breaking layout leases as DIO writes can only trigger
+additive changes to the layout.
+
+The layout changes we need notification about (i.e. lease breaks)
+are subtractive layout changes (truncate, hole punch, copy-on-write)
+and ethereal layout changes (e.g. delayed allocation, where data is
+in memory but has no physical space allocated). Those are the ones
+that lead to problems with direct access, either in terms of
+in-correct in-memory state (pages mapped into RDMA hardware that no
+longer have backing store) or the file mapping the application has
+cached (e.g. via fiemap or pNFS file layouts) is no longer valid.
+
+These subtractive/ethereal layout changes are the ones that need to
+break _all_ outstanding layout leases, because nobody knows ahead of
+time which applications might be impacted by the layout modification
+that is about to occur.
+
+IOWs, layout leases are not intended to directly control who can and
+who can't modify the layout of a file, they are for issuing
+notifications to parties using direct storage access that a
+potentially dangerous layout change is about to be made to a file
+they are directly accessing....
+
+> The break layout code does this by creating a F_WRLCK of type FL_LAYOUT which
+> conflicts with the F_RDLCK of type FL_LAYOUT...
+
+Yes, but that's an internal implementation detail of how leases are
+broken. __break_lease(O_WRONLY) means "break all leases", and it
+does that by creating a temporary exclusive lease and then breaking
+all the leases on the inode that conflict with that lease. Which, by
+definition, is all of the leases of the same type. It never attaches
+that temporary lease to the inode - it is only used for comparison
+and is discarded once the lease break is done.
+
+That doesn't mean this behaviour is intended to be part of the
+visible layout lease user API, nor that it means F_WRLCK layout
+leases are something that is supposed to provide exlusive
+modification access to the file layout. It's just an implementation
+mechanism that simplifies breaking existing leases.
+
+> Also, I don't see any code which limits the number of read layout holders which
+> can be present
+
+There is no limit on the number of holders that can have read
+layouts...
+
+> and all of them will be revoked by the above code.
+
+Yup, that's what breaking leases does right now - it notifies all
+lease holders that a potentially problematic layout change is about
+to be made.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
