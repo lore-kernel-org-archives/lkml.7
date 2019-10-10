@@ -2,97 +2,121 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E28C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D66C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9D9218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E6C20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696634;
-	bh=sPv+ZyDulKHp04w0XAu6498xfyesROKAukGS+K8XOPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iDfcD8lqCNIHkXScLuOuO858YGhM9zzdlnxwEZaQDJF5MPSNQR8iHsD1q28rBgm7q
-	 +Vhux+bShtUQKwZNVacgkkBL2PfFG7rB3TantcJ8LlA6Dy+RvWZ+NK3/trJLltC9cl
-	 fiwvwfT8a9qV8e2e9jhV6t02WQ5m7jHg6h4Vh2T0=
+	s=default; t=1570696668;
+	bh=ADigWx33rF4XyHxIEKHsXdqfJMUHpqFwLSqHQEu0hVc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0OxC7MjsUQvoTRXI4CxcLoIJonZV39SA8+6ymNXVap/fQGmkcNW9lQHVM8kT5dirq
+	 0j9WCX0rqYib3/nH0GikGa6J9wt7c3JTQ0090Bk/pnAnw6jc9mE7IoGHIe5fij8bEA
+	 oadbIcmsuj5OFDNI3bcV3qtC7c6LCc3GZcO3Z1uU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733170AbfJJIhN (ORCPT
+        id S1733225AbfJJIhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:37:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36290 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729932AbfJJIhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:37:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1BA0BB048;
-        Thu, 10 Oct 2019 08:37:11 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 10:37:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>, Qian Cai <cai@lca.pw>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Petr Mladek <pmladek@suse.com>, akpm@linux-foundation.org,
-        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, david@redhat.com,
-        linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Thu, 10 Oct 2019 04:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728388AbfJJIhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:37:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E0BD20B7C;
+        Thu, 10 Oct 2019 08:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570696666;
+        bh=ADigWx33rF4XyHxIEKHsXdqfJMUHpqFwLSqHQEu0hVc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jNEyCt2P73zS+2K4y/4+/eup+SEKoEV/KLsYrJuBg/lJHvrTLzyCHejeSPFlaHoor
+         h9sgExYpUu1nMBSGOseJD+QfYR54DlUcV0fjsL0bBj2erADG/MlFO8Iv9FcgxAJgFk
+         oFbwedJESpwE3NnDxochzSlBC5UVNGdLrInQUsY4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191010083710.GF18412@dhcp22.suse.cz>
-References: <20191007144937.GO2381@dhcp22.suse.cz>
- <20191008074357.f33f6pbs4cw5majk@pathway.suse.cz>
- <20191008082752.GB6681@dhcp22.suse.cz>
- <aefe7f75-b0ec-9e99-a77e-87324edb24e0@de.ibm.com>
- <1570550917.5576.303.camel@lca.pw>
- <1157b3ae-006e-5b8e-71f0-883918992ecc@linux.ibm.com>
- <20191009142623.GE6681@dhcp22.suse.cz>
- <20191010051201.GA78180@jagdpanzerIV>
- <20191010074049.GD18412@dhcp22.suse.cz>
- <20191010081629.GA120986@jagdpanzerIV>
+Subject: [PATCH 5.3 001/148] s390/process: avoid potential reading of freed stack
+Date:   Thu, 10 Oct 2019 10:34:22 +0200
+Message-Id: <20191010083609.882111313@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
+References: <20191010083609.660878383@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010081629.GA120986@jagdpanzerIV>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 10-10-19 17:16:29, Sergey Senozhatsky wrote:
-> On (10/10/19 09:40), Michal Hocko wrote:
-> [..]
-> > > > Considering that console.write is called from essentially arbitrary code
-> > > > path IIUC then all the locks used in this path should be pretty much
-> > > > tail locks or console internal ones without external dependencies.
-> > > 
-> > > That's a good expectation, but I guess it's not always the case.
-> > > 
-> > > One example might be NET console - net subsystem locks, net device
-> > > drivers locks, maybe even some MM locks (skb allocations?).
-> > 
-> > I am not familiar with the netconsole code TBH. If there is absolutely
-> > no way around that then we might have to bite a bullet and consider some
-> > of MM locks a land of no printk.
-> 
-> So this is what netconsole does (before we pass on udp to net device
-> driver code, which *may be* can do more allocations, I don't know):
-> 
-> write_msg()
->  netpoll_send_udp()
->   find_skb()
->    alloc_skb(len, GFP_ATOMIC)
->     kmem_cache_alloc_node()
-> 
-> You are the right person to ask this question to - how many MM
-> locks are involved when we do GFP_ATOMIC kmem_cache allocation?
-> Is there anything to be concerned about?
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-At least zone->lock might involved. Maybe even more.
--- 
-Michal Hocko
-SUSE Labs
+commit 8769f610fe6d473e5e8e221709c3ac402037da6c upstream.
+
+With THREAD_INFO_IN_TASK (which is selected on s390) task's stack usage
+is refcounted and should always be protected by get/put when touching
+other task's stack to avoid race conditions with task's destruction code.
+
+Fixes: d5c352cdd022 ("s390: move thread_info into task_struct")
+Cc: stable@vger.kernel.org # v4.10+
+Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/s390/kernel/process.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
+
+--- a/arch/s390/kernel/process.c
++++ b/arch/s390/kernel/process.c
+@@ -184,20 +184,30 @@ unsigned long get_wchan(struct task_stru
+ 
+ 	if (!p || p == current || p->state == TASK_RUNNING || !task_stack_page(p))
+ 		return 0;
++
++	if (!try_get_task_stack(p))
++		return 0;
++
+ 	low = task_stack_page(p);
+ 	high = (struct stack_frame *) task_pt_regs(p);
+ 	sf = (struct stack_frame *) p->thread.ksp;
+-	if (sf <= low || sf > high)
+-		return 0;
++	if (sf <= low || sf > high) {
++		return_address = 0;
++		goto out;
++	}
+ 	for (count = 0; count < 16; count++) {
+ 		sf = (struct stack_frame *) sf->back_chain;
+-		if (sf <= low || sf > high)
+-			return 0;
++		if (sf <= low || sf > high) {
++			return_address = 0;
++			goto out;
++		}
+ 		return_address = sf->gprs[8];
+ 		if (!in_sched_functions(return_address))
+-			return return_address;
++			goto out;
+ 	}
+-	return 0;
++out:
++	put_task_stack(p);
++	return return_address;
+ }
+ 
+ unsigned long arch_align_stack(unsigned long sp)
+
+
