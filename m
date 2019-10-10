@@ -2,177 +2,130 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A285ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F69BECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF42206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:28:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SmGbXwl4"
+	by mail.kernel.org (Postfix) with ESMTP id 5DAAB20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfJJO2g (ORCPT
+        id S1726428AbfJJO3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 10:28:36 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:57655 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfJJO2g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 10:28:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1570717714; x=1602253714;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=MbNhUYiQT/iwMjwdlqMi5LP2NhQ+5+8OhcRLlxcsKBY=;
-  b=SmGbXwl4vtV5RCIgRvc9Z3NPriaB4WIPaH43pM0Ddhw9TkX7JWQ+Eb5R
-   vUU2lJuozjMW+JD7F/Huq0PWJqE0LoqF7qapu9N4BWZRN3vhxso+C8Fet
-   bCg5pBpDPiVGcWLS540UVacrCoLiVkBWcgbqmRCnton3BDKb7GSCWPFsQ
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.67,280,1566864000"; 
-   d="scan'208";a="791395129"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 10 Oct 2019 14:28:31 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id 62D8DA29A8;
-        Thu, 10 Oct 2019 14:28:30 +0000 (UTC)
-Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
- EX13MTAUEB001.ant.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 10 Oct 2019 14:28:30 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (10.43.60.96) by
- EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 10 Oct 2019 14:28:29 +0000
-Received: from [10.107.3.25] (10.107.3.25) by mail-relay.amazon.com
- (10.43.60.129) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Thu, 10 Oct 2019 14:28:25 +0000
-Subject: Re: [PATCH v6 3/3] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>, <daniel@iogearbox.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Thu, 10 Oct 2019 10:29:02 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3690 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725923AbfJJO3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 10:29:01 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B0170D9F904E22620CC3;
+        Thu, 10 Oct 2019 22:28:52 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.179) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 10 Oct 2019
+ 22:28:43 +0800
+Subject: Re: [RFC PATCH 1/3] ACPICA: ACPI 6.3: PPTT add additional fields in
+ Processor Structure Flags
+To:     "Moore, Robert" <robert.moore@intel.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "rrichter@marvell.com" <rrichter@marvell.com>,
+        "jeremy.linton@arm.com" <jeremy.linton@arm.com>
+References: <1570714192-236724-1-git-send-email-john.garry@huawei.com>
+ <1570714192-236724-2-git-send-email-john.garry@huawei.com>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B9691ADA@ORSMSX110.amr.corp.intel.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>, <benh@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        Talel Shenhar <talel@amazon.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        Sudeep Holla <Sudeep.Holla@arm.com>
-References: <20191007151730.7705-1-hhhawa@amazon.com>
- <20191007151730.7705-4-hhhawa@amazon.com>
- <CAL_JsqKk1SeUTPdVOC_5ewC+xqdPMZbBxiqZHYO3Zdme06P57w@mail.gmail.com>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <9b62e2aa-4503-02d7-2448-cc0697464046@amazon.com>
-Date:   Thu, 10 Oct 2019 17:28:24 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "guohanjun@huawei.com" <guohanjun@huawei.com>,
+        "wanghuiqiang@huawei.com" <wanghuiqiang@huawei.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <efd1203b-ef81-a27e-8681-6eeabab75f8e@huawei.com>
+Date:   Thu, 10 Oct 2019 15:28:34 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKk1SeUTPdVOC_5ewC+xqdPMZbBxiqZHYO3Zdme06P57w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B9691ADA@ORSMSX110.amr.corp.intel.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/10/2019 15:22, Moore, Robert wrote:
+> John,
+> These #defines are all already in actbl2.h. Perhaps they didn't make it into Linux.
+> Bob
+
+Hi Bob,
+
+Yes, they are in the latest linux mainline release.
+
+But this patch is just a preview to backport them to an earlier kernel 
+version.
+
+Thanks,
+John
+
+>
+>
+> -----Original Message-----
+> From: John Garry <john.garry@huawei.com>
+> Sent: Thursday, October 10, 2019 6:30 AM
+> To: catalin.marinas@arm.com; will@kernel.org; rjw@rjwysocki.net; lenb@kernel.org; Moore, Robert <robert.moore@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; sudeep.holla@arm.com; rrichter@marvell.com; jeremy.linton@arm.com
+> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; linuxarm@huawei.com; gregkh@linuxfoundation.org; guohanjun@huawei.com; wanghuiqiang@huawei.com; Wysocki, Rafael J <rafael.j.wysocki@intel.com>; John Garry <john.garry@huawei.com>
+> Subject: [RFC PATCH 1/3] ACPICA: ACPI 6.3: PPTT add additional fields in Processor Structure Flags
+>
+> From: Erik Schmauss <erik.schmauss@intel.com>
+>
+> Commit b5eab512e7cffb2bb37c4b342b5594e9e75fd486 upstream.
+>
+> ACPICA commit c736ea34add19a3a07e0e398711847cd6b95affd
+>
+> Link: https://github.com/acpica/acpica/commit/c736ea34
+> Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+> Signed-off-by: Bob Moore <robert.moore@intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  include/acpi/actbl2.h | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h index c50ef7e6b942..1d4ef0621174 100644
+> --- a/include/acpi/actbl2.h
+> +++ b/include/acpi/actbl2.h
+> @@ -1472,8 +1472,11 @@ struct acpi_pptt_processor {
+>
+>  /* Flags */
+>
+> -#define ACPI_PPTT_PHYSICAL_PACKAGE          (1)	/* Physical package */
+> -#define ACPI_PPTT_ACPI_PROCESSOR_ID_VALID   (2)	/* ACPI Processor ID valid */
+> +#define ACPI_PPTT_PHYSICAL_PACKAGE          (1)
+> +#define ACPI_PPTT_ACPI_PROCESSOR_ID_VALID   (1<<1)
+> +#define ACPI_PPTT_ACPI_PROCESSOR_IS_THREAD  (1<<2)	/* ACPI 6.3 */
+> +#define ACPI_PPTT_ACPI_LEAF_NODE            (1<<3)	/* ACPI 6.3 */
+> +#define ACPI_PPTT_ACPI_IDENTICAL            (1<<4)	/* ACPI 6.3 */
+>
+>  /* 1: Cache Type Structure */
+>
+> --
+> 2.17.1
+>
+>
+> .
+>
 
 
-On 10/10/2019 2:09 AM, Rob Herring wrote:
-> +Sudeep
-> 
-> On Mon, Oct 7, 2019 at 10:18 AM Hanna Hawa <hhhawa@amazon.com> wrote:
->>
->> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
->> report L2 errors.
-> 
-> I was curious why you needed a DT cache parsing function...
-> 
-> [...]
-> 
->> +static int al_l2_edac_probe(struct platform_device *pdev)
->> +{
->> +       struct edac_device_ctl_info *edac_dev;
->> +       struct al_l2_edac *al_l2;
->> +       struct device *dev = &pdev->dev;
->> +       int ret, i;
->> +
->> +       edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2), DRV_NAME, 1, "L",
->> +                                             1, 2, NULL, 0,
->> +                                             edac_device_alloc_index());
->> +       if (!edac_dev)
->> +               return -ENOMEM;
->> +
->> +       al_l2 = edac_dev->pvt_info;
->> +       edac_dev->edac_check = al_l2_edac_check;
->> +       edac_dev->dev = dev;
->> +       edac_dev->mod_name = DRV_NAME;
->> +       edac_dev->dev_name = dev_name(dev);
->> +       edac_dev->ctl_name = "L2_cache";
->> +       platform_set_drvdata(pdev, edac_dev);
->> +
->> +       INIT_LIST_HEAD(&al_l2->l2_caches);
->> +
->> +       for_each_possible_cpu(i) {
->> +               struct device_node *cpu;
->> +               struct device_node *cpu_cache;
->> +               struct al_l2_cache *l2_cache;
->> +               bool found = false;
->> +
->> +               cpu = of_get_cpu_node(i, NULL);
->> +               if (!cpu)
->> +                       continue;
->> +
->> +               cpu_cache = of_find_next_cache_node(cpu);
->> +               list_for_each_entry(l2_cache, &al_l2->l2_caches, list_node) {
->> +                       if (l2_cache->of_node == cpu_cache) {
->> +                               found = true;
->> +                               break;
->> +                       }
->> +               }
->> +
->> +               if (found) {
->> +                       cpumask_set_cpu(i, &l2_cache->cluster_cpus);
->> +               } else {
->> +                       l2_cache = devm_kzalloc(dev, sizeof(*l2_cache),
->> +                                               GFP_KERNEL);
->> +                       l2_cache->of_node = cpu_cache;
->> +                       list_add(&l2_cache->list_node, &al_l2->l2_caches);
->> +                       cpumask_set_cpu(i, &l2_cache->cluster_cpus);
->> +               }
->> +
->> +               of_node_put(cpu);
->> +       }
-> 
-> We already have what's probably similar code to parse DT and populate
-> cacheinfo data. Does that not work for you? If not, why not and can we
-> extend it?
-
-As I saw in cacheinfo it will return the cacheinfo for the online CPUs 
-only, correct me if I'm wrong..
-
-Here I'm parsing all the L2 info for all CPUs depends on DT to get 
-"cluster_cpus", and using smp_call_function_any() will call the online 
-cpu to read the L2MERRSR status register.
-
-> 
-> Then your driver might work if the data comes from ACPI instead (or
-> maybe that's all different, I don't know).
-
-No plan to get it work on ACPI, at least in the near future.
-
-> 
-> Rob
-> 
