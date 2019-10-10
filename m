@@ -2,156 +2,228 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B853ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CBDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B086206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD3720659
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZgAEAuKG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y2PnsLiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfJJTAE (ORCPT
+        id S1726930AbfJJTEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 15:00:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34186 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfJJTAE (ORCPT
+        Thu, 10 Oct 2019 15:04:53 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33134 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfJJTEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 15:00:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id q1so16194748ion.1;
-        Thu, 10 Oct 2019 12:00:03 -0700 (PDT)
+        Thu, 10 Oct 2019 15:04:52 -0400
+Received: by mail-io1-f66.google.com with SMTP id z19so16263698ior.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 12:04:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cA1nu7WjrWAqmer6330wc0ijhhk83SGo4tS7biMmkzM=;
-        b=ZgAEAuKGNSm1/2mqvjdNeg2BeAXi21dVyn9q62E+Iu/ozmBo3wcCaT/7BKIoBAZOTj
-         dDAHRUs/OzQ4mTOWyMfo+0XcOuQL0I26UncPEfNPzUC804jb3T4Ly123g8ax48QIngr6
-         ER3d5u50DZRrZBkNfjBnSDd9Ru7og2vz6dQCKOlRmNo8Q6gP2XcFXUmp1fISS1lJQO3C
-         7yVg8gGSq3+aJ1brvf7pGPBu/31vmXwMNyeEIdVATaihqc7Q3kjg9bKwkGJF57w2L3RJ
-         /5EEERwn/sqHHPy8HoLZ9eMxPloJNKEjdVsMYUrO2tZps2E0fU1HCPGcaKdEWGBDtoXi
-         1xRw==
+        bh=W6MyvVE0eBaDj0DuImlooBl1Swx9/iYzpr3ha7apj4Q=;
+        b=Y2PnsLizNi10y0AQijqSryDRPc8hLvGIHO2wCV8Mnj7U+8ARZjBdonzqoBjIl0m7PB
+         g31oP3wP8AxO7p/M9ldOuGap34mbJu2IWUr6cS0XFSkYaSTKrI9neMz1YsTRHi1N/+1O
+         m8wMNXyV1gIqwIZXpFoiZ1+IOUPdcy/sICFCVlZ6xjn7YlJ0+BFOjpC/TUeROg22njQK
+         FrSp74iLfSSZr4w4h7xctma4Rl3/n6/HPF0EPuW3yozzbsDw9Gkj/dX2KmEWZYKeiPtZ
+         t9EYb+3lbJn34K0DMT42h90EOCvV+Vrs+wXuXtxaPIPkpWljvsYY7l5GX6+L46NqG9R2
+         EJuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cA1nu7WjrWAqmer6330wc0ijhhk83SGo4tS7biMmkzM=;
-        b=UMk6RqdR6KqStIrYl8SpVKGtXuj+KFH7cr5jJcU8FJ1++tE0iQrRcQXLdjixNU6Bl8
-         UrhQFgXODB6n5TMw0CnLsBNeyoXfbvic6Tmcaz0S1+2pzZcQJixpEhFs+AXP7RqIdtx0
-         Ze4etB7bv6mMwikRukb7lvH8lNTg/kByFxQlkR88t4AaYw9RaGUQvXsFJwXwuj9KbFFt
-         tzrqjsqBxYvXLSZKHJA1YreA2OnJX8hBFpmJJHKRztkAGdoQiv2kXChNZEc/UbyfngF9
-         nJGZ9IaJx2FiIHel2kgG8YelbO4OB0eDDQZtf95/RTNtSUaLmwDqLJIQq7ZMzKoj/SOa
-         jEog==
-X-Gm-Message-State: APjAAAV14vbXTlVxjIYl4nJHDe0SqSnVIzhRaC6FCBYJ0qbbQf5pt9hb
-        fGL9CjuMl9L5lU6NF8+auLBq5H5Zpo7W2dFgg8U1vQ==
-X-Google-Smtp-Source: APXvYqy2jIsV/0okFyYF1KBC8/M37CPZIxf/tq3+cYPkx00MgiScI6/1sGtqXgBQgssHUI2lYs/pujp8uSI9sAIhI4E=
-X-Received: by 2002:a5d:904e:: with SMTP id v14mr11728084ioq.33.1570734003178;
- Thu, 10 Oct 2019 12:00:03 -0700 (PDT)
+        bh=W6MyvVE0eBaDj0DuImlooBl1Swx9/iYzpr3ha7apj4Q=;
+        b=L6p7AMNnMj/Gu8VN2FcmujDQ0ufpCwg1oZtRMX1BvGWVUU3E+FmMZqwC0+HIXAVPL2
+         ZzfUDdLP/xCvXDUcMsSDOq+dZ4EHSRabKhcRZ1HPiPgIA49MU/xf7YpBuN5ZlHEjczLg
+         R7XNf1dVOnoOyZC3CBLTn1iHCQEV2dBuYa3tS4wQdjGDeW3kPioiHiTfZKVoYjhKgeh0
+         wtp6qL2c7c1N42kGg1/A2jzdWmEefYyWA6cxw/1p8N7uyF/MMdOhG8HynIT0WbHTUbWF
+         WO8epsm3My1lhdCtt6jXw4p0hcDcPcTkDrTKfVHB3LwVBwZ5uuWGPLfJW0UV5H7WDaef
+         6NfA==
+X-Gm-Message-State: APjAAAW9Tmopt9u4rvsfZouN9aX3Cgv3dVp+WUjQPwo9vPZpx3kFBJfD
+        tRi30aRnWRXNlSrIqZXvT6PLHXamlOshLn/UxZ6GwQ==
+X-Google-Smtp-Source: APXvYqyDapEPzr9nfKiT7XcVdqga4sq5RRhPysLdHLDjEhYcHw3eXS6QxZl5vGe6khsIa/ztyDX0HI+SeR1/f8mysKY=
+X-Received: by 2002:a6b:7d4b:: with SMTP id d11mr12241184ioq.40.1570734291240;
+ Thu, 10 Oct 2019 12:04:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191009213454.32891-1-jeffrey.l.hugo@gmail.com>
- <20191010184544.GK85762@art_vandelay> <CAMavQKJ7iMD+4a0eftNre9xMvyoZy_=sAPRAuMctX5bueugk1g@mail.gmail.com>
-In-Reply-To: <CAMavQKJ7iMD+4a0eftNre9xMvyoZy_=sAPRAuMctX5bueugk1g@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 10 Oct 2019 12:59:52 -0600
-Message-ID: <CAOCk7NqW=85qduSFquCgivHTDxDpJ7xK9zBjgbd1nM8QS7xM=Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dsi: Implement reset correctly
-To:     Sean Paul <sean@poorly.run>
-Cc:     Rob Clark <robdclark@gmail.com>, Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <20190927021927.23057-4-weijiang.yang@intel.com> <CALMp9eT3HJ3S6Mzzntje2Kb4m-y86GvkhaNXun-mLJukEy6wbA@mail.gmail.com>
+ <20191009061509.GB27851@local-michael-cet-test>
+In-Reply-To: <20191009061509.GB27851@local-michael-cet-test>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 10 Oct 2019 12:04:40 -0700
+Message-ID: <CALMp9eT-6HGQSKpDGBD6poujSXc-KckaR__Re3RiiMuVse1t8Q@mail.gmail.com>
+Subject: Re: [PATCH v7 3/7] KVM: VMX: Pass through CET related MSRs to Guest
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 12:49 PM Sean Paul <sean@poorly.run> wrote:
+On Tue, Oct 8, 2019 at 11:13 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
 >
-> On Thu, Oct 10, 2019 at 2:45 PM Sean Paul <sean@poorly.run> wrote:
+> On Wed, Oct 02, 2019 at 11:18:32AM -0700, Jim Mattson wrote:
+> > On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> > >
+> > > CET MSRs pass through Guest directly to enhance performance.
+> > > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
+> > > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
+> > > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
+> > > these MSRs are defined in kernel and re-used here.
 > >
-> > On Wed, Oct 09, 2019 at 02:34:54PM -0700, Jeffrey Hugo wrote:
-> > > On msm8998, vblank timeouts are observed because the DSI controller is not
-> > > reset properly, which ends up stalling the MDP.  This is because the reset
-> > > logic is not correct per the hardware documentation.
+> > All of these new guest MSRs will have to be enumerated by
+> > KVM_GET_MSR_INDEX_LIST.
+> >
+> Since CET feature is Intel platform specific, but looks like KVM_GET_MSR_INDEX_LIST
+> fetchs x86 common MSRs, I have patch in QEMU to support CET
+> MSRs, the patch is here:
+> https://patchwork.ozlabs.org/patch/1058265/
+
+Qemu is not the only user of kvm. All possible guest MSRs for the
+platform *must* be enumerated by KVM_GET_MSR_INDEX_LIST. A number of
+Intel-specific MSRs are already enumerated.
+
+> > > MSR_IA32_U_CET and MSR_IA32_PL3_SSP are used for user mode protection,
+> > > the contents could differ from process to process, therefore,
+> > > kernel needs to save/restore them during context switch, it makes
+> > > sense to pass through them so that the guest kernel can
+> > > use xsaves/xrstors to operate them efficiently. Other MSRs are used
+> > > for non-user mode protection. See CET spec for detailed info.
+> >
+> > I assume that XSAVES & XRSTORS bypass the MSR permission bitmap, like
+> > other instructions that manipulate MSRs (e.g. SWAPGS, RDTSCP, etc.).
+> > Is the guest OS likely to use RDMSR/WRMSR to access these MSRs?
+> >
+> Yes, exactly, you may check the CET kernel code.
+>
+> > > The difference between CET VMCS state fields and xsave components is that,
+> > > the former used for CET state storage during VMEnter/VMExit,
+> > > whereas the latter used for state retention between Guest task/process
+> > > switch.
 > > >
-> > > The documentation states that after asserting reset, software should wait
-> > > some time (no indication of how long), or poll the status register until it
-> > > returns 0 before deasserting reset.
-> > >
-> > > wmb() is insufficient for this purpose since it just ensures ordering, not
-> > > timing between writes.  Since asserting and deasserting reset occurs on the
-> > > same register, ordering is already guaranteed by the architecture, making
-> > > the wmb extraneous.
-> > >
-> > > Since we would define a timeout for polling the status register to avoid a
-> > > possible infinite loop, lets just use a static delay of 20 ms, since 16.666
-> > > ms is the time available to process one frame at 60 fps.
-> > >
-> > > Fixes: a689554ba6ed (drm/msm: Initial add DSI connector support)
-> > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 > > > ---
+> > >  arch/x86/kvm/cpuid.c   |  1 +
+> > >  arch/x86/kvm/cpuid.h   |  2 ++
+> > >  arch/x86/kvm/vmx/vmx.c | 39 +++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 42 insertions(+)
 > > >
-> > > Rob et al, is it possible for this to go into a 5.4-rc?
->
-> Sorry, I missed this on the first go-around, I'm Ok with this getting
-> into 5.4. Rob, if you're Ok with this, I can send it through -misc
-> unless you're planning an msm-fixes PR.
->
+> > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > > index 1aa86b87b6ab..0a47b9e565be 100644
+> > > --- a/arch/x86/kvm/cpuid.c
+> > > +++ b/arch/x86/kvm/cpuid.c
+> > > @@ -66,6 +66,7 @@ u64 kvm_supported_xss(void)
+> > >  {
+> > >         return KVM_SUPPORTED_XSS & kvm_x86_ops->supported_xss();
+> > >  }
+> > > +EXPORT_SYMBOL_GPL(kvm_supported_xss);
 > > >
-> > >  drivers/gpu/drm/msm/dsi/dsi_host.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >  #define F(x) bit(X86_FEATURE_##x)
 > > >
-> > > diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > > index 663ff9f4fac9..68ded9b4735d 100644
-> > > --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > > +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > > @@ -986,7 +986,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
-> > >       wmb(); /* clocks need to be enabled before reset */
+> > > diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> > > index d78a61408243..1d77b880084d 100644
+> > > --- a/arch/x86/kvm/cpuid.h
+> > > +++ b/arch/x86/kvm/cpuid.h
+> > > @@ -27,6 +27,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
 > > >
-> > >       dsi_write(msm_host, REG_DSI_RESET, 1);
-> > > -     wmb(); /* make sure reset happen */
-> > > +     msleep(20); /* make sure reset happen */
-> >
-> > Could you please pull this out into a #define used for both in case we decide to
-> > tweak it? I don't want these 2 values to drift.
-> >
-
-Oh, yeah.  That's a really good point.  Will fix.
-
->
-> oh yeah, and with that fixed,
->
-> Reviewed-by: Sean Paul <sean@poorly.run>
-
-Thanks.
-
->
-> > Thanks,
-> > Sean
-> >
-> > >       dsi_write(msm_host, REG_DSI_RESET, 0);
+> > >  int cpuid_query_maxphyaddr(struct kvm_vcpu *vcpu);
+> > >
+> > > +u64 kvm_supported_xss(void);
+> > > +
+> > >  static inline int cpuid_maxphyaddr(struct kvm_vcpu *vcpu)
+> > >  {
+> > >         return vcpu->arch.maxphyaddr;
+> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > > index a84198cff397..f720baa7a9ba 100644
+> > > --- a/arch/x86/kvm/vmx/vmx.c
+> > > +++ b/arch/x86/kvm/vmx/vmx.c
+> > > @@ -7001,6 +7001,43 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
+> > >                 vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
 > > >  }
 > > >
-> > > @@ -1396,7 +1396,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
-> > >
-> > >       /* dsi controller can only be reset while clocks are running */
-> > >       dsi_write(msm_host, REG_DSI_RESET, 1);
-> > > -     wmb();  /* make sure reset happen */
-> > > +     msleep(20);     /* make sure reset happen */
-> > >       dsi_write(msm_host, REG_DSI_RESET, 0);
-> > >       wmb();  /* controller out of reset */
-> > >       dsi_write(msm_host, REG_DSI_CTRL, data0);
-> > > --
-> > > 2.17.1
-> > >
+> > > +static void vmx_intercept_cet_msrs(struct kvm_vcpu *vcpu)
 > >
-> > --
-> > Sean Paul, Software Engineer, Google / Chromium OS
+> > Nit: It seems like this function adjusts the MSR permission bitmap so
+> > as *not* to intercept the CET MSRs.
+> >
+> OK, will rename it.
+> > > +{
+> > > +       struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > > +       unsigned long *msr_bitmap;
+> > > +       u64 kvm_xss;
+> > > +       bool cet_en;
+> > > +
+> > > +       msr_bitmap = vmx->vmcs01.msr_bitmap;
+> >
+> > What about nested guests? (i.e. vmcs02).
+> >
+> Hmm, I need to check the nested case, thank you.
+>
+> > > +       kvm_xss = kvm_supported_xss();
+> > > +       cet_en = guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+> > > +                guest_cpuid_has(vcpu, X86_FEATURE_IBT);
+> > > +       /*
+> > > +        * U_CET is a must for USER CET, per CET spec., U_CET and PL3_SPP are
+> > > +        * a bundle for USER CET xsaves.
+> > > +        */
+> > > +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_USER)) {
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
+> > > +       }
+> >
+> > Since this is called from vmx_cpuid_update, what happens if cet_en was
+> > previously true and now it's false?
+> >
+> Yes, it's likely, but guest CPUID usually is fixed before
+> guest is launched, do you have any suggestion?
+
+How about an else clause?
+
+> > > +       /*
+> > > +        * S_CET is a must for KERNEL CET, PL0_SSP ... PL2_SSP are a bundle
+> > > +        * for CET KERNEL xsaves.
+> > > +        */
+> > > +       if (cet_en && (kvm_xss & XFEATURE_MASK_CET_KERNEL)) {
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW);
+> > > +               vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW);
+> > > +
+> > > +               /* SSP_TAB only available for KERNEL SHSTK.*/
+> > > +               if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
+> > > +                       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB,
+> > > +                                                     MSR_TYPE_RW);
+> > > +       }
+> > > +}
+> > > +
+> > >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> > >  {
+> > >         struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > > @@ -7025,6 +7062,8 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> > >         if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
+> > >                         guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
+> > >                 update_intel_pt_cfg(vcpu);
+> > > +
+> > > +       vmx_intercept_cet_msrs(vcpu);
+> > >  }
+> > >
+> > >  static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+> > > --
+> > > 2.17.2
+> > >
