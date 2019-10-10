@@ -2,177 +2,130 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02103C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C71ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE86121835
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F0521835
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:10:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vFJLATR5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Do8hAovh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfJJRJi (ORCPT
+        id S1726683AbfJJRKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:09:38 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38938 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfJJRJi (ORCPT
+        Thu, 10 Oct 2019 13:10:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51610 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfJJRKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:09:38 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y3so6991897ljj.6
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:09:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=07k4TlcKY0H7BLbXRw8BDYAuoLrXRbYHdEv/KYsqSU4=;
-        b=vFJLATR5phjST86akF50pwuc+J9KFiVUkfzWYX6w0FfuZwKzxtKafM5wRV3MkXQ2lN
-         dg4UQH4RKYQvZV9N/7qlBeAlewyE8XSm5aprbAWf9z6Ea+7ZCjSix3jFa9eaXy6kZ8sf
-         cmSRhxZR/pCzv+T/ofyCa/gUVJBV6kx6BPlM195wXCdK3++s+A3UjD5oqjbqTENhFCM4
-         Nf2y5HWrU4IGa3RSCXshIADHMup8SfjK+hjIwSr025AtgjMZQCLsJIekVDPMwoKjfa6+
-         8DzYnycxGecjC/ui4KRy3JfE01AdRSqjksu0JMm4dnFuEKjeuCDsWm4tBxG8eM9IZjmf
-         yFuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=07k4TlcKY0H7BLbXRw8BDYAuoLrXRbYHdEv/KYsqSU4=;
-        b=CMAkE0TJ0/H/kD3MpgVYo965rALFYNu/vpFVvY2//gpC9rn71YCeN/OUBJsUIEI1iq
-         gOJYQ8Yu7E+lijdiC5arvNAthGWMJJa55VKl62cafZLSdEdVDaJuRSwlynPXpT6vCAjX
-         EWH9Cnh5AVTpfH4o6VdZHQtTzCL5k0VuioOawYuwvNORHfq1kt0XxuT27aAxo1g0VncO
-         lDxMGSyl02uCMKNaI+nhhNw4kxZr1GfcC33+tDL3N3+X5DsJFdClV5UWEo+0VyoIskXb
-         pZ/eh+xLNCXgxjfZnWIS841GwiQeoGBZepCkqfMAiek6XKOqzih2xUIsxmKG4qbsnGcz
-         0k7g==
-X-Gm-Message-State: APjAAAUutXNluaYXEWx1PScda0LP76ffIhiFnr+S5wD0VJl5zKQtk9eN
-        Lv43fpItT1Ze0tiV4obfgAdl64HVuQMk4Ag/88efHA==
-X-Google-Smtp-Source: APXvYqzkiTFz9JxPgxjfcvoaXi9BhxI9lFB1zec6ECI6cqMgVTmmfo4fX6mRQgPvTm7htW1vk/7U5Q7/kFuTjD+RbyQ=
-X-Received: by 2002:a2e:8602:: with SMTP id a2mr7211268lji.20.1570727376267;
- Thu, 10 Oct 2019 10:09:36 -0700 (PDT)
+        Thu, 10 Oct 2019 13:10:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2ORhkw5GPRBxZuF/xlv/BjcMDmGKtcdp+AMxb3+giRk=; b=Do8hAovh7JWYg3ucRGcXnRKlp
+        Hk/Mdo6HvHbjjzVB2oeN73Lg3ScBEwJ7yLS2xEExgXEBE42Ov7eTrryiUc+6flTBzVMEVyngCfmr0
+        7DveBBO5dhInqtgUEe9a8uF1I+nODwJYoFohx1pWitYKqMGQnFzbQK9pZt+qPCF7MLYHxa6iEwG/W
+        8B6jY4hY9N4UfA4dnrnri9GsVVNzoPzINpuJzJ263r3CONhT24WWKWVS0iUkTf0g+msab95XEwsqm
+        robs5JYWD7vsNoTe5jx1EFbG3TPye9jJ4o0v+nT1wPbMgJAT9He3Ach8nHO3p/htt4/oIuFjVH/eV
+        AslgJc8fw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIbwl-0004bm-V5; Thu, 10 Oct 2019 17:09:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E0E243013A4;
+        Thu, 10 Oct 2019 19:08:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 29D5A21492B14; Thu, 10 Oct 2019 19:09:49 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 19:09:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        primiano@google.com, rsavitski@google.com, jeffv@google.com,
+        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
+Message-ID: <20191010170949.GR2328@hirez.programming.kicks-ass.net>
+References: <20191009203657.6070-1-joel@joelfernandes.org>
+ <20191010081251.GP2311@hirez.programming.kicks-ass.net>
+ <20191010151333.GE96813@google.com>
 MIME-Version: 1.0
-References: <20191010083609.660878383@linuxfoundation.org>
-In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 10 Oct 2019 22:39:23 +0530
-Message-ID: <CA+G9fYsypoQHnYTeZJgeYecwTtbnVyRf=0y3Gm5EuGwLr2PKrg@mail.gmail.com>
-Subject: Re: [PATCH 5.3 000/148] 5.3.6-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010151333.GE96813@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 at 14:09, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.3.6 release.
-> There are 148 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.3.6-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.3.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Thu, Oct 10, 2019 at 11:13:33AM -0400, Joel Fernandes wrote:
+> On Thu, Oct 10, 2019 at 10:12:51AM +0200, Peter Zijlstra wrote:
+> > +static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+> >  {
+> > -	return sysctl_perf_event_paranoid > 1;
+> > +	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
+> > +		return -EPERM;
+> > +
+> 
+> Here the sysctl check of > -1 also is now coupled with a CAP_SYS_ADMIN check.
+> However..
+> 
+> > +	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
+> 
+> >  }
+> >  
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> > @@ -5862,14 +5859,8 @@ static int perf_mmap(struct file *file,
+> >  	lock_limit >>= PAGE_SHIFT;
+> >  	locked = atomic64_read(&vma->vm_mm->pinned_vm) + extra;
+> >  
+> > -	if (locked > lock_limit) {
+> > -		if (perf_paranoid_tracepoint_raw() && !capable(CAP_IPC_LOCK)) {
+> > -			ret = -EPERM;
+> > -			goto unlock;
+> > -		}
+> > -
+> > -		ret = security_perf_event_open(&event->attr,
+> > -					       PERF_SECURITY_TRACEPOINT);
+> > +	if (locked > lock_limit && !capable(CAP_IPC_LOCK)) {
+> > +		ret = perf_allow_tracepoint(&event->attr);
+> 
+> In previous code, this check did not involve a check for CAP_SYS_ADMIN.
+> 
+> I am Ok with adding the CAP_SYS_ADMIN check as well which does make sense to
+> me for tracepoint access. But it is still a change in the logic so I wanted
+> to bring it up.
+> 
+> Let me know any other thoughts and then I'll post a new patch.
 
-Summary
-------------------------------------------------------------------------
+Yes, I did notice, I found it weird.
 
-kernel: 5.3.6-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.3.y
-git commit: e863f125e178f8d2edf7a3a03e7fc144d3af82c2
-git describe: v5.3.5-149-ge863f125e178
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/bui=
-ld/v5.3.5-149-ge863f125e178
+If you have CAP_IPC_LIMIT you should be able to bust mlock memory
+limits, so I don't see why we should further relate that to paranoid.
 
-No regressions (compared to build v5.3.5)
+The way I wrote it, we also allow to bust the limit if we have disabled
+all paranoid checks. Which makes some sense I suppose.
 
-No fixes (compared to build v5.3.5)
+The original commit is this:
 
-Ran 23503 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* spectre-meltdown-checker-test
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+  459ec28ab404 ("perf_counter: Allow mmap if paranoid checks are turned off")
