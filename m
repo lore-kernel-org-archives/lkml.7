@@ -2,130 +2,229 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10EAC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1D9ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C9E214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C54321835
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:43:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="ePF0aeJ8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rsm+y2rI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfJJOll (ORCPT
+        id S1726381AbfJJOn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 10:41:41 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40025 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfJJOlj (ORCPT
+        Thu, 10 Oct 2019 10:43:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43758 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfJJOn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 10:41:39 -0400
-Received: by mail-wm1-f68.google.com with SMTP id b24so7064960wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 07:41:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=WvpcapkJx8ulBJzj4PJvqG7ZVPifCPQ0JR/mWjZ/O3U=;
-        b=ePF0aeJ8i2wRFfX68Bj0lleBItCXI1E7kyXzLaREUNWaIje2xgTAtyy87DEbAU0FXo
-         69a121/5zq6kSsNsdfzzntJ6LaR8QbkFaS38rzT/FTwm0uGa6RDvxd0qHy7SKrrbdJsH
-         Vx/OTSShDI2hzUPiRMm1NC9tX1qyfBZrmKYHVb7NJ8h2/LTwawjqGXHGHtnut519aL8Y
-         ncqH3+7vJOA6d13IFQ2cM9z1sUH3LAIQ7POp8BNzXIzExw6PMp3fTABJGLtu8hfcXBzF
-         2jqv0LSny1yWgiuEbke38H2z+7d26tAxTFdZ95V+Q7vLpOs8WiOFzlhP+hIKGm5na6EK
-         6oJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=WvpcapkJx8ulBJzj4PJvqG7ZVPifCPQ0JR/mWjZ/O3U=;
-        b=No8pu4y08oBmvqc0SOcW8qJNmf7QkMfKFGS5yqA+CF1ubg8q6Pk6dfa1jybeXqagw8
-         RYhHc7vCOZSIgq6cq5tXb6cmWzLP6CMumYKP0dRLF62kPXC5KkDH4lhWZQWhM0B7cGRv
-         UGE/M6um9CBB7j9FE4gMHegU8Nw6DLQKNvYMqJpisIaLYMQmrvrWIIZ2frR/OFy/4HaM
-         U0swOislLgoR/P67xGAYaEuR4uMSn2oOznY9spovd45XyoTPeiNNr1wQfyjX0YrcjcK8
-         2qbLrAuhCx2jHfeIupixZZMcAzYmPbEAIyH23LdwqhzxrnuL85IyznSsBqfcVh+AIjcG
-         G1Ag==
-X-Gm-Message-State: APjAAAWNObAML4LyQeFm5R+d2m+xFTcHaQc5pjkuzhfh2yzAnT5lDqlx
-        n8n5V9DM6IT73/txMfLbjhgTzA==
-X-Google-Smtp-Source: APXvYqzUIiSDxzC9sMSlK0uERGT2OaXsOObyUMqZGbyT1xJTSaDjErh3SKgv1hWBPGWSzzFO4YeXig==
-X-Received: by 2002:a7b:c4cf:: with SMTP id g15mr7453778wmk.122.1570718497368;
-        Thu, 10 Oct 2019 07:41:37 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id y18sm11027830wro.36.2019.10.10.07.41.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 07:41:36 -0700 (PDT)
-Message-ID: <5d9f4320.1c69fb81.dd898.69fb@mx.google.com>
-Date:   Thu, 10 Oct 2019 07:41:36 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 10 Oct 2019 10:43:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QNsH8RqTKQDFBl/DTY+j/4M+yf8y1CDtO+6Gmm9dx4Y=; b=rsm+y2rI3REufv4ArB+mOZLHI
+        1ylpq9w5+Z/+6SmoWDt3yKcOqzZhF4/idm21+GPpI2a8RCNuZJWunoftYi7fh7xq6cu44n3zpsKDa
+        IHqwV2uYQBUWTbrBPfSMxm4sI5cCF6lIssRdWQkDk2wm56nx3K+7RhyPYW1zzqPUOjFlmHfQSJLP9
+        GRqijrUeEpjItjmUHUpiZzLcraaEDdQ0Yr4I7yYi/EIq2QeFlcFJsjyKbqKtCtHoBxu6q2tgr6hvo
+        RskmdplSqSXqOD0nlcschglvH9QbYloL/QKZxG0e0UBSrKsg5HIOHoVUiASMceCVCMAT8Tkd7Gqjj
+        PyELZ1QOQ==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIZfA-0004wv-A3; Thu, 10 Oct 2019 14:43:32 +0000
+Subject: Re: [PATCH v3 1/3] x86/boot: Introduce the kernel_info
+To:     Daniel Kiper <daniel.kiper@oracle.com>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, xen-devel@lists.xenproject.org,
+        ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
+        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
+        hpa@zytor.com, jgross@suse.com, konrad.wilk@oracle.com,
+        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
+References: <20191009105358.32256-1-daniel.kiper@oracle.com>
+ <20191009105358.32256-2-daniel.kiper@oracle.com>
+ <181249b6-5833-6f29-7d38-6dacc3f8ee62@infradead.org>
+ <20191010094349.la3sjiuiikmegjck@tomti.i.net-space.pl>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <cb5bcff5-e787-82c4-790d-71695291d552@infradead.org>
+Date:   Thu, 10 Oct 2019 07:43:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.19.78-115-g4d84b0bb68d4
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.19.y
-In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
-References: <20191010083544.711104709@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 000/114] 4.19.79-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+In-Reply-To: <20191010094349.la3sjiuiikmegjck@tomti.i.net-space.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 117 boots: 0 failed, 107 passed with 10 offlin=
-e (v4.19.78-115-g4d84b0bb68d4)
+On 10/10/19 2:43 AM, Daniel Kiper wrote:
+> On Wed, Oct 09, 2019 at 05:43:31PM -0700, Randy Dunlap wrote:
+>> Hi,
+>>
+>> Questions and comments below...
+>> Thanks.
+>>
+>> On 10/9/19 3:53 AM, Daniel Kiper wrote:
+>>
+>>> Suggested-by: H. Peter Anvin <hpa@zytor.com>
+>>> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+>>> Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+>>> Reviewed-by: Ross Philipson <ross.philipson@oracle.com>
+>>> ---
+>>
+>>> ---
+>>>  Documentation/x86/boot.rst             | 121 +++++++++++++++++++++++++++++++++
+>>>  arch/x86/boot/Makefile                 |   2 +-
+>>>  arch/x86/boot/compressed/Makefile      |   4 +-
+>>>  arch/x86/boot/compressed/kernel_info.S |  17 +++++
+>>>  arch/x86/boot/header.S                 |   1 +
+>>>  arch/x86/boot/tools/build.c            |   5 ++
+>>>  arch/x86/include/uapi/asm/bootparam.h  |   1 +
+>>>  7 files changed, 148 insertions(+), 3 deletions(-)
+>>>  create mode 100644 arch/x86/boot/compressed/kernel_info.S
+>>>
+>>> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+>>> index 08a2f100c0e6..d5323a39f5e3 100644
+>>> --- a/Documentation/x86/boot.rst
+>>> +++ b/Documentation/x86/boot.rst
+>>> @@ -68,8 +68,25 @@ Protocol 2.12	(Kernel 3.8) Added the xloadflags field and extension fields
+>>>  Protocol 2.13	(Kernel 3.14) Support 32- and 64-bit flags being set in
+>>>  		xloadflags to support booting a 64-bit kernel from 32-bit
+>>>  		EFI
+>>> +
+>>> +Protocol 2.14:	BURNT BY INCORRECT COMMIT ae7e1238e68f2a472a125673ab506d49158c1889
+>>> +		(x86/boot: Add ACPI RSDP address to setup_header)
+>>> +		DO NOT USE!!! ASSUME SAME AS 2.13.
+>>> +
+>>> +Protocol 2.15:	(Kernel 5.5) Added the kernel_info.
+>>>  =============	============================================================
+>>>
+>>> +.. note::
+>>> +     The protocol version number should be changed only if the setup header
+>>> +     is changed. There is no need to update the version number if boot_params
+>>> +     or kernel_info are changed. Additionally, it is recommended to use
+>>> +     xloadflags (in this case the protocol version number should not be
+>>> +     updated either) or kernel_info to communicate supported Linux kernel
+>>> +     features to the boot loader. Due to very limited space available in
+>>> +     the original setup header every update to it should be considered
+>>> +     with great care. Starting from the protocol 2.15 the primary way to
+>>> +     communicate things to the boot loader is the kernel_info.
+>>> +
+>>>
+>>>  Memory Layout
+>>>  =============
+>>> @@ -207,6 +224,7 @@ Offset/Size	Proto		Name			Meaning
+>>>  0258/8		2.10+		pref_address		Preferred loading address
+>>>  0260/4		2.10+		init_size		Linear memory required during initialization
+>>>  0264/4		2.11+		handover_offset		Offset of handover entry point
+>>> +0268/4		2.15+		kernel_info_offset	Offset of the kernel_info
+>>>  ===========	========	=====================	============================================
+>>>
+>>>  .. note::
+>>> @@ -855,6 +873,109 @@ Offset/size:	0x264/4
+>>>
+>>>    See EFI HANDOVER PROTOCOL below for more details.
+>>>
+>>> +============	==================
+>>> +Field name:	kernel_info_offset
+>>> +Type:		read
+>>> +Offset/size:	0x268/4
+>>> +Protocol:	2.15+
+>>> +============	==================
+>>> +
+>>> +  This field is the offset from the beginning of the kernel image to the
+>>> +  kernel_info. It is embedded in the Linux image in the uncompressed
+>>                   ^^
+>>    What does      It   refer to, please?
+> 
+> s/It/The kernel_info structure/ Is it better?
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.78-115-g4d84b0bb68d4/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.78-115-g4d84b0bb68d4/
+Yes.
 
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.78-115-g4d84b0bb68d4
-Git Commit: 4d84b0bb68d49edd179af2b16d4b912c1568a182
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 70 unique boards, 22 SoC families, 16 builds out of 206
+>>> +  protected mode region.
+>>> +
+>>> +
+>>> +The kernel_info
+>>> +===============
+>>> +
+>>> +The relationships between the headers are analogous to the various data
+>>> +sections:
+>>> +
+>>> +  setup_header = .data
+>>> +  boot_params/setup_data = .bss
+>>> +
+>>> +What is missing from the above list? That's right:
+>>> +
+>>> +  kernel_info = .rodata
+>>> +
+>>> +We have been (ab)using .data for things that could go into .rodata or .bss for
+>>> +a long time, for lack of alternatives and -- especially early on -- inertia.
+>>> +Also, the BIOS stub is responsible for creating boot_params, so it isn't
+>>> +available to a BIOS-based loader (setup_data is, though).
+>>> +
+>>> +setup_header is permanently limited to 144 bytes due to the reach of the
+>>> +2-byte jump field, which doubles as a length field for the structure, combined
+>>> +with the size of the "hole" in struct boot_params that a protected-mode loader
+>>> +or the BIOS stub has to copy it into. It is currently 119 bytes long, which
+>>> +leaves us with 25 very precious bytes. This isn't something that can be fixed
+>>> +without revising the boot protocol entirely, breaking backwards compatibility.
+>>> +
+>>> +boot_params proper is limited to 4096 bytes, but can be arbitrarily extended
+>>> +by adding setup_data entries. It cannot be used to communicate properties of
+>>> +the kernel image, because it is .bss and has no image-provided content.
+>>> +
+>>> +kernel_info solves this by providing an extensible place for information about
+>>> +the kernel image. It is readonly, because the kernel cannot rely on a
+>>> +bootloader copying its contents anywhere, but that is OK; if it becomes
+>>> +necessary it can still contain data items that an enabled bootloader would be
+>>> +expected to copy into a setup_data chunk.
+>>> +
+>>> +All kernel_info data should be part of this structure. Fixed size data have to
+>>> +be put before kernel_info_var_len_data label. Variable size data have to be put
+>>> +behind kernel_info_var_len_data label. Each chunk of variable size data has to
+>>
+>>    s/behind/after/
+> 
+> OK.
+> 
+>>> +be prefixed with header/magic and its size, e.g.:
+>>> +
+>>> +  kernel_info:
+>>> +          .ascii  "LToP"          /* Header, Linux top (structure). */
+>>> +          .long   kernel_info_var_len_data - kernel_info
+>>> +          .long   kernel_info_end - kernel_info
+>>> +          .long   0x01234567      /* Some fixed size data for the bootloaders. */
+>>> +  kernel_info_var_len_data:
+>>> +  example_struct:                 /* Some variable size data for the bootloaders. */
+>>> +          .ascii  "EsTT"          /* Header/Magic. */
+>>> +          .long   example_struct_end - example_struct
+>>> +          .ascii  "Struct"
+>>> +          .long   0x89012345
+>>> +  example_struct_end:
+>>> +  example_strings:                /* Some variable size data for the bootloaders. */
+>>> +          .ascii  "EsTs"          /* Header/Magic. */
+>>
+>> Where do the Magic values "EsTT" and "EsTs" come from?
+>> where are they defined?
+> 
+> EsTT == Example STrucT
+> EsTs == Example STringS
+> 
+> Anyway, it can be anything which does not collide with existing variable
+> length data magics. There are none right now. So, it can be anything.
+> Maybe I should add something saying that.
 
-Offline Platforms:
+Yes, please.
 
-arm:
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-arm64:
-
-    defconfig:
-        gcc-8
-            apq8016-sbc: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+thanks.
+-- 
+~Randy
