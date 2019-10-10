@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E02C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D00C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2008F21929
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D37D21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697002;
-	bh=pBeAS6A7LRD8yPJsSSTWTnoFfgaLOPqFv1K1vsCt9L0=;
+	s=default; t=1570697006;
+	bh=BOanT1SW13OnGnjPMS6uXvmdJhRS0NsJ5UKaucbKJNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u8VEl1ZJNuViDBnATO41iGG8mX9z0l+GYpiJAZZYjNgX/Lz5ZKy1huj+vSrCR+uty
-	 aaFahWEBjmrnuOFa2so2ckWmS9rajxEuDXZlSRx8qoxeWlOucaAcJRIwxX/VXRY/YQ
-	 HFJejU6i3QUVdMJaF1mLba3WDu/QsEVT7o+uU+j0=
+	b=ger50gfj5/jtN12Ju6BpbJSApaLjxCiwfdgLWv7P6i/xB6f1W+96HKyzu4BhpGOMB
+	 RVVlYCBrh+MdeG7jwBMMiPDAV/1W5640DPtJ5HgaWgV5pnDimlnmvUfZ5GlCTc1wiw
+	 q6JVH+CAJuK/w5zyZYmvTJMvwZKXP+7iAmcJXW00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388720AbfJJInU (ORCPT
+        id S2388727AbfJJInY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48090 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388704AbfJJInR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:43:17 -0400
+        id S2388073AbfJJInW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:43:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0993421A4A;
-        Thu, 10 Oct 2019 08:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A39A2190F;
+        Thu, 10 Oct 2019 08:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696996;
-        bh=pBeAS6A7LRD8yPJsSSTWTnoFfgaLOPqFv1K1vsCt9L0=;
+        s=default; t=1570697002;
+        bh=BOanT1SW13OnGnjPMS6uXvmdJhRS0NsJ5UKaucbKJNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=auwbJ5d40hn4WWn0+nxtrXTItijZl60q+XZVr7k8n9kSI5YDHdivbQq7037sSm7B1
-         XprNStjzMPaO3J7yGfxUTw19Jah0mg2wsMafdbs/+4PDSlLrOVtL2NQ7SgkaUyMDOD
-         uowkZQhrPuEGXplCTHo5h27PYj8aCTAlPE0UhOf0=
+        b=POg6CoZfdbdNeAQlwE8pJm5wJrYy9BLnRM6TN6aG2ZHePC7TL3rfNcyKQ/HFhMu/5
+         YUHVB6QlY+5oWZuMjUY3RlY6SENziDFJoLC/g25mRsp07cwYL/udCm2VR0cdHmw38J
+         i1vHxMgSejfHhEcuY5belnNcW+cL0rWKpB6riqF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.3 085/148] nl80211: validate beacon head
-Date:   Thu, 10 Oct 2019 10:35:46 +0200
-Message-Id: <20191010083616.514723385@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.3 087/148] cfg80211: initialize on-stack chandefs
+Date:   Thu, 10 Oct 2019 10:35:48 +0200
+Message-Id: <20191010083616.634383014@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,79 +61,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johannes Berg <johannes.berg@intel.com>
 
-commit f88eb7c0d002a67ef31aeb7850b42ff69abc46dc upstream.
+commit f43e5210c739fe76a4b0ed851559d6902f20ceb1 upstream.
 
-We currently don't validate the beacon head, i.e. the header,
-fixed part and elements that are to go in front of the TIM
-element. This means that the variable elements there can be
-malformed, e.g. have a length exceeding the buffer size, but
-most downstream code from this assumes that this has already
-been checked.
+In a few places we don't properly initialize on-stack chandefs,
+resulting in EDMG data to be non-zero, which broke things.
 
-Add the necessary checks to the netlink policy.
+Additionally, in a few places we rely on the driver to init the
+data completely, but perhaps we shouldn't as non-EDMG drivers
+may not initialize the EDMG data, also initialize it there.
 
 Cc: stable@vger.kernel.org
-Fixes: ed1b6cc7f80f ("cfg80211/nl80211: add beacon settings")
-Link: https://lore.kernel.org/r/1569009255-I7ac7fbe9436e9d8733439eab8acbbd35e55c74ef@changeid
+Fixes: 2a38075cd0be ("nl80211: Add support for EDMG channels")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/1569239475-I2dcce394ecf873376c386a78f31c2ec8b538fa25@changeid
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c |   37 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+ net/wireless/nl80211.c     |    4 +++-
+ net/wireless/reg.c         |    2 +-
+ net/wireless/wext-compat.c |    2 +-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
 --- a/net/wireless/nl80211.c
 +++ b/net/wireless/nl80211.c
-@@ -201,6 +201,38 @@ cfg80211_get_dev_from_info(struct net *n
- 	return __cfg80211_rdev_from_attrs(netns, info->attrs);
- }
+@@ -2597,6 +2597,8 @@ int nl80211_parse_chandef(struct cfg8021
  
-+static int validate_beacon_head(const struct nlattr *attr,
-+				struct netlink_ext_ack *extack)
-+{
-+	const u8 *data = nla_data(attr);
-+	unsigned int len = nla_len(attr);
-+	const struct element *elem;
-+	const struct ieee80211_mgmt *mgmt = (void *)data;
-+	unsigned int fixedlen = offsetof(struct ieee80211_mgmt,
-+					 u.beacon.variable);
+ 	control_freq = nla_get_u32(attrs[NL80211_ATTR_WIPHY_FREQ]);
+ 
++	memset(chandef, 0, sizeof(*chandef));
 +
-+	if (len < fixedlen)
-+		goto err;
-+
-+	if (ieee80211_hdrlen(mgmt->frame_control) !=
-+	    offsetof(struct ieee80211_mgmt, u.beacon))
-+		goto err;
-+
-+	data += fixedlen;
-+	len -= fixedlen;
-+
-+	for_each_element(elem, data, len) {
-+		/* nothing */
-+	}
-+
-+	if (for_each_element_completed(elem, data, len))
-+		return 0;
-+
-+err:
-+	NL_SET_ERR_MSG_ATTR(extack, attr, "malformed beacon head");
-+	return -EINVAL;
-+}
-+
- static int validate_ie_attr(const struct nlattr *attr,
- 			    struct netlink_ext_ack *extack)
+ 	chandef->chan = ieee80211_get_channel(&rdev->wiphy, control_freq);
+ 	chandef->width = NL80211_CHAN_WIDTH_20_NOHT;
+ 	chandef->center_freq1 = control_freq;
+@@ -3125,7 +3127,7 @@ static int nl80211_send_iface(struct sk_
+ 
+ 	if (rdev->ops->get_channel) {
+ 		int ret;
+-		struct cfg80211_chan_def chandef;
++		struct cfg80211_chan_def chandef = {};
+ 
+ 		ret = rdev_get_channel(rdev, wdev, &chandef);
+ 		if (ret == 0) {
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -2108,7 +2108,7 @@ static void reg_call_notifier(struct wip
+ 
+ static bool reg_wdev_chan_valid(struct wiphy *wiphy, struct wireless_dev *wdev)
  {
-@@ -322,8 +354,9 @@ const struct nla_policy nl80211_policy[N
+-	struct cfg80211_chan_def chandef;
++	struct cfg80211_chan_def chandef = {};
+ 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
+ 	enum nl80211_iftype iftype;
  
- 	[NL80211_ATTR_BEACON_INTERVAL] = { .type = NLA_U32 },
- 	[NL80211_ATTR_DTIM_PERIOD] = { .type = NLA_U32 },
--	[NL80211_ATTR_BEACON_HEAD] = { .type = NLA_BINARY,
--				       .len = IEEE80211_MAX_DATA_LEN },
-+	[NL80211_ATTR_BEACON_HEAD] =
-+		NLA_POLICY_VALIDATE_FN(NLA_BINARY, validate_beacon_head,
-+				       IEEE80211_MAX_DATA_LEN),
- 	[NL80211_ATTR_BEACON_TAIL] =
- 		NLA_POLICY_VALIDATE_FN(NLA_BINARY, validate_ie_attr,
- 				       IEEE80211_MAX_DATA_LEN),
+--- a/net/wireless/wext-compat.c
++++ b/net/wireless/wext-compat.c
+@@ -797,7 +797,7 @@ static int cfg80211_wext_giwfreq(struct
+ {
+ 	struct wireless_dev *wdev = dev->ieee80211_ptr;
+ 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
+-	struct cfg80211_chan_def chandef;
++	struct cfg80211_chan_def chandef = {};
+ 	int ret;
+ 
+ 	switch (wdev->iftype) {
 
 
