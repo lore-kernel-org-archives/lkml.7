@@ -2,109 +2,91 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B2AECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB13C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA9A20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1C420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ho8GObx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfJJR5Q (ORCPT
+        id S1726847AbfJJSAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:57:16 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:53342 "EHLO ale.deltatee.com"
+        Thu, 10 Oct 2019 14:00:18 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55384 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbfJJR5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:57:16 -0400
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1iIcgF-0000Hl-4N; Thu, 10 Oct 2019 11:56:52 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20191009192530.13079-1-logang@deltatee.com>
- <20191009192530.13079-12-logang@deltatee.com> <20191010100526.GA27209@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <d0b7e064-2e28-83b0-1593-405ab75d5bd2@deltatee.com>
-Date:   Thu, 10 Oct 2019 11:56:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726157AbfJJSAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 14:00:18 -0400
+Received: from zn.tnic (p200300EC2F0A6300D1C0EB70E9B309BA.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6300:d1c0:eb70:e9b3:9ba])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B7011EC090E;
+        Thu, 10 Oct 2019 20:00:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1570730415;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Xe1SX//dDoWeX+ij/nDraOaVSkSMgvg4F8+xxebszBM=;
+        b=ho8GObx8x8ogaRx5uJLjl31cqJAZGDuZNy/gKli2vkRXyewbGzasCVSSCyhDoQQwLUSAdB
+        6Ch+ilhWD9WU/Q44lP40VOutBHAqCxDcNCYXoLlw0x0BYwbf3EhUuehrKk4qWbR8joF/Uh
+        MKxwSv/3EwfqYFCfTb6K2+9UEj5t1ns=
+Date:   Thu, 10 Oct 2019 20:00:08 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 28/29] x86/mm: Report actual image regions in /proc/iomem
+Message-ID: <20191010180008.GH7658@zn.tnic>
+References: <20190926175602.33098-1-keescook@chromium.org>
+ <20190926175602.33098-29-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20191010100526.GA27209@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v9 10/12] block: don't check blk_rq_is_passthrough() in
- blk_do_io_stat()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Disposition: inline
+In-Reply-To: <20190926175602.33098-29-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+On Thu, Sep 26, 2019 at 10:56:01AM -0700, Kees Cook wrote:
+> The resource reservations in made for the kernel image did not reflect
+			      ^
+			      /proc/iomem
 
-Thanks for the thorough review, lots here to go through. I'll address it
-all as I have time and try to get the prep work done first, as soon as I
-can.
+> the gaps between text, rodata, and data. This adds the rodata resource
 
-On 2019-10-10 4:05 a.m., Christoph Hellwig wrote:
->> @@ -319,7 +319,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
->>  	rq->cmd_flags = op;
->>  	if (data->flags & BLK_MQ_REQ_PREEMPT)
->>  		rq->rq_flags |= RQF_PREEMPT;
->> -	if (blk_queue_io_stat(data->q))
->> +	if (blk_queue_io_stat(data->q) && !blk_rq_is_passthrough(rq))
->>  		rq->rq_flags |= RQF_IO_STAT;
+s/This adds/Add/
+
+> and updates the start/end calculations to match the respective calls to
+
+s/updates/update/
+
+> free_kernel_image_pages().
 > 
-> This needs a comment why we don't account passthrough requests by
-> default.  And I'm really curious about the answer, because I don't
-> know it myself.
+> Before (booted with "nokaslr" for easier comparison):
 
-Yes, sadly, I don't know this answer either but the comment made it
-appear that someone did it deliberately. Digging into git blame suggests
-that it just evolved that way. The check was originally added in 2005
-here with blk_fs_request():
+...
 
-commit d72d904a5367 ("[BLOCK] Update read/write block io statistics at
-completion time")
+-- 
+Regards/Gruss,
+    Boris.
 
-blk_fs_request() evolved to become blk_rq_is_passthrough() but I suspect
-no one ever considered whether we want to account the passthru requests.
-
-So, I'll leave this restriction out and see if anyone complains.
-
-Logan
-
->>   *	a) it's attached to a gendisk, and
->>   *	b) the queue had IO stats enabled when this request was started, and
->> - *	c) it's a file system request
->> + *	c) it's a file system request (RQF_IO_STAT will not be set otherwise)
-> 
-> c) should just go away now based on your changes.
-> 
->>  static inline bool blk_do_io_stat(struct request *rq)
->>  {
->>  	return rq->rq_disk &&
->> -	       (rq->rq_flags & RQF_IO_STAT) &&
->> -		!blk_rq_is_passthrough(rq);
->> +	       (rq->rq_flags & RQF_IO_STAT);
-> 
-> The check can be collapsed onto a single line now.
-> 
-
-
+https://people.kernel.org/tglx/notes-about-netiquette
