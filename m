@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69513C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BFDC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BDA2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D452190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697155;
-	bh=Cj6zVdwil1V9LHOzG+BAeozXgHOjbyNXgx+HXxMd0CM=;
+	s=default; t=1570697169;
+	bh=YjZS4138O8AQQGbJuVTLVInle2sdwhFjSQ4SBwSHri8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vWnGPzAzqIAfBtSgfM7g+bo6r6wJjItN/RNsjA2tuA85h0Sax4EgwLyXAeNU9TP4B
-	 AP62VGDCOnCu+nnMc/Yf28dp7ZoGxFgGS6L6OxaM9P/LuyeK3T+x5t5XPPhIV1G0dQ
-	 Q6aCVy6if4HsnOID4H+UDGQZSdD7zuT702yz3cVQ=
+	b=sT3d4j06MfQhPEUOaQStIEX6AocS+Ac3ebalO/iHDc0B1Vce1ExoAXSb+ukeU+pY2
+	 3svQ3oXkCzQp3iF76ueneO0TrSqBHLlaWCAqFLb73qbgYAqEBUsZYs28d2Rego/okb
+	 Y0FpzPxlN8zEVZRWiug2MQOgNxrGWaApGXGrIL8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389227AbfJJIpx (ORCPT
+        id S2387755AbfJJIqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389207AbfJJIpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:49 -0400
+        id S2388533AbfJJIp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C49762190F;
-        Thu, 10 Oct 2019 08:45:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8D022064A;
+        Thu, 10 Oct 2019 08:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697149;
-        bh=Cj6zVdwil1V9LHOzG+BAeozXgHOjbyNXgx+HXxMd0CM=;
+        s=default; t=1570697157;
+        bh=YjZS4138O8AQQGbJuVTLVInle2sdwhFjSQ4SBwSHri8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gpb38uxFL7nXHkL6DI2IotmDu+3JgMYdC31shpDY7ki1ziIDRfElbJrfzuX+5RP+0
-         Ax3MKdcu6javwOdYLqu8fUtf674DJMml3J+OLcsLrhSKA1iuhxgVQ6qy9UVPx9ZxA1
-         84omyPo7Hant79wmmpKTsPrMerbkA9+ixzSKvZhA=
+        b=auXHbZVQ2DeyGI7aSmlzpwd2gti5TFMZBpMkKqzydR2VxydkOZ4TXAaGY2vJJhoov
+         0+g5sNB6b48ZUYj836SV/ePC/KfINlE+cYAtGdddKVnq5k9WMfAXUHbxsOa7X23HMv
+         iGQYE9Aoo/DDwmRiFIgu0o5498TGxrRxZ3OYv+8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 4.19 035/114] watchdog: imx2_wdt: fix min() calculation in imx2_wdt_set_timeout
-Date:   Thu, 10 Oct 2019 10:35:42 +0200
-Message-Id: <20191010083601.861038621@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>
+Subject: [PATCH 4.19 006/114] KVM: PPC: Book3S HV: Check for MMU ready on piggybacked virtual cores
+Date:   Thu, 10 Oct 2019 10:35:13 +0200
+Message-Id: <20191010083547.134529109@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -61,53 +58,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Paul Mackerras <paulus@ozlabs.org>
 
-commit 144783a80cd2cbc45c6ce17db649140b65f203dd upstream.
+commit d28eafc5a64045c78136162af9d4ba42f8230080 upstream.
 
-Converting from ms to s requires dividing by 1000, not multiplying. So
-this is currently taking the smaller of new_timeout and 1.28e8,
-i.e. effectively new_timeout.
+When we are running multiple vcores on the same physical core, they
+could be from different VMs and so it is possible that one of the
+VMs could have its arch.mmu_ready flag cleared (for example by a
+concurrent HPT resize) when we go to run it on a physical core.
+We currently check the arch.mmu_ready flag for the primary vcore
+but not the flags for the other vcores that will be run alongside
+it.  This adds that check, and also a check when we select the
+secondary vcores from the preempted vcores list.
 
-The driver knows what it set max_hw_heartbeat_ms to, so use that
-value instead of doing a division at run-time.
-
-FWIW, this can easily be tested by booting into a busybox shell and
-doing "watchdog -t 5 -T 130 /dev/watchdog" - without this patch, the
-watchdog fires after 130&127 == 2 seconds.
-
-Fixes: b07e228eee69 "watchdog: imx2_wdt: Fix set_timeout for big timeout values"
-Cc: stable@vger.kernel.org # 5.2 plus anything the above got backported to
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20190812131356.23039-1-linux@rasmusvillemoes.dk
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: stable@vger.kernel.org # v4.14+
+Fixes: 38c53af85306 ("KVM: PPC: Book3S HV: Fix exclusion between HPT resizing and other HPT updates")
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/imx2_wdt.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kvm/book3s_hv.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -55,7 +55,7 @@
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -2550,7 +2550,7 @@ static void collect_piggybacks(struct co
+ 		if (!spin_trylock(&pvc->lock))
+ 			continue;
+ 		prepare_threads(pvc);
+-		if (!pvc->n_runnable) {
++		if (!pvc->n_runnable || !pvc->kvm->arch.mmu_ready) {
+ 			list_del_init(&pvc->preempt_list);
+ 			if (pvc->runner == NULL) {
+ 				pvc->vcore_state = VCORE_INACTIVE;
+@@ -2571,15 +2571,20 @@ static void collect_piggybacks(struct co
+ 	spin_unlock(&lp->lock);
+ }
  
- #define IMX2_WDT_WMCR		0x08		/* Misc Register */
- 
--#define IMX2_WDT_MAX_TIME	128
-+#define IMX2_WDT_MAX_TIME	128U
- #define IMX2_WDT_DEFAULT_TIME	60		/* in seconds */
- 
- #define WDOG_SEC_TO_COUNT(s)	((s * 2 - 1) << 8)
-@@ -180,7 +180,7 @@ static int imx2_wdt_set_timeout(struct w
+-static bool recheck_signals(struct core_info *cip)
++static bool recheck_signals_and_mmu(struct core_info *cip)
  {
- 	unsigned int actual;
+ 	int sub, i;
+ 	struct kvm_vcpu *vcpu;
++	struct kvmppc_vcore *vc;
  
--	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
-+	actual = min(new_timeout, IMX2_WDT_MAX_TIME);
- 	__imx2_wdt_set_timeout(wdog, actual);
- 	wdog->timeout = new_timeout;
- 	return 0;
+-	for (sub = 0; sub < cip->n_subcores; ++sub)
+-		for_each_runnable_thread(i, vcpu, cip->vc[sub])
++	for (sub = 0; sub < cip->n_subcores; ++sub) {
++		vc = cip->vc[sub];
++		if (!vc->kvm->arch.mmu_ready)
++			return true;
++		for_each_runnable_thread(i, vcpu, vc)
+ 			if (signal_pending(vcpu->arch.run_task))
+ 				return true;
++	}
+ 	return false;
+ }
+ 
+@@ -2800,7 +2805,7 @@ static noinline void kvmppc_run_core(str
+ 	local_irq_disable();
+ 	hard_irq_disable();
+ 	if (lazy_irq_pending() || need_resched() ||
+-	    recheck_signals(&core_info) || !vc->kvm->arch.mmu_ready) {
++	    recheck_signals_and_mmu(&core_info)) {
+ 		local_irq_enable();
+ 		vc->vcore_state = VCORE_INACTIVE;
+ 		/* Unlock all except the primary vcore */
 
 
