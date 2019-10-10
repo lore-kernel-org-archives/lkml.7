@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63040C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69513C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9EE2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44BDA2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697151;
-	bh=REnVTK/vJsHqsJ2ph+V4kW/zCAVVACeJOLkSLwg2JdE=;
+	s=default; t=1570697155;
+	bh=Cj6zVdwil1V9LHOzG+BAeozXgHOjbyNXgx+HXxMd0CM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0MC7QWm4jPi7I2akqt2pBpEvsHB2IhOvVzehWpDaKmn1Ck/LZphJZYTj96QRKgigJ
-	 AQtFJhsZxqk5kDQzPK6KkNB+V1jVfnSn1u3WniaZ+sLgm7XjdNfg5YPfnhfbLU2RYZ
-	 LcIF2JRTBDH6u9a0nxrm6dVQExPlDi6QIqWHZgq8=
+	b=vWnGPzAzqIAfBtSgfM7g+bo6r6wJjItN/RNsjA2tuA85h0Sax4EgwLyXAeNU9TP4B
+	 AP62VGDCOnCu+nnMc/Yf28dp7ZoGxFgGS6L6OxaM9P/LuyeK3T+x5t5XPPhIV1G0dQ
+	 Q6aCVy6if4HsnOID4H+UDGQZSdD7zuT702yz3cVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389214AbfJJIpu (ORCPT
+        id S2389227AbfJJIpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51514 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389195AbfJJIpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:47 -0400
+        id S2389207AbfJJIpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04D1D208C3;
-        Thu, 10 Oct 2019 08:45:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C49762190F;
+        Thu, 10 Oct 2019 08:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697146;
-        bh=REnVTK/vJsHqsJ2ph+V4kW/zCAVVACeJOLkSLwg2JdE=;
+        s=default; t=1570697149;
+        bh=Cj6zVdwil1V9LHOzG+BAeozXgHOjbyNXgx+HXxMd0CM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dma4e8u0n56aZBqsvagRIh5QOPuh+gaUgtfMU7vdcdQ5jkdocdsv+ou6MisPgrixU
-         7XZTOBV5UTNmStCV4D8j9mI0NcrbyehAqUYRjt35Z7qmA0rfXe3Z4vtmurP46noNDj
-         qFRbk41GxHJ+3jFyIrimBqrHIbdC1MLGyr87i1vY=
+        b=Gpb38uxFL7nXHkL6DI2IotmDu+3JgMYdC31shpDY7ki1ziIDRfElbJrfzuX+5RP+0
+         Ax3MKdcu6javwOdYLqu8fUtf674DJMml3J+OLcsLrhSKA1iuhxgVQ6qy9UVPx9ZxA1
+         84omyPo7Hant79wmmpKTsPrMerbkA9+ixzSKvZhA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [PATCH 4.19 034/114] PCI: Restore Resizable BAR size bits correctly for 1MB BARs
-Date:   Thu, 10 Oct 2019 10:35:41 +0200
-Message-Id: <20191010083601.646843873@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 4.19 035/114] watchdog: imx2_wdt: fix min() calculation in imx2_wdt_set_timeout
+Date:   Thu, 10 Oct 2019 10:35:42 +0200
+Message-Id: <20191010083601.861038621@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,50 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Saxena <sumit.saxena@broadcom.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-commit d2182b2d4b71ff0549a07f414d921525fade707b upstream.
+commit 144783a80cd2cbc45c6ce17db649140b65f203dd upstream.
 
-In a Resizable BAR Control Register, bits 13:8 control the size of the BAR.
-The encoded values of these bits are as follows (see PCIe r5.0, sec
-7.8.6.3):
+Converting from ms to s requires dividing by 1000, not multiplying. So
+this is currently taking the smaller of new_timeout and 1.28e8,
+i.e. effectively new_timeout.
 
-  Value    BAR size
-     0     1 MB (2^20 bytes)
-     1     2 MB (2^21 bytes)
-     2     4 MB (2^22 bytes)
-   ...
-    43     8 EB (2^63 bytes)
+The driver knows what it set max_hw_heartbeat_ms to, so use that
+value instead of doing a division at run-time.
 
-Previously we incorrectly set the BAR size bits for a 1 MB BAR to 0x1f
-instead of 0, so devices that support that size, e.g., new megaraid_sas and
-mpt3sas adapters, fail to initialize during resume from S3 sleep.
+FWIW, this can easily be tested by booting into a busybox shell and
+doing "watchdog -t 5 -T 130 /dev/watchdog" - without this patch, the
+watchdog fires after 130&127 == 2 seconds.
 
-Correctly calculate the BAR size bits for Resizable BAR control registers.
-
-Link: https://lore.kernel.org/r/20190725192552.24295-1-sumit.saxena@broadcom.com
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203939
-Fixes: d3252ace0bc6 ("PCI: Restore resized BAR state on resume")
-Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Cc: stable@vger.kernel.org	# v4.19+
+Fixes: b07e228eee69 "watchdog: imx2_wdt: Fix set_timeout for big timeout values"
+Cc: stable@vger.kernel.org # 5.2 plus anything the above got backported to
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20190812131356.23039-1-linux@rasmusvillemoes.dk
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/imx2_wdt.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1366,7 +1366,7 @@ static void pci_restore_rebar_state(stru
- 		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
- 		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
- 		res = pdev->resource + bar_idx;
--		size = order_base_2((resource_size(res) >> 20) | 1) - 1;
-+		size = ilog2(resource_size(res)) - 20;
- 		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
- 		ctrl |= size << PCI_REBAR_CTRL_BAR_SHIFT;
- 		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
+--- a/drivers/watchdog/imx2_wdt.c
++++ b/drivers/watchdog/imx2_wdt.c
+@@ -55,7 +55,7 @@
+ 
+ #define IMX2_WDT_WMCR		0x08		/* Misc Register */
+ 
+-#define IMX2_WDT_MAX_TIME	128
++#define IMX2_WDT_MAX_TIME	128U
+ #define IMX2_WDT_DEFAULT_TIME	60		/* in seconds */
+ 
+ #define WDOG_SEC_TO_COUNT(s)	((s * 2 - 1) << 8)
+@@ -180,7 +180,7 @@ static int imx2_wdt_set_timeout(struct w
+ {
+ 	unsigned int actual;
+ 
+-	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
++	actual = min(new_timeout, IMX2_WDT_MAX_TIME);
+ 	__imx2_wdt_set_timeout(wdog, actual);
+ 	wdog->timeout = new_timeout;
+ 	return 0;
 
 
