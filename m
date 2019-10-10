@@ -2,173 +2,123 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E826C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46354C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532A3218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183FA218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:50:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RFG6HwCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733053AbfJJHuE (ORCPT
+        id S1733083AbfJJHuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:50:04 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41043 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfJJHuD (ORCPT
+        Thu, 10 Oct 2019 03:50:13 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44361 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfJJHuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:50:03 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w65so4090250oiw.8;
-        Thu, 10 Oct 2019 00:50:02 -0700 (PDT)
+        Thu, 10 Oct 2019 03:50:13 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so3334454pfn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 00:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BMwVxKJ5pjT6AAme6CzPathy+GO4sDWlKBre4oI24yA=;
+        b=RFG6HwCYSDramAhQi1uVRJXiRCVoJbWbPFfqpgOBrr+ONoYndjuqcaaKVXq5mGam8b
+         NZtTefp9ssgMDcOeS44tvnd/S01DBUC/puqu1Pc1WrhMLPuHRw/wlomndD3BsbpSaPGb
+         gHUbAX/+u3EKiwTIyQl/RS16LhLTepVBNK6XM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eVvYMYarzhJrwE6yFFXzgyZHGyeDwkr9hOnx2vpOIME=;
-        b=sQjRzxgoV2fVt9VQ8HLD9tfkIyoKEhVLiwZKGSWBBPHZALAwqOxYqMbxjldy1Bjb6t
-         60/+m8RT2fWioCImfgcsYpPbr1LfLj9BdyWqQaJIpu6MOfdNvFWsZH4pE32U3bmIwmt2
-         p98hWEW/xu0FQDrzhbUvXoO58QNkl0nGzjeKHz+okMZy/CzJLASnd4OEaecYa+UhTevd
-         KztaqpDLD33b83Up3iHUwAfaeL71pgwoxsQTft0lC0Bz564km0KamB8J8SCoVoVrtzR7
-         ZeftpTydP8VTrPeRYgN40IC7LnMwf+/OFnjxvSC6kr5OKcoTwu1FXunqYcdp3idL4Fov
-         Temg==
-X-Gm-Message-State: APjAAAX10R0cMSuWOPPRGkwnFoHDO46drWjd9YsEPh8sm2JTCKrKkuk3
-        YwWq946NN44imCaDVi2tfmN2HnOVdP1FtQMtDK0=
-X-Google-Smtp-Source: APXvYqysMMf5yeS+bvd+d64d0b4d0QWCLGnQ+1EuJ7pMdhAJG06ztEeNrc8aR7qc9c2xlUXkVf58Z+O0t+BAwLK1Mcs=
-X-Received: by 2002:aca:cf58:: with SMTP id f85mr6038657oig.153.1570693802394;
- Thu, 10 Oct 2019 00:50:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BMwVxKJ5pjT6AAme6CzPathy+GO4sDWlKBre4oI24yA=;
+        b=jEr4iE5fXv/PiDcBaN31m/dfAxLYCKTMIaLOlTQAkof7YBLH8SWKlAWvvcQ081FIDO
+         VExmZfP4ORwawSdHSuo8hMQlsS1eiCilpJ+wikah88SZHyp2XXk+ZjkLWYnmkljkVMTR
+         /cWm55uS0sTLoKz/tFNTgsBzInUKa6hlcI2DA5a4g5pzoZxk1AU9f7BoKmVMx48DAc4f
+         Sm/e921B7kcZu6U1petgXa/rN+lXWFIEyPp/dvXCaj7i7Q1329HGfKm6RHmhwO80G1Lv
+         Ga+++CGEexwoJK7V3wff1mJV0Ze9CbsRqfs7wjuVjKe+oAwePe2WgSbF3fd/VIxD54kZ
+         o4Zw==
+X-Gm-Message-State: APjAAAVg+S2q14I3xZnzm3FjmbbBced4oRjyB3k0HPjL6X1ml7QkSl4z
+        c0PuRuWqS4Qfvj9T5mcnBuSPvw==
+X-Google-Smtp-Source: APXvYqyImi2kgnGChUg2KfgfL+4s6k7vSPd2oI6xHbrOyAm/ZcqmRMonHqTVcAChWDBQgIDHwV/S+w==
+X-Received: by 2002:a63:4e09:: with SMTP id c9mr9163082pgb.98.1570693812256;
+        Thu, 10 Oct 2019 00:50:12 -0700 (PDT)
+Received: from tfiga.tok.corp.google.com ([2401:fa00:8f:203:f5fe:2a5e:f953:c0ed])
+        by smtp.gmail.com with ESMTPSA id 22sm4812489pfj.139.2019.10.10.00.50.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 00:50:11 -0700 (PDT)
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     linux-usb@vger.kernel.org
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support), linux-kernel@vger.kernel.org (open list),
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Changqi Hu <Changqi.Hu@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Shik Chen <shik@chromium.org>, Tomasz Figa <tfiga@chromium.org>
+Subject: [PATCH] usb: mtk-xhci: Set the XHCI_NO_64BIT_SUPPORT quirk
+Date:   Thu, 10 Oct 2019 16:50:04 +0900
+Message-Id: <20191010075004.192818-1-tfiga@chromium.org>
+X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
 MIME-Version: 1.0
-References: <cover.1570633189.git.vilhelm.gray@gmail.com> <893c3b4f03266c9496137cc98ac2b1bd27f92c73.1570633189.git.vilhelm.gray@gmail.com>
- <CAK7LNATgW7bXUmqV=3QAaJ0Qu73Kox-TgDCQJb=s0=mwewSCUg@mail.gmail.com>
- <20191009170917.GG32742@smile.fi.intel.com> <CAMuHMdXyyrL4ibKvjMV6r8TuxpmK73=JxsWNEfcRk1NjwsnOjA@mail.gmail.com>
- <CAK7LNASVdqU_6+_iinWStb9ALqLw494pnZKr46fLW+WJ9nUo6A@mail.gmail.com>
- <CAHp75VeLkfNZkqhD8tedJdav81L+VA3Z50Kwcd9h4R7zMwjtvA@mail.gmail.com>
- <CAMuHMdVs=PgET6=-fKgznETOye_Bxqt6h16Ok0nu6J2vXG-r_w@mail.gmail.com> <CAHp75Vc8HX=hs2F2R_wOaFM7cFjaX0k_kENybdxSh742PpVkjw@mail.gmail.com>
-In-Reply-To: <CAHp75Vc8HX=hs2F2R_wOaFM7cFjaX0k_kENybdxSh742PpVkjw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 10 Oct 2019 09:49:51 +0200
-Message-ID: <CAMuHMdVrQyt=VJ8outiGEXW78-cY=YUWyeVXN-_MFg75erJ=Yg@mail.gmail.com>
-Subject: Re: [PATCH v17 01/14] bitops: Introduce the for_each_set_clump8 macro
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Phil Reid <preid@electromag.com.au>,
-        Lukas Wunner <lukas@wunner.de>, sean.nyekjaer@prevas.dk,
-        morten.tiljeset@prevas.dk, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+MediaTek XHCI host controller does not support 64-bit addressing despite
+the AC64 bit of HCCPARAMS1 register being set. The platform-specific
+glue sets the DMA mask to 32 bits on its own, but it has no effect,
+because xhci_gen_setup() overrides it according to hardware
+capabilities.
 
-On Thu, Oct 10, 2019 at 9:42 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Thu, Oct 10, 2019 at 9:29 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Oct 10, 2019 at 7:49 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, Oct 10, 2019 at 5:31 AM Masahiro Yamada
-> > > <yamada.masahiro@socionext.com> wrote:
-> > > > On Thu, Oct 10, 2019 at 3:54 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > On Wed, Oct 9, 2019 at 7:09 PM Andy Shevchenko
-> > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > On Thu, Oct 10, 2019 at 01:28:08AM +0900, Masahiro Yamada wrote:
-> > > > > > > On Thu, Oct 10, 2019 at 12:27 AM William Breathitt Gray
-> > > > > > > <vilhelm.gray@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > This macro iterates for each 8-bit group of bits (clump) with set bits,
-> > > > > > > > within a bitmap memory region. For each iteration, "start" is set to the
-> > > > > > > > bit offset of the found clump, while the respective clump value is
-> > > > > > > > stored to the location pointed by "clump". Additionally, the
-> > > > > > > > bitmap_get_value8 and bitmap_set_value8 functions are introduced to
-> > > > > > > > respectively get and set an 8-bit value in a bitmap memory region.
-> > > > > >
-> > > > > > > Why is the return type "unsigned long" where you know
-> > > > > > > it return the 8-bit value ?
-> > > > > >
-> > > > > > Because bitmap API operates on unsigned long type. This is not only
-> > > > > > consistency, but for sake of flexibility in case we would like to introduce
-> > > > > > more calls like clump16 or so.
-> > > > >
-> > > > > TBH, that doesn't convince me: those functions explicitly take/return an
-> > > > > 8-bit value, and have "8" in their name.  The 8-bit value is never
-> > > > > really related to, retrieved from, or stored in a full "unsigned long"
-> > > > > element of a bitmap, only to/from/in a part (byte) of it.
-> > > > >
-> > > > > Following your rationale, all of iowrite{8,16,32,64}*() should take an
-> > > > > "unsigned long" value, too.
-> > > > >
-> > > >
-> > > > +1
-> > > >
-> > > > Using u8/u16/u32/u64 looks more consistent with other bitmap helpers.
-> > > >
-> > > > void bitmap_from_arr32(unsigned long *bitmap, const u32 *buf, unsigned
-> > > > int nbits);
-> > > > void bitmap_to_arr32(u32 *buf, const unsigned long *bitmap, unsigned int nbits);
-> > > > static inline void bitmap_from_u64(unsigned long *dst, u64 mask);
-> > > >
-> > > >
-> > > >
-> > > > If you want to see more examples from other parts,
-> > >
-> > > Geert's and yours examples both are not related. They are about
-> > > fixed-width properies when we know that is the part of protocol.
-> > > Here we have no protocol which stricts us to the mentioned fixed-width types.
-> >
-> > Yes you have: they are functions to store/retrieve an 8-bit value from
-> > the middle of the bitmap, which is reflected in their names ("clump8",
-> > "value8").
-> > The input/output value is clearly separated from the actual bitmap,
-> > which is referenced by the "unsigned long *".
-> >
-> > If you add new "value16" functions, they will be intended to store/retrieve
-> > 16-bit values.
->
-> And if I add 4-bit, 12-bit or 24-bit values, what should I use?
+Use the XHCI_NO_64BIT_SUPPORT quirk to tell the XHCI core to force
+32-bit DMA mask instead.
 
-Whatever is needed to store that?
-I agree "unsigned long" is appropriate for a generic function to extract a
-bit field of 1 to BITS_PER_LONG bits.
+Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+---
+ drivers/usb/host/xhci-mtk.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> > Besides, if retrieving an 8-bit value requires passing an
-> > "unsigned long *", the caller needs two variables: one unsigned long to
-> > pass the address of, and one u8 to copy the returned value into.
->
-> Why do you need a temporary variable? In some cases it might make
-> sense, but in general simple cases I don't see what you may achieve
-> with it.
-
-Because find_next_clump8() takes a pointer to store the output value.
-
-> I looked at bitmap.h and see few functions may have benefited of
-> actually eliminating a use of long -> u8 -> long conversion.
->
-> Here is the question what we are mostly doing after we got a clump out
-> of bitmap.
-
-If I call find_next_clump8() to extract a byte, I guess I want to process an u8
-aftwerwards?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index b18a6baef204a..4d101d52cc11b 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -395,6 +395,11 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 	xhci->quirks |= XHCI_SPURIOUS_SUCCESS;
+ 	if (mtk->lpm_support)
+ 		xhci->quirks |= XHCI_LPM_SUPPORT;
++	/*
++	 * MTK host controller does not support 64-bit addressing, despite
++	 * having the AC64 bit of the HCCPARAMS1 register set.
++	 */
++	xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+ }
+ 
+ /* called during probe() after chip reset completes */
+@@ -488,11 +493,6 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 		goto disable_clk;
+ 	}
+ 
+-	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
+-	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+-	if (ret)
+-		goto disable_clk;
+-
+ 	hcd = usb_create_hcd(driver, dev, dev_name(dev));
+ 	if (!hcd) {
+ 		ret = -ENOMEM;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.23.0.581.g78d2f28ef7-goog
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
