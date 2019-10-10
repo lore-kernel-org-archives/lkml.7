@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BADC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626C3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17CF021D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33773218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696814;
-	bh=rgUASk+qHXvrsXRxbaZLq2x3+KI4P2PsXhbri1vX0Y8=;
+	s=default; t=1570696818;
+	bh=2KO0PQV+YfYTOs5nrDmOcGrwFcq5NKyOlH5jzXPiB0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ecbW08SyqJXALX4ATmY6u6WVgPNOqZMq/uTbeHHGRxt+KIqSC+2zHnvCOS4pMSeq2
-	 B37fdw4pIGLvTwQxF7KMKziPt3UhajlKR+dkhQx5kw+kZnKfs96RgaKeZ8XfVYgYF8
-	 ty9lhWpVUmH3EfUAUoTzCCzFiKJUKphUM6MIPLQg=
+	b=xZsPhEPlJ0U5uhV8/laqRTXZpfs+ZeaZRQcw3Z6FsKuM3PRCbxiW6dTlNjmzmSX2Z
+	 se84tCCBUqj5zR9X/s+oYn+TLRbhGbgTBiZARZVkKuSVXdP/msuTuLXzeMvixHSZ4c
+	 RoYlBzKwQsdhzYNHpWZRNeu6sh7+vgvY7YmX5SZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388059AbfJJIkM (ORCPT
+        id S2388069AbfJJIkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:40:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44158 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:40:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387411AbfJJIkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:40:11 -0400
+        id S2387411AbfJJIkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:40:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8AC218AC;
-        Thu, 10 Oct 2019 08:40:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 463FB21D56;
+        Thu, 10 Oct 2019 08:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696811;
-        bh=rgUASk+qHXvrsXRxbaZLq2x3+KI4P2PsXhbri1vX0Y8=;
+        s=default; t=1570696813;
+        bh=2KO0PQV+YfYTOs5nrDmOcGrwFcq5NKyOlH5jzXPiB0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QsdXqHajKGLdOI9HT80Y1zYt4GIv/Egm99/TXpapE2ir5eYwYWgtRbPoWeP1DeRx1
-         TT6snfE9kClbOnOtMmEqR8SRjPeHerDmfTt6zBLKxHgEt0z/+bV1b1uCNMvjKR1/w1
-         NW7b1eArT6c5dIGuEur8K2s78+AaynOYpfjEwFqM=
+        b=yRns0Dxnc64qiJX3bJI0f3mLv0nfeJfYVNC9dwecSiBaBjNulE4blBUjGmZFo7vxf
+         iphXXfzAJ2bPxA+E/Qyz1UhhBoFIawG+kE2XZKOUS9olvmWIdHQiQ1+c1K+LkNvndb
+         4sM0McFV1UPFs3Y841Gk90eqTxBt3xVsaBKWga7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.3 034/148] powerpc/mm: Add a helper to select PAGE_KERNEL_RO or PAGE_READONLY
-Date:   Thu, 10 Oct 2019 10:34:55 +0200
-Message-Id: <20191010083613.220293397@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: [PATCH 5.3 061/148] perf stat: Fix a segmentation fault when using repeat forever
+Date:   Thu, 10 Oct 2019 10:35:22 +0200
+Message-Id: <20191010083614.848736651@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,76 +64,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
-commit 4c0f5d1eb4072871c34530358df45f05ab80edd6 upstream.
+commit 443f2d5ba13d65ccfd879460f77941875159d154 upstream.
 
-In a couple of places there is a need to select whether read-only
-protection of shadow pages is performed with PAGE_KERNEL_RO or with
-PAGE_READONLY.
+Observe a segmentation fault when 'perf stat' is asked to repeat forever
+with the interval option.
 
-Add a helper to avoid duplicating the choice.
+Without fix:
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/9f33f44b9cd741c4a02b3dce7b8ef9438fe2cd2a.1566382750.git.christophe.leroy@c-s.fr
+  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
+  #           time             counts unit events
+       5.000211692  3,13,89,82,34,157      cycles
+      10.000380119  1,53,98,52,22,294      cycles
+      10.040467280       17,16,79,265      cycles
+  Segmentation fault
+
+This problem was only observed when we use forever option aka -r 0 and
+works with limited repeats. Calling print_counter with ts being set to
+NULL, is not a correct option when interval is set. Hence avoid
+print_counter(NULL,..)  if interval is set.
+
+With fix:
+
+  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
+   #           time             counts unit events
+       5.019866622  3,15,14,43,08,697      cycles
+      10.039865756  3,15,16,31,95,261      cycles
+      10.059950628     1,26,05,47,158      cycles
+       5.009902655  3,14,52,62,33,932      cycles
+      10.019880228  3,14,52,22,89,154      cycles
+      10.030543876       66,90,18,333      cycles
+       5.009848281  3,14,51,98,25,437      cycles
+      10.029854402  3,15,14,93,04,918      cycles
+       5.009834177  3,14,51,95,92,316      cycles
+
+Committer notes:
+
+Did the 'git bisect' to find the cset introducing the problem to add the
+Fixes tag below, and at that time the problem reproduced as:
+
+  (gdb) run stat -r0 -I500 sleep 1
+  <SNIP>
+  Program received signal SIGSEGV, Segmentation fault.
+  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
+  866		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, csv_sep);
+  (gdb) bt
+  #0  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
+  #1  0x000000000041860a in print_counters (ts=ts@entry=0x0, argc=argc@entry=2, argv=argv@entry=0x7fffffffd640) at builtin-stat.c:938
+  #2  0x0000000000419a7f in cmd_stat (argc=2, argv=0x7fffffffd640, prefix=<optimized out>) at builtin-stat.c:1411
+  #3  0x000000000045c65a in run_builtin (p=p@entry=0x6291b8 <commands+216>, argc=argc@entry=5, argv=argv@entry=0x7fffffffd640) at perf.c:370
+  #4  0x000000000045c893 in handle_internal_command (argc=5, argv=0x7fffffffd640) at perf.c:429
+  #5  0x000000000045c8f1 in run_argv (argcp=argcp@entry=0x7fffffffd4ac, argv=argv@entry=0x7fffffffd4a0) at perf.c:473
+  #6  0x000000000045cac9 in main (argc=<optimized out>, argv=<optimized out>) at perf.c:588
+  (gdb)
+
+Mostly the same as just before this patch:
+
+  Program received signal SIGSEGV, Segmentation fault.
+  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
+  964		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, config->csv_sep);
+  (gdb) bt
+  #0  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
+  #1  0x0000000000588047 in perf_evlist__print_counters (evlist=0xbc9b90, config=0xa1f2a0 <stat_config>, _target=0xa1f0c0 <target>, ts=0x0, argc=2, argv=0x7fffffffd670)
+      at util/stat-display.c:1172
+  #2  0x000000000045390f in print_counters (ts=0x0, argc=2, argv=0x7fffffffd670) at builtin-stat.c:656
+  #3  0x0000000000456bb5 in cmd_stat (argc=2, argv=0x7fffffffd670) at builtin-stat.c:1960
+  #4  0x00000000004dd2e0 in run_builtin (p=0xa30e00 <commands+288>, argc=5, argv=0x7fffffffd670) at perf.c:310
+  #5  0x00000000004dd54d in handle_internal_command (argc=5, argv=0x7fffffffd670) at perf.c:362
+  #6  0x00000000004dd694 in run_argv (argcp=0x7fffffffd4cc, argv=0x7fffffffd4c0) at perf.c:406
+  #7  0x00000000004dda11 in main (argc=5, argv=0x7fffffffd670) at perf.c:531
+  (gdb)
+
+Fixes: d4f63a4741a8 ("perf stat: Introduce print_counters function")
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org # v4.2+
+Link: http://lore.kernel.org/lkml/20190904094738.9558-3-srikar@linux.vnet.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/kasan/kasan_init_32.c |   21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ tools/perf/builtin-stat.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -12,6 +12,14 @@
- #include <asm/code-patching.h>
- #include <mm/mmu_decl.h>
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1962,7 +1962,7 @@ int cmd_stat(int argc, const char **argv
+ 				run_idx + 1);
  
-+static pgprot_t kasan_prot_ro(void)
-+{
-+	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE))
-+		return PAGE_READONLY;
-+
-+	return PAGE_KERNEL_RO;
-+}
-+
- static void kasan_populate_pte(pte_t *ptep, pgprot_t prot)
- {
- 	unsigned long va = (unsigned long)kasan_early_shadow_page;
-@@ -26,6 +34,7 @@ static int __ref kasan_init_shadow_page_
- {
- 	pmd_t *pmd;
- 	unsigned long k_cur, k_next;
-+	pgprot_t prot = kasan_prot_ro();
- 
- 	pmd = pmd_offset(pud_offset(pgd_offset_k(k_start), k_start), k_start);
- 
-@@ -43,10 +52,7 @@ static int __ref kasan_init_shadow_page_
- 
- 		if (!new)
- 			return -ENOMEM;
--		if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE))
--			kasan_populate_pte(new, PAGE_READONLY);
--		else
--			kasan_populate_pte(new, PAGE_KERNEL_RO);
-+		kasan_populate_pte(new, prot);
- 
- 		smp_wmb(); /* See comment in __pte_alloc */
- 
-@@ -103,10 +109,9 @@ static int __ref kasan_init_region(void
- 
- static void __init kasan_remap_early_shadow_ro(void)
- {
--	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE))
--		kasan_populate_pte(kasan_early_shadow_pte, PAGE_READONLY);
--	else
--		kasan_populate_pte(kasan_early_shadow_pte, PAGE_KERNEL_RO);
-+	pgprot_t prot = kasan_prot_ro();
-+
-+	kasan_populate_pte(kasan_early_shadow_pte, prot);
- 
- 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
- }
+ 		status = run_perf_stat(argc, argv, run_idx);
+-		if (forever && status != -1) {
++		if (forever && status != -1 && !interval) {
+ 			print_counters(NULL, argc, argv);
+ 			perf_stat__reset_stats();
+ 		}
 
 
