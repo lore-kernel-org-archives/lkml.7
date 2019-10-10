@@ -2,91 +2,114 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852BDC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6CDECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3372067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:15:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="Q/oWxwMr"
+	by mail.kernel.org (Postfix) with ESMTP id 94D70214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570742630;
+	bh=3IW8PpnNpOw4Rqw6xxZGMFfB4t6X4qC/PCfFusKx8e4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CVb1WqFSpzcWsATUuFrlmFdCorooC031FQZhIYnkRDxpvUB/jMMB7VHS4CbfoaRcg
+	 wJRDSLBEYG4ac3sOR+OjyTWqzqywAjFMwpXTPPwUIq/pYSJdEuCMHRZ2LPXdotRfW2
+	 8Wh/NQv0o31o4ZLlfUEu/ydkVbLTU2K2xtrgny+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfJJVPB (ORCPT
+        id S1727273AbfJJVXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:15:01 -0400
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21426 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJVPA (ORCPT
+        Thu, 10 Oct 2019 17:23:49 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36811 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJVXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:15:00 -0400
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Oct 2019 17:15:00 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1570741166; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=MT3hjDO4tOkZdDe44jV/yQoGxm9ZqGJ1bdQIbmP2i/EJ2+PCQq5Y4DzyJn3QKNbqJ2g19RaIaZkeG2WUkqybwS7tbo+A87XQKk4y1gR6UOCX4MNeCUkXuU2c9hmx9CjsLvlR/kkWDOmi0mKIB7PFzXQd1HJRwXLuFMHzKUwiYww=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1570741166; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=dPNtWA0Iz960tXwOsZN/Ef5wEwgoiqzvPe2KZB4O4E8=; 
-        b=XEoC2phaeU1FWrQyjWgxrBR7JFuqiSvy897xCArdpwAXbaKXYr3pst9XnJdpQtkjtRRWPzIOJOe5diG+byHJy7DshxGjLe7RYS4euld7VeRxqNc2g3ZC+fCUygMLswe9E56Hp8MqG1ge7ZKHpeqJ8D+XzmU/dL9vRkwQt6F8k8U=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=didiksetiawan.com;
-        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
-        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570741166;
-        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        l=858; bh=dPNtWA0Iz960tXwOsZN/Ef5wEwgoiqzvPe2KZB4O4E8=;
-        b=Q/oWxwMr388i1ZpVvqL+0FOPHeVHHTvJrCmIT7o2u0fBlT/gWPG5vOFBh1cKqsCr
-        7MkK6oIW0heUsqe/ACFQzsuN1BBwZsPmwR+Q8VLotwyfOLjCfSdvEa/gPAejZR0HBBI
-        wj1MxcZHgpLIN1plUTZtoZLJyjz1KZvkR1O1I9c4=
-Received: from thinkpad-e420s (120.188.6.98 [120.188.6.98]) by mx.zohomail.com
-        with SMTPS id 1570741163961789.4700517861468; Thu, 10 Oct 2019 13:59:23 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 03:59:16 +0700
-From:   Didik Setiawan <ds@didiksetiawan.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 000/148] 5.3.6-stable review
-Message-ID: <20191010205916.GA18683@thinkpad-e420s>
-References: <20191010083609.660878383@linuxfoundation.org>
+        Thu, 10 Oct 2019 17:23:48 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 67so6196697oto.3;
+        Thu, 10 Oct 2019 14:23:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8fsaLFcYDAROH9HBoKC5Vafqp1MCH4HA/pJSglSZ4co=;
+        b=bKjELxGNAZN7UBGTFrZEAnN7TuoetlHlelmVWf9GsyR5amJTLlVS5UmG4om4QBlfoc
+         uZ7XzRvahamKbuTFPmhWzLU7vIPRpfFPqStqvLBY1D3CmnMztcUhcx7I+QUlJU8I+k2D
+         EMAUiHjg0tfdNM9GuQq1c/HawnH9s/2bOYZ8q2gJ++E0fBI/QpKIJ/2aFwhkkUel1kXG
+         V2O2TJLIhHwjwmm4czN8yNjLFoPXpIB3hFE81KHMTYstsW9Es6cLx1+CaN8Hr41uSP7T
+         O5/5AdyHOn+2540VlVk+KBQHidUyrcYKPAosq9dnhgi9B8aK9GxYZZQucHtX8EHHPUl9
+         7NVg==
+X-Gm-Message-State: APjAAAWE4pp2C/Gyu/UbUgqwLHAdIXjVNL2ivp/Z3RmJEaQ78dy6yT2e
+        nFhOVvTEcgLL7otfuWRw4w==
+X-Google-Smtp-Source: APXvYqyIyxVe/QML8xBJW19srjEWY1fzMm01BIPfEyxogOHEBtnRrO0q0z3M7piA63qkH2laitZG7g==
+X-Received: by 2002:a05:6830:13d8:: with SMTP id e24mr9348918otq.42.1570742627232;
+        Thu, 10 Oct 2019 14:23:47 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v132sm2027358oif.34.2019.10.10.14.23.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 14:23:46 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 16:23:46 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-crypto@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 4/8] dt-bindings: memory-controllers: Convert Samsung
+ Exynos SROM bindings to json-schema
+Message-ID: <20191010212346.GA7896@bogus>
+References: <20190918173141.4314-1-krzk@kernel.org>
+ <20190918173141.4314-4-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ZohoMailClient: External
+In-Reply-To: <20190918173141.4314-4-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:34:21AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.6 release.
-> There are 148 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, 18 Sep 2019 19:31:37 +0200, Krzysztof Kozlowski wrote:
+> Convert Samsung Exynos SROM controller bindings to DT schema format
+> using json-schema.
 > 
-> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
-> Anything received after that time might be too late.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.6-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> and the diffstat can be found below.
+> ---
 > 
-> thanks,
-> 
-> greg k-h
+> Changes since v1:
+> 1. Indent example with four spaces (more readable),
+> 2. Split examples into two,
+> 3. Fix pattern for subnode name,
+> 4. Remove checks for #address-cells-ranges-#size-cells,
+> 5. Add "additionalProperties" so the wrongly named subnodes would be
+>    matched.
+> ---
+>  .../memory-controllers/exynos-srom.txt        |  79 -----------
+>  .../memory-controllers/exynos-srom.yaml       | 128 ++++++++++++++++++
+>  2 files changed, 128 insertions(+), 79 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml
 > 
 
-Compiled, booted, and no regressions found on my x86_64 system.
+Applied, thanks.
 
-Thanks,
-Didik Setiawan 
-
+Rob
