@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA39ECE596
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92033C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A85F7218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62196218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697879;
-	bh=y2FnuqKS9UEad8BiPBaKJfjggds9omeZqseRuPGn0AI=;
+	s=default; t=1570697886;
+	bh=6sBvMm2Nw7U7LT3LmRh9xLUiLq7DSI/hufiVDue5SYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9Au+GNhXCdcSm+oiQtY5dMt2G3aYBpQdYN81wgNvI/jhigYDZLyXXqd7gDIg7Per
-	 LW3bGJG9MiXLsYaEBcV/0bIY9VDDeqYjzCC69CtYn+XIP3zC4TKyBqzch1gnkmeIRP
-	 v0t0KR1aCDYGzh0U8tNywLMEsegB/VImV1gmZvvE=
+	b=yoWtqqHRLY6BUge/fRvhwxlpJrj0/AFgzRAqLJN6b8vZKVfK2tmMouffwwC/GH0aB
+	 9LECbXGHzlXXW0kY+E0dasAInM4kVrvSrVkK3rdOmPCqqLI6jjJGtf60ze4fBYw9l6
+	 34X26ASBSSlxCfOMw4Zn9S0zxNZgqA5D+7kZ6djo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389271AbfJJIqL (ORCPT
+        id S2389242AbfJJIqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:46:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51888 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:46:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388563AbfJJIqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:46:06 -0400
+        id S2389221AbfJJIpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C7FD208C3;
-        Thu, 10 Oct 2019 08:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F5BB2054F;
+        Thu, 10 Oct 2019 08:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697165;
-        bh=y2FnuqKS9UEad8BiPBaKJfjggds9omeZqseRuPGn0AI=;
+        s=default; t=1570697151;
+        bh=6sBvMm2Nw7U7LT3LmRh9xLUiLq7DSI/hufiVDue5SYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7vOuHyFb+PBoKf2Js3VT8vD/cw96RFuEXReQ837OkVOL4AU98hLNTfJK+PLBNRR7
-         212QXkfGsPVa/N03h985Yx0RtGByHJ7lgiAgCwGU3yM/9wAZPo43eO6wxBak4RPNBh
-         BQViRsWYCR3jt3DYmN/g592rsGhM+51pZhfEmEFs=
+        b=lRohm8QD82Ma77T9xAYGZePXRZ/nd5BeH3R+tZxvftiH33XQlZARXnwxwpaTojRNS
+         V4gkQ986NaU0SELOLn06cncmuGj1amSAhNq1hmbza25h6KQtGlEqs5cRSmNghwiael
+         wcqhI9styfg4ENLGTw8YGkiIEUE6I2QRvrM7dJ+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 009/114] KVM: nVMX: handle page fault in vmread fix
-Date:   Thu, 10 Oct 2019 10:35:16 +0200
-Message-Id: <20191010083548.643670435@linuxfoundation.org>
+        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.19 004/114] s390/cio: exclude subchannels with no parent from pseudo check
+Date:   Thu, 10 Oct 2019 10:35:11 +0200
+Message-Id: <20191010083546.147426763@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -59,57 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Wang <jinpu.wang@cloud.ionos.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-During backport f7eea636c3d5 ("KVM: nVMX: handle page fault in vmread"),
-there was a mistake the exception reference should be passed to function
-kvm_write_guest_virt_system, instead of NULL, other wise, we will get
-NULL pointer deref, eg
+commit ab5758848039de9a4b249d46e4ab591197eebaf2 upstream.
 
-kvm-unit-test triggered a NULL pointer deref below:
-[  948.518437] kvm [24114]: vcpu0, guest rIP: 0x407ef9 kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x3, nop
-[  949.106464] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-[  949.106707] PGD 0 P4D 0
-[  949.106872] Oops: 0002 [#1] SMP
-[  949.107038] CPU: 2 PID: 24126 Comm: qemu-2.7 Not tainted 4.19.77-pserver #4.19.77-1+feature+daily+update+20191005.1625+a4168bb~deb9
-[  949.107283] Hardware name: Dell Inc. Precision Tower 3620/09WH54, BIOS 2.7.3 01/31/2018
-[  949.107549] RIP: 0010:kvm_write_guest_virt_system+0x12/0x40 [kvm]
-[  949.107719] Code: c0 5d 41 5c 41 5d 41 5e 83 f8 03 41 0f 94 c0 41 c1 e0 02 e9 b0 ed ff ff 0f 1f 44 00 00 48 89 f0 c6 87 59 56 00 00 01 48 89 d6 <49> c7 00 00 00 00 00 89 ca 49 c7 40 08 00 00 00 00 49 c7 40 10 00
-[  949.108044] RSP: 0018:ffffb31b0a953cb0 EFLAGS: 00010202
-[  949.108216] RAX: 000000000046b4d8 RBX: ffff9e9f415b0000 RCX: 0000000000000008
-[  949.108389] RDX: ffffb31b0a953cc0 RSI: ffffb31b0a953cc0 RDI: ffff9e9f415b0000
-[  949.108562] RBP: 00000000d2e14928 R08: 0000000000000000 R09: 0000000000000000
-[  949.108733] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffffffffc8
-[  949.108907] R13: 0000000000000002 R14: ffff9e9f4f26f2e8 R15: 0000000000000000
-[  949.109079] FS:  00007eff8694c700(0000) GS:ffff9e9f51a80000(0000) knlGS:0000000031415928
-[  949.109318] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  949.109495] CR2: 0000000000000000 CR3: 00000003be53b002 CR4: 00000000003626e0
-[  949.109671] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  949.109845] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  949.110017] Call Trace:
-[  949.110186]  handle_vmread+0x22b/0x2f0 [kvm_intel]
-[  949.110356]  ? vmexit_fill_RSB+0xc/0x30 [kvm_intel]
-[  949.110549]  kvm_arch_vcpu_ioctl_run+0xa98/0x1b30 [kvm]
-[  949.110725]  ? kvm_vcpu_ioctl+0x388/0x5d0 [kvm]
-[  949.110901]  kvm_vcpu_ioctl+0x388/0x5d0 [kvm]
-[  949.111072]  do_vfs_ioctl+0xa2/0x620
+ccw console is created early in start_kernel and used before css is
+initialized or ccw console subchannel is registered. Until then console
+subchannel does not have a parent. For that reason assume subchannels
+with no parent are not pseudo subchannels. This fixes the following
+kasan finding:
 
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+BUG: KASAN: global-out-of-bounds in sch_is_pseudo_sch+0x8e/0x98
+Read of size 8 at addr 00000000000005e8 by task swapper/0/0
+
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc8-07370-g6ac43dd12538 #2
+Hardware name: IBM 2964 NC9 702 (z/VM 6.4.0)
+Call Trace:
+([<000000000012cd76>] show_stack+0x14e/0x1e0)
+ [<0000000001f7fb44>] dump_stack+0x1a4/0x1f8
+ [<00000000007d7afc>] print_address_description+0x64/0x3c8
+ [<00000000007d75f6>] __kasan_report+0x14e/0x180
+ [<00000000018a2986>] sch_is_pseudo_sch+0x8e/0x98
+ [<000000000189b950>] cio_enable_subchannel+0x1d0/0x510
+ [<00000000018cac7c>] ccw_device_recognition+0x12c/0x188
+ [<0000000002ceb1a8>] ccw_device_enable_console+0x138/0x340
+ [<0000000002cf1cbe>] con3215_init+0x25e/0x300
+ [<0000000002c8770a>] console_init+0x68a/0x9b8
+ [<0000000002c6a3d6>] start_kernel+0x4fe/0x728
+ [<0000000000100070>] startup_continue+0x70/0xd0
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/vmx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/cio/css.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -8801,7 +8801,7 @@ static int handle_vmread(struct kvm_vcpu
- 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
- 		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
- 						(is_long_mode(vcpu) ? 8 : 4),
--						NULL))
-+						&e))
- 			kvm_inject_page_fault(vcpu, &e);
- 	}
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -1213,6 +1213,8 @@ device_initcall(cio_settle_init);
+ 
+ int sch_is_pseudo_sch(struct subchannel *sch)
+ {
++	if (!sch->dev.parent)
++		return 0;
+ 	return sch == to_css(sch->dev.parent)->pseudo_subchannel;
+ }
  
 
 
