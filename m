@@ -2,95 +2,152 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094D4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0CAC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF851206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA41206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZPkFQitf"
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="dmcCM7Yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387569AbfJJJqx (ORCPT
+        id S2387633AbfJJJq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:46:53 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58424 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfJJJqx (ORCPT
+        Thu, 10 Oct 2019 05:46:59 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55517 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfJJJq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:46:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sTRhFKvn0glVeC9mpJ0ol8xV4CtebwGWcwgq8iAIB/k=; b=ZPkFQitfoTicBpUlrGCAHIgyB
-        NgqXJzWuoebSOlXlPHneEHlEK8iP38ulBLQ7xpUryw3FSrtoTLXd6xQxpNJTFU5KpTrxvwI/LD/Es
-        ry4N8Od7qHRhJkkiRZ1TdybR3MVwIv0UppEr7Sly5aXACIIrctsU30/de/G/wRR36WvYi8GWj+PIS
-        IgN7/ZzB4CQvbCXokCHILiF4jfm/bd1lfXhhnh8ech6UiCcpSTE8yImz+xXsBQgS0uQNn6kQIk1hz
-        X9bvAg3UJxnUpcYpbTezcjr1liSlRTYto0eraFROPxY9q2iz7+C7ELcJ8FFZTPKWTSjm1B6EMS0tm
-        d1UxbHCKA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIV1q-0001e8-Si; Thu, 10 Oct 2019 09:46:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5F9093013A4;
-        Thu, 10 Oct 2019 11:45:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8B8E2202F4F54; Thu, 10 Oct 2019 11:46:37 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 11:46:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Li RongQing <lirongqing@baidu.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][RFC] perf/x86: avoid false-positives hard lockup
-Message-ID: <20191010094637.GN2328@hirez.programming.kicks-ass.net>
-References: <1570696898-13169-1-git-send-email-lirongqing@baidu.com>
+        Thu, 10 Oct 2019 05:46:58 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a6so6183512wma.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=QPp55kuRf3+lyRK+9iqTbgFqqJyrdtmwyo0KQ5EsOTA=;
+        b=dmcCM7YrL1FFyCOdkX+y1T/WzvgfoBjg4nwbGncoILd5jM29jXMJYI8d3gz5Qg7+Uv
+         X2MMdXO36rUXOEFfIrqP6g2AEbh9xym/rSgDhsomXMhWsJH++M3665Vhr1BbhER/TNhy
+         R2khVK7tQeFuRcgXtkANbdKkerbb5w6wHct/FZLlygVdHCOIu+QRBXp+QMdo1z1436vN
+         wAzFCfiKDvqThE1iIP3oPdOP/DjKlrzM+OkEr565JnGrQg0tRFTl/nyVHaYE+02taVpM
+         4CErQcNC3OBu2KmM+xvQU/ApF6Wwc3eS7uqdQPLLP4UuokFYHnACNX5yoGmEL1WQbLKp
+         egPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=QPp55kuRf3+lyRK+9iqTbgFqqJyrdtmwyo0KQ5EsOTA=;
+        b=FXf7GyWJlEDq4KPYOUsLmkJViglTNjzPk/SU7wzHrIkz3ETM86uxSVIRz5v7jyqcTW
+         I1ryr0ZaViXasUKoMKPl3fbfiKDbmbAc0EdTcWC2O+J7IbLDCwcUEfMlGOlvC1Doj5dg
+         oRywflLrRUJPn7muTCOu70Vl+tsB2D7SbMbESsb33VTGytnWFLddqdMV9ZyfhnSLYHwN
+         OxGM83PJzCqkribBZdF7+T8iZZnyGFKW8my+/Z00GeUmLZWsUzG2hrdOfEm6ksQiTzaR
+         eArP3p0GP6+YmiaEUHib1se2hsottbLiuFKVAFmg6Q/a6tLrhfKK6zqwD25VttwwMc0w
+         Jirw==
+X-Gm-Message-State: APjAAAX5Ddlwm98WGd1fBaHfh8bHfqd2y4wCL56Ry1QRu/47Xx2KLwqX
+        qvi6QCcbl7KHg3VlpObT5LSAMLIntBT8S+Iu
+X-Google-Smtp-Source: APXvYqxoTwpEg6SSoRFBewcWqiVLIEvIsnjXkyrjzUNSKHI1zz4JFiSD7mp4brU/DXLXplJjnQnvsw==
+X-Received: by 2002:a7b:cb03:: with SMTP id u3mr6799650wmj.126.1570700815618;
+        Thu, 10 Oct 2019 02:46:55 -0700 (PDT)
+Received: from rudolphp (b2b-78-94-0-50.unitymedia.biz. [78.94.0.50])
+        by smtp.gmail.com with ESMTPSA id a2sm5156154wrp.11.2019.10.10.02.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 02:46:54 -0700 (PDT)
+Message-ID: <6cfca8c34ccd51f12b4418e9a74d8961e32077ed.camel@9elements.com>
+Subject: Re: [PATCH 2/2] firmware: coreboot: Export active CBFS partition
+From:   patrick.rudolph@9elements.com
+To:     Julius Werner <jwerner@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Zhang <benzh@chromium.org>,
+        Filipe Brandenburger <filbranden@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Samuel Holland <samuel@sholland.org>
+Date:   Thu, 10 Oct 2019 11:46:53 +0200
+In-Reply-To: <CAODwPW-mfySMQUejCwT+G45BtOysq_JCRQa8GwoYTkjY_yRwgA@mail.gmail.com>
+References: <20191008115342.28483-1-patrick.rudolph@9elements.com>
+         <20191008115342.28483-2-patrick.rudolph@9elements.com>
+         <5d9d120b.1c69fb81.b6201.1477@mx.google.com>
+         <CAODwPW-mfySMQUejCwT+G45BtOysq_JCRQa8GwoYTkjY_yRwgA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570696898-13169-1-git-send-email-lirongqing@baidu.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 04:41:38PM +0800, Li RongQing wrote:
-> if perf counter is used as nmi watchdog, and twice nmi in soft
-> watchdog sample period will trigger hard lockup
+On Wed, 2019-10-09 at 14:19 -0700, Julius Werner wrote:
+> > Somehow we've gotten /sys/firmware/log to be the coreboot log, and
+> > quite
+> > frankly that blows my mind that this path was accepted upstream.
+> > Userspace has to know it's running on coreboot firmware to know
+> > that
+> > /sys/firmware/log is actually the coreboot log.
 > 
-> make sure left time is not less than soft watchdog period by
-> compared with 3/5 period to skip forward, since soft watchdog
-> sample period is 2/5 of watchdog_thresh, nmi watchdog sample
-> period, computed by set_sample_period
+> Not really sure I understand your concern here? That's the generic
+> node for the log from the mainboard firmware, whatever it is. It was
+> originally added for non-coreboot firmware and that use is still
+> supported. If some other non-coreboot firmware wants to join in, it's
+> welcome to do so -- the interface is separated out enough to make it
+> easy to add more backends.
 > 
-> Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> ---
->  arch/x86/events/core.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> I do agree that if we want to add other, more coreboot-specific
+> nodes,
+> they should be explicitly namespaced.
 > 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 7b21455d7504..1f5309456d4c 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1196,7 +1196,11 @@ int x86_perf_event_set_period(struct perf_event *event)
->  	/*
->  	 * If we are way outside a reasonable range then just skip forward:
->  	 */
-> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
-> +	if (unlikely(left <= -(period * 3 / 5))) {
-> +#else
->  	if (unlikely(left <= -period)) {
-> +#endif
 
-NAK. This is 100% the wrong place to do anything like that.
+I'll add a new namespace called 'coreboot'.
+
+> > But I also wonder why this is being exposed by the kernel at all?
+> 
+
+It's difficult for userspace tools to find out how to access the flash
+and then to find the FMAP, which resides somewhere in it on 4KiB boundary.
+The "boot media params" usually give the offset to the FMAP from beginning
+of the flash, but tell nothing about how to access it.
+
+> I share Stephen's concern that I'm not sure this belongs in the
+> kernel
+> at all. There are existing ways for userspace to access this
+> information like the cbmem utility does... if you want it accessible
+> from fwupd, it could chain-call into cbmem or we could factor that
+> functionality out into a library. If you want to get away from using
+> /dev/mem for this, we could maybe add a driver that exports CBMEM or
+> coreboot table areas via sysfs... but then I think that should be a
+> generic driver which makes them all accessible in one go, rather than
+> having to add yet another driver whenever someone needs to parse
+> another coreboot table blob for some reason. We could design an
+> interface like /sys/firmware/coreboot/table/<tag> where every entry
+> in
+> the table gets exported as a binary file.
+
+I don't even consider using binaries that operate on /dev/mem.
+In my opinion CBMEM is something coreboot internal, the OS or userspace
+shouldn't even known about.
+
+> I think a specific sysfs driver only makes sense for things that are
+> human readable and that you'd actually expect a human to want to go
+> read directly, like the log. Maybe exporting FMAP entries one by one
+> like Stephen suggests could be such a case, but I doubt that there's
+> a
+> common enough need for that since there are plenty of existing ways
+> to
+> show FMAP entries from userspace (and if there was a generic
+> interface
+> like /sys/firmware/coreboot/table/37 to access it, we could just add
+> a
+> new flag to the dump_fmap utility to read it from there).
+
+I'll expose the coreboot tables using a sysfs driver, which then can be
+used by coreboot tools instead of accessing /dev/mem. As it holds the
+FMAP and "boot media params" that's all I need for now.
+
+The downside is that the userspace tools need to be keep in sync with
+the binary interface the coreboot tables are providing.
+
