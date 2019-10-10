@@ -2,138 +2,139 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F337CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F388C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A8E218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oXEBvVog"
+	by mail.kernel.org (Postfix) with ESMTP id 11CD6218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733241AbfJJHiQ (ORCPT
+        id S1733230AbfJJHiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 10 Oct 2019 03:38:16 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:41501 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733061AbfJJHbD (ORCPT
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:34031 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733056AbfJJHa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:31:03 -0400
-Received: by mail-qk1-f201.google.com with SMTP id z128so4611937qke.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 00:31:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=v+LLFtvEckUzputJIuZrPxx3By/lN1gL3OtSQmwVR94=;
-        b=oXEBvVog+GYUFdZS6nbRFPX4kM5tulvoNbWDK0JlCK400aDOdG4fx5K78mB6fw1Fnb
-         Fm/aDMafzZO4rtJf0joBPsIyrpFyATrh7QSU+3AYy74LjXVida1xyOxzXn7UrGELefsV
-         lwHyei54XzSIN3/WPOjeNgX5yGAXeNFQtmWh8R7eBTihLnIqZV6YLz9yitStMSbpsVzY
-         7IjUa8EkxXDbtnvlL7uTVehZkq+NCKBweJxZtau7cCa5rFxix2DPSA9XYlPJg3E4sgJb
-         Ua07w0RDFseYndhi1zZK7z4vSrkgzhswMZOjck1bNu0VR4HLdJ6U3ZQlVflHjxLdUqPZ
-         tyeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=v+LLFtvEckUzputJIuZrPxx3By/lN1gL3OtSQmwVR94=;
-        b=Z6zVWoboKOtG0xuvwd/VZgUE6fdpFtDUH+4I8XXgW+dfsU475lXOqVOnnFsgatnLEZ
-         dWzuhIYnGUK6FDRRNRMHeRZaKgxqokUUR62D5NkxPKZbrC5GvrOgUtou7D/hDWsyFmHT
-         6RpWn89c+8kFl1W8OFrQdUcCSPkajnWoTfH60Tk6O9Xjz/x+9pJSG6B/zt69BVDCSmnO
-         5qBeyx/3c0HOkksf/Sa0JaHXI/8i4iQogvMGIyX788rbYMnkX2OjiTeswoCMc/ObIcyk
-         1eUwkIByYiy+EVRAlQ9eitXAv99pOywaQmBYRemqvuK/bWdhI1sChhipy7WGE6ys66Hs
-         X8+g==
-X-Gm-Message-State: APjAAAWwTUpXMRJg9/MVGojNx0g1eiBzddVOG69Ln2RqGyYTTmVEFsz3
-        fCu+KDFd4SUc73f4Y7PAFRhxJ4dt+z/kVQ==
-X-Google-Smtp-Source: APXvYqyD9HKOtk0SarlzT8pp42sYiLkFHwAn9eUk83sA8rOiisTkHGAPdmKoPBCuQTQeRxenoJbZZHPVIHB7Jw==
-X-Received: by 2002:ac8:3158:: with SMTP id h24mr8582490qtb.370.1570692662399;
- Thu, 10 Oct 2019 00:31:02 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 16:30:53 +0900
-Message-Id: <20191010073055.183635-1-suleiman@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.581.g78d2f28ef7-goog
-Subject: [RFC v2 0/2] kvm: Use host timekeeping in guest.
-From:   Suleiman Souhlal <suleiman@google.com>
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de
-Cc:     john.stultz@linaro.org, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        ssouhlal@freebsd.org, tfiga@chromium.org, vkuznets@redhat.com,
-        Suleiman Souhlal <suleiman@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 10 Oct 2019 03:30:27 -0400
+Received: from dread.disaster.area (pa49-195-199-207.pa.nsw.optusnet.com.au [49.195.199.207])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id F270743E930;
+        Thu, 10 Oct 2019 18:30:21 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iIStw-0001K4-Iw; Thu, 10 Oct 2019 18:30:20 +1100
+Date:   Thu, 10 Oct 2019 18:30:20 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>,
+        linux-xfs@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org, rgoldwyn@suse.de,
+        gujx@cn.fujitsu.com, qi.fuli@fujitsu.com, caoj.fnst@cn.fujitsu.com
+Subject: Re: [RFC PATCH 0/7] xfs: add reflink & dedupe support for fsdax.
+Message-ID: <20191010073020.GI16973@dread.disaster.area>
+References: <20190731114935.11030-1-ruansy.fnst@cn.fujitsu.com>
+ <20191009063144.GA4300@infradead.org>
+ <20191009171152.GF13108@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009171152.GF13108@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=U3CgBz6+VuTzJ8lMfNbwVQ==:117 a=U3CgBz6+VuTzJ8lMfNbwVQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=7-415B0cAAAA:8 a=KLqftw6RVRZ3hi40DLEA:9 a=oZXh2kF1ifLAk1_0:21
+        a=fGh-JakunK8VnCng:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This RFC is to try to solve the following problem:
+On Wed, Oct 09, 2019 at 10:11:52AM -0700, Darrick J. Wong wrote:
+> On Tue, Oct 08, 2019 at 11:31:44PM -0700, Christoph Hellwig wrote:
+> > Btw, I just had a chat with Dan last week on this.  And he pointed out
+> > that while this series deals with the read/write path issues of 
+> > reflink on DAX it doesn't deal with the mmap side issue that
+> > page->mapping and page->index can point back to exactly one file.
+> > 
+> > I think we want a few xfstests that reflink a file and then use the
+> > different links using mmap, as that should blow up pretty reliably.
+> 
+> Hmm, you're right, we don't actually have a test that checks the
+> behavior of mwriting all copies of a shared block.  Ok, I'll go write
+> one.
 
-We have some applications that are currently running in their
-own namespace, that still talk to other processes on the
-machine, using IPC, and expect to run on the same machine.
+I've pointed this problem out to everyone who has asked me "what do
+we need to do to support reflink on DAX". I've even walked a couple
+of people right through the problem that needs to be solved and
+discussed the potential solutions to it.
 
-We want to move them into a virtual machine, for the usual
-benefits of virtualization.
+Problems that I think need addressing:
 
-However, some of these programs use CLOCK_MONOTONIC and
-CLOCK_BOOTTIME timestamps, as part of their protocol, when talking
-to the host.
+	- device dax and filesystem dax have fundamentally different
+	  needs in this space, so they need to be separated and not
+	  try to use the same solution.
+	- dax_lock_entry() being used as a substitute for
+	  page_lock() but it not being held on the page itself means
+	  it can't be extended to serialise access to the page
+	  across multiple mappings that are unaware of each other
+	- dax_lock_page/dax_unlock_page interface for hardware
+	  memory errors needs to report to the
+	  filesystem for processing and repair, not assume the page
+	  is user data and killing processes is the only possible
+	  recovery mechanism.
+	- dax_associate_entry/dax_disassociate_entry can only work
+	  for a 1:1 page:mapping,index relationship. It needs to go
+	  away and be replaced by a mechanism that allows
+	  tracking multiple page mapping/index/state tuples. This
+	  has much wider use than DAX (e.g. sharing page cache pages
+	  between reflinked files)
 
-Generally speaking, we have multiple event sources, for example
-sensors, input devices, display controller vsync, etc and we would
-like to rely on them in the guest for various scenarios.
+I've proposed shadow pages (based on a concept from Matethw Wilcox)
+for each read-only reflink mapping with the real physical page being
+owned by the filesystem and indexed by LBA in the filesystem buffer
+cache. This would be based on whether the extent in the file the
+page is mapped from has multiple references to it.
 
-As a specific example, we are trying to run some wayland clients
-(in the guest) who talk to the server (in the host), and the server
-gives input events based on host time. Additionally, there are also
-vsync events that the clients use for timing their rendering.
+i.e. When a new page mapping occurs in a shared extent, we add the
+page to the buffer cache (i.e. point a struct xfs_buf at it)i if it
+isn't already present, then allocate a shadow page, point it at the
+master, set it up with the new mapping,index tuple and add it to the
+mapping tree. Then we can treat it as a unique page even though it
+points to the read-only master page.
 
-Another use case we have are timestamps from IIO sensors and cameras.
-There are applications that need to determine how the timestamps
-relate to the current time and the only way to get current time is
-clock_gettime(), which would return a value from a different time
-domain than the timestamps.
+When the page get's COWed, we toss away the shadow page and the
+master can be reclaimed with the reference count goes to zero or the
+extent is no longer shared.  Think of it kind of like the way we
+multiply reference the zero page for holes in mmap()d dax regions,
+except we can have millions of them and they are found by physical
+buffer cache index lookups. 
 
-In this case, it is not feasible to change these programs, due to
-the number of the places we would have to change.
+This works for both DAX and non-DAX sharing of read-only shared
+filesytsem pages. i.e. it would form the basis of single-copy
+read-only page cache pages for reflinked files.
 
-We spent some time thinking about this, and the best solution we
-could come up with was the following:
+There was quite a bit of talk at LSFMM 2018 about having a linked
+list of mapping structures hanging off a struct page, one for each
+mapping that references the page. Operations would then have to walk
+all mappings that reference the page. This was useful to other
+subsystems (HMM?) for some purpose I forget, but I'm not sure it's
+particularly useful by itself for non-dax reflink purposes - I
+suspect the filesystem would still need to track such pages itself
+in it's buffer cache so it can find the cached page to link new
+reflink copies to the same page...
 
-Make the guest kernel return the same CLOCK_MONOTONIC and
-CLOCK_GETTIME timestamps as the host.
+ISTR a couple of other solutions were thrown around, but I don't
+think anyone came up with a simple solution...
 
-To do that, I am changing kvmclock to request to the host to copy
-its timekeeping parameters (mult, base, cycle_last, etc), so that
-the guest timekeeper can use the same values, so that time can
-be synchronized between the guest and the host.
+Cheers,
 
-Any suggestions or feedback would be highly appreciated.
-
-Changes in v2:
-- Move out of kvmclock and into its own clocksource and file.
-- Remove timekeeping.c #ifdefs.
-- Fix i386 build.
-
-Suleiman Souhlal (2):
-  kvm: Mechanism to copy host timekeeping parameters into guest.
-  x86/kvmclock: Introduce kvm-hostclock clocksource.
-
- arch/x86/Kconfig                     |   9 ++
- arch/x86/include/asm/kvm_host.h      |   3 +
- arch/x86/include/asm/kvmclock.h      |  12 +++
- arch/x86/include/asm/pvclock-abi.h   |  27 ++++++
- arch/x86/include/uapi/asm/kvm_para.h |   1 +
- arch/x86/kernel/Makefile             |   2 +
- arch/x86/kernel/kvmclock.c           |   5 +-
- arch/x86/kernel/kvmhostclock.c       | 130 +++++++++++++++++++++++++++
- arch/x86/kvm/x86.c                   | 121 +++++++++++++++++++++++++
- include/linux/timekeeper_internal.h  |   8 ++
- kernel/time/timekeeping.c            |   2 +
- 11 files changed, 319 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/kernel/kvmhostclock.c
-
+Dave.
 -- 
-2.23.0.581.g78d2f28ef7-goog
-
+Dave Chinner
+david@fromorbit.com
