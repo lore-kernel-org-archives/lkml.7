@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A703C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDBDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741AD218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A75218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNP5xwS0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFMhmNn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388044AbfJJJvp (ORCPT
+        id S2387868AbfJJJvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:51:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40588 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387791AbfJJJvk (ORCPT
+        Thu, 10 Oct 2019 05:51:37 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34101 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387400AbfJJJvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:51:40 -0400
-Received: by mail-wm1-f67.google.com with SMTP id b24so6055055wmj.5;
-        Thu, 10 Oct 2019 02:51:38 -0700 (PDT)
+        Thu, 10 Oct 2019 05:51:36 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j11so7070393wrp.1;
+        Thu, 10 Oct 2019 02:51:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=srs/G6L95nqsY4WglnHua/DxIGwZ02H3rDdTeu18fMw=;
-        b=KNP5xwS0GAhtmU7mevXpPtwvPbvcC1qhN89NeihjYgO6TjF4o1FrLARNsjko52Mmpn
-         3Ywfhvczfqldh7Ca4EuzqK1deE7iJy+ankan/vCXcgtldIwpryGNYzDo06eSzlcSjp+k
-         vpV1eYwc1HHS/AzAlvw+gh1stGASP88cbeS0eTt5/W/fwLFG7eyYKqeF0D+mieQhcjZt
-         xztiOhv/gsAJ9NvMHSNSeJHP9KVTB/O418NUA4CaYj53qi86EG3HYWVGHDkH1w9xaDrF
-         RhgQKOTuLsgWS4nSAzX3XDAKAq4Ya2KApDqXpK98GObWb43HQOHH2gapGgt584Gt14tG
-         PhhA==
+        bh=vR/97ha/8nINLtKlRJDAXkvt7wXAGo20zdsTBey8WDA=;
+        b=TFMhmNn6fd8Y1HE/9jdGNBq/1CtQEn8SEuHZY+IeRl2wMKOOVecFJe6MvzmHxl+RrD
+         5F4uJ9KO/neqIpGzQ/csSMhvjHQ1Wkc80+Qo8IDcavhMaRfx5pzjrz6qDplsJ/d1IOa8
+         J1vPTfyIqm8kQUA8KQc8Z8RIthCeNnwwy7xJ9hNRuysUkHUsOZs/j88/Ri6fYg5iahYJ
+         kXz8IKfxSwZM2UmYdtEvhh0ep3HfktR1X4WO1J4/MJxNvo7WF9NXnBV4xkQ8/0mbr+YX
+         9/90WAoaS617Oq30MP+L3lo94v2mCjFqc4bJO0GH85PNtl4D9PXTOR9Z3v2r5yTY6JkE
+         OFxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=srs/G6L95nqsY4WglnHua/DxIGwZ02H3rDdTeu18fMw=;
-        b=cMb2IgydKE6GKRs+856Hg51b/OY2ltQsoXN+PS0Ma65L1DlwxD+RQSfEAMNnQeE2qu
-         Bia6KJTI115XNcptCdHZBKRnG/wXuGukv78JOwK9ddOx/WLe5b/+Mv76YRWG1FrT96QA
-         jFE+oTXG+MoAieL90kdtpdKwc8aGBLNx1QRIEy1RFbIJtgVPCs4515xE5orUw9aKQ7Nw
-         5guCkk4aIyiuW1Iv9rlcnlXjKtM8QHjglmV0SQTsXqinb2GeYQcftdE4y1tXZ2fAEssB
-         uIQZSv6NqgheZejKa794Tfxd88/eAHeNtwHeTF21/BNoJpNx0fspoyoe6Mpw/aSYlZTI
-         9hiw==
-X-Gm-Message-State: APjAAAWbopNUq+pKRRvJV3ENabykoOrQ6X47z8BHjkND0/KziVpzsJu8
-        RPLOgCjFSYe/N39yyuM3rHQ=
-X-Google-Smtp-Source: APXvYqxjAkeyomPfEbaWJy7L3AnKIh7SohJILppQM3Ad8XjX1kEfBfQ07OnsFrKj8jcZJLL3kd9hlQ==
-X-Received: by 2002:a7b:ce07:: with SMTP id m7mr7049727wmc.117.1570701097956;
-        Thu, 10 Oct 2019 02:51:37 -0700 (PDT)
+        bh=vR/97ha/8nINLtKlRJDAXkvt7wXAGo20zdsTBey8WDA=;
+        b=AEl0UpMTdgyy65GdoSqWogNJdKlpNJ9bvzXFcbS6w+NubSl3+WPMykOhvxZfnD5h9g
+         bWtZNNQskSX102ZRxA2pYvgyqMy961838kAAiibGDN0DWi3Zg6yn1vsOUv2DsVlspl5k
+         WSIam7fYxz0ycHjLwGW0xhzeHe0Pb49XFYbDyZq39bRlg6tmTQn5D9K/yKCu2TQaxCR0
+         2cJqMgDFb8AU2cBgS6JN1evJiEEWYYWsZim5XgDiCmjReg4KvgrcPOGpesgzBgd8kqEy
+         BxGl4/lP7kvraSfETZj0y0TfjmWnN4IvjDjwlIMWHt/KPMGhowcmoTmr6hQfswXNMs9u
+         sH8w==
+X-Gm-Message-State: APjAAAXOSabEnQrj3CNFoCU3r5i7eW/LXzCAaCDsSB8AxSfxxW9KikV4
+        PHYsLPm39XGLag8DlgY4beI=
+X-Google-Smtp-Source: APXvYqylf9nKxM3hVAWOugW/T0Pu5gy0Ed8GhiFvEZKb4vDEJGSpBHTcvlBCKf38r+fOzZBQA9UzHg==
+X-Received: by 2002:adf:e688:: with SMTP id r8mr8260370wrm.342.1570701092960;
+        Thu, 10 Oct 2019 02:51:32 -0700 (PDT)
 Received: from localhost.localdomain ([46.114.37.24])
-        by smtp.googlemail.com with ESMTPSA id o4sm11678251wre.91.2019.10.10.02.51.36
+        by smtp.googlemail.com with ESMTPSA id o4sm11678251wre.91.2019.10.10.02.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 02:51:37 -0700 (PDT)
+        Thu, 10 Oct 2019 02:51:32 -0700 (PDT)
 From:   Gon Solo <gonsolo@gmail.com>
 To:     mchehab+samsung@kernel.org
 Cc:     linux-media@vger.kernel.org, mchehab@infradead.org, jp@jpvw.nl,
         crope@iki.fi, sean@mess.org, linux-kernel@vger.kernel.org,
         Gon Solo <gonsolo@gmail.com>
-Subject: [PATCH 4/4] Add support for Logilink VG0022A.
-Date:   Thu, 10 Oct 2019 11:51:03 +0200
-Message-Id: <20191010095103.3803-5-gonsolo@gmail.com>
+Subject: [PATCH 1/4] si2168: Use bits and convert to kernel-doc format.
+Date:   Thu, 10 Oct 2019 11:51:00 +0200
+Message-Id: <20191010095103.3803-2-gonsolo@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191010091848.GA2898@Limone>
 References: <20191010091848.GA2898@Limone>
@@ -75,65 +75,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This includes a hack for the device as it returns only 0xff after a new
-firmware is loaded. To quote Mauro:
-
-"When the [...] firmware that came with the device is replaced
-by a new one, any I2C data received from the tuner will be
-replaced by 0xff.
-
-Probably, the vendor firmware has some patch specifically
-designed for this device. So, we can't replace by the generic
-firmware.
-
-The right solution would be to extract the [...] firmware from
-the original driver and ask the driver to load the specifically
-designed firmware, but, while we don't have that, the next best
-solution is to just keep the original firmware at the device."
-
 Signed-off-by: Gon Solo <gonsolo@gmail.com>
 ---
- drivers/media/usb/dvb-usb-v2/af9035.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/media/dvb-frontends/si2168.h      | 47 +++++++++++++----------
+ drivers/media/dvb-frontends/si2168_priv.h | 10 ++---
+ 2 files changed, 31 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
-index 51e607ea3add..792667ee5ebc 100644
---- a/drivers/media/usb/dvb-usb-v2/af9035.c
-+++ b/drivers/media/usb/dvb-usb-v2/af9035.c
-@@ -1619,6 +1619,24 @@ static int it930x_tuner_attach(struct dvb_usb_adapter *adap)
+diff --git a/drivers/media/dvb-frontends/si2168.h b/drivers/media/dvb-frontends/si2168.h
+index 50dccb394efa..ecd21adf8950 100644
+--- a/drivers/media/dvb-frontends/si2168.h
++++ b/drivers/media/dvb-frontends/si2168.h
+@@ -9,38 +9,43 @@
+ #define SI2168_H
  
- 	memset(&si2157_config, 0, sizeof(si2157_config));
- 	si2157_config.fe = adap->fe[0];
-+
-+	/*
-+	 * HACK: The Logilink VG0022A has a bug: when the si2157
-+	 * firmware that came with the device is replaced by a new
-+	 * one, the I2C transfers to the tuner will return just 0xff.
-+	 *
-+	 * Probably, the vendor firmware has some patch specifically
-+	 * designed for this device. So, we can't replace by the
-+	 * generic firmware. The right solution would be to extract
-+	 * the si2157 firmware from the original driver and ask the
-+	 * driver to load the specifically designed firmware, but,
-+	 * while we don't have that, the next best solution is to just
-+	 * keep the original firmware at the device.
-+	 */
-+	if (le16_to_cpu(d->udev->descriptor.idVendor) == USB_VID_DEXATEK &&
-+	    le16_to_cpu(d->udev->descriptor.idProduct) == 0x0100)
-+		si2157_config.dont_load_firmware = true;
-+
- 	si2157_config.if_port = it930x_addresses_table[state->it930x_addresses].tuner_if_port;
- 	ret = af9035_add_i2c_dev(d, "si2157",
- 				 it930x_addresses_table[state->it930x_addresses].tuner_i2c_addr,
-@@ -2130,6 +2148,8 @@ static const struct usb_device_id af9035_id_table[] = {
- 		&it930x_props, "ITE 9303 Generic", NULL) },
- 	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, USB_PID_AVERMEDIA_TD310,
- 		&it930x_props, "AVerMedia TD310 DVB-T2", NULL) },
-+	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x0100,
-+		&it930x_props, "Logilink VG0022A", NULL) },
- 	{ }
+ #include <linux/dvb/frontend.h>
+-/*
+- * I2C address
+- * 0x64
++/**
++ * struct si2168_config - configuration parameters for si2168
++ *
++ * @fe:
++ *	frontend returned by driver
++ * @i2c_adapter:
++ *	tuner I2C adapter returned by driver
++ * @ts_mode:
++ *	Transport Stream mode. Can be:
++ *	- %SI2168_TS_PARALLEL
++ *	- %SI2168_TS_SERIAL
++ *	- %SI2168_TS_TRISTATE
++ *	- %SI2168_TS_CLK_MANUAL
++ * @ts_clock_inv:
++ *	TS clock inverted
++ * @ts_clock_gapped:
++ *	TS clock gapped
++ * @spectral_inversion:
++ *	Inverted spectrum
++ *
++ * Note:
++ *	The I2C address of this demod is 0x64.
+  */
+ struct si2168_config {
+-	/*
+-	 * frontend
+-	 * returned by driver
+-	 */
+ 	struct dvb_frontend **fe;
+-
+-	/*
+-	 * tuner I2C adapter
+-	 * returned by driver
+-	 */
+ 	struct i2c_adapter **i2c_adapter;
+ 
+-	/* TS mode */
+ #define SI2168_TS_PARALLEL	0x06
+ #define SI2168_TS_SERIAL	0x03
+ #define SI2168_TS_TRISTATE	0x00
+ #define SI2168_TS_CLK_MANUAL	0x20
+ 	u8 ts_mode;
+ 
+-	/* TS clock inverted */
+-	bool ts_clock_inv;
+-
+-	/* TS clock gapped */
+-	bool ts_clock_gapped;
+-
+-	/* Inverted spectrum */
+-	bool spectral_inversion;
++	/* Flags */
++	unsigned int ts_clock_inv:1;
++	unsigned int ts_clock_gapped:1;
++	unsigned int spectral_inversion:1;
  };
- MODULE_DEVICE_TABLE(usb, af9035_id_table);
+ 
+ #endif
+diff --git a/drivers/media/dvb-frontends/si2168_priv.h b/drivers/media/dvb-frontends/si2168_priv.h
+index 804d5b30c697..18bea5222082 100644
+--- a/drivers/media/dvb-frontends/si2168_priv.h
++++ b/drivers/media/dvb-frontends/si2168_priv.h
+@@ -34,12 +34,12 @@ struct si2168_dev {
+ 	unsigned int chip_id;
+ 	unsigned int version;
+ 	const char *firmware_name;
+-	bool active;
+-	bool warm;
+ 	u8 ts_mode;
+-	bool ts_clock_inv;
+-	bool ts_clock_gapped;
+-	bool spectral_inversion;
++	unsigned int active:1;
++	unsigned int warm:1;
++	unsigned int ts_clock_inv:1;
++	unsigned int ts_clock_gapped:1;
++	unsigned int spectral_inversion:1;
+ };
+ 
+ /* firmware command struct */
 -- 
 2.20.1
 
