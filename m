@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92139C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC146C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD9920679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51EB218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697667;
-	bh=OrPEpdqwd733jdhoGK9h+vv1s9G3mOo9wyJbXWHjDiw=;
+	s=default; t=1570697675;
+	bh=nuhga0DMfaO1O8U8B68DgN13T+q/8blK2H/gTCb/pjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N55I9wuSTa0BSatwrOb23HbPR3T/n3aMBAsiRzNTv6fPyebsiNZoc8DFkLf0NP4Et
-	 pdCgkO9v2zfSZbaJYkdDyh3L3Lm4iaPKnqQRH9sLDa3FjA3JVL7rV1xNGKMiqqi0Fm
-	 NpBWeQ9qES6Jhsavh0t+gPSRIBj240HLNuMBaQms=
+	b=UanxmXgfjleL176jAju8PwO8t18WICMUiN9jJgQ/Zlt6/BZR2/GZB38zUugTKq2tJ
+	 k+JnRKA6tiPax9zWo3KbOOIlCTagDpvSDX8A93drgIXg07AuJoIGWdfvBdW7dmx0zt
+	 QsqF6awe8ApSHiUO0km5FdRi76b0FclrMDfaQG5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389928AbfJJIy0 (ORCPT
+        id S2389985AbfJJIye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:54:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57552 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:54:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389979AbfJJIub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:31 -0400
+        id S2389963AbfJJIuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:50:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D684E21929;
-        Thu, 10 Oct 2019 08:50:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E2C0218AC;
+        Thu, 10 Oct 2019 08:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697430;
-        bh=OrPEpdqwd733jdhoGK9h+vv1s9G3mOo9wyJbXWHjDiw=;
+        s=default; t=1570697424;
+        bh=nuhga0DMfaO1O8U8B68DgN13T+q/8blK2H/gTCb/pjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FwpJHG7eQHyB/ydKb/o9upqVhOKvNSiS+SgqMAKkK5ToFhArGOeB0T9yeAk2OR7Jl
-         cto3uUALBodFCTEBKlpQ+0ubKqaABpfhHtzdKpJefQO7wdlHDI4pxzhKLrVtX2MHSL
-         IT5DxZNjwVpd/br89T8yKbbAnTLxVv/k3270hG+4=
+        b=JpBTpyV8W/ZHnHEiL0CVqCFrecwi5hiMDFepqeOqjGBhfMPD22EBgj44vn5B9pcjA
+         cIbbuGTutKyzouqSBcPJh3IhbEW6bnxwWDubPB5ybEfb+fr1FlKORjPeqZsjlnC/Hr
+         KO/2TqNpmnQs7xWh+5aDtFEY1QgERs1VGLNzetZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.14 04/61] s390/cio: avoid calling strlen on null pointer
-Date:   Thu, 10 Oct 2019 10:36:29 +0200
-Message-Id: <20191010083452.173115242@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 22/61] mmc: sdhci: improve ADMA error reporting
+Date:   Thu, 10 Oct 2019 10:36:47 +0200
+Message-Id: <20191010083502.599466479@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -59,55 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit ea298e6ee8b34b3ed4366be7eb799d0650ebe555 upstream.
+commit d1c536e3177390da43d99f20143b810c35433d1f upstream.
 
-Fix the following kasan finding:
-BUG: KASAN: global-out-of-bounds in ccwgroup_create_dev+0x850/0x1140
-Read of size 1 at addr 0000000000000000 by task systemd-udevd.r/561
+ADMA errors are potentially data corrupting events; although we print
+the register state, we do not usefully print the ADMA descriptors.
+Worse than that, we print them by referencing their virtual address
+which is meaningless when the register state gives us the DMA address
+of the failing descriptor.
 
-CPU: 30 PID: 561 Comm: systemd-udevd.r Tainted: G    B
-Hardware name: IBM 3906 M04 704 (LPAR)
-Call Trace:
-([<0000000231b3db7e>] show_stack+0x14e/0x1a8)
- [<0000000233826410>] dump_stack+0x1d0/0x218
- [<000000023216fac4>] print_address_description+0x64/0x380
- [<000000023216f5a8>] __kasan_report+0x138/0x168
- [<00000002331b8378>] ccwgroup_create_dev+0x850/0x1140
- [<00000002332b618a>] group_store+0x3a/0x50
- [<00000002323ac706>] kernfs_fop_write+0x246/0x3b8
- [<00000002321d409a>] vfs_write+0x132/0x450
- [<00000002321d47da>] ksys_write+0x122/0x208
- [<0000000233877102>] system_call+0x2a6/0x2c8
+Print the ADMA descriptors giving their DMA addresses rather than their
+virtual addresses, and print them using SDHCI_DUMP() rather than DBG().
 
-Triggered by:
-openat(AT_FDCWD, "/sys/bus/ccwgroup/drivers/qeth/group",
-		O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 16
-write(16, "0.0.bd00,0.0.bd01,0.0.bd02", 26) = 26
+We also do not show the correct value of the interrupt status register;
+the register dump shows the current value, after we have cleared the
+pending interrupts we are going to service.  What is more useful is to
+print the interrupts that _were_ pending at the time the ADMA error was
+encountered.  Fix that too.
 
-The problem is that __get_next_id in ccwgroup_create_dev might set "buf"
-buffer pointer to NULL and explicit check for that is required.
-
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/cio/ccwgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/sdhci.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/s390/cio/ccwgroup.c
-+++ b/drivers/s390/cio/ccwgroup.c
-@@ -369,7 +369,7 @@ int ccwgroup_create_dev(struct device *p
- 		goto error;
- 	}
- 	/* Check for trailing stuff. */
--	if (i == num_devices && strlen(buf) > 0) {
-+	if (i == num_devices && buf && strlen(buf) > 0) {
- 		rc = -EINVAL;
- 		goto error;
- 	}
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2638,6 +2638,7 @@ static void sdhci_cmd_irq(struct sdhci_h
+ static void sdhci_adma_show_error(struct sdhci_host *host)
+ {
+ 	void *desc = host->adma_table;
++	dma_addr_t dma = host->adma_addr;
+ 
+ 	sdhci_dumpregs(host);
+ 
+@@ -2645,18 +2646,21 @@ static void sdhci_adma_show_error(struct
+ 		struct sdhci_adma2_64_desc *dma_desc = desc;
+ 
+ 		if (host->flags & SDHCI_USE_64_BIT_DMA)
+-			DBG("%p: DMA 0x%08x%08x, LEN 0x%04x, Attr=0x%02x\n",
+-			    desc, le32_to_cpu(dma_desc->addr_hi),
++			SDHCI_DUMP("%08llx: DMA 0x%08x%08x, LEN 0x%04x, Attr=0x%02x\n",
++			    (unsigned long long)dma,
++			    le32_to_cpu(dma_desc->addr_hi),
+ 			    le32_to_cpu(dma_desc->addr_lo),
+ 			    le16_to_cpu(dma_desc->len),
+ 			    le16_to_cpu(dma_desc->cmd));
+ 		else
+-			DBG("%p: DMA 0x%08x, LEN 0x%04x, Attr=0x%02x\n",
+-			    desc, le32_to_cpu(dma_desc->addr_lo),
++			SDHCI_DUMP("%08llx: DMA 0x%08x, LEN 0x%04x, Attr=0x%02x\n",
++			    (unsigned long long)dma,
++			    le32_to_cpu(dma_desc->addr_lo),
+ 			    le16_to_cpu(dma_desc->len),
+ 			    le16_to_cpu(dma_desc->cmd));
+ 
+ 		desc += host->desc_sz;
++		dma += host->desc_sz;
+ 
+ 		if (dma_desc->cmd & cpu_to_le16(ADMA2_END))
+ 			break;
+@@ -2732,7 +2736,8 @@ static void sdhci_data_irq(struct sdhci_
+ 			!= MMC_BUS_TEST_R)
+ 		host->data->error = -EILSEQ;
+ 	else if (intmask & SDHCI_INT_ADMA_ERROR) {
+-		pr_err("%s: ADMA error\n", mmc_hostname(host->mmc));
++		pr_err("%s: ADMA error: 0x%08x\n", mmc_hostname(host->mmc),
++		       intmask);
+ 		sdhci_adma_show_error(host);
+ 		host->data->error = -EIO;
+ 		if (host->ops->adma_workaround)
 
 
