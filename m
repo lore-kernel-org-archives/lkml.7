@@ -2,120 +2,106 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEA0ECE596
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B46C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC77214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A329214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbfJJOwC (ORCPT
+        id S1726472AbfJJOwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 10:52:02 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:2391 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfJJOwC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 10:52:02 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.13]) by rmmx-syy-dmz-app02-12002 (RichMail) with SMTP id 2ee25d9f4569809-229e5; Thu, 10 Oct 2019 22:51:21 +0800 (CST)
-X-RM-TRANSID: 2ee25d9f4569809-229e5
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost (unknown[223.105.0.241])
-        by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee75d9f4566e8f-c4fb8;
-        Thu, 10 Oct 2019 22:51:20 +0800 (CST)
-X-RM-TRANSID: 2ee75d9f4566e8f-c4fb8
-From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-To:     Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <horms@verge.net.au>
-Cc:     Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org,
-        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Subject: [PATCH v6 3/3] selftests: netfilter: add ipvs tunnel test case
-Date:   Thu, 10 Oct 2019 22:50:55 +0800
-Message-Id: <1570719055-25110-4-git-send-email-yanhaishuang@cmss.chinamobile.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1570719055-25110-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
-References: <1570719055-25110-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+        Thu, 10 Oct 2019 10:52:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39744 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbfJJOwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 10:52:36 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0458A64467;
+        Thu, 10 Oct 2019 14:52:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-84.rdu2.redhat.com [10.10.121.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BB4A196B2;
+        Thu, 10 Oct 2019 14:52:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix possible NULL pointer access in ICMP handling
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 10 Oct 2019 15:52:34 +0100
+Message-ID: <157071915431.29197.5055122258964729288.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 10 Oct 2019 14:52:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test virtual server via ipip tunnel.
+If an ICMP packet comes in on the UDP socket backing an AF_RXRPC socket as
+the UDP socket is being shut down, rxrpc_error_report() may get called to
+deal with it after sk_user_data on the UDP socket has been cleared, leading
+to a NULL pointer access when this local endpoint record gets accessed.
 
-Tested:
-# selftests: netfilter: ipvs.sh
-# Testing DR mode...
-# Testing NAT mode...
-# Testing Tunnel mode...
-# ipvs.sh: PASS
-ok 6 selftests: netfilter: ipvs.sh
+Fix this by just returning immediately if sk_user_data was NULL.
 
-Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+The oops looks like the following:
+
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+...
+RIP: 0010:rxrpc_error_report+0x1bd/0x6a9
+...
+Call Trace:
+ ? sock_queue_err_skb+0xbd/0xde
+ ? __udp4_lib_err+0x313/0x34d
+ __udp4_lib_err+0x313/0x34d
+ icmp_unreach+0x1ee/0x207
+ icmp_rcv+0x25b/0x28f
+ ip_protocol_deliver_rcu+0x95/0x10e
+ ip_local_deliver+0xe9/0x148
+ __netif_receive_skb_one_core+0x52/0x6e
+ process_backlog+0xdc/0x177
+ net_rx_action+0xf9/0x270
+ __do_softirq+0x1b6/0x39a
+ ? smpboot_register_percpu_thread+0xce/0xce
+ run_ksoftirqd+0x1d/0x42
+ smpboot_thread_fn+0x19e/0x1b3
+ kthread+0xf1/0xf6
+ ? kthread_delayed_work_timer_fn+0x83/0x83
+ ret_from_fork+0x24/0x30
+
+Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
+Reported-by: syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
-v2: optimize test script
----
- tools/testing/selftests/netfilter/ipvs.sh | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
 
-diff --git a/tools/testing/selftests/netfilter/ipvs.sh b/tools/testing/selftests/netfilter/ipvs.sh
-index 8b2e618..c3b8f90 100755
---- a/tools/testing/selftests/netfilter/ipvs.sh
-+++ b/tools/testing/selftests/netfilter/ipvs.sh
-@@ -168,6 +168,30 @@ test_nat() {
- 	test_service
- }
- 
-+test_tun() {
-+	ip netns exec ns0 ip route add ${vip_v4} via ${gip_v4} dev br0
-+
-+	ip netns exec ns1 modprobe ipip
-+	ip netns exec ns1 ip link set tunl0 up
-+	ip netns exec ns1 sysctl -qw net.ipv4.ip_forward=0
-+	ip netns exec ns1 sysctl -qw net.ipv4.conf.all.send_redirects=0
-+	ip netns exec ns1 sysctl -qw net.ipv4.conf.default.send_redirects=0
-+	ip netns exec ns1 ipvsadm -A -t ${vip_v4}:${port} -s rr
-+	ip netns exec ns1 ipvsadm -a -i -t ${vip_v4}:${port} -r ${rip_v4}:${port}
-+	ip netns exec ns1 ip addr add ${vip_v4}/32 dev lo:1
-+
-+	ip netns exec ns2 modprobe ipip
-+	ip netns exec ns2 ip link set tunl0 up
-+	ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_ignore=1
-+	ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_announce=2
-+	ip netns exec ns2 sysctl -qw net.ipv4.conf.all.rp_filter=0
-+	ip netns exec ns2 sysctl -qw net.ipv4.conf.tunl0.rp_filter=0
-+	ip netns exec ns2 sysctl -qw net.ipv4.conf.veth21.rp_filter=0
-+	ip netns exec ns2 ip addr add ${vip_v4}/32 dev lo:1
-+
-+	test_service
-+}
-+
- run_tests() {
- 	local errors=
- 
-@@ -183,6 +207,12 @@ run_tests() {
- 	test_nat
- 	errors=$(( $errors + $? ))
- 
-+	echo "Testing Tunnel mode..."
-+	cleanup
-+	setup
-+	test_tun
-+	errors=$(( $errors + $? ))
-+
- 	return $errors
- }
- 
--- 
-1.8.3.1
+ net/rxrpc/peer_event.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-
+diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
+index c97ebdc043e4..61451281d74a 100644
+--- a/net/rxrpc/peer_event.c
++++ b/net/rxrpc/peer_event.c
+@@ -151,6 +151,9 @@ void rxrpc_error_report(struct sock *sk)
+ 	struct rxrpc_peer *peer;
+ 	struct sk_buff *skb;
+ 
++	if (unlikely(!local))
++		return;
++
+ 	_enter("%p{%d}", sk, local->debug_id);
+ 
+ 	/* Clear the outstanding error value on the socket so that it doesn't
 
