@@ -2,271 +2,144 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76C6ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CF9C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7879D206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B861214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:31:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0TXQ8XO"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MRUNDfqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfJJWaA (ORCPT
+        id S1726449AbfJJWbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 18:30:00 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33667 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfJJWaA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 18:30:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d22so3497724pls.0;
-        Thu, 10 Oct 2019 15:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+Rq5CoTE2b9CRlBzcczaJbDgzRspVbnY0jyqvQtXOLk=;
-        b=F0TXQ8XOSIFR3LftRORcvg6zYvgwuWjXU/vMmsRqPOPJbp6sOmBg8cT/WR2SO4+7n7
-         YmoVnNKu6N76Qt8+eZ88+5IydI3fL1sL0ojTwUSN0V50JeV8uqQE7Dpd3/jGR6CUj6dO
-         padyHY857EaLkA/6Js8ckRa0uRB6sYPuUvwYdfEQcI/pXCscm9U/3CCyonjBjvAcXloj
-         bC8Jcip2EX3aXc7IC7deq7maBynlc80ExvuSzBctzGoHDk6PoErrk56bK+n1e+HWpWHJ
-         DOdQQ945k1KQEG58m1UH5ATl38u5n/seJtzaFJugIOauRY7IObLwvl+fBP2dm+XicFy+
-         RdRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+Rq5CoTE2b9CRlBzcczaJbDgzRspVbnY0jyqvQtXOLk=;
-        b=GIPzJlX3i9xFUmGQM1NbNuALZfnvsLlN1MGFB/YZp9vP9ST4tTaQ2k0iWJXA++BOrb
-         2FtuG/jLx6o8svSKdnWmZ6QZdLU9yAhE5koNwH6kSqVmhKiBnKqyZ/3KeHHPah1bvv3T
-         8RkHhVGj1QfT2MM7MKKNPJInyOe/BbpdZzs8TcSURLSpGyLROH/jyW9PQFjQ0TEHq7HU
-         SjeRYB8TABQ5qCP5IVjYI1eI3mTHTgtXUjbRf1mU/6JEfvd0vtYtE5I1lvQfIwZTouGG
-         bbqtseOb6yaaf7S5ba2938kQuTV108Psfb4qRoq+b8+QhR6/5BlPxdYdoIon3IAorINO
-         A/+A==
-X-Gm-Message-State: APjAAAWp9GOiXJrsrbVPI8GwUfJD3H0gSNlRfLbQI0jGM4Tv0WDYJHDP
-        FPt7Tz4+hMmgCgZygjAqNns=
-X-Google-Smtp-Source: APXvYqyTxO9tIPDRTcjUxp64SziEtWMojxOT65LeO0UkvFHvXqwvgTyLxurGAOgkGXCJxq2hsDxzSg==
-X-Received: by 2002:a17:902:6b06:: with SMTP id o6mr12111867plk.154.1570746598284;
-        Thu, 10 Oct 2019 15:29:58 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h70sm6222740pgc.48.2019.10.10.15.29.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 15:29:57 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 15:29:55 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 15/36] ARM: s3c: adc: move header to linux/soc/samsung
-Message-ID: <20191010222955.GB229325@dtor-ws>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-15-arnd@arndb.de>
- <da32e8a3-cbb3-ea08-1c55-55980b3dc53e@roeck-us.net>
+        Thu, 10 Oct 2019 18:31:21 -0400
+Received: from mail-eopbgr70053.outbound.protection.outlook.com ([40.107.7.53]:7045
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726065AbfJJWbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 18:31:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AewdmOUQ0tSDNLZYYFm4STu1CbIVIAHhlfQH+R8V5S4UxK7FbhweS3LOZqdlRA30bA6kOUvzmXfTr2nw88CjmiiXzVEGJpoH4X2Bxn1krhg5fLotshaEfnqsFMJvqPeRRCGEl1ob2PiQRejdf+bbMTZ3Rd4zhRhPZkoTAFqtECd9/Xctrm+nXN05GI7lEOc38efGmicgp8e/xujfb+ZJ5lYCK6189SfetijJd6XdAcPSbu+mA2rXjADezCafdQuqw8/YkKjWLoAXCxaLGNIgjEzshYh9ffdWMPZds0gCexBk7xC4sEtkJJ3p2MYQYcpgHlTGjDR4PtXqcc1hTAdztA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JnN/7CJrC76VnTCk66pmfUbRG8pLOyVhaJQYFwMrhNE=;
+ b=KrtkhNoLP0NJBDtKDwKy7XfNtq2nOVkd/wEgJPw65x0lPx0CVwwLWWVhqmV70Im17lYnaDec9GIZ+FA37tbiHPuxtchlZ1Lic62jxkRYvstK5FKm5c7PC9hgU7cxZfaSTr5sLmuB+KMb+9Sq9OjQfdyF4h479LfudlrRbSGoTX2PLgO8L/iyUeM5Sdmo58uwDptWvTlOMWzXikpFwmtR0lyooF80WBeu6Zv5Zb98SnvuGO/DrvHQPm0aosAB94ehuB9OLmjH9AuW0p5ZKFAAmRUbm6Zf9guWL+o+sUTl6XtImRz+isGdsBR/pYpsqhxITl+zU5YnSYIrAZuV2CK6YQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JnN/7CJrC76VnTCk66pmfUbRG8pLOyVhaJQYFwMrhNE=;
+ b=MRUNDfqm1vDpKcpAj8DLJo77YCEDGFkn8OkIphgg9Q9JqP7yIFGpMDvT4r/jDmYvS3tSUbNSyBM0FOD1ubPNmJ1p3qmf+N90G3om1keQi9p4nuzrEvxrWz3X50h27JLH90fxjpO6MQQTxyT47X3O06ZKtfrRCCmchPIDAIly8uY=
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
+ VE1PR04MB6639.eurprd04.prod.outlook.com (10.255.118.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.21; Thu, 10 Oct 2019 22:31:16 +0000
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::c93:c279:545b:b6b6]) by VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::c93:c279:545b:b6b6%3]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
+ 22:31:16 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     Andy Tang <andy.tang@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH v2] arm64: dts: ls1028a: fix a compatible issue
+Thread-Topic: [PATCH v2] arm64: dts: ls1028a: fix a compatible issue
+Thread-Index: AQHVf0brHYC8TgXW1EGDttx7++luRKdUdjcw
+Date:   Thu, 10 Oct 2019 22:31:16 +0000
+Message-ID: <VE1PR04MB6687C0E8739C82D1DAFC71D58F940@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <20191010083334.7037-1-andy.tang@nxp.com>
+In-Reply-To: <20191010083334.7037-1-andy.tang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b802e09c-64b9-48ed-a286-08d74dd190c3
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VE1PR04MB6639:|VE1PR04MB6639:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6639E67272C69A7001D208DC8F940@VE1PR04MB6639.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1284;
+x-forefront-prvs: 018632C080
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(13464003)(189003)(199004)(55016002)(8936002)(8676002)(9686003)(6436002)(7736002)(6116002)(11346002)(25786009)(446003)(486006)(476003)(66066001)(6246003)(81156014)(4326008)(86362001)(26005)(14444005)(66446008)(3846002)(71190400001)(71200400001)(81166006)(256004)(14454004)(66946007)(186003)(76116006)(5660300002)(102836004)(64756008)(66556008)(66476007)(2906002)(6506007)(53546011)(2501003)(110136005)(54906003)(74316002)(52536014)(99286004)(229853002)(305945005)(478600001)(33656002)(316002)(76176011)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6639;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4ZqcARqLaMF5Hte8a3gstWR7f33ki+MMV+X4Gn4zqP7u1bZOXYRYgxHV8I4Cam9yozZFK8ADs8rZHPYQFY8cw4suQpLb3kuIfwBDvv5089U7MdO6MN7gGM7bqXYcYHyIAr2ANrlN6dmj3xBF7kby6MizVI3MR+Rlf+Q+vtD4d/h+Rq/gBkZ6VmAP5EVK62svka01nTL8utftZGMEg0hNCg6EW/+oGA/iMleG9ORIaDstR9kwEEHPrifPLWK1DMGIGK6ciWXkyp/TWRZ0ZxqSHt/xg88O6p59YtO+xjln5oNHm28zdlQ3SPcMTpdMUYeK9vvFJ+I3BpJWY/zDUAQ9W3n+gt434zBOGcwe8Be28nW8fQ883a6kr0isZS0A4dReUShyJkLYb4X84nLqiKzdujcf5J/cevvDKozo26mGvtQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da32e8a3-cbb3-ea08-1c55-55980b3dc53e@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b802e09c-64b9-48ed-a286-08d74dd190c3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 22:31:16.6489
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bu858TigHGrFGhBTyL6okp9rIxeQQxBVTnapFT0u1TV5A72uWD1b0HpDS82BLHIy0is2Y6c5nsafkgRk7Q/hew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6639
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 03:20:32PM -0700, Guenter Roeck wrote:
-> On 10/10/19 1:29 PM, Arnd Bergmann wrote:
-> > There are multiple drivers using the private adc interface.
-> > It seems unlikely that they would ever get converted to iio,
-> > so make the current state official by making the header file
-> > global.
-> > 
-> > The s3c2410_ts driver needs a couple of register definitions
-> > as well.
-> > 
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> For hwmon:
-> 
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
-
-For input:
-
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
 
-> 
-> > ---
-> >   arch/arm/mach-s3c64xx/mach-crag6410.c         |  2 +-
-> >   arch/arm/mach-s3c64xx/mach-mini6410.c         |  2 +-
-> >   arch/arm/mach-s3c64xx/mach-real6410.c         |  2 +-
-> >   arch/arm/mach-s3c64xx/mach-smdk6410.c         |  2 +-
-> >   arch/arm/plat-samsung/adc.c                   |  2 +-
-> >   arch/arm/plat-samsung/devs.c                  |  2 +-
-> >   drivers/hwmon/s3c-hwmon.c                     |  2 +-
-> >   drivers/input/touchscreen/s3c2410_ts.c        | 37 ++++++++++++++++++-
-> >   drivers/power/supply/s3c_adc_battery.c        |  2 +-
-> >   .../linux/soc/samsung/s3c-adc.h               |  0
-> >   10 files changed, 43 insertions(+), 10 deletions(-)
-> >   rename arch/arm/plat-samsung/include/plat/adc.h => include/linux/soc/samsung/s3c-adc.h (100%)
-> > 
-> > diff --git a/arch/arm/mach-s3c64xx/mach-crag6410.c b/arch/arm/mach-s3c64xx/mach-crag6410.c
-> > index da5b50981a14..133453562d23 100644
-> > --- a/arch/arm/mach-s3c64xx/mach-crag6410.c
-> > +++ b/arch/arm/mach-s3c64xx/mach-crag6410.c
-> > @@ -57,7 +57,7 @@
-> >   #include <plat/keypad.h>
-> >   #include <plat/devs.h>
-> >   #include <plat/cpu.h>
-> > -#include <plat/adc.h>
-> > +#include <linux/soc/samsung/s3c-adc.h>
-> >   #include <linux/platform_data/i2c-s3c2410.h>
-> >   #include <plat/pm.h>
-> >   #include <plat/samsung-time.h>
-> > diff --git a/arch/arm/mach-s3c64xx/mach-mini6410.c b/arch/arm/mach-s3c64xx/mach-mini6410.c
-> > index 0dd36ae49e6a..c7140300bd3f 100644
-> > --- a/arch/arm/mach-s3c64xx/mach-mini6410.c
-> > +++ b/arch/arm/mach-s3c64xx/mach-mini6410.c
-> > @@ -27,7 +27,7 @@
-> >   #include <mach/regs-gpio.h>
-> >   #include <mach/gpio-samsung.h>
-> > -#include <plat/adc.h>
-> > +#include <linux/soc/samsung/s3c-adc.h>
-> >   #include <plat/cpu.h>
-> >   #include <plat/devs.h>
-> >   #include <plat/fb.h>
-> > diff --git a/arch/arm/mach-s3c64xx/mach-real6410.c b/arch/arm/mach-s3c64xx/mach-real6410.c
-> > index 0ff88b6859c4..f55097fde94c 100644
-> > --- a/arch/arm/mach-s3c64xx/mach-real6410.c
-> > +++ b/arch/arm/mach-s3c64xx/mach-real6410.c
-> > @@ -29,7 +29,7 @@
-> >   #include <mach/gpio-samsung.h>
-> >   #include <mach/irqs.h>
-> > -#include <plat/adc.h>
-> > +#include <linux/soc/samsung/s3c-adc.h>
-> >   #include <plat/cpu.h>
-> >   #include <plat/devs.h>
-> >   #include <plat/fb.h>
-> > diff --git a/arch/arm/mach-s3c64xx/mach-smdk6410.c b/arch/arm/mach-s3c64xx/mach-smdk6410.c
-> > index 95bdcfe95a53..3042f6cbffd9 100644
-> > --- a/arch/arm/mach-s3c64xx/mach-smdk6410.c
-> > +++ b/arch/arm/mach-s3c64xx/mach-smdk6410.c
-> > @@ -60,7 +60,7 @@
-> >   #include <plat/devs.h>
-> >   #include <plat/cpu.h>
-> > -#include <plat/adc.h>
-> > +#include <linux/soc/samsung/s3c-adc.h>
-> >   #include <linux/platform_data/touchscreen-s3c2410.h>
-> >   #include <plat/keypad.h>
-> >   #include <plat/samsung-time.h>
-> > diff --git a/arch/arm/plat-samsung/adc.c b/arch/arm/plat-samsung/adc.c
-> > index ee3d5c989a76..623a9774cc52 100644
-> > --- a/arch/arm/plat-samsung/adc.c
-> > +++ b/arch/arm/plat-samsung/adc.c
-> > @@ -20,7 +20,7 @@
-> >   #include <linux/regulator/consumer.h>
-> >   #include <plat/regs-adc.h>
-> > -#include <plat/adc.h>
-> > +#include <linux/soc/samsung/s3c-adc.h>
-> >   /* This driver is designed to control the usage of the ADC block between
-> >    * the touchscreen and any other drivers that may need to use it, such as
-> > diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
-> > index fd94a35e22f8..ddd90f0bb380 100644
-> > --- a/arch/arm/plat-samsung/devs.c
-> > +++ b/arch/arm/plat-samsung/devs.c
-> > @@ -44,7 +44,7 @@
-> >   #include <plat/cpu.h>
-> >   #include <plat/devs.h>
-> > -#include <plat/adc.h>
-> > +#include <linux/soc/samsung/s3c-adc.h>
-> >   #include <linux/platform_data/ata-samsung_cf.h>
-> >   #include <plat/fb.h>
-> >   #include <plat/fb-s3c2410.h>
-> > diff --git a/drivers/hwmon/s3c-hwmon.c b/drivers/hwmon/s3c-hwmon.c
-> > index b490fe3d2ee8..f2703c5460d0 100644
-> > --- a/drivers/hwmon/s3c-hwmon.c
-> > +++ b/drivers/hwmon/s3c-hwmon.c
-> > @@ -20,7 +20,7 @@
-> >   #include <linux/hwmon.h>
-> >   #include <linux/hwmon-sysfs.h>
-> > -#include <plat/adc.h>
-> > +#include <linux/soc/samsung/s3c-adc.h>
-> >   #include <linux/platform_data/hwmon-s3c.h>
-> >   struct s3c_hwmon_attr {
-> > diff --git a/drivers/input/touchscreen/s3c2410_ts.c b/drivers/input/touchscreen/s3c2410_ts.c
-> > index b346e7cafd62..1a5a178ea286 100644
-> > --- a/drivers/input/touchscreen/s3c2410_ts.c
-> > +++ b/drivers/input/touchscreen/s3c2410_ts.c
-> > @@ -21,10 +21,43 @@
-> >   #include <linux/clk.h>
-> >   #include <linux/io.h>
-> > -#include <plat/adc.h>
-> > -#include <plat/regs-adc.h>
-> > +#include <linux/soc/samsung/s3c-adc.h>
-> >   #include <linux/platform_data/touchscreen-s3c2410.h>
-> > +#define	S3C2410_ADCCON			(0x00)
-> > +#define	S3C2410_ADCTSC			(0x04)
-> > +#define	S3C2410_ADCDLY			(0x08)
-> > +#define	S3C2410_ADCDAT0			(0x0C)
-> > +#define	S3C2410_ADCDAT1			(0x10)
-> > +#define	S3C64XX_ADCUPDN			(0x14)
-> > +#define	S3C2443_ADCMUX			(0x18)
-> > +#define	S3C64XX_ADCCLRINT		(0x18)
-> > +#define	S5P_ADCMUX			(0x1C)
-> > +#define	S3C64XX_ADCCLRINTPNDNUP		(0x20)
-> > +
-> > +/* ADCTSC Register Bits */
-> > +#define S3C2443_ADCTSC_UD_SEN		(1 << 8)
-> > +#define S3C2410_ADCTSC_YM_SEN		(1<<7)
-> > +#define S3C2410_ADCTSC_YP_SEN		(1<<6)
-> > +#define S3C2410_ADCTSC_XM_SEN		(1<<5)
-> > +#define S3C2410_ADCTSC_XP_SEN		(1<<4)
-> > +#define S3C2410_ADCTSC_PULL_UP_DISABLE	(1<<3)
-> > +#define S3C2410_ADCTSC_AUTO_PST		(1<<2)
-> > +#define S3C2410_ADCTSC_XY_PST(x)	(((x)&0x3)<<0)
-> > +
-> > +/* ADCDAT0 Bits */
-> > +#define S3C2410_ADCDAT0_UPDOWN		(1<<15)
-> > +#define S3C2410_ADCDAT0_AUTO_PST	(1<<14)
-> > +#define S3C2410_ADCDAT0_XY_PST		(0x3<<12)
-> > +#define S3C2410_ADCDAT0_XPDATA_MASK	(0x03FF)
-> > +
-> > +/* ADCDAT1 Bits */
-> > +#define S3C2410_ADCDAT1_UPDOWN		(1<<15)
-> > +#define S3C2410_ADCDAT1_AUTO_PST	(1<<14)
-> > +#define S3C2410_ADCDAT1_XY_PST		(0x3<<12)
-> > +#define S3C2410_ADCDAT1_YPDATA_MASK	(0x03FF)
-> > +
-> > +
-> >   #define TSC_SLEEP  (S3C2410_ADCTSC_PULL_UP_DISABLE | S3C2410_ADCTSC_XY_PST(0))
-> >   #define INT_DOWN	(0)
-> > diff --git a/drivers/power/supply/s3c_adc_battery.c b/drivers/power/supply/s3c_adc_battery.c
-> > index 3d00b35cafc9..60b7f41ab063 100644
-> > --- a/drivers/power/supply/s3c_adc_battery.c
-> > +++ b/drivers/power/supply/s3c_adc_battery.c
-> > @@ -22,7 +22,7 @@
-> >   #include <linux/init.h>
-> >   #include <linux/module.h>
-> > -#include <plat/adc.h>
-> > +#include <linux/soc/samsung/s3c-adc.h>
-> >   #define BAT_POLL_INTERVAL		10000 /* ms */
-> >   #define JITTER_DELAY			500 /* ms */
-> > diff --git a/arch/arm/plat-samsung/include/plat/adc.h b/include/linux/soc/samsung/s3c-adc.h
-> > similarity index 100%
-> > rename from arch/arm/plat-samsung/include/plat/adc.h
-> > rename to include/linux/soc/samsung/s3c-adc.h
-> > 
-> 
+> -----Original Message-----
+> From: Yuantian Tang <andy.tang@nxp.com>
+> Sent: Thursday, October 10, 2019 3:34 AM
+> To: shawnguo@kernel.org
+> Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
+> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Andy Tang
+> <andy.tang@nxp.com>
+> Subject: [PATCH v2] arm64: dts: ls1028a: fix a compatible issue
+>=20
+> The I2C multiplexer used on ls1028aqds is PCA9547, not PCA9847.
+> If the wrong compatible was used, this chip will not be able to be probed
+> correctly and hence fail to work.
+>=20
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 
--- 
-Dmitry
+Acked-by: Li Yang <leoyang.li@nxp.com>
+
+> ---
+> v2:
+> 	- refine the description
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> index 5e14e5a19744..f5da9e8b0d9d 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> @@ -107,7 +107,7 @@
+>  	status =3D "okay";
+>=20
+>  	i2c-mux@77 {
+> -		compatible =3D "nxp,pca9847";
+> +		compatible =3D "nxp,pca9547";
+>  		reg =3D <0x77>;
+>  		#address-cells =3D <1>;
+>  		#size-cells =3D <0>;
+> --
+> 2.17.1
+
