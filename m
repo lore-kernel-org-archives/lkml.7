@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AC9C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33113C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3C621A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A34221920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696780;
-	bh=6tbXvVaKRk6fxxefrdGvDY9Lbd+z9PQqGTiTVs0NcvA=;
+	s=default; t=1570696783;
+	bh=kXRkOfBAkQq2qSRWaYK/tWRsdccPsnNMDtyWyCDnW3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uKOSSa9vAsaKhzEcpX0osPDa/097w7iLhWBPdzF75oxSeDj/KWzm1QyvjK1YDkFWW
-	 dEl+TWkeNyrFMEPErZlV6K2CHx6BEtZWf6hlHaDPqZgdhTtFS45YoYD+NDOMWq0eDx
-	 nvdwHdOZI+3V9oyT0AiyMP4UQKO/HI1tdNHG8U+o=
+	b=MMBoJdzo87aMiKeyuJUYEFb88AKeEgnK5lK+Ah9eVD9i3pVNUI1r16aPFFXgWZ/lZ
+	 pdr8DCBKjdX4tAjVDcb1oiIz3AB170udG5B9kCNLS1CWOk7NFIYD+g4083bbEjmI6D
+	 V6/Nj26Y16w58z2tqANHIs+5VFJIMRbJnfN3+B50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387919AbfJJIjj (ORCPT
+        id S2387935AbfJJIjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:39:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43256 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:39:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387908AbfJJIjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:39:36 -0400
+        id S2387917AbfJJIjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:39:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FCD320B7C;
-        Thu, 10 Oct 2019 08:39:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA0CC2196E;
+        Thu, 10 Oct 2019 08:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696775;
-        bh=6tbXvVaKRk6fxxefrdGvDY9Lbd+z9PQqGTiTVs0NcvA=;
+        s=default; t=1570696778;
+        bh=kXRkOfBAkQq2qSRWaYK/tWRsdccPsnNMDtyWyCDnW3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g2cOgXK4GmO3f5ohkGPOtpoZafhgSPnAMp/7ivsAm+HMoBmMvIJK/wPIPIcNBE1B1
-         9B2cEExgYwl6tukXqWus4g2otupYfYR/zG60ogrqJtBwkRUmFBoBkMLPXT/YM6j1kC
-         qTEaJHVyI0hxeWxY7pZUw3s/+L1NEJYaBGCETcJ0=
+        b=I4jktegz18/1QO8eDyBNL6kVjborOoCmYU2Sun9IYFFMrsdS1P362z9WLfxuzPrIr
+         IVQ4vtlV99HFcyHD7GTUMkAmTUdjzr2GZ9uiJlucyLmExZ+1ha1Bl/x4JtLp5l0K6L
+         zXVwQVEcpIWBZf4mIGdTiDni+WdsEDXZALoT/xUE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Nosthoff <committed@heine.so>,
-        Brian Norris <briannorris@chromium.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.3 049/148] power: supply: sbs-battery: only return health when battery present
-Date:   Thu, 10 Oct 2019 10:35:10 +0200
-Message-Id: <20191010083614.117013387@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH 5.3 050/148] tracing: Make sure variable reference alias has correct var_ref_idx
+Date:   Thu, 10 Oct 2019 10:35:11 +0200
+Message-Id: <20191010083614.182158465@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,74 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Nosthoff <committed@heine.so>
+From: Tom Zanussi <zanussi@kernel.org>
 
-commit fe55e770327363304c4111423e6f7ff3c650136d upstream.
+commit 17f8607a1658a8e70415eef67909f990d13017b5 upstream.
 
-when the battery is set to sbs-mode and  no gpio detection is enabled
-"health" is always returning a value even when the battery is not present.
-All other fields return "not present".
-This leads to a scenario where the driver is constantly switching between
-"present" and "not present" state. This generates a lot of constant
-traffic on the i2c.
+Original changelog from Steve Rostedt (except last sentence which
+explains the problem, and the Fixes: tag):
 
-This commit changes the response of "health" to an error when the battery
-is not responding leading to a consistent "not present" state.
+I performed a three way histogram with the following commands:
 
-Fixes: 76b16f4cdfb8 ("power: supply: sbs-battery: don't assume MANUFACTURER_DATA formats")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Michael Nosthoff <committed@heine.so>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+echo 'irq_lat u64 lat pid_t pid' > synthetic_events
+echo 'wake_lat u64 lat u64 irqlat pid_t pid' >> synthetic_events
+echo 'hist:keys=common_pid:irqts=common_timestamp.usecs if function == 0xffffffff81200580' > events/timer/hrtimer_start/trigger
+echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$irqts:onmatch(timer.hrtimer_start).irq_lat($lat,pid) if common_flags & 1' > events/sched/sched_waking/trigger
+echo 'hist:keys=pid:wakets=common_timestamp.usecs,irqlat=lat' > events/synthetic/irq_lat/trigger
+echo 'hist:keys=next_pid:lat=common_timestamp.usecs-$wakets,irqlat=$irqlat:onmatch(synthetic.irq_lat).wake_lat($lat,$irqlat,next_pid)' > events/sched/sched_switch/trigger
+echo 1 > events/synthetic/wake_lat/enable
+
+Basically I wanted to see:
+
+ hrtimer_start (calling function tick_sched_timer)
+
+Note:
+
+  # grep tick_sched_timer /proc/kallsyms
+ffffffff81200580 t tick_sched_timer
+
+And save the time of that, and then record sched_waking if it is called
+in interrupt context and with the same pid as the hrtimer_start, it
+will record the latency between that and the waking event.
+
+I then look at when the task that is woken is scheduled in, and record
+the latency between the wakeup and the task running.
+
+At the end, the wake_lat synthetic event will show the wakeup to
+scheduled latency, as well as the irq latency in from hritmer_start to
+the wakeup. The problem is that I found this:
+
+          <idle>-0     [007] d...   190.485261: wake_lat: lat=27 irqlat=190485230 pid=698
+          <idle>-0     [005] d...   190.485283: wake_lat: lat=40 irqlat=190485239 pid=10
+          <idle>-0     [002] d...   190.488327: wake_lat: lat=56 irqlat=190488266 pid=335
+          <idle>-0     [005] d...   190.489330: wake_lat: lat=64 irqlat=190489262 pid=10
+          <idle>-0     [003] d...   190.490312: wake_lat: lat=43 irqlat=190490265 pid=77
+          <idle>-0     [005] d...   190.493322: wake_lat: lat=54 irqlat=190493262 pid=10
+          <idle>-0     [005] d...   190.497305: wake_lat: lat=35 irqlat=190497267 pid=10
+          <idle>-0     [005] d...   190.501319: wake_lat: lat=50 irqlat=190501264 pid=10
+
+The irqlat seemed quite large! Investigating this further, if I had
+enabled the irq_lat synthetic event, I noticed this:
+
+          <idle>-0     [002] d.s.   249.429308: irq_lat: lat=164968 pid=335
+          <idle>-0     [002] d...   249.429369: wake_lat: lat=55 irqlat=249429308 pid=335
+
+Notice that the timestamp of the irq_lat "249.429308" is awfully
+similar to the reported irqlat variable. In fact, all instances were
+like this. It appeared that:
+
+  irqlat=$irqlat
+
+Wasn't assigning the old $irqlat to the new irqlat variable, but
+instead was assigning the $irqts to it.
+
+The issue is that assigning the old $irqlat to the new irqlat variable
+creates a variable reference alias, but the alias creation code
+forgets to make sure the alias uses the same var_ref_idx to access the
+reference.
+
+Link: http://lkml.kernel.org/r/1567375321.5282.12.camel@kernel.org
+
+Cc: Linux Trace Devel <linux-trace-devel@vger.kernel.org>
+Cc: linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 7e8b88a30b085 ("tracing: Add hist trigger support for variable reference aliases")
+Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/supply/sbs-battery.c |   25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ kernel/trace/trace_events_hist.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/power/supply/sbs-battery.c
-+++ b/drivers/power/supply/sbs-battery.c
-@@ -314,17 +314,22 @@ static int sbs_get_battery_presence_and_
- {
- 	int ret;
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -2785,6 +2785,8 @@ static struct hist_field *create_alias(s
+ 		return NULL;
+ 	}
  
--	if (psp == POWER_SUPPLY_PROP_PRESENT) {
--		/* Dummy command; if it succeeds, battery is present. */
--		ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
--		if (ret < 0)
--			val->intval = 0; /* battery disconnected */
--		else
--			val->intval = 1; /* battery present */
--	} else { /* POWER_SUPPLY_PROP_HEALTH */
-+	/* Dummy command; if it succeeds, battery is present. */
-+	ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
++	alias->var_ref_idx = var_ref->var_ref_idx;
 +
-+	if (ret < 0) { /* battery not present*/
-+		if (psp == POWER_SUPPLY_PROP_PRESENT) {
-+			val->intval = 0;
-+			return 0;
-+		}
-+		return ret;
-+	}
-+
-+	if (psp == POWER_SUPPLY_PROP_PRESENT)
-+		val->intval = 1; /* battery present */
-+	else /* POWER_SUPPLY_PROP_HEALTH */
- 		/* SBS spec doesn't have a general health command. */
- 		val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
--	}
- 
- 	return 0;
+ 	return alias;
  }
-@@ -626,6 +631,8 @@ static int sbs_get_property(struct power
- 		else
- 			ret = sbs_get_battery_presence_and_health(client, psp,
- 								  val);
-+
-+		/* this can only be true if no gpio is used */
- 		if (psp == POWER_SUPPLY_PROP_PRESENT)
- 			return 0;
- 		break;
+ 
 
 
