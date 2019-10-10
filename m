@@ -2,50 +2,52 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0808BC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBC2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D4922790
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7951218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697370;
-	bh=7tld6r4njYlcCBmeGgYzIQgVbZE6ybfWh0j0vccDjpc=;
+	s=default; t=1570697373;
+	bh=2L6z+YucNVtGSXTpTVYqs4wYjrBZz8a4o9AYczD3IjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kBi/qn7nMWiFUHpm5c+970Z9KxjPdlDvTDrZSsrzxEwiWHUhc1CkcSPaSX/zYe273
-	 sP54i1P/VajmrDkc3MscpC04B9zipzKiol5tZ+T7HDUe55HdZU79O/gn/o026EGM1d
-	 MJdoC6F30YHxDQ4q/QuJPKkbfEkVpxCYxbHJmUwQ=
+	b=eOdFsi/0QGiixPQn9C7R7Upe8ZalY4/FPAFJVEh+oeHTZL76iFEUBWoI+FmEvDagd
+	 dMjUnSUuLNJSEeMRq9ti9lD4qSCk5pdUxCB/Jp/AiJfM8oRBVxFTLpicJ1UzTXfIuq
+	 4/3n+9bPptdkztnRe9UNRPagk0pL5w//YQPCq7rU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388397AbfJJIta (ORCPT
+        id S2389828AbfJJItc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:49:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56012 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:49:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389279AbfJJItZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:49:25 -0400
+        id S2389816AbfJJIt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:49:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DA58218AC;
-        Thu, 10 Oct 2019 08:49:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 393DD2190F;
+        Thu, 10 Oct 2019 08:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697365;
-        bh=7tld6r4njYlcCBmeGgYzIQgVbZE6ybfWh0j0vccDjpc=;
+        s=default; t=1570697367;
+        bh=2L6z+YucNVtGSXTpTVYqs4wYjrBZz8a4o9AYczD3IjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0a/7PuSsFODGKQKHov/uq4EyH8cC0U6sDB3h+ND6ee2FnAPmskWBpJR0+2ycPCFWA
-         wVbNOZojkCGYgW8tHxI4MDMe6FLgd+dYOJbnTiEa5Xz74nfman2JFYWV2kSocTMYrf
-         uJe/GOKiDdF2Ezscf/6sUCJjndzL6U1w7cdvXTdA=
+        b=NsrHM7IltGWCClouiMdwlq7ZW6cT8vg15O5mv1e2fnVLaexdrd6/vDpLzZZ5RXO58
+         0HmKicjtn+y9/sVhkB6WmUX2duo2JvXhtKVIKlf5PV8F6jSxWtNcbCNbvImPJFdB74
+         z/8VhqO099UjUK1Sr/ILi7IxBZJb3/aBZjFWw0tM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 114/114] nl80211: validate beacon head
-Date:   Thu, 10 Oct 2019 10:37:01 +0200
-Message-Id: <20191010083614.334354467@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 087/114] drm/i915/userptr: Acquire the page lock around set_page_dirty()
+Date:   Thu, 10 Oct 2019 10:36:34 +0200
+Message-Id: <20191010083612.658211813@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -58,82 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit f88eb7c0d002a67ef31aeb7850b42ff69abc46dc upstream.
+[ Upstream commit cb6d7c7dc7ff8cace666ddec66334117a6068ce2 ]
 
-We currently don't validate the beacon head, i.e. the header,
-fixed part and elements that are to go in front of the TIM
-element. This means that the variable elements there can be
-malformed, e.g. have a length exceeding the buffer size, but
-most downstream code from this assumes that this has already
-been checked.
+set_page_dirty says:
 
-Add the necessary checks to the netlink policy.
+	For pages with a mapping this should be done under the page lock
+	for the benefit of asynchronous memory errors who prefer a
+	consistent dirty state. This rule can be broken in some special
+	cases, but should be better not to.
 
+Under those rules, it is only safe for us to use the plain set_page_dirty
+calls for shmemfs/anonymous memory. Userptr may be used with real
+mappings and so needs to use the locked version (set_page_dirty_lock).
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
+Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
 Cc: stable@vger.kernel.org
-Fixes: ed1b6cc7f80f ("cfg80211/nl80211: add beacon settings")
-Link: https://lore.kernel.org/r/1569009255-I7ac7fbe9436e9d8733439eab8acbbd35e55c74ef@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190708140327.26825-1-chris@chris-wilson.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c |   38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/gpu/drm/i915/i915_gem_userptr.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -200,6 +200,38 @@ cfg80211_get_dev_from_info(struct net *n
- 	return __cfg80211_rdev_from_attrs(netns, info->attrs);
- }
+diff --git a/drivers/gpu/drm/i915/i915_gem_userptr.c b/drivers/gpu/drm/i915/i915_gem_userptr.c
+index 2c9b284036d10..e13ea2ecd669c 100644
+--- a/drivers/gpu/drm/i915/i915_gem_userptr.c
++++ b/drivers/gpu/drm/i915/i915_gem_userptr.c
+@@ -692,7 +692,15 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
  
-+static int validate_beacon_head(const struct nlattr *attr,
-+				struct netlink_ext_ack *extack)
-+{
-+	const u8 *data = nla_data(attr);
-+	unsigned int len = nla_len(attr);
-+	const struct element *elem;
-+	const struct ieee80211_mgmt *mgmt = (void *)data;
-+	unsigned int fixedlen = offsetof(struct ieee80211_mgmt,
-+					 u.beacon.variable);
-+
-+	if (len < fixedlen)
-+		goto err;
-+
-+	if (ieee80211_hdrlen(mgmt->frame_control) !=
-+	    offsetof(struct ieee80211_mgmt, u.beacon))
-+		goto err;
-+
-+	data += fixedlen;
-+	len -= fixedlen;
-+
-+	for_each_element(elem, data, len) {
-+		/* nothing */
-+	}
-+
-+	if (for_each_element_completed(elem, data, len))
-+		return 0;
-+
-+err:
-+	NL_SET_ERR_MSG_ATTR(extack, attr, "malformed beacon head");
-+	return -EINVAL;
-+}
-+
- /* policy for the attributes */
- static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
- 	[NL80211_ATTR_WIPHY] = { .type = NLA_U32 },
-@@ -4016,6 +4048,12 @@ static int nl80211_parse_beacon(struct n
- 	memset(bcn, 0, sizeof(*bcn));
+ 	for_each_sgt_page(page, sgt_iter, pages) {
+ 		if (obj->mm.dirty)
+-			set_page_dirty(page);
++			/*
++			 * As this may not be anonymous memory (e.g. shmem)
++			 * but exist on a real mapping, we have to lock
++			 * the page in order to dirty it -- holding
++			 * the page reference is not sufficient to
++			 * prevent the inode from being truncated.
++			 * Play safe and take the lock.
++			 */
++			set_page_dirty_lock(page);
  
- 	if (attrs[NL80211_ATTR_BEACON_HEAD]) {
-+		int ret = validate_beacon_head(attrs[NL80211_ATTR_BEACON_HEAD],
-+					       NULL);
-+
-+		if (ret)
-+			return ret;
-+
- 		bcn->head = nla_data(attrs[NL80211_ATTR_BEACON_HEAD]);
- 		bcn->head_len = nla_len(attrs[NL80211_ATTR_BEACON_HEAD]);
- 		if (!bcn->head_len)
+ 		mark_page_accessed(page);
+ 		put_page(page);
+-- 
+2.20.1
+
 
 
