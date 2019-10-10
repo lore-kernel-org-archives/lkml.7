@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED936C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CFFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D6520679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0DF320679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697809;
-	bh=g1EwKsoWRrIPN9pIi5JHek7BXpKp8hPNF+sPHViPCJc=;
+	s=default; t=1570697815;
+	bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JEUNYCD+uWCj+WtpsGgH2wPy+WZyZM6O8aaFCBYhhwePt+bnH1mmQtiG+BJU6p4He
-	 mUxLxNxdTDPE2TwMjQQjRHoFgNKZJvGdRj5RfB/LNcaCT2Lb74yIN1IiHa7ntttjQZ
-	 6XwZ9DYcZxUgh4YsxylzSi/p/bAcoptAWwX8+obc=
+	b=OgqdPn9HSiPLazJbAY0sqMloZh8CbYSuH3nqtjz8Xv0kcw/Sd8R8HpOYNe2EjftR+
+	 AgMrrTLUTiB/I5kXIg0NcIpuf/0RBndnP8ATvP1JjFe7NmsTfkYaEhPMb8kSroe/DV
+	 L+OmdyCc6Cp0LazJRrnvyyGQRZTxqXguNQ5kovlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388949AbfJJI4s (ORCPT
+        id S2389586AbfJJI4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:56:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53862 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:56:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387775AbfJJIrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:47 -0400
+        id S2389501AbfJJIrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AB2C218AC;
-        Thu, 10 Oct 2019 08:47:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37AA7222D2;
+        Thu, 10 Oct 2019 08:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697266;
-        bh=g1EwKsoWRrIPN9pIi5JHek7BXpKp8hPNF+sPHViPCJc=;
+        s=default; t=1570697255;
+        bh=d1cwlKNt2mnCdzZ5RHbHyTPGEAf/7X1xqYU1nu09wHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yVFgVeqHqVSBHaMMMVcSgBK6NCukrRb9+DfGN6vD2PX09qP0weYwYmJ/PL2U4vNaw
-         y+b9Kv0D/+naohLSXzVUF4euTKge86RaeEbw5LQ47rs3yLo0qkmI6a0trI3Lsj2Odn
-         c3uHV/YJJiho52LzyjDEhvfLRA0tUTKkSOr5ffvc=
+        b=J88PohXiQdW/9uLb7bFXpEAfjWuY5gOfpIstNLpYBvdZfDPNztjT8GOXGe16smi5G
+         bqLlMbf5SQ7P1puIWyQCReyHPGO5HSj80emCpUFpe1ll/e4jdVcKbEm/Wnn7K+gTmK
+         /bhRZjeH4yhjP8lsib1ZFDJgnHikUT28f3qIsOns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 077/114] drm/radeon: Bail earlier when radeon.cik_/si_support=0 is passed
-Date:   Thu, 10 Oct 2019 10:36:24 +0200
-Message-Id: <20191010083612.035029947@linuxfoundation.org>
+Subject: [PATCH 4.19 074/114] kernel/elfcore.c: include proper prototypes
+Date:   Thu, 10 Oct 2019 10:36:21 +0200
+Message-Id: <20191010083611.841491973@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -62,114 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit 9dbc88d013b79c62bd845cb9e7c0256e660967c5 ]
+[ Upstream commit 0f74914071ab7e7b78731ed62bf350e3a344e0a5 ]
 
-Bail from the pci_driver probe function instead of from the drm_driver
-load function.
+When building with W=1, gcc properly complains that there's no prototypes:
 
-This avoid /dev/dri/card0 temporarily getting registered and then
-unregistered again, sending unwanted add / remove udev events to
-userspace.
+  CC      kernel/elfcore.o
+kernel/elfcore.c:7:17: warning: no previous prototype for 'elf_core_extra_phdrs' [-Wmissing-prototypes]
+    7 | Elf_Half __weak elf_core_extra_phdrs(void)
+      |                 ^~~~~~~~~~~~~~~~~~~~
+kernel/elfcore.c:12:12: warning: no previous prototype for 'elf_core_write_extra_phdrs' [-Wmissing-prototypes]
+   12 | int __weak elf_core_write_extra_phdrs(struct coredump_params *cprm, loff_t offset)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/elfcore.c:17:12: warning: no previous prototype for 'elf_core_write_extra_data' [-Wmissing-prototypes]
+   17 | int __weak elf_core_write_extra_data(struct coredump_params *cprm)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/elfcore.c:22:15: warning: no previous prototype for 'elf_core_extra_data_size' [-Wmissing-prototypes]
+   22 | size_t __weak elf_core_extra_data_size(void)
+      |               ^~~~~~~~~~~~~~~~~~~~~~~~
 
-Specifically this avoids triggering the (userspace) bug fixed by this
-plymouth merge-request:
-https://gitlab.freedesktop.org/plymouth/plymouth/merge_requests/59
+Provide the include file so gcc is happy, and we don't have potential code drift
 
-Note that despite that being an userspace bug, not sending unnecessary
-udev events is a good idea in general.
-
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1490490
-Reviewed-by: Michel Dänzer <mdaenzer@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: http://lkml.kernel.org/r/29875.1565224705@turing-police
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_drv.c | 31 +++++++++++++++++++++++++++++
- drivers/gpu/drm/radeon/radeon_kms.c | 25 -----------------------
- 2 files changed, 31 insertions(+), 25 deletions(-)
+ kernel/elfcore.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 25b5407c74b5a..d83310751a8e4 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -340,8 +340,39 @@ static int radeon_kick_out_firmware_fb(struct pci_dev *pdev)
- static int radeon_pci_probe(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
+diff --git a/kernel/elfcore.c b/kernel/elfcore.c
+index fc482c8e0bd88..57fb4dcff4349 100644
+--- a/kernel/elfcore.c
++++ b/kernel/elfcore.c
+@@ -3,6 +3,7 @@
+ #include <linux/fs.h>
+ #include <linux/mm.h>
+ #include <linux/binfmts.h>
++#include <linux/elfcore.h>
+ 
+ Elf_Half __weak elf_core_extra_phdrs(void)
  {
-+	unsigned long flags = 0;
- 	int ret;
- 
-+	if (!ent)
-+		return -ENODEV; /* Avoid NULL-ptr deref in drm_get_pci_dev */
-+
-+	flags = ent->driver_data;
-+
-+	if (!radeon_si_support) {
-+		switch (flags & RADEON_FAMILY_MASK) {
-+		case CHIP_TAHITI:
-+		case CHIP_PITCAIRN:
-+		case CHIP_VERDE:
-+		case CHIP_OLAND:
-+		case CHIP_HAINAN:
-+			dev_info(&pdev->dev,
-+				 "SI support disabled by module param\n");
-+			return -ENODEV;
-+		}
-+	}
-+	if (!radeon_cik_support) {
-+		switch (flags & RADEON_FAMILY_MASK) {
-+		case CHIP_KAVERI:
-+		case CHIP_BONAIRE:
-+		case CHIP_HAWAII:
-+		case CHIP_KABINI:
-+		case CHIP_MULLINS:
-+			dev_info(&pdev->dev,
-+				 "CIK support disabled by module param\n");
-+			return -ENODEV;
-+		}
-+	}
-+
- 	if (vga_switcheroo_client_probe_defer(pdev))
- 		return -EPROBE_DEFER;
- 
-diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-index 6a8fb6fd183c3..3ff835767ac58 100644
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -95,31 +95,6 @@ int radeon_driver_load_kms(struct drm_device *dev, unsigned long flags)
- 	struct radeon_device *rdev;
- 	int r, acpi_status;
- 
--	if (!radeon_si_support) {
--		switch (flags & RADEON_FAMILY_MASK) {
--		case CHIP_TAHITI:
--		case CHIP_PITCAIRN:
--		case CHIP_VERDE:
--		case CHIP_OLAND:
--		case CHIP_HAINAN:
--			dev_info(dev->dev,
--				 "SI support disabled by module param\n");
--			return -ENODEV;
--		}
--	}
--	if (!radeon_cik_support) {
--		switch (flags & RADEON_FAMILY_MASK) {
--		case CHIP_KAVERI:
--		case CHIP_BONAIRE:
--		case CHIP_HAWAII:
--		case CHIP_KABINI:
--		case CHIP_MULLINS:
--			dev_info(dev->dev,
--				 "CIK support disabled by module param\n");
--			return -ENODEV;
--		}
--	}
--
- 	rdev = kzalloc(sizeof(struct radeon_device), GFP_KERNEL);
- 	if (rdev == NULL) {
- 		return -ENOMEM;
 -- 
 2.20.1
 
