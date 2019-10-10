@@ -2,180 +2,93 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED11C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51C5C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E751F208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEB5208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:37:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mgjrhdeP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732732AbfJJDbi (ORCPT
+        id S1732725AbfJJDhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 23:31:38 -0400
-Received: from mail-sh.amlogic.com ([58.32.228.43]:21232 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfJJDbh (ORCPT
+        Wed, 9 Oct 2019 23:37:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52878 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732252AbfJJDhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 23:31:37 -0400
-Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 10 Oct
- 2019 11:31:39 +0800
-Subject: Re: [PATCH 1/3] dt-bindings: power: add Amlogic secure power domains
- bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>,
-        Zhiqiang Liang <zhiqiang.liang@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
- <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
- <5d93ce88.1c69fb81.aec64.6b1b@mx.google.com>
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-Message-ID: <3152a4ac-5059-502b-3bf3-71f7e2d8118a@amlogic.com>
-Date:   Thu, 10 Oct 2019 11:31:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 9 Oct 2019 23:37:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A3TT5B121490;
+        Thu, 10 Oct 2019 03:37:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=QPgael3DIpp/EzyPXpnJ5F9DaD/nZMYWVOzsKWlWTIw=;
+ b=mgjrhdeP8sEttxgJNHvqt44bAjGo3bewphk/c7vMQ1zcBYOMZ6NpVTAUMpMahJNH50dA
+ t4hJ21hVGOj1GKJwa63TV2VTil/s3U42tsGtT1ZIJESdxyvSO+so09asuoTdh4Uj5Elu
+ ERFBH76uxBkF3SbP4JaNs+00yWrBQRrfGPLVQbAGbVd7A6OFld2l563ZVUmNlhvZf616
+ 4C9fLBXjICxDT5Sukx1HBX3KQJYx3CDRksbCKYroyjZidmCkuiyvuUD0wcQnq6EMukAo
+ DuQj7FbOQMx0skTWbskyjLxK3LKPbtXRoa1jRhaPkrFNEtrHgq199l1HHAt8D9CBqCvF MA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2vejkurdkc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 03:37:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A3STD5099801;
+        Thu, 10 Oct 2019 03:37:03 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2vh5cc5uwg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 03:37:03 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9A3b14m010196;
+        Thu, 10 Oct 2019 03:37:02 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Oct 2019 20:37:01 -0700
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: sni_53c710 fix compilation error
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191009151118.32350-1-tbogendoerfer@suse.de>
+Date:   Wed, 09 Oct 2019 23:36:59 -0400
+In-Reply-To: <20191009151118.32350-1-tbogendoerfer@suse.de> (Thomas
+        Bogendoerfer's message of "Wed, 9 Oct 2019 17:11:18 +0200")
+Message-ID: <yq1lftti84k.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <5d93ce88.1c69fb81.aec64.6b1b@mx.google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.18.29.227]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=819
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910100031
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=896 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910100031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob，
 
-Thanks for your review.
+Thomas,
 
-I'm sorry to reply so late, for I've been on vacation in the last week.
+> Drop out memory dev_printk() with wring device pointer argument.
 
-On 2019/10/2 6:09, Rob Herring wrote:
-> On Thu, Sep 19, 2019 at 08:11:02AM -0400, Jianxin Pan wrote:
->> Add the bindings for the Amlogic Secure power domains, controlling the
->> secure power domains.
->>
->> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
->> power domain registers are in secure world.
->>
->> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
->> ---
->>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 32 ++++++++++++++++++++++
->>  include/dt-bindings/power/meson-a1-power.h         | 32 ++++++++++++++++++++++
->>  2 files changed, 64 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->>  create mode 100644 include/dt-bindings/power/meson-a1-power.h
->>
->> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->> new file mode 100644
->> index 00000000..327e0d9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->> @@ -0,0 +1,32 @@
->> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +# Copyright (c) 2019 Amlogic, Inc
->> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Amlogic Meson Secure Power Domains
->> +
->> +maintainers:
->> +  - Jianxin Pan <jianxin.pan@amlogic.com>
->> +
->> +description: |+
->> +  A1/C1 series The Secure Power Domains node should be the child of a syscon
->> +  node with the required property.
-> 
-> 'a syscon node' is not specific enough. It must be a specific node.
-> 
-I will fix this.
-In A1/C1, power control is in secure domain, and syscon parent is not needed.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - amlogic,meson-a1-pwrc
->> +
->> +required:
->> +  - compatible
->> +
->> +examples:
->> +  - |
->> +    pwrc: power-controller {
->> +          compatible = "amlogic,meson-a1-pwrc";
-> 
-> But why do you need this node? It has no resources.
-> 
-> #power-domain-cells needed?
-I will add #power-domain-cells and secure-monitor here.
-Thank you for the review.
-> 
->> +    };
->> +
->> +
->> diff --git a/include/dt-bindings/power/meson-a1-power.h b/include/dt-bindings/power/meson-a1-power.h
->> new file mode 100644
->> index 00000000..6cf50bf
->> --- /dev/null
->> +++ b/include/dt-bindings/power/meson-a1-power.h
->> @@ -0,0 +1,32 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
->> +/*
->> + * Copyright (c) 2019 Amlogic, Inc.
->> + * Author: Jianxin Pan <jianxin.pan@amlogic.com>
->> + */
->> +
->> +#ifndef _DT_BINDINGS_MESON_A1_POWER_H
->> +#define _DT_BINDINGS_MESON_A1_POWER_H
->> +
->> +#define PWRC_DSPA_ID	8
->> +#define PWRC_DSPB_ID	9
->> +#define PWRC_UART_ID	10
->> +#define PWRC_DMC_ID	11
->> +#define PWRC_I2C_ID	12
->> +#define PWRC_PSRAM_ID	13
->> +#define PWRC_ACODEC_ID	14
->> +#define PWRC_AUDIO_ID	15
->> +#define PWRC_OTP_ID	16
->> +#define PWRC_DMA_ID	17
->> +#define PWRC_SD_EMMC_ID	18
->> +#define PWRC_RAMA_ID	19
->> +#define PWRC_RAMB_ID	20
->> +#define PWRC_IR_ID	21
->> +#define PWRC_SPICC_ID	22
->> +#define PWRC_SPIFC_ID	23
->> +#define PWRC_USB_ID	24
->> +#define PWRC_NIC_ID	25
->> +#define PWRC_PDMIN_ID	26
->> +#define PWRC_RSA_ID	27
->> +#define PWRC_MAX_ID	28
->> +
->> +#endif
->> -- 
->> 2.7.4
->>
-> 
-> .
-> 
+Applied to 5.4/scsi-fixes, thanks!
 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
