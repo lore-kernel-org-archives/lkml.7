@@ -2,110 +2,81 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E95ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16168C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE2920B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64F820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 23:40:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="BAVg1aEQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfJJXgb (ORCPT
+        id S1727206AbfJJXkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 19:36:31 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:57852 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbfJJXga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 19:36:30 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iIhyu-0006HU-S1; Thu, 10 Oct 2019 17:36:29 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iIhyt-0004Al-Fl; Thu, 10 Oct 2019 17:36:27 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@lst.de>
-Date:   Thu, 10 Oct 2019 17:36:26 -0600
-Message-Id: <20191010233626.15998-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 10 Oct 2019 19:40:04 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46238 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfJJXkD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 19:40:03 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 201so7226525qkd.13;
+        Thu, 10 Oct 2019 16:40:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qzY2GiRsLdKkNjOULOmOY2uh2S6GFNejWSTG+vyFaHU=;
+        b=BAVg1aEQqMRenewRVbfHesEnWeY+3OjzO2is/qAbM5snBow68FC34L2LRa1QaZ3eR5
+         9Hk1wAjLnBY22hsxQRBsMj4hM26tHiYTXepbuzNl9+eRSSK3tvAvBTPCqWCj6HZbftgd
+         F3oFG0waiCp5yvWHjy7xElgo8yxABrzwKmroA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qzY2GiRsLdKkNjOULOmOY2uh2S6GFNejWSTG+vyFaHU=;
+        b=Ycz9Os8T+gSVqlG7yMREbI24xFOmpKF3dvJ+TofFKGeCVPePuFkntr8BMqk/MZPpBZ
+         Ly/AxY2CsISmOHYv0BFtqi+5tqG1oGT5PNAI3gMOYT07gzSO2vQ18DaNcTS19ZUtqmD0
+         rWa4BFO6aTXWeAIuXMv0IRlyIhGzrFQ21mYakuMWmJUlEGJRHuaGgGhj1ycPxVWvR8XQ
+         t4R6NiKKDJOMkRt+Apt4Oh9fzICjbbMoJvrJVEmivB3gfHM9eCpPJeqHssDrDx5sWk1S
+         2xliOGapIaLkAPDyeHGC3fK72ykWrYtRi2y4kYJuMdnJ6yEUMTHmWKRDvc2d7vIfuYDo
+         eMuQ==
+X-Gm-Message-State: APjAAAWE1MYzwFzUG+CTf/NLmxG6uzSZvCMwisV4ju06heyGONJm+qDK
+        MBIEKdXSxEwUq2ts5o6+Y3woOWftnd1yt5NY5WM=
+X-Google-Smtp-Source: APXvYqx12wus94E93QLNJZDQFKcLjtUWJadRRN6O4zaoD5brzLAp2CQYDAJzj7qrNBW2/PzPYUcsc4tkO6fvhiMuSlM=
+X-Received: by 2002:a37:8d1:: with SMTP id 200mr12927454qki.330.1570750802156;
+ Thu, 10 Oct 2019 16:40:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, axboe@kernel.dk, sbates@raithlin.com, logang@deltatee.com, hch@lst.de
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH] block: account statistics for passthrough requests
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20191010020655.3776-1-andrew@aj.id.au> <20191010020655.3776-2-andrew@aj.id.au>
+In-Reply-To: <20191010020655.3776-2-andrew@aj.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 10 Oct 2019 23:39:49 +0000
+Message-ID: <CACPK8Xc2mibu+Pqi7ejGT_M24oprgoOik3Z8=fP6NVgEQeZYZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: Add AST2500 RMII RCLK definitions
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Presently, passthrough requests are not accounted for because
-blk_do_io_stat() expressly rejects them. Based on some digging
-in the history, this doesn't seem like a concious decision but
-one that evolved from the change from blk_fs_request() to
-blk_rq_is_passthrough().
+On Thu, 10 Oct 2019 at 02:05, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The AST2500 has an explicit gate for the RMII RCLK for each of the two
+> MACs.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-To support this, call blk_account_io_start() in blk_execute_rq_nowait()
-and remove the passthrough check in blk_do_io_stat().
-
-Link: https://lore.kernel.org/linux-block/20191010100526.GA27209@lst.de/
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@lst.de>
----
-
-This change is needed for the NVMe-of passthru work that is in progress.
-Christoph suggested sending it as its own patch. (See the link
-in the commit message for more information.)
-
- block/blk-exec.c | 2 ++
- block/blk.h      | 7 ++-----
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/block/blk-exec.c b/block/blk-exec.c
-index 1db44ca0f4a6..e20a852ae432 100644
---- a/block/blk-exec.c
-+++ b/block/blk-exec.c
-@@ -55,6 +55,8 @@ void blk_execute_rq_nowait(struct request_queue *q, struct gendisk *bd_disk,
- 	rq->rq_disk = bd_disk;
- 	rq->end_io = done;
-
-+	blk_account_io_start(rq, true);
-+
- 	/*
- 	 * don't check dying flag for MQ because the request won't
- 	 * be reused after dying flag is set
-diff --git a/block/blk.h b/block/blk.h
-index 47fba9362e60..2bea40180b6f 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -242,14 +242,11 @@ int blk_dev_init(void);
-  * Contribute to IO statistics IFF:
-  *
-  *	a) it's attached to a gendisk, and
-- *	b) the queue had IO stats enabled when this request was started, and
-- *	c) it's a file system request
-+ *	b) the queue had IO stats enabled when this request was started
-  */
- static inline bool blk_do_io_stat(struct request *rq)
- {
--	return rq->rq_disk &&
--	       (rq->rq_flags & RQF_IO_STAT) &&
--		!blk_rq_is_passthrough(rq);
-+	return rq->rq_disk && (rq->rq_flags & RQF_IO_STAT);
- }
-
- static inline void req_set_nomerge(struct request_queue *q, struct request *req)
---
-2.20.1
+Reviewed-by: Joel Stanley <joel@jms.id.au>
