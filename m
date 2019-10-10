@@ -2,136 +2,331 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F06ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2A6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120A72067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:28:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570724923;
-	bh=ZKfQdksfkEfZFiM2k7jhU+vFevfdcdkiuIxAJ5mytso=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HhW2x0fZRRaZMFeGlyh46nNDd05sil6RJAMxPqnU+Ae0OWq2nlVEmvvp0Xy0rqQMO
-	 w0IacYy43ytn26JCTmrAVPloF0lamBtQm3LHkTGRDnZf4TOFL6dTxaClSiO2bKdL97
-	 j5dK6CTbL/cDjZ4wDU6QD94K3Jk+ULNG4Q9/0Ivk=
+	by mail.kernel.org (Postfix) with ESMTP id 22776205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfJJQ2m (ORCPT
+        id S1726246AbfJJQgV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 12:28:42 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42815 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfJJQ2l (ORCPT
+        Thu, 10 Oct 2019 12:36:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57347 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfJJQgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 12:28:41 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i185so5427930oif.9;
-        Thu, 10 Oct 2019 09:28:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vR2xgB+PJ4hryKhIu/ABDp/zNbHr4xtzKP74nw4y8Ik=;
-        b=XMS1zZbbKaMWK8LNn5z0tClByULY6OAKohFZbMx/x7Tl8/4BeC/tDrN2gTBDSDkR4D
-         MXTeeKbpzwUcX2+h04Zx9oOuUhmhkF0cNfIJAVN1ZVmmWH0p6GijsknWaJyEMqpNupDh
-         ajJMfTPN3K8noNqELHvH8u5I9LfetsRFb/J9LnbpK6dI6xzk025DsmEGHwbVJBcfGBIQ
-         hAKgKgM+lCzy+g/MNN7V8nVjqtmT7mEXExtwiFFaq7rbzHrfUv2EEo9yKaWEqT40v0O7
-         /fhybe2JIBHrdwuALuR/pNGvG87BwF2Wds+L3ysGY5ir4dkLvveR8Y6bG5y/uScDJM+b
-         qScQ==
-X-Gm-Message-State: APjAAAUZ1Ijvqc/0fnYAHRCoQnr/XmMemLQWtZb4kpplHMIq145RI8uC
-        bTKRlSNGsFWZHaWVJbAjPqmF+WGQwX69pf7A8iU=
-X-Google-Smtp-Source: APXvYqzbrJOhGfBWBTIglV05BZrFqcToiafb4MWI8sJuPR1PbO7wyzrGsiSbiAiZYgYzUUKgvZH6WdjUdOkyQrTiF2o=
-X-Received: by 2002:aca:5885:: with SMTP id m127mr8546117oib.110.1570724920583;
- Thu, 10 Oct 2019 09:28:40 -0700 (PDT)
+        Thu, 10 Oct 2019 12:36:21 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iIbQG-0005f2-VR; Thu, 10 Oct 2019 18:36:17 +0200
+Date:   Thu, 10 Oct 2019 18:36:16 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        tglx@linutronix.de
+Subject: [PATCH REPOST] lib/ubsan: Don't seralize UBSAN report
+Message-ID: <20191010163616.qon4ppmhf74l4fix@linutronix.de>
 MIME-Version: 1.0
-References: <20191010124746.2882-1-helgaas@kernel.org> <20191010124746.2882-2-helgaas@kernel.org>
-In-Reply-To: <20191010124746.2882-2-helgaas@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 10 Oct 2019 18:28:29 +0200
-Message-ID: <CAJZ5v0i7EApH4rHjAqKJ1T96M57ONn+dNPUSwC9ZQ6UJi53Jqg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] PCI/ASPM: Remove pcie_aspm_enabled() unnecessary locking
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Rajat Jain <rajatja@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 2:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> The lifetime of the link_state structure (bridge->link_state) is not the
-> same as the lifetime of "bridge" itself.  The link_state is allocated by
-> pcie_aspm_init_link_state() after children of the bridge have been
-> enumerated, and it is deallocated by pcie_aspm_exit_link_state() after all
-> children of the bridge (but not the bridge itself) have been removed.
->
-> Previously pcie_aspm_enabled() acquired aspm_lock to ensure that
-> link_state was not deallocated while we're looking at it.  But the fact
-> that the caller of pcie_aspm_enabled() holds a reference to @pdev means
-> there's always at least one child of the bridge, which means link_state
-> can't be deallocated.
->
-> Remove the unnecessary locking in pcie_aspm_enabled().
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+At the moment, UBSAN report will be serialized using a spin_lock(). On
+RT-systems, spinlocks are turned to rt_spin_lock and may sleep. This will
+result to the following splat if the undefined behavior is in a context
+that can not sleep:
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+| BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:968
+| in_atomic(): 1, irqs_disabled(): 128, pid: 3447, name: make
+| 1 lock held by make/3447:
+|  #0: 000000009a966332 (&mm->mmap_sem){++++}, at: do_page_fault+0x140/0x4f8
+| Preemption disabled at:
+| [<ffff000011324a4c>] rt_mutex_futex_unlock+0x4c/0xb0
+| CPU: 3 PID: 3447 Comm: make Tainted: G        W         5.2.14-rt7-01890-ge6e057589653 #911
+| Call trace:
+…
+|  ___might_sleep+0x154/0x210
+|  rt_spin_lock+0x68/0xa0
+|  ubsan_prologue+0x30/0x68
+|  handle_overflow+0x64/0xe0
+|  __ubsan_handle_add_overflow+0x10/0x18
 
-(also for the further changes you and Christoph have been discussing).
+The spin_lock() will protect against multiple CPUs to output a report
+together, I guess to prevent them to be interleaved. However, they can
+still interleave with other messages (and even splat from __migth_sleep).
 
-> ---
->  drivers/pci/pcie/aspm.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 652ef23bba35..f5c7138a34aa 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1172,20 +1172,20 @@ module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
->  /**
->   * pcie_aspm_enabled - Check if PCIe ASPM has been enabled for a device.
->   * @pdev: Target device.
-> + *
-> + * Relies on the upstream bridge's link_state being valid.  The link_state
-> + * is deallocated only when the last child of the bridge (i.e., @pdev or a
-> + * sibling) is removed, and the caller should be holding a reference to
-> + * @pdev, so this should be safe.
->   */
->  bool pcie_aspm_enabled(struct pci_dev *pdev)
->  {
->         struct pci_dev *bridge = pci_upstream_bridge(pdev);
-> -       bool ret;
->
->         if (!bridge)
->                 return false;
->
-> -       mutex_lock(&aspm_lock);
-> -       ret = bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
-> -       mutex_unlock(&aspm_lock);
-> -
-> -       return ret;
-> +       return bridge->link_state ? !!bridge->link_state->aspm_enabled : false;
->  }
->  EXPORT_SYMBOL_GPL(pcie_aspm_enabled);
->
-> --
-> 2.23.0.581.g78d2f28ef7-goog
->
+So the lock usefulness seems pretty limited. Rather than trying to
+accomodate RT-system by switching to a raw_spin_lock(), the lock is now
+completely dropped.
+
+Link: https://lkml.kernel.org/r/20190920100835.14999-1-julien.grall@arm.com
+Reported-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Julien Grall <julien.grall@arm.com>
+Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+Repost of
+  https://lkml.kernel.org/r/20190920100835.14999-1-julien.grall@arm.com
+
+ lib/ubsan.c | 64 +++++++++++++++++++----------------------------------
+ 1 file changed, 23 insertions(+), 41 deletions(-)
+
+diff --git a/lib/ubsan.c b/lib/ubsan.c
+index e7d31735950de..39d5952c42733 100644
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -140,25 +140,21 @@ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
+ 	}
+ }
+ 
+-static DEFINE_SPINLOCK(report_lock);
+-
+-static void ubsan_prologue(struct source_location *location,
+-			unsigned long *flags)
++static void ubsan_prologue(struct source_location *location)
+ {
+ 	current->in_ubsan++;
+-	spin_lock_irqsave(&report_lock, *flags);
+ 
+ 	pr_err("========================================"
+ 		"========================================\n");
+ 	print_source_location("UBSAN: Undefined behaviour in", location);
+ }
+ 
+-static void ubsan_epilogue(unsigned long *flags)
++static void ubsan_epilogue(void)
+ {
+ 	dump_stack();
+ 	pr_err("========================================"
+ 		"========================================\n");
+-	spin_unlock_irqrestore(&report_lock, *flags);
++
+ 	current->in_ubsan--;
+ }
+ 
+@@ -167,14 +163,13 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
+ {
+ 
+ 	struct type_descriptor *type = data->type;
+-	unsigned long flags;
+ 	char lhs_val_str[VALUE_LENGTH];
+ 	char rhs_val_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(lhs_val_str, sizeof(lhs_val_str), type, lhs);
+ 	val_to_string(rhs_val_str, sizeof(rhs_val_str), type, rhs);
+@@ -186,7 +181,7 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
+ 		rhs_val_str,
+ 		type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ 
+ void __ubsan_handle_add_overflow(struct overflow_data *data,
+@@ -214,20 +209,19 @@ EXPORT_SYMBOL(__ubsan_handle_mul_overflow);
+ void __ubsan_handle_negate_overflow(struct overflow_data *data,
+ 				void *old_val)
+ {
+-	unsigned long flags;
+ 	char old_val_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(old_val_str, sizeof(old_val_str), data->type, old_val);
+ 
+ 	pr_err("negation of %s cannot be represented in type %s:\n",
+ 		old_val_str, data->type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
+ 
+@@ -235,13 +229,12 @@ EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
+ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
+ 				void *lhs, void *rhs)
+ {
+-	unsigned long flags;
+ 	char rhs_val_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(rhs_val_str, sizeof(rhs_val_str), data->type, rhs);
+ 
+@@ -251,58 +244,52 @@ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
+ 	else
+ 		pr_err("division by zero\n");
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_divrem_overflow);
+ 
+ static void handle_null_ptr_deref(struct type_mismatch_data_common *data)
+ {
+-	unsigned long flags;
+-
+ 	if (suppress_report(data->location))
+ 		return;
+ 
+-	ubsan_prologue(data->location, &flags);
++	ubsan_prologue(data->location);
+ 
+ 	pr_err("%s null pointer of type %s\n",
+ 		type_check_kinds[data->type_check_kind],
+ 		data->type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ 
+ static void handle_misaligned_access(struct type_mismatch_data_common *data,
+ 				unsigned long ptr)
+ {
+-	unsigned long flags;
+-
+ 	if (suppress_report(data->location))
+ 		return;
+ 
+-	ubsan_prologue(data->location, &flags);
++	ubsan_prologue(data->location);
+ 
+ 	pr_err("%s misaligned address %p for type %s\n",
+ 		type_check_kinds[data->type_check_kind],
+ 		(void *)ptr, data->type->type_name);
+ 	pr_err("which requires %ld byte alignment\n", data->alignment);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ 
+ static void handle_object_size_mismatch(struct type_mismatch_data_common *data,
+ 					unsigned long ptr)
+ {
+-	unsigned long flags;
+-
+ 	if (suppress_report(data->location))
+ 		return;
+ 
+-	ubsan_prologue(data->location, &flags);
++	ubsan_prologue(data->location);
+ 	pr_err("%s address %p with insufficient space\n",
+ 		type_check_kinds[data->type_check_kind],
+ 		(void *) ptr);
+ 	pr_err("for an object of type %s\n", data->type->type_name);
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ 
+ static void ubsan_type_mismatch_common(struct type_mismatch_data_common *data,
+@@ -351,25 +338,23 @@ EXPORT_SYMBOL(__ubsan_handle_type_mismatch_v1);
+ 
+ void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data, void *index)
+ {
+-	unsigned long flags;
+ 	char index_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(index_str, sizeof(index_str), data->index_type, index);
+ 	pr_err("index %s is out of range for type %s\n", index_str,
+ 		data->array_type->type_name);
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_out_of_bounds);
+ 
+ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+ 					void *lhs, void *rhs)
+ {
+-	unsigned long flags;
+ 	struct type_descriptor *rhs_type = data->rhs_type;
+ 	struct type_descriptor *lhs_type = data->lhs_type;
+ 	char rhs_str[VALUE_LENGTH];
+@@ -378,7 +363,7 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(rhs_str, sizeof(rhs_str), rhs_type, rhs);
+ 	val_to_string(lhs_str, sizeof(lhs_str), lhs_type, lhs);
+@@ -401,18 +386,16 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+ 			lhs_str, rhs_str,
+ 			lhs_type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
+ 
+ 
+ void __ubsan_handle_builtin_unreachable(struct unreachable_data *data)
+ {
+-	unsigned long flags;
+-
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 	pr_err("calling __builtin_unreachable()\n");
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ 	panic("can't return from __builtin_unreachable()");
+ }
+ EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
+@@ -420,19 +403,18 @@ EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
+ void __ubsan_handle_load_invalid_value(struct invalid_value_data *data,
+ 				void *val)
+ {
+-	unsigned long flags;
+ 	char val_str[VALUE_LENGTH];
+ 
+ 	if (suppress_report(&data->location))
+ 		return;
+ 
+-	ubsan_prologue(&data->location, &flags);
++	ubsan_prologue(&data->location);
+ 
+ 	val_to_string(val_str, sizeof(val_str), data->type, val);
+ 
+ 	pr_err("load of value %s is not a valid value for type %s\n",
+ 		val_str, data->type->type_name);
+ 
+-	ubsan_epilogue(&flags);
++	ubsan_epilogue();
+ }
+ EXPORT_SYMBOL(__ubsan_handle_load_invalid_value);
+-- 
+2.23.0
+
