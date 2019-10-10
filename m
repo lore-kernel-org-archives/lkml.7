@@ -2,55 +2,82 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53B1C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B9CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC220208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587AE208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfJJVbH (ORCPT
+        id S1727333AbfJJVbe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:31:07 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33860 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbfJJVbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:31:07 -0400
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iIg1S-0007Bv-HL; Thu, 10 Oct 2019 23:30:58 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Vivek Unune <npcomplete13@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, ezequiel@collabora.com,
-        vicencb@gmail.com, akash@openedev.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
-Date:   Thu, 10 Oct 2019 23:30:57 +0200
-Message-ID: <1594003.l3tWjkc0Ga@phil>
-In-Reply-To: <20190929032230.24628-1-npcomplete13@gmail.com>
-References: <20190929032230.24628-1-npcomplete13@gmail.com>
+        Thu, 10 Oct 2019 17:31:34 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:45023 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJVbe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 17:31:34 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BAD3A240009;
+        Thu, 10 Oct 2019 21:31:30 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 23:31:29 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 8/8] dt-bindings: Add max12xx SPI ADC series as
+ trivial devices
+Message-ID: <20191010233129.67a1d76c@xps13>
+In-Reply-To: <20191010204751.GA22206@bogus>
+References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
+        <20191007132657.4190-9-miquel.raynal@bootlin.com>
+        <20191010204751.GA22206@bogus>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sonntag, 29. September 2019, 05:22:30 CEST schrieb Vivek Unune:
-> Fix usb-c on X99 TV Box. Tested with armbian w/ kernel 5.3
+Hi Rob,
+
+Rob Herring <robh@kernel.org> wrote on Thu, 10 Oct 2019 15:47:51 -0500:
+
+> On Mon, Oct 07, 2019 at 03:26:57PM +0200, Miquel Raynal wrote:
+> > Update the compatible list with three Maxim ADCs compatibles.
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+> >  .../bindings/iio/adc/max1027-adc.txt          | 28 +++++++++++++++++++
+> >  .../devicetree/bindings/trivial-devices.yaml  |  6 ++++
+> >  2 files changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt  
 > 
-> Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+> Devices are supposed to be documented in one place or the other. So 
+> either make max1027-adc.txt a schema or drop it.
+> 
+> I'm fine either way. Obviously, trivial-devices.yaml is trivial to add 
+> to, but it does leave some ambiguities. Like is an interrupt required, 
+> optional or non-existent? What about power supplies? Or what are allowed 
+> values for spi-max-frequency.
 
-applied as fix for 5.4
+Rhaaa... I obviously wanted to drop the *txt file, just forgot to do
+it. As the interrupts are optional I found the trivial device
+description accurate enough.
 
-Thanks
-Heiko
-
-
+Thanks,
+Miquèl
