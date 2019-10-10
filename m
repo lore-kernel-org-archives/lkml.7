@@ -2,98 +2,109 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505E2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108C7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B4321920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DcqaoHnV"
+	by mail.kernel.org (Postfix) with ESMTP id DCD542190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570698120;
+	bh=n/e/vaObw3kyd5fTVUpqKkcLIwSibsqLEzhB8D8JkZ8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fElwTd8bYGhPDGdf2JfokpHBNDaK3f3mTlXSBYjHrTwGAb8YoyCJickylxVHAgYuT
+	 4o2hEUInFJGFh4XCgsVQyf5rAjKwzsn8EjoleUyIOpeqWvWClvJDNQX19MguvBgoBu
+	 w7ZyIJwW+tCgPzFUP4x47ef/ywzDi1THfuQsL52Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388578AbfJJJBt (ORCPT
+        id S2388181AbfJJIkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:01:49 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46433 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387914AbfJJJBr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:01:47 -0400
-Received: by mail-qk1-f193.google.com with SMTP id 201so4856950qkd.13
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:01:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=RnfWy7RbwLMyjkDN3hZ9aqaLFEi/aaIZD+6GHufi3cY=;
-        b=DcqaoHnVvnghNBODhEqsdmUoQjKa8VPa3Qk7cPM9tD9KorPgfDoHPtihpS0KYXfNgI
-         GYlvF+v2eWobPCQNz3c+ayng6V6uCEFDOpEp3Ae/fyDp9bOe99SQsziiyfpOm4ZShjaS
-         /4OqIuRWSKcbmiXggwGhG5Hs+2je4aI68jeLfKVngKcajG+1PQCBP+lmdfuzFprTHM+U
-         Fm6J+z3NIKMhTHxMKU1qRQFdQ9Xy6OXzoG1wRhzgBzCjJFivL2kMLPa6WecPPxFK+z35
-         Xo95gaeGAZBZ10kd1ZR0xyTyHEXJ51Qn4yf20VitQTzjb/3UHEnq3rwq8uqoOgV1vmpU
-         4uIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=RnfWy7RbwLMyjkDN3hZ9aqaLFEi/aaIZD+6GHufi3cY=;
-        b=V7EYBEnXlOUu8n60Fjw9Zg+hzBm6+3AhyQhFJxJK6hMINqiABGDTFnSTa8+KAX2KuJ
-         +U0q/HPkV978E1vUtbBMo8D+BTfMGWeVZ+loLs5o9J2wWkAA4qrg8gnBqo9eyVzdrnz8
-         +291rFgkZiADycYZyfWbTPAcq2QHDyfkER4e2J2DurZnyoewJ9w88oV/gTugOXVjAiBf
-         9E3a4Es7Sqq8T7Tic5tOtasXFVi2hGN7YHoL+2J/MOPliotBDOLRdwa9AKCmh6xrwjEk
-         Ji3qUYKBXZgip6zEFxDnNNAhwgzR3ia/m9rS22aACQp6XALT6uhL1i2NTNVgT2fhnPlN
-         2iWA==
-X-Gm-Message-State: APjAAAWmfEE1RX9vvhBOPVhg8PCbrxCvDqY7PAgc/X64eOfGEFLzmelb
-        euQDfOxK23tfnC7b8fLen4XXRA==
-X-Google-Smtp-Source: APXvYqxdc4HzzOMRhsrDi7bP8kpwPoy0x09tptP+hjsvrkIBzvcyF4TjtfzGTcueITYAEkMKJKP1gA==
-X-Received: by 2002:a37:e407:: with SMTP id y7mr8300320qkf.77.1570698105860;
-        Thu, 10 Oct 2019 02:01:45 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id m91sm2238816qte.8.2019.10.10.02.01.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2019 02:01:45 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Date:   Thu, 10 Oct 2019 05:01:44 -0400
-Message-Id: <6AAB77B5-092B-43E3-9F4B-0385DE1890D9@lca.pw>
-References: <20191009162339.GI6681@dhcp22.suse.cz>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191009162339.GI6681@dhcp22.suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-X-Mailer: iPhone Mail (17A860)
+        Thu, 10 Oct 2019 04:40:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388163AbfJJIko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:40:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EE072196E;
+        Thu, 10 Oct 2019 08:40:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570696843;
+        bh=n/e/vaObw3kyd5fTVUpqKkcLIwSibsqLEzhB8D8JkZ8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xAMtAQ38DRE7S+bIT7cDqPdzG7LW8pbHbeBJx52Hy4upWweyRGxBF2T11s0TvL79l
+         AI2gopr8q1D0aHYLdqh5vrZWcsWbNWQpOtbXFJUp4k4IJ/ypjtT3+hemIKpWwUngL+
+         GzXoBwggt11kWYZNHmshJaTAXsn0fRQog7AS7DSo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Subject: [PATCH 5.3 071/148] drm/i915/userptr: Acquire the page lock around set_page_dirty()
+Date:   Thu, 10 Oct 2019 10:35:32 +0200
+Message-Id: <20191010083615.708820027@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
+References: <20191010083609.660878383@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Chris Wilson <chris@chris-wilson.co.uk>
+
+commit cb6d7c7dc7ff8cace666ddec66334117a6068ce2 upstream.
+
+set_page_dirty says:
+
+	For pages with a mapping this should be done under the page lock
+	for the benefit of asynchronous memory errors who prefer a
+	consistent dirty state. This rule can be broken in some special
+	cases, but should be better not to.
+
+Under those rules, it is only safe for us to use the plain set_page_dirty
+calls for shmemfs/anonymous memory. Userptr may be used with real
+mappings and so needs to use the locked version (set_page_dirty_lock).
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
+Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190708140327.26825-1-chris@chris-wilson.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/gpu/drm/i915/gem/i915_gem_userptr.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+--- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
+@@ -664,7 +664,15 @@ i915_gem_userptr_put_pages(struct drm_i9
+ 
+ 	for_each_sgt_page(page, sgt_iter, pages) {
+ 		if (obj->mm.dirty)
+-			set_page_dirty(page);
++			/*
++			 * As this may not be anonymous memory (e.g. shmem)
++			 * but exist on a real mapping, we have to lock
++			 * the page in order to dirty it -- holding
++			 * the page reference is not sufficient to
++			 * prevent the inode from being truncated.
++			 * Play safe and take the lock.
++			 */
++			set_page_dirty_lock(page);
+ 
+ 		mark_page_accessed(page);
+ 		put_page(page);
 
 
-> On Oct 9, 2019, at 12:23 PM, Michal Hocko <mhocko@kernel.org> wrote:
->=20
-> If this was only about the memory offline code then I would agree. But
-> we are talking about any printk from the zone->lock context and that is
-> a bigger deal. Besides that it is quite natural that the printk code
-> should be more universal and allow to be also called from the MM
-> contexts as much as possible. If there is any really strong reason this
-> is not possible then it should be documented at least.
-
-Where is the best place to document this? I am thinking about under the =E2=80=
-=9Cstruct zone=E2=80=9D definition=E2=80=99s lock field in mmzone.h.
-
-Does workaround this potential deadlock and fix a few lockdep false positive=
-s for free count as a really strong reason?=
