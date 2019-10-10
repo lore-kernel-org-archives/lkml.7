@@ -2,109 +2,215 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AA6ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73582ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD8E208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:58:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sOEsd8Kw"
+	by mail.kernel.org (Postfix) with ESMTP id 56BF1208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbfJJO64 (ORCPT
+        id S1726477AbfJJPAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 10:58:56 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:44143 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfJJO64 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 10:58:56 -0400
-Received: by mail-yw1-f65.google.com with SMTP id m13so2257267ywa.11;
-        Thu, 10 Oct 2019 07:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8UJVAVd9tVKum+aEXONwvAGLsYA36w9rZPqLYuWLasE=;
-        b=sOEsd8Kwch2+znDIjN/oXghsz7hbqTlimJTJT00inkT3BZcYds/bSHA7JnIci03J5D
-         G1ZLuF3ShSaWGr842VYsb5DqUMDybXxEUrmYD7LlN5SpEaMNF3CwbnBYK1hpejmN5nql
-         13qeLprE+hdOJgr4mWRxbiJ+4AgZlfYrsoXyarqeSDbkHPd2xGgA6K+a/4WJiZXOu2jO
-         7oY3kX+VwavRMg7IfBbx8Gdr2gy5xQXfHHCgSufekZKymGLhFVNTaxPaQPDrCTRX2YwW
-         rvcV6sJAV0wTiT28fjfc0QVRvw/rJYrN7mHvQZh0ZSz+AllOofD0QlxEuFPtFwjTDlAL
-         hBog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8UJVAVd9tVKum+aEXONwvAGLsYA36w9rZPqLYuWLasE=;
-        b=CsH4snkamSVBS7LVg2F0g7Neer1yWPeOScxbIBe+3e+3cu5OYGbmeIaotnO1jDS9aH
-         GiGGZm/cRxIYc+yMLB87h90mxV/ZzcQEDoBbN94n0hqliPBcVj7tYK3mogFRnQqbkH2U
-         7QhVAvSeeDJ8om7oNlWIyiq42aCriTXBWBiwM7RNs4Frrs50WLqmE6PK9Yzk+q3CR2XV
-         GF2arlAmLCtfaFro54CfqCm7QcQi+E1OWHRIr0x6BqYqAdaIc5XI+pm7oH8YAI6zE0kH
-         +vCckzscFrPEySSXSP7lcwORAiPQUcVLXZCRLznhzCwGCtN1huquxxilOXTCeLPBVudc
-         xXfQ==
-X-Gm-Message-State: APjAAAVdbBfs17dfjA35dmj6nR2mshjPCKQ3GfEyzWoFuROz6+0BjmrX
-        p9TdHaepjtiT4zqMCkq5fnKyNJUwzl4FUGcGuu60/rnZ
-X-Google-Smtp-Source: APXvYqzwdaF2b4NMce+fPnJQEiHyr1tsRlXvr37+bAPGZRjkX6sxjct6psuDgAamkwGelEt5kah/yQ3WttZohu6a8gk=
-X-Received: by 2002:a81:80c1:: with SMTP id q184mr7995099ywf.128.1570719535254;
- Thu, 10 Oct 2019 07:58:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191009155928.3047-1-tbogendoerfer@suse.de> <20191009184311.GA20261@infradead.org>
- <20191010150136.a30e47b37f8c8aed9e863a5e@suse.de> <20191010135308.GA2052@infradead.org>
- <20191010164850.34a8d2274720e1bc26fd34d8@suse.de>
-In-Reply-To: <20191010164850.34a8d2274720e1bc26fd34d8@suse.de>
-From:   Carlo Pisani <carlojpisani@gmail.com>
-Date:   Thu, 10 Oct 2019 16:58:45 +0200
-Message-ID: <CA+QBN9B6q3piiB+d1=+-5L5op-RYto2vKKEDUTQ=ShTd13RQaA@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: add support for SGI Octane (IP30)
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
+        Thu, 10 Oct 2019 11:00:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46870 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726131AbfJJPAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 11:00:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 86583AF23;
+        Thu, 10 Oct 2019 15:00:01 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        James Hogan <jhogan@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v9 4/5] MIPS: SGI-IP27: fix readb/writeb addressing
+Date:   Thu, 10 Oct 2019 16:59:50 +0200
+Message-Id: <20191010145953.21327-5-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191010145953.21327-1-tbogendoerfer@suse.de>
+References: <20191010145953.21327-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-with my friends, I opened a forum here (1), where we are randomly
-reporting progress and problems.
-we fixed the machine_powerdown() function.
+Our chosen byte swapping, which is what firmware already uses, is to
+do readl/writel by normal lw/sw intructions (data invariance). This
+also means we need to mangle addresses for u8 and u16 accesses. The
+mangling for 16bit has been done aready, but 8bit one was missing.
+Correcting this causes different addresses for accesses to the
+SuperIO and local bus of the IOC3 chip. This is fixed by changing
+byte order in ioc3 and m48rtc_rtc structs.
 
-ugly patch, anyway the ip30 can poweroff
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ arch/mips/include/asm/mach-ip27/mangle-port.h |  4 +--
+ arch/mips/include/asm/sn/ioc3.h               | 38 +++++++++++++--------------
+ drivers/rtc/rtc-m48t35.c                      | 11 ++++++++
+ drivers/tty/serial/8250/8250_ioc3.c           |  4 +--
+ 4 files changed, 34 insertions(+), 23 deletions(-)
 
+diff --git a/arch/mips/include/asm/mach-ip27/mangle-port.h b/arch/mips/include/asm/mach-ip27/mangle-port.h
+index f6e4912ea062..27c56efa519f 100644
+--- a/arch/mips/include/asm/mach-ip27/mangle-port.h
++++ b/arch/mips/include/asm/mach-ip27/mangle-port.h
+@@ -8,7 +8,7 @@
+ #ifndef __ASM_MACH_IP27_MANGLE_PORT_H
+ #define __ASM_MACH_IP27_MANGLE_PORT_H
+ 
+-#define __swizzle_addr_b(port)	(port)
++#define __swizzle_addr_b(port)	((port) ^ 3)
+ #define __swizzle_addr_w(port)	((port) ^ 2)
+ #define __swizzle_addr_l(port)	(port)
+ #define __swizzle_addr_q(port)	(port)
+@@ -20,6 +20,6 @@
+ # define ioswabl(a, x)		(x)
+ # define __mem_ioswabl(a, x)	cpu_to_le32(x)
+ # define ioswabq(a, x)		(x)
+-# define __mem_ioswabq(a, x)	cpu_to_le32(x)
++# define __mem_ioswabq(a, x)	cpu_to_le64(x)
+ 
+ #endif /* __ASM_MACH_IP27_MANGLE_PORT_H */
+diff --git a/arch/mips/include/asm/sn/ioc3.h b/arch/mips/include/asm/sn/ioc3.h
+index 78ef760ddde4..3865d3225780 100644
+--- a/arch/mips/include/asm/sn/ioc3.h
++++ b/arch/mips/include/asm/sn/ioc3.h
+@@ -21,50 +21,50 @@ struct ioc3_serialregs {
+ 
+ /* SUPERIO uart register map */
+ struct ioc3_uartregs {
++	u8	iu_lcr;
+ 	union {
+-		u8	iu_rbr;	/* read only, DLAB == 0 */
+-		u8	iu_thr;	/* write only, DLAB == 0 */
+-		u8	iu_dll;	/* DLAB == 1 */
++		u8	iu_iir;	/* read only */
++		u8	iu_fcr;	/* write only */
+ 	};
+ 	union {
+ 		u8	iu_ier;	/* DLAB == 0 */
+ 		u8	iu_dlm;	/* DLAB == 1 */
+ 	};
+ 	union {
+-		u8	iu_iir;	/* read only */
+-		u8	iu_fcr;	/* write only */
++		u8	iu_rbr;	/* read only, DLAB == 0 */
++		u8	iu_thr;	/* write only, DLAB == 0 */
++		u8	iu_dll;	/* DLAB == 1 */
+ 	};
+-	u8	iu_lcr;
+-	u8	iu_mcr;
+-	u8	iu_lsr;
+-	u8	iu_msr;
+ 	u8	iu_scr;
++	u8	iu_msr;
++	u8	iu_lsr;
++	u8	iu_mcr;
+ };
+ 
+ struct ioc3_sioregs {
+ 	u8	fill[0x141];	/* starts at 0x141 */
+ 
+-	u8	uartc;
+ 	u8	kbdcg;
++	u8	uartc;
+ 
+-	u8	fill0[0x150 - 0x142 - 1];
++	u8	fill0[0x151 - 0x142 - 1];
+ 
+-	u8	pp_data;
+-	u8	pp_dsr;
+ 	u8	pp_dcr;
++	u8	pp_dsr;
++	u8	pp_data;
+ 
+-	u8	fill1[0x158 - 0x152 - 1];
++	u8	fill1[0x159 - 0x153 - 1];
+ 
+-	u8	pp_fifa;
+-	u8	pp_cfgb;
+ 	u8	pp_ecr;
++	u8	pp_cfgb;
++	u8	pp_fifa;
+ 
+-	u8	fill2[0x168 - 0x15a - 1];
++	u8	fill2[0x16a - 0x15b - 1];
+ 
+-	u8	rtcad;
+ 	u8	rtcdat;
++	u8	rtcad;
+ 
+-	u8	fill3[0x170 - 0x169 - 1];
++	u8	fill3[0x170 - 0x16b - 1];
+ 
+ 	struct ioc3_uartregs	uartb;	/* 0x20170  */
+ 	struct ioc3_uartregs	uarta;	/* 0x20178  */
+diff --git a/drivers/rtc/rtc-m48t35.c b/drivers/rtc/rtc-m48t35.c
+index d3a75d447fce..e8194f1f01a8 100644
+--- a/drivers/rtc/rtc-m48t35.c
++++ b/drivers/rtc/rtc-m48t35.c
+@@ -20,6 +20,16 @@
+ 
+ struct m48t35_rtc {
+ 	u8	pad[0x7ff8];    /* starts at 0x7ff8 */
++#ifdef CONFIG_SGI_IP27
++	u8	hour;
++	u8	min;
++	u8	sec;
++	u8	control;
++	u8	year;
++	u8	month;
++	u8	date;
++	u8	day;
++#else
+ 	u8	control;
+ 	u8	sec;
+ 	u8	min;
+@@ -28,6 +38,7 @@ struct m48t35_rtc {
+ 	u8	date;
+ 	u8	month;
+ 	u8	year;
++#endif
+ };
+ 
+ #define M48T35_RTC_SET		0x80
+diff --git a/drivers/tty/serial/8250/8250_ioc3.c b/drivers/tty/serial/8250/8250_ioc3.c
+index 2be6ed2967e0..4c405f1b9c67 100644
+--- a/drivers/tty/serial/8250/8250_ioc3.c
++++ b/drivers/tty/serial/8250/8250_ioc3.c
+@@ -23,12 +23,12 @@ struct ioc3_8250_data {
+ 
+ static unsigned int ioc3_serial_in(struct uart_port *p, int offset)
+ {
+-	return readb(p->membase + offset);
++	return readb(p->membase + (offset ^ 3));
+ }
+ 
+ static void ioc3_serial_out(struct uart_port *p, int offset, int value)
+ {
+-	writeb(value, p->membase + offset);
++	writeb(value, p->membase + (offset ^ 3));
+ }
+ 
+ static int serial8250_ioc3_probe(struct platform_device *pdev)
+-- 
+2.16.4
 
-
-
-(1) http://www.downthebunker.com/reloaded/space/viewforum.php?f=3D69
-
-Il giorno gio 10 ott 2019 alle ore 16:49 Thomas Bogendoerfer
-<tbogendoerfer@suse.de> ha scritto:
->
-> On Thu, 10 Oct 2019 06:53:08 -0700
-> Christoph Hellwig <hch@infradead.org> wrote:
->
-> > On Thu, Oct 10, 2019 at 03:01:36PM +0200, Thomas Bogendoerfer wrote:
-> > > ok, as far as I can anticipate IP35 verion of this functions will be
-> > > the same as well. So I'll move both into pci-xtalk-bridge.c in the
-> > > next version of the patch.
-> >
-> > Sounds good.  In fact you probably want to send a prep patch just
-> > moving pci-ip27.c to pci-xtalk-bridge.c and adding a new
-> > CONFIG_MIPS_PCI_XTALK_BRIDGE option that all these ports can select.
->
-> the option is already there and used by IP27.
->
-> Thomas.
->
-> --
-> SUSE Software Solutions Germany GmbH
-> HRB 247165 (AG M=C3=BCnchen)
-> Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
