@@ -2,71 +2,114 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A84C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E43ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7686206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570733404;
-	bh=s3uIL/Z1b3UQKalI9NtPRMT+y12PpiywCPgPBwN6HDM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=RzpV/sfBnMPmjkOIeSmIJvovyLO3oWWHBnI1EwO0vRKbnCRSXpspNQwxKg2E0yYPg
-	 OD1gH86e75Ge0op31UP2rjaHe7mZvmkV9ZIawzAygk6BROTTPFPrRTO7oYvHqHtzwf
-	 sOe5PSd2/s0bvZ/8yAX6gSFlXDKNyoJ9I2oWYnwY=
+	by mail.kernel.org (Postfix) with ESMTP id 1E0F82053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:50:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfJJSuD (ORCPT
+        id S1726988AbfJJSu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:50:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfJJSuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:50:03 -0400
-Subject: Re: [GIT PULL] xfs: fixes for 5.4-rc3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570733402;
-        bh=s3uIL/Z1b3UQKalI9NtPRMT+y12PpiywCPgPBwN6HDM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=JNou5fwVAdO2KkavzuArqeNOvd705ycNTBdtpvbmGajtWbE7LsuVSTg98zLRM7TP6
-         b4G9YJfNDiGdmAYBOmWOAs6/cZnqU5FPndvdWvbyLCUdtTWpN9zqMPMq6vDNoSGxj6
-         sy+1XWbeblSdJOgZMicKrYtEDbxHegOwrh/4VfxY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191010165314.GP1473994@magnolia>
-References: <20191010165314.GP1473994@magnolia>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191010165314.GP1473994@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- tags/xfs-5.4-fixes-3
-X-PR-Tracked-Commit-Id: aeea4b75f045294e1c026acc380466daa43afc65
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9e208aa06c2109b45eec6be049a8e47034748c20
-Message-Id: <157073340283.27451.569926685853295034.pr-tracker-bot@kernel.org>
-Date:   Thu, 10 Oct 2019 18:50:02 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+        Thu, 10 Oct 2019 14:50:58 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44285 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfJJSu6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 14:50:58 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w6so5808654oie.11;
+        Thu, 10 Oct 2019 11:50:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pe9UtS2nB3IVlBbTVZ3hO/YsOnzfUIPDBvq3veYk6Pg=;
+        b=kx1OW3fFfVDe/l3mHLjQOWgaEBP+jrlLuvk24StYiZMhfPIOGBXlbC5Z0Lu5I2ZOen
+         GXfRad53Wa+dEclrWfWtGsvokTsmw/mg0GuVBnf0osci4swUorj3I2+s6MNQ6zdDSaVt
+         1eyrkcx/KAdrZbuv0MYdw6EvZx6d0T0UvJr/WVRhOEZqK8lVYh0dxRrkfzjICsP3p6gM
+         gxGvVLqszAof4lxhVG5uRDyPXi7nFbHmvi/Qc6Qpnp2VxTW8YVMCElVg/hWxc/56cxfY
+         abac6XJN3HT2BHfuwyKFYJff3fnfSFezS7VQR1h8E+0P422t/iIF3YSUIcydkmHClMhT
+         iqnQ==
+X-Gm-Message-State: APjAAAWiRsCFPlj9hoU9jOUnZCUcsC9hhcY71aattfbRiCDY+DBWaWUn
+        fb0Pr2ZVJ+swT/lHdCslDSM2z6SUFHZBPjffVN8FXWnZ
+X-Google-Smtp-Source: APXvYqxHBnRYVznAMgmZqD4x3EvzZXk8DCBb1p7eqY2OJrA8SaFoMCgRJz6m1m2/1M3jlyYoLP5l6HXOT/RSdtNr0f4=
+X-Received: by 2002:a54:4e89:: with SMTP id c9mr8518987oiy.148.1570733457084;
+ Thu, 10 Oct 2019 11:50:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191002194346.GA3792@localhost.localdomain> <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
+ <20191010174710.GA2405@localhost.localdomain>
+In-Reply-To: <20191010174710.GA2405@localhost.localdomain>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 10 Oct 2019 20:50:45 +0200
+Message-ID: <CAMuHMdVriPMVWdNOD4ytZQFPmad7CvD_4utbw1PxMJBua1TSfQ@mail.gmail.com>
+Subject: Re: [PATCH] Ask user input only when CONFIG_X86 or
+ CONFIG_COMPILE_TEST is set to y
+To:     Narendra K <Narendra.K@dell.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 10 Oct 2019 09:53:14 -0700:
+Hi Narendra,
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.4-fixes-3
+On Thu, Oct 10, 2019 at 7:47 PM <Narendra.K@dell.com> wrote:
+> On Wed, Oct 09, 2019 at 04:11:04PM +0200, Ard Biesheuvel wrote:
+> > On Wed, 2 Oct 2019 at 21:44, <Narendra.K@dell.com> wrote:
+> > >
+> > > From: Narendra K <Narendra.K@dell.com>
+> > >
+> > > For the EFI_RCI2_TABLE kconfig option, 'make oldconfig' asks the user
+> > > for input as it is a new kconfig option in kernel version 5.4. This patch
+> > > modifies the kconfig option to ask the user for input only when CONFIG_X86
+> > > or CONFIG_COMPILE_TEST is set to y.
+> > >
+> > > The patch also makes EFI_RCI2_TABLE kconfig option depend on CONFIG_EFI.
+> > >
+> > > Signed-off-by: Narendra K <Narendra.K@dell.com>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9e208aa06c2109b45eec6be049a8e47034748c20
+> > >  drivers/firmware/efi/Kconfig | 5 ++++-
+> > >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+> > > index 178ee8106828..6e4c46e8a954 100644
+> > > --- a/drivers/firmware/efi/Kconfig
+> > > +++ b/drivers/firmware/efi/Kconfig
+> > > @@ -181,7 +181,10 @@ config RESET_ATTACK_MITIGATION
+> > >           reboots.
+> > >
+> > >  config EFI_RCI2_TABLE
+> > > -       bool "EFI Runtime Configuration Interface Table Version 2 Support"
+> > > +       bool
+> > > +       prompt "EFI RCI Table Version 2 Support" if X86 || COMPILE_TEST
 
-Thank you!
+Why the split of bool and prompt?
+Why not simply add a single line "depends on X86 || COMPILE_TEST"?
+
+> >
+> > You can drop the || COMPILE_TEST as well.
+>
+> I will drop this part of the change in the next version of the patch.
+
+Why drop that part? Isn't it good to have more compile test coverage?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
