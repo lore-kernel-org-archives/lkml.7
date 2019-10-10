@@ -2,334 +2,96 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAA3C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F11C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F82A20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3793420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:33:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p+k/fFju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733265AbfJJIbU (ORCPT
+        id S1733237AbfJJIdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:31:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40192 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729932AbfJJIbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:31:19 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E0C8EC049E17
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:31:18 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id t11so2375141wro.10
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 01:31:18 -0700 (PDT)
+        Thu, 10 Oct 2019 04:33:04 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38288 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732034AbfJJIdE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:33:04 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x10so3201299pgi.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 01:33:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=O7p2fEqyW0bVC4UiR9HAc7G+W6mndKZsFPSQmUHXQOs=;
+        b=p+k/fFjus2iMXsQjgstcB4b4WB5zfA5cT2pFdCVTwodhFve3rnj0UyAS5/TrK1l+jP
+         Fj7BYq+UOpDkTiiEO5IcxazfG2x62D6mOyvV0FnceC+RI+6DfXSzU2H4F3O53nv+s2JZ
+         xWNfPfeM50wEalTJWvI9F4g9prWz5oD9I0T7XXjDHmR5x2i1Aitn5igvDn+DYkF52KaM
+         O//BciCy9oW8PFP3JE024ZAi7gA+M+OtXMBIzKEHNy55LQOuRw71pOdmQ1sTHTMJhHcW
+         10fFyTCm8Ejc6Q+NBW5+INiPAJhxWy21NMbeRNAIhoAyDoyOqu7TMRmEHRP1Sl1n8uzT
+         jMDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=dnxA342uWQGojBc2trI0QZPTLR8iPWlQv7iUQgbZnxo=;
-        b=ORNeoIipJfN4DnlGGPoBLvVaSfoPH/8NSyaQ3+UqZ8lYSfmKJTY65j5bKKjJmyBpKB
-         K4O04LOiLh9hffCvrP2CsWSb0jXVT8x00iyPG41c4zyLsvan+LoDa8RX4dwDzO0Yzypf
-         uNtrwMf9750Rg4eNjzRBhfwM4LRPS5dYhFCxRVdPbR5AxY3ClH7M1/1H9ELXe8mTg/xY
-         MUKlnhKdX7i96T0cvmIs2o2kqDlGIbqRU4A29/APN939cqe0vL1fkJzvxLBpB0+1+nqN
-         2Pmk9w19NihirdWIgVDBpP2lmX2mmqROv6GR/FKRjBkerCK3Hk+LUxhE6UKcnRq7S5cs
-         zSvw==
-X-Gm-Message-State: APjAAAUGIlu7i+DVNPWwy1nt2Xq3TlGGJOopJX/FhTCN9z0W+zmvwCLh
-        Wq6XUAGMUL/SKMOkt0kvfevGyOYgmkkz+G2H6pqdGo2XMZZRc/3iSDc20Lee/kyRmAhbmKMjDdy
-        LPshoi1EDhhKbCxSgbX3EnFch
-X-Received: by 2002:a05:6000:11cc:: with SMTP id i12mr7557599wrx.241.1570696277542;
-        Thu, 10 Oct 2019 01:31:17 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxcoEwqyOpgdABShTXsK2c7PElGcMyZ78gwFcFLBMKOwWSikEuQunfReN0aH+kZaOM5HXg0KQ==
-X-Received: by 2002:a05:6000:11cc:: with SMTP id i12mr7557558wrx.241.1570696277187;
-        Thu, 10 Oct 2019 01:31:17 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id l6sm3569647wmg.2.2019.10.10.01.31.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 01:31:16 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Suleiman Souhlal <suleiman@google.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, tglx@linutronix.de
-Cc:     john.stultz@linaro.org, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        ssouhlal@freebsd.org, tfiga@chromium.org,
-        Suleiman Souhlal <suleiman@google.com>
-Subject: Re: [RFC v2 1/2] kvm: Mechanism to copy host timekeeping parameters into guest.
-In-Reply-To: <20191010073055.183635-2-suleiman@google.com>
-References: <20191010073055.183635-1-suleiman@google.com> <20191010073055.183635-2-suleiman@google.com>
-Date:   Thu, 10 Oct 2019 10:31:15 +0200
-Message-ID: <87zhi96lyk.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=O7p2fEqyW0bVC4UiR9HAc7G+W6mndKZsFPSQmUHXQOs=;
+        b=cdZWcktThmnF2WA5cGL5DBciCWdky8/eGpIKkXzvZuBlyyaMZW76c1ly2OoKA17Fl1
+         rmGI+mXfLwc25H9q79G8tI5NOriT5sXZWriDWLsVBO4RmTy6kzIuFAm2+5novuVe8QGI
+         33eZNwtS6yILQ+yBFzlHir1ACvKt4DPcDEHblMFW24owz9isp1LzhiFeRIU5lVaikaMN
+         L6NQbAT6/TGRlGhJ7K6skjHvg5r3SFbA1kPaRYUDZQPE509dBY0B6GGFUobgutTOLsAm
+         xxyNiX9HKb6sPKgxUNaB3y79F5Vv83gbE//KIhkmy2nLc7zNzJ/SF/HB6PLzaZuRP7uE
+         lsiQ==
+X-Gm-Message-State: APjAAAU3BE2oV5LYXBAPMF6O63XpZ7FskhOv9MuPr4KW/oCYMFoNE48U
+        61edi+renAPTIUi0hKwCfvku5UixdAI=
+X-Google-Smtp-Source: APXvYqzyutGAVXNM/PD1VvisCGv1p9QsixR+cchjogvT0/HSuilUbh8huFSd3rnak94fGCQcEmBq0w==
+X-Received: by 2002:a62:d402:: with SMTP id a2mr9184721pfh.115.1570696382444;
+        Thu, 10 Oct 2019 01:33:02 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id m34sm7028036pgb.91.2019.10.10.01.32.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 01:33:01 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH] xen/grant-table: remove unnecessary printing
+Date:   Thu, 10 Oct 2019 16:32:09 +0800
+Message-Id: <20191010083209.4702-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Suleiman Souhlal <suleiman@google.com> writes:
+xen_auto_xlat_grant_frames.vaddr is definitely NULL in this case.
+So the address printing is unnecessary.
 
-> This is used to synchronize time between host and guest.
-> The guest can request the (guest) physical address it wants the
-> data in through the MSR_KVM_TIMEKEEPER_EN MSR.
->
-> It currently assumes the host timekeeper is "tsc".
->
-> Signed-off-by: Suleiman Souhlal <suleiman@google.com>
-> ---
->  arch/x86/include/asm/kvm_host.h      |   3 +
->  arch/x86/include/asm/pvclock-abi.h   |  27 ++++++
->  arch/x86/include/uapi/asm/kvm_para.h |   1 +
->  arch/x86/kvm/x86.c                   | 121 +++++++++++++++++++++++++++
->  4 files changed, 152 insertions(+)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 50eb430b0ad8..4d622450cb4a 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -659,7 +659,10 @@ struct kvm_vcpu_arch {
->  	struct pvclock_vcpu_time_info hv_clock;
->  	unsigned int hw_tsc_khz;
->  	struct gfn_to_hva_cache pv_time;
-> +	struct gfn_to_hva_cache pv_timekeeper_g2h;
-> +	struct pvclock_timekeeper pv_timekeeper;
->  	bool pv_time_enabled;
-> +	bool pv_timekeeper_enabled;
->  	/* set guest stopped flag in pvclock flags field */
->  	bool pvclock_set_guest_stopped_request;
->  
-> diff --git a/arch/x86/include/asm/pvclock-abi.h b/arch/x86/include/asm/pvclock-abi.h
-> index 1436226efe3e..2809008b9b26 100644
-> --- a/arch/x86/include/asm/pvclock-abi.h
-> +++ b/arch/x86/include/asm/pvclock-abi.h
-> @@ -40,6 +40,33 @@ struct pvclock_wall_clock {
->  	u32   nsec;
->  } __attribute__((__packed__));
->  
-> +struct pvclock_read_base {
-> +	u64 mask;
-> +	u64 cycle_last;
-> +	u32 mult;
-> +	u32 shift;
-> +	u64 xtime_nsec;
-> +	u64 base;
-> +} __attribute__((__packed__));
-> +
-> +struct pvclock_timekeeper {
-> +	u64 gen;
-> +	u64 flags;
-> +	struct pvclock_read_base tkr_mono;
-> +	struct pvclock_read_base tkr_raw;
-> +	u64 xtime_sec;
-> +	u64 ktime_sec;
-> +	u64 wall_to_monotonic_sec;
-> +	u64 wall_to_monotonic_nsec;
-> +	u64 offs_real;
-> +	u64 offs_boot;
-> +	u64 offs_tai;
-> +	u64 raw_sec;
-> +	u64 tsc_offset;
-> +} __attribute__((__packed__));
-> +
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/xen/grant-table.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-AFAIU these structures mirror struct tk_read_base and struct timekeeper
-but these are intenal to timekeeper so the risk I see is: we decide to
-change timekeeper internals and these structures become hard-to-mirror
-so I'd think about versioning them from the very beginning, e.g.: host
-reports supported timekeer versions in MSR_KVM_TIMEKEEPER_EN (renamed)
-and then guest asks for a particular version. This way we can deprecate
-old versions eventually.
-
-> +#define	PVCLOCK_TIMEKEEPER_ENABLED (1 << 0)
-> +
->  #define PVCLOCK_TSC_STABLE_BIT	(1 << 0)
->  #define PVCLOCK_GUEST_STOPPED	(1 << 1)
->  /* PVCLOCK_COUNTS_FROM_ZERO broke ABI and can't be used anymore. */
-> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
-> index 2a8e0b6b9805..3ebb1d87db3a 100644
-> --- a/arch/x86/include/uapi/asm/kvm_para.h
-> +++ b/arch/x86/include/uapi/asm/kvm_para.h
-> @@ -50,6 +50,7 @@
->  #define MSR_KVM_STEAL_TIME  0x4b564d03
->  #define MSR_KVM_PV_EOI_EN      0x4b564d04
->  #define MSR_KVM_POLL_CONTROL	0x4b564d05
-> +#define MSR_KVM_TIMEKEEPER_EN	0x4b564d06
->  
->  struct kvm_steal_time {
->  	__u64 steal;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 661e2bf38526..937f83cdda4b 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -157,6 +157,8 @@ module_param(force_emulation_prefix, bool, S_IRUGO);
->  int __read_mostly pi_inject_timer = -1;
->  module_param(pi_inject_timer, bint, S_IRUGO | S_IWUSR);
->  
-> +static atomic_t pv_timekeepers_nr;
-> +
->  #define KVM_NR_SHARED_MSRS 16
->  
->  struct kvm_shared_msrs_global {
-> @@ -2729,6 +2731,16 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  
->  		break;
->  	}
-> +	case MSR_KVM_TIMEKEEPER_EN:
-> +		if (kvm_gfn_to_hva_cache_init(vcpu->kvm,
-> +		    &vcpu->arch.pv_timekeeper_g2h, data,
-> +		    sizeof(struct pvclock_timekeeper)))
-> +			vcpu->arch.pv_timekeeper_enabled = false;
-> +		else {
-> +			vcpu->arch.pv_timekeeper_enabled = true;
-> +			atomic_inc(&pv_timekeepers_nr);
-> +		}
-> +		break;
->  	case MSR_KVM_ASYNC_PF_EN:
->  		if (kvm_pv_enable_async_pf(vcpu, data))
->  			return 1;
-> @@ -7097,6 +7109,109 @@ static struct perf_guest_info_callbacks kvm_guest_cbs = {
->  };
->  
->  #ifdef CONFIG_X86_64
-> +static DEFINE_SPINLOCK(shadow_pvtk_lock);
-> +static struct pvclock_timekeeper shadow_pvtk;
-> +
-> +static void
-> +pvclock_copy_read_base(struct pvclock_read_base *pvtkr,
-> +    struct tk_read_base *tkr)
-> +{
-> +	pvtkr->cycle_last = tkr->cycle_last;
-> +	pvtkr->mult = tkr->mult;
-> +	pvtkr->shift = tkr->shift;
-> +	pvtkr->mask = tkr->mask;
-> +	pvtkr->xtime_nsec = tkr->xtime_nsec;
-> +	pvtkr->base = tkr->base;
-> +}
-> +
-> +static void
-> +kvm_copy_into_pvtk(struct kvm_vcpu *vcpu)
-> +{
-> +	struct pvclock_timekeeper *pvtk;
-> +	unsigned long flags;
-> +
-> +	if (!vcpu->arch.pv_timekeeper_enabled)
-> +		return;
-> +
-> +	pvtk = &vcpu->arch.pv_timekeeper;
-> +	if (pvclock_gtod_data.clock.vclock_mode == VCLOCK_TSC) {
-> +		pvtk->flags |= PVCLOCK_TIMEKEEPER_ENABLED;
-> +		spin_lock_irqsave(&shadow_pvtk_lock, flags);
-> +		pvtk->tkr_mono = shadow_pvtk.tkr_mono;
-> +		pvtk->tkr_raw = shadow_pvtk.tkr_raw;
-> +
-> +		pvtk->xtime_sec = shadow_pvtk.xtime_sec;
-> +		pvtk->ktime_sec = shadow_pvtk.ktime_sec;
-> +		pvtk->wall_to_monotonic_sec =
-> +		    shadow_pvtk.wall_to_monotonic_sec;
-> +		pvtk->wall_to_monotonic_nsec =
-> +		    shadow_pvtk.wall_to_monotonic_nsec;
-> +		pvtk->offs_real = shadow_pvtk.offs_real;
-> +		pvtk->offs_boot = shadow_pvtk.offs_boot;
-> +		pvtk->offs_tai = shadow_pvtk.offs_tai;
-> +		pvtk->raw_sec = shadow_pvtk.raw_sec;
-> +		spin_unlock_irqrestore(&shadow_pvtk_lock, flags);
-> +
-> +		pvtk->tsc_offset = kvm_x86_ops->read_l1_tsc_offset(vcpu);
-> +	} else
-> +		pvtk->flags &= ~PVCLOCK_TIMEKEEPER_ENABLED;
-> +
-> +	BUILD_BUG_ON(offsetof(struct pvclock_timekeeper, gen) != 0);
-> +
-> +	/*
-> +	 * Make the gen count odd to indicate we are in the process of
-> +	 * updating.
-> +	 */
-> +	vcpu->arch.pv_timekeeper.gen++;
-> +	vcpu->arch.pv_timekeeper.gen |= 1;
-> +
-> +	/*
-> +	 * See comment in kvm_guest_time_update() for why we have to do
-> +	 * multiple writes.
-> +	 */
-> +	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.pv_timekeeper_g2h,
-> +	    &vcpu->arch.pv_timekeeper, sizeof(vcpu->arch.pv_timekeeper.gen));
-> +
-> +	smp_wmb();
-> +
-> +	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.pv_timekeeper_g2h,
-> +	    &vcpu->arch.pv_timekeeper, sizeof(vcpu->arch.pv_timekeeper));
-> +
-> +	smp_wmb();
-> +
-> +	vcpu->arch.pv_timekeeper.gen++;
-> +
-> +	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.pv_timekeeper_g2h,
-> +	    &vcpu->arch.pv_timekeeper, sizeof(vcpu->arch.pv_timekeeper.gen));
-> +}
-> +
-> +static void
-> +update_shadow_pvtk(struct timekeeper *tk)
-> +{
-> +	struct pvclock_timekeeper *pvtk;
-> +	unsigned long flags;
-> +
-> +	pvtk = &shadow_pvtk;
-> +
-> +	if (atomic_read(&pv_timekeepers_nr) == 0 ||
-> +	    pvclock_gtod_data.clock.vclock_mode != VCLOCK_TSC)
-> +		return;
-> +
-> +	spin_lock_irqsave(&shadow_pvtk_lock, flags);
-> +	pvclock_copy_read_base(&pvtk->tkr_mono, &tk->tkr_mono);
-> +	pvclock_copy_read_base(&pvtk->tkr_raw, &tk->tkr_raw);
-> +
-> +	pvtk->xtime_sec = tk->xtime_sec;
-> +	pvtk->ktime_sec = tk->ktime_sec;
-> +	pvtk->wall_to_monotonic_sec = tk->wall_to_monotonic.tv_sec;
-> +	pvtk->wall_to_monotonic_nsec = tk->wall_to_monotonic.tv_nsec;
-> +	pvtk->offs_real = tk->offs_real;
-> +	pvtk->offs_boot = tk->offs_boot;
-> +	pvtk->offs_tai = tk->offs_tai;
-> +	pvtk->raw_sec = tk->raw_sec;
-> +	spin_unlock_irqrestore(&shadow_pvtk_lock, flags);
-> +}
-> +
->  static void pvclock_gtod_update_fn(struct work_struct *work)
->  {
->  	struct kvm *kvm;
-> @@ -7124,6 +7239,7 @@ static int pvclock_gtod_notify(struct notifier_block *nb, unsigned long unused,
->  	struct timekeeper *tk = priv;
->  
->  	update_pvclock_gtod(tk);
-> +	update_shadow_pvtk(tk);
->  
->  	/* disable master clock if host does not trust, or does not
->  	 * use, TSC based clocksource.
-> @@ -7940,6 +8056,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  
->  	bool req_immediate_exit = false;
->  
-> +	kvm_copy_into_pvtk(vcpu);
-
-It doesn't matter for pvclock_gtod_update_fn() but vcpu_enter_guest() is
-performance critical. I would suggest to introduce a static key to avoid
-this completely when no guest is using this new timekeeper.
-
-> +
->  	if (kvm_request_pending(vcpu)) {
->  		if (kvm_check_request(KVM_REQ_GET_VMCS12_PAGES, vcpu))
->  			kvm_x86_ops->get_vmcs12_pages(vcpu);
-> @@ -9020,6 +9138,9 @@ void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
->  
->  	kvmclock_reset(vcpu);
->  
-> +	if (vcpu->arch.pv_timekeeper_enabled)
-> +		atomic_dec(&pv_timekeepers_nr);
-> +
->  	kvm_x86_ops->vcpu_free(vcpu);
->  	free_cpumask_var(wbinvd_dirty_mask);
->  }
-
+diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
+index 7ea6fb6a2e5d..49b381e104ef 100644
+--- a/drivers/xen/grant-table.c
++++ b/drivers/xen/grant-table.c
+@@ -1363,8 +1363,7 @@ static int gnttab_setup(void)
+ 	if (xen_feature(XENFEAT_auto_translated_physmap) && gnttab_shared.addr == NULL) {
+ 		gnttab_shared.addr = xen_auto_xlat_grant_frames.vaddr;
+ 		if (gnttab_shared.addr == NULL) {
+-			pr_warn("gnttab share frames (addr=0x%08lx) is not mapped!\n",
+-				(unsigned long)xen_auto_xlat_grant_frames.vaddr);
++			pr_warn("gnttab share frames is not mapped!\n");
+ 			return -ENOMEM;
+ 		}
+ 	}
 -- 
-Vitaly
+2.11.0
+
