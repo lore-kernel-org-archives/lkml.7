@@ -2,97 +2,113 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0034CC47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08563ECE58C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5422086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:26:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5DYis7u"
+	by mail.kernel.org (Postfix) with ESMTP id DF93D2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732395AbfJJA0t (ORCPT
+        id S1732465AbfJJA1f convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:26:49 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36609 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731542AbfJJA0s (ORCPT
+        Wed, 9 Oct 2019 20:27:35 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:33851 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732421AbfJJA1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:26:48 -0400
-Received: by mail-qk1-f196.google.com with SMTP id y189so3999685qkc.3;
-        Wed, 09 Oct 2019 17:26:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hJVRzApWUSHgdNBRH3SUZ0/qd5E2CCfr2UoORKNjRa8=;
-        b=N5DYis7uPKipl0cDXvFbCowOIVqJOHtHkPbbgeuPBKtiej1Ij51lQaKh+Gy7hRp2ra
-         EIu8aTLliFZcetEYjur8WYm1n75nqJ+Hy0/aSL4snbMcyzqEHLslTZ1taRJpxDOwmkdh
-         mka1E6M9BOtuGsHqgOWKYdcDpMXT80IiOMMgWxIYOug1zlnw9yW5u0k8Vrfz4TJ3sNab
-         oKPjjN2sdBqYWw343JKpsqRR6YyU/3ZfYMwUcA4RPkQHbj0SBF1iMh0lheHJDnslaoS3
-         bqWRJozkJtU4I5P/Iw1sf4VOSXmJDL5v9G7oF2TFPU14AxdJN85h3fC8fJ3uRil6Md4m
-         ZbLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hJVRzApWUSHgdNBRH3SUZ0/qd5E2CCfr2UoORKNjRa8=;
-        b=XiHDSMs/+PN+fnWYOnhnHO4skVy86hFrdKUUc5PJ7LudhcmuJFRq9tJUPUEHyfWN1D
-         D+yalBfFTa7HMPzDuo/vMfnZh7xe7dW7botD4ovvx9HLJukrgRnjXKNRt/9Sd40BUhl1
-         P+bHPILgWscu8LOzGNTF3TmZ3VJpaWhfar7lzq70mw1kSe3DFh33BFDWhWxm9VcXDbvh
-         fB70PX6CPD9Jyal3jU++0KMnN4/dtz1OSb2aqzlspZhaMenYoWeIbcrtbyN8WZRDOjs3
-         8l7snMwuPkC/RLj8/UnzDdJM7BLrWvKNOxrbexAhAvsU0dwno975ypUXM7WofjrWNpQr
-         KKyw==
-X-Gm-Message-State: APjAAAV6rkDNwRRkYxxs2QnB/BagKLrSOt+yVspQ3jPG6BgRi1cfnw2X
-        90jUl0Tw3TFezuzv0sk/mPPx3KCwf7jDp5eAFU0=
-X-Google-Smtp-Source: APXvYqxUSe0DseUwlExqerpeDVzqzpbZSaxkzseSPt9wfk83oiom+qzJWnHqrY7tZz8n93L9Dc5K57DvbXGqR3ZFumg=
-X-Received: by 2002:a37:4c13:: with SMTP id z19mr6820886qka.449.1570667207415;
- Wed, 09 Oct 2019 17:26:47 -0700 (PDT)
+        Wed, 9 Oct 2019 20:27:35 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9A0RKQN018137
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 10 Oct 2019 09:27:20 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9A0RK5D006401;
+        Thu, 10 Oct 2019 09:27:20 +0900
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9A0R49V023354;
+        Thu, 10 Oct 2019 09:27:20 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-9297955; Thu, 10 Oct 2019 09:26:20 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0439.000; Thu,
+ 10 Oct 2019 09:26:19 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     David Hildenbrand <david@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
+ memmaps in memory_failure()
+Thread-Topic: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
+ memmaps in memory_failure()
+Thread-Index: AQHVfq1QC/9/3IlYuEK91tWnhgAEnKdSbnGA
+Date:   Thu, 10 Oct 2019 00:26:19 +0000
+Message-ID: <20191010002619.GB3585@hori.linux.bs1.fc.nec.co.jp>
+References: <20191009142435.3975-1-david@redhat.com>
+ <20191009142435.3975-3-david@redhat.com>
+In-Reply-To: <20191009142435.3975-3-david@redhat.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.96]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <B381226EDEBF614A8081151E7F7D2CBD@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20191009204134.26960-1-ivan.khoronzhuk@linaro.org> <20191009204134.26960-12-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20191009204134.26960-12-ivan.khoronzhuk@linaro.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 9 Oct 2019 17:26:36 -0700
-Message-ID: <CAEf4BzZ=-DYoP0yPttx9WWwqZe10q+=nxAer7V_S0WRY47tp9Q@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 11/15] libbpf: don't use cxx to test_libpf target
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org,
-        sergei.shtylyov@cogentembedded.com
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 1:43 PM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> No need to use C++ for test_libbpf target when libbpf is on C and it
-> can be tested with C, after this change the CXXFLAGS in makefiles can
-> be avoided, at least in bpf samples, when sysroot is used, passing
-> same C/LDFLAGS as for lib.
->
-> Add "return 0" in test_libbpf to void warn, but also remove spaces at
-> start of the lines to keep same style and avoid warns while apply.
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+On Wed, Oct 09, 2019 at 04:24:35PM +0200, David Hildenbrand wrote:
+> We should check for pfn_to_online_page() to not access uninitialized
+> memmaps. Reshuffle the code so we don't have to duplicate the error
+> message.
+> 
+> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
+>  mm/memory-failure.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 7ef849da8278..e866e6e5660b 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -1253,17 +1253,19 @@ int memory_failure(unsigned long pfn, int flags)
+>  	if (!sysctl_memory_failure_recovery)
+>  		panic("Memory failure on page %lx", pfn);
+>  
+> -	if (!pfn_valid(pfn)) {
+> +	p = pfn_to_online_page(pfn);
+> +	if (!p) {
+> +		if (pfn_valid(pfn)) {
+> +			pgmap = get_dev_pagemap(pfn, NULL);
+> +			if (pgmap)
+> +				return memory_failure_dev_pagemap(pfn, flags,
+> +								  pgmap);
+> +		}
+>  		pr_err("Memory failure: %#lx: memory outside kernel control\n",
+>  			pfn);
+>  		return -ENXIO;
+>  	}
+>  
+> -	pgmap = get_dev_pagemap(pfn, NULL);
+> -	if (pgmap)
+> -		return memory_failure_dev_pagemap(pfn, flags, pgmap);
+> -
+> -	p = pfn_to_page(pfn);
 
-Thanks for the clean up!
+This change seems to assume that memory_failure_dev_pagemap() is never
+called for online pages. Is it an intended behavior?
+Or the concept "online pages" is not applicable to zone device pages?
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-
-[...]
+Thanks,
+Naoya Horiguchi
