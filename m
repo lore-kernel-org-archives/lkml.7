@@ -4,58 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61943ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81668ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B4921D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5520221D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697936;
-	bh=2zuuBILVBCcqXDaiw/iKTe4cR80FAkibiEk1vK9tmdE=;
+	s=default; t=1570697942;
+	bh=yEwwN4aCrDKN7M8R+26m8PSL7h3DXKhMA0QOudOPcF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Smx3QNVZEUy7YKAi6AvWZmk1HCgz8BolnDqnBoKn5AH5NLXsKKA1YJJidFW87s21
-	 w3Ivao9JMdhdxlmqaHsAGfMaFKhLKTOJrSsX31O0yQco40DzAMESs2zW1gtEgqrfkS
-	 LRM+yhBuS0UMDMb0PECab0vRGVaHi/u9UOz+2GGI=
+	b=mmmV4COkWj8LmUHB0485tO9vEKtVBs+1ShJ8JBK5SznL2dlTBFKAsFIkRPobjP488
+	 GVdBhDMQlGUrWoOK/k8tccbE6sNtH2U/HqQW2JvRZucXN1pIvomiiMT+YLEq4LqrQn
+	 Pgy6vapm09ACizTDXsXwnMQ1uMr0bWCu4sOIpYeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389078AbfJJIpK (ORCPT
+        id S2388006AbfJJIpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50646 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389055AbfJJIpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:06 -0400
+        id S2389027AbfJJIo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:44:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13A3321929;
-        Thu, 10 Oct 2019 08:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 455D321929;
+        Thu, 10 Oct 2019 08:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697105;
-        bh=2zuuBILVBCcqXDaiw/iKTe4cR80FAkibiEk1vK9tmdE=;
+        s=default; t=1570697094;
+        bh=yEwwN4aCrDKN7M8R+26m8PSL7h3DXKhMA0QOudOPcF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GziLrO9QLhIvYzJjYElnqW/xDDCojTYL1ZWSYrzqIapcRuE54XtyZmi3/Ipf6dvuV
-         TbUmP8Dw+IOqpOmrpisWxr+lvA3E5pymuWSolpPweV5eRZyQ79BkYexetXhQYP7V+P
-         o52qU2C7tl3CR4NEmWlrDM3qH60xURcgGdXcwGRg=
+        b=lnJYoE48+/WIbedbQcj9BuVdIAzri2S/fwr9A87MmvH4JUkiMGON57X/EXOyBVlPT
+         LRo+n5Fe+qShuIgb7jNr4tqOH4z/cWPNsjZBVs/WwgbSz1tGut8348CGhPhSE2Qory
+         heg5SA6fr+jXEJZmkgPIIyEGlsx7Fdk6qT9R2iS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        He Kuang <hekuang@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
-        Michal rarek <mmarek@suse.com>, Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 020/114] tools lib traceevent: Fix "robust" test of do_generate_dynamic_list_file
-Date:   Thu, 10 Oct 2019 10:35:27 +0200
-Message-Id: <20191010083553.429261317@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 017/114] powerpc/powernv/ioda: Fix race in TCE level allocation
+Date:   Thu, 10 Oct 2019 10:35:24 +0200
+Message-Id: <20191010083552.110759758@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -68,52 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-commit 82a2f88458d70704be843961e10b5cef9a6e95d3 upstream.
+commit 56090a3902c80c296e822d11acdb6a101b322c52 upstream.
 
-The tools/lib/traceevent/Makefile had a test added to it to detect a failure
-of the "nm" when making the dynamic list file (whatever that is). The
-problem is that the test sorts the values "U W w" and some versions of sort
-will place "w" ahead of "W" (even though it has a higher ASCII value, and
-break the test.
+pnv_tce() returns a pointer to a TCE entry and originally a TCE table
+would be pre-allocated. For the default case of 2GB window the table
+needs only a single level and that is fine. However if more levels are
+requested, it is possible to get a race when 2 threads want a pointer
+to a TCE entry from the same page of TCEs.
 
-Add 'tr "w" "W"' to merge the two and not worry about the ordering.
+This adds cmpxchg to handle the race. Note that once TCE is non-zero,
+it cannot become zero again.
 
-Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Carrillo-Cisneros <davidcc@google.com>
-Cc: He Kuang <hekuang@huawei.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Michal rarek <mmarek@suse.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: stable@vger.kernel.org
-Fixes: 6467753d61399 ("tools lib traceevent: Robustify do_generate_dynamic_list_file")
-Link: http://lkml.kernel.org/r/20190805130150.25acfeb1@gandalf.local.home
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: a68bd1267b72 ("powerpc/powernv/ioda: Allocate indirect TCE levels on demand")
+CC: stable@vger.kernel.org # v4.19+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190718051139.74787-2-aik@ozlabs.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/lib/traceevent/Makefile |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda-tce.c |   18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -259,8 +259,8 @@ endef
+--- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
+@@ -49,6 +49,9 @@ static __be64 *pnv_alloc_tce_level(int n
+ 	return addr;
+ }
  
- define do_generate_dynamic_list_file
- 	symbol_type=`$(NM) -u -D $1 | awk 'NF>1 {print $$1}' | \
--	xargs echo "U W w" | tr ' ' '\n' | sort -u | xargs echo`;\
--	if [ "$$symbol_type" = "U W w" ];then				\
-+	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
-+	if [ "$$symbol_type" = "U W" ];then				\
- 		(echo '{';						\
- 		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
- 		echo '};';						\
++static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
++		unsigned long size, unsigned int levels);
++
+ static __be64 *pnv_tce(struct iommu_table *tbl, bool user, long idx, bool alloc)
+ {
+ 	__be64 *tmp = user ? tbl->it_userspace : (__be64 *) tbl->it_base;
+@@ -58,9 +61,9 @@ static __be64 *pnv_tce(struct iommu_tabl
+ 
+ 	while (level) {
+ 		int n = (idx & mask) >> (level * shift);
+-		unsigned long tce;
++		unsigned long oldtce, tce = be64_to_cpu(READ_ONCE(tmp[n]));
+ 
+-		if (tmp[n] == 0) {
++		if (!tce) {
+ 			__be64 *tmp2;
+ 
+ 			if (!alloc)
+@@ -71,10 +74,15 @@ static __be64 *pnv_tce(struct iommu_tabl
+ 			if (!tmp2)
+ 				return NULL;
+ 
+-			tmp[n] = cpu_to_be64(__pa(tmp2) |
+-					TCE_PCI_READ | TCE_PCI_WRITE);
++			tce = __pa(tmp2) | TCE_PCI_READ | TCE_PCI_WRITE;
++			oldtce = be64_to_cpu(cmpxchg(&tmp[n], 0,
++					cpu_to_be64(tce)));
++			if (oldtce) {
++				pnv_pci_ioda2_table_do_free_pages(tmp2,
++					ilog2(tbl->it_level_size) + 3, 1);
++				tce = oldtce;
++			}
+ 		}
+-		tce = be64_to_cpu(tmp[n]);
+ 
+ 		tmp = __va(tce & ~(TCE_PCI_READ | TCE_PCI_WRITE));
+ 		idx &= ~mask;
 
 
