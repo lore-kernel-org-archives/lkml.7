@@ -2,144 +2,187 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CF9C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3308ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B861214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81815214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MRUNDfqm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJeXf3az"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfJJWbV (ORCPT
+        id S1726538AbfJJWdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 18:31:21 -0400
-Received: from mail-eopbgr70053.outbound.protection.outlook.com ([40.107.7.53]:7045
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726065AbfJJWbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 18:31:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AewdmOUQ0tSDNLZYYFm4STu1CbIVIAHhlfQH+R8V5S4UxK7FbhweS3LOZqdlRA30bA6kOUvzmXfTr2nw88CjmiiXzVEGJpoH4X2Bxn1krhg5fLotshaEfnqsFMJvqPeRRCGEl1ob2PiQRejdf+bbMTZ3Rd4zhRhPZkoTAFqtECd9/Xctrm+nXN05GI7lEOc38efGmicgp8e/xujfb+ZJ5lYCK6189SfetijJd6XdAcPSbu+mA2rXjADezCafdQuqw8/YkKjWLoAXCxaLGNIgjEzshYh9ffdWMPZds0gCexBk7xC4sEtkJJ3p2MYQYcpgHlTGjDR4PtXqcc1hTAdztA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JnN/7CJrC76VnTCk66pmfUbRG8pLOyVhaJQYFwMrhNE=;
- b=KrtkhNoLP0NJBDtKDwKy7XfNtq2nOVkd/wEgJPw65x0lPx0CVwwLWWVhqmV70Im17lYnaDec9GIZ+FA37tbiHPuxtchlZ1Lic62jxkRYvstK5FKm5c7PC9hgU7cxZfaSTr5sLmuB+KMb+9Sq9OjQfdyF4h479LfudlrRbSGoTX2PLgO8L/iyUeM5Sdmo58uwDptWvTlOMWzXikpFwmtR0lyooF80WBeu6Zv5Zb98SnvuGO/DrvHQPm0aosAB94ehuB9OLmjH9AuW0p5ZKFAAmRUbm6Zf9guWL+o+sUTl6XtImRz+isGdsBR/pYpsqhxITl+zU5YnSYIrAZuV2CK6YQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JnN/7CJrC76VnTCk66pmfUbRG8pLOyVhaJQYFwMrhNE=;
- b=MRUNDfqm1vDpKcpAj8DLJo77YCEDGFkn8OkIphgg9Q9JqP7yIFGpMDvT4r/jDmYvS3tSUbNSyBM0FOD1ubPNmJ1p3qmf+N90G3om1keQi9p4nuzrEvxrWz3X50h27JLH90fxjpO6MQQTxyT47X3O06ZKtfrRCCmchPIDAIly8uY=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.234.30) by
- VE1PR04MB6639.eurprd04.prod.outlook.com (10.255.118.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Thu, 10 Oct 2019 22:31:16 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::c93:c279:545b:b6b6%3]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
- 22:31:16 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Andy Tang <andy.tang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH v2] arm64: dts: ls1028a: fix a compatible issue
-Thread-Topic: [PATCH v2] arm64: dts: ls1028a: fix a compatible issue
-Thread-Index: AQHVf0brHYC8TgXW1EGDttx7++luRKdUdjcw
-Date:   Thu, 10 Oct 2019 22:31:16 +0000
-Message-ID: <VE1PR04MB6687C0E8739C82D1DAFC71D58F940@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20191010083334.7037-1-andy.tang@nxp.com>
-In-Reply-To: <20191010083334.7037-1-andy.tang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b802e09c-64b9-48ed-a286-08d74dd190c3
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: VE1PR04MB6639:|VE1PR04MB6639:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6639E67272C69A7001D208DC8F940@VE1PR04MB6639.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1284;
-x-forefront-prvs: 018632C080
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(13464003)(189003)(199004)(55016002)(8936002)(8676002)(9686003)(6436002)(7736002)(6116002)(11346002)(25786009)(446003)(486006)(476003)(66066001)(6246003)(81156014)(4326008)(86362001)(26005)(14444005)(66446008)(3846002)(71190400001)(71200400001)(81166006)(256004)(14454004)(66946007)(186003)(76116006)(5660300002)(102836004)(64756008)(66556008)(66476007)(2906002)(6506007)(53546011)(2501003)(110136005)(54906003)(74316002)(52536014)(99286004)(229853002)(305945005)(478600001)(33656002)(316002)(76176011)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6639;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4ZqcARqLaMF5Hte8a3gstWR7f33ki+MMV+X4Gn4zqP7u1bZOXYRYgxHV8I4Cam9yozZFK8ADs8rZHPYQFY8cw4suQpLb3kuIfwBDvv5089U7MdO6MN7gGM7bqXYcYHyIAr2ANrlN6dmj3xBF7kby6MizVI3MR+Rlf+Q+vtD4d/h+Rq/gBkZ6VmAP5EVK62svka01nTL8utftZGMEg0hNCg6EW/+oGA/iMleG9ORIaDstR9kwEEHPrifPLWK1DMGIGK6ciWXkyp/TWRZ0ZxqSHt/xg88O6p59YtO+xjln5oNHm28zdlQ3SPcMTpdMUYeK9vvFJ+I3BpJWY/zDUAQ9W3n+gt434zBOGcwe8Be28nW8fQ883a6kr0isZS0A4dReUShyJkLYb4X84nLqiKzdujcf5J/cevvDKozo26mGvtQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 10 Oct 2019 18:33:31 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44350 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbfJJWda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 18:33:30 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m13so7800263ljj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 15:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TAvn4d+6F76ruJCv+xI5LO/P/Y+59nUm5AGlvaTi8Qw=;
+        b=vJeXf3azUyrJDmPHgSurrI5ADTbYih+86/WFbg8dxAp7IHN3cdZWYjBLR60qwZ5WDv
+         +7zEknqFxZF8ZKQBs5ulbxKt9GQz6IiGJO4107AQWREr75bdRb2+pqZd/WouJkMySosy
+         bKzS9qmyQq++va8SBxc+B05JbhbbfSnBoXlPzP2MUzc6PpJRFps+LbQwi54hbrdNemyi
+         yv6YVRDj33bT3RROfu4d77Ug71GRpwU1E83SVN+5W9BgV9wJpPu15TrVAkYRIRQ8QLdk
+         NH9pWVNjc6mgh14iNXiBtnqiZzq6toTZsDPEw08v3Wr48zoh3VWbDh8ejlHbntKinseP
+         4aQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TAvn4d+6F76ruJCv+xI5LO/P/Y+59nUm5AGlvaTi8Qw=;
+        b=m2fw6CpZFVx5/iqHEiCV2ltgCFRXIal7axJfxltqIr4JzFV5rooQNDojgYBLD8mVRA
+         PvLf35E3RE4DD7ZuDO2N75/Q5TcVhuQl/3BjzR2h7mgL6ru1lE+4h007PTmr9lY1esmJ
+         0ECoU9GP8iiRHrne1pGlR/1ye9R93xZ5neNVHzAryHesP7hfYM3ektdGDQhcp7xd8v3u
+         Lo+dZTusBUAHZNnD1kN/L1QfpZSoUkAfL2mKXUK8mHfBWtqLSEdZaiZjCNQSHTpyVMWN
+         hkevyZU0IGO4VRR1U5pYXh72LFS6dcVAmBmjiCch9kEfzrBj6+gbch0NGsM378OtQgNE
+         QFSg==
+X-Gm-Message-State: APjAAAXj2ow1QJCa5Ykisq2mx0LRIPco7h1dq8JTIkDSBzSzIVeAExuc
+        UNKVWFO3osA0ybafeFmIXAg=
+X-Google-Smtp-Source: APXvYqwLfOoXtt3G/Kcf9WrLtPl4oTNYwUgcoETwkfA3rEAYZyw4U95S9dGoHtCwrxFX6ktf3C6YvQ==
+X-Received: by 2002:a2e:9d56:: with SMTP id y22mr7786051ljj.37.1570746807968;
+        Thu, 10 Oct 2019 15:33:27 -0700 (PDT)
+Received: from pc636.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id h2sm1530033ljm.26.2019.10.10.15.33.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 15:33:26 -0700 (PDT)
+From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Daniel Wagner <dwagner@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v2 1/1] mm/vmalloc: remove preempt_disable/enable when do preloading
+Date:   Fri, 11 Oct 2019 00:33:18 +0200
+Message-Id: <20191010223318.28115-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b802e09c-64b9-48ed-a286-08d74dd190c3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 22:31:16.6489
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bu858TigHGrFGhBTyL6okp9rIxeQQxBVTnapFT0u1TV5A72uWD1b0HpDS82BLHIy0is2Y6c5nsafkgRk7Q/hew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6639
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Get rid of preempt_disable() and preempt_enable() when the
+preload is done for splitting purpose. The reason is that
+calling spin_lock() with disabled preemtion is forbidden in
+CONFIG_PREEMPT_RT kernel.
 
+Therefore, we do not guarantee that a CPU is preloaded, instead
+we minimize the case when it is not with this change.
 
-> -----Original Message-----
-> From: Yuantian Tang <andy.tang@nxp.com>
-> Sent: Thursday, October 10, 2019 3:34 AM
-> To: shawnguo@kernel.org
-> Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
-> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Andy Tang
-> <andy.tang@nxp.com>
-> Subject: [PATCH v2] arm64: dts: ls1028a: fix a compatible issue
->=20
-> The I2C multiplexer used on ls1028aqds is PCA9547, not PCA9847.
-> If the wrong compatible was used, this chip will not be able to be probed
-> correctly and hence fail to work.
->=20
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+For example i run the special test case that follows the preload
+pattern and path. 20 "unbind" threads run it and each does
+1000000 allocations. Only 3.5 times among 1000000 a CPU was
+not preloaded. So it can happen but the number is negligible.
 
-Acked-by: Li Yang <leoyang.li@nxp.com>
+V1 -> V2:
+  - move __this_cpu_cmpxchg check when spin_lock is taken,
+    as proposed by Andrew Morton
+  - add more explanation in regard of preloading
+  - adjust and move some comments
 
-> ---
-> v2:
-> 	- refine the description
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> index 5e14e5a19744..f5da9e8b0d9d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> @@ -107,7 +107,7 @@
->  	status =3D "okay";
->=20
->  	i2c-mux@77 {
-> -		compatible =3D "nxp,pca9847";
-> +		compatible =3D "nxp,pca9547";
->  		reg =3D <0x77>;
->  		#address-cells =3D <1>;
->  		#size-cells =3D <0>;
-> --
-> 2.17.1
+Fixes: 82dd23e84be3 ("mm/vmalloc.c: preload a CPU with one object for split purpose")
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ mm/vmalloc.c | 50 +++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 33 insertions(+), 17 deletions(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index e92ff5f7dd8b..f48cd0711478 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -969,6 +969,19 @@ adjust_va_to_fit_type(struct vmap_area *va,
+ 			 * There are a few exceptions though, as an example it is
+ 			 * a first allocation (early boot up) when we have "one"
+ 			 * big free space that has to be split.
++			 *
++			 * Also we can hit this path in case of regular "vmap"
++			 * allocations, if "this" current CPU was not preloaded.
++			 * See the comment in alloc_vmap_area() why. If so, then
++			 * GFP_NOWAIT is used instead to get an extra object for
++			 * split purpose. That is rare and most time does not
++			 * occur.
++			 *
++			 * What happens if an allocation gets failed. Basically,
++			 * an "overflow" path is triggered to purge lazily freed
++			 * areas to free some memory, then, the "retry" path is
++			 * triggered to repeat one more time. See more details
++			 * in alloc_vmap_area() function.
+ 			 */
+ 			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
+ 			if (!lva)
+@@ -1078,31 +1091,34 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 
+ retry:
+ 	/*
+-	 * Preload this CPU with one extra vmap_area object to ensure
+-	 * that we have it available when fit type of free area is
+-	 * NE_FIT_TYPE.
++	 * Preload this CPU with one extra vmap_area object. It is used
++	 * when fit type of free area is NE_FIT_TYPE. Please note, it
++	 * does not guarantee that an allocation occurs on a CPU that
++	 * is preloaded, instead we minimize the case when it is not.
++	 * It can happen because of migration, because there is a race
++	 * until the below spinlock is taken.
+ 	 *
+ 	 * The preload is done in non-atomic context, thus it allows us
+ 	 * to use more permissive allocation masks to be more stable under
+-	 * low memory condition and high memory pressure.
++	 * low memory condition and high memory pressure. In rare case,
++	 * if not preloaded, GFP_NOWAIT is used.
+ 	 *
+-	 * Even if it fails we do not really care about that. Just proceed
+-	 * as it is. "overflow" path will refill the cache we allocate from.
++	 * Set "pva" to NULL here, because of "retry" path.
+ 	 */
+-	preempt_disable();
+-	if (!__this_cpu_read(ne_fit_preload_node)) {
+-		preempt_enable();
+-		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
+-		preempt_disable();
++	pva = NULL;
+ 
+-		if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
+-			if (pva)
+-				kmem_cache_free(vmap_area_cachep, pva);
+-		}
+-	}
++	if (!this_cpu_read(ne_fit_preload_node))
++		/*
++		 * Even if it fails we do not really care about that.
++		 * Just proceed as it is. If needed "overflow" path
++		 * will refill the cache we allocate from.
++		 */
++		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
+ 
+ 	spin_lock(&vmap_area_lock);
+-	preempt_enable();
++
++	if (pva && __this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva))
++		kmem_cache_free(vmap_area_cachep, pva);
+ 
+ 	/*
+ 	 * If an allocation fails, the "vend" address is
+-- 
+2.20.1
 
