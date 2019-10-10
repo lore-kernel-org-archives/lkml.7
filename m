@@ -2,105 +2,164 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C662C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE06CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E53F20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B967F20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:40:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZQ6PxwUt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VO7m1YIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfJJSiN (ORCPT
+        id S1726750AbfJJSk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:38:13 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36368 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfJJSiM (ORCPT
+        Thu, 10 Oct 2019 14:40:58 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38768 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfJJSk6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:38:12 -0400
-Received: by mail-io1-f68.google.com with SMTP id b136so16011122iof.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:38:11 -0700 (PDT)
+        Thu, 10 Oct 2019 14:40:58 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 3so7813006wmi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uUzRX7Xh7byk+MCJLYcIVyEy+EENOl4g6KMABWycDWw=;
-        b=ZQ6PxwUt7uDnexDJkq9OENRzTCFskAngHyXDBZksax3F+PGRBGH8FR1A6RJapyEQ55
-         /zzucfJ05Y9z2hjpZyqzThIvKaXCo7NfK/mdARhJfTS2Z1kk3fh+fAgRvxEYh+Hfn0xb
-         CgRg0yjdWxEEOFfba4LnL9gOFEwaksq23hjZQ=
+        bh=8NsqnSY95fdoi2VDvZcdhUdFBDwBGSd8eV8Ri4czn8Y=;
+        b=VO7m1YIn2R9UaxF6uga618E7+yQCBUAVgQkcYkf4rfnMXVcQBYAGVv8dz98DoBj4Jm
+         f184Ul0TzGHhz36KAQ7Yywcer/gvQu+22svOWhJ+GNCDCnDNm9t+NBKgbmkQlZq2dFbG
+         oMZlAyA33VxbAPpS0xTcSuVKRiKFW4nwayOuSsnfSmuW/D3N/Lu2S7zOOlmsUr0FqiuC
+         aBU+8ir413SG3KlrJ1B2cyK56pwHeyzRAEpj19YXFCk9yHezV6j2OrO/mhzRSOf5HAyl
+         HDp9SP3AmQHnM6rnNDZ0m2fcoFsPNHBSGaegh3SeJRDR2cJuaicfcIdoAE143X04yy0o
+         kJDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uUzRX7Xh7byk+MCJLYcIVyEy+EENOl4g6KMABWycDWw=;
-        b=Oz5yo32hPiH035hExEw/EJVJ+7ZZBazZZ/hmwYucv5nXba1VBZdetsHpF12wp2iKz3
-         IH5iz0zJhEUrJpHohCnN+2LpCD6/adeVUoS2s6R8kdrRMZDy2tpbRZyuoVQF/60E7moa
-         DwKEWN5EKl4yBu3vlMVIGwA+2fb1GIsHDt7S5WiNY5KjR4ITqWx5+XAaucaM4Jsx2CBv
-         5z+BzzhdqlyRwK0Sg0OqnsJmpkMGXY6XWxvkU4h6H26e9kX2a874JjNutRHwi2EuOvPF
-         yp0ITfhgfz/JVfVlsD3YfOBlAgXllXLZaWDqI4/5UOTY1ZvgUgq00lj1SjCKOKWYslCH
-         CgBQ==
-X-Gm-Message-State: APjAAAUAhIydIb75VTmhgfJ/W/fj7K17jtJM5vnMA8BpH9+Lm8oor/p+
-        1s0my7hOIr3zWhFImbDlXrml1EvrPIn26EWL9BIVdw==
-X-Google-Smtp-Source: APXvYqyEPPCMhzAxynrhUpsjYl18h3kyEF/0J8BemwV2SSA0s8xu58jyxX1AcQyr0RHPK4QPm9Qtmih6L0sw0Cz+Egw=
-X-Received: by 2002:a02:c4cd:: with SMTP id h13mr12796842jaj.142.1570732690810;
- Thu, 10 Oct 2019 11:38:10 -0700 (PDT)
+        bh=8NsqnSY95fdoi2VDvZcdhUdFBDwBGSd8eV8Ri4czn8Y=;
+        b=uS81798tUkycb5A2t08EVsgE0iudvaTuY+PGjSX2PFUDMwJ2xJCBqtvoPutEaifEKi
+         scApHBb5HFHCTtJeZqc9Qlixuqn03DmjDqaOdB+mvZvoG0vwbUFzGpV18CyLXO5Q19uW
+         6yP9vrmkmhSdQyRdI8bRZHtAtrIsBYwrTU33thoeGon396RNDzb3+NIoduo/O2TAE28F
+         n5/Z1Ogh5tsiDCvVJD6cfJVYo+4BPPpxoiW7b+2pmD/YxWQBv4GDd5v5BPLaVJaA3f8l
+         z5r7oUkUYtEa0aA6hBiH8w3Yxp4Gp/FtCmoAnmYLhMapYvilDUqO8DijAviRaB8XZomv
+         z0Vw==
+X-Gm-Message-State: APjAAAW+zsZi8TWM+Jjej0JZlp+jRCMePiQY0nJnyVlvDUqQpbIax9m3
+        90dBps9YWp8oXBeC41KEc7jE5x0EKWZ8WFZ7QmyusQ==
+X-Google-Smtp-Source: APXvYqw4wievu7Dccjidrshv6ttu1kKAi+nssgofP8O2my9+rW1wYmqnupOkIxWkd14IXVCkfS1rHdtsh9uPI6K9SZI=
+X-Received: by 2002:a1c:a9c5:: with SMTP id s188mr7913551wme.61.1570732854939;
+ Thu, 10 Oct 2019 11:40:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191008115342.28483-1-patrick.rudolph@9elements.com>
- <20191008115342.28483-2-patrick.rudolph@9elements.com> <5d9d120b.1c69fb81.b6201.1477@mx.google.com>
- <CAODwPW-mfySMQUejCwT+G45BtOysq_JCRQa8GwoYTkjY_yRwgA@mail.gmail.com>
- <6cfca8c34ccd51f12b4418e9a74d8961e32077ed.camel@9elements.com> <5d9f3b9f.1c69fb81.62109.325d@mx.google.com>
-In-Reply-To: <5d9f3b9f.1c69fb81.62109.325d@mx.google.com>
-From:   Julius Werner <jwerner@chromium.org>
-Date:   Thu, 10 Oct 2019 11:37:58 -0700
-Message-ID: <CAODwPW-x1fwGSrvLNWCU4GAfGbD0zqo2HLm+33D8eUtxbnFLCg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] firmware: coreboot: Export active CBFS partition
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Julius Werner <jwerner@chromium.org>,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Zhang <benzh@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
+References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157066230358.1059972.1736585303527133478.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu8ih2RffZHdwAnHZicL_v8CxV9WnCy+uA1jSSyh58xapA@mail.gmail.com> <CAPcyv4iQ5Np3dDH=-a_7gPnWKBCHXGit2PN-h=Jw_eqj7Lb2BQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4iQ5Np3dDH=-a_7gPnWKBCHXGit2PN-h=Jw_eqj7Lb2BQ@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 10 Oct 2019 20:40:42 +0200
+Message-ID: <CAKv+Gu9co_FTVYWNZsXF0H+fV1K76pZX4Yv11ANE6NwDBT3pBQ@mail.gmail.com>
+Subject: Re: [PATCH v6 05/12] x86/efi: EFI soft reservation to E820 enumeration
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Samuel Holland <samuel@sholland.org>
+        kbuild test robot <lkp@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > I'll expose the coreboot tables using a sysfs driver, which then can be
-> > used by coreboot tools instead of accessing /dev/mem. As it holds the
-> > FMAP and "boot media params" that's all I need for now.
+On Thu, 10 Oct 2019 at 20:31, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Wed, Oct 9, 2019 at 11:45 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
 > >
-> > The downside is that the userspace tools need to be keep in sync with
-> > the binary interface the coreboot tables are providing.
+> > On Thu, 10 Oct 2019 at 01:19, Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > > interpretation of the EFI Memory Types as "reserved for a specific
+> > > purpose".
+> > >
+> > > The proposed Linux behavior for specific purpose memory is that it is
+> > > reserved for direct-access (device-dax) by default and not available for
+> > > any kernel usage, not even as an OOM fallback.  Later, through udev
+> > > scripts or another init mechanism, these device-dax claimed ranges can
+> > > be reconfigured and hot-added to the available System-RAM with a unique
+> > > node identifier. This device-dax management scheme implements "soft" in
+> > > the "soft reserved" designation by allowing some or all of the
+> > > reservation to be recovered as typical memory. This policy can be
+> > > disabled at compile-time with CONFIG_EFI_SOFT_RESERVE=n, or runtime with
+> > > efi=nosoftreserve.
+> > >
+> > > This patch introduces 2 new concepts at once given the entanglement
+> > > between early boot enumeration relative to memory that can optionally be
+> > > reserved from the kernel page allocator by default. The new concepts
+> > > are:
+> > >
+> > > - E820_TYPE_SOFT_RESERVED: Upon detecting the EFI_MEMORY_SP
+> > >   attribute on EFI_CONVENTIONAL memory, update the E820 map with this
+> > >   new type. Only perform this classification if the
+> > >   CONFIG_EFI_SOFT_RESERVE=y policy is enabled, otherwise treat it as
+> > >   typical ram.
+> > >
+> > > - IORES_DESC_SOFT_RESERVED: Add a new I/O resource descriptor for
+> > >   a device driver to search iomem resources for application specific
+> > >   memory. Teach the iomem code to identify such ranges as "Soft Reserved".
+> > >
+> > > A follow-on change integrates parsing of the ACPI HMAT to identify the
+> > > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
+> > > now, just identify and reserve memory of this type.
+> > >
+> > > Cc: <x86@kernel.org>
+> > > Cc: Borislav Petkov <bp@alien8.de>
+> > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > > Cc: Darren Hart <dvhart@infradead.org>
+> > > Cc: Andy Shevchenko <andy@infradead.org>
+> > > Cc: Andy Lutomirski <luto@kernel.org>
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> >
+> > For the EFI changes
+> >
+> > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> >
+> > although I must admit I don't follow the enum add_efi_mode logic 100%
+>
+> I'm open to suggestions as I'm not sure it's the best possible
+> organization. The do_add_efi_memmap() routine has the logic to
+> translate EFI to E820, but unless "add_efi_memmap" is specified on the
+> kernel command line the EFI memory map is ignored. For
+> soft-reservation support I want to reuse do_add_efi_memmap(), but
+> otherwise avoid any other side effects of considering the EFI map.
+> What I'm missing is the rationale for why "add_efi_memmap" is required
+> before considering the EFI memory map.
+>
+> If there is a negative side effect to always using the EFI map then
+> the new "add_efi_mode" designation constrains it to just the
+> soft-reservation case.
+>
 
-Well, in the other version the kernel needs to be kept in sync
-instead. No matter where you do the parsing, something needs to be
-kept in sync. I think userspace would be easier, especially if we
-would host a small userspace library in the coreboot repository that
-other tools could just link.
-
-> I'd rather we export this information in sysfs via some coreboot_fmap
-> class and then make the "boot media params" another property of one of
-> the fmap devices. Then userspace can search through all the fmap devices
-> and find the "boot media params" one. Is anything else needed?
-
-Okay, this is the fundamental question we need to answer first... do
-you really think it's better to add a separate interface for each of
-these, Stephen? The coreboot table[1] currently contains 49 entries
-with all sorts of random firmware information, and most of these will
-never be interesting to the kernel. Do we want to establish a pattern
-where we add a new sysfs interface for each of them whenever someone
-has a use case for reading it from userspace? I think this might be a
-good point to implement a generic interface to read any coreboot table
-entry from userspace instead, and say that if the kernel doesn't need
-the information in a specific entry itself, it shouldn't need to know
-how to parse it.
-
-[1] https://review.coreboot.org/cgit/coreboot.git/tree/src/commonlib/include/commonlib/coreboot_tables.h
+Could we make the presence of any EFI_MEMORY_SP regions imply
+add_efi_memmap? That way, it is guaranteed that we don't regress
+existing systems, while establishing clear and unambiguous semantics
+for new systems that rely on these changes in order to be able to use
+the special purpose memory as intended.
