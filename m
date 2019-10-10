@@ -6,54 +6,62 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD86C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9B1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70E020659
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C8120659
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfJJRc5 (ORCPT
+        id S1726754AbfJJRfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:32:57 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:43998 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfJJRc5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:32:57 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iIcJ3-0001jt-VX; Thu, 10 Oct 2019 19:32:54 +0200
-Message-ID: <47343b6d5ccf292bbce8772db5deba674b53a5f8.camel@sipsolutions.net>
-Subject: Re: [PATCH] mac80211_hwsim: add support for OCB and more 5Ghz
- Channels Signed-off-by: Ramon Fontes <ramonreisfontes@gmail.com>
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Ramon Fontes <ramonreisfontes@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-Cc:     kvalo@codeaurora.org, davem@davemloft.net
-Date:   Thu, 10 Oct 2019 19:32:53 +0200
-In-Reply-To: <20191010173029.8435-1-ramonreisfontes@gmail.com> (sfid-20191010_193114_148958_F3E0A182)
-References: <20191010173029.8435-1-ramonreisfontes@gmail.com>
-         (sfid-20191010_193114_148958_F3E0A182)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 10 Oct 2019 13:35:14 -0400
+Received: from ms.lwn.net ([45.79.88.28]:60806 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbfJJRfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 13:35:13 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id EB00C5A0;
+        Thu, 10 Oct 2019 17:35:12 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 11:35:11 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Quentin Perret <qperret@qperret.net>
+Subject: Re: [PATCH] docs: admin-guide: fix printk_ratelimit explanation
+Message-ID: <20191010113511.141902cc@lwn.net>
+In-Reply-To: <20191002114610.5773-1-oleksandr@redhat.com>
+References: <20191002114610.5773-1-oleksandr@redhat.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed,  2 Oct 2019 13:46:10 +0200
+Oleksandr Natalenko <oleksandr@redhat.com> wrote:
 
-Something went wrong here - your S-o-b landed in the subject?
+> The printk_ratelimit value accepts seconds, not jiffies (though it is
+> converted into jiffies internally). Update documentation to reflect
+> this.
+> 
+> Also, remove the statement about allowing 1 message in 5 seconds since
+> bursts up to 10 messages are allowed by default.
+> 
+> Finally, while we are here, mention default value for
+> printk_ratelimit_burst too.
+> 
+> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
 
-Also, I think you should really split this into two or three patches
-even if it's this simple - theoretically the 5/10 MHz could be
-independent of OCB even. To make it perfect, add a few words to each
-commit log :)
+This seems good.  Applied, thanks.
 
-Thanks,
-johannes
-
+jon
