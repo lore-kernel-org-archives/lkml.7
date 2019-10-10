@@ -2,126 +2,341 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52141C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1261ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2743321920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698093;
-	bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ek3jL8ygy7DuBcojGhjpT+2tfxlGBNIpdV4+w5dP1w3HzsVj6TPh2ke+IMSvDWBz9
-	 4fugwqQRZrJp5Aj+Iu76MzjajN9NUaq5IY5foUewq/DQZrzUK+9ghhkteb9yO5wTdu
-	 ywuH4y/8crFe6XqvK2gQIpd4b23DJZgVNqtPSg0o=
+	by mail.kernel.org (Postfix) with ESMTP id AD67021920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388317AbfJJIlY (ORCPT
+        id S2388294AbfJJIlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:41:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45630 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:41:22 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45604 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388291AbfJJIlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:41:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02B9621BE5;
-        Thu, 10 Oct 2019 08:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696876;
-        bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZLBhkN0mMhcgcn2CnbcGm3aLnJWm9fM3pJr1/yhtPGvKhYHm8tTagGIgnN3yML7J
-         RLHbCaDBlOSvoAEEHksp3ht5ugXQFCuctILeUgEOxlCWp0ek8LpORqj50VRiWvW5WQ
-         gs5c93NXpwRqBpue5C2drxf4j7KV83ZbnhinArKo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.3 040/148] crypto: qat - Silence smp_processor_id() warning
-Date:   Thu, 10 Oct 2019 10:35:01 +0200
-Message-Id: <20191010083613.576179416@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
-References: <20191010083609.660878383@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S2388280AbfJJIlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:41:15 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 378E32008AA;
+        Thu, 10 Oct 2019 10:41:13 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F275020091A;
+        Thu, 10 Oct 2019 10:41:08 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B2D7E4031C;
+        Thu, 10 Oct 2019 16:41:03 +0800 (SGT)
+From:   Yuantian Tang <andy.tang@nxp.com>
+To:     shawnguo@kernel.org
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH v2] arm64: dts: lx2160a: add tmu device node
+Date:   Thu, 10 Oct 2019 16:30:22 +0800
+Message-Id: <20191010083022.6700-1-andy.tang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Add the TMU (Thermal Monitoring Unit) device node to enable
+TMU feature.
 
-commit 1b82feb6c5e1996513d0fb0bbb475417088b4954 upstream.
-
-It seems that smp_processor_id() is only used for a best-effort
-load-balancing, refer to qat_crypto_get_instance_node(). It's not feasible
-to disable preemption for the duration of the crypto requests. Therefore,
-just silence the warning. This commit is similar to e7a9b05ca4
-("crypto: cavium - Fix smp_processor_id() warnings").
-
-Silences the following splat:
-BUG: using smp_processor_id() in preemptible [00000000] code: cryptomgr_test/2904
-caller is qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
-CPU: 1 PID: 2904 Comm: cryptomgr_test Tainted: P           O    4.14.69 #1
-...
-Call Trace:
- dump_stack+0x5f/0x86
- check_preemption_disabled+0xd3/0xe0
- qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
- skcipher_setkey_ablkcipher+0x2b/0x40
- __test_skcipher+0x1f3/0xb20
- ? cpumask_next_and+0x26/0x40
- ? find_busiest_group+0x10e/0x9d0
- ? preempt_count_add+0x49/0xa0
- ? try_module_get+0x61/0xf0
- ? crypto_mod_get+0x15/0x30
- ? __kmalloc+0x1df/0x1f0
- ? __crypto_alloc_tfm+0x116/0x180
- ? crypto_skcipher_init_tfm+0xa6/0x180
- ? crypto_create_tfm+0x4b/0xf0
- test_skcipher+0x21/0xa0
- alg_test_skcipher+0x3f/0xa0
- alg_test.part.6+0x126/0x2a0
- ? finish_task_switch+0x21b/0x260
- ? __schedule+0x1e9/0x800
- ? __wake_up_common+0x8d/0x140
- cryptomgr_test+0x40/0x50
- kthread+0xff/0x130
- ? cryptomgr_notify+0x540/0x540
- ? kthread_create_on_node+0x70/0x70
- ret_from_fork+0x24/0x50
-
-Fixes: ed8ccaef52 ("crypto: qat - Add support for SRIOV")
-Cc: stable@vger.kernel.org
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 ---
- drivers/crypto/qat/qat_common/adf_common_drv.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2:
+	- sort the node and use micro to replace hardcoded number
 
---- a/drivers/crypto/qat/qat_common/adf_common_drv.h
-+++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
-@@ -95,7 +95,7 @@ struct service_hndl {
- 
- static inline int get_current_node(void)
- {
--	return topology_physical_package_id(smp_processor_id());
-+	return topology_physical_package_id(raw_smp_processor_id());
- }
- 
- int adf_service_register(struct service_hndl *service);
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 108 +++++++++++++++---
+ 1 file changed, 92 insertions(+), 16 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index 80268c6ed5fb..72054fe1cafe 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -6,6 +6,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ /memreserve/ 0x80000000 0x00010000;
+ 
+@@ -20,7 +21,7 @@
+ 		#size-cells = <0>;
+ 
+ 		// 8 clusters having 2 Cortex-A72 cores each
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -34,9 +35,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster0_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -50,9 +52,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster0_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@100 {
++		cpu100: cpu@100 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -66,9 +69,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster1_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@101 {
++		cpu101: cpu@101 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -82,9 +86,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster1_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@200 {
++		cpu200: cpu@200 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -98,9 +103,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster2_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@201 {
++		cpu201: cpu@201 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -114,9 +120,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster2_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@300 {
++		cpu300: cpu@300 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -130,9 +137,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster3_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@301 {
++		cpu301: cpu@301 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -146,9 +154,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster3_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@400 {
++		cpu400: cpu@400 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -162,9 +171,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster4_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@401 {
++		cpu401: cpu@401 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -178,9 +188,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster4_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@500 {
++		cpu500: cpu@500 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -194,9 +205,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster5_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@501 {
++		cpu501: cpu@501 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -210,9 +222,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster5_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@600 {
++		cpu600: cpu@600 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -226,9 +239,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster6_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@601 {
++		cpu601: cpu@601 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -242,9 +256,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster6_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@700 {
++		cpu700: cpu@700 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -258,9 +273,10 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster7_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@701 {
++		cpu701: cpu@701 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			enable-method = "psci";
+@@ -274,6 +290,7 @@
+ 			i-cache-sets = <192>;
+ 			next-level-cache = <&cluster7_l2>;
+ 			cpu-idle-states = <&cpu_pw20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cluster0_l2: l2-cache0 {
+@@ -418,6 +435,51 @@
+ 		clock-output-names = "sysclk";
+ 	};
+ 
++	thermal-zones {
++		core_thermal1: core-thermal1 {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&tmu 0>;
++
++			trips {
++				core_cluster_alert: core-cluster-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				core_cluster_crit: core-cluster-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&core_cluster_alert>;
++					cooling-device =
++						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu200 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu201 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu300 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu301 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu400 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu401 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu500 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu501 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu600 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu601 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu700 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu701 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+@@ -478,6 +540,20 @@
+ 			little-endian;
+ 		};
+ 
++		tmu: tmu@1f80000 {
++			compatible = "fsl,qoriq-tmu";
++			reg = <0x0 0x1f80000 0x0 0x10000>;
++			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++			fsl,tmu-range = <0x800000e6 0x8001017d>;
++			fsl,tmu-calibration =
++				/* Calibration data group 1 */
++				<0x00000000 0x00000035
++				/* Calibration data group 2 */
++				0x00010001 0x00000154>;
++			little-endian;
++			#thermal-sensor-cells = <1>;
++		};
++
+ 		i2c0: i2c@2000000 {
+ 			compatible = "fsl,vf610-i2c";
+ 			#address-cells = <1>;
+-- 
+2.17.1
 
