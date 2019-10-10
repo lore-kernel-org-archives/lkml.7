@@ -2,181 +2,98 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C736C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FAAC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2F22064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:28:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vBgud5FU"
+	by mail.kernel.org (Postfix) with ESMTP id 085AB2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387953AbfJJJ2O (ORCPT
+        id S2387562AbfJJJ3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:28:14 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33121 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfJJJ2N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:28:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r17so6679753wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 02:28:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D/ELkajn5nIeWjt+au+JukJPjjOmYN8ul5L5G8g9Cbw=;
-        b=vBgud5FUoF0BluzVgOr5mc+3sO+QeVDiiFna1seL30oxei6d/G1Gcn6OURjpSV5FJp
-         tyIDD8hgqfT6TqZ0m8A+Y570QFqu7S18n75up5d6x6MwFgpV2at9SaLbbeQMiQbgHkK1
-         HFkubXUAXl0UuYvhGw8Hu6IcWiMWHPa3r20trLP/WXhWAHUJQg3ZNz8NkhNi/DKeFb97
-         FTEXsltHQ9xnTUKo9aJL817yRA6Kjg8QH9Af0vGts/ubMQ8yskDLIBA44ZPI4WOVeS+G
-         FTra92WmfZuYkQdI53afAlAcjNMt5rfa5bQr5fIQIGChlBjL3p7uv9RQPwGWYYdlPOsj
-         tXeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D/ELkajn5nIeWjt+au+JukJPjjOmYN8ul5L5G8g9Cbw=;
-        b=C4j7JyYCDxd+y76zEJSlP8mANPVZN2cr6MSe+2DcizMXOGnol0yk2F7R857FWSPmDm
-         0qTRD2Bt4hXM7ZAl6YX/e/2i2L0H1egKslkZXQxKiFX/FvC/slXBFxfrLCZYvby/ID59
-         JrWMr93w0D99T1MCVJX43AhgqlQcH+4K1NHG20MdhI4zYA6F6Yl8/HcQk8jYeLLVU/cl
-         KF2LTpydVGwsvCPYLL2UFD1yPJVvuXJz/4Z6p1W4bRIhDkvLJDxNLt+prOV/QQAAplDs
-         gxemH6g/dx+7PI05KtwEbR8s/ycTVJB6616hzKGPbaqQNDAFcwHJNJaB/Bvzqka4sCkC
-         5VOg==
-X-Gm-Message-State: APjAAAVlg3ryoKGj8DF1NcplmLyC4YxrjXtGQ8xMrbVA8/HFnhxdkLcS
-        LagT2yYN8RT6kYSjTJoFZSbtcw==
-X-Google-Smtp-Source: APXvYqzh6cSKpRv0QPcGFghP+vIiOOMTWhRv7tSw50MdW0LwB1cnhPJCjyLv5lQ6J6Vs3RTkKyuYyg==
-X-Received: by 2002:a7b:caea:: with SMTP id t10mr6538733wml.118.1570699691297;
-        Thu, 10 Oct 2019 02:28:11 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id l11sm6282042wmh.34.2019.10.10.02.28.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 02:28:10 -0700 (PDT)
-Subject: Re: [PATCH v7 2/2] ASoC: codecs: add wsa881x amplifier support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     spapothi@codeaurora.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, vkoul@kernel.org,
-        pierre-louis.bossart@linux.intel.com
-References: <20191009085108.4950-1-srinivas.kandagatla@linaro.org>
- <20191009085108.4950-3-srinivas.kandagatla@linaro.org>
- <20191009163535.GK2036@sirena.org.uk>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <95637c0a-8373-0eda-47e5-ac6e529019e5@linaro.org>
-Date:   Thu, 10 Oct 2019 10:28:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191009163535.GK2036@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 10 Oct 2019 05:29:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:21633 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727320AbfJJJ3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 05:29:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 02:29:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,279,1566889200"; 
+   d="scan'208";a="197189672"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by orsmga003.jf.intel.com with ESMTP; 10 Oct 2019 02:29:19 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        tony.luck@intel.com, x86@kernel.org
+Cc:     andriy.shevchenko@intel.com, alan@linux.intel.com,
+        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
+        chuanhua.lei@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v3 0/1] x86/init: Add option to skip using RTC
+Date:   Thu, 10 Oct 2019 17:28:55 +0800
+Message-Id: <cover.1570693058.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Mark for taking time to review this patch.
+Hi,
 
-On 09/10/2019 17:35, Mark Brown wrote:
-> On Wed, Oct 09, 2019 at 09:51:08AM +0100, Srinivas Kandagatla wrote:
-> 
->> +static const u8 wsa881x_reg_readable[WSA881X_CACHE_SIZE] = {
-> 
->> +static bool wsa881x_readable_register(struct device *dev, unsigned int reg)
->> +{
->> +	return wsa881x_reg_readable[reg];
-> u
-> There's no bounds check and that array size is not...
-> 
-I converted this now to a proper switch statement as other drivers do.
+We have a new Atom Airmont core based product which does not support
+RTC as persistent clock source.
 
->> +static struct regmap_config wsa881x_regmap_config = {
->> +	.reg_bits = 32,
->> +	.val_bits = 8,
->> +	.cache_type = REGCACHE_RBTREE,
->> +	.reg_defaults = wsa881x_defaults,
->> +	.num_reg_defaults = ARRAY_SIZE(wsa881x_defaults),
->> +	.max_register = WSA881X_MAX_REGISTER,
-> 
-> ...what regmap has as max_register.  Uusually you'd render as a
-> switch statement (as you did for volatile) and let the compiler
-> figure out a sensible way to do the lookup.
+Presently, platform ops get/set wallclock always use MC146818 RTC/CMOS
+device to read & set time. This causes boot failure on our SOC with no
+RTC. More specifically, it hangs in RTC driver's mach_get_cmos_time() 
+when it polls RTC_FRQ_SELECT register and loops until Update-In-Progress
+(UIP) flag gets cleared i.e. below code snippet.
 
-Sorry, I did not get your point here.
+ 	while ((CMOS_READ(RTC_FREQ_SELECT) & RTC_UIP))
+		cpu_relax();
 
-Are you saying that we can skip max_register in this regmap config ?
-Then how would max_register in regmap be set?
+After few rounds of review cycles/feedback, we concluded that we should
+control it from Motorola MC146818 compatible RTC devicetree node.
+Please see [1].
 
-> 
->> +static void wsa881x_init(struct wsa881x_priv *wsa881x)
->> +{
->> +	struct regmap *rm = wsa881x->regmap;
->> +	unsigned int val = 0;
->> +
->> +	regmap_read(rm, WSA881X_CHIP_ID1, &wsa881x->version);
->> +	regcache_cache_only(rm, true);
->> +	regmap_multi_reg_write(rm, wsa881x_rev_2_0,
->> +			       ARRAY_SIZE(wsa881x_rev_2_0));
->> +	regcache_cache_only(rm, false);
-> 
-> This looks broken, what is it supposed to be doing?  It looks
-> like it should be a register patch but it's not documented.
-> 
-Yep, it makes sense to move this to patch, its done in new version.
+Make RTC read/write optional by detecting platforms which does not
+support RTC/CMOS device through the corresponding DT node status
+property. If status says disabled, then noop the get/set wallclock
+ops.
 
->> +static const struct snd_kcontrol_new wsa881x_snd_controls[] = {
->> +	SOC_ENUM("Smart Boost Level", smart_boost_lvl_enum),
->> +	WSA881X_PA_GAIN_TLV("PA Gain", WSA881X_SPKR_DRV_GAIN,
->> +			    4, 0xC, 1, pa_gain),
-> 
-> As covered in control-names.rst all volume controls should end in
-> Volume.
-> 
-Fixed this in next version.
+For non DT enabled platforms or for DT enabled platforms which does
+not define optional status property, proceed same as before.
 
->> +static void wsa881x_clk_ctrl(struct snd_soc_component *comp, bool enable)
->> +{
->> +	struct wsa881x_priv *wsa881x = snd_soc_component_get_drvdata(comp);
->> +
->> +	mutex_lock(&wsa881x->res_lock);
-> 
-> What is this lock supposed to be protecting?  As far as I can
-> tell this function is the only place it is used and this function
-> has exactly one caller which itself has only one caller which is
-> a DAPM widget and hence needs no locking.  It looks awfully like
-> it should just be a widget itself, or inlined into the single
-> caller.
-> 
-This was done for temperature sensor reads which can happen in parallel.
-But for now I will remove it and add back once we add tsens support.
+Patch is baselined upon Linux 5.4-rc2 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
 
->> +static void wsa881x_bandgap_ctrl(struct snd_soc_component *comp, bool enable)
->> +{
->> +	struct wsa881x_priv *wsa881x = snd_soc_component_get_drvdata(comp);
-> 
-> Similarly here.
-> 
-This one was over done! its now removed in next version.
+[1] Documentation/devicetree/bindings/rtc/rtc-cmos.txt
 
->> +static int32_t wsa881x_resource_acquire(struct snd_soc_component *comp,
->> +					bool enable)
->> +{
->> +	wsa881x_clk_ctrl(comp, enable);
->> +	wsa881x_bandgap_ctrl(comp, enable);
->> +
->> +	return 0;
->> +}
-> 
-> There's no corresponding disables.
+v3:
+* Rebase to latest 5.4-rc2 kernel.
+* Fix a build warning reported by kbuild test robot.
 
-both wsa881x_clk_ctrl() and wsa881x_bandgap_ctrl() have corresponding 
-disables in that functions.
+v2:
+* As per review feedback, do not hack RTC read/write functions directly. 
+  Instead, override get/set wallclock ops during setup_arch init sequence.
 
-thanks,
-srini
-> 
+v1:
+* Detect platforms with no RTC in RTC read/write functions and skip RTC
+  read/write if not applicable.
+
+
+Rahul Tanwar (1):
+  x86/init: Noop get/set wallclock when platform doesn't support RTC
+
+ arch/x86/kernel/x86_init.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
+
+-- 
+2.11.0
+
