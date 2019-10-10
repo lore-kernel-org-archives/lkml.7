@@ -2,148 +2,86 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96CDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7612C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D776206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCC9206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1dTyMBF"
+	dkim=pass (1024-bit key) header.d=mykernel.net header.i=cgxu519@mykernel.net header.b="gnmox6pB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388022AbfJJNHP (ORCPT
+        id S2387787AbfJJNJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:07:15 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36864 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbfJJNHO (ORCPT
+        Thu, 10 Oct 2019 09:09:55 -0400
+Received: from sender2-of-o52.zoho.com.cn ([163.53.93.247]:21371 "EHLO
+        sender2-of-o52.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733300AbfJJNJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:07:14 -0400
-Received: by mail-io1-f68.google.com with SMTP id b19so13484942iob.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 06:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zlF+lm3JRhGGGTiYfCuwp6G/d6yyrmwzyu8GIS+igK4=;
-        b=H1dTyMBFIxWKLe11ms1NCdcfBtCBpqXVkW+dP5rVr0WIdme7EQjM/pMm7lcwrIxxM8
-         OSmpVngDeVcQJH6WBnFGd5CBlGk1jJn2wITfkXttoIYjJGOc9j6F8GEHm3hqKHUFR7b/
-         E463+H76GPy5mHM7FEZ7YO0YV1dEHrrpuEFQTn+9VnXu+uMyin7MPc3glOXQCQpc9IZJ
-         h+wVKXChEJU3K1WkMUkwl77tP3C65QvxLJAw4MCzbDlN5OhboWRLuKZZ/E6WGVleIRqd
-         Sq69NsqFHpZ7UT1ak4bUVHSqs8JR/AiW3d7uap6GqMi0sq9dGkAHTxvbkTrRyKpv4snl
-         7ktA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zlF+lm3JRhGGGTiYfCuwp6G/d6yyrmwzyu8GIS+igK4=;
-        b=VZLuM4sOqIRljXPOWV984QjMRDDmHjmUa6wcq1ft76GPTtxcWDlw4VfzTZ7s9jHIey
-         NERyyuzA3KEndWfZAGxA9Ip+ebfjxM2rQT4Vqn+5RMDo691RmmZNoWRIUaXvpwjBards
-         EHE8Q1012FYDdNwMxC48IB1/amgyk0CeDr6NyxAO19r2N/Rmw/W+LxQu88SuE6nPBqZq
-         j8RqBlZ04pe0HPcQ/ob2Hb7T0kQE9FnnugNMW7f+WP2S+2rxeEo5+BfKP1kaXz4JJHw4
-         CqgB7KSg91i0YSTwH9kw4llohqez5pA4qQjMNAYLaMssAR0AIs5MsWb56ZPw2kHd5shR
-         5YwA==
-X-Gm-Message-State: APjAAAVnAwVrq8mTrGno46zyzcL94dYDv1dzanWuhnxjj9OMenKzuqhc
-        zuFuW/3r0pjLOo3ZHtY7c/agUvphQpc=
-X-Google-Smtp-Source: APXvYqyAjQRQelOCSKOee17IGyMMbI3XhdVPttdK72+RBX5FZw+MN5wAbpJ99qPYf6OKqWinlI7l9w==
-X-Received: by 2002:a92:7e91:: with SMTP id q17mr6655ill.22.1570712833738;
-        Thu, 10 Oct 2019 06:07:13 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id i26sm3491521iol.84.2019.10.10.06.07.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 06:07:12 -0700 (PDT)
-Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm remoteproc dependencies
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20191009001442.15719-1-bjorn.andersson@linaro.org>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <cc0482aa-10fe-9a49-da2d-6f30b130da3d@linaro.org>
-Date:   Thu, 10 Oct 2019 08:07:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 10 Oct 2019 09:09:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1570712984; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=dzGVLNhlQAnkvoMVmwtwDTLhfVl3fNxwl/hucMMHVdpQdvPMrOnsGX5DnN1g6nwErnOEuxWSMQBJCVEQgD3Nq7ps2NLvyf+c3369iklBE07FZuepYCfDjwOJm0IDvQK4FhwdQxHzZlqbzHd95bc1KUZWsdnEJlJCDKtj2bx2w5Q=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1570712984; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=2dzT5h3IL4cdmj7rE2OhK8O7CRAGjGXyu7ncyaConKU=; 
+        b=RapY3WVi7TrcfZC/tcod6rbaCHzI4aAXINnuQEjVPtHECviQDxNNgZqkWciV4U13O/6H0dUMqJN2bLmJbskdPCjedy5CknsrH4NE+3d+UqSkK/Yi1wjyXIJU7ElvT+4MVnmOqDJyFY6veuLWy8Y3cHJwQww8LcYhMq9xRU0JNy0=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=mykernel.net;
+        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
+        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570712984;
+        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
+        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        l=721; bh=2dzT5h3IL4cdmj7rE2OhK8O7CRAGjGXyu7ncyaConKU=;
+        b=gnmox6pBuhF3ooMdlANhu/u+sENwM3lPQPApz5sIGVofSvtscyM6pxeEc0FBp2Ls
+        Kri59jahWq6u+uSHxXBFoBZd8jONt+mwNFrvk9wxEOtsAQ2H1nE2GDm4R9xsHy6oabb
+        XXsElXXPjeooHdKTfdRycAlGIlr1FzzDS1dcRK+8=
+Received: from localhost.localdomain (113.88.133.79 [113.88.133.79]) by mx.zoho.com.cn
+        with SMTPS id 1570712980468688.636944062762; Thu, 10 Oct 2019 21:09:40 +0800 (CST)
+From:   Chengguang Xu <cgxu519@mykernel.net>
+To:     jack@suse.com
+Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>
+Message-ID: <20191010130924.17697-1-cgxu519@mykernel.net>
+Subject: [PATCH] quota: minor code cleanup for v1_format_ops
+Date:   Thu, 10 Oct 2019 21:09:24 +0800
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191009001442.15719-1-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/8/19 7:14 PM, Bjorn Andersson wrote:
-> Enable the the power domains, reset controllers and remote block device
-> memory access drivers necessary to boot the Audio, Compute and Modem
-> DSPs on Qualcomm SDM845.
-> 
-> None of the power domains are system critical, but needs to be builtin
-> as the driver core prohibits probe deferal past late initcall.
+It's not a functinal change, it's just for keeping
+consistent coding style.
 
-I asked Bjorn privately about the need for these to be built in,
-and he clarified:
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+---
+ fs/quota/quota_v1.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> However, Rob Herring introduced a nice feature last year that means that
-> if you request a power-domain from a driver that has not yet probed at
-> late_initcall that request will fail instead of returning EPROBE_DEFER.
-> So compiling these as modules will, based on kernel module load order,
-> cause intermittent failures to probe the consumer drivers.
+diff --git a/fs/quota/quota_v1.c b/fs/quota/quota_v1.c
+index c740e5572eb8..cd92e5fa0062 100644
+--- a/fs/quota/quota_v1.c
++++ b/fs/quota/quota_v1.c
+@@ -217,7 +217,6 @@ static const struct quota_format_ops v1_format_ops =3D =
+{
+ =09.check_quota_file=09=3D v1_check_quota_file,
+ =09.read_file_info=09=09=3D v1_read_file_info,
+ =09.write_file_info=09=3D v1_write_file_info,
+-=09.free_file_info=09=09=3D NULL,
+ =09.read_dqblk=09=09=3D v1_read_dqblk,
+ =09.commit_dqblk=09=09=3D v1_commit_dqblk,
+ };
+--=20
+2.21.0
 
-So that's what "the driver core prohibits probe deferral past late
-initcall" means, and better explains the issue that requires some of
-these to be built-in rather than be built as kernel modules.
 
-I was able to test with and without this applied, and I find that without
-the patch the modem won't boot, and it boots successfully when used.
-
-Tested-by: Alex Elder <elder@linaro.org>
-
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/configs/defconfig | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index c9a867ac32d4..42f042ba1039 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -732,10 +732,13 @@ CONFIG_RPMSG_QCOM_GLINK_SMEM=m
->  CONFIG_RPMSG_QCOM_SMD=y
->  CONFIG_RASPBERRYPI_POWER=y
->  CONFIG_IMX_SCU_SOC=y
-> +CONFIG_QCOM_AOSS_QMP=y
->  CONFIG_QCOM_COMMAND_DB=y
->  CONFIG_QCOM_GENI_SE=y
->  CONFIG_QCOM_GLINK_SSR=m
-> +CONFIG_QCOM_RMTFS_MEM=m
->  CONFIG_QCOM_RPMH=y
-> +CONFIG_QCOM_RPMHPD=y
->  CONFIG_QCOM_SMEM=y
->  CONFIG_QCOM_SMD_RPM=y
->  CONFIG_QCOM_SMP2P=y
-> @@ -780,6 +783,8 @@ CONFIG_PWM_ROCKCHIP=y
->  CONFIG_PWM_SAMSUNG=y
->  CONFIG_PWM_SUN4I=m
->  CONFIG_PWM_TEGRA=m
-> +CONFIG_RESET_QCOM_AOSS=y
-> +CONFIG_RESET_QCOM_PDC=m
->  CONFIG_RESET_TI_SCI=y
->  CONFIG_PHY_XGENE=y
->  CONFIG_PHY_SUN4I_USB=y
-> 
 
