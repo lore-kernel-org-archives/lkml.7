@@ -2,144 +2,184 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10E5ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8737AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A69F2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:49:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rN9RRE7c"
+	by mail.kernel.org (Postfix) with ESMTP id 62027218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732869AbfJJFtX (ORCPT
+        id S1732896AbfJJFt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 01:49:23 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33959 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfJJFtX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 01:49:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id y35so2952415pgl.1;
-        Wed, 09 Oct 2019 22:49:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RhxY1MPKMW6WR/zUFAC74xJM92OHmjB+kj8GPP9wIlw=;
-        b=rN9RRE7cIrRHiqRZYHnHSbHLkLn8sEliKdKOykE1BAiQd6iUPmf/oYzt2zGUIJLtc1
-         J/Hv96bumBiGBFwkKfJnzTskhdi2HR4zk98z5zCQoBtcrgdsvi4YEfsu8ALTj07La0Z2
-         y5DSQdzRYQybpa8QuuYByRSJxvy99ZC+pOqw1RuDAryOAY9qmzzrEwX1sEvhtMP8mKu9
-         Wn0659AVEQs+A8IfAtiI13X+kXbgHTJuPiITwSKFjVxmcEh8gBVFsbX9Dn7NegnpBsx5
-         cBDj4qkHToVxQk92I5PH9cOFLPLVKWoqKmLZHyR3XAXJDbJ7Fw31c/i5VvJ2MaY8KCxQ
-         A9Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RhxY1MPKMW6WR/zUFAC74xJM92OHmjB+kj8GPP9wIlw=;
-        b=F7nj+6YmpxvPdixuRntqvQz5inOmXb0mIoPiIzl1s8ayXxHPKynffNnJFCAgTRLjOP
-         eq5X+vs8ZfEnOYrhRg0S6F0u7rXOhohTf1j6kEi/51d4QTD1nNtNWnMh2qoFq+LO+1G8
-         bW8528f/+sgZIp/iJK3ToYwQVmQFKxhZTkPTxhitnJiNGI2Hm5CY5EOqyW4IrnF/mz/C
-         32WAr/0uyYq/TkQLZYf4de9ZxhZbLmDfRxKMkEXTzZ9mJS71MPd39cSZ3kGAYmnYYXDp
-         5IM1LEoLlnoIPUhZzMteeO886OXYCta7UVzPWmRz+/52WUaJdAlMKWjWsK1QjaicsW8v
-         2Hhg==
-X-Gm-Message-State: APjAAAVSK7r0LrdGueHgyXHvb0hHXvgpSXmg/exA0UZzjAFCU/UDwmaK
-        p3HKKOxpdN/p7nZfLKpCoQd9/3z10d21jWssoSs=
-X-Google-Smtp-Source: APXvYqxTWGaHrxna/RW71KUqM4PD44f4t6P+cJUv3cQo53Tkjbf14ZESvxDMrwfIJKmfQGqBt7rE4hOcImn0K/p+Em0=
-X-Received: by 2002:a17:90a:db4a:: with SMTP id u10mr9179621pjx.30.1570686562156;
- Wed, 09 Oct 2019 22:49:22 -0700 (PDT)
+        Thu, 10 Oct 2019 01:49:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59490 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbfJJFtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 01:49:25 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 371DB2A09A3;
+        Thu, 10 Oct 2019 05:49:25 +0000 (UTC)
+Received: from [10.72.12.46] (ovpn-12-46.pek2.redhat.com [10.72.12.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 69C6D600C4;
+        Thu, 10 Oct 2019 05:49:18 +0000 (UTC)
+Subject: Re: [PATCH 07/11] vhost: convert vhost_umem_interval_tree to half
+ closed intervals
+To:     Davidlohr Bueso <dave@stgolabs.net>, akpm@linux-foundation.org
+Cc:     walken@google.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Davidlohr Bueso <dbueso@suse.de>
+References: <20191003201858.11666-1-dave@stgolabs.net>
+ <20191003201858.11666-8-dave@stgolabs.net>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <294467e3-5545-9a76-a975-4798f096ac4b@redhat.com>
+Date:   Thu, 10 Oct 2019 13:49:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1570633189.git.vilhelm.gray@gmail.com> <893c3b4f03266c9496137cc98ac2b1bd27f92c73.1570633189.git.vilhelm.gray@gmail.com>
- <CAK7LNATgW7bXUmqV=3QAaJ0Qu73Kox-TgDCQJb=s0=mwewSCUg@mail.gmail.com>
- <20191009170917.GG32742@smile.fi.intel.com> <CAMuHMdXyyrL4ibKvjMV6r8TuxpmK73=JxsWNEfcRk1NjwsnOjA@mail.gmail.com>
- <CAK7LNASVdqU_6+_iinWStb9ALqLw494pnZKr46fLW+WJ9nUo6A@mail.gmail.com>
-In-Reply-To: <CAK7LNASVdqU_6+_iinWStb9ALqLw494pnZKr46fLW+WJ9nUo6A@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Oct 2019 08:49:10 +0300
-Message-ID: <CAHp75VeLkfNZkqhD8tedJdav81L+VA3Z50Kwcd9h4R7zMwjtvA@mail.gmail.com>
-Subject: Re: [PATCH v17 01/14] bitops: Introduce the for_each_set_clump8 macro
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Phil Reid <preid@electromag.com.au>,
-        Lukas Wunner <lukas@wunner.de>, sean.nyekjaer@prevas.dk,
-        morten.tiljeset@prevas.dk, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191003201858.11666-8-dave@stgolabs.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 10 Oct 2019 05:49:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 5:31 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> On Thu, Oct 10, 2019 at 3:54 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, Oct 9, 2019 at 7:09 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Thu, Oct 10, 2019 at 01:28:08AM +0900, Masahiro Yamada wrote:
-> > > > On Thu, Oct 10, 2019 at 12:27 AM William Breathitt Gray
-> > > > <vilhelm.gray@gmail.com> wrote:
-> > > > >
-> > > > > This macro iterates for each 8-bit group of bits (clump) with set bits,
-> > > > > within a bitmap memory region. For each iteration, "start" is set to the
-> > > > > bit offset of the found clump, while the respective clump value is
-> > > > > stored to the location pointed by "clump". Additionally, the
-> > > > > bitmap_get_value8 and bitmap_set_value8 functions are introduced to
-> > > > > respectively get and set an 8-bit value in a bitmap memory region.
-> > >
-> > > > Why is the return type "unsigned long" where you know
-> > > > it return the 8-bit value ?
-> > >
-> > > Because bitmap API operates on unsigned long type. This is not only
-> > > consistency, but for sake of flexibility in case we would like to introduce
-> > > more calls like clump16 or so.
-> >
-> > TBH, that doesn't convince me: those functions explicitly take/return an
-> > 8-bit value, and have "8" in their name.  The 8-bit value is never
-> > really related to, retrieved from, or stored in a full "unsigned long"
-> > element of a bitmap, only to/from/in a part (byte) of it.
-> >
-> > Following your rationale, all of iowrite{8,16,32,64}*() should take an
-> > "unsigned long" value, too.
-> >
->
-> +1
->
-> Using u8/u16/u32/u64 looks more consistent with other bitmap helpers.
->
-> void bitmap_from_arr32(unsigned long *bitmap, const u32 *buf, unsigned
-> int nbits);
-> void bitmap_to_arr32(u32 *buf, const unsigned long *bitmap, unsigned int nbits);
-> static inline void bitmap_from_u64(unsigned long *dst, u64 mask);
->
->
->
-> If you want to see more examples from other parts,
 
-Geert's and yours examples both are not related. They are about
-fixed-width properies when we know that is the part of protocol.
-Here we have no protocol which stricts us to the mentioned fixed-width types.
+On 2019/10/4 上午4:18, Davidlohr Bueso wrote:
+> The vhost_umem interval tree really wants [a, b) intervals,
+> not fully closed as currently. As such convert it to use the
+> new interval_tree_gen.h, and also rename the 'last' endpoint
+> in the node to 'end', which both a more suitable name for
+> the half closed interval and also reduces the chances of some
+> caller being missed.
+>
+> Cc: Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: virtualization@lists.linux-foundation.org
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> ---
+>   drivers/vhost/vhost.c | 19 +++++++++----------
+>   drivers/vhost/vhost.h |  4 ++--
+>   2 files changed, 11 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 36ca2cf419bf..80c3cca24dc7 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -28,7 +28,7 @@
+>   #include <linux/sort.h>
+>   #include <linux/sched/mm.h>
+>   #include <linux/sched/signal.h>
+> -#include <linux/interval_tree_generic.h>
+> +#include <linux/interval_tree_gen.h>
+>   #include <linux/nospec.h>
+>   
+>   #include "vhost.h"
+> @@ -51,7 +51,7 @@ enum {
+>   
+>   INTERVAL_TREE_DEFINE(struct vhost_umem_node,
+>   		     rb, __u64, __subtree_last,
+> -		     START, LAST, static inline, vhost_umem_interval_tree);
+> +		     START, END, static inline, vhost_umem_interval_tree);
+>   
+>   #ifdef CONFIG_VHOST_CROSS_ENDIAN_LEGACY
+>   static void vhost_disable_cross_endian(struct vhost_virtqueue *vq)
+> @@ -1034,7 +1034,7 @@ static int vhost_new_umem_range(struct vhost_umem *umem,
+>   
+>   	node->start = start;
+>   	node->size = size;
+> -	node->last = end;
+> +	node->end = end;
+>   	node->userspace_addr = userspace_addr;
+>   	node->perm = perm;
+>   	INIT_LIST_HEAD(&node->link);
+> @@ -1112,7 +1112,7 @@ static int vhost_process_iotlb_msg(struct vhost_dev *dev,
+>   		}
+>   		vhost_vq_meta_reset(dev);
+>   		if (vhost_new_umem_range(dev->iotlb, msg->iova, msg->size,
+> -					 msg->iova + msg->size - 1,
+> +					 msg->iova + msg->size,
+>   					 msg->uaddr, msg->perm)) {
+>   			ret = -ENOMEM;
+>   			break;
+> @@ -1126,7 +1126,7 @@ static int vhost_process_iotlb_msg(struct vhost_dev *dev,
+>   		}
+>   		vhost_vq_meta_reset(dev);
+>   		vhost_del_umem_range(dev->iotlb, msg->iova,
+> -				     msg->iova + msg->size - 1);
+> +				     msg->iova + msg->size);
+>   		break;
+>   	default:
+>   		ret = -EINVAL;
+> @@ -1320,15 +1320,14 @@ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
+>   {
+>   	const struct vhost_umem_node *node;
+>   	struct vhost_umem *umem = vq->iotlb;
+> -	u64 s = 0, size, orig_addr = addr, last = addr + len - 1;
+> +	u64 s = 0, size, orig_addr = addr, last = addr + len;
+>   
+>   	if (vhost_vq_meta_fetch(vq, addr, len, type))
+>   		return true;
+>   
+>   	while (len > s) {
+>   		node = vhost_umem_interval_tree_iter_first(&umem->umem_tree,
+> -							   addr,
+> -							   last);
+> +							   addr, last);
+>   		if (node == NULL || node->start > addr) {
+>   			vhost_iotlb_miss(vq, addr, access);
+>   			return false;
+> @@ -1455,7 +1454,7 @@ static long vhost_set_memory(struct vhost_dev *d, struct vhost_memory __user *m)
+>   					 region->guest_phys_addr,
+>   					 region->memory_size,
+>   					 region->guest_phys_addr +
+> -					 region->memory_size - 1,
+> +					 region->memory_size,
+>   					 region->userspace_addr,
+>   					 VHOST_ACCESS_RW))
+>   			goto err;
+> @@ -2055,7 +2054,7 @@ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
+>   		}
+>   
+>   		node = vhost_umem_interval_tree_iter_first(&umem->umem_tree,
+> -							addr, addr + len - 1);
+> +							   addr, addr + len);
+>   		if (node == NULL || node->start > addr) {
+>   			if (umem != dev->iotlb) {
+>   				ret = -EFAULT;
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index e9ed2722b633..bb36cb9ed5ec 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -53,13 +53,13 @@ struct vhost_log {
+>   };
+>   
+>   #define START(node) ((node)->start)
+> -#define LAST(node) ((node)->last)
+> +#define END(node) ((node)->end)
+>   
+>   struct vhost_umem_node {
+>   	struct rb_node rb;
+>   	struct list_head link;
+>   	__u64 start;
+> -	__u64 last;
+> +	__u64 end;
+>   	__u64 size;
+>   	__u64 userspace_addr;
+>   	__u32 perm;
 
-So, I can tell an opposite, your arguments didn't convince me.
 
-Imagine the function which does an or / and / xor operation on bitmap.
-Now, when I supply unsigned long, I will see
-operations on one type in _one_ function independently of the size.
-Your proposal will make an unneded churn.
+Reviewed-by: Jason Wang <jasowang@redhat.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+
