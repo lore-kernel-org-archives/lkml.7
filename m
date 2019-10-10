@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DA7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D91C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E2621D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2F721A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696940;
-	bh=sYY95Hr5Vx7uYLpkaAUKFT7rsKYr+ZKBrBYfbzCeno0=;
+	s=default; t=1570696944;
+	bh=Y9uQYymY0eFnLevhi+Oh+Vqc/2hn+dwDMy63dOaerEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTXWs8GR72uk/B4JDTxhJnkNvoYGJK5HgVAPpsb5qYQjeCw0P8aQ6gLKwNyFlgtQ1
-	 WT9IdYkNsq2GeLdkQHjMzAqxA19wQ/lxP/O4Fiuz9b4Dlz0HNWguJ4WMopkX5EuuQr
-	 fO2c7Lfy0KAHgaAqtg6LWlCoKBQw8kqHZikuChgA=
+	b=zskO5BicYVDytATm/PQhe2Rdg08WqUn7rCaR+MrVUFkhvxhx4ulZ9plQ5vkLWo0Mp
+	 TayP69LSjsb/B5HM9P4re5+dnVvIB8c7zhtRQ3DFjPOdq36eKcRssC6IH7cV+/Rgp/
+	 Yr/LQnN/lezaiONyfm1wVv7SOaJ734tazUnQNFQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388525AbfJJImS (ORCPT
+        id S2388532AbfJJImW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:42:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46856 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388511AbfJJImR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:42:17 -0400
+        id S2388511AbfJJImU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:42:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D71621BE5;
-        Thu, 10 Oct 2019 08:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C61CE2190F;
+        Thu, 10 Oct 2019 08:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696936;
-        bh=sYY95Hr5Vx7uYLpkaAUKFT7rsKYr+ZKBrBYfbzCeno0=;
+        s=default; t=1570696939;
+        bh=Y9uQYymY0eFnLevhi+Oh+Vqc/2hn+dwDMy63dOaerEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sFpj4IeO7dW0YE87fjvz349bwSlJOgFFtXL3eGZpHJWtvdyUhuycbgCaSlp+SEUNV
-         m+h5zUhzORPEkkkHHM5/RAjgL502a8ZTsqrPq3bM8iMW1K6XTNjl/5skfs/E/FwIf2
-         C8elT/R/HY7B/urcL44YUdQDE3sS3XfOOubhLP5k=
+        b=KVSBX+7Z41l/GG5m4TpsawKvOJJmMaANGz0rDYp3jf03SZdRzUyxLC8G+7LqEUVnB
+         rzIHriLEWNrlnvh1jUkTURh5vEBDQw/6keCxFoo4EM4jeqfaQwnQHcZfsBzIoO8pgq
+         Cc9rHdsr8QmbW5U9450NYtSzxSxSJKXbIvckHuf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 107/148] pNFS: Ensure we do clear the return-on-close layout stateid on fatal errors
-Date:   Thu, 10 Oct 2019 10:36:08 +0200
-Message-Id: <20191010083617.658814199@linuxfoundation.org>
+Subject: [PATCH 5.3 108/148] SUNRPC: Dont try to parse incomplete RPC messages
+Date:   Thu, 10 Oct 2019 10:36:09 +0200
+Message-Id: <20191010083617.709024171@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -63,43 +63,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 9c47b18cf722184f32148784189fca945a7d0561 ]
+[ Upstream commit 9ba828861c56a21d211d5d10f5643774b1ea330d ]
 
-IF the server rejected our layout return with a state error such as
-NFS4ERR_BAD_STATEID, or even a stale inode error, then we do want
-to clear out all the remaining layout segments and mark that stateid
-as invalid.
+If the copy of the RPC reply into our buffers did not complete, and
+we could end up with a truncated message. In that case, just resend
+the call.
 
-Fixes: 1c5bd76d17cca ("pNFS: Enable layoutreturn operation for...")
+Fixes: a0584ee9aed80 ("SUNRPC: Use struct xdr_stream when decoding...")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/sunrpc/clnt.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 4525d5acae386..0418b198edd3e 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1449,10 +1449,15 @@ void pnfs_roc_release(struct nfs4_layoutreturn_args *args,
- 	const nfs4_stateid *res_stateid = NULL;
- 	struct nfs4_xdr_opaque_data *ld_private = args->ld_private;
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index e7fdc400506e8..f7f78566be463 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2482,6 +2482,7 @@ call_decode(struct rpc_task *task)
+ 	struct rpc_clnt	*clnt = task->tk_client;
+ 	struct rpc_rqst	*req = task->tk_rqstp;
+ 	struct xdr_stream xdr;
++	int err;
  
--	if (ret == 0) {
--		arg_stateid = &args->stateid;
-+	switch (ret) {
-+	case -NFS4ERR_NOMATCHING_LAYOUT:
-+		break;
-+	case 0:
- 		if (res->lrs_present)
- 			res_stateid = &res->stateid;
-+		/* Fallthrough */
-+	default:
-+		arg_stateid = &args->stateid;
- 	}
- 	pnfs_layoutreturn_free_lsegs(lo, arg_stateid, &args->range,
- 			res_stateid);
+ 	dprint_status(task);
+ 
+@@ -2504,6 +2505,15 @@ call_decode(struct rpc_task *task)
+ 	 * before it changed req->rq_reply_bytes_recvd.
+ 	 */
+ 	smp_rmb();
++
++	/*
++	 * Did we ever call xprt_complete_rqst()? If not, we should assume
++	 * the message is incomplete.
++	 */
++	err = -EAGAIN;
++	if (!req->rq_reply_bytes_recvd)
++		goto out;
++
+ 	req->rq_rcv_buf.len = req->rq_private_buf.len;
+ 
+ 	/* Check that the softirq receive buffer is valid */
+@@ -2512,7 +2522,9 @@ call_decode(struct rpc_task *task)
+ 
+ 	xdr_init_decode(&xdr, &req->rq_rcv_buf,
+ 			req->rq_rcv_buf.head[0].iov_base, req);
+-	switch (rpc_decode_header(task, &xdr)) {
++	err = rpc_decode_header(task, &xdr);
++out:
++	switch (err) {
+ 	case 0:
+ 		task->tk_action = rpc_exit_task;
+ 		task->tk_status = rpcauth_unwrap_resp(task, &xdr);
 -- 
 2.20.1
 
