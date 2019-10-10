@@ -2,109 +2,266 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822B2C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8215ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A35F206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA59021848
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pcv2RYJi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g1jDm8Sd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732552AbfJJArm (ORCPT
+        id S1732615AbfJJAry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:47:42 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55452 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731166AbfJJArl (ORCPT
+        Wed, 9 Oct 2019 20:47:54 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41574 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731834AbfJJAry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:47:41 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A0iLlM171680;
-        Thu, 10 Oct 2019 00:46:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=wUw24dYwtRzDhdQ0o8HSROqGQRo01O5bW3h5i/yV0YA=;
- b=Pcv2RYJi0amWYNl6TCUmkcbjGAM5sjbz7jTIlFs2/MKodKTj2PV631IsY4xMYJFZZnqy
- k8lk7AzWgZmd8xOf+cemErBCvwQV38bmGlnVeCDdDi7Dp6C+SALF42S7u7ldrgD/CphO
- 5l6JouFMsSSpBzvrrLwLnmBaEgXQ45o4iuTXXp1FRjvn0AQPdnocmDQ+HnfmTia4qHlk
- 7hRowDQb9yvSffzX6g3y/PtlVzWEqk7gyupPwz0dj4Z1C5f0j72BxKbmnbdaAWy3SCbC
- DPSZ7TnSJN9TresoCGKzDXPqtDTEUFd8PSgPWyZa6ABrbI1LEKTCmls87Hlnlvhk4Bbf eA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2vek4qqx6a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 00:46:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A0cujo051434;
-        Thu, 10 Oct 2019 00:46:07 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2vhhsnm5ee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 00:46:07 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9A0jxYL026366;
-        Thu, 10 Oct 2019 00:45:59 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Oct 2019 17:45:59 -0700
-Subject: Re: [PATCH -next] userfaultfd: remove set but not used variable 'h'
-To:     YueHaibing <yuehaibing@huawei.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20191009122740.70517-1-yuehaibing@huawei.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <a28da32b-5c26-21e9-4a08-722abf9fbeba@oracle.com>
-Date:   Wed, 9 Oct 2019 17:45:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 9 Oct 2019 20:47:54 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9A0lpnB119594;
+        Wed, 9 Oct 2019 19:47:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570668471;
+        bh=W4tgg+8rfTzgD3XxaYrq0SPR4ta7PyHqmlPUxUiR0C8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=g1jDm8Sd+4vvRpKgKsmFynIxJWukTjmBehsVA3ptUdFWBLoTJx+u7M1vLvqdgK3KH
+         WbtqytmXgkvn8IS9lVvJMbWwXYz/TvOiyReVOZc0L3QStKl24evA7xq+1M3CIodheM
+         oacgCccnHIX8pDfQQ7aOJ8misTbe0tr8/FdRjIxk=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9A0lp3H086691
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Oct 2019 19:47:51 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
+ 2019 19:47:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 9 Oct 2019 19:47:47 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9A0loHH006322;
+        Wed, 9 Oct 2019 19:47:50 -0500
+Subject: Re: [PATCH v11 12/16] leds: lp55xx: Add multicolor framework support
+ to lp55xx
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191008204800.19870-1-dmurphy@ti.com>
+ <20191008204800.19870-13-dmurphy@ti.com>
+ <1f0ac6f3-a822-84f0-d398-2f16751c3b1b@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <a5c59e36-85b9-ad90-25f8-4ac160b5b661@ti.com>
+Date:   Wed, 9 Oct 2019 19:47:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191009122740.70517-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <1f0ac6f3-a822-84f0-d398-2f16751c3b1b@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910100003
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910100004
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/9/19 5:27 AM, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> mm/userfaultfd.c: In function '__mcopy_atomic_hugetlb':
-> mm/userfaultfd.c:217:17: warning:
->  variable 'h' set but not used [-Wunused-but-set-variable]
-> 
-> It is not used since commit 78911d0e18ac ("userfaultfd: use vma_pagesize
-> for all huge page size calculation")
-> 
+Jacek
 
-Thanks!  That should have been removed with the recent cleanups.
+On 10/9/19 5:04 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 10/8/19 10:47 PM, Dan Murphy wrote:
+>> Add multicolor framework support for the lp55xx family.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/leds/Kconfig                      |   1 +
+>>   drivers/leds/leds-lp55xx-common.c         | 176 +++++++++++++++++++---
+>>   drivers/leds/leds-lp55xx-common.h         |  11 ++
+>>   include/linux/platform_data/leds-lp55xx.h |   5 +
+>>   4 files changed, 169 insertions(+), 24 deletions(-)
+>>
+> [...]
+>>   
+>> +static int lp5xx_parse_common_child(struct device_node *np,
+>> +				    struct lp55xx_led_config *cfg,
+>> +				    int chan_num, bool is_multicolor,
+>> +				    int color_num)
+>> +{
+>> +	u32 led_number;
+>> +	int ret;
+>> +
+>> +	of_property_read_string(np, "chan-name",
+>> +				&cfg[chan_num].name);
+>> +	of_property_read_u8(np, "led-cur",
+>> +			    &cfg[chan_num].led_current);
+>> +	of_property_read_u8(np, "max-cur",
+>> +			    &cfg[chan_num].max_current);
+>> +
+>> +	ret = of_property_read_u32(np, "reg", &led_number);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (led_number < 0 || led_number > 6)
+>> +		return -EINVAL;
+>> +
+>> +	if (is_multicolor)
+>> +		cfg[chan_num].color_component[color_num].output_num =
+>> +								led_number;
+>> +	else
+>> +		cfg[chan_num].chan_nr = led_number;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int lp5xx_parse_channel_child(struct device_node *np,
+>> +				     struct lp55xx_led_config *cfg,
+>> +				     int child_number)
+>> +{
+>> +	struct device_node *child;
+>> +	int channel_color;
+>> +	int num_colors = 0;
+>> +	u32 color_id;
+>> +	int ret;
+>> +
+>> +	cfg[child_number].default_trigger =
+>> +			of_get_property(np, "linux,default-trigger", NULL);
+>> +
+>> +	ret = of_property_read_u32(np, "color", &channel_color);
+>> +	if (ret)
+>> +		channel_color = ret;
+>> +
+>> +
+>> +	if (channel_color == LED_COLOR_ID_MULTI) {
+>> +		for_each_child_of_node(np, child) {
+>> +			ret = lp5xx_parse_common_child(child, cfg,
+>> +						       child_number, true,
+>> +						       num_colors);
+>> +			if (ret)
+>> +				return ret;
+>> +
+>> +			ret = of_property_read_u32(child, "color", &color_id);
+>> +			if (ret)
+>> +				return ret;
+>> +
+>> +			cfg[child_number].color_component[num_colors].color_id =
+>> +						color_id;
+>> +			set_bit(color_id, &cfg[child_number].available_colors);
+>> +			num_colors++;
+>> +		}
+>> +
+>> +		cfg[child_number].num_colors = num_colors;
+>> +	} else {
+>> +		return lp5xx_parse_common_child(np, cfg, child_number, false,
+>> +						num_colors);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
+>>   						      struct device_node *np)
+>>   {
+>> @@ -546,6 +678,7 @@ struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
+>>   	struct lp55xx_led_config *cfg;
+>>   	int num_channels;
+>>   	int i = 0;
+>> +	int ret;
+>>   
+>>   	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+>>   	if (!pdata)
+>> @@ -565,14 +698,9 @@ struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
+>>   	pdata->num_channels = num_channels;
+>>   
+>>   	for_each_child_of_node(np, child) {
+>> -		cfg[i].chan_nr = i;
+>> -
+>> -		of_property_read_string(child, "chan-name", &cfg[i].name);
+>> -		of_property_read_u8(child, "led-cur", &cfg[i].led_current);
+>> -		of_property_read_u8(child, "max-cur", &cfg[i].max_current);
+>> -		cfg[i].default_trigger =
+>> -			of_get_property(child, "linux,default-trigger", NULL);
+>> -
+>> +		ret = lp5xx_parse_channel_child(child, cfg, i);
+>> +		if (ret)
+>> +			return ERR_PTR(-EINVAL);
+>>   		i++;
+>>   	}
+>>   
+>> diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
+>> index 783ed5103ce5..55d420f704d1 100644
+>> --- a/drivers/leds/leds-lp55xx-common.h
+>> +++ b/drivers/leds/leds-lp55xx-common.h
+>> @@ -12,6 +12,10 @@
+>>   #ifndef _LEDS_LP55XX_COMMON_H
+>>   #define _LEDS_LP55XX_COMMON_H
+>>   
+>> +#include <linux/led-class-multicolor.h>
+>> +
+>> +#define LP55XX_MAX_GROUPED_CHAN	4
+>> +
+>>   enum lp55xx_engine_index {
+>>   	LP55XX_ENGINE_INVALID,
+>>   	LP55XX_ENGINE_1,
+>> @@ -109,6 +113,9 @@ struct lp55xx_device_config {
+>>   	/* access brightness register */
+>>   	int (*brightness_fn)(struct lp55xx_led *led);
+>>   
+>> +	/* access specific brightness register */
+>> +	int (*color_intensity_fn)(struct lp55xx_led *led);
+>> +
+>>   	/* current setting function */
+>>   	void (*set_led_current) (struct lp55xx_led *led, u8 led_current);
+>>   
+>> @@ -159,6 +166,8 @@ struct lp55xx_chip {
+>>    * struct lp55xx_led
+>>    * @chan_nr         : Channel number
+>>    * @cdev            : LED class device
+>> + * @mc_cdev	    : Multi color class device
+>> + * @color_component : Multi color LED map information
+>>    * @led_current     : Current setting at each led channel
+>>    * @max_current     : Maximun current at each led channel
+>>    * @brightness      : Brightness value
+>> @@ -167,6 +176,8 @@ struct lp55xx_chip {
+>>   struct lp55xx_led {
+>>   	int chan_nr;
+>>   	struct led_classdev cdev;
+>> +	struct led_classdev_mc mc_cdev;
+>> +	struct led_mc_color_conversion color_component[LP55XX_MAX_GROUPED_CHAN];
+>>   	u8 led_current;
+>>   	u8 max_current;
+>>   	u8 brightness;
+>> diff --git a/include/linux/platform_data/leds-lp55xx.h b/include/linux/platform_data/leds-lp55xx.h
+>> index 96a787100fda..1e7a25ed9a87 100644
+>> --- a/include/linux/platform_data/leds-lp55xx.h
+>> +++ b/include/linux/platform_data/leds-lp55xx.h
+>> @@ -12,6 +12,8 @@
+>>   #ifndef _LEDS_LP55XX_H
+>>   #define _LEDS_LP55XX_H
+>>   
+>> +#include <linux/led-class-multicolor.h>
+>> +
+>>   /* Clock configuration */
+>>   #define LP55XX_CLOCK_AUTO	0
+>>   #define LP55XX_CLOCK_INT	1
+>> @@ -23,6 +25,9 @@ struct lp55xx_led_config {
+>>   	u8 chan_nr;
+>>   	u8 led_current; /* mA x10, 0 if led is not connected */
+>>   	u8 max_current;
+>> +	int num_colors;
+>> +	unsigned long available_colors;
+>> +	struct led_mc_color_conversion color_component[LED_COLOR_ID_MAX];
+> I can't see why the array length can't be LP55XX_MAX_GROUPED_CHAN here
+> too. You're indexing it with num_colors counter and not with color_id.
 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Ack
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Dan
 
--- 
-Mike Kravetz
+
