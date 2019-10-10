@@ -2,115 +2,171 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76130C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB208C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D51B20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M4BS0+tP"
+	by mail.kernel.org (Postfix) with ESMTP id A47A22064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570697589;
+	bh=QzZUIKgGeYlbpmGf0NnBsRvUqyBwNvPwsxQAVxza750=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N2D+dbfmPbrZG9a0HGoPB/2f/feC18DYExpVKCzr6Jg1c175cs/rWUe4ZCWQKC+0m
+	 btbg9WPtwOqUI+Px26/YLJ5KcOqoDauaMM3TfhnK1aqn4UxHGR8+fPA99yIZFt1Qdn
+	 sHs9CK8MSSnu/6MlfzJLCgIfRJuKR6y0XgU+Dnqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388809AbfJJIwQ (ORCPT
+        id S2390182AbfJJIv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:52:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48904 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390209AbfJJIwI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:52:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A8hf1M171675;
-        Thu, 10 Oct 2019 08:52:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=G0KsV1YxbVFGrkZatR+VCZvWIuzuocCgwD5kF42g0f0=;
- b=M4BS0+tPoSTzkf49boQcsxdnt4/vqXWQQn7l13mMQwFAmohAyMoS/uLFd6f9CGW/4HQF
- cd3TtsyZqi784lsMp3UEVhMiWjC8IP7sEu6N/5DItKA6nH/BlUvqdoJaPzEb7Dl661Hz
- 6LDeOGftOpW833nzoBhpGfbh5toOyh77Q/UAgnYXroHuq6I7N+wZ+M8aVdoHs11lK5v5
- 9f6Ve86+heFVaXc+iUogC8adP1QkLtzPxu4f5cc7j0jy4aq6MNBcPkIHuXdL6I9DUsR6
- 2xIAq+3ob2yvMs7SdDsrnufU7zv90O5GnoYu6bEazghtIIzFFVBR3yH0T+0TMRW47AGQ bA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vejkustce-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 08:52:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A8m98r066979;
-        Thu, 10 Oct 2019 08:52:00 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2vhrxd8f02-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 08:52:00 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9A8pxjN002980;
-        Thu, 10 Oct 2019 08:51:59 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 10 Oct 2019 01:51:57 -0700
-Date:   Thu, 10 Oct 2019 11:51:49 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
-        grekh@linuxfoundation.org, GR-Linux-NIC-Dev@marvell.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: qlge: Fix multiple assignments warning by
- splitting the assignement into two each
-Message-ID: <20191010085048.GC20470@kadam>
-References: <20191009201029.7051-1-jbi.octave@gmail.com>
+        Thu, 10 Oct 2019 04:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389331AbfJJIvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADAD22064A;
+        Thu, 10 Oct 2019 08:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570697512;
+        bh=QzZUIKgGeYlbpmGf0NnBsRvUqyBwNvPwsxQAVxza750=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R0L2w0TtOjZCoJU39zStT5g7pt1TFHINdOCkHUlKMm8bkfRQtYSkh/f2UfV5/R+l9
+         eZQFfiHGw40J9nEhPzEbe9kZBcfQecBVoUN4Y2Phn2Be1aaR0YwGNsMa+YFxpQiaBO
+         mIsVgXUUdwjQ+r050XTx+MVmo8gFRXMuk/7hmGrU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 53/61] perf stat: Fix a segmentation fault when using repeat forever
+Date:   Thu, 10 Oct 2019 10:37:18 +0200
+Message-Id: <20191010083523.076799160@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
+References: <20191010083449.500442342@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009201029.7051-1-jbi.octave@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=965
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910100081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910100081
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 09:10:29PM +0100, Jules Irenge wrote:
-> Fix multiple assignments warning " check
->  issued by checkpatch.pl tool:
-> "CHECK: multiple assignments should be avoided".
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  drivers/staging/qlge/qlge_dbg.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-> index 086f067fd899..69bd4710c5ec 100644
-> --- a/drivers/staging/qlge/qlge_dbg.c
-> +++ b/drivers/staging/qlge/qlge_dbg.c
-> @@ -141,8 +141,10 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
->  	u32 *direct_ptr, temp;
->  	u32 *indirect_ptr;
->  
-> -	xfi_direct_valid = xfi_indirect_valid = 0;
-> -	xaui_direct_valid = xaui_indirect_valid = 1;
-> +	xfi_indirect_valid = 0;
-> +	xfi_direct_valid = xfi_indirect_valid;
-> +	xaui_indirect_valid = 1;
-> +	xaui_direct_valid = xaui_indirect_valid
+From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
-The original code is fine here.  Just ignore checkpatch on this.
+[ Upstream commit 443f2d5ba13d65ccfd879460f77941875159d154 ]
 
-regards,
-dan carpenter
+Observe a segmentation fault when 'perf stat' is asked to repeat forever
+with the interval option.
+
+Without fix:
+
+  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
+  #           time             counts unit events
+       5.000211692  3,13,89,82,34,157      cycles
+      10.000380119  1,53,98,52,22,294      cycles
+      10.040467280       17,16,79,265      cycles
+  Segmentation fault
+
+This problem was only observed when we use forever option aka -r 0 and
+works with limited repeats. Calling print_counter with ts being set to
+NULL, is not a correct option when interval is set. Hence avoid
+print_counter(NULL,..)  if interval is set.
+
+With fix:
+
+  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
+   #           time             counts unit events
+       5.019866622  3,15,14,43,08,697      cycles
+      10.039865756  3,15,16,31,95,261      cycles
+      10.059950628     1,26,05,47,158      cycles
+       5.009902655  3,14,52,62,33,932      cycles
+      10.019880228  3,14,52,22,89,154      cycles
+      10.030543876       66,90,18,333      cycles
+       5.009848281  3,14,51,98,25,437      cycles
+      10.029854402  3,15,14,93,04,918      cycles
+       5.009834177  3,14,51,95,92,316      cycles
+
+Committer notes:
+
+Did the 'git bisect' to find the cset introducing the problem to add the
+Fixes tag below, and at that time the problem reproduced as:
+
+  (gdb) run stat -r0 -I500 sleep 1
+  <SNIP>
+  Program received signal SIGSEGV, Segmentation fault.
+  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
+  866		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, csv_sep);
+  (gdb) bt
+  #0  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
+  #1  0x000000000041860a in print_counters (ts=ts@entry=0x0, argc=argc@entry=2, argv=argv@entry=0x7fffffffd640) at builtin-stat.c:938
+  #2  0x0000000000419a7f in cmd_stat (argc=2, argv=0x7fffffffd640, prefix=<optimized out>) at builtin-stat.c:1411
+  #3  0x000000000045c65a in run_builtin (p=p@entry=0x6291b8 <commands+216>, argc=argc@entry=5, argv=argv@entry=0x7fffffffd640) at perf.c:370
+  #4  0x000000000045c893 in handle_internal_command (argc=5, argv=0x7fffffffd640) at perf.c:429
+  #5  0x000000000045c8f1 in run_argv (argcp=argcp@entry=0x7fffffffd4ac, argv=argv@entry=0x7fffffffd4a0) at perf.c:473
+  #6  0x000000000045cac9 in main (argc=<optimized out>, argv=<optimized out>) at perf.c:588
+  (gdb)
+
+Mostly the same as just before this patch:
+
+  Program received signal SIGSEGV, Segmentation fault.
+  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
+  964		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, config->csv_sep);
+  (gdb) bt
+  #0  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
+  #1  0x0000000000588047 in perf_evlist__print_counters (evlist=0xbc9b90, config=0xa1f2a0 <stat_config>, _target=0xa1f0c0 <target>, ts=0x0, argc=2, argv=0x7fffffffd670)
+      at util/stat-display.c:1172
+  #2  0x000000000045390f in print_counters (ts=0x0, argc=2, argv=0x7fffffffd670) at builtin-stat.c:656
+  #3  0x0000000000456bb5 in cmd_stat (argc=2, argv=0x7fffffffd670) at builtin-stat.c:1960
+  #4  0x00000000004dd2e0 in run_builtin (p=0xa30e00 <commands+288>, argc=5, argv=0x7fffffffd670) at perf.c:310
+  #5  0x00000000004dd54d in handle_internal_command (argc=5, argv=0x7fffffffd670) at perf.c:362
+  #6  0x00000000004dd694 in run_argv (argcp=0x7fffffffd4cc, argv=0x7fffffffd4c0) at perf.c:406
+  #7  0x00000000004dda11 in main (argc=5, argv=0x7fffffffd670) at perf.c:531
+  (gdb)
+
+Fixes: d4f63a4741a8 ("perf stat: Introduce print_counters function")
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org # v4.2+
+Link: http://lore.kernel.org/lkml/20190904094738.9558-3-srikar@linux.vnet.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/builtin-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 52486c90ab936..b6c1c9939c2f1 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2770,7 +2770,7 @@ int cmd_stat(int argc, const char **argv)
+ 				run_idx + 1);
+ 
+ 		status = run_perf_stat(argc, argv);
+-		if (forever && status != -1) {
++		if (forever && status != -1 && !interval) {
+ 			print_counters(NULL, argc, argv);
+ 			perf_stat__reset_stats();
+ 		}
+-- 
+2.20.1
+
+
 
