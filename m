@@ -2,115 +2,128 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3125DC47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0149ECE58C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5CA2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC1C2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="I2FXmNxC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="ONissujf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732519AbfJJA3X (ORCPT
+        id S1732140AbfJJAfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:29:23 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40181 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732008AbfJJA3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:29:23 -0400
-Received: by mail-qk1-f193.google.com with SMTP id y144so3984215qkb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 17:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=KM17Zz+I9yDyEJy8g6P6xuHBOuiNDSOYxA/dR1gGI6E=;
-        b=I2FXmNxCWfd8tVjUwlf9v9WXMDP/MMgA/K1bEpH2bwf6J8EVQZROxDIE0SXiZvHZ25
-         skje1Ud55ft/OpqaYf8y4auFzr2/yOQTPVfNsLEs9f5EcoLckM/xUVOOUa5wGTHqfAOv
-         F33R/3vgfufNh7PZ+WbnmBRpLhmT0Y1iaQVY+Wn1NOonDGOjD6j/Ph4TaejKdlSDmj/K
-         BugdlbrEhe6iPg51rMgGgXj43DA2Oi0KBS30EY0dGAzDJyemqZ4T6zFGMZ0StHHDripC
-         Chz/ctN3s1j4bYwzDCnVif8cStbJlBfHq87PcgByi6nMTztC/xLJcRmsZnRCdvWfyRvp
-         70/A==
+        Wed, 9 Oct 2019 20:35:50 -0400
+Received: from mx2.ucr.edu ([138.23.62.3]:55171 "EHLO mx2.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731145AbfJJAft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 20:35:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1570667749; x=1602203749;
+  h=mime-version:from:date:message-id:subject:to;
+  bh=nWu3ebWjqXjCvzB4v842JIolrNY8p92IVVNrwebapD4=;
+  b=ONissujfcMeMqvgW9vzgAndrQgUr7u2J+0Mt2QKqN+NA8btYr4nzzJzW
+   e8BldebK/8kzlOkSFiWV2AEjLhWZhv/sOycfsNFMFqOLn+Th6WMRddL6/
+   AD51fx7f8yvt5BCcZ8xaPjfeKS88VEzy6fOeHtXMr9j7lsKWHBvqlPABG
+   kOLJ65T2sIoSwXqh1qDElManjqllYQYlA0yJLClEaCjsBrV8YidUVFEEo
+   L7w8foXL9lU2jSaho+u6KVfSVa53c9X7xBi4erB3XK5wrek2/uT1etsqF
+   YSr3TsnztklhbEuxGQQRyyQqAeiuFXuiNRMBQOqOqAhfqumlL0iz9ANzQ
+   w==;
+IronPort-SDR: 0MK1gZZ9srlenfXTIouQdW0+l4v44gJjyDCcLaNK0H52yJ+o3EL6mn7pWh4orr0ydm+PQbtbNP
+ CF0VO8ltqBgZfckNhOU5GylfvDlsjDIKN59tud9Y01fd5uCrzksCxmhgNLQwOUBy+BnV6/Fo1m
+ jwvIqeT1l4HwjkOhBAUUDPet7BGDDRD8JdkQB8KpZNi6aRlUTeRaR6mq/oYIVMLPe76gJ/Fxg/
+ /pEvuZm8O5aUURZjAbXSyFPc//sQ9vaAFnqaYQ4FhcPvxbTezsQruXv8jqEofTrN4Il7pIdZdj
+ KMw=
+IronPort-PHdr: =?us-ascii?q?9a23=3AJcXt8B3l4TKSGTfUsmDT+DRfVm0co7zxezQtwd?=
+ =?us-ascii?q?8ZseMSI/ad9pjvdHbS+e9qxAeQG9mCsLQa0aGN7OjJYi8p2d65qncMcZhBBV?=
+ =?us-ascii?q?cuqP49uEgeOvODElDxN/XwbiY3T4xoXV5h+GynYwAOQJ6tL1LdrWev4jEMBx?=
+ =?us-ascii?q?7xKRR6JvjvGo7Vks+7y/2+94fcbglVijexe7J/IAu5oQjftMQdnJdvJLs2xh?=
+ =?us-ascii?q?bVuHVDZv5YxXlvJVKdnhb84tm/8Zt++ClOuPwv6tBNX7zic6s3UbJXAjImM3?=
+ =?us-ascii?q?so5MLwrhnMURGP5noHXWoIlBdDHhXI4wv7Xpf1tSv6q/Z91SyHNsD4Ubw4RT?=
+ =?us-ascii?q?Kv5LpwRRT2lCkIKSI28GDPisxxkq1bpg6hpwdiyILQeY2ZKeZycr/Ycd4cWG?=
+ =?us-ascii?q?FPXNteVzZZD4yzb4UBAekPM/tGoYbhvFYOsQeyCBOwCO/z1jNFhHn71rA63e?=
+ =?us-ascii?q?Q7FgHG2RQtENAPsHXVrNX1KaASWv22w6nI1zrDbu5d1DD96YnJchAuu/CMUa?=
+ =?us-ascii?q?5sfcff0kQvCh/Kjk+KpYP7IjyVy/0Avm6G5ORjTeKik3Arpx11rzS1xcohip?=
+ =?us-ascii?q?PFip8Ux13G7yl0wps5KNulQ0Bhe9GkCoFftySCOotzRcMtXn9ntT4hyr0DpZ?=
+ =?us-ascii?q?67ZC8KyIk7xxLHa/yIbYyI4hX7WeaUOzh4hXZldKu7hxa87ESs0+P8W8up3F?=
+ =?us-ascii?q?pQoSpFld7Mtn8J1xPN8MSIVvx9/kK51TaO0QDc9P1ELFgqmabHL5Mt2L09m5?=
+ =?us-ascii?q?oJvUjeHyL7ml/6ga2Lekk8/+in8eXnYrHopp+GMI90jxnzM6Qvm8y/G+s4Mx?=
+ =?us-ascii?q?QCU3SV9Omnyb3s4Vf5TK9UgfIrj6nVqIraKtgDpq6lHw9V1Z4u6xK+Dzegzd?=
+ =?us-ascii?q?QZkmALLFFbdxKdiYjmJVXOLevmDfewnVusii1nx/PYMb37BJXCMHzDnK3mfb?=
+ =?us-ascii?q?Zn5E4PgDY0mPlb6olPA7cNOvW7aFL0sduQWhZ/IRGxxuHPFNJi25kCVGmPRK?=
+ =?us-ascii?q?6FZueamFuF9uspL/OBLKUYvDL6Lflts/fqgG8wn1MHcO+j0J8Tb3a5Nv5hJF?=
+ =?us-ascii?q?mdYHyqidAERyNCugs4UfyvkkGJeSBcamz0XK8m4Dw/ToW8AsOLQoGrnazE3y?=
+ =?us-ascii?q?qhGJBSTn5JB0rKEnrycYiAHfAWZ2baEM9ggyECHYGgQolpgQOutR7nzaNPJf?=
+ =?us-ascii?q?GS5yYC85/vyY4xr8bTmBc95CE8NMOb3CnZRHpzmGwgTCRwwatl50Fx1wHQ/7?=
+ =?us-ascii?q?J/hqlpFM5T+vQBYAczNNaI3v56AtGqAlnpY9yTDluqX4P1UnkKUtstzopWMA?=
+ =?us-ascii?q?5GENK4g0WGhnLyDg=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2GYAgB0fJ5dh0enVdFmDoIzhBGETY5?=
+ =?us-ascii?q?cgW0FgyUBjWmIOYF7AQgBAQEOLwEBhxIjNQgOAgMJAQEFAQEBAQEFBAEBAhA?=
+ =?us-ascii?q?BAQEIDQkIKYVAgjopAYNVEXwDDAImAiQSAQUBIgEaGoMAgnikaIEDPIsmgTK?=
+ =?us-ascii?q?IZQEJDYFIEnoojA6CF4Nuc4dSgl4EgTkBAQGVL5ZXAQYCghAUA4xRiEUbgio?=
+ =?us-ascii?q?BlxWOLZlPDyOBMQKCDjMaJX8GZ4FPTxAUgWmNcVskkUsBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2GYAgB0fJ5dh0enVdFmDoIzhBGETY5cgW0FgyUBjWmIO?=
+ =?us-ascii?q?YF7AQgBAQEOLwEBhxIjNQgOAgMJAQEFAQEBAQEFBAEBAhABAQEIDQkIKYVAg?=
+ =?us-ascii?q?jopAYNVEXwDDAImAiQSAQUBIgEaGoMAgnikaIEDPIsmgTKIZQEJDYFIEnooj?=
+ =?us-ascii?q?A6CF4Nuc4dSgl4EgTkBAQGVL5ZXAQYCghAUA4xRiEUbgioBlxWOLZlPDyOBM?=
+ =?us-ascii?q?QKCDjMaJX8GZ4FPTxAUgWmNcVskkUsBAQ?=
+X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
+   d="scan'208";a="14101559"
+Received: from mail-lf1-f71.google.com ([209.85.167.71])
+  by smtp2.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Oct 2019 17:35:48 -0700
+Received: by mail-lf1-f71.google.com with SMTP id c7so978872lfh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 17:35:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=KM17Zz+I9yDyEJy8g6P6xuHBOuiNDSOYxA/dR1gGI6E=;
-        b=BAeajFBl65S0/XzxNKa/dcWcqwJ8oG2NbCGiT+DvvlkhEqDRFOb2Lvo6nKraB+7XIJ
-         OXPxXiUQVDpqvtbsxKfkTwzk/7P7/dUDSCU5ecmdMRWdL9Sh5Dde/Jn9yRdE6tSJvXEV
-         phvMZdRfloxsXdphFKSL9fuo9pp5P86rlvzlVyLqh8KgYHvJ0asOXNUpcns0+RWL23Sg
-         d6z+IidOPKnCmrVqydZoWTfFi4CD0KGk0Z/LvLgHuj7AZfk4xf+DlOM3awHDXaXvDeri
-         oRNHRgCCqNxFAeJNSKNG71uT791y8IwdDSvdv20VYaLA0cSVt2/hyPkd/gtOl9E6tUEh
-         klOQ==
-X-Gm-Message-State: APjAAAXZEBjt9qfcQ/k5n+zoR/HazTLXbNwRA5ME7VD69IdSLUQ48Wvi
-        fi5bZm/qmsbz5TrtTKBAKTW2fQ==
-X-Google-Smtp-Source: APXvYqwxLszV1CO4Y+cHe3rlyRS04aKgmKU7SXExS9KJRtKaEih6sjrCZlHCSBxJ0lSMoVrjQP6/SA==
-X-Received: by 2002:a37:c249:: with SMTP id j9mr6920330qkm.164.1570667362065;
-        Wed, 09 Oct 2019 17:29:22 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id h10sm1913833qtk.18.2019.10.09.17.29.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 17:29:21 -0700 (PDT)
-Date:   Wed, 9 Oct 2019 17:29:07 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Lars Poeschel <poeschel@lemonage.de>
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Steve Winslow <swinslow@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Allison Randal <allison@lohutok.net>,
-        Johan Hovold <johan@kernel.org>,
-        Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v9 0/7] nfc: pn533: add uart phy driver
-Message-ID: <20191009172907.2f0877f4@cakuba.netronome.com>
-In-Reply-To: <20191008140544.17112-1-poeschel@lemonage.de>
-References: <20191008140544.17112-1-poeschel@lemonage.de>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=G4W3e3qGvtDBybhSHNkiyzwqamwrUZ6xOAFBHkAsOEk=;
+        b=OvJWODO7EiB4zemUtqIBSEk9qfPIYa7YLicgAcYsTLIpPeHRh05RHBEUmf3672uKTL
+         AT2wjI4XdcLsH3xvDQGUxKezfbmiTMoRzWHFULcEZXi594fde5OsAvsB1LYA90TF5jlR
+         venxSOfbsojV5ZjmmTy3fHQ4xV7kmg9jjiRprXwnrjtJFJ2JvsmON02rtzXxQKMLunU1
+         G1o54w4rd1kzbrp/pcP7TasajXhcsHTykT9BENjydlCJ2hHmmQc7bhwRJdQ6M4c7rcOX
+         O117oXxOtYCZ+9WvIqJ9NfFXJDiI5NnTKAxkYyL0WUZmPbfZriyJMDe5NdY85s2O/d4f
+         /44Q==
+X-Gm-Message-State: APjAAAWokjM4JeAHrrRuJLQKmGGnr1Vre1AQRiFOIgdzomlAj3arRzGA
+        w2KOdZ/1LH2Kx7KBI1sOInxZT2D8BYUREDg28TjJVQYw1XopiSxqKPHKxcMEYo71XbvmCFqw80u
+        XQBN4huqB5n5yFoJwat6gQo6TP/LCer/vcX5pzrOMxQ==
+X-Received: by 2002:a2e:9a4e:: with SMTP id k14mr4006720ljj.104.1570667746628;
+        Wed, 09 Oct 2019 17:35:46 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzvF9cWwtovR/T13+tT+9QEtwd/pWMQ6spGIHADyJ6SkZx60DwAP8BAZs9zWtZz8M8Q2/bsxHfBns3rLL9Dquk=
+X-Received: by 2002:a2e:9a4e:: with SMTP id k14mr4006714ljj.104.1570667746390;
+ Wed, 09 Oct 2019 17:35:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From:   Yizhuo Zhai <yzhai003@ucr.edu>
+Date:   Wed, 9 Oct 2019 17:36:28 -0700
+Message-ID: <CABvMjLRirOKZvCaknF6isxRPvOgMeij2YZe1ef83EEg0kFnUjg@mail.gmail.com>
+Subject: Potential uninitialized variables in rtc: ds1343
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Chengyu Song <csong@cs.ucr.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  8 Oct 2019 16:05:37 +0200, Lars Poeschel wrote:
-> The purpose of this patch series is to add a uart phy driver to the
-> pn533 nfc driver.
-> It first changes the dt strings and docs. The dt compatible strings
-> need to change, because I would add "pn532-uart" to the already
-> existing "pn533-i2c" one. These two are now unified into just
-> "pn532". Then the neccessary changes to the pn533 core driver are
-> made. Then the uart phy is added.
-> As the pn532 chip supports a autopoll, I wanted to use this instead
-> of the software poll loop in the pn533 core driver. It is added and
-> activated by the last to patches.
-> The way to add the autopoll later in seperate patches is chosen, to
-> show, that the uart phy driver can also work with the software poll
-> loop, if someone needs that for some reason.
-> This patchset is already rebased on Johans "NFC: pn533: fix
-> use-after-free and memleaks" patch
-> https://lore.kernel.org/netdev/20191007164059.5927-1-johan@kernel.org/
-> as they would conflict.
-> If for some reason Johans patch will not get merged, I can of course
-> provide the patchset without depending on this patch.
+Hi All:
+drivers/rtc/rtc-ds1343.c:
+Inside function ds1343_show_glitchfilter(), variable "data" could be
+uninitialized if regmap_read() returns -EINVAL. However,"data"
+is used later in the if statement, which is potentially unsafe. Patch
+for this case is hard since the return value -EINVAL is unacceptable
+for ds1343_show_glitchfilter().
 
-The memleak patch was a fix and it's on its way to the current 5.4-rc
-releases - therefore it was merged into the net tree. Your set adds
-support for a new bus, and will go into the net-next tree.
+-- 
+Kind Regards,
 
-It'd be best if you reposted once the net tree was merged into the
-net-next tree (which usually happens every week or two). If you'd
-rather not wait you need to rebase on top of the current net-next tree,
-and maintainers will handle the conflicts.
+Yizhuo Zhai
+
+Computer Science, Graduate Student
+University of California, Riverside
