@@ -2,167 +2,140 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C6DC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8B3C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B4921835
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:19:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="QbFLF53m";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XjBdI1HL"
+	by mail.kernel.org (Postfix) with ESMTP id 32E7621835
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfJJRTa (ORCPT
+        id S1726769AbfJJRUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:19:30 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:19168 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726131AbfJJRTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:19:30 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x9AH7A3k018682;
-        Thu, 10 Oct 2019 10:19:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=B+5Ns28EhcwoidKDx8A4nZ9NVX+e4p+KSTMlnfKiBOU=;
- b=QbFLF53mDP+2IGIqH/od/bqE3rl0tl2yA8VWDwZghOiecbnxM34tgS0W6J4aouxhEhov
- pIJnrQ3caY0oWV1RsbsZwP/1ZG54w5X28+d097rYG9VRdvVzduFqu3UoRqcvSRBV3cj/
- uIr4aK+0qwHYhzHLtCaDKOh6wp9hECBjGYA= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2vhyc0u2js-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 10 Oct 2019 10:19:04 -0700
-Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
- prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 10 Oct 2019 10:19:03 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 10 Oct 2019 10:19:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cqxpdmjr7tNbUouGHuyz558CKLKVkAIP9nnYQdgni+ff+ilBaDLL+MLEHQnHn2F7rruvVGbDweX4EM7GKhz/ySIeK4UB1R7OmSvKln4vPpocQygUawkvvwj3d0UtrCespl6c9NszvV/rgewqBDxMx9vCQVpgYQDpbVGOdVtfa0Lgx5NfWs6SVzMxh2O4NezjkZXusJ6scmB5h1g9r30CG3FVcHggJ71njzlpuu4Af4zRptKAcM9x7rV9fvdRk7afskLSMiiLzbg+V53SUe41r/5wT5+MfAvrZxUhuxjx4PSqWZmHFwTG7muMlsCxyE+KQVbjO746BQMnCU0qpwI1Ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+5Ns28EhcwoidKDx8A4nZ9NVX+e4p+KSTMlnfKiBOU=;
- b=T8zcRkslhLShvtlvkZoTkndhhMCJeGKUFrYeqY6tXFo/FiLB8LXy9Umt+qUR/LKy098prk4L0K5ZLEgrIORAeBgY5Yekct5rnOMFOxMjMFq6mfXW5NEAIj8cppLuw0GLiZ1e20Gu/KSjDHSiu8Z8F5djjBPAZvBftU1XUXmTpIFJNWwFXpuliFuyo6vUcgSUZN5HHdnC7q637CLEIrGxNufTlfjFU7jgSxgCTfCOHR8IDmOrsLIqkE7QbK35qETQI6Ekiea/AWhEKA+EtwVUsZlNV3HI3GsZaYHGQC1ev+iteOJtJ7/PxjMb3ISbbRUMkdgweAgUBRdhF8KBafSyJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+5Ns28EhcwoidKDx8A4nZ9NVX+e4p+KSTMlnfKiBOU=;
- b=XjBdI1HLsHJWZv2MeRPTb3+YihL6BghT0CxLY4vgso7f1ScpHcjDab7jfX4zPl+NDM1+P3YIxewuFpuV1vPlIyieFuE4ITxVVM1OEtHYcB4IjpdCVGLCzs0wBXFVIt/Zf8/PZ6J21Xeau2m+hzmqhEK/NYwrpfUzVwFb1rCsezc=
-Received: from BYAPR15MB2501.namprd15.prod.outlook.com (52.135.196.11) by
- BYAPR15MB2663.namprd15.prod.outlook.com (20.179.156.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Thu, 10 Oct 2019 17:19:01 +0000
-Received: from BYAPR15MB2501.namprd15.prod.outlook.com
- ([fe80::c13d:be57:b216:bfa0]) by BYAPR15MB2501.namprd15.prod.outlook.com
- ([fe80::c13d:be57:b216:bfa0%5]) with mapi id 15.20.2327.026; Thu, 10 Oct 2019
- 17:19:01 +0000
-From:   Alexei Starovoitov <ast@fb.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf-next 2/2] bpf/stackmap: fix A-A deadlock in
- bpf_get_stack()
-Thread-Topic: [PATCH bpf-next 2/2] bpf/stackmap: fix A-A deadlock in
- bpf_get_stack()
-Thread-Index: AQHVfzKswn/pkqmThEy7QwA/cvFN/adTfF0AgACi1oA=
-Date:   Thu, 10 Oct 2019 17:19:01 +0000
-Message-ID: <a1d30b11-2759-0293-5612-48150db92775@fb.com>
-References: <20191010061916.198761-1-songliubraving@fb.com>
- <20191010061916.198761-3-songliubraving@fb.com>
- <20191010073608.GO2311@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191010073608.GO2311@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0001.namprd19.prod.outlook.com
- (2603:10b6:300:d4::11) To BYAPR15MB2501.namprd15.prod.outlook.com
- (2603:10b6:a02:88::11)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::f66f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 99400205-3077-480d-10db-08d74da5f101
-x-ms-traffictypediagnostic: BYAPR15MB2663:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB2663530AE9E4E6AD6F7AEA96D7940@BYAPR15MB2663.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:175;
-x-forefront-prvs: 018632C080
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(376002)(366004)(396003)(39860400002)(136003)(346002)(199004)(189003)(256004)(66556008)(66446008)(64756008)(478600001)(6512007)(8676002)(102836004)(446003)(54906003)(81156014)(11346002)(66476007)(66946007)(6486002)(486006)(81166006)(52116002)(305945005)(14444005)(2616005)(76176011)(46003)(7736002)(25786009)(476003)(6436002)(229853002)(31686004)(14454004)(186003)(6246003)(4326008)(99286004)(36756003)(2906002)(316002)(71200400001)(71190400001)(8936002)(86362001)(110136005)(5660300002)(6116002)(53546011)(31696002)(6506007)(386003)(6636002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2663;H:BYAPR15MB2501.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JlOUHvbFeeg2+KRy49JZw8XQa/AWVhuCfJKMTIj6QfhcxnWnnD+kgjM0alnSJl4MZQdskhH9ke1muTcJi2uY+SIDuptoNzBRiiRLunhordFCcPrdUieQS7zpxV2AYVfQcC5mejVBuLMqJoEooUVv9sCIpZNH3cgPleF2e2DEcBhRSFfYbpruzZU/Kuy3X1YcVS96KGRCnn//GWQNnxWBz1th3Viy6IT2JKIVLBckmuuU83aHycGVKkE3rIMt+gRzVZ1MBiQYG3tb3aceAtS7IMwTAoJ4rpWyljyMJEmYBA4sXyrbpu4FzsGqvh5UBsJrdYhcucMpTrGzuZQVAEujDB9JGFsy4QF53K6csYv2Q4SkUrV/PtB0K/2fsAvH9Y/l1jiGQP8VsorOBQy/LVMKDPp61g7KT9xe4PsIjFew+Zg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <886DEB1D6DD67342989EFADF24526243@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 10 Oct 2019 13:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfJJRUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 13:20:17 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9413A20659;
+        Thu, 10 Oct 2019 17:20:15 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 13:20:13 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] ftrace/module: Allow ftrace to make only loaded module
+ text read-write
+Message-ID: <20191010132013.7f3388bc@gandalf.local.home>
+In-Reply-To: <20191010170111.GQ2328@hirez.programming.kicks-ass.net>
+References: <20191009223638.60b78727@oasis.local.home>
+        <20191010073121.GN2311@hirez.programming.kicks-ass.net>
+        <20191010093329.GI2359@hirez.programming.kicks-ass.net>
+        <20191010093650.GJ2359@hirez.programming.kicks-ass.net>
+        <20191010122909.GK2359@hirez.programming.kicks-ass.net>
+        <20191010105515.5eba7f31@gandalf.local.home>
+        <20191010170111.GQ2328@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99400205-3077-480d-10db-08d74da5f101
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 17:19:01.6349
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qdu9LS4OBj4OODOhtT/UZd8oFp5Z1dOGidoEFv/jOnWqagubIfg7bH6jhl6scPX3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2663
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-10_06:2019-10-10,2019-10-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- mlxlogscore=999 clxscore=1011 spamscore=0 suspectscore=0 impostorscore=0
- phishscore=0 bulkscore=0 priorityscore=1501 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910100152
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTAvMTAvMTkgMTI6MzYgQU0sIFBldGVyIFppamxzdHJhIHdyb3RlOg0KPiBPbiBXZWQsIE9j
-dCAwOSwgMjAxOSBhdCAxMToxOToxNlBNIC0wNzAwLCBTb25nIExpdSB3cm90ZToNCj4+IGJwZiBz
-dGFja21hcCB3aXRoIGJ1aWxkLWlkIGxvb2t1cCAoQlBGX0ZfU1RBQ0tfQlVJTERfSUQpIGNhbiB0
-cmlnZ2VyIEEtQQ0KPj4gZGVhZGxvY2sgb24gcnFfbG9jaygpOg0KPj4NCj4+IHJjdTogSU5GTzog
-cmN1X3NjaGVkIGRldGVjdGVkIHN0YWxscyBvbiBDUFVzL3Rhc2tzOg0KPj4gWy4uLl0NCj4+IENh
-bGwgVHJhY2U6DQo+PiAgIHRyeV90b193YWtlX3VwKzB4MWFkLzB4NTkwDQo+PiAgIHdha2VfdXBf
-cSsweDU0LzB4ODANCj4+ICAgcndzZW1fd2FrZSsweDhhLzB4YjANCj4+ICAgYnBmX2dldF9zdGFj
-aysweDEzYy8weDE1MA0KPj4gICBicGZfcHJvZ19mYmRhZjQyZWRlZDlmZTQ2X29uX2V2ZW50KzB4
-NWUzLzB4MTAwMA0KPj4gICBicGZfb3ZlcmZsb3dfaGFuZGxlcisweDYwLzB4MTAwDQo+PiAgIF9f
-cGVyZl9ldmVudF9vdmVyZmxvdysweDRmLzB4ZjANCj4+ICAgcGVyZl9zd2V2ZW50X292ZXJmbG93
-KzB4OTkvMHhjMA0KPj4gICBfX19wZXJmX3N3X2V2ZW50KzB4ZTcvMHgxMjANCj4+ICAgX19zY2hl
-ZHVsZSsweDQ3ZC8weDYyMA0KPj4gICBzY2hlZHVsZSsweDI5LzB4OTANCj4+ICAgZnV0ZXhfd2Fp
-dF9xdWV1ZV9tZSsweGI5LzB4MTEwDQo+PiAgIGZ1dGV4X3dhaXQrMHgxMzkvMHgyMzANCj4+ICAg
-ZG9fZnV0ZXgrMHgyYWMvMHhhNTANCj4+ICAgX194NjRfc3lzX2Z1dGV4KzB4MTNjLzB4MTgwDQo+
-PiAgIGRvX3N5c2NhbGxfNjQrMHg0Mi8weDEwMA0KPj4gICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVy
-X2h3ZnJhbWUrMHg0NC8weGE5DQo+Pg0KPiANCj4+IGRpZmYgLS1naXQgYS9rZXJuZWwvYnBmL3N0
-YWNrbWFwLmMgYi9rZXJuZWwvYnBmL3N0YWNrbWFwLmMNCj4+IGluZGV4IDA1MjU4MGMzM2QyNi4u
-M2IyNzhmNmIwYzNlIDEwMDY0NA0KPj4gLS0tIGEva2VybmVsL2JwZi9zdGFja21hcC5jDQo+PiAr
-KysgYi9rZXJuZWwvYnBmL3N0YWNrbWFwLmMNCj4+IEBAIC0yODcsNyArMjg3LDcgQEAgc3RhdGlj
-IHZvaWQgc3RhY2tfbWFwX2dldF9idWlsZF9pZF9vZmZzZXQoc3RydWN0IGJwZl9zdGFja19idWls
-ZF9pZCAqaWRfb2ZmcywNCj4+ICAgCWJvb2wgaXJxX3dvcmtfYnVzeSA9IGZhbHNlOw0KPj4gICAJ
-c3RydWN0IHN0YWNrX21hcF9pcnFfd29yayAqd29yayA9IE5VTEw7DQo+Pg0KPj4gLQlpZiAoaW5f
-bm1pKCkpIHsNCj4+ICsJaWYgKGluX25taSgpIHx8IHRoaXNfcnFfaXNfbG9ja2VkKCkpIHsNCj4+
-ICAgCQl3b3JrID0gdGhpc19jcHVfcHRyKCZ1cF9yZWFkX3dvcmspOw0KPj4gICAJCWlmICh3b3Jr
-LT5pcnFfd29yay5mbGFncyAmIElSUV9XT1JLX0JVU1kpDQo+PiAgIAkJCS8qIGNhbm5vdCBxdWV1
-ZSBtb3JlIHVwX3JlYWQsIGZhbGxiYWNrICovDQo+IA0KPiBUaGlzIGlzIGhvcnJpZmljIGNyYXAu
-IEp1c3Qgc2F5IG5vIHRvIHRoYXQgZ2V0X2J1aWxkX2lkX29mZnNldCgpDQo+IHRyYWlud3JlY2su
-DQoNCnRoaXMgaXMgbm90IGEgaGVscGZ1bCBjb21tZW50Lg0KV2hhdCBpc3N1ZXMgZG8geW91IHNl
-ZSB3aXRoIHRoaXMgYXBwcm9hY2g/DQoNCg0KDQo=
+On Thu, 10 Oct 2019 19:01:11 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Thu, Oct 10, 2019 at 10:55:15AM -0400, Steven Rostedt wrote:
+> 
+> > OK, so basically this moves the enabling of function tracing from
+> > within the ftrace_module_enable() code without releasing the
+> > ftrace_lock mutex.
+> > 
+> > But we have an issue with the state of the module here, as it is still
+> > set as MODULE_STATE_UNFORMED. Let's look at what happens if we have:
+> > 
+> > 
+> > 	CPU0				CPU1
+> > 	----				----
+> >  echo function > current_tracer
+> > 				modprobe foo
+> > 				  enable foo functions to be traced
+> > 				  (foo function records not disabled)
+> >  echo nop > current_tracer
+> > 
+> >    disable all functions being
+> >    traced including foo functions
+> > 
+> >    arch calls set_all_modules_text_rw()
+> >     [skips UNFORMED modules, which foo still is ]
+> > 
+> > 				  set foo's text to read-only
+> > 				  foo's state to COMING
+> > 
+> >    tries to disable foo's functions
+> >    foo's text is read-only
+> > 
+> >    BUG trying to write to ro text!!!
+> > 
+> > 
+> > Like I said, this is very subtle. It may no longer be a bug on x86
+> > with your patches, but it will bug on ARM or anything else that still
+> > uses set_all_modules_text_rw() in the ftrace prepare code.  
+> 
+> I can't immediately follow, but I think we really should go there.
+> 
+> For now, something like this might work:
+
+Hmm, I'm lost at what the below is trying to do with respect to the
+above.
+
+-- Steve
+
+> 
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -34,6 +34,8 @@
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  
+> +static int ftrace_poke_late = 0;
+> +
+>  int ftrace_arch_code_modify_prepare(void)
+>      __acquires(&text_mutex)
+>  {
+> @@ -43,12 +45,15 @@ int ftrace_arch_code_modify_prepare(void
+>  	 * ftrace has it set to "read/write".
+>  	 */
+>  	mutex_lock(&text_mutex);
+> +	ftrace_poke_late = 1;
+>  	return 0;
+>  }
+>  
+>  int ftrace_arch_code_modify_post_process(void)
+>      __releases(&text_mutex)
+>  {
+> +	text_poke_finish();
+> +	ftrace_poke_late = 0;
+>  	mutex_unlock(&text_mutex);
+>  	return 0;
+>  }
+> @@ -116,7 +121,10 @@ ftrace_modify_code_direct(unsigned long
+>  		return ret;
+>  
+>  	/* replace the text with the new text */
+> -	text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
+> +	if (ftrace_poke_late)
+> +		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
+> +	else
+> +		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
+>  	return 0;
+>  }
+>  
+
