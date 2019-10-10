@@ -2,80 +2,116 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945C8C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63572C47404
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFF2206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA8C206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:13:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qaOuO5Yn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732475AbfJJALA (ORCPT
+        id S1732509AbfJJANB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:11:00 -0400
-Received: from gate.crashing.org ([63.228.1.57]:56020 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731145AbfJJAK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:10:59 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9A0AioC023487;
-        Wed, 9 Oct 2019 19:10:45 -0500
-Message-ID: <991382b92be6b78e596b089d2c3677358afa52fc.camel@kernel.crashing.org>
-Subject: Re: [PATCH 1/3] dt-bindings: net: ftgmac100: Document AST2600
- compatible
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Andrew Jeffery <andrew@aj.id.au>, netdev <netdev@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joel Stanley <joel@jms.id.au>
-Date:   Thu, 10 Oct 2019 11:10:44 +1100
-In-Reply-To: <4998960d-6125-4402-9905-869653a84e52@www.fastmail.com>
-References: <20191008115143.14149-1-andrew@aj.id.au>
-         <20191008115143.14149-2-andrew@aj.id.au>
-         <75d915aec936be64ea5ebd63402efd90bb1c29d9.camel@kernel.crashing.org>
-         <6f70580a-4b4b-45e0-8899-8a74f9587002@www.fastmail.com>
-         <4998960d-6125-4402-9905-869653a84e52@www.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 9 Oct 2019 20:13:01 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:43742 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732019AbfJJANB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 20:13:01 -0400
+Received: from prsriva-Precision-Tower-5810.corp.microsoft.com (unknown [167.220.2.18])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C712320B71C6;
+        Wed,  9 Oct 2019 17:12:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C712320B71C6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1570666379;
+        bh=8PIUlpe4QGC+q/h/YpfHHQXYskMJ+TEhigux0nCSFXM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qaOuO5Yn2yipBl6hZT8j8IFlCHBTtyJC7kkcW9FvlG5kGq4uyWFQDjYVtosLiWlQ+
+         1D46wLbZo9t0EgiPI05/SVm9SsFhuQCQQOgfaxGIp8F9rqNKmrc+3JogfHl0Y7hZOY
+         cFsEVt4+weA6ky/j8ZbMQ1JG5JBtdUG4jXQoDpKU=
+From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Cc:     arnd@arndb.de, jean-philippe@linaro.org, allison@lohutok.net,
+        kristina.martsenko@arm.org, yamada.masahiro@socionext.com,
+        duwe@lst.de, mark.rutland@arm.com, tglx@linutronix.de,
+        takahiro.akashi@linaro.org, james.morse@arm.org,
+        catalin.marinas@arm.com, sboyd@kernel.org, bauerman@linux.ibm.com,
+        zohar@linux.ibm.com
+Subject: [PATCH v3 0/2] Add support for arm64 to carry ima measurement log in kexec_file_load
+Date:   Wed,  9 Oct 2019 17:12:49 -0700
+Message-Id: <20191010001251.22746-1-prsriva@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-09 at 15:25 +1030, Andrew Jeffery wrote:
-> 
-> On Wed, 9 Oct 2019, at 15:19, Andrew Jeffery wrote:
-> > 
-> > 
-> > On Wed, 9 Oct 2019, at 15:08, Benjamin Herrenschmidt wrote:
-> > > On Tue, 2019-10-08 at 22:21 +1030, Andrew Jeffery wrote:
-> > > > The AST2600 contains an FTGMAC100-compatible MAC, although it
-> > > > no-
-> > > > longer
-> > > > contains an MDIO controller.
-> > > 
-> > > How do you talk to the PHY then ?
-> > 
-> > There are still MDIO controllers, they're just not in the MAC IP on
-> > the 2600.
-> 
-> Sorry, on reflection that description is a little ambiguous in its
-> use of 'it'. I'll
-> fix that in v2 as well. Does this read better?
-> 
-> "The AST2600 contains an FTGMAC100-compatible MAC, although the MAC
-> no-longer contains an MDIO controller."
+Add support to carry ima measurement log
+to the next kexec'ed session triggered via kexec_file_load.
+- Top of Linux 5.3-rc6
 
-That's fine. Or to be pendantic, say the MDIO controller has been moved
-of the MAC unit into its own separate block or something along those
-lines so people like me don't get anxious :)
+Currently during kexec the kernel file signatures are/can be validated
+prior to actual load, the information(PE/ima signature) is not carried
+to the next session. This lead to loss of information.
 
-Cheers,
-Ben.
+Carrying forward the ima measurement log to the next kexec'ed session 
+allows a verifying party to get the entire runtime event log since the
+last full reboot, since that is when PCRs were last reset.
 
+Tested for arm64 qemu and real hardware.
+I have not been unable to test the patch for powerpc 64bit. Any testing
+is greatly appretiated.
+
+TODO: Add support for 32 bit in the of_ima.c
+
+v3:
+  - Fix build breaks due to bad config.
+
+v2:
+  - move common code to drivers/of/of_ima.c.
+  - point arm64 to use of_ima implementation.
+  - point powerpc to use of_ima implementation
+
+v1:
+  - add new fdt porperties to mark start and end for ima measurement
+    log.
+  - use fdt_* functions to add/remove fdt properties and memory
+    allocations.
+  - remove additional check for endian-ness as they are checked
+    in fdt_* functions.
+
+v0:
+  - Add support to carry ima measurement log in arm64, 
+   uses same code as powerpc.
+Prakhar Srivastava (2):
+  Add support for arm64 to carry ima measurement log in kexec_file_load
+  update powerpc implementation to call into of_ima*
+
+ arch/arm64/Kconfig                     |   7 +
+ arch/arm64/include/asm/ima.h           |  24 +++
+ arch/arm64/include/asm/kexec.h         |   5 +
+ arch/arm64/kernel/Makefile             |   3 +-
+ arch/arm64/kernel/ima_kexec.c          |  78 ++++++++++
+ arch/arm64/kernel/machine_kexec_file.c |   6 +
+ arch/powerpc/Kconfig                   |   6 +
+ arch/powerpc/include/asm/ima.h         |   6 -
+ arch/powerpc/kernel/Makefile           |   8 +-
+ arch/powerpc/kernel/ima_kexec.c        | 170 ++-------------------
+ drivers/of/Kconfig                     |   6 +
+ drivers/of/Makefile                    |   1 +
+ drivers/of/of_ima.c                    | 204 +++++++++++++++++++++++++
+ include/linux/of.h                     |  31 ++++
+ 14 files changed, 386 insertions(+), 169 deletions(-)
+ create mode 100644 arch/arm64/include/asm/ima.h
+ create mode 100644 arch/arm64/kernel/ima_kexec.c
+ create mode 100644 drivers/of/of_ima.c
+
+-- 
+2.17.1
 
