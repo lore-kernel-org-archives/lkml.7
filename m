@@ -2,69 +2,69 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FAAECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B226BC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009F021920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB33218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vg1mOyAk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmdsPV5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387757AbfJJJve (ORCPT
+        id S2387915AbfJJJvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:51:34 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53042 "EHLO
+        Thu, 10 Oct 2019 05:51:38 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51220 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387400AbfJJJve (ORCPT
+        with ESMTP id S2387791AbfJJJvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:51:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r19so6217906wmh.2;
-        Thu, 10 Oct 2019 02:51:32 -0700 (PDT)
+        Thu, 10 Oct 2019 05:51:37 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so6218517wme.1;
+        Thu, 10 Oct 2019 02:51:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aHFN65Csd/xrxQzu8FB0q4K51jhLg6Nw1K88IWkE/Xo=;
-        b=Vg1mOyAkeg4XrF3AGBRhpEcGntwVblb3HyOAvq0hjvwCPZ1Xa0rG0puc+kpoEU5rTg
-         y/lSBvgglRKSzaysmBb+0FAG/RmeWsxwo6xU6V+LqYr2dbddIrUnqaQAG0OL2lEVaQ/t
-         8aobsqUU8Ef/q06+jjhTAWA781m+rYXvePdOXDL62NoADES6NIqFWfW5Q2cJe3EIOWwt
-         L9bcJwUE92+XcyLohC2yrfsGIXl7/uo0MzapJHTaqxEBlnUfTzkxwuGsZpSTFYOF4l6I
-         RA9npQ1GTgYaO0vOowrsJ1i2vDtY+4V6A7HepnfqQof41+dxqFxrLB+ngO3i6cfpbwib
-         mMkg==
+        bh=jC8sod3IK3MEfPEVtwNiX6u+A/D3kZVyjuptbX8nh2k=;
+        b=nmdsPV5Mjr9w0p/bozHVlWvJgjufvIdwfAXEVF6YGmdOa8XI1UEfG3jG6G7l+2GUJ7
+         /XdgxIdG6jFbZZvHulVeJOumDkrzEfV8tmPOe1FN9YP8jcvflZpRgfJGRVz24fImYUuq
+         LK85SgKS5I0ruMbfXizbcE0Y/PhPnpOOpwUhhyHgYLFppVmwjl0eW28ZBIK0y/KZmJNP
+         wYeWi2e38bnFnTDZU9PkcwMtXPlQi3+caxjBz5zzB6AsP3LTYGcaTYcZif4OojcTpmGO
+         /nZO2DGIVZZ95vYzfU2hEuJ61mQy2dROZcp0+7Soq6QAOx611R8Lh5TqKliZXG7SkmU0
+         tXNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aHFN65Csd/xrxQzu8FB0q4K51jhLg6Nw1K88IWkE/Xo=;
-        b=dYMIvFwHPuKR/3cQ6zGtHKZwA4kSPe6ugqICaHFHsJC+S5RgVgMLH8Y0seOQyyAluw
-         qu3/lwo7WKV/VHNGaQGCLto3enj9Ho9anu+q1MRdb2DTT4MXWAewP4ljOebS6vgjPpKk
-         T1HhhzpEs8suxO2sQgr9nz4DOm9Jh2eLYN5IZxGLNLYwRMfRXaCc5UmSt/4sW9qdFQ08
-         lpw9IDkL45nNbf0a84ogenQd9MFP2gOtLTKLwt5mJnpALnh+RzWmYXB3X5p/tkZD2Jxk
-         Wwvojcz6L05ON2BSpvkBHYKCsImCV5lniQfCtO1Ya6txNT1O6usX7bLZ5bJILl+tqedb
-         Azyw==
-X-Gm-Message-State: APjAAAX0YPHvIkF+LhGJmgqZo2ZBY1BquL8/pu0touE38gCQ8eYunhsX
-        dFcCy7RAd7WgjkAA+RKAANw=
-X-Google-Smtp-Source: APXvYqyPbJZpHATNxhAcfYFLJqGU8BIPoxBObKr+SglCL34kv1hRQlx1GqAHDeBTW+y0t+BA4JtWtw==
-X-Received: by 2002:a1c:e455:: with SMTP id b82mr6835014wmh.41.1570701091565;
-        Thu, 10 Oct 2019 02:51:31 -0700 (PDT)
+        bh=jC8sod3IK3MEfPEVtwNiX6u+A/D3kZVyjuptbX8nh2k=;
+        b=oQr0UDvFGYV2fkvzlkLNMgVpEOIaSjr8ushg6TN9zHy4ybHXLIi3RK50hvCQGOjRdZ
+         n6IEi+6pnfU2tSvq7AYgy+Xg77F4kYW3MeVmAQ5/2sSdYn+VaQWqSHUHWxLwPPBOXLhc
+         vdicwblp15b1dMGk6HA3Fl9MC6cFG5O5EcU1NrvO1k1yXgzcVxjOwn7Qt8nc3LHpkAaJ
+         CBXq6p0pxZMwfzL6pqoO1kQ+IC/oru8SeeSWu7/S7p8TKlSg4IuxPmBs1x6bFXHAYwS/
+         gRkVLbIO8v5eQNKrUwyHu9tMdKh3yrVbbZ2MsmJp2OckAx3xTOoOJDHSCqnJqz1W6wNV
+         XwtA==
+X-Gm-Message-State: APjAAAVmlO0CqgjeHkclUnCfjoNj5AJT/SG4YvKlaoijXWIYu2DyBCA0
+        Aj+P7fCmd3o+sSedk+MIpEXJBJeo
+X-Google-Smtp-Source: APXvYqxKLn7x0hopMV3fSEWhlTjEba4RBIu6XjvuvKFjvMKkDVqYJjzkcjmHBvgmafFOArnmsIGhRw==
+X-Received: by 2002:a05:600c:2185:: with SMTP id e5mr7096154wme.78.1570701094206;
+        Thu, 10 Oct 2019 02:51:34 -0700 (PDT)
 Received: from localhost.localdomain ([46.114.37.24])
-        by smtp.googlemail.com with ESMTPSA id o4sm11678251wre.91.2019.10.10.02.51.29
+        by smtp.googlemail.com with ESMTPSA id o4sm11678251wre.91.2019.10.10.02.51.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 02:51:30 -0700 (PDT)
+        Thu, 10 Oct 2019 02:51:33 -0700 (PDT)
 From:   Gon Solo <gonsolo@gmail.com>
 To:     mchehab+samsung@kernel.org
 Cc:     linux-media@vger.kernel.org, mchehab@infradead.org, jp@jpvw.nl,
         crope@iki.fi, sean@mess.org, linux-kernel@vger.kernel.org,
-        Gon Solo <gonsolo@gmail.com>,
-        Andreas Wendleder <andreas.wendleder@gmail.com>
-Subject: [PATCH 0/4] Add support for Logilink VG0022A.
-Date:   Thu, 10 Oct 2019 11:50:59 +0200
-Message-Id: <20191010095103.3803-1-gonsolo@gmail.com>
+        Gon Solo <gonsolo@gmail.com>
+Subject: [PATCH 2/4] si2157: Add option for not downloading firmware.
+Date:   Thu, 10 Oct 2019 11:51:01 +0200
+Message-Id: <20191010095103.3803-3-gonsolo@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191010091848.GA2898@Limone>
 References: <20191010091848.GA2898@Limone>
@@ -75,24 +75,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches add support for the Logilink VG0022A.
+While at it, convert to kernel-doc format and use bits instead of bools.
 
-Signed-off-by: Andreas Wendleder <andreas.wendleder@gmail.com>
+Signed-off-by: Gon Solo <gonsolo@gmail.com>
+---
+ drivers/media/tuners/si2157.c      |  6 ++++++
+ drivers/media/tuners/si2157.h      | 33 +++++++++++++++++-------------
+ drivers/media/tuners/si2157_priv.h |  5 +++--
+ 3 files changed, 28 insertions(+), 16 deletions(-)
 
-Gon Solo (4):
-  si2168: Use bits and convert to kernel-doc format.
-  si2157: Add option for not downloading firmware.
-  af9035: Make speed computation clear.
-  Add support for Logilink VG0022A.
-
- drivers/media/dvb-frontends/si2168.h      | 47 +++++++++++++----------
- drivers/media/dvb-frontends/si2168_priv.h | 10 ++---
- drivers/media/tuners/si2157.c             |  6 +++
- drivers/media/tuners/si2157.h             | 33 +++++++++-------
- drivers/media/tuners/si2157_priv.h        |  5 ++-
- drivers/media/usb/dvb-usb-v2/af9035.c     | 37 ++++++++++++++++--
- 6 files changed, 92 insertions(+), 46 deletions(-)
-
+diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
+index e87040d6eca7..898e0f9f8b70 100644
+--- a/drivers/media/tuners/si2157.c
++++ b/drivers/media/tuners/si2157.c
+@@ -118,6 +118,11 @@ static int si2157_init(struct dvb_frontend *fe)
+ 			goto err;
+ 	}
+ 
++	if (dev->dont_load_firmware) {
++		dev_info(&client->dev, "device is buggy, skipping firmware download\n");
++		goto skip_fw_download;
++	}
++
+ 	/* query chip revision */
+ 	memcpy(cmd.args, "\x02", 1);
+ 	cmd.wlen = 1;
+@@ -440,6 +445,7 @@ static int si2157_probe(struct i2c_client *client,
+ 	i2c_set_clientdata(client, dev);
+ 	dev->fe = cfg->fe;
+ 	dev->inversion = cfg->inversion;
++	dev->dont_load_firmware = cfg->dont_load_firmware;
+ 	dev->if_port = cfg->if_port;
+ 	dev->chiptype = (u8)id->driver_data;
+ 	dev->if_frequency = 5000000; /* default value of property 0x0706 */
+diff --git a/drivers/media/tuners/si2157.h b/drivers/media/tuners/si2157.h
+index c22ca784f43f..ffdece3c2eaa 100644
+--- a/drivers/media/tuners/si2157.h
++++ b/drivers/media/tuners/si2157.h
+@@ -11,29 +11,34 @@
+ #include <media/media-device.h>
+ #include <media/dvb_frontend.h>
+ 
+-/*
+- * I2C address
+- * 0x60
++/**
++ * struct si2157_config - configuration parameters for si2157
++ *
++ * @fe:
++ *	frontend returned by driver
++ * @mdev:
++ *	media device returned by driver
++ * @inversion:
++ *	spectral inversion
++ * @dont_load_firmware:
++ *	Instead of uploading a new firmware, use the existing one
++ * @if_port:
++ *	Port selection
++ *	Select the RF interface to use (pins 9+11 or 12+13)
++ *
++ * Note:
++ *	The I2C address of this demod is 0x60.
+  */
+ struct si2157_config {
+-	/*
+-	 * frontend
+-	 */
+ 	struct dvb_frontend *fe;
+ 
+ #if defined(CONFIG_MEDIA_CONTROLLER)
+ 	struct media_device *mdev;
+ #endif
+ 
+-	/*
+-	 * Spectral Inversion
+-	 */
+-	bool inversion;
++	unsigned int inversion:1;
++	unsigned int dont_load_firmware:1;
+ 
+-	/*
+-	 * Port selection
+-	 * Select the RF interface to use (pins 9+11 or 12+13)
+-	 */
+ 	u8 if_port;
+ };
+ 
+diff --git a/drivers/media/tuners/si2157_priv.h b/drivers/media/tuners/si2157_priv.h
+index 2bda903358da..778f81b39996 100644
+--- a/drivers/media/tuners/si2157_priv.h
++++ b/drivers/media/tuners/si2157_priv.h
+@@ -23,8 +23,9 @@ enum si2157_pads {
+ struct si2157_dev {
+ 	struct mutex i2c_mutex;
+ 	struct dvb_frontend *fe;
+-	bool active;
+-	bool inversion;
++	unsigned int active:1;
++	unsigned int inversion:1;
++	unsigned int dont_load_firmware:1;
+ 	u8 chiptype;
+ 	u8 if_port;
+ 	u32 if_frequency;
 -- 
 2.20.1
 
