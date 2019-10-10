@@ -2,72 +2,72 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 825C4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC69FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603B520B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB84214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfJJWCv (ORCPT
+        id S1726665AbfJJWK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 18:02:51 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57583 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfJJWCv (ORCPT
+        Thu, 10 Oct 2019 18:10:57 -0400
+Received: from smtprelay0113.hostedemail.com ([216.40.44.113]:56900 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725978AbfJJWK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 18:02:51 -0400
-Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 41b39622b0139b57; Fri, 11 Oct 2019 00:02:49 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-kernel@lists.codethink.co.uk,
-        linux-pm@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] PM: sleep: include <linux/pm_runtime.h> for pm_wq
-Date:   Fri, 11 Oct 2019 00:02:48 +0200
-Message-ID: <4465950.ddMAbEBQAA@kreacher>
-In-Reply-To: <20191008104646.11658-1-ben.dooks@codethink.co.uk>
-References: <20191008104646.11658-1-ben.dooks@codethink.co.uk>
+        Thu, 10 Oct 2019 18:10:57 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 31CB2182CED2A;
+        Thu, 10 Oct 2019 22:10:56 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: news25_4231f6f182805
+X-Filterd-Recvd-Size: 1564
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 10 Oct 2019 22:10:54 +0000 (UTC)
+Message-ID: <19dc4500bbfbb9d09f9730764a2b59353534358d.camel@perches.com>
+Subject: Re: [PATCH 05/19] EDAC, mc: Reduce indentation level in
+ edac_mc_handle_error()
+From:   Joe Perches <joe@perches.com>
+To:     Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 10 Oct 2019 15:10:53 -0700
+In-Reply-To: <20191010202418.25098-6-rrichter@marvell.com>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+         <20191010202418.25098-6-rrichter@marvell.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 8, 2019 12:46:46 PM CEST Ben Dooks wrote:
-> Include the <linux/runtime_pm.h> for the definition of
-> pm_wq to avoid the following warning:
-> 
-> kernel/power/main.c:890:25: warning: symbol 'pm_wq' was not declared. Should it be static?
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
->  kernel/power/main.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/power/main.c b/kernel/power/main.c
-> index e8710d179b35..e26de7af520b 100644
-> --- a/kernel/power/main.c
-> +++ b/kernel/power/main.c
-> @@ -15,6 +15,7 @@
->  #include <linux/seq_file.h>
->  #include <linux/suspend.h>
->  #include <linux/syscalls.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include "power.h"
->  
-> 
+On Thu, 2019-10-10 at 20:25 +0000, Robert Richter wrote:
+> Reduce the indentation level in edac_mc_handle_error() a bit by using
+> continue. No functional changes.
 
-Applying as a fix for 5.4, thanks!
+Seems fine, but trivially below:
 
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+[]
+> @@ -1171,37 +1171,38 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+[]
+> +		strcpy(p, dimm->label);
+> +		p += strlen(p);
+> +		*p = '\0';
 
+This *p = '\0' is unnecessary as the strcpy already did that.
 
 
