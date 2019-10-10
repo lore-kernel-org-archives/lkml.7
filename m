@@ -2,120 +2,93 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA9FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C9AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120D5206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kc7eo7i+"
+	by mail.kernel.org (Postfix) with ESMTP id E89A6214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570710785;
+	bh=QQuI/HtU7JQ5P/P+YFgxZHiWEkZ1bQRUlcfBi244Tf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dH0gmuj3y0qHFdhvP0mspY7cDz5ccy7yAQPQSk/3nveZ6DrzdiUyZvgtzljEhF3yN
+	 kQ/Ezhl8oLmX77qfSbE5JH4AZy1QrJQgDiMJuoXClBBBrzvGmjTwCq8FqDXrqFpKdX
+	 77fXfKrVm8saAeXzycIVj88WggCF4Rf1HRQjfM5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733289AbfJJMci (ORCPT
+        id S2387442AbfJJMdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:32:38 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59476 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfJJMci (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:32:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JHl9GmYtentxJL+7m1E2SgJVgP8t2x02tS9jT0BZXPY=; b=kc7eo7i+iGPnb8iSo9NczDvt8Y
-        rHiGsvmqx6erZt14GL+1e78YvnlkwOKyVo5iRHX3aNc6HNbp075D50M0f/3cwgl3k/RKzpL/fn5wM
-        HwmRmVLSPU73hu0+yOml9+pkJbkPL/YWeQLnxcbi+dqHiHAflRV9XbPnwVPP1pQVlh4Wuojy77Zd/
-        +DnGmEl9KT+vM1hdNOW5t7WCXnAqVKqFtFJN8sg3m4cOAF7mqkciZ9RpFPf7r0nm+GjldiZh9Hfok
-        o/4vYmvXXwWQykt36mUK24VRQjx3gApcCdF/ZFsML1vLZHT4ZKAn7tMExucfcapZwXhbBM2KLLz1x
-        3b7Rv0yw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIXcD-0007JG-Cc; Thu, 10 Oct 2019 12:32:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 10 Oct 2019 08:33:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726923AbfJJMdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:33:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 51A1B301224;
-        Thu, 10 Oct 2019 14:31:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 88009205A4300; Thu, 10 Oct 2019 14:32:19 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 14:32:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Manfred Spraul <manfred@colorfullife.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        1vier1@web.de, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-Subject: Re: wake_q memory ordering
-Message-ID: <20191010123219.GO2328@hirez.programming.kicks-ass.net>
-References: <990690aa-8281-41da-4a46-99bb8f9fec31@colorfullife.com>
- <20191010114244.GS2311@hirez.programming.kicks-ass.net>
- <7af22b09-2ab9-78c9-3027-8281f020e2e8@colorfullife.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5543120B7C;
+        Thu, 10 Oct 2019 12:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570710782;
+        bh=QQuI/HtU7JQ5P/P+YFgxZHiWEkZ1bQRUlcfBi244Tf0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b17VOrZXBIUY2jMy/zCZMuXLACb95NdVlFoDe693SRI8/DJu8IwHFQQrREjwHPC2P
+         w+EhEo26rexSmBj8w5rulBy4arT7o2aInmo3CHJcrHeQ1QrnV+4BF2ACQQ5lY5ZBIJ
+         w19nLC4Jz1jXq2xO8M09lRllfEoejQmywKe4kprk=
+Date:   Thu, 10 Oct 2019 14:33:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
+        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+Subject: Re: [RESEND PATCH v4 2/2] uacce: add uacce driver
+Message-ID: <20191010123300.GA730639@kroah.com>
+References: <1570634502-20923-1-git-send-email-zhangfei.gao@linaro.org>
+ <1570634502-20923-3-git-send-email-zhangfei.gao@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7af22b09-2ab9-78c9-3027-8281f020e2e8@colorfullife.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1570634502-20923-3-git-send-email-zhangfei.gao@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 02:13:47PM +0200, Manfred Spraul wrote:
-> Hi Peter,
+On Wed, Oct 09, 2019 at 11:21:42PM +0800, Zhangfei Gao wrote:
+> From: Kenneth Lee <liguozhu@hisilicon.com>
 > 
-> On 10/10/19 1:42 PM, Peter Zijlstra wrote:
-> > On Thu, Oct 10, 2019 at 12:41:11PM +0200, Manfred Spraul wrote:
-> > > Hi,
-> > > 
-> > > Waiman Long noticed that the memory barriers in sem_lock() are not really
-> > > documented, and while adding documentation, I ended up with one case where
-> > > I'm not certain about the wake_q code:
-> > > 
-> > > Questions:
-> > > - Does smp_mb__before_atomic() + a (failed) cmpxchg_relaxed provide an
-> > >    ordering guarantee?
-> > Yep. Either the atomic instruction implies ordering (eg. x86 LOCK
-> > prefix) or it doesn't (most RISC LL/SC), if it does,
-> > smp_mb__{before,after}_atomic() are a NO-OP and the ordering is
-> > unconditinoal, if it does not, then smp_mb__{before,after}_atomic() are
-> > unconditional barriers.
+> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
+> provide Shared Virtual Addressing (SVA) between accelerators and processes.
+> So accelerator can access any data structure of the main cpu.
+> This differs from the data sharing between cpu and io device, which share
+> data content rather than address.
+> Since unified address, hardware and user space of process can share the
+> same virtual address in the communication.
 > 
-> And _relaxed() differs from "normal" cmpxchg only for LL/SC architectures,
-> correct?
-
-Indeed.
-
-> Therefore smp_mb__{before,after}_atomic() may be combined with
-> cmpxchg_relaxed, to form a full memory barrier, on all archs.
-
-Just so.
-
-> > > - Is it ok that wake_up_q just writes wake_q->next, shouldn't
-> > >    smp_store_acquire() be used? I.e.: guarantee that wake_up_process()
-> > >    happens after cmpxchg_relaxed(), assuming that a failed cmpxchg_relaxed
-> > >    provides any ordering.
-> > There is no such thing as store_acquire, it is either load_acquire or
-> > store_release. But just like how we can write load-aquire like
-> > load+smp_mb(), so too I suppose we could write store-acquire like
-> > store+smp_mb(), and that is exactly what is there (through the implied
-> > barrier of wake_up_process()).
+> Uacce create a chrdev for every registration, the queue is allocated to
+> the process when the chrdev is opened. Then the process can access the
+> hardware resource by interact with the queue file. By mmap the queue
+> file space to user space, the process can directly put requests to the
+> hardware without syscall to the kernel space.
 > 
-> Thanks for confirming my assumption:
-> The code is correct, due to the implied barrier inside wake_up_process().
+> Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
+> Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 
-It has a comment there, trying to state this.
+No one is using these new apis you are creating, so we can not judge if
+they are correct or not.  Please submit this as a patch series with a
+driver that is actually going to use this api.
 
-		task->wake_q.next = NULL;
+thanks,
 
-		/*
-		 * wake_up_process() executes a full barrier, which pairs with
-		 * the queueing in wake_q_add() so as not to miss wakeups.
-		 */
-		wake_up_process(task);
+greg k-h
