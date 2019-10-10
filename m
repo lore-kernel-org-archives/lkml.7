@@ -2,109 +2,98 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108C7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDE0ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD542190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698120;
-	bh=n/e/vaObw3kyd5fTVUpqKkcLIwSibsqLEzhB8D8JkZ8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fElwTd8bYGhPDGdf2JfokpHBNDaK3f3mTlXSBYjHrTwGAb8YoyCJickylxVHAgYuT
-	 4o2hEUInFJGFh4XCgsVQyf5rAjKwzsn8EjoleUyIOpeqWvWClvJDNQX19MguvBgoBu
-	 w7ZyIJwW+tCgPzFUP4x47ef/ywzDi1THfuQsL52Q=
+	by mail.kernel.org (Postfix) with ESMTP id E7E2C2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrP7wzKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388181AbfJJIkr (ORCPT
+        id S2388296AbfJJJCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388163AbfJJIko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:40:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EE072196E;
-        Thu, 10 Oct 2019 08:40:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696843;
-        bh=n/e/vaObw3kyd5fTVUpqKkcLIwSibsqLEzhB8D8JkZ8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAMtAQ38DRE7S+bIT7cDqPdzG7LW8pbHbeBJx52Hy4upWweyRGxBF2T11s0TvL79l
-         AI2gopr8q1D0aHYLdqh5vrZWcsWbNWQpOtbXFJUp4k4IJ/ypjtT3+hemIKpWwUngL+
-         GzXoBwggt11kWYZNHmshJaTAXsn0fRQog7AS7DSo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Subject: [PATCH 5.3 071/148] drm/i915/userptr: Acquire the page lock around set_page_dirty()
-Date:   Thu, 10 Oct 2019 10:35:32 +0200
-Message-Id: <20191010083615.708820027@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
-References: <20191010083609.660878383@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 10 Oct 2019 05:02:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42046 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388177AbfJJIks (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:40:48 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z12so3207387pgp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 01:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=VOH0FG/wfv4tTtRAMaFH4XaR+zS/VbCyArBPqtL3IdA=;
+        b=jrP7wzKomFVFwg1M3qS+BWJWMnb6EndUxHO0g/Ys4jaJiN8HHwR1OagZQcNJq45ykC
+         oN9yLuOPcz4JGLJ+LL9XiSU3D5YKaB8zwV2OGQZ6ckUwNtPn5h8+i91R4wCjS1vEkNU3
+         AlyOo/W5Id9eFaBVKI6cpovRtfW8KsELBRvJzZGOuNyyneDeZU7gXaMSsUzm17lzTAwq
+         MHYVr/DKnGWnRHfEteLgoYNpOw+JcvP3HspDEfaTL0aGUEe1rj0aaJGp13moAFbSWlD0
+         +hBRdZLIWMZ2LQXPK/ysZiPBceVfIh6kUEOekDyAPBjavydFhox8dOrt+urqPMimHtdU
+         phuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VOH0FG/wfv4tTtRAMaFH4XaR+zS/VbCyArBPqtL3IdA=;
+        b=T6ILszZnxpa0pNloxv3EKgXHci7f/ANdIf+joqxSdMIOCOg1uuGxsxoW+nO1+8YrfX
+         sOO1Mcn/HYDLeo2Vckkoi1pOw9nYVTQ2vHErjzwsB12tC7Z62nwmTpJzSn5pQcbp7p6X
+         JXR3Ew4oZFvXFw/J0y4iiVEsXAxC9I4sZoxRGbPW6xqYGjcFesUSC3aPsUMCLhV6ynQ+
+         jLkhrUGbVEh92GUIGPFxIN91ual7oDL2nyK4Fvu4TUY7NAfvqioQNEyr9QiRsIbgGF2M
+         cHBWSQblwoF4ix04VkGH9PRQyjDv5BizrK1d7Q2i50aazqZKHKfCg1NIY6/dgQSkFzbc
+         /l0w==
+X-Gm-Message-State: APjAAAVmSY45dbQ9btU38tXrNQr1QLPa7DfsYTNL5l5K3ZogGsvKheoN
+        LUX7XoPbzIMrs/zHOusCZqo=
+X-Google-Smtp-Source: APXvYqzWarJ2ujAQfqmDQjlMQl1mMnKaKFzOZ6j2Mt7ttxZUv1tC3Ny6E0t3uffmQx9lwP3WTp4xIQ==
+X-Received: by 2002:a63:cd47:: with SMTP id a7mr9363852pgj.29.1570696846951;
+        Thu, 10 Oct 2019 01:40:46 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id s1sm4772495pjs.31.2019.10.10.01.40.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 01:40:46 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH v2] mtd: maps: l440gx: Avoid printing address to dmesg
+Date:   Thu, 10 Oct 2019 16:40:19 +0800
+Message-Id: <20191010084019.5190-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+Avoid printing the address of l440gx_map.virt every time l440gx init.
 
-commit cb6d7c7dc7ff8cace666ddec66334117a6068ce2 upstream.
-
-set_page_dirty says:
-
-	For pages with a mapping this should be done under the page lock
-	for the benefit of asynchronous memory errors who prefer a
-	consistent dirty state. This rule can be broken in some special
-	cases, but should be better not to.
-
-Under those rules, it is only safe for us to use the plain set_page_dirty
-calls for shmemfs/anonymous memory. Userptr may be used with real
-mappings and so needs to use the locked version (set_page_dirty_lock).
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
-Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190708140327.26825-1-chris@chris-wilson.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/gpu/drm/i915/gem/i915_gem_userptr.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/mtd/maps/l440gx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-@@ -664,7 +664,15 @@ i915_gem_userptr_put_pages(struct drm_i9
+diff --git a/drivers/mtd/maps/l440gx.c b/drivers/mtd/maps/l440gx.c
+index 876f12f40018..ebe37edc8e88 100644
+--- a/drivers/mtd/maps/l440gx.c
++++ b/drivers/mtd/maps/l440gx.c
+@@ -86,7 +86,7 @@ static int __init init_l440gx(void)
+ 		return -ENOMEM;
+ 	}
+ 	simple_map_init(&l440gx_map);
+-	printk(KERN_NOTICE "window_addr = 0x%08lx\n", (unsigned long)l440gx_map.virt);
++	printk(KERN_DEBUG "window_addr = 0x%08lx\n", (unsigned long)l440gx_map.virt);
  
- 	for_each_sgt_page(page, sgt_iter, pages) {
- 		if (obj->mm.dirty)
--			set_page_dirty(page);
-+			/*
-+			 * As this may not be anonymous memory (e.g. shmem)
-+			 * but exist on a real mapping, we have to lock
-+			 * the page in order to dirty it -- holding
-+			 * the page reference is not sufficient to
-+			 * prevent the inode from being truncated.
-+			 * Play safe and take the lock.
-+			 */
-+			set_page_dirty_lock(page);
- 
- 		mark_page_accessed(page);
- 		put_page(page);
-
+ 	/* Setup the pm iobase resource
+ 	 * This code should move into some kind of generic bridge
+-- 
+2.11.0
 
