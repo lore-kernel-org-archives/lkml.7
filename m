@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C15C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6354DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4194222C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA6B218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697303;
-	bh=J5TBZoLVR+UShUVcY9TOBt35xpRh7w429U/ZmIA3R7k=;
+	s=default; t=1570697314;
+	bh=YzbKdnyeAdGS6SxVj6Vh8w6hl9hCK0w4wCWdFEfXuUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5CYZxHWosaXUqSo1wQkrtliClQQvo3N8G7how7WlcESVnFjUmvS+IFfu0MogBm/l
-	 boVHt9hDfFc6o1O5u9E6VIyx6yllOb/RbWHQ6xLPyHhCpplz596oxgSUZXdZoKksMw
-	 kMjn9qF6YhOWE2k5K7IE2r6noT6dL5v0mx6/3GoA=
+	b=AcNSXS47bANQb9xNwjH6xS77tkIz8t302SY2nKuXYtPUUJ7YO1Uhi2sviDcKJ0Gtu
+	 VJrlaeGkfSFYXGl3UlFLGBKXQpp/btOPdsCNIMg2GPdkmntssoGlC/pVy1cD5UO3SU
+	 h+bUvi/Dmrb158g5ll1kwdoXV/uRKGmArgXTiAn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389636AbfJJIsW (ORCPT
+        id S2389659AbfJJIsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:48:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54396 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389617AbfJJIsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:14 -0400
+        id S2388644AbfJJIsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 866DF218AC;
-        Thu, 10 Oct 2019 08:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A5B2064A;
+        Thu, 10 Oct 2019 08:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697294;
-        bh=J5TBZoLVR+UShUVcY9TOBt35xpRh7w429U/ZmIA3R7k=;
+        s=default; t=1570697302;
+        bh=YzbKdnyeAdGS6SxVj6Vh8w6hl9hCK0w4wCWdFEfXuUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Usy/AoiifikETEi/avpGkRkCavdCZWqRqWvGnb2fUkcS065SGNj/qtWToN4BOsvEX
-         sy+AEjpy7lutMYvpgXUntQ/xaaps2ZEG0/0wCIp+Tww1eOlf4YiqV9+FhCLMqTjbkh
-         XeKrZ+XPZLGP5vrQzoyRyM/3Bg0cVIHLj/17JYLE=
+        b=Ro0rwDwoEw+mUJxk2XM2SIgSadiOfYGy/Y+OBBCaGh7Qsv9MLBJrzJYG9l9DGna7l
+         nBRGjUKnARAwkPsLJT9f+0OMMpZHDEwRmz5Fpqeqlf3Nw67GTfSVFwuvjx6oUbvr/G
+         XiZCrikX4Rl9SBQ/7ih7idmXAeq9Ho9dPqYD2xe8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Aring <alex.aring@gmail.com>,
-        syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>,
-        Stefan Schmidt <stefan@datenfreihafen.org>
-Subject: [PATCH 4.19 045/114] ieee802154: atusb: fix use-after-free at disconnect
-Date:   Thu, 10 Oct 2019 10:35:52 +0200
-Message-Id: <20191010083607.610435049@linuxfoundation.org>
+        stable@vger.kernel.org, Mian Yousaf Kaukab <ykaukab@suse.de>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH 4.19 093/114] arm64: Add sysfs vulnerability show for spectre-v1
+Date:   Thu, 10 Oct 2019 10:36:40 +0200
+Message-Id: <20191010083613.035890528@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -61,39 +65,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Mian Yousaf Kaukab <ykaukab@suse.de>
 
-commit 7fd25e6fc035f4b04b75bca6d7e8daa069603a76 upstream.
+[ Upstream commit 3891ebccace188af075ce143d8b072b65e90f695 ]
 
-The disconnect callback was accessing the hardware-descriptor private
-data after having having freed it.
+spectre-v1 has been mitigated and the mitigation is always active.
+Report this to userspace via sysfs
 
-Fixes: 7490b008d123 ("ieee802154: add support for atusb transceiver")
-Cc: stable <stable@vger.kernel.org>     # 4.2
-Cc: Alexander Aring <alex.aring@gmail.com>
-Reported-by: syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ieee802154/atusb.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/cpu_errata.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/ieee802154/atusb.c
-+++ b/drivers/net/ieee802154/atusb.c
-@@ -1140,10 +1140,11 @@ static void atusb_disconnect(struct usb_
- 
- 	ieee802154_unregister_hw(atusb->hw);
- 
-+	usb_put_dev(atusb->usb_dev);
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -729,3 +729,9 @@ const struct arm64_cpu_capabilities arm6
+ 	{
+ 	}
+ };
 +
- 	ieee802154_free_hw(atusb->hw);
- 
- 	usb_set_intfdata(interface, NULL);
--	usb_put_dev(atusb->usb_dev);
- 
- 	pr_debug("%s done\n", __func__);
- }
++ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr,
++			    char *buf)
++{
++	return sprintf(buf, "Mitigation: __user pointer sanitization\n");
++}
 
 
