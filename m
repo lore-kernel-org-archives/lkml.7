@@ -2,118 +2,116 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00C9C47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5161AECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2AE2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2564B2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 00:40:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KLpChH0U"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="CQBl48C9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732438AbfJJAgc (ORCPT
+        id S1732487AbfJJAk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 20:36:32 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33909 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731145AbfJJAgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 20:36:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46pXFn3J83z9s7T;
-        Thu, 10 Oct 2019 11:36:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570667789;
-        bh=arnV4YeF195CkdQRcEOF4JZK7WnH2Z7fUvzdfofOT24=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KLpChH0U0UFW1QQk54fxdOWQGndN3TtL67gQ7H0DbksYVt6Ibdron+x6EKZvZyX+L
-         OesHmz2WfAuM0rHT0MtIEbjC883tZ4/0tYJZMjqVQiIaNeXaufD+GJ9nxeKnjbxZjO
-         XiMtJrItb8RPf7HFrVkj1MQ0LglVSkP3Bf+2KvCvmUt/mWloiS+AYTBFz3y0j3W42q
-         vok5qD1toUZVEF8KCuOevnQydepZGPV84/fU9Zil7suc+3ug28+n5tTK4tqCII8EY0
-         9rZZFheXepJMZZCPKnRZZu414/sBzzBNKXU/fTLtJfwmu7RDVVy7xcSSnVj1ZtO0Wy
-         PdbpSzsUmZYNA==
-Date:   Thu, 10 Oct 2019 11:36:28 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: Re: leds in -next -- update address was Re: [GIT PULL] LED fixes
- for 5.4-rc3.
-Message-ID: <20191010113628.62708b7d@canb.auug.org.au>
-In-Reply-To: <20191009125520.GA1436@amd>
-References: <20191008204258.22196-1-jacek.anaszewski@gmail.com>
-        <20191009125520.GA1436@amd>
+        Wed, 9 Oct 2019 20:40:26 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40847 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731155AbfJJAkZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 20:40:25 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x127so2727500pfb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 17:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UcPd5Jny5aY5aMsPzhLMHUk3eBTerZnA6THOQx3YHYM=;
+        b=CQBl48C9FQrJE5k703Kev1+BQ/3whfu6HOkubrefsdeM3B2i5ly4Dw9keO2geTEGUV
+         s+Ui79CGMEi8TyPD6oEqp7cslGqZKhXLLTCoggJ/CPYtMcY9bWkjwact3xZFKaXvWZYO
+         u5JLNe8rCmmBk2yB39UHSrBbn2Uo+Ciiic/jw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UcPd5Jny5aY5aMsPzhLMHUk3eBTerZnA6THOQx3YHYM=;
+        b=l0GVEM/Eb6BeDe0ZpKd2APkVsZjCij73X0Lrl1rOhTTHCSs3RKoQDHMejcf+xoFqsy
+         mzaTLm/nJ/Bi4NOWSXHaGtuIv3OeX7UnodPiiYnr7chIlIanLvErkUJYaOdFbaYCWNBu
+         YeD2BOjJOCeWShltNiQ8hXYqNl8pHxBAFn7TwX4eituKYzLKQHaWaU2Cf56g9Oq64j5C
+         0pDSEGEjAFhPbKpAHWZ9/pBBjq7az9RttdAFAtd9J2Zly8O3ZCGBNGwIwYKqFDhkyQbS
+         mAeRrznOQfjoxBSAoIknK1KI8PpGe1SQLUK5/Yb4xovyXBDBhA78QxdUp88CoWsl559z
+         jbUA==
+X-Gm-Message-State: APjAAAWD/p8/SH5lKQFBsyAPnuyaU0L/3jKPzlifXeoydD6f+sQtCyPB
+        E8yN69/iStdMd/CuxMv5a1qHGw==
+X-Google-Smtp-Source: APXvYqwiMuTGGeU2xAhSzgcNonr+8WNtJueMfhMlVoTbDTnimhgmwYn+zScwE00Wpmxe8o7Phci6AA==
+X-Received: by 2002:aa7:93a9:: with SMTP id x9mr6675538pff.81.1570668025033;
+        Wed, 09 Oct 2019 17:40:25 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 22sm3415597pfo.131.2019.10.09.17.40.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 17:40:24 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 20:40:23 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>, rostedt@goodmis.org,
+        primiano@google.com, rsavitski@google.com, jeffv@google.com,
+        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
+Message-ID: <20191010004023.GC96813@google.com>
+References: <20191009203657.6070-1-joel@joelfernandes.org>
+ <710c5bc0-deca-2649-8351-678e177214e9@schaufler-ca.com>
+ <alpine.LRH.2.21.1910100912210.29840@namei.org>
+ <2b94802d-12ea-4f2d-bb65-eda3b3542bb2@schaufler-ca.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pQjucLpReI.erAoc1bAlOW_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b94802d-12ea-4f2d-bb65-eda3b3542bb2@schaufler-ca.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pQjucLpReI.erAoc1bAlOW_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Oct 09, 2019 at 03:41:56PM -0700, Casey Schaufler wrote:
+> On 10/9/2019 3:14 PM, James Morris wrote:
+> > On Wed, 9 Oct 2019, Casey Schaufler wrote:
+> >
+> >> Please consider making the perf_alloc security blob maintained
+> >> by the infrastructure rather than the individual modules. This
+> >> will save it having to be changed later.
+> > Is anyone planning on using this with full stacking?
+> >
+> > If not, we don't need the extra code & complexity. Stacking should only 
+> > cover what's concretely required by in-tree users.
+> 
+> I don't believe it's any simpler for SELinux to do the allocation
+> than for the infrastructure to do it. I don't see anyone's head
+> exploding over the existing infrastructure allocation of blobs.
+> We're likely to want it at some point, so why not avoid the hassle
+> and delay by doing it the "new" way up front?
+> 
 
-Hi Pavel,
+I don't see how it can be maintained by the users (assuming you meant
+infrastructure as perf_event subsystem). The blob contains a SID which as far
+as I know, is specific to SELinux. Do you have an in-tree example of this?
 
-On Wed, 9 Oct 2019 14:55:21 +0200 Pavel Machek <pavel@ucw.cz> wrote:
->
-> > - MAINTAINERS: add pointer to Pavel Machek's linux-leds.git tree.
-> >   Pavel is going to take over LED tree maintainership
-> >   from myself. =20
->=20
-> I pulled latest changes from for-next, so I can take over -next
-> maintainance for now.
->=20
-> Stephen, could you update your scripts to pull from
-> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git ?
+Further, this is also exactly it is done for BPF objects which I used as a
+reference.
 
-Done.
+thanks,
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
+ - Joel
 
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
-
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
-
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
-
---Sig_/pQjucLpReI.erAoc1bAlOW_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2efQwACgkQAVBC80lX
-0GwgXgf4xDlgAN864WMWFjNSbkM6j2Hbno9pmOFU8VLnhFEasLqk7fb2zxnOmrT8
-NJ6AKufxhi5ICOcSBHsvF3FO1fARiMYU6I4UUg1ttYqaX2v7nOuRyojvsZZqxCXf
-puMPeq42O5oAgzXSuQnNEG32jwQHSKydhWUr74s/uNsWDEylYIAUDPfmGQKQ3Ret
-mcTnaKrohPXegSmJ7CAL2+SgCuMuDufk7kGhUtl6DNRl9t9FTJOaEUIBxbGwIh1k
-M58Ri6Y3/HphDvUAvdBrB4WAldY568gZfF5ufRJ3xARCRPKb4q5um1ftrWBFqniH
-aNmQa+1CCqAfXzR4cjB/KOcEjFhH
-=Kdm0
------END PGP SIGNATURE-----
-
---Sig_/pQjucLpReI.erAoc1bAlOW_--
