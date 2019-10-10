@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA512C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0D0C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94370208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E1F218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697275;
-	bh=AlUybCsrB0fQp7PIbGTomtI+efG1wHQyT5ucYaGg8Xk=;
+	s=default; t=1570697278;
+	bh=HYJ6TBJCDPcKIy71M87pqTGMonT+AGK/9LfEE7RF5CY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TZF5JFrfjarxt9Vh2R4WIIRo8e6fDugisu3zlkfAdWf8Ivvl9QjqRMZ0H47Aih2/r
-	 ZRKsJuZLzGZ7i6IimZ4rbEIegMJIi3EnxUpiJDLnal6xu1OSzvReKkdgFkJXvoHZjS
-	 UK5FC+IBZsdT8HO8arfh+txbWuk2xGeXjOpr71us=
+	b=FPvDIXxYY243uSNJ262tgur1fSxFnQw6hdyHM6fIQXILRg4+fbcsrTnMY6noVlgy3
+	 sSkjN5YKD7Joeol9l8imLzspm1d4w//uYK0Mz4uxTRYpKMVklA9h0K/R29hfANzlwl
+	 ebamNclKutBYOHoMVazQR0P3+DsVorQjZB8LwebM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389555AbfJJIry (ORCPT
+        id S2389566AbfJJIr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:47:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53926 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:47:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389544AbfJJIrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:51 -0400
+        id S2388762AbfJJIrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BD352064A;
-        Thu, 10 Oct 2019 08:47:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5317208C3;
+        Thu, 10 Oct 2019 08:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697269;
-        bh=AlUybCsrB0fQp7PIbGTomtI+efG1wHQyT5ucYaGg8Xk=;
+        s=default; t=1570697272;
+        bh=HYJ6TBJCDPcKIy71M87pqTGMonT+AGK/9LfEE7RF5CY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r25Yxf17TeO73qjXtbwFKdyPPqpRzep/dtQm00ecsBlZ2Fa42EQL9OHP5Gd9PrEaP
-         MJc5Fuh0XGA2HYYUia1b4AVnKy/QtPEzDpBlqsu3WEWLET9JAYCbltlEwSZHxOuoMU
-         v8X726xFSKXAIpKE/R/VeyOItF+XvFXq2uK//zec=
+        b=sX3Z1aqgQkLkljJG6UD1JQQOlJLa88JzqnxvfSm7ABAo0SFvpSMUV9iuC5q19XgO/
+         0AYLJZQaCHqw9yKLq/oaKqbBw6XqstRx/+JorKW7VFHUds4U5Rw2wfyf0mi4FTAmP6
+         xws/0rSllijgEhAme/Hd7XBK4u+aQfCqtZ9iCkW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/114] KVM: PPC: Book3S HV: XIVE: Free escalation interrupts before disabling the VP
-Date:   Thu, 10 Oct 2019 10:36:25 +0200
-Message-Id: <20191010083612.105058931@linuxfoundation.org>
+Subject: [PATCH 4.19 079/114] KVM: nVMX: Fix consistency check on injected exception error code
+Date:   Thu, 10 Oct 2019 10:36:26 +0200
+Message-Id: <20191010083612.158518676@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -61,80 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 237aed48c642328ff0ab19b63423634340224a06 ]
+[ Upstream commit 567926cca99ba1750be8aae9c4178796bf9bb90b ]
 
-When a vCPU is brought done, the XIVE VP (Virtual Processor) is first
-disabled and then the event notification queues are freed. When freeing
-the queues, we check for possible escalation interrupts and free them
-also.
+Current versions of Intel's SDM incorrectly state that "bits 31:15 of
+the VM-Entry exception error-code field" must be zero.  In reality, bits
+31:16 must be zero, i.e. error codes are 16-bit values.
 
-But when a XIVE VP is disabled, the underlying XIVE ENDs also are
-disabled in OPAL. When an END (Event Notification Descriptor) is
-disabled, its ESB pages (ESn and ESe) are disabled and loads return all
-1s. Which means that any access on the ESB page of the escalation
-interrupt will return invalid values.
+The bogus error code check manifests as an unexpected VM-Entry failure
+due to an invalid code field (error number 7) in L1, e.g. when injecting
+a #GP with error_code=0x9f00.
 
-When an interrupt is freed, the shutdown handler computes a 'saved_p'
-field from the value returned by a load in xive_do_source_set_mask().
-This value is incorrect for escalation interrupts for the reason
-described above.
+Nadav previously reported the bug[*], both to KVM and Intel, and fixed
+the associated kvm-unit-test.
 
-This has no impact on Linux/KVM today because we don't make use of it
-but we will introduce in future changes a xive_get_irqchip_state()
-handler. This handler will use the 'saved_p' field to return the state
-of an interrupt and 'saved_p' being incorrect, softlockup will occur.
+[*] https://patchwork.kernel.org/patch/11124749/
 
-Fix the vCPU cleanup sequence by first freeing the escalation interrupts
-if any, then disable the XIVE VP and last free the queues.
-
-Fixes: 90c73795afa2 ("KVM: PPC: Book3S HV: Add a new KVM device for the XIVE native exploitation mode")
-Fixes: 5af50993850a ("KVM: PPC: Book3S HV: Native usage of the XIVE interrupt controller")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190806172538.5087-1-clg@kaod.org
+Reported-by: Nadav Amit <namit@vmware.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_xive.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ arch/x86/kvm/vmx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kvm/book3s_xive.c b/arch/powerpc/kvm/book3s_xive.c
-index aae34f218ab45..031f07f048afd 100644
---- a/arch/powerpc/kvm/book3s_xive.c
-+++ b/arch/powerpc/kvm/book3s_xive.c
-@@ -1037,20 +1037,22 @@ void kvmppc_xive_cleanup_vcpu(struct kvm_vcpu *vcpu)
- 	/* Mask the VP IPI */
- 	xive_vm_esb_load(&xc->vp_ipi_data, XIVE_ESB_SET_PQ_01);
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index d3a900a4fa0e7..6f7b3acdab263 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -12574,7 +12574,7 @@ static int check_vmentry_prereqs(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
  
--	/* Disable the VP */
--	xive_native_disable_vp(xc->vp_id);
--
--	/* Free the queues & associated interrupts */
-+	/* Free escalations */
- 	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
--		struct xive_q *q = &xc->queues[i];
--
--		/* Free the escalation irq */
- 		if (xc->esc_virq[i]) {
- 			free_irq(xc->esc_virq[i], vcpu);
- 			irq_dispose_mapping(xc->esc_virq[i]);
- 			kfree(xc->esc_virq_names[i]);
- 		}
--		/* Free the queue */
-+	}
-+
-+	/* Disable the VP */
-+	xive_native_disable_vp(xc->vp_id);
-+
-+	/* Free the queues */
-+	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
-+		struct xive_q *q = &xc->queues[i];
-+
- 		xive_native_disable_queue(xc->vp_id, q, i);
- 		if (q->qpage) {
- 			free_pages((unsigned long)q->qpage,
+ 		/* VM-entry exception error code */
+ 		if (has_error_code &&
+-		    vmcs12->vm_entry_exception_error_code & GENMASK(31, 15))
++		    vmcs12->vm_entry_exception_error_code & GENMASK(31, 16))
+ 			return VMXERR_ENTRY_INVALID_CONTROL_FIELD;
+ 
+ 		/* VM-entry interruption-info field: reserved bits */
 -- 
 2.20.1
 
