@@ -2,53 +2,54 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82E7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68667C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80CD02054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A36621D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696972;
-	bh=1aRzyPI+xk3fHa5V0gSMAabkms8B0IJ+eUeGtqcGjLQ=;
+	s=default; t=1570696980;
+	bh=LsS3cLKEpGqy9ebVuNqcBko7hWdPP6FRJnuapa640F0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0lD8siMYTxFLn32zdjL/wS+OLS2lNjpOtzLBVV2e51DjgDAiVEdEMUY0N8JVi5KSL
-	 TNSEoIg+jYZlKD6wvOzMdSK3JmkbJRPDccX5KzVCCi/amfw+IXps0GDy0PvTk4tMsl
-	 hbI+p8CqfyyrfQqk2Ofv1iJ4Z9hyTZtb4FT1vHH8=
+	b=mxgVWkVxrygPjXmKjfsQwWoQDgcpmAYpoSmZeLHD2gbd0XGd/mRR0WE8azGqQDg3v
+	 vv6S3+jwW3MRcJYB7ccEEH2fLe5JOlCI6Dtqf3UHM3y/n///F3xrcnpDZeaW6pDqOJ
+	 nTWXCLW/lFYsCmEaeiOho94YknHfeRg7vbfeaNYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388630AbfJJImv (ORCPT
+        id S2388641AbfJJIm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:42:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47442 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388614AbfJJImr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:42:47 -0400
+        id S2388632AbfJJImz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:42:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04D432190F;
-        Thu, 10 Oct 2019 08:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F20321A4A;
+        Thu, 10 Oct 2019 08:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696966;
-        bh=1aRzyPI+xk3fHa5V0gSMAabkms8B0IJ+eUeGtqcGjLQ=;
+        s=default; t=1570696974;
+        bh=LsS3cLKEpGqy9ebVuNqcBko7hWdPP6FRJnuapa640F0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gWnPikS/bLww19e4p4w+eQX7Hk8eDe11K8XOti7luWAnTxaJqlHIWToDhqPc5WC+0
-         MCytpgSrngoAl+qvSuZJlVpml3yewPN3FjT4m4iucPNzWH5XUG0C0vN2PISVtM6BVn
-         Gv+zqoYXDS5HGhqfwqs4P3bCDb/xsVLjWPYn0r4w=
+        b=wCs/3ErrLkpOKlKHnIdv19/5xl77CweufT8RbG/Fm4RBoR5DfYFYAHA6HWo1g7FBU
+         4qljO5gvCMee3E650jJMKPFRL3k+xdcUrNEPKA2hciIJpnszVmcWQA/8c0Oe2+9OKh
+         +FFqfesHRRGXdsM/ucwsAX+erH4gAYfzm22MqK+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 117/148] =?UTF-8?q?libnvdimm:=20Fix=20endian=20conversion=20issues=C2=A0?=
-Date:   Thu, 10 Oct 2019 10:36:18 +0200
-Message-Id: <20191010083618.171367540@linuxfoundation.org>
+Subject: [PATCH 5.3 119/148] libnvdimm/nfit_test: Fix acpi_handle redefinition
+Date:   Thu, 10 Oct 2019 10:36:20 +0200
+Message-Id: <20191010083618.277525949@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -61,78 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 86aa66687442ef45909ff9814b82b4d2bb892294 ]
+[ Upstream commit 59f08896f058a92f03a0041b397a1a227c5e8529 ]
 
-nd_label->dpa issue was observed when trying to enable the namespace created
-with little-endian kernel on a big-endian kernel. That made me run
-`sparse` on the rest of the code and other changes are the result of that.
+After commit 62974fc389b3 ("libnvdimm: Enable unit test infrastructure
+compile checks"), clang warns:
 
-Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
-Fixes: 9dedc73a4658 ("libnvdimm/btt: Fix LBA masking during 'free list' population")
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Link: https://lore.kernel.org/r/20190809074726.27815-1-aneesh.kumar@linux.ibm.com
+In file included from
+../drivers/nvdimm/../../tools/testing/nvdimm/test/iomap.c:15:
+../drivers/nvdimm/../../tools/testing/nvdimm/test/nfit_test.h:206:15:
+warning: redefinition of typedef 'acpi_handle' is a C11 feature
+[-Wtypedef-redefinition]
+typedef void *acpi_handle;
+              ^
+../include/acpi/actypes.h:424:15: note: previous definition is here
+typedef void *acpi_handle;      /* Actually a ptr to a NS Node */
+              ^
+1 warning generated.
+
+The include chain:
+
+iomap.c ->
+    linux/acpi.h ->
+        acpi/acpi.h ->
+            acpi/actypes.h
+    nfit_test.h
+
+Avoid this by including linux/acpi.h in nfit_test.h, which allows us to
+remove both the typedef and the forward declaration of acpi_object.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/660
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Link: https://lore.kernel.org/r/20190918042148.77553-1-natechancellor@gmail.com
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/btt.c            | 8 ++++----
- drivers/nvdimm/namespace_devs.c | 7 ++++---
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ tools/testing/nvdimm/test/nfit_test.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index a8d56887ec881..3e9f45aec8d18 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -392,9 +392,9 @@ static int btt_flog_write(struct arena_info *arena, u32 lane, u32 sub,
- 	arena->freelist[lane].sub = 1 - arena->freelist[lane].sub;
- 	if (++(arena->freelist[lane].seq) == 4)
- 		arena->freelist[lane].seq = 1;
--	if (ent_e_flag(ent->old_map))
-+	if (ent_e_flag(le32_to_cpu(ent->old_map)))
- 		arena->freelist[lane].has_err = 1;
--	arena->freelist[lane].block = le32_to_cpu(ent_lba(ent->old_map));
-+	arena->freelist[lane].block = ent_lba(le32_to_cpu(ent->old_map));
+diff --git a/tools/testing/nvdimm/test/nfit_test.h b/tools/testing/nvdimm/test/nfit_test.h
+index 448d686da8b13..0bf5640f1f071 100644
+--- a/tools/testing/nvdimm/test/nfit_test.h
++++ b/tools/testing/nvdimm/test/nfit_test.h
+@@ -4,6 +4,7 @@
+  */
+ #ifndef __NFIT_TEST_H__
+ #define __NFIT_TEST_H__
++#include <linux/acpi.h>
+ #include <linux/list.h>
+ #include <linux/uuid.h>
+ #include <linux/ioport.h>
+@@ -202,9 +203,6 @@ struct nd_intel_lss {
+ 	__u32 status;
+ } __packed;
  
- 	return ret;
- }
-@@ -560,8 +560,8 @@ static int btt_freelist_init(struct arena_info *arena)
- 		 * FIXME: if error clearing fails during init, we want to make
- 		 * the BTT read-only
- 		 */
--		if (ent_e_flag(log_new.old_map) &&
--				!ent_normal(log_new.old_map)) {
-+		if (ent_e_flag(le32_to_cpu(log_new.old_map)) &&
-+		    !ent_normal(le32_to_cpu(log_new.old_map))) {
- 			arena->freelist[i].has_err = 1;
- 			ret = arena_clear_freelist_error(arena, i);
- 			if (ret)
-diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index a16e52251a305..102c9d5141ee8 100644
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -1987,7 +1987,7 @@ static struct device *create_namespace_pmem(struct nd_region *nd_region,
- 		nd_mapping = &nd_region->mapping[i];
- 		label_ent = list_first_entry_or_null(&nd_mapping->labels,
- 				typeof(*label_ent), list);
--		label0 = label_ent ? label_ent->label : 0;
-+		label0 = label_ent ? label_ent->label : NULL;
- 
- 		if (!label0) {
- 			WARN_ON(1);
-@@ -2322,8 +2322,9 @@ static struct device **scan_labels(struct nd_region *nd_region)
- 			continue;
- 
- 		/* skip labels that describe extents outside of the region */
--		if (nd_label->dpa < nd_mapping->start || nd_label->dpa > map_end)
--			continue;
-+		if (__le64_to_cpu(nd_label->dpa) < nd_mapping->start ||
-+		    __le64_to_cpu(nd_label->dpa) > map_end)
-+				continue;
- 
- 		i = add_namespace_resource(nd_region, nd_label, devs, count);
- 		if (i < 0)
+-union acpi_object;
+-typedef void *acpi_handle;
+-
+ typedef struct nfit_test_resource *(*nfit_test_lookup_fn)(resource_size_t);
+ typedef union acpi_object *(*nfit_test_evaluate_dsm_fn)(acpi_handle handle,
+ 		 const guid_t *guid, u64 rev, u64 func,
 -- 
 2.20.1
 
