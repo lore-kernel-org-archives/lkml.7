@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAFDC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F89EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B8020659
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95B6218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbWgnsDu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kr8hUZA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfJJSYM (ORCPT
+        id S1727101AbfJJSYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:24:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43192 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfJJSYF (ORCPT
+        Thu, 10 Oct 2019 14:24:14 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46140 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfJJSYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:24:05 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j18so9043708wrq.10;
-        Thu, 10 Oct 2019 11:24:04 -0700 (PDT)
+        Thu, 10 Oct 2019 14:24:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id o18so9017077wrv.13;
+        Thu, 10 Oct 2019 11:24:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LKdxoiXO2qcL2j7u49KVkFwVEXUyQJUfWzDkZKrEpxA=;
-        b=JbWgnsDuMhLpVCjb+YdJezFjZG8aXtqnOKnJXXWeKs7moUL5bxI6rQpxAQ7KEawMWh
-         sPtpY6fMpMZIJLHl99Z0xBpbzmjsMnI4twZIUMajJ+QVKz1pHi3I0wv+u28p+18X/Ab8
-         mQhU0Z8IBU/kHkULCMgYxZYcFdLgzBYRDD2oynFkHbgBq6cyPMDQQT/b0pXWo3PQV8S2
-         WcNI2/uaDmFEo7l1GIusjX3GYEYu2We6fd0uFKuAVZuA7IyCwYjcrj3RSvpuBbBXRztg
-         3fgzz+50Jk4oFOoAc/7iHdNucBVVI5zInrZ7lj5WObSsD8XI1Rd7CDLTCJFiXgXP9V1q
-         0hnw==
+        bh=rYi1VSAulK4JfPFywnxCiz/tj4/4Gu/YnXW7odKIbWU=;
+        b=Kr8hUZA75c1Bnf/XsiOtbPU0uR36AeEFj/LojWcMhcPK0PTEKY5Mk/Z/fe19InSyTl
+         XfNFzKHocC9RsOGeC4k2ydCDBO5nZtWu2RXNN3MW21uLPAb2udgcoqc3Olgy0MnTvojO
+         9no0tm0g37RlurDNA1JSCCxgrTFYblyVbsU1x9bAd5FnP+txB67ICOyFCfNAIXrJP/KP
+         JvH2h+R5F4jewjvg08955UsdCdr+BUvUnZUuyOPV/EN1R+G+b7Z2ukroUKP+0yKdXLCC
+         9QXsK2AVRbFS8wFFKF/pnpaGaceWzAx9GDZwxI23NqAo2vsERZsJsvplbtabukotAn+f
+         R6ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LKdxoiXO2qcL2j7u49KVkFwVEXUyQJUfWzDkZKrEpxA=;
-        b=fHHQ3U6n8CQkKP6NvEhJfWl3MFQNw3k4kSjo5qK1RZyRPtNDRelosPfvGjaiqiXuJv
-         SVusqAQcn6YIJXxr5O7yeqStR29CVZ6dpSqFyMthL1Qrul00yhWQLuMBADszWndPfVvo
-         E2rA6CRBEctURSQGK6QENbTiw02VBKjYqDUPLNhRCHO20lRptgYc8pIpBgrjWYOPk5ht
-         5SPGcrFjIuCoxAnQ1LSxW/gG84fEOalR2iSz9jGiNLioeZR6Zmp6io9XIVNJMd7XzylB
-         aNvIKfhRdbsz2jG8sdymZshgR5Pqbbe+gLZ0+Sp030PlcrmCYXQsfdEzXCsmiv56VBr0
-         6NfA==
-X-Gm-Message-State: APjAAAWukYH2LWIlGh8aQ8Apw/GSAjqh6WXL671wyVvHZOA6pKL5Ki3L
-        B58fnmJ1SO70mKk5z6URVDo=
-X-Google-Smtp-Source: APXvYqz3MCgqtkhNoSBxMkDnoDYLi2oXfF1XS84vQAfiTka5MhJvT1m4xOCTpFmxMe4HuKqops47tQ==
-X-Received: by 2002:adf:f90d:: with SMTP id b13mr9538028wrr.316.1570731843957;
-        Thu, 10 Oct 2019 11:24:03 -0700 (PDT)
+        bh=rYi1VSAulK4JfPFywnxCiz/tj4/4Gu/YnXW7odKIbWU=;
+        b=Am/OJHkVdG2DMeXnnzxrfWUk07BcpEyKENIMSdpUfrFQuJHZEla83QLu38rz/zIi5D
+         HLuPSlKstwRIIVTqFPLOCrhOCnddEXdslxlT5Qp4LpTTVad+evNHyQ4lwd+0XHWAiZzN
+         FSrznAnUiGJ0AvHA5V5hET+Ybbmspil+o43fg6DoY7aiFCIGMGYGV+AyaUxU8Um+ILme
+         izvmdDQElN9bGdimKeZovqx3okCJdneot0dRMazV+ElOK0p3MnqlVkQej1q1MXrDenZi
+         dhLbeovIuN43XQ1lMATEMYLSktPD1WP7WXQ4HbZatw+C1HUi/stUAhHiS0HUjF2vaf0p
+         oH5A==
+X-Gm-Message-State: APjAAAU8b8uTZpDuGi+4NVZ3S/nM/6jjstAbQslJmuegdHHSYF8565tS
+        3ZO5WJNmOy5GCKf0zWFRTEc=
+X-Google-Smtp-Source: APXvYqwP53ZvChovIvqkdm1RA2MyQqS2h1Qym7zVKohHbFRKdqrev/tdPed99iIgdJQF05D1SS7O4A==
+X-Received: by 2002:a5d:428c:: with SMTP id k12mr9800113wrq.184.1570731850062;
+        Thu, 10 Oct 2019 11:24:10 -0700 (PDT)
 Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id y186sm11367664wmb.41.2019.10.10.11.24.02
+        by smtp.googlemail.com with ESMTPSA id y186sm11367664wmb.41.2019.10.10.11.24.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 11:24:03 -0700 (PDT)
+        Thu, 10 Oct 2019 11:24:09 -0700 (PDT)
 From:   Corentin Labbe <clabbe.montjoie@gmail.com>
 To:     catalin.marinas@arm.com, davem@davemloft.net,
         herbert@gondor.apana.org.au, linux@armlinux.org.uk,
@@ -66,9 +66,9 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v3 08/11] ARM64: dts: allwinner: sun50i: Add Crypto Engine node on H6
-Date:   Thu, 10 Oct 2019 20:23:25 +0200
-Message-Id: <20191010182328.15826-9-clabbe.montjoie@gmail.com>
+Subject: [PATCH v3 10/11] arm64: defconfig: add new Allwinner crypto options
+Date:   Thu, 10 Oct 2019 20:23:27 +0200
+Message-Id: <20191010182328.15826-11-clabbe.montjoie@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191010182328.15826-1-clabbe.montjoie@gmail.com>
 References: <20191010182328.15826-1-clabbe.montjoie@gmail.com>
@@ -79,37 +79,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Crypto Engine is a hardware cryptographic accelerator that supports
-many algorithms.
-
-This patch enables the Crypto Engine on the Allwinner H6 SoC Device-tree.
+This patch adds the new allwinner crypto configs to ARM64 defconfig
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 5d7ab540b950..68697cef8e5f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -149,6 +149,16 @@
- 			allwinner,sram = <&ve_sram 1>;
- 		};
- 
-+		crypto: crypto@1904000 {
-+			compatible = "allwinner,sun50i-h6-crypto";
-+			reg = <0x01904000 0x1000>;
-+			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>, <&ccu CLK_MBUS_CE>;
-+			clock-names = "bus", "mod", "ram";
-+			resets = <&ccu RST_BUS_CE>;
-+			reset-names = "bus";
-+		};
-+
- 		syscon: syscon@3000000 {
- 			compatible = "allwinner,sun50i-h6-system-control",
- 				     "allwinner,sun50i-a64-system-control";
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index c9adae41bac0..c45fb6822e4a 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -114,6 +114,8 @@ CONFIG_CRYPTO_AES_ARM64_CE_CCM=y
+ CONFIG_CRYPTO_AES_ARM64_CE_BLK=y
+ CONFIG_CRYPTO_CHACHA20_NEON=m
+ CONFIG_CRYPTO_AES_ARM64_BS=m
++CONFIG_CRYPTO_DEV_ALLWINNER=y
++CONFIG_CRYPTO_DEV_SUN8I_CE=m
+ CONFIG_JUMP_LABEL=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
 -- 
 2.21.0
 
