@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D944DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A941C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0FE21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78DF2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698143;
-	bh=GTWgFHLwoXXGGIzbDDyDhmgz2NP0QKE5HFdI4syuReA=;
+	s=default; t=1570698168;
+	bh=c7WJh+EJ+vLVCVWgY959mfZeB3g+LV991TNwgJT3s/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nIchUvaN9h/NX2Z5X1viU95ATtcbp5YVfjKvZxMwAQm+UZy0UbCynZRYG2dJxpofh
-	 zoljmHO7JZ/xFM7PbEXZbA+FNAnGWrlNuAm24c1nbuVRDd781WlT4Nmpoa5ht++SB8
-	 qynxiRgy5e0oBeZBYBZDRhMVqUDMP7pG8TVA+ZTg=
+	b=syVUVAAWcggQPXNZj8Owuzfp4r9wRuC/9VF1prxFxcHfLEwQZypvbDcZDxtUoFcV8
+	 tdV+ZlX2OsshLzd7wFOSM4uij2x3qu3cuw3QzF+y3bzb98QkaRDiQ0/zcIP2luRipx
+	 a3LjE/Muu5Qxi1tDFdTVzO7z3bUZkqMltohlaTik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388696AbfJJJCW (ORCPT
+        id S2388583AbfJJJCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43972 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 05:02:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733302AbfJJIkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:40:03 -0400
+        id S2387811AbfJJIjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:39:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 735F621D56;
-        Thu, 10 Oct 2019 08:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C938D21D80;
+        Thu, 10 Oct 2019 08:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696803;
-        bh=GTWgFHLwoXXGGIzbDDyDhmgz2NP0QKE5HFdI4syuReA=;
+        s=default; t=1570696759;
+        bh=c7WJh+EJ+vLVCVWgY959mfZeB3g+LV991TNwgJT3s/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rTE7pgJN8a8gZ2i/yWiYEqayJJB3PPWxZgoXN/7uXpKGmURUo8G7F8rBqEYFn4IDJ
-         kduXhbkP3zQQMCCBpMN1YNU3jviW5DQcB/hZjfKGsbAedLI3VmNePbXAySMSz72eHg
-         X+Y4gRvWRC7fIRztuk0cxpEmp9D7xRVc11ZUz0t0=
+        b=yzEppY5AuX7fvxcH/MpUHcJDdOK6ea5l4K9mfu49PPtcdVO8wRUfxT/XKDBEl5mv8
+         aGwP6/UY9uac7ecQoq5Y3RYKQ5A4XVkg5mVqk/zBUCpi8bSVmND5d2z1J8yL2geqjC
+         HVhuaL7ET5zDShFdukb7/rDsvRhRy0idNDU2bdKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 5.3 058/148] selftests: pidfd: Fix undefined reference to pthread_create()
-Date:   Thu, 10 Oct 2019 10:35:19 +0200
-Message-Id: <20191010083614.662526683@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.3 043/148] crypto: caam/qi - fix error handling in ERN handler
+Date:   Thu, 10 Oct 2019 10:35:04 +0200
+Message-Id: <20191010083613.739344414@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -59,37 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-commit 3969e76909d3aa06715997896184ee684f68d164 upstream.
+commit 51fab3d73054ca5b06b26e20edac0486b052c6f4 upstream.
 
-Fix build failure:
+ERN handler calls the caam/qi frontend "done" callback with a status
+of -EIO. This is incorrect, since the callback expects a status value
+meaningful for the crypto engine - hence the cryptic messages
+like the one below:
+platform caam_qi: 15: unknown error source
 
-undefined reference to `pthread_create'
-collect2: error: ld returned 1 exit status
+Fix this by providing the callback with:
+-the status returned by the crypto engine (fd[status]) in case
+it contains an error, OR
+-a QI "No error" code otherwise; this will trigger the message:
+platform caam_qi: 50000000: Queue Manager Interface: No error
+which is fine, since QMan driver provides details about the cause of
+failure
 
-Fix CFLAGS to include pthread correctly.
-
-Fixes: 740378dc7834 ("pidfd: add polling selftests")
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190924195237.30519-1-skhan@linuxfoundation.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: <stable@vger.kernel.org> # v5.1+
+Fixes: 67c2315def06 ("crypto: caam - add Queue Interface (QI) backend support")
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/pidfd/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/caam/error.c |    1 +
+ drivers/crypto/caam/qi.c    |    5 ++++-
+ drivers/crypto/caam/regs.h  |    1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
---- a/tools/testing/selftests/pidfd/Makefile
-+++ b/tools/testing/selftests/pidfd/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
--CFLAGS += -g -I../../../../usr/include/ -lpthread
-+CFLAGS += -g -I../../../../usr/include/ -pthread
+--- a/drivers/crypto/caam/error.c
++++ b/drivers/crypto/caam/error.c
+@@ -118,6 +118,7 @@ static const struct {
+ 	u8 value;
+ 	const char *error_text;
+ } qi_error_list[] = {
++	{ 0x00, "No error" },
+ 	{ 0x1F, "Job terminated by FQ or ICID flush" },
+ 	{ 0x20, "FD format error"},
+ 	{ 0x21, "FD command format error"},
+--- a/drivers/crypto/caam/qi.c
++++ b/drivers/crypto/caam/qi.c
+@@ -163,7 +163,10 @@ static void caam_fq_ern_cb(struct qman_p
+ 	dma_unmap_single(drv_req->drv_ctx->qidev, qm_fd_addr(fd),
+ 			 sizeof(drv_req->fd_sgt), DMA_BIDIRECTIONAL);
  
- TEST_GEN_PROGS := pidfd_test pidfd_open_test
+-	drv_req->cbk(drv_req, -EIO);
++	if (fd->status)
++		drv_req->cbk(drv_req, be32_to_cpu(fd->status));
++	else
++		drv_req->cbk(drv_req, JRSTA_SSRC_QI);
+ }
+ 
+ static struct qman_fq *create_caam_req_fq(struct device *qidev,
+--- a/drivers/crypto/caam/regs.h
++++ b/drivers/crypto/caam/regs.h
+@@ -641,6 +641,7 @@ struct caam_job_ring {
+ #define JRSTA_SSRC_CCB_ERROR        0x20000000
+ #define JRSTA_SSRC_JUMP_HALT_USER   0x30000000
+ #define JRSTA_SSRC_DECO             0x40000000
++#define JRSTA_SSRC_QI               0x50000000
+ #define JRSTA_SSRC_JRERROR          0x60000000
+ #define JRSTA_SSRC_JUMP_HALT_CC     0x70000000
  
 
 
