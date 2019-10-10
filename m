@@ -2,102 +2,81 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E59ECE596
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654ABC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5C6218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2CF22477
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697739;
-	bh=WmQ6xVhy6F1VzCuXT88er8kQuWfHDNle5G7/6tY/DhM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RnfOcjCHtjfXOqtmlh11tCEe+nYeZPOj9Z6VevxmujkAEJyfbmE7MjZYJIMeSv+xS
-	 3jj2i/IUdLs0V1aj75ci8xO+8BMW5SDvb1jf4BpBzyXb5vXqioLPG/0DyIWzUwRNXr
-	 gZuCyRoRRLBtmNvOE4tMDorpaALT74KqMfamHj8c=
+	s=default; t=1570697746;
+	bh=fWJjbXpmFkxTYN182RrS0pGcx/QVyeR2dPDwnS/HsTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OnsbUhVyUjegm6K5CoLpcZ6zrQqZ5xEegqV9SIii1Q3VS+A3jzmJjy2Nf71FVm3g9
+	 VgN1U5j0VPEG1o/9VjRLOy8MLtXnQLpvXb9oEjjO2LrC2ubeyOsQ0Z0GH7lx0s6WNI
+	 YGJy3MsJ2VVKAVOoRQhmh3/obNm1bvlLnhfUUrs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389787AbfJJItU (ORCPT
+        id S2389535AbfJJIzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:49:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55694 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388852AbfJJItL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:49:11 -0400
+        id S2388327AbfJJIzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:55:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBE1321929;
-        Thu, 10 Oct 2019 08:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31C682190F;
+        Thu, 10 Oct 2019 08:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697351;
-        bh=WmQ6xVhy6F1VzCuXT88er8kQuWfHDNle5G7/6tY/DhM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3+I46dpodV2DA0Y5+Gy6Q06ymAjY9SMQOXvXLzkOBLEh4YXr63wAGmaMGNlnCzM7
-         iePrbPAAD82hlOqXHjoOaRefMkEajOeMK3EdWAADLONAmugCMeEit96Gy0dd79cmei
-         1tH+8ic3ruxisDts70xjWJFekJ3XhcMuv/2RXZTs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 4.19 110/114] staging: erofs: add two missing erofs_workgroup_put for corrupted images
-Date:   Thu, 10 Oct 2019 10:36:57 +0200
-Message-Id: <20191010083614.097681169@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
-References: <20191010083544.711104709@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1570697743;
+        bh=fWJjbXpmFkxTYN182RrS0pGcx/QVyeR2dPDwnS/HsTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Tqrbyxx7vQRb3pTZ4yaY7TfY+WhmKqOi6eLilR4NrlcMSSP0IWAve36knAdr3v+Xw
+         vT6fVwb9maoaNVWLfj1OJaTMKtnXDY7OA7///Oti93WxRXDfYyv6FCyV2qPH/NZb1O
+         Aa5/gG8zcshCE1q4zUMY9p7RqYR4afqPec9QQyQY=
+Date:   Thu, 10 Oct 2019 10:49:12 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: qlge: fix "alignment should match open
+ parenthesis" check
+Message-ID: <20191010084912.GA394561@kroah.com>
+References: <20191009135909.19474-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009135909.19474-1-jbi.octave@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+On Wed, Oct 09, 2019 at 02:59:09PM +0100, Jules Irenge wrote:
+> Fix "alignment should match open parenthesis" check
+>  issued by checkpatch.pl tool:
+> "CHECK: Alignment should match open parenthesis".
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  drivers/staging/qlge/qlge_dbg.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 138e1a0990e80db486ab9f6c06bd5c01f9a97999 upstream.
+Hi,
 
-As reported by erofs-utils fuzzer, these error handling
-path will be entered to handle corrupted images.
+You sent 8 patches for the same driver, some patches with almost
+identical subject lines, and some a bit different.  None of these gave
+me any hint as to which ones superseed which, and which order to apply
+any of these in.
 
-Lack of erofs_workgroup_puts will cause unmounting
-unsuccessfully.
+Please resend all of the latest versions, in a patch series properly
+numbered, so that I have a chance to apply them correctly.
 
-Fix these return values to EFSCORRUPTED as well.
+thanks,
 
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Link: https://lore.kernel.org/r/20190819103426.87579-4-gaoxiang25@huawei.com
-[ Gao Xiang: Older kernel versions don't have length validity check
-             and EFSCORRUPTED, thus backport pageofs check for now. ]
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/staging/erofs/unzip_vle.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -311,7 +311,11 @@ z_erofs_vle_work_lookup(struct super_blo
- 	/* if multiref is disabled, `primary' is always true */
- 	primary = true;
- 
--	DBG_BUGON(work->pageofs != pageofs);
-+	if (work->pageofs != pageofs) {
-+		DBG_BUGON(1);
-+		erofs_workgroup_put(egrp);
-+		return ERR_PTR(-EIO);
-+	}
- 
- 	/*
- 	 * lock must be taken first to avoid grp->next == NIL between
-
-
+greg k-h
