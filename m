@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B979AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C15C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6F4222C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4194222C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697299;
-	bh=dTmsqtgyR61mF8BwJ3Q1DjH7pm/mxnHGdYfe/UOyPlI=;
+	s=default; t=1570697303;
+	bh=J5TBZoLVR+UShUVcY9TOBt35xpRh7w429U/ZmIA3R7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XwgdvQ/PuwcMZMxFb7ro8hoe6GU+ndDzen4albk8ROD952EKbX/LXv5fTYQcUJwAM
-	 jftqvkfhFH87sjasENeI+lC322mBKeCioW1bTx0FYn68BwytZRko2R8t5yzA7ncx73
-	 U0X0yYy5ClgxGIWksNTlRp0oIFkbq5uJRMcwlGg0=
+	b=c5CYZxHWosaXUqSo1wQkrtliClQQvo3N8G7how7WlcESVnFjUmvS+IFfu0MogBm/l
+	 boVHt9hDfFc6o1O5u9E6VIyx6yllOb/RbWHQ6xLPyHhCpplz596oxgSUZXdZoKksMw
+	 kMjn9qF6YhOWE2k5K7IE2r6noT6dL5v0mx6/3GoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388617AbfJJIsS (ORCPT
+        id S2389636AbfJJIsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54298 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:48:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389601AbfJJIsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:09 -0400
+        id S2389617AbfJJIsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 164C0208C3;
-        Thu, 10 Oct 2019 08:48:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 866DF218AC;
+        Thu, 10 Oct 2019 08:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697288;
-        bh=dTmsqtgyR61mF8BwJ3Q1DjH7pm/mxnHGdYfe/UOyPlI=;
+        s=default; t=1570697294;
+        bh=J5TBZoLVR+UShUVcY9TOBt35xpRh7w429U/ZmIA3R7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ma92/3ubo/UX/ElYjqt7eIAPb6RnUAUxlJrR/QOU3s5pr2qEwPEj3usZiKczi934t
-         GVQ63ObMuxpAjp2RdLtJ/XWvXThv9kbdr1doJaw2GRD/+Z65p0HwabzKg9qfBZdFdb
-         QSukKqOmI/TYoQhUFAtHiK/X949k2rjp1wFsCWmk=
+        b=Usy/AoiifikETEi/avpGkRkCavdCZWqRqWvGnb2fUkcS065SGNj/qtWToN4BOsvEX
+         sy+AEjpy7lutMYvpgXUntQ/xaaps2ZEG0/0wCIp+Tww1eOlf4YiqV9+FhCLMqTjbkh
+         XeKrZ+XPZLGP5vrQzoyRyM/3Bg0cVIHLj/17JYLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, loobinliu@tencent.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Subject: [PATCH 4.19 043/114] Revert "locking/pvqspinlock: Dont wait if vCPU is preempted"
-Date:   Thu, 10 Oct 2019 10:35:50 +0200
-Message-Id: <20191010083606.862006127@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Aring <alex.aring@gmail.com>,
+        syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>,
+        Stefan Schmidt <stefan@datenfreihafen.org>
+Subject: [PATCH 4.19 045/114] ieee802154: atusb: fix use-after-free at disconnect
+Date:   Thu, 10 Oct 2019 10:35:52 +0200
+Message-Id: <20191010083607.610435049@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -65,65 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 89340d0935c9296c7b8222b6eab30e67cb57ab82 upstream.
+commit 7fd25e6fc035f4b04b75bca6d7e8daa069603a76 upstream.
 
-This patch reverts commit 75437bb304b20 (locking/pvqspinlock: Don't
-wait if vCPU is preempted).  A large performance regression was caused
-by this commit.  on over-subscription scenarios.
+The disconnect callback was accessing the hardware-descriptor private
+data after having having freed it.
 
-The test was run on a Xeon Skylake box, 2 sockets, 40 cores, 80 threads,
-with three VMs of 80 vCPUs each.  The score of ebizzy -M is reduced from
-13000-14000 records/s to 1700-1800 records/s:
-
-          Host                Guest                score
-
-vanilla w/o kvm optimizations     upstream    1700-1800 records/s
-vanilla w/o kvm optimizations     revert      13000-14000 records/s
-vanilla w/ kvm optimizations      upstream    4500-5000 records/s
-vanilla w/ kvm optimizations      revert      14000-15500 records/s
-
-Exit from aggressive wait-early mechanism can result in premature yield
-and extra scheduling latency.
-
-Actually, only 6% of wait_early events are caused by vcpu_is_preempted()
-being true.  However, when one vCPU voluntarily releases its vCPU, all
-the subsequently waiters in the queue will do the same and the cascading
-effect leads to bad performance.
-
-kvm optimizations:
-[1] commit d73eb57b80b (KVM: Boost vCPUs that are delivering interrupts)
-[2] commit 266e85a5ec9 (KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption)
-
-Tested-by: loobinliu@tencent.com
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: loobinliu@tencent.com
-Cc: stable@vger.kernel.org
-Fixes: 75437bb304b20 (locking/pvqspinlock: Don't wait if vCPU is preempted)
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 7490b008d123 ("ieee802154: add support for atusb transceiver")
+Cc: stable <stable@vger.kernel.org>     # 4.2
+Cc: Alexander Aring <alex.aring@gmail.com>
+Reported-by: syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/locking/qspinlock_paravirt.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ieee802154/atusb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/locking/qspinlock_paravirt.h
-+++ b/kernel/locking/qspinlock_paravirt.h
-@@ -271,7 +271,7 @@ pv_wait_early(struct pv_node *prev, int
- 	if ((loop & PV_PREV_CHECK_MASK) != 0)
- 		return false;
+--- a/drivers/net/ieee802154/atusb.c
++++ b/drivers/net/ieee802154/atusb.c
+@@ -1140,10 +1140,11 @@ static void atusb_disconnect(struct usb_
  
--	return READ_ONCE(prev->state) != vcpu_running || vcpu_is_preempted(prev->cpu);
-+	return READ_ONCE(prev->state) != vcpu_running;
+ 	ieee802154_unregister_hw(atusb->hw);
+ 
++	usb_put_dev(atusb->usb_dev);
++
+ 	ieee802154_free_hw(atusb->hw);
+ 
+ 	usb_set_intfdata(interface, NULL);
+-	usb_put_dev(atusb->usb_dev);
+ 
+ 	pr_debug("%s done\n", __func__);
  }
- 
- /*
 
 
