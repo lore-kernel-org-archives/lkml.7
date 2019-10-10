@@ -2,131 +2,167 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86CDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C6DC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE4AE205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12B4921835
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:19:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="QbFLF53m";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XjBdI1HL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfJJRPm (ORCPT
+        id S1726726AbfJJRTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:15:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:36362 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbfJJRPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:15:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E279E1597;
-        Thu, 10 Oct 2019 10:15:37 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E02AE3F71A;
-        Thu, 10 Oct 2019 10:15:36 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, will@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, dave.martin@arm.com,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 3/3] arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
-Date:   Thu, 10 Oct 2019 18:15:17 +0100
-Message-Id: <20191010171517.28782-4-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191010171517.28782-1-suzuki.poulose@arm.com>
-References: <20191010171517.28782-1-suzuki.poulose@arm.com>
+        Thu, 10 Oct 2019 13:19:30 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:19168 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726131AbfJJRTa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 13:19:30 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x9AH7A3k018682;
+        Thu, 10 Oct 2019 10:19:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=B+5Ns28EhcwoidKDx8A4nZ9NVX+e4p+KSTMlnfKiBOU=;
+ b=QbFLF53mDP+2IGIqH/od/bqE3rl0tl2yA8VWDwZghOiecbnxM34tgS0W6J4aouxhEhov
+ pIJnrQ3caY0oWV1RsbsZwP/1ZG54w5X28+d097rYG9VRdvVzduFqu3UoRqcvSRBV3cj/
+ uIr4aK+0qwHYhzHLtCaDKOh6wp9hECBjGYA= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2vhyc0u2js-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 10 Oct 2019 10:19:04 -0700
+Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
+ prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 10 Oct 2019 10:19:03 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 10 Oct 2019 10:19:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cqxpdmjr7tNbUouGHuyz558CKLKVkAIP9nnYQdgni+ff+ilBaDLL+MLEHQnHn2F7rruvVGbDweX4EM7GKhz/ySIeK4UB1R7OmSvKln4vPpocQygUawkvvwj3d0UtrCespl6c9NszvV/rgewqBDxMx9vCQVpgYQDpbVGOdVtfa0Lgx5NfWs6SVzMxh2O4NezjkZXusJ6scmB5h1g9r30CG3FVcHggJ71njzlpuu4Af4zRptKAcM9x7rV9fvdRk7afskLSMiiLzbg+V53SUe41r/5wT5+MfAvrZxUhuxjx4PSqWZmHFwTG7muMlsCxyE+KQVbjO746BQMnCU0qpwI1Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B+5Ns28EhcwoidKDx8A4nZ9NVX+e4p+KSTMlnfKiBOU=;
+ b=T8zcRkslhLShvtlvkZoTkndhhMCJeGKUFrYeqY6tXFo/FiLB8LXy9Umt+qUR/LKy098prk4L0K5ZLEgrIORAeBgY5Yekct5rnOMFOxMjMFq6mfXW5NEAIj8cppLuw0GLiZ1e20Gu/KSjDHSiu8Z8F5djjBPAZvBftU1XUXmTpIFJNWwFXpuliFuyo6vUcgSUZN5HHdnC7q637CLEIrGxNufTlfjFU7jgSxgCTfCOHR8IDmOrsLIqkE7QbK35qETQI6Ekiea/AWhEKA+EtwVUsZlNV3HI3GsZaYHGQC1ev+iteOJtJ7/PxjMb3ISbbRUMkdgweAgUBRdhF8KBafSyJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B+5Ns28EhcwoidKDx8A4nZ9NVX+e4p+KSTMlnfKiBOU=;
+ b=XjBdI1HLsHJWZv2MeRPTb3+YihL6BghT0CxLY4vgso7f1ScpHcjDab7jfX4zPl+NDM1+P3YIxewuFpuV1vPlIyieFuE4ITxVVM1OEtHYcB4IjpdCVGLCzs0wBXFVIt/Zf8/PZ6J21Xeau2m+hzmqhEK/NYwrpfUzVwFb1rCsezc=
+Received: from BYAPR15MB2501.namprd15.prod.outlook.com (52.135.196.11) by
+ BYAPR15MB2663.namprd15.prod.outlook.com (20.179.156.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Thu, 10 Oct 2019 17:19:01 +0000
+Received: from BYAPR15MB2501.namprd15.prod.outlook.com
+ ([fe80::c13d:be57:b216:bfa0]) by BYAPR15MB2501.namprd15.prod.outlook.com
+ ([fe80::c13d:be57:b216:bfa0%5]) with mapi id 15.20.2327.026; Thu, 10 Oct 2019
+ 17:19:01 +0000
+From:   Alexei Starovoitov <ast@fb.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH bpf-next 2/2] bpf/stackmap: fix A-A deadlock in
+ bpf_get_stack()
+Thread-Topic: [PATCH bpf-next 2/2] bpf/stackmap: fix A-A deadlock in
+ bpf_get_stack()
+Thread-Index: AQHVfzKswn/pkqmThEy7QwA/cvFN/adTfF0AgACi1oA=
+Date:   Thu, 10 Oct 2019 17:19:01 +0000
+Message-ID: <a1d30b11-2759-0293-5612-48150db92775@fb.com>
+References: <20191010061916.198761-1-songliubraving@fb.com>
+ <20191010061916.198761-3-songliubraving@fb.com>
+ <20191010073608.GO2311@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191010073608.GO2311@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR19CA0001.namprd19.prod.outlook.com
+ (2603:10b6:300:d4::11) To BYAPR15MB2501.namprd15.prod.outlook.com
+ (2603:10b6:a02:88::11)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::f66f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 99400205-3077-480d-10db-08d74da5f101
+x-ms-traffictypediagnostic: BYAPR15MB2663:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB2663530AE9E4E6AD6F7AEA96D7940@BYAPR15MB2663.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:175;
+x-forefront-prvs: 018632C080
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(376002)(366004)(396003)(39860400002)(136003)(346002)(199004)(189003)(256004)(66556008)(66446008)(64756008)(478600001)(6512007)(8676002)(102836004)(446003)(54906003)(81156014)(11346002)(66476007)(66946007)(6486002)(486006)(81166006)(52116002)(305945005)(14444005)(2616005)(76176011)(46003)(7736002)(25786009)(476003)(6436002)(229853002)(31686004)(14454004)(186003)(6246003)(4326008)(99286004)(36756003)(2906002)(316002)(71200400001)(71190400001)(8936002)(86362001)(110136005)(5660300002)(6116002)(53546011)(31696002)(6506007)(386003)(6636002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2663;H:BYAPR15MB2501.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JlOUHvbFeeg2+KRy49JZw8XQa/AWVhuCfJKMTIj6QfhcxnWnnD+kgjM0alnSJl4MZQdskhH9ke1muTcJi2uY+SIDuptoNzBRiiRLunhordFCcPrdUieQS7zpxV2AYVfQcC5mejVBuLMqJoEooUVv9sCIpZNH3cgPleF2e2DEcBhRSFfYbpruzZU/Kuy3X1YcVS96KGRCnn//GWQNnxWBz1th3Viy6IT2JKIVLBckmuuU83aHycGVKkE3rIMt+gRzVZ1MBiQYG3tb3aceAtS7IMwTAoJ4rpWyljyMJEmYBA4sXyrbpu4FzsGqvh5UBsJrdYhcucMpTrGzuZQVAEujDB9JGFsy4QF53K6csYv2Q4SkUrV/PtB0K/2fsAvH9Y/l1jiGQP8VsorOBQy/LVMKDPp61g7KT9xe4PsIjFew+Zg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <886DEB1D6DD67342989EFADF24526243@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99400205-3077-480d-10db-08d74da5f101
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 17:19:01.6349
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qdu9LS4OBj4OODOhtT/UZd8oFp5Z1dOGidoEFv/jOnWqagubIfg7bH6jhl6scPX3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2663
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-10_06:2019-10-10,2019-10-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1011 spamscore=0 suspectscore=0 impostorscore=0
+ phishscore=0 bulkscore=0 priorityscore=1501 mlxscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910100152
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We set the compat_elf_hwcap bits unconditionally on arm64 to
-include the VFP and NEON support. However, the FP/SIMD unit
-is optional on Arm v8 and thus could be missing. We already
-handle this properly in the kernel, but still advertise to
-the COMPAT applications that the VFP is available. Fix this
-to make sure we only advertise when we really have them.
-
-Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
-Changes since v1:
-  - Switch to using cpuid_feature_extract_unsigned_field() rather than
-    hard coding field extraction.
----
- arch/arm64/kernel/cpufeature.c | 37 +++++++++++++++++++++++++++++++---
- 1 file changed, 34 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 0f9eace6c64b..d260e3bdf07b 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -32,9 +32,7 @@ static unsigned long elf_hwcap __read_mostly;
- #define COMPAT_ELF_HWCAP_DEFAULT	\
- 				(COMPAT_HWCAP_HALF|COMPAT_HWCAP_THUMB|\
- 				 COMPAT_HWCAP_FAST_MULT|COMPAT_HWCAP_EDSP|\
--				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_VFP|\
--				 COMPAT_HWCAP_VFPv3|COMPAT_HWCAP_VFPv4|\
--				 COMPAT_HWCAP_NEON|COMPAT_HWCAP_IDIV|\
-+				 COMPAT_HWCAP_TLS|COMPAT_HWCAP_IDIV|\
- 				 COMPAT_HWCAP_LPAE)
- unsigned int compat_elf_hwcap __read_mostly = COMPAT_ELF_HWCAP_DEFAULT;
- unsigned int compat_elf_hwcap2 __read_mostly;
-@@ -1589,6 +1587,12 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.match_list = list,						\
- 	}
- 
-+#define HWCAP_CAP_MATCH(match, cap_type, cap)					\
-+	{									\
-+		__HWCAP_CAP(#cap, cap_type, cap)				\
-+		.matches = match,						\
-+	}
-+
- #ifdef CONFIG_ARM64_PTR_AUTH
- static const struct arm64_cpu_capabilities ptr_auth_hwcap_addr_matches[] = {
- 	{
-@@ -1662,8 +1666,35 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
- 	{},
- };
- 
-+#ifdef CONFIG_COMPAT
-+static bool compat_has_neon(const struct arm64_cpu_capabilities *cap, int scope)
-+{
-+	/*
-+	 * Check that all of MVFR1_EL1.{SIMDSP, SIMDInt, SIMDLS} are available,
-+	 * in line with that of arm32 as in vfp_init(). We make sure that the
-+	 * check is future proof, by making sure value is non-zero.
-+	 */
-+	u32 mvfr1;
-+
-+	WARN_ON(scope == SCOPE_LOCAL_CPU && preemptible());
-+	if (scope == SCOPE_SYSTEM)
-+		mvfr1 = read_sanitised_ftr_reg(SYS_MVFR1_EL1);
-+	else
-+		mvfr1 = read_sysreg_s(SYS_MVFR1_EL1);
-+
-+	return cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDSP_SHIFT) &&
-+		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDINT_SHIFT) &&
-+		cpuid_feature_extract_unsigned_field(mvfr1, MVFR1_SIMDLS_SHIFT);
-+}
-+#endif
-+
- static const struct arm64_cpu_capabilities compat_elf_hwcaps[] = {
- #ifdef CONFIG_COMPAT
-+	HWCAP_CAP_MATCH(compat_has_neon, CAP_COMPAT_HWCAP, COMPAT_HWCAP_NEON),
-+	HWCAP_CAP(SYS_MVFR1_EL1, MVFR1_SIMDFMAC_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv4),
-+	/* Arm v8 mandates MVFR0.FPDP == {0, 2}. So, piggy back on this for the presence of VFP support */
-+	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFP),
-+	HWCAP_CAP(SYS_MVFR0_EL1, MVFR0_FPDP_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP, COMPAT_HWCAP_VFPv3),
- 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_PMULL),
- 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_AES),
- 	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA1_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA1),
--- 
-2.21.0
-
+T24gMTAvMTAvMTkgMTI6MzYgQU0sIFBldGVyIFppamxzdHJhIHdyb3RlOg0KPiBPbiBXZWQsIE9j
+dCAwOSwgMjAxOSBhdCAxMToxOToxNlBNIC0wNzAwLCBTb25nIExpdSB3cm90ZToNCj4+IGJwZiBz
+dGFja21hcCB3aXRoIGJ1aWxkLWlkIGxvb2t1cCAoQlBGX0ZfU1RBQ0tfQlVJTERfSUQpIGNhbiB0
+cmlnZ2VyIEEtQQ0KPj4gZGVhZGxvY2sgb24gcnFfbG9jaygpOg0KPj4NCj4+IHJjdTogSU5GTzog
+cmN1X3NjaGVkIGRldGVjdGVkIHN0YWxscyBvbiBDUFVzL3Rhc2tzOg0KPj4gWy4uLl0NCj4+IENh
+bGwgVHJhY2U6DQo+PiAgIHRyeV90b193YWtlX3VwKzB4MWFkLzB4NTkwDQo+PiAgIHdha2VfdXBf
+cSsweDU0LzB4ODANCj4+ICAgcndzZW1fd2FrZSsweDhhLzB4YjANCj4+ICAgYnBmX2dldF9zdGFj
+aysweDEzYy8weDE1MA0KPj4gICBicGZfcHJvZ19mYmRhZjQyZWRlZDlmZTQ2X29uX2V2ZW50KzB4
+NWUzLzB4MTAwMA0KPj4gICBicGZfb3ZlcmZsb3dfaGFuZGxlcisweDYwLzB4MTAwDQo+PiAgIF9f
+cGVyZl9ldmVudF9vdmVyZmxvdysweDRmLzB4ZjANCj4+ICAgcGVyZl9zd2V2ZW50X292ZXJmbG93
+KzB4OTkvMHhjMA0KPj4gICBfX19wZXJmX3N3X2V2ZW50KzB4ZTcvMHgxMjANCj4+ICAgX19zY2hl
+ZHVsZSsweDQ3ZC8weDYyMA0KPj4gICBzY2hlZHVsZSsweDI5LzB4OTANCj4+ICAgZnV0ZXhfd2Fp
+dF9xdWV1ZV9tZSsweGI5LzB4MTEwDQo+PiAgIGZ1dGV4X3dhaXQrMHgxMzkvMHgyMzANCj4+ICAg
+ZG9fZnV0ZXgrMHgyYWMvMHhhNTANCj4+ICAgX194NjRfc3lzX2Z1dGV4KzB4MTNjLzB4MTgwDQo+
+PiAgIGRvX3N5c2NhbGxfNjQrMHg0Mi8weDEwMA0KPj4gICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVy
+X2h3ZnJhbWUrMHg0NC8weGE5DQo+Pg0KPiANCj4+IGRpZmYgLS1naXQgYS9rZXJuZWwvYnBmL3N0
+YWNrbWFwLmMgYi9rZXJuZWwvYnBmL3N0YWNrbWFwLmMNCj4+IGluZGV4IDA1MjU4MGMzM2QyNi4u
+M2IyNzhmNmIwYzNlIDEwMDY0NA0KPj4gLS0tIGEva2VybmVsL2JwZi9zdGFja21hcC5jDQo+PiAr
+KysgYi9rZXJuZWwvYnBmL3N0YWNrbWFwLmMNCj4+IEBAIC0yODcsNyArMjg3LDcgQEAgc3RhdGlj
+IHZvaWQgc3RhY2tfbWFwX2dldF9idWlsZF9pZF9vZmZzZXQoc3RydWN0IGJwZl9zdGFja19idWls
+ZF9pZCAqaWRfb2ZmcywNCj4+ICAgCWJvb2wgaXJxX3dvcmtfYnVzeSA9IGZhbHNlOw0KPj4gICAJ
+c3RydWN0IHN0YWNrX21hcF9pcnFfd29yayAqd29yayA9IE5VTEw7DQo+Pg0KPj4gLQlpZiAoaW5f
+bm1pKCkpIHsNCj4+ICsJaWYgKGluX25taSgpIHx8IHRoaXNfcnFfaXNfbG9ja2VkKCkpIHsNCj4+
+ICAgCQl3b3JrID0gdGhpc19jcHVfcHRyKCZ1cF9yZWFkX3dvcmspOw0KPj4gICAJCWlmICh3b3Jr
+LT5pcnFfd29yay5mbGFncyAmIElSUV9XT1JLX0JVU1kpDQo+PiAgIAkJCS8qIGNhbm5vdCBxdWV1
+ZSBtb3JlIHVwX3JlYWQsIGZhbGxiYWNrICovDQo+IA0KPiBUaGlzIGlzIGhvcnJpZmljIGNyYXAu
+IEp1c3Qgc2F5IG5vIHRvIHRoYXQgZ2V0X2J1aWxkX2lkX29mZnNldCgpDQo+IHRyYWlud3JlY2su
+DQoNCnRoaXMgaXMgbm90IGEgaGVscGZ1bCBjb21tZW50Lg0KV2hhdCBpc3N1ZXMgZG8geW91IHNl
+ZSB3aXRoIHRoaXMgYXBwcm9hY2g/DQoNCg0KDQo=
