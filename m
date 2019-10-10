@@ -2,99 +2,109 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C1DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C52C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11C92067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1AA21D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="2D1Tqf6U"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="AfuUb30B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388363AbfJJNmI (ORCPT
+        id S2388306AbfJJNow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:42:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38565 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387791AbfJJNmH (ORCPT
+        Thu, 10 Oct 2019 09:44:52 -0400
+Received: from mail-ed1-f50.google.com ([209.85.208.50]:42613 "EHLO
+        mail-ed1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387651AbfJJNoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:42:07 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 3so6854566wmi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 06:42:05 -0700 (PDT)
+        Thu, 10 Oct 2019 09:44:38 -0400
+Received: by mail-ed1-f50.google.com with SMTP id y91so5499769ede.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 06:44:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BFnPJ9CbG5m+x0gh6lci0Tzu5Dr4+uLZpxV5Yx2Lp/I=;
-        b=2D1Tqf6UFvfY0GQ9zEYDEh2Aun4e/M6ytMMzlnE2j/5GfOvQb2EdFXTY8hL3tUFiK4
-         IKvpLWImL7VIt4bWNW6tdtZjUjstnN9Sw4k+8qSkxy1hm7hP3wzyM9tXrNoehAr2pBfI
-         /pph7Ltzs7VJpXiH5PgtBZQg6RphycW5hmd6eemxlXSu9/bL+7iUvP0l/8E2smERE16U
-         c5a5JCC+dn3i1Kuzymw+jIQ/dEaazHKRi+sULEFpIKz+2f2qySvzK8MEQTuoEX/m8FmZ
-         zndroZ+Qn1ckVlUP4Av//2uOc97O8bKY+D/nzac0m21tJ0UcjUJJbsX0H8QvCCFL0QQv
-         4HKg==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hoJ6TorxaA0ueOkAnVcY7UKvB59REF8/krI4QbdE3rY=;
+        b=AfuUb30BN2fwLHvc++JsHy0F39WOPWyY6n5BemTQw4OffXIs9XPV8OEKc91w7W4+g5
+         hrlPzv1yXu60ZCX+CWlLe8CNYfo2zJTFzNtQS/MD5/GwzPcnvFN3neUhaveUI3Q8qoVC
+         VH1RNyOOxQ0acee6EjhlHOvgQbsStXwga5L2c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BFnPJ9CbG5m+x0gh6lci0Tzu5Dr4+uLZpxV5Yx2Lp/I=;
-        b=HPn8ZEt1nij63b/Wm+mc+ZhI18Uv1n8EvaumVwBN2wXOAc6B8M5Jno/T7X1ODTy+7F
-         Dzwcw8ECNZg1cXsJRUP0eHvAatORH3ha1qT4d2eBYWS3kBD1/gEfVPaRzcCh2aCY1t48
-         UfHDp0lhX9dm7Wpi27Ouen84dflzv0T9ulwfHi+y4FQTn/JzayGE37U+jc+9RefhKVka
-         1NXt9oqt4XlYtzs+dxz6qgztcLzFp0BmEb5PlZgm9VFD1B4EgNVjtYUCN3tyUSDnoDH+
-         MbcX0aKM7o6m2UZZCkUl8wGmTrptPU2xJ5BBIWkkRbjapOCbr1KaxCU+qq1eF5hJ6cos
-         YEoQ==
-X-Gm-Message-State: APjAAAUcqz4j2xp0uJqZYjzRtJ2u+PU6KmV6ehhWjbGCjdBBTkCjRK9b
-        z6yfCEunELA15eO7DT4xFGUubg==
-X-Google-Smtp-Source: APXvYqzi+PrehgDRm3UXJf+By4vMypNQE6kgp+vy7T5Pq1WqICHZIHsTblx+rCZ98uH3ZCqj4MEFdQ==
-X-Received: by 2002:a05:600c:2185:: with SMTP id e5mr7960137wme.78.1570714924491;
-        Thu, 10 Oct 2019 06:42:04 -0700 (PDT)
-Received: from localhost ([85.163.43.78])
-        by smtp.gmail.com with ESMTPSA id u1sm4930948wmc.38.2019.10.10.06.42.03
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=hoJ6TorxaA0ueOkAnVcY7UKvB59REF8/krI4QbdE3rY=;
+        b=OfCan/o3S26vRpDCeZWYvaOlOgs/pXi9KUryyHUSDw96XMkx8laB3gkBnGutQGiKzL
+         HiaYBTyUjMHJIO7OYxrTRCUvm+Hl5toaGSGWbv1VIY0QjmeLUMyFDl7m8ZvSCBm/S01S
+         rrYqVPOkbgFfTylcjPoQ3eHH1m4vd94eMzgLYApcm0S2adqrSD1pplsapBNu/ezZNyWg
+         RFojUeih0OwXo2CEmq9obup7aIIogeV0ipzevweXPSHcAXvYAJoNHJepKxqGZj9XoUMf
+         /8M+w7mlERL+h07YDDTzv4Ibtz0wgeeHQUWUkTmOOYuyXSPxQ6GljTXpmkunPG5zVH2v
+         Kfdg==
+X-Gm-Message-State: APjAAAV7DxdLyuZ1hthMCTYczVJ7W+PPfzMyDnH0nYJfYgD4ajPhBErl
+        TDKzW8cjLV/VRJUfQBXgD64StQ==
+X-Google-Smtp-Source: APXvYqzHiMfMRhzP+ce4ioVGwJmdp6neoxytw+JQPQJ8tg7kmLQo7v1y826ew96r7MuwZnWxO0ymAA==
+X-Received: by 2002:a17:906:a986:: with SMTP id jr6mr7585993ejb.158.1570715076498;
+        Thu, 10 Oct 2019 06:44:36 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id r18sm974451edx.94.2019.10.10.06.44.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 06:42:03 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 15:42:03 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 05/17] ethtool: helper functions for netlink
- interface
-Message-ID: <20191010134203.GA22798@nanopsycho>
-References: <cover.1570654310.git.mkubecek@suse.cz>
- <061af34c9f34205ed18a126cef9ebe1534de8bc7.1570654310.git.mkubecek@suse.cz>
+        Thu, 10 Oct 2019 06:44:35 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 15:44:33 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20191010134433.GY16989@phenom.ffwll.local>
+Mail-Followup-To: Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>
+References: <20191010131448.482da2b2@canb.auug.org.au>
+ <20191010080207.GA22099@gmail.com>
+ <20191010222210.1365d50b@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <061af34c9f34205ed18a126cef9ebe1534de8bc7.1570654310.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20191010222210.1365d50b@canb.auug.org.au>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Oct 09, 2019 at 10:59:15PM CEST, mkubecek@suse.cz wrote:
+On Thu, Oct 10, 2019 at 10:23:21PM +1100, Stephen Rothwell wrote:
+> Hi Ingo,
+> 
+> On Thu, 10 Oct 2019 10:02:07 +0200 Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> > I suspect -next will have to carry this semantic merge conflict 
+> > resolution until the DRM tree is merged upstream.
+> 
+> Yep, its not a real problem, I get a few like this every cycle.
 
-[...]
-
-
->+/**
->+ * ethnl_parse_header() - parse request header
->+ * @req_info:    structure to put results into
->+ * @header:      nest attribute with request header
->+ * @net:         request netns
->+ * @extack:      netlink extack for error reporting
->+ * @policy:      netlink attribute policy to validate header; use
->+ *               @dflt_header_policy (all attributes allowed) if null
->+ * @require_dev: fail if no device identiified in header
-
-s/identiified/identified/
-
+Yeah totally within expectations when I acked that cleanup patch. We'll
+probably have a few more lockdep annotation patches/changes that will
+conflict in drm.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
