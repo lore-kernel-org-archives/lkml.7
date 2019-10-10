@@ -2,77 +2,275 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B713C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C20C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59F06206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BBB206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:20:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vO3NnEQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfJJWUe (ORCPT
+        id S1727040AbfJJWUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 18:20:34 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:65011 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfJJWUe (ORCPT
+        Thu, 10 Oct 2019 18:20:37 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44017 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfJJWUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 18:20:34 -0400
-Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 86c559199dc39aa4; Fri, 11 Oct 2019 00:20:31 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Daniel Black <daniel@linux.ibm.com>
-Cc:     Len Brown <lenb@kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] acpi/hmat: ACPI_HMAT_MEMORY_PD_VALID is deprecated in ACPI-6.3
-Date:   Fri, 11 Oct 2019 00:20:31 +0200
-Message-ID: <5172949.9bKdBNxvUS@kreacher>
-In-Reply-To: <20190806042440.16445-1-daniel@linux.ibm.com>
-References: <20190806042440.16445-1-daniel@linux.ibm.com>
+        Thu, 10 Oct 2019 18:20:35 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f21so3467495plj.10;
+        Thu, 10 Oct 2019 15:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W3mGTs7MOyLjtpnj0PJB9+Bxqcbq+qsvgn2CFvFNE9o=;
+        b=vO3NnEQYc9E8PG1a8ibC12yEWFQFOB1Hx8hGQVef2QBix8XnuHV72vGqiqfBByDX1B
+         GB+RXlzi1AgV2HLPIJOxN5OEUrNN1gMc6B+upAOBwjnOFaybpjU2MNBFlpCcCVOGVi34
+         Bf6J1QQrOp1pBonMzqpVzSZEKhB48Skt12qivYXo9agFB3h/z3YoYoEanyOXvX4+IV0N
+         +vsR5ie1bipkap+s8HO1W/rkb8UOmSt4cT41+D8ayYPw5gSVvww3Yd9sdBrCiRcUCAJQ
+         rpk2/At5z7IegYM6MLvNuOvrogHp6udXgni3zdPgfxyAPd31wwzen4UN1i9pSZ5MVqTJ
+         /JEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W3mGTs7MOyLjtpnj0PJB9+Bxqcbq+qsvgn2CFvFNE9o=;
+        b=OCU7a1fTOYzo/8aSu78Iyd4qZdLdP9O6eTujN3yvC71Fs7KZKvTlL2jBQrWENaP/Pf
+         YRsAbcuPlC1Gby5+WvA4hKwydUqr6aOQkMs5sjIpK7Ng05pUn9XjdrSJNoxteS2a7JFE
+         eMr5320e4aW7nIXHpLFJa2rmV6on+zdDNRW1JS4aC7hdWm68EoxYK3ty3IAryKZxAepN
+         Z6h2XjVMUKgV+JWyBfs8kaminoWE3lznwa+vbJZsfLXgO6+8x2cMqLooVLjLgVLPTwho
+         u6dPxRW3sOhwE84w5UI8iNykyi/XCmwFH16JFxQiLtV9DwQ4DuA13Y+NpP6jC6oQSiQ/
+         QQ3A==
+X-Gm-Message-State: APjAAAVmw0hv+kQsy+ONLb5lsZgn/0ROol/3IhnP8ORwC6Y6C9DcR7sZ
+        syPzSdJ9EQVKLE0IiUPVJ3vBBzvb
+X-Google-Smtp-Source: APXvYqxhaE1iUzipXQlVGVyDvINWacWoHayHW9CYbbNozw8zmvHGLekFyPQMOcyuxIEYoAhqKGzqbg==
+X-Received: by 2002:a17:902:bf0a:: with SMTP id bi10mr12162507plb.56.1570746033896;
+        Thu, 10 Oct 2019 15:20:33 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 11sm6805064pgd.0.2019.10.10.15.20.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 15:20:33 -0700 (PDT)
+Subject: Re: [PATCH 15/36] ARM: s3c: adc: move header to linux/soc/samsung
+To:     Arnd Bergmann <arnd@arndb.de>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-15-arnd@arndb.de>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <da32e8a3-cbb3-ea08-1c55-55980b3dc53e@roeck-us.net>
+Date:   Thu, 10 Oct 2019 15:20:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191010203043.1241612-15-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, August 6, 2019 6:24:39 AM CEST Daniel Black wrote:
-> ACPI-6.3 corresponds to when hmat revision was bumped from
-> 1 to 2. In this version ACPI_HMAT_MEMORY_PD_VALID was
-> deprecated and made reserved.
+On 10/10/19 1:29 PM, Arnd Bergmann wrote:
+> There are multiple drivers using the private adc interface.
+> It seems unlikely that they would ever get converted to iio,
+> so make the current state official by making the header file
+> global.
 > 
-> As such in revision 2+ we shouldn't be testing this flag.
+> The s3c2410_ts driver needs a couple of register definitions
+> as well.
 > 
-> This is as per ACPI-6.3, 5.2.27.3, Table 5-145
-> "Memory Proximity Domain Attributes Structure"
-> for Flags.
-> 
-> Signed-off-by: Daniel Black <daniel@linux.ibm.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+For hwmon:
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
->  drivers/acpi/hmat/hmat.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   arch/arm/mach-s3c64xx/mach-crag6410.c         |  2 +-
+>   arch/arm/mach-s3c64xx/mach-mini6410.c         |  2 +-
+>   arch/arm/mach-s3c64xx/mach-real6410.c         |  2 +-
+>   arch/arm/mach-s3c64xx/mach-smdk6410.c         |  2 +-
+>   arch/arm/plat-samsung/adc.c                   |  2 +-
+>   arch/arm/plat-samsung/devs.c                  |  2 +-
+>   drivers/hwmon/s3c-hwmon.c                     |  2 +-
+>   drivers/input/touchscreen/s3c2410_ts.c        | 37 ++++++++++++++++++-
+>   drivers/power/supply/s3c_adc_battery.c        |  2 +-
+>   .../linux/soc/samsung/s3c-adc.h               |  0
+>   10 files changed, 43 insertions(+), 10 deletions(-)
+>   rename arch/arm/plat-samsung/include/plat/adc.h => include/linux/soc/samsung/s3c-adc.h (100%)
 > 
-> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-> index 96b7d39a97c6..e938e34673d9 100644
-> --- a/drivers/acpi/hmat/hmat.c
-> +++ b/drivers/acpi/hmat/hmat.c
-> @@ -382,7 +382,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
->  		pr_info("HMAT: Memory Flags:%04x Processor Domain:%d Memory Domain:%d\n",
->  			p->flags, p->processor_PD, p->memory_PD);
->  
-> -	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
-> +	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
->  		target = find_mem_target(p->memory_PD);
->  		if (!target) {
->  			pr_debug("HMAT: Memory Domain missing from SRAT\n");
+> diff --git a/arch/arm/mach-s3c64xx/mach-crag6410.c b/arch/arm/mach-s3c64xx/mach-crag6410.c
+> index da5b50981a14..133453562d23 100644
+> --- a/arch/arm/mach-s3c64xx/mach-crag6410.c
+> +++ b/arch/arm/mach-s3c64xx/mach-crag6410.c
+> @@ -57,7 +57,7 @@
+>   #include <plat/keypad.h>
+>   #include <plat/devs.h>
+>   #include <plat/cpu.h>
+> -#include <plat/adc.h>
+> +#include <linux/soc/samsung/s3c-adc.h>
+>   #include <linux/platform_data/i2c-s3c2410.h>
+>   #include <plat/pm.h>
+>   #include <plat/samsung-time.h>
+> diff --git a/arch/arm/mach-s3c64xx/mach-mini6410.c b/arch/arm/mach-s3c64xx/mach-mini6410.c
+> index 0dd36ae49e6a..c7140300bd3f 100644
+> --- a/arch/arm/mach-s3c64xx/mach-mini6410.c
+> +++ b/arch/arm/mach-s3c64xx/mach-mini6410.c
+> @@ -27,7 +27,7 @@
+>   #include <mach/regs-gpio.h>
+>   #include <mach/gpio-samsung.h>
+>   
+> -#include <plat/adc.h>
+> +#include <linux/soc/samsung/s3c-adc.h>
+>   #include <plat/cpu.h>
+>   #include <plat/devs.h>
+>   #include <plat/fb.h>
+> diff --git a/arch/arm/mach-s3c64xx/mach-real6410.c b/arch/arm/mach-s3c64xx/mach-real6410.c
+> index 0ff88b6859c4..f55097fde94c 100644
+> --- a/arch/arm/mach-s3c64xx/mach-real6410.c
+> +++ b/arch/arm/mach-s3c64xx/mach-real6410.c
+> @@ -29,7 +29,7 @@
+>   #include <mach/gpio-samsung.h>
+>   #include <mach/irqs.h>
+>   
+> -#include <plat/adc.h>
+> +#include <linux/soc/samsung/s3c-adc.h>
+>   #include <plat/cpu.h>
+>   #include <plat/devs.h>
+>   #include <plat/fb.h>
+> diff --git a/arch/arm/mach-s3c64xx/mach-smdk6410.c b/arch/arm/mach-s3c64xx/mach-smdk6410.c
+> index 95bdcfe95a53..3042f6cbffd9 100644
+> --- a/arch/arm/mach-s3c64xx/mach-smdk6410.c
+> +++ b/arch/arm/mach-s3c64xx/mach-smdk6410.c
+> @@ -60,7 +60,7 @@
+>   
+>   #include <plat/devs.h>
+>   #include <plat/cpu.h>
+> -#include <plat/adc.h>
+> +#include <linux/soc/samsung/s3c-adc.h>
+>   #include <linux/platform_data/touchscreen-s3c2410.h>
+>   #include <plat/keypad.h>
+>   #include <plat/samsung-time.h>
+> diff --git a/arch/arm/plat-samsung/adc.c b/arch/arm/plat-samsung/adc.c
+> index ee3d5c989a76..623a9774cc52 100644
+> --- a/arch/arm/plat-samsung/adc.c
+> +++ b/arch/arm/plat-samsung/adc.c
+> @@ -20,7 +20,7 @@
+>   #include <linux/regulator/consumer.h>
+>   
+>   #include <plat/regs-adc.h>
+> -#include <plat/adc.h>
+> +#include <linux/soc/samsung/s3c-adc.h>
+>   
+>   /* This driver is designed to control the usage of the ADC block between
+>    * the touchscreen and any other drivers that may need to use it, such as
+> diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
+> index fd94a35e22f8..ddd90f0bb380 100644
+> --- a/arch/arm/plat-samsung/devs.c
+> +++ b/arch/arm/plat-samsung/devs.c
+> @@ -44,7 +44,7 @@
+>   
+>   #include <plat/cpu.h>
+>   #include <plat/devs.h>
+> -#include <plat/adc.h>
+> +#include <linux/soc/samsung/s3c-adc.h>
+>   #include <linux/platform_data/ata-samsung_cf.h>
+>   #include <plat/fb.h>
+>   #include <plat/fb-s3c2410.h>
+> diff --git a/drivers/hwmon/s3c-hwmon.c b/drivers/hwmon/s3c-hwmon.c
+> index b490fe3d2ee8..f2703c5460d0 100644
+> --- a/drivers/hwmon/s3c-hwmon.c
+> +++ b/drivers/hwmon/s3c-hwmon.c
+> @@ -20,7 +20,7 @@
+>   #include <linux/hwmon.h>
+>   #include <linux/hwmon-sysfs.h>
+>   
+> -#include <plat/adc.h>
+> +#include <linux/soc/samsung/s3c-adc.h>
+>   #include <linux/platform_data/hwmon-s3c.h>
+>   
+>   struct s3c_hwmon_attr {
+> diff --git a/drivers/input/touchscreen/s3c2410_ts.c b/drivers/input/touchscreen/s3c2410_ts.c
+> index b346e7cafd62..1a5a178ea286 100644
+> --- a/drivers/input/touchscreen/s3c2410_ts.c
+> +++ b/drivers/input/touchscreen/s3c2410_ts.c
+> @@ -21,10 +21,43 @@
+>   #include <linux/clk.h>
+>   #include <linux/io.h>
+>   
+> -#include <plat/adc.h>
+> -#include <plat/regs-adc.h>
+> +#include <linux/soc/samsung/s3c-adc.h>
+>   #include <linux/platform_data/touchscreen-s3c2410.h>
+>   
+> +#define	S3C2410_ADCCON			(0x00)
+> +#define	S3C2410_ADCTSC			(0x04)
+> +#define	S3C2410_ADCDLY			(0x08)
+> +#define	S3C2410_ADCDAT0			(0x0C)
+> +#define	S3C2410_ADCDAT1			(0x10)
+> +#define	S3C64XX_ADCUPDN			(0x14)
+> +#define	S3C2443_ADCMUX			(0x18)
+> +#define	S3C64XX_ADCCLRINT		(0x18)
+> +#define	S5P_ADCMUX			(0x1C)
+> +#define	S3C64XX_ADCCLRINTPNDNUP		(0x20)
+> +
+> +/* ADCTSC Register Bits */
+> +#define S3C2443_ADCTSC_UD_SEN		(1 << 8)
+> +#define S3C2410_ADCTSC_YM_SEN		(1<<7)
+> +#define S3C2410_ADCTSC_YP_SEN		(1<<6)
+> +#define S3C2410_ADCTSC_XM_SEN		(1<<5)
+> +#define S3C2410_ADCTSC_XP_SEN		(1<<4)
+> +#define S3C2410_ADCTSC_PULL_UP_DISABLE	(1<<3)
+> +#define S3C2410_ADCTSC_AUTO_PST		(1<<2)
+> +#define S3C2410_ADCTSC_XY_PST(x)	(((x)&0x3)<<0)
+> +
+> +/* ADCDAT0 Bits */
+> +#define S3C2410_ADCDAT0_UPDOWN		(1<<15)
+> +#define S3C2410_ADCDAT0_AUTO_PST	(1<<14)
+> +#define S3C2410_ADCDAT0_XY_PST		(0x3<<12)
+> +#define S3C2410_ADCDAT0_XPDATA_MASK	(0x03FF)
+> +
+> +/* ADCDAT1 Bits */
+> +#define S3C2410_ADCDAT1_UPDOWN		(1<<15)
+> +#define S3C2410_ADCDAT1_AUTO_PST	(1<<14)
+> +#define S3C2410_ADCDAT1_XY_PST		(0x3<<12)
+> +#define S3C2410_ADCDAT1_YPDATA_MASK	(0x03FF)
+> +
+> +
+>   #define TSC_SLEEP  (S3C2410_ADCTSC_PULL_UP_DISABLE | S3C2410_ADCTSC_XY_PST(0))
+>   
+>   #define INT_DOWN	(0)
+> diff --git a/drivers/power/supply/s3c_adc_battery.c b/drivers/power/supply/s3c_adc_battery.c
+> index 3d00b35cafc9..60b7f41ab063 100644
+> --- a/drivers/power/supply/s3c_adc_battery.c
+> +++ b/drivers/power/supply/s3c_adc_battery.c
+> @@ -22,7 +22,7 @@
+>   #include <linux/init.h>
+>   #include <linux/module.h>
+>   
+> -#include <plat/adc.h>
+> +#include <linux/soc/samsung/s3c-adc.h>
+>   
+>   #define BAT_POLL_INTERVAL		10000 /* ms */
+>   #define JITTER_DELAY			500 /* ms */
+> diff --git a/arch/arm/plat-samsung/include/plat/adc.h b/include/linux/soc/samsung/s3c-adc.h
+> similarity index 100%
+> rename from arch/arm/plat-samsung/include/plat/adc.h
+> rename to include/linux/soc/samsung/s3c-adc.h
 > 
-
-Applied as a fix for 5.4, thanks!
-
-
 
