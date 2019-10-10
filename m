@@ -2,143 +2,99 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D442C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C1DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD352067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11C92067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="ijWXaZYo"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="2D1Tqf6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388236AbfJJNlX (ORCPT
+        id S2388363AbfJJNmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:41:23 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:23236 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbfJJNlV (ORCPT
+        Thu, 10 Oct 2019 09:42:08 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38565 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387791AbfJJNmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:41:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 5038F3F662;
-        Thu, 10 Oct 2019 15:41:19 +0200 (CEST)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=ijWXaZYo;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JuFPudYhk_3z; Thu, 10 Oct 2019 15:41:18 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id EBF0D3F247;
-        Thu, 10 Oct 2019 15:41:17 +0200 (CEST)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 2C952360ED5;
-        Thu, 10 Oct 2019 15:41:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1570714877; bh=xEUu8V1jmdy0b1JnfsdE1ixgai5iPm/a0UL1Js6USpk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ijWXaZYo+2T/KF/TFThEJ4/Jb8vCSvNjD316eFCovtyF5dIhD6is1nn8Kn78Yp1wl
-         109pQPDHWw2KQATIc41ioJqlpOP16P7BQjGrKD72PtUYMLh1D9cydzTUygDh0D4Xbp
-         cSmgxlrMIlSAK3nmcoPyIrQVjCSCd17RHCyvyuIs=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        torvalds@linux-foundation.org, kirill@shutemov.name
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>
-Subject: [RFC PATCH 1/4] mm: Have the mempolicy pagewalk to avoid positive callback return codes
-Date:   Thu, 10 Oct 2019 15:40:55 +0200
-Message-Id: <20191010134058.11949-2-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191010134058.11949-1-thomas_os@shipmail.org>
-References: <20191010134058.11949-1-thomas_os@shipmail.org>
+        Thu, 10 Oct 2019 09:42:07 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 3so6854566wmi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 06:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BFnPJ9CbG5m+x0gh6lci0Tzu5Dr4+uLZpxV5Yx2Lp/I=;
+        b=2D1Tqf6UFvfY0GQ9zEYDEh2Aun4e/M6ytMMzlnE2j/5GfOvQb2EdFXTY8hL3tUFiK4
+         IKvpLWImL7VIt4bWNW6tdtZjUjstnN9Sw4k+8qSkxy1hm7hP3wzyM9tXrNoehAr2pBfI
+         /pph7Ltzs7VJpXiH5PgtBZQg6RphycW5hmd6eemxlXSu9/bL+7iUvP0l/8E2smERE16U
+         c5a5JCC+dn3i1Kuzymw+jIQ/dEaazHKRi+sULEFpIKz+2f2qySvzK8MEQTuoEX/m8FmZ
+         zndroZ+Qn1ckVlUP4Av//2uOc97O8bKY+D/nzac0m21tJ0UcjUJJbsX0H8QvCCFL0QQv
+         4HKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BFnPJ9CbG5m+x0gh6lci0Tzu5Dr4+uLZpxV5Yx2Lp/I=;
+        b=HPn8ZEt1nij63b/Wm+mc+ZhI18Uv1n8EvaumVwBN2wXOAc6B8M5Jno/T7X1ODTy+7F
+         Dzwcw8ECNZg1cXsJRUP0eHvAatORH3ha1qT4d2eBYWS3kBD1/gEfVPaRzcCh2aCY1t48
+         UfHDp0lhX9dm7Wpi27Ouen84dflzv0T9ulwfHi+y4FQTn/JzayGE37U+jc+9RefhKVka
+         1NXt9oqt4XlYtzs+dxz6qgztcLzFp0BmEb5PlZgm9VFD1B4EgNVjtYUCN3tyUSDnoDH+
+         MbcX0aKM7o6m2UZZCkUl8wGmTrptPU2xJ5BBIWkkRbjapOCbr1KaxCU+qq1eF5hJ6cos
+         YEoQ==
+X-Gm-Message-State: APjAAAUcqz4j2xp0uJqZYjzRtJ2u+PU6KmV6ehhWjbGCjdBBTkCjRK9b
+        z6yfCEunELA15eO7DT4xFGUubg==
+X-Google-Smtp-Source: APXvYqzi+PrehgDRm3UXJf+By4vMypNQE6kgp+vy7T5Pq1WqICHZIHsTblx+rCZ98uH3ZCqj4MEFdQ==
+X-Received: by 2002:a05:600c:2185:: with SMTP id e5mr7960137wme.78.1570714924491;
+        Thu, 10 Oct 2019 06:42:04 -0700 (PDT)
+Received: from localhost ([85.163.43.78])
+        by smtp.gmail.com with ESMTPSA id u1sm4930948wmc.38.2019.10.10.06.42.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 06:42:03 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 15:42:03 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v7 05/17] ethtool: helper functions for netlink
+ interface
+Message-ID: <20191010134203.GA22798@nanopsycho>
+References: <cover.1570654310.git.mkubecek@suse.cz>
+ <061af34c9f34205ed18a126cef9ebe1534de8bc7.1570654310.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <061af34c9f34205ed18a126cef9ebe1534de8bc7.1570654310.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+Wed, Oct 09, 2019 at 10:59:15PM CEST, mkubecek@suse.cz wrote:
 
-The pagewalk code is being reworked to have positive callback return codes
-do walk control. Avoid using positive return codes: "1" is replaced by
-"-EBUSY".
+[...]
 
-Co-developed-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
----
- mm/mempolicy.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 4ae967bcf954..df34c7498c27 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -482,8 +482,8 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
-  *
-  * queue_pages_pte_range() has three possible return values:
-  * 0 - pages are placed on the right node or queued successfully.
-- * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
-- *     specified.
-+ * -EBUSY - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *          specified.
-  * -EIO - only MPOL_MF_STRICT was specified and an existing page was already
-  *        on a node that does not follow the policy.
-  */
-@@ -503,7 +503,7 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
- 	if (ptl) {
- 		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
- 		if (ret != 2)
--			return ret;
-+			return (ret == 1) ? -EBUSY : ret;
- 	}
- 	/* THP was split, fall through to pte walk */
- 
-@@ -546,7 +546,7 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
- 	cond_resched();
- 
- 	if (has_unmovable)
--		return 1;
-+		return -EBUSY;
- 
- 	return addr != end ? -EIO : 0;
- }
-@@ -669,9 +669,9 @@ static const struct mm_walk_ops queue_pages_walk_ops = {
-  * passed via @private.
-  *
-  * queue_pages_range() has three possible return values:
-- * 1 - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
-- *     specified.
-  * 0 - queue pages successfully or no misplaced page.
-+ * -EBUSY - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *	    specified.
-  * -EIO - there is misplaced page and only MPOL_MF_STRICT was specified.
-  */
- static int
-@@ -1285,7 +1285,7 @@ static long do_mbind(unsigned long start, unsigned long len,
- 	ret = queue_pages_range(mm, start, end, nmask,
- 			  flags | MPOL_MF_INVERT, &pagelist);
- 
--	if (ret < 0) {
-+	if (ret < 0 && ret != -EBUSY) {
- 		err = -EIO;
- 		goto up_out;
- 	}
-@@ -1303,7 +1303,7 @@ static long do_mbind(unsigned long start, unsigned long len,
- 				putback_movable_pages(&pagelist);
- 		}
- 
--		if ((ret > 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
-+		if ((ret < 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
- 			err = -EIO;
- 	} else
- 		putback_movable_pages(&pagelist);
--- 
-2.21.0
+>+/**
+>+ * ethnl_parse_header() - parse request header
+>+ * @req_info:    structure to put results into
+>+ * @header:      nest attribute with request header
+>+ * @net:         request netns
+>+ * @extack:      netlink extack for error reporting
+>+ * @policy:      netlink attribute policy to validate header; use
+>+ *               @dflt_header_policy (all attributes allowed) if null
+>+ * @require_dev: fail if no device identiified in header
+
+s/identiified/identified/
 
