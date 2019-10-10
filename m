@@ -2,135 +2,156 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9900C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B853ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D19A206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B086206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:00:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZgAEAuKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfJJS7k (ORCPT
+        id S1727059AbfJJTAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:59:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52758 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726424AbfJJS7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:59:40 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 44CFF18C8902;
-        Thu, 10 Oct 2019 18:59:39 +0000 (UTC)
-Received: from [10.36.116.80] (ovpn-116-80.ams2.redhat.com [10.36.116.80])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A79E1001B09;
-        Thu, 10 Oct 2019 18:59:35 +0000 (UTC)
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-To:     Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, linux-mm@kvack.org,
-        john.ogness@linutronix.de, akpm@linux-foundation.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-References: <20191009162339.GI6681@dhcp22.suse.cz>
- <6AAB77B5-092B-43E3-9F4B-0385DE1890D9@lca.pw>
- <20191010105927.GG18412@dhcp22.suse.cz> <1570713112.5937.26.camel@lca.pw>
- <20191010141820.GI18412@dhcp22.suse.cz> <1570718858.5937.28.camel@lca.pw>
- <20191010173040.GK18412@dhcp22.suse.cz> <1570729686.5937.30.camel@lca.pw>
- <20191010180626.GL18412@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <31b7049d-ba43-10a0-8434-18c9769ac0a5@redhat.com>
-Date:   Thu, 10 Oct 2019 20:59:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 10 Oct 2019 15:00:04 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34186 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfJJTAE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 15:00:04 -0400
+Received: by mail-io1-f65.google.com with SMTP id q1so16194748ion.1;
+        Thu, 10 Oct 2019 12:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cA1nu7WjrWAqmer6330wc0ijhhk83SGo4tS7biMmkzM=;
+        b=ZgAEAuKGNSm1/2mqvjdNeg2BeAXi21dVyn9q62E+Iu/ozmBo3wcCaT/7BKIoBAZOTj
+         dDAHRUs/OzQ4mTOWyMfo+0XcOuQL0I26UncPEfNPzUC804jb3T4Ly123g8ax48QIngr6
+         ER3d5u50DZRrZBkNfjBnSDd9Ru7og2vz6dQCKOlRmNo8Q6gP2XcFXUmp1fISS1lJQO3C
+         7yVg8gGSq3+aJ1brvf7pGPBu/31vmXwMNyeEIdVATaihqc7Q3kjg9bKwkGJF57w2L3RJ
+         /5EEERwn/sqHHPy8HoLZ9eMxPloJNKEjdVsMYUrO2tZps2E0fU1HCPGcaKdEWGBDtoXi
+         1xRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cA1nu7WjrWAqmer6330wc0ijhhk83SGo4tS7biMmkzM=;
+        b=UMk6RqdR6KqStIrYl8SpVKGtXuj+KFH7cr5jJcU8FJ1++tE0iQrRcQXLdjixNU6Bl8
+         UrhQFgXODB6n5TMw0CnLsBNeyoXfbvic6Tmcaz0S1+2pzZcQJixpEhFs+AXP7RqIdtx0
+         Ze4etB7bv6mMwikRukb7lvH8lNTg/kByFxQlkR88t4AaYw9RaGUQvXsFJwXwuj9KbFFt
+         tzrqjsqBxYvXLSZKHJA1YreA2OnJX8hBFpmJJHKRztkAGdoQiv2kXChNZEc/UbyfngF9
+         nJGZ9IaJx2FiIHel2kgG8YelbO4OB0eDDQZtf95/RTNtSUaLmwDqLJIQq7ZMzKoj/SOa
+         jEog==
+X-Gm-Message-State: APjAAAV14vbXTlVxjIYl4nJHDe0SqSnVIzhRaC6FCBYJ0qbbQf5pt9hb
+        fGL9CjuMl9L5lU6NF8+auLBq5H5Zpo7W2dFgg8U1vQ==
+X-Google-Smtp-Source: APXvYqy2jIsV/0okFyYF1KBC8/M37CPZIxf/tq3+cYPkx00MgiScI6/1sGtqXgBQgssHUI2lYs/pujp8uSI9sAIhI4E=
+X-Received: by 2002:a5d:904e:: with SMTP id v14mr11728084ioq.33.1570734003178;
+ Thu, 10 Oct 2019 12:00:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191010180626.GL18412@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Thu, 10 Oct 2019 18:59:39 +0000 (UTC)
+References: <20191009213454.32891-1-jeffrey.l.hugo@gmail.com>
+ <20191010184544.GK85762@art_vandelay> <CAMavQKJ7iMD+4a0eftNre9xMvyoZy_=sAPRAuMctX5bueugk1g@mail.gmail.com>
+In-Reply-To: <CAMavQKJ7iMD+4a0eftNre9xMvyoZy_=sAPRAuMctX5bueugk1g@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 10 Oct 2019 12:59:52 -0600
+Message-ID: <CAOCk7NqW=85qduSFquCgivHTDxDpJ7xK9zBjgbd1nM8QS7xM=Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dsi: Implement reset correctly
+To:     Sean Paul <sean@poorly.run>
+Cc:     Rob Clark <robdclark@gmail.com>, Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.10.19 20:06, Michal Hocko wrote:
-> On Thu 10-10-19 13:48:06, Qian Cai wrote:
->> On Thu, 2019-10-10 at 19:30 +0200, Michal Hocko wrote:
->>> On Thu 10-10-19 10:47:38, Qian Cai wrote:
->>>> On Thu, 2019-10-10 at 16:18 +0200, Michal Hocko wrote:
->>>>> On Thu 10-10-19 09:11:52, Qian Cai wrote:
->>>>>> On Thu, 2019-10-10 at 12:59 +0200, Michal Hocko wrote:
->>>>>>> On Thu 10-10-19 05:01:44, Qian Cai wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>>> On Oct 9, 2019, at 12:23 PM, Michal Hocko <mhocko@kernel.org> wrote:
->>>>>>>>>
->>>>>>>>> If this was only about the memory offline code then I would agree. But
->>>>>>>>> we are talking about any printk from the zone->lock context and that is
->>>>>>>>> a bigger deal. Besides that it is quite natural that the printk code
->>>>>>>>> should be more universal and allow to be also called from the MM
->>>>>>>>> contexts as much as possible. If there is any really strong reason this
->>>>>>>>> is not possible then it should be documented at least.
->>>>>>>>
->>>>>>>> Where is the best place to document this? I am thinking about under
->>>>>>>> the “struct zone” definition’s lock field in mmzone.h.
->>>>>>>
->>>>>>> I am not sure TBH and I do not think we have reached the state where
->>>>>>> this would be the only way forward.
->>>>>>
->>>>>> How about I revised the changelog to focus on memory offline rather than making
->>>>>> a rule that nobody should call printk() with zone->lock held?
->>>>>
->>>>> If you are to remove the CONFIG_DEBUG_VM printk then I am all for it. I
->>>>> am still not convinced that fiddling with dump_page in the isolation
->>>>> code is justified though.
->>>>
->>>> No, dump_page() there has to be fixed together for memory offline to be useful.
->>>> What's the other options it has here?
->>>
->>> I would really prefer to not repeat myself
->>> http://lkml.kernel.org/r/20191010074049.GD18412@dhcp22.suse.cz
->>
->> Care to elaborate what does that mean? I am confused on if you finally agree on
->> no printk() while held zone->lock or not. You said "If there is absolutely
->> no way around that then we might have to bite a bullet and consider some
->> of MM locks a land of no printk." which makes me think you agreed, but your
->> stance from the last reply seems you were opposite to it.
-> 
-> I really do mean that the first step is to remove the dependency from
-> the printk and remove any allocation from the console callbacks. If that
-> turns out to be infeasible then we have to bite the bullet and think of
-> a way to drop all printks from all locks that participate in an atomic
-> allocation requests.
-> 
+On Thu, Oct 10, 2019 at 12:49 PM Sean Paul <sean@poorly.run> wrote:
+>
+> On Thu, Oct 10, 2019 at 2:45 PM Sean Paul <sean@poorly.run> wrote:
+> >
+> > On Wed, Oct 09, 2019 at 02:34:54PM -0700, Jeffrey Hugo wrote:
+> > > On msm8998, vblank timeouts are observed because the DSI controller is not
+> > > reset properly, which ends up stalling the MDP.  This is because the reset
+> > > logic is not correct per the hardware documentation.
+> > >
+> > > The documentation states that after asserting reset, software should wait
+> > > some time (no indication of how long), or poll the status register until it
+> > > returns 0 before deasserting reset.
+> > >
+> > > wmb() is insufficient for this purpose since it just ensures ordering, not
+> > > timing between writes.  Since asserting and deasserting reset occurs on the
+> > > same register, ordering is already guaranteed by the architecture, making
+> > > the wmb extraneous.
+> > >
+> > > Since we would define a timeout for polling the status register to avoid a
+> > > possible infinite loop, lets just use a static delay of 20 ms, since 16.666
+> > > ms is the time available to process one frame at 60 fps.
+> > >
+> > > Fixes: a689554ba6ed (drm/msm: Initial add DSI connector support)
+> > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > ---
+> > >
+> > > Rob et al, is it possible for this to go into a 5.4-rc?
+>
+> Sorry, I missed this on the first go-around, I'm Ok with this getting
+> into 5.4. Rob, if you're Ok with this, I can send it through -misc
+> unless you're planning an msm-fixes PR.
+>
+> > >
+> > >  drivers/gpu/drm/msm/dsi/dsi_host.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> > > index 663ff9f4fac9..68ded9b4735d 100644
+> > > --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> > > +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> > > @@ -986,7 +986,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
+> > >       wmb(); /* clocks need to be enabled before reset */
+> > >
+> > >       dsi_write(msm_host, REG_DSI_RESET, 1);
+> > > -     wmb(); /* make sure reset happen */
+> > > +     msleep(20); /* make sure reset happen */
+> >
+> > Could you please pull this out into a #define used for both in case we decide to
+> > tweak it? I don't want these 2 values to drift.
+> >
 
-I second that and dropping the useless printk() as Michal mentioned. I 
-would beg to not uglify the offlining/isolation code with __nolock 
-variants or dropping locks somewhere down in a function. If everything 
-fails, I rather want to see the prinkt's gone or returning details in a 
-struct back to the caller, that can print it instead.
+Oh, yeah.  That's a really good point.  Will fix.
 
-e.g.,
+>
+> oh yeah, and with that fixed,
+>
+> Reviewed-by: Sean Paul <sean@poorly.run>
 
-struct unmovable_page_info {
-	const char *reason;
-	struct page *page;
-...
-};
+Thanks.
 
-You should get the idea.
-
--- 
-
-Thanks,
-
-David / dhildenb
+>
+> > Thanks,
+> > Sean
+> >
+> > >       dsi_write(msm_host, REG_DSI_RESET, 0);
+> > >  }
+> > >
+> > > @@ -1396,7 +1396,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
+> > >
+> > >       /* dsi controller can only be reset while clocks are running */
+> > >       dsi_write(msm_host, REG_DSI_RESET, 1);
+> > > -     wmb();  /* make sure reset happen */
+> > > +     msleep(20);     /* make sure reset happen */
+> > >       dsi_write(msm_host, REG_DSI_RESET, 0);
+> > >       wmb();  /* controller out of reset */
+> > >       dsi_write(msm_host, REG_DSI_CTRL, data0);
+> > > --
+> > > 2.17.1
+> > >
+> >
+> > --
+> > Sean Paul, Software Engineer, Google / Chromium OS
