@@ -2,103 +2,85 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFC2C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3C7ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8E62067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:09:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XtWytnr1"
+	by mail.kernel.org (Postfix) with ESMTP id 8B9742190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570698644;
+	bh=V3zr+ZXU6ZhM0Uibhq8ct+Em8IKMgto52jOF6Bnvq5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kbK78uyUT6Ki67+ZrBRLt4LOU5y/YgXaARVB/LMf9KFL5rWnM7+8SiDq7mlm9XEap
+	 fD35n+09B4yqwsd9hHeob9F0z0vpVvGVJRqPkFowOw4GjA+VR7sjlc5pB4tbArzl8r
+	 b8xFuMoL64bjZsu5/pC1+7+5hsLRr/KMIC19HIdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbfJJJJf (ORCPT
+        id S2387672AbfJJJKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:09:35 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:34684 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387527AbfJJJJe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 05:09:34 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A99McG157524;
-        Thu, 10 Oct 2019 09:09:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Vx8uYnGXTh91J18N/6j4HjOFlm/NiKRQjZRhmX7eqBk=;
- b=XtWytnr1cBD8tC4+0Vk6zmyPiXy4cfUj9iUfPR+dv8WTt4Ozhmd7b4m4HyA6FpvzFGNZ
- 4ZCeb8bsPdcOpt+ROqKYdmwnCbbyJZZRIGE4balJUESUV85nVZD1ZpEsNzLT2mC5IuQN
- vN+WFajihlVxMEzXNxLwK9JyVLiZrLWKnYMHMjM8WrNf9bkHPSpszSYRbpb2nq+XWKMp
- 6A6HG5zJlxp78Bt1WtDmQ0GPeIsdpVxut8vs0PStxnfBRv7wTC31gSsHNZGgYwHRMs8X
- 7pP14Tu73h32OBDYpomU954HvJ7upMSeS/4oAjET38eMCX+Aq0jYctT6cT8FSe34jTES 7w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2vek4qsu4q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 09:09:22 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A98CoQ051485;
-        Thu, 10 Oct 2019 09:09:19 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2vh8k2fwx6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Oct 2019 09:09:19 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9A99HRU014129;
-        Thu, 10 Oct 2019 09:09:17 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 10 Oct 2019 02:09:16 -0700
-Date:   Thu, 10 Oct 2019 12:09:06 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        devel@driverdev.osuosl.org, GR-Linux-NIC-Dev@marvell.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org
-Subject: Re: [Outreachy kernel] [PATCH] staging: qlge: Fix multiple
- assignments warning by splitting the assignement into two each
-Message-ID: <20191010090906.GF20470@kadam>
-References: <20191009204311.7988-1-jbi.octave@gmail.com>
- <alpine.DEB.2.21.1910092248170.2570@hadrien>
- <f9bdcaeccc9dd131f28a64f4b19136d1c92a27e2.camel@perches.com>
+        Thu, 10 Oct 2019 05:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733254AbfJJJKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 05:10:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A6932067B;
+        Thu, 10 Oct 2019 09:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570698642;
+        bh=V3zr+ZXU6ZhM0Uibhq8ct+Em8IKMgto52jOF6Bnvq5I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T1bY6Te5yLOv7NsrTHNGNQMuLdhpDlrnYgXvn/MeUdUAP35iC2on6upmRxncfJwOu
+         xXKjswiogbmIVTIlXqohS10argJY3P97Zzn/4JwzDmMKJIyGixleBApenhXUB2O0If
+         41qntA+47iUQD5MT89jwNOGmWRkZjZKUI1D7qXJ8=
+Date:   Thu, 10 Oct 2019 11:10:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 5.3 076/148] mmc: sdhci-of-esdhc: set DMA snooping based
+ on DMA coherence
+Message-ID: <20191010091039.GA467648@kroah.com>
+References: <20191010083609.660878383@linuxfoundation.org>
+ <20191010083615.965680999@linuxfoundation.org>
+ <20191010084912.GI25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f9bdcaeccc9dd131f28a64f4b19136d1c92a27e2.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910100083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1031
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910100083
+In-Reply-To: <20191010084912.GI25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I was just about to give a newbie a Reviewed-by cookie until I saw it
-was a Joe Perches patch without a commit message or a sign off.  And
-then I was annoyed that I had invested any time in it at all.  I even
-dropped out of my email client for this!
+On Thu, Oct 10, 2019 at 09:49:12AM +0100, Russell King - ARM Linux admin wrote:
+> Hi Greg,
+> 
+> On 5th October, Christian Zigotzky <chzigotzky@xenosoft.de> reported a
+> problem with this on PowerPC (at a guess, it looks like there's a
+> PowerPC user of this where the DT does not mark the device as
+> dma-coherent, but the hardware requires it to be DMA coherent.)
+> 
+> However, despite sending a reply to him within minutes of his email
+> arriving, I've heard nothing since, so there's been no progress on
+> working out what is really going on.
+> 
+> Given that the reporter hasn't responded to my reply, I'm not sure
+> what we should be doing with this... maybe the reporter has solved
+> his problem, maybe he was using an incorrect DT, we just don't know.
 
-:P
+Let's just leave this in, and if this did cause a problem, whatever fix
+is made will be sent to Linus and we can then take that fix into stable
+as well.
 
-If you want to resend as a proper commit then you can still have my
-Reviewed-by I guess.
+thanks,
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-regards,
-dan carpenter
-
+greg k-h
