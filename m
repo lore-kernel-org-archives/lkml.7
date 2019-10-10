@@ -2,54 +2,60 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568ADC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438ADC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9E120679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1995220679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697705;
-	bh=mYrFo0W9gI8djX/nmVkmDQqAzDr5zN+mypISr36JtF0=;
+	s=default; t=1570697713;
+	bh=PtwfxrY3qGfEkoS0hbLCZk9IvD+Q3DudzZOkh7MLpI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qSJ1tX7OblisSXJmacwccVaPz4HhJVh+LMa8f3ic5h6jB27MfybZdWD54J7aHrQ7W
-	 /HHwHM5fKkSdE/0JBpW9Twbhe5h0j3UCwYlZRjsbJeG6b/yGU4YcgXPccqIdneEwSd
-	 ftzIKBH6S7Iukymdod6VKg+zju3jDr48McSInb5w=
+	b=PqAyp2h+IAj1xupftVjaCmOhDv/CPbR6n6lN7UIAgjopTYHhbCi33s18RCZHFP+e7
+	 sSP9ZWzBMMNeHp4TfoGJE95LM1apWckP01G8YI0EOrHBvGZOhBCFegyFyD4Te1c9sZ
+	 ILCl078EkgKktfBqGCI26ULGX+AJpJMC0uocOsH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389744AbfJJIy7 (ORCPT
+        id S2390055AbfJJIzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:54:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:55:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389870AbfJJItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:49:52 -0400
+        id S2389850AbfJJIto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:49:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B58AC2064A;
-        Thu, 10 Oct 2019 08:49:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA8B218AC;
+        Thu, 10 Oct 2019 08:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697392;
-        bh=mYrFo0W9gI8djX/nmVkmDQqAzDr5zN+mypISr36JtF0=;
+        s=default; t=1570697384;
+        bh=PtwfxrY3qGfEkoS0hbLCZk9IvD+Q3DudzZOkh7MLpI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYJWiiKpur8gqnYsjiscfjrQZvU+XL7mClstSEMxkkJe4hJLMFNFHY1blNF2VE0Oq
-         O9i8l5GVelv9KHwUpYF88kojmdiqrJBIboZrrzyjLNutwtwe6WEACcwWovzXD+A64A
-         BCzo4nGx0Cpk1OZceT1DI3660YxR9pph9MUq5C1Q=
+        b=pXJoTDlgie8a0r/oap6oWs32jzJAZ8h0CAKId1hA/bzrrgpA/hkek+SKVS9rczipD
+         /jv1KAlbCr7r5jryQxqfqEV51WGkWwtHeHsfL6j63W6lNvq+Yzo9YSxWmwlYaIBcnZ
+         y1bpQhEMvbXQ5t87G2skCQsWbPxvrLfP3PtvmOVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.14 11/61] can: mcp251x: mcp251x_hw_reset(): allow more time after a reset
-Date:   Thu, 10 Oct 2019 10:36:36 +0200
-Message-Id: <20191010083456.241092643@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 083/114] tools lib traceevent: Do not free tep->cmdlines in add_new_comm() on failure
+Date:   Thu, 10 Oct 2019 10:36:30 +0200
+Message-Id: <20191010083612.408800292@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
-References: <20191010083449.500442342@linuxfoundation.org>
+In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
+References: <20191010083544.711104709@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,57 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit d84ea2123f8d27144e3f4d58cd88c9c6ddc799de upstream.
+[ Upstream commit e0d2615856b2046c2e8d5bfd6933f37f69703b0b ]
 
-Some boards take longer than 5ms to power up after a reset, so allow
-some retries attempts before giving up.
+If the re-allocation of tep->cmdlines succeeds, then the previous
+allocation of tep->cmdlines will be freed. If we later fail in
+add_new_comm(), we must not free cmdlines, and also should assign
+tep->cmdlines to the new allocation. Otherwise when freeing tep, the
+tep->cmdlines will be pointing to garbage.
 
-Fixes: ff06d611a31c ("can: mcp251x: Improve mcp251x_hw_reset()")
-Cc: linux-stable <stable@vger.kernel.org>
-Tested-by: Sean Nyekjaer <sean@geanix.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: a6d2a61ac653a ("tools lib traceevent: Remove some die() calls")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-trace-devel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190828191819.970121417@goodmis.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/spi/mcp251x.c |   19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ tools/lib/traceevent/event-parse.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -627,7 +627,7 @@ static int mcp251x_setup(struct net_devi
- static int mcp251x_hw_reset(struct spi_device *spi)
- {
- 	struct mcp251x_priv *priv = spi_get_drvdata(spi);
--	u8 reg;
-+	unsigned long timeout;
- 	int ret;
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 6ccfd13d5cf9c..382e476629fb1 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -254,10 +254,10 @@ static int add_new_comm(struct tep_handle *pevent, const char *comm, int pid)
+ 		errno = ENOMEM;
+ 		return -1;
+ 	}
++	pevent->cmdlines = cmdlines;
  
- 	/* Wait for oscillator startup timer after power up */
-@@ -641,10 +641,19 @@ static int mcp251x_hw_reset(struct spi_d
- 	/* Wait for oscillator startup timer after reset */
- 	mdelay(MCP251X_OST_DELAY_MS);
+ 	cmdlines[pevent->cmdline_count].comm = strdup(comm);
+ 	if (!cmdlines[pevent->cmdline_count].comm) {
+-		free(cmdlines);
+ 		errno = ENOMEM;
+ 		return -1;
+ 	}
+@@ -268,7 +268,6 @@ static int add_new_comm(struct tep_handle *pevent, const char *comm, int pid)
+ 		pevent->cmdline_count++;
  
--	reg = mcp251x_read_reg(spi, CANSTAT);
--	if ((reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF)
--		return -ENODEV;
--
-+	/* Wait for reset to finish */
-+	timeout = jiffies + HZ;
-+	while ((mcp251x_read_reg(spi, CANSTAT) & CANCTRL_REQOP_MASK) !=
-+	       CANCTRL_REQOP_CONF) {
-+		usleep_range(MCP251X_OST_DELAY_MS * 1000,
-+			     MCP251X_OST_DELAY_MS * 1000 * 2);
-+
-+		if (time_after(jiffies, timeout)) {
-+			dev_err(&spi->dev,
-+				"MCP251x didn't enter in conf mode after reset\n");
-+			return -EBUSY;
-+		}
-+	}
+ 	qsort(cmdlines, pevent->cmdline_count, sizeof(*cmdlines), cmdline_cmp);
+-	pevent->cmdlines = cmdlines;
+ 
  	return 0;
  }
- 
+-- 
+2.20.1
+
 
 
