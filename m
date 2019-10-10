@@ -2,205 +2,443 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FCCC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B12C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE73920650
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691212067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:02:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VO/LbGQC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="OwiduhoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfJJVA5 (ORCPT
+        id S1727267AbfJJVCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:00:57 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41190 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfJJVA5 (ORCPT
+        Thu, 10 Oct 2019 17:02:31 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:49918 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfJJVCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:00:57 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t10so3381571plr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 14:00:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ORG+HsGy3iRF0g1A3SvuSaUHioZzX6MFBQbaXv8rsek=;
-        b=VO/LbGQCFTqvqDL7wZtd0QnnzymNdlzpMyVPi2Q3Im5nIx7lSuCiM7f58PJ+uMEIjI
-         koX9U8d4if0Nz77wYV7FZDwfESeFSOIkf3jlTnmYWbDohkrLYYUgPGqfw/Y6hrketL3U
-         KnXHyezm27STWnjXlgfGF3Sg2GPXkzdLniSOw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ORG+HsGy3iRF0g1A3SvuSaUHioZzX6MFBQbaXv8rsek=;
-        b=aNhR62P+RaooNpls3gBNio5oqWnVoHnfXqVuBTk5WE9j/O00Su4r9fuqKm40MiJBkC
-         +4dCL1P0vBRQUExz6FolxXxntnskEmmtOQq5N/wlUJfSW2C0XXcD3Huj8yPaVOEPpBwG
-         QEOwtoPcO3hFol+5Z84NEc+JQO0/cx7BY4puMu+B0kUvSjBtKzNS4SfAYfhcyn+e/vvK
-         601iYmDJxKi+65iK6mwMh7Rk93xG+zbzSYR3V0YQFixvBV5mY8QVHoUVZobXg8McIldu
-         XtfZHgRXLqbBr5eTijFXaZZdjQ1Wx/h0sOFfIBu2R9m1yu3sfAR1XXHIHQbmLbar8yGI
-         b+yg==
-X-Gm-Message-State: APjAAAWPQmZE1MfxrC26SKV6Zg9ifoVHMkJxrpy1cVvfKBrf/jvV94Us
-        b5yz6e3ZpJZh//7kjTWqUUWQ7A==
-X-Google-Smtp-Source: APXvYqyqdYFFugXyLXLIipZ/O7fa8NdhYSO5j+/CU441LMhNnsoOUgYoHdj+Hn3IqSCxZ9gCqhpxQw==
-X-Received: by 2002:a17:902:304:: with SMTP id 4mr10659484pld.106.1570741256418;
-        Thu, 10 Oct 2019 14:00:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z12sm6745946pfj.41.2019.10.10.14.00.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 14:00:55 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 14:00:54 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Brown <mark.brown@arm.com>
-Subject: Re: [RFC PATCH v2 2/2] ELF: Add ELF program property parsing support
-Message-ID: <201910101359.9B3B84B@keescook>
-References: <1566581020-9953-1-git-send-email-Dave.Martin@arm.com>
- <1566581020-9953-3-git-send-email-Dave.Martin@arm.com>
- <201908292224.007EB4D5@keescook>
- <20190830083415.GI27757@arm.com>
- <20191009125913.GE27757@arm.com>
+        Thu, 10 Oct 2019 17:02:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GOvsSXPX5WtsXHeYWNOuRtlXQ9QuSoefn1nZ0F/ehbA=; b=OwiduhoVYCBq+kBw6BNGb52t+
+        k3WKuzfH+gk4cG4kW/cdwhUynmWiiU9pnNCTqIEucGpzVNDm+EcmC1bfjocV4gUjcMYl04y+je9kn
+        wkjLfxhJYXP6RZE5q/ynoNZd6aM0u8yuj27EpNgYMtKdVmG2OoC8DmfXsntI+lB+/Q9oeWjsg1tX2
+        UFED/3mQ44z4s5uPIhecp9t17UF9VrhIYVHKopdBsYyKiRIcQhHEZYehrwr02ve3xCyqD6xx4k2Ll
+        orq9N+jC9bxwQSbywwfmlE9FaDneC+9Ol6dCuuWZwk8kqIls72YQXPKWMqkWsVgI7TQiVxnoxmdYR
+        dg3c5rjnQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42498)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iIfZc-0001FP-0J; Thu, 10 Oct 2019 22:02:12 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iIfZZ-0000WS-0V; Thu, 10 Oct 2019 22:02:09 +0100
+Date:   Thu, 10 Oct 2019 22:02:08 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-samsung-soc@vger.kernel.org, linus.walleij@linaro.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 34/36] ARM: s3c: stop including mach/hardware.h from
+ mach/io.h
+Message-ID: <20191010210208.GK25745@shell.armlinux.org.uk>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-34-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191009125913.GE27757@arm.com>
+In-Reply-To: <20191010203043.1241612-34-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 01:59:13PM +0100, Dave Martin wrote:
-> On Fri, Aug 30, 2019 at 09:34:17AM +0100, Dave Martin wrote:
-> > On Fri, Aug 30, 2019 at 06:37:45AM +0100, Kees Cook wrote:
-> > > On Fri, Aug 23, 2019 at 06:23:40PM +0100, Dave Martin wrote:
-> > > > ELF program properties will needed for detecting whether to enable
-> > > > optional architecture or ABI features for a new ELF process.
-> > > > 
-> > > > For now, there are no generic properties that we care about, so do
-> > > > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
-> > > > 
-> > > > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
-> > > > phdrs entry (if any), and notify each property to the arch code.
-> > > > 
-> > > > For now, the added code is not used.
-> > > > 
-> > > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> > > 
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> > Thanks for the review.
-> > 
-> > Do you have any thoughts on Yu-Cheng Yu's comments?  It would be nice to
-> > early-terminate the scan if we can, but my feeling so far was that the
-> > scan is cheap, the number of properties is unlikely to be more than a
-> > smallish integer, and the code separation benefits of just calling the
-> > arch code for every property probably likely outweigh the costs of
-> > having to iterate over every property.  We could always optimise it
-> > later if necessary.
-> > 
-> > I need to double-check that there's no way we can get stuck in an
-> > infinite loop with the current code, though I've not seen it in my
-> > testing.  I should throw some malformed notes at it though.
-> > 
-> > > Note below...
-> > > 
-> > > > [...]
-> > > > +static int parse_elf_property(const char *data, size_t *off, size_t datasz,
-> > > > +			      struct arch_elf_state *arch,
-> > > > +			      bool have_prev_type, u32 *prev_type)
-> > > > +{
-> > > > +	size_t size, step;
-> > > > +	const struct gnu_property *pr;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (*off == datasz)
-> > > > +		return -ENOENT;
-> > > > +
-> > > > +	if (WARN_ON(*off > datasz || *off % elf_gnu_property_align))
-> > > > +		return -EIO;
-> > > > +
-> > > > +	size = datasz - *off;
-> > > > +	if (size < sizeof(*pr))
-> > > > +		return -EIO;
-> > > > +
-> > > > +	pr = (const struct gnu_property *)(data + *off);
-> > > > +	if (pr->pr_datasz > size - sizeof(*pr))
-> > > > +		return -EIO;
-> > > > +
-> > > > +	step = round_up(sizeof(*pr) + pr->pr_datasz, elf_gnu_property_align);
-> > > > +	if (step > size)
-> > > > +		return -EIO;
-> > > > +
-> > > > +	/* Properties are supposed to be unique and sorted on pr_type: */
-> > > > +	if (have_prev_type && pr->pr_type <= *prev_type)
-> > > > +		return -EIO;
-> > > > +	*prev_type = pr->pr_type;
-> > > > +
-> > > > +	ret = arch_parse_elf_property(pr->pr_type,
-> > > > +				      data + *off + sizeof(*pr),
-> > > > +				      pr->pr_datasz, ELF_COMPAT, arch);
-> > > 
-> > > I find it slightly hard to read the "cursor" motion in this parse. It
-> > > feels strange, for example, to refer twice to "data + *off" with the
-> > > second including consumed *pr size. Everything is fine AFAICT in the math,
-> > > though, and I haven't been able to construct a convincingly "cleaner"
-> > > version. Maybe:
-> > > 
-> > > 	data += *off;
-> > > 	pr = (const struct gnu_property *)data;
-> > > 	data += sizeof(*pr);
-> > > 	...
-> > > 	ret = arch_parse_elf_property(pr->pr_type, data,
-> > > 				      pr->pr_datasz, ELF_COMPAT, arch);
-> > 
-> > Fair point.  The cursor is really *off, which I suppose I could update
-> > as we go through this function, or cache in a local variable and assign
-> > on the way out.
-> > 
-> > > But that feels disjoint from the "step" calculation, so... I think what
-> > > you have is fine. :)
-> > 
-> > It's good to be as clear as possible about exactly how far we have
-> > parsed, so I'll see if I can improve this when I repost.
-> > 
-> > 
-> > Do you have any objection to merging patch 1 with this one?  For
-> > upstreaming purposes, it seems overkill for that to be a separate patch.
-> > 
-> > I may also convert elf_gnu_property_align to upper case, since unlike
-> > the other related definitions this one isn't trying to look like a
-> > struct tag.
-> > 
-> > Do you have any opinion on the WARN_ON()s?  They should be un-hittable,
-> > so they're documenting assumptions rather than protecting against
-> > anything real.  Maybe I should replace them with comments.
+On Thu, Oct 10, 2019 at 10:30:18PM +0200, Arnd Bergmann wrote:
+> A number of other files rely on mach/map.h to be indirectly
+> included from mach/io.h through mach/hardware.h.
 > 
-> FYI, I'm going to be inactive for a while, so I'm not going to be able
-> to push this patch further.
+> Reduce this to the minimal plat/map-base.h and add explicit
+> includes everywhere else.
 > 
-> Mark Brown will be picking up the arm64 BTI series, so it will probably
-> make sense if he pulls it into that series.
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm/mach-s3c24xx/common.c                          | 1 +
+>  arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h       | 2 ++
+>  arch/arm/mach-s3c24xx/include/mach/hardware.h           | 7 -------
+>  arch/arm/mach-s3c24xx/include/mach/io.h                 | 3 +--
+>  arch/arm/mach-s3c24xx/include/mach/regs-clock.h         | 2 ++
+>  arch/arm/mach-s3c24xx/include/mach/regs-gpio.h          | 2 ++
+>  arch/arm/mach-s3c24xx/include/mach/regs-irq.h           | 2 ++
+>  arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h | 1 +
+>  arch/arm/mach-s3c24xx/include/mach/s3c2412.h            | 2 ++
+>  arch/arm/mach-s3c24xx/mach-h1940.c                      | 1 +
+>  arch/arm/mach-s3c24xx/mach-jive.c                       | 1 +
+>  arch/arm/mach-s3c24xx/mach-rx1950.c                     | 1 +
+>  arch/arm/mach-s3c24xx/pm-h1940.S                        | 1 -
+>  arch/arm/mach-s3c24xx/regs-mem.h                        | 2 ++
+>  arch/arm/mach-s3c24xx/s3c2410.c                         | 2 +-
+>  arch/arm/mach-s3c24xx/s3c2412.c                         | 2 +-
+>  arch/arm/mach-s3c24xx/s3c2416.c                         | 2 +-
+>  arch/arm/mach-s3c24xx/s3c2443.c                         | 2 +-
+>  arch/arm/mach-s3c24xx/s3c244x.c                         | 2 +-
+>  arch/arm/mach-s3c24xx/sleep-s3c2410.S                   | 1 -
+>  arch/arm/mach-s3c24xx/sleep-s3c2412.S                   | 1 -
+>  arch/arm/mach-s3c24xx/sleep.S                           | 1 -
+>  drivers/spi/spi-s3c24xx-regs.h                          | 2 ++
+>  drivers/usb/gadget/udc/s3c2410_udc_regs.h               | 2 ++
+>  24 files changed, 27 insertions(+), 18 deletions(-)
 > 
-> Any thoughts?
+> diff --git a/arch/arm/mach-s3c24xx/common.c b/arch/arm/mach-s3c24xx/common.c
+> index d16a164df6c4..42d828f48345 100644
+> --- a/arch/arm/mach-s3c24xx/common.c
+> +++ b/arch/arm/mach-s3c24xx/common.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/dmaengine.h>
+>  
+>  #include <mach/hardware.h>
+> +#include <mach/map.h>
+>  #include <mach/regs-clock.h>
+>  #include <asm/irq.h>
+>  #include <asm/cacheflush.h>
+> diff --git a/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h b/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h
+> index 2ad22b2d459b..f8a114891f16 100644
+> --- a/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h
+> +++ b/arch/arm/mach-s3c24xx/include/mach/gpio-samsung.h
+> @@ -14,6 +14,8 @@
+>  #ifndef GPIO_SAMSUNG_S3C24XX_H
+>  #define GPIO_SAMSUNG_S3C24XX_H
+>  
+> +#include <mach/map.h>
+> +
 
-Okay, sounds good. Mark, I think these patches are in good shape. Can
-you include me on CC where you pick these up?
+Why?  Nothing in this file uses anything from mach/map.h
 
-Thanks!
+>  /*
+>   * GPIO sizes for various SoCs:
+>   *
+> diff --git a/arch/arm/mach-s3c24xx/include/mach/hardware.h b/arch/arm/mach-s3c24xx/include/mach/hardware.h
+> index f28ac6c78d82..c732ea54984c 100644
+> --- a/arch/arm/mach-s3c24xx/include/mach/hardware.h
+> +++ b/arch/arm/mach-s3c24xx/include/mach/hardware.h
+> @@ -9,13 +9,6 @@
+>  #ifndef __ASM_ARCH_HARDWARE_H
+>  #define __ASM_ARCH_HARDWARE_H
+>  
+> -#ifndef __ASSEMBLY__
+> -
+>  extern unsigned int s3c2410_modify_misccr(unsigned int clr, unsigned int chg);
+>  
+> -#endif /* __ASSEMBLY__ */
+> -
+> -#include <linux/sizes.h>
+> -#include <mach/map.h>
+> -
+>  #endif /* __ASM_ARCH_HARDWARE_H */
+> diff --git a/arch/arm/mach-s3c24xx/include/mach/io.h b/arch/arm/mach-s3c24xx/include/mach/io.h
+> index 3e8bff26cdd5..bcddf615adb6 100644
+> --- a/arch/arm/mach-s3c24xx/include/mach/io.h
+> +++ b/arch/arm/mach-s3c24xx/include/mach/io.h
+> @@ -10,8 +10,7 @@
+>  #ifndef __ASM_ARM_ARCH_IO_H
+>  #define __ASM_ARM_ARCH_IO_H
+>  
+> -#include <mach/hardware.h>
+> -
+> +#include <plat/map-base.h>
+>  
+>  /*
+>   * ISA style IO, for each machine to sort out mappings for,
+> diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-clock.h b/arch/arm/mach-s3c24xx/include/mach/regs-clock.h
+> index 7ca3dd4f13c0..da4e7b3aeba6 100644
+> --- a/arch/arm/mach-s3c24xx/include/mach/regs-clock.h
+> +++ b/arch/arm/mach-s3c24xx/include/mach/regs-clock.h
+> @@ -9,6 +9,8 @@
+>  #ifndef __ASM_ARM_REGS_CLOCK
+>  #define __ASM_ARM_REGS_CLOCK
+>  
+> +#include <mach/map.h>
+> +
 
--Kees
+Why?  Nothing in this file uses anything from mach/map.h
+
+>  #define S3C2410_CLKREG(x) ((x) + S3C24XX_VA_CLKPWR)
+>  
+>  #define S3C2410_PLLVAL(_m,_p,_s) ((_m) << 12 | ((_p) << 4) | ((_s)))
+> diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-gpio.h b/arch/arm/mach-s3c24xx/include/mach/regs-gpio.h
+> index 594e967c0673..51827d5577b6 100644
+> --- a/arch/arm/mach-s3c24xx/include/mach/regs-gpio.h
+> +++ b/arch/arm/mach-s3c24xx/include/mach/regs-gpio.h
+> @@ -10,6 +10,8 @@
+>  #ifndef __ASM_ARCH_REGS_GPIO_H
+>  #define __ASM_ARCH_REGS_GPIO_H
+>  
+> +#include <plat/map-s3c.h>
+> +
+>  #define S3C24XX_MISCCR		S3C24XX_GPIOREG2(0x80)
+>  
+>  /* general configuration options */
+> diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-irq.h b/arch/arm/mach-s3c24xx/include/mach/regs-irq.h
+> index 8d8e669e3903..2921b48c56b2 100644
+> --- a/arch/arm/mach-s3c24xx/include/mach/regs-irq.h
+> +++ b/arch/arm/mach-s3c24xx/include/mach/regs-irq.h
+> @@ -8,6 +8,8 @@
+>  #ifndef ___ASM_ARCH_REGS_IRQ_H
+>  #define ___ASM_ARCH_REGS_IRQ_H
+>  
+> +#include <plat/map-s3c.h>
+> +
+>  /* interrupt controller */
+>  
+>  #define S3C2410_IRQREG(x)   ((x) + S3C24XX_VA_IRQ)
+> diff --git a/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h b/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
+> index 682759549e63..fefef7233f4b 100644
+> --- a/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
+> +++ b/arch/arm/mach-s3c24xx/include/mach/regs-s3c2443-clock.h
+> @@ -11,6 +11,7 @@
+>  #define __ASM_ARM_REGS_S3C2443_CLOCK
+>  
+>  #include <linux/delay.h>
+> +#include <plat/map-s3c.h>
+>  
+>  #define S3C2443_CLKREG(x)		((x) + S3C24XX_VA_CLKPWR)
+>  
+> diff --git a/arch/arm/mach-s3c24xx/include/mach/s3c2412.h b/arch/arm/mach-s3c24xx/include/mach/s3c2412.h
+> index 4ff83f956cfb..1ae369c81beb 100644
+> --- a/arch/arm/mach-s3c24xx/include/mach/s3c2412.h
+> +++ b/arch/arm/mach-s3c24xx/include/mach/s3c2412.h
+> @@ -8,6 +8,8 @@
+>  #ifndef __ARCH_ARM_MACH_S3C24XX_S3C2412_H
+>  #define __ARCH_ARM_MACH_S3C24XX_S3C2412_H __FILE__
+>  
+> +#include <plat/map-s3c.h>
+> +
+>  #define S3C2412_MEMREG(x)		(S3C24XX_VA_MEMCTRL + (x))
+>  #define S3C2412_EBIREG(x)		(S3C2412_VA_EBI + (x))
+>  
+> diff --git a/arch/arm/mach-s3c24xx/mach-h1940.c b/arch/arm/mach-s3c24xx/mach-h1940.c
+> index d56e3befa459..287e42fc1665 100644
+> --- a/arch/arm/mach-s3c24xx/mach-h1940.c
+> +++ b/arch/arm/mach-s3c24xx/mach-h1940.c
+> @@ -48,6 +48,7 @@
+>  #include <sound/uda1380.h>
+>  
+>  #include <linux/platform_data/fb-s3c2410.h>
+> +#include <mach/map.h>
+>  #include <mach/hardware.h>
+>  #include <mach/regs-clock.h>
+>  #include <mach/regs-gpio.h>
+> diff --git a/arch/arm/mach-s3c24xx/mach-jive.c b/arch/arm/mach-s3c24xx/mach-jive.c
+> index 3b33132b2334..8012c34bddd9 100644
+> --- a/arch/arm/mach-s3c24xx/mach-jive.c
+> +++ b/arch/arm/mach-s3c24xx/mach-jive.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/platform_data/mtd-nand-s3c2410.h>
+>  #include <linux/platform_data/i2c-s3c2410.h>
+>  
+> +#include <mach/hardware.h>
+>  #include <mach/regs-gpio.h>
+>  #include <linux/platform_data/fb-s3c2410.h>
+>  #include <mach/gpio-samsung.h>
+> diff --git a/arch/arm/mach-s3c24xx/mach-rx1950.c b/arch/arm/mach-s3c24xx/mach-rx1950.c
+> index ee4a0992339f..f94884090fbe 100644
+> --- a/arch/arm/mach-s3c24xx/mach-rx1950.c
+> +++ b/arch/arm/mach-s3c24xx/mach-rx1950.c
+> @@ -46,6 +46,7 @@
+>  
+>  #include <sound/uda1380.h>
+>  
+> +#include <mach/hardware.h>
+>  #include <mach/regs-gpio.h>
+>  #include <mach/gpio-samsung.h>
+>  
+> diff --git a/arch/arm/mach-s3c24xx/pm-h1940.S b/arch/arm/mach-s3c24xx/pm-h1940.S
+> index a7bbe336ac6b..f9ee515e1cbe 100644
+> --- a/arch/arm/mach-s3c24xx/pm-h1940.S
+> +++ b/arch/arm/mach-s3c24xx/pm-h1940.S
+> @@ -7,7 +7,6 @@
+>  
+>  #include <linux/linkage.h>
+>  #include <asm/assembler.h>
+> -#include <mach/hardware.h>
+>  #include <mach/map.h>
+>  
+>  #include <mach/regs-gpio.h>
+> diff --git a/arch/arm/mach-s3c24xx/regs-mem.h b/arch/arm/mach-s3c24xx/regs-mem.h
+> index 2f3bc48b5890..5048ab8f06c2 100644
+> --- a/arch/arm/mach-s3c24xx/regs-mem.h
+> +++ b/arch/arm/mach-s3c24xx/regs-mem.h
+> @@ -9,6 +9,8 @@
+>  #ifndef __ARCH_ARM_MACH_S3C24XX_REGS_MEM_H
+>  #define __ARCH_ARM_MACH_S3C24XX_REGS_MEM_H __FILE__
+>  
+> +#include <plat/map-s3c.h>
+> +
+>  #define S3C2410_MEMREG(x)		(S3C24XX_VA_MEMCTRL + (x))
+>  
+>  #define S3C2410_BWSCON			S3C2410_MEMREG(0x00)
+> diff --git a/arch/arm/mach-s3c24xx/s3c2410.c b/arch/arm/mach-s3c24xx/s3c2410.c
+> index 8427c150dd22..44bf3e1e77f1 100644
+> --- a/arch/arm/mach-s3c24xx/s3c2410.c
+> +++ b/arch/arm/mach-s3c24xx/s3c2410.c
+> @@ -25,7 +25,7 @@
+>  #include <asm/mach/map.h>
+>  #include <asm/mach/irq.h>
+>  
+> -#include <mach/hardware.h>
+> +#include <mach/map.h>
+>  #include <mach/gpio-samsung.h>
+>  #include <asm/irq.h>
+>  #include <asm/system_misc.h>
+> diff --git a/arch/arm/mach-s3c24xx/s3c2412.c b/arch/arm/mach-s3c24xx/s3c2412.c
+> index 209f952a6c98..75648dcc2c1d 100644
+> --- a/arch/arm/mach-s3c24xx/s3c2412.c
+> +++ b/arch/arm/mach-s3c24xx/s3c2412.c
+> @@ -29,7 +29,7 @@
+>  #include <asm/irq.h>
+>  #include <asm/system_misc.h>
+>  
+> -#include <mach/hardware.h>
+> +#include <mach/map.h>
+>  #include <mach/regs-clock.h>
+>  #include <mach/regs-gpio.h>
+>  
+> diff --git a/arch/arm/mach-s3c24xx/s3c2416.c b/arch/arm/mach-s3c24xx/s3c2416.c
+> index 1cdb7bd3e713..ef2eace605e6 100644
+> --- a/arch/arm/mach-s3c24xx/s3c2416.c
+> +++ b/arch/arm/mach-s3c24xx/s3c2416.c
+> @@ -26,7 +26,7 @@
+>  #include <asm/mach/map.h>
+>  #include <asm/mach/irq.h>
+>  
+> -#include <mach/hardware.h>
+> +#include <mach/map.h>
+>  #include <mach/gpio-samsung.h>
+>  #include <asm/proc-fns.h>
+>  #include <asm/irq.h>
+> diff --git a/arch/arm/mach-s3c24xx/s3c2443.c b/arch/arm/mach-s3c24xx/s3c2443.c
+> index f404ecac4baf..00318ad994ff 100644
+> --- a/arch/arm/mach-s3c24xx/s3c2443.c
+> +++ b/arch/arm/mach-s3c24xx/s3c2443.c
+> @@ -23,7 +23,7 @@
+>  #include <asm/mach/map.h>
+>  #include <asm/mach/irq.h>
+>  
+> -#include <mach/hardware.h>
+> +#include <mach/map.h>
+>  #include <mach/gpio-samsung.h>
+>  #include <mach/irqs.h>
+>  #include <asm/irq.h>
+> diff --git a/arch/arm/mach-s3c24xx/s3c244x.c b/arch/arm/mach-s3c24xx/s3c244x.c
+> index f5bd489bac85..0ca188d0ffe5 100644
+> --- a/arch/arm/mach-s3c24xx/s3c244x.c
+> +++ b/arch/arm/mach-s3c24xx/s3c244x.c
+> @@ -25,7 +25,7 @@
+>  #include <asm/mach/map.h>
+>  #include <asm/mach/irq.h>
+>  
+> -#include <mach/hardware.h>
+> +#include <mach/map.h>
+>  #include <asm/irq.h>
+>  
+>  #include <mach/regs-clock.h>
+> diff --git a/arch/arm/mach-s3c24xx/sleep-s3c2410.S b/arch/arm/mach-s3c24xx/sleep-s3c2410.S
+> index 659f9eff9de2..e4f6f64e7826 100644
+> --- a/arch/arm/mach-s3c24xx/sleep-s3c2410.S
+> +++ b/arch/arm/mach-s3c24xx/sleep-s3c2410.S
+> @@ -13,7 +13,6 @@
+>  #include <linux/linkage.h>
+>  #include <linux/serial_s3c.h>
+>  #include <asm/assembler.h>
+> -#include <mach/hardware.h>
+>  #include <mach/map.h>
+>  
+>  #include <mach/regs-gpio.h>
+> diff --git a/arch/arm/mach-s3c24xx/sleep-s3c2412.S b/arch/arm/mach-s3c24xx/sleep-s3c2412.S
+> index c373f1ca862b..434f5082b2ed 100644
+> --- a/arch/arm/mach-s3c24xx/sleep-s3c2412.S
+> +++ b/arch/arm/mach-s3c24xx/sleep-s3c2412.S
+> @@ -8,7 +8,6 @@
+>  
+>  #include <linux/linkage.h>
+>  #include <asm/assembler.h>
+> -#include <mach/hardware.h>
+>  #include <mach/map.h>
+>  
+>  #include <mach/regs-irq.h>
+> diff --git a/arch/arm/mach-s3c24xx/sleep.S b/arch/arm/mach-s3c24xx/sleep.S
+> index f0f11ad60c52..4bda4a413584 100644
+> --- a/arch/arm/mach-s3c24xx/sleep.S
+> +++ b/arch/arm/mach-s3c24xx/sleep.S
+> @@ -13,7 +13,6 @@
+>  #include <linux/linkage.h>
+>  #include <linux/serial_s3c.h>
+>  #include <asm/assembler.h>
+> -#include <mach/hardware.h>
+>  #include <mach/map.h>
+>  
+>  #include <mach/regs-gpio.h>
+> diff --git a/drivers/spi/spi-s3c24xx-regs.h b/drivers/spi/spi-s3c24xx-regs.h
+> index 37b93ff7c7fe..b76d591eba8c 100644
+> --- a/drivers/spi/spi-s3c24xx-regs.h
+> +++ b/drivers/spi/spi-s3c24xx-regs.h
+> @@ -8,6 +8,8 @@
+>  #ifndef __ASM_ARCH_REGS_SPI_H
+>  #define __ASM_ARCH_REGS_SPI_H
+>  
+> +#include <mach/map.h>
+> +
+
+If this is outside of arch/arm, it shouldn't need anything from
+mach/map.h - mach/map.h is not for driver use.
+
+>  #define S3C2410_SPCON		(0x00)
+>  
+>  #define S3C2410_SPCON_SMOD_DMA	(2 << 5)	/* DMA mode */
+> diff --git a/drivers/usb/gadget/udc/s3c2410_udc_regs.h b/drivers/usb/gadget/udc/s3c2410_udc_regs.h
+> index d8d2eeaca088..4df279342cdd 100644
+> --- a/drivers/usb/gadget/udc/s3c2410_udc_regs.h
+> +++ b/drivers/usb/gadget/udc/s3c2410_udc_regs.h
+> @@ -6,6 +6,8 @@
+>  #ifndef __ASM_ARCH_REGS_UDC_H
+>  #define __ASM_ARCH_REGS_UDC_H
+>  
+> +#include <mach/map.h>
+> +
+
+If this is outside of arch/arm, it shouldn't need anything from
+mach/map.h - mach/map.h is not for driver use.
+
+>  #define S3C2410_USBDREG(x) (x)
+>  
+>  #define S3C2410_UDC_FUNC_ADDR_REG	S3C2410_USBDREG(0x0140)
+> -- 
+> 2.20.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
 -- 
-Kees Cook
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
