@@ -2,167 +2,184 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38526C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A686C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE430208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:34:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a8/BUQSR"
+	by mail.kernel.org (Postfix) with ESMTP id C51CD208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfJJUeX (ORCPT
+        id S1726894AbfJJUez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:34:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37368 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfJJUeX (ORCPT
+        Thu, 10 Oct 2019 16:34:55 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:36719 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJUez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:34:23 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so4639949pfo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 13:34:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qLN+ZaDKXKKqy42TKsmx8NFeuacgz7hdpKcKP23ADmI=;
-        b=a8/BUQSRa5fAL7ua30472Y4U7kNqLVO+XHaBB/Rc2wmWKE9Xj04D00RKSoqyZUda8p
-         AoN69CT8wMJ2+8+9xP0hKg/fExhxNp8lM/hqppiZ2eSLtMQm6/uYroSxKlTzitdKEuQz
-         TwEci32h62j6hKZzmDlEOn92Ch+77FD0Fd8R4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qLN+ZaDKXKKqy42TKsmx8NFeuacgz7hdpKcKP23ADmI=;
-        b=cEDVYYB0U1IgS/kRBuAtdiwhoRppGNZt2YrdAxaiWQMtroos/kg6Bntecf1vwsM9bs
-         h17yQ+jYAk+2ASvzF3tswVBElikED/SpR/rQbbwa9HIjinQYbaKONA4UItkSrab20JKe
-         01d3LiivmEDL9s/ouu/3p/mKtQYCDUjRr0kgqMRNa4nfYDN13JFk8IItwAq6OM5KxuBp
-         /LMFmxP1vNsfC5rXbdvgzBtb2VHWo9QvLcEKAkbje3MbueltidH98FeK6yuf2QwPWvJJ
-         VdFwR/HP1d9ZQeOhuZ6anWXzHH8Njbh8FdQcWVNDHUDbrBBDwmjfy/TQ/TEcGVueNXUz
-         ww2g==
-X-Gm-Message-State: APjAAAXiL1+VI3nJh1zgYd6ikWislU08qV+ce3YjrylRWwE3cvvu+a7B
-        h5682sb9yRJ9kYXsCfyoS7Tt6A==
-X-Google-Smtp-Source: APXvYqwEu3drJD2Rf13atiZCcuDu9mkLKlc6Z2P3wFQoHl4Ae6+HQ4EAmBu1c73yaqSQEBRghQ4ujA==
-X-Received: by 2002:a63:311:: with SMTP id 17mr12928079pgd.327.1570739662653;
-        Thu, 10 Oct 2019 13:34:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o9sm5965017pfp.67.2019.10.10.13.34.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 13:34:21 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 13:34:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        clang-built-linux@googlegroups.com, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 1/4] net: sctp: Rename fallthrough label to unhandled
-Message-ID: <201910101334.22271AB@keescook>
-References: <cover.1570292505.git.joe@perches.com>
- <2e0111756153d81d77248bc8356bac78925923dc.1570292505.git.joe@perches.com>
+        Thu, 10 Oct 2019 16:34:55 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MuF4v-1hxQGJ3NEb-00uawx; Thu, 10 Oct 2019 22:34:38 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: [PATCH 08/36] ARM: exynos: stop selecting PLAT_SAMSUNG
+Date:   Thu, 10 Oct 2019 22:29:52 +0200
+Message-Id: <20191010203043.1241612-8-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e0111756153d81d77248bc8356bac78925923dc.1570292505.git.joe@perches.com>
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:uwZUxKfHU6aXQrxq5LBsqRjtGw4Jouv7a9Oj5nhgoB0hlXyrcjq
+ cQyW2Cc79CrgKEOR6AddSkd8kEBELnOavaFnpiNz+2wYC6JLZtkFkNgiIgcAb7IBPMKOVw0
+ /4ytjJKtS7vIIFSkZF7IEeIC9HtyP3lGkyhZhf4Pi3jKK/5gN5ZDuHWv+OUxglNHQchIV00
+ 9MUCnTUKaPQYLOuhuq7Yg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MjZuD1WSriM=:hwMzUoxCknZvCwSvNSjCMN
+ 7y6Uvi/BhIjqy3zK9+GLPLSNPmAYLF6XMR5MVm9RdReMkMhEpRn9U0e2Bqx/jFGajmKkkwPaF
+ OwPQDZ/+fO1eN5nL+6z52rQyDTWBG/uTALbBrsxJFjw2IXpGkynCbp+CvOZSYprMJ+B+R4ASg
+ 8BLcQdVkFnlwHipnDjJMzkOCDq8f/K/fea3DmU+S6WllVxMBke4EAGCFCz+N7DLEAdxr1uit2
+ UHXrt4ArSWWE1IOV1hWsBjL9OoKUx6cb9T4rAhjcQrYQRjP8dXIy1yExNCq/K1pvVZm+chtMl
+ gpJJYL3sYB5Hg7Aa6mC4X2/uNwbpQyBbZCXB1Lcxc6Rj402rXZQCV2Xjc4m5va6u+CCtnXL4x
+ 4yC/wMNz5qcSvYatDm8uHxsqOXJ2qvf4Eh7HcD8JzxLmcY1MjSa3NB8LRnEZgol+ONBYmvDoz
+ OEh2KpTH7cbgo3nQxW3+JuTkmuCV+x+NlnA1/PJKIzzxG2jj7xoi1GAS7ZrZwhGb/J9FU/oZa
+ sMXSrcHyKE9XN+8rl6ymRIH1La+GHJZXvQw6Sd70xeGKzq5WJSqpklT2Ql4aKALBCxsLCaGxt
+ Gvs7d/Fj8p4WWGHEyJNaHyK0X5ltlQo2XUe7WBqDH65jq+4uEstinmPiWPi7rgkwSppRrlyu+
+ kBzlPLcpQxheqyt2DqjQ9FMOnqx5mGNz1Oj6JaLtBKUDi8RpaZp7TGvCZ+njWgcqEhIGm/FQQ
+ S5Y24w/1H9yJpgB9XlgNpINBNfESIaOnFJqyFXF7R12fdZ4/L7hfjdGcZ74xss1Qn9i4MeOBB
+ t3OBWaJsXz357+6RJFLHXKD3cL1S4doTsLpMWmh5tniImws1g/Gy4X2PoBsyOv3h5d3eZfz6l
+ rMhwf0F77SGifPySmcCg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 09:46:41AM -0700, Joe Perches wrote:
-> fallthrough may become a pseudo reserved keyword so this only use of
-> fallthrough is better renamed to allow it.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+Now that no code in arch/arm is shared between mach-exynos and the
+others, make the split formal.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/Kconfig.debug        | 8 ++++----
+ arch/arm/Makefile             | 1 -
+ arch/arm/mach-exynos/Makefile | 4 ----
+ arch/arm/plat-samsung/Kconfig | 4 ++--
+ drivers/mmc/host/Kconfig      | 2 +-
+ 5 files changed, 7 insertions(+), 12 deletions(-)
 
--Kees
-
-> ---
->  net/sctp/sm_make_chunk.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
-> index e41ed2e0ae7d..48d63956a68c 100644
-> --- a/net/sctp/sm_make_chunk.c
-> +++ b/net/sctp/sm_make_chunk.c
-> @@ -2155,7 +2155,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  	case SCTP_PARAM_SET_PRIMARY:
->  		if (ep->asconf_enable)
->  			break;
-> -		goto fallthrough;
-> +		goto unhandled;
->  
->  	case SCTP_PARAM_HOST_NAME_ADDRESS:
->  		/* Tell the peer, we won't support this param.  */
-> @@ -2166,11 +2166,11 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  	case SCTP_PARAM_FWD_TSN_SUPPORT:
->  		if (ep->prsctp_enable)
->  			break;
-> -		goto fallthrough;
-> +		goto unhandled;
->  
->  	case SCTP_PARAM_RANDOM:
->  		if (!ep->auth_enable)
-> -			goto fallthrough;
-> +			goto unhandled;
->  
->  		/* SCTP-AUTH: Secion 6.1
->  		 * If the random number is not 32 byte long the association
-> @@ -2187,7 +2187,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  
->  	case SCTP_PARAM_CHUNKS:
->  		if (!ep->auth_enable)
-> -			goto fallthrough;
-> +			goto unhandled;
->  
->  		/* SCTP-AUTH: Section 3.2
->  		 * The CHUNKS parameter MUST be included once in the INIT or
-> @@ -2203,7 +2203,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  
->  	case SCTP_PARAM_HMAC_ALGO:
->  		if (!ep->auth_enable)
-> -			goto fallthrough;
-> +			goto unhandled;
->  
->  		hmacs = (struct sctp_hmac_algo_param *)param.p;
->  		n_elt = (ntohs(param.p->length) -
-> @@ -2226,7 +2226,7 @@ static enum sctp_ierror sctp_verify_param(struct net *net,
->  			retval = SCTP_IERROR_ABORT;
->  		}
->  		break;
-> -fallthrough:
-> +unhandled:
->  	default:
->  		pr_debug("%s: unrecognized param:%d for chunk:%d\n",
->  			 __func__, ntohs(param.p->type), cid);
-> -- 
-> 2.15.0
-> 
-
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index d05b836dfeb2..9c4f2d6deb06 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -998,7 +998,7 @@ choice
+ 		  via SCIFA4 on Renesas SH-Mobile AG5 (SH73A0).
+ 
+ 	config DEBUG_S3C_UART0
+-		depends on PLAT_SAMSUNG
++		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+ 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+ 		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+ 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+@@ -1010,7 +1010,7 @@ choice
+ 		  by the boot-loader before use.
+ 
+ 	config DEBUG_S3C_UART1
+-		depends on PLAT_SAMSUNG
++		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+ 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+ 		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+ 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+@@ -1022,7 +1022,7 @@ choice
+ 		  by the boot-loader before use.
+ 
+ 	config DEBUG_S3C_UART2
+-		depends on PLAT_SAMSUNG
++		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+ 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+ 		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+ 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+@@ -1034,7 +1034,7 @@ choice
+ 		  by the boot-loader before use.
+ 
+ 	config DEBUG_S3C_UART3
+-		depends on PLAT_SAMSUNG && (ARCH_EXYNOS || ARCH_S5PV210)
++		depends on ARCH_EXYNOS || ARCH_S5PV210
+ 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+ 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+ 		select DEBUG_S5PV210_UART if ARCH_S5PV210
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index db857d07114f..f492d7c338fe 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -233,7 +233,6 @@ machine-$(CONFIG_PLAT_SPEAR)		+= spear
+ 
+ # Platform directory name.  This list is sorted alphanumerically
+ # by CONFIG_* macro name.
+-plat-$(CONFIG_ARCH_EXYNOS)	+= samsung
+ plat-$(CONFIG_ARCH_OMAP)	+= omap
+ plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
+ plat-$(CONFIG_ARCH_S5PV210)	+= samsung
+diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
+index 0fd3fcf8bfb0..53fa363c8e44 100644
+--- a/arch/arm/mach-exynos/Makefile
++++ b/arch/arm/mach-exynos/Makefile
+@@ -3,10 +3,6 @@
+ # Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
+ #		http://www.samsung.com/
+ 
+-ccflags-$(CONFIG_ARCH_MULTIPLATFORM) += -I$(srctree)/$(src)/include -I$(srctree)/arch/arm/plat-samsung/include
+-
+-# Core
+-
+ obj-$(CONFIG_ARCH_EXYNOS)	+= exynos.o exynos-smc.o firmware.o
+ 
+ obj-$(CONFIG_EXYNOS_CPU_SUSPEND) += pm.o sleep.o
+diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
+index 832ab0e6cd72..e31a156a27df 100644
+--- a/arch/arm/plat-samsung/Kconfig
++++ b/arch/arm/plat-samsung/Kconfig
+@@ -4,7 +4,7 @@
+ 
+ config PLAT_SAMSUNG
+ 	bool
+-	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_EXYNOS || ARCH_S5PV210
++	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
+ 	default y
+ 	select GENERIC_IRQ_CHIP
+ 	select NO_IOPORT_MAP
+@@ -240,7 +240,7 @@ config SAMSUNG_PM_DEBUG
+ 	bool "Samsung PM Suspend debug"
+ 	depends on PM && DEBUG_KERNEL
+ 	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
+-	depends on DEBUG_EXYNOS_UART || DEBUG_S3C24XX_UART || DEBUG_S3C2410_UART
++	depends on DEBUG_S3C24XX_UART || DEBUG_S3C2410_UART
+ 	help
+ 	  Say Y here if you want verbose debugging from the PM Suspend and
+ 	  Resume code. See <file:Documentation/arm/samsung-s3c24xx/suspend.rst>
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 49ea02c467bf..400a581c918c 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -275,7 +275,7 @@ config MMC_SDHCI_TEGRA
+ 
+ config MMC_SDHCI_S3C
+ 	tristate "SDHCI support on Samsung S3C SoC"
+-	depends on MMC_SDHCI && PLAT_SAMSUNG
++	depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_EXYNOS)
+ 	help
+ 	  This selects the Secure Digital Host Controller Interface (SDHCI)
+ 	  often referrered to as the HSMMC block in some of the Samsung S3C
 -- 
-Kees Cook
+2.20.0
+
