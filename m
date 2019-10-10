@@ -2,147 +2,140 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBCFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E58C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8BA8218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3F0208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 05:10:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="qQRAUig6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbfJJFJD (ORCPT
+        id S1732797AbfJJFKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 01:09:03 -0400
-Received: from mga09.intel.com ([134.134.136.24]:23904 "EHLO mga09.intel.com"
+        Thu, 10 Oct 2019 01:10:21 -0400
+Received: from mx2.ucr.edu ([138.23.62.3]:6050 "EHLO mx2.ucr.edu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbfJJFJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 01:09:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 22:09:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
-   d="scan'208";a="218904879"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Oct 2019 22:09:01 -0700
-Received: from [10.226.38.27] (unknown [10.226.38.27])
-        by linux.intel.com (Postfix) with ESMTP id AF7C75802B9;
-        Wed,  9 Oct 2019 22:08:59 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] spi: cadence-qspi: Add cadence-qspi support for
- Intel LGM SoC
-To:     Vignesh Raghavendra <vigneshr@ti.com>, broonie@kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
- <89e49834-8697-2917-d666-769969f074a4@linux.intel.com>
- <21cb17ab-b272-ce35-67fc-abce56969fee@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <897dd6a2-e319-4e67-48aa-dfd179e11609@linux.intel.com>
-Date:   Thu, 10 Oct 2019 13:08:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726518AbfJJFKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 01:10:21 -0400
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Oct 2019 01:10:18 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1570684220; x=1602220220;
+  h=mime-version:from:date:message-id:subject:to;
+  bh=pQsPO+s+a3PgY5D8E1xj+ga8C5+DTSwnG2XjsOjt7mI=;
+  b=qQRAUig6uYCeheJWIuWEb2NBFoNv5aXcgrX62KkJqXI9uyjaO0+pTmWg
+   R+WegWEXtSxQRsJWeRMIHtOBevSI55xuqcL1pT9jMOJH9rYHJH+g5mcfZ
+   DvIBaiIPBI+/chWQ6Z8mWY16Z0btq31+oUiJbZ8r/Qwt+fF0uxh5XQuB6
+   c9WAsUwXaL4QZkSFXh/TZDky56SgX33FCTxyku5PKI1QeLQhPS1ts3wXk
+   rj64J8SgoxkftxuBB3pqNIUEx39FvXr2ePSX8eTigXoDo41MaEGsrNkFE
+   Oy0xaOnvhzwNTjmbnWxQdTzDK5mKpEVBg/IFRWvhQfYCNqretyqizk8LN
+   g==;
+IronPort-SDR: NxCbwf052UUoEjXLfRfL4s6mxtPy0txup7A3pIneRDqQimYwCsddmi48sXUEbb4g9hfG9JLfRl
+ cHELsnXbTqrL3frsLdxUKv81/BXuZYU9o2PEl/ErDULGs/YfISGGF7Ew+YxVtyc8wQWNXU3OXZ
+ W7OSJlG+Ynes7VZ7Gt/lflhPJyJahc4U6VUWkpBcHDp/1iV1OEiIYCGFUxJJp/Ql9VF/0+9jTj
+ WMcPiaCr0yUTB2LEeL8JKR5zuxdTGhx43b0Qpq7JmEkirr15ODblYIaf6W2VwPIw523vgLlSSk
+ dNU=
+IronPort-PHdr: =?us-ascii?q?9a23=3AYAawzR0JL1VqX7qQsmDT+DRfVm0co7zxezQtwd?=
+ =?us-ascii?q?8ZsesXIvTxwZ3uMQTl6Ol3ixeRBMOHsqkC1bCd4vqocFdDyK7JiGoFfp1IWk?=
+ =?us-ascii?q?1NouQttCtkPvS4D1bmJuXhdS0wEZcKflZk+3amLRodQ56mNBXdrXKo8DEdBA?=
+ =?us-ascii?q?j0OxZrKeTpAI7SiNm82/yv95HJbAhEmTSwbalzIRmoogncstcaipZ+J6gszR?=
+ =?us-ascii?q?fEvmFGcPlMy2NyIlKTkRf85sOu85Nm7i9dpfEv+dNeXKvjZ6g3QqBWAzogM2?=
+ =?us-ascii?q?Au+c3krgLDQheV5nsdSWoZjBxFCBXY4R7gX5fxtiz6tvdh2CSfIMb7Q6w4VS?=
+ =?us-ascii?q?ik4qx2UxLjljsJOCAl/2HWksxwjbxUoBS9pxxk3oXYZJiZOOdicq/BeN8XQ3?=
+ =?us-ascii?q?dKUMRMWCxbGo6zYIsBAeQCM+hFsYfyu0ADrQeiCQS2GO/j1iNEi33w0KYn0+?=
+ =?us-ascii?q?ohCwbG3Ak4Et0MsXTVrdX1NLoVUeuoz6bIzS/Mb/JL0jr66InJcxAhruuNXb?=
+ =?us-ascii?q?5sbcbcx1IiFx7ZgVWKs4DqIS6a1vkUvmWd8uFuVvqvhnY5pw1tpjWj3MQhh4?=
+ =?us-ascii?q?nTio4Iy13J9z91zYQoKdC+VUV1e8SrEIFKuCGfL4Z2R8QiTHx2tysi0b0GvI?=
+ =?us-ascii?q?K7fDANyJQ62x7Tc/yHfJaM4hLkTOuRJC13hHNheL6mgxay/1WsxvTyVsS2zV?=
+ =?us-ascii?q?pGtCVFkt7LtnAC0xzc9NKLRed6/kekwTqP1gbT5f9YIU0si6bXN5oszqQzm5?=
+ =?us-ascii?q?cTq0jPAy77lUfsgKKUa0ko4u2o5P7mYrXiqJ+cLYh0igTmP6Uum82/Af43Mg?=
+ =?us-ascii?q?kSU2SH9+mxz6Dj8lHjQLlQkPI5j7TZvIjAJcsHvq65HxNV0oE75ha7Djem1s?=
+ =?us-ascii?q?kYnHYeIFJGZh2HlY7pNE/KIP3jE/e/jEqjkC1xy/DFILLhGJPNIWbHkLv7er?=
+ =?us-ascii?q?Z98UFcm0IPyoV2459EQp0MPfnzV1W54NXcAw8wNQC52aDrBch21o4EcWuKDu?=
+ =?us-ascii?q?mSN6aE9Rej5vguOPWNbYkim6j7Kvdts/Xul34ihV4Ue++q2pYRaX+QF/FqZU?=
+ =?us-ascii?q?6eZCyoyp0tGHkLskJ+Z+z3jniDVzESL0SyWL92rmUXAZynAd6FdICqnZSI2S?=
+ =?us-ascii?q?v9FZpTMCQOJlmSEHugXoSeX/YBIHabI9VlkzEIfbygTZIxkxCj4kuy57NhL+?=
+ =?us-ascii?q?fQshMVqY7uzpAh6+TVlBw23TJ6EMCZlWqNGSU8pWoNDwU/wqZ1plZyggOY2K?=
+ =?us-ascii?q?1QmfVGE9ZU/fwPVR01Y9qU4vJzDZjLRwvHNoOEVl+gBMy7CDcZR9c9hdQJZh?=
+ =?us-ascii?q?A5U/erhROL7yujBPdBtbWAB9oE86vb93H0K4B2zHOQkOEoilVjTcVfHWmnnb?=
+ =?us-ascii?q?JksQbJCoPFnl6ai6GyM6MG02qF+H2CiGaDokxceApxSrneG34Fa0baoM/6+k?=
+ =?us-ascii?q?TaCbi0BvBvNgpH1N7HKaZQbNDtpUtJSe2lO9nEZW+13WCqClLA9LONfZfsM1?=
+ =?us-ascii?q?wc1SOVXFoEkhEO+2+uPhN4Gyy75W/SEWoqXXnvbkXj4PQ2k3S9QQdgxBqNaU?=
+ =?us-ascii?q?JJ3KHz5xUPw/GQVqVA8KgDvXIQqid0AVH17dLfCpLUthhhdaQEOYgV/Vxdk2?=
+ =?us-ascii?q?/VqloubdSbM6l+iwtGIExMtET02kAyU90YnA=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2FRAwDwvJ5dh0enVdFlDhABCxyGDIR?=
+ =?us-ascii?q?NjluFFwGNaYo0AQgBAQEOLwEBhxgjOBMCAwkBAQUBAQEBAQUEAQECEAEBAQg?=
+ =?us-ascii?q?NCQgphUCCOikBg1URfA8CJgIkEgEFASIBGhqDAIJ4pDuBAzyLJoEyhAsBAYR?=
+ =?us-ascii?q?bAQkNgUgSeiiMDoIXgRGLIoJeBIE5AQEBlS+WVwEGAoIQFIxUiEUbgioBlxW?=
+ =?us-ascii?q?OLZlPDyOBRoF7MxolfwZngU9PEBSBaY1xBAFWJJFLAQE?=
+X-IPAS-Result: =?us-ascii?q?A2FRAwDwvJ5dh0enVdFlDhABCxyGDIRNjluFFwGNaYo0A?=
+ =?us-ascii?q?QgBAQEOLwEBhxgjOBMCAwkBAQUBAQEBAQUEAQECEAEBAQgNCQgphUCCOikBg?=
+ =?us-ascii?q?1URfA8CJgIkEgEFASIBGhqDAIJ4pDuBAzyLJoEyhAsBAYRbAQkNgUgSeiiMD?=
+ =?us-ascii?q?oIXgRGLIoJeBIE5AQEBlS+WVwEGAoIQFIxUiEUbgioBlxWOLZlPDyOBRoF7M?=
+ =?us-ascii?q?xolfwZngU9PEBSBaY1xBAFWJJFLAQE?=
+X-IronPort-AV: E=Sophos;i="5.67,279,1566889200"; 
+   d="scan'208";a="14127050"
+Received: from mail-lf1-f71.google.com ([209.85.167.71])
+  by smtp2.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Oct 2019 22:09:59 -0700
+Received: by mail-lf1-f71.google.com with SMTP id t84so1053659lff.10
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 22:09:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=GIIH2P83q/mX3xh3maQPqHlz4QJ+Z9HFyeC3gCwbPig=;
+        b=Pm/FUdFzN9G5DRYxxybBJBQZ7qYWLyW3avGckQKi2iumWsF5KxMdHngLE2Ia0B1XUX
+         FIY8ueZhwYCUD4MKxPXVxMX6nzeIzSY06S+Eas+c16CfXjxRjcz7cQZz9QFV87qxKDew
+         d7qSYvMTBroARmLnrJ2nVWnzMnXTHv1744bXBbqzjCSeUkayWiVUyVgwe+5XdhupDbbi
+         +CG8m4ij49Qo6n3sP8Zqv3aWa9oQDpn9yZg3mlU2IJLeW/vAJomTJoMPkDPNapU04gcd
+         Nd71jyL+X2oGT79oMp5QUMrVHlLNaKLAvbrDqcZ6eboviVWXsFEusrIsD1ozhRvLeSCw
+         Nj1Q==
+X-Gm-Message-State: APjAAAUNm84+02wEWDEbus1yUKHdAF9QrGk5LbTsT6ZJkBqHJlzgdueA
+        vJp8u1gqRALCaXVqa/edWIw6vtsfRW7eCjoLEr60ezhyAto7PMxE5Bdk/zN3f2edHMXPrOlK8fT
+        aMlWaO+pF7NQRMWXBnoUF2BczJjZpY/J1Z9re2X08UQ==
+X-Received: by 2002:a2e:6a04:: with SMTP id f4mr4795053ljc.97.1570684198370;
+        Wed, 09 Oct 2019 22:09:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx4+Ag+0zjeb2o0SrDvuaa8jOaPuDPdyg3zpbOVtTOkjtWQ+gGvmWw+7mH9RDBzjC8jtfHcYs2qafTJb+Kg2A8=
+X-Received: by 2002:a2e:6a04:: with SMTP id f4mr4795013ljc.97.1570684197726;
+ Wed, 09 Oct 2019 22:09:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <21cb17ab-b272-ce35-67fc-abce56969fee@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+From:   Yizhuo Zhai <yzhai003@ucr.edu>
+Date:   Wed, 9 Oct 2019 22:09:32 -0700
+Message-ID: <CABvMjLQuxeZnRMV0T5VDeEj7zV7mD4wzp5QPFCJ_oVhH0vRihQ@mail.gmail.com>
+Subject: Potential NULL pointer deference in drm/amdgpu
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>, Evan Quan <evan.quan@amd.com>,
+        Jack Xiao <Jack.Xiao@amd.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Chengyu Song <csong@cs.ucr.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vignesh,
+Hi All:
+drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c:
+The function to_amdgpu_fence() could return NULL, but callers
+in this file does not check the return value but directly dereference it,
+which seems potentially unsafe.
+Such callers include amdgpu_fence_get_timeline_name(),
+amdgpu_fence_enable_signaling() and amdgpu_fence_free().
 
-On 10/10/2019 12:18 PM, Vignesh Raghavendra wrote:
->
-> On 10/10/19 7:04 AM, Ramuthevar, Vadivel MuruganX wrote:
->> HI Vignesh,
->>
->> On 17/9/2019 12:50 AM, Vignesh Raghavendra wrote:
->>> Hi,
->>>
->>> On 16/09/19 1:08 PM, Ramuthevar,Vadivel MuruganX wrote:
->>>> patch 1: Add YAML for cadence-qspi devicetree cdocumentation.
->>>> patch 2: cadence-qspi controller driver to support QSPI-NAND flash
->>>> using existing spi-nand framework with legacy spi protocol.
->>> Nope, you cannot have two drivers for the same IP (i.e Cadence QSPI)
->>> just to support to different types of SPI memories. This is the reason
->>> why spi_mem_ops was introduced.
->>>
->>> Please rewrite this driver over to use spi_mem_ops (instead of using
->>> generic SPI xfers) so that same driver supports both SPI-NOR and
->>> SPI-NAND flashes. Once that's done drivers/mtd/spi-nor/cadence-quadspi.c
->>> can be deleted.
->>>
->>> There are few existing examples of spi_mem_ops users in drivers/spi/
->>> (git grep spi_mem_ops) and materials here on how to write such a driver:
->>>
->>> [1]
->>> https://bootlin.com/blog/spi-mem-bringing-some-consistency-to-the-spi-memory-ecosystem/
->>>
->>> [2] https://www.youtube.com/watch?v=PkWbuLM_gmU
->> As per Mark Brown and your suggestion,  I have started adapting
->> cadence-qaudspi driver with spi_mem_ops framework to work
->> QSPI-NAND/NOR as a generic driver(completely removed the legacy
->> SPI-XFERS),  is in progress on Intel LGM SoC.
->> QSPI-IP on Intel LGM  do not have DMA  support and also not part of QSPI
->> IP, so couldn't able to validate DMA related.
->> will adapt the DMA things which are existing in cadence-quadspi.c as it is.
->>
-> Great, appreciate the effort!
->
->> currently TI and Altera SoC's use this Cadence-qspi IP , both are not
->> using DMA as per my understanding (correct me if it is wrong).
->> confirmed through device tree entry.
->>
-> TI platforms use DMA to read data from flash in memory mapped mode
-> (direct access controller) using mem-to-mem DMA channels. Mem-to-mem DMA
-> channels are requested as and when needed and are not part of DT
-> description (as they are not bound to a device)
-yes, understood now, Thanks!
->> what is your opinion on DMA related stuff?
-> Not having DMA support would be a regression. Please keep the DAC + DMA
-> part as is. I can help you will all the DMA related testing...
-Sure, will keep DAC + DMA, as we discussed earlier use QUIRKS to 
-differentiate and follow the same.
 
----
-With Regards
-Vadivel
+-- 
+Kind Regards,
 
-> Regards
-> Vignesh
->
->> also using macronix(QSPI-NOR)
->> flash/Micron(QSPI-NAND).
->> ---
->> With Regards
->> Vadivel
->>>> Ramuthevar Vadivel Murugan (2):
->>>>     dt-bindings: spi: Add support for cadence-qspi IP Intel LGM SoC
->>>>     spi: cadence-qspi: Add QSPI support for Intel LGM SoC
->>>>
->>>>    .../devicetree/bindings/spi/cadence,qspi-nand.yaml |  84 +++
->>>>    drivers/spi/Kconfig                                |   9 +
->>>>    drivers/spi/Makefile                               |   1 +
->>>>    drivers/spi/spi-cadence-qspi-apb.c                 | 644
->>>> +++++++++++++++++++++
->>>>    drivers/spi/spi-cadence-qspi-apb.h                 | 174 ++++++
->>>>    drivers/spi/spi-cadence-qspi.c                     | 461
->>>> +++++++++++++++
->>>>    drivers/spi/spi-cadence-qspi.h                     |  73 +++
->>>>    7 files changed, 1446 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->>>>    create mode 100644 drivers/spi/spi-cadence-qspi-apb.c
->>>>    create mode 100644 drivers/spi/spi-cadence-qspi-apb.h
->>>>    create mode 100644 drivers/spi/spi-cadence-qspi.c
->>>>    create mode 100644 drivers/spi/spi-cadence-qspi.h
->>>>
+Yizhuo Zhai
+
+Computer Science, Graduate Student
+University of California, Riverside
