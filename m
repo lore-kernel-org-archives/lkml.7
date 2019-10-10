@@ -2,56 +2,57 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F85DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4C4C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49555222C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488B821929
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697259;
-	bh=EsGY4Ro3QJMVIc6Pr48axtXJLhwkNlHF1eAwIn0tiHA=;
+	s=default; t=1570697262;
+	bh=kgzfr/vRrO0hm5BZsVAdICd2cayTt5lbLSD11QS0AvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m4pRVK6T8CpKB6MOy1Mn4CK8FbzdPfXU0fKKFfXtf8Exkdj+XcOrKaMS6prgUsm3a
-	 m9jsKofB4mOnXa89aSfXiEBdox4+uxyfJ7ODXrQakr2tHYjemDShh3A3K9+mOU4CAy
-	 G1+kcBesGFg27zkK1YkYpk4jOMDKIDUAybu/TPbA=
+	b=M+yFrSGBb1rK81fKrnwYvkBx2RvIkDHtQNkvoJeaaidZu3FP5FPihiHaOrf/0fr2p
+	 MheEjqYgTxdNnvObW39Wb3RURh+Z5+wwNo7EY4zCUd7AvB0u5UkHZGy5QW3ORojjfs
+	 v3kXiGot8MB+pU/T72SEu6jrNrOyZ3XoKLKAFcTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389511AbfJJIrh (ORCPT
+        id S2388557AbfJJIrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53594 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:47:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389490AbfJJIrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:47:33 -0400
+        id S2388546AbfJJIrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:47:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80E0A222C5;
-        Thu, 10 Oct 2019 08:47:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02C042245A;
+        Thu, 10 Oct 2019 08:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697253;
-        bh=EsGY4Ro3QJMVIc6Pr48axtXJLhwkNlHF1eAwIn0tiHA=;
+        s=default; t=1570697258;
+        bh=kgzfr/vRrO0hm5BZsVAdICd2cayTt5lbLSD11QS0AvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPBVCg+nS7T+1EJH4AZpo19sXKg+xXR3nghKcCRRrsVL8FgbxrXFHkSZ+U1Br53wU
-         d04bGsFCkfXOkDe6tqkR+3WqhZ6CPOSEnw6bYpnwrqG1puMV8CDnJtFYtsghBTAjaP
-         x+pNAaecd458PUEwP4cBTvKuepsRmgIoG3dci9g4=
+        b=13mKZFxWLHEL0aZD3rqNSTFOFTySIZNsKy0vTWMH0j7W2VkbZi+ogxiQiu1syurvN
+         P9EjQ2vGBJHI3Q6uHgxAm1FKqxaeze40c3Ccyr8/s7D4JeIioT5E0MVwP4cajflaSL
+         QiyTQnv07MPgYRb2wboH6TLYq8LobN/ZCBJUd7EE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Krebbel <krebbel@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/114] perf build: Add detection of java-11-openjdk-devel package
-Date:   Thu, 10 Oct 2019 10:36:20 +0200
-Message-Id: <20191010083611.766732099@linuxfoundation.org>
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 075/114] perf unwind: Fix libunwind build failure on i386 systems
+Date:   Thu, 10 Oct 2019 10:36:22 +0200
+Message-Id: <20191010083611.905436286@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -64,60 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 815c1560bf8fd522b8d93a1d727868b910c1cc24 ]
+[ Upstream commit 26acf400d2dcc72c7e713e1f55db47ad92010cc2 ]
 
-With Java 11 there is no seperate JRE anymore.
+Naresh Kamboju reported, that on the i386 build pr_err()
+doesn't get defined properly due to header ordering:
 
-Details:
+  perf-in.o: In function `libunwind__x86_reg_id':
+  tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
+  undefined reference to `pr_err'
 
-  https://coderanch.com/t/701603/java/JRE-JDK
-
-Therefore the detection of the JRE needs to be adapted.
-
-This change works for s390 and x86.  I have not tested other platforms.
-
-Committer testing:
-
-Continues to work with the OpenJDK 8:
-
-  $ rm -f ~acme/lib64/libperf-jvmti.so
-  $ rpm -qa | grep jdk-devel
-  java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
-  $ git log --oneline -1
-  a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
-  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
-  $ ls -la ~acme/lib64/libperf-jvmti.so
-  -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
-  $
-
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20190909114116.50469-4-tmricht@linux.ibm.com
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/Makefile.config | 2 +-
+ tools/perf/arch/x86/util/unwind-libunwind.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 849b3be15bd89..510caedd73194 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -837,7 +837,7 @@ ifndef NO_JVMTI
-     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
-   else
-     ifneq (,$(wildcard /usr/sbin/alternatives))
--      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
-+      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
-     endif
-   endif
-   ifndef JDIR
+diff --git a/tools/perf/arch/x86/util/unwind-libunwind.c b/tools/perf/arch/x86/util/unwind-libunwind.c
+index 05920e3edf7a7..47357973b55b2 100644
+--- a/tools/perf/arch/x86/util/unwind-libunwind.c
++++ b/tools/perf/arch/x86/util/unwind-libunwind.c
+@@ -1,11 +1,11 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ #include <errno.h>
++#include "../../util/debug.h"
+ #ifndef REMOTE_UNWIND_LIBUNWIND
+ #include <libunwind.h>
+ #include "perf_regs.h"
+ #include "../../util/unwind.h"
+-#include "../../util/debug.h"
+ #endif
+ 
+ #ifdef HAVE_ARCH_X86_64_SUPPORT
 -- 
 2.20.1
 
