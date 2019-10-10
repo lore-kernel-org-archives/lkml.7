@@ -2,164 +2,99 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE06CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F88ECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B967F20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:40:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VO7m1YIn"
+	by mail.kernel.org (Postfix) with ESMTP id A268C2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570732866;
+	bh=l0Xei6/9N4UDEa7ldmuBwq53U9K808SKgsDr3Wd09rQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uxVVTNSRzHA7h0KxyhqeYhXBTn7GrpacRCaDx2XjKe77t/6LydAMA/CF9V0IeWuQJ
+	 qUSaeW+FhlZwKXo+jiRJCdKqkNTnrb8M2tTmOqW+CxMC8GJ0+EHT3vZ+4wcWPAcEMf
+	 BnGh27ynHvxC434PFG9bMOizKd6dNN6elKVonbQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfJJSk6 (ORCPT
+        id S1726851AbfJJSlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:40:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38768 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbfJJSk6 (ORCPT
+        Thu, 10 Oct 2019 14:41:05 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43864 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfJJSlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:40:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 3so7813006wmi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8NsqnSY95fdoi2VDvZcdhUdFBDwBGSd8eV8Ri4czn8Y=;
-        b=VO7m1YIn2R9UaxF6uga618E7+yQCBUAVgQkcYkf4rfnMXVcQBYAGVv8dz98DoBj4Jm
-         f184Ul0TzGHhz36KAQ7Yywcer/gvQu+22svOWhJ+GNCDCnDNm9t+NBKgbmkQlZq2dFbG
-         oMZlAyA33VxbAPpS0xTcSuVKRiKFW4nwayOuSsnfSmuW/D3N/Lu2S7zOOlmsUr0FqiuC
-         aBU+8ir413SG3KlrJ1B2cyK56pwHeyzRAEpj19YXFCk9yHezV6j2OrO/mhzRSOf5HAyl
-         HDp9SP3AmQHnM6rnNDZ0m2fcoFsPNHBSGaegh3SeJRDR2cJuaicfcIdoAE143X04yy0o
-         kJDw==
+        Thu, 10 Oct 2019 14:41:04 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t84so5808880oih.10;
+        Thu, 10 Oct 2019 11:41:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8NsqnSY95fdoi2VDvZcdhUdFBDwBGSd8eV8Ri4czn8Y=;
-        b=uS81798tUkycb5A2t08EVsgE0iudvaTuY+PGjSX2PFUDMwJ2xJCBqtvoPutEaifEKi
-         scApHBb5HFHCTtJeZqc9Qlixuqn03DmjDqaOdB+mvZvoG0vwbUFzGpV18CyLXO5Q19uW
-         6yP9vrmkmhSdQyRdI8bRZHtAtrIsBYwrTU33thoeGon396RNDzb3+NIoduo/O2TAE28F
-         n5/Z1Ogh5tsiDCvVJD6cfJVYo+4BPPpxoiW7b+2pmD/YxWQBv4GDd5v5BPLaVJaA3f8l
-         z5r7oUkUYtEa0aA6hBiH8w3Yxp4Gp/FtCmoAnmYLhMapYvilDUqO8DijAviRaB8XZomv
-         z0Vw==
-X-Gm-Message-State: APjAAAW+zsZi8TWM+Jjej0JZlp+jRCMePiQY0nJnyVlvDUqQpbIax9m3
-        90dBps9YWp8oXBeC41KEc7jE5x0EKWZ8WFZ7QmyusQ==
-X-Google-Smtp-Source: APXvYqw4wievu7Dccjidrshv6ttu1kKAi+nssgofP8O2my9+rW1wYmqnupOkIxWkd14IXVCkfS1rHdtsh9uPI6K9SZI=
-X-Received: by 2002:a1c:a9c5:: with SMTP id s188mr7913551wme.61.1570732854939;
- Thu, 10 Oct 2019 11:40:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XmWVPPP865LCrxGXKVMx+awlUtO1lgx35IM/Tkg3d/4=;
+        b=eoT/bWUPn7NoTvOY/2jwtFZD/F5hKCCwpQowzBZCD+kN2ufrKaiu7XfmBv2agV0KL1
+         C++LYgthWufWKOps4h65S12q2lCF2Tn956VkR1E/rgNc0TsrXHtZy/XMJ7Hii1RtpPte
+         NMXH8XomxbnmmTAZpHKS2F1ftlEhfgnVzBNFH5E/LsuFWBDj/5RZzeAILaMlPm/vK4qv
+         WCRMB8JrFjd2pyoyCkKXEuHNXFIiIUCUoaiaask7auM5Dste3kx+Dcv737K5rFJZy3IE
+         GJJgvGy+Lh1PPkFM+OaryqrRqOgwuUMYikpjkJK+8ZQLVtPVvJTJA9emW2AiovSm9V3C
+         FzGw==
+X-Gm-Message-State: APjAAAUWjrtc70KWnzGv1HGzD3aNyA/27LxtqNEQk1wOtVa3glFxef2e
+        LYgJp5GYlICUpX2HPA60tw==
+X-Google-Smtp-Source: APXvYqyhnaWIZALC+KGjjdwYuY6XqSa0t4X1o/I5FP/w0EG3/e1rUV3ELAxXyTApAAYjD9jmtuIQiQ==
+X-Received: by 2002:aca:a9ca:: with SMTP id s193mr9116907oie.85.1570732863751;
+        Thu, 10 Oct 2019 11:41:03 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t10sm1836170oib.49.2019.10.10.11.41.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 11:41:02 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 13:41:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: rng: exynos4-rng: Convert Exynos PRNG
+ bindings to json-schema
+Message-ID: <20191010184102.GA16673@bogus>
+References: <20191002161340.11846-1-krzk@kernel.org>
 MIME-Version: 1.0
-References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157066230358.1059972.1736585303527133478.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAKv+Gu8ih2RffZHdwAnHZicL_v8CxV9WnCy+uA1jSSyh58xapA@mail.gmail.com> <CAPcyv4iQ5Np3dDH=-a_7gPnWKBCHXGit2PN-h=Jw_eqj7Lb2BQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4iQ5Np3dDH=-a_7gPnWKBCHXGit2PN-h=Jw_eqj7Lb2BQ@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 10 Oct 2019 20:40:42 +0200
-Message-ID: <CAKv+Gu9co_FTVYWNZsXF0H+fV1K76pZX4Yv11ANE6NwDBT3pBQ@mail.gmail.com>
-Subject: Re: [PATCH v6 05/12] x86/efi: EFI soft reservation to E820 enumeration
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002161340.11846-1-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 at 20:31, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Wed, Oct 9, 2019 at 11:45 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Thu, 10 Oct 2019 at 01:19, Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
-> > > interpretation of the EFI Memory Types as "reserved for a specific
-> > > purpose".
-> > >
-> > > The proposed Linux behavior for specific purpose memory is that it is
-> > > reserved for direct-access (device-dax) by default and not available for
-> > > any kernel usage, not even as an OOM fallback.  Later, through udev
-> > > scripts or another init mechanism, these device-dax claimed ranges can
-> > > be reconfigured and hot-added to the available System-RAM with a unique
-> > > node identifier. This device-dax management scheme implements "soft" in
-> > > the "soft reserved" designation by allowing some or all of the
-> > > reservation to be recovered as typical memory. This policy can be
-> > > disabled at compile-time with CONFIG_EFI_SOFT_RESERVE=n, or runtime with
-> > > efi=nosoftreserve.
-> > >
-> > > This patch introduces 2 new concepts at once given the entanglement
-> > > between early boot enumeration relative to memory that can optionally be
-> > > reserved from the kernel page allocator by default. The new concepts
-> > > are:
-> > >
-> > > - E820_TYPE_SOFT_RESERVED: Upon detecting the EFI_MEMORY_SP
-> > >   attribute on EFI_CONVENTIONAL memory, update the E820 map with this
-> > >   new type. Only perform this classification if the
-> > >   CONFIG_EFI_SOFT_RESERVE=y policy is enabled, otherwise treat it as
-> > >   typical ram.
-> > >
-> > > - IORES_DESC_SOFT_RESERVED: Add a new I/O resource descriptor for
-> > >   a device driver to search iomem resources for application specific
-> > >   memory. Teach the iomem code to identify such ranges as "Soft Reserved".
-> > >
-> > > A follow-on change integrates parsing of the ACPI HMAT to identify the
-> > > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
-> > > now, just identify and reserve memory of this type.
-> > >
-> > > Cc: <x86@kernel.org>
-> > > Cc: Borislav Petkov <bp@alien8.de>
-> > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > > Cc: Darren Hart <dvhart@infradead.org>
-> > > Cc: Andy Shevchenko <andy@infradead.org>
-> > > Cc: Andy Lutomirski <luto@kernel.org>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >
-> > For the EFI changes
-> >
-> > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >
-> > although I must admit I don't follow the enum add_efi_mode logic 100%
->
-> I'm open to suggestions as I'm not sure it's the best possible
-> organization. The do_add_efi_memmap() routine has the logic to
-> translate EFI to E820, but unless "add_efi_memmap" is specified on the
-> kernel command line the EFI memory map is ignored. For
-> soft-reservation support I want to reuse do_add_efi_memmap(), but
-> otherwise avoid any other side effects of considering the EFI map.
-> What I'm missing is the rationale for why "add_efi_memmap" is required
-> before considering the EFI memory map.
->
-> If there is a negative side effect to always using the EFI map then
-> the new "add_efi_mode" designation constrains it to just the
-> soft-reservation case.
->
+On Wed,  2 Oct 2019 18:13:40 +0200, Krzysztof Kozlowski wrote:
+> Convert Samsung Exynos Pseudo Random Number Generator bindings to DT
+> schema format using json-schema.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v2:
+> 1. Add additionalProperties false,
+> 2. Include clock header and use defines instead of clock numbers.
+> 
+> Changes since v1:
+> 1. Indent example with four spaces (more readable).
+> ---
+>  .../bindings/rng/samsung,exynos4-rng.txt      | 19 --------
+>  .../bindings/rng/samsung,exynos4-rng.yaml     | 45 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 46 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
+>  create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml
+> 
 
-Could we make the presence of any EFI_MEMORY_SP regions imply
-add_efi_memmap? That way, it is guaranteed that we don't regress
-existing systems, while establishing clear and unambiguous semantics
-for new systems that rely on these changes in order to be able to use
-the special purpose memory as intended.
+Applied, thanks.
+
+Rob
