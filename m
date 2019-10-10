@@ -2,187 +2,135 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC0FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A9AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABFBF206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADEDE20640
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:11:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r/LIxHSW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yRaz5Oe1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfJJOLM (ORCPT
+        id S1726369AbfJJOLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 10:11:12 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:34341 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfJJOLL (ORCPT
+        Thu, 10 Oct 2019 10:11:13 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60406 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfJJOLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 10:11:11 -0400
-Received: by mail-vs1-f65.google.com with SMTP id d3so4012861vsr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 07:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gA5F+RboE/pq+skSstsxaptbKJRogDAxspae1hZdrlw=;
-        b=r/LIxHSW9Hdinc+D0Q6ii6IgfODtEPA7DG+J3nI5G4dmTYbg0AE8kFbjz4uCjpx4tF
-         QrLKKae+TVAOXVIm8ul1al4xJKrRBf4PHxbHxvzkzylS2dlImR5Ta9ZS8C8LOnIvCi8Z
-         YT/DpA5D0z2tTsdrfvUKjoUGjElPqlkPMxF7J3/BaBDUsUQ+JXlh/jdLQqKjZ2y0T/SN
-         LWPgem2QK0RVDs3oPjUFSY0OULoh/0Qonhqby6SdaZMcuFtH7hOoyOSaj2qJWVhkmJEq
-         J6EH4NlsThcmjNlAM7KIo+XcHU1nBOjHN8nNi0cFMsvnIW5b1HABIkXZX3x+z3765HHV
-         S6LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gA5F+RboE/pq+skSstsxaptbKJRogDAxspae1hZdrlw=;
-        b=Ss9B2giEw6vr3NYFTi5OwOnaJ/YLPNyvB6g8LkN1vap4HiUMWHh6kaHgBwlrqdR8xF
-         FZFLH1IAH1bXNJEiDEJy+gOkgy4md30TPx0qyW8d4r3w8dL3UxsnuvZLZD1pYJXv/sTV
-         LEaOH+/X0aQdWhnRB2cftDZ3KoQ1ZkElAx78a7Wn2zWCRC5I/gP0IAwLSpxnd5+HylRG
-         SjokXXZSIBMwkdd9vmXRrA5Kz1VWIyRNJgrAeUIzlk9GBkBdjYmteRfX35kUVTvSFbVB
-         Vz2aOn9WwUEPCRlLXp25T+MaAoXKk/uu7p/D7cWA5fP1PFUtJTjZrbjBD+XpDuR5cEY5
-         usMA==
-X-Gm-Message-State: APjAAAVw8QPpE33+N1ZWBomH8HkKOPZz68WXpTG84oXXFfImxRaTU/Zm
-        cd9Kb8N52/TWSnUIi5nG4OSlwk5B3Y/hfH22RlxJXA==
-X-Google-Smtp-Source: APXvYqx8YwXRB2hrYG/fdZo1ha3XH6HrALf+bCVpuuJw5+7mmU3wP8OnkTRknPuULXGYFLMFs7UbggxceKVIPmCeIC8=
-X-Received: by 2002:a67:ef89:: with SMTP id r9mr5830898vsp.200.1570716668861;
- Thu, 10 Oct 2019 07:11:08 -0700 (PDT)
+        Thu, 10 Oct 2019 10:11:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lHcR3GT2gEihOKAOsow8gcz96aZQETHMSxuDKwuvrVM=; b=yRaz5Oe1zvS46erwkCGhw7XNU
+        VTTQqHGkSpKC1mXRKEkURLrrXHLF6Gz/Vw7d7/L6VT/3BVGY595Hsyrv6lrYw4jNpBpWWNGFhP5p+
+        dFp1aj2i14Z4VhxR6pbTMuNYWuy/K3TEFoxWqYpl2PvTR09TVTATtyq3GKbbiIdsyCqzLfaoxeJS8
+        mKvsq31Vuv1ijktfpHpWWZI+3tEm2OnftG0Ar5HgB2mHsMRXM07Zh+tKGXrO+au6WoZfTJCaeTEK1
+        SYcABSBvtlwq0M4YT/0jpDSXdE+gTIexSHX1bRLYjRlTpmF8ULcUIYfh+H81OKX8QoOJZo39U/dWf
+        wnMHLx25g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIZ9p-0008JS-Qq; Thu, 10 Oct 2019 14:11:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A3F7B3008C1;
+        Thu, 10 Oct 2019 16:10:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B027D202BC5A1; Thu, 10 Oct 2019 16:11:07 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 16:11:07 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] ftrace/module: Allow ftrace to make only loaded module
+ text read-write
+Message-ID: <20191010141107.GU2311@hirez.programming.kicks-ass.net>
+References: <20191009223638.60b78727@oasis.local.home>
+ <20191010073121.GN2311@hirez.programming.kicks-ass.net>
+ <20191010093329.GI2359@hirez.programming.kicks-ass.net>
+ <20191010093650.GJ2359@hirez.programming.kicks-ass.net>
+ <20191010085011.3734d87b@gandalf.local.home>
 MIME-Version: 1.0
-References: <20190722193939.125578-1-dianders@chromium.org> <20190722193939.125578-2-dianders@chromium.org>
-In-Reply-To: <20190722193939.125578-2-dianders@chromium.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 10 Oct 2019 16:10:32 +0200
-Message-ID: <CAPDyKFpKWo4n+nmBXVcDc4TNzFV3vc+3aeKcu_nKaB=hj=RKUQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] mmc: core: Add sdio_trigger_replug() API
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Andreas Fenkart <afenkart@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        netdev <netdev@vger.kernel.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010085011.3734d87b@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 at 21:41, Douglas Anderson <dianders@chromium.org> wrote:
->
-> When using Marvell WiFi SDIO cards, it is not uncommon for Linux WiFi
-> driver to fully lose the communication channel to the firmware running
-> on the card.  Presumably the firmware on the card has a bug or two in
-> it and occasionally crashes.
->
-> The Marvell WiFi driver attempts to recover from this problem.
-> Specifically the driver has the function mwifiex_sdio_card_reset()
-> which is called when communcation problems are found.  That function
-> attempts to reset the state of things by utilizing the mmc_hw_reset()
-> function.
->
-> The current solution is a bit complex because the Marvell WiFi driver
-> needs to manually deinit and reinit the WiFi driver around the reset
-> call.  This means it's going through a bunch of code paths that aren't
-> normally tested.  However, complexity isn't our only problem.  The
-> other (bigger) problem is that Marvell WiFi cards are often combo
-> WiFi/Bluetooth cards and Bluetooth runs on a second SDIO func.  While
-> the WiFi driver knows that it should re-init its own state around the
-> mmc_hw_reset() call there is no good way to inform the Bluetooth
-> driver.  That means that in Linux today when you reset the Marvell
-> WiFi driver you lose all Bluetooth communication.  Doh!
+On Thu, Oct 10, 2019 at 08:50:11AM -0400, Steven Rostedt wrote:
+> On Thu, 10 Oct 2019 11:36:50 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 
-Thanks for a nice description to the problem!
+> > > load_module()
+> > >   ...
+> > >   complete_formation()
+> > >     mutex_lock(&module_mutex);
+> > >     ...
+> > >     module_enable_ro();
+> > >     module_enable_nx();
+> > >     module_enable_x();
+> > > 
+> > >     mod->state = MODULE_STATE_COMING;
+> > >     mutex_unlock(&module_mutex);
+> > > 
+> > >   prepare_coming_module()
+> > >     ftrace_module_enable();
+> > >     ...
+> > > 
+> > > IOW, we're doing ftrace_module_enable() immediately after we flip it
+> > > RO+X. There is nothing in between that we can possibly rely on.
+> 
+> One reason for the above is the module_mutex. The lock order is that
+> module_mutex may be called inside the ftrace_lock, but not vice-versa.
+> 
+> The ftrace_module_init() was called due to the setting of all modules
+> rw when registering a ftrace function while a module was being loaded.
+> We may have eliminated this issue on x86 but other archs still call
+> set_all_modules_text_rw/ro() when enabling function tracing. Thus, the
+> race will still exist there.
+> 
+> See commit a949ae560a511 for the description of it.
+> 
+> After implementing that commit, I found it a bit cleaner to handle
+> modules in general by breaking it up into setting nops first, and then
+> determining if we need to trace that module.
 
-In principle it makes mmc_hw_reset() quite questionable to use for
-SDIO func drivers, at all. However, let's consider that for later.
+I still don't get it. So you do both, the initial NOPs and the CALL
+patching from ftrace_module_init().
 
->
-> One way to fix the above problems is to leverage a more standard way
-> to reset the Marvell WiFi card where we go through the same code paths
-> as card unplug and the card plug.  In this patch we introduce a new
-> API call for doing just that: sdio_trigger_replug().  This API call
-> will trigger an unplug of the SDIO card followed by a plug of the
-> card.  As part of this the card will be nicely reset.
+> > > I was going to put:
+> > > 
+> > >   blocking_notifier_call_chain(&module_notify_list,
+> > > 			       MODULE_STATE_UNFORMED, mod);
+> > > 
+> > > right before module_enable_ro(), in complete_formation(), for jump_label
+> > > and static_call. It looks like ftrace (and possibly klp) want that too.  
+> > 
+> > Also, you already have ftrace_module_init() right before that. The only
+> > thing inbetween ftrace_module_init() and ftrace_module_enable() is
+> > verify_exported_symbols() and module_bug_finalize().
+> 
+> Yep, see commit a949ae560a511 about that too.
+> 
+> > 
+> > Do you really need that for patching stuff?
+> 
+> Because arm and nds32 still use the set_all_modules_text_rw(), this
+> patch would at least remove that for all archs, and only modify the
+> text of a module that isn't running yet. Which I thought was a plus.
+> 
+> Just need to be careful about other archs, or we need to at least make
+> sure they change too.
 
-I have been thinking back and forth on this, exploring various
-options, perhaps adding some callbacks that the core could invoke to
-inform the SDIO func drivers of what is going on.
-
-Although, in the end this boils done to complexity and I think your
-approach is simply the most superior in regards to this. However, I
-think there is a few things that we can do to even further simply your
-approach, let me comment on the code below.
-
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->
-> Changes in v2:
-> - s/routnine/routine (Brian Norris, Matthias Kaehlcke).
-> - s/contining/containing (Matthias Kaehlcke).
-> - Add Matthias Reviewed-by tag.
->
->  drivers/mmc/core/core.c       | 28 ++++++++++++++++++++++++++--
->  drivers/mmc/core/sdio_io.c    | 20 ++++++++++++++++++++
->  include/linux/mmc/host.h      | 15 ++++++++++++++-
->  include/linux/mmc/sdio_func.h |  2 ++
->  4 files changed, 62 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index 221127324709..5da365b1fdb4 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -2161,6 +2161,12 @@ int mmc_sw_reset(struct mmc_host *host)
->  }
->  EXPORT_SYMBOL(mmc_sw_reset);
->
-> +void mmc_trigger_replug(struct mmc_host *host)
-> +{
-> +       host->trigger_replug_state = MMC_REPLUG_STATE_UNPLUG;
-> +       _mmc_detect_change(host, 0, false);
-> +}
-> +
->  static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
->  {
->         host->f_init = freq;
-> @@ -2214,6 +2220,11 @@ int _mmc_detect_card_removed(struct mmc_host *host)
->         if (!host->card || mmc_card_removed(host->card))
->                 return 1;
->
-> +       if (host->trigger_replug_state == MMC_REPLUG_STATE_UNPLUG) {
-> +               mmc_card_set_removed(host->card);
-> +               return 1;
-
-Do you really need to set state of the card to "removed"?
-
-If I understand correctly, what you need is to allow mmc_rescan() to
-run a second time, in particular for non removable cards.
-
-In that path, mmc_rescan should find the card being non-functional,
-thus it should remove it and then try to re-initialize it again. Etc.
-
-Do you want me to send a patch to show you what I mean!?
-
-[...]
-
-Kind regards
-Uffe
+They call that from ftrace_arch_code_modofy_prepare(), and the patch I
+just send makes that unused. So all should be good ;-)
