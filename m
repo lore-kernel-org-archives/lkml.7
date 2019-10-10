@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81668ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528C9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5520221D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B7F2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697942;
-	bh=yEwwN4aCrDKN7M8R+26m8PSL7h3DXKhMA0QOudOPcF4=;
+	s=default; t=1570697956;
+	bh=IWEXUG8GJwFQFa7ca4evLCJXEGxNsAlNsuhjMNugcgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mmmV4COkWj8LmUHB0485tO9vEKtVBs+1ShJ8JBK5SznL2dlTBFKAsFIkRPobjP488
-	 GVdBhDMQlGUrWoOK/k8tccbE6sNtH2U/HqQW2JvRZucXN1pIvomiiMT+YLEq4LqrQn
-	 Pgy6vapm09ACizTDXsXwnMQ1uMr0bWCu4sOIpYeA=
+	b=iTqVHr1SYLiSzt65xw2GtHNEhXElMvgOex9/h83YzYgkKXn7JfjN6V5AU78osHdyR
+	 WOCDfFAVielmT0P16Tr0V0eVfFK5Ht/4otjJCPLvTyBYVvDFsRMz/jjla+AMcq2gM6
+	 fitsPmRwOKkUy2kV8mmQE5w6ExzaPCBvpleCy7d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388006AbfJJIpA (ORCPT
+        id S2387806AbfJJI7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50394 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:59:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389027AbfJJIo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:44:57 -0400
+        id S2388969AbfJJIog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:44:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 455D321929;
-        Thu, 10 Oct 2019 08:44:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15D4521D6C;
+        Thu, 10 Oct 2019 08:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697094;
-        bh=yEwwN4aCrDKN7M8R+26m8PSL7h3DXKhMA0QOudOPcF4=;
+        s=default; t=1570697075;
+        bh=IWEXUG8GJwFQFa7ca4evLCJXEGxNsAlNsuhjMNugcgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lnJYoE48+/WIbedbQcj9BuVdIAzri2S/fwr9A87MmvH4JUkiMGON57X/EXOyBVlPT
-         LRo+n5Fe+qShuIgb7jNr4tqOH4z/cWPNsjZBVs/WwgbSz1tGut8348CGhPhSE2Qory
-         heg5SA6fr+jXEJZmkgPIIyEGlsx7Fdk6qT9R2iS8=
+        b=pld5PKQr+hdNp8k0/60HAX02w/HfkHFPq1gjTRX3rltySXn77JrxQo+Ayvm2SKKRD
+         yfjke3lkUXaeKfi5G/TFYejFtuZEraZaQVbqq5L18ilcy3Cnjfs4hZg3CuKmguiGN9
+         uhdswlCN97CiIMkQkSaVymEM9MUtPoEbwCMhCZzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 017/114] powerpc/powernv/ioda: Fix race in TCE level allocation
-Date:   Thu, 10 Oct 2019 10:35:24 +0200
-Message-Id: <20191010083552.110759758@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 010/114] nbd: fix max number of supported devs
+Date:   Thu, 10 Oct 2019 10:35:17 +0200
+Message-Id: <20191010083549.165748237@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -59,72 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Mike Christie <mchristi@redhat.com>
 
-commit 56090a3902c80c296e822d11acdb6a101b322c52 upstream.
+commit e9e006f5fcf2bab59149cb38a48a4817c1b538b4 upstream.
 
-pnv_tce() returns a pointer to a TCE entry and originally a TCE table
-would be pre-allocated. For the default case of 2GB window the table
-needs only a single level and that is fine. However if more levels are
-requested, it is possible to get a race when 2 threads want a pointer
-to a TCE entry from the same page of TCEs.
+This fixes a bug added in 4.10 with commit:
 
-This adds cmpxchg to handle the race. Note that once TCE is non-zero,
-it cannot become zero again.
+commit 9561a7ade0c205bc2ee035a2ac880478dcc1a024
+Author: Josef Bacik <jbacik@fb.com>
+Date:   Tue Nov 22 14:04:40 2016 -0500
 
-Fixes: a68bd1267b72 ("powerpc/powernv/ioda: Allocate indirect TCE levels on demand")
-CC: stable@vger.kernel.org # v4.19+
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190718051139.74787-2-aik@ozlabs.ru
+    nbd: add multi-connection support
+
+that limited the number of devices to 256. Before the patch we could
+create 1000s of devices, but the patch switched us from using our
+own thread to using a work queue which has a default limit of 256
+active works.
+
+The problem is that our recv_work function sits in a loop until
+disconnection but only handles IO for one connection. The work is
+started when the connection is started/restarted, but if we end up
+creating 257 or more connections, the queue_work call just queues
+connection257+'s recv_work and that waits for connection 1 - 256's
+recv_work to be disconnected and that work instance completing.
+
+Instead of reverting back to kthreads, this has us allocate a
+workqueue_struct per device, so we can block in the work.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/pci-ioda-tce.c |   18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/block/nbd.c |   39 +++++++++++++++++++++++++--------------
+ 1 file changed, 25 insertions(+), 14 deletions(-)
 
---- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-@@ -49,6 +49,9 @@ static __be64 *pnv_alloc_tce_level(int n
- 	return addr;
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -106,6 +106,7 @@ struct nbd_device {
+ 	struct nbd_config *config;
+ 	struct mutex config_lock;
+ 	struct gendisk *disk;
++	struct workqueue_struct *recv_workq;
+ 
+ 	struct list_head list;
+ 	struct task_struct *task_recv;
+@@ -134,7 +135,6 @@ static struct dentry *nbd_dbg_dir;
+ 
+ static unsigned int nbds_max = 16;
+ static int max_part = 16;
+-static struct workqueue_struct *recv_workqueue;
+ static int part_shift;
+ 
+ static int nbd_dev_dbg_init(struct nbd_device *nbd);
+@@ -1025,7 +1025,7 @@ static int nbd_reconnect_socket(struct n
+ 		/* We take the tx_mutex in an error path in the recv_work, so we
+ 		 * need to queue_work outside of the tx_mutex.
+ 		 */
+-		queue_work(recv_workqueue, &args->work);
++		queue_work(nbd->recv_workq, &args->work);
+ 
+ 		atomic_inc(&config->live_connections);
+ 		wake_up(&config->conn_wait);
+@@ -1126,6 +1126,10 @@ static void nbd_config_put(struct nbd_de
+ 		kfree(nbd->config);
+ 		nbd->config = NULL;
+ 
++		if (nbd->recv_workq)
++			destroy_workqueue(nbd->recv_workq);
++		nbd->recv_workq = NULL;
++
+ 		nbd->tag_set.timeout = 0;
+ 		nbd->disk->queue->limits.discard_granularity = 0;
+ 		nbd->disk->queue->limits.discard_alignment = 0;
+@@ -1154,6 +1158,14 @@ static int nbd_start_device(struct nbd_d
+ 		return -EINVAL;
+ 	}
+ 
++	nbd->recv_workq = alloc_workqueue("knbd%d-recv",
++					  WQ_MEM_RECLAIM | WQ_HIGHPRI |
++					  WQ_UNBOUND, 0, nbd->index);
++	if (!nbd->recv_workq) {
++		dev_err(disk_to_dev(nbd->disk), "Could not allocate knbd recv work queue.\n");
++		return -ENOMEM;
++	}
++
+ 	blk_mq_update_nr_hw_queues(&nbd->tag_set, config->num_connections);
+ 	nbd->task_recv = current;
+ 
+@@ -1184,7 +1196,7 @@ static int nbd_start_device(struct nbd_d
+ 		INIT_WORK(&args->work, recv_work);
+ 		args->nbd = nbd;
+ 		args->index = i;
+-		queue_work(recv_workqueue, &args->work);
++		queue_work(nbd->recv_workq, &args->work);
+ 	}
+ 	nbd_size_update(nbd);
+ 	return error;
+@@ -1204,8 +1216,10 @@ static int nbd_start_device_ioctl(struct
+ 	mutex_unlock(&nbd->config_lock);
+ 	ret = wait_event_interruptible(config->recv_wq,
+ 					 atomic_read(&config->recv_threads) == 0);
+-	if (ret)
++	if (ret) {
+ 		sock_shutdown(nbd);
++		flush_workqueue(nbd->recv_workq);
++	}
+ 	mutex_lock(&nbd->config_lock);
+ 	nbd_bdev_reset(bdev);
+ 	/* user requested, ignore socket errors */
+@@ -1835,6 +1849,12 @@ static void nbd_disconnect_and_put(struc
+ 	nbd_disconnect(nbd);
+ 	nbd_clear_sock(nbd);
+ 	mutex_unlock(&nbd->config_lock);
++	/*
++	 * Make sure recv thread has finished, so it does not drop the last
++	 * config ref and try to destroy the workqueue from inside the work
++	 * queue.
++	 */
++	flush_workqueue(nbd->recv_workq);
+ 	if (test_and_clear_bit(NBD_HAS_CONFIG_REF,
+ 			       &nbd->config->runtime_flags))
+ 		nbd_config_put(nbd);
+@@ -2215,20 +2235,12 @@ static int __init nbd_init(void)
+ 
+ 	if (nbds_max > 1UL << (MINORBITS - part_shift))
+ 		return -EINVAL;
+-	recv_workqueue = alloc_workqueue("knbd-recv",
+-					 WQ_MEM_RECLAIM | WQ_HIGHPRI |
+-					 WQ_UNBOUND, 0);
+-	if (!recv_workqueue)
+-		return -ENOMEM;
+ 
+-	if (register_blkdev(NBD_MAJOR, "nbd")) {
+-		destroy_workqueue(recv_workqueue);
++	if (register_blkdev(NBD_MAJOR, "nbd"))
+ 		return -EIO;
+-	}
+ 
+ 	if (genl_register_family(&nbd_genl_family)) {
+ 		unregister_blkdev(NBD_MAJOR, "nbd");
+-		destroy_workqueue(recv_workqueue);
+ 		return -EINVAL;
+ 	}
+ 	nbd_dbg_init();
+@@ -2270,7 +2282,6 @@ static void __exit nbd_cleanup(void)
+ 
+ 	idr_destroy(&nbd_index_idr);
+ 	genl_unregister_family(&nbd_genl_family);
+-	destroy_workqueue(recv_workqueue);
+ 	unregister_blkdev(NBD_MAJOR, "nbd");
  }
  
-+static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
-+		unsigned long size, unsigned int levels);
-+
- static __be64 *pnv_tce(struct iommu_table *tbl, bool user, long idx, bool alloc)
- {
- 	__be64 *tmp = user ? tbl->it_userspace : (__be64 *) tbl->it_base;
-@@ -58,9 +61,9 @@ static __be64 *pnv_tce(struct iommu_tabl
- 
- 	while (level) {
- 		int n = (idx & mask) >> (level * shift);
--		unsigned long tce;
-+		unsigned long oldtce, tce = be64_to_cpu(READ_ONCE(tmp[n]));
- 
--		if (tmp[n] == 0) {
-+		if (!tce) {
- 			__be64 *tmp2;
- 
- 			if (!alloc)
-@@ -71,10 +74,15 @@ static __be64 *pnv_tce(struct iommu_tabl
- 			if (!tmp2)
- 				return NULL;
- 
--			tmp[n] = cpu_to_be64(__pa(tmp2) |
--					TCE_PCI_READ | TCE_PCI_WRITE);
-+			tce = __pa(tmp2) | TCE_PCI_READ | TCE_PCI_WRITE;
-+			oldtce = be64_to_cpu(cmpxchg(&tmp[n], 0,
-+					cpu_to_be64(tce)));
-+			if (oldtce) {
-+				pnv_pci_ioda2_table_do_free_pages(tmp2,
-+					ilog2(tbl->it_level_size) + 3, 1);
-+				tce = oldtce;
-+			}
- 		}
--		tce = be64_to_cpu(tmp[n]);
- 
- 		tmp = __va(tce & ~(TCE_PCI_READ | TCE_PCI_WRITE));
- 		idx &= ~mask;
 
 
