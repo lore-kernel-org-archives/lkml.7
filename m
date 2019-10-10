@@ -3,41 +3,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE9AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1694EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5FE420659
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041682067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfJJRXt (ORCPT
+        id S1726718AbfJJR2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:23:49 -0400
-Received: from ms.lwn.net ([45.79.88.28]:60662 "EHLO ms.lwn.net"
+        Thu, 10 Oct 2019 13:28:34 -0400
+Received: from ms.lwn.net ([45.79.88.28]:60706 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfJJRXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:23:49 -0400
+        id S1725862AbfJJR2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 13:28:33 -0400
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 5B8CC5A0;
-        Thu, 10 Oct 2019 17:23:48 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 11:23:47 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id 7CBEE2BD;
+        Thu, 10 Oct 2019 17:28:31 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 11:28:30 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
-        Andreas Schwab <schwab@suse.de>
-Subject: Re: [PATCH] Documentation: admin-guide: add earlycon documentation
- for RISC-V
-Message-ID: <20191010112347.4a7237bb@lwn.net>
-In-Reply-To: <CAMuHMdUfqvkVJHHwyuYxLSxj_iUofx-vSvEj92C5mg3bGxHqmA@mail.gmail.com>
-References: <alpine.DEB.2.21.9999.1910091252160.11044@viisi.sifive.com>
-        <CAMuHMdUfqvkVJHHwyuYxLSxj_iUofx-vSvEj92C5mg3bGxHqmA@mail.gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Steve French <sfrench@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 1/3] docs: fix some broken references
+Message-ID: <20191010112830.11ce7007@lwn.net>
+In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
 Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -47,20 +66,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 09:10:18 +0200
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Tue, 24 Sep 2019 10:01:28 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
-> On Wed, Oct 9, 2019 at 9:53 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> > Kernels booting on RISC-V can specify "earlycon" with no options on
-> > the Linux command line, and the generic DT earlycon support will query
-> > the "chosen/stdout-path" property (if present) to determine which
-> > early console device to use.  Document this appropriately in the
-> > admin-guide.
-> >
-> > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>  
+> There are a number of documentation files that got moved or
+> renamed. update their references.
 > 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Applied, thanks.
+I've applied this set, thanks.
 
 jon
