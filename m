@@ -2,96 +2,67 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77270C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363D7C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A53206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131F3206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:48:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbfJJOsn (ORCPT
+        id S1726265AbfJJOsx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 10:48:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38094 "EHLO mx1.suse.de"
+        Thu, 10 Oct 2019 10:48:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38142 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725862AbfJJOsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 10:48:43 -0400
+        id S1725862AbfJJOsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 10:48:52 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5B8EBACD7;
-        Thu, 10 Oct 2019 14:48:41 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 47200DA7E3; Thu, 10 Oct 2019 16:48:55 +0200 (CEST)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        by mx1.suse.de (Postfix) with ESMTP id EB287AC7B;
+        Thu, 10 Oct 2019 14:48:50 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 16:48:50 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 5.4-rc3
-Date:   Thu, 10 Oct 2019 16:48:51 +0200
-Message-Id: <cover.1570718349.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] MIPS: add support for SGI Octane (IP30)
+Message-Id: <20191010164850.34a8d2274720e1bc26fd34d8@suse.de>
+In-Reply-To: <20191010135308.GA2052@infradead.org>
+References: <20191009155928.3047-1-tbogendoerfer@suse.de>
+        <20191009184311.GA20261@infradead.org>
+        <20191010150136.a30e47b37f8c8aed9e863a5e@suse.de>
+        <20191010135308.GA2052@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 10 Oct 2019 06:53:08 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-a few more stabitly fixes, one build warning fix.
+> On Thu, Oct 10, 2019 at 03:01:36PM +0200, Thomas Bogendoerfer wrote:
+> > ok, as far as I can anticipate IP35 verion of this functions will be
+> > the same as well. So I'll move both into pci-xtalk-bridge.c in the
+> > next version of the patch.
+> 
+> Sounds good.  In fact you probably want to send a prep patch just
+> moving pci-ip27.c to pci-xtalk-bridge.c and adding a new
+> CONFIG_MIPS_PCI_XTALK_BRIDGE option that all these ports can select.
 
-Changes:
+the option is already there and used by IP27.
 
-- fix inode allocation under NOFS context
+Thomas.
 
-- fix leak in fiemap due to concurrent append writes
-
-- fix log-root tree updates
-
-- fix balance convert of single profile on 32bit architectures
-
-- silence false positive warning on old GCCs (code moved in rc1)
-
-Please pull, thanks.
-
-----------------------------------------------------------------
-The following changes since commit d4e204948fe3e0dc8e1fbf3f8f3290c9c2823be3:
-
-  btrfs: qgroup: Fix reserved data space leak if we have multiple reserve calls (2019-09-27 15:24:34 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.4-rc2-tag
-
-for you to fetch changes up to 431d39887d6273d6d84edf3c2eab09f4200e788a:
-
-  btrfs: silence maybe-uninitialized warning in clone_range (2019-10-08 13:14:55 +0200)
-
-----------------------------------------------------------------
-Austin Kim (1):
-      btrfs: silence maybe-uninitialized warning in clone_range
-
-Filipe Manana (1):
-      Btrfs: fix memory leak due to concurrent append writes with fiemap
-
-Josef Bacik (3):
-      btrfs: fix incorrect updating of log root tree
-      btrfs: allocate new inode in NOFS context
-      btrfs: fix uninitialized ret in ref-verify
-
-Zygo Blaxell (1):
-      btrfs: fix balance convert to single on 32-bit host CPUs
-
- fs/btrfs/file.c       | 13 ++++++++++++-
- fs/btrfs/inode.c      |  3 +++
- fs/btrfs/ref-verify.c |  2 +-
- fs/btrfs/send.c       |  2 +-
- fs/btrfs/tree-log.c   | 36 +++++++++++++++++++++++++++---------
- fs/btrfs/volumes.c    |  6 +++++-
- 6 files changed, 49 insertions(+), 13 deletions(-)
+-- 
+SUSE Software Solutions Germany GmbH
+HRB 247165 (AG München)
+Geschäftsführer: Felix Imendörffer
