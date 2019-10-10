@@ -2,92 +2,124 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D97C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0C0ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C996F206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25363206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 14:15:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1Zmb9dc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfJJOMG (ORCPT
+        id S1726252AbfJJOPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 10:12:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46580 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfJJOMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 10:12:05 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 55C343084032;
-        Thu, 10 Oct 2019 14:12:05 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-218.ams2.redhat.com [10.36.117.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 220B75C1B2;
-        Thu, 10 Oct 2019 14:12:00 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Thu, 10 Oct 2019 10:15:08 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40592 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726037AbfJJOPH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 10:15:07 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9AE64WR013966;
+        Thu, 10 Oct 2019 16:07:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=7yWUXL9Rc0acEqWqS7CkOitYwbC3Jm+sq0bKkZ4qLec=;
+ b=1Zmb9dc0kz4QQ+jGoKss208+6ply1VtAYDEuo168rNTXbHccPV5ZMe7qFZ4R1MK+bBQS
+ rB3Ak1s5zz7YQPGpUsTT+wUx6uF4z7uqQ4PUuqDTlKTTI+jeT5wOiVotCM6ciOCp90fX
+ 2aohlrOx2BQ9OKP2QmgrysZJuDVboIZRcBbcOV8huyW2/EXVtTLy5BdLTwriXBVkQIjB
+ qqUoTxiq/nm9zMwcl02s9rLnH+oXcj1qSLdWqPlCKADfVhY5Ridk1JgfSC4HruswpcYd
+ QQ9ww6pS6dAqxgDHGDJGnRBzqOkKMiLUotvHuUbrKvf9TsqfOgFmPqXrdhLOiE3hSCzx pQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vej2pmev3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Oct 2019 16:07:26 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 69AFB100038;
+        Thu, 10 Oct 2019 16:07:24 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2D0AF212523;
+        Thu, 10 Oct 2019 16:07:24 +0200 (CEST)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Oct
+ 2019 16:07:23 +0200
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Thu, 10 Oct 2019 16:07:23 +0200
+From:   Fabien DESSENNE <fabien.dessenne@st.com>
+To:     Johan Hovold <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        "Sean Paul" <sean@poorly.run>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Harald Freudenberger" <freude@linux.ibm.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v1] drivers/base/memory.c: Don't access uninitialized memmaps in soft_offline_page_store()
-Date:   Thu, 10 Oct 2019 16:12:00 +0200
-Message-Id: <20191010141200.8985-1-david@redhat.com>
+        stable <stable@vger.kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: Re: [PATCH 2/4] media: bdisp: fix memleak on release
+Thread-Topic: [PATCH 2/4] media: bdisp: fix memleak on release
+Thread-Index: AQHVf2yqC/jYoGn80Ees298jOdJYjqdTx7KA
+Date:   Thu, 10 Oct 2019 14:07:23 +0000
+Message-ID: <5cb3040c-8c6a-ee38-be4f-b83fa9d98686@st.com>
+References: <20191010131333.23635-1-johan@kernel.org>
+ <20191010131333.23635-3-johan@kernel.org>
+In-Reply-To: <20191010131333.23635-3-johan@kernel.org>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <09FA797EF141D1488C813B9ADD032BE3@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 10 Oct 2019 14:12:05 +0000 (UTC)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-10_05:2019-10-10,2019-10-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uninitialized memmaps contain garbage and in the worst case trigger kernel
-BUGs, especially with CONFIG_PAGE_POISONING. They should not get
-touched.
-
-Right now, when trying to soft-offline a PFN that resides on a memory
-block that was never onlined, one gets a misleading error with
-CONFIG_PAGE_POISONING:
-  :/# echo 5637144576 > /sys/devices/system/memory/soft_offline_page
-  [   23.097167] soft offline: 0x150000 page already poisoned
-
-But the actual result depends on the garbage in the memmap.
-
-soft_offline_page() can only work with online pages, it returns -EIO in
-case of ZONE_DEVICE. Make sure to only forward pages that are online
-(iow, managed by the buddy) and, therefore, have an initialized memmap.
-
-Add a check against pfn_to_online_page() and similarly return -EIO.
-
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/base/memory.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 6bea4f3f8040..55907c27075b 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -540,6 +540,9 @@ static ssize_t soft_offline_page_store(struct device *dev,
- 	pfn >>= PAGE_SHIFT;
- 	if (!pfn_valid(pfn))
- 		return -ENXIO;
-+	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
-+	if (!pfn_to_online_page(pfn))
-+		return -EIO;
- 	ret = soft_offline_page(pfn_to_page(pfn), 0);
- 	return ret == 0 ? count : ret;
- }
--- 
-2.21.0
-
+SGkgSm9oYW4NCg0KVGhhbmsgeW91IGZvciB0aGUgcGF0Y2gNCg0KQlINCg0KRmFiaWVuDQoNCg0K
+T24gMTAvMTAvMjAxOSAzOjEzIFBNLCBKb2hhbiBIb3ZvbGQgd3JvdGU6DQo+IElmIGEgcHJvY2Vz
+cyBpcyBpbnRlcnJ1cHRlZCB3aGlsZSBhY2Nlc3NpbmcgdGhlIHZpZGVvIGRldmljZSBhbmQgdGhl
+DQo+IGRldmljZSBsb2NrIGlzIGNvbnRlbmRlZCwgcmVsZWFzZSgpIGNvdWxkIHJldHVybiBlYXJs
+eSBhbmQgZmFpbCB0byBmcmVlDQo+IHJlbGF0ZWQgcmVzb3VyY2VzLg0KPg0KPiBOb3RlIHRoYXQg
+dGhlIHJldHVybiB2YWx1ZSBvZiB0aGUgdjRsMiByZWxlYXNlIGZpbGUgb3BlcmF0aW9uIGlzDQo+
+IGlnbm9yZWQuDQo+DQo+IEZpeGVzOiAyOGZmZWViYmI3YmQgKCJbbWVkaWFdIGJkaXNwOiAyRCBi
+bGl0dGVyIGRyaXZlciB1c2luZyB2NGwyIG1lbTJtZW0gZnJhbWV3b3JrIikNCj4gQ2M6IHN0YWJs
+ZSA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4gICAgICMgNC4yDQo+IENjOiBGYWJpZW4gRGVzc2Vu
+bmUgPGZhYmllbi5kZXNzZW5uZUBzdC5jb20+DQo+IENjOiBIYW5zIFZlcmt1aWwgPGhhbnMudmVy
+a3VpbEBjaXNjby5jb20+DQo+IENjOiBNYXVybyBDYXJ2YWxobyBDaGVoYWIgPG1jaGVoYWJAb3Nn
+LnNhbXN1bmcuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBKb2hhbiBIb3ZvbGQgPGpvaGFuQGtlcm5l
+bC5vcmc+DQpSZXZpZXdlZC1ieTogRmFiaWVuIERlc3Nlbm5lIDxmYWJpZW4uZGVzc2VubmVAc3Qu
+Y29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9iZGlzcC9iZGlzcC12
+NGwyLmMgfCAzICstLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxl
+dGlvbnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2Jk
+aXNwL2JkaXNwLXY0bDIuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2JkaXNwL2JkaXNw
+LXY0bDIuYw0KPiBpbmRleCBlOTBmMWJhMzA1NzQuLjY3NWI1ZjJiNGMyZSAxMDA2NDQNCj4gLS0t
+IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkvYmRpc3AvYmRpc3AtdjRsMi5jDQo+ICsrKyBi
+L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RpL2JkaXNwL2JkaXNwLXY0bDIuYw0KPiBAQCAtNjUx
+LDggKzY1MSw3IEBAIHN0YXRpYyBpbnQgYmRpc3BfcmVsZWFzZShzdHJ1Y3QgZmlsZSAqZmlsZSkN
+Cj4gICANCj4gICAJZGV2X2RiZyhiZGlzcC0+ZGV2LCAiJXNcbiIsIF9fZnVuY19fKTsNCj4gICAN
+Cj4gLQlpZiAobXV0ZXhfbG9ja19pbnRlcnJ1cHRpYmxlKCZiZGlzcC0+bG9jaykpDQo+IC0JCXJl
+dHVybiAtRVJFU1RBUlRTWVM7DQo+ICsJbXV0ZXhfbG9jaygmYmRpc3AtPmxvY2spOw0KPiAgIA0K
+PiAgIAl2NGwyX20ybV9jdHhfcmVsZWFzZShjdHgtPmZoLm0ybV9jdHgpOw0KPiAgIA==
