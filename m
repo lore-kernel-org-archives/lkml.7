@@ -2,137 +2,114 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FFCECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACE3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E3420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPeNcuB6"
+	by mail.kernel.org (Postfix) with ESMTP id B15C32064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570697521;
+	bh=C2dPrzvJbLHxSfOqxAHxfA+whEXnGFJtN4jQkT7k6Ag=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SwzA6AsO1BQNNkQ/V0OWVSSHfMiTJGw9NIw/15WPGk7/YYVzoYW3MiasBXSC7Ouj8
+	 LegA97fnBghdlBzak0vDypAXEt301zc6YCPp4rv24sy1cyOvbeIIG2NVQsnVSi2zz7
+	 k70tobniJa8b9Ag0Zhy194bM2AI8qbWQOdvFtty4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390167AbfJJIvx (ORCPT
+        id S2389408AbfJJIwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:51:53 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36703 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390154AbfJJIvt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:49 -0400
-Received: by mail-wm1-f65.google.com with SMTP id m18so5846731wmc.1;
-        Thu, 10 Oct 2019 01:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iBVy5EpS5miZLPYXy54PXc4Tp3ZcCov2ByS5T+jtyzQ=;
-        b=oPeNcuB6ERNhMIaqdBhqvoaicqED33w2ZnRTPI1p35C5PjIp7M9osj7CbCyJN8zPD3
-         nG6qo00p+0C3GDV4s/9yBSa8mfu9zBhTYIglKOccIfc+j10IBM9F9DXFq4SIfkTQNXaE
-         fE375uuX1MA0BcAHwBvL1otT/gRBtypTz3WyZ+7i2csJ0nBVgikl3eux1lElB7TYwEjv
-         vnJOQVyLrrrEOe4XhskyXBXjBDp+ToI+0IwbqS5sW8lsPH33Lut4ZKWtJHjV9CC7Q/95
-         L1DRvuYRO+1wfp6e/A2OpRyn91sFEAEHtTOOWNqYCTTPsrEmiXvoY2x1H1/G9O06cNzR
-         y76g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iBVy5EpS5miZLPYXy54PXc4Tp3ZcCov2ByS5T+jtyzQ=;
-        b=mjkF3uiUAAscIAlyznVnb9dgYJ4+5C+CzPqqTc/UhtyLZRDmwQ3CgYIeKqkKs4u0Kr
-         Dm/GYOVRtWtzjqVoe4Jye8XC+ONzgTwwFcEhe37gWL/cHtlgDox/XQFQLbb1+GGWMpa/
-         fmxHZVqpE0FLB0H+gazJkENW9ZkBpnQQv4dukYW4mZncbv/C56STTSwo5NeFrt03PooW
-         fPZE1+fiwEKlt8Gbe7nk6Qz1BST8fOkZlbwCqah/qHQWxv4cyv1X12A5cXKm/hcceeEd
-         fGTYJAtdce2wREJ1qYWWQDLdSTybQYYhk1meZE+fnA9riuj56LHkMIm/GTyeZSfxeqmI
-         RH0w==
-X-Gm-Message-State: APjAAAVEhW8PI03QOa0a1PhXA6jUmDY9hfT9aCPnG6BCcDfZ+Rk/W8e4
-        ipJXd63/hpD4yJTWSQ+wSdG1Xc58
-X-Google-Smtp-Source: APXvYqyLknqLcUuYq9q/QesWPksjxjSFkRwD5oI5ldv1gDrTXvnqviOQWl53byaUzLuLESgiSA0EPw==
-X-Received: by 2002:a05:600c:2190:: with SMTP id e16mr6254868wme.136.1570697507740;
-        Thu, 10 Oct 2019 01:51:47 -0700 (PDT)
-Received: from AlexGordeev-DPT-VI0092 ([213.86.25.46])
-        by smtp.gmail.com with ESMTPSA id g13sm4032958wrm.42.2019.10.10.01.51.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 10 Oct 2019 01:51:47 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 10:51:45 +0200
-From:   Alexander Gordeev <a.gordeev.box@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
- for PCIe
-Message-ID: <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
-References: <cover.1570558807.git.a.gordeev.box@gmail.com>
- <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
- <20191009121441.GM25098@kadam>
- <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
- <20191009185323.GG13286@kadam>
+        Thu, 10 Oct 2019 04:52:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390179AbfJJIv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E16020679;
+        Thu, 10 Oct 2019 08:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570697517;
+        bh=C2dPrzvJbLHxSfOqxAHxfA+whEXnGFJtN4jQkT7k6Ag=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dtwTYlXmcaWgRso5iRcaJXxMawkSiwLItb10EljcDZYQCAjQkSFXj8z8tEJGMd4E1
+         nn/qev4jkHsOY/5B3dlSO4ssCmqfsSmTr3opcQBK+kGhYpVnrNndaFemInVQWGR/Yd
+         flRs4DIRShIcdNwBImfN0MSebjtOA0oHqpsJKZYc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 55/61] drm/i915/userptr: Acquire the page lock around set_page_dirty()
+Date:   Thu, 10 Oct 2019 10:37:20 +0200
+Message-Id: <20191010083524.098009692@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
+References: <20191010083449.500442342@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009185323.GG13286@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
-> > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
-> > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
-> > > > +	struct avalon_dma_desc *desc;
-> > > > +	struct virt_dma_desc *vdesc;
-> > > > +	bool rd_done;
-> > > > +	bool wr_done;
-> > > > +
-> > > > +	spin_lock(lock);
-> > > > +
-> > > > +	rd_done = (hw->h2d_last_id < 0);
-> > > > +	wr_done = (hw->d2h_last_id < 0);
-> > > > +
-> > > > +	if (rd_done && wr_done) {
-> > > > +		spin_unlock(lock);
-> > > > +		return IRQ_NONE;
-> > > > +	}
-> > > > +
-> > > > +	do {
-> > > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
-> > > > +			rd_done = true;
-> > > > +
-> > > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
-> > > > +			wr_done = true;
-> > > > +	} while (!rd_done || !wr_done);
-> > > 
-> > > This loop is very strange.  It feels like the last_id indexes needs
-> > > to atomic or protected from racing somehow so we don't do an out of
-> > > bounds read.
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[...]
+[ Upstream commit cb6d7c7dc7ff8cace666ddec66334117a6068ce2 ]
 
-> You're missing my point.  When we set
-> hw->d2h_last_id = 1;
-[1]
-> ...
-> hw->d2h_last_id = 2;
-[2]
+set_page_dirty says:
 
-> There is a tiny moment where ->d2h_last_id is transitioning from 1 to 2
-> where its value is unknown.  We're in a busy loop here so we have a
-> decent chance of hitting that 1/1000,000th of a second.  If we happen to
-> hit it at exactly the right time then we're reading from a random
-> address and it will cause an oops.
-> 
-> We have to use atomic_t types or something to handle race conditions.
+	For pages with a mapping this should be done under the page lock
+	for the benefit of asynchronous memory errors who prefer a
+	consistent dirty state. This rule can be broken in some special
+	cases, but should be better not to.
 
-Err.. I am still missing the point :( In your example I do see a chance
-for a reader to read out 1 at point in time [2] - because of SMP race.
-But what could it be other than 1 or 2?
+Under those rules, it is only safe for us to use the plain set_page_dirty
+calls for shmemfs/anonymous memory. Userptr may be used with real
+mappings and so needs to use the locked version (set_page_dirty_lock).
 
-Anyways, all code paths dealing with h2d_last_id and d2h_last_id indexes
-are protected with a spinlock.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
+Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190708140327.26825-1-chris@chris-wilson.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/i915/i915_gem_userptr.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-> regards,
-> dan carpenter
-> 
+diff --git a/drivers/gpu/drm/i915/i915_gem_userptr.c b/drivers/gpu/drm/i915/i915_gem_userptr.c
+index 05ae8c4a8a1b6..9760b67dab28b 100644
+--- a/drivers/gpu/drm/i915/i915_gem_userptr.c
++++ b/drivers/gpu/drm/i915/i915_gem_userptr.c
+@@ -691,7 +691,15 @@ i915_gem_userptr_put_pages(struct drm_i915_gem_object *obj,
+ 
+ 	for_each_sgt_page(page, sgt_iter, pages) {
+ 		if (obj->mm.dirty)
+-			set_page_dirty(page);
++			/*
++			 * As this may not be anonymous memory (e.g. shmem)
++			 * but exist on a real mapping, we have to lock
++			 * the page in order to dirty it -- holding
++			 * the page reference is not sufficient to
++			 * prevent the inode from being truncated.
++			 * Play safe and take the lock.
++			 */
++			set_page_dirty_lock(page);
+ 
+ 		mark_page_accessed(page);
+ 		put_page(page);
+-- 
+2.20.1
+
+
+
