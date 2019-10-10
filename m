@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4710DC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4B3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C4721A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0743A2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696932;
-	bh=WtMBOunqzYjl4jozG6r1PE63VrycBMI8XpYf9CAn4oA=;
+	s=default; t=1570696936;
+	bh=67alXanO7YCIs4Cnpue3J69QNuYSm8158GPO0Zhsjto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bNkSQpXVwaLq5Nk5GSxn7uWHvlZhuAgpkq6SrTJTkRw0d9KXtdI1a1qfqzPhlw5F4
-	 8ZEgvkZbGS5p/a3MlNma710/cKbONni6cn4yOcf5V649qGzn2b2nINlIFpo6hNa4Wr
-	 cXhnA5xXIPOuIrOJIW5dIcAGNIvC9iszmo+21aHI=
+	b=rfq1RnNTMo6YOw+PtylFSVDKD9wqENq7x7jjdNleBuJIdnhRbUjjn4Xig8bprfHbP
+	 5HK1j6dyONC38Jpi4uWtbWq75/n3Ka59/SfpIw19JdPzVbdNUhqcMN8JjW8gfiAOab
+	 tremPZl4Vj6NrdD2WqRegmppwF26AzaFUC0VkuBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388493AbfJJImL (ORCPT
+        id S2388506AbfJJImO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:42:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46682 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:42:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388481AbfJJImI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:42:08 -0400
+        id S2388494AbfJJImL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:42:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25A721A4C;
-        Thu, 10 Oct 2019 08:42:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA0102190F;
+        Thu, 10 Oct 2019 08:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696928;
-        bh=WtMBOunqzYjl4jozG6r1PE63VrycBMI8XpYf9CAn4oA=;
+        s=default; t=1570696931;
+        bh=67alXanO7YCIs4Cnpue3J69QNuYSm8158GPO0Zhsjto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XUY3j8Mzm+Xc3kO/xDGJadtj6RzS193Mjj/y/UREr75eacxEoSGKw5iQDByM9v3X0
-         VGzrwvwBUeViOMSX+dBt4kMszXiAOYooDyznQTUmDy3ApSxaeCrTzLigDSmWAxkd9K
-         WkWy9co/ASMmkEf2pemdVmZOIWW80bbnKoYjlfhc=
+        b=QcEymdV8TKr927JjQAxx2tPv5HNcT6xEJB5xcGTEGoyDrvdkcJuVv3e01brHdglwq
+         ZvftmJpqHWkLa5JiimWb1b86lmg3SxkE/Mf1Jf/tNJGyTKMFUf1EwyBtKNmbXAKvK3
+         H7oMWN//S2I5dIkItLwm/BfmaW+xDqrgvaNdIKr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, Trek <trek00@inbox.ru>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 104/148] drm/amdgpu: Fix KFD-related kernel oops on Hawaii
-Date:   Thu, 10 Oct 2019 10:36:05 +0200
-Message-Id: <20191010083617.506295681@linuxfoundation.org>
+Subject: [PATCH 5.3 105/148] drm/amdgpu: Check for valid number of registers to read
+Date:   Thu, 10 Oct 2019 10:36:06 +0200
+Message-Id: <20191010083617.557758906@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -61,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Trek <trek00@inbox.ru>
 
-[ Upstream commit dcafbd50f2e4d5cc964aae409fb5691b743fba23 ]
+[ Upstream commit 73d8e6c7b841d9bf298c8928f228fb433676635c ]
 
-Hawaii needs to flush caches explicitly, submitting an IB in a user
-VMID from kernel mode. There is no s_fence in this case.
+Do not try to allocate any amount of memory requested by the user.
+Instead limit it to 128 registers. Actually the longest series of
+consecutive allowed registers are 48, mmGB_TILE_MODE0-31 and
+mmGB_MACROTILE_MODE0-15 (0x2644-0x2673).
 
-Fixes: eb3961a57424 ("drm/amdgpu: remove fence context from the job")
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
+Bug: https://bugs.freedesktop.org/show_bug.cgi?id=111273
+Signed-off-by: Trek <trek00@inbox.ru>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-index 7850084a05e3a..60655834d6498 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ib.c
-@@ -143,7 +143,8 @@ int amdgpu_ib_schedule(struct amdgpu_ring *ring, unsigned num_ibs,
- 	/* ring tests don't use a job */
- 	if (job) {
- 		vm = job->vm;
--		fence_ctx = job->base.s_fence->scheduled.context;
-+		fence_ctx = job->base.s_fence ?
-+			job->base.s_fence->scheduled.context : 0;
- 	} else {
- 		vm = NULL;
- 		fence_ctx = 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index 0cf7e8606fd3d..00beba533582c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -662,6 +662,9 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
+ 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
+ 			sh_num = 0xffffffff;
+ 
++		if (info->read_mmr_reg.count > 128)
++			return -EINVAL;
++
+ 		regs = kmalloc_array(info->read_mmr_reg.count, sizeof(*regs), GFP_KERNEL);
+ 		if (!regs)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
