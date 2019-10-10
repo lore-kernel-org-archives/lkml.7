@@ -2,121 +2,129 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315C9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996F7C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0876920B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BF820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 18:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lMwqpl2J"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Mv4MgHak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfJJSdQ (ORCPT
+        id S1726688AbfJJSfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 14:33:16 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38501 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfJJSdQ (ORCPT
+        Thu, 10 Oct 2019 14:35:00 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33724 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfJJSe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 14:33:16 -0400
-Received: by mail-qk1-f194.google.com with SMTP id x4so2598901qkx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:33:16 -0700 (PDT)
+        Thu, 10 Oct 2019 14:34:59 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 60so5779175otu.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:34:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=UMGkm8vlJcXfwuaXc8Eh6q4HwPOEO5uzQitJ0iRzkKw=;
-        b=lMwqpl2JmzHxPY0WofpK4cnZygbmHL2Gsrbxjc36tMEiL3FohF2kw1FhNWQvWMmXQ3
-         qL3Mn+m8kMaVaG6HK6WOnvab/PZI5LLW+JsNt8JfNZKmXsz5ej3SdHjlJmSQyQOVHIOZ
-         WbieWlTTkQ7urEeXPi+5vNrN/ZFqrXYb4TuldKVahk7gJbf8/0lvln7fqtIUw9JRQfNt
-         lfnx+OYCO8YpuENipcpybxFshBYK0tb77U3psNShAmJABds2GoCH/JvtGcs/TbypX4Hx
-         DiJNYLldutuIgbd1LUyGuN9b9+FEM/qKjeH+TzawX97ttl1Knffq2Tu/G/8Jsv/xUvGT
-         xYXA==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=r4XAjDc0xfpf5vzfo/i7Ws66r6JtB7Z+yeiV1OLT15o=;
+        b=Mv4MgHakwlbkZi54pRbq6rETPbooTcIqnnEmLH++AM/dbjJdkhLvcNrXOW6IsB/pgz
+         d3BRPjAYgQBUlrZUnlPimOcZM56EUiNxYWXroi33EWcAq5Fahw8qTgF6f72D6D5a6YWU
+         7q+yiS2BlxAegJ+W9jG3+epyOA7gnmnpBJPqvF325FE5RJDugDklSWrk6RcuPRm8gboS
+         NTLPeYmYJHcKWhneSddbCJX/CvCvSPdD+dJPI1kA6LYqbcEzzn6/LZmG47mjRo0eR6jX
+         EBgk0m7BwCElwY/08rYUe0cf8VTuxLShCP1sxj18C0SXkFF458ooK8/QtW7p1Ueg0kBu
+         IevA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UMGkm8vlJcXfwuaXc8Eh6q4HwPOEO5uzQitJ0iRzkKw=;
-        b=T0GKG8ti0OJzTiXB2zumQa5bChkkUJArICVOKY4iOXevRy4b/tPzegGm6WB8+LZN3J
-         oU04ty7DYzGFqpLNQa5rdQ78NVkjER6bqQIeZUZuSFYCsEGGvm3gyt1jaDPCjC/KhcHV
-         V7ZTzzbvpilTAqxP9ptDjl9lBXDUQbaY/Te09Wk/cd5wYbrzVNNgYGjLZ7XvN8ob6aab
-         PLpX1RanE1TxjtiwN3MuvxZgSnPGVYFLMaogpuhxsCSvqlSPksncsLHYJQKSlIvcJ8lx
-         Pn6PuSYrcIjJiZzKR3beWUEFUuiTbDBG18ZlA8P3fJqw6R84vvqqgkXMlL3mhVobYgG7
-         8q2g==
-X-Gm-Message-State: APjAAAWqSv3Ib/caB9wtZVMROV9+n0FasOjX8itQyWbsYf/s81jZ++/S
-        d16cL2H9jUqHcOV5O+cpSMmJ29aEPqA=
-X-Google-Smtp-Source: APXvYqwIWhuCMnICE+C+HhJYXq5I4Gxdbiuzk0ivNFDBihrMDXlBtCSp8FMErPRENKQ9nkpGhZI8bw==
-X-Received: by 2002:a05:620a:12c7:: with SMTP id e7mr11189984qkl.162.1570732395555;
-        Thu, 10 Oct 2019 11:33:15 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id u123sm2746990qkh.120.2019.10.10.11.33.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Oct 2019 11:33:14 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/page_owner: fix a crash after memory offline
-Date:   Thu, 10 Oct 2019 14:32:46 -0400
-Message-Id: <1570732366-16426-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=r4XAjDc0xfpf5vzfo/i7Ws66r6JtB7Z+yeiV1OLT15o=;
+        b=gD1SYeBJqNJORYAJzED49/uuS7kywxugUJvLISxcJky/otp21z/ayMBrSLKXjGnYXP
+         U3veDSgtM6vNTyE8Bae/hMxgxPMVQLA2dxouClOSnY+J3Aou2TWSbqSWI5ZmMcsEwfP3
+         vK1d0yqq5cyTe2Ev4zjupW8skxaoexnnUaS6i7aNDX54Jh9iEMCIf+EUcvZQU8ByIeME
+         xIAesj9FZzzhilH14ydpC99atO/x7roTxF5pVhkH4Bd42DJL6MCkG5DHASbv7ynIxO3i
+         I0OSkL8kp7RU+Lzz20BT0mCnVRIFuGENmDoNdwImUw6gw9eOZbowuTGr2osCwL7t+Ht5
+         Vcng==
+X-Gm-Message-State: APjAAAXEw0nomry0SkeMhPDaZdLU0jNZaiiXgUg+Fru0ndGNf6KxKiw0
+        pewrBQ0LwcjDc5YDB2Y0medfsQ==
+X-Google-Smtp-Source: APXvYqxflYfMilSfm+EF8uvVn9CW8v2d/Bajx2LYtYV1/X7fPOeBeGReXzuA/f5bw8ZARuEpamC1jg==
+X-Received: by 2002:a9d:3675:: with SMTP id w108mr6677517otb.81.1570732498705;
+        Thu, 10 Oct 2019 11:34:58 -0700 (PDT)
+Received: from localhost ([2600:100e:b04d:43d4:f34c:fed9:3a80:e86d])
+        by smtp.gmail.com with ESMTPSA id w25sm1914021oth.39.2019.10.10.11.34.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 11:34:58 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 11:34:55 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Rob Herring <robh@kernel.org>
+cc:     Palmer Dabbelt <palmer@sifive.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
+In-Reply-To: <CAL_JsqK==+6QPrx3NDobYfWQwRg9m-t0LZgL=KzqfhAfbu+xTg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1910101132440.4464@viisi.sifive.com>
+References: <20191009234648.2271-1-robh@kernel.org> <alpine.DEB.2.21.9999.1910091657240.11044@viisi.sifive.com> <CAL_JsqK==+6QPrx3NDobYfWQwRg9m-t0LZgL=KzqfhAfbu+xTg@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next series "mm/memory_hotplug: Shrink zones before removing
-memory" [1] seems make a crash easier to reproduce while reading
-/proc/pagetypeinfo after offlining a memory section. Fix it by using
-pfn_to_online_page() in the PFN walker.
+On Thu, 10 Oct 2019, Rob Herring wrote:
 
-[1] https://lore.kernel.org/linux-mm/20191006085646.5768-1-david@redhat.com/
+> On Wed, Oct 9, 2019 at 7:08 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> >
+> > On Wed, 9 Oct 2019, Rob Herring wrote:
+> >
+> > > Fix the errors in the RiscV CPU DT schema:
+> > >
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
+> > > Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+> > >
+> > > The DT spec allows for 'timebase-frequency' to be in 'cpu' or 'cpus' node
+> > > and RiscV is doing nothing special with it, so just drop the definition
+> > > here and don't make it required.
+> >
+> > The RISC-V kernel code does in fact parse it and use it, and we currently
+> > rely on it being under /cpus:
+> >
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/kernel/time.c#n19
+> >
+> > The RISC-V user ISA specification also constrains the timebase-frequency
+> > to be the same across all CPUs, in section 10.1:
+> >
+> >   https://github.com/riscv/riscv-isa-manual/releases/download/draft-20190608-f467e5d/riscv-spec.pdf
+> >
+> > So the right thing is to require 'timebase-frequency' at /cpus, and forbid
+> > it in the individual CPU nodes.
+> 
+> Yes, but this schema only deals with 'cpu' nodes and we can't check
+> /cpus here. We'd need to write another schema matching on a child cpu
+> node having a RiscV compatible.
+> 
+> I can change this to 'timebase-frequency: false' to ban it here.
 
-page:ffffea0021200000 is uninitialized and poisoned
-raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-There is not page extension available.
-------------[ cut here ]------------
-kernel BUG at include/linux/mm.h:1107!
-RIP: 0010:pagetypeinfo_showmixedcount_print+0x4fb/0x680
-Call Trace:
- walk_zones_in_node+0x3a/0xc0
- pagetypeinfo_show+0x260/0x2c0
- seq_read+0x27e/0x710
- proc_reg_read+0x12e/0x190
- __vfs_read+0x50/0xa0
- vfs_read+0xcb/0x1e0
- ksys_read+0xc6/0x160
- __x64_sys_read+0x43/0x50
- do_syscall_64+0xcc/0xaec
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Sounds good to me.  (Might catch the occasional mistake.)  With that 
+change, the resulting patch would be
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/page_owner.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # for arch/riscv
 
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index dee931184788..03a6b19b3cdd 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -296,11 +296,10 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
- 		pageblock_mt = get_pageblock_migratetype(page);
- 
- 		for (; pfn < block_end_pfn; pfn++) {
--			if (!pfn_valid_within(pfn))
-+			page = pfn_to_online_page(pfn);
-+			if (!page)
- 				continue;
- 
--			page = pfn_to_page(pfn);
--
- 			if (page_zone(page) != zone)
- 				continue;
- 
--- 
-1.8.3.1
+and thanks indeed for cleaning this up.
 
+> That doesn't add too much as any undefined name is still allowed such as 
+> 'timbase-frequency'. There's a way to address this in json-schema draft8 
+> with 'unevaluatedProperties', but that's not ready yet.
+
+OK
+
+
+- Paul
