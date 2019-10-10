@@ -2,139 +2,120 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851E4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA9FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A94A208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 120D5206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:32:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NH+owc3B"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kc7eo7i+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733287AbfJJM3O (ORCPT
+        id S1733289AbfJJMci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:29:14 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40947 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733082AbfJJM3N (ORCPT
+        Thu, 10 Oct 2019 08:32:38 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59476 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfJJMci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:29:13 -0400
-Received: by mail-qt1-f193.google.com with SMTP id m61so8390327qte.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 05:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=23//cENVQiVYoGQZus1cpePnZWSeYRa3XeMxkFD7WQg=;
-        b=NH+owc3Bkdk66rd2oxnrLG1lU03Niv3N/GUBSt1/9dRSfQRuHfW4W1igS07q2DzsED
-         fiQrQlVCnB6RH1zol5ooTAqAkk4Xsuck4130IKNNILzVnR6dN+APBVrTF3gt0uibSGgD
-         REgXmU/yULmLNMrOnM+eAoYoNE5cZ/yj3rOWgPhBgTAsd1uDptCc1neDWiXY9TsuUizx
-         bdjyqsenan6mAiId/xeorNg/BvGaBC7aZxP6eqKDfiV8jP3HVR62eHRnxnDBCTnQPotz
-         /ChHSep613KsdqBbI6DYZASrvDT7F3+conY9cWnCzQAvoYhTBLOfZarBcIdBVrbFnPgR
-         g5jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=23//cENVQiVYoGQZus1cpePnZWSeYRa3XeMxkFD7WQg=;
-        b=Xz3uUUWUEz+DenY2WOyFiEmgokJgvJQyQ2+iYJEkXuRHC0nfQ0mde5vm+RXvpR3NmZ
-         6EQz2bhSo4Yqeup9EMpNQ37750yojA1J7TRbptnuEBv7jBh67fLEW8dyBOracXcLcGO9
-         V0vxz5iPell+duKUurrfC08JVq2XHufNa4GAZqoLnD3Ek3Fosd1g8Ujz5zKKGdRfaXKe
-         FUCrSuMiJ5GeNCnd/LZloxtEOWHI0yXIJ3qBGdlR+B+bemJQhH0k9Y3kgbodtG2zLiuL
-         gd9vHGBYcJ66WvqZD+IZbzPxWCeCRT//DwM/mAFQwTfLB0Yo5Kvs5P7tDaQ0DE2zz2NG
-         t5Pg==
-X-Gm-Message-State: APjAAAVt1LKnpENWzQ7gERY1NzPbTdSLaEXYFahFUs2lCD9QkArLDzuc
-        ou20Pp7VC1DHSzTtt2DX/JE=
-X-Google-Smtp-Source: APXvYqwQH5Jlb64oqJ1zXF4YJOVldcOTFNRXzDkOo7N4G+q3ydZkfiZFyUgO93pSNrWeN0FYBF31hw==
-X-Received: by 2002:a0c:814d:: with SMTP id 71mr9689628qvc.220.1570710552657;
-        Thu, 10 Oct 2019 05:29:12 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id t64sm2491824qkc.70.2019.10.10.05.29.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 05:29:11 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 175E641199; Thu, 10 Oct 2019 09:29:08 -0300 (-03)
-Date:   Thu, 10 Oct 2019 09:29:08 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Mao Han <han_mao@c-sky.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3] perf tools: avoid sample_reg_masks being const + weak
-Message-ID: <20191010122908.GA19434@kernel.org>
-References: <20190927214341.170683-1-irogers@google.com>
- <20191001003623.255186-1-irogers@google.com>
- <20191008123104.GA16241@krava>
- <CAP-5=fUSgjyLkZJaHTvdFbzZijy6Gzmx5UZHK_brxVEhFpMG8g@mail.gmail.com>
+        Thu, 10 Oct 2019 08:32:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JHl9GmYtentxJL+7m1E2SgJVgP8t2x02tS9jT0BZXPY=; b=kc7eo7i+iGPnb8iSo9NczDvt8Y
+        rHiGsvmqx6erZt14GL+1e78YvnlkwOKyVo5iRHX3aNc6HNbp075D50M0f/3cwgl3k/RKzpL/fn5wM
+        HwmRmVLSPU73hu0+yOml9+pkJbkPL/YWeQLnxcbi+dqHiHAflRV9XbPnwVPP1pQVlh4Wuojy77Zd/
+        +DnGmEl9KT+vM1hdNOW5t7WCXnAqVKqFtFJN8sg3m4cOAF7mqkciZ9RpFPf7r0nm+GjldiZh9Hfok
+        o/4vYmvXXwWQykt36mUK24VRQjx3gApcCdF/ZFsML1vLZHT4ZKAn7tMExucfcapZwXhbBM2KLLz1x
+        3b7Rv0yw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIXcD-0007JG-Cc; Thu, 10 Oct 2019 12:32:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 51A1B301224;
+        Thu, 10 Oct 2019 14:31:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 88009205A4300; Thu, 10 Oct 2019 14:32:19 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 14:32:19 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Manfred Spraul <manfred@colorfullife.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        1vier1@web.de, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Subject: Re: wake_q memory ordering
+Message-ID: <20191010123219.GO2328@hirez.programming.kicks-ass.net>
+References: <990690aa-8281-41da-4a46-99bb8f9fec31@colorfullife.com>
+ <20191010114244.GS2311@hirez.programming.kicks-ass.net>
+ <7af22b09-2ab9-78c9-3027-8281f020e2e8@colorfullife.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUSgjyLkZJaHTvdFbzZijy6Gzmx5UZHK_brxVEhFpMG8g@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7af22b09-2ab9-78c9-3027-8281f020e2e8@colorfullife.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Oct 09, 2019 at 04:07:37PM -0700, Ian Rogers escreveu:
-> On Tue, Oct 8, 2019 at 5:31 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > On Mon, Sep 30, 2019 at 05:36:23PM -0700, Ian Rogers wrote:
-> > > Being const + weak breaks with some compilers that constant-propagate
-> > > from the weak symbol. This behavior is outside of the specification, but
-> > > in LLVM is chosen to match GCC's behavior.
-> > >
-> > > LLVM's implementation was set in this patch:
-> > > https://github.com/llvm/llvm-project/commit/f49573d1eedcf1e44893d5a062ac1b72c8419646
-> > > A const + weak symbol is set to be weak_odr:
-> > > https://llvm.org/docs/LangRef.html
-> > > ODR is one definition rule, and given there is one constant definition
-> > > constant-propagation is possible. It is possible to get this code to
-> > > miscompile with LLVM when applying link time optimization. As compilers
-> > > become more aggressive, this is likely to break in more instances.
+On Thu, Oct 10, 2019 at 02:13:47PM +0200, Manfred Spraul wrote:
+> Hi Peter,
+> 
+> On 10/10/19 1:42 PM, Peter Zijlstra wrote:
+> > On Thu, Oct 10, 2019 at 12:41:11PM +0200, Manfred Spraul wrote:
+> > > Hi,
+> > > 
+> > > Waiman Long noticed that the memory barriers in sem_lock() are not really
+> > > documented, and while adding documentation, I ended up with one case where
+> > > I'm not certain about the wake_q code:
+> > > 
+> > > Questions:
+> > > - Does smp_mb__before_atomic() + a (failed) cmpxchg_relaxed provide an
+> > >    ordering guarantee?
+> > Yep. Either the atomic instruction implies ordering (eg. x86 LOCK
+> > prefix) or it doesn't (most RISC LL/SC), if it does,
+> > smp_mb__{before,after}_atomic() are a NO-OP and the ordering is
+> > unconditinoal, if it does not, then smp_mb__{before,after}_atomic() are
+> > unconditional barriers.
+> 
+> And _relaxed() differs from "normal" cmpxchg only for LL/SC architectures,
+> correct?
 
-> > is this just aprecaution or you actualy saw some breakage?
- 
-> We saw a breakage with clang with thinlto enabled for linking. Our
-> compiler team had recently seen, and were surprised by, a similar
-> issue and were able to dig out the weak ODR issue.
+Indeed.
 
-This is useful info, I'll add it to the commit log message.
- 
-> > > Move the definition of sample_reg_masks to the conditional part of
-> > > perf_regs.h and guard usage with HAVE_PERF_REGS_SUPPORT. This avoids the
-> > > weak symbol.
+> Therefore smp_mb__{before,after}_atomic() may be combined with
+> cmpxchg_relaxed, to form a full memory barrier, on all archs.
 
-> > > Fix an issue when HAVE_PERF_REGS_SUPPORT isn't defined from patch v1.
-> > > In v3, add perf_regs.c for architectures that HAVE_PERF_REGS_SUPPORT but
-> > > don't declare sample_regs_masks.
+Just so.
 
-> > looks good to me (again ;-)), let's see if it passes Arnaldo's farm
+> > > - Is it ok that wake_up_q just writes wake_q->next, shouldn't
+> > >    smp_store_acquire() be used? I.e.: guarantee that wake_up_process()
+> > >    happens after cmpxchg_relaxed(), assuming that a failed cmpxchg_relaxed
+> > >    provides any ordering.
+> > There is no such thing as store_acquire, it is either load_acquire or
+> > store_release. But just like how we can write load-aquire like
+> > load+smp_mb(), so too I suppose we could write store-acquire like
+> > store+smp_mb(), and that is exactly what is there (through the implied
+> > barrier of wake_up_process()).
+> 
+> Thanks for confirming my assumption:
+> The code is correct, due to the implied barrier inside wake_up_process().
 
-It passed a few of the usual places where things like this break, I'll
-submit it to a full set of build environments soon, together with what
-is sitting in acme/perf/core.
+It has a comment there, trying to state this.
 
-Thanks,
+		task->wake_q.next = NULL;
 
-- Arnaldo
+		/*
+		 * wake_up_process() executes a full barrier, which pairs with
+		 * the queueing in wake_q_add() so as not to miss wakeups.
+		 */
+		wake_up_process(task);
