@@ -2,84 +2,151 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F34C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFD6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA70E218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B602E20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 17:21:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="pXvR3Wde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfJJRVC (ORCPT
+        id S1726812AbfJJRVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 13:21:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:36516 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfJJRVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 13:21:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E859828;
-        Thu, 10 Oct 2019 10:21:01 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF9F93F71A;
-        Thu, 10 Oct 2019 10:21:00 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 18:20:58 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     will@kernel.org, maz@kernel.org, corbet@lwn.net,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/4] arm64: add support for the AMU extension v1
-Message-ID: <20191010172058.GD40923@arrakis.emea.arm.com>
-References: <20190917134228.5369-1-ionela.voinescu@arm.com>
- <20190917134228.5369-2-ionela.voinescu@arm.com>
+        Thu, 10 Oct 2019 13:21:21 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32811 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbfJJRVV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 13:21:21 -0400
+Received: by mail-qk1-f196.google.com with SMTP id x134so6352955qkb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 10:21:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=xuvZN0JITodz2dLriQ7w9E3lEap+u/kTKfmALojGiXI=;
+        b=pXvR3WdevfThpK6cyxcaeOuvjdw4Z2kJd6T4aFcXn2jmKAeJo74f0Tmk2tKwk6EUdN
+         cGCTn5Y/HVU0nmpCGVUM9YI55p/CiuzGU7poiJHq3C5voS1pwmjv2Q18v2uVyPklSrPI
+         4EYqI0j5pTpGWTNNA2T/yiT7acrkbCZziLGKS1XW0x27hoiPi4YreBLFCje2gjU9q8Qu
+         26JBHgtgJnf6tMzpN7oW3itWRwLSS2KamPJ5U0ANI431FsCOc/q3TDgj1WH+ezdWQ3eQ
+         rQz3vySzMofV+CV+o0GallARMOJIB1L9mo3EDGU5TPWH7E1+gexllXrLawymH7wXBobO
+         Y0xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=xuvZN0JITodz2dLriQ7w9E3lEap+u/kTKfmALojGiXI=;
+        b=BvT2BKFdpcWxiJrcGImoKswgUBboRcHIM7C8vNgdAUDFwy/l68JiAGDecBC+ULZ/L+
+         FK0PyDXntfz+bHtHr0kON7c5nKqFoHSpZNpmpBR6kiKNJORtEJQE6lYhFKaycKMXLfRM
+         tZif4W90iQtDPTa+AuIupLPWdyFO+oEZFV00NlqlDxbcbMgrtUfTjSLbDRZhgCdWhC+p
+         6+dXSZqNxU7mD9kYXPD5qifLMJfuYZIplJVZzDFeM2+4BLnerj7JZQCO/EfneQq7pu4i
+         HsiNI6qjw03Ir8unjnV4cGgY+aF/97boc0YaUVdjmoeStvz9+8tfuB3KsMDzKGRAc44v
+         1WOw==
+X-Gm-Message-State: APjAAAVD0pBuZqHlaS9ubxHZSAHTejpeKSWVcE2FTVHXsUX4vnL4lanY
+        LiDKCg/INf+dNnyQKg1nsz0ieA==
+X-Google-Smtp-Source: APXvYqys42xIeFnEN5JmYINrqK78cSzCxgKoo1zagzhJB4sId53ApV4Lp3JoUu8AyzpgxfsZ65rJWA==
+X-Received: by 2002:a37:6255:: with SMTP id w82mr10872838qkb.305.1570728080205;
+        Thu, 10 Oct 2019 10:21:20 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id q207sm3254120qke.98.2019.10.10.10.21.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 10:21:19 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 10:21:02 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] genetlink: do not parse attributes for
+ families with zero maxattr
+Message-ID: <20191010102102.3bc8515d@cakuba.netronome.com>
+In-Reply-To: <20191010103402.36408E378C@unicorn.suse.cz>
+References: <20191010103402.36408E378C@unicorn.suse.cz>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917134228.5369-2-ionela.voinescu@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ionela,
+On Thu, 10 Oct 2019 12:34:02 +0200 (CEST), Michal Kubecek wrote:
+> Commit c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing
+> to a separate function") moved attribute buffer allocation and attribute
+> parsing from genl_family_rcv_msg_doit() into a separate function
+> genl_family_rcv_msg_attrs_parse() which, unlike the previous code, calls
+> __nlmsg_parse() even if family->maxattr is 0 (i.e. the family does its own
+> parsing). The parser error is ignored and does not propagate out of
+> genl_family_rcv_msg_attrs_parse() but an error message ("Unknown attribute
+> type") is set in extack and if further processing generates no error or
+> warning, it stays there and is interpreted as a warning by userspace.
+> 
+> Dumpit requests are not affected as genl_family_rcv_msg_dumpit() bypasses
+> the call of genl_family_rcv_msg_doit() if family->maxattr is zero. Do the
+> same also in genl_family_rcv_msg_doit().
+> 
+> Fixes: c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing to a separate function")
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+> ---
+>  net/netlink/genetlink.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
+> index ecc2bd3e73e4..1f14e55ad3ad 100644
+> --- a/net/netlink/genetlink.c
+> +++ b/net/netlink/genetlink.c
+> @@ -639,21 +639,23 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
+>  				    const struct genl_ops *ops,
+>  				    int hdrlen, struct net *net)
+>  {
+> -	struct nlattr **attrbuf;
+> +	struct nlattr **attrbuf = NULL;
+>  	struct genl_info info;
+>  	int err;
+>  
+>  	if (!ops->doit)
+>  		return -EOPNOTSUPP;
+>  
+> +	if (!family->maxattr)
+> +		goto no_attrs;
+>  	attrbuf = genl_family_rcv_msg_attrs_parse(family, nlh, extack,
+>  						  ops, hdrlen,
+>  						  GENL_DONT_VALIDATE_STRICT,
+> -						  family->maxattr &&
+>  						  family->parallel_ops);
+>  	if (IS_ERR(attrbuf))
+>  		return PTR_ERR(attrbuf);
+>  
+> +no_attrs:
 
-On Tue, Sep 17, 2019 at 02:42:25PM +0100, Ionela Voinescu wrote:
-> +#ifdef CONFIG_ARM64_AMU_EXTN
-> +
-> +/*
-> + * This per cpu variable only signals that the CPU implementation supports the
-> + * AMU but does not provide information regarding all the events that it
-> + * supports.
-> + * When this amu_feat per CPU variable is true, the user of this feature can
-> + * only rely on the presence of the 4 fixed counters. But this does not
-> + * guarantee that the counters are enabled or access to these counters is
-> + * provided by code executed at higher exception levels.
-> + */
-> +DEFINE_PER_CPU(bool, amu_feat) = false;
-> +
-> +static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
-> +{
-> +	if (has_cpuid_feature(cap, SCOPE_LOCAL_CPU)) {
-> +		pr_info("detected CPU%d: Activity Monitors extension\n",
-> +			smp_processor_id());
-> +		this_cpu_write(amu_feat, true);
-> +	}
-> +}
+The use of a goto statement as a replacement for an if is making me
+uncomfortable. 
 
-Sorry if I missed anything as I just skimmed through this series. I
-can't see the amu_feat used anywhere in these patches, so on its own it
-doesn't make much sense.
+Looks like both callers of genl_family_rcv_msg_attrs_parse() jump
+around it if !family->maxattr and then check the result with IS_ERR().
 
-I also can't see the advantage of allowing mismatched CPU
-implementations for this feature. What's the intended use-case?
+Would it not make more sense to have genl_family_rcv_msg_attrs_parse()
+return NULL if !family->maxattr?
 
-Thanks.
+Just wondering, if you guys prefer this version I can apply..
 
--- 
-Catalin
+>  	info.snd_seq = nlh->nlmsg_seq;
+>  	info.snd_portid = NETLINK_CB(skb).portid;
+>  	info.nlhdr = nlh;
+> @@ -676,8 +678,7 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
+>  		family->post_doit(ops, skb, &info);
+>  
+>  out:
+> -	genl_family_rcv_msg_attrs_free(family, attrbuf,
+> -				       family->maxattr && family->parallel_ops);
+> +	genl_family_rcv_msg_attrs_free(family, attrbuf, family->parallel_ops);
+>  
+>  	return err;
+>  }
