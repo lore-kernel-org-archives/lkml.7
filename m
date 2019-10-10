@@ -2,231 +2,108 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79164C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 679C9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50685218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B475206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:53:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732879AbfJJDpH (ORCPT
+        id S1732774AbfJJDxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 23:45:07 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46758 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfJJDpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 23:45:06 -0400
-Received: by mail-pl1-f196.google.com with SMTP id q24so2069556plr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 20:45:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=amRpcIpCSIzpI9qw9JunLNMzTja2mT7Cd8T4RQ8vtAc=;
-        b=j8srwIa9MuZqD8+L4WSKDn0mvQzcmGWXvC0SyMiRX/BsL1j3GRNxb0UxeBT7fWhJCt
-         IUJE0s4xOttK5eDOwAwewqkek8HV0DDQMr1JZ81IpRr+QEELuEvrN40wWyEpb+lsJZL0
-         gAO2r/jrhnesK3yEfH1WFMJn2ydLIYJ9+78Ky4oIjbymtfgbri0RkR6qkG8y8X7ylCc1
-         358y2jVqfbdjSiphwRUQ6GBnlP8jCGVYI6t8zkOZaGaXul3n67n1x2DKxivgjcR3gJsc
-         UkZRn9u3EIb9A+0uaiOcQZcdRN22hr7L+aRv3UoSCSkcWpz3R3W5AybQWXg8Rjg8khOD
-         Px0Q==
-X-Gm-Message-State: APjAAAUL2PctRBndxzUCuoKKzQmcKiCK+tc8MYKAxrFWEe7Mr33oyqts
-        v4H+FiEQv6NlZF5apeVpHYE=
-X-Google-Smtp-Source: APXvYqw2GNqZw03SMzQITAg2WvD8DqeOWPJsN6GbPLbca485yPtQMH+MpYuHXiYyGBI2Bl4KbCj0zw==
-X-Received: by 2002:a17:902:8c92:: with SMTP id t18mr6636599plo.76.1570679105381;
-        Wed, 09 Oct 2019 20:45:05 -0700 (PDT)
-Received: from localhost.localdomain ([103.29.142.67])
-        by smtp.gmail.com with ESMTPSA id z13sm4552188pfq.121.2019.10.09.20.45.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2019 20:45:04 -0700 (PDT)
-From:   Nickey Yang <nickey.yang@rock-chips.com>
-To:     heiko@sntech.de, hjc@rock-chips.com
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com,
-        seanpaul@chromium.org, laurent.pinchart@ideasonboard.com
-Subject: [PATCH 1/1] drm/rockchip: vop: add the definition of dclk_pol
-Date:   Thu, 10 Oct 2019 11:44:52 +0800
-Message-Id: <20191010034452.20260-2-nickey.yang@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191010034452.20260-1-nickey.yang@rock-chips.com>
-References: <20191010034452.20260-1-nickey.yang@rock-chips.com>
+        Wed, 9 Oct 2019 23:53:34 -0400
+Received: from mga09.intel.com ([134.134.136.24]:16106 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726659AbfJJDxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 23:53:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 20:53:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
+   d="scan'208";a="184280680"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga007.jf.intel.com with ESMTP; 09 Oct 2019 20:53:31 -0700
+Date:   Thu, 10 Oct 2019 11:53:14 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] userfaultfd: remove set but not used variable 'h'
+Message-ID: <20191010035314.GA6917@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191009122740.70517-1-yuehaibing@huawei.com>
+ <a28da32b-5c26-21e9-4a08-722abf9fbeba@oracle.com>
+ <20191010012322.GB2167@richard>
+ <ba62cc8f-da4d-a316-c968-80871551c863@oracle.com>
+ <20191010033045.GA5927@richard>
+ <01601a94-5c52-7ef6-ce08-7a86ac70fab2@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01601a94-5c52-7ef6-ce08-7a86ac70fab2@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some VOP's (such as px30) dclk_pol bit is at the last.
-So it is necessary to distinguish dclk_pol and pin_pol.
+On Wed, Oct 09, 2019 at 08:42:46PM -0700, Mike Kravetz wrote:
+>On 10/9/19 8:30 PM, Wei Yang wrote:
+>> On Wed, Oct 09, 2019 at 07:25:18PM -0700, Mike Kravetz wrote:
+>>> On 10/9/19 6:23 PM, Wei Yang wrote:
+>>>> On Wed, Oct 09, 2019 at 05:45:57PM -0700, Mike Kravetz wrote:
+>>>>> On 10/9/19 5:27 AM, YueHaibing wrote:
+>>>>>> Fixes gcc '-Wunused-but-set-variable' warning:
+>>>>>>
+>>>>>> mm/userfaultfd.c: In function '__mcopy_atomic_hugetlb':
+>>>>>> mm/userfaultfd.c:217:17: warning:
+>>>>>>  variable 'h' set but not used [-Wunused-but-set-variable]
+>>>>>>
+>>>>>> It is not used since commit 78911d0e18ac ("userfaultfd: use vma_pagesize
+>>>>>> for all huge page size calculation")
+>>>>>>
+>>>>>
+>>>>> Thanks!  That should have been removed with the recent cleanups.
+>>>>>
+>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>>>
+>>>>> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+>>>>
+>>>> If I am correct, this is removed in a recent patch.
+>>>
+>>> I'm having a hard time figuring out what is actually in the latest mmotm
+>>> tree.  Andrew added a build fixup patch ab169389eb5 in linux-next which
+>>> adds the reference to h.  Is there a patch after that to remove the reference?
+>>>
+>> 
+>> I checked linux-next tree, this commit removes the reference.
+>> 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=add4eaeef3766b7491d70d473c48c0b6d6ca5cb7
+>> 
+>
+>Yes, but unless I am mistaken this adds it back,
+>
+>https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=ab169389eb5ff9da7113a21737574edc6d22c072
+>
 
-Signed-off-by: Nickey Yang <nickey.yang@rock-chips.com>
----
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 12 +++---
- drivers/gpu/drm/rockchip/rockchip_drm_vop.h |  8 +++-
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 45 ++++++++++++++-------
- 3 files changed, 43 insertions(+), 22 deletions(-)
+Oops, we may leave this to Andrew.
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index 613404f86668..0d6682ed9e15 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -1085,9 +1085,7 @@ static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
- 		DRM_DEV_ERROR(vop->dev, "Failed to enable vop (%d)\n", ret);
- 		return;
- 	}
--
--	pin_pol = BIT(DCLK_INVERT);
--	pin_pol |= (adjusted_mode->flags & DRM_MODE_FLAG_PHSYNC) ?
-+	pin_pol = (adjusted_mode->flags & DRM_MODE_FLAG_PHSYNC) ?
- 		   BIT(HSYNC_POSITIVE) : 0;
- 	pin_pol |= (adjusted_mode->flags & DRM_MODE_FLAG_PVSYNC) ?
- 		   BIT(VSYNC_POSITIVE) : 0;
-@@ -1096,25 +1094,29 @@ static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
- 
- 	switch (s->output_type) {
- 	case DRM_MODE_CONNECTOR_LVDS:
--		VOP_REG_SET(vop, output, rgb_en, 1);
-+		VOP_REG_SET(vop, output, rgb_dclk_pol, 1);
- 		VOP_REG_SET(vop, output, rgb_pin_pol, pin_pol);
-+		VOP_REG_SET(vop, output, rgb_en, 1);
- 		break;
- 	case DRM_MODE_CONNECTOR_eDP:
-+		VOP_REG_SET(vop, output, edp_dclk_pol, 1);
- 		VOP_REG_SET(vop, output, edp_pin_pol, pin_pol);
- 		VOP_REG_SET(vop, output, edp_en, 1);
- 		break;
- 	case DRM_MODE_CONNECTOR_HDMIA:
-+		VOP_REG_SET(vop, output, hdmi_dclk_pol, 1);
- 		VOP_REG_SET(vop, output, hdmi_pin_pol, pin_pol);
- 		VOP_REG_SET(vop, output, hdmi_en, 1);
- 		break;
- 	case DRM_MODE_CONNECTOR_DSI:
-+		VOP_REG_SET(vop, output, mipi_dclk_pol, 1);
- 		VOP_REG_SET(vop, output, mipi_pin_pol, pin_pol);
- 		VOP_REG_SET(vop, output, mipi_en, 1);
- 		VOP_REG_SET(vop, output, mipi_dual_channel_en,
- 			    !!(s->output_flags & ROCKCHIP_OUTPUT_DSI_DUAL));
- 		break;
- 	case DRM_MODE_CONNECTOR_DisplayPort:
--		pin_pol &= ~BIT(DCLK_INVERT);
-+		VOP_REG_SET(vop, output, dp_dclk_pol, 0);
- 		VOP_REG_SET(vop, output, dp_pin_pol, pin_pol);
- 		VOP_REG_SET(vop, output, dp_en, 1);
- 		break;
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-index 2149a889c29d..ea1f97a5aa5d 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-@@ -46,10 +46,15 @@ struct vop_modeset {
- struct vop_output {
- 	struct vop_reg pin_pol;
- 	struct vop_reg dp_pin_pol;
-+	struct vop_reg dp_dclk_pol;
- 	struct vop_reg edp_pin_pol;
-+	struct vop_reg edp_dclk_pol;
- 	struct vop_reg hdmi_pin_pol;
-+	struct vop_reg hdmi_dclk_pol;
- 	struct vop_reg mipi_pin_pol;
-+	struct vop_reg mipi_dclk_pol;
- 	struct vop_reg rgb_pin_pol;
-+	struct vop_reg rgb_dclk_pol;
- 	struct vop_reg dp_en;
- 	struct vop_reg edp_en;
- 	struct vop_reg hdmi_en;
-@@ -294,8 +299,7 @@ enum dither_down_mode_sel {
- enum vop_pol {
- 	HSYNC_POSITIVE = 0,
- 	VSYNC_POSITIVE = 1,
--	DEN_NEGATIVE   = 2,
--	DCLK_INVERT    = 3
-+	DEN_NEGATIVE   = 2
- };
- 
- #define FRAC_16_16(mult, div)    (((mult) << 16) / (div))
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-index d1494be14471..f92c899d656c 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-@@ -214,9 +214,11 @@ static const struct vop_modeset px30_modeset = {
- };
- 
- static const struct vop_output px30_output = {
--	.rgb_pin_pol = VOP_REG(PX30_DSP_CTRL0, 0xf, 1),
--	.mipi_pin_pol = VOP_REG(PX30_DSP_CTRL0, 0xf, 25),
-+	.rgb_dclk_pol = VOP_REG(PX30_DSP_CTRL0, 0x1, 1),
-+	.rgb_pin_pol = VOP_REG(PX30_DSP_CTRL0, 0x7, 2),
- 	.rgb_en = VOP_REG(PX30_DSP_CTRL0, 0x1, 0),
-+	.mipi_dclk_pol = VOP_REG(PX30_DSP_CTRL0, 0x1, 25),
-+	.mipi_pin_pol = VOP_REG(PX30_DSP_CTRL0, 0x7, 26),
- 	.mipi_en = VOP_REG(PX30_DSP_CTRL0, 0x1, 24),
- };
- 
-@@ -717,10 +719,14 @@ static const struct vop_win_data rk3368_vop_win_data[] = {
- };
- 
- static const struct vop_output rk3368_output = {
--	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 16),
--	.hdmi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 20),
--	.edp_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 24),
--	.mipi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 28),
-+	.rgb_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 19),
-+	.hdmi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 23),
-+	.edp_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 27),
-+	.mipi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 31),
-+	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 16),
-+	.hdmi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 20),
-+	.edp_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 24),
-+	.mipi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 28),
- 	.rgb_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 12),
- 	.hdmi_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 13),
- 	.edp_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 14),
-@@ -764,11 +770,16 @@ static const struct vop_data rk3366_vop = {
- };
- 
- static const struct vop_output rk3399_output = {
--	.dp_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0xf, 16),
--	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 16),
--	.hdmi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 20),
--	.edp_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 24),
--	.mipi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 28),
-+	.dp_dclk_pol = VOP_REG(RK3399_DSP_CTRL1, 0x1, 19),
-+	.rgb_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 19),
-+	.hdmi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 23),
-+	.edp_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 27),
-+	.mipi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 31),
-+	.dp_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0x7, 16),
-+	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 16),
-+	.hdmi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 20),
-+	.edp_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 24),
-+	.mipi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 28),
- 	.dp_en = VOP_REG(RK3399_SYS_CTRL, 0x1, 11),
- 	.rgb_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 12),
- 	.hdmi_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 13),
-@@ -872,14 +883,18 @@ static const struct vop_modeset rk3328_modeset = {
- };
- 
- static const struct vop_output rk3328_output = {
-+	.rgb_dclk_pol = VOP_REG(RK3328_DSP_CTRL1, 0x1, 19),
-+	.hdmi_dclk_pol = VOP_REG(RK3328_DSP_CTRL1, 0x1, 23),
-+	.edp_dclk_pol = VOP_REG(RK3328_DSP_CTRL1, 0x1, 27),
-+	.mipi_dclk_pol = VOP_REG(RK3328_DSP_CTRL1, 0x1, 31),
- 	.rgb_en = VOP_REG(RK3328_SYS_CTRL, 0x1, 12),
- 	.hdmi_en = VOP_REG(RK3328_SYS_CTRL, 0x1, 13),
- 	.edp_en = VOP_REG(RK3328_SYS_CTRL, 0x1, 14),
- 	.mipi_en = VOP_REG(RK3328_SYS_CTRL, 0x1, 15),
--	.rgb_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0xf, 16),
--	.hdmi_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0xf, 20),
--	.edp_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0xf, 24),
--	.mipi_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0xf, 28),
-+	.rgb_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0x7, 16),
-+	.hdmi_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0x7, 20),
-+	.edp_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0x7, 24),
-+	.mipi_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0x7, 28),
- };
- 
- static const struct vop_misc rk3328_misc = {
+>-- 
+>Mike Kravetz
+
 -- 
-2.17.1
-
+Wei Yang
+Help you, Help me
