@@ -2,233 +2,137 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539BCC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FFCECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 246D220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697511;
-	bh=gIvY/jYPB98Ex3XhQU52QQHGDF7nkbITWsP9epN1HRU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=je3I60Cd/U7aePXRgpSeK/26QPTayQKvnDcaX+1xZ4p0TSY7EpX6REIDFG5mvW/5r
-	 JDhC2EhHRd9HvwgQcpjc9hCxtuU63zU2iBjtpF1/F7+wwqP8ImMJTKuPqLRspuT7af
-	 iRC+0hLU1tOlbS+9NFrn7bPP6dowCGLlX4Yr4HHw=
+	by mail.kernel.org (Postfix) with ESMTP id 17E3420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPeNcuB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390159AbfJJIvt (ORCPT
+        id S2390167AbfJJIvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 10 Oct 2019 04:51:53 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36703 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390154AbfJJIvt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Oct 2019 04:51:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390144AbfJJIvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FBC02064A;
-        Thu, 10 Oct 2019 08:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697504;
-        bh=gIvY/jYPB98Ex3XhQU52QQHGDF7nkbITWsP9epN1HRU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKLvzQS/IqVUSEtI/b0BO0nd8ieq9jgkX3zjAfoS+9BIN8BhbvCffmGIWLnhFex/S
-         26qGxyaj7wWSt8f1hGkO4QoRbSFFsW4iBuZIwi21S4Zf7Q0XfoTEvdmL5nLT6vDu1x
-         ttW589cW9SW6QOU9JXohacXJgs4AfCjBTGER+FbI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Balasubramani Vivekanandan 
-        <balasubramani_vivekanandan@mentor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 51/61] tick: broadcast-hrtimer: Fix a race in bc_set_next
-Date:   Thu, 10 Oct 2019 10:37:16 +0200
-Message-Id: <20191010083521.639499190@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
-References: <20191010083449.500442342@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-wm1-f65.google.com with SMTP id m18so5846731wmc.1;
+        Thu, 10 Oct 2019 01:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iBVy5EpS5miZLPYXy54PXc4Tp3ZcCov2ByS5T+jtyzQ=;
+        b=oPeNcuB6ERNhMIaqdBhqvoaicqED33w2ZnRTPI1p35C5PjIp7M9osj7CbCyJN8zPD3
+         nG6qo00p+0C3GDV4s/9yBSa8mfu9zBhTYIglKOccIfc+j10IBM9F9DXFq4SIfkTQNXaE
+         fE375uuX1MA0BcAHwBvL1otT/gRBtypTz3WyZ+7i2csJ0nBVgikl3eux1lElB7TYwEjv
+         vnJOQVyLrrrEOe4XhskyXBXjBDp+ToI+0IwbqS5sW8lsPH33Lut4ZKWtJHjV9CC7Q/95
+         L1DRvuYRO+1wfp6e/A2OpRyn91sFEAEHtTOOWNqYCTTPsrEmiXvoY2x1H1/G9O06cNzR
+         y76g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iBVy5EpS5miZLPYXy54PXc4Tp3ZcCov2ByS5T+jtyzQ=;
+        b=mjkF3uiUAAscIAlyznVnb9dgYJ4+5C+CzPqqTc/UhtyLZRDmwQ3CgYIeKqkKs4u0Kr
+         Dm/GYOVRtWtzjqVoe4Jye8XC+ONzgTwwFcEhe37gWL/cHtlgDox/XQFQLbb1+GGWMpa/
+         fmxHZVqpE0FLB0H+gazJkENW9ZkBpnQQv4dukYW4mZncbv/C56STTSwo5NeFrt03PooW
+         fPZE1+fiwEKlt8Gbe7nk6Qz1BST8fOkZlbwCqah/qHQWxv4cyv1X12A5cXKm/hcceeEd
+         fGTYJAtdce2wREJ1qYWWQDLdSTybQYYhk1meZE+fnA9riuj56LHkMIm/GTyeZSfxeqmI
+         RH0w==
+X-Gm-Message-State: APjAAAVEhW8PI03QOa0a1PhXA6jUmDY9hfT9aCPnG6BCcDfZ+Rk/W8e4
+        ipJXd63/hpD4yJTWSQ+wSdG1Xc58
+X-Google-Smtp-Source: APXvYqyLknqLcUuYq9q/QesWPksjxjSFkRwD5oI5ldv1gDrTXvnqviOQWl53byaUzLuLESgiSA0EPw==
+X-Received: by 2002:a05:600c:2190:: with SMTP id e16mr6254868wme.136.1570697507740;
+        Thu, 10 Oct 2019 01:51:47 -0700 (PDT)
+Received: from AlexGordeev-DPT-VI0092 ([213.86.25.46])
+        by smtp.gmail.com with ESMTPSA id g13sm4032958wrm.42.2019.10.10.01.51.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 10 Oct 2019 01:51:47 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 10:51:45 +0200
+From:   Alexander Gordeev <a.gordeev.box@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
+ <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+ <20191009185323.GG13286@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009185323.GG13286@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
+> > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
+> > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
+> > > > +	struct avalon_dma_desc *desc;
+> > > > +	struct virt_dma_desc *vdesc;
+> > > > +	bool rd_done;
+> > > > +	bool wr_done;
+> > > > +
+> > > > +	spin_lock(lock);
+> > > > +
+> > > > +	rd_done = (hw->h2d_last_id < 0);
+> > > > +	wr_done = (hw->d2h_last_id < 0);
+> > > > +
+> > > > +	if (rd_done && wr_done) {
+> > > > +		spin_unlock(lock);
+> > > > +		return IRQ_NONE;
+> > > > +	}
+> > > > +
+> > > > +	do {
+> > > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
+> > > > +			rd_done = true;
+> > > > +
+> > > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
+> > > > +			wr_done = true;
+> > > > +	} while (!rd_done || !wr_done);
+> > > 
+> > > This loop is very strange.  It feels like the last_id indexes needs
+> > > to atomic or protected from racing somehow so we don't do an out of
+> > > bounds read.
 
-[ Upstream commit b9023b91dd020ad7e093baa5122b6968c48cc9e0 ]
+[...]
 
-When a cpu requests broadcasting, before starting the tick broadcast
-hrtimer, bc_set_next() checks if the timer callback (bc_handler) is active
-using hrtimer_try_to_cancel(). But hrtimer_try_to_cancel() does not provide
-the required synchronization when the callback is active on other core.
+> You're missing my point.  When we set
+> hw->d2h_last_id = 1;
+[1]
+> ...
+> hw->d2h_last_id = 2;
+[2]
 
-The callback could have already executed tick_handle_oneshot_broadcast()
-and could have also returned. But still there is a small time window where
-the hrtimer_try_to_cancel() returns -1. In that case bc_set_next() returns
-without doing anything, but the next_event of the tick broadcast clock
-device is already set to a timeout value.
+> There is a tiny moment where ->d2h_last_id is transitioning from 1 to 2
+> where its value is unknown.  We're in a busy loop here so we have a
+> decent chance of hitting that 1/1000,000th of a second.  If we happen to
+> hit it at exactly the right time then we're reading from a random
+> address and it will cause an oops.
+> 
+> We have to use atomic_t types or something to handle race conditions.
 
-In the race condition diagram below, CPU #1 is running the timer callback
-and CPU #2 is entering idle state and so calls bc_set_next().
+Err.. I am still missing the point :( In your example I do see a chance
+for a reader to read out 1 at point in time [2] - because of SMP race.
+But what could it be other than 1 or 2?
 
-In the worst case, the next_event will contain an expiry time, but the
-hrtimer will not be started which happens when the racing callback returns
-HRTIMER_NORESTART. The hrtimer might never recover if all further requests
-from the CPUs to subscribe to tick broadcast have timeout greater than the
-next_event of tick broadcast clock device. This leads to cascading of
-failures and finally noticed as rcu stall warnings
+Anyways, all code paths dealing with h2d_last_id and d2h_last_id indexes
+are protected with a spinlock.
 
-Here is a depiction of the race condition
-
-CPU #1 (Running timer callback)                   CPU #2 (Enter idle
-                                                  and subscribe to
-                                                  tick broadcast)
----------------------                             ---------------------
-
-__run_hrtimer()                                   tick_broadcast_enter()
-
-  bc_handler()                                      __tick_broadcast_oneshot_control()
-
-    tick_handle_oneshot_broadcast()
-
-      raw_spin_lock(&tick_broadcast_lock);
-
-      dev->next_event = KTIME_MAX;                  //wait for tick_broadcast_lock
-      //next_event for tick broadcast clock
-      set to KTIME_MAX since no other cores
-      subscribed to tick broadcasting
-
-      raw_spin_unlock(&tick_broadcast_lock);
-
-    if (dev->next_event == KTIME_MAX)
-      return HRTIMER_NORESTART
-    // callback function exits without
-       restarting the hrtimer                      //tick_broadcast_lock acquired
-                                                   raw_spin_lock(&tick_broadcast_lock);
-
-                                                   tick_broadcast_set_event()
-
-                                                     clockevents_program_event()
-
-                                                       dev->next_event = expires;
-
-                                                       bc_set_next()
-
-                                                         hrtimer_try_to_cancel()
-                                                         //returns -1 since the timer
-                                                         callback is active. Exits without
-                                                         restarting the timer
-  cpu_base->running = NULL;
-
-The comment that hrtimer cannot be armed from within the callback is
-wrong. It is fine to start the hrtimer from within the callback. Also it is
-safe to start the hrtimer from the enter/exit idle code while the broadcast
-handler is active. The enter/exit idle code and the broadcast handler are
-synchronized using tick_broadcast_lock. So there is no need for the
-existing try to cancel logic. All this can be removed which will eliminate
-the race condition as well.
-
-Fixes: 5d1638acb9f6 ("tick: Introduce hrtimer based broadcast")
-Originally-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190926135101.12102-2-balasubramani_vivekanandan@mentor.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/time/tick-broadcast-hrtimer.c | 57 ++++++++++++++--------------
- 1 file changed, 29 insertions(+), 28 deletions(-)
-
-diff --git a/kernel/time/tick-broadcast-hrtimer.c b/kernel/time/tick-broadcast-hrtimer.c
-index 58045eb976c38..c750c80570e88 100644
---- a/kernel/time/tick-broadcast-hrtimer.c
-+++ b/kernel/time/tick-broadcast-hrtimer.c
-@@ -44,34 +44,39 @@ static int bc_shutdown(struct clock_event_device *evt)
-  */
- static int bc_set_next(ktime_t expires, struct clock_event_device *bc)
- {
--	int bc_moved;
- 	/*
--	 * We try to cancel the timer first. If the callback is on
--	 * flight on some other cpu then we let it handle it. If we
--	 * were able to cancel the timer nothing can rearm it as we
--	 * own broadcast_lock.
-+	 * This is called either from enter/exit idle code or from the
-+	 * broadcast handler. In all cases tick_broadcast_lock is held.
- 	 *
--	 * However we can also be called from the event handler of
--	 * ce_broadcast_hrtimer itself when it expires. We cannot
--	 * restart the timer because we are in the callback, but we
--	 * can set the expiry time and let the callback return
--	 * HRTIMER_RESTART.
-+	 * hrtimer_cancel() cannot be called here neither from the
-+	 * broadcast handler nor from the enter/exit idle code. The idle
-+	 * code can run into the problem described in bc_shutdown() and the
-+	 * broadcast handler cannot wait for itself to complete for obvious
-+	 * reasons.
- 	 *
--	 * Since we are in the idle loop at this point and because
--	 * hrtimer_{start/cancel} functions call into tracing,
--	 * calls to these functions must be bound within RCU_NONIDLE.
-+	 * Each caller tries to arm the hrtimer on its own CPU, but if the
-+	 * hrtimer callbback function is currently running, then
-+	 * hrtimer_start() cannot move it and the timer stays on the CPU on
-+	 * which it is assigned at the moment.
-+	 *
-+	 * As this can be called from idle code, the hrtimer_start()
-+	 * invocation has to be wrapped with RCU_NONIDLE() as
-+	 * hrtimer_start() can call into tracing.
- 	 */
--	RCU_NONIDLE({
--			bc_moved = hrtimer_try_to_cancel(&bctimer) >= 0;
--			if (bc_moved)
--				hrtimer_start(&bctimer, expires,
--					      HRTIMER_MODE_ABS_PINNED);});
--	if (bc_moved) {
--		/* Bind the "device" to the cpu */
--		bc->bound_on = smp_processor_id();
--	} else if (bc->bound_on == smp_processor_id()) {
--		hrtimer_set_expires(&bctimer, expires);
--	}
-+	RCU_NONIDLE( {
-+		hrtimer_start(&bctimer, expires, HRTIMER_MODE_ABS_PINNED);
-+		/*
-+		 * The core tick broadcast mode expects bc->bound_on to be set
-+		 * correctly to prevent a CPU which has the broadcast hrtimer
-+		 * armed from going deep idle.
-+		 *
-+		 * As tick_broadcast_lock is held, nothing can change the cpu
-+		 * base which was just established in hrtimer_start() above. So
-+		 * the below access is safe even without holding the hrtimer
-+		 * base lock.
-+		 */
-+		bc->bound_on = bctimer.base->cpu_base->cpu;
-+	} );
- 	return 0;
- }
- 
-@@ -97,10 +102,6 @@ static enum hrtimer_restart bc_handler(struct hrtimer *t)
- {
- 	ce_broadcast_hrtimer.event_handler(&ce_broadcast_hrtimer);
- 
--	if (clockevent_state_oneshot(&ce_broadcast_hrtimer))
--		if (ce_broadcast_hrtimer.next_event != KTIME_MAX)
--			return HRTIMER_RESTART;
--
- 	return HRTIMER_NORESTART;
- }
- 
--- 
-2.20.1
-
-
-
+> regards,
+> dan carpenter
+> 
