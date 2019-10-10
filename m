@@ -2,111 +2,119 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00768C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6A3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86E120679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFBD20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697604;
-	bh=jfvznRRfXeB9IPJWd16lVCQcUbcZO/h03cSC2+aSIak=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E43fHDoJX7wQOM9uy5VO3j1IWlcA/MqbhQLt2TloEnEHvQRcoL+bISURgNkyhYGVp
-	 labkfNIEQQtPVyQlUZy479W2RmE/KuF5KIuVPHlYtjpP6xtK44UoNHuSTefgwK6/b/
-	 7mDfhIiBxM1z8vhOUVvg1nH4BQOd4QOVfKMOPJ3w=
+	s=default; t=1570697607;
+	bh=dIkt0vLKrtVJ+hQhnXmuOhdKk9aVdewU/JuwAz9hb5k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iAPWPMzvB9zK6JvY7RwzNQjlQ4hLexDWYtdu+aiYD2pp80witC/wzIoefiIl6wRYo
+	 iSQBENa6l8RDRoy8ciQeJKqsIDkvlWKuwf2onFAmtNmb54HCHrtHqofx7YLc98mw+R
+	 SP2i02IDr8heu3MEB4Lg0nJs7Fxuk1WJSQmTkij0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390141AbfJJIvm (ORCPT
+        id S2389350AbfJJIx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:51:42 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35198 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390103AbfJJIvf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:35 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z6so4204992otb.2;
-        Thu, 10 Oct 2019 01:51:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5WNy1ElvBlIaPl/GDmtgPQ9owV2ns5U1oFv7ORu9uBU=;
-        b=daVNcE/EVKPZW/LOWlMEgA2sMtNhSisWzXtx24MPYhrcprVMg8tQSbDn9ybR9wzD4m
-         hu1h9il3eQXNkx140R02v9VoejoOMA6O0mFy2+8293nNpP9nKElFvEkJVIpzewace0WZ
-         +K3LlU6b6gi5UwOR1d1KAY3igzfB4DC0Rf7OmtneT3d0YpuN0+32HjZeeVvWoBGK0+6G
-         wrSRiy0OGBLCK+yG84B2g795q7c16DYsNX+scmUNK2oqUiJy6u6KkHEAwPXwwSaKL9pX
-         9ab63t+7oLgErHZV+Rb0HuU3+mQR/tGfe4q1rGVG6iv10N+pJl0MAhPN0mc9PSAp1fv7
-         19Og==
-X-Gm-Message-State: APjAAAWH16C6Ru5oS+trNhYXSiowmK4iF4pCgXUUMY2eoAJQHwNVRXrZ
-        yPxePIVYRx3kD19ipPp6IHHBraTi7heufZUTS8Q=
-X-Google-Smtp-Source: APXvYqybut8NGn1i7VK/T9RwJi5vdWmQ2cqbahMnWy1naHR4DNpIcCrBdMB7F4wtF7phljdYiF7/SfohwtDZ7o5VOz0=
-X-Received: by 2002:a9d:459b:: with SMTP id x27mr6529097ote.167.1570697494577;
- Thu, 10 Oct 2019 01:51:34 -0700 (PDT)
+        Thu, 10 Oct 2019 04:53:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390138AbfJJIvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A813B20679;
+        Thu, 10 Oct 2019 08:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570697501;
+        bh=dIkt0vLKrtVJ+hQhnXmuOhdKk9aVdewU/JuwAz9hb5k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zxZ97PO9WdxEFaQdvNHUC/SKZORdmM2TcXBaYAAFSKRhNKBlocQDN7vHePaWfgF5h
+         lJGalMgdVFD4VInWEo5XMc4x4tFli2l0hQfue7F/Q+lOWYLDfae+A0Zm9Mwp9lT4rQ
+         /lwmJ/S9Y3s4PBrGydFaOoHxDDxSMwdGgYQ2qy3M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 50/61] tools lib traceevent: Do not free tep->cmdlines in add_new_comm() on failure
+Date:   Thu, 10 Oct 2019 10:37:15 +0200
+Message-Id: <20191010083521.214463081@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
+References: <20191010083449.500442342@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1569514137-2307-1-git-send-email-mario.limonciello@dell.com>
- <97e66464-8407-fd58-21a6-aeb7736dec7b@molgen.mpg.de> <541d9bfa3ccf45b5b07e35e3eebb72ed@AUSX13MPC105.AMER.DELL.COM>
-In-Reply-To: <541d9bfa3ccf45b5b07e35e3eebb72ed@AUSX13MPC105.AMER.DELL.COM>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 10 Oct 2019 10:51:23 +0200
-Message-ID: <CAJZ5v0i6tApHQ-QUS3PNo8BZ7CHaqpZea+z=Layyzt0yhGjVeQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: PM: Revert "ACPI / PM: Blacklist Low Power S0 Idle
- _DSM for Dell XPS13 9360"
-To:     Mario Limonciello <Mario.Limonciello@dell.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 3:44 AM <Mario.Limonciello@dell.com> wrote:
->
-> > On 26.09.19 18:08, Mario Limonciello wrote:
-> > > This reverts part of
-> > > commit 71630b7a832f ("ACPI / PM: Blacklist Low Power S0 Idle _DSM for
-> > > Dell XPS13 9360") to remove the S0ix blacklist for the XPS 9360.
-> > >
-> > > The problems with this system occurred in one possible NVME SSD when
-> > > putting system into s0ix.  As the NVME sleep behavior has been
-> > > adjusted in d916b1be this is expected to be now resolved.
-> >
-> > 1.  Please add, that it was the Hynix(?) SSD.
-> > 2.  Please add the commit message summary of d916b1be.
-> >
-> >      nvme-pci: use host managed power state for suspend
-> >
->
-> Rafael, let me know if you want me to adjust the commit message and resubmit
-> or if you would just handle this task.
->
-> > > Cc: 'Paul Menzel <pmenzel@molgen.mpg.de>'
-> > > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=196907
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> >
-> > Tag it for the stable series? d916b1be (first tag v5.3-rc1) is not tagged for stable.
-> >
->
-> Although Dell arranged a lot of testing with partners I don't feel d916b1be is a stable
-> candidate.  Rafael found a corner case with regards to ASPM configuration last minute
-> in 5.3rcX, I found a another corner case related to order of events and timing around
-> PC10 entry that's getting fixed in 5.4.
->
-> > > ---
-> > > The particular failing configuration was reported by only ever failed
-> > > for Paul Menzel, so hopefully he can test on his failing system.
-> >
-> > I successfully tested Linux 5.4-rc1+ with this commit last Friday on the Dell XPS
-> > 13 9360.
-> >
-> > Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> >
->
-> Well that's great, appreciate your testing and confirmation.
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Applying, thanks!
+[ Upstream commit e0d2615856b2046c2e8d5bfd6933f37f69703b0b ]
+
+If the re-allocation of tep->cmdlines succeeds, then the previous
+allocation of tep->cmdlines will be freed. If we later fail in
+add_new_comm(), we must not free cmdlines, and also should assign
+tep->cmdlines to the new allocation. Otherwise when freeing tep, the
+tep->cmdlines will be pointing to garbage.
+
+Fixes: a6d2a61ac653a ("tools lib traceevent: Remove some die() calls")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-trace-devel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190828191819.970121417@goodmis.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/lib/traceevent/event-parse.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 7989dd6289e7a..8211e8010e09b 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -268,10 +268,10 @@ static int add_new_comm(struct pevent *pevent, const char *comm, int pid)
+ 		errno = ENOMEM;
+ 		return -1;
+ 	}
++	pevent->cmdlines = cmdlines;
+ 
+ 	cmdlines[pevent->cmdline_count].comm = strdup(comm);
+ 	if (!cmdlines[pevent->cmdline_count].comm) {
+-		free(cmdlines);
+ 		errno = ENOMEM;
+ 		return -1;
+ 	}
+@@ -282,7 +282,6 @@ static int add_new_comm(struct pevent *pevent, const char *comm, int pid)
+ 		pevent->cmdline_count++;
+ 
+ 	qsort(cmdlines, pevent->cmdline_count, sizeof(*cmdlines), cmdline_cmp);
+-	pevent->cmdlines = cmdlines;
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
+
+
+
