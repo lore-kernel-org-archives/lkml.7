@@ -2,305 +2,161 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41857C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C624C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A962190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570747484;
-	bh=aUY+2G6kw97wxWvRNj1wmuIasli7uRNKLfj987xjrJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DNypxDZCJi9LuMJKG8e3Tc+EJE0Zp3tAL+//Mx9HbtCqreFYQOJlEl2Sec++Szf45
-	 Drxr3oThI8pLH4UmFRDSeBFe+zxJLYmFNABj7R/h/WkIdhoPHtuh14xdGAKbJ4XeVd
-	 tFZHep5/IsW2aqPHytEjq73go9WJlHz+URsocIjo=
+	by mail.kernel.org (Postfix) with ESMTP id 15A3320B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 22:45:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IRsNEcWr";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="bySIxchT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfJJWom (ORCPT
+        id S1726453AbfJJWpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 18:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbfJJWol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 18:44:41 -0400
-Received: from earth.universe (unknown [185.62.205.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ECE82067B;
-        Thu, 10 Oct 2019 22:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570747479;
-        bh=aUY+2G6kw97wxWvRNj1wmuIasli7uRNKLfj987xjrJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t2wzh37US8FDUoIZ+weJd1nfSJpeQ6euxNPQpUSQ8xARX4Z6GRdippaRKdLUgC/r6
-         inne3V2YM0oNlAQ3zkqvVccRTdpgVSPkEgQMDSRAK2FFuWJ/f+OKMC8m+qed6Wmv3w
-         rUBHZji9sEdCAyQZkPg+66BMXFjpxS1aLIBfQEeY=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 586633C0CA1; Fri, 11 Oct 2019 00:44:36 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 00:44:36 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 15/36] ARM: s3c: adc: move header to linux/soc/samsung
-Message-ID: <20191010224436.t6gwb5fassr2dymp@earth.universe>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-15-arnd@arndb.de>
- <da32e8a3-cbb3-ea08-1c55-55980b3dc53e@roeck-us.net>
- <20191010222955.GB229325@dtor-ws>
+        Thu, 10 Oct 2019 18:45:44 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:27294 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726184AbfJJWpo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 18:45:44 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9AMhNEL004710;
+        Thu, 10 Oct 2019 15:44:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=tacmddVBCqmn6XjYlckxpY0wHfyOCB4/1pEJDOmSb7Q=;
+ b=IRsNEcWrT97KkZrVqzD+9QBeo3Mn3TNcm3BMlsLKznhEWDSJKqbtknl0tTIdQVKPb7zG
+ C2ptZ/9nGVZw9JZ/LzbXms827mlasblLrcafe5rbcusP9AtNUsnMNkCL/WZaRA6UXKpD
+ lFnZF4FWDkB18xPp5hZxkU4i2KorWwvayxw= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vj7wya8rn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 10 Oct 2019 15:44:45 -0700
+Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 10 Oct 2019 15:44:43 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 10 Oct 2019 15:44:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qp3btuj55Nh0tOACxDx5LWYv2Bgb5Vg+ljE+n7QxbcMO1BcWoF/PNHAN0sDr2edXwTOiVTOQCShEqcFAp+W3bedCFQ4z9uymgcgTUNfAO7HigCjLtAtH/6bxEwhjF9HF6rSNS4NV46RyqIxU0wG8y9LIh1+boX5n6nni9PjC0ZtDFlEQft2wri/sdrl1XYDPyckkBn2knkWy0qE5mwo7dxzhyp5y7F+v//C3VyA+9OoVi5CnVxzXnG4o6SIqOb6tmW9omcpt/FMfJTg74YtQ34A8g69bNJWZwRlIbimcb4QlPrj7yX6TxZUwIGMDCojcOIRJLYYf1EaNW7oUQpZgiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tacmddVBCqmn6XjYlckxpY0wHfyOCB4/1pEJDOmSb7Q=;
+ b=bPR/OR2iYGvlh9N7ylgl3klwpE0LGKAbxhf7h2DTVrOf4Hj34RUZ8h/NBPOxg9jvz+yW29QNat9V16OI/PPCmNJPfEQX/TXixf3EYl4+1ejqzql9PX40dDZB3DqnHs9OcJmBLpmoAHWMqwaS+BIw0+I/KodhtPoqKt23jCw1Je3nkgx6f0832OGQyMS9EdCMnWg4NvfOTQyucpRAHZGLpfIfj8sIEQ9hmQDBwt1adBfU3Pxh7OgJxZZzyq+QQ1+kwhmu46/8ORfiBn+qCWjBGSbcKIJidkj1dUiBRatKADqtGg3xOM9BnC06z5Cdgzv7upwuIUUozJEsBbnmx95WKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tacmddVBCqmn6XjYlckxpY0wHfyOCB4/1pEJDOmSb7Q=;
+ b=bySIxchT88sp39a4sAGdq7MRjHwL33sSNLUYrzMsuW73saEl6GCi9cYlqcIEaVl1YNbvO+dU6IbV/lHaXp+DAZEk5K5UCU2j3LRhL4d+XSWw5tVy/oc5zZF7IjVDnHttO6jQRnXlcI0PJztg1CEFs2RmbDUryvSwxk9dQIHtGgE=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1454.namprd15.prod.outlook.com (10.173.235.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Thu, 10 Oct 2019 22:44:42 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
+ 22:44:42 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+CC:     open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>, David Xu <dxu@fb.com>,
+        Andrew Hall <hall@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] perf/kprobe: maxactive for fd-based kprobe (pmu
+ perf_kprobe)
+Thread-Topic: [PATCH] perf/kprobe: maxactive for fd-based kprobe (pmu
+ perf_kprobe)
+Thread-Index: AQHVfV79pbxZC0PPd0u0Pg6K2pv05adP1L4AgASpH4A=
+Date:   Thu, 10 Oct 2019 22:44:42 +0000
+Message-ID: <14283CB6-F665-47BA-9A77-54D2BBC85FD5@fb.com>
+References: <20191007223111.1142454-1-songliubraving@fb.com>
+ <20191008083420.cecebd6afdf5c34074565195@kernel.org>
+In-Reply-To: <20191008083420.cecebd6afdf5c34074565195@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3594.4.19)
+x-originating-ip: [2620:10d:c090:200::3:428c]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ccffcca2-5941-4e3a-2d33-08d74dd370d2
+x-ms-traffictypediagnostic: MWHPR15MB1454:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB1454352FD15D67DEE98EA3E0B3940@MWHPR15MB1454.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 018632C080
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(366004)(39860400002)(346002)(189003)(199004)(66446008)(6486002)(102836004)(71190400001)(71200400001)(86362001)(6506007)(64756008)(66476007)(33656002)(66946007)(966005)(229853002)(53546011)(54906003)(5660300002)(305945005)(316002)(6246003)(66556008)(4744005)(4326008)(2906002)(7736002)(76176011)(99286004)(478600001)(25786009)(36756003)(6116002)(14454004)(6512007)(256004)(6306002)(476003)(446003)(76116006)(8936002)(6436002)(46003)(81156014)(186003)(81166006)(50226002)(486006)(6916009)(11346002)(8676002)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1454;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UsfxYewxRTLFQMwEMvFEmRy04thCVsIcH/elZoeeyUDhlDEJsZ0HuwPdCaLjxT6o6YQxfnzWMuBq/TBxENXXCoKY+SeIRyZoCHVkmEwXrcI4TT/Fm02gY1QpcPXiXEA2z2IlA6yDrXj7IPy0TGvl5+CJqSXwZh3T8LrdQIwS+gQieeNmPT8Azxd35Cx1CNYQiN0OVkqKw61bVl+pTBA6aptznwC4N3v4RgTi/jR2qOYQ9cOBeVY3k4i+h3WlezxHH0jQYXI/VcrYMy9v77iNER3vZUzzu/3LCo3SQFOqDe/2YuAohg4qN1/x3ckXspum7d2DuStPkdtHHhWvkFO8uEai98fV1rTewz3qVLtiKA22WWOOkxJNFzYCEA34+gJqB5DgSbh0nL+pkGi5PYfHeHF3aEgs1LgeAMEJE2iLfrRm2IegoVjJXM7nYPi/QStHFy5cG84xntGcKK24LvCN0A==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2DB2D03E642DBF449F8AAE42F5DC3E1C@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mopqc6x4c2h7s3hb"
-Content-Disposition: inline
-In-Reply-To: <20191010222955.GB229325@dtor-ws>
-User-Agent: NeoMutt/20180716
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccffcca2-5941-4e3a-2d33-08d74dd370d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 22:44:42.0815
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: whBvPKets7r8fjq7o3sYDn9RbKegi55ageRpthV6ZvUQlkZTEGYFxbS3XH7qOe9orwhp+2Wuw9O25rJuwG4EvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1454
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-10_08:2019-10-10,2019-10-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=731
+ mlxscore=0 priorityscore=1501 impostorscore=0 adultscore=0 suspectscore=0
+ phishscore=0 spamscore=0 clxscore=1015 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910100197
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---mopqc6x4c2h7s3hb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Thu, Oct 10, 2019 at 03:29:55PM -0700, Dmitry Torokhov wrote:
-> On Thu, Oct 10, 2019 at 03:20:32PM -0700, Guenter Roeck wrote:
-> > On 10/10/19 1:29 PM, Arnd Bergmann wrote:
-> > > There are multiple drivers using the private adc interface.
-> > > It seems unlikely that they would ever get converted to iio,
-> > > so make the current state official by making the header file
-> > > global.
-> > >=20
-> > > The s3c2410_ts driver needs a couple of register definitions
-> > > as well.
-> > >=20
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> >=20
-> > For hwmon:
-> >=20
-> > Acked-by: Guenter Roeck <linux@roeck-us.net>
+> On Oct 7, 2019, at 4:34 PM, Masami Hiramatsu <mhiramat@kernel.org> wrote:
 >=20
-> For input:
+> Hi,
 >=20
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-For power-supply:
-
-Acked-by: Sebastian Reichel <sre@kernel.org>
-
--- Sebastian
-
-> > > ---
-> > >   arch/arm/mach-s3c64xx/mach-crag6410.c         |  2 +-
-> > >   arch/arm/mach-s3c64xx/mach-mini6410.c         |  2 +-
-> > >   arch/arm/mach-s3c64xx/mach-real6410.c         |  2 +-
-> > >   arch/arm/mach-s3c64xx/mach-smdk6410.c         |  2 +-
-> > >   arch/arm/plat-samsung/adc.c                   |  2 +-
-> > >   arch/arm/plat-samsung/devs.c                  |  2 +-
-> > >   drivers/hwmon/s3c-hwmon.c                     |  2 +-
-> > >   drivers/input/touchscreen/s3c2410_ts.c        | 37 ++++++++++++++++=
-++-
-> > >   drivers/power/supply/s3c_adc_battery.c        |  2 +-
-> > >   .../linux/soc/samsung/s3c-adc.h               |  0
-> > >   10 files changed, 43 insertions(+), 10 deletions(-)
-> > >   rename arch/arm/plat-samsung/include/plat/adc.h =3D> include/linux/=
-soc/samsung/s3c-adc.h (100%)
-> > >=20
-> > > diff --git a/arch/arm/mach-s3c64xx/mach-crag6410.c b/arch/arm/mach-s3=
-c64xx/mach-crag6410.c
-> > > index da5b50981a14..133453562d23 100644
-> > > --- a/arch/arm/mach-s3c64xx/mach-crag6410.c
-> > > +++ b/arch/arm/mach-s3c64xx/mach-crag6410.c
-> > > @@ -57,7 +57,7 @@
-> > >   #include <plat/keypad.h>
-> > >   #include <plat/devs.h>
-> > >   #include <plat/cpu.h>
-> > > -#include <plat/adc.h>
-> > > +#include <linux/soc/samsung/s3c-adc.h>
-> > >   #include <linux/platform_data/i2c-s3c2410.h>
-> > >   #include <plat/pm.h>
-> > >   #include <plat/samsung-time.h>
-> > > diff --git a/arch/arm/mach-s3c64xx/mach-mini6410.c b/arch/arm/mach-s3=
-c64xx/mach-mini6410.c
-> > > index 0dd36ae49e6a..c7140300bd3f 100644
-> > > --- a/arch/arm/mach-s3c64xx/mach-mini6410.c
-> > > +++ b/arch/arm/mach-s3c64xx/mach-mini6410.c
-> > > @@ -27,7 +27,7 @@
-> > >   #include <mach/regs-gpio.h>
-> > >   #include <mach/gpio-samsung.h>
-> > > -#include <plat/adc.h>
-> > > +#include <linux/soc/samsung/s3c-adc.h>
-> > >   #include <plat/cpu.h>
-> > >   #include <plat/devs.h>
-> > >   #include <plat/fb.h>
-> > > diff --git a/arch/arm/mach-s3c64xx/mach-real6410.c b/arch/arm/mach-s3=
-c64xx/mach-real6410.c
-> > > index 0ff88b6859c4..f55097fde94c 100644
-> > > --- a/arch/arm/mach-s3c64xx/mach-real6410.c
-> > > +++ b/arch/arm/mach-s3c64xx/mach-real6410.c
-> > > @@ -29,7 +29,7 @@
-> > >   #include <mach/gpio-samsung.h>
-> > >   #include <mach/irqs.h>
-> > > -#include <plat/adc.h>
-> > > +#include <linux/soc/samsung/s3c-adc.h>
-> > >   #include <plat/cpu.h>
-> > >   #include <plat/devs.h>
-> > >   #include <plat/fb.h>
-> > > diff --git a/arch/arm/mach-s3c64xx/mach-smdk6410.c b/arch/arm/mach-s3=
-c64xx/mach-smdk6410.c
-> > > index 95bdcfe95a53..3042f6cbffd9 100644
-> > > --- a/arch/arm/mach-s3c64xx/mach-smdk6410.c
-> > > +++ b/arch/arm/mach-s3c64xx/mach-smdk6410.c
-> > > @@ -60,7 +60,7 @@
-> > >   #include <plat/devs.h>
-> > >   #include <plat/cpu.h>
-> > > -#include <plat/adc.h>
-> > > +#include <linux/soc/samsung/s3c-adc.h>
-> > >   #include <linux/platform_data/touchscreen-s3c2410.h>
-> > >   #include <plat/keypad.h>
-> > >   #include <plat/samsung-time.h>
-> > > diff --git a/arch/arm/plat-samsung/adc.c b/arch/arm/plat-samsung/adc.c
-> > > index ee3d5c989a76..623a9774cc52 100644
-> > > --- a/arch/arm/plat-samsung/adc.c
-> > > +++ b/arch/arm/plat-samsung/adc.c
-> > > @@ -20,7 +20,7 @@
-> > >   #include <linux/regulator/consumer.h>
-> > >   #include <plat/regs-adc.h>
-> > > -#include <plat/adc.h>
-> > > +#include <linux/soc/samsung/s3c-adc.h>
-> > >   /* This driver is designed to control the usage of the ADC block be=
-tween
-> > >    * the touchscreen and any other drivers that may need to use it, s=
-uch as
-> > > diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/dev=
-s.c
-> > > index fd94a35e22f8..ddd90f0bb380 100644
-> > > --- a/arch/arm/plat-samsung/devs.c
-> > > +++ b/arch/arm/plat-samsung/devs.c
-> > > @@ -44,7 +44,7 @@
-> > >   #include <plat/cpu.h>
-> > >   #include <plat/devs.h>
-> > > -#include <plat/adc.h>
-> > > +#include <linux/soc/samsung/s3c-adc.h>
-> > >   #include <linux/platform_data/ata-samsung_cf.h>
-> > >   #include <plat/fb.h>
-> > >   #include <plat/fb-s3c2410.h>
-> > > diff --git a/drivers/hwmon/s3c-hwmon.c b/drivers/hwmon/s3c-hwmon.c
-> > > index b490fe3d2ee8..f2703c5460d0 100644
-> > > --- a/drivers/hwmon/s3c-hwmon.c
-> > > +++ b/drivers/hwmon/s3c-hwmon.c
-> > > @@ -20,7 +20,7 @@
-> > >   #include <linux/hwmon.h>
-> > >   #include <linux/hwmon-sysfs.h>
-> > > -#include <plat/adc.h>
-> > > +#include <linux/soc/samsung/s3c-adc.h>
-> > >   #include <linux/platform_data/hwmon-s3c.h>
-> > >   struct s3c_hwmon_attr {
-> > > diff --git a/drivers/input/touchscreen/s3c2410_ts.c b/drivers/input/t=
-ouchscreen/s3c2410_ts.c
-> > > index b346e7cafd62..1a5a178ea286 100644
-> > > --- a/drivers/input/touchscreen/s3c2410_ts.c
-> > > +++ b/drivers/input/touchscreen/s3c2410_ts.c
-> > > @@ -21,10 +21,43 @@
-> > >   #include <linux/clk.h>
-> > >   #include <linux/io.h>
-> > > -#include <plat/adc.h>
-> > > -#include <plat/regs-adc.h>
-> > > +#include <linux/soc/samsung/s3c-adc.h>
-> > >   #include <linux/platform_data/touchscreen-s3c2410.h>
-> > > +#define	S3C2410_ADCCON			(0x00)
-> > > +#define	S3C2410_ADCTSC			(0x04)
-> > > +#define	S3C2410_ADCDLY			(0x08)
-> > > +#define	S3C2410_ADCDAT0			(0x0C)
-> > > +#define	S3C2410_ADCDAT1			(0x10)
-> > > +#define	S3C64XX_ADCUPDN			(0x14)
-> > > +#define	S3C2443_ADCMUX			(0x18)
-> > > +#define	S3C64XX_ADCCLRINT		(0x18)
-> > > +#define	S5P_ADCMUX			(0x1C)
-> > > +#define	S3C64XX_ADCCLRINTPNDNUP		(0x20)
-> > > +
-> > > +/* ADCTSC Register Bits */
-> > > +#define S3C2443_ADCTSC_UD_SEN		(1 << 8)
-> > > +#define S3C2410_ADCTSC_YM_SEN		(1<<7)
-> > > +#define S3C2410_ADCTSC_YP_SEN		(1<<6)
-> > > +#define S3C2410_ADCTSC_XM_SEN		(1<<5)
-> > > +#define S3C2410_ADCTSC_XP_SEN		(1<<4)
-> > > +#define S3C2410_ADCTSC_PULL_UP_DISABLE	(1<<3)
-> > > +#define S3C2410_ADCTSC_AUTO_PST		(1<<2)
-> > > +#define S3C2410_ADCTSC_XY_PST(x)	(((x)&0x3)<<0)
-> > > +
-> > > +/* ADCDAT0 Bits */
-> > > +#define S3C2410_ADCDAT0_UPDOWN		(1<<15)
-> > > +#define S3C2410_ADCDAT0_AUTO_PST	(1<<14)
-> > > +#define S3C2410_ADCDAT0_XY_PST		(0x3<<12)
-> > > +#define S3C2410_ADCDAT0_XPDATA_MASK	(0x03FF)
-> > > +
-> > > +/* ADCDAT1 Bits */
-> > > +#define S3C2410_ADCDAT1_UPDOWN		(1<<15)
-> > > +#define S3C2410_ADCDAT1_AUTO_PST	(1<<14)
-> > > +#define S3C2410_ADCDAT1_XY_PST		(0x3<<12)
-> > > +#define S3C2410_ADCDAT1_YPDATA_MASK	(0x03FF)
-> > > +
-> > > +
-> > >   #define TSC_SLEEP  (S3C2410_ADCTSC_PULL_UP_DISABLE | S3C2410_ADCTSC=
-_XY_PST(0))
-> > >   #define INT_DOWN	(0)
-> > > diff --git a/drivers/power/supply/s3c_adc_battery.c b/drivers/power/s=
-upply/s3c_adc_battery.c
-> > > index 3d00b35cafc9..60b7f41ab063 100644
-> > > --- a/drivers/power/supply/s3c_adc_battery.c
-> > > +++ b/drivers/power/supply/s3c_adc_battery.c
-> > > @@ -22,7 +22,7 @@
-> > >   #include <linux/init.h>
-> > >   #include <linux/module.h>
-> > > -#include <plat/adc.h>
-> > > +#include <linux/soc/samsung/s3c-adc.h>
-> > >   #define BAT_POLL_INTERVAL		10000 /* ms */
-> > >   #define JITTER_DELAY			500 /* ms */
-> > > diff --git a/arch/arm/plat-samsung/include/plat/adc.h b/include/linux=
-/soc/samsung/s3c-adc.h
-> > > similarity index 100%
-> > > rename from arch/arm/plat-samsung/include/plat/adc.h
-> > > rename to include/linux/soc/samsung/s3c-adc.h
-> > >=20
-> >=20
+> On Mon, 7 Oct 2019 15:31:11 -0700
+> Song Liu <songliubraving@fb.com> wrote:
 >=20
-> --=20
-> Dmitry
+>> Enable specifying maxactive for fd based kretprobe. This will be useful
+>> for tracing tools like bcc and bpftrace. [1] discussed the need of this
+>> in bpftrace. Use highest highest 12 bit (bit 52-63) to allow maximal
+>> maxactive of 4095.
+>>=20
+>> [1] https://github.com/iovisor/bpftrace/issues/835
+>=20
+> From the view point of trace_kprobe, this looks good to me.
+>=20
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
---mopqc6x4c2h7s3hb
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks Masami!
 
------BEGIN PGP SIGNATURE-----
+Hi Peter and Steven,=20
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2ftFAACgkQ2O7X88g7
-+ppCxxAAn15YlBwsqaGwUaYchBuBq14qU4EobExBzZbw8oYHQL4I5oAbH2t+3oOa
-UrhNrvHnWWftmlq/2ycEzWRk4NOQ8ZES1AD/4r7q56i4QxyV/zk/cRiAjRjcCm5w
-IRJEAVVSxyADbMTxK0omr0GW2cIqUlJcRmW5JyqQvXKC5wOXVz3+0C613tQCm0o2
-JBSC+HqZkoDAlcBF/6IDcDfy1K+3FEhCEYkvFTPNeh+7I48u7qdLFS6Xf66+kLPW
-ccKaSTBw6WV9KLrwf4+sEukRP5QfA0ehVuaV447SiH2n1uzSQlju4w5pRleAwlps
-umOd1n1rFcrxBf+TEQS0XsRJ7Oa/h11DXkkLWPtCtA84FXO1IvHGLmkSx3yxRxSz
-JIszIsYHyTWwJJNKorhB2PjpSGZoaciwgOE/lt8mgPc5I64MZXvHosV2nlAMsFhJ
-LMKyxh69aShi8ylCFBy+ukiC8yXM4CzRNh1chazvB2cjNNB1p6BS/4zAxlTmIvGo
-9lUxde12J325Z9peeP6OInu1h1/v+fRfrg2wxsblwCQmdC6eQoWTPTynH9t+WADr
-ka6XkZvcoAEoaPji8fyGfY6DUkhiRwSkDpn3bk1zg7nmm5jAlH1MCoMBVrUOKylv
-Xp2bULDZLS6KD5LBn+s3bsZ1hatAJpU2746uE4Afal2lgcAnqb4=
-=0aUK
------END PGP SIGNATURE-----
+Could you please share your comments on this?
 
---mopqc6x4c2h7s3hb--
+Thanks,
+Song
