@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D078C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56EAC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC6E22459
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9006922459
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697766;
-	bh=4+ddVrSlwKEXvHJR9TXUtVJv03PE9mTWulwBohgF+iE=;
+	s=default; t=1570697769;
+	bh=oao8EGCviC1uG/vEmaLziTEieGml2DsRK5XwBRMeSjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zY8iI9+YILSe8Tvs/1606wgouTl9zcfQdDDZsdhXRY2B+woGdwt1IwI3yGURyq+pr
-	 Z0zzekkM1KmRBIc2MfcjyFfNFvcj6e12JEwe9TOcQ5o0QjTcpH4WtPqFtR82j02dLA
-	 Tcf159EY8e2rjfTQvKJnVlGksa/EhMnBbF7UfdaA=
+	b=n28H5eAzMotbSQCAHNXPn0Pj2l/AcvMMjnMuqOCJscJnEX8rsFFb4G2AZzA4e3s9a
+	 8ydVoo0YxGeMFz2sTRC5pvTu+k0uw1JJPGH6u8pPoOt8fDvrvn/0Pekm6yXokOFYxd
+	 tjepFji8F7XFrEQTx4vWBA5tbfQBqLiNROKhNrWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389763AbfJJI4F (ORCPT
+        id S2389669AbfJJIsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:56:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54868 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:48:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389674AbfJJIsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:37 -0400
+        id S2389120AbfJJIs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C7EF218AC;
-        Thu, 10 Oct 2019 08:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B50E208C3;
+        Thu, 10 Oct 2019 08:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697315;
-        bh=4+ddVrSlwKEXvHJR9TXUtVJv03PE9mTWulwBohgF+iE=;
+        s=default; t=1570697304;
+        bh=oao8EGCviC1uG/vEmaLziTEieGml2DsRK5XwBRMeSjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S77g7MFM0uw3xzeRJW4dgLxcF1HRSz6vVUtcMwhSt1GdxOMo7LAflk44Y97sR0Vxg
-         /Sb6cK6NPvEk8z3cMRjNciAH7kmiJPQItwrrTfGQuT6PTWpvFllM9UVZU6h6iMDt55
-         jcDVRH3Zm06v+J6qLI/ar0fIYXKZBYiO4YQAeBNY=
+        b=Wzt4W63e5aEs8+tagvcGuRu+xpgd3IxESPsj8tFtF0GvHyEMzAE8pDbIjMUdJtbxH
+         VmUJ6ziI1wWLzZon3XYhPenzC6eJk6d8Siec0IzKxXaFgX8nwFbme22Q4hskYOYQAz
+         TwaZaIp0QiQtdOwz50kAQXQUTpcG2WHjfh9mnTjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
+        stable@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Stefan Wahren <stefan.wahren@i2se.com>,
         Will Deacon <will.deacon@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.19 098/114] arm64: Advertise mitigation of Spectre-v2, or lack thereof
-Date:   Thu, 10 Oct 2019 10:36:45 +0200
-Message-Id: <20191010083613.354710166@linuxfoundation.org>
+Subject: [PATCH 4.19 094/114] arm64: add sysfs vulnerability show for meltdown
+Date:   Thu, 10 Oct 2019 10:36:41 +0200
+Message-Id: <20191010083613.091754245@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -65,221 +64,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Jeremy Linton <jeremy.linton@arm.com>
 
-[ Upstream commit 73f38166095947f3b86b02fbed6bd592223a7ac8 ]
+[ Upstream commit 1b3ccf4be0e7be8c4bd8522066b6cbc92591e912 ]
 
-We currently have a list of CPUs affected by Spectre-v2, for which
-we check that the firmware implements ARCH_WORKAROUND_1. It turns
-out that not all firmwares do implement the required mitigation,
-and that we fail to let the user know about it.
+We implement page table isolation as a mitigation for meltdown.
+Report this to userspace via sysfs.
 
-Instead, let's slightly revamp our checks, and rely on a whitelist
-of cores that are known to be non-vulnerable, and let the user know
-the status of the mitigation in the kernel log.
-
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/cpu_errata.c |  109 +++++++++++++++++++++--------------------
- 1 file changed, 56 insertions(+), 53 deletions(-)
+ arch/arm64/kernel/cpufeature.c |   58 +++++++++++++++++++++++++++++++----------
+ 1 file changed, 44 insertions(+), 14 deletions(-)
 
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -109,9 +109,9 @@ static void __copy_hyp_vect_bpi(int slot
- 	__flush_icache_range((uintptr_t)dst, (uintptr_t)dst + SZ_2K);
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -889,7 +889,7 @@ static bool has_cache_dic(const struct a
+ 	return ctr & BIT(CTR_DIC_SHIFT);
  }
  
--static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
--				      const char *hyp_vecs_start,
--				      const char *hyp_vecs_end)
-+static void install_bp_hardening_cb(bp_hardening_cb_t fn,
-+				    const char *hyp_vecs_start,
-+				    const char *hyp_vecs_end)
- {
- 	static DEFINE_SPINLOCK(bp_lock);
- 	int cpu, slot = -1;
-@@ -138,7 +138,7 @@ static void __install_bp_hardening_cb(bp
- #define __smccc_workaround_1_smc_start		NULL
- #define __smccc_workaround_1_smc_end		NULL
+-#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
++static bool __meltdown_safe = true;
+ static int __kpti_forced; /* 0: not forced, >0: forced on, <0: forced off */
  
--static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
-+static void install_bp_hardening_cb(bp_hardening_cb_t fn,
- 				      const char *hyp_vecs_start,
- 				      const char *hyp_vecs_end)
- {
-@@ -146,23 +146,6 @@ static void __install_bp_hardening_cb(bp
- }
- #endif	/* CONFIG_KVM_INDIRECT_VECTORS */
+ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+@@ -908,6 +908,16 @@ static bool unmap_kernel_at_el0(const st
+ 		{ /* sentinel */ }
+ 	};
+ 	char const *str = "command line option";
++	bool meltdown_safe;
++
++	meltdown_safe = is_midr_in_range_list(read_cpuid_id(), kpti_safe_list);
++
++	/* Defer to CPU feature registers */
++	if (has_cpuid_feature(entry, scope))
++		meltdown_safe = true;
++
++	if (!meltdown_safe)
++		__meltdown_safe = false;
  
--static void  install_bp_hardening_cb(const struct arm64_cpu_capabilities *entry,
--				     bp_hardening_cb_t fn,
--				     const char *hyp_vecs_start,
--				     const char *hyp_vecs_end)
--{
--	u64 pfr0;
--
--	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
--		return;
--
--	pfr0 = read_cpuid(ID_AA64PFR0_EL1);
--	if (cpuid_feature_extract_unsigned_field(pfr0, ID_AA64PFR0_CSV2_SHIFT))
--		return;
--
--	__install_bp_hardening_cb(fn, hyp_vecs_start, hyp_vecs_end);
--}
--
- #include <uapi/linux/psci.h>
- #include <linux/arm-smccc.h>
- #include <linux/psci.h>
-@@ -197,31 +180,27 @@ static int __init parse_nospectre_v2(cha
- }
- early_param("nospectre_v2", parse_nospectre_v2);
- 
--static void
--enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
-+/*
-+ * -1: No workaround
-+ *  0: No workaround required
-+ *  1: Workaround installed
-+ */
-+static int detect_harden_bp_fw(void)
- {
- 	bp_hardening_cb_t cb;
- 	void *smccc_start, *smccc_end;
- 	struct arm_smccc_res res;
- 	u32 midr = read_cpuid_id();
- 
--	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
--		return;
--
--	if (__nospectre_v2) {
--		pr_info_once("spectrev2 mitigation disabled by command line option\n");
--		return;
--	}
--
- 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
--		return;
-+		return -1;
- 
- 	switch (psci_ops.conduit) {
- 	case PSCI_CONDUIT_HVC:
- 		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
- 		if ((int)res.a0 < 0)
--			return;
-+			return -1;
- 		cb = call_hvc_arch_workaround_1;
- 		/* This is a guest, no need to patch KVM vectors */
- 		smccc_start = NULL;
-@@ -232,23 +211,23 @@ enable_smccc_arch_workaround_1(const str
- 		arm_smccc_1_1_smc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
- 		if ((int)res.a0 < 0)
--			return;
-+			return -1;
- 		cb = call_smc_arch_workaround_1;
- 		smccc_start = __smccc_workaround_1_smc_start;
- 		smccc_end = __smccc_workaround_1_smc_end;
- 		break;
- 
- 	default:
--		return;
-+		return -1;
+ 	/*
+ 	 * For reasons that aren't entirely clear, enabling KPTI on Cavium
+@@ -919,6 +929,19 @@ static bool unmap_kernel_at_el0(const st
+ 		__kpti_forced = -1;
  	}
  
- 	if (((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR) ||
- 	    ((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR_V1))
- 		cb = qcom_link_stack_sanitization;
- 
--	install_bp_hardening_cb(entry, cb, smccc_start, smccc_end);
-+	install_bp_hardening_cb(cb, smccc_start, smccc_end);
- 
--	return;
-+	return 1;
- }
- #endif	/* CONFIG_HARDEN_BRANCH_PREDICTOR */
- 
-@@ -535,24 +514,48 @@ multi_entry_cap_cpu_enable(const struct
- }
- 
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
--
- /*
-- * List of CPUs where we need to issue a psci call to
-- * harden the branch predictor.
-+ * List of CPUs that do not need any Spectre-v2 mitigation at all.
-  */
--static const struct midr_range arm64_bp_harden_smccc_cpus[] = {
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
--	MIDR_ALL_VERSIONS(MIDR_CORTEX_A75),
--	MIDR_ALL_VERSIONS(MIDR_BRCM_VULCAN),
--	MIDR_ALL_VERSIONS(MIDR_CAVIUM_THUNDERX2),
--	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR_V1),
--	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR),
--	MIDR_ALL_VERSIONS(MIDR_NVIDIA_DENVER),
--	{},
-+static const struct midr_range spectre_v2_safe_list[] = {
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
-+	{ /* sentinel */ }
- };
- 
-+static bool __maybe_unused
-+check_branch_predictor(const struct arm64_cpu_capabilities *entry, int scope)
-+{
-+	int need_wa;
++	/* Useful for KASLR robustness */
++	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0) {
++		if (!__kpti_forced) {
++			str = "KASLR";
++			__kpti_forced = 1;
++		}
++	}
 +
-+	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
-+
-+	/* If the CPU has CSV2 set, we're safe */
-+	if (cpuid_feature_extract_unsigned_field(read_cpuid(ID_AA64PFR0_EL1),
-+						 ID_AA64PFR0_CSV2_SHIFT))
-+		return false;
-+
-+	/* Alternatively, we have a list of unaffected CPUs */
-+	if (is_midr_in_range_list(read_cpuid_id(), spectre_v2_safe_list))
-+		return false;
-+
-+	/* Fallback to firmware detection */
-+	need_wa = detect_harden_bp_fw();
-+	if (!need_wa)
-+		return false;
-+
-+	/* forced off */
-+	if (__nospectre_v2) {
-+		pr_info_once("spectrev2 mitigation disabled by command line option\n");
++	if (!IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0)) {
++		pr_info_once("kernel page table isolation disabled by kernel configuration\n");
 +		return false;
 +	}
 +
-+	if (need_wa < 0)
-+		pr_warn_once("ARM_SMCCC_ARCH_WORKAROUND_1 missing from firmware\n");
-+
-+	return (need_wa > 0);
-+}
- #endif
+ 	/* Forced? */
+ 	if (__kpti_forced) {
+ 		pr_info_once("kernel page table isolation forced %s by %s\n",
+@@ -926,18 +949,10 @@ static bool unmap_kernel_at_el0(const st
+ 		return __kpti_forced > 0;
+ 	}
  
- #ifdef CONFIG_HARDEN_EL2_VECTORS
-@@ -715,8 +718,8 @@ const struct arm64_cpu_capabilities arm6
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
- 	{
- 		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
--		.cpu_enable = enable_smccc_arch_workaround_1,
--		ERRATA_MIDR_RANGE_LIST(arm64_bp_harden_smccc_cpus),
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
-+		.matches = check_branch_predictor,
+-	/* Useful for KASLR robustness */
+-	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
+-		return true;
+-
+-	/* Don't force KPTI for CPUs that are not vulnerable */
+-	if (is_midr_in_range_list(read_cpuid_id(), kpti_safe_list))
+-		return false;
+-
+-	/* Defer to CPU feature registers */
+-	return !has_cpuid_feature(entry, scope);
++	return !meltdown_safe;
+ }
+ 
++#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+ static void
+ kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+ {
+@@ -962,6 +977,12 @@ kpti_install_ng_mappings(const struct ar
+ 
+ 	return;
+ }
++#else
++static void
++kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
++{
++}
++#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
+ 
+ static int __init parse_kpti(char *str)
+ {
+@@ -975,7 +996,6 @@ static int __init parse_kpti(char *str)
+ 	return 0;
+ }
+ early_param("kpti", parse_kpti);
+-#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
+ 
+ #ifdef CONFIG_ARM64_HW_AFDBM
+ static inline void __cpu_enable_hw_dbm(void)
+@@ -1196,7 +1216,6 @@ static const struct arm64_cpu_capabiliti
+ 		.field_pos = ID_AA64PFR0_EL0_SHIFT,
+ 		.min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
  	},
- #endif
- #ifdef CONFIG_HARDEN_EL2_VECTORS
+-#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+ 	{
+ 		.desc = "Kernel page table isolation (KPTI)",
+ 		.capability = ARM64_UNMAP_KERNEL_AT_EL0,
+@@ -1212,7 +1231,6 @@ static const struct arm64_cpu_capabiliti
+ 		.matches = unmap_kernel_at_el0,
+ 		.cpu_enable = kpti_install_ng_mappings,
+ 	},
+-#endif
+ 	{
+ 		/* FP/SIMD is not implemented */
+ 		.capability = ARM64_HAS_NO_FPSIMD,
+@@ -1853,3 +1871,15 @@ void cpu_clear_disr(const struct arm64_c
+ 	/* Firmware may have left a deferred SError in this register. */
+ 	write_sysreg_s(0, SYS_DISR_EL1);
+ }
++
++ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr,
++			  char *buf)
++{
++	if (__meltdown_safe)
++		return sprintf(buf, "Not affected\n");
++
++	if (arm64_kernel_unmapped_at_el0())
++		return sprintf(buf, "Mitigation: PTI\n");
++
++	return sprintf(buf, "Vulnerable\n");
++}
 
 
