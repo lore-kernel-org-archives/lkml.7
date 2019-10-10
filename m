@@ -2,255 +2,109 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4D7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AF0C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6A921920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3EA218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:39:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B/+yaJLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387456AbfJJHjp (ORCPT
+        id S2387466AbfJJHjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:39:45 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:44333 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733084AbfJJHgQ (ORCPT
+        Thu, 10 Oct 2019 03:39:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59156 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733088AbfJJHgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:36:16 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id x9A7ZqPj005366
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Thu, 10 Oct 2019 00:35:52 -0700 (PDT)
-Received: from [128.224.158.243] (128.224.158.243) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server id 14.3.468.0; Thu, 10 Oct 2019
- 00:35:52 -0700
-Subject: Re: [PATCH] ARM: dts: zynq: enablement of coresight topology
-To:     Michal Simek <michal.simek@xilinx.com>,
-        <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-        <git@xilinx.com>
-CC:     Zumeng Chen <zumeng.chen@windriver.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Crosthwaite <peter.crosthwaite@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robherring2@gmail.com>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <u-boot@lists.denx.de>
-References: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
-From:   qwang2 <quanyang.wang@windriver.com>
-Message-ID: <eb198b89-3b4a-4090-acc5-db036dd0be69@windriver.com>
-Date:   Thu, 10 Oct 2019 15:35:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 10 Oct 2019 03:36:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WpK+tHhD79sRpUxX2TvDfN4NB5JxjZXZLIF/L+pB+ho=; b=B/+yaJLtn2cVn4Y0JCaEnkp8z
+        GCO9Pgjkv1e7IN5X5omdjhKjp0h3cXym7YDQFNfspg0x6rFAZEKgMD469ZTUiT3LZZoOrmuch6kCk
+        r9bUwJEZEjsGkrez/t8rbuuygdXtEpKAt5LaIEgtPcmqbAFStqCgVMqHnyPNj7tK5krrMJOKjgkja
+        5DwsM6zPJ/qSvjzgn/fbscBbwt5w3l03sEwpOpD/0++5ca1IBMSBuQcE8Bj3RgPXcRhBjKRZRVKOz
+        NjpStHdkwSLIs2KTsfXKVZZZ4vvJTNLXJ5haAS6C+mT6/ofAzN+ilh9bGzwmr22Hbpj2uPPf+KtwZ
+        hLPatH60Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iISza-0004Yw-5a; Thu, 10 Oct 2019 07:36:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D6B3301A79;
+        Thu, 10 Oct 2019 09:35:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 86BE4202F4F4F; Thu, 10 Oct 2019 09:36:08 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 09:36:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-team@fb.com, stable@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH bpf-next 2/2] bpf/stackmap: fix A-A deadlock in
+ bpf_get_stack()
+Message-ID: <20191010073608.GO2311@hirez.programming.kicks-ass.net>
+References: <20191010061916.198761-1-songliubraving@fb.com>
+ <20191010061916.198761-3-songliubraving@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010061916.198761-3-songliubraving@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 09, 2019 at 11:19:16PM -0700, Song Liu wrote:
+> bpf stackmap with build-id lookup (BPF_F_STACK_BUILD_ID) can trigger A-A
+> deadlock on rq_lock():
+> 
+> rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> [...]
+> Call Trace:
+>  try_to_wake_up+0x1ad/0x590
+>  wake_up_q+0x54/0x80
+>  rwsem_wake+0x8a/0xb0
+>  bpf_get_stack+0x13c/0x150
+>  bpf_prog_fbdaf42eded9fe46_on_event+0x5e3/0x1000
+>  bpf_overflow_handler+0x60/0x100
+>  __perf_event_overflow+0x4f/0xf0
+>  perf_swevent_overflow+0x99/0xc0
+>  ___perf_sw_event+0xe7/0x120
+>  __schedule+0x47d/0x620
+>  schedule+0x29/0x90
+>  futex_wait_queue_me+0xb9/0x110
+>  futex_wait+0x139/0x230
+>  do_futex+0x2ac/0xa50
+>  __x64_sys_futex+0x13c/0x180
+>  do_syscall_64+0x42/0x100
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
 
-On 10/9/19 10:07 PM, Michal Simek wrote:
-> From: Zumeng Chen <zumeng.chen@windriver.com>
->
-> This patch is to build the coresight topology structure of zynq-7000
-> series according to the docs of coresight and userguide of zynq-7000.
->
-> Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
-> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->
->   arch/arm/boot/dts/zynq-7000.dtsi | 158 +++++++++++++++++++++++++++++++
->   1 file changed, 158 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-> index ca6425ad794c..86430ad76fee 100644
-> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> @@ -59,6 +59,40 @@
->   		regulator-always-on;
->   	};
->   
-> +	replicator {
-> +		compatible = "arm,coresight-static-replicator";
-> +		clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +		clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +
-> +		out-ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			/* replicator output ports */
-> +			port@0 {
-> +				reg = <0>;
-> +				replicator_out_port0: endpoint {
-> +					remote-endpoint = <&tpiu_in_port>;
-> +				};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				replicator_out_port1: endpoint {
-> +					remote-endpoint = <&etb_in_port>;
-> +				};
-> +			};
-> +		};
-> +		in-ports {
-> +			/* replicator input port */
-> +			port {
-> +				replicator_in_port0: endpoint {
-> +					slave-mode;
-> +					remote-endpoint = <&funnel_out_port>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->   	amba: amba {
->   		compatible = "simple-bus";
->   		#address-cells = <1>;
-> @@ -365,5 +399,129 @@
->   			reg = <0xf8005000 0x1000>;
->   			timeout-sec = <10>;
->   		};
-> +
-> +		etb@f8801000 {
-> +			compatible = "arm,coresight-etb10", "arm,primecell";
-> +			reg = <0xf8801000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			in-ports {
-> +				port {
-> +					etb_in_port: endpoint {
-> +						remote-endpoint = <&replicator_out_port1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		tpiu@f8803000 {
-> +			compatible = "arm,coresight-tpiu", "arm,primecell";
-> +			reg = <0xf8803000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			in-ports {
-> +				port {
-> +					tpiu_in_port: endpoint {
-> +						remote-endpoint = <&replicator_out_port0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@f8804000 {
-> +			compatible = "arm,coresight-static-funnel", "arm,primecell";
-> +			reg = <0xf8804000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +
-> +			/* funnel output ports */
-> +			out-ports {
-> +				port {
-> +					funnel_out_port: endpoint {
-> +						remote-endpoint =
-> +							<&replicator_in_port0>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				/* funnel input ports */
-> +				port@0 {
-> +					reg = <0>;
-> +					funnel0_in_port0: endpoint {
-> +						remote-endpoint = <&ptm0_out_port>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					funnel0_in_port1: endpoint {
-> +						remote-endpoint = <&ptm1_out_port>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					funnel0_in_port2: endpoint {
-> +					};
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					funnel0_in_port3: endpoint {
-> +						remote-endpoint = <&itm_out_port>;
-> +					};
-> +				};
-> +				/* The other input ports are not connect to anything */
-> +			};
-> +		};
-> +
-> +		/* ITM is not supported by kernel, only leave device node here */
-> +		itm@f8805000 {
-> +			compatible = "arm,coresight-etm3x", "arm,primecell";
+> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+> index 052580c33d26..3b278f6b0c3e 100644
+> --- a/kernel/bpf/stackmap.c
+> +++ b/kernel/bpf/stackmap.c
+> @@ -287,7 +287,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
+>  	bool irq_work_busy = false;
+>  	struct stack_map_irq_work *work = NULL;
+> 
+> -	if (in_nmi()) {
+> +	if (in_nmi() || this_rq_is_locked()) {
+>  		work = this_cpu_ptr(&up_read_work);
+>  		if (work->irq_work.flags & IRQ_WORK_BUSY)
+>  			/* cannot queue more up_read, fallback */
 
-The "arm,coresight-etm3x" shouldn't be the compatible property for ITM. 
-Had better remove it.
-
-Thanks,
-
-Quanyang
-
-> +			reg = <0xf8805000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			out-ports {
-> +				port {
-> +					itm_out_port: endpoint {
-> +						remote-endpoint = <&funnel0_in_port3>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		ptm@f889c000 {
-> +			compatible = "arm,coresight-etm3x", "arm,primecell";
-> +			reg = <0xf889c000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			cpu = <&cpu0>;
-> +			out-ports {
-> +				port {
-> +					ptm0_out_port: endpoint {
-> +						remote-endpoint = <&funnel0_in_port0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		ptm@f889d000 {
-> +			compatible = "arm,coresight-etm3x", "arm,primecell";
-> +			reg = <0xf889d000 0x1000>;
-> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
-> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
-> +			cpu = <&cpu1>;
-> +			out-ports {
-> +				port {
-> +					ptm1_out_port: endpoint {
-> +						remote-endpoint = <&funnel0_in_port1>;
-> +					};
-> +				};
-> +			};
-> +		};
->   	};
->   };
+This is horrific crap. Just say no to that get_build_id_offset()
+trainwreck.
