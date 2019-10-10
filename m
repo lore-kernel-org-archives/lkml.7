@@ -2,156 +2,153 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4C3C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FC2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A9D2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B492067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:07:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="W9XjitJV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I9lwiD04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfJJVEg (ORCPT
+        id S1727108AbfJJVHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:04:36 -0400
-Received: from mail-eopbgr800092.outbound.protection.outlook.com ([40.107.80.92]:23435
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726986AbfJJVEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:04:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ANoP7vvST9AinWLUjzaFRtGnEYqJlfSS6Rp0a5aURJ/z4Mww5Z+Os+sibCf4R+mwU15qBTcow0Jrb9U1P3ioaajxuv+zhWKVwjevrOvpkyL5ir1BeB/KLpUnfB/KuP+GdtIHWGsJxARqoGM0eIpVfCC3snQMlEMQJaI6wdygLiXnAP8cxUBojsTJm9i6LeqKEDk/GlO0i0487UI3fyifKnFiTOFaSbZd2PlXpIY67fcDn+jEzZUPuOVXbgo69EtCFB/GUtYSMf8JdcbKeArJj2+7XgRNKKwnZJQf0jUaeT+OFrHR3USd5b27rtZpTjfi4gFs8Dwnt5Au37Ex4If+Ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bU5Me7enwfA8VAvE54PrnHIecTtiHFVupcpOKg/XXqE=;
- b=QYpUUnXTgoLVqi5uUw+v0MZ71xchMFE1R3X5QbsEORMeTX4+UZzHQv23qSrOO5NqwuyBwScJhDLrC9yoKtZgs63X3BdPokjkklcbdTdPNanBX+mQpvBZMtayfnCu2ealqva/Nds1S3ZYHRfIPliRJf/kOEw/Cy/26J3tqGugwe8l9H9hxx6jjhrDseq8qbF5LqnqO7I2UgbeC0r0DzcrL+FdxrmELlOJZBt0drnJLHpGXLI9UraKIyg3iP8WWWkOt6NWqF1WzIsPuruO9dd4oGOh7FNW5M8/V84ErkET5u4eljnwYShl/fPATzUSL9bszqkoqARvxxgHs7ModBPriQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bU5Me7enwfA8VAvE54PrnHIecTtiHFVupcpOKg/XXqE=;
- b=W9XjitJVz0k0FSlnAmHCxbdVdCre0nHWrZExjWi9yJ6DYqf/EMJJG8QIWeQyM4fnmWznDL/db6tjXkmrrBFguw8hrGljYDm8i8xqOF1z8gh4BJ6BhBmc1goNjNoEnImY7CBnzTGjRm3UeG8WDkJ1QHBDjl4gG7p551fDvb4Yijg=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1279.namprd22.prod.outlook.com (10.174.162.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.24; Thu, 10 Oct 2019 21:04:21 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::c1dc:dba3:230c:e7f0]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::c1dc:dba3:230c:e7f0%8]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
- 21:04:21 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH] mips: Fix unroll macro when building with Clang
-Thread-Topic: [PATCH] mips: Fix unroll macro when building with Clang
-Thread-Index: AQHVf65JWhHySr7ydUe0eu/Ed/jbNg==
-Date:   Thu, 10 Oct 2019 21:04:21 +0000
-Message-ID: <MWHPR2201MB1277296EAF034DFC726FF1EFC1940@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20191010203159.20565-1-natechancellor@gmail.com>
-In-Reply-To: <20191010203159.20565-1-natechancellor@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0022.prod.exchangelabs.com (2603:10b6:a02:80::35)
- To MWHPR2201MB1277.namprd22.prod.outlook.com (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 97f61870-1968-4b90-1702-08d74dc56bf7
-x-ms-traffictypediagnostic: MWHPR2201MB1279:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB12799DAED4CA42269E83544CC1940@MWHPR2201MB1279.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 018632C080
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(39840400004)(136003)(346002)(366004)(199004)(189003)(71200400001)(966005)(11346002)(446003)(71190400001)(486006)(478600001)(256004)(54906003)(99286004)(14444005)(476003)(4326008)(14454004)(44832011)(66066001)(66946007)(66476007)(66556008)(64756008)(66446008)(42882007)(52536014)(6916009)(5660300002)(102836004)(8676002)(81156014)(74316002)(81166006)(26005)(7696005)(52116002)(305945005)(76176011)(3846002)(1411001)(6116002)(6506007)(186003)(33656002)(386003)(316002)(25786009)(6246003)(6306002)(55016002)(9686003)(7736002)(2906002)(8936002)(6436002)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1279;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZbR1cgjsiBJoS7dM+CFycl888a2v9OQC0MWrtlCLzeqKpgls0wY9TYHE3CrR4VarkQrQesfD4DNGNu6nZ49fLKOf2DNMGvb3BYgFi5cH0PJ6A1+krgm2ybsEEnBodZCrnHbP5z8PkcXo/1jGmHjxSYrEyU6TyKvn6xaS3aEUO37NYeR3cM2cgxr4c5MvBT3s3kEud4TVo0V6Lbt4EpnDAtKwZyDFu6PrQk2BsPoxUshfMLh1ma+6K0V9VuIzzvHo1lWz56U19CP/BpV81gFqhP6Qp2O0paRSRGqXTK3tumbIWpGEUEG98v3flIWdoMSD4m1eCtrXMLhAx8sP7yHyWV94A8Vy3aHy0w6PhQ1AjJDiRLyK1XQzPrTXvKcOmyFats2iY8vLQaYOyeiQVz5f/ItTHnNV6N1+5jMBJHcchruB6gyFJU9hvqBctYxcuGhWY77IVoHySAoQYR6JwaBvsA==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97f61870-1968-4b90-1702-08d74dc56bf7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 21:04:21.4574
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LTK1snwJCTmU3SFsSyoZ+cjXOM/DT3gRF+TDFGp2tEUp7O+rmtX3/feuvNqNRV5z3Z32oLUVOUmqrtXy+CEkng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1279
+        Thu, 10 Oct 2019 17:07:03 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43120 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJVHD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 17:07:03 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a2so4673638pfo.10;
+        Thu, 10 Oct 2019 14:07:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qC40adZXU/tV5QzYgkBZx24z9et5UNUWBE0VYT7PPKM=;
+        b=I9lwiD04t1jKp5V8AgRfsBgUtqOqxbP2i2vMH/gvkQdGrPNFU8oba65acyXERV2WxY
+         v22XAjePeSNoSnuHvvSA3n0sZueH/ek4qoDsV1mF5gUidtlh0f9FoQfVDAR/jhkOcGhB
+         rnykdBOTlPwXGv1tJqfm+muTrjPsvtCHqZ6NIxprQmcBoo3Q1X3BOiJAKexs+98gGLXI
+         gy3kJH4Zzmx8dl5/AWZaZXQWidW/uMELQ+Df4m0RopDxA1X73CcmKuvV8DuDVa+IPveD
+         5JW71HSCGxBV95p5y9yuhCfuGDL78Qh7kwGviirnVfRQLpsrBLlk1ua2yXpUwA+5aM6b
+         ks0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qC40adZXU/tV5QzYgkBZx24z9et5UNUWBE0VYT7PPKM=;
+        b=bw55MY9Jn/eIZI2SJwlgas2/5GdWLFFbDwN4o5fzJxvsmRlxyk/wsAz3PqaN9Fu0Tp
+         8J3DCWvhdOLFm2MDogWGzqpv662ROZXN8juCcLz+Knin2ZejoETzo5GE7LItFNuh+X3j
+         jMVHKJKp9Ta+wrRjH9SFis+HNCUfOkfsHbz1mS/eoBT/aVek6pOOXVSvrNYe4tMqlG9+
+         mZaC5IbAngmwK5Qhwys+eP/wNxurcn817N/y1qcEdpjxt5t7FwUPvPJIUPCmCYMYZIxD
+         reX/AlFicatSmth9u8WG9KRMAgL0YRLsqssdQRvKC52ephAPsDx0HYxCw7+/UYZvpbeL
+         cazA==
+X-Gm-Message-State: APjAAAUQmSB9eBqoM7cVEOmeC1ilvh0Yf49BLn1rIaErBb3mCGuMLjm7
+        lARtDftMXIyqvzS8i9KirQs=
+X-Google-Smtp-Source: APXvYqxHvLlCmq0oZPemzFhc9sfBvjJdNcYUNGHxi4jnZ2DaNVAPm7JpzEYskIcPh0DGt6hKAW5iCg==
+X-Received: by 2002:aa7:8ece:: with SMTP id b14mr12791904pfr.113.1570741622461;
+        Thu, 10 Oct 2019 14:07:02 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id v68sm7898208pfv.47.2019.10.10.14.07.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 14:07:02 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
+        daniel@ffwll.ch, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] dt-bindings: display: Convert sharp,ld-d5116z01b panel to DT schema
+Date:   Thu, 10 Oct 2019 14:06:54 -0700
+Message-Id: <20191010210654.37426-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Convert the sharp,ld-d5116z01b panel binding to DT schema.
 
-Nathan Chancellor wrote:
-> Building with Clang errors after commit 6baaeadae911 ("MIPS: Provide
-> unroll() macro, use it for cache ops") since the GCC_VERSION macro
-> is defined in include/linux/compiler-gcc.h, which is only included
-> in compiler.h when using GCC:
->=20
-> In file included from arch/mips/kernel/mips-mt.c:20:
-> ./arch/mips/include/asm/r4kcache.h:254:1: error: use of undeclared
-> identifier 'GCC_VERSION'; did you mean 'S_VERSION'?
-> __BUILD_BLAST_CACHE(i, icache, Index_Invalidate_I, Hit_Invalidate_I, 32,
-> )
-> ^
-> ./arch/mips/include/asm/r4kcache.h:219:4: note: expanded from macro
-> '__BUILD_BLAST_CACHE'
->                         cache_unroll(32, kernel_cache, indexop,
->                         ^
-> ./arch/mips/include/asm/r4kcache.h:203:2: note: expanded from macro
-> 'cache_unroll'
->         unroll(times, _cache_op, insn, op, (addr) + (i++ * (lsize)));
->         ^
-> ./arch/mips/include/asm/unroll.h:28:15: note: expanded from macro
-> 'unroll'
->         BUILD_BUG_ON(GCC_VERSION >=3D 40700 &&                    \
->                      ^
->=20
-> Use CONFIG_GCC_VERSION, which will always be set by Kconfig.
-> Additionally, Clang 8 had improvements around __builtin_constant_p so
-> use that as a lower limit for this check with Clang (although MIPS
-> wasn't buildable until Clang 9); building a kernel with Clang 9.0.0
-> has no issues after this change.
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ .../display/panel/sharp,ld-d5116z01b.txt      | 26 ----------------
+ .../display/panel/sharp,ld-d5116z01b.yaml     | 30 +++++++++++++++++++
+ 2 files changed, 30 insertions(+), 26 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.yaml
 
-Applied to mips-next.
+diff --git a/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
+deleted file mode 100644
+index fd9cf39bde77..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-Sharp LD-D5116Z01B 12.3" WUXGA+ eDP panel
+-
+-Required properties:
+-- compatible: should be "sharp,ld-d5116z01b"
+-- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
+-
+-This binding is compatible with the simple-panel binding.
+-
+-The device node can contain one 'port' child node with one child
+-'endpoint' node, according to the bindings defined in [1]. This
+-node should describe panel's video bus.
+-
+-[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+-
+-Example:
+-
+-	panel: panel {
+-		compatible = "sharp,ld-d5116z01b";
+-		power-supply = <&vlcd_3v3>;
+-
+-		port {
+-			panel_ep: endpoint {
+-				remote-endpoint = <&bridge_out_ep>;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.yaml b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.yaml
+new file mode 100644
+index 000000000000..fbb647eb33c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.yaml
+@@ -0,0 +1,30 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/sharp,ld-d5116z01b.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sharp LD-D5116Z01B 12.3" WUXGA+ eDP panel
++
++maintainers:
++  - Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: sharp,ld-d5116z01b
++
++  power-supply: true
++  backlight: true
++  port: true
++  no-hpd: true
++
++additionalProperties: false
++
++required:
++  - compatible
++  - power-supply
++
++...
+-- 
+2.17.1
 
-> commit df3da04880b4
-> https://git.kernel.org/mips/c/df3da04880b4
->=20
-> Fixes: 6baaeadae911 ("MIPS: Provide unroll() macro, use it for cache ops"=
-)
-> Link: https://github.com/ClangBuiltLinux/linux/issues/736
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
-
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
