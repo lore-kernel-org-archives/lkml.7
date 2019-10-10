@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E72C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53A9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2992190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFBB21BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697110;
-	bh=nVfH0Y+P0S0auPKi3sefQmgsK6Oeq7PNhJqG1QzuM5Q=;
+	s=default; t=1570697113;
+	bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2mrXvIlo591BbSX5WA//J0S6KGsAYWG7yFU9jfm9nAszGCkc+lMN5cbJs+4TT9zEV
-	 bVQ7DH512nBqiDDscxoHpRAR8iKVqQh6T68R9dbypyks2NelQzWOF/9oVkFLqSpqNA
-	 SFDPTRmm1UBwm5ojpgUClUzwCPo1wtZW+OR0YD1U=
+	b=vQVflWcj5xVs2wXNL7N3uzqQ6fZ2lRPIBYT1kXpFmeiWnuEikzj/Im56AMPs0K+Xl
+	 EsyHvoab6YQpJpjh+Q6W1J10vxKS4RErjaUrXJthNS0UMfDxxsg5R5kz5nEu0bazAA
+	 o5sqU6gIFMMtxw06HRbyIqUNDG+XOxWLZg4XA01g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389069AbfJJIpJ (ORCPT
+        id S2389089AbfJJIpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50508 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388345AbfJJIpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:00 -0400
+        id S2388361AbfJJIpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C03F521929;
-        Thu, 10 Oct 2019 08:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9B5021A4A;
+        Thu, 10 Oct 2019 08:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697100;
-        bh=nVfH0Y+P0S0auPKi3sefQmgsK6Oeq7PNhJqG1QzuM5Q=;
+        s=default; t=1570697108;
+        bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBpkl6diVaw+4HzysQYXHB8ibLd9DfxM93O++nYBs8HDFPU893PMOvPl0jTaGcse6
-         PQxH53CY+YFuXMnhXYDe57u4IFdbDML6a05E3gcMtLP7FO0gWRA4ctAChi0OHSly1o
-         11aeFmh8Z9l15mJ9VpREnULlXuRuIobPDDe0CQWQ=
+        b=j6rxFCC1hyf12mI8s0DS5/IeurH3QdfdxmBTIvlltpgUeKhbYK4tpS9CHduaDhBmj
+         8tNfH5fsjuidd1uqv2anWNodpXyMz4K4ytsMrWnN+ybgsbLPRBCTvCWZDhJyNX5NgA
+         xBk4aX31UCDLXKJlZWj8xOlCZjTiJnUN70um+pEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.19 019/114] can: mcp251x: mcp251x_hw_reset(): allow more time after a reset
-Date:   Thu, 10 Oct 2019 10:35:26 +0200
-Message-Id: <20191010083553.031818149@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 021/114] crypto: qat - Silence smp_processor_id() warning
+Date:   Thu, 10 Oct 2019 10:35:28 +0200
+Message-Id: <20191010083553.941912256@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -59,57 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-commit d84ea2123f8d27144e3f4d58cd88c9c6ddc799de upstream.
+commit 1b82feb6c5e1996513d0fb0bbb475417088b4954 upstream.
 
-Some boards take longer than 5ms to power up after a reset, so allow
-some retries attempts before giving up.
+It seems that smp_processor_id() is only used for a best-effort
+load-balancing, refer to qat_crypto_get_instance_node(). It's not feasible
+to disable preemption for the duration of the crypto requests. Therefore,
+just silence the warning. This commit is similar to e7a9b05ca4
+("crypto: cavium - Fix smp_processor_id() warnings").
 
-Fixes: ff06d611a31c ("can: mcp251x: Improve mcp251x_hw_reset()")
-Cc: linux-stable <stable@vger.kernel.org>
-Tested-by: Sean Nyekjaer <sean@geanix.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Silences the following splat:
+BUG: using smp_processor_id() in preemptible [00000000] code: cryptomgr_test/2904
+caller is qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
+CPU: 1 PID: 2904 Comm: cryptomgr_test Tainted: P           O    4.14.69 #1
+...
+Call Trace:
+ dump_stack+0x5f/0x86
+ check_preemption_disabled+0xd3/0xe0
+ qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
+ skcipher_setkey_ablkcipher+0x2b/0x40
+ __test_skcipher+0x1f3/0xb20
+ ? cpumask_next_and+0x26/0x40
+ ? find_busiest_group+0x10e/0x9d0
+ ? preempt_count_add+0x49/0xa0
+ ? try_module_get+0x61/0xf0
+ ? crypto_mod_get+0x15/0x30
+ ? __kmalloc+0x1df/0x1f0
+ ? __crypto_alloc_tfm+0x116/0x180
+ ? crypto_skcipher_init_tfm+0xa6/0x180
+ ? crypto_create_tfm+0x4b/0xf0
+ test_skcipher+0x21/0xa0
+ alg_test_skcipher+0x3f/0xa0
+ alg_test.part.6+0x126/0x2a0
+ ? finish_task_switch+0x21b/0x260
+ ? __schedule+0x1e9/0x800
+ ? __wake_up_common+0x8d/0x140
+ cryptomgr_test+0x40/0x50
+ kthread+0xff/0x130
+ ? cryptomgr_notify+0x540/0x540
+ ? kthread_create_on_node+0x70/0x70
+ ret_from_fork+0x24/0x50
+
+Fixes: ed8ccaef52 ("crypto: qat - Add support for SRIOV")
+Cc: stable@vger.kernel.org
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/spi/mcp251x.c |   19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/crypto/qat/qat_common/adf_common_drv.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -626,7 +626,7 @@ static int mcp251x_setup(struct net_devi
- static int mcp251x_hw_reset(struct spi_device *spi)
+--- a/drivers/crypto/qat/qat_common/adf_common_drv.h
++++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
+@@ -95,7 +95,7 @@ struct service_hndl {
+ 
+ static inline int get_current_node(void)
  {
- 	struct mcp251x_priv *priv = spi_get_drvdata(spi);
--	u8 reg;
-+	unsigned long timeout;
- 	int ret;
- 
- 	/* Wait for oscillator startup timer after power up */
-@@ -640,10 +640,19 @@ static int mcp251x_hw_reset(struct spi_d
- 	/* Wait for oscillator startup timer after reset */
- 	mdelay(MCP251X_OST_DELAY_MS);
- 
--	reg = mcp251x_read_reg(spi, CANSTAT);
--	if ((reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF)
--		return -ENODEV;
--
-+	/* Wait for reset to finish */
-+	timeout = jiffies + HZ;
-+	while ((mcp251x_read_reg(spi, CANSTAT) & CANCTRL_REQOP_MASK) !=
-+	       CANCTRL_REQOP_CONF) {
-+		usleep_range(MCP251X_OST_DELAY_MS * 1000,
-+			     MCP251X_OST_DELAY_MS * 1000 * 2);
-+
-+		if (time_after(jiffies, timeout)) {
-+			dev_err(&spi->dev,
-+				"MCP251x didn't enter in conf mode after reset\n");
-+			return -EBUSY;
-+		}
-+	}
- 	return 0;
+-	return topology_physical_package_id(smp_processor_id());
++	return topology_physical_package_id(raw_smp_processor_id());
  }
  
+ int adf_service_register(struct service_hndl *service);
 
 
