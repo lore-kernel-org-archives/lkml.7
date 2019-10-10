@@ -2,165 +2,171 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D438ECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B92CC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03754206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570736048;
-	bh=lzfJ/g7tajR317T7qaU/Sdfc2M0Tct3F0/pLL4V17GQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SnaVsJkzE5l7yOi+V2uJn1uHAOKgpVtq3OgCMZxwpaYF5jWUd35RJEapkaONEKnnX
-	 4Cu7vWkhshe6nSFh5ma9fo79jHIbZbYVdW/BELqgdCkoUuK7tlWJYxmCqY03qLwUZF
-	 V95KyynoA2GGgBDAbZDAdqLGhvmyqu16JqxrCkzo=
+	by mail.kernel.org (Postfix) with ESMTP id 36115206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 19:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kUPo+0Qq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbfJJTd7 (ORCPT
+        id S1726112AbfJJThk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 15:33:59 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46639 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJTd7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 15:33:59 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k25so5928668oiw.13;
-        Thu, 10 Oct 2019 12:33:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7ET4N4h1mz+QXnjZEYhffwJ+S0rSM6M0DCW5sXhGLr4=;
-        b=q27Wk4WXPi8qpC5UNFYVxQ294oPik1VDg4Q+UG2rdvWy81v8wv6VAgwbHa9zTCv8Cp
-         9U0K6oDCJy06/Laa4NdgTahqPQ8qcW1th0UQrsfuqXFBi/GeikSKYMuxCUNvb6p9MqAv
-         o8h1XrrtkdGsH9kvhHWDmOunE+qeqLbCCey2Zd1xp0r4Bk5LZX8fLE9J6KXmUfqEvHHz
-         6Xo19KpDOMblQeHv/S8wgnbugcYaO4gwU6Ih95JplnYH8oR0DmfgwJR4Zdau5u+isfWF
-         ELIPxpGnUWff9p3MeZhRgEkxWNyV9LRKCf94BNBhCHpABBYsO+k59WGBc0g7FbjDZaks
-         +fRg==
-X-Gm-Message-State: APjAAAUE2H+aiOqSID4/0QzXOpUJoBu4yWBR1GTVS/harTRIVtK/Czq/
-        rES1gWF/ID1C0AWZJL7Csg==
-X-Google-Smtp-Source: APXvYqyuT5yi9lOX+HY+jMDUqyMXIegTNgwLUO2uJeseCSix9lpmMgQ5/3duA7qI2l/FDDlVpw2grA==
-X-Received: by 2002:aca:36d5:: with SMTP id d204mr8794400oia.51.1570736038102;
-        Thu, 10 Oct 2019 12:33:58 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n186sm2042419oih.58.2019.10.10.12.33.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 12:33:57 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 14:33:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v3 02/10] dt-bindings: sram: Convert Samsung Exynos
- SYSRAM bindings to json-schema
-Message-ID: <20191010193356.GA9975@bogus>
-References: <20191002164316.14905-1-krzk@kernel.org>
- <20191002164316.14905-2-krzk@kernel.org>
+        Thu, 10 Oct 2019 15:37:40 -0400
+Received: from mail-eopbgr50076.outbound.protection.outlook.com ([40.107.5.76]:33679
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725867AbfJJThj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 15:37:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ccEkfK0D6foFht/IrtCbeqdREyun3ab5vLsSm3L73PlPWxF+DJEi9rlo4yJ3KW5QSvjC9eOeQTWjJuaZL8m3cxVa1Aqc8KT+nzFeMcNIodU0/Bgt915NeSO0lOnn/fPEcUFosgxKqmPVocqjoSwPcUtd+SmRJP1s+Eq7VdOam81r49PXFlyy9m5kDyvT8sKIUed+pkiZPaFsyOgu16nj1IpKA57KzbxE1q6iL06uA09tIr/XyHqnkdJ/PgDSdqB9JqMGnrJe5o6CLqiDE81AhyND+K8SevShSdjvJcLjcnlFMa048dwvXc0qDjz9amrKMjSH1d+S/Ere8ZwfLMGHHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6mXdB3i5JeOmNo+B9Q4wnLveLWNpISnToCMurGa9awk=;
+ b=bhSLVuaijBCXsFD77Q37HX2LpTKPE0ejsD9Sdz5jG/JKMHaYCoYWFsNHEPDuqZksEp3LrZLv4dSrAlJ87k36vkJcEBwpPdfW6lI9h+hylkLNSu0foTGdBZjQcif+or7s6BlZ0a0ChrthHg9qsoI1lCKVu0DY8+cRv+xi6xinytYS8FMs1cuSyhpgAyDFJJsQUqcPuj9yc7h/in2nO8xGxhMJygik/csPqYwdvjyu9ldJBKe5meKL36ZCR17jTjYh9y0Jf1pVQmmoQRZsGN7CLk5fmTJ8sDllGEdbXtFkee1iYkby9Gqm9qPoqKUJddecSwu4Hp0FINBAIDPu78fq4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6mXdB3i5JeOmNo+B9Q4wnLveLWNpISnToCMurGa9awk=;
+ b=kUPo+0QqbklQDa5lf7M1/nD4asxtM5/tOyIdEAYZbiKGVzQL2GRm6cJDmSmXTXqo4FV1CQEsRTpYXxFJDkorBL46Bsmet0JvBtRUYQiHsROytJSPj5TEgDoXU3BRv+2YvAHFXyn/QnZ8gwP9ltu734OSgiGrY26fgqDdp6i+3Cg=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB5309.eurprd04.prod.outlook.com (20.177.50.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Thu, 10 Oct 2019 19:36:55 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::8c20:60f:5a1c:42ef]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::8c20:60f:5a1c:42ef%3]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
+ 19:36:55 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Joel Colledge <joel.colledge@linbit.com>
+CC:     Kieran Bingham <kbingham@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scripts/gdb: fix lx-dmesg when CONFIG_PRINTK_CALLER is
+ set
+Thread-Topic: [PATCH] scripts/gdb: fix lx-dmesg when CONFIG_PRINTK_CALLER is
+ set
+Thread-Index: AQHVc7J2WTi3Jq2z7EqErfeE4WWeNw==
+Date:   Thu, 10 Oct 2019 19:36:55 +0000
+Message-ID: <VI1PR04MB70236211F170522DD456553AEE940@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <20190925150308.6609-1-joel.colledge@linbit.com>
+ <a87e01b0-73f1-8a86-d7c0-2700e1032b92@siemens.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7ac3a1b9-5e7c-4a83-205f-08d74db93582
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VI1PR04MB5309:
+x-microsoft-antispam-prvs: <VI1PR04MB53092CFB39B6E4E59D551C31EE940@VI1PR04MB5309.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 018632C080
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(136003)(39860400002)(366004)(189003)(199004)(6116002)(316002)(478600001)(26005)(186003)(14454004)(25786009)(110136005)(256004)(8676002)(81156014)(7696005)(305945005)(81166006)(7736002)(86362001)(229853002)(8936002)(99286004)(14444005)(55016002)(9686003)(76176011)(3846002)(6436002)(76116006)(6506007)(446003)(53546011)(6246003)(33656002)(5660300002)(91956017)(66066001)(71190400001)(71200400001)(44832011)(52536014)(66446008)(64756008)(66556008)(66476007)(102836004)(4326008)(476003)(74316002)(66946007)(486006)(2906002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5309;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cuRyvzhXVRHVNOuM6yg4fAcjBs1KEOFMNdJsCWqX4JgCUcpEwMY7TaWYZgKyHBS3CzPwhxC7nBLSEeMr0+9UItKjS7hGSqobGM7xIGI8YU0pM30stpBv5K/c7hJTRbaQ0I876pBx7enLLR/Qwfn/3C4F/JmISghYvEJNQrqt9GwNwYlDhSyxz28p1uovW9uqh9n6qcfK+v/xTGkHHgTnOZw3/hRil9Km08b+UaeX89ldlen0WAP40bCa0EpdNu+HDeyZeB3+GZBHG9xdi+6egW1PaTHKobPL9BMOan4lx+QJOh9DpGMUOd4J8KFeBAQ5sXZgDijWkmIfzoMnsj1fns6kGZi2c71EA45K6XhRJdS0PrKGVGrpsgH20L1LzaGt9Brka1OpAYjzvKvp6+VvmJ0qHP1/dbldl4SKm4qkVX4=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191002164316.14905-2-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ac3a1b9-5e7c-4a83-205f-08d74db93582
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 19:36:55.7412
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5rdjWkGttmYwf5JS+XYLinFJtpegisN0dPNv0VmhHdfe8Uwq8LiR4d7qdex4CyIDAV2TGQhkLDH6BKW4zwWp9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5309
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:43:08PM +0200, Krzysztof Kozlowski wrote:
-> Convert Samsung Exynos SYSRAM bindings to DT schema format using
-> json-schema.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v2:
-> 1. Use sram as name of node in example.
-> 
-> Changes since v1:
-> 1. Indent example with four spaces (more readable).
-> ---
->  .../devicetree/bindings/sram/samsung-sram.txt | 38 ------------
->  .../bindings/sram/samsung-sram.yaml           | 58 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 59 insertions(+), 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/samsung-sram.txt
->  create mode 100644 Documentation/devicetree/bindings/sram/samsung-sram.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/sram/samsung-sram.yaml b/Documentation/devicetree/bindings/sram/samsung-sram.yaml
-> new file mode 100644
-> index 000000000000..3e77c434ecca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sram/samsung-sram.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sram/samsung-sram.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung Exynos SoC SYSRAM for SMP bringup
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +description: |+
-> +  Samsung SMP-capable Exynos SoCs use part of the SYSRAM for the bringup
-> +  of the secondary cores. Once the core gets powered up it executes the
-> +  code that is residing at some specific location of the SYSRAM.
-> +
-> +  Therefore reserved section sub-nodes have to be added to the mmio-sram
-> +  declaration. These nodes are of two types depending upon secure or
-> +  non-secure execution environment.
-> +
-> +allOf:
-> +  - $ref: "sram.yaml#"
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^sysram(@.*)?"
-
-As you are renaming all the node names, this will no longer work. If you 
-change it to 'sram', that's going to match others, but would still work 
-as long as the child node names are unique to Samsung. If you change 
-them to '*-sram' then, you'd have to come up with something else. That 
-probably means using 'compatible' strings. At that point, it's kind of 
-silly to just be validating what your are using to select the schema. It 
-may be better to just add the compatible strings into sram.yaml if 
-that's the only difference.
-
-> +
-> +patternProperties:
-> +  "^([a-z]*-)?sysram@[a-f0-9]$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        description:
-> +          Depending upon boot mode
-> +        enum:
-> +          - samsung,exynos4210-sysram                 # for Secure SYSRAM
-> +          - samsung,exynos4210-sysram-ns              # for Non-secure SYSRAM
-> +
+On 10.10.2019 18:14, Jan Kiszka wrote:=0A=
+> On 25.09.19 17:03, Joel Colledge wrote:=0A=
+>> When CONFIG_PRINTK_CALLER is set, struct printk_log contains an=0A=
+>> additional member caller_id. As a result, the offset of the log text is=
+=0A=
+>> different.=0A=
+>>=0A=
+>> This fixes the following error:=0A=
+>>=0A=
+>>    (gdb) lx-dmesg=0A=
+>>    Python Exception <class 'ValueError'> embedded null character:=0A=
+>>    Error occurred in Python command: embedded null character=0A=
+>>=0A=
+>> Signed-off-by: Joel Colledge <joel.colledge@linbit.com>=0A=
+>> ---=0A=
+>>   scripts/gdb/linux/constants.py.in | 1 +=0A=
+>>   scripts/gdb/linux/dmesg.py        | 4 +++-=0A=
+>>   2 files changed, 4 insertions(+), 1 deletion(-)=0A=
+>>=0A=
+>> diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/const=
+ants.py.in=0A=
+>> index 2efbec6b6b8d..3c9794a0bf55 100644=0A=
+>> --- a/scripts/gdb/linux/constants.py.in=0A=
+>> +++ b/scripts/gdb/linux/constants.py.in=0A=
+>> @@ -74,4 +74,5 @@ LX_CONFIG(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST)=0A=
+>>   LX_CONFIG(CONFIG_HIGH_RES_TIMERS)=0A=
+>>   LX_CONFIG(CONFIG_NR_CPUS)=0A=
+>>   LX_CONFIG(CONFIG_OF)=0A=
+>> +LX_CONFIG(CONFIG_PRINTK_CALLER)=0A=
+>>   LX_CONFIG(CONFIG_TICK_ONESHOT)=0A=
+>> diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py=0A=
+>> index 6d2e09a2ad2f..1352680ef731 100644=0A=
+>> --- a/scripts/gdb/linux/dmesg.py=0A=
+>> +++ b/scripts/gdb/linux/dmesg.py=0A=
+>> @@ -14,6 +14,7 @@=0A=
+>>   import gdb=0A=
+>>   import sys=0A=
+>>   =0A=
+>> +from linux import constants=0A=
+>>   from linux import utils=0A=
+>>   =0A=
+>>   =0A=
+>> @@ -53,7 +54,8 @@ class LxDmesg(gdb.Command):=0A=
+>>                   continue=0A=
+>>   =0A=
+>>               text_len =3D utils.read_u16(log_buf[pos + 10:pos + 12])=0A=
+>> -            text =3D log_buf[pos + 16:pos + 16 + text_len].decode(=0A=
+>> +            text_start =3D pos + (20 if constants.LX_CONFIG_PRINTK_CALL=
+ER else 16)=0A=
+>> +            text =3D log_buf[text_start:text_start + text_len].decode(=
+=0A=
+>>                   encoding=3D'utf8', errors=3D'replace')=0A=
+>>               time_stamp =3D utils.read_u64(log_buf[pos:pos + 8])=0A=
+> =0A=
+> Sorry for the delay:=0A=
+> =0A=
+> Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>=0A=
+> =0A=
+> I suspect we will see more in nearer future with upcoming printk rework..=
+.=0A=
+=0A=
+The patch looks correct but I'm curious: is there a reason this code =0A=
+doesn't use struct printk_log?=0A=
+=0A=
+GDB already knows about struct offsets so there should be no need to =0A=
+handle ifdefs with arithmetic.=0A=
+=0A=
+Is it realistic to use gdb without struct layout info?=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
