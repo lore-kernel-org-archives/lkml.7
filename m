@@ -2,124 +2,163 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7FEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91BBC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E173220679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BEF82054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fHFwxPvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733239AbfJJMOX (ORCPT
+        id S1733247AbfJJMRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:14:23 -0400
-Received: from mga01.intel.com ([192.55.52.88]:37689 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfJJMOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:14:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 05:14:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,280,1566889200"; 
-   d="scan'208";a="198330411"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga006.jf.intel.com with ESMTP; 10 Oct 2019 05:14:20 -0700
-Date:   Thu, 10 Oct 2019 20:14:03 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Shakeel Butt <shakeelb@google.com>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: "reuse mergeable anon_vma as parent when fork" causes a crash on
- s390
-Message-ID: <20191010121403.GA13088@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <1570656570.5937.24.camel@lca.pw>
- <CALvZod4psOEyYwPOF1UcJoK96LbYBccYhsG0DrKD+CCf8Sc-Yg@mail.gmail.com>
- <20191010023601.GA4793@richard>
- <20191010031516.GA5060@richard>
- <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
+        Thu, 10 Oct 2019 08:17:02 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33452 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728030AbfJJMRC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:17:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570709821;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2lHnonVw5Ni2BwUYIttHCnA3w1EKUNdv1m01q4IzX5U=;
+        b=fHFwxPvrCAthTS8XkKSAVbBXrrSYJdiO2RGTKF5WEqqI0mAyDqc1+Cu2wkzvGRDL+KEzI0
+        GBLODeGhBCMdqKgH4xK52nUPRg2jqZjO+40iAQ8MIxDRcfaODJuhAGRIWmm/kkyFtSUmBJ
+        L3f6d5K6aTAqO4YkekHlvOXO2r7fz4c=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-111-yznj07MfP6ikZx2JdMrhog-1; Thu, 10 Oct 2019 08:16:59 -0400
+Received: by mail-qt1-f198.google.com with SMTP id c8so5516638qtd.20
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 05:16:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s7inn7T78nlvJNzw0gTQf4L+rcqUs2LyvXLi2sC3zEA=;
+        b=axrQd4xkkP8G4WIn9F2uwwc5DjInDvlqzJdx4NADrzjyTYNqAw/EbK5G3hKWQE8cSK
+         GJrjm1KxgrSRy3exSa9IX2edHabfKoFBdTXsNv0kljEqoD85uxTgQtxeZwunNNj8NFxS
+         m1T1zZKLpXyht0gKv4eFvWw2fSBHfH0U0C5qnEDf2e9QIxE7vy9vGs3SQuSGhsrl2DEX
+         jOAXMQfsh7BiMB7BnH40VULufzQlBKlfciaBR8ryCPyTPL9Xn3vjTjbp3IyoW71toFDH
+         9KvfywIWI/yF6LBkrFvBV9rl7fklH/5ciHgo8UiXLt5OfAAmMD7X91PLTGrGC1VvyS9C
+         EM3A==
+X-Gm-Message-State: APjAAAXQH55jxsXyXVhfabVsH6GMqPr8jAI/liTdRS4rGiLSL726jQbk
+        WEqiowAqbtbHP2hOhNIU71s2tBJb8eCIZjXCqgVKi3+9ksvMfzYjTobNyrHD6u2NfXBsfsZ9531
+        qyod8aD8i7kqpOfJ4jAHKO3lpcQUNpa0uOORgOsC/
+X-Received: by 2002:ac8:1e83:: with SMTP id c3mr9928771qtm.294.1570709819501;
+        Thu, 10 Oct 2019 05:16:59 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxRkW7AdvFDNqnvMgNQJTqUWcVFbQOfXSi/TrYiTpHKIad141T1gbycryZ8x/yjN9sQ4mymdPUrbnyPAAJdWq0=
+X-Received: by 2002:ac8:1e83:: with SMTP id c3mr9928733qtm.294.1570709819174;
+ Thu, 10 Oct 2019 05:16:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
+ <d739f691b677fb3ed88a23476d221527a87c363d.camel@suse.de> <nycvar.YFH.7.76.1910091958120.13160@cbobk.fhfr.pm>
+ <CAPnx3XNGBw+SKSFA3DhhHFZZ17f54DMfYjKOcqYTb3N-PWGKpw@mail.gmail.com>
+In-Reply-To: <CAPnx3XNGBw+SKSFA3DhhHFZZ17f54DMfYjKOcqYTb3N-PWGKpw@mail.gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Thu, 10 Oct 2019 14:16:47 +0200
+Message-ID: <CAO-hwJJEcP3AEYfadhEbqzfszawxiQ7E9NAwmxHcK6SH8zzhiQ@mail.gmail.com>
+Subject: Re: [PATCH v2] HID: core: check whether usage page item is after
+ usage id item
+To:     Candle Sun <candlesea@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        orson.zhai@unisoc.com,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+X-MC-Unique: yznj07MfP6ikZx2JdMrhog-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:29:44AM +0300, Konstantin Khlebnikov wrote:
->On 10/10/2019 06.15, Wei Yang wrote:
->> On Thu, Oct 10, 2019 at 10:36:01AM +0800, Wei Yang wrote:
->> > Hi, Qian, Shakeel
->> > 
->> > Thanks for testing.
->> > 
->> > Sounds I missed some case to handle. anon_vma_clone() now would be called in
->> > vma_adjust, which is a different case when it is introduced.
->> > 
->> 
->> Well, I have to correct my statement. The reason is we may did something more
->> in anon_vma_clone().
->> 
->> Here is a quick fix, while I need to go through all the cases carefully.
+On Thu, Oct 10, 2019 at 5:19 AM Candle Sun <candlesea@gmail.com> wrote:
 >
->Oops, I've overlooked this case too.
+> On Thu, Oct 10, 2019 at 2:00 AM Jiri Kosina <jikos@kernel.org> wrote:
+> >
+> > On Wed, 9 Oct 2019, Nicolas Saenz Julienne wrote:
+> >
+> > > > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> > > > index 3eaee2c..3394222 100644
+> > > > --- a/drivers/hid/hid-core.c
+> > > > +++ b/drivers/hid/hid-core.c
+> > > > @@ -35,6 +35,8 @@
+> > > >
+> > > >  #include "hid-ids.h"
+> > > >
+> > > > +#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xf=
+fff))
+> > >
+> > > Not sure I like the macro. I'd rather have the explicit code. That sa=
+id, lets
+> > > see what Benjamin has to say.
+> >
+> > Not sure about Benjamin :) but I personally would ask for putting it
+> > somewhere into hid.h as static inline.
+> >
+> > And even if it's for some reason insisted on this staying macro, please=
+ at
+> > least put it as close to the place(s) it's being used as possible, in
+> > order to maintain some code sanity.
+> >
+> > Thanks,
+> >
+> > --
+> > Jiri Kosina
+> > SUSE Labs
+> >
 >
->You have to check src->anon_vma
->otherwise in  __split_vma or copy_vma dst could pick completely random anon_vma.
->
->Also checking prev will not hurt, just to be sure.
->
->So, something like this should work:
->
->if (!dst->anon_vma && src->anon_vma &&
->    prev && pprev && pprev->anon_vma == src->anon_vma)
->      dst->anon_vma = prev->anon_vma;
->
+> Thanks Nicolas and Jiri,
+> If macro is not good, I will change it to static function. But the
+> funciton is only used in hid-core.c,
+> maybe placing it into hid.h is not good?
 
-This may not be the root cause, I found another problem of it.
+I would rather use a function too (in hid-core.c, as it's not reused
+anywhere else), and we can make it simpler from the caller point of
+view (if I am not mistaken):
+---
+static void concatenate_usage_page(struct hid_parser *parser, int index)
+{
+    parser->local.usage[index] &=3D 0xFFFF;
+    parser->local.usage[index] |=3D (parser->global.usage_page & 0xFFFF) <<=
+ 16;
+}
 
-Let me prepare a patch to fix it.
+// Which can then be called as:
++       parser->local.usage[parser->local.usage_index] =3D usage;
++       if (size <=3D 2)
++               concatenate_usage_page(parser, parser->local.usage_index);
++
 
->> 
->> diff --git a/mm/rmap.c b/mm/rmap.c
->> index 12f6c3d7fd9d..2844f442208d 100644
->> --- a/mm/rmap.c
->> +++ b/mm/rmap.c
->> @@ -271,7 +271,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->>           * 1. Parent has vm_prev, which implies we have vm_prev.
->>           * 2. Parent and its vm_prev have the same anon_vma.
->>           */
->> -       if (pprev && pprev->anon_vma == src->anon_vma)
->> +       if (!dst->anon_vma && pprev && pprev->anon_vma == src->anon_vma)
->>                  dst->anon_vma = prev->anon_vma;
->>          list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
->> 
->> > BTW, do you have the specific test case? So that I could verify my change. The
->> > kernel build test doesn't trigger this.
->> > 
->> > Thanks a lot :-)
->> > 
->> > On Wed, Oct 09, 2019 at 03:21:11PM -0700, Shakeel Butt wrote:
->> > -- 
->> > Wei Yang
->> > Help you, Help me
->> 
+// And
+        for (i =3D 0; i < parser->local.usage_index; i++)
+-               if (parser->local.usage_size[i] <=3D 2)
+-                       parser->local.usage[i] +=3D
+parser->global.usage_page << 16;
++               if (parser->local.usage_size[i] <=3D 2) {
++                       concatenate_usage_page(parser, i);
++               }
+ }
+---
 
--- 
-Wei Yang
-Help you, Help me
+And now that I have written this, the check on the size could also be
+very well integrated in concatenate_usage_page().
+
+Cheers,
+Benjamin
+
+>
+> Regards,
+> Candle
+
