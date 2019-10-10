@@ -2,154 +2,91 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC19AC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852BDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796322067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3372067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HJqZYKFF"
+	dkim=pass (1024-bit key) header.d=didiksetiawan.com header.i=ds@didiksetiawan.com header.b="Q/oWxwMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbfJJVM1 (ORCPT
+        id S1727229AbfJJVPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:12:27 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45494 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJVM0 (ORCPT
+        Thu, 10 Oct 2019 17:15:01 -0400
+Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21426 "EHLO
+        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfJJVPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:12:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r1so3256379pgj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 14:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HEAgwKdOoQC6Wd9HJsO0tDBZQypgFf5snhFdbKdfnZI=;
-        b=HJqZYKFFJo/XZSPavT78d2YKlU9WJWvPx0wB4ao3Q/rWUk7ZrystYVsOvLIp2H+EQf
-         Ofb4g2pWKoQJXFClpvlz33RB/XtxBrrAOCSeztsqH2qTZUcAO/L0CrBxg5D+yMWjM635
-         FsmkZkfDWF7NNP5KcSsLTeQupmnbUk+eA/Hqw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HEAgwKdOoQC6Wd9HJsO0tDBZQypgFf5snhFdbKdfnZI=;
-        b=T6aIDXsfDpcH6ll7gL+tL0g1VhTWfduRVeXGkTDc5u0xiOvbGLrU66mgu/T3jJ7RKG
-         8CmgDKd0VB4QW27XWruvWJbWy7wb/UOY2U/6QYROLmfp8AoZOsuNBFoRrGAYsiiXIg7Q
-         Yp577dh7b+kBMPJqUkDxPd1QJ9ICokliX5Q3rFM6E/UrXK5dlrid8OeQDb7ZiSd6grz/
-         W5xjKWc6LDKB/g9zx+x08JCtluPxMiIRWC/w46TrN5erGJiWdIg3e4m8fh7os2ItsS4o
-         I2Zpi+KedmnN26cXxPfcYKwgu8r5CjYbxPVbM0JGybIV1yPJezg4YvuNzzlWdTIiVRnF
-         yNrA==
-X-Gm-Message-State: APjAAAUzEdaYCEU2+1pzTcT2mEls5ikoHzilCHOPDvrWqoFTrOvOkecK
-        Ubpssh7bB+wFMn9YAXzmMJrwxQ==
-X-Google-Smtp-Source: APXvYqzP+jB7UJNAvicTteDJsCk5HjaiskubGM15qBj7BzwXIu39xsb4pJUNZOtakx/Y1+Pdvj4lAQ==
-X-Received: by 2002:a65:5b05:: with SMTP id y5mr13564319pgq.48.1570741946089;
-        Thu, 10 Oct 2019 14:12:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b22sm6317971pgg.2.2019.10.10.14.12.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 14:12:25 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 14:12:24 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: fix function type mismatches
-Message-ID: <201910101411.98362BA0@keescook>
-References: <20191007214740.188547-1-samitolvanen@google.com>
+        Thu, 10 Oct 2019 17:15:00 -0400
+X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Oct 2019 17:15:00 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1570741166; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=MT3hjDO4tOkZdDe44jV/yQoGxm9ZqGJ1bdQIbmP2i/EJ2+PCQq5Y4DzyJn3QKNbqJ2g19RaIaZkeG2WUkqybwS7tbo+A87XQKk4y1gR6UOCX4MNeCUkXuU2c9hmx9CjsLvlR/kkWDOmi0mKIB7PFzXQd1HJRwXLuFMHzKUwiYww=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1570741166; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=dPNtWA0Iz960tXwOsZN/Ef5wEwgoiqzvPe2KZB4O4E8=; 
+        b=XEoC2phaeU1FWrQyjWgxrBR7JFuqiSvy897xCArdpwAXbaKXYr3pst9XnJdpQtkjtRRWPzIOJOe5diG+byHJy7DshxGjLe7RYS4euld7VeRxqNc2g3ZC+fCUygMLswe9E56Hp8MqG1ge7ZKHpeqJ8D+XzmU/dL9vRkwQt6F8k8U=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=didiksetiawan.com;
+        spf=pass  smtp.mailfrom=ds@didiksetiawan.com;
+        dmarc=pass header.from=<ds@didiksetiawan.com> header.from=<ds@didiksetiawan.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570741166;
+        s=zoho; d=didiksetiawan.com; i=ds@didiksetiawan.com;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        l=858; bh=dPNtWA0Iz960tXwOsZN/Ef5wEwgoiqzvPe2KZB4O4E8=;
+        b=Q/oWxwMr388i1ZpVvqL+0FOPHeVHHTvJrCmIT7o2u0fBlT/gWPG5vOFBh1cKqsCr
+        7MkK6oIW0heUsqe/ACFQzsuN1BBwZsPmwR+Q8VLotwyfOLjCfSdvEa/gPAejZR0HBBI
+        wj1MxcZHgpLIN1plUTZtoZLJyjz1KZvkR1O1I9c4=
+Received: from thinkpad-e420s (120.188.6.98 [120.188.6.98]) by mx.zohomail.com
+        with SMTPS id 1570741163961789.4700517861468; Thu, 10 Oct 2019 13:59:23 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 03:59:16 +0700
+From:   Didik Setiawan <ds@didiksetiawan.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.3 000/148] 5.3.6-stable review
+Message-ID: <20191010205916.GA18683@thinkpad-e420s>
+References: <20191010083609.660878383@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191007214740.188547-1-samitolvanen@google.com>
+In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 02:47:40PM -0700, Sami Tolvanen wrote:
-> This change fixes indirect call mismatches with function and function
-> graph tracing, which trip Control-Flow Integrity (CFI) checking.
+On Thu, Oct 10, 2019 at 10:34:21AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.6 release.
+> There are 148 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-
-Thanks for sending this! We're getting pretty close to having all the
-various CFI issues cleaned up now. :)
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  kernel/trace/fgraph.c | 9 ++++++---
->  kernel/trace/ftrace.c | 8 +++++---
->  2 files changed, 11 insertions(+), 6 deletions(-)
+> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
+> Anything received after that time might be too late.
 > 
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 7950a0356042..ecfd4a4a106a 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -327,14 +327,17 @@ void ftrace_graph_sleep_time_control(bool enable)
->  	fgraph_sleep_time = enable;
->  }
->  
-> +void ftrace_graph_return_stub(struct ftrace_graph_ret *trace)
-> +{
-> +}
-> +
->  int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
->  {
->  	return 0;
->  }
->  
->  /* The callbacks that hook a function */
-> -trace_func_graph_ret_t ftrace_graph_return =
-> -			(trace_func_graph_ret_t)ftrace_stub;
-> +trace_func_graph_ret_t ftrace_graph_return = ftrace_graph_return_stub;
->  trace_func_graph_ent_t ftrace_graph_entry = ftrace_graph_entry_stub;
->  static trace_func_graph_ent_t __ftrace_graph_entry = ftrace_graph_entry_stub;
->  
-> @@ -614,7 +617,7 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
->  		goto out;
->  
->  	ftrace_graph_active--;
-> -	ftrace_graph_return = (trace_func_graph_ret_t)ftrace_stub;
-> +	ftrace_graph_return = ftrace_graph_return_stub;
->  	ftrace_graph_entry = ftrace_graph_entry_stub;
->  	__ftrace_graph_entry = ftrace_graph_entry_stub;
->  	ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 62a50bf399d6..b68ee130d4a2 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -125,8 +125,9 @@ static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
->  				 struct ftrace_ops *op, struct pt_regs *regs);
->  #else
->  /* See comment below, where ftrace_ops_list_func is defined */
-> -static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip);
-> -#define ftrace_ops_list_func ((ftrace_func_t)ftrace_ops_no_ops)
-> +static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip,
-> +			      struct ftrace_ops *op, struct pt_regs *regs);
-> +#define ftrace_ops_list_func ftrace_ops_no_ops
->  #endif
->  
->  static inline void ftrace_ops_init(struct ftrace_ops *ops)
-> @@ -6325,7 +6326,8 @@ static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
->  }
->  NOKPROBE_SYMBOL(ftrace_ops_list_func);
->  #else
-> -static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip)
-> +static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip,
-> +			      struct ftrace_ops *op, struct pt_regs *regs)
->  {
->  	__ftrace_ops_list_func(ip, parent_ip, NULL, NULL);
->  }
-> -- 
-> 2.23.0.581.g78d2f28ef7-goog
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.6-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 > 
 
--- 
-Kees Cook
+Compiled, booted, and no regressions found on my x86_64 system.
+
+Thanks,
+Didik Setiawan 
+
