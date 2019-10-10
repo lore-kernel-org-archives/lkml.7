@@ -2,262 +2,102 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED96C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE12C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD49206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A938920B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="An1rCjjg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qp4Qkf6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfJJPh7 (ORCPT
+        id S1726525AbfJJPjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 11:37:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33912 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfJJPh7 (ORCPT
+        Thu, 10 Oct 2019 11:39:35 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33708 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfJJPjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 11:37:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j11so8496914wrp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:37:57 -0700 (PDT)
+        Thu, 10 Oct 2019 11:39:35 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so4168904pfl.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:39:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z+Gkaf0QqroJFGWOAVIivpR0uzALr3BZIuYtVcv3prg=;
-        b=An1rCjjgNS7CgI92YXRqwtxoR2+VPVfg1jpEa3YMpCkcPk+czOhVxPOPlsUMKybCwd
-         6KQhzzj/5+oDRajHiRuX//K1F770WqLEgrVaOq99elMgyel5nd2KkoEhSu6fdvQX8R0/
-         j+vlY6OEgscvqn0Oy5NZui094cdrX/NJTs0IfPLi7pDOP4ZuDZkMUv1ZZQSM6FYWqFDo
-         v17nUxo0yt5EWpKzmCtNk+TbN/mdpsIU55DYX/5yLHG43sNwJQvLtNmB/59FW+7s8aG7
-         U8ZEkwK4tkLMErF5nogUzQs3LiDmGNvP3mZQsYrWbqeIAVKc7z0E9BKro9eKJ0B2z3jO
-         cpQg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JwdlgT8hDAqNnvsbqVOgYcsV//b7oTzDiaICevRMAZs=;
+        b=qp4Qkf6UajxvdDRvinUc90yAtXwFc46gs1Wuf8ED91eEP20YKAQnI3j4i2AK1O4tji
+         KEq1bwkYRgc3Frpn/qJWtCZpGfxqsrHZ/9ibYaSelAK1KYZu+J9MRuCf49oA++W21p9B
+         69j6tC/ALqhDfcTKsaAc8git9bEtQhTpm6SxgrW+W2mM8WCzd/2K/s6Ij6lhD8BdEq+K
+         rmMdn5q4fFF6euUh6T9QMKVRYFyZANB7fM+ljcuSa9qS/1f2p2d+yf6YvyGXOBNP8J8x
+         V8QOdLAP58XwqQ1mPn0K3P1r2jCnlHeO5O/LQbhFN+8XpQ5o2G+6ZBkQX1a0Z6Va3qx+
+         oroA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z+Gkaf0QqroJFGWOAVIivpR0uzALr3BZIuYtVcv3prg=;
-        b=B74BeFrzCkPEBalCv974RaAFLi5ZHd4JJ/06StuA7Fa879/dzxyvtRxOmQJF2PN3vb
-         /D2WQjw2alGzCYpZaJpiz19l9m2+CJYeGmyR4B0/ck4oUiukz1TlM37I6nMAk1c5oN8t
-         89hpgC+khF2eY5epxPbKVpWWg/aLhKK8nvLFVnFfb5ZpiPXgsdMpQR5uUsRZjAtfYJ3b
-         5Y2Fl1zKu8bCggqAwMCp1RwHsk3IOkL1GTHguxeXdt8+3QO+SRHOEYsWTzYy8laJyZja
-         HDYbjgUXLrBN0YCfUEV58E5DESbfzMRB/NmJUqdvadS4FrOSZncqIGe1acBf+uGbN4Ml
-         o3pQ==
-X-Gm-Message-State: APjAAAURWt9cSLOprgyALHwICpeK9cvYr5D35hxyUl9bCsaEkRorVmQH
-        vmWnUeRc3eWdzRfnRtouPv8diQ==
-X-Google-Smtp-Source: APXvYqwZ69806fViMGZKjqZhvNLN0kBd/FTDoA6+GonPedIE2oOd7PHFQQdldx0H/FriUUUdYXA/Ww==
-X-Received: by 2002:adf:f9cf:: with SMTP id w15mr9564920wrr.61.1570721876343;
-        Thu, 10 Oct 2019 08:37:56 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id g11sm6936820wmh.45.2019.10.10.08.37.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 08:37:55 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 17:37:54 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 14/17] ethtool: set link settings with
- LINKINFO_SET request
-Message-ID: <20191010153754.GA2901@nanopsycho>
-References: <cover.1570654310.git.mkubecek@suse.cz>
- <aef31ba798d1cfa2ae92d333ad1547f4b528ffa8.1570654310.git.mkubecek@suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JwdlgT8hDAqNnvsbqVOgYcsV//b7oTzDiaICevRMAZs=;
+        b=sFnIIaRoxunoJuGD+wXjPReRnusCWHsEyJHoYSlHcP2TRCIeolWdwBxnV0RaXw5lGD
+         /Q6JEhOGEnISWFzb7JX04ZeahmRWLD0DH39ynWq0fvJZdGsuUYT1VxDSdTehrK/Sq65P
+         V1CZ7UWGWcv5sETitxGOdXnveGhm+BYNBW6ntTJicPXbTqwwepRDannvPOy2kfIrP/W+
+         V/x4ouftfj/MrApaheUyWQDiICw4+1Y8uFp5XbqSdk3IpewGhw7XCzMp9qLswuXt5gsx
+         b186UvOvlLThr3F2B23+JBCSdJH7rne3REXvQzi6eCA8BU7wStC+9zFn4439keQ9Z8Re
+         VyLw==
+X-Gm-Message-State: APjAAAXlYqLPm19YAyUaumoat8WETiAERZkD1WglQp8qTj2tC8D13RRd
+        bxMtgsIAfG55Cwjm6kvlRUIfkriah67vS84CqI3EXQ==
+X-Google-Smtp-Source: APXvYqw+JkpVmRn96tTeYYk+vPQV8eH0uQ37XfYipDQdUqOxhO2+fBUA7TpKmtXOohbzHWV15NvBj4eLKg1WtPjIMxY=
+X-Received: by 2002:a65:4c03:: with SMTP id u3mr11798981pgq.440.1570721973285;
+ Thu, 10 Oct 2019 08:39:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aef31ba798d1cfa2ae92d333ad1547f4b528ffa8.1570654310.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <Pine.LNX.4.44L0.1909191639240.6904-100000@iolanthe.rowland.org> <000000000000f8d8a10592eed95f@google.com>
+In-Reply-To: <000000000000f8d8a10592eed95f@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 10 Oct 2019 17:39:22 +0200
+Message-ID: <CAAeHK+zRkoOje-irNLB-_0Vtgr1_Af-rxPv+=_8P3pqNd+YHQw@mail.gmail.com>
+Subject: Re: KASAN: invalid-free in disconnect_rio (2)
+To:     syzbot <syzbot+745b0dff8028f9488eba@syzkaller.appspotmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Cesar Miquel <miquel@df.uba.ar>,
+        rio500-users@lists.sourceforge.net,
+        Alan Stern <stern@rowland.harvard.edu>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Oct 09, 2019 at 10:59:43PM CEST, mkubecek@suse.cz wrote:
->Implement LINKINFO_SET netlink request to set link settings queried by
->LINKINFO_GET message.
+On Thu, Sep 19, 2019 at 11:44 PM syzbot
+<syzbot+745b0dff8028f9488eba@syzkaller.appspotmail.com> wrote:
 >
->Only physical port, phy MDIO address and MDI(-X) control can be set,
->attempt to modify MDI(-X) status and transceiver is rejected.
+> Hello,
 >
->When any data is modified, ETHTOOL_MSG_LINKINFO_NTF message in the same
->format as reply to LINKINFO_GET request is sent to notify userspace about
->the changes. The same notification is also sent when these settings are
->modified using the ioctl interface.
+> syzbot has tested the proposed patch and the reproducer did not trigger
+> crash:
 >
-
-It is a bit confusing and harder to follow when you have set and notify
-code in the same patch. Could you please split?
-
-[...]
-
-
->+/* LINKINFO_SET */
->+
->+static const struct nla_policy linkinfo_hdr_policy[ETHTOOL_A_HEADER_MAX + 1] = {
->+	[ETHTOOL_A_HEADER_UNSPEC]		= { .type = NLA_REJECT },
->+	[ETHTOOL_A_HEADER_DEV_INDEX]		= { .type = NLA_U32 },
->+	[ETHTOOL_A_HEADER_DEV_NAME]		= { .type = NLA_NUL_STRING,
->+						    .len = IFNAMSIZ - 1 },
->+	[ETHTOOL_A_HEADER_GFLAGS]		= { .type = NLA_U32 },
->+	[ETHTOOL_A_HEADER_RFLAGS]		= { .type = NLA_REJECT },
->+};
-
-This is what I was talking about in the other email. These common attrs
-should have common policy and should be parsed by generic netlink code
-by default and be available for ethnl_set_linkinfo() in info->attrs.
-
-
->+
->+static const struct nla_policy
->+linkinfo_set_policy[ETHTOOL_A_LINKINFO_MAX + 1] = {
->+	[ETHTOOL_A_LINKINFO_UNSPEC]		= { .type = NLA_REJECT },
->+	[ETHTOOL_A_LINKINFO_HEADER]		= { .type = NLA_NESTED },
->+	[ETHTOOL_A_LINKINFO_PORT]		= { .type = NLA_U8 },
->+	[ETHTOOL_A_LINKINFO_PHYADDR]		= { .type = NLA_U8 },
->+	[ETHTOOL_A_LINKINFO_TP_MDIX]		= { .type = NLA_REJECT },
->+	[ETHTOOL_A_LINKINFO_TP_MDIX_CTRL]	= { .type = NLA_U8 },
->+	[ETHTOOL_A_LINKINFO_TRANSCEIVER]	= { .type = NLA_REJECT },
->+};
->+
->+int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info)
->+{
->+	struct nlattr *tb[ETHTOOL_A_LINKINFO_MAX + 1];
->+	struct ethtool_link_ksettings ksettings = {};
->+	struct ethtool_link_settings *lsettings;
->+	struct ethnl_req_info req_info = {};
->+	struct net_device *dev;
->+	bool mod = false;
->+	int ret;
->+
->+	ret = nlmsg_parse(info->nlhdr, GENL_HDRLEN, tb,
->+			  ETHTOOL_A_LINKINFO_MAX, linkinfo_set_policy,
->+			  info->extack);
-
-Yeah, genl code should do this parse..
-
-
->+	if (ret < 0)
->+		return ret;
->+	ret = ethnl_parse_header(&req_info, tb[ETHTOOL_A_LINKINFO_HEADER],
->+				 genl_info_net(info), info->extack,
->+				 linkinfo_hdr_policy, true);
-
-and pre_doit should do this one.
-
-
->+	if (ret < 0)
->+		return ret;
->+	dev = req_info.dev;
->+	if (!dev->ethtool_ops->get_link_ksettings ||
->+	    !dev->ethtool_ops->set_link_ksettings)
->+		return -EOPNOTSUPP;
->+
->+	rtnl_lock();
->+	ret = ethnl_before_ops(dev);
->+	if (ret < 0)
->+		goto out_rtnl;
->+
->+	ret = __ethtool_get_link_ksettings(dev, &ksettings);
->+	if (ret < 0) {
->+		if (info)
->+			GENL_SET_ERR_MSG(info, "failed to retrieve link settings");
->+		goto out_ops;
->+	}
->+	lsettings = &ksettings.base;
->+
->+	ethnl_update_u8(&lsettings->port, tb[ETHTOOL_A_LINKINFO_PORT], &mod);
->+	ethnl_update_u8(&lsettings->phy_address, tb[ETHTOOL_A_LINKINFO_PHYADDR],
->+			&mod);
->+	ethnl_update_u8(&lsettings->eth_tp_mdix_ctrl,
->+			tb[ETHTOOL_A_LINKINFO_TP_MDIX_CTRL], &mod);
->+
->+	ret = 0;
->+	if (mod) {
-
-	if (!mod)
-		goto out_ops;
-
-?
-
-
->+		ret = dev->ethtool_ops->set_link_ksettings(dev, &ksettings);
->+		if (ret < 0)
->+			GENL_SET_ERR_MSG(info, "link settings update failed");
->+		else
->+			ethtool_notify(dev, ETHTOOL_MSG_LINKINFO_NTF, NULL);
->+	}
->+
->+out_ops:
->+	ethnl_after_ops(dev);
->+out_rtnl:
->+	rtnl_unlock();
->+	dev_put(dev);
->+	return ret;
->+}
->diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
->index dc52d912e0dd..5b9d12656e97 100644
->--- a/net/ethtool/netlink.c
->+++ b/net/ethtool/netlink.c
->@@ -603,6 +603,11 @@ static int ethnl_get_done(struct netlink_callback *cb)
-> 
-> static const struct get_request_ops *ethnl_std_notify_to_ops(unsigned int cmd)
-> {
->+	switch (cmd) {
->+	case ETHTOOL_MSG_LINKINFO_NTF:
->+		return &linkinfo_request_ops;
->+	};
->+
-> 	WARN_ONCE(1, "unexpected notification type %u\n", cmd);
-> 	return NULL;
-> }
->@@ -683,6 +688,7 @@ typedef void (*ethnl_notify_handler_t)(struct net_device *dev, unsigned int cmd,
-> 				       const void *data);
-> 
-> static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
->+	[ETHTOOL_MSG_LINKINFO_NTF]	= ethnl_std_notify,
-
-Correct me if I'm wrong, but this is the only notification I found in
-this patchset. Do you expect other then ethnl_std_notify() handler?
-Bacause otherwise this can ba simplified down to just a single table
-similar you have for GET.
-
-
-> };
-> 
-> void ethtool_notify(struct net_device *dev, unsigned int cmd, const void *data)
->@@ -717,6 +723,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
-> 		.dumpit	= ethnl_get_dumpit,
-> 		.done	= ethnl_get_done,
-> 	},
->+	{
->+		.cmd	= ETHTOOL_MSG_LINKINFO_SET,
->+		.flags	= GENL_UNS_ADMIN_PERM,
->+		.doit	= ethnl_set_linkinfo,
->+	},
-> };
-> 
-> static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
->diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
->index 23e82a4dd265..ca136dd7ea02 100644
->--- a/net/ethtool/netlink.h
->+++ b/net/ethtool/netlink.h
->@@ -350,4 +350,6 @@ struct get_request_ops {
-> extern const struct get_request_ops strset_request_ops;
-> extern const struct get_request_ops linkinfo_request_ops;
-> 
->+int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info);
->+
-> #endif /* _NET_ETHTOOL_NETLINK_H */
->-- 
->2.23.0
+> Reported-and-tested-by:
+> syzbot+745b0dff8028f9488eba@syzkaller.appspotmail.com
 >
+> Tested on:
+>
+> commit:         e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=745b0dff8028f9488eba
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=15b3efc3600000
+>
+> Note: testing is done by a robot and is best-effort only.
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000f8d8a10592eed95f%40google.com.
+
+#syz fix: USB: rio500: Remove Rio 500 kernel driver
