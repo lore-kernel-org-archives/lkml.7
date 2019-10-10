@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBCAC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298A5C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2BC821A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0081820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696738;
-	bh=SpB5N8pAkIuM01uVBkL7NmZpdTQQGJm7TotlPNgVfMM=;
+	s=default; t=1570696741;
+	bh=9cScITfbpyOvujzZJWa7wm9Lu6lCEye1LkZVrNiM3BI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=izlaOc07SBL9UqJt0FkssglcW1/NrSSMK2N2/+h47Um+PE0xhT5VArHj++81yU9jY
-	 jalJ6ez3QAGL/wkRSFP5LWrR7v9o8j/Fw4Quvarc6t+G1xmipfbElcvLhdPQrUVp8R
-	 b30mUIkOWS+OveHZbSNoPGS9SYrFTQJplkAJMLMU=
+	b=apuApcUSaodR3VWvrbpIt2icpVRls1fVw7eQOcG4pQcnx+H+J9gPtVSMjzp0R796i
+	 /GT2KufOejAsxKHuDtXWyHlG2J8fbXehFRRaHtsdnHeczKPDqzYvIecC37bSYjz2/J
+	 TFHBvCYXOLe5EsA67UflNndF46XAA2BVq/c0Sojs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387741AbfJJIi5 (ORCPT
+        id S2387754AbfJJIi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:38:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42006 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:38:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387712AbfJJIiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:38:55 -0400
+        id S2387712AbfJJIi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:38:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC6220B7C;
-        Thu, 10 Oct 2019 08:38:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3E6A20B7C;
+        Thu, 10 Oct 2019 08:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696734;
-        bh=SpB5N8pAkIuM01uVBkL7NmZpdTQQGJm7TotlPNgVfMM=;
+        s=default; t=1570696737;
+        bh=9cScITfbpyOvujzZJWa7wm9Lu6lCEye1LkZVrNiM3BI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j/jX0LAWW+/JE/AVcaBaatwVZterpdssDlbAtDEgDImMuHmJdW5GHDJMRhJvm4Hug
-         OdgiwI3qyfL4ZREGFC5LTRLYKUIPVSX4+yLZVR/lyEX0PaWLZxMKwaGDegHcNcUHNx
-         W7nZysgtrGnxWvSwHJlYMHV56qUVlq4Bu7CtOkrs=
+        b=UVrR55yVyqzEv0M5iEjaItjUcRpQa37ODWTsKrrlyfiJT+0k7X7MOpaHyR6nffGi8
+         RoCd+8ow08oQAcJSPzr9/xrZXWDyA0yVNVfs9W5DiMPYtyA5oYN/guXps4FETFz2bK
+         j1S8HQw/9qZhbpATG1mxBP9eJgW+9abyHAmIHYoQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.3 005/148] s390/cio: avoid calling strlen on null pointer
-Date:   Thu, 10 Oct 2019 10:34:26 +0200
-Message-Id: <20191010083610.790939302@linuxfoundation.org>
+Subject: [PATCH 5.3 006/148] s390/cio: exclude subchannels with no parent from pseudo check
+Date:   Thu, 10 Oct 2019 10:34:27 +0200
+Message-Id: <20191010083610.960464096@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -61,33 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit ea298e6ee8b34b3ed4366be7eb799d0650ebe555 upstream.
+commit ab5758848039de9a4b249d46e4ab591197eebaf2 upstream.
 
-Fix the following kasan finding:
-BUG: KASAN: global-out-of-bounds in ccwgroup_create_dev+0x850/0x1140
-Read of size 1 at addr 0000000000000000 by task systemd-udevd.r/561
+ccw console is created early in start_kernel and used before css is
+initialized or ccw console subchannel is registered. Until then console
+subchannel does not have a parent. For that reason assume subchannels
+with no parent are not pseudo subchannels. This fixes the following
+kasan finding:
 
-CPU: 30 PID: 561 Comm: systemd-udevd.r Tainted: G    B
-Hardware name: IBM 3906 M04 704 (LPAR)
+BUG: KASAN: global-out-of-bounds in sch_is_pseudo_sch+0x8e/0x98
+Read of size 8 at addr 00000000000005e8 by task swapper/0/0
+
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc8-07370-g6ac43dd12538 #2
+Hardware name: IBM 2964 NC9 702 (z/VM 6.4.0)
 Call Trace:
-([<0000000231b3db7e>] show_stack+0x14e/0x1a8)
- [<0000000233826410>] dump_stack+0x1d0/0x218
- [<000000023216fac4>] print_address_description+0x64/0x380
- [<000000023216f5a8>] __kasan_report+0x138/0x168
- [<00000002331b8378>] ccwgroup_create_dev+0x850/0x1140
- [<00000002332b618a>] group_store+0x3a/0x50
- [<00000002323ac706>] kernfs_fop_write+0x246/0x3b8
- [<00000002321d409a>] vfs_write+0x132/0x450
- [<00000002321d47da>] ksys_write+0x122/0x208
- [<0000000233877102>] system_call+0x2a6/0x2c8
-
-Triggered by:
-openat(AT_FDCWD, "/sys/bus/ccwgroup/drivers/qeth/group",
-		O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 16
-write(16, "0.0.bd00,0.0.bd01,0.0.bd02", 26) = 26
-
-The problem is that __get_next_id in ccwgroup_create_dev might set "buf"
-buffer pointer to NULL and explicit check for that is required.
+([<000000000012cd76>] show_stack+0x14e/0x1e0)
+ [<0000000001f7fb44>] dump_stack+0x1a4/0x1f8
+ [<00000000007d7afc>] print_address_description+0x64/0x3c8
+ [<00000000007d75f6>] __kasan_report+0x14e/0x180
+ [<00000000018a2986>] sch_is_pseudo_sch+0x8e/0x98
+ [<000000000189b950>] cio_enable_subchannel+0x1d0/0x510
+ [<00000000018cac7c>] ccw_device_recognition+0x12c/0x188
+ [<0000000002ceb1a8>] ccw_device_enable_console+0x138/0x340
+ [<0000000002cf1cbe>] con3215_init+0x25e/0x300
+ [<0000000002c8770a>] console_init+0x68a/0x9b8
+ [<0000000002c6a3d6>] start_kernel+0x4fe/0x728
+ [<0000000000100070>] startup_continue+0x70/0xd0
 
 Cc: stable@vger.kernel.org
 Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
@@ -95,19 +94,19 @@ Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/cio/ccwgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/cio/css.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/s390/cio/ccwgroup.c
-+++ b/drivers/s390/cio/ccwgroup.c
-@@ -372,7 +372,7 @@ int ccwgroup_create_dev(struct device *p
- 		goto error;
- 	}
- 	/* Check for trailing stuff. */
--	if (i == num_devices && strlen(buf) > 0) {
-+	if (i == num_devices && buf && strlen(buf) > 0) {
- 		rc = -EINVAL;
- 		goto error;
- 	}
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -1388,6 +1388,8 @@ device_initcall(cio_settle_init);
+ 
+ int sch_is_pseudo_sch(struct subchannel *sch)
+ {
++	if (!sch->dev.parent)
++		return 0;
+ 	return sch == to_css(sch->dev.parent)->pseudo_subchannel;
+ }
+ 
 
 
