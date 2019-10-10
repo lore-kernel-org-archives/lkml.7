@@ -2,114 +2,80 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC43C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68100C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E85A2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3B52190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733039AbfJJHH6 (ORCPT
+        id S1733004AbfJJHKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:07:58 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38163 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbfJJHH5 (ORCPT
+        Thu, 10 Oct 2019 03:10:30 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33205 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfJJHKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:07:57 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iISY7-0004f8-Fx; Thu, 10 Oct 2019 09:07:47 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iISY1-0003fP-PN; Thu, 10 Oct 2019 09:07:41 +0200
-Date:   Thu, 10 Oct 2019 09:07:41 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     thierry.reding@gmail.com, alexandre.torgue@st.com,
-        benjamin.gaignard@st.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] pwm: stm32: add comment to better describe breakinput
- feature
-Message-ID: <20191010070741.jhkpqgmfpqp2jteo@pengutronix.de>
-References: <1570534887-26181-1-git-send-email-fabrice.gasnier@st.com>
- <20191008144531.pjt525xuz7n5a3hq@pengutronix.de>
- <5c05893b-e938-4db8-e33a-803b1a498f97@st.com>
+        Thu, 10 Oct 2019 03:10:30 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a15so4039179oic.0;
+        Thu, 10 Oct 2019 00:10:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TU10B3nKbfIpm9WNlkT9iNcLTqsb+xgrJpyrz4+X/IA=;
+        b=qQHHWk0I+urGfE8LZvAvu1TBDwXUAl/bP9PhX/4PTKuUBO3e9CkUBJ3BbS8uqKeHtG
+         gf87ZfbRNIHoBbudgsi5R/nJm44XPd67sU5g0zp21Mgtt/jTQDDVvNG6xK/7kTkX+xgm
+         oxnY1mTVy/y1hDckeQ9Y/rdNbID+F81Ja3IiVXl5xYk/lomXwDletaeyUdYnMYG7nFWi
+         UQT/rvjFync/diRvrd+Bu1HqXF5LzQCEZWrKpoz7zssilH6ZoA7xD9B0jK9sNNaVfphR
+         swxxeR8HerrJbhukoaOAcmKPOQ00pODij/Re584/JWj4Wha77ttvsVA9hHtm6ewxL5LC
+         fsEQ==
+X-Gm-Message-State: APjAAAWLcBOpWFS+isspzS7R75d4o9zqgokChK5crZGTMtFDlOnwVb0Q
+        3ja9bm18H5uRFT7TrZbhdHC+lSyawIiKWyN+e+Q=
+X-Google-Smtp-Source: APXvYqy+li7Xr8sM09s9qHeHYmcP9+9HHF++GuPo9eOazB7/UBi9MtzGp2SFtJxnjCj66BmyNdMv5eH+ZbbiswlC9f4=
+X-Received: by 2002:a54:4e89:: with SMTP id c9mr5896405oiy.148.1570691429202;
+ Thu, 10 Oct 2019 00:10:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5c05893b-e938-4db8-e33a-803b1a498f97@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <alpine.DEB.2.21.9999.1910091252160.11044@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1910091252160.11044@viisi.sifive.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 10 Oct 2019 09:10:18 +0200
+Message-ID: <CAMuHMdUfqvkVJHHwyuYxLSxj_iUofx-vSvEj92C5mg3bGxHqmA@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: admin-guide: add earlycon documentation
+ for RISC-V
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
+        Andreas Schwab <schwab@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 11:51:05AM +0200, Fabrice Gasnier wrote:
-> On 10/8/19 4:45 PM, Uwe Kleine-König wrote:
-> > On Tue, Oct 08, 2019 at 01:41:27PM +0200, Fabrice Gasnier wrote:
-> >> Add a comment to better describe the purpose of breakinput feature that
-> >> can be found on some STM32 timer instances. Briefly comment on the
-> >> characteristics of this input for PWM, and pinmuxing as suggested in [1].
-> >>
-> >> [1] https://lkml.org/lkml/2019/10/1/207
-> >>
-> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> >> ---
-> >>  drivers/pwm/pwm-stm32.c | 8 +++++++-
-> >>  1 file changed, 7 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> >> index 359b085..6406ebb 100644
-> >> --- a/drivers/pwm/pwm-stm32.c
-> >> +++ b/drivers/pwm/pwm-stm32.c
-> >> @@ -522,8 +522,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
-> >>  					     sizeof(struct stm32_breakinput));
-> >>  
-> >>  	/*
-> >> +	 * Some timer instances can have BRK input pins (e.g. basically a fault
-> >> +	 * pin from the output power stage). The break feature allows a safe
-> >> +	 * shut-down of the PWM outputs to a predefined state. Further details
-> >> +	 * are available in application note AN4277, "Using STM32 device PWM
-> >> +	 * shut-down features..."
-> > 
-> > Without having read the application note I don't understand the purpose.
-> > Not sure if this should be a show stopper though.
-> 
-> Hi Uwe,
-> 
-> I can rephrase this. Do you think the bellow comment would be more
-> relevant and easy to understand ?
-> 
-> /*
->  * The break feature allows a safe shut-down of the PWM outputs.
->  * It's based on the BRK event signal defined in the dt-bindings
->  * by <index level filter> values.
->  * Because "st,breakinput" parameter is optional do not make probe
->  * failed if it doesn't exist.
->  */
+On Wed, Oct 9, 2019 at 9:53 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> Kernels booting on RISC-V can specify "earlycon" with no options on
+> the Linux command line, and the generic DT earlycon support will query
+> the "chosen/stdout-path" property (if present) to determine which
+> early console device to use.  Document this appropriately in the
+> admin-guide.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 
-I still fail to understand. This is an input that determines the actual
-value of the output pin? What makes a shutdown of outputs safe? What is
-a shutdown anyhow?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Apart from that: s/do not make probe failed/don't fail to probe/.
+Gr{oetje,eeting}s,
 
-Best regards
-Uwe
+                        Geert
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
