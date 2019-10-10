@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18783C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286DEC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E674B218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2467218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696730;
-	bh=yWUB2eFyF+kAE8u9QcoZelZzL2qmlHqCLVLd+kbIucg=;
+	s=default; t=1570696734;
+	bh=7ICmKWHcVsxa7fjU9//oUnyZkEX5xHC61tndE/5jLus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j76GobFP8oe61Y3VjEJBqSloCAUQTyXljZl69nyhWS+Pr/edjnEDWDNw9vD3JM2mc
-	 h4fezpMWsyUP/PyjLFKNoB1/wBVXXoDlugdAGSP7GhKyaEb5ANQYfvdrbWfvP4sPJd
-	 zb1/v6LvcaNB/PFMwaIfZhTWnaHBJHo6x2MbIItM=
+	b=j+Fk5Ht58KQhE2I1FxJyv/J4H5H+j0f83XZZINaN2POlqoZH+Dg8ze8JaL45UurGX
+	 XW+hOl9Tv65f09c3/NM8HF49JFIzqRts5El2Icv90jC92BGQk7lDVthaUcqus1GCXh
+	 x3btf6iwYhRpTIFRwhXaLEQcbeZ6K1NBVJwnCC4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387704AbfJJIit (ORCPT
+        id S2387717AbfJJIiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:38:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41784 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:38:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387635AbfJJIir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:38:47 -0400
+        id S2387635AbfJJIiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:38:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F448218AC;
-        Thu, 10 Oct 2019 08:38:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA6E620B7C;
+        Thu, 10 Oct 2019 08:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696726;
-        bh=yWUB2eFyF+kAE8u9QcoZelZzL2qmlHqCLVLd+kbIucg=;
+        s=default; t=1570696729;
+        bh=7ICmKWHcVsxa7fjU9//oUnyZkEX5xHC61tndE/5jLus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zsu7SMD+12c7LlAgFf6Xydvng47bmiWaIWY7NMjrPv//1AslQLNrOX/VYcH6NOUwg
-         Ngz50/fr49ognbmlclNF6CCPORW9sYQyBMRNcDuG7nBZbOGOeuoU8eO+1KauXKz5X4
-         uzVkuaDhP/76pbpBa+4BJ9R2vRgVv8t3ODlrRMK8=
+        b=XAMDi4lFgVBRQs4zophgeUB1/Uoztx86N0RZDTuJ0BT0GygFwzx50G+NPtN6J51kn
+         dJ+sm9Rmb/2bnVwxgPdcqT6Jo8ZAxdtJJyscuE4jsP41EHg0w+MtWvg9chVEeusz7I
+         XFWbSvm2BAsx45KAXrFyvGuVovh9yX5R9afwci7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 5.3 003/148] KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
-Date:   Thu, 10 Oct 2019 10:34:24 +0200
-Message-Id: <20191010083610.398134531@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.3 030/148] powerpc/kasan: Fix parallel loading of modules.
+Date:   Thu, 10 Oct 2019 10:34:51 +0200
+Message-Id: <20191010083612.957788488@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -62,50 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Huth <thuth@redhat.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit a13b03bbb4575b350b46090af4dfd30e735aaed1 upstream.
+commit 45ff3c55958542c3b76075d59741297b8cb31cbb upstream.
 
-If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
-then there is certainly a bug in the calling userspace application.
-We check for wrong access registers, but only if the vCPU was already
-in the access register mode before (i.e. the SIE block has recorded
-it). The check is also buried somewhere deep in the calling chain (in
-the function ar_translation()), so this is somewhat hard to find.
+Parallel loading of modules may lead to bad setup of shadow page table
+entries.
 
-It's better to always report an error to the userspace in case this
-field is set wrong, and it's safer in the KVM code if we block wrong
-values here early instead of relying on a check somewhere deep down
-the calling chain, so let's add another check to kvm_s390_guest_mem_op()
-directly.
+First, lets align modules so that two modules never share the same
+shadow page.
 
-We also should check that the "size" is non-zero here (thanks to Janosch
-Frank for the hint!). If we do not check the size, we could call vmalloc()
-with this 0 value, and this will cause a kernel warning.
+Second, ensure that two modules cannot allocate two page tables for
+the same PMD entry at the same time. This is done by using
+init_mm.page_table_lock in the same way as __pte_alloc_kernel()
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
-Link: https://lkml.kernel.org/r/20190829122517.31042-1-thuth@redhat.com
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/c97284f912128cbc3f2fe09d68e90e65fb3e6026.1565361876.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/kvm-s390.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/kasan/kasan_init_32.c |   21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -4257,7 +4257,7 @@ static long kvm_s390_guest_mem_op(struct
- 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
- 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -5,6 +5,7 @@
+ #include <linux/kasan.h>
+ #include <linux/printk.h>
+ #include <linux/memblock.h>
++#include <linux/moduleloader.h>
+ #include <linux/sched/task.h>
+ #include <linux/vmalloc.h>
+ #include <asm/pgalloc.h>
+@@ -46,7 +47,19 @@ static int __ref kasan_init_shadow_page_
+ 			kasan_populate_pte(new, PAGE_READONLY);
+ 		else
+ 			kasan_populate_pte(new, PAGE_KERNEL_RO);
+-		pmd_populate_kernel(&init_mm, pmd, new);
++
++		smp_wmb(); /* See comment in __pte_alloc */
++
++		spin_lock(&init_mm.page_table_lock);
++			/* Has another populated it ? */
++		if (likely((void *)pmd_page_vaddr(*pmd) == kasan_early_shadow_pte)) {
++			pmd_populate_kernel(&init_mm, pmd, new);
++			new = NULL;
++		}
++		spin_unlock(&init_mm.page_table_lock);
++
++		if (new && slab_is_available())
++			pte_free_kernel(&init_mm, new);
+ 	}
+ 	return 0;
+ }
+@@ -137,7 +150,11 @@ void __init kasan_init(void)
+ #ifdef CONFIG_MODULES
+ void *module_alloc(unsigned long size)
+ {
+-	void *base = vmalloc_exec(size);
++	void *base;
++
++	base = __vmalloc_node_range(size, MODULE_ALIGN, VMALLOC_START, VMALLOC_END,
++				    GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
++				    NUMA_NO_NODE, __builtin_return_address(0));
  
--	if (mop->flags & ~supported_flags)
-+	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
- 		return -EINVAL;
- 
- 	if (mop->size > MEM_OP_MAX_SIZE)
+ 	if (!base)
+ 		return NULL;
 
 
