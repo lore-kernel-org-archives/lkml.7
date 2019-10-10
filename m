@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D5BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71199C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C030E21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4940E21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696673;
-	bh=y2zbsO5T3/Z2dXmo1sqzHSi55Pv/yML1S45Zkv/rtH8=;
+	s=default; t=1570696675;
+	bh=fT56qIs8PSkC21iYNoO3OOpHT7+AczEdjACor5C7SJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kE0sUry28e6Z4ZcjHb6zjoddraD7quwAifqevMEtLjvdegKwK3UsN9XFiKqr0tk7Y
-	 Wvr6si5P3aJzK78OHry71CJgtF+PKMMiYoUK+kv0/whH/10u7SGJwY6deXAbliIRVl
-	 uGfPmPO5OlT0vgbG/2tUazJmB6NePhSJnbsBnyRs=
+	b=Qh+8IS2Q9QPgAZvyuacuzr+TOJE8G2S3g0hbmqnLpLDF5o4VoArer7ul0aISUUQr9
+	 O/hUL7lFiJWkYaFetiXo6mU/KRKW520GEMlMZuwsRHaNzVBOswc3WWvCOIzL1d757h
+	 9AIiAkec/xwt/LY6T6CDy80lhVcXqTwfFYc+u4qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733293AbfJJIhw (ORCPT
+        id S2387434AbfJJIhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:37:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40494 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:37:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbfJJIhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:37:52 -0400
+        id S1733242AbfJJIhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:37:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0066B218AC;
-        Thu, 10 Oct 2019 08:37:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1CF220B7C;
+        Thu, 10 Oct 2019 08:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696669;
-        bh=y2zbsO5T3/Z2dXmo1sqzHSi55Pv/yML1S45Zkv/rtH8=;
+        s=default; t=1570696672;
+        bh=fT56qIs8PSkC21iYNoO3OOpHT7+AczEdjACor5C7SJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qZS4vFKhSPO1xsfQkO58Wb6yS02cr6LAM/82327fXSzOzJCcFhvIx7RYTLuBESec5
-         Z611qrxSjoIYIkfiiKZ3WOGkDHkBWuyN1LgaAxtrmEcW7MJpmwodycvgLdn0kiH1OO
-         iWz6R47OZtZdpjU8x0qLSqBqbBRp1unxGG0EwPM4=
+        b=kVoxdXcaqtVTBBGqF4MXFilVXLwm9dQmlnG4eWc7gbg9oU7Scw0niKe+2EqiLQSxV
+         R9JuyKl/EiQP0a3eb+8MftDYy5/ZoJGRQ1t0zJCuBQob2Mi6mpSzJkLrmAr/vdrZC9
+         TNRqM3Vc6jCveJDzsQYZikQ4+JTp8cYeb3A88cEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Gibson <david@gibson.dropbear.id.au>,
+        stable@vger.kernel.org,
         =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Paul Mackerras <paulus@ozlabs.org>
-Subject: [PATCH 5.3 010/148] KVM: PPC: Book3S: Enable XIVE native capability only if OPAL has required functions
-Date:   Thu, 10 Oct 2019 10:34:31 +0200
-Message-Id: <20191010083611.708276260@linuxfoundation.org>
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.3 011/148] KVM: PPC: Book3S HV: XIVE: Free escalation interrupts before disabling the VP
+Date:   Thu, 10 Oct 2019 10:34:32 +0200
+Message-Id: <20191010083611.769257929@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -60,119 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Mackerras <paulus@ozlabs.org>
+From: Cédric Le Goater <clg@kaod.org>
 
-commit 2ad7a27deaf6d78545d97ab80874584f6990360e upstream.
+commit 237aed48c642328ff0ab19b63423634340224a06 upstream.
 
-There are some POWER9 machines where the OPAL firmware does not support
-the OPAL_XIVE_GET_QUEUE_STATE and OPAL_XIVE_SET_QUEUE_STATE calls.
-The impact of this is that a guest using XIVE natively will not be able
-to be migrated successfully.  On the source side, the get_attr operation
-on the KVM native device for the KVM_DEV_XIVE_GRP_EQ_CONFIG attribute
-will fail; on the destination side, the set_attr operation for the same
-attribute will fail.
+When a vCPU is brought done, the XIVE VP (Virtual Processor) is first
+disabled and then the event notification queues are freed. When freeing
+the queues, we check for possible escalation interrupts and free them
+also.
 
-This adds tests for the existence of the OPAL get/set queue state
-functions, and if they are not supported, the XIVE-native KVM device
-is not created and the KVM_CAP_PPC_IRQ_XIVE capability returns false.
-Userspace can then either provide a software emulation of XIVE, or
-else tell the guest that it does not have a XIVE controller available
-to it.
+But when a XIVE VP is disabled, the underlying XIVE ENDs also are
+disabled in OPAL. When an END (Event Notification Descriptor) is
+disabled, its ESB pages (ESn and ESe) are disabled and loads return all
+1s. Which means that any access on the ESB page of the escalation
+interrupt will return invalid values.
 
-Cc: stable@vger.kernel.org # v5.2+
-Fixes: 3fab2d10588e ("KVM: PPC: Book3S HV: XIVE: Activate XIVE exploitation mode")
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+When an interrupt is freed, the shutdown handler computes a 'saved_p'
+field from the value returned by a load in xive_do_source_set_mask().
+This value is incorrect for escalation interrupts for the reason
+described above.
+
+This has no impact on Linux/KVM today because we don't make use of it
+but we will introduce in future changes a xive_get_irqchip_state()
+handler. This handler will use the 'saved_p' field to return the state
+of an interrupt and 'saved_p' being incorrect, softlockup will occur.
+
+Fix the vCPU cleanup sequence by first freeing the escalation interrupts
+if any, then disable the XIVE VP and last free the queues.
+
+Fixes: 90c73795afa2 ("KVM: PPC: Book3S HV: Add a new KVM device for the XIVE native exploitation mode")
+Fixes: 5af50993850a ("KVM: PPC: Book3S HV: Native usage of the XIVE interrupt controller")
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190806172538.5087-1-clg@kaod.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/kvm_ppc.h    |    1 +
- arch/powerpc/include/asm/xive.h       |    1 +
- arch/powerpc/kvm/book3s.c             |    8 +++++---
- arch/powerpc/kvm/book3s_xive_native.c |    5 +++++
- arch/powerpc/kvm/powerpc.c            |    3 ++-
- arch/powerpc/sysdev/xive/native.c     |    7 +++++++
- 6 files changed, 21 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/book3s_xive.c        |   18 ++++++++++--------
+ arch/powerpc/kvm/book3s_xive_native.c |   12 +++++++-----
+ 2 files changed, 17 insertions(+), 13 deletions(-)
 
---- a/arch/powerpc/include/asm/kvm_ppc.h
-+++ b/arch/powerpc/include/asm/kvm_ppc.h
-@@ -598,6 +598,7 @@ extern int kvmppc_xive_native_get_vp(str
- 				     union kvmppc_one_reg *val);
- extern int kvmppc_xive_native_set_vp(struct kvm_vcpu *vcpu,
- 				     union kvmppc_one_reg *val);
-+extern bool kvmppc_xive_native_supported(void);
+--- a/arch/powerpc/kvm/book3s_xive.c
++++ b/arch/powerpc/kvm/book3s_xive.c
+@@ -1134,20 +1134,22 @@ void kvmppc_xive_cleanup_vcpu(struct kvm
+ 	/* Mask the VP IPI */
+ 	xive_vm_esb_load(&xc->vp_ipi_data, XIVE_ESB_SET_PQ_01);
  
- #else
- static inline int kvmppc_xive_set_xive(struct kvm *kvm, u32 irq, u32 server,
---- a/arch/powerpc/include/asm/xive.h
-+++ b/arch/powerpc/include/asm/xive.h
-@@ -127,6 +127,7 @@ extern int xive_native_get_queue_state(u
- extern int xive_native_set_queue_state(u32 vp_id, uint32_t prio, u32 qtoggle,
- 				       u32 qindex);
- extern int xive_native_get_vp_state(u32 vp_id, u64 *out_state);
-+extern bool xive_native_has_queue_state_support(void);
- 
- #else
- 
---- a/arch/powerpc/kvm/book3s.c
-+++ b/arch/powerpc/kvm/book3s.c
-@@ -1083,9 +1083,11 @@ static int kvmppc_book3s_init(void)
- 	if (xics_on_xive()) {
- 		kvmppc_xive_init_module();
- 		kvm_register_device_ops(&kvm_xive_ops, KVM_DEV_TYPE_XICS);
--		kvmppc_xive_native_init_module();
--		kvm_register_device_ops(&kvm_xive_native_ops,
--					KVM_DEV_TYPE_XIVE);
-+		if (kvmppc_xive_native_supported()) {
-+			kvmppc_xive_native_init_module();
-+			kvm_register_device_ops(&kvm_xive_native_ops,
-+						KVM_DEV_TYPE_XIVE);
-+		}
- 	} else
- #endif
- 		kvm_register_device_ops(&kvm_xics_ops, KVM_DEV_TYPE_XICS);
+-	/* Disable the VP */
+-	xive_native_disable_vp(xc->vp_id);
+-
+-	/* Free the queues & associated interrupts */
++	/* Free escalations */
+ 	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
+-		struct xive_q *q = &xc->queues[i];
+-
+-		/* Free the escalation irq */
+ 		if (xc->esc_virq[i]) {
+ 			free_irq(xc->esc_virq[i], vcpu);
+ 			irq_dispose_mapping(xc->esc_virq[i]);
+ 			kfree(xc->esc_virq_names[i]);
+ 		}
+-		/* Free the queue */
++	}
++
++	/* Disable the VP */
++	xive_native_disable_vp(xc->vp_id);
++
++	/* Free the queues */
++	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
++		struct xive_q *q = &xc->queues[i];
++
+ 		xive_native_disable_queue(xc->vp_id, q, i);
+ 		if (q->qpage) {
+ 			free_pages((unsigned long)q->qpage,
 --- a/arch/powerpc/kvm/book3s_xive_native.c
 +++ b/arch/powerpc/kvm/book3s_xive_native.c
-@@ -1171,6 +1171,11 @@ int kvmppc_xive_native_set_vp(struct kvm
- 	return 0;
- }
+@@ -67,10 +67,7 @@ void kvmppc_xive_native_cleanup_vcpu(str
+ 	xc->valid = false;
+ 	kvmppc_xive_disable_vcpu_interrupts(vcpu);
  
-+bool kvmppc_xive_native_supported(void)
-+{
-+	return xive_native_has_queue_state_support();
-+}
+-	/* Disable the VP */
+-	xive_native_disable_vp(xc->vp_id);
+-
+-	/* Free the queues & associated interrupts */
++	/* Free escalations */
+ 	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
+ 		/* Free the escalation irq */
+ 		if (xc->esc_virq[i]) {
+@@ -79,8 +76,13 @@ void kvmppc_xive_native_cleanup_vcpu(str
+ 			kfree(xc->esc_virq_names[i]);
+ 			xc->esc_virq[i] = 0;
+ 		}
++	}
+ 
+-		/* Free the queue */
++	/* Disable the VP */
++	xive_native_disable_vp(xc->vp_id);
 +
- static int xive_native_debug_show(struct seq_file *m, void *private)
- {
- 	struct kvmppc_xive *xive = m->private;
---- a/arch/powerpc/kvm/powerpc.c
-+++ b/arch/powerpc/kvm/powerpc.c
-@@ -561,7 +561,8 @@ int kvm_vm_ioctl_check_extension(struct
- 		 * a POWER9 processor) and the PowerNV platform, as
- 		 * nested is not yet supported.
- 		 */
--		r = xive_enabled() && !!cpu_has_feature(CPU_FTR_HVMODE);
-+		r = xive_enabled() && !!cpu_has_feature(CPU_FTR_HVMODE) &&
-+			kvmppc_xive_native_supported();
- 		break;
- #endif
++	/* Free the queues */
++	for (i = 0; i < KVMPPC_XIVE_Q_COUNT; i++) {
+ 		kvmppc_xive_native_cleanup_queue(vcpu, i);
+ 	}
  
---- a/arch/powerpc/sysdev/xive/native.c
-+++ b/arch/powerpc/sysdev/xive/native.c
-@@ -811,6 +811,13 @@ int xive_native_set_queue_state(u32 vp_i
- }
- EXPORT_SYMBOL_GPL(xive_native_set_queue_state);
- 
-+bool xive_native_has_queue_state_support(void)
-+{
-+	return opal_check_token(OPAL_XIVE_GET_QUEUE_STATE) &&
-+		opal_check_token(OPAL_XIVE_SET_QUEUE_STATE);
-+}
-+EXPORT_SYMBOL_GPL(xive_native_has_queue_state_support);
-+
- int xive_native_get_vp_state(u32 vp_id, u64 *out_state)
- {
- 	__be64 state;
 
 
