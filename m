@@ -2,171 +2,180 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B7EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD9FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A6D206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19664206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 12:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuXW1Jn3"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="lVZ70xQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387509AbfJJMdO (ORCPT
+        id S2387626AbfJJMdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 08:33:14 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46205 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733010AbfJJMdO (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:33:14 -0400
-Received: by mail-qt1-f193.google.com with SMTP id u22so8367594qtq.13
-        for <Linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 05:33:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CgEV3AWxKtncF58gsDUOlqYVqqhzG2IkmMWY3vFrELk=;
-        b=AuXW1Jn3/VS2HoHeNpY8PnNdsqgwyKlnijaiv+vdWna4Bo3BOy5XfyNjWXrRX9wRt0
-         DfFY1Ymno/PHrKy0elxth0gRRRXwigIMCvVHQ8fyjp92hNoPfXVk5Nbmo4r9m26o27+5
-         AT/YjDnQNdSVd6MZpTTyuTcEwWR7ZdlnKcH0IB+ODtSP7YCkpI8+caDs9S53p1TfkmAK
-         lAn4LNG1+GqLtzi/e6TBm2PV6XO9H5gFfLeNErR7o0GVlTLr+wWFCMXbCWB8nVeR3qZr
-         5dfxHhPjSSusqI7frFUYwNyh7WRQnb6/QsDExFScHaZl4f+T4mAqYO/RR+hHEh77xP3S
-         ooBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CgEV3AWxKtncF58gsDUOlqYVqqhzG2IkmMWY3vFrELk=;
-        b=jMP4/1ww3ZFmUfoUfsL/ec7dA25HuTOoFFAgGJjo+J6n0d5/dkC6ZiPCqvXaS9F9b2
-         dfNjeYex97CPZado7vgXAmyjk1kUIC1ea7R6IsO+eSKfjn8u8HiW3cWR5qqmt7cWDHZc
-         FuT79AWs1UxFD+Eiz0J1R6+0oHe/2ppjQaUDzBbU/iaDOySOaB2a/Aw2Dvb0H2lxj/KE
-         wyz0D5CreNa/5Igo5G1p3Fa6fCySTTqZJap5MvZtFLbhGsU/ob2W8Z8NV3Sbj/Vf+E2j
-         /M3AEFk93C5coJWfNWA6/hQLJKWH1nDt4mEFP8iqZRaoqSuc5lg/XM/Xd/ayZ48keB8X
-         iyGQ==
-X-Gm-Message-State: APjAAAXnCdK5eX9D6DSK0ckSwm1FlzMNxPF5B/PLZZQLEzoD4uUgAFOv
-        Cfxsu1ZmrW0S2NqWMoDoOzU=
-X-Google-Smtp-Source: APXvYqwB/fHAmpeneAQ04e8YGXE/ODIDsIU73FsL7Mlv1Gw7myqM2ZPVe6nEISZWdAOo5DL3e/b92Q==
-X-Received: by 2002:a05:6214:11a8:: with SMTP id u8mr9344521qvv.41.1570710792739;
-        Thu, 10 Oct 2019 05:33:12 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id j7sm3622189qtc.73.2019.10.10.05.33.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 05:33:11 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7A7F741199; Thu, 10 Oct 2019 09:33:09 -0300 (-03)
-Date:   Thu, 10 Oct 2019 09:33:09 -0300
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v1 0/2] perf stat: Support --all-kernel and --all-user
-Message-ID: <20191010123309.GB19434@kernel.org>
-References: <20190925020218.8288-1-yao.jin@linux.intel.com>
- <20190929151022.GA16309@krava>
- <20190930182136.GD8560@tassilo.jf.intel.com>
- <20190930192800.GA13904@kernel.org>
- <20191001021755.GF8560@tassilo.jf.intel.com>
- <8a1cbcf6-2de7-3036-1c86-f3af6af077e2@linux.intel.com>
- <20191010080052.GB9616@krava>
- <9df9e60f-4998-32f2-f743-ebb0fdea4c0a@linux.intel.com>
+        Thu, 10 Oct 2019 08:33:23 -0400
+Received: from mail-eopbgr70134.outbound.protection.outlook.com ([40.107.7.134]:51810
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726923AbfJJMdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:33:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ay26mq05w/y77uUjxGA2gU3omDIgyQ1/Hu4+2+kNMdGUaaKMOlVoiS5JB5cEfYkrYeUQnRln4d/mMEiUWH7kK8fPwOgUf+7HcBLg8yh0QQrd9HkDytEGs2xt+FyxqOMV11EzZ0IA3lXid7UBPLDJG5PiKRJ5AwWchFBCr44K2P23kmB86tNxYZmqJPqynZVvrE7EY05pljY+ESX8/VHWWzvUn9vCX2gTJhacWHG2jD9fEVuV+RqBRYUOA0nNzJzHWMqAXvs2xxKx1bAwj5y+Tj0sFe/tRYODen6pdxu1FMHqoLqToSvIz67AxrPIXTLXoaTWPkpi82/hlSDwlyaPxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lrk0oUG60Jr/2lcLKT0L9p6LapgtXHX/LG9XubPNpmw=;
+ b=BWyEfnAmRKUXmxHGEXYexNlr7mon1PLp9niDzr8EPtB8J8ucKIjadZInkz6Kj2ChPOs9CU87TI/IbJTJkylLNyj+RHQYY3GyUTqBVGNJqHy4mHepHfV9ug/IrMnWmeX30+vqnm4w66pdyo5S6U5TVwbRnQGG5OSwTUFD7YjyLrG9kt8Jjo/lU4y3sypHoCMlIfxicwCrQvEHiduyCRimDw6dggHTcxnxgXXruC2C03nGTrm+sU/fC4IYj6SdTtcKA/apRoW9zJ73HTzhm3uKQX9tzBsHyQ7433lOszMas8kO6aASKyJ2BquySpeG4uK6xTrHx7XjJlGizpirUH063w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lrk0oUG60Jr/2lcLKT0L9p6LapgtXHX/LG9XubPNpmw=;
+ b=lVZ70xQxwNpjxeyoaDa0o1tXnpn8fadRikV+n3XCHcgutql85k1I2ud/XDjMiT58drHl8YrxdCZ9oyrTZ9G9sv4TNkvkH1OX7gqGyZaO5+n1ZgdWFADmL0+h0DIF63GSzPkvK3CGq8V1RkeUVgJLtEBk0rGxW90BmhVqG6qExyY=
+Received: from AM0PR08MB5537.eurprd08.prod.outlook.com (20.179.36.87) by
+ AM0PR08MB3953.eurprd08.prod.outlook.com (20.178.117.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Thu, 10 Oct 2019 12:33:06 +0000
+Received: from AM0PR08MB5537.eurprd08.prod.outlook.com
+ ([fe80::a8ea:5223:db78:dd3]) by AM0PR08MB5537.eurprd08.prod.outlook.com
+ ([fe80::a8ea:5223:db78:dd3%7]) with mapi id 15.20.2347.016; Thu, 10 Oct 2019
+ 12:33:05 +0000
+From:   Roman Kagan <rkagan@virtuozzo.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: [PATCH v4] x86/hyperv: make vapic support x2apic mode
+Thread-Topic: [PATCH v4] x86/hyperv: make vapic support x2apic mode
+Thread-Index: AQHVf2bd3sDcAG/lCUuldIC8p8n4Qw==
+Date:   Thu, 10 Oct 2019 12:33:05 +0000
+Message-ID: <20191010123258.16919-1-rkagan@virtuozzo.com>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [185.231.240.5]
+x-clientproxiedby: HE1P190CA0004.EURP190.PROD.OUTLOOK.COM (2603:10a6:3:bc::14)
+ To AM0PR08MB5537.eurprd08.prod.outlook.com (2603:10a6:208:148::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rkagan@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.21.0
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9c6076ea-86bb-4fd6-ee67-08d74d7e0001
+x-ms-traffictypediagnostic: AM0PR08MB3953:
+x-microsoft-antispam-prvs: <AM0PR08MB3953803B65CFE212FAAB4BF5C9940@AM0PR08MB3953.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 018632C080
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39850400004)(376002)(396003)(366004)(199004)(189003)(71200400001)(14444005)(478600001)(66556008)(81156014)(316002)(5660300002)(99286004)(71190400001)(52116002)(2906002)(110136005)(81166006)(8676002)(66066001)(66446008)(6436002)(26005)(6486002)(6506007)(1511001)(256004)(8936002)(386003)(64756008)(1076003)(6512007)(2501003)(66476007)(102836004)(186003)(50226002)(66946007)(25786009)(4326008)(2616005)(486006)(6116002)(2201001)(86362001)(3846002)(14454004)(7736002)(305945005)(36756003)(7416002)(476003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR08MB3953;H:AM0PR08MB5537.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +QgMTUgx10hm4a7+gr7C7Nstc9JegdK7eKzYtERDa66Z9Yx1JUXMqS4NOLrNaYFrZCYae5D2bHcw/wpZGm3KYfVTAtCrnSNRKIpKU9MzAuljrK10ASvbkiZo7253615E/5nuzFygk7IguPeBT/worZ4Din2UeveW86/DT0F15Tr5hoJbbKxB1iGLTLX/trnRNNhzoiLYGYdudy8UJ66JdtAS/ItsOuOMwPLo9FBHxHZrxxpqnDS16WvXdWzK53PcxK15p5WY0FUjrF2w2Ldl45w24wmfZoH1iOcSgtsOA3AWXS5HmXRhBzFUJg20uZuMmqqIrfu5quES+c0+B1CNA1e17NjlLUoo8zQKhITFpFYynnDVzzlknztJ2frTyJAEDsHiQPom1wPUXYjrmAOUKqHi1O29yaqLHkXY6RjF0Xk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9df9e60f-4998-32f2-f743-ebb0fdea4c0a@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c6076ea-86bb-4fd6-ee67-08d74d7e0001
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2019 12:33:05.8738
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QUrkhrEgdL6NseTTYaDK8cvu5MWPf+5NuF/xnluFppJdyRNHZI+oUnywM4SW0KaHawQO++85kjuZUA09NNVMew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3953
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Oct 10, 2019 at 04:33:57PM +0800, Jin, Yao escreveu:
-> 
-> 
-> On 10/10/2019 4:00 PM, Jiri Olsa wrote:
-> > On Thu, Oct 10, 2019 at 02:46:36PM +0800, Jin, Yao wrote:
-> > > 
-> > > 
-> > > On 10/1/2019 10:17 AM, Andi Kleen wrote:
-> > > > > > I think it's useful. Makes it easy to do kernel/user break downs.
-> > > > > > perf record should support the same.
-> > > > > 
-> > > > > Don't we have this already with:
-> > > > > 
-> > > > > [root@quaco ~]# perf stat -e cycles:u,instructions:u,cycles:k,instructions:k -a -- sleep 1
-> > > > 
-> > > > This only works for simple cases. Try it for --topdown or multiple -M metrics.
-> > > > 
-> > > > -Andi
-> > > > 
-> > > 
-> > > Hi Arnaldo, Jiri,
-> > > 
-> > > We think it should be very useful if --all-user / --all-kernel can be
-> > > specified together, so that we can get a break down between user and kernel
-> > > easily.
-> > > 
-> > > But yes, the patches for supporting this new semantics is much complicated
-> > > than the patch which just follows original perf-record behavior. I fully
-> > > understand this concern.
-> > > 
-> > > So if this new semantics can be accepted, that would be very good. But if
-> > > you think the new semantics is too complicated, I'm also fine for posting a
-> > > new patch which just follows the perf-record behavior.
-> > 
-> > I still need to think a bit more about this.. did you consider
-> > other options like cloning of the perf_evlist/perf_evsel and
-> > changing just the exclude* bits? might be event worse actualy ;-)
-> > 
-> 
-> That should be another approach, but it might be a bit more complicated than
-> just appending ":u"/":k" modifiers to the event name string.
-> 
-> > or maybe if we add modifier we could add extra events/groups
-> > within the parser.. like:
-> > 
-> >    "{cycles,instructions}:A,{cache-misses,cache-references}:A,cycles:A"
-> > 
-> > but that might be still more complicated then what you did
-> > 
-> 
-> Yes agree.
-> 
-> > also please add the perf record changes so we have same code
-> > and logic for both if we are going to change it
- 
-> If this new semantics can be accepted, I'd like to add perf record
-> supporting as well. :)
+Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
+when supported by the vcpus.
 
-Changes in semantics should be avoided, when we add an option already
-present in some other tool, we should strive to keep the semantics, so
-that people can reuse their knowledge and just switch tools to go from
-sampling to counting, say.
+However, the apic access functions for Hyper-V enlightened apic assume
+xapic mode only.
 
-So if at all possible, and without having really looked deep in this
-specific case, I would prefer that new semantics come with a new syntax,
-would that be possible?
+As a result, Linux fails to bring up secondary cpus when run as a guest
+in QEMU/KVM with both hv_apic and x2apic enabled.
 
-- Arnaldo
- 
-> Another difficulty for the new semantics is we need to create user and
-> kernel stat type in runtime_stat rblist (see patch "perf stat: Support
-> topdown with --all-kernel/--all-user"). That has to bring extra complexity.
-> 
-> Thanks
-> Jin Yao
-> 
-> > jirka
-> > 
+According to Michael Kelley, when in x2apic mode, the Hyper-V synthetic
+apic MSRs behave exactly the same as the corresponding architectural
+x2apic MSRs, so there's no need to override the apic accessors.  The
+only exception is hv_apic_eoi_write, which benefits from lazy EOI when
+available; however, its implementation works for both xapic and x2apic
+modes.
 
--- 
+Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
+Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
+Cc: stable@vger.kernel.org
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
+---
+v3 -> v4:
+- adjust the log message [Vitaly, Michael]
 
-- Arnaldo
+v2 -> v3:
+- do not introduce x2apic-capable hv_apic accessors; leave original
+  x2apic accessors instead
+
+v1 -> v2:
+- add ifdefs to handle !CONFIG_X86_X2APIC
+
+ arch/x86/hyperv/hv_apic.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index 5c056b8aebef..e01078e93dd3 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -260,11 +260,21 @@ void __init hv_apic_init(void)
+ 	}
+=20
+ 	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
+-		pr_info("Hyper-V: Using MSR based APIC access\n");
++		pr_info("Hyper-V: Using enlightened APIC (%s mode)",
++			x2apic_enabled() ? "x2apic" : "xapic");
++		/*
++		 * With x2apic, architectural x2apic MSRs are equivalent to the
++		 * respective synthetic MSRs, so there's no need to override
++		 * the apic accessors.  The only exception is
++		 * hv_apic_eoi_write, because it benefits from lazy EOI when
++		 * available, but it works for both xapic and x2apic modes.
++		 */
+ 		apic_set_eoi_write(hv_apic_eoi_write);
+-		apic->read      =3D hv_apic_read;
+-		apic->write     =3D hv_apic_write;
+-		apic->icr_write =3D hv_apic_icr_write;
+-		apic->icr_read  =3D hv_apic_icr_read;
++		if (!x2apic_enabled()) {
++			apic->read      =3D hv_apic_read;
++			apic->write     =3D hv_apic_write;
++			apic->icr_write =3D hv_apic_icr_write;
++			apic->icr_read  =3D hv_apic_icr_read;
++		}
+ 	}
+ }
+--=20
+2.21.0
+
