@@ -2,136 +2,115 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C21C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B900C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33372190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697909;
-	bh=Cbulkmm9GwC8jvTTwza+47Jdqbj9EpfMt2YzOG0dxZc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zVIH9iyra/6ZI0fjviVoaz7jW+vbeK1XxDKq0u+OUf44XKCecEMAgame0hTiX6JWd
-	 yLgOogBEODMpXwGygOhMiGNG9hb37VYVfbcpR5St2sQSCIGFR1BduFc3sH0WvsT4gz
-	 koewy8lI7fMyMEumGrZxmjXe13Y2EEa/6PYor8Bk=
+	by mail.kernel.org (Postfix) with ESMTP id 6B41F21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389203AbfJJIps (ORCPT
+        id S2387547AbfJJIpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389181AbfJJIpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:45:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 792082190F;
-        Thu, 10 Oct 2019 08:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697141;
-        bh=Cbulkmm9GwC8jvTTwza+47Jdqbj9EpfMt2YzOG0dxZc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=duiBEXZlgIvRQGEbjwj58XRN6Xl7LO6KUPN6PuNDc78Ejx+GAqOA2mRejFEfLvhro
-         unsqfvQCqOIhkP/oDM/2gThzeUjlsRo018F5/f5V5P8k+4TnnocYe/kcTGfFvrir+D
-         8hmTm28DAzipl//eaE0UjOWvvQM2+kbRlAPzR1j0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Liang ZhiCheng <liangzhicheng@baidu.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 032/114] timer: Read jiffies once when forwarding base clk
-Date:   Thu, 10 Oct 2019 10:35:39 +0200
-Message-Id: <20191010083600.488625019@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
-References: <20191010083544.711104709@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 10 Oct 2019 04:45:32 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:6607 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388082AbfJJIp2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:45:28 -0400
+X-UUID: fca862e4d84f4e6594ed4159528f2e68-20191010
+X-UUID: fca862e4d84f4e6594ed4159528f2e68-20191010
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1801377807; Thu, 10 Oct 2019 16:45:19 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 10 Oct
+ 2019 16:45:16 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 10 Oct 2019 16:45:16 +0800
+Message-ID: <1570697118.32135.20.camel@mhfsdcap03>
+Subject: Re: [PATCH] usb: mtk-xhci: Set the XHCI_NO_64BIT_SUPPORT quirk
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Changqi Hu <Changqi.Hu@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Shik Chen <shik@chromium.org>
+Date:   Thu, 10 Oct 2019 16:45:18 +0800
+In-Reply-To: <20191010075004.192818-1-tfiga@chromium.org>
+References: <20191010075004.192818-1-tfiga@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: B90345DAD5A894277746B2A803C573FB68AC83DB838DD9C7583D5D1E62D8AAD32000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+Hi, Tomasz,
 
-commit e430d802d6a3aaf61bd3ed03d9404888a29b9bf9 upstream.
+On Thu, 2019-10-10 at 16:50 +0900, Tomasz Figa wrote:
+> MediaTek XHCI host controller does not support 64-bit addressing despite
+> the AC64 bit of HCCPARAMS1 register being set. The platform-specific
+> glue sets the DMA mask to 32 bits on its own, but it has no effect,
+> because xhci_gen_setup() overrides it according to hardware
+> capabilities.
+> 
+> Use the XHCI_NO_64BIT_SUPPORT quirk to tell the XHCI core to force
+> 32-bit DMA mask instead.
+> 
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> ---
+>  drivers/usb/host/xhci-mtk.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+> index b18a6baef204a..4d101d52cc11b 100644
+> --- a/drivers/usb/host/xhci-mtk.c
+> +++ b/drivers/usb/host/xhci-mtk.c
+> @@ -395,6 +395,11 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  	xhci->quirks |= XHCI_SPURIOUS_SUCCESS;
+>  	if (mtk->lpm_support)
+>  		xhci->quirks |= XHCI_LPM_SUPPORT;
+> +	/*
+> +	 * MTK host controller does not support 64-bit addressing, despite
+> +	 * having the AC64 bit of the HCCPARAMS1 register set.
+> +	 */
+> +	xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+Somes SoCs support 64bits in fact, so can't support this quirk, do you
+encounter any issues without this quirk?
 
-The timer delayed for more than 3 seconds warning was triggered during
-testing.
+>  }
 
-  Workqueue: events_unbound sched_tick_remote
-  RIP: 0010:sched_tick_remote+0xee/0x100
-  ...
-  Call Trace:
-   process_one_work+0x18c/0x3a0
-   worker_thread+0x30/0x380
-   kthread+0x113/0x130
-   ret_from_fork+0x22/0x40
-
-The reason is that the code in collect_expired_timers() uses jiffies
-unprotected:
-
-    if (next_event > jiffies)
-        base->clk = jiffies;
-
-As the compiler is allowed to reload the value base->clk can advance
-between the check and the store and in the worst case advance farther than
-next event. That causes the timer expiry to be delayed until the wheel
-pointer wraps around.
-
-Convert the code to use READ_ONCE()
-
-Fixes: 236968383cf5 ("timers: Optimize collect_expired_timers() for NOHZ")
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Liang ZhiCheng <liangzhicheng@baidu.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1568894687-14499-1-git-send-email-lirongqing@baidu.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/time/timer.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1590,24 +1590,26 @@ void timer_clear_idle(void)
- static int collect_expired_timers(struct timer_base *base,
- 				  struct hlist_head *heads)
- {
-+	unsigned long now = READ_ONCE(jiffies);
-+
- 	/*
- 	 * NOHZ optimization. After a long idle sleep we need to forward the
- 	 * base to current jiffies. Avoid a loop by searching the bitfield for
- 	 * the next expiring timer.
- 	 */
--	if ((long)(jiffies - base->clk) > 2) {
-+	if ((long)(now - base->clk) > 2) {
- 		unsigned long next = __next_timer_interrupt(base);
- 
- 		/*
- 		 * If the next timer is ahead of time forward to current
- 		 * jiffies, otherwise forward to the next expiry time:
- 		 */
--		if (time_after(next, jiffies)) {
-+		if (time_after(next, now)) {
- 			/*
- 			 * The call site will increment base->clk and then
- 			 * terminate the expiry loop immediately.
- 			 */
--			base->clk = jiffies;
-+			base->clk = now;
- 			return 0;
- 		}
- 		base->clk = next;
+>  
+>  /* called during probe() after chip reset completes */
+> @@ -488,11 +493,6 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+>  		goto disable_clk;
+>  	}
+>  
+> -	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
+> -	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> -	if (ret)
+> -		goto disable_clk;
+> -
+>  	hcd = usb_create_hcd(driver, dev, dev_name(dev));
+>  	if (!hcd) {
+>  		ret = -ENOMEM;
 
 
