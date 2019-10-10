@@ -2,97 +2,79 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA7FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAECFC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505122067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570744309;
-	bh=EfYl3DEKiMDTEd71Sf/gNrcgc3iPbO+kTX4RjvVd1p8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yO9AOJJaZG0kRcaUncXP27HwlzUF5sbqxrunCBAUsL5pU7NFoExAfJb/JwWi1uDUV
-	 5jg3trFDIypCnEQahzDpFL1reuveUpsub/hyudOkXloktE04DRHQiDbMUE+bJ69ior
-	 3quYTxXk4I4yfngea/guXENo/mu5TKZUFE+mj0W0=
+	by mail.kernel.org (Postfix) with ESMTP id A45A5206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfJJVvs (ORCPT
+        id S1727403AbfJJVwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:51:48 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35855 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJVvr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:51:47 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 67so6254070oto.3;
-        Thu, 10 Oct 2019 14:51:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BsPwSU6X2gQyCit53YR9b2X6LOdSxAWOyZ/eXX+wmiM=;
-        b=s4+67hOZqHoXoQJfJZZ63GCBSBsTweKg+dRP9lxkUlFoOBpILsrRQmwmZxy8PlakNX
-         xq/RQ9oEi8QbebI+PbFWBNFqDb1+Ba9rs3e3gb7TtjGv5g314oHPF8n9lHyde7JCE0u+
-         CDIKPZHaAJBmJbkSxf/7G8Qu4u2D5wBPI+jg8Vp//fcVBOn3TZ/GNr9gXO4rB1W8Fktn
-         TARzcmMlfi9geugeoNVLRlmHC9heOqUBguG1xv3tlQ0JqZWj5CtZDwVHuLipQC5aAKG7
-         cQONmtrjycsx99s8Xz3RqVfsvUPtgrlO+9NSlQEN6hFCCk2L6UeWQGVpaKaG3vmFnG6o
-         8xvg==
-X-Gm-Message-State: APjAAAUOR6PqmooBM97Exg9UORwxiYpXlWAZGGs3v2/+zLaj903JoWQO
-        pTcXlr1kMCy1PhWxK6XipeYyPog=
-X-Google-Smtp-Source: APXvYqyeeCI7SWt8DgFaTGCvI1pwHUIrAXSg4kf5ngWc9Hr2IhfYul0XKR9JMoYXpLjIpfiKIDNnZQ==
-X-Received: by 2002:a05:6830:1e03:: with SMTP id s3mr403637otr.289.1570744306660;
-        Thu, 10 Oct 2019 14:51:46 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f205sm2022658oib.11.2019.10.10.14.51.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 14:51:46 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 16:51:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Maciej Falkowski <m.falkowski@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2] ASoC: samsung: i2s: Document clocks macros
-Message-ID: <20191010215145.GA24430@bogus>
-References: <CGME20190926110226eucas1p24dbb1b39ffa3f607aa28c0c4d9ff6aba@eucas1p2.samsung.com>
- <20190926110219.6144-1-m.szyprowski@samsung.com>
+        Thu, 10 Oct 2019 17:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfJJVwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 17:52:19 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40DE52067B;
+        Thu, 10 Oct 2019 21:52:18 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 17:52:16 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [RFC][PATCH] kprobes/x86: While list ftrace locations in kprobe
+ blacklist areas
+Message-ID: <20191010175216.4ceb3cf1@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190926110219.6144-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Sep 2019 13:02:19 +0200, Marek Szyprowski wrote:
-> From: Maciej Falkowski <m.falkowski@samsung.com>
-> 
-> Document clocks macros with their description
-> from 'Documentation/devicetree/bindings/sound/samsung-i2s.txt'
-> 
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> v2:
-> - Added proper commit message and description
-> - Moved comments to the right side
-> 
-> Best regards,
-> Maciej Falkowski
-> ---
->  include/dt-bindings/sound/samsung-i2s.h | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Applied, thanks.
+I noticed some of my old tests failing on kprobes, and realized that
+this was due to black listing irq_entry functions on x86 from being
+used by kprobes. IIRC, this was due to the cr2 being corrupted and
+such, and I believe other things were to cause. But black listing all
+irq_entry code is a big hammer to this.
 
-Rob
+ (See commit 0eae81dc9f026 "x86/kprobes: Prohibit probing on IRQ
+ handlers directly" for more details)
+
+Anyway, if kprobes is using ftrace as a hook, there shouldn't be any
+problems here. If we white list ftrace locations in the range of
+kprobe_add_area_blacklist(), it should be safe.
+
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index d9770a5393c8..9d28a279282c 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2124,6 +2124,11 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
+ 	int ret = 0;
+ 
+ 	for (entry = start; entry < end; entry += ret) {
++#ifdef CONFIG_KPROBES_ON_FTRACE
++		/* We are safe if using ftrace */
++		if (ftrace_location(entry))
++			continue;
++#endif
+ 		ret = kprobe_add_ksym_blacklist(entry);
+ 		if (ret < 0)
+ 			return ret;
