@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651B3ECE58E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15CAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B30218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93AC20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570696724;
-	bh=PiLVW/DsUnOL6344RwbBLLZjLvoXyDOgI5e4SR7M1FU=;
+	s=default; t=1570696727;
+	bh=yEwwN4aCrDKN7M8R+26m8PSL7h3DXKhMA0QOudOPcF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mW4Ys7mbfxNZjlWinhL582kJypvu2rDfH7hwYsgiSOrIH7unCqm2RnkGQ8IfIQDIz
-	 ohXoHCoq9AFoNpqGjwvZrN+VIe+F0ble610tpAI2rWr5couHCXBya3a/jm2O3mbnJt
-	 uFGaN8pbd05TPR4sbFs5H8HJ6wGC+0XtZkW5Zy20=
+	b=rA7dbtA7rK3M6wiLWrkRrcbgWgbvu9/lILLb4o1TDYEORcqrKB4nfdZtwwHXgORME
+	 CHny7QsLseE8UyvLbRR6pwfe9urMzrzGe/WBv5W4D4gcJtU/K+ND7kkrI3qT7CeXdx
+	 JleMSPupCefqVJWybRp5mWQAk1WrwQyOIH+9L+DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387407AbfJJIin (ORCPT
+        id S2387691AbfJJIiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:38:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:38:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387635AbfJJIim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:38:42 -0400
+        id S2387635AbfJJIio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:38:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD066218AC;
-        Thu, 10 Oct 2019 08:38:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C36820B7C;
+        Thu, 10 Oct 2019 08:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696721;
-        bh=PiLVW/DsUnOL6344RwbBLLZjLvoXyDOgI5e4SR7M1FU=;
+        s=default; t=1570696723;
+        bh=yEwwN4aCrDKN7M8R+26m8PSL7h3DXKhMA0QOudOPcF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=poEu5m5Cb9+nbI+NercR7FrqffJqatl6gYJ3Pao4XuAmhMOMborlw++JRHJGv6W6m
-         lDebfKcbiP2AF70IcUNZ6vCJ5cQ4EzQa1JaSMLB+Gs1a6mTnXs4KSfiye9VnPppMt/
-         sqv6XiKrYM/blOCS7/WFfUpI5I11z56WbptylIYc=
+        b=UMCky3TDbAMbMYJ8/ZaifeiHgoMdhrdC1j1t2LaOvA4lrv1cPPBEN8VSXYZmQ6Zu3
+         Tjuo/ZsiNnNgRAszuTtpRSY8m8eIjIX5zWwyFFus/i6h/Nx786KedDaPrazZuxAUyw
+         AAonsQBvRnDXW9mV+u2OsRu7e1J3/pxWtmORQxJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.3 028/148] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt()
-Date:   Thu, 10 Oct 2019 10:34:49 +0200
-Message-Id: <20191010083612.818069391@linuxfoundation.org>
+Subject: [PATCH 5.3 029/148] powerpc/powernv/ioda: Fix race in TCE level allocation
+Date:   Thu, 10 Oct 2019 10:34:50 +0200
+Message-Id: <20191010083612.888985844@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -61,170 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-commit c784be435d5dae28d3b03db31753dd7a18733f0c upstream.
+commit 56090a3902c80c296e822d11acdb6a101b322c52 upstream.
 
-The calls to arch_add_memory()/arch_remove_memory() are always made
-with the read-side cpu_hotplug_lock acquired via memory_hotplug_begin().
-On pSeries, arch_add_memory()/arch_remove_memory() eventually call
-resize_hpt() which in turn calls stop_machine() which acquires the
-read-side cpu_hotplug_lock again, thereby resulting in the recursive
-acquisition of this lock.
+pnv_tce() returns a pointer to a TCE entry and originally a TCE table
+would be pre-allocated. For the default case of 2GB window the table
+needs only a single level and that is fine. However if more levels are
+requested, it is possible to get a race when 2 threads want a pointer
+to a TCE entry from the same page of TCEs.
 
-In the absence of CONFIG_PROVE_LOCKING, we hadn't observed a system
-lockup during a memory hotplug operation because cpus_read_lock() is a
-per-cpu rwsem read, which, in the fast-path (in the absence of the
-writer, which in our case is a CPU-hotplug operation) simply
-increments the read_count on the semaphore. Thus a recursive read in
-the fast-path doesn't cause any problems.
+This adds cmpxchg to handle the race. Note that once TCE is non-zero,
+it cannot become zero again.
 
-However, we can hit this problem in practice if there is a concurrent
-CPU-Hotplug operation in progress which is waiting to acquire the
-write-side of the lock. This will cause the second recursive read to
-block until the writer finishes. While the writer is blocked since the
-first read holds the lock. Thus both the reader as well as the writers
-fail to make any progress thereby blocking both CPU-Hotplug as well as
-Memory Hotplug operations.
-
-Memory-Hotplug				CPU-Hotplug
-CPU 0					CPU 1
-------                                  ------
-
-1. down_read(cpu_hotplug_lock.rw_sem)
-   [memory_hotplug_begin]
-					2. down_write(cpu_hotplug_lock.rw_sem)
-					[cpu_up/cpu_down]
-3. down_read(cpu_hotplug_lock.rw_sem)
-   [stop_machine()]
-
-Lockdep complains as follows in these code-paths.
-
- swapper/0/1 is trying to acquire lock:
- (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
-
-but task is already holding lock:
-(____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
-
- other info that might help us debug this:
-  Possible unsafe locking scenario:
-
-        CPU0
-        ----
-   lock(cpu_hotplug_lock.rw_sem);
-   lock(cpu_hotplug_lock.rw_sem);
-
-  *** DEADLOCK ***
-
-  May be due to missing lock nesting notation
-
- 3 locks held by swapper/0/1:
-  #0: (____ptrval____) (&dev->mutex){....}, at: __driver_attach+0x12c/0x1b0
-  #1: (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
-  #2: (____ptrval____) (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x54/0x1a0
-
-stack backtrace:
- CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc5-58373-gbc99402235f3-dirty #166
- Call Trace:
-   dump_stack+0xe8/0x164 (unreliable)
-   __lock_acquire+0x1110/0x1c70
-   lock_acquire+0x240/0x290
-   cpus_read_lock+0x64/0xf0
-   stop_machine+0x2c/0x60
-   pseries_lpar_resize_hpt+0x19c/0x2c0
-   resize_hpt_for_hotplug+0x70/0xd0
-   arch_add_memory+0x58/0xfc
-   devm_memremap_pages+0x5e8/0x8f0
-   pmem_attach_disk+0x764/0x830
-   nvdimm_bus_probe+0x118/0x240
-   really_probe+0x230/0x4b0
-   driver_probe_device+0x16c/0x1e0
-   __driver_attach+0x148/0x1b0
-   bus_for_each_dev+0x90/0x130
-   driver_attach+0x34/0x50
-   bus_add_driver+0x1a8/0x360
-   driver_register+0x108/0x170
-   __nd_driver_register+0xd0/0xf0
-   nd_pmem_driver_init+0x34/0x48
-   do_one_initcall+0x1e0/0x45c
-   kernel_init_freeable+0x540/0x64c
-   kernel_init+0x2c/0x160
-   ret_from_kernel_thread+0x5c/0x68
-
-Fix this issue by
-  1) Requiring all the calls to pseries_lpar_resize_hpt() be made
-     with cpu_hotplug_lock held.
-
-  2) In pseries_lpar_resize_hpt() invoke stop_machine_cpuslocked()
-     as a consequence of 1)
-
-  3) To satisfy 1), in hpt_order_set(), call mmu_hash_ops.resize_hpt()
-     with cpu_hotplug_lock held.
-
-Fixes: dbcf929c0062 ("powerpc/pseries: Add support for hash table resizing")
-Cc: stable@vger.kernel.org # v4.11+
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Fixes: a68bd1267b72 ("powerpc/powernv/ioda: Allocate indirect TCE levels on demand")
+CC: stable@vger.kernel.org # v4.19+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1557906352-29048-1-git-send-email-ego@linux.vnet.ibm.com
+Link: https://lore.kernel.org/r/20190718051139.74787-2-aik@ozlabs.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/book3s64/hash_utils.c |    9 ++++++++-
- arch/powerpc/platforms/pseries/lpar.c |    8 ++++++--
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda-tce.c |   18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -34,6 +34,7 @@
- #include <linux/libfdt.h>
- #include <linux/pkeys.h>
- #include <linux/hugetlb.h>
-+#include <linux/cpu.h>
- 
- #include <asm/debugfs.h>
- #include <asm/processor.h>
-@@ -1931,10 +1932,16 @@ static int hpt_order_get(void *data, u64
- 
- static int hpt_order_set(void *data, u64 val)
- {
-+	int ret;
-+
- 	if (!mmu_hash_ops.resize_hpt)
- 		return -ENODEV;
- 
--	return mmu_hash_ops.resize_hpt(val);
-+	cpus_read_lock();
-+	ret = mmu_hash_ops.resize_hpt(val);
-+	cpus_read_unlock();
-+
-+	return ret;
+--- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
+@@ -49,6 +49,9 @@ static __be64 *pnv_alloc_tce_level(int n
+ 	return addr;
  }
  
- DEFINE_DEBUGFS_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n");
---- a/arch/powerpc/platforms/pseries/lpar.c
-+++ b/arch/powerpc/platforms/pseries/lpar.c
-@@ -1413,7 +1413,10 @@ static int pseries_lpar_resize_hpt_commi
- 	return 0;
- }
- 
--/* Must be called in user context */
-+/*
-+ * Must be called in process context. The caller must hold the
-+ * cpus_lock.
-+ */
- static int pseries_lpar_resize_hpt(unsigned long shift)
++static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
++		unsigned long size, unsigned int levels);
++
+ static __be64 *pnv_tce(struct iommu_table *tbl, bool user, long idx, bool alloc)
  {
- 	struct hpt_resize_state state = {
-@@ -1467,7 +1470,8 @@ static int pseries_lpar_resize_hpt(unsig
+ 	__be64 *tmp = user ? tbl->it_userspace : (__be64 *) tbl->it_base;
+@@ -58,9 +61,9 @@ static __be64 *pnv_tce(struct iommu_tabl
  
- 	t1 = ktime_get();
+ 	while (level) {
+ 		int n = (idx & mask) >> (level * shift);
+-		unsigned long tce;
++		unsigned long oldtce, tce = be64_to_cpu(READ_ONCE(tmp[n]));
  
--	rc = stop_machine(pseries_lpar_resize_hpt_commit, &state, NULL);
-+	rc = stop_machine_cpuslocked(pseries_lpar_resize_hpt_commit,
-+				     &state, NULL);
+-		if (tmp[n] == 0) {
++		if (!tce) {
+ 			__be64 *tmp2;
  
- 	t2 = ktime_get();
+ 			if (!alloc)
+@@ -71,10 +74,15 @@ static __be64 *pnv_tce(struct iommu_tabl
+ 			if (!tmp2)
+ 				return NULL;
  
+-			tmp[n] = cpu_to_be64(__pa(tmp2) |
+-					TCE_PCI_READ | TCE_PCI_WRITE);
++			tce = __pa(tmp2) | TCE_PCI_READ | TCE_PCI_WRITE;
++			oldtce = be64_to_cpu(cmpxchg(&tmp[n], 0,
++					cpu_to_be64(tce)));
++			if (oldtce) {
++				pnv_pci_ioda2_table_do_free_pages(tmp2,
++					ilog2(tbl->it_level_size) + 3, 1);
++				tce = oldtce;
++			}
+ 		}
+-		tce = be64_to_cpu(tmp[n]);
+ 
+ 		tmp = __va(tce & ~(TCE_PCI_READ | TCE_PCI_WRITE));
+ 		idx &= ~mask;
 
 
