@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E6EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95668ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546AF20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0D620679
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697615;
-	bh=ROxEfYetPFCwBqpYR5AoZmH9Ks/XqE7RhVURrEv9GHY=;
+	s=default; t=1570697619;
+	bh=6SkMzT9k6yp6Cj1bG3nLbeaWUtm82QQSSSOy363reCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GVC5igKXcK0CTtWqwODmknAR3f0W6zEqxKqmCE9Es17+1zdKh9uHzqYVZAnJm6KdP
-	 GJhUT7afzJMXjUsUrgjtAC71wI+XZYHYTwj1J9yZSXMZiD4+Oz7jGH1E1i8utGeW3E
-	 DuA8Bi9WzplzQiIOLy6kekpMN2RjXYdPSUh9A/SM=
+	b=nlnGYDoaoKE/+3f+BDLZtDd0bClpFvK5PTVEDahws+2jiB9AWIovRv3X+pQI/6WCc
+	 DrGF5gEDoRoY4yiOeMyOOqHVirXi5B7EKRdRok6ffOQIfFJzoqYTKUc2MhaH9pPo/C
+	 ig6SADpR/HlRwCMWiFhti7J3Jc78AA18qwXa5qtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389618AbfJJIxd (ORCPT
+        id S2390130AbfJJIvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:53:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59258 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:51:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389802AbfJJIvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:51:39 -0400
+        id S2390123AbfJJIvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:51:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A16C2064A;
-        Thu, 10 Oct 2019 08:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C806220679;
+        Thu, 10 Oct 2019 08:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697498;
-        bh=ROxEfYetPFCwBqpYR5AoZmH9Ks/XqE7RhVURrEv9GHY=;
+        s=default; t=1570697490;
+        bh=6SkMzT9k6yp6Cj1bG3nLbeaWUtm82QQSSSOy363reCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZBnoMUcM1viEhtbRgjeldr6VHBIuBS4RW7Ax7GErl9S+p2LRc9uvEerIxs6UEOsF
-         Lk9EA8XxV72JI31jRp98C2rnVZYh3FOCkzHvnACDsirvYoApTVR8gfhuvysigO8sjp
-         SJxC3x50OmSGEKc6wwIISCNuJs1L2ZnWpQruATk4=
+        b=IaAmdnwNeTHO6jTWbJIZFfOk924U1sROlothrV46NasFBmAyqnSlggUGrDktd1GyX
+         AeYYCqtDjSJlhO0lHbyeExyrMFgTScWzzaVyqDAt1nu51KHGtMFssq8b9k3IyyolC7
+         xpdlIreKieWRPcjPMLLS3BowHa1T0B9RW6BkvDqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 49/61] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt()
-Date:   Thu, 10 Oct 2019 10:37:14 +0200
-Message-Id: <20191010083520.365076698@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Xiubo Li <xiubli@redhat.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 46/61] nbd: fix crash when the blksize is zero
+Date:   Thu, 10 Oct 2019 10:37:11 +0200
+Message-Id: <20191010083518.820493491@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -62,174 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit c784be435d5dae28d3b03db31753dd7a18733f0c ]
+[ Upstream commit 553768d1169a48c0cd87c4eb4ab57534ee663415 ]
 
-The calls to arch_add_memory()/arch_remove_memory() are always made
-with the read-side cpu_hotplug_lock acquired via memory_hotplug_begin().
-On pSeries, arch_add_memory()/arch_remove_memory() eventually call
-resize_hpt() which in turn calls stop_machine() which acquires the
-read-side cpu_hotplug_lock again, thereby resulting in the recursive
-acquisition of this lock.
+This will allow the blksize to be set zero and then use 1024 as
+default.
 
-In the absence of CONFIG_PROVE_LOCKING, we hadn't observed a system
-lockup during a memory hotplug operation because cpus_read_lock() is a
-per-cpu rwsem read, which, in the fast-path (in the absence of the
-writer, which in our case is a CPU-hotplug operation) simply
-increments the read_count on the semaphore. Thus a recursive read in
-the fast-path doesn't cause any problems.
-
-However, we can hit this problem in practice if there is a concurrent
-CPU-Hotplug operation in progress which is waiting to acquire the
-write-side of the lock. This will cause the second recursive read to
-block until the writer finishes. While the writer is blocked since the
-first read holds the lock. Thus both the reader as well as the writers
-fail to make any progress thereby blocking both CPU-Hotplug as well as
-Memory Hotplug operations.
-
-Memory-Hotplug				CPU-Hotplug
-CPU 0					CPU 1
-------                                  ------
-
-1. down_read(cpu_hotplug_lock.rw_sem)
-   [memory_hotplug_begin]
-					2. down_write(cpu_hotplug_lock.rw_sem)
-					[cpu_up/cpu_down]
-3. down_read(cpu_hotplug_lock.rw_sem)
-   [stop_machine()]
-
-Lockdep complains as follows in these code-paths.
-
- swapper/0/1 is trying to acquire lock:
- (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
-
-but task is already holding lock:
-(____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
-
- other info that might help us debug this:
-  Possible unsafe locking scenario:
-
-        CPU0
-        ----
-   lock(cpu_hotplug_lock.rw_sem);
-   lock(cpu_hotplug_lock.rw_sem);
-
-  *** DEADLOCK ***
-
-  May be due to missing lock nesting notation
-
- 3 locks held by swapper/0/1:
-  #0: (____ptrval____) (&dev->mutex){....}, at: __driver_attach+0x12c/0x1b0
-  #1: (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
-  #2: (____ptrval____) (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x54/0x1a0
-
-stack backtrace:
- CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc5-58373-gbc99402235f3-dirty #166
- Call Trace:
-   dump_stack+0xe8/0x164 (unreliable)
-   __lock_acquire+0x1110/0x1c70
-   lock_acquire+0x240/0x290
-   cpus_read_lock+0x64/0xf0
-   stop_machine+0x2c/0x60
-   pseries_lpar_resize_hpt+0x19c/0x2c0
-   resize_hpt_for_hotplug+0x70/0xd0
-   arch_add_memory+0x58/0xfc
-   devm_memremap_pages+0x5e8/0x8f0
-   pmem_attach_disk+0x764/0x830
-   nvdimm_bus_probe+0x118/0x240
-   really_probe+0x230/0x4b0
-   driver_probe_device+0x16c/0x1e0
-   __driver_attach+0x148/0x1b0
-   bus_for_each_dev+0x90/0x130
-   driver_attach+0x34/0x50
-   bus_add_driver+0x1a8/0x360
-   driver_register+0x108/0x170
-   __nd_driver_register+0xd0/0xf0
-   nd_pmem_driver_init+0x34/0x48
-   do_one_initcall+0x1e0/0x45c
-   kernel_init_freeable+0x540/0x64c
-   kernel_init+0x2c/0x160
-   ret_from_kernel_thread+0x5c/0x68
-
-Fix this issue by
-  1) Requiring all the calls to pseries_lpar_resize_hpt() be made
-     with cpu_hotplug_lock held.
-
-  2) In pseries_lpar_resize_hpt() invoke stop_machine_cpuslocked()
-     as a consequence of 1)
-
-  3) To satisfy 1), in hpt_order_set(), call mmu_hash_ops.resize_hpt()
-     with cpu_hotplug_lock held.
-
-Fixes: dbcf929c0062 ("powerpc/pseries: Add support for hash table resizing")
-Cc: stable@vger.kernel.org # v4.11+
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1557906352-29048-1-git-send-email-ego@linux.vnet.ibm.com
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+[fix to use goto out instead of return in genl_connect]
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hash_utils_64.c       | 9 ++++++++-
- arch/powerpc/platforms/pseries/lpar.c | 8 ++++++--
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ drivers/block/nbd.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index 87687e46b48bb..58c14749bb0c1 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -35,6 +35,7 @@
- #include <linux/memblock.h>
- #include <linux/context_tracking.h>
- #include <linux/libfdt.h>
-+#include <linux/cpu.h>
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index e4b049f281f50..a65e4ed6c9372 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -132,6 +132,8 @@ static struct dentry *nbd_dbg_dir;
  
- #include <asm/debugfs.h>
- #include <asm/processor.h>
-@@ -1852,10 +1853,16 @@ static int hpt_order_get(void *data, u64 *val)
+ #define NBD_MAGIC 0x68797548
  
- static int hpt_order_set(void *data, u64 val)
- {
-+	int ret;
++#define NBD_DEF_BLKSIZE 1024
 +
- 	if (!mmu_hash_ops.resize_hpt)
- 		return -ENODEV;
- 
--	return mmu_hash_ops.resize_hpt(val);
-+	cpus_read_lock();
-+	ret = mmu_hash_ops.resize_hpt(val);
-+	cpus_read_unlock();
-+
-+	return ret;
+ static unsigned int nbds_max = 16;
+ static int max_part = 16;
+ static struct workqueue_struct *recv_workqueue;
+@@ -1216,6 +1218,14 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
+ 		nbd_config_put(nbd);
  }
  
- DEFINE_SIMPLE_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n");
-diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-index 55e97565ed2dd..eb738ef577926 100644
---- a/arch/powerpc/platforms/pseries/lpar.c
-+++ b/arch/powerpc/platforms/pseries/lpar.c
-@@ -643,7 +643,10 @@ static int pseries_lpar_resize_hpt_commit(void *data)
- 	return 0;
- }
- 
--/* Must be called in user context */
-+/*
-+ * Must be called in process context. The caller must hold the
-+ * cpus_lock.
-+ */
- static int pseries_lpar_resize_hpt(unsigned long shift)
- {
- 	struct hpt_resize_state state = {
-@@ -699,7 +702,8 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
- 
- 	t1 = ktime_get();
- 
--	rc = stop_machine(pseries_lpar_resize_hpt_commit, &state, NULL);
-+	rc = stop_machine_cpuslocked(pseries_lpar_resize_hpt_commit,
-+				     &state, NULL);
- 
- 	t2 = ktime_get();
- 
++static bool nbd_is_valid_blksize(unsigned long blksize)
++{
++	if (!blksize || !is_power_of_2(blksize) || blksize < 512 ||
++	    blksize > PAGE_SIZE)
++		return false;
++	return true;
++}
++
+ /* Must be called with config_lock held */
+ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+ 		       unsigned int cmd, unsigned long arg)
+@@ -1231,8 +1241,9 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+ 	case NBD_SET_SOCK:
+ 		return nbd_add_socket(nbd, arg, false);
+ 	case NBD_SET_BLKSIZE:
+-		if (!arg || !is_power_of_2(arg) || arg < 512 ||
+-		    arg > PAGE_SIZE)
++		if (!arg)
++			arg = NBD_DEF_BLKSIZE;
++		if (!nbd_is_valid_blksize(arg))
+ 			return -EINVAL;
+ 		nbd_size_set(nbd, arg,
+ 			     div_s64(config->bytesize, arg));
+@@ -1312,7 +1323,7 @@ static struct nbd_config *nbd_alloc_config(void)
+ 	atomic_set(&config->recv_threads, 0);
+ 	init_waitqueue_head(&config->recv_wq);
+ 	init_waitqueue_head(&config->conn_wait);
+-	config->blksize = 1024;
++	config->blksize = NBD_DEF_BLKSIZE;
+ 	atomic_set(&config->live_connections, 0);
+ 	try_module_get(THIS_MODULE);
+ 	return config;
+@@ -1744,6 +1755,12 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+ 	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
+ 		u64 bsize =
+ 			nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
++		if (!bsize)
++			bsize = NBD_DEF_BLKSIZE;
++		if (!nbd_is_valid_blksize(bsize)) {
++			ret = -EINVAL;
++			goto out;
++		}
+ 		nbd_size_set(nbd, bsize, div64_u64(config->bytesize, bsize));
+ 	}
+ 	if (info->attrs[NBD_ATTR_TIMEOUT]) {
 -- 
 2.20.1
 
