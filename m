@@ -7,46 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30341C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62C8ECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D9821A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09CC21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697395;
-	bh=Yhhc+Dgashloh3oz5wixN5SOY5Qb/eNUcE8b8BhrcDU=;
+	s=default; t=1570697397;
+	bh=2zuuBILVBCcqXDaiw/iKTe4cR80FAkibiEk1vK9tmdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nKgIUfrF8V4Kdu/3H6kTXQVOuydLuNmXLfjFnJRiqNy4kJdh93O2IkN4RDwUYmsx0
-	 Xn4LSr3flHy50qAou634SwgPQxQTDDkblCh/if4H/Bbmfmx4gNYsp1PRZE3b7aolbj
-	 01JHAmpCn65ERY3ciqFz7goI/enF6T1k3SSHQe/M=
+	b=aJU+3RMsueL+JyuIs4mVZbPe/GJf+/bpyPfbT30wzRqbUx7CjJfiI7Hk40wxDk8Ms
+	 jGDZ85kvNUUEiOvo9tISD6P9/c3xVSPnzo68mD7oY8QIb5N36V29x/z3t0UiRDghkA
+	 Qr5CBn3KjpkIHzDsQqUeOo9i6AacRMyW35sO4nd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389879AbfJJItx (ORCPT
+        id S2389883AbfJJIt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:49:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56606 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:49:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389859AbfJJItu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:49:50 -0400
+        id S2389086AbfJJItz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:49:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 160B822473;
-        Thu, 10 Oct 2019 08:49:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49AB221929;
+        Thu, 10 Oct 2019 08:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697389;
-        bh=Yhhc+Dgashloh3oz5wixN5SOY5Qb/eNUcE8b8BhrcDU=;
+        s=default; t=1570697394;
+        bh=2zuuBILVBCcqXDaiw/iKTe4cR80FAkibiEk1vK9tmdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dykGMrGFdKZF/HYePE04D5lj9Yr0H1tj3s8MXatKq5EdT0f4rhVdAXu93oJALRxPH
-         brJlffDX7r+xu778NVsiiWeUDVEou0sP7QiYadiM/VZspetL59IOlUsD5mbK9Dd0Pk
-         X9MNr3XEh7Fjxubd3ko8L06S4MHlYgE2fD5iHMpA=
+        b=jKRuqxnalw/V47YnvevZ/eBUGnleC0H66FYhwwCtdGMivZECegC2EvLvNIDPQ/7HJ
+         nFE5oDdYF1hJH9/VFfcJ3OFT4I/63b70tUgimTRjLD7QyKkxpe+J6Zihupc/RNfCwR
+         Df2eYq+QLQdRkcNjHSvxWpI/zM+l9aTVECj1ExC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-Subject: [PATCH 4.14 10/61] powerpc/powernv: Restrict OPAL symbol map to only be readable by root
-Date:   Thu, 10 Oct 2019 10:36:35 +0200
-Message-Id: <20191010083455.271171053@linuxfoundation.org>
+        stable@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        He Kuang <hekuang@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
+        Michal rarek <mmarek@suse.com>, Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 12/61] tools lib traceevent: Fix "robust" test of do_generate_dynamic_list_file
+Date:   Thu, 10 Oct 2019 10:36:37 +0200
+Message-Id: <20191010083456.776957055@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
 References: <20191010083449.500442342@linuxfoundation.org>
@@ -59,54 +68,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Donnellan <ajd@linux.ibm.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit e7de4f7b64c23e503a8c42af98d56f2a7462bd6d upstream.
+commit 82a2f88458d70704be843961e10b5cef9a6e95d3 upstream.
 
-Currently the OPAL symbol map is globally readable, which seems bad as
-it contains physical addresses.
+The tools/lib/traceevent/Makefile had a test added to it to detect a failure
+of the "nm" when making the dynamic list file (whatever that is). The
+problem is that the test sorts the values "U W w" and some versions of sort
+will place "w" ahead of "W" (even though it has a higher ASCII value, and
+break the test.
 
-Restrict it to root.
+Add 'tr "w" "W"' to merge the two and not worry about the ordering.
 
-Fixes: c8742f85125d ("powerpc/powernv: Expose OPAL firmware symbol map")
-Cc: stable@vger.kernel.org # v3.19+
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190503075253.22798-1-ajd@linux.ibm.com
+Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: He Kuang <hekuang@huawei.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Michal rarek <mmarek@suse.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: stable@vger.kernel.org
+Fixes: 6467753d61399 ("tools lib traceevent: Robustify do_generate_dynamic_list_file")
+Link: http://lkml.kernel.org/r/20190805130150.25acfeb1@gandalf.local.home
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/opal.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ tools/lib/traceevent/Makefile |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -617,7 +617,10 @@ static ssize_t symbol_map_read(struct fi
- 				       bin_attr->size);
- }
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -259,8 +259,8 @@ endef
  
--static BIN_ATTR_RO(symbol_map, 0);
-+static struct bin_attribute symbol_map_attr = {
-+	.attr = {.name = "symbol_map", .mode = 0400},
-+	.read = symbol_map_read
-+};
- 
- static void opal_export_symmap(void)
- {
-@@ -634,10 +637,10 @@ static void opal_export_symmap(void)
- 		return;
- 
- 	/* Setup attributes */
--	bin_attr_symbol_map.private = __va(be64_to_cpu(syms[0]));
--	bin_attr_symbol_map.size = be64_to_cpu(syms[1]);
-+	symbol_map_attr.private = __va(be64_to_cpu(syms[0]));
-+	symbol_map_attr.size = be64_to_cpu(syms[1]);
- 
--	rc = sysfs_create_bin_file(opal_kobj, &bin_attr_symbol_map);
-+	rc = sysfs_create_bin_file(opal_kobj, &symbol_map_attr);
- 	if (rc)
- 		pr_warn("Error %d creating OPAL symbols file\n", rc);
- }
+ define do_generate_dynamic_list_file
+ 	symbol_type=`$(NM) -u -D $1 | awk 'NF>1 {print $$1}' | \
+-	xargs echo "U W w" | tr ' ' '\n' | sort -u | xargs echo`;\
+-	if [ "$$symbol_type" = "U W w" ];then				\
++	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
++	if [ "$$symbol_type" = "U W" ];then				\
+ 		(echo '{';						\
+ 		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
+ 		echo '};';						\
 
 
