@@ -2,50 +2,53 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65549C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9469C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351C821920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97582190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 09:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570698005;
-	bh=Z7qMlZaZcDZIhgD5kbXQoS87jFUa8k4Q4KdfQBxnahk=;
+	s=default; t=1570698011;
+	bh=8rXf1rcCw3zLras7kS4IMtEFY7Dv0pAdekM63Zo4p1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQHIH/4/ritF9a6f9L3X2uYWKKpuZ4EKfBZkhQyxh9XvZ6aZKL4LAsQKXlLt0ibyn
-	 p5XY4UK9RQhP+5DHMmk65D8jkrt9YrLDUWZikBleJkQKm4RU/t0fC/Wj6EfBENNwMv
-	 3X9coyFRdAHRahYbcA6KXZYmDZ5mRnQAg4OtpP/k=
+	b=gPK8V/Sn+FZ7+4qVdqLwBjTsSnrvKwRLA1aC5bqh7/p54uqnWSSW98ZGqz0h/jMUf
+	 rNNByBoJ9TfNRbOcCYa8sHeJ58Y6XXqD75l92pteWam6Ms7iATeOfMhH+wHQE1CNd3
+	 YnhdiBsqoVCGMJaYbHb7q1S26aD7O8LCQq5Yu9yA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389065AbfJJJAE (ORCPT
+        id S2389138AbfJJJAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 05:00:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 05:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387767AbfJJInT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:43:19 -0400
+        id S2388690AbfJJInL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:43:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF2C92190F;
-        Thu, 10 Oct 2019 08:43:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CFBB21BE5;
+        Thu, 10 Oct 2019 08:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570696999;
-        bh=Z7qMlZaZcDZIhgD5kbXQoS87jFUa8k4Q4KdfQBxnahk=;
+        s=default; t=1570696991;
+        bh=8rXf1rcCw3zLras7kS4IMtEFY7Dv0pAdekM63Zo4p1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FWO25hlcnd4xuBLRvFeU7HTJyFBl1AerxaOQ52ZEvKhdP8IGr12hYRuXQd2mLVDX0
-         pQ8FqmwogrufWhENNVSNrdarNXgKJWXpTzHOv7DjJclutmFLfD+j7lKldrVDPEn+Bs
-         /IGTpofHaH7ia7M4/zIqJ7KFyd3IyFnk/q8r1ZAE=
+        b=QAZozvlpAhRwNkOvmtAsfLrLIovV+7eCJFKd/ZBEQ6gIxfNK0p2pL6v1ShCdjGU1r
+         zy8mZiMjK2eaXlKry8hNa1Njcx5vPuYzSA4/lgged12gJgdtFN4AbDBMyLgV7TYjqa
+         sO2WozRPrfxiqak2PTHmBRhvaiUvWaAH+Q8ZftPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.3 086/148] cfg80211: validate SSID/MBSSID element ordering assumption
-Date:   Thu, 10 Oct 2019 10:35:47 +0200
-Message-Id: <20191010083616.576489163@linuxfoundation.org>
+        stable@vger.kernel.org, Alexei Starovoitov <ast@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 125/148] selftests/bpf: adjust strobemeta loop to satisfy latest clang
+Date:   Thu, 10 Oct 2019 10:36:26 +0200
+Message-Id: <20191010083618.634149576@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
 References: <20191010083609.660878383@linuxfoundation.org>
@@ -58,43 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit 242b0931c1918c56cd1dc5563fd250a3c39b996d upstream.
+[ Upstream commit 4670d68b9254710fdeaf794cad54d8b2c9929e0a ]
 
-The code copying the data assumes that the SSID element is
-before the MBSSID element, but since the data is untrusted
-from the AP, this cannot be guaranteed.
+Some recent changes in latest Clang started causing the following
+warning when unrolling strobemeta test case main loop:
 
-Validate that this is indeed the case and ignore the MBSSID
-otherwise, to avoid having to deal with both cases for the
-copy of data that should be between them.
+  progs/strobemeta.h:416:2: warning: loop not unrolled: the optimizer was
+  unable to perform the requested transformation; the transformation might
+  be disabled or specified as part of an unsupported transformation
+  ordering [-Wpass-failed=transform-warning]
 
-Cc: stable@vger.kernel.org
-Fixes: 0b8fb8235be8 ("cfg80211: Parsing of Multiple BSSID information in scanning")
-Link: https://lore.kernel.org/r/1569009255-I1673911f5eae02964e21bdc11b2bf58e5e207e59@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch simplifies loop's exit condition to depend only on constant
+max iteration number (STROBE_MAX_MAP_ENTRIES), while moving early
+termination logic inside the loop body. The changes are equivalent from
+program logic standpoint, but fixes the warning. It also appears to
+improve generated BPF code, as it fixes previously failing non-unrolled
+strobemeta test cases.
 
+Cc: Alexei Starovoitov <ast@fb.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/scan.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/progs/strobemeta.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/wireless/scan.c
-+++ b/net/wireless/scan.c
-@@ -1711,7 +1711,12 @@ cfg80211_update_notlisted_nontrans(struc
- 		return;
- 	new_ie_len -= trans_ssid[1];
- 	mbssid = cfg80211_find_ie(WLAN_EID_MULTIPLE_BSSID, ie, ielen);
--	if (!mbssid)
-+	/*
-+	 * It's not valid to have the MBSSID element before SSID
-+	 * ignore if that happens - the code below assumes it is
-+	 * after (while copying things inbetween).
-+	 */
-+	if (!mbssid || mbssid < trans_ssid)
- 		return;
- 	new_ie_len -= mbssid[1];
- 	rcu_read_lock();
+diff --git a/tools/testing/selftests/bpf/progs/strobemeta.h b/tools/testing/selftests/bpf/progs/strobemeta.h
+index 8a399bdfd9203..067eb625d01c5 100644
+--- a/tools/testing/selftests/bpf/progs/strobemeta.h
++++ b/tools/testing/selftests/bpf/progs/strobemeta.h
+@@ -413,7 +413,10 @@ static __always_inline void *read_map_var(struct strobemeta_cfg *cfg,
+ #else
+ #pragma unroll
+ #endif
+-	for (int i = 0; i < STROBE_MAX_MAP_ENTRIES && i < map.cnt; ++i) {
++	for (int i = 0; i < STROBE_MAX_MAP_ENTRIES; ++i) {
++		if (i >= map.cnt)
++			break;
++
+ 		descr->key_lens[i] = 0;
+ 		len = bpf_probe_read_str(payload, STROBE_MAX_STR_LEN,
+ 					 map.entries[i].key);
+-- 
+2.20.1
+
 
 
