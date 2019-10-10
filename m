@@ -2,125 +2,242 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE04DC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379BDC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848A6214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0489E214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 15:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XvDnIWbO"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="GFYqlOXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfJJPZ0 (ORCPT
+        id S1726667AbfJJP0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 11:25:26 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33680 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbfJJPZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 11:25:25 -0400
-Received: from zn.tnic (p200300EC2F0A630005874FFE54801724.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6300:587:4ffe:5480:1724])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DD39A1EC0987;
-        Thu, 10 Oct 2019 17:25:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570721124;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=oFtLtIT92PEjPANVccNt8bv5ZEw6stfT1hPzmyy05AU=;
-        b=XvDnIWbOWnxP5VFZO9ko7ahJhTcRm/Xsrm8HgemYJGsHSBOE6Uta44f3AIYcSZ6OfEGl/a
-        AEH1A9BDC9JA4n3PgugNym5/q4Nt+C+NeHY9F4IhvYggxoRn7C5NPgZWNAKd44J4GzphzU
-        Yg/gusTeVLuPtqp+cJTKXO0tNksVAHs=
-Date:   Thu, 10 Oct 2019 17:25:16 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        Thu, 10 Oct 2019 11:26:03 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34013 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfJJP0D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 11:26:03 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j11so8446418wrp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 08:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4KtpyJcZymMDldmeqsuGE5WoW9tQnlMUYqvVj3l3rIE=;
+        b=GFYqlOXdzrwPAyel1BaDfJev7DNqRpkIRadg+7l1w/DTWcBEtewg5uv6e5wu9aDBlk
+         ZxrZcisq0IwOpa48yRTfgn8LgeJdI9MIGinoZA7gOpP7Lf+yl8GimEoa4j/Lkf9ArSIK
+         G3SpIH8zvJJmoPPP6TZYDj6VAcbC/3LnYX//iRu6cS6CRw4SuKPet/VRcMUEKOU6UPDs
+         Smhl1vwUqhCfXypJr8QqaevLLrDeTlCm1PHQUZGkA6swbv/S1tb18vCne91Z7OMuihg3
+         3sOLbqa2la6QfR8phsyB9g1DHGMzbuaqNJ3cbw4PXxM0JKfiQYSwsSKVRpiM9/IicyxU
+         5DKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4KtpyJcZymMDldmeqsuGE5WoW9tQnlMUYqvVj3l3rIE=;
+        b=IpETcldnz/hrs0dtJR96tOSxvDswQi3voKfy4L8REimT8Gxcw6L8ynFxV1M9WXJAqa
+         PYbWvxHHEZTfStvvJUkeKtla0XPnLuyKZqm1eE83xHMD5hEb2wil0MB1PsnYIO9Nf1nC
+         TZcik416wk5qdyUUmcEMmD6qG748OeVAN3Tw4c5A1TihGWCYuWV+aEzJMbgwkhRa9Xf1
+         H7S+SzskD09OnVV5vttlb5kl48iOGK01myfgOYjAtj/7JUSX/RmGjCfzigc68ngQYoM5
+         rEmkB1Dj3yV32eNNR50ClPlaJy/o4/pSDzgIbKwyKrbDmuNfoDc5lz64xMNLgZNPTbW/
+         UnOQ==
+X-Gm-Message-State: APjAAAUOM41ZhPTarDnp2tJ5kEkeAQ2XuGA99KXMVtCDGl/uURbkNJjY
+        4EZ3PgOs8Et+UM/26lAXjw88PQ==
+X-Google-Smtp-Source: APXvYqyop/uFFLhsM755cqKYP6Lgxlm8Qp3ur3GS/kE9OtX1EgWsuVUAVfrrHfitxhPgWWFfUatkAw==
+X-Received: by 2002:a05:6000:354:: with SMTP id e20mr6255987wre.383.1570721161065;
+        Thu, 10 Oct 2019 08:26:01 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id w18sm6903683wmc.9.2019.10.10.08.26.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 08:26:00 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 17:25:59 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/29] vmlinux.lds.h: Allow EXCEPTION_TABLE to live in
- RO_DATA
-Message-ID: <20191010152516.GG7658@zn.tnic>
-References: <20190926175602.33098-1-keescook@chromium.org>
- <20190926175602.33098-15-keescook@chromium.org>
+Subject: Re: [PATCH net-next v7 13/17] ethtool: add standard notification
+ handler
+Message-ID: <20191010152559.GA2994@nanopsycho>
+References: <cover.1570654310.git.mkubecek@suse.cz>
+ <ac2fef494116db9d4679f4501f1be6a7898ef724.1570654310.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190926175602.33098-15-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ac2fef494116db9d4679f4501f1be6a7898ef724.1570654310.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 10:55:47AM -0700, Kees Cook wrote:
-> Many architectures have an EXCEPTION_TABLE that needs only to be
-> read-only. As such, it should live in RO_DATA. This creates a macro to
-> identify this case for the architectures that can move EXCEPTION_TABLE
-> into RO_DATA.
+Wed, Oct 09, 2019 at 10:59:40PM CEST, mkubecek@suse.cz wrote:
+>The ethtool netlink notifications have the same format as related GET
+>replies so that if generic GET handling framework is used to process GET
+>requests, its callbacks and instance of struct get_request_ops can be
+>also used to compose corresponding notification message.
+>
+>Provide function ethnl_std_notify() to be used as notification handler in
+>ethnl_notify_handlers table.
+>
+>Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+>---
+> net/ethtool/netlink.c | 89 +++++++++++++++++++++++++++++++++++++++++++
+> net/ethtool/netlink.h |  3 +-
+> 2 files changed, 91 insertions(+), 1 deletion(-)
+>
+>diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+>index 47b6aefa0bf9..dc52d912e0dd 100644
+>--- a/net/ethtool/netlink.c
+>+++ b/net/ethtool/netlink.c
+>@@ -7,6 +7,7 @@
+> static struct genl_family ethtool_genl_family;
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/asm-generic/vmlinux.lds.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> static bool ethnl_ok __read_mostly;
+>+static u32 ethnl_bcast_seq;
 > 
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index d57a28786bb8..35a6cba39d9f 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -69,6 +69,17 @@
->  #define NOTES_HEADERS_RESTORE
->  #endif
->  
-> +/*
-> + * Some architectures have non-executable read-only exception tables.
-> + * They can be added to the RO_DATA segment by specifying their desired
-> + * alignment.
-> + */
-> +#ifdef RO_DATA_EXCEPTION_TABLE_ALIGN
-> +#define RO_DATA_EXCEPTION_TABLE	EXCEPTION_TABLE(RO_DATA_EXCEPTION_TABLE_ALIGN)
-> +#else
-> +#define RO_DATA_EXCEPTION_TABLE
-> +#endif
-> +
->  /* Align . to a 8 byte boundary equals to maximum function alignment. */
->  #define ALIGN_FUNCTION()  . = ALIGN(8)
->  
-> @@ -508,6 +519,7 @@
->  		__stop___modver = .;					\
->  	}								\
->  									\
-> +	RO_DATA_EXCEPTION_TABLE						\
->  	NOTES								\
->  									\
->  	. = ALIGN((align));						\
-> -- 
+> #define __LINK_MODE_NAME(speed, type, duplex) \
+> 	#speed "base" #type "/" #duplex
+>@@ -257,6 +258,18 @@ struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
+> 	return NULL;
+> }
+> 
+>+static void *ethnl_bcastmsg_put(struct sk_buff *skb, u8 cmd)
+>+{
+>+	return genlmsg_put(skb, 0, ++ethnl_bcast_seq, &ethtool_genl_family, 0,
+>+			   cmd);
+>+}
+>+
+>+static int ethnl_multicast(struct sk_buff *skb, struct net_device *dev)
+>+{
+>+	return genlmsg_multicast_netns(&ethtool_genl_family, dev_net(dev), skb,
+>+				       0, ETHNL_MCGRP_MONITOR, GFP_KERNEL);
+>+}
 
-I think you can drop the "DATA" from the names as it is kinda clear
-where the exception table lands:
+No need for these 2 helpers. Just put the code directly into
+ethnl_std_notify() and make the code easier to read.
 
-RO_EXCEPTION_TABLE_ALIGN
-RO_EXCEPTION_TABLE
 
-The "read-only" part is the important one.
+>+
+> /* GET request helpers */
+> 
+> /**
+>@@ -588,6 +601,82 @@ static int ethnl_get_done(struct netlink_callback *cb)
+> 	return 0;
+> }
+> 
+>+static const struct get_request_ops *ethnl_std_notify_to_ops(unsigned int cmd)
+>+{
+>+	WARN_ONCE(1, "unexpected notification type %u\n", cmd);
+>+	return NULL;
+>+}
 
--- 
-Regards/Gruss,
-    Boris.
+Why this isn't a table similar to get_requests ?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+>+
+>+/* generic notification handler */
+>+static void ethnl_std_notify(struct net_device *dev, unsigned int cmd,
+
+Better "common" comparing to "standard", I believe.
+
+
+>+			     const void *data)
+>+{
+>+	struct ethnl_reply_data *reply_data;
+>+	const struct get_request_ops *ops;
+>+	struct ethnl_req_info *req_info;
+>+	struct sk_buff *skb;
+>+	void *reply_payload;
+>+	int reply_len;
+>+	int ret;
+>+
+>+	ops = ethnl_std_notify_to_ops(cmd);
+>+	if (!ops)
+>+		return;
+>+	req_info = kzalloc(ops->req_info_size, GFP_KERNEL);
+>+	if (!req_info)
+>+		return;
+>+	reply_data = kmalloc(ops->reply_data_size, GFP_KERNEL);
+>+	if (!reply_data) {
+>+		kfree(req_info);
+>+		return;
+>+	}
+>+
+>+	req_info->dev = dev;
+>+	req_info->global_flags |= ETHTOOL_GFLAG_COMPACT_BITSETS;
+>+
+>+	ethnl_init_reply_data(reply_data, ops, dev);
+>+	ret = ops->prepare_data(req_info, reply_data, NULL);
+>+	if (ret < 0)
+>+		goto err_cleanup;
+>+	reply_len = ops->reply_size(req_info, reply_data);
+>+	if (ret < 0)
+>+		goto err_cleanup;
+>+	ret = -ENOMEM;
+>+	skb = genlmsg_new(reply_len, GFP_KERNEL);
+>+	if (!skb)
+>+		goto err_cleanup;
+>+	reply_payload = ethnl_bcastmsg_put(skb, cmd);
+>+	if (!reply_payload)
+>+		goto err_skb;
+>+	ret = ethnl_fill_reply_header(skb, dev, ops->hdr_attr);
+>+	if (ret < 0)
+>+		goto err_msg;
+>+	ret = ops->fill_reply(skb, req_info, reply_data);
+>+	if (ret < 0)
+>+		goto err_msg;
+>+	if (ops->cleanup_data)
+>+		ops->cleanup_data(reply_data);
+>+
+>+	genlmsg_end(skb, reply_payload);
+>+	kfree(reply_data);
+>+	kfree(req_info);
+>+	ethnl_multicast(skb, dev);
+>+	return;
+>+
+>+err_msg:
+>+	WARN_ONCE(ret == -EMSGSIZE,
+>+		  "calculated message payload length (%d) not sufficient\n",
+>+		  reply_len);
+>+err_skb:
+>+	nlmsg_free(skb);
+>+err_cleanup:
+>+	if (ops->cleanup_data)
+>+		ops->cleanup_data(reply_data);
+>+	kfree(reply_data);
+>+	kfree(req_info);
+>+	return;
+>+}
+>+
+> /* notifications */
+> 
+> typedef void (*ethnl_notify_handler_t)(struct net_device *dev, unsigned int cmd,
+>diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+>index a0ae47bebe51..23e82a4dd265 100644
+>--- a/net/ethtool/netlink.h
+>+++ b/net/ethtool/netlink.h
+>@@ -316,7 +316,8 @@ static inline void ethnl_after_ops(struct net_device *dev)
+>  * infrastructure. When used, a pointer to an instance of this structure is to
+>  * be added to &get_requests array and generic handlers ethnl_get_doit(),
+>  * ethnl_get_dumpit(), ethnl_get_start() and ethnl_get_done() used in
+>- * @ethnl_genl_ops
+>+ * @ethnl_genl_ops; ethnl_std_notify() can be used in @ethnl_notify_handlers
+>+ * to send notifications of the corresponding type.
+>  */
+> struct get_request_ops {
+> 	u8			request_cmd;
+>-- 
+>2.23.0
+>
