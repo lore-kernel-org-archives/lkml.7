@@ -2,248 +2,98 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10580C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9828DC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C040C20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BJ8jq8Pf"
+	by mail.kernel.org (Postfix) with ESMTP id 61536208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfJJUsY (ORCPT
+        id S1727433AbfJJUsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:48:24 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46300 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJUsY (ORCPT
+        Thu, 10 Oct 2019 16:48:43 -0400
+Received: from smtprelay0058.hostedemail.com ([216.40.44.58]:38196 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725867AbfJJUsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:48:24 -0400
-Received: by mail-pg1-f194.google.com with SMTP id b8so4390769pgm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 13:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=r6xu82oQYUmtXhHP2fj0ZiVY9ale3ywYgTv6f+0xCAw=;
-        b=BJ8jq8Pfl1utUrIw1vqmwneXHSBS7ob/3iITh+TKLSqXnx+M+xHg97Ph4I3dvwE7SV
-         cadPYKJcUQ3LSJxlTuhh0Sci74/VSIPBK3ronOh/etMIZ59gDHDc1PkepuJ0qgQ1Tj/M
-         sBPfH3rVqCuqUcGBCqXQ9FDwV3FcNLvXT1W3g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=r6xu82oQYUmtXhHP2fj0ZiVY9ale3ywYgTv6f+0xCAw=;
-        b=spy4Tcogog18E8erZNjF8DpMzhu4F33S5gUcFFvE9pH28jvZ9Vbs0UK7eDt0iBcUea
-         wVzd7+eAM/tZWfz+Tj7/TQbsCcezI2Z2UFa5MEp+hfz2gHokv4zNR/ChlyYEkzul67Oh
-         0nMkkTdzam42BCo2QYR+jzmAsv4l4CqokKJSHByPZjDWXrGs83bbEEWqFQ/AXjK7I8dR
-         J0N5SatphIZqsnMeaEm3EOyeM8x/V5YxHcT5BuLbENwPOMBxLZKcN1Qlgmfd73aW+eWu
-         r3LeAE5GEeNSsrnAdO7gNy74wRefk3UKa/GyLBU0oOnIVFA1SrEMjvsSpUb0VFDT04DQ
-         Ae5A==
-X-Gm-Message-State: APjAAAVK9or7QPPdAiEwBQw4TWIvSzrYorpyd3kaZWwsJtNE7hImISkM
-        CQixLLMcDDcdIr0BvcBhuYdRRw==
-X-Google-Smtp-Source: APXvYqxvB0FIdlsXJRoXPU4pel7YJkYadJIh05jyA2/pUuJ3PxuCDUaZCYmQwns2vmwdV+uRW2RExQ==
-X-Received: by 2002:a17:90a:9201:: with SMTP id m1mr13762509pjo.42.1570740502878;
-        Thu, 10 Oct 2019 13:48:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 7sm5780851pgx.26.2019.10.10.13.48.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 13:48:22 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 13:48:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH v3 06/10] lib/refcount: Move saturation warnings out of
- line
-Message-ID: <201910101342.B6B4B3B6@keescook>
-References: <20191007154703.5574-1-will@kernel.org>
- <20191007154703.5574-7-will@kernel.org>
+        Thu, 10 Oct 2019 16:48:43 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 88169781C;
+        Thu, 10 Oct 2019 20:48:41 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: dolls38_4b7237beba646
+X-Filterd-Recvd-Size: 2857
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 10 Oct 2019 20:48:38 +0000 (UTC)
+Message-ID: <4b2ed594c5054138562c80cc94dee8b5398c9064.camel@perches.com>
+Subject: Re: [PATCH 4/4] scripts/cvt_style.pl: Tool to reformat sources in
+ various ways
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Miller <davem@davemloft.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Date:   Thu, 10 Oct 2019 13:48:37 -0700
+In-Reply-To: <201910101338.59F36A33@keescook>
+References: <cover.1570292505.git.joe@perches.com>
+         <4a904777303fbaea75fe0875b7984c33824f4b68.1570292505.git.joe@perches.com>
+         <CANiq72nwDgMgXNczW=JRANzH72=f0ukwVoPaud1d7J4YQLQX=w@mail.gmail.com>
+         <52794b248ba13e88ab4c30c9b6ea55a7be30df5d.camel@perches.com>
+         <201910101338.59F36A33@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007154703.5574-7-will@kernel.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 04:46:59PM +0100, Will Deacon wrote:
-> Having the refcount saturation and warnings inline bloats the text,
-> despite the fact that these paths should never be executed in normal
-> operation.
+On Thu, 2019-10-10 at 13:39 -0700, Kees Cook wrote:
+> On Sat, Oct 05, 2019 at 11:35:42PM -0700, Joe Perches wrote:
+[]
+> > I think clang-format could not do this sort of conversion.
+> > Nor could coccinelle or checkpatch.
+> > 
+> > Anyway, it's not really necessary for this particular patch
+> > to be applied, but it's a convenient way to show the script
+> > has the capability to do fallthrough comment conversions.
+> > 
+> > I think it does conversions fairly reasonably but likely
+> > some files could not compile without adding an #include
+> > like:
+> > 
+> > #include <linux/compiler.h>
 > 
-> Move the refcount saturation and warnings out of line to reduce the
-> image size when refcount_t checking is enabled. Relative to an x86_64
-> defconfig, the sizes reported by bloat-o-meter are:
-> 
->  # defconfig+REFCOUNT_FULL, inline saturation (i.e. before this patch)
->  Total: Before=14762076, After=14915442, chg +1.04%
-> 
->  # defconfig+REFCOUNT_FULL, out-of-line saturation (i.e. after this patch)
->  Total: Before=14762076, After=14835497, chg +0.50%
+> I think this is a nice tool to add -- at the very least it serves as
+> infrastructure for future similar conversions. And small cleanups can be
+> generated from it for people looking to clean up subsystems, etc.
 
-The downside of this change is that this means we get one warning per
-refcount_saturation_type, where as before it was once per refcount
-usage. I think, ultimately, this is okay, but it is a behavioral change
-that might be worth pointing out.
+Another similar tool that used checkpatch and also compile
+tested and created git commits was reformat_with_checkpatch
 
-> 
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Elena Reshetova <elena.reshetova@intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  include/linux/refcount.h | 39 ++++++++++++++++++++-------------------
->  lib/refcount.c           | 28 ++++++++++++++++++++++++++++
->  2 files changed, 48 insertions(+), 19 deletions(-)
-> 
-> diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-> index 7f9aa6511142..40ddff74a96c 100644
-> --- a/include/linux/refcount.h
-> +++ b/include/linux/refcount.h
-> @@ -23,6 +23,16 @@ typedef struct refcount_struct {
->  
->  #define REFCOUNT_INIT(n)	{ .refs = ATOMIC_INIT(n), }
->  
-> +enum refcount_saturation_type {
-> +	REFCOUNT_ADD_NOT_ZERO_OVF,
-> +	REFCOUNT_ADD_OVF,
-> +	REFCOUNT_ADD_UAF,
-> +	REFCOUNT_SUB_UAF,
-> +	REFCOUNT_DEC_LEAK,
-> +};
-> +
-> +void refcount_warn_saturate(refcount_t *r, enum refcount_saturation_type t);
-> +
->  /**
->   * refcount_set - set a refcount's value
->   * @r: the refcount
-> @@ -116,10 +126,8 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
->  			break;
->  	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &old, old + i));
->  
-> -	if (unlikely(old < 0 || old + i < 0)) {
-> -		refcount_set(r, REFCOUNT_SATURATED);
-> -		WARN_ONCE(1, "refcount_t: saturated; leaking memory.\n");
-> -	}
-> +	if (unlikely(old < 0 || old + i < 0))
-> +		refcount_warn_saturate(r, REFCOUNT_ADD_NOT_ZERO_OVF);
->  
->  	return old;
->  }
-> @@ -144,11 +152,10 @@ static inline void refcount_add(int i, refcount_t *r)
->  {
->  	int old = atomic_fetch_add_relaxed(i, &r->refs);
->  
-> -	WARN_ONCE(!old, "refcount_t: addition on 0; use-after-free.\n");
-> -	if (unlikely(old <= 0 || old + i <= 0)) {
-> -		refcount_set(r, REFCOUNT_SATURATED);
-> -		WARN_ONCE(old, "refcount_t: saturated; leaking memory.\n");
-> -	}
-> +	if (unlikely(!old))
-> +		refcount_warn_saturate(r, REFCOUNT_ADD_UAF);
-> +	else if (unlikely(old < 0 || old + i < 0))
-> +		refcount_warn_saturate(r, REFCOUNT_ADD_OVF);
->  }
->  
->  /**
-> @@ -215,10 +222,8 @@ static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
->  		return true;
->  	}
->  
-> -	if (unlikely(old - i < 0)) {
-> -		refcount_set(r, REFCOUNT_SATURATED);
-> -		WARN_ONCE(1, "refcount_t: underflow; use-after-free.\n");
-> -	}
-> +	if (unlikely(old - i < 0))
-> +		refcount_warn_saturate(r, REFCOUNT_SUB_UAF);
->  
->  	return false;
->  }
-> @@ -253,12 +258,8 @@ static inline __must_check bool refcount_dec_and_test(refcount_t *r)
->   */
->  static inline void refcount_dec(refcount_t *r)
->  {
-> -	int old = atomic_fetch_sub_release(1, &r->refs);
-> -
-> -	if (unlikely(old <= 1)) {
-> -		refcount_set(r, REFCOUNT_SATURATED);
-> -		WARN_ONCE(1, "refcount_t: decrement hit 0; leaking memory.\n");
-> -	}
-> +	if (unlikely(atomic_fetch_sub_release(1, &r->refs) <= 1))
-> +		refcount_warn_saturate(r, REFCOUNT_DEC_LEAK);
->  }
->  #else /* CONFIG_REFCOUNT_FULL */
->  
-> diff --git a/lib/refcount.c b/lib/refcount.c
-> index 3a534fbebdcc..6a61d39f9390 100644
-> --- a/lib/refcount.c
-> +++ b/lib/refcount.c
-> @@ -8,6 +8,34 @@
->  #include <linux/spinlock.h>
->  #include <linux/bug.h>
->  
-> +#define REFCOUNT_WARN(str)	WARN_ONCE(1, "refcount_t: " str ".\n")
+https://lore.kernel.org/lkml/1405128087.6751.12.camel@joe-AO725/
 
-This define seems like overkill for just adding a prefix to 5 uses...
 
-> +
-> +void refcount_warn_saturate(refcount_t *r, enum refcount_saturation_type t)
-> +{
-> +	refcount_set(r, REFCOUNT_SATURATED);
-> +
-> +	switch (t) {
-> +	case REFCOUNT_ADD_NOT_ZERO_OVF:
-> +		REFCOUNT_WARN("saturated; leaking memory");
-> +		break;
-> +	case REFCOUNT_ADD_OVF:
-> +		REFCOUNT_WARN("saturated; leaking memory");
-> +		break;
-> +	case REFCOUNT_ADD_UAF:
-> +		REFCOUNT_WARN("addition on 0; use-after-free");
-> +		break;
-> +	case REFCOUNT_SUB_UAF:
-> +		REFCOUNT_WARN("underflow; use-after-free");
-> +		break;
-> +	case REFCOUNT_DEC_LEAK:
-> +		REFCOUNT_WARN("decrement hit 0; leaking memory");
-
-Even the longest doesn't line wrap:
-
-		WARN_ONCE(1, "refcount_t: decrement hit 0; leaking memory\n");
-
-> +		break;
-> +	default:
-> +		WARN_ON(1);
-
-This deserves a string too, yes?
-
-		WARN_ONCE(1, "refcount_t: unknown saturation event!?\n");
-
-> +	}
-> +}
-> +EXPORT_SYMBOL(refcount_warn_saturate);
-> +
->  /**
->   * refcount_dec_if_one - decrement a refcount if it is 1
->   * @r: the refcount
-> -- 
-> 2.23.0.581.g78d2f28ef7-goog
-> 
-
-Otherwise, okay, I grudgingly accept the loss of warnings when running
-the lkdtm tests in order to gain back some text size... :)
-
--- 
-Kees Cook
