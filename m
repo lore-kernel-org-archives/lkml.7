@@ -2,331 +2,143 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2A6C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F094FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22776205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9F7205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 16:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="MStOefh8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfJJQgV convert rfc822-to-8bit (ORCPT
+        id S1726415AbfJJQhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 12:36:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57347 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfJJQgV (ORCPT
+        Thu, 10 Oct 2019 12:37:20 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36462 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfJJQhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 12:36:21 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iIbQG-0005f2-VR; Thu, 10 Oct 2019 18:36:17 +0200
-Date:   Thu, 10 Oct 2019 18:36:16 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        tglx@linutronix.de
-Subject: [PATCH REPOST] lib/ubsan: Don't seralize UBSAN report
-Message-ID: <20191010163616.qon4ppmhf74l4fix@linutronix.de>
+        Thu, 10 Oct 2019 12:37:20 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so6902008ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 09:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:organization:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yfyOriptMBDiaNAXMAHeFqoD+N162h27NUaqIbiMn8g=;
+        b=MStOefh8juSpz0SHnnQad09QT4Fa6DBUzzsFT+0kynCLK95vCaQjDcLVS5v/xzigeU
+         qCpyG75sS7RxMUxZmmOhdOl/epXfJeRXXOfrA4nvR6kFbjPVCgFF5evbfVSP37qQYDxS
+         fUfhRHIyYZrsNsXMHDHxL4hZCXSQD0rD3FYGQzoGBdIjSAdGPgN/CndJNspJ5TzDDt/V
+         8+qfJjBselXWOwch9wHOBIMAbn0EM7xsyXfWJ/thT94GFR5K4sF+VRWYQS6DzF1vJIP6
+         xnmDEvdwh7CsQgLndLAdyoT8cjr1XKTH1qVG3y9nHq3AYOlQ6yv2IxOHCjUIx8V4D+Gg
+         6lxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=yfyOriptMBDiaNAXMAHeFqoD+N162h27NUaqIbiMn8g=;
+        b=awmtP2uCdXAU8eL7HcHMDOc8BETeCgfPa4U0yve06Ki+ilxw5v76LzeVP2dFCAcUKU
+         Fc5QMDkdcBwV8DQd4cAzb24xUunbk6OWI3Bcfln+ehkwJXm1MZQt1fD9TU70D/V6nrV9
+         gvE40yv3Nkzq02+ObFpRoUXq9aQSpTEEH69L9KxTsAdLUkpm7YSi5dzU4oWXiTI84DUM
+         JUJFzYvNgC+Him15i1VEKopp+mLotgWoHXyyJigGwfHELSiifdk+/1nkWLRKIYaU+nMo
+         kzVq/EjuDh1jH68LvyIUTjj9UFj0Y9HHSSg0Yypw9L2yDsj5aEvbdsNIdlGlOK6vugYf
+         3QWA==
+X-Gm-Message-State: APjAAAU0Uw+iFcWtR5TqSGbcFZrU8uuUge/E6TdJ9oIOmR1wI/4ASbNj
+        f/dD76tP48uenS+4xDhd8VrwBw==
+X-Google-Smtp-Source: APXvYqxQzg7PeYXEqZES/u8aJpwejbzcaBWpM2ZrtmNSR43Do+7YWdlXHee3xVamjDLKq3Nb1NVijA==
+X-Received: by 2002:a2e:9119:: with SMTP id m25mr6930040ljg.106.1570725438077;
+        Thu, 10 Oct 2019 09:37:18 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:46de:289:1600:123:1371:e3f7])
+        by smtp.gmail.com with ESMTPSA id b20sm1328867ljo.106.2019.10.10.09.37.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 09:37:17 -0700 (PDT)
+Subject: Re: [PATCH v9 5/5] MIPS: SGI-IP27: Enable ethernet phy on second
+ Origin 200 module
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+References: <20191010145953.21327-1-tbogendoerfer@suse.de>
+ <20191010145953.21327-6-tbogendoerfer@suse.de>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <102db20a-0c37-3e28-2d14-e9c6eaa55f5c@cogentembedded.com>
+Date:   Thu, 10 Oct 2019 19:37:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191010145953.21327-6-tbogendoerfer@suse.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-User-Agent: NeoMutt/20180716
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment, UBSAN report will be serialized using a spin_lock(). On
-RT-systems, spinlocks are turned to rt_spin_lock and may sleep. This will
-result to the following splat if the undefined behavior is in a context
-that can not sleep:
+On 10/10/2019 05:59 PM, Thomas Bogendoerfer wrote:
 
-| BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:968
-| in_atomic(): 1, irqs_disabled(): 128, pid: 3447, name: make
-| 1 lock held by make/3447:
-|  #0: 000000009a966332 (&mm->mmap_sem){++++}, at: do_page_fault+0x140/0x4f8
-| Preemption disabled at:
-| [<ffff000011324a4c>] rt_mutex_futex_unlock+0x4c/0xb0
-| CPU: 3 PID: 3447 Comm: make Tainted: G        W         5.2.14-rt7-01890-ge6e057589653 #911
-| Call trace:
-…
-|  ___might_sleep+0x154/0x210
-|  rt_spin_lock+0x68/0xa0
-|  ubsan_prologue+0x30/0x68
-|  handle_overflow+0x64/0xe0
-|  __ubsan_handle_add_overflow+0x10/0x18
+> PROM only enables ethernet PHY on first Origin 200 module, so we must
+> do it ourselves for the second module.
+> 
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> ---
+>  arch/mips/pci/pci-ip27.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/mips/pci/pci-ip27.c b/arch/mips/pci/pci-ip27.c
+> index 441eb9383b20..7cc784cb299b 100644
+> --- a/arch/mips/pci/pci-ip27.c
+> +++ b/arch/mips/pci/pci-ip27.c
+> @@ -7,6 +7,11 @@
+>   * Copyright (C) 1999, 2000, 04 Ralf Baechle (ralf@linux-mips.org)
+>   * Copyright (C) 1999, 2000 Silicon Graphics, Inc.
+>   */
+> +#include <asm/sn/addrs.h>
+> +#include <asm/sn/types.h>
+> +#include <asm/sn/klconfig.h>
+> +#include <asm/sn/hub.h>
+> +#include <asm/sn/ioc3.h>
+>  #include <asm/pci/bridge.h>
+>  
+>  dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+> @@ -31,3 +36,20 @@ int pcibus_to_node(struct pci_bus *bus)
+>  }
+>  EXPORT_SYMBOL(pcibus_to_node);
+>  #endif /* CONFIG_NUMA */
+> +
+> +static void ip29_fixup_phy(struct pci_dev *dev)
+> +{
+> +	int nasid = pcibus_to_node(dev->bus);
+> +	u32 sid;
+> +
+> +	if (nasid != 1)
+> +		return; /* only needed on second module */
+> +
+> +	/* enable ethernet PHY on IP29 systemboard */
+> +	pci_read_config_dword(dev, PCI_SUBSYSTEM_VENDOR_ID, &sid);
+> +	if (sid == ((PCI_VENDOR_ID_SGI << 16) | IOC3_SUBSYS_IP29_SYSBOARD))
 
-The spin_lock() will protect against multiple CPUs to output a report
-together, I guess to prevent them to be interleaved. However, they can
-still interleave with other messages (and even splat from __migth_sleep).
+   I thought PCI was little endian, thuis vendor ID at offset 0 and device ID
+at offset 2?
 
-So the lock usefulness seems pretty limited. Rather than trying to
-accomodate RT-system by switching to a raw_spin_lock(), the lock is now
-completely dropped.
+[...]
 
-Link: https://lkml.kernel.org/r/20190920100835.14999-1-julien.grall@arm.com
-Reported-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Julien Grall <julien.grall@arm.com>
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-Repost of
-  https://lkml.kernel.org/r/20190920100835.14999-1-julien.grall@arm.com
-
- lib/ubsan.c | 64 +++++++++++++++++++----------------------------------
- 1 file changed, 23 insertions(+), 41 deletions(-)
-
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index e7d31735950de..39d5952c42733 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -140,25 +140,21 @@ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
- 	}
- }
- 
--static DEFINE_SPINLOCK(report_lock);
--
--static void ubsan_prologue(struct source_location *location,
--			unsigned long *flags)
-+static void ubsan_prologue(struct source_location *location)
- {
- 	current->in_ubsan++;
--	spin_lock_irqsave(&report_lock, *flags);
- 
- 	pr_err("========================================"
- 		"========================================\n");
- 	print_source_location("UBSAN: Undefined behaviour in", location);
- }
- 
--static void ubsan_epilogue(unsigned long *flags)
-+static void ubsan_epilogue(void)
- {
- 	dump_stack();
- 	pr_err("========================================"
- 		"========================================\n");
--	spin_unlock_irqrestore(&report_lock, *flags);
-+
- 	current->in_ubsan--;
- }
- 
-@@ -167,14 +163,13 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
- {
- 
- 	struct type_descriptor *type = data->type;
--	unsigned long flags;
- 	char lhs_val_str[VALUE_LENGTH];
- 	char rhs_val_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(lhs_val_str, sizeof(lhs_val_str), type, lhs);
- 	val_to_string(rhs_val_str, sizeof(rhs_val_str), type, rhs);
-@@ -186,7 +181,7 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
- 		rhs_val_str,
- 		type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- 
- void __ubsan_handle_add_overflow(struct overflow_data *data,
-@@ -214,20 +209,19 @@ EXPORT_SYMBOL(__ubsan_handle_mul_overflow);
- void __ubsan_handle_negate_overflow(struct overflow_data *data,
- 				void *old_val)
- {
--	unsigned long flags;
- 	char old_val_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(old_val_str, sizeof(old_val_str), data->type, old_val);
- 
- 	pr_err("negation of %s cannot be represented in type %s:\n",
- 		old_val_str, data->type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
- 
-@@ -235,13 +229,12 @@ EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
- void __ubsan_handle_divrem_overflow(struct overflow_data *data,
- 				void *lhs, void *rhs)
- {
--	unsigned long flags;
- 	char rhs_val_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(rhs_val_str, sizeof(rhs_val_str), data->type, rhs);
- 
-@@ -251,58 +244,52 @@ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
- 	else
- 		pr_err("division by zero\n");
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_divrem_overflow);
- 
- static void handle_null_ptr_deref(struct type_mismatch_data_common *data)
- {
--	unsigned long flags;
--
- 	if (suppress_report(data->location))
- 		return;
- 
--	ubsan_prologue(data->location, &flags);
-+	ubsan_prologue(data->location);
- 
- 	pr_err("%s null pointer of type %s\n",
- 		type_check_kinds[data->type_check_kind],
- 		data->type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- 
- static void handle_misaligned_access(struct type_mismatch_data_common *data,
- 				unsigned long ptr)
- {
--	unsigned long flags;
--
- 	if (suppress_report(data->location))
- 		return;
- 
--	ubsan_prologue(data->location, &flags);
-+	ubsan_prologue(data->location);
- 
- 	pr_err("%s misaligned address %p for type %s\n",
- 		type_check_kinds[data->type_check_kind],
- 		(void *)ptr, data->type->type_name);
- 	pr_err("which requires %ld byte alignment\n", data->alignment);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- 
- static void handle_object_size_mismatch(struct type_mismatch_data_common *data,
- 					unsigned long ptr)
- {
--	unsigned long flags;
--
- 	if (suppress_report(data->location))
- 		return;
- 
--	ubsan_prologue(data->location, &flags);
-+	ubsan_prologue(data->location);
- 	pr_err("%s address %p with insufficient space\n",
- 		type_check_kinds[data->type_check_kind],
- 		(void *) ptr);
- 	pr_err("for an object of type %s\n", data->type->type_name);
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- 
- static void ubsan_type_mismatch_common(struct type_mismatch_data_common *data,
-@@ -351,25 +338,23 @@ EXPORT_SYMBOL(__ubsan_handle_type_mismatch_v1);
- 
- void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data, void *index)
- {
--	unsigned long flags;
- 	char index_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(index_str, sizeof(index_str), data->index_type, index);
- 	pr_err("index %s is out of range for type %s\n", index_str,
- 		data->array_type->type_name);
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_out_of_bounds);
- 
- void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
- 					void *lhs, void *rhs)
- {
--	unsigned long flags;
- 	struct type_descriptor *rhs_type = data->rhs_type;
- 	struct type_descriptor *lhs_type = data->lhs_type;
- 	char rhs_str[VALUE_LENGTH];
-@@ -378,7 +363,7 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(rhs_str, sizeof(rhs_str), rhs_type, rhs);
- 	val_to_string(lhs_str, sizeof(lhs_str), lhs_type, lhs);
-@@ -401,18 +386,16 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
- 			lhs_str, rhs_str,
- 			lhs_type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
- 
- 
- void __ubsan_handle_builtin_unreachable(struct unreachable_data *data)
- {
--	unsigned long flags;
--
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 	pr_err("calling __builtin_unreachable()\n");
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- 	panic("can't return from __builtin_unreachable()");
- }
- EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
-@@ -420,19 +403,18 @@ EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
- void __ubsan_handle_load_invalid_value(struct invalid_value_data *data,
- 				void *val)
- {
--	unsigned long flags;
- 	char val_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(val_str, sizeof(val_str), data->type, val);
- 
- 	pr_err("load of value %s is not a valid value for type %s\n",
- 		val_str, data->type->type_name);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_load_invalid_value);
--- 
-2.23.0
-
+MBR, Sergei
