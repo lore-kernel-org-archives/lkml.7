@@ -2,216 +2,456 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FC7C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3C0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3207121D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697973;
-	bh=ejwYFqJF+Z3CCeeyEPbC5ZQuHgcawi1Vkn1mUz3MXhA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JOLATy9uthlXS6prLfEm9DKcf1KB2Mlu5fh/rFW8JnMRmuixwKIWnvH5+Xj7WQEyr
-	 RJO76E/nQXHbdSrzWJl1sIeFDAUVKVUfh4oAwEfEliTl+LiMXpC9nUxo3F839MbRDC
-	 5QFNjM/kuL79F2Rgeh7J8Alq+qG5ySfPtzZ+h6+c=
+	by mail.kernel.org (Postfix) with ESMTP id 72FBC2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:59:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iwV4mp+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388893AbfJJIoO (ORCPT
+        id S2389029AbfJJI7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:44:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388882AbfJJIoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:44:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 961F92054F;
-        Thu, 10 Oct 2019 08:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697051;
-        bh=ejwYFqJF+Z3CCeeyEPbC5ZQuHgcawi1Vkn1mUz3MXhA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kSNIVlIEmQF6LkpynNLJbMD6FKpfxovduTfdGhORqBvDuwrmu2itbhVciD0abr5qm
-         X9X3BgOnLDSzcAAevo6HALPMse9AVmHqFdQez7aViuz8dX0xGC1ZwVya1/Jz4UbqyW
-         LTSEC6Mqbj0kaPR1Zsxr9yDZ/Hm5cub4o9WrdqRo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Allan Zhang <allanzhang@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 129/148] bpf: Fix bpf_event_output re-entry issue
-Date:   Thu, 10 Oct 2019 10:36:30 +0200
-Message-Id: <20191010083620.194361117@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191010083609.660878383@linuxfoundation.org>
-References: <20191010083609.660878383@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 10 Oct 2019 04:59:37 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43784 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387946AbfJJI7d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:59:33 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9A8wtvM111374;
+        Thu, 10 Oct 2019 03:58:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570697935;
+        bh=FZ5m5fs3B8g3OBzN8iroXxEV7WIfFcZBg387gdAKDFo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=iwV4mp+D6AptkvLFGg/EZjal0oTFYZRm34GDNYRn7i+jZKfvBHvWvpojJ1Ov6mCT9
+         VDDkSh5r8hKyN+frX2QKumbJa8D8P++9nGOsckDUZefI9Cy8QsPoJ9UEZSQyCW069g
+         +N+kmOMT4A0ZzFtXLknJCJchvHDpIzXu5uyIekJg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9A8wtoY083866
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Oct 2019 03:58:55 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 10
+ Oct 2019 03:58:51 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 10 Oct 2019 03:58:51 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9A8wlcw079738;
+        Thu, 10 Oct 2019 03:58:48 -0500
+Subject: Re: [PATCH v3 15/16] phy: phy-mmp3-usb: add a new driver
+To:     Lubomir Rintel <lkundrak@v3.sk>,
+        "To : Olof Johansson" <olof@lixom.net>
+CC:     "Cc : Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-clk@vger.kernel.org>
+References: <20190830220743.439670-1-lkundrak@v3.sk>
+ <20190830220743.439670-16-lkundrak@v3.sk>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <cc2dba6e-17df-af14-c5b9-b5148a64dcfb@ti.com>
+Date:   Thu, 10 Oct 2019 14:28:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190830220743.439670-16-lkundrak@v3.sk>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allan Zhang <allanzhang@google.com>
+Hi,
 
-[ Upstream commit 768fb61fcc13b2acaca758275d54c09a65e2968b ]
+On 31/08/19 3:37 AM, Lubomir Rintel wrote:
 
-BPF_PROG_TYPE_SOCK_OPS program can reenter bpf_event_output because it
-can be called from atomic and non-atomic contexts since we don't have
-bpf_prog_active to prevent it happen.
+Change the $subject to "phy: Add USB2 PHY driver for Marvell MMP3 SoC"
+> This is the USB2 PHY as found on the Marvell MMP3 SoC. Based on Marvell GPL
+> release.
 
-This patch enables 3 levels of nesting to support normal, irq and nmi
-context.
+Just have "Add PHY driver for the USB2 PHY found on Marvell MMP3 SoC." here.
+> 
+> While at that, also add a MAINTAINERS entry including the other MMP PHY
+> driver.
 
-We can easily reproduce the issue by running netperf crr mode with 100
-flows and 10 threads from netperf client side.
+Adding MAINTAINERS could be a different patch.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Here is the whole stack dump:
+Once the commit log is fixed:
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-[  515.228898] WARNING: CPU: 20 PID: 14686 at kernel/trace/bpf_trace.c:549 bpf_event_output+0x1f9/0x220
-[  515.228903] CPU: 20 PID: 14686 Comm: tcp_crr Tainted: G        W        4.15.0-smp-fixpanic #44
-[  515.228904] Hardware name: Intel TBG,ICH10/Ikaria_QC_1b, BIOS 1.22.0 06/04/2018
-[  515.228905] RIP: 0010:bpf_event_output+0x1f9/0x220
-[  515.228906] RSP: 0018:ffff9a57ffc03938 EFLAGS: 00010246
-[  515.228907] RAX: 0000000000000012 RBX: 0000000000000001 RCX: 0000000000000000
-[  515.228907] RDX: 0000000000000000 RSI: 0000000000000096 RDI: ffffffff836b0f80
-[  515.228908] RBP: ffff9a57ffc039c8 R08: 0000000000000004 R09: 0000000000000012
-[  515.228908] R10: ffff9a57ffc1de40 R11: 0000000000000000 R12: 0000000000000002
-[  515.228909] R13: ffff9a57e13bae00 R14: 00000000ffffffff R15: ffff9a57ffc1e2c0
-[  515.228910] FS:  00007f5a3e6ec700(0000) GS:ffff9a57ffc00000(0000) knlGS:0000000000000000
-[  515.228910] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  515.228911] CR2: 0000537082664fff CR3: 000000061fed6002 CR4: 00000000000226f0
-[  515.228911] Call Trace:
-[  515.228913]  <IRQ>
-[  515.228919]  [<ffffffff82c6c6cb>] bpf_sockopt_event_output+0x3b/0x50
-[  515.228923]  [<ffffffff8265daee>] ? bpf_ktime_get_ns+0xe/0x10
-[  515.228927]  [<ffffffff8266fda5>] ? __cgroup_bpf_run_filter_sock_ops+0x85/0x100
-[  515.228930]  [<ffffffff82cf90a5>] ? tcp_init_transfer+0x125/0x150
-[  515.228933]  [<ffffffff82cf9159>] ? tcp_finish_connect+0x89/0x110
-[  515.228936]  [<ffffffff82cf98e4>] ? tcp_rcv_state_process+0x704/0x1010
-[  515.228939]  [<ffffffff82c6e263>] ? sk_filter_trim_cap+0x53/0x2a0
-[  515.228942]  [<ffffffff82d90d1f>] ? tcp_v6_inbound_md5_hash+0x6f/0x1d0
-[  515.228945]  [<ffffffff82d92160>] ? tcp_v6_do_rcv+0x1c0/0x460
-[  515.228947]  [<ffffffff82d93558>] ? tcp_v6_rcv+0x9f8/0xb30
-[  515.228951]  [<ffffffff82d737c0>] ? ip6_route_input+0x190/0x220
-[  515.228955]  [<ffffffff82d5f7ad>] ? ip6_protocol_deliver_rcu+0x6d/0x450
-[  515.228958]  [<ffffffff82d60246>] ? ip6_rcv_finish+0xb6/0x170
-[  515.228961]  [<ffffffff82d5fb90>] ? ip6_protocol_deliver_rcu+0x450/0x450
-[  515.228963]  [<ffffffff82d60361>] ? ipv6_rcv+0x61/0xe0
-[  515.228966]  [<ffffffff82d60190>] ? ipv6_list_rcv+0x330/0x330
-[  515.228969]  [<ffffffff82c4976b>] ? __netif_receive_skb_one_core+0x5b/0xa0
-[  515.228972]  [<ffffffff82c497d1>] ? __netif_receive_skb+0x21/0x70
-[  515.228975]  [<ffffffff82c4a8d2>] ? process_backlog+0xb2/0x150
-[  515.228978]  [<ffffffff82c4aadf>] ? net_rx_action+0x16f/0x410
-[  515.228982]  [<ffffffff830000dd>] ? __do_softirq+0xdd/0x305
-[  515.228986]  [<ffffffff8252cfdc>] ? irq_exit+0x9c/0xb0
-[  515.228989]  [<ffffffff82e02de5>] ? smp_call_function_single_interrupt+0x65/0x120
-[  515.228991]  [<ffffffff82e020e1>] ? call_function_single_interrupt+0x81/0x90
-[  515.228992]  </IRQ>
-[  515.228996]  [<ffffffff82a11ff0>] ? io_serial_in+0x20/0x20
-[  515.229000]  [<ffffffff8259c040>] ? console_unlock+0x230/0x490
-[  515.229003]  [<ffffffff8259cbaa>] ? vprintk_emit+0x26a/0x2a0
-[  515.229006]  [<ffffffff8259cbff>] ? vprintk_default+0x1f/0x30
-[  515.229008]  [<ffffffff8259d9f5>] ? vprintk_func+0x35/0x70
-[  515.229011]  [<ffffffff8259d4bb>] ? printk+0x50/0x66
-[  515.229013]  [<ffffffff82637637>] ? bpf_event_output+0xb7/0x220
-[  515.229016]  [<ffffffff82c6c6cb>] ? bpf_sockopt_event_output+0x3b/0x50
-[  515.229019]  [<ffffffff8265daee>] ? bpf_ktime_get_ns+0xe/0x10
-[  515.229023]  [<ffffffff82c29e87>] ? release_sock+0x97/0xb0
-[  515.229026]  [<ffffffff82ce9d6a>] ? tcp_recvmsg+0x31a/0xda0
-[  515.229029]  [<ffffffff8266fda5>] ? __cgroup_bpf_run_filter_sock_ops+0x85/0x100
-[  515.229032]  [<ffffffff82ce77c1>] ? tcp_set_state+0x191/0x1b0
-[  515.229035]  [<ffffffff82ced10e>] ? tcp_disconnect+0x2e/0x600
-[  515.229038]  [<ffffffff82cecbbb>] ? tcp_close+0x3eb/0x460
-[  515.229040]  [<ffffffff82d21082>] ? inet_release+0x42/0x70
-[  515.229043]  [<ffffffff82d58809>] ? inet6_release+0x39/0x50
-[  515.229046]  [<ffffffff82c1f32d>] ? __sock_release+0x4d/0xd0
-[  515.229049]  [<ffffffff82c1f3e5>] ? sock_close+0x15/0x20
-[  515.229052]  [<ffffffff8273b517>] ? __fput+0xe7/0x1f0
-[  515.229055]  [<ffffffff8273b66e>] ? ____fput+0xe/0x10
-[  515.229058]  [<ffffffff82547bf2>] ? task_work_run+0x82/0xb0
-[  515.229061]  [<ffffffff824086df>] ? exit_to_usermode_loop+0x7e/0x11f
-[  515.229064]  [<ffffffff82408171>] ? do_syscall_64+0x111/0x130
-[  515.229067]  [<ffffffff82e0007c>] ? entry_SYSCALL_64_after_hwframe+0x3d/0xa2
-
-Fixes: a5a3a828cd00 ("bpf: add perf event notificaton support for sock_ops")
-Signed-off-by: Allan Zhang <allanzhang@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Stanislav Fomichev <sdf@google.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20190925234312.94063-2-allanzhang@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/trace/bpf_trace.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index ca1255d145766..3e38a010003c9 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -500,14 +500,17 @@ static const struct bpf_func_proto bpf_perf_event_output_proto = {
- 	.arg5_type	= ARG_CONST_SIZE_OR_ZERO,
- };
- 
--static DEFINE_PER_CPU(struct pt_regs, bpf_pt_regs);
--static DEFINE_PER_CPU(struct perf_sample_data, bpf_misc_sd);
-+static DEFINE_PER_CPU(int, bpf_event_output_nest_level);
-+struct bpf_nested_pt_regs {
-+	struct pt_regs regs[3];
-+};
-+static DEFINE_PER_CPU(struct bpf_nested_pt_regs, bpf_pt_regs);
-+static DEFINE_PER_CPU(struct bpf_trace_sample_data, bpf_misc_sds);
- 
- u64 bpf_event_output(struct bpf_map *map, u64 flags, void *meta, u64 meta_size,
- 		     void *ctx, u64 ctx_size, bpf_ctx_copy_t ctx_copy)
- {
--	struct perf_sample_data *sd = this_cpu_ptr(&bpf_misc_sd);
--	struct pt_regs *regs = this_cpu_ptr(&bpf_pt_regs);
-+	int nest_level = this_cpu_inc_return(bpf_event_output_nest_level);
- 	struct perf_raw_frag frag = {
- 		.copy		= ctx_copy,
- 		.size		= ctx_size,
-@@ -522,12 +525,25 @@ u64 bpf_event_output(struct bpf_map *map, u64 flags, void *meta, u64 meta_size,
- 			.data	= meta,
- 		},
- 	};
-+	struct perf_sample_data *sd;
-+	struct pt_regs *regs;
-+	u64 ret;
-+
-+	if (WARN_ON_ONCE(nest_level > ARRAY_SIZE(bpf_misc_sds.sds))) {
-+		ret = -EBUSY;
-+		goto out;
-+	}
-+	sd = this_cpu_ptr(&bpf_misc_sds.sds[nest_level - 1]);
-+	regs = this_cpu_ptr(&bpf_pt_regs.regs[nest_level - 1]);
- 
- 	perf_fetch_caller_regs(regs);
- 	perf_sample_data_init(sd, 0, 0);
- 	sd->raw = &raw;
- 
--	return __bpf_perf_event_output(regs, map, flags, sd);
-+	ret = __bpf_perf_event_output(regs, map, flags, sd);
-+out:
-+	this_cpu_dec(bpf_event_output_nest_level);
-+	return ret;
- }
- 
- BPF_CALL_0(bpf_get_current_task)
--- 
-2.20.1
-
-
-
+Thanks
+Kishon
+> ---
+>  MAINTAINERS                        |   7 +
+>  drivers/phy/marvell/Kconfig        |  11 ++
+>  drivers/phy/marvell/Makefile       |   1 +
+>  drivers/phy/marvell/phy-mmp3-usb.c | 291 +++++++++++++++++++++++++++++
+>  4 files changed, 310 insertions(+)
+>  create mode 100644 drivers/phy/marvell/phy-mmp3-usb.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 176ef19f0b9db..449349f8f20bf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10799,6 +10799,13 @@ F:	arch/arm/boot/dts/mmp*
+>  F:	arch/arm/mach-mmp/
+>  F:	linux/soc/mmp/
+>  
+> +MMP USB PHY DRIVERS
+> +R:	Lubomir Rintel <lkundrak@v3.sk>
+> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +S:	Maintained
+> +F:	drivers/phy/marvell/phy-mmp3-usb.c
+> +F:	drivers/phy/marvell/phy-pxa-usb.c
+> +
+>  MMU GATHER AND TLB INVALIDATION
+>  M:	Will Deacon <will@kernel.org>
+>  M:	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
+> index 0e1642419c0bf..d33ef35b3e51b 100644
+> --- a/drivers/phy/marvell/Kconfig
+> +++ b/drivers/phy/marvell/Kconfig
+> @@ -102,3 +102,14 @@ config PHY_PXA_USB
+>  	  The PHY driver will be used by Marvell udc/ehci/otg driver.
+>  
+>  	  To compile this driver as a module, choose M here.
+> +
+> +config PHY_MMP3_USB
+> +	tristate "Marvell MMP3 USB PHY Driver"
+> +	depends on MACH_MMP3_DT || COMPILE_TEST
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support Marvell MMP3 USB PHY driver for Marvell
+> +	  SoC. This driver will do the PHY initialization and shutdown.
+> +	  The PHY driver will be used by Marvell udc/ehci/otg driver.
+> +
+> +	  To compile this driver as a module, choose M here.
+> diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
+> index 434eb9ca6cc3f..5a106b1549f41 100644
+> --- a/drivers/phy/marvell/Makefile
+> +++ b/drivers/phy/marvell/Makefile
+> @@ -2,6 +2,7 @@
+>  obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+>  obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
+>  obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
+> +obj-$(CONFIG_PHY_MMP3_USB)		+= phy-mmp3-usb.o
+>  obj-$(CONFIG_PHY_MVEBU_A3700_COMPHY)	+= phy-mvebu-a3700-comphy.o
+>  obj-$(CONFIG_PHY_MVEBU_A3700_UTMI)	+= phy-mvebu-a3700-utmi.o
+>  obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+= phy-armada38x-comphy.o
+> diff --git a/drivers/phy/marvell/phy-mmp3-usb.c b/drivers/phy/marvell/phy-mmp3-usb.c
+> new file mode 100644
+> index 0000000000000..499869595a582
+> --- /dev/null
+> +++ b/drivers/phy/marvell/phy-mmp3-usb.c
+> @@ -0,0 +1,291 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2011 Marvell International Ltd. All rights reserved.
+> + * Copyright (C) 2018,2019 Lubomir Rintel <lkundrak@v3.sk>
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/soc/mmp/cputype.h>
+> +
+> +#define USB2_PLL_REG0		0x4
+> +#define USB2_PLL_REG1		0x8
+> +#define USB2_TX_REG0		0x10
+> +#define USB2_TX_REG1		0x14
+> +#define USB2_TX_REG2		0x18
+> +#define USB2_RX_REG0		0x20
+> +#define USB2_RX_REG1		0x24
+> +#define USB2_RX_REG2		0x28
+> +#define USB2_ANA_REG0		0x30
+> +#define USB2_ANA_REG1		0x34
+> +#define USB2_ANA_REG2		0x38
+> +#define USB2_DIG_REG0		0x3C
+> +#define USB2_DIG_REG1		0x40
+> +#define USB2_DIG_REG2		0x44
+> +#define USB2_DIG_REG3		0x48
+> +#define USB2_TEST_REG0		0x4C
+> +#define USB2_TEST_REG1		0x50
+> +#define USB2_TEST_REG2		0x54
+> +#define USB2_CHARGER_REG0	0x58
+> +#define USB2_OTG_REG0		0x5C
+> +#define USB2_PHY_MON0		0x60
+> +#define USB2_RESETVE_REG0	0x64
+> +#define USB2_ICID_REG0		0x78
+> +#define USB2_ICID_REG1		0x7C
+> +
+> +/* USB2_PLL_REG0 */
+> +
+> +/* This is for Ax stepping */
+> +#define USB2_PLL_FBDIV_SHIFT_MMP3		0
+> +#define USB2_PLL_FBDIV_MASK_MMP3		(0xFF << 0)
+> +
+> +#define USB2_PLL_REFDIV_SHIFT_MMP3		8
+> +#define USB2_PLL_REFDIV_MASK_MMP3		(0xF << 8)
+> +
+> +#define USB2_PLL_VDD12_SHIFT_MMP3		12
+> +#define USB2_PLL_VDD18_SHIFT_MMP3		14
+> +
+> +/* This is for B0 stepping */
+> +#define USB2_PLL_FBDIV_SHIFT_MMP3_B0		0
+> +#define USB2_PLL_REFDIV_SHIFT_MMP3_B0		9
+> +#define USB2_PLL_VDD18_SHIFT_MMP3_B0		14
+> +#define USB2_PLL_FBDIV_MASK_MMP3_B0		0x01FF
+> +#define USB2_PLL_REFDIV_MASK_MMP3_B0		0x3E00
+> +
+> +#define USB2_PLL_CAL12_SHIFT_MMP3		0
+> +#define USB2_PLL_CALI12_MASK_MMP3		(0x3 << 0)
+> +
+> +#define USB2_PLL_VCOCAL_START_SHIFT_MMP3	2
+> +
+> +#define USB2_PLL_KVCO_SHIFT_MMP3		4
+> +#define USB2_PLL_KVCO_MASK_MMP3			(0x7<<4)
+> +
+> +#define USB2_PLL_ICP_SHIFT_MMP3			8
+> +#define USB2_PLL_ICP_MASK_MMP3			(0x7<<8)
+> +
+> +#define USB2_PLL_LOCK_BYPASS_SHIFT_MMP3		12
+> +
+> +#define USB2_PLL_PU_PLL_SHIFT_MMP3		13
+> +#define USB2_PLL_PU_PLL_MASK			(0x1 << 13)
+> +
+> +#define USB2_PLL_READY_MASK_MMP3		(0x1 << 15)
+> +
+> +/* USB2_TX_REG0 */
+> +#define USB2_TX_IMPCAL_VTH_SHIFT_MMP3		8
+> +#define USB2_TX_IMPCAL_VTH_MASK_MMP3		(0x7 << 8)
+> +
+> +#define USB2_TX_RCAL_START_SHIFT_MMP3		13
+> +
+> +/* USB2_TX_REG1 */
+> +#define USB2_TX_CK60_PHSEL_SHIFT_MMP3		0
+> +#define USB2_TX_CK60_PHSEL_MASK_MMP3		(0xf << 0)
+> +
+> +#define USB2_TX_AMP_SHIFT_MMP3			4
+> +#define USB2_TX_AMP_MASK_MMP3			(0x7 << 4)
+> +
+> +#define USB2_TX_VDD12_SHIFT_MMP3		8
+> +#define USB2_TX_VDD12_MASK_MMP3			(0x3 << 8)
+> +
+> +/* USB2_TX_REG2 */
+> +#define USB2_TX_DRV_SLEWRATE_SHIFT		10
+> +
+> +/* USB2_RX_REG0 */
+> +#define USB2_RX_SQ_THRESH_SHIFT_MMP3		4
+> +#define USB2_RX_SQ_THRESH_MASK_MMP3		(0xf << 4)
+> +
+> +#define USB2_RX_SQ_LENGTH_SHIFT_MMP3		10
+> +#define USB2_RX_SQ_LENGTH_MASK_MMP3		(0x3 << 10)
+> +
+> +/* USB2_ANA_REG1*/
+> +#define USB2_ANA_PU_ANA_SHIFT_MMP3		14
+> +
+> +/* USB2_OTG_REG0 */
+> +#define USB2_OTG_PU_OTG_SHIFT_MMP3		3
+> +
+> +struct mmp3_usb_phy {
+> +	struct phy *phy;
+> +	void __iomem *base;
+> +};
+> +
+> +static unsigned int u2o_get(void __iomem *base, unsigned int offset)
+> +{
+> +	return readl_relaxed(base + offset);
+> +}
+> +
+> +static void u2o_set(void __iomem *base, unsigned int offset,
+> +		unsigned int value)
+> +{
+> +	u32 reg;
+> +
+> +	reg = readl_relaxed(base + offset);
+> +	reg |= value;
+> +	writel_relaxed(reg, base + offset);
+> +	readl_relaxed(base + offset);
+> +}
+> +
+> +static void u2o_clear(void __iomem *base, unsigned int offset,
+> +		unsigned int value)
+> +{
+> +	u32 reg;
+> +
+> +	reg = readl_relaxed(base + offset);
+> +	reg &= ~value;
+> +	writel_relaxed(reg, base + offset);
+> +	readl_relaxed(base + offset);
+> +}
+> +
+> +static int mmp3_usb_phy_init(struct phy *phy)
+> +{
+> +	struct mmp3_usb_phy *mmp3_usb_phy = phy_get_drvdata(phy);
+> +	void __iomem *base = mmp3_usb_phy->base;
+> +
+> +	if (cpu_is_mmp3_a0()) {
+> +		u2o_clear(base, USB2_PLL_REG0, (USB2_PLL_FBDIV_MASK_MMP3
+> +			| USB2_PLL_REFDIV_MASK_MMP3));
+> +		u2o_set(base, USB2_PLL_REG0,
+> +			0xd << USB2_PLL_REFDIV_SHIFT_MMP3
+> +			| 0xf0 << USB2_PLL_FBDIV_SHIFT_MMP3);
+> +	} else if (cpu_is_mmp3_b0()) {
+> +		u2o_clear(base, USB2_PLL_REG0, USB2_PLL_REFDIV_MASK_MMP3_B0
+> +			| USB2_PLL_FBDIV_MASK_MMP3_B0);
+> +		u2o_set(base, USB2_PLL_REG0,
+> +			0xd << USB2_PLL_REFDIV_SHIFT_MMP3_B0
+> +			| 0xf0 << USB2_PLL_FBDIV_SHIFT_MMP3_B0);
+> +	} else {
+> +		dev_err(&phy->dev, "unsupported silicon revision\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	u2o_clear(base, USB2_PLL_REG1, USB2_PLL_PU_PLL_MASK
+> +		| USB2_PLL_ICP_MASK_MMP3
+> +		| USB2_PLL_KVCO_MASK_MMP3
+> +		| USB2_PLL_CALI12_MASK_MMP3);
+> +	u2o_set(base, USB2_PLL_REG1, 1 << USB2_PLL_PU_PLL_SHIFT_MMP3
+> +		| 1 << USB2_PLL_LOCK_BYPASS_SHIFT_MMP3
+> +		| 3 << USB2_PLL_ICP_SHIFT_MMP3
+> +		| 3 << USB2_PLL_KVCO_SHIFT_MMP3
+> +		| 3 << USB2_PLL_CAL12_SHIFT_MMP3);
+> +
+> +	u2o_clear(base, USB2_TX_REG0, USB2_TX_IMPCAL_VTH_MASK_MMP3);
+> +	u2o_set(base, USB2_TX_REG0, 2 << USB2_TX_IMPCAL_VTH_SHIFT_MMP3);
+> +
+> +	u2o_clear(base, USB2_TX_REG1, USB2_TX_VDD12_MASK_MMP3
+> +		| USB2_TX_AMP_MASK_MMP3
+> +		| USB2_TX_CK60_PHSEL_MASK_MMP3);
+> +	u2o_set(base, USB2_TX_REG1, 3 << USB2_TX_VDD12_SHIFT_MMP3
+> +		| 4 << USB2_TX_AMP_SHIFT_MMP3
+> +		| 4 << USB2_TX_CK60_PHSEL_SHIFT_MMP3);
+> +
+> +	u2o_clear(base, USB2_TX_REG2, 3 << USB2_TX_DRV_SLEWRATE_SHIFT);
+> +	u2o_set(base, USB2_TX_REG2, 2 << USB2_TX_DRV_SLEWRATE_SHIFT);
+> +
+> +	u2o_clear(base, USB2_RX_REG0, USB2_RX_SQ_THRESH_MASK_MMP3);
+> +	u2o_set(base, USB2_RX_REG0, 0xa << USB2_RX_SQ_THRESH_SHIFT_MMP3);
+> +
+> +	u2o_set(base, USB2_ANA_REG1, 0x1 << USB2_ANA_PU_ANA_SHIFT_MMP3);
+> +
+> +	u2o_set(base, USB2_OTG_REG0, 0x1 << USB2_OTG_PU_OTG_SHIFT_MMP3);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mmp3_usb_phy_calibrate(struct phy *phy)
+> +{
+> +	struct mmp3_usb_phy *mmp3_usb_phy = phy_get_drvdata(phy);
+> +	void __iomem *base = mmp3_usb_phy->base;
+> +	int loops;
+> +
+> +	/*
+> +	 * PLL VCO and TX Impedance Calibration Timing:
+> +	 *
+> +	 *                _____________________________________
+> +	 * PU  __________|
+> +	 *                        _____________________________
+> +	 * VCOCAL START _________|
+> +	 *                                 ___
+> +	 * REG_RCAL_START ________________|   |________|_______
+> +	 *               | 200us | 400us  | 40| 400us  | USB PHY READY
+> +	 */
+> +
+> +	udelay(200);
+> +	u2o_set(base, USB2_PLL_REG1, 1 << USB2_PLL_VCOCAL_START_SHIFT_MMP3);
+> +	udelay(400);
+> +	u2o_set(base, USB2_TX_REG0, 1 << USB2_TX_RCAL_START_SHIFT_MMP3);
+> +	udelay(40);
+> +	u2o_clear(base, USB2_TX_REG0, 1 << USB2_TX_RCAL_START_SHIFT_MMP3);
+> +	udelay(400);
+> +
+> +	loops = 0;
+> +	while ((u2o_get(base, USB2_PLL_REG1) & USB2_PLL_READY_MASK_MMP3) == 0) {
+> +		mdelay(1);
+> +		loops++;
+> +		if (loops > 100) {
+> +			dev_err(&phy->dev, "PLL_READY not set after 100mS.\n");
+> +			return -ETIMEDOUT;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops mmp3_usb_phy_ops = {
+> +	.init		= mmp3_usb_phy_init,
+> +	.calibrate	= mmp3_usb_phy_calibrate,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct of_device_id mmp3_usb_phy_of_match[] = {
+> +	{ .compatible = "marvell,mmp3-usb-phy", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, mmp3_usb_phy_of_match);
+> +
+> +static int mmp3_usb_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *resource;
+> +	struct mmp3_usb_phy *mmp3_usb_phy;
+> +	struct phy_provider *provider;
+> +
+> +	mmp3_usb_phy = devm_kzalloc(dev, sizeof(*mmp3_usb_phy), GFP_KERNEL);
+> +	if (!mmp3_usb_phy)
+> +		return -ENOMEM;
+> +
+> +	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	mmp3_usb_phy->base = devm_ioremap_resource(dev, resource);
+> +	if (IS_ERR(mmp3_usb_phy->base)) {
+> +		dev_err(dev, "failed to remap PHY regs\n");
+> +		return PTR_ERR(mmp3_usb_phy->base);
+> +	}
+> +
+> +	mmp3_usb_phy->phy = devm_phy_create(dev, NULL, &mmp3_usb_phy_ops);
+> +	if (IS_ERR(mmp3_usb_phy->phy)) {
+> +		dev_err(dev, "failed to create PHY\n");
+> +		return PTR_ERR(mmp3_usb_phy->phy);
+> +	}
+> +
+> +	phy_set_drvdata(mmp3_usb_phy->phy, mmp3_usb_phy);
+> +	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	if (IS_ERR(provider)) {
+> +		dev_err(dev, "failed to register PHY provider\n");
+> +		return PTR_ERR(provider);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver mmp3_usb_phy_driver = {
+> +	.probe		= mmp3_usb_phy_probe,
+> +	.driver		= {
+> +		.name	= "mmp3-usb-phy",
+> +		.of_match_table = mmp3_usb_phy_of_match,
+> +	},
+> +};
+> +module_platform_driver(mmp3_usb_phy_driver);
+> +
+> +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
+> +MODULE_DESCRIPTION("Marvell MMP3 USB PHY Driver");
+> +MODULE_LICENSE("GPL v2");
+> 
