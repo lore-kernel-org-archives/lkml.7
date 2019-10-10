@@ -2,101 +2,78 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6C4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E3DECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DF220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E5E21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 10:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570704352;
+	bh=V0vzZx1+h5Q4noRlV+vYUjs+nhGS6+mHOA4vjDJFlM8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WyOhUUjQG6SCDZbyMhCFvDg+ts6zUxrnzU/utQfQBWzA4ezxwHNGdiFCoHQMDD/tf
+	 sjD7Du952ld/F1H6M1PknKiIMx+SyQdVov+TGqzLr8e5fq7tBJ4+mkAeAnzhK+znql
+	 27lGIeQ/6hAOKJgnqhRNHVwCtD36YKgAUikssn0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732876AbfJJKpr (ORCPT
+        id S1732948AbfJJKpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 06:45:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37042 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726230AbfJJKpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 06:45:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 84D03AFB1;
-        Thu, 10 Oct 2019 10:45:45 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 32858E378C; Thu, 10 Oct 2019 12:45:45 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 12:45:45 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] genetlink: do not parse attributes for families
- with zero maxattr
-Message-ID: <20191010104545.GB22163@unicorn.suse.cz>
-References: <20191009164432.AD5D1E3785@unicorn.suse.cz>
- <20191010093153.GG2223@nanopsycho>
+        Thu, 10 Oct 2019 06:45:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfJJKpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 06:45:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E00D8208C3;
+        Thu, 10 Oct 2019 10:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570704350;
+        bh=V0vzZx1+h5Q4noRlV+vYUjs+nhGS6+mHOA4vjDJFlM8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mSdknab5VAgcj5aRKy9YYOX9apAcB0q18wZ0jA4t/pZzl++1esjZAMH8MA05z/qsr
+         2T5iN+N+vKVLTtJJrzXyHAjOSD27ShskriTiMFdtkajQiajPC35txUG9l2EwyKnWcj
+         OeWuOeKqk9qyQ5+iAP4vVjWWB2TMEL4eVz02w2xM=
+Date:   Thu, 10 Oct 2019 12:45:48 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] USB: iowarrior: disconnect fixes and locking cleanups
+Message-ID: <20191010104548.GA639765@kroah.com>
+References: <20191009104846.5925-1-johan@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010093153.GG2223@nanopsycho>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191009104846.5925-1-johan@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:31:53AM +0200, Jiri Pirko wrote:
-> Wed, Oct 09, 2019 at 06:44:32PM CEST, mkubecek@suse.cz wrote:
-> >Commit c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing
-> >to a separate function") moved attribute buffer allocation and attribute
-> >parsing from genl_family_rcv_msg_doit() into a separate function
-> >genl_family_rcv_msg_attrs_parse() which, unlike the previous code, calls
-> >__nlmsg_parse() even if family->maxattr is 0 (i.e. the family does its own
-> >parsing). The parser error is ignored and does not propagate out of
-> >genl_family_rcv_msg_attrs_parse() but an error message ("Unknown attribute
-> >type") is set in extack and if further processing generates no error or
-> >warning, it stays there and is interpreted as a warning by userspace.
-> >
-> >Dumpit requests are not affected as genl_family_rcv_msg_dumpit() bypasses
-> >the call of genl_family_rcv_msg_doit() if family->maxattr is zero. Do the
-> >same also in genl_family_rcv_msg_doit().
-> >
-> >Fixes: c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing to a separate function")
-> >Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-> >---
-> > net/netlink/genetlink.c | 6 ++++--
-> > 1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> >diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
-> >index ecc2bd3e73e4..c4bf8830eedf 100644
-> >--- a/net/netlink/genetlink.c
-> >+++ b/net/netlink/genetlink.c
-> >@@ -639,21 +639,23 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
-> > 				    const struct genl_ops *ops,
-> > 				    int hdrlen, struct net *net)
-> > {
-> >-	struct nlattr **attrbuf;
-> >+	struct nlattr **attrbuf = NULL;
-> > 	struct genl_info info;
-> > 	int err;
-> > 
-> > 	if (!ops->doit)
-> > 		return -EOPNOTSUPP;
-> > 
-> >+	if (!family->maxattr)
-> >+		goto no_attrs;
-> > 	attrbuf = genl_family_rcv_msg_attrs_parse(family, nlh, extack,
-> > 						  ops, hdrlen,
-> > 						  GENL_DONT_VALIDATE_STRICT,
-> >-						  family->maxattr &&
-> > 						  family->parallel_ops);
+On Wed, Oct 09, 2019 at 12:48:40PM +0200, Johan Hovold wrote:
+> This series fixes a use-after-free bug introduced by a recent
+> disconnect-deadlock fix that was reported by syzbot. Turns out there was
+> already a related bug in the driver, and the first patch addresses both
+> issues.
 > 
-> Please also adjust genl_family_rcv_msg_attrs_free() call arg
-> below in this function in the similar way.
+> While looking at the code I found two more use-after-free bugs, which
+> the next two patches fix.
+> 
+> The next two clean up the driver by dropping two redundant locks.
+> 
+> Tested using a mockup device.
 
-Sent v2.
+Thanks for these patches, now queued up.  I have one of these devices
+(their new one) and need to fix the driver up to work with it, but I'll
+start on that on top of these fixes :)
 
-Michal
+thanks,
+
+greg k-h
