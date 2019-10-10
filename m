@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37DEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328CBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC0B2190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAA822459
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697749;
-	bh=frxZ1c0Yl11YuZfJJQl+IVKGf+OQqwOKfjhdN+46TS8=;
+	s=default; t=1570697756;
+	bh=JTeskSJEsytwnsbhj0g3kb2jBcSdMn7bs2/OemONbdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IjX88LMampm8vbtHrZq4UCegrzYmH/QgqfSimoBgHYooHiP3v/XnoiRf6B6Xn/9dK
-	 02dH/wthSOD2kIpnphGH/cDPxB4s0Ve93POCl0FEnIku1uj4j3yktzDmKvCQpOAerJ
-	 Z+niGMWaBW+p1St3lfW9np3oNz6HO9DBE1uGHzHI=
+	b=uvNMlsxwNy8XhPQTpvG+438N1FHmRYQxDz0gq+opOfwS4HFoq8L3HteHDHtZyShCq
+	 VEHAAOzNZRhaTaXI7ocozeLyk6Ob2g9oAOMrpQTQADJo/utXT0NEIjyTgDZdycHd2G
+	 QZu2nf5GDbbyZJZcnlH13xftsoZw6Q+MrwOhw9FM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389746AbfJJItG (ORCPT
+        id S2389712AbfJJIsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55466 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389731AbfJJItE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:49:04 -0400
+        id S2387657AbfJJIsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E9BA208C3;
-        Thu, 10 Oct 2019 08:49:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85A192064A;
+        Thu, 10 Oct 2019 08:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697343;
-        bh=frxZ1c0Yl11YuZfJJQl+IVKGf+OQqwOKfjhdN+46TS8=;
+        s=default; t=1570697324;
+        bh=JTeskSJEsytwnsbhj0g3kb2jBcSdMn7bs2/OemONbdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AdjJdHtFgHV5EBT65PQn4ZfXAYBJfMr70ggv2r5rLEcZTbFUjL+MnBQdzJFkN7riQ
-         bDkEYpLys5JCI8/o72nDKz3AojTouBIgQRFyjK9HgUE4KrM97BsUT+q6kpYXHncRBR
-         P5rt5geeo+iya06CCDRzp6tIZg1we2bv6RlZi2Y0=
+        b=QRYg/2yNrBa1fcpxo1+U0m+F1ucdiKufH2wm27F+f8WV5h4iJ6637p2LrRNeTi3KE
+         /7Mpfmj5u/KCDiw3uIklHH0akNiRIZN+5vnRkbRS1zUPTVnZTpV78GsYioTnNzS5uc
+         OG/NZGGviUTYO1QpSQP/6LvG9Zdlda29GrG97c4U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.19 107/114] coresight: etm4x: Use explicit barriers on enable/disable
-Date:   Thu, 10 Oct 2019 10:36:54 +0200
-Message-Id: <20191010083613.897582109@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 4.19 101/114] arm64: add sysfs vulnerability show for speculative store bypass
+Date:   Thu, 10 Oct 2019 10:36:48 +0200
+Message-Id: <20191010083613.546505028@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -60,72 +60,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Murray <andrew.murray@arm.com>
+From: Jeremy Linton <jeremy.linton@arm.com>
 
-commit 1004ce4c255fc3eb3ad9145ddd53547d1b7ce327 upstream.
+[ Upstream commit 526e065dbca6df0b5a130b84b836b8b3c9f54e21 ]
 
-Synchronization is recommended before disabling the trace registers
-to prevent any start or stop points being speculative at the point
-of disabling the unit (section 7.3.77 of ARM IHI 0064D).
+Return status based on ssbd_state and __ssb_safe. If the
+mitigation is disabled, or the firmware isn't responding then
+return the expected machine state based on a whitelist of known
+good cores.
 
-Synchronization is also recommended after programming the trace
-registers to ensure all updates are committed prior to normal code
-resuming (section 4.3.7 of ARM IHI 0064D).
+Given a heterogeneous machine, the overall machine vulnerability
+defaults to safe but is reset to unsafe when we miss the whitelist
+and the firmware doesn't explicitly tell us the core is safe.
+In order to make that work we delay transitioning to vulnerable
+until we know the firmware isn't responding to avoid a case
+where we miss the whitelist, but the firmware goes ahead and
+reports the core is not vulnerable. If all the cores in the
+machine have SSBS, then __ssb_safe will remain true.
 
-Let's ensure these syncronization points are present in the code
-and clearly commented.
-
-Note that we could rely on the barriers in CS_LOCK and
-coresight_disclaim_device_unlocked or the context switch to user
-space - however coresight may be of use in the kernel.
-
-On armv8 the mb macro is defined as dsb(sy) - Given that the etm4x is
-only used on armv8 let's directly use dsb(sy) instead of mb(). This
-removes some ambiguity and makes it easier to correlate the code with
-the TRM.
-
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-[Fixed capital letter for "use" in title]
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20190829202842.580-11-mathieu.poirier@linaro.org
-Cc: stable@vger.kernel.org # 4.9+
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/cpu_errata.c |   42 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -174,6 +174,12 @@ static void etm4_enable_hw(void *info)
- 	if (coresight_timeout(drvdata->base, TRCSTATR, TRCSTATR_IDLE_BIT, 0))
- 		dev_err(drvdata->dev,
- 			"timeout while waiting for Idle Trace Status\n");
-+	/*
-+	 * As recommended by section 4.3.7 ("Synchronization when using the
-+	 * memory-mapped interface") of ARM IHI 0064D
-+	 */
-+	dsb(sy);
-+	isb();
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -233,6 +233,7 @@ static int detect_harden_bp_fw(void)
+ DEFINE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
  
- 	CS_LOCK(drvdata->base);
+ int ssbd_state __read_mostly = ARM64_SSBD_KERNEL;
++static bool __ssb_safe = true;
  
-@@ -324,8 +330,12 @@ static void etm4_disable_hw(void *info)
- 	/* EN, bit[0] Trace unit enable bit */
- 	control &= ~0x1;
+ static const struct ssbd_options {
+ 	const char	*str;
+@@ -336,6 +337,7 @@ static bool has_ssbd_mitigation(const st
+ 	struct arm_smccc_res res;
+ 	bool required = true;
+ 	s32 val;
++	bool this_cpu_safe = false;
  
--	/* make sure everything completes before disabling */
--	mb();
-+	/*
-+	 * Make sure everything completes before disabling, as recommended
-+	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
-+	 * SSTATUS") of ARM IHI 0064D
-+	 */
-+	dsb(sy);
- 	isb();
- 	writel_relaxed(control, drvdata->base + TRCPRGCTLR);
+ 	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
  
+@@ -344,8 +346,14 @@ static bool has_ssbd_mitigation(const st
+ 		goto out_printmsg;
+ 	}
+ 
++	/* delay setting __ssb_safe until we get a firmware response */
++	if (is_midr_in_range_list(read_cpuid_id(), entry->midr_range_list))
++		this_cpu_safe = true;
++
+ 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0) {
+ 		ssbd_state = ARM64_SSBD_UNKNOWN;
++		if (!this_cpu_safe)
++			__ssb_safe = false;
+ 		return false;
+ 	}
+ 
+@@ -362,6 +370,8 @@ static bool has_ssbd_mitigation(const st
+ 
+ 	default:
+ 		ssbd_state = ARM64_SSBD_UNKNOWN;
++		if (!this_cpu_safe)
++			__ssb_safe = false;
+ 		return false;
+ 	}
+ 
+@@ -370,14 +380,18 @@ static bool has_ssbd_mitigation(const st
+ 	switch (val) {
+ 	case SMCCC_RET_NOT_SUPPORTED:
+ 		ssbd_state = ARM64_SSBD_UNKNOWN;
++		if (!this_cpu_safe)
++			__ssb_safe = false;
+ 		return false;
+ 
++	/* machines with mixed mitigation requirements must not return this */
+ 	case SMCCC_RET_NOT_REQUIRED:
+ 		pr_info_once("%s mitigation not required\n", entry->desc);
+ 		ssbd_state = ARM64_SSBD_MITIGATED;
+ 		return false;
+ 
+ 	case SMCCC_RET_SUCCESS:
++		__ssb_safe = false;
+ 		required = true;
+ 		break;
+ 
+@@ -387,6 +401,8 @@ static bool has_ssbd_mitigation(const st
+ 
+ 	default:
+ 		WARN_ON(1);
++		if (!this_cpu_safe)
++			__ssb_safe = false;
+ 		return false;
+ 	}
+ 
+@@ -427,6 +443,14 @@ out_printmsg:
+ 	return required;
+ }
+ 
++/* known invulnerable cores */
++static const struct midr_range arm64_ssb_cpus[] = {
++	MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
++	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
++	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
++	{},
++};
++
+ #ifdef CONFIG_ARM64_ERRATUM_1463225
+ DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
+ 
+@@ -748,6 +772,7 @@ const struct arm64_cpu_capabilities arm6
+ 		.capability = ARM64_SSBD,
+ 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
+ 		.matches = has_ssbd_mitigation,
++		.midr_range_list = arm64_ssb_cpus,
+ 	},
+ #ifdef CONFIG_ARM64_ERRATUM_1463225
+ 	{
+@@ -778,3 +803,20 @@ ssize_t cpu_show_spectre_v2(struct devic
+ 
+ 	return sprintf(buf, "Vulnerable\n");
+ }
++
++ssize_t cpu_show_spec_store_bypass(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	if (__ssb_safe)
++		return sprintf(buf, "Not affected\n");
++
++	switch (ssbd_state) {
++	case ARM64_SSBD_KERNEL:
++	case ARM64_SSBD_FORCE_ENABLE:
++		if (IS_ENABLED(CONFIG_ARM64_SSBD))
++			return sprintf(buf,
++			    "Mitigation: Speculative Store Bypass disabled via prctl\n");
++	}
++
++	return sprintf(buf, "Vulnerable\n");
++}
 
 
