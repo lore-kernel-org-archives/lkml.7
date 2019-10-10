@@ -2,96 +2,180 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB70AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED11C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5F2208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E751F208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 03:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732669AbfJJDbF (ORCPT
+        id S1732732AbfJJDbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 23:31:05 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38880 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbfJJDbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 23:31:05 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Oct 2019 20:31:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,278,1566889200"; 
-   d="scan'208";a="187824635"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga008.jf.intel.com with ESMTP; 09 Oct 2019 20:31:02 -0700
-Date:   Thu, 10 Oct 2019 11:30:45 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] userfaultfd: remove set but not used variable 'h'
-Message-ID: <20191010033045.GA5927@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191009122740.70517-1-yuehaibing@huawei.com>
- <a28da32b-5c26-21e9-4a08-722abf9fbeba@oracle.com>
- <20191010012322.GB2167@richard>
- <ba62cc8f-da4d-a316-c968-80871551c863@oracle.com>
+        Wed, 9 Oct 2019 23:31:38 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:21232 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfJJDbh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Oct 2019 23:31:37 -0400
+Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 10 Oct
+ 2019 11:31:39 +0800
+Subject: Re: [PATCH 1/3] dt-bindings: power: add Amlogic secure power domains
+ bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>,
+        Zhiqiang Liang <zhiqiang.liang@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
+ <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
+ <5d93ce88.1c69fb81.aec64.6b1b@mx.google.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <3152a4ac-5059-502b-3bf3-71f7e2d8118a@amlogic.com>
+Date:   Thu, 10 Oct 2019 11:31:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba62cc8f-da4d-a316-c968-80871551c863@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <5d93ce88.1c69fb81.aec64.6b1b@mx.google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.18.29.227]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 07:25:18PM -0700, Mike Kravetz wrote:
->On 10/9/19 6:23 PM, Wei Yang wrote:
->> On Wed, Oct 09, 2019 at 05:45:57PM -0700, Mike Kravetz wrote:
->>> On 10/9/19 5:27 AM, YueHaibing wrote:
->>>> Fixes gcc '-Wunused-but-set-variable' warning:
->>>>
->>>> mm/userfaultfd.c: In function '__mcopy_atomic_hugetlb':
->>>> mm/userfaultfd.c:217:17: warning:
->>>>  variable 'h' set but not used [-Wunused-but-set-variable]
->>>>
->>>> It is not used since commit 78911d0e18ac ("userfaultfd: use vma_pagesize
->>>> for all huge page size calculation")
->>>>
->>>
->>> Thanks!  That should have been removed with the recent cleanups.
->>>
->>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>
->>> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
->> 
->> If I am correct, this is removed in a recent patch.
->
->I'm having a hard time figuring out what is actually in the latest mmotm
->tree.  Andrew added a build fixup patch ab169389eb5 in linux-next which
->adds the reference to h.  Is there a patch after that to remove the reference?
->
+Hi Rob，
 
-I checked linux-next tree, this commit removes the reference.
+Thanks for your review.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=add4eaeef3766b7491d70d473c48c0b6d6ca5cb7
+I'm sorry to reply so late, for I've been on vacation in the last week.
 
->-- 
->Mike Kravetz
+On 2019/10/2 6:09, Rob Herring wrote:
+> On Thu, Sep 19, 2019 at 08:11:02AM -0400, Jianxin Pan wrote:
+>> Add the bindings for the Amlogic Secure power domains, controlling the
+>> secure power domains.
+>>
+>> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
+>> power domain registers are in secure world.
+>>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
+>> ---
+>>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 32 ++++++++++++++++++++++
+>>  include/dt-bindings/power/meson-a1-power.h         | 32 ++++++++++++++++++++++
+>>  2 files changed, 64 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>>  create mode 100644 include/dt-bindings/power/meson-a1-power.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> new file mode 100644
+>> index 00000000..327e0d9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> @@ -0,0 +1,32 @@
+>> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +# Copyright (c) 2019 Amlogic, Inc
+>> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic Meson Secure Power Domains
+>> +
+>> +maintainers:
+>> +  - Jianxin Pan <jianxin.pan@amlogic.com>
+>> +
+>> +description: |+
+>> +  A1/C1 series The Secure Power Domains node should be the child of a syscon
+>> +  node with the required property.
+> 
+> 'a syscon node' is not specific enough. It must be a specific node.
+> 
+I will fix this.
+In A1/C1, power control is in secure domain, and syscon parent is not needed.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - amlogic,meson-a1-pwrc
+>> +
+>> +required:
+>> +  - compatible
+>> +
+>> +examples:
+>> +  - |
+>> +    pwrc: power-controller {
+>> +          compatible = "amlogic,meson-a1-pwrc";
+> 
+> But why do you need this node? It has no resources.
+> 
+> #power-domain-cells needed?
+I will add #power-domain-cells and secure-monitor here.
+Thank you for the review.
+> 
+>> +    };
+>> +
+>> +
+>> diff --git a/include/dt-bindings/power/meson-a1-power.h b/include/dt-bindings/power/meson-a1-power.h
+>> new file mode 100644
+>> index 00000000..6cf50bf
+>> --- /dev/null
+>> +++ b/include/dt-bindings/power/meson-a1-power.h
+>> @@ -0,0 +1,32 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc.
+>> + * Author: Jianxin Pan <jianxin.pan@amlogic.com>
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_MESON_A1_POWER_H
+>> +#define _DT_BINDINGS_MESON_A1_POWER_H
+>> +
+>> +#define PWRC_DSPA_ID	8
+>> +#define PWRC_DSPB_ID	9
+>> +#define PWRC_UART_ID	10
+>> +#define PWRC_DMC_ID	11
+>> +#define PWRC_I2C_ID	12
+>> +#define PWRC_PSRAM_ID	13
+>> +#define PWRC_ACODEC_ID	14
+>> +#define PWRC_AUDIO_ID	15
+>> +#define PWRC_OTP_ID	16
+>> +#define PWRC_DMA_ID	17
+>> +#define PWRC_SD_EMMC_ID	18
+>> +#define PWRC_RAMA_ID	19
+>> +#define PWRC_RAMB_ID	20
+>> +#define PWRC_IR_ID	21
+>> +#define PWRC_SPICC_ID	22
+>> +#define PWRC_SPIFC_ID	23
+>> +#define PWRC_USB_ID	24
+>> +#define PWRC_NIC_ID	25
+>> +#define PWRC_PDMIN_ID	26
+>> +#define PWRC_RSA_ID	27
+>> +#define PWRC_MAX_ID	28
+>> +
+>> +#endif
+>> -- 
+>> 2.7.4
+>>
+> 
+> .
+> 
 
--- 
-Wei Yang
-Help you, Help me
