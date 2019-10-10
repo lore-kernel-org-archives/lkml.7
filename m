@@ -2,162 +2,157 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373A8C10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06381ECE596
 	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05EDC218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDDOEmTJ"
+	by mail.kernel.org (Postfix) with ESMTP id DD3FE21920
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733190AbfJJHiM (ORCPT
+        id S1733158AbfJJHiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:38:12 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45188 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732926AbfJJH3I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:29:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u12so2331058pls.12;
-        Thu, 10 Oct 2019 00:29:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZRrVLXwmpo4xQzXPyPqYPbJsiga9xziaedvCp7FhOE0=;
-        b=FDDOEmTJXVTCe/j4jUtg65bcxfOZ96Hb33qWjaE8DKhPm28ZhA5kCRW9NXghUcH+me
-         KTvCIX5X6m6l1j32jnPXL8/8twUioHrEAk+IshxyxXsavy2lx/PUL4hic5U4LHFgVaUn
-         fa621I3JVaSQyZTwoEKxyH8LGpY2gBRl6jWfk76q/megCp34fZwcsCJ+Tbk287tivvk+
-         o6qmbAfIiBAaLa+eOXhSYPl3w1vjPUuDsYLca27EuDknhq7VAsKxLOOa3sf6L88eXku3
-         FGhmyiLnh53HUF06rIrC1RQT0iTGjr3eommjmnLRNpBf2Am1U7F9o59qwy81suDSpV75
-         1EPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZRrVLXwmpo4xQzXPyPqYPbJsiga9xziaedvCp7FhOE0=;
-        b=dx1UtC/dr30NmH8jPDTaowHtrzkomq59IC+cLd2Q75eYnbxHXBJjdl+E9mGbRQ6DP8
-         F6f7AEcawmTn+zT5DKDlEF5ZzCz5BlRf8vwVdYAEckmQMT5e9gQ5hPx/MhCzZsY4D79l
-         WffbvHdN+diLC7XSx1NF1Nu7p3u6FoTu5s4grZvO4XHa+ajtkGarlqbAEpyg2Tnyv0IL
-         RHnuQrkWG9BnybyqhRNZvqcek2kDXkxOQIR06N5iGaa1smllOzIfSu01Bess3K0X05Oy
-         u9oV0yaReIce4s2nug1KWbz6Jv0iL+r3sEZvMYLuTR44WLqDVn0GBPBZSLrjw1rK5q8i
-         63FA==
-X-Gm-Message-State: APjAAAW+ZZa4+kdaDJ4Vj+N2L0Arm7m+6+HjD2Y1wD5zOlod9d8i+l1T
-        xQ4XZ9xINh1Z/7QS+HtRKpQ=
-X-Google-Smtp-Source: APXvYqyn0W2pI1YMiNV1UgZzss1HUG1vYlIM7U9NlK7YdxNTCuDuWlIW4Ge1hh0t3JyUP1nKi9G1uQ==
-X-Received: by 2002:a17:902:47:: with SMTP id 65mr7783959pla.94.1570692548062;
-        Thu, 10 Oct 2019 00:29:08 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.255.39])
-        by smtp.googlemail.com with ESMTPSA id v8sm12673274pje.6.2019.10.10.00.29.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 10 Oct 2019 00:29:07 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     dan.j.williams@intel.com, dave.hansen@linux.intel.com,
-        mingo@kernel.org, mpe@ellerman.id.au, pasha.tatashin@soleen.com,
-        osalvador@suse.de, richardw.yang@linux.intel.com,
-        Tianyu.Lan@microsoft.com, christophe.leroy@c-s.fr, bp@suse.de,
-        rdunlap@infradead.org, michael.h.kelley@microsoft.com,
-        kys@microsoft.com, sashal@kernel.org
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH] mm/resource: Move child to new resource when release mem region.
-Date:   Thu, 10 Oct 2019 15:28:56 +0800
-Message-Id: <20191010072856.20079-1-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
+        Thu, 10 Oct 2019 03:38:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36558 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727362AbfJJH1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:27:35 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 676E2877A61;
+        Thu, 10 Oct 2019 07:27:34 +0000 (UTC)
+Received: from [10.36.117.125] (ovpn-117-125.ams2.redhat.com [10.36.117.125])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 16A5D19D70;
+        Thu, 10 Oct 2019 07:27:32 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
+ memmaps in memory_failure()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191009142435.3975-1-david@redhat.com>
+ <20191009142435.3975-3-david@redhat.com>
+ <20191009144323.GH6681@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <5a626821-77e9-e26b-c2ee-219670283bf0@redhat.com>
+Date:   Thu, 10 Oct 2019 09:27:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191009144323.GH6681@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 10 Oct 2019 07:27:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On 09.10.19 16:43, Michal Hocko wrote:
+> On Wed 09-10-19 16:24:35, David Hildenbrand wrote:
+>> We should check for pfn_to_online_page() to not access uninitialized
+>> memmaps. Reshuffle the code so we don't have to duplicate the error
+>> message.
+>>
+>> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  mm/memory-failure.c | 14 ++++++++------
+>>  1 file changed, 8 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+>> index 7ef849da8278..e866e6e5660b 100644
+>> --- a/mm/memory-failure.c
+>> +++ b/mm/memory-failure.c
+>> @@ -1253,17 +1253,19 @@ int memory_failure(unsigned long pfn, int flags)
+>>  	if (!sysctl_memory_failure_recovery)
+>>  		panic("Memory failure on page %lx", pfn);
+>>  
+>> -	if (!pfn_valid(pfn)) {
+>> +	p = pfn_to_online_page(pfn);
+>> +	if (!p) {
+>> +		if (pfn_valid(pfn)) {
+>> +			pgmap = get_dev_pagemap(pfn, NULL);
+>> +			if (pgmap)
+>> +				return memory_failure_dev_pagemap(pfn, flags,
+>> +								  pgmap);
+>> +		}
+>>  		pr_err("Memory failure: %#lx: memory outside kernel control\n",
+>>  			pfn);
+>>  		return -ENXIO;
+> 
+> Don't we need that earlier at hwpoison_inject level?
+> 
 
-When release mem region, old mem region may be splited to
-two regions. Current allocate new struct resource for high
-end mem region but not move child resources whose ranges are
-in the high end range to new resource. When adjust old mem
-region's range, adjust_resource() detects child region's range
-is out of new range and return error. Move child resources to
-high end resource before adjusting old mem range.
+Theoretically yes, this is another instance. But pfn_to_online_page(pfn)
+alone would not be sufficient as discussed. We would, again, have to
+special-case ZONE_DEVICE via things like get_dev_pagemap() ...
 
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
-This patch is to prepare for memory hot-remove function
-in Hyper-V balloon driver.
----
- kernel/resource.c | 38 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 34 insertions(+), 4 deletions(-)
+But mm/hwpoison-inject.c:hwpoison_inject() is a pure debug feature either way:
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 158f04ec1d4f..7856347adfd2 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -181,6 +181,38 @@ static struct resource *alloc_resource(gfp_t flags)
- 	return res;
- }
- 
-+static void move_child_to_newresource(struct resource *old,
-+				      struct resource *new)
-+{
-+	struct resource *tmp, **p, **np;
-+
-+	if (!old->child)
-+		return;
-+
-+	p = &old->child;
-+	np = &new->child;
-+
-+	for (;;) {
-+		tmp = *p;
-+		if (!tmp)
-+			break;
-+
-+		if (tmp->start >= new->start && tmp->end <= new->end) {
-+			tmp->parent = new;
-+			*np = tmp;
-+			np = &tmp->sibling;
-+			*p = tmp->sibling;
-+
-+			if (!tmp->sibling)
-+				*np = NULL;
-+			continue;
-+		}
-+
-+		p = &tmp->sibling;
-+	}
-+}
-+
- /* Return the conflict entry if you can't request it */
- static struct resource * __request_resource(struct resource *root, struct resource *new)
- {
-@@ -1231,9 +1263,6 @@ EXPORT_SYMBOL(__release_region);
-  * Note:
-  * - Additional release conditions, such as overlapping region, can be
-  *   supported after they are confirmed as valid cases.
-- * - When a busy memory resource gets split into two entries, the code
-- *   assumes that all children remain in the lower address entry for
-- *   simplicity.  Enhance this logic when necessary.
-  */
- int release_mem_region_adjustable(struct resource *parent,
- 				  resource_size_t start, resource_size_t size)
-@@ -1316,11 +1345,12 @@ int release_mem_region_adjustable(struct resource *parent,
- 			new_res->sibling = res->sibling;
- 			new_res->child = NULL;
- 
-+			move_child_to_newresource(res, new_res);
-+			res->sibling = new_res;
- 			ret = __adjust_resource(res, res->start,
- 						start - res->start);
- 			if (ret)
- 				break;
--			res->sibling = new_res;
- 			new_res = NULL;
- 		}
- 
+	/*
+	 * Note that the below poison/unpoison interfaces do not involve
+	 * hardware status change, hence do not require hardware support.
+	 * They are mainly for testing hwpoison in software level.
+	 */
+
+So it's not that bad compared to memory_failure() called from real HW or
+drivers/base/memory.c:soft_offline_page_store()/hard_offline_page_store()
+
 -- 
-2.14.5
 
+Thanks,
+
+David / dhildenb
