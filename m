@@ -2,189 +2,118 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B8BC47404
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E59ECE58C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682ED206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE70206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 02:27:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ubZZhCQg"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oD01xZzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732659AbfJJCZJ (ORCPT
+        id S1732609AbfJJC1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Oct 2019 22:25:09 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:32086 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfJJCZI (ORCPT
+        Wed, 9 Oct 2019 22:27:55 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34668 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfJJC1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Oct 2019 22:25:08 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x9A2P043031114
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 11:25:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x9A2P043031114
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570674301;
-        bh=uAYAlfm4I1nuexyDN7gOVUdZQWvIy84+ATaXpAvlJI4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ubZZhCQga6eTUmSm6lVevSCPPlLS9xjbohJljRiDmwO5dXhugLcPuxtiMiIP2tz6n
-         hy4NEAnJ9Sd1nT/2rRywjbA8tWpURZJFq96c61sWwnyA8Jwx0vzJP5f5B3sMjzPLwg
-         TWURmkctSyinFGAiYbUmItws4+5ujpwbvkGX/HoHHCG6AfgU7e3tHCVzZAFTqB54zB
-         z1rNtbvEL48VmxLrGLpiC4RBHu893Rd68IBdxHUF1BCA+JhvJYqVVs0iCYRGqYEIn7
-         2r1STnUpB/YoF13vhNFzN56QNFA034FuZLY53n9nnKWl8QU9noIlPF965w5aIvOCt6
-         tBnx9/yfRNOQQ==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id w195so2862225vsw.11
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Oct 2019 19:25:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAUrXWn5lKPzVhdyEnLUZhvzEIz4FbBftDsrk0xbn3xaqczjhyb7
-        DyEl417WDUl6WYQT1vKVapzAo2sdy7oIXOFYClM=
-X-Google-Smtp-Source: APXvYqwssDuxB9ZpZp9504VgABsJ5XwuyUqMbmaC2qDT8E2b8FltAisFnRI5dPw1JVsHMKXVp22c9OlQChyZ/3eePN8=
-X-Received: by 2002:a67:ff14:: with SMTP id v20mr3832680vsp.215.1570674299760;
- Wed, 09 Oct 2019 19:24:59 -0700 (PDT)
+        Wed, 9 Oct 2019 22:27:54 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A2IqbR040330;
+        Thu, 10 Oct 2019 02:27:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=wbLroutOnvA812BxPr3bS3A0Ss61AI1f1pLVhnMY4VU=;
+ b=oD01xZzzN8C953xNDw0ic8Mj64sNc9HfcKVfx3NWoPOMYql5gqv1QMZg7YYxuhA7n+LE
+ APVtN6sixNEmpnBPStXqylYktb8GgDHsiBz4cFABCF9/c4+kgqp+gSQpRVJ263pES0Ls
+ Zvcy5APbUspoTtdfU7KUeX/fnelbvhzaltyHz6F6bBX37aAzZ9czkFxZnP5ZMOBd9+G/
+ IuOwYu2d0PZky07A5sgXVd3/5DaQbew+tRc0ZEkZReJ7/FTJZpH8vIpnIUXyrbHfg0te
+ HZLbM/eYfoGRJi+l6RFjaxq3thFOb9kAlvmEFhomMc2X3DtapxzA8/v866t+tOVyG/XQ 1A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2vek4qr6my-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 02:27:23 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9A2IWwM019077;
+        Thu, 10 Oct 2019 02:25:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2vhrxchwfb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 02:25:23 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9A2PJPT009595;
+        Thu, 10 Oct 2019 02:25:19 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Oct 2019 19:25:19 -0700
+Subject: Re: [PATCH -next] userfaultfd: remove set but not used variable 'h'
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20191009122740.70517-1-yuehaibing@huawei.com>
+ <a28da32b-5c26-21e9-4a08-722abf9fbeba@oracle.com>
+ <20191010012322.GB2167@richard>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <ba62cc8f-da4d-a316-c968-80871551c863@oracle.com>
+Date:   Wed, 9 Oct 2019 19:25:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20190811184938.1796-1-rikard.falkeborn@gmail.com>
- <20191009214502.637875-1-rikard.falkeborn@gmail.com> <20191009214502.637875-3-rikard.falkeborn@gmail.com>
-In-Reply-To: <20191009214502.637875-3-rikard.falkeborn@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 10 Oct 2019 11:24:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARmYFxoWJqkSO+Fd9PkxoisU3ri=yULjvb6_XsZzh07hg@mail.gmail.com>
-Message-ID: <CAK7LNARmYFxoWJqkSO+Fd9PkxoisU3ri=yULjvb6_XsZzh07hg@mail.gmail.com>
-Subject: Re: [Patch v4 2/2] linux/bits.h: Add compile time sanity check of
- GENMASK inputs
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>, Joe Perches <joe@perches.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Haren Myneni <haren@us.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191010012322.GB2167@richard>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910100021
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9405 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910100021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 6:45 AM Rikard Falkeborn
-<rikard.falkeborn@gmail.com> wrote:
->
-> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
-> as the first argument and the low bit as the second argument. Mixing
-> them will return a mask with zero bits set.
->
-> Recent commits show getting this wrong is not uncommon, see e.g.
-> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
-> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
-> macro").
->
-> To prevent such mistakes from appearing again, add compile time sanity
-> checking to the arguments of GENMASK() and GENMASK_ULL(). If both
-> arguments are known at compile time, and the low bit is higher than the
-> high bit, break the build to detect the mistake immediately.
->
-> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
-> used instead of BUILD_BUG_ON().
->
-> __builtin_constant_p does not evaluate is argument, it only checks if it
-> is a constant or not at compile time, and __builtin_choose_expr does not
-> evaluate the expression that is not chosen. Therefore, GENMASK(x++, 0)
-> does only evaluate x++ once.
->
-> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-> available in assembly") made the macros in linux/bits.h available in
-> assembly. Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
-> checks if the file is included in an asm file.
->
-> Due to bugs in GCC versions before 4.9 [0], disable the check if
-> building with a too old GCC compiler.
->
-> [0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
->
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+On 10/9/19 6:23 PM, Wei Yang wrote:
+> On Wed, Oct 09, 2019 at 05:45:57PM -0700, Mike Kravetz wrote:
+>> On 10/9/19 5:27 AM, YueHaibing wrote:
+>>> Fixes gcc '-Wunused-but-set-variable' warning:
+>>>
+>>> mm/userfaultfd.c: In function '__mcopy_atomic_hugetlb':
+>>> mm/userfaultfd.c:217:17: warning:
+>>>  variable 'h' set but not used [-Wunused-but-set-variable]
+>>>
+>>> It is not used since commit 78911d0e18ac ("userfaultfd: use vma_pagesize
+>>> for all huge page size calculation")
+>>>
+>>
+>> Thanks!  That should have been removed with the recent cleanups.
+>>
+>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>
+>> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+> 
+> If I am correct, this is removed in a recent patch.
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-
-
-> ---
-> Geert, can you check if this works better? I do not have gcc 4.6-4.8
-> readily installed.
->
-> Kees, Masahiro, since I changed this patch, I didn't include your
-> reviewed-by tags.
->
-> Changes in v4:
->   - Disable the argument check for GCC < 4.9 due to a compiler bug.
-> Changes in v3:
->   - Changed back to shorter macro argument names
->   - Remove casts and use 0 instead of UL(0) in GENMASK_INPUT_CHECK(),
->     since all results in GENMASK_INPUT_CHECK() are now ints. Update
->     commit message to reflect that.
->
-> Changes in v2:
->   - Add comment about why inputs are not checked when used in asm file
->   - Use UL(0) instead of 0
->   - Extract mask creation in a separate macro to improve readability
->   - Use high and low instead of h and l (part of this was extracted to a
->     separate patch)
->   - Updated commit message
->
-> Joe Perches sent a series to fix the existing misuses of GENMASK().
-> Those patches have been merged into Linus tree except two places where
-> the GENMASK misuse is in unused macros, which will not fail to build.
-> There was also a patch by Nathan Chancellor that have now been merged.
->
->  include/linux/bits.h | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/bits.h b/include/linux/bits.h
-> index 669d69441a62..f108302a3121 100644
-> --- a/include/linux/bits.h
-> +++ b/include/linux/bits.h
-> @@ -18,12 +18,30 @@
->   * position @h. For example
->   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
->   */
-> -#define GENMASK(h, l) \
-> +#if !defined(__ASSEMBLY__) && \
-> +       (!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
-> +#include <linux/build_bug.h>
-> +#define GENMASK_INPUT_CHECK(h, l) \
-> +       (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> +               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> +#else
-> +/*
-> + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-> + * disable the input check if that is the case.
-> + */
-> +#define GENMASK_INPUT_CHECK(h, l) 0
-> +#endif
-> +
-> +#define __GENMASK(h, l) \
->         (((~UL(0)) - (UL(1) << (l)) + 1) & \
->          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-> +#define GENMASK(h, l) \
-> +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
->
-> -#define GENMASK_ULL(h, l) \
-> +#define __GENMASK_ULL(h, l) \
->         (((~ULL(0)) - (ULL(1) << (l)) + 1) & \
->          (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-> +#define GENMASK_ULL(h, l) \
-> +       (GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
->
->  #endif /* __LINUX_BITS_H */
-> --
-> 2.23.0
->
-
+I'm having a hard time figuring out what is actually in the latest mmotm
+tree.  Andrew added a build fixup patch ab169389eb5 in linux-next which
+adds the reference to h.  Is there a patch after that to remove the reference?
 
 -- 
-Best Regards
-Masahiro Yamada
+Mike Kravetz
