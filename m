@@ -2,101 +2,104 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB915C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A735C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51B2208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPGKjlfQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5E9A9208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 13:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388370AbfJJNTF (ORCPT
+        id S2388172AbfJJNUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 09:19:05 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:40589 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388329AbfJJNTC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 09:19:02 -0400
-Received: by mail-wr1-f51.google.com with SMTP id h4so7880217wrv.7;
-        Thu, 10 Oct 2019 06:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cU2Z1he193fGQfwYVGWXirAJ34kU3C29gXJ8rRkJamw=;
-        b=vPGKjlfQDkdDEt4C1sBLoyEU4P8EUM8qOBnrSZsBimJeNmaKLK/JhWxhEWBJujWcBk
-         TIoicQuLtu0gL3aHzwrxyTGZrteoEn8ke3zp/bC2itrXLmOk3/ct7dPmd/X8QQqabT1u
-         6upmvGlnnYWezEJZeFz9dFBleVuhZZseRoLlN5njRp5vLP30W8yur6mm8i2T79zyyD1J
-         5+4/CtDyrK0eOI5L+sEp6Gm75DOHhN0Z3c9O9P1cNJl9UaTz2sJV/wTEIQWTzvhD7fPz
-         UZd1h1oporKC8j+1LcFkhkORaf06CCY3JDP/deap43PBVdW5wiCghbMfg3qcfiPVDxwm
-         YOaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cU2Z1he193fGQfwYVGWXirAJ34kU3C29gXJ8rRkJamw=;
-        b=rEGlQJgrq2LmpANuG9fOhrvRSdPL9PKlVNSqvoe3RvXCdjB2hyI4kKI8Uu1+lfM8Mz
-         m3RgT4Z04G6IE9YMvrIiLcDYugf/JkQC3cUZSLTQeOCpDSwq5ggrtDUitSVe1Ib+j0Fg
-         HchJ3+44+Ew0qtzgJaX4Tu7wz17FmjwJCTDUowJvmxwW7UuGdk+DKbamE4NPfsH6y+qf
-         aSrLljbEgKqNlx4gifkur4q0UjUZv/mfVKXElWOq475hhXM8XW8IpMI+N1jFt56ewXU+
-         01/crhZUllP/WzBSU/UqQdSOTDVZDTiL4yascHcAPOGDYdHmFfGLDGsKptYdc0DuIi1o
-         oIgA==
-X-Gm-Message-State: APjAAAWBojZL/c9kNc8zmzdq8yE+YBIbembMjzZRssdtRHTv19RVdYkM
-        0ECVdghcyuEWyyLYjJqi5HWF1sFr
-X-Google-Smtp-Source: APXvYqyY34PXFOxPL+JOw98k0b9U39Y6bs5YHdz8yme77Kl47Ru/r1ga+iLNYRV2qXw3PlaP7QHB9Q==
-X-Received: by 2002:adf:9cca:: with SMTP id h10mr8249674wre.339.1570713540365;
-        Thu, 10 Oct 2019 06:19:00 -0700 (PDT)
-Received: from [192.168.2.202] (pD9EA3280.dip0.t-ipconnect.de. [217.234.50.128])
-        by smtp.gmail.com with ESMTPSA id r65sm7208546wmr.9.2019.10.10.06.18.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2019 06:18:59 -0700 (PDT)
-Subject: Re: [PATCH v2] serdev: Add ACPI devices by ResourceSource field
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Johan Hovold <johan@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-serial@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190924162226.1493407-1-luzmaximilian@gmail.com>
- <03d11e04-aaad-4851-c7d6-feaf62793670@redhat.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <84883ba0-ec01-9114-5c4a-e468cf85dfec@gmail.com>
-Date:   Thu, 10 Oct 2019 15:18:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 10 Oct 2019 09:20:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727852AbfJJNUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 09:20:00 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 456B92064A;
+        Thu, 10 Oct 2019 13:19:58 +0000 (UTC)
+Date:   Thu, 10 Oct 2019 09:19:56 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191010091956.48fbcf42@gandalf.local.home>
+In-Reply-To: <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+References: <20191007081716.07616230.8@infradead.org>
+        <20191007081945.10951536.8@infradead.org>
+        <20191008104335.6fcd78c9@gandalf.local.home>
+        <20191009224135.2dcf7767@oasis.local.home>
+        <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <03d11e04-aaad-4851-c7d6-feaf62793670@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 10 Oct 2019 11:20:54 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-On 10/10/19 12:22 PM, Hans de Goede wrote:
-> This patch looks good to me and it works on my test hw with serial
-> attached BT HCI:
+> On Wed, Oct 09, 2019 at 10:41:35PM -0400, Steven Rostedt wrote:
+> > On Tue, 8 Oct 2019 10:43:35 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> >   
+> > > BTW, I'd really like to take this patch series through my tree. That
+> > > way I can really hammer it, as well as I have code that will be built
+> > > on top of it.  
+> > 
+> > I did a bit of hammering and found two bugs. One I sent a patch to fix
+> > (adding a module when tracing is enabled), but the other bug I
+> > triggered, I'm too tired to debug right now. But figured I'd mention it
+> > anyway.  
 > 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> I'm thinking this should fix it... Just not sure this is the right plce,
+> then again, we're doing the same thing in jump_label and static_call, so
+> perhaps we should do it like this.
 > 
-> Regards,
-> 
-> Hans
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -1230,10 +1230,15 @@ void text_poke_queue(void *addr, const v
+>   * dynamically allocated memory. This function should be used when it is
+>   * not possible to allocate memory.
+>   */
+> -void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
+> +void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
+>  {
+>  	struct text_poke_loc tp;
+>  
+> +	if (unlikely(system_state == SYSTEM_BOOTING)) {
+> +		text_poke_early(addr, opcode, len);
+> +		return;
+> +	}
 
-Awesome, thank you!
+We need a new system state. SYSTEM_UP ? (Arg, that name is confusing,
+SYSTEM_BOOTING_SMP?) Or perhaps just test num_online_cpus()?
 
-Regards,
+	if (unlikely(system_state == SYSTEM_BOOTING &&
+		     num_online_cpus() == 1)
 
-Maximilian
+?
+
+Because we can't do the above once we have more than one CPU running.
+
+-- Steve
+
+> +
+>  	text_poke_loc_init(&tp, addr, opcode, len, emulate);
+>  	text_poke_bp_batch(&tp, 1);
+>  }
+
