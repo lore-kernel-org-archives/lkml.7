@@ -2,125 +2,192 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC12C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13ECC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515AA21920
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BFA218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 07:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733105AbfJJH6A (ORCPT
+        id S1733118AbfJJH6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 03:58:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35234 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733062AbfJJH57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:57:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 73269B1B8;
-        Thu, 10 Oct 2019 07:57:57 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 09:57:56 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
-        peterz@infradead.org, Michal Hocko <mhocko@kernel.org>,
-        linux-mm@kvack.org, john.ogness@linutronix.de,
-        akpm@linux-foundation.org, Vasily Gorbik <gor@linux.ibm.com>,
-        PeterOberparleiter <oberpar@linux.ibm.com>, david@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/page_isolation: fix a deadlock with printk()
-Message-ID: <20191010075756.nyix7l32ai6fylzn@pathway.suse.cz>
-References: <20191008183525.GQ6681@dhcp22.suse.cz>
- <1570561573.5576.307.camel@lca.pw>
- <20191008191728.GS6681@dhcp22.suse.cz>
- <1570563324.5576.309.camel@lca.pw>
- <20191009114903.aa6j6sa56z2cssom@pathway.suse.cz>
- <1570626402.5937.1.camel@lca.pw>
- <20191009132746.GA6681@dhcp22.suse.cz>
- <1570628593.5937.3.camel@lca.pw>
- <20191009142438.yx74ukfqwy2hr4fz@pathway.suse.cz>
- <1570632374.5937.8.camel@lca.pw>
+        Thu, 10 Oct 2019 03:58:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:17291 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733062AbfJJH6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:58:43 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0CEE63069609;
+        Thu, 10 Oct 2019 07:58:43 +0000 (UTC)
+Received: from [10.36.117.125] (ovpn-117-125.ams2.redhat.com [10.36.117.125])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 95BB51001DDE;
+        Thu, 10 Oct 2019 07:58:41 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
+ memmaps in memory_failure()
+From:   David Hildenbrand <david@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191009142435.3975-1-david@redhat.com>
+ <20191009142435.3975-3-david@redhat.com>
+ <20191009144323.GH6681@dhcp22.suse.cz>
+ <5a626821-77e9-e26b-c2ee-219670283bf0@redhat.com>
+ <20191010073526.GC18412@dhcp22.suse.cz>
+ <18383432-c74a-9ce5-a3c6-1e57d54cb629@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <52e81b85-c460-5b99-a297-e065caab3a16@redhat.com>
+Date:   Thu, 10 Oct 2019 09:58:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1570632374.5937.8.camel@lca.pw>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <18383432-c74a-9ce5-a3c6-1e57d54cb629@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 10 Oct 2019 07:58:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-10-09 10:46:14, Qian Cai wrote:
-> On Wed, 2019-10-09 at 16:24 +0200, Petr Mladek wrote:
-> > On Wed 2019-10-09 09:43:13, Qian Cai wrote:
-> > > On Wed, 2019-10-09 at 15:27 +0200, Michal Hocko wrote:
-> > > > On Wed 09-10-19 09:06:42, Qian Cai wrote:
-> > > > [...]
-> > > > > https://lore.kernel.org/linux-mm/1570460350.5576.290.camel@lca.pw/
-> > > > > 
-> > > > > [  297.425964] -> #1 (&port_lock_key){-.-.}:
-> > > > > [  297.425967]        __lock_acquire+0x5b3/0xb40
-> > > > > [  297.425967]        lock_acquire+0x126/0x280
-> > > > > [  297.425968]        _raw_spin_lock_irqsave+0x3a/0x50
-> > > > > [  297.425969]        serial8250_console_write+0x3e4/0x450
-> > > > > [  297.425970]        univ8250_console_write+0x4b/0x60
-> > > > > [  297.425970]        console_unlock+0x501/0x750
-> > > > > [  297.425971]        vprintk_emit+0x10d/0x340
-> > > > > [  297.425972]        vprintk_default+0x1f/0x30
-> > > > > [  297.425972]        vprintk_func+0x44/0xd4
-> > > > > [  297.425973]        printk+0x9f/0xc5
-> > > > > [  297.425974]        register_console+0x39c/0x520
-> > > > > [  297.425975]        univ8250_console_init+0x23/0x2d
-> > > > > [  297.425975]        console_init+0x338/0x4cd
-> > > > > [  297.425976]        start_kernel+0x534/0x724
-> > > > > [  297.425977]        x86_64_start_reservations+0x24/0x26
-> > > > > [  297.425977]        x86_64_start_kernel+0xf4/0xfb
-> > > > > [  297.425978]        secondary_startup_64+0xb6/0xc0
-> > > > > 
-> > > > > where the report again show the early boot call trace for the locking
-> > > > > dependency,
-> > > > > 
-> > > > > console_owner --> port_lock_key
-> > > > > 
-> > > > > but that dependency clearly not only happen in the early boot.
-> > > > 
-> > > > Can you provide an example of the runtime dependency without any early
-> > > > boot artifacts? Because this discussion really doens't make much sense
-> > > > without a clear example of a _real_ lockdep report that is not a false
-> > > > possitive. All of them so far have been concluded to be false possitive
-> > > > AFAIU.
-> > > 
-> > > An obvious one is in the above link. Just replace the trace in #1 above with
-> > > printk() from anywhere, i.e., just ignore the early boot calls there as they are
-> > >  not important.
-> > > 
-> > > printk()
-> > >   console_unlock()
-> > >     console_lock_spinning_enable() --> console_owner_lock
-> > >   call_console_drivers()
-> > >     serial8250_console_write() --> port->lock
-> > 
-> > Please, find the location where this really happens and then suggests
-> > how the real deadlock could get fixed. So far, we have seen only
-> > false positives and theoretical scenarios.
+On 10.10.19 09:52, David Hildenbrand wrote:
+> On 10.10.19 09:35, Michal Hocko wrote:
+>> On Thu 10-10-19 09:27:32, David Hildenbrand wrote:
+>>> On 09.10.19 16:43, Michal Hocko wrote:
+>>>> On Wed 09-10-19 16:24:35, David Hildenbrand wrote:
+>>>>> We should check for pfn_to_online_page() to not access uninitialized
+>>>>> memmaps. Reshuffle the code so we don't have to duplicate the error
+>>>>> message.
+>>>>>
+>>>>> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>>> Cc: Michal Hocko <mhocko@kernel.org>
+>>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>>> ---
+>>>>>  mm/memory-failure.c | 14 ++++++++------
+>>>>>  1 file changed, 8 insertions(+), 6 deletions(-)
+>>>>>
+>>>>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+>>>>> index 7ef849da8278..e866e6e5660b 100644
+>>>>> --- a/mm/memory-failure.c
+>>>>> +++ b/mm/memory-failure.c
+>>>>> @@ -1253,17 +1253,19 @@ int memory_failure(unsigned long pfn, int flags)
+>>>>>  	if (!sysctl_memory_failure_recovery)
+>>>>>  		panic("Memory failure on page %lx", pfn);
+>>>>>  
+>>>>> -	if (!pfn_valid(pfn)) {
+>>>>> +	p = pfn_to_online_page(pfn);
+>>>>> +	if (!p) {
+>>>>> +		if (pfn_valid(pfn)) {
+>>>>> +			pgmap = get_dev_pagemap(pfn, NULL);
+>>>>> +			if (pgmap)
+>>>>> +				return memory_failure_dev_pagemap(pfn, flags,
+>>>>> +								  pgmap);
+>>>>> +		}
+>>>>>  		pr_err("Memory failure: %#lx: memory outside kernel control\n",
+>>>>>  			pfn);
+>>>>>  		return -ENXIO;
+>>>>
+>>>> Don't we need that earlier at hwpoison_inject level?
+>>>>
+>>>
+>>> Theoretically yes, this is another instance. But pfn_to_online_page(pfn)
+>>> alone would not be sufficient as discussed. We would, again, have to
+>>> special-case ZONE_DEVICE via things like get_dev_pagemap() ...
+>>>
+>>> But mm/hwpoison-inject.c:hwpoison_inject() is a pure debug feature either way:
+>>>
+>>> 	/*
+>>> 	 * Note that the below poison/unpoison interfaces do not involve
+>>> 	 * hardware status change, hence do not require hardware support.
+>>> 	 * They are mainly for testing hwpoison in software level.
+>>> 	 */
+>>>
+>>> So it's not that bad compared to memory_failure() called from real HW or
+>>> drivers/base/memory.c:soft_offline_page_store()/hard_offline_page_store()
+>>
+>> Yes, this is just a toy. And yes we need to handle zone device pages
+>> here because a) people likely want to test MCE behavior even on these
+>> pages and b) HW can really trigger MCEs there as well. I was just
+>> pointing that the patch is likely incomplete.
+>>
 > 
-> Now the bar is higher again. You are now asking me to actually trigger this
-> potential deadlock live. I am probably better off buying some lottery tickets
-> then if I could be that lucky.
+> I rather think this deserves a separate patch as it is a separate
+> interface :)
+> 
+> I do wonder why hwpoison_inject() has to perform so much extra work
+> compared to other memory_failure() users. This smells like legacy
+> leftovers to me, but I might be wrong. The interface is fairly old,
+> though. Does anybody know why we need this magic? I can spot quite some
+> duplicate checks/things getting performed.
+> 
+> Naiive me would just make the interface perform the same as
+> hard_offline_page_store(). But most probably I am not getting the real
+> purpose of both different interfaces.
+> 
+> HWPOISON_INJECT is only selected for DEBUG_KERNEL, so I would have
+> guessed that fixing this is not urgent.
+> 
+> BTW: mm/memory-failure.c:soft_offline_page() also looks wrong and needs
+> fixing to make sure we access initialized memmaps.
+> 
 
-No, we just do not want to comlicate the code too much just to hide
-false positives from lockdep.
+To be more precise, soft_offline_page_store() needs a
+pfn_to_online_page() check. Will send a patch.
 
-I do not ask you to reproduce the deadlock. I ask you to find
-a code path where the deadlock might really happen. It seems
-that you actually found one in the tty code in the other mail.
+-- 
 
-Best Regards,
-Petr
+Thanks,
+
+David / dhildenb
