@@ -2,184 +2,104 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A686C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38FCECE58D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51CD208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9968208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 20:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GAZBtPvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfJJUez (ORCPT
+        id S1727085AbfJJUf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 16:34:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:36719 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJUez (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:34:55 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MuF4v-1hxQGJ3NEb-00uawx; Thu, 10 Oct 2019 22:34:38 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: [PATCH 08/36] ARM: exynos: stop selecting PLAT_SAMSUNG
-Date:   Thu, 10 Oct 2019 22:29:52 +0200
-Message-Id: <20191010203043.1241612-8-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
+        Thu, 10 Oct 2019 16:35:27 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40987 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfJJUf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 16:35:27 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46q2s74MH7z9s7T;
+        Fri, 11 Oct 2019 07:35:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570739724;
+        bh=2iGd5ROkda3Y6J2MmH/+8mopajYGf+t5o0Gi5NzAir4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GAZBtPvkT4x2lVX1/F51NL9iqh/G9zECJz1ThPyE3Am9vWs6VtkB2cz5EMm++Ld0b
+         XDtvZC8nUDjsxxp8CG/eg29+6KhKCBXBOSwBH9tDMHmEFok+UVzPLqWDSwWnIbrJob
+         ZzN0+IqBWa/+9ANOsYUeW3Lux87vC0OLmcpukWZluhKaC5SQQwIw/oy01qshO0ji2P
+         Y5aL1/DeLKNGHifZ75bJ5FSdTDaeOOPpYvOi8t/dR/hvjFc4LCGbhsI4I94sppyZeX
+         3MSrYMyJB1zUt7fG7zFASr8SfxqKHmognaHXWbsQXK6O6O2WDtqqZ+HupiFSv2LO3p
+         vM3fjivBa2P3A==
+Date:   Fri, 11 Oct 2019 07:35:15 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Remove Simon as Renesas SoC Co-Maintainer
+Message-ID: <20191011073515.2933918c@canb.auug.org.au>
+In-Reply-To: <20191010123046.15291-1-geert+renesas@glider.be>
+References: <20191010123046.15291-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:uwZUxKfHU6aXQrxq5LBsqRjtGw4Jouv7a9Oj5nhgoB0hlXyrcjq
- cQyW2Cc79CrgKEOR6AddSkd8kEBELnOavaFnpiNz+2wYC6JLZtkFkNgiIgcAb7IBPMKOVw0
- /4ytjJKtS7vIIFSkZF7IEeIC9HtyP3lGkyhZhf4Pi3jKK/5gN5ZDuHWv+OUxglNHQchIV00
- 9MUCnTUKaPQYLOuhuq7Yg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MjZuD1WSriM=:hwMzUoxCknZvCwSvNSjCMN
- 7y6Uvi/BhIjqy3zK9+GLPLSNPmAYLF6XMR5MVm9RdReMkMhEpRn9U0e2Bqx/jFGajmKkkwPaF
- OwPQDZ/+fO1eN5nL+6z52rQyDTWBG/uTALbBrsxJFjw2IXpGkynCbp+CvOZSYprMJ+B+R4ASg
- 8BLcQdVkFnlwHipnDjJMzkOCDq8f/K/fea3DmU+S6WllVxMBke4EAGCFCz+N7DLEAdxr1uit2
- UHXrt4ArSWWE1IOV1hWsBjL9OoKUx6cb9T4rAhjcQrYQRjP8dXIy1yExNCq/K1pvVZm+chtMl
- gpJJYL3sYB5Hg7Aa6mC4X2/uNwbpQyBbZCXB1Lcxc6Rj402rXZQCV2Xjc4m5va6u+CCtnXL4x
- 4yC/wMNz5qcSvYatDm8uHxsqOXJ2qvf4Eh7HcD8JzxLmcY1MjSa3NB8LRnEZgol+ONBYmvDoz
- OEh2KpTH7cbgo3nQxW3+JuTkmuCV+x+NlnA1/PJKIzzxG2jj7xoi1GAS7ZrZwhGb/J9FU/oZa
- sMXSrcHyKE9XN+8rl6ymRIH1La+GHJZXvQw6Sd70xeGKzq5WJSqpklT2Ql4aKALBCxsLCaGxt
- Gvs7d/Fj8p4WWGHEyJNaHyK0X5ltlQo2XUe7WBqDH65jq+4uEstinmPiWPi7rgkwSppRrlyu+
- kBzlPLcpQxheqyt2DqjQ9FMOnqx5mGNz1Oj6JaLtBKUDi8RpaZp7TGvCZ+njWgcqEhIGm/FQQ
- S5Y24w/1H9yJpgB9XlgNpINBNfESIaOnFJqyFXF7R12fdZ4/L7hfjdGcZ74xss1Qn9i4MeOBB
- t3OBWaJsXz357+6RJFLHXKD3cL1S4doTsLpMWmh5tniImws1g/Gy4X2PoBsyOv3h5d3eZfz6l
- rMhwf0F77SGifPySmcCg==
+Content-Type: multipart/signed; boundary="Sig_/V3S_2M9Xo6krU8dWBzoccDj";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that no code in arch/arm is shared between mach-exynos and the
-others, make the split formal.
+--Sig_/V3S_2M9Xo6krU8dWBzoccDj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/Kconfig.debug        | 8 ++++----
- arch/arm/Makefile             | 1 -
- arch/arm/mach-exynos/Makefile | 4 ----
- arch/arm/plat-samsung/Kconfig | 4 ++--
- drivers/mmc/host/Kconfig      | 2 +-
- 5 files changed, 7 insertions(+), 12 deletions(-)
+Hi Geert,
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index d05b836dfeb2..9c4f2d6deb06 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -998,7 +998,7 @@ choice
- 		  via SCIFA4 on Renesas SH-Mobile AG5 (SH73A0).
- 
- 	config DEBUG_S3C_UART0
--		depends on PLAT_SAMSUNG
-+		depends on PLAT_SAMSUNG || ARCH_EXYNOS
- 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
- 		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
- 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-@@ -1010,7 +1010,7 @@ choice
- 		  by the boot-loader before use.
- 
- 	config DEBUG_S3C_UART1
--		depends on PLAT_SAMSUNG
-+		depends on PLAT_SAMSUNG || ARCH_EXYNOS
- 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
- 		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
- 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-@@ -1022,7 +1022,7 @@ choice
- 		  by the boot-loader before use.
- 
- 	config DEBUG_S3C_UART2
--		depends on PLAT_SAMSUNG
-+		depends on PLAT_SAMSUNG || ARCH_EXYNOS
- 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
- 		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
- 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-@@ -1034,7 +1034,7 @@ choice
- 		  by the boot-loader before use.
- 
- 	config DEBUG_S3C_UART3
--		depends on PLAT_SAMSUNG && (ARCH_EXYNOS || ARCH_S5PV210)
-+		depends on ARCH_EXYNOS || ARCH_S5PV210
- 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
- 		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
- 		select DEBUG_S5PV210_UART if ARCH_S5PV210
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index db857d07114f..f492d7c338fe 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -233,7 +233,6 @@ machine-$(CONFIG_PLAT_SPEAR)		+= spear
- 
- # Platform directory name.  This list is sorted alphanumerically
- # by CONFIG_* macro name.
--plat-$(CONFIG_ARCH_EXYNOS)	+= samsung
- plat-$(CONFIG_ARCH_OMAP)	+= omap
- plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
- plat-$(CONFIG_ARCH_S5PV210)	+= samsung
-diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
-index 0fd3fcf8bfb0..53fa363c8e44 100644
---- a/arch/arm/mach-exynos/Makefile
-+++ b/arch/arm/mach-exynos/Makefile
-@@ -3,10 +3,6 @@
- # Copyright (c) 2010-2011 Samsung Electronics Co., Ltd.
- #		http://www.samsung.com/
- 
--ccflags-$(CONFIG_ARCH_MULTIPLATFORM) += -I$(srctree)/$(src)/include -I$(srctree)/arch/arm/plat-samsung/include
--
--# Core
--
- obj-$(CONFIG_ARCH_EXYNOS)	+= exynos.o exynos-smc.o firmware.o
- 
- obj-$(CONFIG_EXYNOS_CPU_SUSPEND) += pm.o sleep.o
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index 832ab0e6cd72..e31a156a27df 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -4,7 +4,7 @@
- 
- config PLAT_SAMSUNG
- 	bool
--	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_EXYNOS || ARCH_S5PV210
-+	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
- 	default y
- 	select GENERIC_IRQ_CHIP
- 	select NO_IOPORT_MAP
-@@ -240,7 +240,7 @@ config SAMSUNG_PM_DEBUG
- 	bool "Samsung PM Suspend debug"
- 	depends on PM && DEBUG_KERNEL
- 	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
--	depends on DEBUG_EXYNOS_UART || DEBUG_S3C24XX_UART || DEBUG_S3C2410_UART
-+	depends on DEBUG_S3C24XX_UART || DEBUG_S3C2410_UART
- 	help
- 	  Say Y here if you want verbose debugging from the PM Suspend and
- 	  Resume code. See <file:Documentation/arm/samsung-s3c24xx/suspend.rst>
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 49ea02c467bf..400a581c918c 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -275,7 +275,7 @@ config MMC_SDHCI_TEGRA
- 
- config MMC_SDHCI_S3C
- 	tristate "SDHCI support on Samsung S3C SoC"
--	depends on MMC_SDHCI && PLAT_SAMSUNG
-+	depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_EXYNOS)
- 	help
- 	  This selects the Secure Digital Host Controller Interface (SDHCI)
- 	  often referrered to as the HSMMC block in some of the Samsung S3C
--- 
-2.20.0
+On Thu, 10 Oct 2019 14:30:46 +0200 Geert Uytterhoeven <geert+renesas@glider=
+.be> wrote:
+>
+> At the end of the v5.3 upstream kernel development cycle, Simon stepped
+> down from his role as Renesas SoC maintainer.
+>=20
+> Remove his maintainership, git repository, and branch from the
+> MAINTAINERS file, and add an entry to the CREDITS file to honor his
+> work.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+So, I will remove Simon's Renesas tree from linux-next and rename the
+renesas-geert tree to be renesas, OK?
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/V3S_2M9Xo6krU8dWBzoccDj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2flgMACgkQAVBC80lX
+0Gz6jggAkWH/aV4Ww6HxXnXq0XbwNVDhJTIfgpJ61ST9eggCpm1c3p4KHKvkd9s0
+JLpzxz4Z/Yx9WkuDbHmRgnIoWu5U7AoJt6OfU0N3S8sciHM7OhuS5CbtZDusADXh
+oFKDnFgnu+/c1onbP5to9IHSHzRtQm9cX72LfHJilKcgN94th7E6aRo/iouS9VMB
+K0XFx+YHgqlKglpzvcT52G1jT10r+nfi30g/FqGMWB91PfPEoZDWTqg9ldcwMJiq
+NpTqOMO+QGCe0rsZbvj/n9JI4kvIVrk4E9lFK1oStJfkqfDWAyPHlqTCWWxuLvxJ
+ccioAcApaMOtA+AjwEMyv+nIFfr0mw==
+=qwbp
+-----END PGP SIGNATURE-----
+
+--Sig_/V3S_2M9Xo6krU8dWBzoccDj--
