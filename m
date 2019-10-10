@@ -2,114 +2,67 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6CDECE58D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75147C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D70214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:23:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570742630;
-	bh=3IW8PpnNpOw4Rqw6xxZGMFfB4t6X4qC/PCfFusKx8e4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CVb1WqFSpzcWsATUuFrlmFdCorooC031FQZhIYnkRDxpvUB/jMMB7VHS4CbfoaRcg
-	 wJRDSLBEYG4ac3sOR+OjyTWqzqywAjFMwpXTPPwUIq/pYSJdEuCMHRZ2LPXdotRfW2
-	 8Wh/NQv0o31o4ZLlfUEu/ydkVbLTU2K2xtrgny+U=
+	by mail.kernel.org (Postfix) with ESMTP id 4A42320B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 21:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfJJVXt (ORCPT
+        id S1727315AbfJJVX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 17:23:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36811 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJVXs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 17:23:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 67so6196697oto.3;
-        Thu, 10 Oct 2019 14:23:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8fsaLFcYDAROH9HBoKC5Vafqp1MCH4HA/pJSglSZ4co=;
-        b=bKjELxGNAZN7UBGTFrZEAnN7TuoetlHlelmVWf9GsyR5amJTLlVS5UmG4om4QBlfoc
-         uZ7XzRvahamKbuTFPmhWzLU7vIPRpfFPqStqvLBY1D3CmnMztcUhcx7I+QUlJU8I+k2D
-         EMAUiHjg0tfdNM9GuQq1c/HawnH9s/2bOYZ8q2gJ++E0fBI/QpKIJ/2aFwhkkUel1kXG
-         V2O2TJLIhHwjwmm4czN8yNjLFoPXpIB3hFE81KHMTYstsW9Es6cLx1+CaN8Hr41uSP7T
-         O5/5AdyHOn+2540VlVk+KBQHidUyrcYKPAosq9dnhgi9B8aK9GxYZZQucHtX8EHHPUl9
-         7NVg==
-X-Gm-Message-State: APjAAAWE4pp2C/Gyu/UbUgqwLHAdIXjVNL2ivp/Z3RmJEaQ78dy6yT2e
-        nFhOVvTEcgLL7otfuWRw4w==
-X-Google-Smtp-Source: APXvYqyIyxVe/QML8xBJW19srjEWY1fzMm01BIPfEyxogOHEBtnRrO0q0z3M7piA63qkH2laitZG7g==
-X-Received: by 2002:a05:6830:13d8:: with SMTP id e24mr9348918otq.42.1570742627232;
-        Thu, 10 Oct 2019 14:23:47 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v132sm2027358oif.34.2019.10.10.14.23.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 14:23:46 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 16:23:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-clk@vger.kernel.org,
+        Thu, 10 Oct 2019 17:23:56 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:33688 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfJJVXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 17:23:55 -0400
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iIfuX-000786-Im; Thu, 10 Oct 2019 23:23:49 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Douglas Anderson <dianders@chromium.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
         linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-crypto@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 4/8] dt-bindings: memory-controllers: Convert Samsung
- Exynos SROM bindings to json-schema
-Message-ID: <20191010212346.GA7896@bogus>
-References: <20190918173141.4314-1-krzk@kernel.org>
- <20190918173141.4314-4-krzk@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] ARM: dts: rockchip: Use interpolated brightness tables for veyron
+Date:   Thu, 10 Oct 2019 23:23:48 +0200
+Message-ID: <3947291.Wl2KGcTfji@phil>
+In-Reply-To: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
+References: <20191003094137.v2.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918173141.4314-4-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 19:31:37 +0200, Krzysztof Kozlowski wrote:
-> Convert Samsung Exynos SROM controller bindings to DT schema format
-> using json-schema.
+Am Donnerstag, 3. Oktober 2019, 18:41:52 CEST schrieb Matthias Kaehlcke:
+> Use interpolated brightness tables (added by commit 573fe6d1c25
+> ("backlight: pwm_bl: Linear interpolation between
+> brightness-levels") for veyron, instead of specifying every single
+> step. Some devices/panels have intervals that are smaller than
+> the specified 'num-interpolated-steps', the driver interprets
+> these intervals as a single step.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Another option would be to switch to a perceptual brightness curve
+> (CIE 1931), with the caveat that it would change the behavior of
+> the backlight. Also the concept of a minimum brightness level is
+> currently not supported for CIE 1931 curves.
 > 
-> ---
-> 
-> Changes since v1:
-> 1. Indent example with four spaces (more readable),
-> 2. Split examples into two,
-> 3. Fix pattern for subnode name,
-> 4. Remove checks for #address-cells-ranges-#size-cells,
-> 5. Add "additionalProperties" so the wrongly named subnodes would be
->    matched.
-> ---
->  .../memory-controllers/exynos-srom.txt        |  79 -----------
->  .../memory-controllers/exynos-srom.yaml       | 128 ++++++++++++++++++
->  2 files changed, 128 insertions(+), 79 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml
-> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-Applied, thanks.
+applied for 5.5
 
-Rob
+Thanks
+Heiko
+
+
