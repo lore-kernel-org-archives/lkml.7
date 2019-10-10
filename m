@@ -2,56 +2,54 @@ Return-Path: <SRS0=5y3R=YD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56EAC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A4BECE58E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9006922459
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134BA2190F
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Oct 2019 08:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570697769;
-	bh=oao8EGCviC1uG/vEmaLziTEieGml2DsRK5XwBRMeSjI=;
+	s=default; t=1570697774;
+	bh=y5fnbsvVCOvoy93773ToMsRGUwmpgIB6iwav6W526N0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n28H5eAzMotbSQCAHNXPn0Pj2l/AcvMMjnMuqOCJscJnEX8rsFFb4G2AZzA4e3s9a
-	 8ydVoo0YxGeMFz2sTRC5pvTu+k0uw1JJPGH6u8pPoOt8fDvrvn/0Pekm6yXokOFYxd
-	 tjepFji8F7XFrEQTx4vWBA5tbfQBqLiNROKhNrWA=
+	b=ntmtBPNfCdbAX1CpQhGumijwO+SKUOXl3VEfVmXblj3jb202WZ7GLRtUxRBBcEves
+	 UPLztvqCCT4vAgvPTOAK3CimijuA/P7rBpEDGAXpbHgXAI6M9cXh67/9h06PiojTRh
+	 azsHdA/Wq0E6mvQNpT9N57wanqywP8vtJRhAKw3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389669AbfJJIsf (ORCPT
+        id S2389653AbfJJIsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 04:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 04:48:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389120AbfJJIs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:48:27 -0400
+        id S2389630AbfJJIsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:48:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B50E208C3;
-        Thu, 10 Oct 2019 08:48:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00C77218AC;
+        Thu, 10 Oct 2019 08:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570697304;
-        bh=oao8EGCviC1uG/vEmaLziTEieGml2DsRK5XwBRMeSjI=;
+        s=default; t=1570697299;
+        bh=y5fnbsvVCOvoy93773ToMsRGUwmpgIB6iwav6W526N0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wzt4W63e5aEs8+tagvcGuRu+xpgd3IxESPsj8tFtF0GvHyEMzAE8pDbIjMUdJtbxH
-         VmUJ6ziI1wWLzZon3XYhPenzC6eJk6d8Siec0IzKxXaFgX8nwFbme22Q4hskYOYQAz
-         TwaZaIp0QiQtdOwz50kAQXQUTpcG2WHjfh9mnTjg=
+        b=KLfm0tornSKzzTbEyi6b9RkWoPJawKOixm7E7v8a7DYfDjWU7jqVfq6UA+Lm/jIGv
+         A+usWbbsXil6qKaqYhqurBb21kJMtlYUGnAo1FOaCTKvh3NiHt4844Weo7uxHIhboR
+         GoS3AyKWE+v5f1ljzBb0X/Umcz+1RlB4mt2t3iWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.19 094/114] arm64: add sysfs vulnerability show for meltdown
-Date:   Thu, 10 Oct 2019 10:36:41 +0200
-Message-Id: <20191010083613.091754245@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Balasubramani Vivekanandan 
+        <balasubramani_vivekanandan@mentor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 084/114] tick: broadcast-hrtimer: Fix a race in bc_set_next
+Date:   Thu, 10 Oct 2019 10:36:31 +0200
+Message-Id: <20191010083612.467090643@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191010083544.711104709@linuxfoundation.org>
 References: <20191010083544.711104709@linuxfoundation.org>
@@ -64,146 +62,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+From: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
 
-[ Upstream commit 1b3ccf4be0e7be8c4bd8522066b6cbc92591e912 ]
+[ Upstream commit b9023b91dd020ad7e093baa5122b6968c48cc9e0 ]
 
-We implement page table isolation as a mitigation for meltdown.
-Report this to userspace via sysfs.
+When a cpu requests broadcasting, before starting the tick broadcast
+hrtimer, bc_set_next() checks if the timer callback (bc_handler) is active
+using hrtimer_try_to_cancel(). But hrtimer_try_to_cancel() does not provide
+the required synchronization when the callback is active on other core.
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The callback could have already executed tick_handle_oneshot_broadcast()
+and could have also returned. But still there is a small time window where
+the hrtimer_try_to_cancel() returns -1. In that case bc_set_next() returns
+without doing anything, but the next_event of the tick broadcast clock
+device is already set to a timeout value.
+
+In the race condition diagram below, CPU #1 is running the timer callback
+and CPU #2 is entering idle state and so calls bc_set_next().
+
+In the worst case, the next_event will contain an expiry time, but the
+hrtimer will not be started which happens when the racing callback returns
+HRTIMER_NORESTART. The hrtimer might never recover if all further requests
+from the CPUs to subscribe to tick broadcast have timeout greater than the
+next_event of tick broadcast clock device. This leads to cascading of
+failures and finally noticed as rcu stall warnings
+
+Here is a depiction of the race condition
+
+CPU #1 (Running timer callback)                   CPU #2 (Enter idle
+                                                  and subscribe to
+                                                  tick broadcast)
+---------------------                             ---------------------
+
+__run_hrtimer()                                   tick_broadcast_enter()
+
+  bc_handler()                                      __tick_broadcast_oneshot_control()
+
+    tick_handle_oneshot_broadcast()
+
+      raw_spin_lock(&tick_broadcast_lock);
+
+      dev->next_event = KTIME_MAX;                  //wait for tick_broadcast_lock
+      //next_event for tick broadcast clock
+      set to KTIME_MAX since no other cores
+      subscribed to tick broadcasting
+
+      raw_spin_unlock(&tick_broadcast_lock);
+
+    if (dev->next_event == KTIME_MAX)
+      return HRTIMER_NORESTART
+    // callback function exits without
+       restarting the hrtimer                      //tick_broadcast_lock acquired
+                                                   raw_spin_lock(&tick_broadcast_lock);
+
+                                                   tick_broadcast_set_event()
+
+                                                     clockevents_program_event()
+
+                                                       dev->next_event = expires;
+
+                                                       bc_set_next()
+
+                                                         hrtimer_try_to_cancel()
+                                                         //returns -1 since the timer
+                                                         callback is active. Exits without
+                                                         restarting the timer
+  cpu_base->running = NULL;
+
+The comment that hrtimer cannot be armed from within the callback is
+wrong. It is fine to start the hrtimer from within the callback. Also it is
+safe to start the hrtimer from the enter/exit idle code while the broadcast
+handler is active. The enter/exit idle code and the broadcast handler are
+synchronized using tick_broadcast_lock. So there is no need for the
+existing try to cancel logic. All this can be removed which will eliminate
+the race condition as well.
+
+Fixes: 5d1638acb9f6 ("tick: Introduce hrtimer based broadcast")
+Originally-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190926135101.12102-2-balasubramani_vivekanandan@mentor.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c |   58 +++++++++++++++++++++++++++++++----------
- 1 file changed, 44 insertions(+), 14 deletions(-)
+ kernel/time/tick-broadcast-hrtimer.c | 57 ++++++++++++++--------------
+ 1 file changed, 29 insertions(+), 28 deletions(-)
 
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -889,7 +889,7 @@ static bool has_cache_dic(const struct a
- 	return ctr & BIT(CTR_DIC_SHIFT);
- }
- 
--#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
-+static bool __meltdown_safe = true;
- static int __kpti_forced; /* 0: not forced, >0: forced on, <0: forced off */
- 
- static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
-@@ -908,6 +908,16 @@ static bool unmap_kernel_at_el0(const st
- 		{ /* sentinel */ }
- 	};
- 	char const *str = "command line option";
-+	bool meltdown_safe;
-+
-+	meltdown_safe = is_midr_in_range_list(read_cpuid_id(), kpti_safe_list);
-+
-+	/* Defer to CPU feature registers */
-+	if (has_cpuid_feature(entry, scope))
-+		meltdown_safe = true;
-+
-+	if (!meltdown_safe)
-+		__meltdown_safe = false;
- 
+diff --git a/kernel/time/tick-broadcast-hrtimer.c b/kernel/time/tick-broadcast-hrtimer.c
+index a59641fb88b69..a836efd345895 100644
+--- a/kernel/time/tick-broadcast-hrtimer.c
++++ b/kernel/time/tick-broadcast-hrtimer.c
+@@ -44,34 +44,39 @@ static int bc_shutdown(struct clock_event_device *evt)
+  */
+ static int bc_set_next(ktime_t expires, struct clock_event_device *bc)
+ {
+-	int bc_moved;
  	/*
- 	 * For reasons that aren't entirely clear, enabling KPTI on Cavium
-@@ -919,6 +929,19 @@ static bool unmap_kernel_at_el0(const st
- 		__kpti_forced = -1;
- 	}
- 
-+	/* Useful for KASLR robustness */
-+	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0) {
-+		if (!__kpti_forced) {
-+			str = "KASLR";
-+			__kpti_forced = 1;
-+		}
-+	}
-+
-+	if (!IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0)) {
-+		pr_info_once("kernel page table isolation disabled by kernel configuration\n");
-+		return false;
-+	}
-+
- 	/* Forced? */
- 	if (__kpti_forced) {
- 		pr_info_once("kernel page table isolation forced %s by %s\n",
-@@ -926,18 +949,10 @@ static bool unmap_kernel_at_el0(const st
- 		return __kpti_forced > 0;
- 	}
- 
--	/* Useful for KASLR robustness */
--	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
--		return true;
--
--	/* Don't force KPTI for CPUs that are not vulnerable */
--	if (is_midr_in_range_list(read_cpuid_id(), kpti_safe_list))
--		return false;
--
--	/* Defer to CPU feature registers */
--	return !has_cpuid_feature(entry, scope);
-+	return !meltdown_safe;
- }
- 
-+#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
- static void
- kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
- {
-@@ -962,6 +977,12 @@ kpti_install_ng_mappings(const struct ar
- 
- 	return;
- }
-+#else
-+static void
-+kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
-+{
-+}
-+#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
- 
- static int __init parse_kpti(char *str)
- {
-@@ -975,7 +996,6 @@ static int __init parse_kpti(char *str)
+-	 * We try to cancel the timer first. If the callback is on
+-	 * flight on some other cpu then we let it handle it. If we
+-	 * were able to cancel the timer nothing can rearm it as we
+-	 * own broadcast_lock.
++	 * This is called either from enter/exit idle code or from the
++	 * broadcast handler. In all cases tick_broadcast_lock is held.
+ 	 *
+-	 * However we can also be called from the event handler of
+-	 * ce_broadcast_hrtimer itself when it expires. We cannot
+-	 * restart the timer because we are in the callback, but we
+-	 * can set the expiry time and let the callback return
+-	 * HRTIMER_RESTART.
++	 * hrtimer_cancel() cannot be called here neither from the
++	 * broadcast handler nor from the enter/exit idle code. The idle
++	 * code can run into the problem described in bc_shutdown() and the
++	 * broadcast handler cannot wait for itself to complete for obvious
++	 * reasons.
+ 	 *
+-	 * Since we are in the idle loop at this point and because
+-	 * hrtimer_{start/cancel} functions call into tracing,
+-	 * calls to these functions must be bound within RCU_NONIDLE.
++	 * Each caller tries to arm the hrtimer on its own CPU, but if the
++	 * hrtimer callbback function is currently running, then
++	 * hrtimer_start() cannot move it and the timer stays on the CPU on
++	 * which it is assigned at the moment.
++	 *
++	 * As this can be called from idle code, the hrtimer_start()
++	 * invocation has to be wrapped with RCU_NONIDLE() as
++	 * hrtimer_start() can call into tracing.
+ 	 */
+-	RCU_NONIDLE({
+-			bc_moved = hrtimer_try_to_cancel(&bctimer) >= 0;
+-			if (bc_moved)
+-				hrtimer_start(&bctimer, expires,
+-					      HRTIMER_MODE_ABS_PINNED);});
+-	if (bc_moved) {
+-		/* Bind the "device" to the cpu */
+-		bc->bound_on = smp_processor_id();
+-	} else if (bc->bound_on == smp_processor_id()) {
+-		hrtimer_set_expires(&bctimer, expires);
+-	}
++	RCU_NONIDLE( {
++		hrtimer_start(&bctimer, expires, HRTIMER_MODE_ABS_PINNED);
++		/*
++		 * The core tick broadcast mode expects bc->bound_on to be set
++		 * correctly to prevent a CPU which has the broadcast hrtimer
++		 * armed from going deep idle.
++		 *
++		 * As tick_broadcast_lock is held, nothing can change the cpu
++		 * base which was just established in hrtimer_start() above. So
++		 * the below access is safe even without holding the hrtimer
++		 * base lock.
++		 */
++		bc->bound_on = bctimer.base->cpu_base->cpu;
++	} );
  	return 0;
  }
- early_param("kpti", parse_kpti);
--#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
  
- #ifdef CONFIG_ARM64_HW_AFDBM
- static inline void __cpu_enable_hw_dbm(void)
-@@ -1196,7 +1216,6 @@ static const struct arm64_cpu_capabiliti
- 		.field_pos = ID_AA64PFR0_EL0_SHIFT,
- 		.min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
- 	},
--#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
- 	{
- 		.desc = "Kernel page table isolation (KPTI)",
- 		.capability = ARM64_UNMAP_KERNEL_AT_EL0,
-@@ -1212,7 +1231,6 @@ static const struct arm64_cpu_capabiliti
- 		.matches = unmap_kernel_at_el0,
- 		.cpu_enable = kpti_install_ng_mappings,
- 	},
--#endif
- 	{
- 		/* FP/SIMD is not implemented */
- 		.capability = ARM64_HAS_NO_FPSIMD,
-@@ -1853,3 +1871,15 @@ void cpu_clear_disr(const struct arm64_c
- 	/* Firmware may have left a deferred SError in this register. */
- 	write_sysreg_s(0, SYS_DISR_EL1);
+@@ -97,10 +102,6 @@ static enum hrtimer_restart bc_handler(struct hrtimer *t)
+ {
+ 	ce_broadcast_hrtimer.event_handler(&ce_broadcast_hrtimer);
+ 
+-	if (clockevent_state_oneshot(&ce_broadcast_hrtimer))
+-		if (ce_broadcast_hrtimer.next_event != KTIME_MAX)
+-			return HRTIMER_RESTART;
+-
+ 	return HRTIMER_NORESTART;
  }
-+
-+ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr,
-+			  char *buf)
-+{
-+	if (__meltdown_safe)
-+		return sprintf(buf, "Not affected\n");
-+
-+	if (arm64_kernel_unmapped_at_el0())
-+		return sprintf(buf, "Mitigation: PTI\n");
-+
-+	return sprintf(buf, "Vulnerable\n");
-+}
+ 
+-- 
+2.20.1
+
 
 
