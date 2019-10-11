@@ -2,125 +2,87 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7877C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A020FC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BDB21A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B1A21A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfJKJny (ORCPT
+        id S1727836AbfJKJpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:43:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34614 "EHLO
+        Fri, 11 Oct 2019 05:45:32 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34704 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfJKJnx (ORCPT
+        with ESMTP id S1726863AbfJKJpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:43:53 -0400
+        Fri, 11 Oct 2019 05:45:32 -0400
 Received: from v22018046084765073.goodsrv.de ([185.183.158.195] helo=wittgenstein)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iIrSS-0004HM-7S; Fri, 11 Oct 2019 09:43:36 +0000
-Date:   Fri, 11 Oct 2019 11:43:34 +0200
+        id 1iIrUH-0004RM-Md; Fri, 11 Oct 2019 09:45:29 +0000
+Date:   Fri, 11 Oct 2019 11:45:28 +0200
 From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     mingo@redhat.com, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, keescook@chromium.org,
-        linux@rasmusvillemoes.dk, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usercopy: Avoid soft lockups in test_check_nonzero_user()
-Message-ID: <20191011094333.7hovhhacrvlf6uq6@wittgenstein>
-References: <20191010114007.o3bygjf4jlfk242e@yavin.dot.cyphar.com>
- <20191011022447.24249-1-mpe@ellerman.id.au>
- <20191011034810.xkmz3e4l5ezxvq57@yavin.dot.cyphar.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-um@lists.infradead.org, luto@kernel.org, oleg@redhat.com,
+        tglx@linutronix.de, wad@chromium.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v1] seccomp: simplify secure_computing()
+Message-ID: <20191011094527.ftevtkeitjqafhdd@wittgenstein>
+References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+ <20190924064420.6353-1-christian.brauner@ubuntu.com>
+ <201910101450.0B13B7F@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191011034810.xkmz3e4l5ezxvq57@yavin.dot.cyphar.com>
+In-Reply-To: <201910101450.0B13B7F@keescook>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 02:48:10PM +1100, Aleksa Sarai wrote:
-> On 2019-10-11, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> > On a machine with a 64K PAGE_SIZE, the nested for loops in
-> > test_check_nonzero_user() can lead to soft lockups, eg:
-> > 
-> >   watchdog: BUG: soft lockup - CPU#4 stuck for 22s! [modprobe:611]
-> >   Modules linked in: test_user_copy(+) vmx_crypto gf128mul crc32c_vpmsum virtio_balloon ip_tables x_tables autofs4
-> >   CPU: 4 PID: 611 Comm: modprobe Tainted: G             L    5.4.0-rc1-gcc-8.2.0-00001-gf5a1a536fa14-dirty #1151
-> >   ...
-> >   NIP __might_sleep+0x20/0xc0
-> >   LR  __might_fault+0x40/0x60
-> >   Call Trace:
-> >     check_zeroed_user+0x12c/0x200
-> >     test_user_copy_init+0x67c/0x1210 [test_user_copy]
-> >     do_one_initcall+0x60/0x340
-> >     do_init_module+0x7c/0x2f0
-> >     load_module+0x2d94/0x30e0
-> >     __do_sys_finit_module+0xc8/0x150
-> >     system_call+0x5c/0x68
-> > 
-> > Even with a 4K PAGE_SIZE the test takes multiple seconds. Instead
-> > tweak it to only scan a 1024 byte region, but make it cross the
-> > page boundary.
-> > 
-> > Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
-> > Suggested-by: Aleksa Sarai <cyphar@cyphar.com>
-> > Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> > ---
-> >  lib/test_user_copy.c | 23 ++++++++++++++++++++---
-> >  1 file changed, 20 insertions(+), 3 deletions(-)
-> > 
-> > How does this look? It runs in < 1s on my machine here.
-> > 
-> > cheers
-> > 
-> > diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
-> > index 950ee88cd6ac..9fb6bc609d4c 100644
-> > --- a/lib/test_user_copy.c
-> > +++ b/lib/test_user_copy.c
-> > @@ -47,9 +47,26 @@ static bool is_zeroed(void *from, size_t size)
-> >  static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
-> >  {
-> >  	int ret = 0;
-> > -	size_t start, end, i;
-> > -	size_t zero_start = size / 4;
-> > -	size_t zero_end = size - zero_start;
-> > +	size_t start, end, i, zero_start, zero_end;
-> > +
-> > +	if (test(size < 1024, "buffer too small"))
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * We want to cross a page boundary to exercise the code more
-> > +	 * effectively. We assume the buffer we're passed has a page boundary at
-> > +	 * size / 2. We also don't want to make the size we scan too large,
-> > +	 * otherwise the test can take a long time and cause soft lockups. So
-> > +	 * scan a 1024 byte region across the page boundary.
-> > +	 */
-> > +	start = size / 2 - 512;
-> > +	size = 1024;
+On Thu, Oct 10, 2019 at 02:53:24PM -0700, Kees Cook wrote:
+> On Tue, Sep 24, 2019 at 08:44:20AM +0200, Christian Brauner wrote:
+> > Afaict, the struct seccomp_data argument to secure_computing() is unused
+> > by all current callers. So let's remove it.
+> > The argument was added in [1]. It was added because having the arch
+> > supply the syscall arguments used to be faster than having it done by
+> > secure_computing() (cf. Andy's comment in [2]). This is not true anymore
+> > though.
 > 
-> I don't think it's necessary to do "size / 2" here -- you can just use
-> PAGE_SIZE directly and check above that "size == 2*PAGE_SIZE" (not that
-> this check is exceptionally necessary -- since there's only one caller
-> of this function and it's in the same file).
+> Yes; thanks for cleaning this up!
+> 
+> > diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+> > index ad71132374f0..ed80bdfbf5fe 100644
+> > --- a/arch/s390/kernel/ptrace.c
+> > +++ b/arch/s390/kernel/ptrace.c
+> > @@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
+> >  long arch_ptrace(struct task_struct *child, long request,
+> >  		 unsigned long addr, unsigned long data)
+> >  {
+> > -	ptrace_area parea; 
+> > +	ptrace_area parea;
+> >  	int copied, ret;
+> >  
+> >  	switch (request) {
+> 
+> If this were whitespace cleanup in kernel/seccomp.c, I'd take it without
+> flinching. As this is only tangentially related and in an arch
+> directory, I've dropped this hunk out of a cowardly fear of causing
+> (a likely very unlikely) merge conflict.
+> 
+> I'd rather we globally clean up trailing whitespace at the end of -rc1
+> and ask Linus to run some crazy script. :)
 
-Michael, in case you resend, can you make my life a little easier and do
-it on top of
-https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=copy_struct_from_user
-please. I have a fix from Aleksa sitting in there laready that _might_
-cause a conflict otherwise.
+Oh that was on accident probably. It usally happens because I have vim
+do whitespace fixups automatically and then they end up slipping in...
+Sorry. Thanks for removing it! :)
 
 Christian
