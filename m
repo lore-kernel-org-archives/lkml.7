@@ -2,191 +2,121 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64765C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82458ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335242196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0B82196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:27:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="eC1VKdI0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aUcLe5s9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfJKH0j (ORCPT
+        id S1727659AbfJKH1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 03:26:39 -0400
-Received: from fd.dlink.ru ([178.170.168.18]:45558 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbfJKH0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 03:26:38 -0400
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 078D31B219E5; Fri, 11 Oct 2019 10:26:36 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 078D31B219E5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1570778796; bh=dOAAmZ8hjSoImka9riHogX7F0mjdr4LsS8gu4vN8Q+E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=eC1VKdI0CIfK20AIvg3zUMydFtaRLCQ9SiSDSYK30/YYpdbbrFxzHEpdqjrpAQXEX
-         ewvEBaClc23mzWj+q3pXjvadx5ne/6XlHPAon0OBErf2lidTmzJKVBNBxAPIcKd5IA
-         NmsXvXEAK0jdF1C333CI79lJ8oryNuHz3fuBv6SY=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id D5F141B219E0;
-        Fri, 11 Oct 2019 10:26:32 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru D5F141B219E0
-Received: by mail.rzn.dlink.ru (Postfix, from userid 5000)
-        id C2B1B1B2192D; Fri, 11 Oct 2019 10:26:32 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA id 156C41B2023E;
-        Fri, 11 Oct 2019 10:26:25 +0300 (MSK)
+        Fri, 11 Oct 2019 03:27:10 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38836 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbfJKH1K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 03:27:10 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b20so8782956ljj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 00:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PXGQmsqTapiIi2DhUs9f3RGCuwoUA1FtXGFtbOssoUc=;
+        b=aUcLe5s9fLYXfWdO1nU+IcaUqji/ba0XGgmPaXLGIqDAiKKfjNxU9dRwn51wVqsRk1
+         X5hvDH19knyBjkXiN7DlZmt4cOzNly0AJpmQ5TcrqqUurlGTpHwWfQCiCX+JHuFeEdW+
+         NUeWBOsIXokWt/pvgES23YR7C+RsSBZ6LJyyifkFpj1Y/wq9h7rrjb7LG4KDJ0x9qNZq
+         VqMbmJHWVJrEcxeRkqmTnB8YLnzsq7SXs/79uFyA0apdMH9uUyMObiVBQ1a3jIL3sZv0
+         Ya1MsLQ2+02db9YcVOhZROJPVFszzjIlWqNtQufqu7tMe69GbqHfZUtkyFuhUy1e0nL0
+         ZTqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PXGQmsqTapiIi2DhUs9f3RGCuwoUA1FtXGFtbOssoUc=;
+        b=erqiRTGS7ZdDQQy41hQPiCsoyQ6Htpf+lJhW1aGi7MGyswWRd6/thxaEIdIjYr8WJK
+         B8cz5xae9jHKANDI5ZxhtlVRiIhpXBa8z/Ej5MKj13ekRNtb4OBfWz2DCGVrMbQhuE7u
+         wuheDmN6gDehgcbQyOOtEyJkLiUqV5+NXvVYTODJmM/xIEFkL2y4tPkM2IIyNHD2RCjk
+         Sc5pKKd0RJg2i3cp3zi15lvL/cfD5R1Do+pwBi6rJuzY4AEzJ9nQ+UOQZSx3Wtqon6gk
+         BtZesPw7HqqHwGfvPxh44V9DQUcY2mZuZwJ1C14tlBZ9tpNS3HPHKjNOLoswpdcc+YGl
+         24ew==
+X-Gm-Message-State: APjAAAVHd7kHNwtQ5H1s0fU+9ZwJEbkW2r5AgHqLlZ5i2tyIiDbcOW6O
+        RaKcfdtrUNuYFL8NGrrhehVpTbPRph+9x1AI4c5A6Q==
+X-Google-Smtp-Source: APXvYqy90+Zu82pTgrHNKhjBbi/20ah6ebAn7AIrhS5P1XlF61ZPkrJsPOICAZmOkSbGNMnO5pNgabigCro3sumPiYw=
+X-Received: by 2002:a2e:9e0a:: with SMTP id e10mr8732217ljk.35.1570778826314;
+ Fri, 11 Oct 2019 00:27:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 11 Oct 2019 10:26:25 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Edward Cree <ecree@solarflare.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next1/2] net: core: use listified Rx for GRO_NORMAL in
- napi_gro_receive()
-In-Reply-To: <bb454c3c-1d86-f81e-a03e-86f8de3e9822@solarflare.com>
-References: <20191010144226.4115-1-alobakin@dlink.ru>
- <20191010144226.4115-2-alobakin@dlink.ru>
- <bb454c3c-1d86-f81e-a03e-86f8de3e9822@solarflare.com>
-Message-ID: <e7eaf0a1d236dda43f5cd73887ecfb9d@dlink.ru>
-X-Sender: alobakin@dlink.ru
-User-Agent: Roundcube Webmail/1.3.6
+References: <20191003000310.17099-1-chris.packham@alliedtelesis.co.nz>
+ <20191003000310.17099-3-chris.packham@alliedtelesis.co.nz>
+ <CAMuHMdV7syxxtnHEcgFBrf5DLo-M_71tZFWHHQ6kTO=2A1eVhg@mail.gmail.com> <86blutdlap.wl-maz@kernel.org>
+In-Reply-To: <86blutdlap.wl-maz@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 11 Oct 2019 09:26:54 +0200
+Message-ID: <CACRpkdb7W1iitkRh=B-cw1JGPey76SrAgasvHkh8a81o3n9qGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: iproc: use unique name for irq chip
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Li Jin <li.jin@broadcom.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Edward Cree wrote 10.10.2019 21:23:
-> On 10/10/2019 15:42, Alexander Lobakin wrote:
->> Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
->> skbs") made use of listified skb processing for the users of
->> napi_gro_frags().
->> The same technique can be used in a way more common napi_gro_receive()
->> to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers,
->> including gro_cells and mac80211 users.
->> 
->> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
->> ---
->>  net/core/dev.c | 49 +++++++++++++++++++++++++------------------------
->>  1 file changed, 25 insertions(+), 24 deletions(-)
->> 
->> diff --git a/net/core/dev.c b/net/core/dev.c
->> index 8bc3dce71fc0..a33f56b439ce 100644
->> --- a/net/core/dev.c
->> +++ b/net/core/dev.c
->> @@ -5884,6 +5884,26 @@ struct packet_offload 
->> *gro_find_complete_by_type(__be16 type)
->>  }
->>  EXPORT_SYMBOL(gro_find_complete_by_type);
->> 
->> +/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
->> +static void gro_normal_list(struct napi_struct *napi)
->> +{
->> +	if (!napi->rx_count)
->> +		return;
->> +	netif_receive_skb_list_internal(&napi->rx_list);
->> +	INIT_LIST_HEAD(&napi->rx_list);
->> +	napi->rx_count = 0;
->> +}
->> +
->> +/* Queue one GRO_NORMAL SKB up for list processing.  If batch size 
->> exceeded,
->> + * pass the whole batch up to the stack.
->> + */
->> +static void gro_normal_one(struct napi_struct *napi, struct sk_buff 
->> *skb)
->> +{
->> +	list_add_tail(&skb->list, &napi->rx_list);
->> +	if (++napi->rx_count >= gro_normal_batch)
->> +		gro_normal_list(napi);
->> +}
->> +
->>  static void napi_skb_free_stolen_head(struct sk_buff *skb)
->>  {
->>  	skb_dst_drop(skb);
->> @@ -5891,12 +5911,13 @@ static void napi_skb_free_stolen_head(struct 
->> sk_buff *skb)
->>  	kmem_cache_free(skbuff_head_cache, skb);
->>  }
->> 
->> -static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff 
->> *skb)
->> +static gro_result_t napi_skb_finish(struct napi_struct *napi,
->> +				    struct sk_buff *skb,
->> +				    gro_result_t ret)
-> Any reason why the argument order here is changed around?
+On Mon, Oct 7, 2019 at 10:14 AM Marc Zyngier <maz@kernel.org> wrote:
+> On Mon, 07 Oct 2019 08:30:50 +0100,
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >
+> > Hi Chris,
+> >
+> > CC MarcZ
+> >
+> > On Thu, Oct 3, 2019 at 2:03 AM Chris Packham
+> > <chris.packham@alliedtelesis.co.nz> wrote:
+> > > Use the dev_name(dev) for the irqc->name so that we get unique names
+> > > when we have multiple instances of this driver.
+> > >
+> > > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> >
+> > A while ago, Marc Zyngier pointed out that the irq_chip .name field
+> > should contain the device's class name, not the instance's name.
+> > Hence the current code is correct?
+>
+> Thanks Geert for looping me in. The main reasons why I oppose this
+> kind of "let's show as much information as we can in /proc/interrupts"
+> are:
+>
+> - It clutters the output badly: the formatting of this file, which is
+>   bad enough when you have a small number of CPUs, becomes unreadable
+>   when you have a large number of them *and* stupidly long strings
+>   that only make sense on a given platform.
+>
+> - Like it or not, /proc is ABI. We don't change things randomly there
+>   without a good reason, and debugging isn't one of them.
+>
+> - Debug information belongs to debugfs, where we already have plenty
+>   of stuff (see CONFIG_GENERIC_IRQ_DEBUGFS). I'd rather we improve
+>   this infrastructure if needed, rather than add platform specific
+>   hacks.
+>
+> </rant>
 
-Actually yes: to match napi_skb_finish() and napi_frags_finish()
-prototypes, as gro_normal one() required an addition of napi
-argument anyway.
+I have reverted the patch.
 
-> 
-> -Ed
->>  {
->>  	switch (ret) {
->>  	case GRO_NORMAL:
->> -		if (netif_receive_skb_internal(skb))
->> -			ret = GRO_DROP;
->> +		gro_normal_one(napi, skb);
->>  		break;
->> 
->>  	case GRO_DROP:
->> @@ -5928,7 +5949,7 @@ gro_result_t napi_gro_receive(struct napi_struct 
->> *napi, struct sk_buff *skb)
->> 
->>  	skb_gro_reset_offset(skb);
->> 
->> -	ret = napi_skb_finish(dev_gro_receive(napi, skb), skb);
->> +	ret = napi_skb_finish(napi, skb, dev_gro_receive(napi, skb));
->>  	trace_napi_gro_receive_exit(ret);
->> 
->>  	return ret;
->> @@ -5974,26 +5995,6 @@ struct sk_buff *napi_get_frags(struct 
->> napi_struct *napi)
->>  }
->>  EXPORT_SYMBOL(napi_get_frags);
->> 
->> -/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
->> -static void gro_normal_list(struct napi_struct *napi)
->> -{
->> -	if (!napi->rx_count)
->> -		return;
->> -	netif_receive_skb_list_internal(&napi->rx_list);
->> -	INIT_LIST_HEAD(&napi->rx_list);
->> -	napi->rx_count = 0;
->> -}
->> -
->> -/* Queue one GRO_NORMAL SKB up for list processing.  If batch size 
->> exceeded,
->> - * pass the whole batch up to the stack.
->> - */
->> -static void gro_normal_one(struct napi_struct *napi, struct sk_buff 
->> *skb)
->> -{
->> -	list_add_tail(&skb->list, &napi->rx_list);
->> -	if (++napi->rx_count >= gro_normal_batch)
->> -		gro_normal_list(napi);
->> -}
->> -
->>  static gro_result_t napi_frags_finish(struct napi_struct *napi,
->>  				      struct sk_buff *skb,
->>  				      gro_result_t ret)
-
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+Yours,
+Linus Walleij
