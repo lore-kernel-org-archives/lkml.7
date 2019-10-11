@@ -2,113 +2,97 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 174B4ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09521C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC50206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB88214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570809930;
+	bh=VLCpLlsGJdIt9QQjzE4HufyIf5Lzrt0iRXPBoqHHuf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uYeV0hewTe1MPZL+moVW6aCiY+rWzQJ0mIwX6kGqfHKYG4cahdnTUDjzcAhRh396l
+	 BrODFRR/m9RmhepznjKDa/az/psovrpgbQ6D7+kPLnDC7K0PH1COIC858bn7BvrvMJ
+	 jvEnnhu9LuRXFl//UHnkJhEV564XxS+BpwWtI8no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfJKQEC (ORCPT
+        id S1728250AbfJKQF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 12:04:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19368 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727970AbfJKQEC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 12:04:02 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9BG2ZCh111730;
-        Fri, 11 Oct 2019 12:03:56 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vjtbx77bm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 12:03:56 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9BG3tNG116134;
-        Fri, 11 Oct 2019 12:03:55 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vjtbx77av-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 12:03:55 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9BG1Ysf005873;
-        Fri, 11 Oct 2019 16:03:56 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01wdc.us.ibm.com with ESMTP id 2vejt7msfy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 16:03:56 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9BG3rF339387416
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Oct 2019 16:03:53 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79425C605F;
-        Fri, 11 Oct 2019 16:03:53 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6AFCC6057;
-        Fri, 11 Oct 2019 16:03:51 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.184.117])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 11 Oct 2019 16:03:51 +0000 (GMT)
-Message-ID: <1570809830.24157.2.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 1/2] tpm: Use GFP_KERNEL for allocating struct tpm_buf
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Fri, 11 Oct 2019 09:03:50 -0700
-In-Reply-To: <20191009213559.GA30044@linux.intel.com>
-References: <20191003185103.26347-1-jarkko.sakkinen@linux.intel.com>
-         <20191003185103.26347-2-jarkko.sakkinen@linux.intel.com>
-         <1570148716.10818.19.camel@linux.ibm.com>
-         <20191006095005.GA7660@linux.intel.com>
-         <1570475528.4242.2.camel@linux.ibm.com>
-         <20191009213559.GA30044@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-11_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=727 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910110145
+        Fri, 11 Oct 2019 12:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfJKQF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 12:05:29 -0400
+Received: from localhost (unknown [131.107.147.255])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29843206CD;
+        Fri, 11 Oct 2019 16:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570809929;
+        bh=VLCpLlsGJdIt9QQjzE4HufyIf5Lzrt0iRXPBoqHHuf0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=laY7xpyZCQaV4aQz6mpW5LvNJojBdkwFJJ2pflkPf2h8HYyJ1DP2fcoFxK4Yw14Qc
+         vA5kT9GHWbib1sDQcF4TQEXMdhWJYuZ4fS59P2/QMNyxt8+c5mqP7Y9T90Uz/HBRo3
+         fy1ljQY0YoHtPyxGsocmXM19P2wZKFPjUsGvZML4=
+Date:   Fri, 11 Oct 2019 12:05:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 4.19 082/114] powerpc/book3s64/radix: Rename
+ CPU_FTR_P9_TLBIE_BUG feature flag
+Message-ID: <20191011160528.GD2635@sasha-vm>
+References: <20191010083544.711104709@linuxfoundation.org>
+ <20191010083612.352065837@linuxfoundation.org>
+ <20191011112106.GA28994@amd>
+ <20191011125838.GA1147624@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191011125838.GA1147624@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-10 at 00:36 +0300, Jarkko Sakkinen wrote:
-> On Mon, Oct 07, 2019 at 12:12:08PM -0700, James Bottomley wrote:
-> > From: James Bottomley <James.Bottomley@HansenPartnership.com>
-> > Subject: [PATCH] tpm: use GFP kernel for tpm_buf allocations
-> > 
-> > The current code uses GFP_HIGHMEM, which is wrong because
-> > GFP_HIGHMEM (on 32 bit systems) is memory ordinarily inaccessible
-> > to the kernel and should only be used for allocations affecting
-> > userspace.  In order to make highmem visible to the kernel on 32
-> > bit it has to be kmapped, which consumes valuable entries in the
-> > kmap region.  Since the tpm_buf is only ever used in the kernel,
-> > switch to using a GFP_KERNEL allocation so as not to waste kmap
-> > space on 32 bits.
-> > 
-> > Fixes: a74f8b36352e (tpm: introduce tpm_buf)
-> > Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.c
-> > om>
-> 
-> Pushed to master branch.
+On Fri, Oct 11, 2019 at 02:58:38PM +0200, Greg Kroah-Hartman wrote:
+>On Fri, Oct 11, 2019 at 01:21:06PM +0200, Pavel Machek wrote:
+>> Hi!
+>>
+>> > From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> >
+>> > Rename the #define to indicate this is related to store vs tlbie
+>> > ordering issue. In the next patch, we will be adding another feature
+>> > flag that is used to handles ERAT flush vs tlbie ordering issue.
+>> >
+>> > Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
+>> > Cc: stable@vger.kernel.org # v4.16+
+>> > Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> > Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+>> > Link:
+>> > https://lore.kernel.org/r/20190924035254.24612-2-aneesh.kumar@linux.ibm.com
+>>
+>> Apparently this is upstream commit
+>> 09ce98cacd51fcd0fa0af2f79d1e1d3192f4cbb0 , but the changelog does not
+>> say so.
+>
+>Yeah, somehow when Sasha backported this, he didn't add that :(
+>
+>Nor did he add his signed-off-by :(
+>
+>I'll go fix it up and add mine, thanks for noticing it.
 
-Thanks.  0day spotted a problem with the use of free_page() so I've
-sent a v2.
+I forgot to run my "prettyfying" script on it, sorry and thanks for
+catching it.
 
-James
-
+-- 
+Thanks,
+Sasha
