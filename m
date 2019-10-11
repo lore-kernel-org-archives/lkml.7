@@ -2,135 +2,144 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF42C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD90ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED672089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC1420673
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfJKPul (ORCPT
+        id S1728101AbfJKPvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:50:41 -0400
-Received: from mga17.intel.com ([192.55.52.151]:5706 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfJKPul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:50:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 08:50:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,284,1566889200"; 
-   d="scan'208";a="200820645"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 11 Oct 2019 08:50:37 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C4EB116A; Fri, 11 Oct 2019 18:50:36 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Corey Minyard <minyard@acm.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2] ipmi: use %*ph to print small buffer
-Date:   Fri, 11 Oct 2019 18:50:36 +0300
-Message-Id: <20191011155036.36748-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 11 Oct 2019 11:51:25 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3697 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726521AbfJKPvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:51:25 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A6F1743842456073C202;
+        Fri, 11 Oct 2019 23:51:21 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
+ 23:51:16 +0800
+Message-ID: <5DA0A4F4.4050103@huawei.com>
+Date:   Fri, 11 Oct 2019 23:51:16 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     Jerome Pouiller <Jerome.Pouiller@silabs.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: wfx: fix an undefined reference error when CONFIG_MMC=m
+References: <1570762939-8735-1-git-send-email-zhongjiang@huawei.com> <20191011042609.GB938845@kroah.com> <3864047.FfxYVOUlJ1@pc-42> <20191011090256.GC1076760@kroah.com>
+In-Reply-To: <20191011090256.GC1076760@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
+On 2019/10/11 17:02, Greg KH wrote:
+> On Fri, Oct 11, 2019 at 08:40:08AM +0000, Jerome Pouiller wrote:
+>> On Friday 11 October 2019 06:26:16 CEST Greg KH wrote:
+>>> CAUTION: This email originated from outside of the organization. Do not 
+>> click links or open attachments unless you recognize the sender and know the 
+>> content is safe.
+>>>
+>>> On Fri, Oct 11, 2019 at 11:02:19AM +0800, zhong jiang wrote:
+>>>> I hit the following error when compile the kernel.
+>>>>
+>>>> drivers/staging/wfx/main.o: In function `wfx_core_init':
+>>>> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:488: 
+>> undefined reference to `sdio_register_driver'
+>>>> drivers/staging/wfx/main.o: In function `wfx_core_exit':
+>>>> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:496: 
+>> undefined reference to `sdio_unregister_driver'
+>>>> drivers/staging/wfx/main.o:(.debug_addr+0x1a8): undefined reference to 
+>> `sdio_register_driver'
+>>>> drivers/staging/wfx/main.o:(.debug_addr+0x6f0): undefined reference to 
+>> `sdio_unregister_driver'
+>>>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>>>> ---
+>>>>  drivers/staging/wfx/Kconfig  | 3 ++-
+>>>>  drivers/staging/wfx/Makefile | 5 +++--
+>>>>  2 files changed, 5 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/staging/wfx/Kconfig b/drivers/staging/wfx/Kconfig
+>>>> index 9b8a1c7..4d045513 100644
+>>>> --- a/drivers/staging/wfx/Kconfig
+>>>> +++ b/drivers/staging/wfx/Kconfig
+>>>> @@ -1,7 +1,8 @@
+>>>>  config WFX
+>>>>       tristate "Silicon Labs wireless chips WF200 and further"
+>>>>       depends on MAC80211
+>>>> -     depends on (SPI || MMC)
+>>>> +     depends on SPI
+>>>> +     select MMC
+>>> How about:
+>>>         depends on (SPI && MMC)
+>> I dislike to force user to enable both buses while only one of them is 
+>> sufficient. I would prefer to keep current dependencies and to add
+>> #ifdef around problematic functions.
+> Yes, that's the better thing to do here overall.
+>
+> zhong, can you work on that?
+How about the following patch ?
 
-Use %*ph format to print small buffer as hex string.
+diff --git a/drivers/staging/wfx/Makefile b/drivers/staging/wfx/Makefile
+index 0d9c1ed..77d68b7 100644
+--- a/drivers/staging/wfx/Makefile
++++ b/drivers/staging/wfx/Makefile
+@@ -19,6 +19,6 @@ wfx-y := \
+        sta.o \
+        debug.o
+ wfx-$(CONFIG_SPI) += bus_spi.o
+-wfx-$(subst m,y,$(CONFIG_MMC)) += bus_sdio.o
++wfx-$(CONFIG_MMC) += bus_sdio.o
 
-The change is safe since the specifier can handle up to 64 bytes and taking
-into account the buffer size of 100 bytes on stack the function has never been
-used to dump more than 32 bytes. Note, this also avoids potential buffer
-overflow if the length of the input buffer is bigger.
+ obj-$(CONFIG_WFX) += wfx.o
+diff --git a/drivers/staging/wfx/main.c b/drivers/staging/wfx/main.c
+index d2508bc..26720a4 100644
+--- a/drivers/staging/wfx/main.c
++++ b/drivers/staging/wfx/main.c
+@@ -484,16 +484,19 @@ static int __init wfx_core_init(void)
 
-This completely eliminates ipmi_debug_msg() in favour of Dynamic Debug.
-
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-- eliminate ipmi_debug_msg() in favour of Dynamic Debug (Joe)
- drivers/char/ipmi/ipmi_msghandler.c | 27 ++++-----------------------
- 1 file changed, 4 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 2aab80e19ae0..1768b81aaf78 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -44,25 +44,6 @@ static void need_waiter(struct ipmi_smi *intf);
- static int handle_one_recv_msg(struct ipmi_smi *intf,
- 			       struct ipmi_smi_msg *msg);
- 
--#ifdef DEBUG
--static void ipmi_debug_msg(const char *title, unsigned char *data,
--			   unsigned int len)
--{
--	int i, pos;
--	char buf[100];
--
--	pos = snprintf(buf, sizeof(buf), "%s: ", title);
--	for (i = 0; i < len; i++)
--		pos += snprintf(buf + pos, sizeof(buf) - pos,
--				" %2.2x", data[i]);
--	pr_debug("%s\n", buf);
--}
--#else
--static void ipmi_debug_msg(const char *title, unsigned char *data,
--			   unsigned int len)
--{ }
--#endif
--
- static bool initialized;
- static bool drvregistered;
- 
-@@ -2267,7 +2248,7 @@ static int i_ipmi_request(struct ipmi_user     *user,
- 		ipmi_free_smi_msg(smi_msg);
- 		ipmi_free_recv_msg(recv_msg);
- 	} else {
--		ipmi_debug_msg("Send", smi_msg->data, smi_msg->data_size);
-+		pr_debug("Send: %*ph\n", smi_msg->data_size, smi_msg->data);
- 
- 		smi_send(intf, intf->handlers, smi_msg, priority);
- 	}
-@@ -3730,7 +3711,7 @@ static int handle_ipmb_get_msg_cmd(struct ipmi_smi *intf,
- 		msg->data[10] = ipmb_checksum(&msg->data[6], 4);
- 		msg->data_size = 11;
- 
--		ipmi_debug_msg("Invalid command:", msg->data, msg->data_size);
-+		pr_debug("Invalid command: %*ph\n", msg->data_size, msg->data);
- 
- 		rcu_read_lock();
- 		if (!intf->in_shutdown) {
-@@ -4217,7 +4198,7 @@ static int handle_one_recv_msg(struct ipmi_smi *intf,
- 	int requeue;
- 	int chan;
- 
--	ipmi_debug_msg("Recv:", msg->rsp, msg->rsp_size);
-+	pr_debug("Recv: %*ph\n", msg->rsp_size, msg->rsp);
- 
- 	if ((msg->data_size >= 2)
- 	    && (msg->data[0] == (IPMI_NETFN_APP_REQUEST << 2))
-@@ -4576,7 +4557,7 @@ smi_from_recv_msg(struct ipmi_smi *intf, struct ipmi_recv_msg *recv_msg,
- 	smi_msg->data_size = recv_msg->msg.data_len;
- 	smi_msg->msgid = STORE_SEQ_IN_MSGID(seq, seqid);
- 
--	ipmi_debug_msg("Resend: ", smi_msg->data, smi_msg->data_size);
-+	pr_debug("Resend: %*ph\n", smi_msg->data_size, smi_msg->data);
- 
- 	return smi_msg;
+        if (IS_ENABLED(CONFIG_SPI))
+                ret = spi_register_driver(&wfx_spi_driver);
+-       if (IS_ENABLED(CONFIG_MMC) && !ret)
++#ifdef CONFIG_MMC
++       if (!ret)
+                ret = sdio_register_driver(&wfx_sdio_driver);
++#endif
+        return ret;
  }
--- 
-2.23.0
+ module_init(wfx_core_init);
+
+ static void __exit wfx_core_exit(void)
+ {
+-       if (IS_ENABLED(CONFIG_MMC))
+-               sdio_unregister_driver(&wfx_sdio_driver);
++#ifdef CONFIG_MMC
++       sdio_unregister_driver(&wfx_sdio_driver);
++#endif
+        if (IS_ENABLED(CONFIG_SPI))
+                spi_unregister_driver(&wfx_spi_driver);
+ }
+--
+
+Thanks,
+zhong jiang
+> thanks,
+>
+> greg k-h
+>
+> .
+>
+
 
