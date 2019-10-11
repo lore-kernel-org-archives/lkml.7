@@ -2,100 +2,102 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7473CECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37883ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D662089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122222089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfJKJRm (ORCPT
+        id S1727543AbfJKJTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:17:42 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:35287 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfJKJRl (ORCPT
+        Fri, 11 Oct 2019 05:19:44 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44156 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbfJKJTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:17:41 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id A7857240004;
-        Fri, 11 Oct 2019 09:17:39 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 11:17:38 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Parthiban Nallathambi <pn@denx.de>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, parthitce@gmail.com
-Subject: Re: [PATCH] rtc: rv3028: add clkout support
-Message-ID: <20191011091738.GC3125@piout.net>
-References: <20190927141505.640751-1-pn@denx.de>
+        Fri, 11 Oct 2019 05:19:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 21so7360520otj.11;
+        Fri, 11 Oct 2019 02:19:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2T/zHCiz5lRoZLCCsEBaHrm43xLEtwr/JLAYUvgdwzE=;
+        b=rY3Uf9LdWgDBPCwqd0My70ixRNRbWYt9jmFcAzct/2Ytmoe4DkGa8BbaoMIeGEKdFR
+         t34MKotWVmuCHtD1xmOdvRmSZmqnmijOzXam6yRSRs0lskZvp4LzmRIPiQuFYbBEgRLn
+         xgl/Li70P0BXy19+uRoaLjIFF+TlXeqsvOe3vxnJvPABEGeGLfgstnqKqios3zicV+Tk
+         gJslr5+YODcCqUPpTLOQonRps+lQaBf1K8Yk5PatVJrdakdRrznSR0ZQ/2SzUTJRW2zU
+         eUjS9wvzRAuZzwLgZ1PxfAPlnoVQNY52od7z6+azmp/ddMgX7ccZThXDPZcTRTaH724Q
+         rVzw==
+X-Gm-Message-State: APjAAAW9xCJNZSKIm+W1gm4Py4m2UDOXqjZxPUknVrL9cIVGBUmjMMWp
+        1qeqsWxQZEYVN3QxsV9Hnt4FGjtG4OyGhOZz0SU=
+X-Google-Smtp-Source: APXvYqzLdkyO6uQN8+aYqrrf0f1ZoJ5UC4uoBKWGKBUzVnWDCeCgMeWJjJBH6Q06m328j8fpzF+F7jTX6lgsPrk7ois=
+X-Received: by 2002:a05:6830:1685:: with SMTP id k5mr11530897otr.250.1570785582416;
+ Fri, 11 Oct 2019 02:19:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927141505.640751-1-pn@denx.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191010123046.15291-1-geert+renesas@glider.be>
+ <20191011073515.2933918c@canb.auug.org.au> <fc7ec17b-c61b-842e-13d9-1e154ce2a654@cogentembedded.com>
+In-Reply-To: <fc7ec17b-c61b-842e-13d9-1e154ce2a654@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 11 Oct 2019 11:19:30 +0200
+Message-ID: <CAMuHMdVurk2akpKFAGKoNN2YxPMBMx2VrvUfTfCX-AiUaFAcxQ@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Remove Simon as Renesas SoC Co-Maintainer
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Sergei,
 
-thanks for the patch, minor comments below.
+On Fri, Oct 11, 2019 at 11:00 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 10.10.2019 23:35, Stephen Rothwell wrote:
+> >> At the end of the v5.3 upstream kernel development cycle, Simon stepped
+> >> down from his role as Renesas SoC maintainer.
+> >>
+> >> Remove his maintainership, git repository, and branch from the
+> >> MAINTAINERS file, and add an entry to the CREDITS file to honor his
+> >> work.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > So, I will remove Simon's Renesas tree from linux-next and rename the
+> > renesas-geert tree to be renesas, OK?
+>
+>     I thought Geert's new repo is called renesas-devel?
 
-On 27/09/2019 16:15:05+0200, Parthiban Nallathambi wrote:
-> +	ret = regmap_update_bits(rv3028->regmap, RV3028_STATUS,
-> +				 RV3028_STATUS_CLKF, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
+The repository is called "renesas-devel".
+The branch Stephen pulls is "next" (colloquially called "renesas-next" ;-)
+The linux-next-specific handle Stephen uses is called "renesas".
 
-This is already done earlier and this will not be enabled again unless
-CLKIE is set which should not happen. So I don't think it is necessary
-to do it once again here.
+Cfr. "git show next-20191011:Next/Trees | grep renesas".
 
-> +	for (i = 0; i < ARRAY_SIZE(clkout_rates); i++) {
-> +		if (clkout_rates[i] == rate) {
-> +			ret = regmap_update_bits(rv3028->regmap,
-> +						 RV3028_CLKOUT,
-> +						 RV3028_CLKOUT_FD_MASK, i);
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +			return regmap_write(rv3028->regmap, RV3028_CLKOUT,
-> +				RV3028_CLKOUT_CLKSY | RV3028_CLKOUT_CLKOE);
-> +		}
-> +	}
-> +
-> +	return -EINVAL;
-> +}
+I hope this clears up the confusion...
 
+Gr{oetje,eeting}s,
 
-> +static int rv3028_clkout_register_clk(struct rv3028_data *rv3028,
-> +				      struct i2c_client *client)
-> +{
-> +	int ret;
-> +	struct clk *clk;
-> +	struct clk_init_data init;
-> +	struct device_node *node = client->dev.of_node;
-> +
-> +	/* disable the clkout output */
-> +	ret = regmap_write(rv3028->regmap, RV3028_CLKOUT, 0x0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-
-This is not what the user would expect and could introduce a glitch in 
-the clock output every time the platform is booted. If there are no 
-users of the clock, then you should probably let the core disable it 
-once the boot has ended.
-
+                        Geert
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
