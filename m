@@ -2,109 +2,79 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05631C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495D4C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3F22084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570800685;
-	bh=JcblHB4891afj+1Cho/6gGeaDtEnNqhWdHtUadMFYxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nfHdlyiCLZNp3ws9ZLEkUqtYsYgdXbLQ2uuCYjDGh7M30iMiSBTraojP90SaeYsRJ
-	 W9XZnQFAyN1QB0Z5VuUjplTZxQs0qGMq7wPvtcYp6iHv1sGao28IOto/hPc7Rt2TuF
-	 M2eEE5ec3vUbde5hpk7y+kvNR5VG8nSV1jWuioyE=
+	by mail.kernel.org (Postfix) with ESMTP id 2A32721D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbfJKNbY (ORCPT
+        id S1728227AbfJKNdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:31:24 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41597 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfJKNbY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:31:24 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t3so5806977pga.8;
-        Fri, 11 Oct 2019 06:31:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PoH5MwnZ8mABUE4xEY3uv3HD3AizjwGwq9FYbMsqiJI=;
-        b=Dd1ZRQUqxJbJ4XmorKsIkCtEacO2eN09lx8ajkjbqAfiJu29ijb20yUVFhLES2aTAC
-         4QL7Kndoe+PxN+LYdFsp2lGfyuVNxnUBXgGL/HFakv10SrqS3+YzRMMBGS/5AuM0qlDn
-         VwX4247mLRYbydvGYCP7gGBNU2Uu7H+peXDi/cJUx3mDSY340fLjw2+5GB8Wc28eCZrS
-         n8QyxrNZjj0KNuY4OPv/yTNr5LKizc2oz1sB5GJD9k262ioPMubB2zzLWSBYfH526Ws9
-         AO5vQdOSr9WbeYAmcunbARwBa9vpuV9n8vty5ILql8hK+8i5Xpwgcg7QhX6eYZNQRz83
-         4QFA==
-X-Gm-Message-State: APjAAAXticFZNFAla4guUMdajszLoyuuDSFyefuqrKwJeTlx08PUfEfJ
-        ZBOLRBXD44y6QqNk+1pUpKY=
-X-Google-Smtp-Source: APXvYqx8TVKU23vxfiCJYNLm8ZBGLiP4x+3bYJYdBArplQPvFpQtfe3pjF2ftceD826I4XWYVhs9MQ==
-X-Received: by 2002:a17:90a:9f94:: with SMTP id o20mr17787166pjp.76.1570800682200;
-        Fri, 11 Oct 2019 06:31:22 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id d4sm7744375pjs.9.2019.10.11.06.31.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 06:31:21 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 61BD5403EA; Fri, 11 Oct 2019 13:31:20 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 13:31:20 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
-Message-ID: <20191011133120.GP16384@42.do-not-panic.com>
-References: <20190822192451.5983-1-scott.branden@broadcom.com>
- <20190822192451.5983-3-scott.branden@broadcom.com>
- <s5hef1crybq.wl-tiwai@suse.de>
- <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
- <s5hr258j6ln.wl-tiwai@suse.de>
- <93b8285a-e5eb-d4a4-545d-426bbbeb8008@broadcom.com>
- <s5ho90byhnv.wl-tiwai@suse.de>
- <b440f372-45be-c06c-94a1-44ae6b1e7eb8@broadcom.com>
- <s5hwoeyj3i5.wl-tiwai@suse.de>
+        Fri, 11 Oct 2019 09:33:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727709AbfJKNdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:33:22 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F95D2084C;
+        Fri, 11 Oct 2019 13:33:21 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 09:33:19 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191011093319.3ef302ff@gandalf.local.home>
+In-Reply-To: <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+References: <20191007081716.07616230.8@infradead.org>
+        <20191007081945.10951536.8@infradead.org>
+        <20191008104335.6fcd78c9@gandalf.local.home>
+        <20191009224135.2dcf7767@oasis.local.home>
+        <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+        <20191010091956.48fbcf42@gandalf.local.home>
+        <20191010140513.GT2311@hirez.programming.kicks-ass.net>
+        <20191010115449.22044b53@gandalf.local.home>
+        <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+        <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s5hwoeyj3i5.wl-tiwai@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 12:40:02PM +0200, Takashi Iwai wrote:
-> On Mon, 26 Aug 2019 19:24:22 +0200,
-> Scott Branden wrote:
-> > 
-> > I will admit I am not familiar with every subtlety of PCI
-> > accesses. Any comments to the Valkyrie driver in this patch series are
-> > appreciated.
-> > But not all drivers need to work on all architectures. I can add a
-> > depends on x86 64bit architectures to the driver to limit it to such.
+On Fri, 11 Oct 2019 14:59:03 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Thu, Oct 10, 2019 at 07:28:19PM +0200, Peter Zijlstra wrote:
 > 
-> But it's an individual board on PCIe, and should work no matter which
-> architecture is?  Or is this really exclusive to x86?
+> > Really the best solution is to move all the poking into
+> > ftrace_module_init(), before we mark it RO+X. That's what I'm going to
+> > do for jump_label and static_call as well, I just need to add that extra
+> > notifier callback.  
+> 
+> OK, so I started writing that patch... or rather, I wrote the patch and
+> started on the Changelog when I ran into trouble describing why we need
+> it.
+> 
+> That is, I'm struggling to explain why we cannot flip
+> prepare_coming_module() and complete_formation().
+> 
+> Yes, it breaks ftrace, but I'm thinking that is all it breaks. So let me
+> see if we can cure that.
 
-Poke Scott.
+For someone that doesn't use modules, you are making me very nervous
+with all the changes you are making to the module code! ;-)
 
-  Luis
+-- Steve
