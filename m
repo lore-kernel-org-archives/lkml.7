@@ -2,101 +2,118 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D8EC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429ADECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB75206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570808308;
-	bh=kZz9naMR6Of1E3vVkHNV4iAu0OHXMeSi56+A/43INNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vmm/4m+DxNcaAkeoom1GgWFhO8BjdeuaJ+/o7bknTbEndQ7jxMLK75ol8D7/3Cktu
-	 lByZqe7QDTcCi8ILpREMMMObtA2mT792MI0SjQnw356y0gmPKH/UuaSxmTNTbjtKV+
-	 AKSXgTm/K/OLdO8eObID/BbmT87biC9zI9f+WTc8=
+	by mail.kernel.org (Postfix) with ESMTP id 2385E206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfJKPi1 (ORCPT
+        id S1727893AbfJKPkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:38:27 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36453 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfJKPi0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:38:26 -0400
-Received: by mail-pl1-f196.google.com with SMTP id j11so4643069plk.3;
-        Fri, 11 Oct 2019 08:38:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=34jLy/imGQdWFtbRAmHbjncBF9hW7DDB6XsjLeKsQC4=;
-        b=g6UsK9AsQg79c3wUOCOTtRnhwBm+MOS+XTCuLjFsc321I1TnrW4PNC6DwbBJm7UTI0
-         D73zH6jJpSGPbyb7aS63BSUaw7+zcpZ6+04+aYX+aMgF8ep1HZX0pHAIbrhgZXpvW+NY
-         LhPAfFMlMxriA3iV/gZ4z/VzVrLe9IlqaFmZiEkqx4MKHNlEuG5jv2p84kaoNr+qzwXx
-         1hHWxcAsjSUnZBZssIq7eCTvGSFc2YB1NV1t9xa09O6y6rsybwI7MDYCMM1ChIIjGux6
-         k4+/jep+b/AS6fdidWpfiWZbd9u/M9GScAjnMYRh6liSeMfzVhfMLbJRvSArBRXaevP2
-         xiTw==
-X-Gm-Message-State: APjAAAWaFI0MVobtg6SgBaJVnNcTN2LMu8JiAnf2b2IP/z2rVCShjBWN
-        FsU1XOb2hsRPyeWWVZybb0A=
-X-Google-Smtp-Source: APXvYqyhY7ooL/PoXLde16E2h3vfL39WPv8HqS8wX4TbBSrp9W1L7IydKIxBl2py8K1m/cLRrZ4cKw==
-X-Received: by 2002:a17:902:7e4e:: with SMTP id a14mr15778620pln.68.1570808305879;
-        Fri, 11 Oct 2019 08:38:25 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id ev20sm8614400pjb.19.2019.10.11.08.38.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 08:38:24 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id A888D403EA; Fri, 11 Oct 2019 15:38:23 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 15:38:23 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Fri, 11 Oct 2019 11:40:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:36196 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726328AbfJKPkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:40:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B135142F;
+        Fri, 11 Oct 2019 08:40:48 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B05D43F68E;
+        Fri, 11 Oct 2019 08:40:45 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 16:40:43 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Richard Henderson <richard.henderson@linaro.org>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
+Subject: Re: [PATCH v2 05/12] arm64: Basic Branch Target Identification
  support
-Message-ID: <20191011153823.GS16384@42.do-not-panic.com>
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191011141036.GK16384@42.do-not-panic.com>
- <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
+Message-ID: <20191011154043.GG33537@lakrids.cambridge.arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-6-git-send-email-Dave.Martin@arm.com>
+ <20191011151028.GE33537@lakrids.cambridge.arm.com>
+ <4e09ca54-f353-9448-64ed-4ba1e38c6ebc@linaro.org>
+ <20191011153225.GL27757@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011153225.GL27757@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 04:31:26PM +0200, Hans de Goede wrote:
-> Hi,
+On Fri, Oct 11, 2019 at 04:32:26PM +0100, Dave Martin wrote:
+> On Fri, Oct 11, 2019 at 11:25:33AM -0400, Richard Henderson wrote:
+> > On 10/11/19 11:10 AM, Mark Rutland wrote:
+> > > On Thu, Oct 10, 2019 at 07:44:33PM +0100, Dave Martin wrote:
+> > >> @@ -730,6 +730,11 @@ static void setup_return
+> > >>  	regs->regs[29] = (unsigned long)&user->next_frame->fp;
+> > >>  	regs->pc = (unsigned long)ka->sa.sa_handler;
+> > >>  
+> > >> +	if (system_supports_bti()) {
+> > >> +		regs->pstate &= ~PSR_BTYPE_MASK;
+> > >> +		regs->pstate |= PSR_BTYPE_CALL;
+> > >> +	}
+> > >> +
+> > > 
+> > > I think we might need a comment as to what we're trying to ensure here.
+> > > 
+> > > I was under the (perhaps mistaken) impression that we'd generate a
+> > > pristine pstate for a signal handler, and it's not clear to me that we
+> > > must ensure the first instruction is a target instruction.
+> > 
+> > I think it makes sense to treat entry into a signal handler as a call.  Code
+> > that has been compiled for BTI, and whose page has been marked with PROT_BTI,
+> > will already have the pauth/bti markup at the beginning of the signal handler
+> > function; we might as well verify that.
+> > 
+> > Otherwise sigaction becomes a hole by which an attacker can force execution to
+> > start at any arbitrary address.
 > 
-> On 10/11/19 4:10 PM, Luis Chamberlain wrote:
-> > Hey Hans, thanks for staying on top of this and follow up! For some
-> > reason the universe conspired against your first and last patch ([1/8],
-> > [8/8]), and I never got them. Could you bounce these or resend in case
-> > others confirm they also didn't get it?
+> Ack, that's the intended rationale -- I also outlined this in the commit
+> message.
+
+Ah, sorry. I evidently did not read that thoroughly enough.
+
+> Does this sound reasonable?
 > 
-> I have received feedback from others on the first patch, so at least
-> that one has reached others. I've bounced patches 1 and 8 to you.
+> 
+> Either way, I feel we should do this: any function in a PROT_BTI page
+> should have a suitable landing pad.  There's no reason I can see why
+> a protection given to any other callback function should be omitted
+> for a signal handler.
+> 
+> Note, if the signal handler isn't in a PROT_BTI page then overriding
+> BTYPE here will not trigger a Branch Target exception.
+> 
+> I'm happy to drop a brief comment into the code also, once we're
+> agreed on what the code should be doing.
 
-Thanks, can you also bounce the feedback received?
+So long as there's a comment as to why, I have no strong feelings here.
+:)
 
-  Luis
+Thanks,
+Mark.
