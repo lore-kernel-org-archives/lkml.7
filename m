@@ -2,110 +2,107 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E670ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB30C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB8520673
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912F620673
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfJKObR (ORCPT
+        id S1728611AbfJKOba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:31:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:34216 "EHLO foss.arm.com"
+        Fri, 11 Oct 2019 10:31:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39932 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbfJKObR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:31:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32979142F;
-        Fri, 11 Oct 2019 07:31:16 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDA823F68E;
-        Fri, 11 Oct 2019 07:31:14 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 15:31:12 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     will@kernel.org, maz@kernel.org, corbet@lwn.net,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/4] arm64: add support for the AMU extension v1
-Message-ID: <20191011143112.GB3607@arrakis.emea.arm.com>
-References: <20190917134228.5369-1-ionela.voinescu@arm.com>
- <20190917134228.5369-2-ionela.voinescu@arm.com>
- <20191010172058.GD40923@arrakis.emea.arm.com>
- <4e82e891-1d47-7a4f-abc9-e6bf2cce7f91@arm.com>
+        id S1728543AbfJKOba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:31:30 -0400
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A7C7C05AA57
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 14:31:29 +0000 (UTC)
+Received: by mail-ed1-f70.google.com with SMTP id j8so5851021edl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 07:31:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=e7jeAeBI7smw0DkvEKb+yEiLD6lnpDm/GMM/0BPj+Sg=;
+        b=RNJ1zo/OdQ08js8hV2/sIRQQ6NEk519lwVaU9+2uoa2xVLXd2NkaIXvODfwXQQQWlS
+         M2qkNuvIfZupbbvJry/TOir4z+o9ERQstMmvjiwuQx6YB5sdn2qAjTqbsShPkQQSVmAb
+         EUr0V28RdvYXvb5rpRfvPlMQ05iB4QxfBkLppme96hx7+UZ/cV+HFdHoFLlH3Fcum/bH
+         K+0LgS3l61OoGLa7RNHEMKHcS42HGHMGs1wilmiYQPz+0E3OQ1D+ml8ZtS/xVjMKxpRU
+         MVsLS7PJP4cpaD2kRZNtp4hPW+XZr9Adrd1tlboP8h+qP7YfBzB9Cuxxp3kqH6Hsm4+S
+         p1MQ==
+X-Gm-Message-State: APjAAAU5HtLGS3wfcryCK7kE8j4lSvZQA7vC1iV+L1qKaodWvfbTlOpG
+        r/zbClyaaRsS3N5P2XHxMhWh2q+DcKO5s9zki8NF+66VeW09eG1WKV/VIRe7ZntmS8VRvLnnmCV
+        sE8KA6HnegicBylNuBExO5pZz
+X-Received: by 2002:a17:906:2319:: with SMTP id l25mr14159772eja.309.1570804288242;
+        Fri, 11 Oct 2019 07:31:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwoRZoAH1NMErSVdJalwF7TdgOzUSOFWLs4mQa22TgCcFbTlVZIC719vTCBSczupc1e7bsjHQ==
+X-Received: by 2002:a17:906:2319:: with SMTP id l25mr14159752eja.309.1570804288071;
+        Fri, 11 Oct 2019 07:31:28 -0700 (PDT)
+Received: from dhcp-44-196.space.revspace.nl ([2a0e:5700:4:11:6eb:1143:b8be:2b8])
+        by smtp.gmail.com with ESMTPSA id s22sm1224314eja.91.2019.10.11.07.31.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2019 07:31:27 -0700 (PDT)
+Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
+ support
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191011141036.GK16384@42.do-not-panic.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
+Date:   Fri, 11 Oct 2019 16:31:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e82e891-1d47-7a4f-abc9-e6bf2cce7f91@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011141036.GK16384@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:31:40AM +0100, Ionela Voinescu wrote:
-> On 10/10/2019 18:20, Catalin Marinas wrote:
-> > On Tue, Sep 17, 2019 at 02:42:25PM +0100, Ionela Voinescu wrote:
-> >> +#ifdef CONFIG_ARM64_AMU_EXTN
-> >> +
-> >> +/*
-> >> + * This per cpu variable only signals that the CPU implementation supports the
-> >> + * AMU but does not provide information regarding all the events that it
-> >> + * supports.
-> >> + * When this amu_feat per CPU variable is true, the user of this feature can
-> >> + * only rely on the presence of the 4 fixed counters. But this does not
-> >> + * guarantee that the counters are enabled or access to these counters is
-> >> + * provided by code executed at higher exception levels.
-> >> + */
-> >> +DEFINE_PER_CPU(bool, amu_feat) = false;
-> >> +
-> >> +static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
-> >> +{
-> >> +	if (has_cpuid_feature(cap, SCOPE_LOCAL_CPU)) {
-> >> +		pr_info("detected CPU%d: Activity Monitors extension\n",
-> >> +			smp_processor_id());
-> >> +		this_cpu_write(amu_feat, true);
-> >> +	}
-> >> +}
-> > 
-> > Sorry if I missed anything as I just skimmed through this series. I
-> > can't see the amu_feat used anywhere in these patches, so on its own it
-> > doesn't make much sense.
-> 
-> No worries, you are correct, at the moment the per-cpu amu_feat is not
-> yet used anywhere. But the intention is to use it to discover the
-> feature at CPU level as some CPUs might implement AMU and some might
-> not.
-> 
-> I'll soon submit some patches using the counters for the scheduler's
-> frequency invariance - to discover the frequency the CPUs are actually
-> running at in case there is power or thermal mitigation happening
-> outside of the OS.
+Hi,
 
-Thanks for the explanation. I guess I'll wait for the other patches to
-see how all fits together. In general I'm not keen on per-CPU variables
-exposed to the rest of the kernel. For example, is it always read in a
-non-preemptible context? I'd rather have an accessor function with the
-corresponding WARN_ON_ONCE(preemptible()). This may come with the rest
-of the patches.
+On 10/11/19 4:10 PM, Luis Chamberlain wrote:
+> Hey Hans, thanks for staying on top of this and follow up! For some
+> reason the universe conspired against your first and last patch ([1/8],
+> [8/8]), and I never got them. Could you bounce these or resend in case
+> others confirm they also didn't get it?
 
-> More practically, it's possible that we'll see big.LITTLE platforms
-> where the big CPUs only will implement activity monitors and for those
-> CPUs it will be useful to get more accurate information on the current
-> frequency, for example, as power and thermal mitigation is more
-> probable to happen in the power domain of the big CPUs.
+I have received feedback from others on the first patch, so at least
+that one has reached others. I've bounced patches 1 and 8 to you.
 
-As long as that's a realistic possibility (not just a theoretical one)
-and the in-kernel code can handle such asymmetry, it's fine by me. This
-could be another reason to never expose the AMU counters to user-space
-or guests. You can control preemption in the kernel but can't run
-user-space in a non-preemptible context.
+> While at it, can you Cc scott.branden@broadcom.com in further
+> communications about this patchset, he's interest in some other changes
+> we'll need to coordinate if we get to have some other development in
+> line for the next merge window.
 
--- 
-Catalin
+Will do.
+
+Regards,
+
+Hans
