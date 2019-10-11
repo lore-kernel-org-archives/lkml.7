@@ -2,262 +2,124 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D08C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B31ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53904206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570797351;
-	bh=VNgydY1ynFilVs3+OYEfBMfTmvBOmjLQ3dKDPAsRGJk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kvgpCv06ErVZEc7oopEc+2YNLwCOxdkuUKzW/nAtzq5ZK4RJv8Sb6g+T2vr+BGOBs
-	 tL7h07ABuCaT3St+Klo8LQ+IYtto/pG36FxOdvIzrE72NOUVbjfjXNdJrT2fog2Nt/
-	 ZyRm8WMceOEFtdx7YkEOtboch8/bpXeZbSwNEBBA=
+	by mail.kernel.org (Postfix) with ESMTP id B5896206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfJKMfu (ORCPT
+        id S1728102AbfJKMiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:35:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34852 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 08:38:07 -0400
+Received: from mga05.intel.com ([192.55.52.43]:26504 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbfJKMft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:35:49 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1D6621D7E;
-        Fri, 11 Oct 2019 12:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570797348;
-        bh=VNgydY1ynFilVs3+OYEfBMfTmvBOmjLQ3dKDPAsRGJk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ebAStlb6ubOzdbNbYRAVygtpjFLr4okk4rxF/Lpg17JMqyoumehNIPoLFtLGLLo2n
-         s5UKLrYfdkyy0+L0988pgbQ8OY722qLzYrkCj5wSnQss5JSQOPMyMIsc4k0hQrA/sY
-         9ZVZaBJysaaLkUyIzlKv/NzHGQFUt3EGc73zZMvU=
-Received: by mail-qt1-f176.google.com with SMTP id t20so8249968qtr.10;
-        Fri, 11 Oct 2019 05:35:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAWV+LtA2IgYU70gvWU7n+/0hBih1awHP2B1etZfBft9GOISukdD
-        492/mfFkZ6UWaSg7b2yG9EbYYgXVaH/U340NEA==
-X-Google-Smtp-Source: APXvYqxPjHzWRhCEa77RLK5XieEQ5KWLu1XccZ9gxrD6cMKqUVp2wpc3H9eDAX5iDitxTvNlqnuBjyFuEMYz2Q5ML9o=
-X-Received: by 2002:a0c:ed4f:: with SMTP id v15mr765035qvq.136.1570797347661;
- Fri, 11 Oct 2019 05:35:47 -0700 (PDT)
+        id S1727672AbfJKMiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 08:38:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 05:38:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,284,1566889200"; 
+   d="scan'208";a="206436900"
+Received: from mkaltenb-mobl.ger.corp.intel.com (HELO localhost) ([10.251.83.92])
+  by orsmga002.jf.intel.com with ESMTP; 11 Oct 2019 05:37:58 -0700
+Date:   Fri, 11 Oct 2019 15:37:57 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     dhowells@redhat.com, peterhuewe@gmx.de, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-security-module@vger.kernel.org, herbert@gondor.apana.org.au,
+        davem@davemloft.net, jgg@ziepe.ca, arnd@arndb.de,
+        gregkh@linuxfoundation.org, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
+        jsnitsel@redhat.com, linux-kernel@vger.kernel.org,
+        daniel.thompson@linaro.org
+Subject: Re: [Patch v7 0/4] Create and consolidate trusted keys subsystem
+Message-ID: <20191011123757.GD3129@linux.intel.com>
+References: <1570425935-7435-1-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-References: <20191002151442.15428-1-benjamin.gaignard@st.com>
-In-Reply-To: <20191002151442.15428-1-benjamin.gaignard@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 11 Oct 2019 07:35:36 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKW91A96NXy8kwPp2mdgiifaqJyCQ0n5Mc=zZzoU4VzDg@mail.gmail.com>
-Message-ID: <CAL_JsqKW91A96NXy8kwPp2mdgiifaqJyCQ0n5Mc=zZzoU4VzDg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: media: Convert stm32 dcmi bindings to json-schema
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570425935-7435-1-git-send-email-sumit.garg@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 10:14 AM Benjamin Gaignard
-<benjamin.gaignard@st.com> wrote:
->
-> Convert the STM32 dcmi binding to DT schema format using json-schema
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/media/st,stm32-dcmi.txt    | 45 ----------
->  .../devicetree/bindings/media/st,stm32-dcmi.yaml   | 97 ++++++++++++++++++++++
->  2 files changed, 97 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
->  create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
->
-> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-> deleted file mode 100644
-> index 3122ded82eb4..000000000000
-> --- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-> +++ /dev/null
-> @@ -1,45 +0,0 @@
-> -STMicroelectronics STM32 Digital Camera Memory Interface (DCMI)
-> -
-> -Required properties:
-> -- compatible: "st,stm32-dcmi"
-> -- reg: physical base address and length of the registers set for the device
-> -- interrupts: should contain IRQ line for the DCMI
-> -- resets: reference to a reset controller,
-> -          see Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
-> -- clocks: list of clock specifiers, corresponding to entries in
-> -          the clock-names property
-> -- clock-names: must contain "mclk", which is the DCMI peripherial clock
-> -- pinctrl: the pincontrol settings to configure muxing properly
-> -           for pins that connect to DCMI device.
-> -           See Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml.
-> -- dmas: phandle to DMA controller node,
-> -        see Documentation/devicetree/bindings/dma/stm32-dma.txt
-> -- dma-names: must contain "tx", which is the transmit channel from DCMI to DMA
-> -
-> -DCMI supports a single port node with parallel bus. It should contain one
-> -'port' child node with child 'endpoint' node. Please refer to the bindings
-> -defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-> -
-> -Example:
-> -
-> -       dcmi: dcmi@50050000 {
-> -               compatible = "st,stm32-dcmi";
-> -               reg = <0x50050000 0x400>;
-> -               interrupts = <78>;
-> -               resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
-> -               clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
-> -               clock-names = "mclk";
-> -               pinctrl-names = "default";
-> -               pinctrl-0 = <&dcmi_pins>;
-> -               dmas = <&dma2 1 1 0x414 0x3>;
-> -               dma-names = "tx";
-> -               port {
-> -                       dcmi_0: endpoint {
-> -                               remote-endpoint = <...>;
-> -                               bus-width = <8>;
-> -                               hsync-active = <0>;
-> -                               vsync-active = <0>;
-> -                               pclk-sample = <1>;
-> -                       };
-> -               };
-> -       };
-> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-> new file mode 100644
-> index 000000000000..50e8cfed06f3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/st,stm32-dcmi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 Digital Camera Memory Interface (DCMI) binding
-> +
-> +maintainers:
-> +  - Hugues Fruchet <hugues.fruchet@st.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32-dcmi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module Clock
+On Mon, Oct 07, 2019 at 10:55:31AM +0530, Sumit Garg wrote:
+> This patch-set does restructuring of trusted keys code to create and
+> consolidate trusted keys subsystem.
+> 
+> Also, patch #2 replaces tpm1_buf code used in security/keys/trusted.c and
+> crypto/asymmertic_keys/asym_tpm.c files to use the common tpm_buf code.
+> 
+> Changes in v7:
+> 1. Rebased to top of tpmdd/master
+> 2. Patch #4: update tpm2 trusted keys code to use tpm_send() instead of
+>    tpm_transmit_cmd() which is an internal function.
+> 
+> Changes in v6:
+> 1. Switch TPM asymmetric code also to use common tpm_buf code. These
+>    changes required patches #1 and #2 update, so I have dropped review
+>    tags from those patches.
+> 2. Incorporated miscellaneous comments from Jarkko.
+> 
+> Changes in v5:
+> 1. Drop 5/5 patch as its more relavant along with TEE patch-set.
+> 2. Add Reviewed-by tag for patch #2.
+> 3. Fix build failure when "CONFIG_HEADER_TEST" and
+>    "CONFIG_KERNEL_HEADER_TEST" config options are enabled.
+> 4. Misc changes to rename files.
+> 
+> Changes in v4:
+> 1. Separate patch for export of tpm_buf code to include/linux/tpm.h
+> 2. Change TPM1.x trusted keys code to use common tpm_buf
+> 3. Keep module name as trusted.ko only
+> 
+> Changes in v3:
+> 
+> Move TPM2 trusted keys code to trusted keys subsystem.
+> 
+> Changes in v2:
+> 
+> Split trusted keys abstraction patch for ease of review.
+> 
+> Sumit Garg (4):
+>   tpm: Move tpm_buf code to include/linux/
+>   KEYS: Use common tpm_buf for trusted and asymmetric keys
+>   KEYS: trusted: Create trusted keys subsystem
+>   KEYS: trusted: Move TPM2 trusted keys code
+> 
+>  crypto/asymmetric_keys/asym_tpm.c                  | 101 +++----
+>  drivers/char/tpm/tpm-interface.c                   |  56 ----
+>  drivers/char/tpm/tpm.h                             | 226 ---------------
+>  drivers/char/tpm/tpm2-cmd.c                        | 307 --------------------
+>  include/Kbuild                                     |   1 -
+>  include/keys/{trusted.h => trusted_tpm.h}          |  49 +---
+>  include/linux/tpm.h                                | 251 ++++++++++++++--
+>  security/keys/Makefile                             |   2 +-
+>  security/keys/trusted-keys/Makefile                |   8 +
+>  .../{trusted.c => trusted-keys/trusted_tpm1.c}     |  96 +++----
+>  security/keys/trusted-keys/trusted_tpm2.c          | 314 +++++++++++++++++++++
+>  11 files changed, 652 insertions(+), 759 deletions(-)
+>  rename include/keys/{trusted.h => trusted_tpm.h} (77%)
+>  create mode 100644 security/keys/trusted-keys/Makefile
+>  rename security/keys/{trusted.c => trusted-keys/trusted_tpm1.c} (94%)
+>  create mode 100644 security/keys/trusted-keys/trusted_tpm2.c
+> 
+> -- 
+> 2.7.4
+> 
 
-'maxItems: 1' is sufficient here as the description doesn't add anything.
+I fixed a merge conflict caused by James' commit. Already pushed.
+Compiling test kernel ATM i.e. tested-by's will follow later.
 
-> +
-> +  clock-names:
-> +    items:
-> +      - const: mclk
-> +
-> +  pinctrl-names: true
-
-This gets added automatically.
-
-> +
-> +  dmas:
-> +    description:
-> +      One DMA channel specifier following the convention outlined
-> +      in bindings/dma/dma.txt
-
-Drop this.
-
-> +    maxItems: 1
-> +
-> +  dma-names:
-> +    description:
-> +      There must be one channel named "tx" for transmit
-
-The schema says all this already.
-
-> +    maxItems: 1
-
-This is implied.
-
-> +    additionalItems: true
-
-This is wrong. You can't have more items because you set the max to 1.
-
-> +    items:
-> +      - const: tx
-> +
-> +  resets:
-> +        maxItems: 1
-
-Inconsistent indentation.
-
-> +
-> +  port:
-> +    type: object
-> +    description:
-> +      DCMI supports a single port node with parallel bus. It should contain
-> +      one 'port' child node with child 'endpoint' node. Please refer to the
-> +      bindings defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +patternProperties:
-> +  "^pinctrl-[0-9]+$": true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - dmas
-> +  - dma-names
-> +  - port
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    dcmi: dcmi@4c006000 {
-> +        compatible = "st,stm32-dcmi";
-> +        reg = <0x4c006000 0x400>;
-> +        interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-> +        resets = <&rcc CAMITF_R>;
-> +        clocks = <&rcc DCMI>;
-> +        clock-names = "mclk";
-> +        dmas = <&dmamux1 75 0x400 0x0d>;
-> +        dma-names = "tx";
-> +
-> +        port {
-> +             dcmi_0: endpoint {
-> +                   remote-endpoint = <&ov5640_0>;
-> +                   bus-width = <8>;
-> +                   hsync-active = <0>;
-> +                   vsync-active = <0>;
-> +                   pclk-sample = <1>;
-> +             };
-> +        };
-> +    };
-> +
-> +...
-> --
-> 2.15.0
->
+/Jarkko
