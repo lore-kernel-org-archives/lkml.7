@@ -2,175 +2,150 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB39C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ACEC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A28721D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570809088;
-	bh=SM20gL8UFJmurgt+rjdFQn95j4Z+zNSNXhK250EJoPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lErSjt8ZF6TWqK+0ewTpD1Wib8SIvp4KuCoH2nl1psRMHaaYEAzSbHXaqgkSAWsPy
-	 zHxAf3KwQeeaU0TkmFDJw+cm3epTsPC12SYvjyYiDMUIyG6o6qeaJ61x7r1WmnKsnr
-	 WPtsCJmKyWyGKROiqRng+3/ARhc2uSnyEdwmSEfM=
+	by mail.kernel.org (Postfix) with ESMTP id 2075820673
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:55:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="LkO6drc/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfJKPv1 (ORCPT
+        id S1727977AbfJKPzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:51:27 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34045 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbfJKPv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:51:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m19so8384187otp.1;
-        Fri, 11 Oct 2019 08:51:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y/QLZGzKlqPXEYz4XBHb6fc2z++j0NNAuKvWxwrnWJg=;
-        b=ec9NzZUpmc0uLkvW1tOSgjCPKMLt9xvqzSaW1wdr6BXn1pXtR5/MfGNBTCiIb/Awjq
-         F/4vQAqh3GMKlZGW7TGvI09CAj7uGcMwHuMUKREdqY88KZa2GTBgWc2NVsYOsVhsRl/W
-         UaD+F/y5Luf70XKJjZUz5Q5cAJyG5iK0ZOkL5U8aFbDpCLlaX0rZiLZny1h99JK2SbSu
-         xsOrXdl82GZL8v4JQIsFY4arKf0ElW+4c42JGtnc8eyjlW3jdTJtqk2Okn+EG/xe+YR4
-         Iqwr6HHancxMvJGCttYL2MdyZLqmVtcqc12DBljO7k0smR3zqFMyFlRpkvYQzhF4acRW
-         LVAw==
-X-Gm-Message-State: APjAAAUsW6M5ba/q6+yZ6jMQC7MZNKT1tNCtXAkOIUFIx7l3KWqL3g5e
-        ymM5DxACq0NwOPLPnbzIeA==
-X-Google-Smtp-Source: APXvYqzMiRb5PqzKa+7EMBkhL+RYTJ4w67wtnTkU2oNcHr3BX8SzjO7iCTP7LdvIaXqRtBxNK69+Rg==
-X-Received: by 2002:a9d:7844:: with SMTP id c4mr9137267otm.273.1570809085207;
-        Fri, 11 Oct 2019 08:51:25 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 17sm2625595oiz.3.2019.10.11.08.51.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 08:51:24 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 10:51:23 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
- compatible for HiSi
-Message-ID: <20191011155123.GA14272@bogus>
-References: <20191007175553.66940-1-john.stultz@linaro.org>
- <20191007175553.66940-5-john.stultz@linaro.org>
- <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
- <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
- <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
- <CALAqxLVpPvHf2RpwjHh5v9cnQm9CLtj0HHaqVH=EFQJk-GhaPQ@mail.gmail.com>
+        Fri, 11 Oct 2019 11:55:18 -0400
+Received: from mail-eopbgr730082.outbound.protection.outlook.com ([40.107.73.82]:11616
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726666AbfJKPzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:55:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S3zwxaLnqmVHElxPvdV9NIeAKVaWN3ZWN0wkPUbOooEVnwlkT0unqK8NmyQ/51dZvlvvkm4QJTGgAWzQ6oxMVc7y08KoDfX8OgRjkar/2mX2wqFZW9/T1thv+hg4iZ1lMvAGgmvzi8NtHGg4rlcJHkNv3FAjrTLJ0p2ZWqBwnbfdSErTyabqx0oBKiYQj4dsZsN/lMlpO1GINml6r+O8BZJBQPB3BprwHQYThkg7GYcbgS2N2RnDiwrcQCc2CmpgnUkxI0tnoCb5kXujxE5+Ve5toxSrc15Yf+uI04TlT8IVHKO+hjSxBRoEv12pKKBOIK9kzZosOeLtOuktyMWvaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Li0w+uSpYpmR2c3XL5t93NlqQixtZbw36KcqeoXhmQA=;
+ b=BivkJUytS25NYcMeR5li8nri5SzNgimE00XlbHZ/XGhwZWb8Q3DOKw4Ms1tc6Jwa4NytFi8wDfYNhK6fv3qnwpZ4aLKYSBKXrGJSIsMdD2ZPlISSfTr07kWvzFnoCxocI/OHQQljcfc87G0GUedqfQe05hLEs2C9ynm/h1X211Tta6LKMI//GcuJbufqGK4fTSmFNzYx3VkesoJhd3tPuQDuDULvUIHZ0M7eSkHrOh9hZz3CqK0AxFOAFsoLqi+GzqqrWgK3RFVMG9zR2Iijw48zpdPiNKVmLEQaFUMtvsCASlLCwOZ6Db0BaJaasF3qz8zWQfr2UlzGfFDHxxnt+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Li0w+uSpYpmR2c3XL5t93NlqQixtZbw36KcqeoXhmQA=;
+ b=LkO6drc//QdHDpoMMYgNgT7wSU2qhShrg6Akr7luTANlG0ZEb/qkm/5QwGRAMUSGjFJGFsE5eDDSQ5KTvKq/CS2vYkIDFEjeIncu8AeYjaV85V//nVFB049rtYcSGCxG57z2ge1dJ1EX2jN55vZ4Ewnrn4Jltw94qbjdyNGjtS4=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB3631.namprd11.prod.outlook.com (20.178.251.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.18; Fri, 11 Oct 2019 15:55:14 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ac8c:fc55:d1e2:465f]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ac8c:fc55:d1e2:465f%5]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
+ 15:55:14 +0000
+From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
+To:     zhong jiang <zhongjiang@huawei.com>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: wfx: fix an undefined reference error when
+ CONFIG_MMC=m
+Thread-Topic: [PATCH] staging: wfx: fix an undefined reference error when
+ CONFIG_MMC=m
+Thread-Index: AQHVf+DaxlKENNqV0UK69LaFcVpmvadU2EGAgABG9ACAAAZhAIAAchYAgAABG4A=
+Date:   Fri, 11 Oct 2019 15:55:14 +0000
+Message-ID: <25343442.QKQdTnp5z4@pc-42>
+References: <1570762939-8735-1-git-send-email-zhongjiang@huawei.com>
+ <20191011090256.GC1076760@kroah.com> <5DA0A4F4.4050103@huawei.com>
+In-Reply-To: <5DA0A4F4.4050103@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6beaf1bc-2f01-4055-42ae-08d74e6367a3
+x-ms-traffictypediagnostic: MN2PR11MB3631:
+x-microsoft-antispam-prvs: <MN2PR11MB36319D44893311B7512F3D7E93970@MN2PR11MB3631.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(136003)(396003)(346002)(376002)(39850400004)(366004)(199004)(189003)(305945005)(71190400001)(478600001)(71200400001)(7736002)(6116002)(8676002)(3846002)(54906003)(316002)(6246003)(2906002)(33716001)(25786009)(76116006)(6916009)(26005)(91956017)(64756008)(66446008)(186003)(66946007)(66476007)(66556008)(476003)(102836004)(86362001)(5660300002)(6506007)(6486002)(6512007)(11346002)(8936002)(4326008)(229853002)(76176011)(486006)(446003)(9686003)(99286004)(256004)(14454004)(81156014)(81166006)(6436002)(66066001)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3631;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: F1eMGhx3kmam8SFAB5SbGaEAfDZSuOZ0GGN82EFFw4RDnzIE6k1BYh3C807vAy4e5h0HJj+j93Spz3E2+6kWVisl2SDnXstuFAPaL7JDdnVnNPQZXppaC0eSRnsoi+Oj5Qd2kKIuSTGce021nCDkpf6hKsrKxWM3CegE5RaAv4b99HuKU0yLXDf4bD4vGbN+7j1NStuRtC+5lt0GLD6HPjQmlyyMRELThi6XumpbKD0wHtb9DwF1HXy9a7dlWw9Q0JHAX2V4hyCIgBsFOxjzZb4iBcMRc6ijtd0Q3dHReW/RwNOnLXz4IMj48434P4NCz3N9gxNkPON78AqUXwtLKF5BhWjrojMYw/xbx8VhIOgGW5e0JJiYimthdbX0D7WuJ6nyEinWOs9JIULjk3LKKzsKNlDpbfcl9Gamgxn1z2A=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <B3F9255740D2D846BF850F7099619AF3@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLVpPvHf2RpwjHh5v9cnQm9CLtj0HHaqVH=EFQJk-GhaPQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6beaf1bc-2f01-4055-42ae-08d74e6367a3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 15:55:14.2017
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ERmu3h7lXD6HoUMb0uyyfiq0M42H0lEPrH+MObL/DA7w4GlcCFS0se4hNf+Fr/I00gP3PHHrhtQsqG+I7DVD6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3631
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 04:00:24PM -0700, John Stultz wrote:
-> On Mon, Oct 7, 2019 at 2:11 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Mon, Oct 7, 2019 at 2:07 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
-> > > > >
-> > > > > Add necessary compatible flag for HiSi's DWC3 so
-> > > > > dwc3-of-simple will probe.
-> > > > >
-> > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > Cc: Felipe Balbi <balbi@kernel.org>
-> > > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > > Cc: Yu Chen <chenyu56@huawei.com>
-> > > > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > > > Cc: linux-usb@vger.kernel.org
-> > > > > Cc: devicetree@vger.kernel.org
-> > > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > > > ---
-> > > > > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
-> > > > > ---
-> > > > >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
-> > > > >  1 file changed, 52 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> > > >
-> > > > Can you make this a schema.
-> > >
-> > > Sorry, I'm not sure exactly what you're asking. I'm guessing from
-> > > grepping around you want the bindings in yaml instead (I see a few
-> > > examples)?
-> >
-> > Yes.
-> >
-> > > Is there some pointer to documentation? The
-> > > Documentation/devicetree/bindings/writing-bindings.txt file doesn't
-> > > seem to say much on it.
-> >
-> > You mean Documentation/devicetree/writing-schemas.rst? There's that
-> > and Documentation/devicetree/bindings/example-schema.yaml which has a
-> > bunch of annotations on what each part means.
-> 
-> Ah! Sorry for missing that. Thanks for the pointer, though I may get
-> away with dropping this one.
-> 
-> > > > If it's only clocks and resets for the wrapper node, just make this
-> > > > all one node.
-> > >
-> > > Just to make sure I'm following, you're suggesting I put all the
-> > > clocks/resets in the dwc3 node (renamed to usb for the node name) and
-> > > not add the wrapper?
-> >
-> > Yes.
-> >
-> > > I'll have to see if that's possible. The generic dwc3 binding wants 3
-> > > clocks, but I only have two in the code I've worked with (similarly it
-> > > seems to only want two resets, not 4) so I'll have to see if I can
-> > > figure out how to adapt that.
-> >
-> > Possible since commit fe8abf332b8f ("usb: dwc3: support clocks and
-> > resets for DWC3 core").
-> 
-> Ok. It *seems* like I can get it working with the existing binding
-> then. There's a little funkiness with the core expecting three clocks
-> while I only have two (currently I'm duplicating the "bus_early" clk
-> for "suspend". Is there a preferred way to do this sort of hack?), and
-> I'm a little worried that only the first reset is being used (instead
-> of the 4 specified), but it seems to work so far.
+On Friday 11 October 2019 17:51:29 CEST zhong jiang wrote:
+[...]
+> How about the following patch ?
+>=20
+> diff --git a/drivers/staging/wfx/Makefile b/drivers/staging/wfx/Makefile
+> index 0d9c1ed..77d68b7 100644
+> --- a/drivers/staging/wfx/Makefile
+> +++ b/drivers/staging/wfx/Makefile
+> @@ -19,6 +19,6 @@ wfx-y :=3D \
+>         sta.o \
+>         debug.o
+>  wfx-$(CONFIG_SPI) +=3D bus_spi.o
+> -wfx-$(subst m,y,$(CONFIG_MMC)) +=3D bus_sdio.o
+> +wfx-$(CONFIG_MMC) +=3D bus_sdio.o
+>=20
+>  obj-$(CONFIG_WFX) +=3D wfx.o
+> diff --git a/drivers/staging/wfx/main.c b/drivers/staging/wfx/main.c
+> index d2508bc..26720a4 100644
+> --- a/drivers/staging/wfx/main.c
+> +++ b/drivers/staging/wfx/main.c
+> @@ -484,16 +484,19 @@ static int __init wfx_core_init(void)
+>=20
+>         if (IS_ENABLED(CONFIG_SPI))
+>                 ret =3D spi_register_driver(&wfx_spi_driver);
+> -       if (IS_ENABLED(CONFIG_MMC) && !ret)
+> +#ifdef CONFIG_MMC
+> +       if (!ret)
+>                 ret =3D sdio_register_driver(&wfx_sdio_driver);
+> +#endif
+>         return ret;
+>  }
+>  module_init(wfx_core_init);
+>=20
+>  static void __exit wfx_core_exit(void)
+>  {
+> -       if (IS_ENABLED(CONFIG_MMC))
+> -               sdio_unregister_driver(&wfx_sdio_driver);
+> +#ifdef CONFIG_MMC
+> +       sdio_unregister_driver(&wfx_sdio_driver);
+> +#endif
+>         if (IS_ENABLED(CONFIG_SPI))
+>                 spi_unregister_driver(&wfx_spi_driver);
+>  }
+Hello zhong,
 
-I would assume that you simply don't know how the 'suspend' clock is 
-connected rather than you don't have one. But that's maybe not a 
-problem you can fix.
+Can you also check the case where CONFIG_SPI is not set?
 
-I would make dwc3 use devm_clk_bulk_get_all and allow for less than 3 
-clocks. And do a similar change for resets.
+Thank you,
 
+--=20
+J=E9r=F4me Pouiller
 
-> I still suspect the dwc3-of-simple.c method might be better since it
-> can handle arbitrary sets of clks and resets instead of the fixed 3 &
-> 1 in the dwc3.txt binding.
-> But if I can get away without having to add an extra binding here, I'd
-> be happier.
-
-Me too.
-
-Rob
