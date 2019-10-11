@@ -6,63 +6,68 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A360C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB871ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC4221D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B087B2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570784465;
-	bh=dip7WC1d3rYrivzNjiGrxb+JxW/shzeEbWuhLH4bGU4=;
+	s=default; t=1570784537;
+	bh=FvTRvAG+rf7yebIY8LceMF0kGTjjLrQsCByAbMcG7ks=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jcrMYicgA2Rxz/hFA/QNcB+owVH4xqtQjzG9hCquCIUIF/q0UraEfo+34khLnJY/t
-	 z/ZGi/sGOCM4u6uBXD9w1A8WzYUeprvhrKvLfoztC80+r7j3Z17Nb4rqLw+6Qkrcmb
-	 JPLGYIHAK90Fd43n32NqFY1ygyTmvjGa0p6zKAJo=
+	b=1qp8q44VOaNfnhWTOd3IOGFDvbvjoZ68GYuksRwgGS9PJ7t7I9LEBe6r1f6JIFuvE
+	 elsT5o6Zoc6S3C1+QR9ZcmNo7SJvZnaD4EVBoSgg8U9vmRFH6W/c2fRCXcD2OJYn+Z
+	 IkMXRDmIj4A6WxRyRSFUI/aeKacGpBSJjPFHp/xQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfJKJBE (ORCPT
+        id S1727569AbfJKJCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:01:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57946 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 05:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbfJKJBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:01:03 -0400
+        id S1727505AbfJKJCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 05:02:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D28002084C;
-        Fri, 11 Oct 2019 09:01:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F6321D6C;
+        Fri, 11 Oct 2019 09:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570784463;
-        bh=dip7WC1d3rYrivzNjiGrxb+JxW/shzeEbWuhLH4bGU4=;
+        s=default; t=1570784535;
+        bh=FvTRvAG+rf7yebIY8LceMF0kGTjjLrQsCByAbMcG7ks=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OeoZJMrz6g7GMmqtbXAue4SM8x4nJovtuam288P3K9MefGoPi+gXjDeWLkcB10tCC
-         JUmUCoaRNjKC0W1+YBri/KJIfafpU/7nWO/grf4/BdSwzK6xU+F0RuClWm6bjLhJwj
-         6Wcy9Tsl1by9TdfFqlEqxndt7IyHlWBYuUyeJsbA=
-Date:   Fri, 11 Oct 2019 11:01:00 +0200
+        b=z/Z3zLqCx7YOJoJckdKqYeaP6ky3TvNHlCoFKSVLmBM7DTomsg/kAAe3XlsiMK5Tl
+         Pz1MaeZ3dBEwdjTTY8qVT0cePbxx7OdrYIazkw1fQsM0n83kHl2KqaYcRF4eMce1g/
+         JuGUw6LadSfnZYDOi6aCkxF/Gk5mwnXjN8Mzukao=
+Date:   Fri, 11 Oct 2019 11:02:13 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Wambui Karuga <wambui.karugax@gmail.com>
 Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Remove declarations of new typedef in
-Message-ID: <20191011090100.GA1076760@kroah.com>
+Subject: Re: [PATCH 2/5] staging: octeon: remove typedef declaration for
+ cvmx_helper_link_info_t
+Message-ID: <20191011090213.GB1076760@kroah.com>
 References: <cover.1570773209.git.wambui.karugax@gmail.com>
+ <78e2c3a4089261e416e9b890cdf81ef029966b75.1570773209.git.wambui.karugax@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1570773209.git.wambui.karugax@gmail.com>
+In-Reply-To: <78e2c3a4089261e416e9b890cdf81ef029966b75.1570773209.git.wambui.karugax@gmail.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 09:02:37AM +0300, Wambui Karuga wrote:
-> This patchset removes various typedef declarations of new data types
-> in drivers/staging/octeon/octeon-stubs.h.
-> The series also changes their old uses with the new declaration
-> format.
+On Fri, Oct 11, 2019 at 09:02:39AM +0300, Wambui Karuga wrote:
+> -typedef union {
+> +union cvmx_helper_link_info_t {
 
-The subject line of this email seems to be lacking something :)
+I agree with Julia, all of the "_t" needs to be dropped as that is
+pointless.  It's a holdover from the original name where "_t" was trying
+to say that this is a typedef.  Gotta love abuse of hungarian notation
+:(
+
+Please redo this patch series and resend.
 
 thanks,
 
