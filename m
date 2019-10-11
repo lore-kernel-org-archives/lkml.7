@@ -2,103 +2,71 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDEBECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A4FECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05FF42084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570800889;
-	bh=S0q1Ris4gOQMieXusBU2vx1H+aMfSdt6g9UnsV6flCw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=px3NwrUmDbtONXmfJgK0s9sZTz/Wol6cwlM8nHk+k8ns+SfxjWqI/fgk80VhLbyQZ
-	 hyI/AuMyXs0UfC/4KwAA3uEd5wGdii+uotqdbh+UHkkBn0G54QfgMYyTroSWgX//y2
-	 mWDnuM+SyotsIxGAWc1bhGwguohM34k+vMNj10bY=
+	by mail.kernel.org (Postfix) with ESMTP id 7AA58214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbfJKNer (ORCPT
+        id S1728516AbfJKNgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:34:47 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:36144 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727709AbfJKNer (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:34:47 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iIv48-00079K-Cw; Fri, 11 Oct 2019 15:34:44 +0200
-Date:   Fri, 11 Oct 2019 14:34:42 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, rnayak@codeaurora.org,
-        suzuki.poulose@arm.com, catalin.marinas@arm.com,
-        linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, jeremy.linton@arm.com,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        andrew.murray@arm.com, will@kernel.org, Dave.Martin@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: Relax CPU features sanity checking on heterogeneous
- architectures
-Message-ID: <20191011143442.515659f4@why>
-In-Reply-To: <7910f428bd96834c15fb56262f3c10f8@codeaurora.org>
-References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
-        <20191011105010.GA29364@lakrids.cambridge.arm.com>
-        <7910f428bd96834c15fb56262f3c10f8@codeaurora.org>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 11 Oct 2019 09:36:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:39351 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727589AbfJKNgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:36:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 06:36:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,284,1566889200"; 
+   d="scan'208";a="207427376"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 11 Oct 2019 06:35:57 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 11 Oct 2019 16:35:57 +0300
+Date:   Fri, 11 Oct 2019 16:35:57 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Kangjie Lu <kjlu@umn.edu>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [v3] thunderbolt: Fix to check the return value of kmemdup
+Message-ID: <20191011133557.GF2819@lahna.fi.intel.com>
+References: <20190325212523.11799-1-pakki001@umn.edu>
+ <f2960ada-7e06-33d1-1533-78989a3e1d2a@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: saiprakash.ranjan@codeaurora.org, mark.rutland@arm.com, rnayak@codeaurora.org, suzuki.poulose@arm.com, catalin.marinas@arm.com, linux-arm-kernel-bounces@lists.infradead.org, linux-kernel@vger.kernel.org, jeremy.linton@arm.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, andrew.murray@arm.com, will@kernel.org, Dave.Martin@arm.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f2960ada-7e06-33d1-1533-78989a3e1d2a@web.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 18:47:39 +0530
-Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org> wrote:
+On Fri, Oct 11, 2019 at 03:00:13PM +0200, Markus Elfring wrote:
+> > uuid in add_switch is allocted via kmemdup which can fail.
+> 
+> I have tried another script for the semantic patch language out.
+> This source code analysis approach points out that the implementation
+> of the function “icm_handle_event” contains still an unchecked call
+> of the function “kmemdup”.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/thunderbolt/icm.c?id=3cdb9446a117d5d63af823bde6fe6babc312e77b#n1627
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/thunderbolt/icm.c#L1627
 
-> Hi Mark,
-> 
-> Thanks a lot for the detailed explanations, I did have a look at all the variations before posting this.
-> 
-> On 2019-10-11 16:20, Mark Rutland wrote:
-> > Hi,
-> > 
-> > On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:  
-> >> On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
-> >> warnings are observed during bootup of big cpu cores.  
-> > 
-> > For reference, which CPUs are in those SoCs?
-> >   
-> 
-> SM8150 is based on Cortex-A55(little cores) and Cortex-A76(big cores). I'm afraid I cannot give details about SC7180 yet.
-> 
-> >> SM8150:  
-> >> >> [    0.271177] CPU features: SANITY CHECK: Unexpected variation in  
-> >> SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: >> 0x00000011111112  
-> > 
-> > The differing fields are EL3, EL2, and EL1: the boot CPU supports
-> > AArch64 and AArch32 at those exception levels, while the secondary only
-> > supports AArch64.
-> > 
-> > Do we handle this variation in KVM?  
-> 
-> We do not support KVM.
+Right it misses that.
 
-Mainline does. You don't get to pick and choose what is supported or
-not.
+> How do you think about to improve it?
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Feel free to send a patch fixing it ;-) Or I can do that myself.
