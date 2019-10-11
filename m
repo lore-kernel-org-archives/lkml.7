@@ -2,170 +2,496 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F09C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FDEECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C66521D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4915921D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:09:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="dRKTtlJE"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AhQbTguD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbfJKNIp (ORCPT
+        id S1728652AbfJKNJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:08:45 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44342 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728599AbfJKNIo (ORCPT
+        Fri, 11 Oct 2019 09:09:14 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45666 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728165AbfJKNJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:08:44 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m13so9724487ljj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 06:08:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=rianfJYqECdE+QtZW64kQ5yJr8Uz6OZaARSFrVw9bs4=;
-        b=dRKTtlJErIwNFWVHk1FM6s4j/GT2w063GFu4qYGKPW9/iqI/6KiBlI2str4R28wVaW
-         4rpQ17qOSD4O81+2oGq2m9O/xphLmFW+MxtukVtcsG2m2yAFrtJwl0KCOERCSQf4YP9G
-         qKKzrT4g5wqVcL59YHcAMqGCG3Y9GI5Kc8/mkqhd5D5B/291mg61LC2sZa/roTggWPL0
-         +uhm7EusNkG0unhs57yT+Un6M86uH0dmgREsXCSwTqKywA7uG+ezCPRSAf4ryOIaI7Iy
-         wZx5Jw8DS/W9L/0d9F30JzgJTBjY6NllJ8YMC5YPnLTC+ZTrTkZcERIxMWKeTC9A0RMx
-         oi/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=rianfJYqECdE+QtZW64kQ5yJr8Uz6OZaARSFrVw9bs4=;
-        b=LGz7DU06HOmB/W0dZ9Qxnr43CIQzKIYDV3y68wRqeQqu8Iya4U29scveYxt5fLA6h+
-         W8CEwPv9sbHwsKI/3PbVUMEQ/4DKgt9R6KU/qP2fTavYViiwm4gsj2KEnLGnPgNeUfuw
-         ievry/On9t9DDZ1dMg4CVQzO1Hp2yfBY7QVXmPA/OYzBPSsfmsBv5ojYiDXaxmYfNGOg
-         84UjrLbG7ed3DysclHZ6zGY8qZ060ZRaf1jnBBBot8lqUawKgQLdHicnS+9tacKR/hvW
-         n22HYdj90bAltTKAuEm7loLHBwDsEKOQDBo+po+0ZelpmhNtfQpe6lyav9XrDoybFX8t
-         mEOg==
-X-Gm-Message-State: APjAAAUDkiC3gyJO5J2BjRuMOdyQ+amlyraJr3JSpExkAL8gxemhs/NJ
-        aTPyo5LTHTLp0Mow/8cQ+jXz9g==
-X-Google-Smtp-Source: APXvYqwypjthT7nDft61JPMpe4A6BPPPb5GutnCDtzzxJ0ODUqmxKoczKMz8zINqEEhUApStCMTFBg==
-X-Received: by 2002:a2e:9bd2:: with SMTP id w18mr9323694ljj.140.1570799321440;
-        Fri, 11 Oct 2019 06:08:41 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id i11sm1952023ljb.74.2019.10.11.06.08.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 06:08:40 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id C7973102DC1; Fri, 11 Oct 2019 16:08:40 +0300 (+03)
-Date:   Fri, 11 Oct 2019 16:08:40 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        torvalds@linux-foundation.org,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: Re: [RFC PATCH 1/4] mm: Have the mempolicy pagewalk to avoid
- positive callback return codes
-Message-ID: <20191011130840.qusspibjxb7iswuq@box>
-References: <20191010134058.11949-1-thomas_os@shipmail.org>
- <20191010134058.11949-2-thomas_os@shipmail.org>
+        Fri, 11 Oct 2019 09:09:13 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BD6F3l025640;
+        Fri, 11 Oct 2019 15:08:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=nQKOZZBYsyXxKFeDroxBKkEayheqE47owb3WUaWVP7U=;
+ b=AhQbTguDJ+GJF/rj6qbfrqMhkSZ/DP8KMmiTzPh+zm8h3GQxFNY8SpOyULy/TZy1T7wx
+ 87QXv3L14i5FlgYTSXpOzZ2d+sNUT7GwmyBoqGMrIgwAVb34GregSMtCm1CmgcJHCSEY
+ 6RmESOn9kZzNjr9/CI3X+Urb5Pq9FFSfGEQjT3tIyC3FBRx4BU83SuRnDukmNzw6YrZ1
+ h62hr5hm7uJXtqXyEasVSgiusz8T9A0rO98DbL6z84QXYkC+CmhHBLX2458U3WhQFWw6
+ eHgN6eLRp+dORCK4kk+Hn84ocJ/Asp+CEmbomNvEpcs3t2omD83ZygL5ydt2bDqn14JI lw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vej2ptcpn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Oct 2019 15:08:55 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6978010002A;
+        Fri, 11 Oct 2019 15:08:54 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5A40F2BEC47;
+        Fri, 11 Oct 2019 15:08:54 +0200 (CEST)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 11 Oct
+ 2019 15:08:54 +0200
+Received: from localhost (10.201.20.122) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 11 Oct 2019 15:08:53
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
+        <yannick.fertre@st.com>, <philippe.cornu@st.com>
+CC:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2] dt-bindings: display: Convert stm32 display bindings to json-schema
+Date:   Fri, 11 Oct 2019 15:08:51 +0200
+Message-ID: <20191011130851.23877-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191010134058.11949-2-thomas_os@shipmail.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-11_08:2019-10-10,2019-10-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 03:40:55PM +0200, Thomas Hellström (VMware) wrote:
-> From: Linus Torvalds <torvalds@linux-foundation.org>
-> 
-> The pagewalk code is being reworked to have positive callback return codes
-> do walk control. Avoid using positive return codes: "1" is replaced by
-> "-EBUSY".
-> 
-> Co-developed-by: Thomas Hellstrom <thellstrom@vmware.com>
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> ---
->  mm/mempolicy.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 4ae967bcf954..df34c7498c27 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -482,8 +482,8 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
->   *
->   * queue_pages_pte_range() has three possible return values:
->   * 0 - pages are placed on the right node or queued successfully.
-> - * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
-> - *     specified.
-> + * -EBUSY - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
-> + *          specified.
->   * -EIO - only MPOL_MF_STRICT was specified and an existing page was already
->   *        on a node that does not follow the policy.
->   */
-> @@ -503,7 +503,7 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
->  	if (ptl) {
->  		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
->  		if (ret != 2)
-> -			return ret;
-> +			return (ret == 1) ? -EBUSY : ret;
+Convert the STM32 display binding to DT schema format using json-schema.
+Split the original bindings in two yaml files:
+- one for display controller (ltdc)
+- one for DSI controller
 
-It would be cleaner to propagate the error code logic to queue_pages_pmd()
-too: 0 - placed, 1 - split, -EBUSY - unmovable, ...
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+changes in v2:
+- use BSD-2-Clause license
+- add panel property
+- fix identation
+- remove pinctrl-names: true
+- remove pinctrl-[0-9]+: true
+- rework ports block to include port@0 and port@1
+- use const for #adress-cells and #size-cells
+- add additionalProperties: false
 
->  	}
->  	/* THP was split, fall through to pte walk */
->  
-> @@ -546,7 +546,7 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
->  	cond_resched();
->  
->  	if (has_unmovable)
-> -		return 1;
-> +		return -EBUSY;
->  
->  	return addr != end ? -EIO : 0;
->  }
-> @@ -669,9 +669,9 @@ static const struct mm_walk_ops queue_pages_walk_ops = {
->   * passed via @private.
->   *
->   * queue_pages_range() has three possible return values:
-> - * 1 - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
-> - *     specified.
->   * 0 - queue pages successfully or no misplaced page.
-> + * -EBUSY - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
-> + *	    specified.
->   * -EIO - there is misplaced page and only MPOL_MF_STRICT was specified.
->   */
->  static int
-> @@ -1285,7 +1285,7 @@ static long do_mbind(unsigned long start, unsigned long len,
->  	ret = queue_pages_range(mm, start, end, nmask,
->  			  flags | MPOL_MF_INVERT, &pagelist);
->  
-> -	if (ret < 0) {
-> +	if (ret < 0 && ret != -EBUSY) {
->  		err = -EIO;
->  		goto up_out;
->  	}
-> @@ -1303,7 +1303,7 @@ static long do_mbind(unsigned long start, unsigned long len,
->  				putback_movable_pages(&pagelist);
->  		}
->  
-> -		if ((ret > 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
-> +		if ((ret < 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
->  			err = -EIO;
->  	} else
->  		putback_movable_pages(&pagelist);
-> -- 
-> 2.21.0
-> 
+ .../devicetree/bindings/display/st,stm32-dsi.yaml  | 151 +++++++++++++++++++++
+ .../devicetree/bindings/display/st,stm32-ltdc.txt  | 144 --------------------
+ .../devicetree/bindings/display/st,stm32-ltdc.yaml |  81 +++++++++++
+ 3 files changed, 232 insertions(+), 144 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+ create mode 100644 Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
 
+diff --git a/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
+new file mode 100644
+index 000000000000..88a176662ac2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
+@@ -0,0 +1,151 @@
++# SPDX-License-Identifier: BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/st,stm32-dsi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 DSI host controller
++
++maintainers:
++  - Philippe Cornu <philippe.cornu@st.com>
++  - Yannick Fertre <yannick.fertre@st.com>
++
++description:
++  The STMicroelectronics STM32 DSI controller uses the Synopsys DesignWare MIPI-DSI host controller.
++
++properties:
++  compatible:
++    const: st,stm32-dsi
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Module Clock
++      - description: DSI bus clock
++      - description: Pixel clock
++    minItems: 2
++    maxItems: 3
++
++  clock-names:
++    items:
++      - const: pclk
++      - const: ref
++      - const: px_clk
++    minItems: 2
++    maxItems: 3
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    items:
++      - const: apb
++
++  phy-dsi-supply:
++    maxItems: 1
++    description:
++        Phandle of the regulator that provides the supply voltage.
++
++  ports:
++    type: object
++    description:
++      A node containing DSI input & output port nodes with endpoint
++      definitions as documented in
++      Documentation/devicetree/bindings/media/video-interfaces.txt
++      Documentation/devicetree/bindings/graph.txt
++    properties:
++      port@0:
++        type: object
++        description:
++          DSI input port node, connected to the ltdc rgb output port.
++
++      port@1:
++        type: object
++        description:
++          DSI output port node, connected to a panel or a bridge input port"
++
++patternProperties:
++  "^(panel|panel-dsi)@[0-9]$":
++    type: object
++    description:
++      A node containing the panel or bridge description as documented in
++      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
++    properties:
++      port@0:
++        type: object
++        description:
++          Panel or bridge port node, connected to the DSI output port (port@1)
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++required:
++  - "#address-cells"
++  - "#size-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    #include <dt-bindings/gpio/gpio.h>
++    dsi: dsi@5a000000 {
++        compatible = "st,stm32-dsi";
++        reg = <0x5a000000 0x800>;
++        clocks = <&rcc DSI_K>, <&clk_hse>, <&rcc DSI_PX>;
++        clock-names = "pclk", "ref", "px_clk";
++        resets = <&rcc DSI_R>;
++        reset-names = "apb";
++        phy-dsi-supply = <&reg18>;
++        
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ports {
++              #address-cells = <1>;
++              #size-cells = <0>;
++
++              port@0 {
++                    reg = <0>;
++                    dsi_in: endpoint {
++                        remote-endpoint = <&ltdc_ep1_out>;
++                    };
++              };
++
++              port@1 {
++                    reg = <1>;
++                    dsi_out: endpoint {
++                        remote-endpoint = <&panel_in>;
++                    };
++              };
++        };
++
++        panel-dsi@0 {
++              compatible = "orisetech,otm8009a";
++              reg = <0>;
++              reset-gpios = <&gpioe 4 GPIO_ACTIVE_LOW>;
++              power-supply = <&v3v3>;
++
++              port {
++                    panel_in: endpoint {
++                        remote-endpoint = <&dsi_out>;
++                    };
++              };
++        };
++    };
++
++...
++
++
+diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+deleted file mode 100644
+index 60c54da4e526..000000000000
+--- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
++++ /dev/null
+@@ -1,144 +0,0 @@
+-* STMicroelectronics STM32 lcd-tft display controller
+-
+-- ltdc: lcd-tft display controller host
+-  Required properties:
+-  - compatible: "st,stm32-ltdc"
+-  - reg: Physical base address of the IP registers and length of memory mapped region.
+-  - clocks: A list of phandle + clock-specifier pairs, one for each
+-    entry in 'clock-names'.
+-  - clock-names: A list of clock names. For ltdc it should contain:
+-      - "lcd" for the clock feeding the output pixel clock & IP clock.
+-  - resets: reset to be used by the device (defined by use of RCC macro).
+-  Required nodes:
+-  - Video port for DPI RGB output: ltdc has one video port with up to 2
+-    endpoints:
+-      - for external dpi rgb panel or bridge, using gpios.
+-      - for internal dpi input of the MIPI DSI host controller.
+-      Note: These 2 endpoints cannot be activated simultaneously.
+-
+-* STMicroelectronics STM32 DSI controller specific extensions to Synopsys
+-  DesignWare MIPI DSI host controller
+-
+-The STMicroelectronics STM32 DSI controller uses the Synopsys DesignWare MIPI
+-DSI host controller. For all mandatory properties & nodes, please refer
+-to the related documentation in [5].
+-
+-Mandatory properties specific to STM32 DSI:
+-- #address-cells: Should be <1>.
+-- #size-cells: Should be <0>.
+-- compatible: "st,stm32-dsi".
+-- clock-names:
+-  - phy pll reference clock string name, must be "ref".
+-- resets: see [5].
+-- reset-names: see [5].
+-
+-Mandatory nodes specific to STM32 DSI:
+-- ports: A node containing DSI input & output port nodes with endpoint
+-  definitions as documented in [3] & [4].
+-  - port@0: DSI input port node, connected to the ltdc rgb output port.
+-  - port@1: DSI output port node, connected to a panel or a bridge input port.
+-- panel or bridge node: A node containing the panel or bridge description as
+-  documented in [6].
+-  - port: panel or bridge port node, connected to the DSI output port (port@1).
+-Optional properties:
+-- phy-dsi-supply: phandle of the regulator that provides the supply voltage.
+-
+-Note: You can find more documentation in the following references
+-[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+-[2] Documentation/devicetree/bindings/reset/reset.txt
+-[3] Documentation/devicetree/bindings/media/video-interfaces.txt
+-[4] Documentation/devicetree/bindings/graph.txt
+-[5] Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+-[6] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+-
+-Example 1: RGB panel
+-/ {
+-	...
+-	soc {
+-	...
+-		ltdc: display-controller@40016800 {
+-			compatible = "st,stm32-ltdc";
+-			reg = <0x40016800 0x200>;
+-			interrupts = <88>, <89>;
+-			resets = <&rcc STM32F4_APB2_RESET(LTDC)>;
+-			clocks = <&rcc 1 CLK_LCD>;
+-			clock-names = "lcd";
+-
+-			port {
+-				ltdc_out_rgb: endpoint {
+-				};
+-			};
+-		};
+-	};
+-};
+-
+-Example 2: DSI panel
+-
+-/ {
+-	...
+-	soc {
+-	...
+-		ltdc: display-controller@40016800 {
+-			compatible = "st,stm32-ltdc";
+-			reg = <0x40016800 0x200>;
+-			interrupts = <88>, <89>;
+-			resets = <&rcc STM32F4_APB2_RESET(LTDC)>;
+-			clocks = <&rcc 1 CLK_LCD>;
+-			clock-names = "lcd";
+-
+-			port {
+-				ltdc_out_dsi: endpoint {
+-					remote-endpoint = <&dsi_in>;
+-				};
+-			};
+-		};
+-
+-
+-		dsi: dsi@40016c00 {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			compatible = "st,stm32-dsi";
+-			reg = <0x40016c00 0x800>;
+-			clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>;
+-			clock-names = "pclk", "ref";
+-			resets = <&rcc STM32F4_APB2_RESET(DSI)>;
+-			reset-names = "apb";
+-			phy-dsi-supply = <&reg18>;
+-
+-			ports {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-
+-				port@0 {
+-					reg = <0>;
+-					dsi_in: endpoint {
+-						remote-endpoint = <&ltdc_out_dsi>;
+-					};
+-				};
+-
+-				port@1 {
+-					reg = <1>;
+-					dsi_out: endpoint {
+-						remote-endpoint = <&dsi_in_panel>;
+-					};
+-				};
+-
+-			};
+-
+-			panel-dsi@0 {
+-				reg = <0>; /* dsi virtual channel (0..3) */
+-				compatible = ...;
+-				enable-gpios = ...;
+-
+-				port {
+-					dsi_in_panel: endpoint {
+-						remote-endpoint = <&dsi_out>;
+-					};
+-				};
+-
+-			};
+-
+-		};
+-
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
+new file mode 100644
+index 000000000000..aa0415007d2f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/st,stm32-ltdc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 lcd-tft display controller
++
++maintainers:
++  - Philippe Cornu <philippe.cornu@st.com>
++  - Yannick Fertre <yannick.fertre@st.com>
++
++properties:
++  compatible:
++    const: st,stm32-ltdc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 2
++    maxItems: 2
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: lcd
++
++  resets:
++    maxItems: 1
++
++  port:
++    type: object
++    description:
++      "Video port for DPI RGB output. 
++      ltdc has one video port with up to 2 endpoints:
++      - for external dpi rgb panel or bridge, using gpios.
++      - for internal dpi input of the MIPI DSI host controller.
++      Note: These 2 endpoints cannot be activated simultaneously.
++      Please refer to the bindings defined in
++      Documentation/devicetree/bindings/media/video-interfaces.txt."
++
++  dma-ranges:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - resets
++  - port
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    ltdc: display-controller@40016800 {
++        compatible = "st,stm32-ltdc";
++        reg = <0x5a001000 0x400>;
++        interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&rcc LTDC_PX>;
++        clock-names = "lcd";
++        resets = <&rcc LTDC_R>;
++
++        port {
++             ltdc_out_dsi: endpoint {
++                     remote-endpoint = <&dsi_in>;
++             };
++        };
++    };
++
++...
++
 -- 
- Kirill A. Shutemov
+2.15.0
+
