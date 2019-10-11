@@ -2,80 +2,119 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D516CC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E17ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2DC206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570813415;
-	bh=1Hli6rSRTCC/5zc4mgxTswUrMtvRKAPnA9Ms67W/ABY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P7sqQQXgz9NcakSpx79uNm/+PwjxnvJRwB3YWhTLbdo5frMmIgn4zVX5DKaPC6gnc
-	 mFvPu7mYl/1p3dsgsC2vTIXbZ0obU+qD5qPBOEZyacBLO3TIvIFEetJ+QC4EtTfbDz
-	 ++ZThg9tmcrnf7MAkgtmVbqGfmQex8QEnaIuWzZM=
+	by mail.kernel.org (Postfix) with ESMTP id 3FD7C2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:05:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vi3AsMoB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbfJKRDe (ORCPT
+        id S1728573AbfJKRFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbfJKRDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:03:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 289462054F;
-        Fri, 11 Oct 2019 17:03:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570813413;
-        bh=1Hli6rSRTCC/5zc4mgxTswUrMtvRKAPnA9Ms67W/ABY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ye8s7tCi6sJHRJtRWPU6AAEb1vVyRqOXKd+9IyJiKTx9U21ByZqia4mUiFnUVy/Jt
-         hicP8wd7MooFkafAiGAbaRMFI91U5rclGyzw6xXmPYM+4g5NOBpLCOx6w3PHlrpdq2
-         GvMu03Wz4bEWhnr9FJ4zU351tEGuPGKoJxRvqx9Y=
-Date:   Fri, 11 Oct 2019 19:03:31 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     Jerome.Pouiller@silabs.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v2] staging: wfx: fix an undefined reference error
- when CONFIG_MMC=m
-Message-ID: <20191011170331.GA1296994@kroah.com>
-References: <1570811647-64905-1-git-send-email-zhongjiang@huawei.com>
+        Fri, 11 Oct 2019 13:05:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43688 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbfJKRFK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 13:05:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a2so6433884pfo.10
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 10:05:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gH8CN6ifApnuUIuL6rRcDtc3+x1r+DnUSfP1BvRM+tU=;
+        b=vi3AsMoBjn6t2StCoswScx6ITgLZ5Dgh/dkl10r9QPfaugvfwAw+Ks8xKYxym1++tD
+         hvzb7DfDTq4FZZsRTjHm5lK07UpQR6ElOaQUNQh1vMdFAB9EJtAXJ5oRLCJ/gAyvebLp
+         Y3GV0qJzrWd+xi/FPiAMnEJA2HE+WRUffyThCEm0vZX8MhhZCNZUfP4eUuHhX4RiUxMk
+         UU42FAkEi+pbCIS8fIWqciAEA4L0F6B52OPRrzwBXuxRFdbC9yYQi87WND1dKMvBIaRH
+         AhAc1Y3Z+JgaiNtoMDqv2EWxSrCg492dY9oa0cnWWSGU9eXqCgVgLip0sBwe9cQlgmfY
+         tKbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gH8CN6ifApnuUIuL6rRcDtc3+x1r+DnUSfP1BvRM+tU=;
+        b=Y5gl/5/J5NIUYyCbZ6YHGXVjJ2VtolL8Y1Ae9c5DF3c0f+Z2MzSOcWSBW98LYBBkNN
+         yFW2jjze1WxLk13MiZtgJTh6SpVY0z6Uqr0IUjEfPw2zTgY76/bpOV8ncUqEdaSbbmBq
+         IrUcW3jfIHHyTaQcDc/ss6Ch5tjSjsaQYpKEh8PFALP8WSNRj/bTm2EwFXZ4/dSP5IKa
+         gn6Kplcv/Tb3amcbQqDNXF5WK+MIxrcKIiwdBuAWNf1o8xqZ1Gu6jClfJhqE+QdBCd6P
+         tN5lhSneeMSlxXbUixIpl3ISeDsKiqCUcllpRW7KiGA3IAMqckevvYT+BlQn9wJkMVJW
+         ZkhA==
+X-Gm-Message-State: APjAAAVhed50HvoIYAMAxD2esp+nsvwHIyBwyvmQMhLIsBiMmNuCnTyg
+        Yvp5Qy902XRG7sgDKyFJeq8Pug==
+X-Google-Smtp-Source: APXvYqxCYyvcatZuXiUrQiYQSR8LloHnPBCD0DgKGggGvjPKWDeBhtnUDZ0YgxWXDlWKV/vjoimEdg==
+X-Received: by 2002:a62:2581:: with SMTP id l123mr17786124pfl.197.1570813509739;
+        Fri, 11 Oct 2019 10:05:09 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 199sm10116069pfv.152.2019.10.11.10.05.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 10:05:08 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 10:05:06 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     georgi.djakov@linaro.org, robh+dt@kernel.org, agross@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, jonathan@marek.ca
+Subject: Re: [PATCH v2 2/2] interconnect: qcom: add msm8974 driver
+Message-ID: <20191011170506.GD571@minitux>
+References: <20191005114605.5279-1-masneyb@onstation.org>
+ <20191005114605.5279-3-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1570811647-64905-1-git-send-email-zhongjiang@huawei.com>
+In-Reply-To: <20191005114605.5279-3-masneyb@onstation.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 12:34:07AM +0800, zhong jiang wrote:
-> I hit the following error when compile the kernel.
-> 
-> drivers/staging/wfx/main.o: In function `wfx_core_init':
-> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:488: undefined reference to `sdio_register_driver'
-> drivers/staging/wfx/main.o: In function `wfx_core_exit':
-> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:496: undefined reference to `sdio_unregister_driver'
-> drivers/staging/wfx/main.o:(.debug_addr+0x1a8): undefined reference to `sdio_register_driver'
-> drivers/staging/wfx/main.o:(.debug_addr+0x6f0): undefined reference to `sdio_unregister_driver'
-> 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  drivers/staging/wfx/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat 05 Oct 04:46 PDT 2019, Brian Masney wrote:
+> diff --git a/drivers/interconnect/qcom/msm8974.c b/drivers/interconnect/qcom/msm8974.c
+[..]
+> +static void msm8974_icc_rpm_smd_send(struct device *dev, int rsc_type,
+> +				     char *name, int id, u64 val)
+> +{
+> +	int ret;
+> +
+> +	if (id == -1)
+> +		return;
+> +
+> +	/*
+> +	 * Setting the bandwidth requests for some nodes fails and this same
+> +	 * behavior occurs on the downstream MSM 3.4 kernel sources based on
+> +	 * errors like this in that kernel:
+> +	 *
+> +	 *   msm_rpm_get_error_from_ack(): RPM NACK Unsupported resource
+> +	 *   AXI: msm_bus_rpm_req(): RPM: Ack failed
+> +	 *   AXI: msm_bus_rpm_commit_arb(): RPM: Req fail: mas:32, bw:240000000
+> +	 *
+> +	 * Since there's no publicly available documentation for this hardware,
+> +	 * and the bandwidth for some nodes in the path can be set properly,
+> +	 * let's not return an error.
+> +	 */
 
-What changed from v1?  Always put that below the --- line.
+So presumably all that matters for paths including these endpoints is
+the clk_set_rate() on the bus itself. But I prefer that we merge it like
+you propose and then swing back to work out the details.
 
-v3 please?
+> +	ret = qcom_icc_rpm_smd_send(QCOM_SMD_RPM_ACTIVE_STATE, rsc_type, id,
+> +				    val);
+> +	if (ret)
+> +		dev_dbg(dev, "Cannot set bandwidth for node %s (%d): %d\n",
+> +			name, id, ret);
+> +}
+> +
 
-thanks,
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-greg k-h
+Regards,
+Bjorn
