@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C750AC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D81ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9658921E6F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C58222D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570824704;
-	bh=vuNxoTb6DytwxDoRyfb9fYEMcmy7VWkF2Z4Z5Mc6VWI=;
+	s=default; t=1570824707;
+	bh=sGNdLLhuEVZysxBhv0Nqac2JO+y3rWu2YqnWwnaSSFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PbA9FZWdY50ZBIs8APw8tl6TCL5zOnIadD2P3nqMAwuALgNe79KhzIIInD4ZyP8ah
-	 sihQFV5RjJMQxr8fXnYpTv4qeF3SFNBaiIkrBwSeUa3pB6I7P+BJqlysHNhHnBvRv8
-	 toSKy0Se3EUVDGKxONNNlkfspX5AKnectX3uFg2Y=
+	b=0Dcxp5758Ky43fHteMfErWckZ23vV1UMoMxWVUbPCHvmV0e8q1ubBVwjK0LYX8f7O
+	 2r1ytkmFsHlccIaH9yXKue5M2SIhsVgva7BTSj2O26aFJI8H2WqUQfGqE976DO1sAB
+	 pQ+gaQf5zXLUWm0sblyq7mPKoeEWECYYB1EwHcAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbfJKULm (ORCPT
+        id S1729866AbfJKULq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:11:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47834 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 16:11:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729806AbfJKULk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:11:40 -0400
+        id S1729449AbfJKULo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 16:11:44 -0400
 Received: from quaco.ghostprotocols.net (189-94-137-67.3g.claro.net.br [189.94.137.67])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C99F22475;
-        Fri, 11 Oct 2019 20:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56D302196E;
+        Fri, 11 Oct 2019 20:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570824699;
-        bh=vuNxoTb6DytwxDoRyfb9fYEMcmy7VWkF2Z4Z5Mc6VWI=;
+        s=default; t=1570824703;
+        bh=sGNdLLhuEVZysxBhv0Nqac2JO+y3rWu2YqnWwnaSSFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zygZY1Bmlxdq9fYSgJYQ8gg+YWV/Sd4l7pLiXLnAm0dNym2xX3kOlW7CV+6rVAZK+
-         kW6GO9F+UyXkYd7w0VskqsV0Xa4eNCAd+Lg3CJwK3MdklrNUfqgiaM/fsxQrZfNbid
-         KMmag0Mjys/4JjbqF33HDOWZHLm8vXDBi9uA9Ek8=
+        b=e8zVfp6cbULxL9fBKKeWi5Kun7Ie7+K/hUfrbUp6SGqpQZpf8vFZNcvIbI5tv7AtF
+         znSK57/KCTex2dXeKueN1U2qbRccIdW8XzeCp1Iax4XpaV/eszrZ+MEp5M7wQZIkDF
+         gev/vjG9hzpfZwgQcBBGAmxjCfetg/ptUql/Kfzo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 64/69] libperf: Move the pollfd allocation from tools/perf to libperf
-Date:   Fri, 11 Oct 2019 17:05:54 -0300
-Message-Id: <20191011200559.7156-65-acme@kernel.org>
+Subject: [PATCH 65/69] libperf: Introduce perf_evlist__exit()
+Date:   Fri, 11 Oct 2019 17:05:55 -0300
+Message-Id: <20191011200559.7156-66-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
@@ -64,73 +64,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-It's needed in libperf only, so move it to the perf_evlist__mmap_ops()
-function.
+Add the perf_evlist__exit() function, so far it's not exported and added
+only for internal use for perf and libperf.
+
+USe it to release cpus/threads and pollfd array.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191007125344.14268-24-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20191007125344.14268-25-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c  | 5 +++++
- tools/perf/util/evlist.c | 4 ----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/lib/evlist.c                  | 12 +++++++++++-
+ tools/perf/lib/include/internal/evlist.h |  2 ++
+ tools/perf/util/evlist.c                 |  6 +-----
+ 3 files changed, 14 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index f9a802d2ceb5..5ae1da97d2e6 100644
+index 5ae1da97d2e6..7ba98f0e6365 100644
 --- a/tools/perf/lib/evlist.c
 +++ b/tools/perf/lib/evlist.c
-@@ -34,6 +34,7 @@ void perf_evlist__init(struct perf_evlist *evlist)
- 		INIT_HLIST_HEAD(&evlist->heads[i]);
- 	INIT_LIST_HEAD(&evlist->entries);
- 	evlist->nr_entries = 0;
-+	fdarray__init(&evlist->pollfd, 64);
+@@ -109,13 +109,23 @@ perf_evlist__next(struct perf_evlist *evlist, struct perf_evsel *prev)
+ 	return next;
  }
  
- static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
-@@ -114,6 +115,7 @@ void perf_evlist__delete(struct perf_evlist *evlist)
++void perf_evlist__exit(struct perf_evlist *evlist)
++{
++	perf_cpu_map__put(evlist->cpus);
++	perf_thread_map__put(evlist->threads);
++	evlist->cpus = NULL;
++	evlist->threads = NULL;
++	fdarray__exit(&evlist->pollfd);
++}
++
+ void perf_evlist__delete(struct perf_evlist *evlist)
+ {
+ 	if (evlist == NULL)
  		return;
  
  	perf_evlist__munmap(evlist);
-+	fdarray__exit(&evlist->pollfd);
+-	fdarray__exit(&evlist->pollfd);
++	perf_evlist__close(evlist);
++	perf_evlist__exit(evlist);
  	free(evlist);
  }
  
-@@ -525,6 +527,9 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 			return -ENOMEM;
- 	}
+diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
+index b2019700cdc0..0721512ffb19 100644
+--- a/tools/perf/lib/include/internal/evlist.h
++++ b/tools/perf/lib/include/internal/evlist.h
+@@ -48,6 +48,8 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+ 			  struct perf_evlist_mmap_ops *ops,
+ 			  struct perf_mmap_param *mp);
  
-+	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
-+		return -ENOMEM;
++void perf_evlist__exit(struct perf_evlist *evlist);
 +
- 	if (perf_cpu_map__empty(cpus))
- 		return mmap_per_thread(evlist, ops, mp);
- 
+ /**
+  * __perf_evlist__for_each_entry - iterate thru all the evsels
+  * @list: list_head instance to iterate
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 3f4f11f27b94..5192c6583c96 100644
+index 5192c6583c96..031ace3696a2 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -58,7 +58,6 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+@@ -138,7 +138,7 @@ void evlist__exit(struct evlist *evlist)
  {
- 	perf_evlist__init(&evlist->core);
- 	perf_evlist__set_maps(&evlist->core, cpus, threads);
--	fdarray__init(&evlist->core.pollfd, 64);
- 	evlist->workload.pid = -1;
- 	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
+ 	zfree(&evlist->mmap);
+ 	zfree(&evlist->overwrite_mmap);
+-	fdarray__exit(&evlist->core.pollfd);
++	perf_evlist__exit(&evlist->core);
  }
-@@ -829,9 +828,6 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
- 	if (!evlist->mmap)
- 		return -ENOMEM;
  
--	if (evlist->core.pollfd.entries == NULL && perf_evlist__alloc_pollfd(&evlist->core) < 0)
--		return -ENOMEM;
--
- 	evlist->core.mmap_len = evlist__mmap_size(pages);
- 	pr_debug("mmap size %zuB\n", evlist->core.mmap_len);
- 	mp.core.mask = evlist->core.mmap_len - page_size - 1;
+ void evlist__delete(struct evlist *evlist)
+@@ -148,10 +148,6 @@ void evlist__delete(struct evlist *evlist)
+ 
+ 	evlist__munmap(evlist);
+ 	evlist__close(evlist);
+-	perf_cpu_map__put(evlist->core.cpus);
+-	perf_thread_map__put(evlist->core.threads);
+-	evlist->core.cpus = NULL;
+-	evlist->core.threads = NULL;
+ 	evlist__purge(evlist);
+ 	evlist__exit(evlist);
+ 	free(evlist);
 -- 
 2.21.0
 
