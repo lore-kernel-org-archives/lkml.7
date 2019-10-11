@@ -2,171 +2,156 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1C0C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2344C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE93621A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:39:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="rD51Grqo"
+	by mail.kernel.org (Postfix) with ESMTP id 9D2C1214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfJKCju (ORCPT
+        id S1726333AbfJKCuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 22:39:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40586 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbfJKCju (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 22:39:50 -0400
-Received: by mail-ot1-f66.google.com with SMTP id y39so6707228ota.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 19:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kUjGfToohnRw3RfgQ+9flaCfPAIrosIOz86XDKOCA7g=;
-        b=rD51GrqogZjnKGZorLgmKzAIqApDPuKQyJfPxfapnklb83LBkH2gdg56h8iJjsNAxP
-         Lp3Xdn8v+HFnoEdG86//8jnIHywJCYDtWHz4XjD66sYaVWFTFuG5xawBbDSfVMHwxqbL
-         zJpwyYXv9QxOEG1VfWm0VW//lM5WUuwMSVNnvQqeD8bg3v3VUBZe5vmarhcKhkwl6D/G
-         FzAomM5Ft+JWRlj+Qvjc/OTxDwkCzP8ZHRpDZfOZhRk7liObRTC6k1DZHjLkDgC58QIR
-         TKQa9CiL9KrF3j/3Lp9Sz6NJ4ZwTauuCjO0J2Ga87+B7d/M9gJ6bqzK7Oybgfl/jji/O
-         rrwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kUjGfToohnRw3RfgQ+9flaCfPAIrosIOz86XDKOCA7g=;
-        b=mTQHjrnuyN4JzoUEMJOep7aIxb+THQcud00aCag50YdNiNXbQbyZP7iI7NMBvZVdlp
-         H49e3JmRttOsClAv/AbyDChGBj4eOIr7n9rkZqRnOoPnj0x8nNvF3U9O6M3UXult+6GH
-         y9SScY3nsUaC25OmrLIfGfp7zigUAIcX6YiI6xB1J6DuyuXIi3CFOZB39CYVJqE237be
-         66tn16MBMEyZieOHf+3Hb14WEv8ZRvWBrJKVWAPMa6/vpGmwUqTuCPuUq6DAcqBic05E
-         G29CfPtn4zIZqoRalkruq8FNZ3HxWnJFqYt6LRSurlAXKXbjADbkVmWwXWKXIzoM4kGA
-         1G9w==
-X-Gm-Message-State: APjAAAVB6hQq3lmN2L5WyehnUr5W2Zf5njrEn5mhK6SP19N2oE3xQs6S
-        0Frg0eirrWtwv6XTeIsnI3jBh1KSeQNCfnDk85M5rQ==
-X-Google-Smtp-Source: APXvYqyCjQsNSbI1mxag1lzJW/e/oU312qrBqdfJ38j8KxBq45vv+72ZX6iPup9KpaNI0dTRd5UK6J3tZdFLeJ9ljeo=
-X-Received: by 2002:a9d:7843:: with SMTP id c3mr8640549otm.71.1570761589216;
- Thu, 10 Oct 2019 19:39:49 -0700 (PDT)
+        Thu, 10 Oct 2019 22:50:39 -0400
+Received: from mga17.intel.com ([192.55.52.151]:51685 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbfJKCui (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 22:50:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 19:50:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,282,1566889200"; 
+   d="scan'208";a="224193678"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.78]) ([10.239.196.78])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Oct 2019 19:50:35 -0700
+Subject: Re: [PATCH v1 0/2] perf stat: Support --all-kernel and --all-user
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20190925020218.8288-1-yao.jin@linux.intel.com>
+ <20190929151022.GA16309@krava> <20190930182136.GD8560@tassilo.jf.intel.com>
+ <20190930192800.GA13904@kernel.org>
+ <20191001021755.GF8560@tassilo.jf.intel.com>
+ <8a1cbcf6-2de7-3036-1c86-f3af6af077e2@linux.intel.com>
+ <20191010080052.GB9616@krava>
+ <9df9e60f-4998-32f2-f743-ebb0fdea4c0a@linux.intel.com>
+ <20191010123309.GB19434@kernel.org>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <03b5fffb-fedf-19e6-5a23-bcf2bbf4ef98@linux.intel.com>
+Date:   Fri, 11 Oct 2019 10:50:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157066230358.1059972.1736585303527133478.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAKv+Gu8ih2RffZHdwAnHZicL_v8CxV9WnCy+uA1jSSyh58xapA@mail.gmail.com>
- <CAPcyv4iQ5Np3dDH=-a_7gPnWKBCHXGit2PN-h=Jw_eqj7Lb2BQ@mail.gmail.com> <CAKv+Gu9co_FTVYWNZsXF0H+fV1K76pZX4Yv11ANE6NwDBT3pBQ@mail.gmail.com>
-In-Reply-To: <CAKv+Gu9co_FTVYWNZsXF0H+fV1K76pZX4Yv11ANE6NwDBT3pBQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 10 Oct 2019 19:39:38 -0700
-Message-ID: <CAPcyv4iCpA_a7272HXVwBY3NqR1RbyuoXbQOPWG2xFHgqN8-iA@mail.gmail.com>
-Subject: Re: [PATCH v6 05/12] x86/efi: EFI soft reservation to E820 enumeration
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191010123309.GB19434@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:41 AM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
->
-> On Thu, 10 Oct 2019 at 20:31, Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Wed, Oct 9, 2019 at 11:45 PM Ard Biesheuvel
-> > <ard.biesheuvel@linaro.org> wrote:
-> > >
-> > > On Thu, 10 Oct 2019 at 01:19, Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >
-> > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
-> > > > interpretation of the EFI Memory Types as "reserved for a specific
-> > > > purpose".
-> > > >
-> > > > The proposed Linux behavior for specific purpose memory is that it is
-> > > > reserved for direct-access (device-dax) by default and not available for
-> > > > any kernel usage, not even as an OOM fallback.  Later, through udev
-> > > > scripts or another init mechanism, these device-dax claimed ranges can
-> > > > be reconfigured and hot-added to the available System-RAM with a unique
-> > > > node identifier. This device-dax management scheme implements "soft" in
-> > > > the "soft reserved" designation by allowing some or all of the
-> > > > reservation to be recovered as typical memory. This policy can be
-> > > > disabled at compile-time with CONFIG_EFI_SOFT_RESERVE=n, or runtime with
-> > > > efi=nosoftreserve.
-> > > >
-> > > > This patch introduces 2 new concepts at once given the entanglement
-> > > > between early boot enumeration relative to memory that can optionally be
-> > > > reserved from the kernel page allocator by default. The new concepts
-> > > > are:
-> > > >
-> > > > - E820_TYPE_SOFT_RESERVED: Upon detecting the EFI_MEMORY_SP
-> > > >   attribute on EFI_CONVENTIONAL memory, update the E820 map with this
-> > > >   new type. Only perform this classification if the
-> > > >   CONFIG_EFI_SOFT_RESERVE=y policy is enabled, otherwise treat it as
-> > > >   typical ram.
-> > > >
-> > > > - IORES_DESC_SOFT_RESERVED: Add a new I/O resource descriptor for
-> > > >   a device driver to search iomem resources for application specific
-> > > >   memory. Teach the iomem code to identify such ranges as "Soft Reserved".
-> > > >
-> > > > A follow-on change integrates parsing of the ACPI HMAT to identify the
-> > > > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
-> > > > now, just identify and reserve memory of this type.
-> > > >
-> > > > Cc: <x86@kernel.org>
-> > > > Cc: Borislav Petkov <bp@alien8.de>
-> > > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > > > Cc: Darren Hart <dvhart@infradead.org>
-> > > > Cc: Andy Shevchenko <andy@infradead.org>
-> > > > Cc: Andy Lutomirski <luto@kernel.org>
-> > > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > >
-> > > For the EFI changes
-> > >
-> > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > >
-> > > although I must admit I don't follow the enum add_efi_mode logic 100%
-> >
-> > I'm open to suggestions as I'm not sure it's the best possible
-> > organization. The do_add_efi_memmap() routine has the logic to
-> > translate EFI to E820, but unless "add_efi_memmap" is specified on the
-> > kernel command line the EFI memory map is ignored. For
-> > soft-reservation support I want to reuse do_add_efi_memmap(), but
-> > otherwise avoid any other side effects of considering the EFI map.
-> > What I'm missing is the rationale for why "add_efi_memmap" is required
-> > before considering the EFI memory map.
-> >
-> > If there is a negative side effect to always using the EFI map then
-> > the new "add_efi_mode" designation constrains it to just the
-> > soft-reservation case.
-> >
->
-> Could we make the presence of any EFI_MEMORY_SP regions imply
-> add_efi_memmap? That way, it is guaranteed that we don't regress
-> existing systems, while establishing clear and unambiguous semantics
-> for new systems that rely on these changes in order to be able to use
-> the special purpose memory as intended.
 
-In fact that's how it works. EFI_MEMORY_SP is unconditionally added.
-Other EFI memory types are optionally added with the add_efi_memmap
-option.
+
+On 10/10/2019 8:33 PM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Oct 10, 2019 at 04:33:57PM +0800, Jin, Yao escreveu:
+>>
+>>
+>> On 10/10/2019 4:00 PM, Jiri Olsa wrote:
+>>> On Thu, Oct 10, 2019 at 02:46:36PM +0800, Jin, Yao wrote:
+>>>>
+>>>>
+>>>> On 10/1/2019 10:17 AM, Andi Kleen wrote:
+>>>>>>> I think it's useful. Makes it easy to do kernel/user break downs.
+>>>>>>> perf record should support the same.
+>>>>>>
+>>>>>> Don't we have this already with:
+>>>>>>
+>>>>>> [root@quaco ~]# perf stat -e cycles:u,instructions:u,cycles:k,instructions:k -a -- sleep 1
+>>>>>
+>>>>> This only works for simple cases. Try it for --topdown or multiple -M metrics.
+>>>>>
+>>>>> -Andi
+>>>>>
+>>>>
+>>>> Hi Arnaldo, Jiri,
+>>>>
+>>>> We think it should be very useful if --all-user / --all-kernel can be
+>>>> specified together, so that we can get a break down between user and kernel
+>>>> easily.
+>>>>
+>>>> But yes, the patches for supporting this new semantics is much complicated
+>>>> than the patch which just follows original perf-record behavior. I fully
+>>>> understand this concern.
+>>>>
+>>>> So if this new semantics can be accepted, that would be very good. But if
+>>>> you think the new semantics is too complicated, I'm also fine for posting a
+>>>> new patch which just follows the perf-record behavior.
+>>>
+>>> I still need to think a bit more about this.. did you consider
+>>> other options like cloning of the perf_evlist/perf_evsel and
+>>> changing just the exclude* bits? might be event worse actualy ;-)
+>>>
+>>
+>> That should be another approach, but it might be a bit more complicated than
+>> just appending ":u"/":k" modifiers to the event name string.
+>>
+>>> or maybe if we add modifier we could add extra events/groups
+>>> within the parser.. like:
+>>>
+>>>     "{cycles,instructions}:A,{cache-misses,cache-references}:A,cycles:A"
+>>>
+>>> but that might be still more complicated then what you did
+>>>
+>>
+>> Yes agree.
+>>
+>>> also please add the perf record changes so we have same code
+>>> and logic for both if we are going to change it
+>   
+>> If this new semantics can be accepted, I'd like to add perf record
+>> supporting as well. :)
+> 
+> Changes in semantics should be avoided, when we add an option already
+> present in some other tool, we should strive to keep the semantics, so
+> that people can reuse their knowledge and just switch tools to go from
+> sampling to counting, say.
+>
+
+Yes, that makes sense. We need to try our best to keep the original 
+semantics. I will post a patch for perf-stat which just follows the 
+semantics in perf-record.
+
+> So if at all possible, and without having really looked deep in this
+> specific case, I would prefer that new semantics come with a new syntax,
+> would that be possible?
+> 
+
+Yes, that's possible. Maybe we can use a new option for automatically 
+adding two copies of the events (one copy for user and the other copy 
+for kernel). The option something like "--all-space"?
+
+Thanks
+Jin Yao
+
+> - Arnaldo
+>   
+
+
+
+>> Another difficulty for the new semantics is we need to create user and
+>> kernel stat type in runtime_stat rblist (see patch "perf stat: Support
+>> topdown with --all-kernel/--all-user"). That has to bring extra complexity.
+>>
+>> Thanks
+>> Jin Yao
+>>
+>>> jirka
+>>>
+> 
