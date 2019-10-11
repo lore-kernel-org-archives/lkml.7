@@ -2,110 +2,156 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3D1C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36ADECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0327521929
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fp0EZsT2"
+	by mail.kernel.org (Postfix) with ESMTP id D993721929
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfJKANG (ORCPT
+        id S1727837AbfJKANJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:13:06 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44088 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbfJKAND (ORCPT
+        Thu, 10 Oct 2019 20:13:09 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:58409 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727815AbfJKANI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:13:03 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q21so4931475pfn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:13:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8/x+eaVk+ss1aFRFRC2BuuTBFLP58LLEcIBPNJoL2cs=;
-        b=fp0EZsT2tyBJy4pMM0BrQdWNH3jIqPiiR0OFuPR3KKp9NlEmrHQgmL/ZBNM1hxDEVj
-         gMnsWemWjREXcL9c9lek/rM89s9e/l7HiEkBH/KqKwR6byArefKYaaiKWxjJgqllWaPD
-         6nPt+boxm7/SK9xvW9TYHnHh28YvJaU9w+77g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8/x+eaVk+ss1aFRFRC2BuuTBFLP58LLEcIBPNJoL2cs=;
-        b=bVs/HIdzRAoNiZS9pmGWcY7Li8vzntr/ob6VHz1LwqoLs1FVm+f6DJJdwAFzZO7pFs
-         /hHkY06LjsP9fdNmHQmo7SzrmzrzPT+APkJJJwIpvJ7eb2UTfcfyN35NdERxIyewtLAK
-         +2sK/jbFoDMINlcongpslWHwliZeyVUk4TeKRUZZUcDkXuJdvFc95FAWi/8OI3ewKD9T
-         uuaoyqPAoJ2SgNNhsg9o6qugu8ugG+d/uNG3CMnh1d5FlMVAgC4p0kXC2XxPFLKfP/UU
-         jZuqEfAC+n7KIuIlpm++H8ln8YYEv5uQ0D0m6DAXdjK0jRmutnyaoxy4b+zVu5saWlQQ
-         8Xfw==
-X-Gm-Message-State: APjAAAV1nerZ26zYgawr248FVqE7qVEUiwmwOG2QAb8T6qVVLaCpZQMD
-        FD4Oe+IKICPEyOtSyIt2wPNtFg==
-X-Google-Smtp-Source: APXvYqzYV7Ta2O1ssdo06WBxZ2tymf8EVzlYCRiZUZ2NeL/vJyas9bBJT97ICY4x4F39C1qUjsxcog==
-X-Received: by 2002:a63:2350:: with SMTP id u16mr1550233pgm.103.1570752782606;
-        Thu, 10 Oct 2019 17:13:02 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q36sm7238812pgb.34.2019.10.10.17.12.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 17:12:56 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 26/29] x86/mm: Remove redundant &s on addresses
-Date:   Thu, 10 Oct 2019 17:06:06 -0700
-Message-Id: <20191011000609.29728-27-keescook@chromium.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191011000609.29728-1-keescook@chromium.org>
-References: <20191011000609.29728-1-keescook@chromium.org>
+        Thu, 10 Oct 2019 20:13:08 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9B0CQAx018009
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 11 Oct 2019 09:12:26 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9B0CQBm029745;
+        Fri, 11 Oct 2019 09:12:26 +0900
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9B0Bs25024015;
+        Fri, 11 Oct 2019 09:12:26 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-9354403; Fri, 11 Oct 2019 09:11:26 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Fri,
+ 11 Oct 2019 09:11:25 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     David Hildenbrand <david@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>, Qian Cai <cai@lca.pw>,
+        "Alexey Dobriyan" <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michal Hocko <mhocko@kernel.org>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v1] mm: Fix access of uninitialized memmaps in
+ fs/proc/page.c
+Thread-Topic: [PATCH v1] mm: Fix access of uninitialized memmaps in
+ fs/proc/page.c
+Thread-Index: AQHVfoGmAHSAUTUjNku3uhYTH+YfcKdRe/+AgAFpK4CAARfIAA==
+Date:   Fri, 11 Oct 2019 00:11:25 +0000
+Message-ID: <20191011001124.GA17127@hori.linux.bs1.fc.nec.co.jp>
+References: <20191009091205.11753-1-david@redhat.com>
+ <20191009095721.GC20971@hori.linux.bs1.fc.nec.co.jp>
+ <f0fcdacc-814b-49d6-78da-beeb1fa6b67a@redhat.com>
+In-Reply-To: <f0fcdacc-814b-49d6-78da-beeb1fa6b67a@redhat.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.96]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <7C29B4784E15DE49A19DE8FCF5C94CBC@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The &s on addresses are redundant. Remove them to match all the other
-similar functions.
+On Thu, Oct 10, 2019 at 09:30:01AM +0200, David Hildenbrand wrote:
+> On 09.10.19 11:57, Naoya Horiguchi wrote:
+> > Hi David,
+> > 
+> > On Wed, Oct 09, 2019 at 11:12:04AM +0200, David Hildenbrand wrote:
+> >> There are various places where we access uninitialized memmaps, namely:
+> >> - /proc/kpagecount
+> >> - /proc/kpageflags
+> >> - /proc/kpagecgroup
+> >> - memory_failure() - which reuses stable_page_flags() from fs/proc/page.c
+> > 
+> > Ah right, memory_failure is another victim of this bug.
+> > 
+> >>
+> >> We have initialized memmaps either when the section is online or when
+> >> the page was initialized to the ZONE_DEVICE. Uninitialized memmaps contain
+> >> garbage and in the worst case trigger kernel BUGs, especially with
+> >> CONFIG_PAGE_POISONING.
+> >>
+> >> For example, not onlining a DIMM during boot and calling /proc/kpagecount
+> >> with CONFIG_PAGE_POISONING:
+> >> :/# cat /proc/kpagecount > tmp.test
+> >> [   95.600592] BUG: unable to handle page fault for address: fffffffffffffffe
+> >> [   95.601238] #PF: supervisor read access in kernel mode
+> >> [   95.601675] #PF: error_code(0x0000) - not-present page
+> >> [   95.602116] PGD 114616067 P4D 114616067 PUD 114618067 PMD 0
+> >> [   95.602596] Oops: 0000 [#1] SMP NOPTI
+> >> [   95.602920] CPU: 0 PID: 469 Comm: cat Not tainted 5.4.0-rc1-next-20191004+ #11
+> >> [   95.603547] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
+> >> [   95.604521] RIP: 0010:kpagecount_read+0xce/0x1e0
+> >> [   95.604917] Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 e7 48 c1 e7 06 48 03 3d ab 51 01 01 74 1d 48 8b 57 08 480
+> >> [   95.606450] RSP: 0018:ffffa14e409b7e78 EFLAGS: 00010202
+> >> [   95.606904] RAX: fffffffffffffffe RBX: 0000000000020000 RCX: 0000000000000000
+> >> [   95.607519] RDX: 0000000000000001 RSI: 00007f76b5595000 RDI: fffff35645000000
+> >> [   95.608128] RBP: 00007f76b5595000 R08: 0000000000000001 R09: 0000000000000000
+> >> [   95.608731] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
+> >> [   95.609327] R13: 0000000000020000 R14: 00007f76b5595000 R15: ffffa14e409b7f08
+> >> [   95.609924] FS:  00007f76b577d580(0000) GS:ffff8f41bd400000(0000) knlGS:0000000000000000
+> >> [   95.610599] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> [   95.611083] CR2: fffffffffffffffe CR3: 0000000078960000 CR4: 00000000000006f0
+> >> [   95.611686] Call Trace:
+> >> [   95.611906]  proc_reg_read+0x3c/0x60
+> >> [   95.612228]  vfs_read+0xc5/0x180
+> >> [   95.612505]  ksys_read+0x68/0xe0
+> >> [   95.612785]  do_syscall_64+0x5c/0xa0
+> >> [   95.613092]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >>
+> >> Note that there are still two possible races as far as I can see:
+> >> - pfn_to_online_page() succeeding but the memory getting offlined and
+> >>   removed. get_online_mems() could help once we run into this.
+> >> - pfn_zone_device() succeeding but the memmap not being fully
+> >>   initialized yet. As the memmap is initialized outside of the memory
+> >>   hoptlug lock, get_online_mems() can't help.
+> >>
+> >> Let's keep the existing interfaces working with ZONE_DEVICE memory. We
+> >> can later come back and fix these rare races and eventually speed-up the
+> >> ZONE_DEVICE detection.
+> > 
+> > Actually, Toshiki is writing code to refactor and optimize the pfn walking
+> > part, where we find the pfn ranges covered by zone devices by running over
+> > xarray pgmap_array and use the range info to reduce pointer dereferences
+> > to speed up pfn walk. I hope he will share it soon.
+> 
+> AFAIKT, Michal is not a friend of special-casing PFN walkers in that
+> way. We should have a mechanism to detect if a memmap was initialized
+> without having to go via pgmap, special-casing. See my other mail where
+> I draft one basic approach.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/mm/init_64.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+OK, so considering your v2 approach, we could have another pfn_to_page()
+variant like pfn_to_zone_device_page(), where we check that a given pfn
+belongs to the memory section backed by zone memory, then another check if
+the pfn has initialized memmap or not, and return NULL if memmap not
+initialied.  We'll try this approach then, but if you find problems/concerns,
+please let me know.
 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 26299e9ce6da..e67ddca8b7a8 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1300,9 +1300,9 @@ void mark_rodata_ro(void)
- {
- 	unsigned long start = PFN_ALIGN(_text);
- 	unsigned long rodata_start = PFN_ALIGN(__start_rodata);
--	unsigned long end = (unsigned long) &__end_rodata_hpage_align;
--	unsigned long text_end = PFN_ALIGN(&_etext);
--	unsigned long rodata_end = PFN_ALIGN(&__end_rodata);
-+	unsigned long end = (unsigned long)__end_rodata_hpage_align;
-+	unsigned long text_end = PFN_ALIGN(_etext);
-+	unsigned long rodata_end = PFN_ALIGN(__end_rodata);
- 	unsigned long all_end;
- 
- 	printk(KERN_INFO "Write protecting the kernel read-only data: %luk\n",
--- 
-2.17.1
-
+Thanks,
+Naoya Horiguchi
