@@ -2,183 +2,231 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D948BC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121BBECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC19221D56
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C33206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:51:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t3oc8qWs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfJKKuk (ORCPT
+        id S1727846AbfJKKvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:50:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:56332 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726935AbfJKKuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:50:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E3FF28;
-        Fri, 11 Oct 2019 03:50:38 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 039E23F703;
-        Fri, 11 Oct 2019 03:50:36 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 11:50:11 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org,
-        catalin.marinas@arm.com, will@kernel.org, Dave.Martin@arm.com,
-        andrew.murray@arm.com, jeremy.linton@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rnayak@codeaurora.org, bjorn.andersson@linaro.org
-Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
-Message-ID: <20191011105010.GA29364@lakrids.cambridge.arm.com>
-References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
+        Fri, 11 Oct 2019 06:51:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:32844 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfJKKvA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:51:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1DSgmq9rOYhjzebuDsQlC00oGl36gQOPXQEF36cqBOA=; b=t3oc8qWsA+ED2UeWVqU5ERq0t
+        cnpnn+lF/rgtKJyQMd/QAfyG3QhwALfc6iu1+FY5NngMkLXExQK/r9WB8WxGz0oyvLH8Nts7cFfK7
+        oqGF7YkMOczXrLyTeJJzRx3lcukZ8GjG+cT62OosEGXNd7qEzqH+qnejWwTRPEjtUyNBTNUrUnAa6
+        5b66XzusuFS+QMQ69w6PnRzF/4vDXa6M5i+9G01Hnk9OHsptva6Hga9vPRvWVDXBXDGyq49qIz/ST
+        eFmdtN9IrVNUSgs2GEAjQpdgkjxwwS2DaCzE60t6UzfQsDA+DwXK7j2aIpdiurmkDsjt79n0dA9/0
+        27R/cG1cA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIsVW-00028N-MU; Fri, 11 Oct 2019 10:50:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BA505305E4E;
+        Fri, 11 Oct 2019 12:49:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 609E9201DF214; Fri, 11 Oct 2019 12:50:48 +0200 (CEST)
+Date:   Fri, 11 Oct 2019 12:50:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191011105048.GM2359@hirez.programming.kicks-ass.net>
+References: <20191008104335.6fcd78c9@gandalf.local.home>
+ <20191009224135.2dcf7767@oasis.local.home>
+ <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+ <20191010091956.48fbcf42@gandalf.local.home>
+ <20191010140513.GT2311@hirez.programming.kicks-ass.net>
+ <20191010115449.22044b53@gandalf.local.home>
+ <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+ <20191010134830.72ccef3d@gandalf.local.home>
+ <20191011104552.GW2328@hirez.programming.kicks-ass.net>
+ <20191011104712.GL2359@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191011104712.GL2359@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:
-> On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
-> warnings are observed during bootup of big cpu cores.
-
-For reference, which CPUs are in those SoCs?
-
-> SM8150:
+On Fri, Oct 11, 2019 at 12:47:12PM +0200, Peter Zijlstra wrote:
+> On Fri, Oct 11, 2019 at 12:45:52PM +0200, Peter Zijlstra wrote:
+> > +	if (!ops->trampoline) {
+> > +		ops->trampoline = create_trampoline(ops, &size, ftrace_ops_get_func(ops));
 > 
-> [    0.271177] CPU features: SANITY CHECK: Unexpected variation in
-> SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 0x00000011111112
-
-The differing fields are EL3, EL2, and EL1: the boot CPU supports
-AArch64 and AArch32 at those exception levels, while the secondary only
-supports AArch64.
-
-Do we handle this variation in KVM?
-
-> [    0.271184] CPU features: SANITY CHECK: Unexpected variation in
-> SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU4: 0x00000000010142
-
-The differing field is (AArch32) SMC: present on the boot CPU, but
-missing on the secondary CPU.
-
-This is mandated to be zero when AArch32 isn' implemented at EL1.
-
-> [    0.271189] CPU features: SANITY CHECK: Unexpected variation in
-> SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU4: 0x00000010010000
-
-The differing fields are (AArch32) Virtualization, Security, and
-ProgMod: all present on the boot CPU, but missing on the secondary
-CPU.
-
-All mandated to be zero when AArch32 isn' implemented at EL1.
-
-> SC7180:
+> And now that I look at what I send, I see we already pass ops, so no
+> need to pass ftrace_ops_get_func().
 > 
-> [    0.812770] CPU features: SANITY CHECK: Unexpected variation in
-> SYS_CTR_EL0. Boot CPU: 0x00000084448004, CPU6: 0x0000009444c004
+> Let me respin that.
 
-The differing fields are:
-
-* IDC: present only on the secondary CPU. This is a worrying mismatch
-  because it could mean that required cache maintenance is missed in
-  some cases. Does the secondary CPU definitely broadcast PoU
-  maintenance to the boot CPU that requires it?
-
-* L1Ip: VIPT on the boot CPU, PIPT on the secondary CPU.
-
-> [    0.812838] CPU features: SANITY CHECK: Unexpected variation in
-> SYS_ID_AA64MMFR2_EL1. Boot CPU: 0x00000000001011, CPU6: 0x00000000000011
-
-The differing field is IESB: presend on the boot CPU, missing on the
-secondary CPU.
-
-> [    0.812876] CPU features: SANITY CHECK: Unexpected variation in
-> SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU6: 0x1100000011111112
-> [    0.812924] CPU features: SANITY CHECK: Unexpected variation in
-> SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU6: 0x00000000010142
-> [    0.812950] CPU features: SANITY CHECK: Unexpected variation in
-> SYS_ID_PFR0_EL1. Boot CPU: 0x00000010000131, CPU6: 0x00000010010131
-> [    0.812977] CPU features: SANITY CHECK: Unexpected variation in
-> SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU6: 0x00000010010000
-
-These are the same story as for SM8150.
-
-> Can we relax some sanity checking for these by making it FTR_NONSTRICT or by
-> some other means? I just tried below roughly for SM8150 but I guess this is
-> not correct,
-> maybe for ftr_generic_32bits we should be checking bootcpu and nonboot cpu
-> partnum(to identify big.LITTLE) and then make it nonstrict?
-> These are all my wild assumptions, please correct me if I am wrong.
-
-Before we make any changes, we need to check whether we do actually
-handle this variation in a safe way, and we need to consider what this
-means w.r.t. late CPU hotplug.
-
-Even if we can handle variation at boot time, once we've determined the
-set of system-wide features we cannot allow those to regress, and I
-believe we'll need new code to enforce that. I don't think it's
-sufficient to mark these as NONSTRICT, though we might do that with
-other changes.
-
-We shouldn't look at the part number at all here. We care about
-variation across CPUs regardless of whether this is big.LITTLE or some
-variation in tie-offs, etc.
-
-Thanks,
-Mark.
-
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index cabebf1a7976..207197692caa 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -164,8 +164,8 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
->         S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE,
-> ID_AA64PFR0_FP_SHIFT, 4, ID_AA64PFR0_FP_NI),
->         /* Linux doesn't care about the EL3 */
->         ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,
-> ID_AA64PFR0_EL3_SHIFT, 4, 0),
-> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
-> ID_AA64PFR0_EL2_SHIFT, 4, 0),
-> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
-> ID_AA64PFR0_EL1_SHIFT, 4, ID_AA64PFR0_EL1_64BIT_ONLY),
-> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,
-> ID_AA64PFR0_EL2_SHIFT, 4, 0),
-> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,
-> ID_AA64PFR0_EL1_SHIFT, 4, ID_AA64PFR0_EL1_64BIT_ONLY),
->         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
-> ID_AA64PFR0_EL0_SHIFT, 4, ID_AA64PFR0_EL0_64BIT_ONLY),
->         ARM64_FTR_END,
->  };
-> @@ -345,10 +345,10 @@ static const struct arm64_ftr_bits
-> ftr_generic_32bits[] = {
->         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 24, 4, 0),
->         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 20, 4, 0),
->         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 16, 4, 0),
-> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),
-> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 12, 4, 0),
->         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),
-> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),
-> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),
-> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 4, 4, 0),
-> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 0, 4, 0),
->         ARM64_FTR_END,
->  };
-> 
-> 
-> Thanks,
-> Sai
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+---
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1209,10 +1209,15 @@ void text_poke_finish(void)
+ 	text_poke_flush(NULL);
+ }
+ 
+-void text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate)
++void __ref text_poke_queue(void *addr, const void *opcode, size_t len, const void *emulate)
+ {
+ 	struct text_poke_loc *tp;
+ 
++	if (unlikely(system_state == SYSTEM_BOOTING)) {
++		text_poke_early(addr, opcode, len);
++		return;
++	}
++
+ 	text_poke_flush(addr);
+ 
+ 	tp = &tp_vec[tp_vec_nr++];
+@@ -1230,10 +1235,15 @@ void text_poke_queue(void *addr, const v
+  * dynamically allocated memory. This function should be used when it is
+  * not possible to allocate memory.
+  */
+-void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
++void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
+ {
+ 	struct text_poke_loc tp;
+ 
++	if (unlikely(system_state == SYSTEM_BOOTING)) {
++		text_poke_early(addr, opcode, len);
++		return;
++	}
++
+ 	text_poke_loc_init(&tp, addr, opcode, len, emulate);
+ 	text_poke_bp_batch(&tp, 1);
+ }
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -34,6 +34,8 @@
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
++static int ftrace_poke_late = 0;
++
+ int ftrace_arch_code_modify_prepare(void)
+     __acquires(&text_mutex)
+ {
+@@ -43,12 +45,15 @@ int ftrace_arch_code_modify_prepare(void
+ 	 * ftrace has it set to "read/write".
+ 	 */
+ 	mutex_lock(&text_mutex);
++	ftrace_poke_late = 1;
+ 	return 0;
+ }
+ 
+ int ftrace_arch_code_modify_post_process(void)
+     __releases(&text_mutex)
+ {
++	text_poke_finish();
++	ftrace_poke_late = 0;
+ 	mutex_unlock(&text_mutex);
+ 	return 0;
+ }
+@@ -116,7 +121,10 @@ ftrace_modify_code_direct(unsigned long
+ 		return ret;
+ 
+ 	/* replace the text with the new text */
+-	text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
++	if (ftrace_poke_late)
++		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
++	else
++		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
+ 	return 0;
+ }
+ 
+@@ -313,6 +321,7 @@ create_trampoline(struct ftrace_ops *ops
+ 	unsigned long start_offset;
+ 	unsigned long end_offset;
+ 	unsigned long op_offset;
++	unsigned long call_offset;
+ 	unsigned long offset;
+ 	unsigned long npages;
+ 	unsigned long size;
+@@ -329,10 +338,12 @@ create_trampoline(struct ftrace_ops *ops
+ 		start_offset = (unsigned long)ftrace_regs_caller;
+ 		end_offset = (unsigned long)ftrace_regs_caller_end;
+ 		op_offset = (unsigned long)ftrace_regs_caller_op_ptr;
++		call_offset = (unsigned long)ftrace_regs_call;
+ 	} else {
+ 		start_offset = (unsigned long)ftrace_caller;
+ 		end_offset = (unsigned long)ftrace_epilogue;
+ 		op_offset = (unsigned long)ftrace_caller_op_ptr;
++		call_offset = (unsigned long)ftrace_call;
+ 	}
+ 
+ 	size = end_offset - start_offset;
+@@ -389,6 +400,15 @@ create_trampoline(struct ftrace_ops *ops
+ 	/* put in the new offset to the ftrace_ops */
+ 	memcpy(trampoline + op_offset, &op_ptr, OP_REF_SIZE);
+ 
++	/* put in the call to the function */
++	mutex_lock(&text_mutex);
++	call_offset -= start_offset;
++	memcpy(trampoline + call_offset,
++	       text_gen_insn(CALL_INSN_OPCODE,
++			     trampoline + call_offset,
++			     ftrace_ops_get_func(ops)), CALL_INSN_SIZE);
++	mutex_unlock(&text_mutex);
++
+ 	/* ALLOC_TRAMP flags lets us know we created it */
+ 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
+ 
+@@ -426,23 +446,23 @@ void arch_ftrace_update_trampoline(struc
+ 	unsigned int size;
+ 	const char *new;
+ 
+-	if (ops->trampoline) {
+-		/*
+-		 * The ftrace_ops caller may set up its own trampoline.
+-		 * In such a case, this code must not modify it.
+-		 */
+-		if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
+-			return;
+-	} else {
++	if (!ops->trampoline) {
+ 		ops->trampoline = create_trampoline(ops, &size);
+ 		if (!ops->trampoline)
+ 			return;
+ 		ops->trampoline_size = size;
++		return;
+ 	}
+ 
++	/*
++	 * The ftrace_ops caller may set up its own trampoline.
++	 * In such a case, this code must not modify it.
++	 */
++	if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
++		return;
++
+ 	offset = calc_trampoline_call_offset(ops->flags & FTRACE_OPS_FL_SAVE_REGS);
+ 	ip = ops->trampoline + offset;
+-
+ 	func = ftrace_ops_get_func(ops);
+ 
+ 	mutex_lock(&text_mutex);
