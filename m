@@ -2,135 +2,172 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EF3C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C68ECE597
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB109218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01FB20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/uA8/F/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NOwHJfGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfJKUvq (ORCPT
+        id S1728876AbfJKUwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:51:46 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46503 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbfJKUvo (ORCPT
+        Fri, 11 Oct 2019 16:52:18 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34486 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfJKUwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:51:44 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 89so9081084oth.13;
-        Fri, 11 Oct 2019 13:51:44 -0700 (PDT)
+        Fri, 11 Oct 2019 16:52:18 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r22so7965910lfm.1;
+        Fri, 11 Oct 2019 13:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=q0W2EhTeP3FRVRzpbLrE0RJ5tQSqi2OLTlhKGN/4n+c=;
-        b=O/uA8/F/YaA3EEcM9kq6B5XMX+2fdJj9e8RuugqEegsxS7o3GoaBynJn9ne1OAuQOI
-         bShSgo93/FMbBsVBkIu34yTEOuE/mKEWis7fCUspSMQbQfyxZ9Q9rESmb3DOi/GKGZ49
-         G1n3QDzE4Lddb5lJBsVswH2jP0YeFGXxVfopLRGJUsn5I1xPUx+uKSBNscgwFt7bqLgb
-         ghYAtvjnld3DEtum3N2IvPAmCUEgVx2o0EygEYJ6FQprv+5yXSX+mGTHXjRzYxYUuCEr
-         y4CBUbuoWGbcmsvjoryQDnEbUS8hQpvunD7sxNun7/DQoz2suDU4vsONK55h6+pAyWTq
-         +XmQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g7/73Rc0SKWAOwZoR7q0+hWJYXz555sJEfwUC/bv8II=;
+        b=NOwHJfGGX76/mb9z7ZvBAt5mN+Brvb/Xtk/F0Ja6c4sBN69CNSgGQg0iJT4Z9z5x1v
+         C0X8Wd9H7/wZ9RrIBeIr74t2GbayrJoX/pyDnBrJ2L5VkJy1oTLYHP8UJyn0He0M+pK2
+         HmRyJbX653VgAAclfTJdJbQ88gPeLSrVLNK2D0F74BaMPrqeRB2HK8Oi+JUx8ruvdm7u
+         6PHVTpaZh+9s26ZXn4P6/sKa0u7wxWCQYMySNwnVCURBV48Sz6TzEkpw5CHfUdeN5qYn
+         eIhiYNwZm/2m4JHSCyrqikzZ6e//4fq01KpWXMDZMyw9qcmGMi7UH6FUIIzm/07XOc9s
+         b58w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=q0W2EhTeP3FRVRzpbLrE0RJ5tQSqi2OLTlhKGN/4n+c=;
-        b=f//A8tyQFcOpiCSIsyssYI87DWhZvOjjWrFKHqty5nnxJl6thhMGGTxMzScl2HtRsp
-         kmXwG3fj88COpgGpHvNSFq2NnECcONUupTyZhNIf8t8QCoiHM7jLT1fLXUng1v6O1vKi
-         cFtMFshh5oRx8jI6MSY8C0s1Xyff6RjTHVesp3OAy9cezz1n/lsfqktbZbqDbryg3Dzx
-         ybqui8xDsuIm/I4WWJaXJNYyLtGOVun8Z+0sy8Ctx20hJT6SmtwvGPoNjUQZCjZHMF7H
-         v9gWHSiIOmq4Msrwe57muR+U+BM4f8/gqY5vB+xTBB4VmkNNv3QPMwfJbvKxaTc/lMuX
-         zRPg==
-X-Gm-Message-State: APjAAAVof7qSL+5QhzXRFDnm//fMeEWNHUoA1zvPmQllQBCIX/iNfsdR
-        6lpnjVnc6pOoudA6KQh6GOw=
-X-Google-Smtp-Source: APXvYqzAY6t1Aiw4Ph0I4P49iQ1tN7cY6XScLZ5BRbRkglRC35HT5JeGS8DfKg5X4VvnxU//9hx+RA==
-X-Received: by 2002:a9d:3ee:: with SMTP id f101mr14174509otf.126.1570827103808;
-        Fri, 11 Oct 2019 13:51:43 -0700 (PDT)
-Received: from localhost.localdomain ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id i5sm2900875otk.10.2019.10.11.13.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 13:51:43 -0700 (PDT)
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de,
-        Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v2 3/3] PCI: pciehp: Add dmi table for in-band presence disabled
-Date:   Fri, 11 Oct 2019 16:51:27 -0400
-Message-Id: <20191011205127.4884-4-stuart.w.hayes@gmail.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20191011205127.4884-1-stuart.w.hayes@gmail.com>
-References: <20191011205127.4884-1-stuart.w.hayes@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g7/73Rc0SKWAOwZoR7q0+hWJYXz555sJEfwUC/bv8II=;
+        b=ehwChliZaBTylb60u2J1Oj0lRipwoT2ds25hjptPB8ixo15H1Nz1y6ZfBLFKyHFQVt
+         Q0cnRSaAHjbApeP517PzdfjR4Lhrq1vQWITCQx0pMTJzUpSyxrpjPfkiaj6bFFxvjctf
+         cn0Lx2P7b6WWmxILihvWh7IjaAvglTpgjfsMnpkVgjJk+AIHIFsMGriqfsY+LdAG2Lky
+         Dp5dfz18eiXrHyzIIZSMErcIZzjYhaYiMSkD78BJpeAJhepuLjs63Wwb3gB7tHMPfqrW
+         qRbkivukJQKUt+lKZbUD+W/mEQ7RthcLAE79MFV1IW7tYn5ZtE0Vhv61S5dpBzKUtch+
+         h+Gw==
+X-Gm-Message-State: APjAAAXHyqSQnw0iMLwtErx1sLzW+aLMuhfTh2O/90qw3msaQ2+4P+5z
+        gNuqJIUyTrJcw0fpemPiM+1xTqFOzhrZ2GRBLn0tp9qSG2A=
+X-Google-Smtp-Source: APXvYqymAjsNqmLluOTezA+tSFTFbOmRzVJZ10hwCZ1FA3rmcEOFoM1YoC7g/EoH64zCa/IIxm8eiaArxpN61yknMI0=
+X-Received: by 2002:a19:fc0b:: with SMTP id a11mr9878797lfi.105.1570827133788;
+ Fri, 11 Oct 2019 13:52:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
+ <20191007051240.4410-2-andrew.smirnov@gmail.com> <CAO-hwJ+jPGa5Z7=Lopsc23m8UOqGWB0=tN+DcotykseAPM7_7w@mail.gmail.com>
+ <20191011182617.GE229325@dtor-ws> <CAO-hwJLH6SMkLb1kZGj1E+BUHJ+ZsE1n+d=xeJgsvTCjHH1Wzw@mail.gmail.com>
+In-Reply-To: <CAO-hwJLH6SMkLb1kZGj1E+BUHJ+ZsE1n+d=xeJgsvTCjHH1Wzw@mail.gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 11 Oct 2019 13:52:02 -0700
+Message-ID: <CAHQ1cqF3VkAwUAKhXZuQx3AuhcTFsBg0_fETiUADf7Uf+9b0rw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] HID: logitech-hidpp: use devres to manage FF private data
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some systems have in-band presence detection disabled for hot-plug PCI
-slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
-On these systems, presence detect can become active well after the link is
-reported to be active, which can cause the slots to be disabled after a
-device is connected.
+On Fri, Oct 11, 2019 at 12:26 PM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> On Fri, Oct 11, 2019 at 8:26 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> >
+> > On Fri, Oct 11, 2019 at 04:52:04PM +0200, Benjamin Tissoires wrote:
+> > > Hi Andrey,
+> > >
+> > > On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+> > > >
+> > > > To simplify resource management in commit that follows as well as to
+> > > > save a couple of extra kfree()s and simplify hidpp_ff_deinit() switch
+> > > > driver code to use devres to manage the life-cycle of FF private data.
+> > > >
+> > > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > > Cc: Jiri Kosina <jikos@kernel.org>
+> > > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > > Cc: Henrik Rydberg <rydberg@bitmath.org>
+> > > > Cc: Sam Bazely <sambazley@fastmail.com>
+> > > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> > > > Cc: Austin Palmer <austinp@valvesoftware.com>
+> > > > Cc: linux-input@vger.kernel.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > > Cc: stable@vger.kernel.org
+> > >
+> > > This patch doesn't seem to fix any error, is there a reason to send it
+> > > to stable? (besides as a dependency of the rest of the series).
+> > >
+> > > > ---
+> > > >  drivers/hid/hid-logitech-hidpp.c | 53 +++++++++++++++++---------------
+> > > >  1 file changed, 29 insertions(+), 24 deletions(-)
+> > > >
+> > > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+> > > > index 0179f7ed77e5..58eb928224e5 100644
+> > > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > > @@ -2079,6 +2079,11 @@ static void hidpp_ff_destroy(struct ff_device *ff)
+> > > >         struct hidpp_ff_private_data *data = ff->private;
+> > > >
+> > > >         kfree(data->effect_ids);
+> > >
+> > > Is there any reasons we can not also devm alloc data->effect_ids?
+> > >
+> > > > +       /*
+> > > > +        * Set private to NULL to prevent input_ff_destroy() from
+> > > > +        * freeing our devres allocated memory
+> > >
+> > > Ouch. There is something wrong here: input_ff_destroy() calls
+> > > kfree(ff->private), when the data has not been allocated by
+> > > input_ff_create(). This seems to lack a little bit of symmetry.
+> >
+> > Yeah, ff and ff-memless essentially take over the private data assigned
+> > to them. They were done before devm and the lifetime of the "private"
+> > data pieces was tied to the lifetime of the input device to simplify
+> > error handling and teardown.
+>
+> Yeah, that stealing of the pointer is not good :)
+> But OTOH, it helps
+>
+> >
+> > Maybe we should clean it up a bit... I'm open to suggestions.
+>
+> The problem I had when doing the review was that there is no easy way
+> to have a "devm_input_ff_create_()", because the way it's built is
+> already "devres-compatible": the destroy gets called by input core.
+>
+> So I don't have a good answer to simplify in a transparent manner
+> without breaking the API.
+>
+> >
+> > In this case maybe best way is to get rid of hidpp_ff_destroy() and not
+> > set ff->private and rely on devm to free the buffers. One can get to
+> > device private data from ff methods via input_get_drvdata() since they
+> > all (except destroy) are passed input device pointer.
+>
+> Sounds like a good idea. However, it seems there might be a race when
+> removing the workqueue:
+> the workqueue gets deleted in hidpp_remove, when the input node will
+> be freed by devres, so after the call of hidpp_remove.
+>
+> So we should probably keep hidpp_ff_destroy() to clean up the ff bits,
+> and instead move the content of hidpp_ff_deinit() into
+> hidpp_ff_destroy() so we ensure proper ordering.
+>
+> Andrey, note that ensuring the workqueue gets freed after the call of
+> input_destroy_device is something that should definitively go into
+> stable as this is a potential race problem.
 
-Add a dmi table to flag these systems as having in-band presence disabled.
+Sure, I'll add this to the series as a separate patch.
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
----
- drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index db5c7b082fda..f864f0875c53 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -14,6 +14,7 @@
- 
- #define dev_fmt(fmt) "pciehp: " fmt
- 
-+#include <linux/dmi.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/jiffies.h>
-@@ -26,6 +27,16 @@
- #include "../pci.h"
- #include "pciehp.h"
- 
-+static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
-+	{
-+		.ident = "Dell System",
-+		.matches = {
-+			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
-+		},
-+	},
-+	{}
-+};
-+
- static inline struct pci_dev *ctrl_dev(struct controller *ctrl)
- {
- 	return ctrl->pcie->port;
-@@ -896,6 +907,9 @@ struct controller *pcie_init(struct pcie_device *dev)
- 		ctrl->inband_presence_disabled = 1;
- 	}
- 
-+	if (dmi_first_match(inband_presence_disabled_dmi_table))
-+		ctrl->inband_presence_disabled = 1;
-+
- 	/*
- 	 * If empty slot's power status is on, turn power off.  The IRQ isn't
- 	 * requested yet, so avoid triggering a notification with this command.
--- 
-2.18.1
-
+Thanks,
+Andrey Smirnov
