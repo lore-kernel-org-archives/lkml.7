@@ -2,186 +2,116 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BADECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3F5C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAD82190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d3LP3nZK"
+	by mail.kernel.org (Postfix) with ESMTP id D013B2190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfJKIvh (ORCPT
+        id S1727562AbfJKIwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:51:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59817 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726508AbfJKIvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:51:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570783895;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wu/Rf3zNUutfn3m2zM9kQv92cgKYcwMDqv7vUduVPBc=;
-        b=d3LP3nZK+Yrp/0UOWuw1dUtzjHGvt0m0f6nGfc1FhXxtO0wMRUIMgiCbL8krXBVImcCOK1
-        Y/6FxFsLhmX2FQB0mIx9mfXlmWxwaax2EzfRO88hWK3W9ib3vt81wisetrjGIADHtaPyx/
-        lj4mF71K4mAZiDCouzJnHJ4Zs+s63vI=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-29-5bRFKRJzNBmsC3M5Ae6RGw-1; Fri, 11 Oct 2019 04:51:33 -0400
-Received: by mail-qt1-f197.google.com with SMTP id n4so8671960qtp.19
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:51:33 -0700 (PDT)
+        Fri, 11 Oct 2019 04:52:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38526 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727387AbfJKIwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 04:52:03 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 38420C049D59
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 08:52:03 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id m16so2499842wmg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:52:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N10/dTN197PTl0+siuLFDZWqlAaRDfdqpN7eV7M6lL0=;
-        b=fiRHPPdGQC52D32e73xeuwl5wDrxdSaJGUngqOv93Z6QVTCefJIsk/T8wh+RibrGz+
-         obonHmK05x3OZkIxARkyFdItgPlPzEeo/U/fxpJBF+QrMxcM0RdWtqzgSIkp1u2enKnC
-         N1/kvostbeunPG2e4nAzG4lNVCJQ+U2qqJZDMWMDjY6zJ9BRzAo1afSnjNKI6f+M7S3x
-         xlvqv0pSTxvU8UwQ9x58clm275emtGTw7LQ0vdC5dPRVk2twc549L6RAcpAJB26zP/zA
-         1CM315cwUI6SV07ell7sstLKsLN32v/PwTYN8NGfd0JEG/7WJEeOu64p2SFbxNfPnXVO
-         RNVQ==
-X-Gm-Message-State: APjAAAV/sfsLgeINT6Jvu1fNpsj1JAkmvi1OfrKYOAiFsyPtI/j0Ft9d
-        yKORaWlbCrUJo1elu7OvK+kQZvB1dnvt+UeqMCpcn+oy/8pWc7dCke9hNIvcVZSBRYf4SjMESGk
-        i1okzVxQ6uOOF+1mAfUaM1p2HkBhKIRoB6hoXwWRZ
-X-Received: by 2002:a37:648d:: with SMTP id y135mr13907182qkb.459.1570783893299;
-        Fri, 11 Oct 2019 01:51:33 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqySLoMI6pvZ557naSRkGTpWHJHszarZ6iWrS7WWNjAZXtz1Nf2y0fUJ33374bS3uf3RZwpModlRILODHjD/gQI=
-X-Received: by 2002:a37:648d:: with SMTP id y135mr13907169qkb.459.1570783893028;
- Fri, 11 Oct 2019 01:51:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bm3aGONhK4qHoU5UjTbFZHuFrC1vqMKeEY0f1MpcuKs=;
+        b=YLV3jsE+cey4K5N6zd1XULbOvmsCRx5YtwzTw7dX+FdH9dkrSnNwK/4a3Na8m1g8VN
+         YA2AB2SG8CbRavcn2shnTRwhR4GvU/IRXKWIYssX/QfBXcjR8bz4OY8jJSjVN9U2tx5/
+         clGVBiDvINWs7OAPlQxZjHPmHvvwjLnkB8rg1eqpX1LFd1Pdw22dyxDN97eqmkiKHg0+
+         PHPko3XOxBnd85PPY3e+il8GYI7ej8N1d5nm2OKSJxturgvJkV+4rABaTQtWuKq+OJC7
+         qZl7kOGcPrON1NZFk6xsxEAkP3lPy32qan+JXM3tcu63FMagyB/bG2+zblp7sJ/KBwhq
+         HjRA==
+X-Gm-Message-State: APjAAAWw1dkJQGZmIKreFg/+tX6BatMxuxbXXGSTEC+GJpSYdlk3ylra
+        jKPxQE/0wVGFzXPc2PPuszkY+R5oSGbrSuTUvfCNlazPK0Bn0Nj+zFjgFhKLTYVVCSkVrYKl3Da
+        rDTCIAtoX3nlbumupOK0Zlw/N
+X-Received: by 2002:adf:f50b:: with SMTP id q11mr8542921wro.310.1570783921677;
+        Fri, 11 Oct 2019 01:52:01 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy1tPYaVEApdDIIQuAyje0VVr9AdUGsps1WDvoQMdr3X8xYr+LiIbxou3tR8pwnY/h86mPFNQ==
+X-Received: by 2002:adf:f50b:: with SMTP id q11mr8542895wro.310.1570783921424;
+        Fri, 11 Oct 2019 01:52:01 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id z189sm13295813wmc.25.2019.10.11.01.51.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 01:52:00 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 10:51:58 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@gmail.com>, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 07/13] vsock: handle buffer_size sockopts in the core
+Message-ID: <20191011085158.wiiv4av5fgipm4k7@steredhat>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-8-sgarzare@redhat.com>
+ <20191009123026.GH5747@stefanha-x1.localdomain>
+ <20191010093254.aluys4hpsfcepb42@steredhat>
+ <20191011082714.GF12360@stefanha-x1.localdomain>
 MIME-Version: 1.0
-References: <GOPSiaLYzQc3Hi9-MvdMQOmiF6O9whCeVYWavirKdm-9VHGb37VtawOPII8FEdYAOWZYFvk3oSQcHkPGazJKZNx8DEwBO7JfrRjLjWA84UI=@protonmail.com>
-In-Reply-To: <GOPSiaLYzQc3Hi9-MvdMQOmiF6O9whCeVYWavirKdm-9VHGb37VtawOPII8FEdYAOWZYFvk3oSQcHkPGazJKZNx8DEwBO7JfrRjLjWA84UI=@protonmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 11 Oct 2019 10:51:22 +0200
-Message-ID: <CAO-hwJL=j_toocbX2qqjt7JJdZS9CswPBo2fXich-7yYgKyd0A@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] HID: logitech: Support WirelessDeviceStatus
- connect events
-To:     Mazin Rezk <mnrzk@protonmail.com>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
-X-MC-Unique: 5bRFKRJzNBmsC3M5Ae6RGw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011082714.GF12360@stefanha-x1.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 2:58 AM Mazin Rezk <mnrzk@protonmail.com> wrote:
->
-> On Saturday, October 5, 2019 9:05 PM, Mazin Rezk <mnrzk@protonmail.com> w=
-rote:
->
-> > This patch makes WirelessDeviceStatus (0x1d4b) events get detected as
-> > connection events on devices with HIDPP_QUIRK_WIRELESS_DEVICE_STATUS.
-> >
-> > This quirk is currently an alias for HIDPP_QUIRK_CLASS_BLUETOOTH since
-> > the added Bluetooth devices do not support regular connect events.
->
-> No changes have been made to this patch in v4.
->
-> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> ---
->  drivers/hid/hid-logitech-hidpp.c | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-=
-hidpp.c
-> index 2062be922c08..b2b5fe2c74db 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -84,6 +84,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
->
->  /* Just an alias for now, may possibly be a catch-all in the future */
->  #define HIDPP_QUIRK_MISSING_SHORT_REPORTS      HIDPP_QUIRK_CLASS_BLUETOO=
-TH
-> +#define HIDPP_QUIRK_WIRELESS_DEVICE_STATUS     HIDPP_QUIRK_CLASS_BLUETOO=
-TH
+On Fri, Oct 11, 2019 at 09:27:14AM +0100, Stefan Hajnoczi wrote:
+> On Thu, Oct 10, 2019 at 11:32:54AM +0200, Stefano Garzarella wrote:
+> > On Wed, Oct 09, 2019 at 01:30:26PM +0100, Stefan Hajnoczi wrote:
+> > > On Fri, Sep 27, 2019 at 01:26:57PM +0200, Stefano Garzarella wrote:
+> > > Another issue is that this patch drops the VIRTIO_VSOCK_MAX_BUF_SIZE
+> > > limit that used to be enforced by virtio_transport_set_buffer_size().
+> > > Now the limit is only applied at socket init time.  If the buffer size
+> > > is changed later then VIRTIO_VSOCK_MAX_BUF_SIZE can be exceeded.  If
+> > > that doesn't matter, why even bother with VIRTIO_VSOCK_MAX_BUF_SIZE
+> > > here?
+> > > 
+> > 
+> > The .notify_buffer_size() should avoid this issue, since it allows the
+> > transport to limit the buffer size requested after the initialization.
+> > 
+> > But again the min set by the user can not be respected and in the
+> > previous implementation we forced it to VIRTIO_VSOCK_MAX_BUF_SIZE.
+> > 
+> > Now we don't limit the min, but we guarantee only that vsk->buffer_size
+> > is lower than VIRTIO_VSOCK_MAX_BUF_SIZE.
+> > 
+> > Can that be an acceptable compromise?
+> 
+> I think so.
+> 
+> Setting buffer sizes was never tested or used much by userspace
+> applications that I'm aware of.  We should probably include tests for
+> changing buffer sizes in the test suite.
 
-Hmm, I don't like the idea of aliasing quirks on a class. Either it's
-a class of devices, and you use it as such in the code, either you
-want to use individual quirks, and so each one of those needs its own
-bit definition.
+Good idea! We should add a test to check if min/max are respected,
+playing a bit with these sockopt.
 
-If you take my advice in 2/4, please assign a new bit for
-HIDPP_QUIRK_WIRELESS_DEVICE_STATUS (0x1f IIRC), and logically and it
-on the HIDPP_QUIRK_CLASS_BLUETOOTH here.
+I'll do it in the test series!
 
-
-
->
->  #define HIDPP_QUIRK_DELAYED_INIT               HIDPP_QUIRK_NO_HIDINPUT
->
-> @@ -406,9 +407,22 @@ static inline bool hidpp_match_error(struct hidpp_re=
-port *question,
->             (answer->fap.params[0] =3D=3D question->fap.funcindex_clienti=
-d);
->  }
->
-> -static inline bool hidpp_report_is_connect_event(struct hidpp_report *re=
-port)
-> +#define HIDPP_PAGE_WIRELESS_DEVICE_STATUS              0x1d4b
-> +
-> +static inline bool hidpp_report_is_connect_event(struct hidpp_device *hi=
-dpp,
-> +                                                struct hidpp_report *rep=
-ort)
->  {
-> -       return (report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) &&
-> +       if (hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STATUS) {
-> +               /* If feature is invalid, skip array check */
-> +               if (report->fap.feature_index > hidpp->feature_count)
-> +                       return false;
-
-This should probably be merged with the next return (if bool0, return
-false else return bool1 can easily be transformed into return !bool0
-&& bool1)
-
-> +
-> +               return (hidpp->features[report->fap.feature_index] =3D=3D
-> +                        HIDPP_PAGE_WIRELESS_DEVICE_STATUS);
-
-Oh, so that's why you need the feature enumeration.
-
-Though, it's a costly operation when you could simply:
-- add a wireless_feature_index in struct hidpp_device,
-- gets this feature index at probe with a single call to
-hidpp_root_get_feature()
-- and check here if this feature index of the report is not null and
-equal to wireless_feature_index.
-
-Cheers,
-Benjamin
-
-> +       }
-> +
-> +       return ((report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) ||
-> +               (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)) &&
->                 (report->rap.sub_id =3D=3D 0x41);
->  }
->
-> @@ -3157,7 +3171,7 @@ static int hidpp_raw_hidpp_event(struct hidpp_devic=
-e *hidpp, u8 *data,
->                 }
->         }
->
-> -       if (unlikely(hidpp_report_is_connect_event(report))) {
-> +       if (unlikely(hidpp_report_is_connect_event(hidpp, report))) {
->                 atomic_set(&hidpp->connected,
->                                 !(report->rap.params[0] & (1 << 6)));
->                 if (schedule_work(&hidpp->work) =3D=3D 0)
-> --
-> 2.23.0
-
+Thanks,
+Stefano
