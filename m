@@ -2,135 +2,149 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1FDECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57ACECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F47F21835
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:33:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570822382;
-	bh=uSHigDuoBkOef46f47ltxjTSdcoO9upwPANgWU6/D9E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=og9B7O/vZWk6+quM2ReMs0YlDcWPUkN1H8PIpoX7qwc3oOqBYINSN41vR0UxyCfkt
-	 TWApzdE1HJH/tdZXnuoyT9e7aaG7HKDN5KA+V+dLrSRCAAeyfu8Tk/WlFyoTpEK1se
-	 XcmdgX1PGnfIQMRQywW3dU6SN9PuPut0JCq43bkY=
+	by mail.kernel.org (Postfix) with ESMTP id 8BF8921835
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="R2bRf+I0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfJKTdB (ORCPT
+        id S1728923AbfJKTh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 15:33:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbfJKTdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 15:33:00 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD62B218AC;
-        Fri, 11 Oct 2019 19:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570822379;
-        bh=uSHigDuoBkOef46f47ltxjTSdcoO9upwPANgWU6/D9E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0wH7kDliiES45/qF6O+0x/bik1ElV2yR2zkp4ybgHXZ5fXxXB5KNRQO+WOpWVSm0N
-         mK8DxNBgbXtqvMsEo8lB6pju+OdYRxlBrDAtkDP/CFGXR+G87Q2PtplnMYjxfIQPsT
-         cE4glGu2aoA6KOhz5eNEww4oZ1i0akNm+MqU4MU0=
-Received: by mail-qt1-f174.google.com with SMTP id u22so15435281qtq.13;
-        Fri, 11 Oct 2019 12:32:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAW7RqQqiDglzXd12kLZb9a0aDE0I4nujYW4bvxJKWntA5aGA2N6
-        XjXAmGDB6BlSADQ9yDrh/Mn74ZCt5FXn3/JcPA==
-X-Google-Smtp-Source: APXvYqwIjsTIx4gE6GsG6zQAJr8JfQ6D5bTKreNB1Ug8rxT51XsikLFA1aNRUj4oItqJYQKqCFfL/6sYmmsielYsPDQ=
-X-Received: by 2002:ac8:44d9:: with SMTP id b25mr19411003qto.300.1570822378023;
- Fri, 11 Oct 2019 12:32:58 -0700 (PDT)
+        Fri, 11 Oct 2019 15:37:57 -0400
+Received: from mail-eopbgr810071.outbound.protection.outlook.com ([40.107.81.71]:56032
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728799AbfJKTh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 15:37:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lLJ0m5uEGuEslbAk/G8iJIXqkaWVTTUqOuvsP5JAFAvFTswcGsGdwj5Wwnvv/bNmxoVYB0DUm21xuR1AltInOZFfa9qf1whoMfE1ZRaYa18rRqWc46c0NJ2TLiXm5R+Nm1dDLDmJQ3ZU4emoWIPzD1Rvz2ggkuXumsLb4pFVoJtEyEpabNWDe18eYxaPL+nLxoOcfIDCtkgD38PXvAwGP6owMQ0RGyqnjsIgdy47QJ2pFqaKaLyTseaZSFEEGK1/GnL1mF29TDfwVtTq7+bCmEaDuLkzbBoZ2fKO7raIYHTllauUXx+dke3cuJXkvueOL1VDOsU0Q8oqOMGiiZ1CVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZNU7wPFGNXR8UmyjgIioJ3a3aCdjtCLYCUg0e/BEfQU=;
+ b=Z9bbd4B8AL+WyVAYbdNjHvQ8WX1PKSenJf3Lb6GQE614dOq0tlnmmoww1CL36zwJk1j59BicA1WipgZtONtStpVr+Pbe6k5trYAd0JnnGueL4sTolMgksVf55JkNuM8yJrMNydCDlPJRYSjamRB+M1f8nLSQZk3/q8t5KXIEMUc5Ve6EPy0kGk3EsMXSMfbkVG4qys4t62n+CGb6rD1gbUthiK4hzqvm8UWpkvPuvZ2IAA9O/RhFbfv6tHZ3kagKjSQ6lYfN709G70InyM28oBmSS9hBvJNq7V/RqXrSVEMQtPwvhDG30GRYVcEvtUCWhzsMLprBWJu7cRRJK9+GfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZNU7wPFGNXR8UmyjgIioJ3a3aCdjtCLYCUg0e/BEfQU=;
+ b=R2bRf+I07K01Pw/lNSAqNdOJGmOCdiznzj5AOSXmRX5ih/HnRKXVtTAs9DE4iSGMU6phXHoe4+y4e3XIe5/vjuqhprEm/H/q/1GJwbVIvHknXpnp+ukgcOxwFLes4tZUNv0Z7JrmlwybOafcqaTbfcV3cnvxaZR+1GgAL32/TxY=
+Received: from SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) by
+ SN6PR12MB2717.namprd12.prod.outlook.com (52.135.103.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.19; Fri, 11 Oct 2019 19:37:54 +0000
+Received: from SN6PR12MB2736.namprd12.prod.outlook.com
+ ([fe80::b1e3:1867:e650:796c]) by SN6PR12MB2736.namprd12.prod.outlook.com
+ ([fe80::b1e3:1867:e650:796c%6]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
+ 19:37:54 +0000
+From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
+To:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
+        Pu Wen <puwen@hygon.com>, Borislav Petkov <bp@suse.de>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
+Subject: [PATCHv2 0/3] Update cpupower and make it more accurate
+Thread-Topic: [PATCHv2 0/3] Update cpupower and make it more accurate
+Thread-Index: AQHVgGtgGy3CWOpXjkaZczBU7MWRIg==
+Date:   Fri, 11 Oct 2019 19:37:54 +0000
+Message-ID: <cover.1570819652.git.Janakarajan.Natarajan@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0201CA0060.namprd02.prod.outlook.com
+ (2603:10b6:803:20::22) To SN6PR12MB2736.namprd12.prod.outlook.com
+ (2603:10b6:805:77::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [165.204.78.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ccc15f69-441d-4f1c-97bb-08d74e82828a
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: SN6PR12MB2717:|SN6PR12MB2717:
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR12MB27173ACE16377FDE81097B4AE7970@SN6PR12MB2717.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(136003)(39860400002)(376002)(199004)(189003)(64756008)(66476007)(25786009)(305945005)(4326008)(66446008)(6486002)(66556008)(476003)(81156014)(81166006)(5660300002)(36756003)(66946007)(478600001)(15650500001)(6512007)(7736002)(7416002)(6436002)(110136005)(54906003)(316002)(14454004)(86362001)(99286004)(486006)(2906002)(2501003)(26005)(102836004)(186003)(8676002)(14444005)(256004)(71190400001)(71200400001)(66066001)(3846002)(52116002)(6506007)(386003)(6116002)(8936002)(2616005)(50226002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2717;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +aptHa4/UQ/O4JWSBaN6ACtAD87DS2zHjFW5e1px7T2d434UVcVT+HCwHoliMzWbckvxuNiZktkgMDp9FsaLknN77bOyddeyEbsm/b7t8SY60fAe5xFFuokNwf0GCZ3IlfDRj1ZjEMw/+cRR5EUy1rV0XOaZcpRl7rbA2JxpQTjJhWxBNUuIt6YfluayMHWu5AyRK+Ia187pag37XIu16sSZ+5KUlhMD39Y208z/MBQ1UH55O8foV7Sgqx9Yhr8yYqY04Ufln7APHeobOnlTsSAU/AlNoDTeoOdk7EUurSGIVZqKUlfGFTNvr7KW280SK8i3ogvyj6v6ydTmN8KRGPuByYfhduygXRf5W7DZdY+Z5OyEVPNMAu/X9j+s/ifR59q7Gp3/8ny/jzi2CZBBaUmIP7hMuHtJkgUKH8UKOfg=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190913211349.28245-1-robh@kernel.org> <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
- <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
- <7672dd2f651bfdcdb1615ab739e36a381b2535b1.camel@perches.com>
- <CAL_JsqKAbP6KYjiJ6dLr=dpFG-j-e4rJPCKZ0+pZrDjsSPAUPQ@mail.gmail.com>
- <CAL_JsqJiV-L14tQte0tZXq+-TRTXGOFW62EsSobu3cFGA8rJDw@mail.gmail.com> <a6933fa81cf1510528ed7a4cfa55f57900800fc6.camel@perches.com>
-In-Reply-To: <a6933fa81cf1510528ed7a4cfa55f57900800fc6.camel@perches.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 11 Oct 2019 14:32:45 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+YHDRkPYQwMWAvXM8kPz92AVYuaiLKAbZwhYeufFJQvw@mail.gmail.com>
-Message-ID: <CAL_Jsq+YHDRkPYQwMWAvXM8kPz92AVYuaiLKAbZwhYeufFJQvw@mail.gmail.com>
-Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
-To:     Joe Perches <joe@perches.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccc15f69-441d-4f1c-97bb-08d74e82828a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 19:37:54.1169
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kTXPfSXg93auFV3nE2RKWHTFGN8rxcwh+F7ZLHuKaqKLFw0OnK8BRwwrjBXmTmPHlhB9PBS6Wqn9ABkPT9mv/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2717
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 1:02 PM Joe Perches <joe@perches.com> wrote:
->
-> On Fri, 2019-10-11 at 12:56 -0500, Rob Herring wrote:
-> > On Fri, Sep 27, 2019 at 10:39 AM Rob Herring <robh@kernel.org> wrote:
-> > > On Fri, Sep 27, 2019 at 9:29 AM Joe Perches <joe@perches.com> wrote:
-> > > > On Fri, 2019-09-27 at 09:02 -0500, Rob Herring wrote:
-> > > > > On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
-> > > > > > On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
-> > > > > > > DT bindings are moving to using a json-schema based schema format
-> > > > > > > instead of freeform text. Add a checkpatch.pl check to encourage using
-> > > > > > > the schema for new bindings. It's not yet a requirement, but is
-> > > > > > > progressively being required by some maintainers.
-> > > > > > []
-> > > > > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > > > > []
-> > > > > > > @@ -2822,6 +2822,14 @@ sub process {
-> > > > > > >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
-> > > > > > >               }
-> > > > > > >
-> > > > > > > +# Check for adding new DT bindings not in schema format
-> > > > > > > +             if (!$in_commit_log &&
-> > > > > > > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
-> > > > > > > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
-> > > > > > > +                     WARN("DT_SCHEMA_BINDING_PATCH",
-> > > > > > > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
-> > > > > > > +             }
-> > > > > > > +
-> > > > > >
-> > > > > > As this already seems to be git dependent, perhaps
-> > > > >
-> > > > > It's quite rare to see a non git generated diff these days.
-> > > > >
-> > > > > > it's easier to read with a single line test like:
-> > > > > >
-> > > > > >                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
-> > > > > >                         etc...
-> > > > > >                 }
-> > > > >
-> > > > > I frequently do 'git show $commit | scripts/checkpatch.pl' and this
-> > > > > doesn't work with that. I really should have a '--pretty=email' in
-> > > > > there, but I just ignore the commit msg warnings. In any case, that
-> > > > > still doesn't help because there's no diffstat. There's probably some
-> > > > > way to turn that on or just use git-format-patch, but really we want
-> > > > > this to work with any git diff.
-> > > >
-> > > > I don't understand your argument against what I proposed at all.
-> > >
-> > > It is dependent on the commit message rather than the diff itself. I
-> > > want it to work with or without a diffstat.
-> > >
-> > > > and btw:
-> > > >
-> > > > $ git format-patch -1 --stdout <commit> | ./scripts/checkpatch.pl
-> > >
-> > > Yes, I stated this was possible. My concern is there are lots of ways
-> > > to generate a diff in git. My way works for *all* of them. Yours
-> > > doesn't.
-> >
-> > Joe, are you okay with this?
->
-> Sure, Andrew Morton does most of the checkpatch upstreaming, but
-> if you want to send your own pull request, I've no objection.
+This patchset updates cpupower to make it more accurate by removing
+the userspace to kernel transitions and read_msr initiated IPI delays.
 
-Thanks, I've applied this to the DT tree.
+The first patch does a little re-arrangement of variables in the
+cpuidle_monitor struct to prepare for a new flag.
 
-Rob
+The second patch introduces a per_cpu_schedule flag which, when set,
+will allow cpupower to move to each of the cpus in the system. The
+advantage of this is that the IPI latency is removed when reading
+the APERF/MPERF registers, since an IPI is not generated for rdmsrs
+when the source and destination cpus are the same for the IPI.
+
+The third patch introduces the RDPRU instruction, which will allow
+cpupower to not use the msr module for APERF/MPERF register reads.
+This will remove the userspace to kernel transition delays when
+reading the APERF/MPERF registers.
+
+v1->v2:
+* Added cover letter.
+* Used bind_cpu instead of rewriting the same code.
+* Moved needs_root to flag sub-struct.
+* Introduced per_cpu_schedule flag.
+
+Janakarajan Natarajan (3):
+  cpupower: Move needs_root variable into a sub-struct
+  cpupower: mperf_monitor: Introduce per_cpu_schedule flag
+  cpupower: mperf_monitor: Update cpupower to use the RDPRU instruction
+
+ tools/power/cpupower/utils/helpers/cpuid.c    |  4 ++
+ tools/power/cpupower/utils/helpers/helpers.h  |  1 +
+ .../utils/idle_monitor/amd_fam14h_idle.c      |  2 +-
+ .../utils/idle_monitor/cpuidle_sysfs.c        |  2 +-
+ .../utils/idle_monitor/cpupower-monitor.c     |  2 +-
+ .../utils/idle_monitor/cpupower-monitor.h     |  5 +-
+ .../utils/idle_monitor/hsw_ext_idle.c         |  2 +-
+ .../utils/idle_monitor/mperf_monitor.c        | 64 +++++++++++++++----
+ .../cpupower/utils/idle_monitor/nhm_idle.c    |  2 +-
+ .../cpupower/utils/idle_monitor/snb_idle.c    |  2 +-
+ 10 files changed, 68 insertions(+), 18 deletions(-)
+
+--=20
+2.17.1
+
