@@ -2,162 +2,262 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E338EECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09A9ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A7220673
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94FD20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:19:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYKRivIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfJKSSi (ORCPT
+        id S1728847AbfJKSTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 14:18:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:39392 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbfJKSSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 14:18:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9AF2142F;
-        Fri, 11 Oct 2019 11:18:37 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E19183F703;
-        Fri, 11 Oct 2019 11:18:35 -0700 (PDT)
-Subject: Re: [PATCH v6 08/17] arm64: hibernate: add trans_pgd public functions
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
- <20191004185234.31471-9-pasha.tatashin@soleen.com>
-From:   James Morse <james.morse@arm.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        vladimir.murzin@arm.com, matthias.bgg@gmail.com,
-        bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
-Message-ID: <2ea69969-154d-fa55-767d-43ea8971dd0e@arm.com>
-Date:   Fri, 11 Oct 2019 19:18:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 14:19:16 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35686 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728721AbfJKSTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 14:19:16 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m7so10754941lji.2;
+        Fri, 11 Oct 2019 11:19:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lbSA0+U8G/oL8JgGMmwp2gpu7thMyfDqSxSYRn93VE8=;
+        b=iYKRivIHaYZB06m/Y86bmZXGfmM00SXvHGC602i0nCsr8z4zKxW/hyoNJ7EjarJet9
+         0QzCZ+deLV/Ihup/+0O4mMhIq5ckbGm5Nodrtsk3wMqcKGl0HYPK9dgROg0KZREyqFrP
+         MlZBBDScHGePvougSkoZNKe/b/k/bR9+4ZvyVfF0OtbkZTdo153hxHjreS3Sx9ek0BEF
+         UAKP75LvryhKknrobjpth4g7GB6MeO0ZexYwMRHssPyrWTewL4Ue/BhrbYj1N7ziNMRh
+         K3Av7B77T+quLldVMVd8vZUXk1dRJPzV78vLKXayb8Ft4qxonIi/kiKhD03iqtF8dwWB
+         uIyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lbSA0+U8G/oL8JgGMmwp2gpu7thMyfDqSxSYRn93VE8=;
+        b=GkznQoWPmH5jKX3PWQwikwctm7LnKWr9khysB7OqCOj4dQFLFKIMt89X+eoLXVEApn
+         /4+klcMn4X2pjcr7SMEIzFfBwtlOIIP+F6OBlOdPuPrkkikPdaZbNGIuqVq0HXp2Fhx6
+         euHdcF3n4Z5MuD3wJEOEKYP8HJMqCTrFGOR8AVlNkbUgSgORYj1qDDWhWcl7BLi+oTuX
+         wpvY9I93Czb2m4rKulbWB3PmD3nZUT1hq8mZHYUpddDvUwwnqg/tNxcxbn0atPJBgKpw
+         MLTIgUwyDmIaIgX9Wrw2Hymb3ZiOWZIqZ3Qdm1C74Cs2b+Ba3RUdyCFlYZfBJ30Q6nss
+         cHmA==
+X-Gm-Message-State: APjAAAWW34QZ+kPxDgOr5YPwTZVA6lxpssAMYNjlx32zibdbT4578oIU
+        2hSHU9fLI7sZmOVF6Pyzf0fWPLWO+cjDd97SEfw=
+X-Google-Smtp-Source: APXvYqw3KYfKyL5he8zBjZLGjb4EzqDCVAOGTBaR5DsqoQ4jy9MsZOBhrseITyN7EmZmKVJSOGsUzQxOeGCKEQR6zaU=
+X-Received: by 2002:a2e:9816:: with SMTP id a22mr6723954ljj.102.1570817953123;
+ Fri, 11 Oct 2019 11:19:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191004185234.31471-9-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
+ <20191007051240.4410-2-andrew.smirnov@gmail.com> <CAO-hwJ+jPGa5Z7=Lopsc23m8UOqGWB0=tN+DcotykseAPM7_7w@mail.gmail.com>
+In-Reply-To: <CAO-hwJ+jPGa5Z7=Lopsc23m8UOqGWB0=tN+DcotykseAPM7_7w@mail.gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 11 Oct 2019 11:18:37 -0700
+Message-ID: <CAHQ1cqHS6CHti_gQ806SPZzmDjMaZLOZKQDzGCu9TFspT9M0wg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] HID: logitech-hidpp: use devres to manage FF private data
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Fri, Oct 11, 2019 at 7:52 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> Hi Andrey,
+>
+> On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+> >
+> > To simplify resource management in commit that follows as well as to
+> > save a couple of extra kfree()s and simplify hidpp_ff_deinit() switch
+> > driver code to use devres to manage the life-cycle of FF private data.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Jiri Kosina <jikos@kernel.org>
+> > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > Cc: Henrik Rydberg <rydberg@bitmath.org>
+> > Cc: Sam Bazely <sambazley@fastmail.com>
+> > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> > Cc: Austin Palmer <austinp@valvesoftware.com>
+> > Cc: linux-input@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: stable@vger.kernel.org
+>
+> This patch doesn't seem to fix any error, is there a reason to send it
+> to stable? (besides as a dependency of the rest of the series).
+>
 
-On 04/10/2019 19:52, Pavel Tatashin wrote:
-> trans_pgd_create_copy() and trans_pgd_map_page() are going to be
-> the basis for new shared code that handles page tables for cases
-> which are between kernels: kexec, and hibernate.
-> 
-> Note: Eventually, get_safe_page() will be moved into a function pointer
-> passed via argument, but for now keep it as is.
+Dependency is the only reason for this patch, but it is a pretty big
+reason. Prior to patches 1/3 and 2/3 FF private data was both
+allocated and passed off to FF layer via ff->private = data in a span
+of a few lines of code within hidpp_ff_init()/g920_get_config().
+After, said pair is effectively split into two different functions,
+both needing access to FF private data, but called quite far apart in
+hidpp_probe(). Alternatives to patch 1/3 would be to either make sure
+that every error path in hidpp_prob() after the call to
+g920_allocate() is aware of allocated FF data, which seems like a
+nightmare, or, to create a temporary FF data, fill it in
+g920_get_config() and memdup() it in hidpp_ff_init(). Is that (the
+latter) the path that you prefer to take?
 
+> > ---
+> >  drivers/hid/hid-logitech-hidpp.c | 53 +++++++++++++++++---------------
+> >  1 file changed, 29 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+> > index 0179f7ed77e5..58eb928224e5 100644
+> > --- a/drivers/hid/hid-logitech-hidpp.c
+> > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > @@ -2079,6 +2079,11 @@ static void hidpp_ff_destroy(struct ff_device *ff)
+> >         struct hidpp_ff_private_data *data = ff->private;
+> >
+> >         kfree(data->effect_ids);
+>
+> Is there any reasons we can not also devm alloc data->effect_ids?
 
-> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-> index ce60bceed357..ded9034b9d39 100644
-> --- a/arch/arm64/kernel/hibernate.c
-> +++ b/arch/arm64/kernel/hibernate.c
+No, but I was trying to limit the scope of this patch.
 
-> @@ -242,6 +218,44 @@ static int create_safe_exec_page(void *src_start, size_t length,
+>
+> > +       /*
+> > +        * Set private to NULL to prevent input_ff_destroy() from
+> > +        * freeing our devres allocated memory
+>
+> Ouch. There is something wrong here: input_ff_destroy() calls
+> kfree(ff->private), when the data has not been allocated by
+> input_ff_create(). This seems to lack a little bit of symmetry.
+>
 
-> +/*
-> + * Copies length bytes, starting at src_start into an new page,
-> + * perform cache maintenance, then maps it at the specified address low
-> + * address as executable.
-> + *
-> + * This is used by hibernate to copy the code it needs to execute when
-> + * overwriting the kernel text. This function generates a new set of page
-> + * tables, which it loads into ttbr0.
-> + *
-> + * Length is provided as we probably only want 4K of data, even on a 64K
-> + * page system.
-> + */
-> +static int create_safe_exec_page(void *src_start, size_t length,
-> +				 unsigned long dst_addr,
-> +				 phys_addr_t *phys_dst_addr)
-> +{
-> +	void *page = (void *)get_safe_page(GFP_ATOMIC);
-> +	pgd_t *trans_pgd;
-> +	int rc;
-> +
-> +	if (!page)
-> +		return -ENOMEM;
-> +
-> +	memcpy(page, src_start, length);
-> +	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
-> +
-> +	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
-> +	if (!trans_pgd)
-> +		return -ENOMEM;
-> +
-> +	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
-> +				PAGE_KERNEL_EXEC);
-> +	if (rc)
-> +		return rc;
-> +
->  	/*
->  	 * Load our new page tables. A strict BBM approach requires that we
->  	 * ensure that TLBs are free of any entries that may overlap with the
+I agree, I think it's a wart in FF API design.
 
-(I suspect you are going to to duplicate this in the kexec code. Kexec has the same
-pattern: instructions that have to be copied to do the relocation of the rest of memory)
+> > +        */
+> > +       ff->private = NULL;
+> >  }
+> >
+> >  static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+> > @@ -2090,7 +2095,7 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+> >         const u16 bcdDevice = le16_to_cpu(udesc->bcdDevice);
+> >         struct ff_device *ff;
+> >         struct hidpp_report response;
+> > -       struct hidpp_ff_private_data *data;
+> > +       struct hidpp_ff_private_data *data = hidpp->private_data;
+> >         int error, j, num_slots;
+> >         u8 version;
+> >
+> > @@ -2129,18 +2134,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+> >                 return error;
+> >         }
+> >
+> > -       data = kzalloc(sizeof(*data), GFP_KERNEL);
+> > -       if (!data)
+> > -               return -ENOMEM;
+> >         data->effect_ids = kcalloc(num_slots, sizeof(int), GFP_KERNEL);
+> > -       if (!data->effect_ids) {
+> > -               kfree(data);
+> > +       if (!data->effect_ids)
+> >                 return -ENOMEM;
+> > -       }
+> > +
+> >         data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
+> >         if (!data->wq) {
+> >                 kfree(data->effect_ids);
+> > -               kfree(data);
+> >                 return -ENOMEM;
+> >         }
+> >
+> > @@ -2199,28 +2199,15 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+> >         return 0;
+> >  }
+> >
+> > -static int hidpp_ff_deinit(struct hid_device *hid)
+> > +static void hidpp_ff_deinit(struct hid_device *hid)
+> >  {
+> > -       struct hid_input *hidinput = list_entry(hid->inputs.next, struct hid_input, list);
+> > -       struct input_dev *dev = hidinput->input;
+> > -       struct hidpp_ff_private_data *data;
+> > -
+> > -       if (!dev) {
+> > -               hid_err(hid, "Struct input_dev not found!\n");
+> > -               return -EINVAL;
+> > -       }
+> > +       struct hidpp_device *hidpp = hid_get_drvdata(hid);
+> > +       struct hidpp_ff_private_data *data = hidpp->private_data;
+> >
+> >         hid_info(hid, "Unloading HID++ force feedback.\n");
+> > -       data = dev->ff->private;
+> > -       if (!data) {
+>
+> I am pretty sure we might need to keep a test on data not being null.
+>
 
+OK, sure. Could you be more explicit in your reasoning next time
+though? I am assuming this is because hid_hw_stop() might be called
+before?
 
-> @@ -462,6 +476,24 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
+> > -               hid_err(hid, "Private data not found!\n");
+> > -               return -EINVAL;
+> > -       }
+> >
+> >         destroy_workqueue(data->wq);
+> >         device_remove_file(&hid->dev, &dev_attr_range);
+> > -
+> > -       return 0;
+> >  }
+>
+> This whole hunk seems unrelated to the devm change.
+> Can you extract a patch that just stores hidpp_ff_private_data in
+> hidpp->private_data and then cleans up hidpp_ff_deinit() before
+> switching it to devm? (or maybe not, see below)
 
-> +int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
-> +			  unsigned long end)
-> +{
-> +	int rc;
-> +	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
-> +
-> +	if (!trans_pgd) {
-> +		pr_err("Failed to allocate memory for temporary page tables.\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	rc = copy_page_tables(trans_pgd, start, end);
-> +	if (!rc)
-> +		*dst_pgdp = trans_pgd;
+Well it appears you are against the idea of leveraging devres in this
+series, so discussing the fate of said hunk seems moot.
 
-*dst_pgdp was already allocated in swsusp_arch_resume().
+>
+> After a few more thoughts, I don't think this mixing of devm and non
+> devm is a good idea:
+> we could say that the hidpp_ff_private_data and its effect_ids are
+> both children of the input_dev, not the hid_device. And we would
+> expect the whole thing to simplify with devm, but it's not, because ff
+> is not supposed to be used with devm.
+>
+> I have a feeling the whole ff logic is wrong in term of where things
+> should be cleaned up, but I can not come up with a good hint on where
+> to start. For example, destroy_workqueue() is called in
+> hidpp_ff_deinit() where it might be racy, and maybe we should call it
+> in hidpp_ff_destroy()...
+>
 
+Yeah, it probably should be moved to hidpp_ff_destroy(). Out of scope
+for this series though, I'll deal with it in a separate submission.
 
-> +
-> +	return rc;
-> +}
-> +
->  /*
->   * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
->   *
-> @@ -488,7 +520,7 @@ int swsusp_arch_resume(void)
->  		pr_err("Failed to allocate memory for temporary page tables.\n");
->  		return -ENOMEM;
->  	}
+> Last, you should base this patch on top of the for-next branch, we
+> recently merged a fix for the FF drivers in the HID subsystem:
+> https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=for-next&id=d9d4b1e46d9543a82c23f6df03f4ad697dab361b
+>
 
-If the allocation moves into 'trans_pgd_create_copy()', please move the code just above
-here (cut off by the diff) that allocates it in swsusp_arch_resume().
+Sure will do.
 
-Its actually okay to leak memory like this, hibernate's allocator acts as a memory pool.
-It either gets freed if we fail to resume, or vanishes when the resumed kernel takes over.
+> Would it be too complex to drop this patch from the series and do a
+> proper follow up cleanup series that might not need to go to stable?
+>
 
-Reviewed-by: James Morse <james.morse@arm.com>
-
-
-> -	rc = copy_page_tables(tmp_pg_dir, PAGE_OFFSET, PAGE_END);
-> +	rc = trans_pgd_create_copy(&tmp_pg_dir, PAGE_OFFSET, PAGE_END);
->  	if (rc)
->  		return rc;
-
+No it's alright. I'll submit a v2 of this series with only two patches
+and send a follow up after.
 
 Thanks,
-
-James
+Andrey Smirnov
