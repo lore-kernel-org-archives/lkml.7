@@ -2,314 +2,164 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A76EC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE29ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588B12084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F85A2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:11:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="DRXxquEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfJKHHi (ORCPT
+        id S1727335AbfJKHLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 03:07:38 -0400
-Received: from regular1.263xmail.com ([211.150.70.199]:55154 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfJKHHh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 03:07:37 -0400
-Received: from localhost (unknown [192.168.167.154])
-        by regular1.263xmail.com (Postfix) with ESMTP id DD89D41F;
-        Fri, 11 Oct 2019 15:07:24 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.10.69] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P30556T139942227334912S1570777641787203_;
-        Fri, 11 Oct 2019 15:07:22 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <d41dfe53de0bfcb4acfccad53fadc479>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: nd@arm.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Cc:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
-        nd <nd@arm.com>
-References: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
- <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
- <20190930104849.GA1208@intel.com>
- <2c46d532-f810-392d-b9c0-3b9aaccae7f4@rock-chips.com>
- <20191008113338.GP1208@intel.com>
- <a5fa3d8e-9e8e-8aa8-8abb-f00e8357acb5@rock-chips.com>
- <eafa5b37-e132-ad37-3876-384ac5ec9584@rock-chips.com>
- <20191011064433.GA18503@jamwan02-TSP300>
-From:   "sandy.huang" <hjc@rock-chips.com>
-Message-ID: <5c932cb6-fdfb-88db-3757-4c1b602d4778@rock-chips.com>
-Date:   Fri, 11 Oct 2019 15:07:22 +0800
+        Fri, 11 Oct 2019 03:11:00 -0400
+Received: from mail-eopbgr740088.outbound.protection.outlook.com ([40.107.74.88]:18441
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726679AbfJKHK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 03:10:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HooJ6QOQrFToxxHPx/kVAdIHiCjPhztO1xBJUuaaBCTGLLj2lkRb3voIleOMfmIFo8RSWqk+hy+C2dYCmZREVT0Eh+9uUnuadi+k0Io7F1XcNU+dvateeJx5jHV7QpCpVnTHCMoS7JbNrLJRRlyy3eqCWnNtnbvu3+Cu9Da6nBNB7eJXm5FeXF77+QTLLmoqJwasXWBN+9GSFOkbBN8TYpj6iNxediWmrjcVXqh1MOWK50NzT+B5ceRQh8INPh66LPzog6qfI/BU6BYP/R5xVEDlPYg/g8pvTFAgqCer55l6R95KV3ENxwaTHC5JliX3o54UENAW0GCBUmo4SMD4ZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DHtnbO5/y6uxrzj/vDghbmPaTUnSC7YAq3PVgaE5y5o=;
+ b=BWHFPJM5q5j+1dncC8xbBTFIX3HGhLi4If/XqYmBewScWLEXGl4yKFftWV8H0O7qdFJRowOPvGwnC8e885dI/SumTzCI0dbvFczRvUCYgzvgy9MyLgUOX6aLIwts/AYV2QC0tgS8oYIreLbHsB/Lt+HPX8vElvBirZ8H78ppWc0K5vBm7meGm9oQCEGiwEm+m7WUDUpu1MC25PVNAe6SGNQiJDweII/2vYxO+yOnFcUH+ElNw7ENvoKZK3bH5JysrB5p4YY8exMf3ZXwI4qTWnwRtZCU3pBgrfL0FQ5wqxCga5SpysXjNTnSldyjKW9+M64LGzSvpW0svDPFEVYYZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=bootlin.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DHtnbO5/y6uxrzj/vDghbmPaTUnSC7YAq3PVgaE5y5o=;
+ b=DRXxquEG3i/heJN0DlDzLbx3bsCbai84ekVNM04LjUrV3Y5IwjrePetG4NcquxxzZTH+guWq4qEXQHQqSY/RtanXLGEpIO/5fi7NP7tjtxPdyBN39+Jt9NlNf6VLdECvfLTEmhLEfJQdlrnP9HiWRJcbGEUNMOi7lXJm3sCQeMU=
+Received: from BN6PR02CA0085.namprd02.prod.outlook.com (2603:10b6:405:60::26)
+ by BYAPR02MB5813.namprd02.prod.outlook.com (2603:10b6:a03:11d::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.21; Fri, 11 Oct
+ 2019 07:10:41 +0000
+Received: from CY1NAM02FT050.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::201) by BN6PR02CA0085.outlook.office365.com
+ (2603:10b6:405:60::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.16 via Frontend
+ Transport; Fri, 11 Oct 2019 07:10:41 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT050.mail.protection.outlook.com (10.152.75.65) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2347.16
+ via Frontend Transport; Fri, 11 Oct 2019 07:10:40 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iIp4S-0003UL-14; Fri, 11 Oct 2019 00:10:40 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iIp4M-0004uC-UG; Fri, 11 Oct 2019 00:10:34 -0700
+Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9B7AMxt006862;
+        Fri, 11 Oct 2019 00:10:22 -0700
+Received: from [172.30.17.123]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1iIp4A-0004dj-0i; Fri, 11 Oct 2019 00:10:22 -0700
+Subject: Re: [PATCH] rtc: xilinx: Fix calibval variable type
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        Srinivas Goud <srinivas.goud@xilinx.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+References: <20765c4c27aa92c75426b82fd2815ebef6471492.1570544738.git.michal.simek@xilinx.com>
+ <20191008143121.GX4254@piout.net>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <7db2fe90-915e-8b6b-e43d-b16487937f5d@xilinx.com>
+Date:   Fri, 11 Oct 2019 09:10:19 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191011064433.GA18503@jamwan02-TSP300>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191008143121.GX4254@piout.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(346002)(39860400002)(189003)(199004)(31696002)(230700001)(486006)(36386004)(14444005)(47776003)(44832011)(126002)(65956001)(65806001)(2486003)(23676004)(8676002)(426003)(9786002)(76176011)(81166006)(81156014)(186003)(336012)(6666004)(356004)(8936002)(305945005)(26005)(54906003)(110136005)(36756003)(4326008)(58126008)(106002)(316002)(5660300002)(478600001)(70586007)(31686004)(2906002)(446003)(11346002)(229853002)(2616005)(476003)(6246003)(50466002)(70206006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5813;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b9006990-eefc-4723-c99a-08d74e1a1fd8
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5813:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <BYAPR02MB5813DAEB69EDF0C765C2EEE7C6970@BYAPR02MB5813.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0187F3EA14
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: q5EmxbM273WuqMhUCJMeU3RtQ8JOTmCNaRXCWDkJA0kxzaW6nO4tkY11RQ+xbdAHipTz1HMZ8vdbxX95ssPCnXIU/gRR1dnYUeejOfkxBT2pmd0QrgOBCGuwGzMamb0IYaLagHs35R/BUyh38P6gWImvrNP6ZcciYZoSLxSpiXaPWO+PrxbecmEO6F4oq704kwl06+5qsn3ojfCsdDZ5VXcgBMZI6yKFHXaN8RH+l4/BPMQDQSwtHiz2jdh7FHEnA829MZ9hBtg1A8g+H3/Ty+3+nPLD2LD1Ywj4PpHJ90oEttQRlL3xD2GiXUFWo3/NWAiawBxRynr56ucwMPf4P3VcpOlTOvT3MLDdFqhdZ2CcQ6yHpfodSpJRisXq67rnv0vdSmP7QZCg92SjBwIyQwpT9hTRN/SKY78uRWqOGWg=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2019 07:10:40.5232
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9006990-eefc-4723-c99a-08d74e1a1fd8
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5813
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 08. 10. 19 16:31, Alexandre Belloni wrote:
+> Hi,
+> 
+> On 08/10/2019 16:25:41+0200, Michal Simek wrote:
+>> From: Srinivas Goud <srinivas.goud@xilinx.com>
+>>
+>> This patch fixes the warnings reported by static code analysis.
+>> Updated calibval variable type to unsigned type from signed.
+>>
+>> Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
+>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>> ---
+>>
+>>  drivers/rtc/rtc-zynqmp.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
+>> index 2c762757fb54..da0dbea8def3 100644
+>> --- a/drivers/rtc/rtc-zynqmp.c
+>> +++ b/drivers/rtc/rtc-zynqmp.c
+>> @@ -44,7 +44,7 @@ struct xlnx_rtc_dev {
+>>  	void __iomem		*reg_base;
+>>  	int			alarm_irq;
+>>  	int			sec_irq;
+>> -	int			calibval;
+>> +	unsigned int		calibval;
+> 
+> Note that ideally, this varialbe should be removed and replaced by
+> .read_offset and .set_offset callbacks so userspace can properly
+> recalibrate the crystal instead of relying on a static value inside the
+> device tree.
 
-在 2019/10/11 下午2:44, james qian wang (Arm Technology China) 写道:
-> On Fri, Oct 11, 2019 at 11:35:53AM +0800, sandy.huang wrote:
->> Hi james.qian.wang,
->>
->>      Thank for you remind, fou some unknow reason, i miss the the mail from
->> you:(, i get this message from https://patchwork.kernel.org/patch/11161937/
->>
->> sorry about that.
->>
->>      About the format block describe, I also found some unreasonable,  this
->> format need 2 line aligned, so the block_h need to sed as 2, and the
->> char_per_block need set as w * h * 10 for y plane, and w * h * 2 * 10 for uv
->> plane, so the following describe maybe more correct, thanks.
->>
->>          { .format = DRM_FORMAT_NV12_10,        .depth = 0, .num_planes = 2,
->>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
->> = { 2, 2, 0 },
->>            .hsub = 2, .vsub = 2, .is_yuv = true},
-> Hi Sandy:
-> I think for such NV12 YUV-422 (hsub = 2, vsub = 2) 2x2 subsampled format
-> the block size can be:
->
-> the Y plane:  2x2;
-> The UV plane: 1x2; (H direction sample 1 Cb and 1Cr, V direction 2 lines got 2)
->
-> Then:
->
-> .char_per_block = {5, 5, 0} block_w = {2, 1, 0}. block_h = {2, 2, 0};
->
-> Thanks
-> James
-
-Hi James,
-
-If the block_w is 2 pixel, one line size at block is 2*10 bit %8 != 0,  
-although we use block to describe this format, but actually the data is 
-still stored one line by one line, still need 4 pixel aligned. so i 
-think here need use 4pixel*2line for per block,
+Thanks for letting me know. We will look at it. It should be patch on
+the top anyway.
 
 Thanks,
-
-sandy.huang.
-
->
->>            .hsub = 2, .vsub = 2, .is_yuv = true},
->>          { .format = DRM_FORMAT_NV21_10,        .depth = 0, .num_planes = 2,
->>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
->> = { 2, 2, 0 },
->>            .hsub = 2, .vsub = 2, .is_yuv = true},
->>          { .format = DRM_FORMAT_NV16_10,        .depth = 0, .num_planes = 2,
->>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
->> = { 2, 2, 0 },
->>            .hsub = 2, .vsub = 1, .is_yuv = true},
->>          { .format = DRM_FORMAT_NV61_10,        .depth = 0, .num_planes = 2,
->>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
->> = { 2, 2, 0 },
->>            .hsub = 2, .vsub = 1, .is_yuv = true},
->>          { .format = DRM_FORMAT_NV24_10,        .depth = 0, .num_planes = 2,
->>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
->> = { 2, 2, 0 },
->>            .hsub = 1, .vsub = 1, .is_yuv = true},
->>          { .format = DRM_FORMAT_NV42_10,        .depth = 0, .num_planes = 2,
->>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
->> = { 2, 2, 0 },
->>            .hsub = 1, .vsub = 1, .is_yuv = true},
->>
->>
->>>>            { .format = DRM_FORMAT_P016,        .depth = 0,  .num_planes =
->> 2,
->>>>              .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 },
->> .block_h = { 1, 0, 0 },
->>>>              .hsub = 2, .vsub = 2, .is_yuv = true},
->>>> +        { .format = DRM_FORMAT_NV12_10,        .depth = 0,  .num_planes
->> = 2,
->>>> +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 },
->> .block_h = { 4, 4, 0 },
->>
->>> Hi Sandy:
->>> Their is a problem here for char_per_block size of plane[0]:
->>> Since: 5 * 8 != 4 * 4 * 10;
->>> Seems you mis-set the block_w/h, per your block size the block is 2x2, and
->> it should be:
->>>    .char_per_block = { 5, 10, 0 }, .block_w = { 2, 2, 0 }, .block_h = { 2,
->> 2, 0 },
->>
->>> Best Regards:
->>> James
->>
->>
->>
->>
->>
->> 在 2019/10/8 下午7:49, sandy.huang 写道:
->>> 在 2019/10/8 下午7:33, Ville Syrjälä 写道:
->>>> On Tue, Oct 08, 2019 at 10:40:20AM +0800, sandy.huang wrote:
->>>>> Hi ville syrjala,
->>>>>
->>>>> 在 2019/9/30 下午6:48, Ville Syrjälä 写道:
->>>>>> On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
->>>>>>> These new format is supported by some rockchip socs:
->>>>>>>
->>>>>>> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
->>>>>>> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
->>>>>>> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
->>>>>>>
->>>>>>> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
->>>>>>> ---
->>>>>>>     drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
->>>>>>>     include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
->>>>>>>     2 files changed, 32 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/gpu/drm/drm_fourcc.c
->>>>>>> b/drivers/gpu/drm/drm_fourcc.c
->>>>>>> index c630064..ccd78a3 100644
->>>>>>> --- a/drivers/gpu/drm/drm_fourcc.c
->>>>>>> +++ b/drivers/gpu/drm/drm_fourcc.c
->>>>>>> @@ -261,6 +261,24 @@ const struct drm_format_info
->>>>>>> *__drm_format_info(u32 format)
->>>>>>>             { .format = DRM_FORMAT_P016,        .depth =
->>>>>>> 0,  .num_planes = 2,
->>>>>>>               .char_per_block = { 2, 4, 0 }, .block_w = {
->>>>>>> 1, 0, 0 }, .block_h = { 1, 0, 0 },
->>>>>>>               .hsub = 2, .vsub = 2, .is_yuv = true},
->>>>>>> +        { .format = DRM_FORMAT_NV12_10,        .depth =
->>>>>>> 0,  .num_planes = 2,
->>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
->>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
->>>>>>> +          .hsub = 2, .vsub = 2, .is_yuv = true},
->>>>>>> +        { .format = DRM_FORMAT_NV21_10,        .depth =
->>>>>>> 0,  .num_planes = 2,
->>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
->>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
->>>>>>> +          .hsub = 2, .vsub = 2, .is_yuv = true},
->>>>>>> +        { .format = DRM_FORMAT_NV16_10,        .depth =
->>>>>>> 0,  .num_planes = 2,
->>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
->>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
->>>>>>> +          .hsub = 2, .vsub = 1, .is_yuv = true},
->>>>>>> +        { .format = DRM_FORMAT_NV61_10,        .depth =
->>>>>>> 0,  .num_planes = 2,
->>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
->>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
->>>>>>> +          .hsub = 2, .vsub = 1, .is_yuv = true},
->>>>>>> +        { .format = DRM_FORMAT_NV24_10,        .depth =
->>>>>>> 0,  .num_planes = 2,
->>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
->>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
->>>>>>> +          .hsub = 1, .vsub = 1, .is_yuv = true},
->>>>>>> +        { .format = DRM_FORMAT_NV42_10,        .depth =
->>>>>>> 0,  .num_planes = 2,
->>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
->>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
->>>>>>> +          .hsub = 1, .vsub = 1, .is_yuv = true},
->>>>>>>             { .format = DRM_FORMAT_P210,        .depth = 0,
->>>>>>>               .num_planes = 2, .char_per_block = { 2, 4, 0 },
->>>>>>>               .block_w = { 1, 0, 0 }, .block_h = { 1, 0,
->>>>>>> 0 }, .hsub = 2,
->>>>>>> diff --git a/include/uapi/drm/drm_fourcc.h
->>>>>>> b/include/uapi/drm/drm_fourcc.h
->>>>>>> index 3feeaa3..08e2221 100644
->>>>>>> --- a/include/uapi/drm/drm_fourcc.h
->>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
->>>>>>> @@ -238,6 +238,20 @@ extern "C" {
->>>>>>>     #define DRM_FORMAT_NV42        fourcc_code('N', 'V',
->>>>>>> '4', '2') /* non-subsampled Cb:Cr plane */
->>>>>>>        /*
->>>>>>> + * 2 plane YCbCr
->>>>>>> + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
->>>>>>> + * index 1 = Cb:Cr plane,
->>>>>>> Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
->>>>>>> + * or
->>>>>>> + * index 1 = Cr:Cb plane,
->>>>>>> Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
->>>>>> So now you're defining it as some kind of byte aligned block.
->>>>>> With that specifying endianness would now make sense since
->>>>>> otherwise this tells us absolutely nothing about the memory
->>>>>> layout.
->>>>>>
->>>>>> So I'd either do that, or go back to not specifying anything and
->>>>>> use some weasel words like "mamory layout is implementation defined"
->>>>>> which of course means no one can use it for anything that involves
->>>>>> any kind of cross vendor stuff.
->>>>> /*
->>>>>     * 2 plane YCbCr
->>>>>     * index 0 = Y plane, [39: 0] Y3:Y2:Y1:Y0 10:10:10:10 little endian
->>>>>     * index 1 = Cb:Cr plane, [79: 0] Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0
->>>>> 10:10:10:10:10:10:10:10  little endian
->>>>>     * or
->>>>>     * index 1 = Cr:Cb plane, [79: 0] Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0
->>>>> 10:10:10:10:10:10:10:10  little endian
->>>>>     */
->>>>>
->>>>> Is this description ok?
->>>> Seems OK to me, if it actually describes the format correctly.
->>>>
->>>> Though I'm not sure why the CbCr is defines as an 80bit block
->>>> and Y has a 40bit block. 40bits should be enough for CbCr as well.
->>>>
->>> well, this is taken into account yuv444,  4 y point corresponding with 4
->>> uv point.
->>>
->>> if only describes the layout memory, here can change to 40bit block.
->>>
->>> thanks.
->>>
->>>>>>> + */
->>>>>>> +#define DRM_FORMAT_NV12_10    fourcc_code('N', 'A',
->>>>>>> '1', '2') /* 2x2 subsampled Cr:Cb plane */
->>>>>>> +#define DRM_FORMAT_NV21_10    fourcc_code('N', 'A',
->>>>>>> '2', '1') /* 2x2 subsampled Cb:Cr plane */
->>>>>>> +#define DRM_FORMAT_NV16_10    fourcc_code('N', 'A',
->>>>>>> '1', '6') /* 2x1 subsampled Cr:Cb plane */
->>>>>>> +#define DRM_FORMAT_NV61_10    fourcc_code('N', 'A',
->>>>>>> '6', '1') /* 2x1 subsampled Cb:Cr plane */
->>>>>>> +#define DRM_FORMAT_NV24_10    fourcc_code('N', 'A',
->>>>>>> '2', '4') /* non-subsampled Cr:Cb plane */
->>>>>>> +#define DRM_FORMAT_NV42_10    fourcc_code('N', 'A',
->>>>>>> '4', '2') /* non-subsampled Cb:Cr plane */
->>>>>>> +
->>>>>>> +/*
->>>>>>>      * 2 plane YCbCr MSB aligned
->>>>>>>      * index 0 = Y plane, [15:0] Y:x [10:6] little endian
->>>>>>>      * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x
->>>>>>> [10:6:10:6] little endian
->>>>>>> -- 
->>>>>>> 2.7.4
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> _______________________________________________
->>>>>>> dri-devel mailing list
->>>>>>> dri-devel@lists.freedesktop.org
->>>>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>>
->>> _______________________________________________
->>> dri-devel mailing list
->>> dri-devel@lists.freedesktop.org
->>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Michal
 
 
