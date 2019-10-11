@@ -2,83 +2,377 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344B3ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9317C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCFC21A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FC220659
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfJKJpb (ORCPT
+        id S1727847AbfJKJqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:45:31 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:45280 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfJKJpb (ORCPT
+        Fri, 11 Oct 2019 05:46:00 -0400
+Received: from regular1.263xmail.com ([211.150.70.204]:52686 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbfJKJqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:45:31 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id E7B3125AD5C;
-        Fri, 11 Oct 2019 20:45:28 +1100 (AEDT)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id ED00E940958; Fri, 11 Oct 2019 11:45:26 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 11:45:26 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH v6 0/3] selftests: netfilter: introduce test cases for
- ipvs
-Message-ID: <20191011094524.ruopnvvh6bedhhgl@verge.net.au>
-References: <1570719055-25110-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+        Fri, 11 Oct 2019 05:46:00 -0400
+Received: from localhost (unknown [192.168.167.152])
+        by regular1.263xmail.com (Postfix) with ESMTP id 7B01C27E;
+        Fri, 11 Oct 2019 17:45:47 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.10.69] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P22861T139794705123072S1570787144832077_;
+        Fri, 11 Oct 2019 17:45:45 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <7cc1003947bb0f35c1c59cc23f449ef6>
+X-RL-SENDER: hjc@rock-chips.com
+X-SENDER: hjc@rock-chips.com
+X-LOGIN-NAME: hjc@rock-chips.com
+X-FST-TO: nd@arm.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        nd <nd@arm.com>
+References: <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
+ <20190930104849.GA1208@intel.com>
+ <2c46d532-f810-392d-b9c0-3b9aaccae7f4@rock-chips.com>
+ <20191008113338.GP1208@intel.com>
+ <a5fa3d8e-9e8e-8aa8-8abb-f00e8357acb5@rock-chips.com>
+ <eafa5b37-e132-ad37-3876-384ac5ec9584@rock-chips.com>
+ <20191011064433.GA18503@jamwan02-TSP300>
+ <5c932cb6-fdfb-88db-3757-4c1b602d4778@rock-chips.com>
+ <20191011072250.GA20592@jamwan02-TSP300>
+ <f4828cab-da7e-1658-51e7-0d123cfdbdf9@rock-chips.com>
+ <20191011083247.GA22224@jamwan02-TSP300>
+From:   "sandy.huang" <hjc@rock-chips.com>
+Message-ID: <dd1afe6b-9762-e8dc-c281-b0c0ff31891c@rock-chips.com>
+Date:   Fri, 11 Oct 2019 17:45:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570719055-25110-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191011083247.GA22224@jamwan02-TSP300>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:50:52PM +0800, Haishuang Yan wrote:
-> This series patch include test cases for ipvs.
-> 
-> The test topology is who as below:
-> +--------------------------------------------------------------+
-> |                      |                                       |
-> |         ns0          |         ns1                           |
-> |      -----------     |     -----------    -----------        |
-> |      | veth01  | --------- | veth10  |    | veth12  |        |
-> |      -----------    peer   -----------    -----------        |
-> |           |          |                        |              |
-> |      -----------     |                        |              |
-> |      |  br0    |     |-----------------  peer |--------------|
-> |      -----------     |                        |              |
-> |           |          |                        |              |
-> |      ----------     peer   ----------      -----------       |
-> |      |  veth02 | --------- |  veth20 |     | veth12  |       |
-> |      ----------      |     ----------      -----------       |
-> |                      |         ns2                           |
-> |                      |                                       |
-> +--------------------------------------------------------------+
-> 
-> Test results:
-> # selftests: netfilter: ipvs.sh
-> # Testing DR mode...
-> # Testing NAT mode...
-> # Testing Tunnel mode...
-> # ipvs.sh: PASS
-> ok 6 selftests: netfilter: ipvs.sh
-> 
-> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Hi, james, ville syrjala, david,
 
-Thanks, applied to ipvs-next.
+在 2019/10/11 下午4:32, james qian wang (Arm Technology China) 写道:
+> On Fri, Oct 11, 2019 at 03:32:17PM +0800, sandy.huang wrote:
+>> 在 2019/10/11 下午3:22, james qian wang (Arm Technology China) 写道:
+>>> On Fri, Oct 11, 2019 at 03:07:22PM +0800, sandy.huang wrote:
+>>>> 在 2019/10/11 下午2:44, james qian wang (Arm Technology China) 写道:
+>>>>> On Fri, Oct 11, 2019 at 11:35:53AM +0800, sandy.huang wrote:
+>>>>>> Hi james.qian.wang,
+>>>>>>
+>>>>>>        Thank for you remind, fou some unknow reason, i miss the the mail from
+>>>>>> you:(, i get this message from https://patchwork.kernel.org/patch/11161937/
+>>>>>>
+>>>>>> sorry about that.
+>>>>>>
+>>>>>>        About the format block describe, I also found some unreasonable,  this
+>>>>>> format need 2 line aligned, so the block_h need to sed as 2, and the
+>>>>>> char_per_block need set as w * h * 10 for y plane, and w * h * 2 * 10 for uv
+>>>>>> plane, so the following describe maybe more correct, thanks.
+>>>>>>
+>>>>>>            { .format = DRM_FORMAT_NV12_10,        .depth = 0, .num_planes = 2,
+>>>>>>              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>>>>>> = { 2, 2, 0 },
+>>>>>>              .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>> Hi Sandy:
+>>>>> I think for such NV12 YUV-422 (hsub = 2, vsub = 2) 2x2 subsampled format
+>>>>> the block size can be:
+>>>>>
+>>>>> the Y plane:  2x2;
+>>>>> The UV plane: 1x2; (H direction sample 1 Cb and 1Cr, V direction 2 lines got 2)
+>>>>>
+>>>>> Then:
+>>>>>
+>>>>> .char_per_block = {5, 5, 0} block_w = {2, 1, 0}. block_h = {2, 2, 0};
+>>>>>
+>>>>> Thanks
+>>>>> James
+>>>> Hi James,
+>>>>
+>>>> If the block_w is 2 pixel, one line size at block is 2*10 bit %8 != 0,
+>>> Hi Sandy:
+>>> you got a mistake here, the bpp of UV plane is 20, 10bit Cb + 10 bit Cr.
+>> here is for y plane.
+> Sorry, Are we talking about the block size calcaltion here ?
+>
+> block_size = block_w * block_h * plane_bpp
+>
+> for you Y plane a 2x2 block is: 2 x 2 * 10 bpp = 40bits
+>
+> And the block info is for computing the minimum pitch, and don't
+> consider the specific hardware alignment here.
+>
+> see: drm_format_info_min_pitch()
+>
+> If you hardware need alignment, you need to put that consideration into your
+> specific driver.
+>
+> James.
+
+Hi david and ville syrjala,
+
+     Do you have any Suggestions?
+
+     James think Y plane 2x2 block size is enough to describe this 
+format, but i prefer to use 4x2 block size, this can include the 
+alignment message.
+
+just like the malidp_de_plane_check()@malidp_plane.c have the following  
+code, here use the block size to check alignment.
+
+     block_w = drm_format_info_block_width(fb->format, 0);
+     block_h = drm_format_info_block_height(fb->format, 0);
+     if (fb->width % block_w || fb->height % block_h) {
+         DRM_DEBUG_KMS("Buffer width/height needs to be a multiple of 
+tile sizes");
+         return -EINVAL;
+     }
+     if ((state->src_x >> 16) % block_w || (state->src_y >> 16) % block_h) {
+         DRM_DEBUG_KMS("Plane src_x/src_y needs to be a multiple of tile 
+sizes");
+         return -EINVAL;
+     }
+
+can you give me some suggestions?
+
+thanks,
+
+sandy.huang
+
+>
+>>>> although we use block to describe this format, but actually the data is
+>>>> still stored one line by one line, still need 4 pixel aligned. so i think
+>>>> here need use 4pixel*2line for per block
+>>> I think this is your hardware specific requirement.
+>>>
+>>> Thanks
+>>> James
+>> yes, this is a new format first used at rockchip platform.
+>>
+>>
+>> Thanks,
+>>
+>> sandy.huang
+>>
+>>>> Thanks,
+>>>>
+>>>> sandy.huang.
+>>>>
+>>>>>>              .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>>>            { .format = DRM_FORMAT_NV21_10,        .depth = 0, .num_planes = 2,
+>>>>>>              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>>>>>> = { 2, 2, 0 },
+>>>>>>              .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>>>            { .format = DRM_FORMAT_NV16_10,        .depth = 0, .num_planes = 2,
+>>>>>>              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>>>>>> = { 2, 2, 0 },
+>>>>>>              .hsub = 2, .vsub = 1, .is_yuv = true},
+>>>>>>            { .format = DRM_FORMAT_NV61_10,        .depth = 0, .num_planes = 2,
+>>>>>>              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>>>>>> = { 2, 2, 0 },
+>>>>>>              .hsub = 2, .vsub = 1, .is_yuv = true},
+>>>>>>            { .format = DRM_FORMAT_NV24_10,        .depth = 0, .num_planes = 2,
+>>>>>>              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>>>>>> = { 2, 2, 0 },
+>>>>>>              .hsub = 1, .vsub = 1, .is_yuv = true},
+>>>>>>            { .format = DRM_FORMAT_NV42_10,        .depth = 0, .num_planes = 2,
+>>>>>>              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>>>>>> = { 2, 2, 0 },
+>>>>>>              .hsub = 1, .vsub = 1, .is_yuv = true},
+>>>>>>
+>>>>>>
+>>>>>>>>              { .format = DRM_FORMAT_P016,        .depth = 0,  .num_planes =
+>>>>>> 2,
+>>>>>>>>                .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 },
+>>>>>> .block_h = { 1, 0, 0 },
+>>>>>>>>                .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>>>>> +        { .format = DRM_FORMAT_NV12_10,        .depth = 0,  .num_planes
+>>>>>> = 2,
+>>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 },
+>>>>>> .block_h = { 4, 4, 0 },
+>>>>>>
+>>>>>>> Hi Sandy:
+>>>>>>> Their is a problem here for char_per_block size of plane[0]:
+>>>>>>> Since: 5 * 8 != 4 * 4 * 10;
+>>>>>>> Seems you mis-set the block_w/h, per your block size the block is 2x2, and
+>>>>>> it should be:
+>>>>>>>      .char_per_block = { 5, 10, 0 }, .block_w = { 2, 2, 0 }, .block_h = { 2,
+>>>>>> 2, 0 },
+>>>>>>
+>>>>>>> Best Regards:
+>>>>>>> James
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> 在 2019/10/8 下午7:49, sandy.huang 写道:
+>>>>>>> 在 2019/10/8 下午7:33, Ville Syrjälä 写道:
+>>>>>>>> On Tue, Oct 08, 2019 at 10:40:20AM +0800, sandy.huang wrote:
+>>>>>>>>> Hi ville syrjala,
+>>>>>>>>>
+>>>>>>>>> 在 2019/9/30 下午6:48, Ville Syrjälä 写道:
+>>>>>>>>>> On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
+>>>>>>>>>>> These new format is supported by some rockchip socs:
+>>>>>>>>>>>
+>>>>>>>>>>> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
+>>>>>>>>>>> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
+>>>>>>>>>>> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+>>>>>>>>>>> ---
+>>>>>>>>>>>       drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
+>>>>>>>>>>>       include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
+>>>>>>>>>>>       2 files changed, 32 insertions(+)
+>>>>>>>>>>>
+>>>>>>>>>>> diff --git a/drivers/gpu/drm/drm_fourcc.c
+>>>>>>>>>>> b/drivers/gpu/drm/drm_fourcc.c
+>>>>>>>>>>> index c630064..ccd78a3 100644
+>>>>>>>>>>> --- a/drivers/gpu/drm/drm_fourcc.c
+>>>>>>>>>>> +++ b/drivers/gpu/drm/drm_fourcc.c
+>>>>>>>>>>> @@ -261,6 +261,24 @@ const struct drm_format_info
+>>>>>>>>>>> *__drm_format_info(u32 format)
+>>>>>>>>>>>               { .format = DRM_FORMAT_P016,        .depth =
+>>>>>>>>>>> 0,  .num_planes = 2,
+>>>>>>>>>>>                 .char_per_block = { 2, 4, 0 }, .block_w = {
+>>>>>>>>>>> 1, 0, 0 }, .block_h = { 1, 0, 0 },
+>>>>>>>>>>>                 .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>>>>>>>> +        { .format = DRM_FORMAT_NV12_10,        .depth =
+>>>>>>>>>>> 0,  .num_planes = 2,
+>>>>>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>>>>>> +          .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>>>>>>>> +        { .format = DRM_FORMAT_NV21_10,        .depth =
+>>>>>>>>>>> 0,  .num_planes = 2,
+>>>>>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>>>>>> +          .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>>>>>>>> +        { .format = DRM_FORMAT_NV16_10,        .depth =
+>>>>>>>>>>> 0,  .num_planes = 2,
+>>>>>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>>>>>> +          .hsub = 2, .vsub = 1, .is_yuv = true},
+>>>>>>>>>>> +        { .format = DRM_FORMAT_NV61_10,        .depth =
+>>>>>>>>>>> 0,  .num_planes = 2,
+>>>>>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>>>>>> +          .hsub = 2, .vsub = 1, .is_yuv = true},
+>>>>>>>>>>> +        { .format = DRM_FORMAT_NV24_10,        .depth =
+>>>>>>>>>>> 0,  .num_planes = 2,
+>>>>>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>>>>>> +          .hsub = 1, .vsub = 1, .is_yuv = true},
+>>>>>>>>>>> +        { .format = DRM_FORMAT_NV42_10,        .depth =
+>>>>>>>>>>> 0,  .num_planes = 2,
+>>>>>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>>>>>> +          .hsub = 1, .vsub = 1, .is_yuv = true},
+>>>>>>>>>>>               { .format = DRM_FORMAT_P210,        .depth = 0,
+>>>>>>>>>>>                 .num_planes = 2, .char_per_block = { 2, 4, 0 },
+>>>>>>>>>>>                 .block_w = { 1, 0, 0 }, .block_h = { 1, 0,
+>>>>>>>>>>> 0 }, .hsub = 2,
+>>>>>>>>>>> diff --git a/include/uapi/drm/drm_fourcc.h
+>>>>>>>>>>> b/include/uapi/drm/drm_fourcc.h
+>>>>>>>>>>> index 3feeaa3..08e2221 100644
+>>>>>>>>>>> --- a/include/uapi/drm/drm_fourcc.h
+>>>>>>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
+>>>>>>>>>>> @@ -238,6 +238,20 @@ extern "C" {
+>>>>>>>>>>>       #define DRM_FORMAT_NV42        fourcc_code('N', 'V',
+>>>>>>>>>>> '4', '2') /* non-subsampled Cb:Cr plane */
+>>>>>>>>>>>          /*
+>>>>>>>>>>> + * 2 plane YCbCr
+>>>>>>>>>>> + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
+>>>>>>>>>>> + * index 1 = Cb:Cr plane,
+>>>>>>>>>>> Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
+>>>>>>>>>>> + * or
+>>>>>>>>>>> + * index 1 = Cr:Cb plane,
+>>>>>>>>>>> Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
+>>>>>>>>>> So now you're defining it as some kind of byte aligned block.
+>>>>>>>>>> With that specifying endianness would now make sense since
+>>>>>>>>>> otherwise this tells us absolutely nothing about the memory
+>>>>>>>>>> layout.
+>>>>>>>>>>
+>>>>>>>>>> So I'd either do that, or go back to not specifying anything and
+>>>>>>>>>> use some weasel words like "mamory layout is implementation defined"
+>>>>>>>>>> which of course means no one can use it for anything that involves
+>>>>>>>>>> any kind of cross vendor stuff.
+>>>>>>>>> /*
+>>>>>>>>>       * 2 plane YCbCr
+>>>>>>>>>       * index 0 = Y plane, [39: 0] Y3:Y2:Y1:Y0 10:10:10:10 little endian
+>>>>>>>>>       * index 1 = Cb:Cr plane, [79: 0] Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0
+>>>>>>>>> 10:10:10:10:10:10:10:10  little endian
+>>>>>>>>>       * or
+>>>>>>>>>       * index 1 = Cr:Cb plane, [79: 0] Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0
+>>>>>>>>> 10:10:10:10:10:10:10:10  little endian
+>>>>>>>>>       */
+>>>>>>>>>
+>>>>>>>>> Is this description ok?
+>>>>>>>> Seems OK to me, if it actually describes the format correctly.
+>>>>>>>>
+>>>>>>>> Though I'm not sure why the CbCr is defines as an 80bit block
+>>>>>>>> and Y has a 40bit block. 40bits should be enough for CbCr as well.
+>>>>>>>>
+>>>>>>> well, this is taken into account yuv444,  4 y point corresponding with 4
+>>>>>>> uv point.
+>>>>>>>
+>>>>>>> if only describes the layout memory, here can change to 40bit block.
+>>>>>>>
+>>>>>>> thanks.
+>>>>>>>
+>>>>>>>>>>> + */
+>>>>>>>>>>> +#define DRM_FORMAT_NV12_10    fourcc_code('N', 'A',
+>>>>>>>>>>> '1', '2') /* 2x2 subsampled Cr:Cb plane */
+>>>>>>>>>>> +#define DRM_FORMAT_NV21_10    fourcc_code('N', 'A',
+>>>>>>>>>>> '2', '1') /* 2x2 subsampled Cb:Cr plane */
+>>>>>>>>>>> +#define DRM_FORMAT_NV16_10    fourcc_code('N', 'A',
+>>>>>>>>>>> '1', '6') /* 2x1 subsampled Cr:Cb plane */
+>>>>>>>>>>> +#define DRM_FORMAT_NV61_10    fourcc_code('N', 'A',
+>>>>>>>>>>> '6', '1') /* 2x1 subsampled Cb:Cr plane */
+>>>>>>>>>>> +#define DRM_FORMAT_NV24_10    fourcc_code('N', 'A',
+>>>>>>>>>>> '2', '4') /* non-subsampled Cr:Cb plane */
+>>>>>>>>>>> +#define DRM_FORMAT_NV42_10    fourcc_code('N', 'A',
+>>>>>>>>>>> '4', '2') /* non-subsampled Cb:Cr plane */
+>>>>>>>>>>> +
+>>>>>>>>>>> +/*
+>>>>>>>>>>>        * 2 plane YCbCr MSB aligned
+>>>>>>>>>>>        * index 0 = Y plane, [15:0] Y:x [10:6] little endian
+>>>>>>>>>>>        * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x
+>>>>>>>>>>> [10:6:10:6] little endian
+>>>>>>>>>>> -- 
+>>>>>>>>>>> 2.7.4
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> _______________________________________________
+>>>>>>>>>>> dri-devel mailing list
+>>>>>>>>>>> dri-devel@lists.freedesktop.org
+>>>>>>>>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>>>>>> _______________________________________________
+>>>>>>> dri-devel mailing list
+>>>>>>> dri-devel@lists.freedesktop.org
+>>>>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
