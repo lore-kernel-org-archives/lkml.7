@@ -2,151 +2,96 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CCEECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2CDECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F98214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2CA214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570802209;
+	bh=au+HdzCzwi1dxfAX7PMoLowdLxP6/BHQkeUPGO1J3Yw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wve+Llvd/pMaVVBrTgGIgbWoY512Iab7dcKOHiFPW1+2U+h1k7ZE6XtRO4lrraNHd
+	 yLhmWdxTjo1ykT/5yE+oP9qe6L8L6CAHwzSPxsyF/oDNzmPs+JU5CoyFgmk+hKCMMd
+	 7G4OsRx53cQjH2jVLS8Rfba8WGVk6e36qFQocp0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfJKN4b (ORCPT
+        id S1728324AbfJKN4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:56:31 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3738 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727589AbfJKN4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:56:31 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 794F6F73EC90C1896BBA;
-        Fri, 11 Oct 2019 21:56:29 +0800 (CST)
-Received: from localhost (10.133.215.230) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
- 21:56:23 +0800
-From:   Zhuang Yanying <ann.zhuangyanying@huawei.com>
-To:     <ann.zhuangyanying@huawei.com>, <linfeng23@huawei.com>,
-        <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-CC:     <weiqi4@huawei.com>, <weidong.huang@huawei.com>
-Subject: [PATCH] KVM: fix overflow of zero page refcount with ksm running
-Date:   Fri, 11 Oct 2019 21:56:17 +0800
-Message-ID: <1570802177-21212-1-git-send-email-ann.zhuangyanying@huawei.com>
-X-Mailer: git-send-email 1.9.5.msysgit.1
+        Fri, 11 Oct 2019 09:56:48 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46431 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbfJKN4r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:56:47 -0400
+Received: by mail-pg1-f195.google.com with SMTP id b8so5830270pgm.13;
+        Fri, 11 Oct 2019 06:56:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pYZN44tcf/xxU7kx6DIe0UpJjwcz9PJmB2YvNccREKU=;
+        b=qCjcFEW/08aMG+fans3bgrmsxov+uC01SXJMtpOlo5OhWEet5s5zkSCxI7pvzHtTx9
+         D9zmNmqf8jA/c9r8GhYEa6fmw8aCfm/EBfwQezZwDTuCfrxMZpx2UtOLBTeGiWrtcK08
+         07eu8DiceRgjOcSf3qiZeeVVoUc7qjeS+4viGAhgXiD7BWXNhi1FYdZ8/QWUpq+dFKna
+         vx9lwIwKdwepilkC9mdJYU2wzXwkqIlREjMk+nandJt0cn0CSBmjQOIm24kdjHN3A8EB
+         LIPJj6g204zn5rrvRtP9GsJj6IieZh1IOvm+8mLFwJ5A8nlF8E2A00Z4PUoqv1xr481L
+         pTWg==
+X-Gm-Message-State: APjAAAW9+ABvWVLA1S0rvMFGXM1ERlNpNkpCupiTG6Lqak6hg355SdiQ
+        xGagfR3wZzhczgaWxsBrvQM=
+X-Google-Smtp-Source: APXvYqyq4Whjhv1pHWqqj6KBdO9ycjVgyQXHccB+LvUmvUApvbU2oRx83Mlu8DosconGWrSq1CRDFA==
+X-Received: by 2002:a63:f646:: with SMTP id u6mr16575972pgj.71.1570802206866;
+        Fri, 11 Oct 2019 06:56:46 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id dw19sm7901861pjb.27.2019.10.11.06.56.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 06:56:45 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id EBB72403EA; Fri, 11 Oct 2019 13:56:44 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 13:56:44 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Alessio Balsini <balsini@android.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] sysctl: Inline braces for ctl_table and ctl_table_header
+Message-ID: <20191011135644.GQ16384@42.do-not-panic.com>
+References: <20190903154906.188651-1-balsini@android.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.215.230]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903154906.188651-1-balsini@android.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are testing Virtual Machine with KSM on v5.4-rc2 kernel,
-and found the zero_page refcount overflow.
-The cause of refcount overflow is increased in try_async_pf
-(get_user_page) without being decreased in mmu_set_spte()
-while handling ept violation.
-In kvm_release_pfn_clean(), only unreserved page will call
-put_page. However, zero page is reserved.
-So, as well as creating and destroy vm, the refcount of
-zero page will continue to increase until it overflows.
+On Tue, Sep 03, 2019 at 04:49:06PM +0100, Alessio Balsini wrote:
+> Fix coding style of "struct ctl_table" and "struct ctl_table_header" to
+> have inline brances.
+> Before:
+> 
+> struct ctl_table
+> {
+> 	...
+> 
+> After:
+> 
+> struct ctl_table {
+> 	...
+> 
+> Besides the wide use of this proposed cose style, this change helps to
+> find at a glance the struct definition when navigating the code.
+> 
+> Signed-off-by: Alessio Balsini <balsini@android.com>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
 
-step1:
-echo 10000 > /sys/kernel/pages_to_scan/pages_to_scan
-echo 1 > /sys/kernel/pages_to_scan/run
-echo 1 > /sys/kernel/pages_to_scan/use_zero_pages
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-step2:
-just create several normal qemu kvm vms.
-And destroy it after 10s.
-Repeat this action all the time.
-
-After a long period of time, all domains hang because
-of the refcount of zero page overflow.
-
-Qemu print error log as follow:
- …
- error: kvm run failed Bad address
- EAX=00006cdc EBX=00000008 ECX=80202001 EDX=078bfbfd
- ESI=ffffffff EDI=00000000 EBP=00000008 ESP=00006cc4
- EIP=000efd75 EFL=00010002 [-------] CPL=0 II=0 A20=1 SMM=0 HLT=0
- ES =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- CS =0008 00000000 ffffffff 00c09b00 DPL=0 CS32 [-RA]
- SS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- DS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- FS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- GS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- LDT=0000 00000000 0000ffff 00008200 DPL=0 LDT
- TR =0000 00000000 0000ffff 00008b00 DPL=0 TSS32-busy
- GDT=     000f7070 00000037
- IDT=     000f70ae 00000000
- CR0=00000011 CR2=00000000 CR3=00000000 CR4=00000000
- DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 DR3=0000000000000000
- DR6=00000000ffff0ff0 DR7=0000000000000400
- EFER=0000000000000000
- Code=00 01 00 00 00 e9 e8 00 00 00 c7 05 4c 55 0f 00 01 00 00 00 <8b> 35 00 00 01 00 8b 3d 04 00 01 00 b8 d8 d3 00 00 c1 e0 08 0c ea a3 00 00 01 00 c7 05 04
- …
-
-Meanwhile, a kernel warning is departed.
-
- [40914.836375] WARNING: CPU: 3 PID: 82067 at ./include/linux/mm.h:987 try_get_page+0x1f/0x30
- [40914.836412] CPU: 3 PID: 82067 Comm: CPU 0/KVM Kdump: loaded Tainted: G           OE     5.2.0-rc2 #5
- [40914.836415] RIP: 0010:try_get_page+0x1f/0x30
- [40914.836417] Code: 40 00 c3 0f 1f 84 00 00 00 00 00 48 8b 47 08 a8 01 75 11 8b 47 34 85 c0 7e 10 f0 ff 47 34 b8 01 00 00 00 c3 48 8d 78 ff eb e9 <0f> 0b 31 c0 c3 66 90 66 2e 0f 1f 84 00 0
- 0 00 00 00 48 8b 47 08 a8
- [40914.836418] RSP: 0018:ffffb4144e523988 EFLAGS: 00010286
- [40914.836419] RAX: 0000000080000000 RBX: 0000000000000326 RCX: 0000000000000000
- [40914.836420] RDX: 0000000000000000 RSI: 00004ffdeba10000 RDI: ffffdf07093f6440
- [40914.836421] RBP: ffffdf07093f6440 R08: 800000424fd91225 R09: 0000000000000000
- [40914.836421] R10: ffff9eb41bfeebb8 R11: 0000000000000000 R12: ffffdf06bbd1e8a8
- [40914.836422] R13: 0000000000000080 R14: 800000424fd91225 R15: ffffdf07093f6440
- [40914.836423] FS:  00007fb60ffff700(0000) GS:ffff9eb4802c0000(0000) knlGS:0000000000000000
- [40914.836425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- [40914.836426] CR2: 0000000000000000 CR3: 0000002f220e6002 CR4: 00000000003626e0
- [40914.836427] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- [40914.836427] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- [40914.836428] Call Trace:
- [40914.836433]  follow_page_pte+0x302/0x47b
- [40914.836437]  __get_user_pages+0xf1/0x7d0
- [40914.836441]  ? irq_work_queue+0x9/0x70
- [40914.836443]  get_user_pages_unlocked+0x13f/0x1e0
- [40914.836469]  __gfn_to_pfn_memslot+0x10e/0x400 [kvm]
- [40914.836486]  try_async_pf+0x87/0x240 [kvm]
- [40914.836503]  tdp_page_fault+0x139/0x270 [kvm]
- [40914.836523]  kvm_mmu_page_fault+0x76/0x5e0 [kvm]
- [40914.836588]  vcpu_enter_guest+0xb45/0x1570 [kvm]
- [40914.836632]  kvm_arch_vcpu_ioctl_run+0x35d/0x580 [kvm]
- [40914.836645]  kvm_vcpu_ioctl+0x26e/0x5d0 [kvm]
- [40914.836650]  do_vfs_ioctl+0xa9/0x620
- [40914.836653]  ksys_ioctl+0x60/0x90
- [40914.836654]  __x64_sys_ioctl+0x16/0x20
- [40914.836658]  do_syscall_64+0x5b/0x180
- [40914.836664]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- [40914.836666] RIP: 0033:0x7fb61cb6bfc7
-
-Signed-off-by: LinFeng <linfeng23@huawei.com>
-Signed-off-by: Zhuang Yanying <ann.zhuangyanying@huawei.com>
----
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index fd68fbe..1f1d731 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -152,7 +152,7 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
- bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
- {
- 	if (pfn_valid(pfn))
--		return PageReserved(pfn_to_page(pfn));
-+		return PageReserved(page) && !is_zero_pfn(pfn);
- 
- 	return true;
- }
--- 
-1.8.3.1
-
-
+  Luis
