@@ -2,160 +2,152 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF9AC10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCD2C4360C
 	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC9D21929
+	by mail.kernel.org (Postfix) with ESMTP id B693F2196E
 	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:09:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jh7skuah"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="O1Y84+iZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfJKCIy (ORCPT
+        id S1727979AbfJKCIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 22:08:54 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:44605 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727369AbfJKCIx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 22:08:53 -0400
-Received: by mail-yw1-f65.google.com with SMTP id m13so2920197ywa.11;
-        Thu, 10 Oct 2019 19:08:53 -0700 (PDT)
+        Thu, 10 Oct 2019 22:08:55 -0400
+Received: from mail-eopbgr750137.outbound.protection.outlook.com ([40.107.75.137]:24902
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727369AbfJKCIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 22:08:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EHouel33XLD/253E+RRq9qXmiBq5oCwak8C0jdNJiBLSN2F86rwmga1QDbsZZL3w5y8gJtzP2CvcN8VK966ehYsDzmT/fFwPxINnPb2OYdzY+A6CD/lNgsgp7a+M4sOb/8kCfeM3Gb7HsoHi4/LNHGv4vZaQuZ/Oou+hs3BulphReo6kVbV/J7OVH23VFnCJHA6/I39qA7SW2ZJT4pdH8whzJbE0eVBGnBTVmejMrIgFjnromSTswDMXFAIUx4XiWmuMOPdtDv3vNOl5YESAYzkJP7VKxdQMxhfPO9xLpanjjAIho3NKB4/h0f7O+Xv2J8b0LY+Y4wz+Y6JFsgO3ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZkWLf+lwpa3bNkDStcFz/F4MOFOX2bq/N3ayqRSYRPs=;
+ b=B277/Oy/3iOig9doSJsrkR7EtZaTGYLRmBYl4F7xlevIvewAcI2yzn9ZXHaVqoBKxBDB80CiGHWFqD8FH0C768brWk2NQb4t/GyW7LcmYmN3kFoB+yPRoZfU4O5TfIrFyYPz4ktclpR8ZZBWmHdb7Ho/2QibliKF7rkbnStNCSW3Kow1ZUuPQQy1mfFWMuoQ6yK2cF2/7zzeZ2J/3SHbsn/11ZdAzvQGjGLQAB6NQQvTAhrvFv443/7FvkNUfFVhowljFAavF6tdc0oQHSof8K/E8aq4dIUTnDP2EWtwN9Mi4JgeNzYAq6bNJKiezCvKYlNA3Qsw8v+sugccJiLCYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s+UDvHeSzR+cQN+NCESzbgPs6kNEAeU6+A0qPCmwP+4=;
-        b=jh7skuahTXIj/dU+M7x5OCrhhC8cuwaYuQVhZ3m919oAbn6D24G1D+Mk51R9ehS4UB
-         2/7PuoXNjqHzTLabnF16vmBtNy4N27rF/z0lvtqVjfS8W9FUFuvAhrifgzaO50lokseK
-         bAp6hpo3675v5J2farDkfgQGfZ84nWb0I55cJEoT1U4/E6vIQME2u4TEKDNH885gO7Iu
-         2FSeY38zRKom2bN7agL0zcqWqgsLymDNT7wnLDaN6ynyyc0oJ2dCKzNRlZTQdVcUQW3J
-         rBEc1h1yXWC5MAMbPx74mfQymOVq6cAum8sYCliz44c7cUoHFXicmjs91EVQYLx27wqO
-         ZqDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s+UDvHeSzR+cQN+NCESzbgPs6kNEAeU6+A0qPCmwP+4=;
-        b=kcUTnRDaPwpy8NFzK5JwK9SzNuu9HSv3k8MEcQqMIgMQLK+NnofP44rhaxzdWohgGN
-         jj0ZbufZH9J/R/fwW4fAd+PK2y+kn6hFXZEXgUbufV10ImeJgnw/9/vOwJOu/YBxvyr5
-         nBAKxoHkW7rxeWcLcPbwRZyezZKORMCxhjlMDS7CyEMDIOa4otKZNIjl6S9AEbmULW7P
-         ilrNpw40F/5oy2UxbIqs/qIUvZBYYkIvU6xAs0NKXD8SB1D3rEPGs5Cu490dfoAUi42c
-         KSAU4xDKafSf6JNRiUYl4+cIzuqnqrllpX0LZknN+vKhJ2SAwa1wFRHVRykddDwWhAb8
-         QAHw==
-X-Gm-Message-State: APjAAAUwhSi9EaBh6BMs+XfK1MCY4VfpFAKt5tcGrNorwxMx0Y5Z0AyE
-        7aGSk1J/WQqlawK8IUMiXffM6zm0LDKHPsi5nkM=
-X-Google-Smtp-Source: APXvYqxz5I+6Yk0tDlHLC+whB9Dtv0NKBhhCu0TlYTT8NcJ4ukDvXVReLRsNTLKeb9ySBfhPAGDjD1D68Zv87mFp4BQ=
-X-Received: by 2002:a81:1d4d:: with SMTP id d74mr654393ywd.420.1570759732802;
- Thu, 10 Oct 2019 19:08:52 -0700 (PDT)
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZkWLf+lwpa3bNkDStcFz/F4MOFOX2bq/N3ayqRSYRPs=;
+ b=O1Y84+iZXk9pFKFmzv0LBXXjaw5psV7qvRtUBi56UgRl1/U2WVsklDU6AMiFIVNssw5nwcMmXsb2WomUG43gAxldYUH4PMNjJblq9kM/4S/fgWzSLcvtx3dE3d1SZdYn5xckE4CLshNy6MqKvh/YpzU6KUUnAVWOUF8Vi46u7bU=
+Received: from BL0PR04MB4532.namprd04.prod.outlook.com (10.167.181.144) by
+ BL0PR04MB4516.namprd04.prod.outlook.com (10.167.172.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Fri, 11 Oct 2019 02:08:51 +0000
+Received: from BL0PR04MB4532.namprd04.prod.outlook.com
+ ([fe80::c184:37a4:7e6e:aa42]) by BL0PR04MB4532.namprd04.prod.outlook.com
+ ([fe80::c184:37a4:7e6e:aa42%7]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
+ 02:08:51 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v2 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+Thread-Topic: [PATCH v2 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+Thread-Index: AQHVf00oAsK7Lki4wU2Sq6LUBIfyh6dToneAgAAA2YCAAQ+sAA==
+Date:   Fri, 11 Oct 2019 02:08:50 +0000
+Message-ID: <20191011020838.GA24665@xin-VirtualBox>
+References: <cover.1570699576.git.xji@analogixsemi.com>
+ <43f48a7036e5a2991bd6bd8a7361107b27e48c54.1570699576.git.xji@analogixsemi.com>
+ <20191010095315.GK13286@kadam> <20191010095617.GL13286@kadam>
+In-Reply-To: <20191010095617.GL13286@kadam>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR03CA0024.apcprd03.prod.outlook.com
+ (2603:1096:203:2e::36) To BL0PR04MB4532.namprd04.prod.outlook.com
+ (2603:10b6:208:4f::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 71e79915-43f9-455f-ef12-08d74deff547
+x-ms-traffictypediagnostic: BL0PR04MB4516:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR04MB451612E1E6A2646508F9E663C7970@BL0PR04MB4516.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(136003)(366004)(396003)(39850400004)(376002)(199004)(189003)(33716001)(33656002)(7736002)(14454004)(6116002)(71190400001)(478600001)(7416002)(6512007)(9686003)(305945005)(1076003)(4326008)(3846002)(256004)(71200400001)(8676002)(8936002)(54906003)(2906002)(316002)(81156014)(81166006)(6916009)(26005)(76176011)(6506007)(386003)(186003)(102836004)(66066001)(6486002)(25786009)(86362001)(486006)(52116002)(99286004)(476003)(6436002)(66446008)(66946007)(66556008)(66476007)(64756008)(229853002)(5660300002)(6246003)(107886003)(11346002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR04MB4516;H:BL0PR04MB4532.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: usKS3wylebWlSSkYQwC9iMZVGVwMnI012B776Vij0BVDqfOxn0a0FvRxSuJO8ImmKg9nZz7u0x71qaV062uqiVJNZBH4JDTd8LJR3q4U8C0zsPlYmFlJkz87G7lisXuxHgXcJLNk+alDnuhRS96MKnElCH09SXySr5GJ8SKIvd4VTjHUePB+uC/YElie1r0sWKXNEKInE3WQHY633U0uaY81+wm8HwCa+8MiWtkPYSrn45yKsW5RDJeoPD/65Jn2PBBm+Fik2D+obp+SeG1gFgWdJOIl6NS7bETWAa7hZRex3Tf3J53KzjcBmGumgdOoeWibMtp2wGiUtREFKlCPFFkW4v4s/Fl+qG5xvh7GGYvstMbVPxXyES3KvX8WEWOpRyvuJ2pUxCKXSSJXA27gj1fp9GZxK24+HfsCZ/zH+HU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <74774DB8CEF834469574AC2BF8907A4B@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1570625609-11083-1-git-send-email-candlesea@gmail.com>
- <d739f691b677fb3ed88a23476d221527a87c363d.camel@suse.de> <nycvar.YFH.7.76.1910091958120.13160@cbobk.fhfr.pm>
- <CAPnx3XNGBw+SKSFA3DhhHFZZ17f54DMfYjKOcqYTb3N-PWGKpw@mail.gmail.com> <CAO-hwJJEcP3AEYfadhEbqzfszawxiQ7E9NAwmxHcK6SH8zzhiQ@mail.gmail.com>
-In-Reply-To: <CAO-hwJJEcP3AEYfadhEbqzfszawxiQ7E9NAwmxHcK6SH8zzhiQ@mail.gmail.com>
-From:   Candle Sun <candlesea@gmail.com>
-Date:   Fri, 11 Oct 2019 10:08:41 +0800
-Message-ID: <CAPnx3XOeJRBsrAamv8o7H_zgnxNfwBX5gsaom_zJHJjewiELSw@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: core: check whether usage page item is after
- usage id item
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        orson.zhai@unisoc.com,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71e79915-43f9-455f-ef12-08d74deff547
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 02:08:50.9675
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OZYKiGDEgQL4ZvGLttVYYMI25yzDrRuHuXYsq4+zpzheDHegNEpbpKN5eqw4uPG1uYAnMYOzaLB3lbokuf8hww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR04MB4516
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 8:17 PM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> On Thu, Oct 10, 2019 at 5:19 AM Candle Sun <candlesea@gmail.com> wrote:
-> >
-> > On Thu, Oct 10, 2019 at 2:00 AM Jiri Kosina <jikos@kernel.org> wrote:
-> > >
-> > > On Wed, 9 Oct 2019, Nicolas Saenz Julienne wrote:
-> > >
-> > > > > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> > > > > index 3eaee2c..3394222 100644
-> > > > > --- a/drivers/hid/hid-core.c
-> > > > > +++ b/drivers/hid/hid-core.c
-> > > > > @@ -35,6 +35,8 @@
-> > > > >
-> > > > >  #include "hid-ids.h"
-> > > > >
-> > > > > +#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xffff))
-> > > >
-> > > > Not sure I like the macro. I'd rather have the explicit code. That said, lets
-> > > > see what Benjamin has to say.
-> > >
-> > > Not sure about Benjamin :) but I personally would ask for putting it
-> > > somewhere into hid.h as static inline.
-> > >
-> > > And even if it's for some reason insisted on this staying macro, please at
-> > > least put it as close to the place(s) it's being used as possible, in
-> > > order to maintain some code sanity.
-> > >
-> > > Thanks,
-> > >
-> > > --
-> > > Jiri Kosina
-> > > SUSE Labs
-> > >
-> >
-> > Thanks Nicolas and Jiri,
-> > If macro is not good, I will change it to static function. But the
-> > funciton is only used in hid-core.c,
-> > maybe placing it into hid.h is not good?
->
-> I would rather use a function too (in hid-core.c, as it's not reused
-> anywhere else), and we can make it simpler from the caller point of
-> view (if I am not mistaken):
-> ---
-> static void concatenate_usage_page(struct hid_parser *parser, int index)
-> {
->     parser->local.usage[index] &= 0xFFFF;
->     parser->local.usage[index] |= (parser->global.usage_page & 0xFFFF) << 16;
-> }
->
-> // Which can then be called as:
-> +       parser->local.usage[parser->local.usage_index] = usage;
-> +       if (size <= 2)
-> +               concatenate_usage_page(parser, parser->local.usage_index);
-> +
->
-> // And
->         for (i = 0; i < parser->local.usage_index; i++)
-> -               if (parser->local.usage_size[i] <= 2)
-> -                       parser->local.usage[i] +=
-> parser->global.usage_page << 16;
-> +               if (parser->local.usage_size[i] <= 2) {
-> +                       concatenate_usage_page(parser, i);
-> +               }
->  }
-> ---
->
-> And now that I have written this, the check on the size could also be
-> very well integrated in concatenate_usage_page().
->
-> Cheers,
-> Benjamin
->
+Hi Dan Carpenter,
 
-Thanks Benjamin's detailed directions. I will amend the patch.
+This is a bug, I'll fix it right now.
 
-Candle
+The coding is much nicer than before, thanks for your comments,
+it is very helpful for me.
 
-> >
-> > Regards,
-> > Candle
->
+Thanks,
+Xin
+
+
+On Thu, Oct 10, 2019 at 12:56:17PM +0300, Dan Carpenter wrote:
+> On Thu, Oct 10, 2019 at 12:53:15PM +0300, Dan Carpenter wrote:
+> > This code is *so* much nicer than before.  I hope you feel good about
+> > the changes.  It makes me happy to look at this code now.
+> >=20
+> > On Thu, Oct 10, 2019 at 09:34:19AM +0000, Xin Ji wrote:
+> > > +static int edid_read(struct anx7625_data *ctx,
+> > > +		     u8 offset, u8 *pblock_buf)
+> > > +{
+> > > +	int ret, cnt;
+> > > +	struct device *dev =3D &ctx->client->dev;
+> > > +
+> > > +	for (cnt =3D 0; cnt < EDID_TRY_CNT; cnt++) {
+>                                           ^^^^^
+>=20
+> > > +		sp_tx_aux_wr(ctx, offset);
+> > > +		/* set I2C read com 0x01 mot =3D 0 and read 16 bytes */
+> > > +		ret =3D sp_tx_aux_rd(ctx, 0xf1);
+> > > +
+> > > +		if (ret) {
+> > > +			sp_tx_rst_aux(ctx);
+> > > +			DRM_DEV_DEBUG_DRIVER(dev, "edid read failed, reset!\n");
+> > > +			cnt++;
+>                         ^^^^^
+>=20
+> I mean that it's incremented twice, yeah?
+>=20
+> regards,
+> dan carpenter
