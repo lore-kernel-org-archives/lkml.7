@@ -2,75 +2,128 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA013ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB775ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5C9214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F995206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbfJKNSm (ORCPT
+        id S1728529AbfJKNTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:18:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41467 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728447AbfJKNSm (ORCPT
+        Fri, 11 Oct 2019 09:19:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24854 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728431AbfJKNTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:18:42 -0400
-Received: from v22018046084765073.goodsrv.de ([185.183.158.195] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iIuoY-0000ld-Vb; Fri, 11 Oct 2019 13:18:39 +0000
-Date:   Fri, 11 Oct 2019 15:18:37 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Christian Kellner <ckellner@redhat.com>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Christian Kellner <christian@kellner.me>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] pidfd: add tests for NSpid info in fdinfo
-Message-ID: <20191011131835.xzxxncgo67kzbemd@wittgenstein>
-References: <20191009160532.20674-1-ckellner@redhat.com>
- <20191011122323.7770-1-ckellner@redhat.com>
- <20191011122323.7770-2-ckellner@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191011122323.7770-2-ckellner@redhat.com>
-User-Agent: NeoMutt/20180716
+        Fri, 11 Oct 2019 09:19:18 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9BD9AkC046385
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 09:19:17 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vjqre75b3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 09:19:17 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 11 Oct 2019 14:19:15 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 11 Oct 2019 14:19:11 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9BDJA9G54591628
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 13:19:10 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 006F111C05C;
+        Fri, 11 Oct 2019 13:19:10 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E15611C06F;
+        Fri, 11 Oct 2019 13:19:08 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.178.57])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 11 Oct 2019 13:19:07 +0000 (GMT)
+Subject: Re: [PATCH v7 8/8] powerpc/ima: update ima arch policy to check for
+ blacklist
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Fri, 11 Oct 2019 09:19:07 -0400
+In-Reply-To: <1570497267-13672-9-git-send-email-nayna@linux.ibm.com>
+References: <1570497267-13672-1-git-send-email-nayna@linux.ibm.com>
+         <1570497267-13672-9-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101113-0008-0000-0000-000003212F6C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101113-0009-0000-0000-00004A403C26
+Message-Id: <1570799947.5250.80.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-11_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910110124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 02:23:21PM +0200, Christian Kellner wrote:
-> From: Christian Kellner <christian@kellner.me>
+On Mon, 2019-10-07 at 21:14 -0400, Nayna Jain wrote:
+> This patch updates the arch specific policies for PowernV systems
+> to add check against blacklisted binary hashes before doing the
+> verification.
+
+This sentence explains how you're doing something.  A simple tweak in
+the wording provides the motivation.
+
+^to make sure that the binary hash is not blacklisted.
+
 > 
-> Add tests that check that if pid namespaces are configured the fdinfo
-> file of a pidfd contains an NSpid: entry containing the process id
-> in the current and additionally all nested namespaces.
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+
+> ---
+>  arch/powerpc/kernel/ima_arch.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Signed-off-by: Christian Kellner <christian@kellner.me>
+> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+> index 88bfe4a1a9a5..4fa41537b846 100644
+> --- a/arch/powerpc/kernel/ima_arch.c
+> +++ b/arch/powerpc/kernel/ima_arch.c
+> @@ -25,9 +25,9 @@ bool arch_ima_get_secureboot(void)
+>  static const char *const arch_rules[] = {
+>  	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
+>  	"measure func=MODULE_CHECK template=ima-modsig",
+> -	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+> +	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
+>  #if !IS_ENABLED(CONFIG_MODULE_SIG_FORCE)
+> -	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+> +	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
+>  #endif
+>  	NULL
+>  };
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-
-Shuah, can I get an Ack for you from this. If you have no objections I'd
-queue up this patchset for the 5.5 merge window.
-
-Thanks!
-Christian
