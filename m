@@ -2,105 +2,88 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A43ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B876C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEB4214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF5E218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q+ZBRH4J"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="YDg7jd9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfJKXul (ORCPT
+        id S1728294AbfJKXwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 19:50:41 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43727 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfJKXuk (ORCPT
+        Fri, 11 Oct 2019 19:52:51 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35835 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfJKXwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 19:50:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i32so6642147pgl.10
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 16:50:39 -0700 (PDT)
+        Fri, 11 Oct 2019 19:52:50 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m15so16367663qtq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 16:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EgtZMQuv8rVlaVgRlgv5EqHSKVxfWJrgFI1xeOtDznY=;
-        b=Q+ZBRH4JMLVEz3cKNEBDilBpczI3cAfNTxVUQ0GmOaaYQMrnhMpBpG/oMkEbPv6Odf
-         8GGYfPNZshLNysepMYmTkT+3aNAgXugsY1CpHbIdxbtdrQQ60VUYCVdhNKtGJPZ9XNmZ
-         yeC9ihKcyyHJaIzy1EL8IqBelW7q7XUwmg/Hj26mRmV0FwdkKluXBx8bn/qC4si8Txjq
-         BJcMrTQsWH7JShE3N5uQdrbWPaMlnQ7E4TerYqhVVbjckQYF1dRgiIH2UwHVA4jeybRa
-         ct5jnHOzbs9B/OYFzSNZbT3pquua3lDioCSE2rTR4TEhQ2ocWM1R5k2um3dsc3fczhsT
-         9efQ==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=MISH1PDZt9MNvLY625jcYTV0a+n6dTpjlTuxG4RxgbM=;
+        b=YDg7jd9ZqdXZqMgk//uFIx4+02PLEpPrl8eL3gPiOUzcZZxYVuZ0sm7qMkPPe4TEso
+         CzqZ7kRO+Qksj2QubZE4GU+qGA8CSvqn4FNz8zgKT5JjEZd9SBCjawJhDY2BInJk4HGZ
+         iYEDgAvUA6aYAVWRT0bwJt/yTdr5ir0WsxBDTmo3T2rzGH9tOugvqVYZQNcjrgPmo9l+
+         aFOLMG8Xs6kIn/YMa5dEAjL231Dih8nH55OVXRUs/AWpEFNRQJbiDRORrLurHsz64uSk
+         ROghOE+opMX2yMGhUpqIWhYNFb60wxER5MgxkfkJaMP8MwkN0UrgMkqOttFyqcph3U6u
+         mVUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EgtZMQuv8rVlaVgRlgv5EqHSKVxfWJrgFI1xeOtDznY=;
-        b=OKEsapGq5MkROMwLFWISSWWM8D568SfeMd7vkrKgLV7KkC3H7YXAuKeSfBHJoBjO18
-         Lm4h3cra891EmGM+JCsOo8PnXp1Lkq0hG5QUh1fcLBKTnln1/Pu5fCGUFfLSaDovAE7+
-         GuqxUsjTSIZLx7ApQIcVOy0TenbyohBJGaVLxQpC8lCTNLuGXgGLOcPdX48g4VIXFl+u
-         YUIv2tjLioxHKLhtXvsR3N5eHSpBeTgVU80jH6R6qSL70yTMvVuPfNkUNRG/eZAnTMJR
-         eN8cQGJmUtzunQbm4srqxRdx4RvuQZRv263jU5pnSEmjnfdfXLA5Y8szrRZvAUzdIiAm
-         s7tg==
-X-Gm-Message-State: APjAAAVmWrPT4XT8GGrk2mSmo4THAou9yjOmU/PxX2odk88ALOTsaCLu
-        07+SFqo0+V6kTLCn4djdWwc5cA==
-X-Google-Smtp-Source: APXvYqxyTECy/5ImThDv0fD4LqF+cLTW2tgyxri1a1OulnP2BTV3jWbPhAnqE9psBlNscebeW3EiBg==
-X-Received: by 2002:a63:a357:: with SMTP id v23mr19518356pgn.383.1570837838628;
-        Fri, 11 Oct 2019 16:50:38 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id ce16sm8784551pjb.29.2019.10.11.16.50.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 16:50:38 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] arm64: defconfig: Enable Qualcomm pseudo rng
-Date:   Fri, 11 Oct 2019 16:50:35 -0700
-Message-Id: <20191011235035.374569-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=MISH1PDZt9MNvLY625jcYTV0a+n6dTpjlTuxG4RxgbM=;
+        b=tKtZT8OH94rYGUiUGnrj8J4F7YEvMk9n+0xHbj8kELSebSB3byC6nJVX/0oa++z8j6
+         LgvDgKV4ZcI++IpxKwrxe+xCFqNL2tdhovqpfDFKeM1QDR3KPjOEMdveI2hK8nbnwZKw
+         O5fGdPPrtcjSbd1RmJ13z3kMFoihfeGXT4Lwc2TMnKz2fNoDJEM3IWeRPzuIndBkfYSv
+         QlM5ZxOhA0Y6ibojgwM//Gu66Gw/kYSgWrI9igu0QF9DMFkc0S8pGcJcmuH/+Hl8HYmx
+         r5kY4Hbox0AYQfWcn9Ie9nh6nVlq9AsQmUi7qcc0Rh5CyG1T7mEsstT2LA2N8GMSPS5P
+         gwfA==
+X-Gm-Message-State: APjAAAWjmZdGJmSN18bhfVMqdVRYyN4JHkgPY1Ei/0+PoGQ1QrJ7JK71
+        CaO25W1e7/b11uif3z0BG70WcP4LM4T1fg==
+X-Google-Smtp-Source: APXvYqwGox9Ul2ppOXU3NBNTbVqsiZNta2iDQ3uguXhrIP6mhjuzSzgKPa7ncU7KJQB2gAplXTNnWw==
+X-Received: by 2002:ac8:1991:: with SMTP id u17mr20319338qtj.369.1570837969512;
+        Fri, 11 Oct 2019 16:52:49 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id u43sm5579373qte.19.2019.10.11.16.52.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2019 16:52:49 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] hugetlb: Add nohugepages parameter to prevent hugepages creation
+Date:   Fri, 11 Oct 2019 19:52:48 -0400
+Message-Id: <4641B95A-6DD8-4E8A-AD53-06E7B72D956C@lca.pw>
+References: <CAHD1Q_ynd6f2Jc54k1D9JjmtD6tGhkDcAHRzd5nZt5LUdQTvaw@mail.gmail.com>
+Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com,
+        linux-kernel@vger.kernel.org,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>
+In-Reply-To: <CAHD1Q_ynd6f2Jc54k1D9JjmtD6tGhkDcAHRzd5nZt5LUdQTvaw@mail.gmail.com>
+To:     Guilherme Piccoli <gpiccoli@canonical.com>
+X-Mailer: iPhone Mail (17A860)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most Qualcomm platforms contain a pseudo random number generator
-hardware block. Enable the driver for this block.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a5953b0b382d..688c8f200034 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -855,6 +855,7 @@ CONFIG_NLS_ISO8859_1=y
- CONFIG_SECURITY=y
- CONFIG_CRYPTO_ECHAINIV=y
- CONFIG_CRYPTO_ANSI_CPRNG=y
-+CONFIG_CRYPTO_DEV_QCOM_RNG=m
- CONFIG_DMA_CMA=y
- CONFIG_CMA_SIZE_MBYTES=32
- CONFIG_PRINTK_TIME=y
--- 
-2.23.0
+> On Oct 11, 2019, at 7:42 PM, Guilherme Piccoli <gpiccoli@canonical.com> wr=
+ote:
+>=20
+> Thanks for the quick response. Kdump in Ubuntu, for example, rely in
+> mounting the root filesystem.
+> Even in initrd-only approaches, we could have sysctl.conf being copied
+> to initramfs, and hugepages end-up getting set.
 
+It simply error-prone to reuse the sysctl.conf from the first kernel, as it c=
+ould contains lots of things that will kill kdump kernel.=
