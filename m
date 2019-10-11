@@ -2,160 +2,169 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E624FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC030C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91E421920
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C662321920
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="ufwcAAv+"
+	dkim=pass (2048-bit key) header.d=netrounds-com.20150623.gappssmtp.com header.i=@netrounds-com.20150623.gappssmtp.com header.b="hc3nIVQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfJKAju (ORCPT
+        id S1727968AbfJKAj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:39:50 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44696 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727917AbfJKAjt (ORCPT
+        Thu, 10 Oct 2019 20:39:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38810 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727626AbfJKAjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:39:49 -0400
-Received: by mail-lf1-f67.google.com with SMTP id q12so5720281lfc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:39:47 -0700 (PDT)
+        Thu, 10 Oct 2019 20:39:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id b20so8051157ljj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:39:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N487as+c+FNQH8UKaT6HaOwU2u0KpBH93Y19zrHfpEU=;
-        b=ufwcAAv+UFt3XUw6Rd8NAzS51flGDXx3ywuA5XIH5+S2oFoO1Eaf6UmFdjOUMI6gka
-         6yCyta6ksoQrqSOl/4+hkHsG2c7boYbSkNyYM6xN8dBIPbyC96ggLQiwD1//Cssn99Rv
-         66i8F1CDFiyrlz+9H6hdBO4lrbiRgJ+nzfIONCUyXnWD2+c1GE1f7j8L2AMRZBEfy9g5
-         ZZYXTCvADd7l7/9pzVM3B1yUR1VRIxbYY8Yzx/B6+8NzIhME/H8YnuE2Mh06ykvkFBst
-         ktCU1ig6EE3fVh6p9t8PnxmUOgUALw4WIVCUzgXCP7JYSSNw42EzsQ/ca4pdqBnSXpKU
-         7bVQ==
+        d=netrounds-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=MDZWWB/Ud+l+MVtuAcfOL6WEx1UA5LiZUDvJuyzpvkg=;
+        b=hc3nIVQED6Uz8RMHE512mAme6wFesU8CViEQvM4PrDjUqlfQ6K2P2by391xa0v+8BD
+         b+i8xdFvIO11WDdZsnkvmC1Tv0EaTCs7bpJiwWW0yhUI6JQDT0mIwKmOhXAV3oZFvi7l
+         BM4l8uliYM+EBQl0GsE4CQr31jvf7BEdw+J4+N0TfyXGoffJ8osMuzmhtBwvVSxhD2h+
+         lP/sPZvblagaDj082R5f1ae61/HJLa0k3W7zwVR2qGNY+eIDsV4SvMyGBrd6Sv1hWh6M
+         Z8JDx+DD9EkVCV4Hg2UtGJnHBmcgrR4sel9eNncDjiCExkdH9wFUdG3yD4M0HhFONhXW
+         I8Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N487as+c+FNQH8UKaT6HaOwU2u0KpBH93Y19zrHfpEU=;
-        b=CSuD327XnzHKdI8etWaFApfh5Q7FaFOm5bd7skFdOhgNdHeCB0j8Ge05rXKDxom25X
-         MtOeb3kOLJ/udNYAtQDtm99M+U31OLQV63SRwpuJBFwqGg1rw5L77h78IGU24v1ZHh9b
-         YAr27tnOAL4/JPn7ThePno9CPgu+2IQob86WTT1SS1cPBItH1a92F/G7z1tHv6THsHy8
-         PdXn3PW0XyV4tnjLbVuMOgZLFeEedk1Tyn0dChmfKak7tpb1CRUtbSbPZo5StUiv907L
-         9ufc2fq6t8UErAzXIr5fICaf31Po43VzQ+TehAuZ6K+HDjQyNEGQdKGvZMJ+7PjDSAAI
-         opEw==
-X-Gm-Message-State: APjAAAWjw32g3kVsxY26734SSw1mep9dEZiwUZHEcOVRYRMJtK7JksNs
-        KIqMo6AfUya1yEJYUGuAvDFejrMgSaHrqMJXjlZ2
-X-Google-Smtp-Source: APXvYqyB4RJDQCQWsrtqXfnRzChlUNiZfRjoEHOyfVUdO0CSjjh+KCjiX6b5mwIZ8VzpJPbiupVbYYs83JZ7LdEfTCQ=
-X-Received: by 2002:a19:2394:: with SMTP id j142mr7362655lfj.13.1570754386530;
- Thu, 10 Oct 2019 17:39:46 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MDZWWB/Ud+l+MVtuAcfOL6WEx1UA5LiZUDvJuyzpvkg=;
+        b=VWhKgg73glygXNwzFNTnZKH1yoywlamsXRhCnFbx3zQxygAAOPGrYBnBSFWPsQ3Y/I
+         40Ln5/a4t4cTD8eAXlR4HZ927MkCuvb+J+ogYLLR2wZDgZNj4nTfEvn67RTRTlsJq/v9
+         QufDFYoLoRd0lISUajaFA0ON9aNKzEU79xvDZBg9VkkKX4EHIWbhX89zRmTwGodW1tTD
+         Fk755UZkJigPffjeGxuU3+KSp7pKXZT8ictcKjjlkLP1oeT6yBbFeT60qdvWrCMIUnAQ
+         LB8ILbSQihIVUb6ubuL2prMJgBzoSl25ontOCpdvniD97id/HpopriJnpURHtM5wUOsA
+         HDAA==
+X-Gm-Message-State: APjAAAUuy9JBInPLbpBhsnUMQr3LU1jpeTBlSpRSPxubWm0rjqNQqwOa
+        ZxvcQTzkUnm5dfvvG4W1i+fwdA==
+X-Google-Smtp-Source: APXvYqwLtDb+QvkzAQUPXoIIcToYZ5I2J6+xh8y/t0HHV0IYXkrCo1M9n2dTnICXxEpHQ6XXx/vfkA==
+X-Received: by 2002:a2e:9890:: with SMTP id b16mr7091204ljj.153.1570754392048;
+        Thu, 10 Oct 2019 17:39:52 -0700 (PDT)
+Received: from [192.168.1.169] (h-137-65.A159.priv.bahnhof.se. [81.170.137.65])
+        by smtp.gmail.com with ESMTPSA id c26sm1789740ljj.45.2019.10.10.17.39.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 17:39:51 -0700 (PDT)
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+To:     Paolo Abeni <pabeni@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Fastabend <john.fastabend@gmail.com>
+References: <d102074f-7489-e35a-98cf-e2cad7efd8a2@netrounds.com>
+ <95c5a697932e19ebd6577b5dac4d7052fe8c4255.camel@redhat.com>
+From:   Jonas Bonn <jonas.bonn@netrounds.com>
+Message-ID: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+Date:   Fri, 11 Oct 2019 02:39:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1568834524.git.rgb@redhat.com> <91315ac64b44bcad9dfc623fa7fefe67d7d2561b.1568834524.git.rgb@redhat.com>
-In-Reply-To: <91315ac64b44bcad9dfc623fa7fefe67d7d2561b.1568834524.git.rgb@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 10 Oct 2019 20:39:35 -0400
-Message-ID: <CAHC9VhRgOTfZzzv+NxxH3D3FN-2A=cd2h1+oDc2cabLhzi4gfQ@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V7 12/21] audit: add support for containerid to
- network namespaces
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <95c5a697932e19ebd6577b5dac4d7052fe8c4255.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 9:26 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> Audit events could happen in a network namespace outside of a task
-> context due to packets received from the net that trigger an auditing
-> rule prior to being associated with a running task.  The network
-> namespace could be in use by multiple containers by association to the
-> tasks in that network namespace.  We still want a way to attribute
-> these events to any potential containers.  Keep a list per network
-> namespace to track these audit container identifiiers.
->
-> Add/increment the audit container identifier on:
-> - initial setting of the audit container identifier via /proc
-> - clone/fork call that inherits an audit container identifier
-> - unshare call that inherits an audit container identifier
-> - setns call that inherits an audit container identifier
-> Delete/decrement the audit container identifier on:
-> - an inherited audit container identifier dropped when child set
-> - process exit
-> - unshare call that drops a net namespace
-> - setns call that drops a net namespace
->
-> Please see the github audit kernel issue for contid net support:
->   https://github.com/linux-audit/audit-kernel/issues/92
-> Please see the github audit testsuiite issue for the test case:
->   https://github.com/linux-audit/audit-testsuite/issues/64
-> Please see the github audit wiki for the feature overview:
->   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+Hi Paolo,
+
+On 09/10/2019 21:14, Paolo Abeni wrote:
+> Something alike the following code - completely untested - can possibly
+> address the issue, but it's a bit rough and I would prefer not adding
+> additonal complexity to the lockless qdiscs, can you please have a spin
+> a it?
+
+We've tested a couple of variants of this patch today, but unfortunately 
+it doesn't fix the problem of packets getting stuck in the queue.
+
+A couple of comments:
+
+i) On 5.4, there is the BYPASS path that also needs the same treatment 
+as it's essentially replicating the behavour of qdisc_run, just without 
+the queue/dequeue steps
+
+ii)  We are working a lot with the 4.19 kernel so I backported to the 
+patch to this version and tested there.  Here the solution would seem to 
+be more robust as the BYPASS path does not exist.
+
+Unfortunately, in both cases we continue to see the issue of the "last 
+packet" getting stuck in the queue.
+
+/Jonas
+
+
+> 
+> Thanks,
+> 
+> Paolo
 > ---
->  include/linux/audit.h | 19 +++++++++++
->  kernel/audit.c        | 87 +++++++++++++++++++++++++++++++++++++++++++++++++--
->  kernel/nsproxy.c      |  4 +++
->  3 files changed, 108 insertions(+), 2 deletions(-)
-
-...
-
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index 7cdb76b38966..e0c27bc39925 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -373,6 +381,75 @@ static struct sock *audit_get_sk(const struct net *net)
->         return aunet->sk;
->  }
->
-> +void audit_netns_contid_add(struct net *net, u64 contid)
-> +{
-> +       struct audit_net *aunet;
-> +       struct list_head *contid_list;
-> +       struct audit_contid *cont;
+> diff --git a/include/net/pkt_sched.h b/include/net/pkt_sched.h
+> index 6a70845bd9ab..65a1c03330d6 100644
+> --- a/include/net/pkt_sched.h
+> +++ b/include/net/pkt_sched.h
+> @@ -113,18 +113,23 @@ bool sch_direct_xmit(struct sk_buff *skb, struct Qdisc *q,
+>   		     struct net_device *dev, struct netdev_queue *txq,
+>   		     spinlock_t *root_lock, bool validate);
+>   
+> -void __qdisc_run(struct Qdisc *q);
+> +int __qdisc_run(struct Qdisc *q);
+>   
+>   static inline void qdisc_run(struct Qdisc *q)
+>   {
+> +	int quota = 0;
 > +
-> +       if (!net)
-> +               return;
-> +       if (!audit_contid_valid(contid))
-> +               return;
-> +       aunet = net_generic(net, audit_net_id);
-> +       if (!aunet)
-> +               return;
-> +       contid_list = &aunet->contid_list;
-> +       spin_lock(&aunet->contid_list_lock);
-> +       list_for_each_entry_rcu(cont, contid_list, list)
-> +               if (cont->id == contid) {
-> +                       refcount_inc(&cont->refcount);
-> +                       goto out;
-> +               }
-> +       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
-
- kmalloc(sizeof(*cont), GFP_ATOMIC)
-
-
-> +       if (cont) {
-> +               INIT_LIST_HEAD(&cont->list);
-> +               cont->id = contid;
-> +               refcount_set(&cont->refcount, 1);
-> +               list_add_rcu(&cont->list, contid_list);
-> +       }
-> +out:
-> +       spin_unlock(&aunet->contid_list_lock);
-> +}
-
---
-paul moore
-www.paul-moore.com
+>   	if (qdisc_run_begin(q)) {
+>   		/* NOLOCK qdisc must check 'state' under the qdisc seqlock
+>   		 * to avoid racing with dev_qdisc_reset()
+>   		 */
+>   		if (!(q->flags & TCQ_F_NOLOCK) ||
+>   		    likely(!test_bit(__QDISC_STATE_DEACTIVATED, &q->state)))
+> -			__qdisc_run(q);
+> +			quota = __qdisc_run(q);
+>   		qdisc_run_end(q);
+> +
+> +		if (quota > 0 && q->flags & TCQ_F_NOLOCK && q->ops->peek(q))
+> +			__netif_schedule(q);
+>   	}
+>   }
+>   
+> diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
+> index 17bd8f539bc7..013480f6a794 100644
+> --- a/net/sched/sch_generic.c
+> +++ b/net/sched/sch_generic.c
+> @@ -376,7 +376,7 @@ static inline bool qdisc_restart(struct Qdisc *q, int *packets)
+>   	return sch_direct_xmit(skb, q, dev, txq, root_lock, validate);
+>   }
+>   
+> -void __qdisc_run(struct Qdisc *q)
+> +int __qdisc_run(struct Qdisc *q)
+>   {
+>   	int quota = dev_tx_weight;
+>   	int packets;
+> @@ -390,9 +390,10 @@ void __qdisc_run(struct Qdisc *q)
+>   		quota -= packets;
+>   		if (quota <= 0 || need_resched()) {
+>   			__netif_schedule(q);
+> -			break;
+> +			return 0;
+>   		}
+>   	}
+> +	return quota;
+>   }
+>   
+>   unsigned long dev_trans_start(struct net_device *dev)
+> 
