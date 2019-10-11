@@ -2,59 +2,57 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F088EC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF6BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE9420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099D420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="deZb/gvn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iAsoVQsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfJKA3s (ORCPT
+        id S1728020AbfJKA3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:29:48 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45255 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfJKA2Z (ORCPT
+        Thu, 10 Oct 2019 20:29:50 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35482 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfJKA2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Oct 2019 20:28:25 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q64so7990931ljb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:28:24 -0700 (PDT)
+Received: by mail-lj1-f194.google.com with SMTP id m7so8056820lji.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:28:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=y12OqUDXt0uUd8S/w/N9B4j5fJB9b6dEGe48WxLpJQ0=;
-        b=deZb/gvn8tRBWJ8EkwM4ZsgQbv8cKKMpAA2vf6G4xRFrYVAvufEMhW8txzk+WL8jog
-         mRr7UCSlsEoukk0CBSI3WVyQH2ebrmaFhmUpX304VfwuEzwcBbYogWTqta96NzGab23d
-         K4u1cCqe2+htE/tMhpH0wwPbB+TmlaC0g94WcpLpPrLjELHj2jJyPZ6ogY2MzYAw8D6P
-         xiaMOcdpUxjpfkClJCQrCd/Z9r5gWMRFGbTxrsrxqzuBe9eeDepyP96MWN2DtWB+gp76
-         Dh5lfo5p3ACqIH0MOgfKt9xTZNOPlHqr4iAdNt7BnklttINOkT2odQBy2BjW8oPe/YK7
-         n0ZA==
+        h=from:to:cc:subject:date:message-id;
+        bh=rEOxUviEkcCW48fJxCH3+DMoe12h6LP7M/4uKtZsbx8=;
+        b=iAsoVQsfqYvDGQefSDs72eSXfctA8ou9qKor43CyO+fvRlLcBxhAkT+k9IgpVXaICJ
+         kRjr8e/8uDi7Y9FOENx9GD2n8DKbgz4VmLfNlKSN3It8fQyg/R/r92ZCnng20zvOL5nE
+         aHqeBAreNBQ3nj4FhEe1ntRsaP/5r65kyq88wbXfif2UmVCnOl2jKyJBBma/5+B9kdoT
+         z7bW+tH/oOvSZ16Da6PINXm+KQzR2nUztMgY5uUhipADqMYIkgrIpkbp3JJJ/irrHkHl
+         yqJ0RCTq6U10iy1qnw8K2rissPKQH6ef8c7WjcubOzGNsBpxeaqbbl/QTlZI3XsV/gKL
+         +GHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=y12OqUDXt0uUd8S/w/N9B4j5fJB9b6dEGe48WxLpJQ0=;
-        b=dKLplWVB9ldxGjPy2JthoC5SLznLzECQVIanw/Dwkp74bgiyVSsVV5Mczpe1JexEqb
-         2ejWSpVqEpkbfG6Nnn0uLEImq7so39YCxnboIlD/jCFfJJ6PXArWPBd2PwDVgVM6XffE
-         atkpK5hOH0r+Nvm8YRTNL+IyKlqqVCZ8n/QncZOO37gJpAv8KeEF3rwtXEYul54b98Ty
-         82OL0B7OQIx9zy62ZLn9P0Mu8cU2Kjq5iQKSOYGM/HNO9nT9UKiGv369ULRQmNv+xaEo
-         cG5/c2nWQOkYK9Bh1Gsx62TiHUeGimZM9AYD2lAq6pCmsKsYRZhV5oML5pxuc3+L9bzK
-         rvAw==
-X-Gm-Message-State: APjAAAU+zP7gY2oAQCGrJee+04uORN0n4ASdZsne2348eAEY6Vz90NXp
-        iXUGYxGoZSyPQJPgvIhtU+x9nA==
-X-Google-Smtp-Source: APXvYqwWFJ/4w/zxqlpX/lyhfjX06c8HYdKUcp1cZYhrWQvMou4/PGZf9SVP2Yk3dHJtL69Dvrhq1w==
-X-Received: by 2002:a2e:82cd:: with SMTP id n13mr7735053ljh.116.1570753703648;
-        Thu, 10 Oct 2019 17:28:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rEOxUviEkcCW48fJxCH3+DMoe12h6LP7M/4uKtZsbx8=;
+        b=t05zTN9m8deEhD9L7/8tblEMw0RdbfkRPG1Z3Bu1nM07jgjxEz+RQHJJ4peV/WFU7q
+         26lxY2iIg/FgQjs0UJk6JazT3uURHcrPBsApHyaArY2FV8Thcz28M3VFlRzulrCNNagG
+         jZ5nrPjJpS58dXVWOsUX56GL7DHJDtEQpISRpBfW+mZUPVEiky94jKqEPnFrJkEXPrky
+         kPDJjPsW+QU6tNN9yCPZhTPNG7zvjQ/dZubuci7y0/CkeNwtC0d6GEC+vIvQW0hKdYqY
+         XDGQd9W2dKEAdTj8Ram3boxMVmFbOBOuGkdiCBpbuD5rr2QcIwB/tmFIwbReh/IoT+X9
+         5wmA==
+X-Gm-Message-State: APjAAAVS4WGvB927T4y4zX1YwGBi4UkmE7THBPl2em5Wn51zRdDHrPOO
+        Zl/1xmgvqASkSSMbrN6XHAY/9w==
+X-Google-Smtp-Source: APXvYqzUkWLaQzQ4RKtJ766ONIeoAFL2izNCMqCZ9sYzesa5PcjDZfpdLcxKnVMci/uTGGyWLuFkew==
+X-Received: by 2002:a2e:584b:: with SMTP id x11mr8035721ljd.90.1570753701013;
+        Thu, 10 Oct 2019 17:28:21 -0700 (PDT)
 Received: from localhost.localdomain (88-201-94-178.pool.ukrtel.net. [178.94.201.88])
-        by smtp.gmail.com with ESMTPSA id 126sm2367010lfh.45.2019.10.10.17.28.22
+        by smtp.gmail.com with ESMTPSA id 126sm2367010lfh.45.2019.10.10.17.28.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 17:28:23 -0700 (PDT)
+        Thu, 10 Oct 2019 17:28:20 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
         davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
@@ -63,44 +61,191 @@ Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
         ilias.apalodimas@linaro.org, sergei.shtylyov@cogentembedded.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v5 bpf-next 02/15] samples/bpf: fix cookie_uid_helper_example obj build
-Date:   Fri, 11 Oct 2019 03:27:55 +0300
-Message-Id: <20191011002808.28206-3-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v5 bpf-next 00/15] samples: bpf: improve/fix cross-compilation
+Date:   Fri, 11 Oct 2019 03:27:53 +0300
+Message-Id: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
-References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't list userspace "cookie_uid_helper_example" object in list for
-bpf objects.
+This series contains mainly fixes/improvements for cross-compilation
+but not only, tested for arm, arm64, and intended for any arch.
+Also verified on native build (not cross compilation) for x86_64
+and arm, arm64.
 
-'always' target is used for listing bpf programs, but
-'cookie_uid_helper_example.o' is a user space ELF file, and covered
-by rule `per_socket_stats_example`, so shouldn't be in 'always'.
-Let us remove `always += cookie_uid_helper_example.o`, which avoids
-breaking cross compilation due to mismatched includes.
+Initial RFC link:
+https://lkml.org/lkml/2019/8/29/1665
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- samples/bpf/Makefile | 1 -
- 1 file changed, 1 deletion(-)
+Prev. version:
+https://lkml.org/lkml/2019/10/9/1045
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 4f61725b1d86..045fa43842e6 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -145,7 +145,6 @@ always += sampleip_kern.o
- always += lwt_len_hist_kern.o
- always += xdp_tx_iptunnel_kern.o
- always += test_map_in_map_kern.o
--always += cookie_uid_helper_example.o
- always += tcp_synrto_kern.o
- always += tcp_rwnd_kern.o
- always += tcp_bufs_kern.o
+Besides the patches given here, the RFC also contains couple patches
+related to llvm clang
+  arm: include: asm: swab: mask rev16 instruction for clang
+  arm: include: asm: unified: mask .syntax unified for clang
+They are necessarily to verify arm 32 build.
+
+Also, couple more fixes were added but are not merged in bpf-next yet,
+they can be needed for verification/configuration steps, if not in
+your tree the fixes can be taken here:
+https://www.spinics.net/lists/netdev/msg601716.html
+https://www.spinics.net/lists/netdev/msg601714.html
+https://www.spinics.net/lists/linux-kbuild/msg23468.html
+
+Now, to build samples, SAMPLE_BPF should be enabled in config.
+
+The change touches not only cross-compilation and can have impact on
+other archs and build environments, so might be good idea to verify
+it in order to add appropriate changes, some warn options could be
+tuned also.
+
+All is tested on x86-64 with clang installed (has to be built containing
+targets for arm, arm64..., see llc --version, usually it's present already)
+
+Instructions to test native on x86_64
+=================================================
+Native build on x86_64 is done in usual way and shouldn't have difference
+except HOSTCC is now printed as CC wile building the samples.
+
+Instructions to test cross compilation on arm64
+=================================================
+#Toolchain used for test:
+gcc version 8.3.0
+(GNU Toolchain for the A-profile Architecture 8.3-2019.03 (arm-rel-8.36))
+
+# Get some arm64 FS, containing at least libelf
+I've used sdk for TI am65x got here:
+http://downloads.ti.com/processor-sdk-linux/esd/AM65X/latest/exports/\
+ti-processor-sdk-linux-am65xx-evm-06.00.00.07-Linux-x86-Install.bin
+
+# Install this binary to some dir, say "sdk".
+# Configure kernel (use defconfig as no matter), but clean everything
+# before.
+make ARCH=arm64 -C tools/ clean
+make ARCH=arm64 -C samples/bpf clean
+make ARCH=arm64 clean
+make ARCH=arm64 defconfig
+
+# Enable SAMPLE_BPF and it's dependencies in config
+
+# The kernel version used in sdk doesn't correspond to checked one,
+# but for this verification only headers need to be syched,
+# so install them (can be enabled in config):
+make ARCH=arm64 headers_install
+
+# or on SDK if need keep them in sync (not necessarily to verify):
+
+make ARCH=arm64 INSTALL_HDR_PATH=/../sdk/\
+ti-processor-sdk-linux-am65xx-evm-06.00.00.07/linux-devkit/sysroots/\
+aarch64-linux/usr headers_install
+
+# Build samples
+make samples/bpf/ ARCH=arm64 CROSS_COMPILE="aarch64-linux-gnu-"\
+SYSROOT="/../sdk/ti-processor-sdk-linux-am65xx-evm-06.00.00.07/\
+linux-devkit/sysroots/aarch64-linux"
+
+Instructions to test cross compilation on arm
+=================================================
+#Toolchains used for test:
+arm-linux-gnueabihf-gcc (Linaro GCC 7.2-2017.11) 7.2.1 20171011
+or
+arm-linux-gnueabihf-gcc
+(GNU Toolchain for the A-profile Architecture 8.3-2019.03 \
+(arm-rel-8.36)) 8.3.0
+
+# Get some FS, I've used sdk for TI am52xx got here:
+http://downloads.ti.com/processor-sdk-linux/esd/AM57X/05_03_00_07/exports/\
+ti-processor-sdk-linux-am57xx-evm-05.03.00.07-Linux-x86-Install.bin
+
+# Install this binary to some dir, say "sdk".
+# Configure kernel, but clean everything before.
+make ARCH=arm -C tools/ clean
+make ARCH=arm -C samples/bpf clean
+make ARCH=arm clean
+make ARCH=arm omap2plus_defconfig
+
+# The kernel version used in sdk doesn't correspond to checked one, but
+# headers only should be synched,
+# so install them (can be enabled in config):
+
+make ARCH=arm headers_install
+
+# or on SDK if need keep them in sync (not necessarily):
+
+make ARCH=arm INSTALL_HDR_PATH=/../sdk/\
+ti-processor-sdk-linux-am57xx-evm-05.03.00.07/linux-devkit/sysroots/\
+armv7ahf-neon-linux-gnueabi/usr headers_install
+
+# Build samples
+make samples/bpf/ ARCH=arm CROSS_COMPILE="arm-linux-gnueabihf-"\
+SYSROOT="/../sdk/ti-processor-sdk-linux-am57xx-evm-05.03\
+.00.07/linux-devkit/sysroots/armv7ahf-neon-linux-gnueabi"
+
+
+Based on bpf-next/master
+
+v5..v4:
+- any changes, only missed SOBs are added
+
+v4..v3:
+- renamed CLANG_EXTRA_CFLAGS on BPF_EXTRA_CFLAGS
+- used filter for ARCH_ARM_SELECTOR
+- omit "-fomit-frame-pointer" and use same flags for native and "cross"
+- used sample/bpf prefixes
+- use C instead of C++ compiler for test_libbpf target
+
+v3..v2:
+- renamed makefile.progs to makeifle.target, as more appropriate
+- left only __LINUX_ARM_ARCH__ for D options for arm
+- for host build - left options from KBUILD_HOST for compatibility reasons
+- split patch adding c/cxx/ld flags to libbpf by modules
+- moved readme change to separate patch
+- added patch setting options for cross-compile
+- fixed issue with option error for syscall_nrs.S,
+  avoiding overlap for ccflags-y.
+
+v2..v1:
+- restructured patches order
+- split "samples: bpf: Makefile: base progs build on Makefile.progs"
+  to make change more readable. It added couple nice extra patches.
+- removed redundant patch:
+  "samples: bpf: Makefile: remove target for native build"
+- added fix:
+  "samples: bpf: makefile: fix cookie_uid_helper_example obj build"
+- limited -D option filter only for arm
+- improved comments
+- added couple instructions to verify cross compilation for arm and
+  arm64 arches based on TI am57xx and am65xx sdks.
+- corrected include a little order
+
+Ivan Khoronzhuk (15):
+  samples/bpf: fix HDR_PROBE "echo"
+  samples/bpf: fix cookie_uid_helper_example obj build
+  samples/bpf: use --target from cross-compile
+  samples/bpf: use own EXTRA_CFLAGS for clang commands
+  samples/bpf: use __LINUX_ARM_ARCH__ selector for arm
+  samples/bpf: drop unnecessarily inclusion for bpf_load
+  samples/bpf: add makefile.target for separate CC target build
+  samples/bpf: base target programs rules on Makefile.target
+  samples/bpf: use own flags but not HOSTCFLAGS
+  samples/bpf: use target CC environment for HDR_PROBE
+  libbpf: don't use cxx to test_libpf target
+  libbpf: add C/LDFLAGS to libbpf.so and test_libpf targets
+  samples/bpf: provide C/LDFLAGS to libbpf
+  samples/bpf: add sysroot support
+  samples/bpf: add preparation steps and sysroot info to readme
+
+ samples/bpf/Makefile                          | 164 ++++++++++--------
+ samples/bpf/Makefile.target                   |  75 ++++++++
+ samples/bpf/README.rst                        |  41 ++++-
+ tools/lib/bpf/Makefile                        |  23 +--
+ .../bpf/{test_libbpf.cpp => test_libbpf.c}    |  14 +-
+ 5 files changed, 218 insertions(+), 99 deletions(-)
+ create mode 100644 samples/bpf/Makefile.target
+ rename tools/lib/bpf/{test_libbpf.cpp => test_libbpf.c} (61%)
+
 -- 
 2.17.1
 
