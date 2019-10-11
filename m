@@ -2,92 +2,72 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2969ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E616FECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3C721D56
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="LuF/o/Oo"
+	by mail.kernel.org (Postfix) with ESMTP id C8E53206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfJKLHi (ORCPT
+        id S1727810AbfJKLHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:07:38 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40782 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfJKLHi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:07:38 -0400
-Received: by mail-qk1-f195.google.com with SMTP id y144so8468630qkb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 04:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=fhRFmkHyAxoggsqD4KnxC3QDzsYkibgJooXeMf6to+g=;
-        b=LuF/o/OotnzHUK7u//h5FxCIivoOI1UcqVDmEJc+VucVnEfMsq7uIGsE5qS9GSqnjV
-         lCTVQBnPMNdbT1GxpAIsToXKYMZwDSrLKNJXM8pEM3JKM8VBZqo4175fiedNPYXy+8wk
-         mS6P5kXgvYi6uoLSYC9U3RUba0bM+gCqAN6i8EmtfNp+b1x16vj90EPrbUmk2WARWwt9
-         4pV3fPd4RhlwQ/Dsida87/VGb6WfNqBszt56gQ5YNcqSHIGlR2Yw/+bloaRTlp5aYTbU
-         Z+4uEdoT5xIZvyJ/FdBW1YJaLrowOqV29YOcnMvuAy1sLUjhFIC1YzVircFa5pQeHujv
-         j0tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=fhRFmkHyAxoggsqD4KnxC3QDzsYkibgJooXeMf6to+g=;
-        b=Q7E9h4pVWqARd5nPN/R7l6XtFPOCQN8H6WuO9xbIsMcMWhpK1V6GG1FCESE4ymOKtr
-         kFPXBdNGQDb92qRFTd5R85KNmkjozFXdzuKbYp077iztfKHjVBt+HBa+6eX1oPTnNBlx
-         AoZonf0Hi21Fo3L2HypnUCT+dCqaKnU9WgvjAaqhARRNsjMlLSD2nloj7j/aLYpXivta
-         QSo8iFtF/52mLyj1RfoAWERt6XqOuGeRK/MhCMTnpzZH2VAY8Ya3bdHTYS5VovC/R/la
-         tOwhO1sa4bSatV5m43JUfuK5qmSxSdxtU3ANKv9+XIumvqeDfBXy/DrUYuh4rvQZpOgB
-         je3Q==
-X-Gm-Message-State: APjAAAVuEvq/XC5xRNhE9+k39Y8w/XQczdD//sWUoQZ1LjvkzsjfOWLF
-        UE05oGULMIH9EQfYuhH7f0+Y2g==
-X-Google-Smtp-Source: APXvYqwf26+beDRiEznayQ9n1JDIBxpwPJNF1cRZSuh9K01KYUk4RZUYpdSAydkHfTPC7Z+HVii53g==
-X-Received: by 2002:a37:4553:: with SMTP id s80mr848341qka.334.1570792055855;
-        Fri, 11 Oct 2019 04:07:35 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id k2sm3893462qti.24.2019.10.11.04.07.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Oct 2019 04:07:35 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm/page_owner: fix a crash after memory offline
-Date:   Fri, 11 Oct 2019 07:07:34 -0400
-Message-Id: <668C1E6F-C119-4BFB-9B9E-7E5568453855@lca.pw>
-References: <dbf95ea6-fe44-41c5-7f5a-a780e5ff42ba@redhat.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, "mhocko@suse.com" <mhocko@suse.com>
-In-Reply-To: <dbf95ea6-fe44-41c5-7f5a-a780e5ff42ba@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-X-Mailer: iPhone Mail (17A860)
+        Fri, 11 Oct 2019 07:07:48 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49958 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727198AbfJKLHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 07:07:48 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 84E421BF4096B01C14F3;
+        Fri, 11 Oct 2019 19:07:45 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
+ 19:07:35 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <darrick.wong@oracle.com>, <bfoster@redhat.com>,
+        <dchinner@redhat.com>
+CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>, <zhangxiaoxu5@huawei.com>
+Subject: [PATCH] xfs: fix wrong struct type in ioctl definition whih cmd XFS_IOC_GETBMAPAX
+Date:   Fri, 11 Oct 2019 19:14:46 +0800
+Message-ID: <1570792486-84374-1-git-send-email-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ioctl expect 'getbmapx' as the 'arg' when the cmd is XFS_IOC_GETBMAPX.
+But the definition in 'xfs_fs.h' is 'getbmap'
 
+So, change it to 'getbmapx'
 
-> On Oct 11, 2019, at 5:57 AM, David Hildenbrand <david@redhat.com> wrote:
->=20
-> You mean, I found the key to an unlimited amount of undetected BUGs, so I s=
-hould fix them? ;)
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ fs/xfs/libxfs/xfs_fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-No, it is more of for the sake of consistency, and the fact that all those b=
-ugs are only starting to show up only recently after applied to your series,=
- so you will probably explain for a better changelog why that fact is not im=
-portant.
+diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+index 39dd2b9..cad245a 100644
+--- a/fs/xfs/libxfs/xfs_fs.h
++++ b/fs/xfs/libxfs/xfs_fs.h
+@@ -764,7 +764,7 @@ struct xfs_scrub_metadata {
+ #define XFS_IOC_FSGETXATTRA	_IOR ('X', 45, struct fsxattr)
+ /*	XFS_IOC_SETBIOSIZE ---- deprecated 46	   */
+ /*	XFS_IOC_GETBIOSIZE ---- deprecated 47	   */
+-#define XFS_IOC_GETBMAPX	_IOWR('X', 56, struct getbmap)
++#define XFS_IOC_GETBMAPX	_IOWR('X', 56, struct getbmapx)
+ #define XFS_IOC_ZERO_RANGE	_IOW ('X', 57, struct xfs_flock64)
+ #define XFS_IOC_FREE_EOFBLOCKS	_IOR ('X', 58, struct xfs_fs_eofblocks)
+ /*	XFS_IOC_GETFSMAP ------ hoisted 59         */
+-- 
+2.7.4
 
->=20
-> In case you don't have time to explore all the dirty details, I can take i=
-t from here. Just let me know.
-
-Indeed, I will appreciate that if I don=E2=80=99t need to dig all those dirt=
-y details again myself.=
