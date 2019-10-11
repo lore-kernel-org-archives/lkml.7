@@ -2,157 +2,83 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ABDC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B20CC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5482084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570789041;
-	bh=VJ29m1gt9k1fMWRf7BE3COEuBol+eI9/lvyqjMjq6Cw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2urtn1NCgeiCjShheNf4J5p0+6GPI9Ui93oZG1rXWegbWsyhszna4l+KDGo/eq7fX
-	 Ij8aQWa97b114hFYb0L74nlppuE3oKG6/X5ik7mBj6QXzm206ybS3mHo5UC5SXzfjv
-	 /ZMmNfSg8Ns1q9bRFPXhwWOhjvNs7DmTqfQZEQgA=
+	by mail.kernel.org (Postfix) with ESMTP id 1B29C2196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfJKKRT (ORCPT
+        id S1727519AbfJKKSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:17:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58338 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfJKKRT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:17:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Cv/KAWwMfr+7BghJTGUGWukKHt7xg9UrE7eOCgXB8Lc=; b=MnaEbUBjI73soKTwbAzHNRrvZ
-        Uw9waepT+B3yTernjqev5rqW69WB1wwZzLBjbAXRuuErEmUWtUNfg7TyHsHh4LvhZQsZzP5RF3ZEX
-        yQLEib/Fctcw+R3S9toaUMNspcDPerEcxsZxVbozmzD4hlMY91cYc8BNZdogb+WK0I9qPAbm4mtEq
-        LNJESqgixdSX37mnXUDQc2ZSbVoXy07mCWO+HNUv6n+8ORNPV3KXSzQA1e2ZWPcmSs7whjE91PQlc
-        y5C3NRFKvzwSnVGtzowCBxsC/O30KS75kHz6el9ZIvGzrb6MNtrGs9QY224N+lMUecY6+AhuSY8P1
-        NtqCC0hyw==;
-Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIrz1-0003C5-LJ; Fri, 11 Oct 2019 10:17:15 +0000
-Date:   Fri, 11 Oct 2019 07:17:11 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/19] EDAC, mc: Reduce indentation level in
- edac_mc_handle_error()
-Message-ID: <20191011071711.7e15a4cb@coco.lan>
-In-Reply-To: <20191010202418.25098-6-rrichter@marvell.com>
-References: <20191010202418.25098-1-rrichter@marvell.com>
-        <20191010202418.25098-6-rrichter@marvell.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 11 Oct 2019 06:18:36 -0400
+Received: from mga02.intel.com ([134.134.136.20]:3120 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbfJKKSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:18:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 03:18:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,283,1566889200"; 
+   d="scan'208";a="207400617"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 11 Oct 2019 03:18:31 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 11 Oct 2019 13:18:31 +0300
+Date:   Fri, 11 Oct 2019 13:18:31 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [GIT PULL] Thunderbolt fixes for v5.4
+Message-ID: <20191011101831.GC2819@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 10 Oct 2019 20:25:14 +0000
-Robert Richter <rrichter@marvell.com> escreveu:
+Hi Greg,
 
-> Reduce the indentation level in edac_mc_handle_error() a bit by using
-> continue. No functional changes.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
+The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
 
-> ---
->  drivers/edac/edac_mc.c | 59 +++++++++++++++++++++---------------------
->  1 file changed, 30 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index f2cbca77bc50..45b02bb31964 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -1171,37 +1171,38 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
->  		 * channel/memory controller/...  may be affected.
->  		 * Also, don't show errors for empty DIMM slots.
->  		 */
-> -		if (e->enable_per_layer_report && dimm->nr_pages) {
-> -			if (n_labels >= EDAC_MAX_LABELS) {
-> -				e->enable_per_layer_report = false;
-> -				break;
-> -			}
-> -			n_labels++;
-> -			if (p != e->label) {
-> -				strcpy(p, OTHER_LABEL);
-> -				p += strlen(OTHER_LABEL);
-> -			}
-> -			strcpy(p, dimm->label);
-> -			p += strlen(p);
-> -			*p = '\0';
-> +		if (!e->enable_per_layer_report || !dimm->nr_pages)
-> +			continue;
->  
-> -			/*
-> -			 * get csrow/channel of the DIMM, in order to allow
-> -			 * incrementing the compat API counters
-> -			 */
-> -			edac_dbg(4, "%s csrows map: (%d,%d)\n",
-> -				 mci->csbased ? "rank" : "dimm",
-> -				 dimm->csrow, dimm->cschannel);
-> -			if (row == -1)
-> -				row = dimm->csrow;
-> -			else if (row >= 0 && row != dimm->csrow)
-> -				row = -2;
-> -
-> -			if (chan == -1)
-> -				chan = dimm->cschannel;
-> -			else if (chan >= 0 && chan != dimm->cschannel)
-> -				chan = -2;
-> +		if (n_labels >= EDAC_MAX_LABELS) {
-> +			e->enable_per_layer_report = false;
-> +			break;
-> +		}
-> +		n_labels++;
-> +		if (p != e->label) {
-> +			strcpy(p, OTHER_LABEL);
-> +			p += strlen(OTHER_LABEL);
->  		}
-> +		strcpy(p, dimm->label);
-> +		p += strlen(p);
-> +		*p = '\0';
-> +
-> +		/*
-> +		 * get csrow/channel of the DIMM, in order to allow
-> +		 * incrementing the compat API counters
-> +		 */
-> +		edac_dbg(4, "%s csrows map: (%d,%d)\n",
-> +			mci->csbased ? "rank" : "dimm",
-> +			dimm->csrow, dimm->cschannel);
-> +		if (row == -1)
-> +			row = dimm->csrow;
-> +		else if (row >= 0 && row != dimm->csrow)
-> +			row = -2;
-> +
-> +		if (chan == -1)
-> +			chan = dimm->cschannel;
-> +		else if (chan >= 0 && chan != dimm->cschannel)
-> +			chan = -2;
->  	}
->  
->  	if (!e->enable_per_layer_report) {
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git tags/thunderbolt-fixes-for-v5.4-1
 
+for you to fetch changes up to 747125db6dcd8bcc21f13d013f6e6a2acade21ee:
 
-Thanks,
-Mauro
+  thunderbolt: Drop unnecessary read when writing LC command in Ice Lake (2019-10-08 12:08:21 +0300)
+
+----------------------------------------------------------------
+thunderbolt: Fixes for v5.4
+
+This includes three fixes for various issues people have reported:
+
+  - Fix DP tunneling on some Light Ridge controllers
+  - Fix for lockdep circular locking dependency warning
+  - Drop unnecessary read on ICL
+
+----------------------------------------------------------------
+Mika Westerberg (3):
+      thunderbolt: Read DP IN adapter first two dwords in one go
+      thunderbolt: Fix lockdep circular locking depedency warning
+      thunderbolt: Drop unnecessary read when writing LC command in Ice Lake
+
+ drivers/thunderbolt/nhi_ops.c |  1 -
+ drivers/thunderbolt/switch.c  | 28 +++++++++++-----------------
+ 2 files changed, 11 insertions(+), 18 deletions(-)
