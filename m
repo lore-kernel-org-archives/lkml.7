@@ -2,105 +2,67 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0983ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDADC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A6B21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570786588;
-	bh=4DDrsaqV7qFGLrLHZa+w0+Whfl3R6FxfLJN2LYMfIu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YY7i0knmolZMn59sJBNC1edwh0LUmKDV27spDx41ZBi/J04n4bNBeHIkxo5AT+YpS
-	 NR/omaiPJws7IjskO3/1E7E4I+SQtmfAkdo2Pmi6OCMb2iNPb9XqmtlupZXsMnBwVG
-	 YqVYaWSzhsgoZD83o77tWi6IFs+eUMFg39mZ5RQQ=
+	by mail.kernel.org (Postfix) with ESMTP id F181421D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:40:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfJKJg1 (ORCPT
+        id S1727722AbfJKJkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:36:27 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40853 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfJKJg1 (ORCPT
+        Fri, 11 Oct 2019 05:40:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34523 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfJKJkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:36:27 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d17so6561890lfa.7;
-        Fri, 11 Oct 2019 02:36:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qlK9gLf5RoF6ICNJqAb4e5paI/AKdb6mnn7W5mQFGS0=;
-        b=ASYBycLtttb85mOEqujHjzNaJ1CBKftLEp8d9y0oEDIEg56PY0AlVEV4Ol+wk1U/Cp
-         sWycuGXNr1FiYjukc3Ru2DwLEb2yoA2pun0hPCkOa3a8BBYnLwvx4EQitas/NCsFkD8y
-         VBQF1q+kSn09L2HW2g7VWhzaUnjf6ms7MtD59j/LPu2AF8V4OHdjKt7V7rkTC7JLyfiv
-         6Xib6TV0vtZXhi6POBowySVhzIRSgRjsgUpPHq83lt1Fc9xicb1av41EK5fcFz6KIuOw
-         8lQDihilkl+S5Ox9DVpxGBo9WiGxteli+fT+YyxdahSeWeyOJm8vaSEJ9yFUrgnpFg0Y
-         4oGA==
-X-Gm-Message-State: APjAAAU6KZOks7h0u718r1E/ud3Qe+V6eR/AvkiSbBVv1J4ZozBOp0Gv
-        svMHFBpMFUInmPMrGbwjaLA=
-X-Google-Smtp-Source: APXvYqzjdCwjHmD1OUcUAPcjISlrTMTsyvKPvNaG5NGSDzSHzWzFAkSASl1KZH637V4hkoJQOY7nGw==
-X-Received: by 2002:a19:23cc:: with SMTP id j195mr8266076lfj.91.1570786584009;
-        Fri, 11 Oct 2019 02:36:24 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id c16sm1961403lfj.8.2019.10.11.02.36.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Oct 2019 02:36:23 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iIrLd-0007T3-Ez; Fri, 11 Oct 2019 11:36:34 +0200
-Date:   Fri, 11 Oct 2019 11:36:33 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Johan Hovold <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] treewide: fix interrupted release
-Message-ID: <20191011093633.GD27819@localhost>
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010135043.GA16989@phenom.ffwll.local>
+        Fri, 11 Oct 2019 05:40:53 -0400
+Received: from v22018046084765073.goodsrv.de ([185.183.158.195] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iIrPm-00047f-Hf; Fri, 11 Oct 2019 09:40:50 +0000
+Date:   Fri, 11 Oct 2019 11:40:44 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>, libc-alpha@sourceware.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH 1/2] clone3: add CLONE3_CLEAR_SIGHAND
+Message-ID: <20191011094042.f53x572aiz75u4yz@wittgenstein>
+References: <20191010133518.5420-1-christian.brauner@ubuntu.com>
+ <20191011082118.GA26368@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191010135043.GA16989@phenom.ffwll.local>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191011082118.GA26368@dhcp22.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
-> On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
-> > Two old USB drivers had a bug in them which could lead to memory leaks
-> > if an interrupted process raced with a disconnect event.
-> > 
-> > Turns out we had a few more driver in other subsystems with the same
-> > kind of bug in them.
+On Fri, Oct 11, 2019 at 10:21:18AM +0200, Michal Hocko wrote:
+> [Cc linux-api]
 
-> Random funny idea: Could we do some debug annotations (akin to
-> might_sleep) that splats when you might_sleep_interruptible somewhere
-> where interruptible sleeps are generally a bad idea? Like in
-> fops->release?
-
-There's nothing wrong with interruptible sleep in fops->release per se,
-it's just that drivers cannot return -ERESTARTSYS and friends and expect
-to be called again later.
-
-The return value from release() is ignored by vfs, and adding a splat in
-__fput() to catch these buggy drivers might be overkill.
-
-Johan
+Right, thanks Michal.
+Christian
