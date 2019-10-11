@@ -2,87 +2,61 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE6EC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFD3ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE7B214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:35:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zs2H82o4"
+	by mail.kernel.org (Postfix) with ESMTP id CE87720640
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfJKRfg (ORCPT
+        id S1728664AbfJKRlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:35:36 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:33239 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728461AbfJKRff (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:35:35 -0400
-Received: by mail-wr1-f44.google.com with SMTP id b9so12854614wrs.0;
-        Fri, 11 Oct 2019 10:35:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ldn1+y4i+TM+l/Cu4HtEy/jFbE45xXljUNQey12ghIg=;
-        b=Zs2H82o4DqF63IDhzoBFLmddb31FxW0PjesX4lLX87MmDlERw56C4+lJxly+SyMPAz
-         PGUsRU6sE6/aU4CzGCBRoSNFQajdav8CSNoZTVGx5AYrigEUBYkmOvyFmZZ3dZYWTuIi
-         m7sBJuLLlGhQ8krkYeGvATfvi96AbbAWdYtG0H6rMWVcnYlmCwCxYl3JsgOjtUB/7U9i
-         QM0LQzc5Mzc325Muz9LJpZU3uzc4gQj6MjF+aEOPpjRb2VNk4usKnLUHfXvv6KszKc/C
-         oWJffYE2VnWLeMrolSwwRUxqFPyTshE+RyhbjmishCoQOlSHVLYGstv2PA+cRy2oY9NF
-         mbOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ldn1+y4i+TM+l/Cu4HtEy/jFbE45xXljUNQey12ghIg=;
-        b=Wo/iiFSYN88PIYRF9nowa/5N2Sx5EJzXYs0P5NFh4nDrx9aVUf3QFxKWIj5/4EdEnP
-         sEXx+Rkn9pW35pzp+TKJBbVGB4uykIeYU2OscIrVqFtS3dltl/UHwC7/Xun3FhHBLfYQ
-         wsy4rfTUArpVwtNrhTuiv/r6VwNwMqH1PPP3lOvQQ+l4ZJ74B5hK6ySE3eGsRmXW6eqZ
-         Xb5PnTynWrcop4pTu1tyR6QUZbG1aYTypCKUuUMQxbRfWZl3WIrTTRJfHR+TjPfO4sX6
-         qqNUC9rSEA39pqRk+xbuRg8rwqgSK4roAqNsirl0IV4GUgdcHydc0ssssFQgR9pQyOf4
-         TZ3Q==
-X-Gm-Message-State: APjAAAXUG6xh3wlyoTxeV5yYEUACCm1JE4NZ2MC3t+DlTw3+dfkMOnEs
-        7kUH426SExce2npH5xXA36c=
-X-Google-Smtp-Source: APXvYqxL1v1bOAqXNayHLgr3O+yDOlR9ISOlJHTaBPGqrem9ZzTj7AtxPsmXFyS+6Pqw62fzU6mQNA==
-X-Received: by 2002:a5d:43c2:: with SMTP id v2mr8911335wrr.153.1570815333323;
-        Fri, 11 Oct 2019 10:35:33 -0700 (PDT)
-Received: from wambui ([197.237.61.225])
-        by smtp.gmail.com with ESMTPSA id a18sm14506877wrs.27.2019.10.11.10.35.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 10:35:32 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 20:35:27 +0300
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
-        isdn@linux-pingi.de, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] staging: isdn: remove assignment in if conditionals
-Message-ID: <20191011173527.GA22796@wambui>
-Reply-To: 20191011110019.GC4774@kadam
-References: <20191011072044.7022-1-wambui.karugax@gmail.com>
- <20191011110019.GC4774@kadam>
+        Fri, 11 Oct 2019 13:41:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60630 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728449AbfJKRlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 13:41:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 71AFDB22A;
+        Fri, 11 Oct 2019 17:41:14 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 0D8A6DA808; Fri, 11 Oct 2019 19:41:28 +0200 (CEST)
+Date:   Fri, 11 Oct 2019 19:41:27 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Cc:     dsterba@suse.com, clm@fb.com,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "open list:BTRFS FILE SYSTEM" <linux-btrfs@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] btrfs: ioctl: Try to use btrfs_fs_info instead of *file
+Message-ID: <20191011174127.GE2751@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        dsterba@suse.com, clm@fb.com,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "open list:BTRFS FILE SYSTEM" <linux-btrfs@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191011002311.12459-1-marcos.souza.org@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011110019.GC4774@kadam>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191011002311.12459-1-marcos.souza.org@gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 02:00:20PM +0300, Dan Carpenter wrote:
-> This ISDN stuff is going to be deleted soon.  Just leave it as is.
-> 
-> regards,
-> dan carpenter
-> 
-Noted, thanks
+On Thu, Oct 10, 2019 at 09:23:11PM -0300, Marcos Paulo de Souza wrote:
+> Some functions are doing some bikeshedding to reach the btrfs_fs_info
+> struct. Change these functions to receive a btrfs_fs_info struct instead
+> of a *file.
 
-wambui karuga
+Makes sense, thanks. Added to msic-next.
