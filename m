@@ -2,131 +2,135 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498A6ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A99ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE322190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MdmGDn+R"
+	by mail.kernel.org (Postfix) with ESMTP id AADE52190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfJKMXf (ORCPT
+        id S1728066AbfJKMXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:23:35 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45756 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfJKMXf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:23:35 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r5so11664298wrm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 05:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R2syL0YW+TeHAd/jZ19BY501P3Ze8eSUts4hhsrlbTg=;
-        b=MdmGDn+RPpTN1sIesf3XhQOrqh33u0TrgoP2gSZ8orSGCtJjwhJpCAEXcl9mb9mrWx
-         KsPGLx2e2QdgGf1g5jnTXTiwC1VvFT0CxS4vB+w8iW1BdmqkgZDiM4wdq7lvf+dlf1Jz
-         vOh+GR18Aer/0dOMhZRG+BH9R57WLWThrrC9S+bUDud6eyigoKRH/kIqe79bysPPWwVq
-         3/6hoXfMx3W+JjlXPoUb4kRuDOqHDUrKZBgqCKl+K4GvvPdQ/998vZ0iWIcL33p8S9F/
-         uvgpLQQbCMPur8ttpcN2FwHMax8ISTC697dIzuXhP1ZIfuVzDQKBRgadvIcP7V0R/MTt
-         PnTw==
+        Fri, 11 Oct 2019 08:23:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43700 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727974AbfJKMXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 08:23:43 -0400
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1487C2A09A7
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 12:23:43 +0000 (UTC)
+Received: by mail-ed1-f69.google.com with SMTP id 34so5661796edf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 05:23:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R2syL0YW+TeHAd/jZ19BY501P3Ze8eSUts4hhsrlbTg=;
-        b=kiw5FIqdkA8xKkS3oNJyXPP9YpRDKU38pNCmpTvHdGgqa0RKOIusuejeGIENxjqTL/
-         KciJNc1t3H9/ubbi411xe3MltyMUenNMuAQcxZWAf8mhol0IldIQmv6s/V6Lydu/F4Zl
-         4jf6FOKCRfnIWu28kIcNzH3mRDnYZ5ws7iHX3b257L2Tx4pvB4Mi1dRLCH1KEG3ttcWY
-         yzKA7ZKBLZbypTbtmkR5iyrcxtHXc1BQv/yvW0iu1HIq35vjWJxPHN6yEcVnTcPbm/cZ
-         OTac0AGHtXzAoqWi0WaJNMsa7xDxTc1SUVmSEpW4iSVMptUvX1thjO8Dp3b5/u8Ww58y
-         9Zew==
-X-Gm-Message-State: APjAAAWzyOWGjVNiBaZDnLSYco3wZ1fxVS3eISdVqolgPQIg6Owovggv
-        U185qvNt/NBANndBgEo/xnUB1w==
-X-Google-Smtp-Source: APXvYqwVVTPqEFScgyagl6Zg7GstkjAmqaiWUrDab1xs8aw1wGbEDjQMh+7jovkqImHb+sxNiZEIAQ==
-X-Received: by 2002:adf:f98b:: with SMTP id f11mr3017198wrr.350.1570796613172;
-        Fri, 11 Oct 2019 05:23:33 -0700 (PDT)
-Received: from apalos.home (ppp-94-65-93-45.home.otenet.gr. [94.65.93.45])
-        by smtp.gmail.com with ESMTPSA id f18sm7670788wrv.38.2019.10.11.05.23.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=H2MBbbJ40+7c+zCxtdMVPxmyJTAgLs4tX+z2yWBAoJY=;
+        b=YNPwsuURRfr/wJ7i9F5IbvWxbAoiCp/ypxFHQVxbuoih8cNlAUqh/yiU2182fxnvYm
+         vUcS9uGYj7jxp8xcDq8dE+vxiBRfAu+ATMJ+/muD8ykf47S5Q4KkQjdDn4eNr5x6d5Cu
+         gyh6IobjdpxjRN2wmZasKtkNwKYIb4XLP7w/kg/gQ1goOLUcnSnpY6ovO/0hr89irF27
+         py3m6mHqpBwkgY9sH6fnhn0Pax6x2XkJpBcQ54ePmK2VHwgSC/sAlBWg6jiy+7ZlTaox
+         UZ7/7f7gBcQXSmRhNlIp9mqcCrWJ4EmraHINVEJlH4uz4xAJODzFNSuGzo0z2yAkwPBS
+         hvUQ==
+X-Gm-Message-State: APjAAAXebsnsRf9dXpzCuATq8LwSSQtwLpRWoO3DUz0XXZXke2TooXPV
+        l71mq7ovkgmsXTGY4kGW/dUQP+GCpKzasJRBHAqjTwD1X+A6HtpNQYhBQfwqLb69iYfe38UzOBg
+        P9EgO8vkKfvrlK52rSh3JTsYD
+X-Received: by 2002:a17:906:5407:: with SMTP id q7mr13791852ejo.24.1570796621422;
+        Fri, 11 Oct 2019 05:23:41 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxcuwNfu7eBCa+wJQza/bR/XzgJiVyFoOkqeJ3Q9NTMa95W6G9v3z1bhtpv9pyERQVnbX9Tyg==
+X-Received: by 2002:a17:906:5407:: with SMTP id q7mr13791826ejo.24.1570796621125;
+        Fri, 11 Oct 2019 05:23:41 -0700 (PDT)
+Received: from localhost ([2a02:2450:102e:d85:877d:43b4:dd8f:144d])
+        by smtp.gmail.com with ESMTPSA id lw23sm1095531ejb.68.2019.10.11.05.23.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 05:23:32 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 15:23:29 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Alexander Lobakin <alobakin@dlink.ru>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/2] net: core: use listified Rx for GRO_NORMAL
- in napi_gro_receive()
-Message-ID: <20191011122329.GA8373@apalos.home>
-References: <20191010144226.4115-1-alobakin@dlink.ru>
+        Fri, 11 Oct 2019 05:23:40 -0700 (PDT)
+From:   Christian Kellner <ckellner@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org,
+        Christian Kellner <christian@kellner.me>,
+        Christian Brauner <christian@brauner.io>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: [PATCH v3 1/2] pidfd: show pids for nested pid namespaces in fdinfo
+Date:   Fri, 11 Oct 2019 14:23:20 +0200
+Message-Id: <20191011122323.7770-1-ckellner@redhat.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191009160532.20674-1-ckellner@redhat.com>
+References: <20191009160532.20674-1-ckellner@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010144226.4115-1-alobakin@dlink.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+From: Christian Kellner <christian@kellner.me>
 
-On Thu, Oct 10, 2019 at 05:42:24PM +0300, Alexander Lobakin wrote:
-> Hi Dave,
-> 
-> This series was written as a continuation to commit 323ebb61e32b
-> ("net: use listified RX for handling GRO_NORMAL skbs"), and also takes
-> an advantage of listified Rx for GRO. This time, however, we're
-> targeting at a way more common and used function, napi_gro_receive().
-> 
-> There are about ~100 call sites of this function, including gro_cells
-> and mac80211, so even wireless systems will benefit from it.
-> The only driver that cares about the return value is
-> ethernet/socionext/netsec, and only for updating statistics. I don't
-> believe that this change can break its functionality, but anyway,
-> we have plenty of time till next merge window to pay this change
-> a proper attention.
+The fdinfo file for a process file descriptor already contains the
+pid of the process in the callers namespaces. Additionally, if pid
+namespaces are configured, show the process ids of the process in
+all nested namespaces in the same format as in the procfs status
+file, i.e. "NSPid:\t%d\%d...". This allows the easy identification
+of the processes in nested namespaces.
 
-I don't think this will break anything on the netsec driver. Dropped packets
-will still be properly accounted for
+Signed-off-by: Christian Kellner <christian@kellner.me>
+---
 
-> 
-> Besides having this functionality implemented for napi_gro_frags()
-> users, the main reason is the solid performance boost that has been
-> shown during tests on 1-core MIPS board (with not yet mainlined
-> driver):
-> 
-> * no batching (5.4-rc2): ~450/450 Mbit/s
-> * with gro_normal_batch == 8: ~480/480 Mbit/s
-> * with gro_normal_batch == 16: ~500/500 Mbit/s
-> 
-> Applies on top of net-next.
-> Thanks.
-> 
-> Alexander Lobakin (2):
->   net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
->   net: core: increase the default size of GRO_NORMAL skb lists to flush
-> 
->  net/core/dev.c | 51 +++++++++++++++++++++++++-------------------------
->  1 file changed, 26 insertions(+), 25 deletions(-)
-> 
-> -- 
-> 2.23.0
-> 
+Changes in v2:
+- Moved into separate function to avoid multiple ifdefs as suggested
+  by Michal Hocko
+Changes in v3:
+- Helper function takes struct pid_namespace *ns param and got a new
+  name
 
-Thanks
-/Ilias
+ kernel/fork.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index bcdf53125210..183950aad82b 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1695,12 +1695,27 @@ static int pidfd_release(struct inode *inode, struct file *file)
+ }
+ 
+ #ifdef CONFIG_PROC_FS
++static inline void print_pidfd_nspid(struct seq_file *m, struct pid *pid,
++				     struct pid_namespace *ns)
++{
++#ifdef CONFIG_PID_NS
++	int i;
++
++	seq_puts(m, "\nNSpid:");
++	for (i = ns->level; i <= pid->level; i++) {
++		ns = pid->numbers[i].ns;
++		seq_put_decimal_ull(m, "\t", pid_nr_ns(pid, ns));
++	}
++#endif
++}
++
+ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+ {
+ 	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
+ 	struct pid *pid = f->private_data;
+ 
+ 	seq_put_decimal_ull(m, "Pid:\t", pid_nr_ns(pid, ns));
++	print_pidfd_nspid(m, pid, ns);
+ 	seq_putc(m, '\n');
+ }
+ #endif
+-- 
+2.21.0
+
