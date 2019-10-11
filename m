@@ -2,217 +2,172 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD26C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1455C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E883214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1E0214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ip6g+bb4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dUfyufk2"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IT7q9GPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfJKFtC (ORCPT
+        id S1726836AbfJKFui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 01:49:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53352 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfJKFtC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 01:49:02 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6EF7260AA3; Fri, 11 Oct 2019 05:49:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570772941;
-        bh=5u+b9wTcZ53qKjgXGaaFghTi4tqrQQDXP/d0qOytXyw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ip6g+bb44kV8/QZB3f17uTQQB7HfysqodP5cwuiXWAyVmH3RSlP8vo4g17DFCNRes
-         WnakODF1W5OmaX+bbj+qv8j2LXzyrb1J/8S/PMvgqcMdfbPkxedwXU9x33RBoPXfu+
-         c9Gza0gQE5hUbeHTCV9OeJTh8rQo1LP+AdRRaZYQ=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 2402360AA3;
-        Fri, 11 Oct 2019 05:49:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570772940;
-        bh=5u+b9wTcZ53qKjgXGaaFghTi4tqrQQDXP/d0qOytXyw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dUfyufk25HRoo0/W7C/wC2shC9KnamRqyhTHpicmv50qUBoF6ECs+lgx10OOQlldV
-         aiJhXuZQ66X5KbBNneXi5SiST0eVWe+eJsEmoBVnzwSIL8jPB1YuqYR+jEuIda3t/G
-         SnzVKog9ayiZCS4MQ8diQSFVML3k9HhasCOazw6o=
+        Fri, 11 Oct 2019 01:50:38 -0400
+Received: from mail-eopbgr140075.outbound.protection.outlook.com ([40.107.14.75]:46643
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726184AbfJKFui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 01:50:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C/A06X+Q3pcwA+jecgV59hkhQDlZxNW791ha2GZ4ShRAA6nqv/9HRHJp53JQ8SUT4Cz+nXuz46SP/L+pGsdW7aujJ9rLssUklso6VWm5RTcDeWVnXeULkJg/GHL2bYMmF+ugSMAMTHthDicNaEpBACFq0bulAUyFlP4BeoXolLcIDNNxhbdKB8eNJqEK7BBOzOpiNW5dAItOc1xGR1JQTBatIoUj4d0t3Zk2WXUaamroZVnqzSUNwAtwGmJ8VkapT8Vo3a4/h5Ezhce32u6eAxoa+7+DhzkQQAaTn+rCEPKz/ccHL+dq1rTpNpgaRrGOOa3bDnGEvBEsBpnfbksgvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zbg3QkVIOJIFlgTl0YuFgMlU/rq8TKJcHc1Awl+VPPA=;
+ b=HzU8CC+iLZ6eCuUQNjgF0UYTJiEUgOSwH1tuhhD7HshJV3pzhqleQa5amkgTvD0vOee0aj/weorD3kEgImXigBKdcQHzLb66ajWnz/1AVVDAJk1+dJkbbJHiBZrC2Ci2fE2XRzNaqYbVnFGfWKHf/0Efl9/q0o3NmXR/FIjnr8F4IPsUAe2ldXbVFrvMiUd6fv75uoCQeWq0+vdAwYRruFhHdqpXRQikCLbvfAFl3tX4feV01ltJxuEt5ABPFIAjupxsC+z6q88sus9YXgPh9GKevKVc9IrbKxA1IQUqwWxW4dPz9Wds62CLARN2yXryCSvNCN1rxnASFbwC1wFY0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zbg3QkVIOJIFlgTl0YuFgMlU/rq8TKJcHc1Awl+VPPA=;
+ b=IT7q9GPtZPmrJ4CODGL8T6duCHE901st4B3r2iqrKj3hJNNJezBZJnKaytclMiJY38ups3WbBQrYKmsAVOzGxEXSpdgehX8aCgyqCu4psruAWwmY9FzRM7x5bm0D/X2wpmgMPcW1PZbNs59MYA22sRsckirayjD3HiosvC0YL4o=
+Received: from AM0PR04MB5314.eurprd04.prod.outlook.com (20.177.41.157) by
+ AM0PR04MB4754.eurprd04.prod.outlook.com (20.176.215.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.23; Fri, 11 Oct 2019 05:50:35 +0000
+Received: from AM0PR04MB5314.eurprd04.prod.outlook.com
+ ([fe80::99b0:3cb8:e409:1798]) by AM0PR04MB5314.eurprd04.prod.outlook.com
+ ([fe80::99b0:3cb8:e409:1798%6]) with mapi id 15.20.2347.021; Fri, 11 Oct 2019
+ 05:50:35 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Igor Opaniuk <igor.opaniuk@gmail.com>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Jun Li <jun.li@nxp.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] usb: chipidea: set mode for usb phy driver
+Thread-Topic: [PATCH v2 2/3] usb: chipidea: set mode for usb phy driver
+Thread-Index: AQHVf3Kguafv1B6mvkqZ25XYUmZVPKdU8I0A
+Date:   Fri, 11 Oct 2019 05:50:35 +0000
+Message-ID: <20191011055002.GD4774@b29397-desktop>
+References: <20191010135656.3264-1-igor.opaniuk@gmail.com>
+ <20191010135656.3264-2-igor.opaniuk@gmail.com>
+In-Reply-To: <20191010135656.3264-2-igor.opaniuk@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peter.chen@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b77d2de3-4511-4b15-29bd-08d74e0eef8f
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: AM0PR04MB4754:|AM0PR04MB4754:|AM0PR04MB4754:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4754A8A3EB74B076023569C48B970@AM0PR04MB4754.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:218;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(39860400002)(366004)(346002)(136003)(376002)(396003)(199004)(189003)(76116006)(186003)(33656002)(81166006)(81156014)(7736002)(6512007)(9686003)(25786009)(26005)(44832011)(446003)(11346002)(33716001)(476003)(4326008)(66066001)(486006)(478600001)(53546011)(76176011)(8676002)(7416002)(5660300002)(6506007)(6246003)(99286004)(86362001)(14454004)(6486002)(6436002)(1076003)(71190400001)(3846002)(71200400001)(316002)(229853002)(6116002)(305945005)(54906003)(102836004)(66946007)(66446008)(6916009)(66476007)(66556008)(64756008)(2906002)(91956017)(256004)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4754;H:AM0PR04MB5314.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XWjGdWuyDASr1+j3LPdgZw8tNCnMXRJXS4C/S8G7CzouCynnoY4jjbsXeGq/ToHZ6qlOWpcvHIqscbzD5Ja0PnFEOSKXhXqlxRmU84DZx+DTAbNFTSyIFCisBwheR0JmJWmz+PjaFg21INuk/wWhCLPEgMi67Lcc5N4uu/UhVnmB8yV795zt8w4TrYKu/SN5ApckORak8cJKyZwwVAhRwbG37DYF1K6mwnK9ugSeXm6J8vePTvl8AMs7pNf638UZqBFu/4n3KYPhscppPGuLPXS9pAowcn3o3Ux69iAdw1nkaHHoJcXDr1adCq+zH8BjNDo8rXj7qFBkpSphY8G0WkhxeLIRW6OocZb/csfOOrviBvIHeEA/hdLz51TFNfmwD6a9SJSSJ024OtMronxSjAJBa7FkzS5Ovj3F480F/Cc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <FF9446BFCB88624A959B7FBB8156D189@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 11 Oct 2019 11:19:00 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     suzuki.poulose@arm.com, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-        will@kernel.org, Dave.Martin@arm.com, andrew.murray@arm.com,
-        jeremy.linton@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
-        saiprakash.ranjan@codeaurora.org
-Subject: Relax CPU features sanity checking on heterogeneous architectures
-Message-ID: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b77d2de3-4511-4b15-29bd-08d74e0eef8f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 05:50:35.1020
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y6CMRewsFhwesxC3a6gZ3MdSlKooC7mAeKcSQnCfxMSf9B5HZmlXV4HCtK8uLWuowcjiLpPThThqc6BU+jbYuw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4754
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below 
-warnings are observed during bootup of big cpu cores.
+On 19-10-10 16:56:55, Igor Opaniuk wrote:
+> From: Li Jun <jun.li@nxp.com>
+>=20
+> After enters one specific role, notify usb phy driver.
+>=20
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+> ---
+>=20
+> v2:
+> - restored original commit author
+> - fixed build for multi_v7
+>=20
+>  drivers/usb/chipidea/ci.h | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
+> index 6911aef500e9..cf9cc9402826 100644
+> --- a/drivers/usb/chipidea/ci.h
+> +++ b/drivers/usb/chipidea/ci.h
+> @@ -275,9 +275,21 @@ static inline int ci_role_start(struct ci_hdrc *ci, =
+enum ci_role role)
+>  		return -ENXIO;
+> =20
+>  	ret =3D ci->roles[role]->start(ci);
+> -	if (!ret)
+> -		ci->role =3D role;
+> -	return ret;
+> +	if (ret)
+> +		return ret;
+> +
+> +	ci->role =3D role;
+> +
+> +	if (ci->usb_phy) {
+> +		if (role =3D=3D CI_ROLE_HOST)
+> +			usb_phy_set_mode(ci->usb_phy,
+> +					USB_CURRENT_MODE_HOST);
+> +		else
+> +			usb_phy_set_mode(ci->usb_phy,
+> +					USB_CURRENT_MODE_DEVICE);
+> +	}
+> +
+> +	return 0;
+>  }
+> =20
+>  static inline void ci_role_stop(struct ci_hdrc *ci)
+> @@ -290,6 +302,9 @@ static inline void ci_role_stop(struct ci_hdrc *ci)
+>  	ci->role =3D CI_ROLE_END;
+> =20
+>  	ci->roles[role]->stop(ci);
+> +
+> +	if (ci->usb_phy)
+> +		usb_phy_set_mode(ci->usb_phy, USB_CURRENT_MODE_NONE);
+>  }
+> =20
+>  static inline enum usb_role ci_role_to_usb_role(struct ci_hdrc *ci)
+> --=20
 
-SM8150:
+For chipidea part:
 
-[    0.271177] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 0x00000011111112
-[    0.271184] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU4: 0x00000000010142
-[    0.271189] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU4: 0x00000010010000
-[    0.271192] CPU features: Unsupported CPU feature variation detected.
-[    0.271208] GICv3: CPU4: found redistributor 400 region 
-0:0x0000000017ae0000
-[    0.271237] CPU4: Booted secondary processor 0x0000000004 
-[0x51df804e]
-[    0.302919] Detected PIPT I-cache on CPU5
-[    0.302930] CPU features: SANITY         CHECK: Unexpected variation 
-in SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU5: 
-0x00000011111112
-[    0.302936] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU5: 0x00000000010142
-[    0.302941] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU5: 0x00000010010000
-[    0.302957] GICv3: CPU5: found redistributor 500 region 
-0:0x0000000017b00000
-[    0.302987] CPU5: Booted secondary processor 0x0000000005 
-[0x51df804e]
-[    0.335066] Detected PIPT I-cache on CPU6
-[    0.335076] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU6: 0x00000011111112
-[    0.335082] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU6: 0x00000000010142
-[    0.335087] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU6: 0x00000010010000
-[    0.335104] GICv3: CPU6: found redistributor 600 region 
-0:0x0000000017b20000
-[    0.335135] CPU6: Booted secondary processor 0x0000000006 
-[0x51df804e]
-[    0.367597] Detected PIPT I-cache on CPU7
-[    0.367605] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU7: 0x00000011111112
-[    0.367610] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU7: 0x00000000010142
-[    0.367615] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU7: 0x00000010010000
-[    0.367632] GICv3: CPU7: found redistributor 700 region 
-0:0x0000000017b40000
-[    0.367661] CPU7: Booted secondary processor 0x0000000007 
-[0x51df804e]
+Acked-by: Peter Chen <peter.chen@nxp.com>
 
-SC7180:
-
-[    0.812770] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_CTR_EL0. Boot CPU: 0x00000084448004, CPU6: 0x0000009444c004
-[    0.812838] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_AA64MMFR2_EL1. Boot CPU: 0x00000000001011, CPU6: 0x00000000000011
-[    0.812876] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU6: 
-0x1100000011111112
-[    0.812924] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU6: 0x00000000010142
-[    0.812950] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_PFR0_EL1. Boot CPU: 0x00000010000131, CPU6: 0x00000010010131
-[    0.812977] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU6: 0x00000010010000
-[    0.813018] CPU features: Unsupported CPU feature variation detected.
-[    0.813447] GICv3: CPU6: found redistributor 600 region 
-0:0x0000000017b20000
-[    0.814144] CPU6: Booted secondary processor 0x0000000600 
-[0x51ff804f]
-[    0.902441] Detected PIPT I-cache on CPU7
-[    0.902528] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_CTR_EL0. Boot CPU: 0x00000084448004, CPU7: 0x0000009444c004
-[    0.902591] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_AA64MMFR2_EL1. Boot CPU: 0x00000000001011, CPU7: 0x00000000000011
-[    0.902610] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU7: 
-0x1100000011111112
-[    0.902659] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU7: 0x00000000010142
-[    0.902695] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_PFR0_EL1. Boot CPU: 0x00000010000131, CPU7: 0x00000010010131
-[    0.902713] CPU features: SANITY CHECK: Unexpected variation in 
-SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU7: 0x00000010010000
-[    0.903217] GICv3: CPU7: found redistributor 700 region 
-0:0x0000000017b40000
-[    0.903965] CPU7: Booted secondary processor 0x0000000700 
-[0x51ff804f]
-
-
-Can we relax some sanity checking for these by making it FTR_NONSTRICT 
-or by some other means? I just tried below roughly for SM8150 but I 
-guess this is not correct,
-maybe for ftr_generic_32bits we should be checking bootcpu and nonboot 
-cpu partnum(to identify big.LITTLE) and then make it nonstrict?
-These are all my wild assumptions, please correct me if I am wrong.
-
-diff --git a/arch/arm64/kernel/cpufeature.c 
-b/arch/arm64/kernel/cpufeature.c
-index cabebf1a7976..207197692caa 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -164,8 +164,8 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] 
-= {
-         S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, 
-ID_AA64PFR0_FP_SHIFT, 4, ID_AA64PFR0_FP_NI),
-         /* Linux doesn't care about the EL3 */
-         ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 
-ID_AA64PFR0_EL3_SHIFT, 4, 0),
--       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 
-ID_AA64PFR0_EL2_SHIFT, 4, 0),
--       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 
-ID_AA64PFR0_EL1_SHIFT, 4, ID_AA64PFR0_EL1_64BIT_ONLY),
-+       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 
-ID_AA64PFR0_EL2_SHIFT, 4, 0),
-+       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 
-ID_AA64PFR0_EL1_SHIFT, 4, ID_AA64PFR0_EL1_64BIT_ONLY),
-         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 
-ID_AA64PFR0_EL0_SHIFT, 4, ID_AA64PFR0_EL0_64BIT_ONLY),
-         ARM64_FTR_END,
-  };
-@@ -345,10 +345,10 @@ static const struct arm64_ftr_bits 
-ftr_generic_32bits[] = {
-         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 24, 4, 
-0),
-         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 20, 4, 
-0),
-         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 16, 4, 
-0),
--       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 
-0),
-+       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 12, 4, 
-0),
-         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),
--       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),
--       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),
-+       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 4, 4, 
-0),
-+       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 0, 4, 
-0),
-         ARM64_FTR_END,
-  };
-
+--=20
 
 Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Peter Chen=
