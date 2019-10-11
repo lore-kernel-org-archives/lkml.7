@@ -2,86 +2,224 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D765C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE34C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E37214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB372196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570788571;
+	bh=BeshWxdy9BOzofgIf1LAQhu1rpxeuR8RB+is4Shw61w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2CIpq1VmH9IpHFT/8euaJeSRkNO/Gg9iOwYN8gEHn/7tk2114D2ZrRlAN9EUw7/Xy
+	 vmYdUkXrUvY86t1gft+C2Hi+f0CFqnq1+cqiG4cbj544vtuIW2qtMW5HOq5HADjkhA
+	 lChe96tvN2aLOljwCdl0ijk8l67CcQRLUvPnwTWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfJKKFn (ORCPT
+        id S1727641AbfJKKJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:05:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:55194 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfJKKFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:05:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4EAF337;
-        Fri, 11 Oct 2019 03:05:41 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B43803F703;
-        Fri, 11 Oct 2019 03:05:40 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 11:05:31 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: ARM Juno r1 + CONFIG_PROVE_LOCKING=y => boot failure
-Message-ID: <20191011100521.GA5122@bogus>
-References: <CGME20191011092604eucas1p1ca11ab9c4c7508776914b0eb4f35e69b@eucas1p1.samsung.com>
- <33a83dce-e9f0-7814-923b-763d33e70257@samsung.com>
+        Fri, 11 Oct 2019 06:09:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53692 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfJKKJ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:09:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KuHjBqIDXIId+wIdCJdZjj5YZ7JkcltaGZLMyUnKd+E=; b=A8ZAI2viBEegAJKBqQXrK0ew8
+        AhdU5CZUamaCpTCLjBivu5UsVp572qyjlTuk8g+LVenQV7y1tXf7PuLYamxhPCw9G/M7inS2/gXex
+        YLccpmmDAgyUdFd42HGZsIUe+sgYeTJs04L8WjF8uSvNowxdTrlHBxqzBL58u6S3lX2f/eLp+Xuwo
+        JyErvffq7PCI4Mk/0n0V1B1w19EG8/ROHsUJzIYf9qdCKsKHXoV8oRYaKjnRfxq6DPiq4jb32hz++
+        cWRCBcWPPrHyX+PiGHQWXt0nv79UPpcSRQQ9rWsEKW2yQEMEN/0G4jEzOI0UAPdgMzLkC9jAfXolC
+        yr0MFkXJA==;
+Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIrr9-0007qw-89; Fri, 11 Oct 2019 10:09:07 +0000
+Date:   Fri, 11 Oct 2019 07:09:03 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 02/19] EDAC: Remove EDAC_DIMM_OFF() macro
+Message-ID: <20191011070903.546d865f@coco.lan>
+In-Reply-To: <20191010202418.25098-3-rrichter@marvell.com>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+        <20191010202418.25098-3-rrichter@marvell.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33a83dce-e9f0-7814-923b-763d33e70257@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+Em Thu, 10 Oct 2019 20:25:07 +0000
+Robert Richter <rrichter@marvell.com> escreveu:
 
-On Fri, Oct 11, 2019 at 11:26:04AM +0200, Marek Szyprowski wrote:
-> Hi
->
-> Recently I've got access to ARM Juno R1 board and did some tests with
-> current mainline kernel on it. I'm a bit surprised that enabling
-> CONFIG_PROVE_LOCKING causes a boot failure on this board. After enabling
-> this Kconfig option, I get no single message from the kernel, although I
-> have earlycon enabled.
->
+> The EDAC_DIMM_OFF() macro takes 5 arguments to get the DIMM's index.
+> This can be much simplified now as the offset is already stored in
+> struct dimm_info. Use it directly and completely remove the
+> EDAC_DIMM_OFF() macro.
 
-I don't have Juno R1 but I tried defconfig + CONFIG_PROVE_LOCKING and
-it boots fine.
+Ah, now I understand why you added the dimm idx field. One more reason
+why to split it on a separate patch (or perhaps merge it here).
 
-So if you disable CONFIG_PROVE_LOCKING(i.e. defconfig) boots fine ?
-Are you using DTB from the mainline ?
+> 
+> Another advantage is that edac_mc_alloc() could be used even if the
+> exact size of the layers is unknown. Only the number of DIMMs would be
+> needed.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/edac_mc.c       | 15 +++++--------
+>  drivers/edac/edac_mc_sysfs.c | 20 ++++--------------
+>  include/linux/edac.h         | 41 ------------------------------------
+>  3 files changed, 9 insertions(+), 67 deletions(-)
+> 
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index 3d45adb5957f..72088d49b03b 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -314,10 +314,10 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
+>  	struct dimm_info *dimm;
+>  	u32 *ce_per_layer[EDAC_MAX_LAYERS], *ue_per_layer[EDAC_MAX_LAYERS];
+>  	unsigned int pos[EDAC_MAX_LAYERS];
+> -	unsigned int size, tot_dimms = 1, count = 1;
+> +	unsigned int idx, size, tot_dimms = 1, count = 1;
+>  	unsigned int tot_csrows = 1, tot_channels = 1, tot_errcount = 0;
+>  	void *pvt, *p, *ptr = NULL;
+> -	int i, j, row, chn, n, len, off;
+> +	int i, j, row, chn, n, len;
+>  	bool per_rank = false;
+>  
+>  	BUG_ON(n_layers > EDAC_MAX_LAYERS || n_layers == 0);
+> @@ -425,20 +425,15 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
+>  	memset(&pos, 0, sizeof(pos));
+>  	row = 0;
+>  	chn = 0;
+> -	for (i = 0; i < tot_dimms; i++) {
+> +	for (idx = 0; idx < tot_dimms; idx++) {
+>  		chan = mci->csrows[row]->channels[chn];
+> -		off = EDAC_DIMM_OFF(layer, n_layers, pos[0], pos[1], pos[2]);
+> -		if (off < 0 || off >= tot_dimms) {
+> -			edac_mc_printk(mci, KERN_ERR, "EDAC core bug: EDAC_DIMM_OFF is trying to do an illegal data access\n");
+> -			goto error;
+> -		}
+>  
+>  		dimm = kzalloc(sizeof(**mci->dimms), GFP_KERNEL);
+>  		if (!dimm)
+>  			goto error;
+> -		mci->dimms[off] = dimm;
+> +		mci->dimms[idx] = dimm;
+>  		dimm->mci = mci;
+> -		dimm->idx = off;
+> +		dimm->idx = idx;
+>  
+>  		/*
+>  		 * Copy DIMM location and initialize it.
+> diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+> index 32d016f1ecd1..91e4c8f155af 100644
+> --- a/drivers/edac/edac_mc_sysfs.c
+> +++ b/drivers/edac/edac_mc_sysfs.c
+> @@ -557,14 +557,8 @@ static ssize_t dimmdev_ce_count_show(struct device *dev,
+>  {
+>  	struct dimm_info *dimm = to_dimm(dev);
+>  	u32 count;
+> -	int off;
+> -
+> -	off = EDAC_DIMM_OFF(dimm->mci->layers,
+> -			    dimm->mci->n_layers,
+> -			    dimm->location[0],
+> -			    dimm->location[1],
+> -			    dimm->location[2]);
+> -	count = dimm->mci->ce_per_layer[dimm->mci->n_layers-1][off];
+> +
+> +	count = dimm->mci->ce_per_layer[dimm->mci->n_layers-1][dimm->idx];
+>  	return sprintf(data, "%u\n", count);
+>  }
+>  
+> @@ -574,14 +568,8 @@ static ssize_t dimmdev_ue_count_show(struct device *dev,
+>  {
+>  	struct dimm_info *dimm = to_dimm(dev);
+>  	u32 count;
+> -	int off;
+> -
+> -	off = EDAC_DIMM_OFF(dimm->mci->layers,
+> -			    dimm->mci->n_layers,
+> -			    dimm->location[0],
+> -			    dimm->location[1],
+> -			    dimm->location[2]);
+> -	count = dimm->mci->ue_per_layer[dimm->mci->n_layers-1][off];
+> +
+> +	count = dimm->mci->ue_per_layer[dimm->mci->n_layers-1][dimm->idx];
+>  	return sprintf(data, "%u\n", count);
+>  }
+>  
+> diff --git a/include/linux/edac.h b/include/linux/edac.h
+> index 7f9804438589..79c5564ee314 100644
+> --- a/include/linux/edac.h
+> +++ b/include/linux/edac.h
+> @@ -362,47 +362,6 @@ struct edac_mc_layer {
+>   */
+>  #define EDAC_MAX_LAYERS		3
+>  
+> -/**
+> - * EDAC_DIMM_OFF - Macro responsible to get a pointer offset inside a pointer
+> - *		   array for the element given by [layer0,layer1,layer2]
+> - *		   position
+> - *
+> - * @layers:	a struct edac_mc_layer array, describing how many elements
+> - *		were allocated for each layer
+> - * @nlayers:	Number of layers at the @layers array
+> - * @layer0:	layer0 position
+> - * @layer1:	layer1 position. Unused if n_layers < 2
+> - * @layer2:	layer2 position. Unused if n_layers < 3
+> - *
+> - * For 1 layer, this macro returns "var[layer0] - var";
+> - *
+> - * For 2 layers, this macro is similar to allocate a bi-dimensional array
+> - * and to return "var[layer0][layer1] - var";
+> - *
+> - * For 3 layers, this macro is similar to allocate a tri-dimensional array
+> - * and to return "var[layer0][layer1][layer2] - var".
+> - *
+> - * A loop could be used here to make it more generic, but, as we only have
+> - * 3 layers, this is a little faster.
+> - *
+> - * By design, layers can never be 0 or more than 3. If that ever happens,
+> - * a NULL is returned, causing an OOPS during the memory allocation routine,
+> - * with would point to the developer that he's doing something wrong.
+> - */
+> -#define EDAC_DIMM_OFF(layers, nlayers, layer0, layer1, layer2) ({		\
+> -	int __i;							\
+> -	if ((nlayers) == 1)						\
+> -		__i = layer0;						\
+> -	else if ((nlayers) == 2)					\
+> -		__i = (layer1) + ((layers[1]).size * (layer0));		\
+> -	else if ((nlayers) == 3)					\
+> -		__i = (layer2) + ((layers[2]).size * ((layer1) +	\
+> -			    ((layers[1]).size * (layer0))));		\
+> -	else								\
+> -		__i = -EINVAL;						\
+> -	__i;								\
+> -})
+> -
+>  struct dimm_info {
+>  	struct device dev;
+>  
 
-> I've did my test with default defconfig and current linux-next,
-> v5.4-rc1, v5.3 and v4.19. In all cases the result is the same. I'm
-> booting kernel using a precompiled uboot from Linaro release and TFTP
-> download.
->
 
-OK, I use UEFI+GRUB but I don't think that should cause any issue.
 
-> Is this a known issue? Other ARM64 boards I have access to (Samsung TM2e
-> and RaspberryPi3) boots fine with the same kernel image.
->
-
-Not that I am aware of. If you could send me the bootlog with defconfig
-I can take a look and see if I get any clue.
-
---
-Regards,
-Sudeep
+Thanks,
+Mauro
