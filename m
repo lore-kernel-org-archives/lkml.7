@@ -2,91 +2,179 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025C3ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F29ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07BF206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D2F206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LOJbWzmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfJKWc1 (ORCPT
+        id S1727208AbfJKWdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 18:32:27 -0400
-Received: from smtprelay0113.hostedemail.com ([216.40.44.113]:53640 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726255AbfJKWc1 (ORCPT
+        Fri, 11 Oct 2019 18:33:14 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59750 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726174AbfJKWdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 18:32:27 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id E131418016C6C;
-        Fri, 11 Oct 2019 22:32:25 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: owl40_14d93818d4721
-X-Filterd-Recvd-Size: 2752
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 11 Oct 2019 22:32:23 +0000 (UTC)
-Message-ID: <28ed468bc58c0d0e92f459b45d8e43cd3d1458b2.camel@perches.com>
-Subject: Re: [Outreachy kernel] [PATCH] staging: vc04_services: fix warnings
- of lines should not end with open parenthesis
-From:   Joe Perches <joe@perches.com>
-To:     Julia Lawall <julia.lawall@lip6.fr>,
-        Jules Irenge <jbi.octave@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        eric@anholt.net, wahrenst@gmx.net, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, daniela.mormocea@gmail.com,
-        dave.stevenson@raspberrypi.org, hverkuil-cisco@xs4all.nl,
-        mchehab+samsung@kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        sbranden@broadcom.com, rjui@broadcom.com, f.fainelli@gmail.com
-Date:   Fri, 11 Oct 2019 15:32:22 -0700
-In-Reply-To: <alpine.DEB.2.21.1910112320550.3284@hadrien>
-References: <20191011211637.19311-1-jbi.octave@gmail.com>
-         <alpine.DEB.2.21.1910112320550.3284@hadrien>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Fri, 11 Oct 2019 18:33:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570833191;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ih6shK72SsYbUilowKrJkHCxbMKYtWGrrGp+ltqWoGg=;
+        b=LOJbWzmn8ME1Apx+RM7LcoyeVKgHD+O4KBn1x2uq/dCwdXC8vhdjgd9Lsmu8/QPQwxfpjf
+        sdrOBt1ekCDbvMyVzLw4TU6/lTBIeaHh0hawQU0Ob25XuaLn8mxIMcyIhkAWQ9VXOI7ME1
+        dX0VLUqAuiAXOchPcwN/P9iIsNix2fs=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-IqHqRbwVPGy5RUZ4TqAz-A-1; Fri, 11 Oct 2019 18:33:09 -0400
+Received: by mail-qt1-f199.google.com with SMTP id h10so10934487qtq.11
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 15:33:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xUGJx7tOM8vQwvIOh3cm4givSxEOOhsnPOf5V8GuBe4=;
+        b=ADEMmPsA6y8ja3GA912EomSbnTyocNLIEJunRDztH9X/u+hQ68oyi5w+pF5kAPinW6
+         4sxy61EAVxIiusL7ipMdX7o9tzYBarNpi4QsLQzgopY/b1LFuYgM6nDamnEd48ONkHSG
+         PFiqi5qX7DIYkMQWzE1kH094aJERO9RuMYf6ylV7zw0FtV/uXgX878556DJQCWUa3AAP
+         JIYrwFtKIk5paKb7PZCFQub+uxQCutY5LXjoPJf8bXqLsEiM6SgkEjqEo7tSMyG0+L6a
+         tZL/45I7tl/JD3cB+3SQSWJLrwHUOo3LN+MZ6m4kIL2KpHpQpJmPY+Z55AXsuLcsJ20m
+         4UeQ==
+X-Gm-Message-State: APjAAAXn4A7sD5tfO33epJo2qvIuY2EMJCpjIEkjutJ2iyp5BIvtIk1w
+        5h9w1wCBtBB1sQwPzo0PpENtCdyQbA7peWjkIass028axUt/a4fvQ9IacgdV/C9GcM6IRhnnSc0
+        ATJ/uuEW/R9GGe0W1fTKz1mErlzMqwR9qDk1Wps7W
+X-Received: by 2002:a05:620a:13d9:: with SMTP id g25mr18351866qkl.230.1570833189358;
+        Fri, 11 Oct 2019 15:33:09 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyNVINYPQ1pIAUtuY+uu541pUmoVdM12qwuHJDRtZtIJHK0tuakBrRGmXG2hwE3aKPfYHWMUN5DKm+iE9s8m5c=
+X-Received: by 2002:a05:620a:13d9:: with SMTP id g25mr18351832qkl.230.1570833189064;
+ Fri, 11 Oct 2019 15:33:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
+ <20191007051240.4410-4-andrew.smirnov@gmail.com> <CAO-hwJJ8tp4Rqte-umv9e=S5evR5oJTErsNR0Wk-z8wcbtR0wg@mail.gmail.com>
+ <CAHQ1cqHCYiaEXck3LMGBwYiHVDQcF=XuF=kHJ4f_v1ea6hDR2g@mail.gmail.com>
+In-Reply-To: <CAHQ1cqHCYiaEXck3LMGBwYiHVDQcF=XuF=kHJ4f_v1ea6hDR2g@mail.gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Sat, 12 Oct 2019 00:32:57 +0200
+Message-ID: <CAO-hwJ+HZEhn_riNwrODKSySt4aP4RzZq+omYDAF-7q5dLQR1Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] HID: logitech-hidpp: add G920 device validation quirk
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+X-MC-Unique: IqHqRbwVPGy5RUZ4TqAz-A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-11 at 23:23 +0200, Julia Lawall wrote:
-> On Fri, 11 Oct 2019, Jules Irenge wrote:
-> > Fix warning of lines should not end with open parenthesis.
-> > Issue detected by checkpatch tool.
-[]
-> > diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-[]
-> > @@ -337,9 +337,8 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
-> >  			if (is_capturing(dev)) {
-> >  				v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
-> >  					 "Grab another frame");
-> > -				vchiq_mmal_port_parameter_set(
-> > -					instance,
-> > -					dev->capture.camera_port,
-> > +			vchiq_mmal_port_parameter_set(instance,
-> > +						      dev->capture.camera_port,
-> >  					MMAL_PARAMETER_CAPTURE,
-> >  					&dev->capture.frame_count,
-> >  					sizeof(dev->capture.frame_count));
-> 
-> You can't reduce the indentation on the function call.  It has to stay
-> clearly in the if branch.
-> 
-> If you adjust the indentation of some of the arguments, you have to do so
-> to all of the arguments.
-> 
-> Similar issues arise below.  There may be no way to make some of the calls
-> look nice without a more severe reorganization of the code.
+On Fri, Oct 11, 2019 at 9:39 PM Andrey Smirnov <andrew.smirnov@gmail.com> w=
+rote:
+>
+> On Fri, Oct 11, 2019 at 7:56 AM Benjamin Tissoires
+> <benjamin.tissoires@redhat.com> wrote:
+> >
+> > On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com=
+> wrote:
+> > >
+> > > G920 device only advertises REPORT_ID_HIDPP_LONG and
+> > > REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
+> > > for REPORT_ID_HIDPP_SHORT with optional=3Dfalse will always fail and
+> > > prevent G920 to be recognized as a valid HID++ device.
+> > >
+> > > Modify hidpp_validate_device() to check only REPORT_ID_HIDPP_LONG wit=
+h
+> > > optional=3Dfalse on G920 to fix this.
+> > >
+> > > Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to=
+ be handled by this module")
+> > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204191
+> > > Reported-by: Sam Bazely <sambazley@fastmail.com>
+> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > Cc: Jiri Kosina <jikos@kernel.org>
+> > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > Cc: Henrik Rydberg <rydberg@bitmath.org>
+> > > Cc: Sam Bazely <sambazley@fastmail.com>
+> > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> > > Cc: Austin Palmer <austinp@valvesoftware.com>
+> > > Cc: linux-input@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  drivers/hid/hid-logitech-hidpp.c | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >
+> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logit=
+ech-hidpp.c
+> > > index cadf36d6c6f3..f415bf398e17 100644
+> > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > @@ -3511,6 +3511,12 @@ static bool hidpp_validate_report(struct hid_d=
+evice *hdev, int id,
+> > >
+> > >  static bool hidpp_validate_device(struct hid_device *hdev)
+> > >  {
+> > > +       struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
+> > > +
+> > > +       if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920)
+> > > +               return hidpp_validate_report(hdev, REPORT_ID_HIDPP_LO=
+NG,
+> > > +                                            HIDPP_REPORT_SHORT_LENGT=
+H, false);
+> > > +
+> >
+> > with https://patchwork.kernel.org/patch/11184749/ we also have a need
+> > for such a trick for BLE mice.
+> >
+> > I wonder if we should not have a more common way of validating the devi=
+ces
+> >
+>
+> What about just checking for:
+>
+> hidpp_validate_report(REPORT_ID_HIDPP_SHORT,
+>                                     HIDPP_REPORT_SHORT_LENGTH, true) ||
+> hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+>                                     HIDPP_REPORT_LONG_LENGTH, true);
+>
+> and probably dropping the "optional" argument for
+> hidpp_validate_report()? Original code allows there to be devices
+> supporting shorts reports only, but it seems that devices that support
+> only long reports are legitimate too, so maybe the only "invalid"
+> combination is if both are invalid length or missing?
 
-My suggestion would be to shorten the vchiq_mmal_port_parameter_set
-function name (29 chars is just too long) and pass dev instead of
-dev->instance as the first argument to this function.
+Well, the problem is we also want to detect 2 things:
+- devices that do not have any of the HID++ collections, and handle
+them as generic ones (the second mouse/keyboard collection in the
+gaming mice should still be exported by the driver, or this will kill
+the macros / rebinding capabilities
+- malicious devices that pretends to have a HID++ collection but want
+to trigger a buffer overflow by having a shorter than expected report
+length
 
+Point 2 above should still be fine, but point 1 is why we have the
+enforcement of the HID++ short report in the first place.
+
+Cheers,
+Benjamin
+
+>
+> Thanks,
+> Andrey Smirnov
 
