@@ -2,190 +2,105 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4696BECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E557C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB2721A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C018218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O+quGUL9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjOkPa+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbfJKUlt (ORCPT
+        id S1727858AbfJKUmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:41:49 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34165 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728943AbfJKUlt (ORCPT
+        Fri, 11 Oct 2019 16:42:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46194 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfJKUmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:41:49 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m19so9109019otp.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 13:41:48 -0700 (PDT)
+        Fri, 11 Oct 2019 16:42:46 -0400
+Received: by mail-pg1-f194.google.com with SMTP id b8so6414913pgm.13;
+        Fri, 11 Oct 2019 13:42:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QCcI0gZx24qP48bYZd6tERlQ1R1wkv8V/GwDJhxA6+4=;
-        b=O+quGUL9GaTo+gzYgH53b4VZvt/bBFsOo+HoyW0Wa5cymiVBv3ZBICK2Ab1z8ywiOW
-         6UVDcg8sc6Kd9egwHekRJrJLEVqHBAcElTS2vmtilW/W523Gbm1xXC2JdGqy3WcC42zV
-         qewmH9LJH5ZfFOhFpCYjQElqSODyKlrLrWR8vZlyS+UHQmC3h1AdXsq/YCnEgPTAhJgV
-         qRFKcH01zJTADmivj0w3XEJlAU+KrMMsmZlgI/NUpjIM453sU5iM50jTq8axNxiArMBO
-         iErIVWcGoBL9clvTA9iUAnIkCIQjpUW6CTHdEr0lqSvqUBNMxsgd+1SIXCsPFz7cpG6L
-         zLOA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4XoXOX0uA8zEeRRweFDHTezpZIHOl+c1NBlkyciPQFQ=;
+        b=kjOkPa+qJNIj54kgt1Tu4c2y/jQTQWnHNv6uAQvSn/P8dU/oM5lZgHuq9LM8Qvt1mD
+         B836hKn2o1emu0wom0YN4mJ7blqqLeq94TU16FWdODUGpY8gL40Q3OeMdCc70AlteXKE
+         X6nj5THN8VqJvA8AQAmdhzQ/j0voXn4FRe1UzTtxQA53a5NnJfDYtwple7KInrVd0JjH
+         vqTIALzwwhMMMcC2OWTFdTCz37TVC0iykWK8iPMn/nhj3tb6LLjjhV9a6TdU8U6Xmfwh
+         ZWCV9GVr6z+tvC8+8tLuX13eYOAZLoB6xxPqb/6Z20U7apbEd5OXwwe0JlnE/lMWigzZ
+         dEqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QCcI0gZx24qP48bYZd6tERlQ1R1wkv8V/GwDJhxA6+4=;
-        b=C1c5a8QBaC0ybqfczlwOtPw+nIZMqEMsi/eW1Llry3cpBz6G5pJlfqfzE0luJVgkog
-         eN3SIkZXQnLUwNTHsESeZE8T0sWOl1SpPFX5njWsa74a2lGJI412VPWwtmRpv/V6NHO6
-         1uY6u2RoobxXsQWygDKltKTpGtlgsbGDn44m4/5iNkmvvXqJcC+B5Qe3CCyByKxyAuqC
-         37OzIkfxMgDBGefPOwuA05ROOPLOqvkmlrwlifDQJ2+i75G6lX4rFitCPUmTToDuxsDD
-         dNp6dfSOUnNSgPjFTtRW/b9UdZEv338E54n3ujAv8mMLJelPwTi5ZZQpjxGPpQCJABbZ
-         kXsQ==
-X-Gm-Message-State: APjAAAV3E+TqZx2kcrnoVrliSqWqF7LvWxw447Rc8h/6sJPqJq0bUqxz
-        nRIC20wZlxFX2EfmQcDl1P2PzT3FiuFTW7YXQsohfg==
-X-Google-Smtp-Source: APXvYqzNjGsf2tP7ZzFAGiWPzmM+QG3u5csg/sFiRGr1eYLK5VU0i/5K52TZlUDNo2IZdUDXQG8XuW+YL+3Hn6n6F34=
-X-Received: by 2002:a9d:5c07:: with SMTP id o7mr14443071otk.33.1570826507552;
- Fri, 11 Oct 2019 13:41:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4XoXOX0uA8zEeRRweFDHTezpZIHOl+c1NBlkyciPQFQ=;
+        b=Mf2vIsmgyMfmjSmQruyPY8/Ih6iLtqX6GE4w7OM1VKc73i6fGzzdasD22Ayneb9I1l
+         HTydWw6AAsZYWwYRZHgkXV0MQhtpceW4pq17i1WytbhEgdd8ODz6TOOMQR4HhMblfOtX
+         ky55+38C/1Q3D9N3UuvCXsn2ondks+Ayo/RDsic1GIel+Z9XazVZZkRdRZqqQZe7YDtL
+         mhj1tUUJ+BHIlVYAYKAVEeClnBJcrHbALueqIumwW9LTwVMsQVoxCHYz3nMr7fYj60lA
+         ALjDCZMRW5iXHnmoUg+2KIoPexourXLSpailtFlWz8G7hwqq+QQOuODfQv9Tv39CDU21
+         D6Sg==
+X-Gm-Message-State: APjAAAVqE1IZdrIrTaHRkVaPqmcuGX6esOcovMRN4BORabV4D3/6kXhJ
+        WiBhRjDoyMfdi8lYs9CgvHU=
+X-Google-Smtp-Source: APXvYqxgMYTRiReIny38MzeJBeHWIF7zFVtugRBRVOxiaqSCzPV++EW3iFHGUcMAK+iv3c7huzSHuQ==
+X-Received: by 2002:a65:66c4:: with SMTP id c4mr3754487pgw.42.1570826565852;
+        Fri, 11 Oct 2019 13:42:45 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id v1sm10714891pfg.26.2019.10.11.13.42.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 13:42:44 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 13:42:42 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH 0/3] net: phy: switch to using fwnode_gpiod_get_index
+Message-ID: <20191011204242.GH229325@dtor-ws>
+References: <20191004231356.135996-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-References: <20190919222421.27408-1-almasrymina@google.com>
- <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com> <CAHS8izN1Q7XH84Srem_McB+Jz67-fu6KPCMQjzbnPDTPzgwC2A@mail.gmail.com>
-In-Reply-To: <CAHS8izN1Q7XH84Srem_McB+Jz67-fu6KPCMQjzbnPDTPzgwC2A@mail.gmail.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Fri, 11 Oct 2019 13:41:36 -0700
-Message-ID: <CAHS8izNhZc8zsdf=eXU5L_ouKwk9s00S-Q21P=QA+vAF3BsXcg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org,
-        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004231356.135996-1-dmitry.torokhov@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 12:10 PM Mina Almasry <almasrymina@google.com> wrote:
->
-> On Mon, Sep 23, 2019 at 10:47 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> >
-> > On 9/19/19 3:24 PM, Mina Almasry wrote:
-> > > Patch series implements hugetlb_cgroup reservation usage and limits, which
-> > > track hugetlb reservations rather than hugetlb memory faulted in. Details of
-> > > the approach is 1/7.
-> >
-> > Thanks for your continued efforts Mina.
-> >
-> > One thing that has bothered me with this approach from the beginning is that
-> > hugetlb reservations are related to, but somewhat distinct from hugetlb
-> > allocations.  The original (existing) huegtlb cgroup implementation does not
-> > take reservations into account.  This is an issue you are trying to address
-> > by adding a cgroup support for hugetlb reservations.  However, this new
-> > reservation cgroup ignores hugetlb allocations at fault time.
-> >
-> > I 'think' the whole purpose of any hugetlb cgroup is to manage the allocation
-> > of hugetlb pages.  Both the existing cgroup code and the reservation approach
-> > have what I think are some serious flaws.  Consider a system with 100 hugetlb
-> > pages available.  A sysadmin, has two groups A and B and wants to limit hugetlb
-> > usage to 50 pages each.
-> >
-> > With the existing implementation, a task in group A could create a mmap of
-> > 100 pages in size and reserve all 100 pages.  Since the pages are 'reserved',
-> > nobody in group B can allocate ANY huge pages.  This is true even though
-> > no pages have been allocated in A (or B).
-> >
-> > With the reservation implementation, a task in group A could use MAP_NORESERVE
-> > and allocate all 100 pages without taking any reservations.
-> >
-> > As mentioned in your documentation, it would be possible to use both the
-> > existing (allocation) and new reservation cgroups together.  Perhaps if both
-> > are setup for the 50/50 split things would work a little better.
-> >
-> > However, instead of creating a new reservation crgoup how about adding
-> > reservation support to the existing allocation cgroup support.  One could
-> > even argue that a reservation is an allocation as it sets aside huge pages
-> > that can only be used for a specific purpose.  Here is something that
-> > may work.
-> >
-> > Starting with the existing allocation cgroup.
-> > - When hugetlb pages are reserved, the cgroup of the task making the
-> >   reservations is charged.  Tracking for the charged cgroup is done in the
-> >   reservation map in the same way proposed by this patch set.
-> > - At page fault time,
-> >   - If a reservation already exists for that specific area do not charge the
-> >     faulting task.  No tracking in page, just the reservation map.
-> >   - If no reservation exists, charge the group of the faulting task.  Tracking
-> >     of this information is in the page itself as implemented today.
-> > - When the hugetlb object is removed, compare the reservation map with any
-> >   allocated pages.  If cgroup tracking information exists in page, uncharge
-> >   that group.  Otherwise, unharge the group (if any) in the reservation map.
-> >
->
-> Sorry for the late response here. I've been prototyping the
-> suggestions from this conversation:
->
-> 1. Supporting cgroup-v2 on the current controller seems trivial.
-> Basically just specifying the dfl files seems to do it, and my tests
-> on top of cgroup-v2 don't see any problems so far at least. In light
-> of this I'm not sure it's best to create a new controller per say.
-> Seems like it would duplicate a lot of code with the current
-> controller, so I've tentatively just stuck to the plan in my current
-> patchset, a new counter on the existing controller.
->
-> 2. I've been working on transitioning the new counter to the behavior
-> Mike specified in the email I'm responding to. So far I have a flow
-> that works for shared mappings but not private mappings:
->
-> - On reservation, charge the new counter and store the info in the
-> resv_map. The counter gets uncharged when the resv_map entry gets
-> removed (works fine).
-> - On alloc_huge_page(), check if there is a reservation for the page
-> being allocated. If not, charge the new counter and store the
-> information in resv_map. The counter still gets uncharged when the
-> resv_map entry gets removed.
->
-> The above works for all shared mappings and reserved private mappings,
-> but I' having trouble supporting private NORESERVE mappings. Charging
-> can work the same as for shared mappings: charge the new counter on
-> reservation and on allocations that do not have a reservation. But the
-> question still comes up: where to store the counter to uncharge this
-> page? I thought of a couple of things that don't seem to work:
->
-> 1. I thought of putting the counter in resv_map->reservation_counter,
-> so that it gets uncharged on vm_op_close. But, private NORESERVE
-> mappings don't even have a resv_map allocated for them.
->
-> 2. I thought of detecting on free_huge_page that the page being freed
-> belonged to a private NORESERVE mapping, and uncharging the
-> hugetlb_cgroup in the page itself, but free_huge_page only gets a
-> struct page* and I can't seem to find a way to detect that that the
-> page comes from a private NORESERVE mapping from only the struct
-> page*.
->
-> Mike, note your suggestion above to check if the page hugetlb_cgroup
-> is null doesn't work if we want to keep the current counter working
-> the same: the page will always have a hugetlb_cgroup that points that
-> contains the old counter. Any ideas how to apply this new counter
-> behavior to a private NORESERVE mappings? Is there maybe a flag I can
-> set on the pages at allocation time that I can read on free time to
-> know whether to uncharge the hugetlb_cgroup or not?
+Hi David,
 
-Reading the code and asking around a bit, it seems the pointer to the
-hugetlb_cgroup is in page[2].private. Is it reasonable to use
-page[3].private to store the hugetlb_cgroup to uncharge for the new
-counter and increment HUGETLB_CGROUP_MIN_ORDER to 3? I think that
-would solve my problem. When allocating a private NORESERVE page, set
-page[3].private to the hugetlb_cgroup to uncharge, then on
-free_huge_page, check page[3].private, if it is non-NULL, uncharge the
-new counter on it.
+On Fri, Oct 04, 2019 at 04:13:53PM -0700, Dmitry Torokhov wrote:
+> This series switches phy drivers form using fwnode_get_named_gpiod() and
+> gpiod_get_from_of_node() that are scheduled to be removed in favor
+> of fwnode_gpiod_get_index() that behaves more like standard
+> gpiod_get_index() and will potentially handle secondary software
+> nodes in cases we need to augment platform firmware.
+> 
+> This depends on the new code that can be bound in
+> ib-fwnode-gpiod-get-index immutable branch of Linus' Walleij tree:
+> 
+>         git pull git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git ib-fwnode-gpiod-get-index
+> 
+> I hope that it would be possible to pull in this immutable branch and
+> not wait until after 5.5 merge window.
+
+I see that the patches are marked as "Not applicable" in the netdev
+patchwork. Does this mean that you decided against pulling this
+immutable branch, or you dropped them because of kbuild complaints (that
+happened because it could not figure out how to apply the patches)?
+
+Thanks.
+
+-- 
+Dmitry
