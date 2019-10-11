@@ -2,108 +2,140 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14211ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2037C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E21B52089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3B42089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570805296;
-	bh=VZguEQJnMJllBHyICpMc6lELM9gKnqPlcl1g3payhJo=;
+	s=default; t=1570805318;
+	bh=22g+Qc5vnHI4MaHmLb7axBtVNMHinDcv1vV8Wh7dykw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mGq2QGYMWI47Bca/OnYV92PS5vCYIUbCO3b1Lto7jOILNoYpzzglY0VFBnHmd2Gix
-	 36AS3kcS+RALUi/Xm8fnVJM/awpG33JbtdfOdzmLSdvVePk1EXadcQ126n8KYK+lfJ
-	 to8Xj7Cn3pEi2dY1EYjxrHWlCvEr+Tx9NIrudBB8=
+	b=gtScOdxKT7YfmPx6wsGoxw1vejf2NHulNmoYxvGleYWk2FjiQxPJnQPbB/0WgHQLG
+	 p8dPbZMrReHRrvvesK/aZhXE2zPThWe9z1K8i+ntim11M3J/il3bkzpy2WEWvhWM9C
+	 YMfVbptb3+47RSVkNk4Nik4rl0UQ76Erg8A6soDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfJKOsQ (ORCPT
+        id S1727281AbfJKOsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:48:16 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37773 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfJKOsP (ORCPT
+        Fri, 11 Oct 2019 10:48:38 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36137 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbfJKOsh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:48:15 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k32so8181656otc.4;
-        Fri, 11 Oct 2019 07:48:13 -0700 (PDT)
+        Fri, 11 Oct 2019 10:48:37 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so6242533pfr.3;
+        Fri, 11 Oct 2019 07:48:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9kELu6s8Xez72s7yjDEZd7hwsCCJDY4gV2VlEWP54QM=;
-        b=A1Omp0uwnI0AOwdEtOWKSx2b/m3irUctzOB+KNmI+BpLLDwsjBsXAAoO10lEF3RoeI
-         K1fWe0+CR7cCbhU+W9B38osApHFaPxAn2QM0PgbYmCB9Nz+Yxm4Scot09XlhC07B1esF
-         yxa6HcvvjJQNNhAjpYok7vnhHs0f4MqlEe/HS9MlC/bb/gj8qos40j80z5Wrd2zg2brz
-         ZlNbynBuZWvCHQ2ngWqTp3XLeLwSPLFin3MyLbuN8uaBKJ5iqbW1N9c2z9gFb+Dwd9Gh
-         1toC+3VGRw3PDpCV1QfPKDWyV0UZfLvdfFAO8rSR1A1oP5OSJZqu/hG9OuvnZ1HlAHvm
-         Xgig==
-X-Gm-Message-State: APjAAAVtup4jNyNKXEPgpTB8/EwfD3+xmianbBDKblgs0I/zAJ6S3dAs
-        YhOWzZ53pd12YJG6xmnwQw==
-X-Google-Smtp-Source: APXvYqxWiF9mlWpmhF4F7i28hJLZ1dDoTA6YcBMy+P+DctntpvAmW5FA4W9ZKMX5tPkbxHvi4IwDcw==
-X-Received: by 2002:a9d:6084:: with SMTP id m4mr11834429otj.18.1570805293419;
-        Fri, 11 Oct 2019 07:48:13 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o184sm2694641oia.28.2019.10.11.07.48.12
+        bh=iPc5NZD98rq6lmQmCZyD8Q7eBmoCyRmt8Bt4JVgrKYo=;
+        b=X7ACOdrrOwaKaQILEcyWGQJ3CcY3Hmwo/l29HtfZACmaXT2h7OrovRtt0ULpoR20Ke
+         W8h3O3wrVhJ9iz/xwUbW7l/gZ0rXycOaMTIKPQuWY4KL4/jMC3jCWl5VdGgXMVL6aCoT
+         PuSpZrOdsve3wBlNRriC0hXWfK56BOvR816MaZPt86bYD4inPUGtdSX537fatuJIUxl5
+         BBBtHbruwTcZ+Po2Y5EBjpYzqwjp98GVqchOa0osffxygOBrbDNpk6RKKboWFXt9pweR
+         7y15vmvkaGPow/Q7gI6+WAiC4ggfQuIvPhu3oX7snLgT/JwTJcGDdBuZyLharr0XOs9J
+         ONnA==
+X-Gm-Message-State: APjAAAWSHf7OzmP7t7e8iejXeWJNObtgx6pATQEJ0BK+1wpKWnnXVsoM
+        2YWSP/qNIG8uPRl0VBrwS/s=
+X-Google-Smtp-Source: APXvYqzUrZcbx+ZWRjUoweN3gS8eeZhjKA3OdK5K+Zw6lT7R/kHLFmtnbH3pcVRrCWmlWUzEIX8jWQ==
+X-Received: by 2002:a63:5406:: with SMTP id i6mr13547064pgb.1.1570805316463;
+        Fri, 11 Oct 2019 07:48:36 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 7sm8008752pgj.35.2019.10.11.07.48.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 07:48:12 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 09:48:12 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Jamie Lentin <jm@lentin.co.uk>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: power: reset: gpio-poweroff: Add
- 'force-mode' property
-Message-ID: <20191011144812.GA7239@bogus>
-References: <20190930141244.12311-1-oleksandr.suvorov@toradex.com>
- <20190930141244.12311-3-oleksandr.suvorov@toradex.com>
+        Fri, 11 Oct 2019 07:48:35 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 98CF6403EA; Fri, 11 Oct 2019 14:48:34 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 14:48:34 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 2/8] efi: Add embedded peripheral firmware support
+Message-ID: <20191011144834.GL16384@42.do-not-panic.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-3-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190930141244.12311-3-oleksandr.suvorov@toradex.com>
+In-Reply-To: <20191004145056.43267-3-hdegoede@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 02:12:53PM +0000, Oleksandr Suvorov wrote:
-> Add 'force-mode' property to allow the driver to load even if
-> someone has registered the pm_power_off hook earlier.
-> 
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> 
-> ---
-> 
-> Changes in v2: None
-> 
->  .../devicetree/bindings/power/reset/gpio-poweroff.txt          | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-> index 3e56c1b34a4c..2056e299a472 100644
-> --- a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-> +++ b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-> @@ -31,6 +31,9 @@ Optional properties:
->  - inactive-delay-ms: Delay (default 100) to wait after driving gpio inactive
->  - timeout-ms: Time to wait before asserting a WARN_ON(1). If nothing is
->                specified, 3000 ms is used.
-> +- force-mode: Force replacing pm_power_off kernel hook.
-> +  If this optional property is not specified, the driver will fail to
-> +  load if someone has registered the pm_power_off hook earlier.
+On Fri, Oct 04, 2019 at 04:50:50PM +0200, Hans de Goede wrote:
+> +static int __init efi_check_md_for_embedded_firmware(
+> +	efi_memory_desc_t *md, const struct efi_embedded_fw_desc *desc)
+> +{
+> +	const u64 prefix = *((u64 *)desc->prefix);
+> +	struct sha256_state sctx;
+> +	struct embedded_fw *fw;
+> +	u8 sha256[32];
+> +	u64 i, size;
+> +	void *map;
+> +
+> +	size = md->num_pages << EFI_PAGE_SHIFT;
+> +	map = memremap(md->phys_addr, size, MEMREMAP_WB);
 
-What if the init order changes?
+Since our limitaiton is the init process must have mostly finished,
+it implies early x86 boot code cannot use this, what measures can we
+take to prevent / check for such conditions to be detected and
+gracefully errored out?
 
-This is too tied to a specific OS implementation to go in DT.
+> +	if (!map) {
+> +		pr_err("Error mapping EFI mem at %#llx\n", md->phys_addr);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	size -= desc->length;
 
-Rob
+Remind me again, why we decrement the size here?
+I was going to ask if we didn't need a:
+
+if (desc->length > size) {
+	memunmap(map);
+	return -EINVAL;
+}
+
+> +	for (i = 0; i < size; i += 8) {
+> +		u64 *mem = map + i;
+> +
+> +		if (*mem != prefix)
+> +			continue;
+> +
+> +		sha256_init(&sctx);
+> +		sha256_update(&sctx, map + i, desc->length);
+> +		sha256_final(&sctx, sha256);
+> +		if (memcmp(sha256, desc->sha256, 32) == 0)
+> +			break;
+> +	}
+> +	if (i >= size) {
+> +		memunmap(map);
+> +		return -ENOENT;
+> +	}
+> +
+> +	pr_info("Found EFI embedded fw '%s'\n", desc->name);
+
+Otherwise looks good.
+
+  Luis
