@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE806C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C53EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D1521D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B41A214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570824437;
-	bh=XLQ7h6j1rBX939uxUO1hOMpyPpYI8mR6cTzLZ8tURbo=;
+	s=default; t=1570824447;
+	bh=zFzGVO23neSbXNobRbkj17p9AKHVNKVOY1lEVNXePPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lEUlHfB2m7g0jtE/GU5FdS3D9Jv3WcuvqSoewV/2k2omK6msjTiQiuLLYV9fPoOI0
-	 AJ6BKysafEodBUHXl1BnLM0zh+hqHn+VyrDqnj9DUdiuDCYF76p0Hx1vPuivV4B9Dm
-	 CLgOM2ModcH5hldLhpyY/bMcGm9NlzJdiPWzPtFY=
+	b=Jt/dzVg4l3i1IsLiW5WBttqk68f44vI7euquiZqYz76jZFiaLqF9H4yimO5xbKXno
+	 BUer6O42zAYtAy3nv+vnh/FS5MR/eKIPbRUyOh47ZD7Ds+4gnpFp4ce399jj9ez7NB
+	 zX8rOT3Q+rCV3cE2OGgZ996guLmAjH6wK0OE6jrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbfJKUHQ (ORCPT
+        id S1729266AbfJKUH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:07:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43534 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 16:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbfJKUHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:07:15 -0400
+        id S1729255AbfJKUHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 16:07:25 -0400
 Received: from quaco.ghostprotocols.net (189-94-137-67.3g.claro.net.br [189.94.137.67])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D123B222BE;
-        Fri, 11 Oct 2019 20:07:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6149B2190F;
+        Fri, 11 Oct 2019 20:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570824435;
-        bh=XLQ7h6j1rBX939uxUO1hOMpyPpYI8mR6cTzLZ8tURbo=;
+        s=default; t=1570824444;
+        bh=zFzGVO23neSbXNobRbkj17p9AKHVNKVOY1lEVNXePPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JigIa/w6cEaEi2Wrb0bStcXimwx95BLYLlZAAjD8Zf/pWz3w1xhgufEXGodPaa1rs
-         Yi80n0v36ZNunZIBPJS6wg6a/SJC2OX3+EVd0zzPY55/kLPx1D3n6LUU50dY7dzWDj
-         noT1CHkjKDo4uOzkbqn0O8+UXuCO25hMip/efOtk=
+        b=swvYXPSRyR7K2HT9CIjf+deCdnuh1XikOXewep4jCqdjL+QogI3BTZBEaKe/bjJdM
+         jeiRDWuGaA9huDqlrzEdaVLhDn8bQiER+wh3MrtzqADB4qLC4AiF06VhzxSIXLt9is
+         rrJ5CxujI6ecYvdI1sEZo91tMKn12SRT6XNIdhM0=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 10/69] perf scripts python: exported-sql-viewer.py: Add HBoxLayout and VBoxLayout
-Date:   Fri, 11 Oct 2019 17:05:00 -0300
-Message-Id: <20191011200559.7156-11-acme@kernel.org>
+Subject: [PATCH 11/69] perf scripts python: exported-sql-viewer.py: Add global time range calculations
+Date:   Fri, 11 Oct 2019 17:05:01 -0300
+Message-Id: <20191011200559.7156-12-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
@@ -63,72 +63,154 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Add layout classes HBoxLayout and VBoxLayout.
+Add calculations to determine a time range that encompasses all data.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20190821083216.1340-3-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20190821083216.1340-4-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 41 ++++++++++++++-----
- 1 file changed, 31 insertions(+), 10 deletions(-)
+ .../scripts/python/exported-sql-viewer.py     | 113 +++++++++++++++++-
+ 1 file changed, 109 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 18ad04654adc..9767a5f802e5 100755
+index 9767a5f802e5..0dcc9a03b1b0 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -980,20 +980,41 @@ class CallTreeModel(CallGraphModelBase):
- 		ids.insert(0, query.value(1))
- 		return ids
+@@ -2088,10 +2088,8 @@ class SampleTimeRangesDataItem(LineEditDataItem):
+ 		QueryExec(query, "SELECT id, time FROM samples ORDER BY id DESC LIMIT 1")
+ 		if query.next():
+ 			self.last_id = int(query.value(0))
+-			self.last_time = int(query.value(1))
+-		QueryExec(query, "SELECT time FROM samples WHERE time != 0 ORDER BY id LIMIT 1")
+-		if query.next():
+-			self.first_time = int(query.value(0))
++		self.first_time = int(glb.HostStartTime())
++		self.last_time = int(glb.HostFinishTime())
+ 		if placeholder_text:
+ 			placeholder_text += ", between " + str(self.first_time) + " and " + str(self.last_time)
  
--# Vertical widget layout
-+# Vertical layout
+@@ -3500,6 +3498,9 @@ class Glb():
+ 			self.have_disassembler = True
+ 		except:
+ 			self.have_disassembler = False
++		self.host_machine_id = 0
++		self.host_start_time = 0
++		self.host_finish_time = 0
  
--class VBox():
-+class HBoxLayout(QHBoxLayout):
+ 	def FileFromBuildId(self, build_id):
+ 		file_name = self.buildid_dir + build_id[0:2] + "/" + build_id[2:] + "/elf"
+@@ -3532,6 +3533,110 @@ class Glb():
+ 			except:
+ 				pass
  
--	def __init__(self, w1, w2, w3=None):
--		self.vbox = QWidget()
--		self.vbox.setLayout(QVBoxLayout())
-+	def __init__(self, *children):
-+		super(HBoxLayout, self).__init__()
++	def GetHostMachineId(self):
++		query = QSqlQuery(self.db)
++		QueryExec(query, "SELECT id FROM machines WHERE pid = -1")
++		if query.next():
++			self.host_machine_id = query.value(0)
++		else:
++			self.host_machine_id = 0
++		return self.host_machine_id
 +
-+		self.layout().setContentsMargins(0, 0, 0, 0)
-+		for child in children:
-+			if child.isWidgetType():
-+				self.layout().addWidget(child)
-+			else:
-+				self.layout().addLayout(child)
++	def HostMachineId(self):
++		if self.host_machine_id:
++			return self.host_machine_id
++		return self.GetHostMachineId()
 +
-+# Horizontal layout
++	def SelectValue(self, sql):
++		query = QSqlQuery(self.db)
++		try:
++			QueryExec(query, sql)
++		except:
++			return None
++		if query.next():
++			return Decimal(query.value(0))
++		return None
 +
-+class VBoxLayout(QVBoxLayout):
++	def SwitchesMinTime(self, machine_id):
++		return self.SelectValue("SELECT time"
++					" FROM context_switches"
++					" WHERE time != 0 AND machine_id = " + str(machine_id) +
++					" ORDER BY id LIMIT 1")
++
++	def SwitchesMaxTime(self, machine_id):
++		return self.SelectValue("SELECT time"
++					" FROM context_switches"
++					" WHERE time != 0 AND machine_id = " + str(machine_id) +
++					" ORDER BY id DESC LIMIT 1")
++
++	def SamplesMinTime(self, machine_id):
++		return self.SelectValue("SELECT time"
++					" FROM samples"
++					" WHERE time != 0 AND machine_id = " + str(machine_id) +
++					" ORDER BY id LIMIT 1")
++
++	def SamplesMaxTime(self, machine_id):
++		return self.SelectValue("SELECT time"
++					" FROM samples"
++					" WHERE time != 0 AND machine_id = " + str(machine_id) +
++					" ORDER BY id DESC LIMIT 1")
++
++	def CallsMinTime(self, machine_id):
++		return self.SelectValue("SELECT calls.call_time"
++					" FROM calls"
++					" INNER JOIN threads ON threads.thread_id = calls.thread_id"
++					" WHERE calls.call_time != 0 AND threads.machine_id = " + str(machine_id) +
++					" ORDER BY calls.id LIMIT 1")
++
++	def CallsMaxTime(self, machine_id):
++		return self.SelectValue("SELECT calls.return_time"
++					" FROM calls"
++					" INNER JOIN threads ON threads.thread_id = calls.thread_id"
++					" WHERE calls.return_time != 0 AND threads.machine_id = " + str(machine_id) +
++					" ORDER BY calls.return_time DESC LIMIT 1")
++
++	def GetStartTime(self, machine_id):
++		t0 = self.SwitchesMinTime(machine_id)
++		t1 = self.SamplesMinTime(machine_id)
++		t2 = self.CallsMinTime(machine_id)
++		if t0 is None or (not(t1 is None) and t1 < t0):
++			t0 = t1
++		if t0 is None or (not(t2 is None) and t2 < t0):
++			t0 = t2
++		return t0
++
++	def GetFinishTime(self, machine_id):
++		t0 = self.SwitchesMaxTime(machine_id)
++		t1 = self.SamplesMaxTime(machine_id)
++		t2 = self.CallsMaxTime(machine_id)
++		if t0 is None or (not(t1 is None) and t1 > t0):
++			t0 = t1
++		if t0 is None or (not(t2 is None) and t2 > t0):
++			t0 = t2
++		return t0
++
++	def HostStartTime(self):
++		if self.host_start_time:
++			return self.host_start_time
++		self.host_start_time = self.GetStartTime(self.HostMachineId())
++		return self.host_start_time
++
++	def HostFinishTime(self):
++		if self.host_finish_time:
++			return self.host_finish_time
++		self.host_finish_time = self.GetFinishTime(self.HostMachineId())
++		return self.host_finish_time
++
++	def StartTime(self, machine_id):
++		if machine_id == self.HostMachineId():
++			return self.HostStartTime()
++		return self.GetStartTime(machine_id)
++
++	def FinishTime(self, machine_id):
++		if machine_id == self.HostMachineId():
++			return self.HostFinishTime()
++		return self.GetFinishTime(machine_id)
++
+ # Database reference
  
--		self.vbox.layout().setContentsMargins(0, 0, 0, 0)
-+	def __init__(self, *children):
-+		super(VBoxLayout, self).__init__()
- 
--		self.vbox.layout().addWidget(w1)
--		self.vbox.layout().addWidget(w2)
--		if w3:
--			self.vbox.layout().addWidget(w3)
-+		self.layout().setContentsMargins(0, 0, 0, 0)
-+		for child in children:
-+			if child.isWidgetType():
-+				self.layout().addWidget(child)
-+			else:
-+				self.layout().addLayout(child)
-+
-+# Vertical layout widget
-+
-+class VBox():
-+
-+	def __init__(self, *children):
-+		self.vbox = QWidget()
-+		self.vbox.setLayout(VBoxLayout(*children))
- 
- 	def Widget(self):
- 		return self.vbox
+ class DBRef():
 -- 
 2.21.0
 
