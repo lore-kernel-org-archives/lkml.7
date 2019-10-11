@@ -2,89 +2,91 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90364ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07601ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F163206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570798723;
-	bh=t8zfNEIofHvVu2Wei3y+UkR0jiiJAB6OS6pOU28U8nk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i6/9j2cPqGXrYs1gMerAkXOMnKJS3x6qrlE6P2bXzgQVkGGQF/fzMyjvB4iKHrr02
-	 SupoKtsaA68WJdCDHhyXrLwRy/bFKJkLqIie1HqnK0PZVYCP/Zc6UenF9gP2OBpPdU
-	 bWbPv+v4pJLzZjW9mYwRIQKOkeqWY21ZunMKZPPg=
+	by mail.kernel.org (Postfix) with ESMTP id D2342206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:59:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HqMH+WY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfJKM6m (ORCPT
+        id S1728208AbfJKM7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:58:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727589AbfJKM6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:58:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Fri, 11 Oct 2019 08:59:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42268 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbfJKM7N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 08:59:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0oxLsQ5iH+e+05LkxnBni+6OFSMtRO8vSqonY1UcZaI=; b=HqMH+WY7Iy18jtrsWKkOPYCSd
+        65W03V98M/943JgI/YKYX3vUHuwYXbof8bh2FOypQ7sOZVdeQLWJfQumslfLV4hIJedD9BbLXgYd+
+        HCypAokA0CO7X0OPNsn4jj4sT8dXJxxURA2JmUpRqUfc1lqDCXiLiXnRaKv5fmaLN8KD1H8x6+XT+
+        MdieLei4sB7J/gK47jo0jydI6AIGHcA0cuSNwfUKvuO/zEYfWiAJYGLq86y0eoCheWuLLRFa5QA0n
+        Ws18zVMvyjIVugH8hJ2sHrhEPTr8s1+tWsGkXcuZsw0FejYccRhGMk7gTS892ftnyuKPQIK++Hd/T
+        A7OtLEBng==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIuVe-0002OW-6Q; Fri, 11 Oct 2019 12:59:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 269D5206A1;
-        Fri, 11 Oct 2019 12:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570798721;
-        bh=t8zfNEIofHvVu2Wei3y+UkR0jiiJAB6OS6pOU28U8nk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ABi5DAe/Y/Zm2p+Az41NPnPFW40sWPwWL6y2DC5HHkt0MfQDMdM471JGaeTpAulXs
-         KvOQeEaxNV1d0OiyF8pQTqAHlRCTtRr8lH6r9rn+PpUyCgW3IZojC+Ed+0pPD0/CAQ
-         iHTMg43O0JHi/bsoqEiIUj7Es0UIHs7BrZ6i2Hh8=
-Date:   Fri, 11 Oct 2019 14:58:38 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 4.19 082/114] powerpc/book3s64/radix: Rename
- CPU_FTR_P9_TLBIE_BUG feature flag
-Message-ID: <20191011125838.GA1147624@kroah.com>
-References: <20191010083544.711104709@linuxfoundation.org>
- <20191010083612.352065837@linuxfoundation.org>
- <20191011112106.GA28994@amd>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7582A3013A4;
+        Fri, 11 Oct 2019 14:58:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 16F592023D649; Fri, 11 Oct 2019 14:59:03 +0200 (CEST)
+Date:   Fri, 11 Oct 2019 14:59:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+References: <20191007081716.07616230.8@infradead.org>
+ <20191007081945.10951536.8@infradead.org>
+ <20191008104335.6fcd78c9@gandalf.local.home>
+ <20191009224135.2dcf7767@oasis.local.home>
+ <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+ <20191010091956.48fbcf42@gandalf.local.home>
+ <20191010140513.GT2311@hirez.programming.kicks-ass.net>
+ <20191010115449.22044b53@gandalf.local.home>
+ <20191010172819.GS2328@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011112106.GA28994@amd>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 01:21:06PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> > 
-> > Rename the #define to indicate this is related to store vs tlbie
-> > ordering issue. In the next patch, we will be adding another feature
-> > flag that is used to handles ERAT flush vs tlbie ordering issue.
-> > 
-> > Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
-> > Cc: stable@vger.kernel.org # v4.16+
-> > Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> > Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> > Link:
-> > https://lore.kernel.org/r/20190924035254.24612-2-aneesh.kumar@linux.ibm.com
-> 
-> Apparently this is upstream commit
-> 09ce98cacd51fcd0fa0af2f79d1e1d3192f4cbb0 , but the changelog does not
-> say so.
+On Thu, Oct 10, 2019 at 07:28:19PM +0200, Peter Zijlstra wrote:
 
-Yeah, somehow when Sasha backported this, he didn't add that :(
+> Really the best solution is to move all the poking into
+> ftrace_module_init(), before we mark it RO+X. That's what I'm going to
+> do for jump_label and static_call as well, I just need to add that extra
+> notifier callback.
 
-Nor did he add his signed-off-by :(
+OK, so I started writing that patch... or rather, I wrote the patch and
+started on the Changelog when I ran into trouble describing why we need
+it.
 
-I'll go fix it up and add mine, thanks for noticing it.
+That is, I'm struggling to explain why we cannot flip
+prepare_coming_module() and complete_formation().
 
-greg k-h
+Yes, it breaks ftrace, but I'm thinking that is all it breaks. So let me
+see if we can cure that.
+
