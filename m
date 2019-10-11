@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15BEECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC645C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3697218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FAD214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570824390;
-	bh=Ytqi3vr5NH3EPY/pcM1iQz7ZaiMgdSvbM02OXhfi070=;
+	s=default; t=1570824396;
+	bh=OHBNbX10bKKwrCvE393nsaHjXnENeS8KG+cFTrix2x4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RrVHf7tpkIGd3FpV0kjl+vkyxXLlgIViC9PkBekQhnw5pVbn1N42C1WAoZK4Gn6EF
-	 1uSecqnmQ/fhvuzq+fb0MM9Lut3zSuD+kkfeUTLWTth2lt9WBGayFQvfS5ODZgYBEy
-	 0Ya8c2x3ALaVpTUzkDJd1rozNACuSIWSnmOwozlE=
+	b=aoIF9quWhOvPz3jILvL3briT0f19hOdNvXDvprDO5bAPbhbJtQMeWsNwAJmKA0srB
+	 zuU1PXwlFzIybDgB+Aq4O++siR1dh17H7BZPwQOCdE3XzAMropyeuiZYPI71LkDd/c
+	 reIWk8wEkbX+0x2fn08v282HpXmqYhldsNXdYuCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfJKUG3 (ORCPT
+        id S1729127AbfJKUGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42848 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 16:06:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbfJKUG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:06:28 -0400
+        id S1728799AbfJKUGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 16:06:34 -0400
 Received: from quaco.ghostprotocols.net (189-94-137-67.3g.claro.net.br [189.94.137.67])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA2321A4A;
-        Fri, 11 Oct 2019 20:06:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79A0F21835;
+        Fri, 11 Oct 2019 20:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570824388;
-        bh=Ytqi3vr5NH3EPY/pcM1iQz7ZaiMgdSvbM02OXhfi070=;
+        s=default; t=1570824393;
+        bh=OHBNbX10bKKwrCvE393nsaHjXnENeS8KG+cFTrix2x4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kfBq5PmcqJ9oIcIIytRNnw45kG8/bGuYEKjm24DOEW76Gu3hNF0EB9NDjEfOgl++8
-         ZYWKsZ6sGOLX3jk7dbjyUpSqCO19a306zZoyFgWCWsELUjby57qH+3Wje/i+Wt99qF
-         qZVlz1ITnxTep617cWnHOg2Wks7T6cP3LHnkvTTU=
+        b=SFM6wBbU/qnvsjegbEj5UD9z2gNdAc7zPlMRr1rAixxOGbzO0feLS8ZaP/bejkeoH
+         dSwqEK/jjsIN5eyVNPPXDfpH7cqswUiuO/7ZXHlUD/Km0iq7Kd0oreQlvT291Qf9kK
+         U7Xv5jDirY6YbJez5i+0wOGBf1S9qBHW8RiJ4BYE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 01/69] perf env: Add routine to read the env->cpuid from the running machine
-Date:   Fri, 11 Oct 2019 17:04:51 -0300
-Message-Id: <20191011200559.7156-2-acme@kernel.org>
+Subject: [PATCH 02/69] perf top: Initialize perf_env->cpuid, needed by the per arch annotation init routine
+Date:   Fri, 11 Oct 2019 17:04:52 -0300
+Message-Id: <20191011200559.7156-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
@@ -62,70 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-In 'perf top' we use that cpuid when initializing the per arch
-annotation init routines (e.g. x86__annotate_init()) and in that case
-(live mode, 'perf top') we need to obtain it from the running machine,
-not from a perf.data file header.
+Just read it so that later on the per arch init routine can use it,
+e.g. x86__annotate_init().
 
-Provide a means to do that. Will be used by 'perf top' in a followup
-patch.
+When using a perf.data file this is obtained from a header that was put
+there by 'perf record', and then it may be for another machine, another
+arch.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-h2wb3sx7u7znx6lqfezrh7ca@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-4t4n3o8l8s0tc2b1pq53hyr4@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/env.c | 16 ++++++++++++++++
- tools/perf/util/env.h |  1 +
- 2 files changed, 17 insertions(+)
+ tools/perf/builtin-top.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 3baca06786fb..2a91a10ccfcc 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -2,6 +2,7 @@
- #include "cpumap.h"
- #include "debug.h"
- #include "env.h"
-+#include "util/header.h"
- #include <linux/ctype.h>
- #include <linux/zalloc.h>
- #include "bpf-event.h"
-@@ -256,6 +257,21 @@ int perf_env__read_cpu_topology_map(struct perf_env *env)
- 	return 0;
- }
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 1f60124eb19b..611d03030abc 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1560,6 +1560,17 @@ int cmd_top(int argc, const char **argv)
+ 	status = perf_config(perf_top_config, &top);
+ 	if (status)
+ 		return status;
++	/*
++	 * Since the per arch annotation init routine may need the cpuid, read
++	 * it here, since we are not getting this from the perf.data header.
++	 */
++	status = perf_env__read_cpuid(&perf_env);
++	if (status) {
++		pr_err("Couldn't read the cpuid for this machine: %s\n",
++		       str_error_r(errno, errbuf, sizeof(errbuf)));
++		goto out_delete_evlist;
++	}
++	top.evlist->env = &perf_env;
  
-+int perf_env__read_cpuid(struct perf_env *env)
-+{
-+	char cpuid[128];
-+	int err = get_cpuid(cpuid, sizeof(cpuid));
-+
-+	if (err)
-+		return err;
-+
-+	free(env->cpuid);
-+	env->cpuid = strdup(cpuid);
-+	if (env->cpuid == NULL)
-+		return ENOMEM;
-+	return 0;
-+}
-+
- static int perf_env__read_arch(struct perf_env *env)
- {
- 	struct utsname uts;
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index db40906e2937..a3059dc1abe5 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -104,6 +104,7 @@ void perf_env__exit(struct perf_env *env);
- 
- int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[]);
- 
-+int perf_env__read_cpuid(struct perf_env *env);
- int perf_env__read_cpu_topology_map(struct perf_env *env);
- 
- void cpu_cache_level__free(struct cpu_cache_level *cache);
+ 	argc = parse_options(argc, argv, options, top_usage, 0);
+ 	if (argc)
 -- 
 2.21.0
 
