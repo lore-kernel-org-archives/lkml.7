@@ -2,112 +2,104 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9537BECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4342FC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9CA20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GnXa2m+a"
+	by mail.kernel.org (Postfix) with ESMTP id 122B82190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbfJKOFz (ORCPT
+        id S1728676AbfJKOGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:05:55 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56902 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728508AbfJKOFv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:06:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48740 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728483AbfJKOFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Oct 2019 10:05:51 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BE149M032059;
-        Fri, 11 Oct 2019 16:05:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=qvG5tHTLBfgJy2cVG8araZL9QxN9PV13AmMFSSV98WA=;
- b=GnXa2m+aBPMioX4V8sEPYum1RCAMQk88Mb+waGPqZdSxLN5/PkjjA7Nz+IXVbftr5FYS
- f3mPuQh+Trn/n9eAZvM/QKBfiYHJnD96sAt66gR+cFqkY3sMTHMsaNXuakMn01kuiIdr
- dNAW/mgaPGoMM1lwFw9RbUGXCb2b1VvtWCvMicKG9eXQfu28LVfkvCk1235NA7tiunZD
- Hz2aoKfrQct6+5pzN88RZsNZ3SDrWZl5LZtcJAlx35FFO/nyKgSAf6XhWWGrDIVRX/0p
- WuHXXJKs7JmWHQZ8NP/hgp5x5K8ESNPolM94HrlDZ8KfQQ7Nr+E5ul7/FX5g8N2EGL3V 6A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vej2ptnwy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 16:05:39 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 60D43100038;
-        Fri, 11 Oct 2019 16:05:39 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 565DB2AD70B;
-        Fri, 11 Oct 2019 16:05:39 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 11 Oct 2019 16:05:38
- +0200
-From:   Pascal Paillet <p.paillet@st.com>
-To:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <p.paillet@st.com>
-Subject: [PATCH 2/4] ARM: dts: stm32: change default minimal buck1 value on stm32mp157
-Date:   Fri, 11 Oct 2019 16:05:31 +0200
-Message-ID: <20191011140533.32619-3-p.paillet@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191011140533.32619-1-p.paillet@st.com>
-References: <20191011140533.32619-1-p.paillet@st.com>
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E55A510C051D;
+        Fri, 11 Oct 2019 14:05:50 +0000 (UTC)
+Received: from krava (unknown [10.40.206.21])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 6CFEB45A3;
+        Fri, 11 Oct 2019 14:05:49 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 16:05:48 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     acme@kernel.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] perf data: Fix babeltrace detection
+Message-ID: <20191011140548.GA20544@krava>
+References: <20191007174120.12330-1-andi@firstfloor.org>
+ <20191008115240.GE10009@krava>
+ <20191008142143.ts5se4pzwfnfnbsh@two.firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-11_08:2019-10-10,2019-10-11 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008142143.ts5se4pzwfnfnbsh@two.firstfloor.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Fri, 11 Oct 2019 14:05:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Minimal value is the value set during boot or before suspend.
-We must ensure that the value is a functional value to boot.
+On Tue, Oct 08, 2019 at 07:21:44AM -0700, Andi Kleen wrote:
+> On Tue, Oct 08, 2019 at 01:52:40PM +0200, Jiri Olsa wrote:
+> > On Mon, Oct 07, 2019 at 10:41:20AM -0700, Andi Kleen wrote:
+> > > From: Andi Kleen <ak@linux.intel.com>
+> > > 
+> > > The symbol the feature file checks for is now actually in -lbabeltrace,
+> > > not -lbabeltrace-ctf, at least as of libbabeltrace-1.5.6-2.fc30.x86_64
+> > > 
+> > > Always add both libraries to fix the feature detection.
+> > 
+> > well, we link with libbabeltrace-ctf.so which links with libbabeltrace.so
+> > 
+> > I guess we can link it as well, but where do you see it fail?
+> 
+> On FC30 the .so file is just a symlink, so it doesn't pull
+> in the other library.
+> 
+> $ gcc test-libbabeltrace.c -lbabeltrace-ctf
+> /usr/bin/ld:
+> /usr/lib/gcc/x86_64-redhat-linux/9/../../../../lib64/libbabeltrace-ctf.so:
+> undefined reference to `bt_packet_seek_get_error'
+> /usr/bin/ld:
+> /usr/lib/gcc/x86_64-redhat-linux/9/../../../../lib64/libbabeltrace-ctf.so:
+> undefined reference to `bt_packet_seek_set_error'
+> collect2: error: ld returned 1 exit status
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
----
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 2 +-
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+I'm confused,
+the test-libbabeltrace.c checks for bt_ctf_stream_class_get_packet_context_type
+which is in libbabeltrace-ctf:
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 26fb7c77092c..efeefb3d25b0 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -250,7 +250,7 @@
- 
- 			vddcore: buck1 {
- 				regulator-name = "vddcore";
--				regulator-min-microvolt = <800000>;
-+				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1350000>;
- 				regulator-always-on;
- 				regulator-initial-mode = <0>;
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 1dbcc580e43c..15afa8f1a36f 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -127,7 +127,7 @@
- 
- 			vddcore: buck1 {
- 				regulator-name = "vddcore";
--				regulator-min-microvolt = <800000>;
-+				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1350000>;
- 				regulator-always-on;
- 				regulator-initial-mode = <0>;
--- 
-2.17.1
+	[jolsa@dell-r440-01 feature]$ nm -D /usr/lib64/libbabeltrace-ctf.so | grep bt_ctf_stream_class_get_packet_context_type
+	0000000000032960 T bt_ctf_stream_class_get_packet_context_type
+	[jolsa@dell-r440-01 feature]$ cat /etc/redhat-release 
+	Fedora release 30 (Thirty)
+	[jolsa@dell-r440-01 feature]$ rpm -qa | grep  libbabeltrace-1.5.6-2.fc30.x86_64
+	libbabeltrace-1.5.6-2.fc30.x86_64
 
+I also get proper feature detection on F30:
+
+	$ make VF=1
+	...                 libbabeltrace: [ on  ]
+
+
+jirka
+
+> 
+> $ ls -l /usr/lib64/libbabeltrace-ctf.so
+> lrwxrwxrwx 1 root root 26 Jan 31  2019 /usr/lib64/libbabeltrace-ctf.so
+> -> libbabeltrace-ctf.so.1.0.0
+> 
+> $ rpm -qf /usr/lib64/libbabeltrace-ctf.so
+> libbabeltrace-devel-1.5.6-2.fc30.x86_64
+> 
+> -Andi
