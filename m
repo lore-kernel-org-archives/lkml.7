@@ -3,110 +3,142 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AC6C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2C6ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6805218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26514206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570807760;
-	bh=l0UcNBCqGXLlFgQm3cpWwpimh18vbPr8+KRVLD4L0yM=;
+	s=default; t=1570807766;
+	bh=Ksj6vO+WrL5zkUBud/LqFGG7EOUEAPTUh4BbiZ78hN8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vJAGQOvIWQ+kUo5oGyQU36yT9CUKVnh97A2Oe2puB7MwSwEWmUvIishQ44BBl4WB/
-	 A/8ZRXPpoilybsCSt02Dp2jHTqZzRchPwPdUNparqAzZKWZ/X6WFuLdCDpnFQLCrRJ
-	 /anDTU0LBZtFFRoFlelrLzCqiMOzHNuaumycjaY8=
+	b=x9/qx0bTulc/b3AkA91qU7Yia/g+u2wYzeiNVQimRem+SyFVcClTwdC/Sz3mE/8c1
+	 lRa8POt2vJfebpg/BG0drmZr3Tuaib/OlvfBvnfOvp6WA440oyJhtdULeBojfIKg4W
+	 jcEvl1DemLyyDtnTLPHO3RqgfthT/1zHNk0nEVqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfJKP3T (ORCPT
+        id S1728036AbfJKP3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:29:19 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37149 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfJKP3T (ORCPT
+        Fri, 11 Oct 2019 11:29:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36484 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfJKP3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:29:19 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i16so8345636oie.4;
-        Fri, 11 Oct 2019 08:29:18 -0700 (PDT)
+        Fri, 11 Oct 2019 11:29:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 23so6006219pgk.3;
+        Fri, 11 Oct 2019 08:29:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0s3hufvwfwMdyJj0mwE2L9llFOTjdMrZMVagGqojKGE=;
-        b=Q90x6icxmP90WcZa9MqLLwe6UG+Vx/UpC7IwuJKuZIzozPjx4TfuYBkGkNIzh+Hzr+
-         QP7BG7BDIcdkivfeufNgYQ94Mop2YuTTlO/8lKtFp6rAdjfjaK6dUJ/bFgPgTq7nGJkD
-         AScmi+U9UvYw62Y35+bZ4MwyrrHbE1Wj0HO55S2AcLXQIviSUzktwDXH5xYANE6s4XxO
-         Nw/wrAN44bvU0bCuw61/Z/jalGT+xri+L1OwQntqjm+SnhantveeM9R1zLK1/nAhcYys
-         fi6LSs9OWe+ildpFVLz0pTxdTutjF3GIklHDKBamfjfe9ytD6h4op/8n8poH1teMvls0
-         GsXw==
-X-Gm-Message-State: APjAAAUBj+2CqKQTlv22utPwEj8F2JBFavx6grwU8gaDH92QhLQenjxu
-        NywO6uuzxPPdKkzJ5LezxyQSb6A=
-X-Google-Smtp-Source: APXvYqxeDPc60Gv0vPS7Jk4X6ZnvVuf3tdXagFg2ciEOg66lig/oXXT0T5cR1LJ+l+65qGRarYvnIg==
-X-Received: by 2002:a05:6808:249:: with SMTP id m9mr12789827oie.49.1570807758412;
-        Fri, 11 Oct 2019 08:29:18 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 100sm2739791otl.48.2019.10.11.08.29.17
+        bh=cb+CuGiPFhTsjsET+vWIxmNhs5/xA7pJX6xm8jBmGpg=;
+        b=fpt5X2ZMVc9IuTJ2DQ0GVwI0Px4HqOiD7k1U0wKljj2FMmHeo6SyqW8ZEJetyb2OF7
+         C1LymmBvyu3TZcGcZj6fsM5myh2AfEZF9sdBDItCo1JUOzgE03uvRv83is8t07P29sWA
+         XcJX2LMU+FgyT7J8knfi2YX/+jKeTdJ5cYZpYXq7i/85X/bUpmu5KWLu34orbGpms2Gq
+         mzl5KgIzSpsw6NYUnz+zIBQp04SPNTryvlomvFSKSzNpoKIKK19kl+eXEL5pWxuLx1Cs
+         45NKR3OWexEs80ihEoc2M7gvjN5mN1j5cazMZhkCrUfztYMnFjBwjLaHQSDq3Ay1toGD
+         b3cg==
+X-Gm-Message-State: APjAAAVQJ9PPiowT1nHUslRnjNMLPiV0iXwRn5BkhfcYvEKbo+1fDMPZ
+        MfR2jfPCZMv3LqfQ+HemkwU=
+X-Google-Smtp-Source: APXvYqzQGIxVvL/RVKdZUGIOFS+l3gvznBmd+kdBx1Iip2tJWpJsNSmo6lTIrjfB8HSt2qDcGX7GxA==
+X-Received: by 2002:aa7:9ed2:: with SMTP id r18mr16643022pfq.1.1570807762693;
+        Fri, 11 Oct 2019 08:29:22 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 7sm7894675pgx.26.2019.10.11.08.29.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 08:29:17 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 10:29:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     bjorn.andersson@linaro.org, georgi.djakov@linaro.org,
-        agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        jonathan@marek.ca
-Subject: Re: [PATCH v2 1/2] dt-bindings: interconnect: qcom: add msm8974
- bindings
-Message-ID: <20191011152917.GA28441@bogus>
-References: <20191005114605.5279-1-masneyb@onstation.org>
- <20191005114605.5279-2-masneyb@onstation.org>
+        Fri, 11 Oct 2019 08:29:21 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id A969E403EA; Fri, 11 Oct 2019 15:29:20 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 15:29:20 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 4/8] firmware: Add new platform fallback mechanism and
+ firmware_request_platform()
+Message-ID: <20191011152920.GQ16384@42.do-not-panic.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-5-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191005114605.5279-2-masneyb@onstation.org>
+In-Reply-To: <20191004145056.43267-5-hdegoede@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 07:46:04AM -0400, Brian Masney wrote:
-> Add device tree bindings for the Qualcomm MSM8974 interconnect providers
-> that support setting system bandwidth requirements between various
-> network-on-chip fabrics.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
-> Rob: I included in the next patch at the top a rough diagram showing the
-> relationship between different buses. I wanted to include that diagram
-> here, however I didn't since I assume that this document will be
-> transformed into HTML. I've seen some of the text bindings in the IIO
-> subsystem have nice ASCII-art diagrams, such as
-> Documentation/devicetree/bindings/iio/dac/dpot-dac.txt. Do you have any
-> suggestions for how this can go in the YAML bindings? Prefix the line
-> with four spaces, similiar to what is done in markdown?
+On Fri, Oct 04, 2019 at 04:50:52PM +0200, Hans de Goede wrote:
+> diff --git a/drivers/base/firmware_loader/Makefile b/drivers/base/firmware_loader/Makefile
+> index 0b2dfa6259c9..fec75895faae 100644
+> --- a/drivers/base/firmware_loader/Makefile
+> +++ b/drivers/base/firmware_loader/Makefile
+> @@ -3,7 +3,7 @@
+>  
+>  obj-$(CONFIG_FW_LOADER_USER_HELPER) += fallback_table.o
+>  obj-$(CONFIG_FW_LOADER)	+= firmware_class.o
+> -firmware_class-objs := main.o
+> +firmware_class-objs := main.o fallback_platform.o
+>  firmware_class-$(CONFIG_FW_LOADER_USER_HELPER) += fallback.o
 
-The long term plan (dream?) is to extract schema into rST and there's 
-been some experimenting with embedded rST into description which seems 
-to work. But I don't see that happening anytime soon really. We've got 
-3500 bindings to convert...
+Why not just:
 
-So put whatever you like in the description as long as it's parseable 
-yaml.
+firmware_class-$(CONFIG_EFI_EMBEDDED_FIRMWARE) += fallback_platform.o
 
-> 
-> Changes since v1:
-> - Don't include all compatibles in the examples. Removed interconnect
->   GPU client from example as well.
-> - Dual license header file: BSD or GPL 2.0
-> 
->  .../bindings/interconnect/qcom,msm8974.yaml   |  62 ++++++++
->  .../dt-bindings/interconnect/qcom,msm8974.h   | 146 ++++++++++++++++++
->  2 files changed, 208 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
->  create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
+>  obj-y += builtin/
+> diff --git a/drivers/base/firmware_loader/fallback.h b/drivers/base/firmware_loader/fallback.h
+> index 21063503e4ea..c4350f2e7cc2 100644
+> --- a/drivers/base/firmware_loader/fallback.h
+> +++ b/drivers/base/firmware_loader/fallback.h
+> @@ -66,4 +66,6 @@ static inline void unregister_sysfs_loader(void)
+>  }
+>  #endif /* CONFIG_FW_LOADER_USER_HELPER */
+>  
+> +int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt_flags);
+> +
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Inline this if not defined.
+
+>  #endif /* __FIRMWARE_FALLBACK_H */
+> diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/base/firmware_loader/fallback_platform.c
+> new file mode 100644
+> index 000000000000..7e9d730e36bf
+> --- /dev/null
+> +++ b/drivers/base/firmware_loader/fallback_platform.c
+> @@ -0,0 +1,33 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/efi_embedded_fw.h>
+> +#include <linux/property.h>
+> +#include <linux/security.h>
+> +#include <linux/vmalloc.h>
+> +
+> +#include "fallback.h"
+> +#include "firmware.h"
+> +
+> +int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt_flags)
+> +{
+> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+
+And we can do away with this eyesore.
+
+Otherwise looks good!
+
+  Luis
