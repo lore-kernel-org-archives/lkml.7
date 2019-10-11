@@ -6,99 +6,112 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDFAECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70744C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C785D206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A45721D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:27:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TY+eyYtu"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="RvgE9Ld3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbfJKNXw (ORCPT
+        id S1728147AbfJKN1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:23:52 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58854 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbfJKNXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:23:51 -0400
-Received: from zn.tnic (p200300EC2F0C8D0081E4E393F9295E7C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:8d00:81e4:e393:f929:5e7c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5A7501EC0691;
-        Fri, 11 Oct 2019 15:23:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1570800226;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=5fLMyzBqU12Rh/Q+Kr0qKD7ip1UeUg/XeOmZ+J5DUfE=;
-        b=TY+eyYtu5/pzkkpWLzgWnp1g9O6nXDcuUnGdLOIoV8X6uSagOOK4qZxQ5t1lBkqA9QrOWr
-        Tvp4tjg9UHyjMYBQRe4rTOMgnMviKRRPVTob5WvDPzYbJOXSUMksSrJiP3kXkwrpnN103r
-        /cjxcRAFEX2u6wy9uAefN1VOn1yk26s=
-Date:   Fri, 11 Oct 2019 15:23:39 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        x86@kernel.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH v2] x86, efi: never relocate kernel below lowest
- acceptable address
-Message-ID: <20191011132339.GB8824@zn.tnic>
-References: <20190919160521.13820-1-kasong@redhat.com>
+        Fri, 11 Oct 2019 09:27:18 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:44934 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbfJKN1R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:27:17 -0400
+Received: by mail-yw1-f68.google.com with SMTP id m13so3455334ywa.11
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 06:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=gfuUfZlYZ9oJJ+/N0uMt9DhhQR0v6tIoqlaSGbKIW5Q=;
+        b=RvgE9Ld3dkdeSZz8gPaqgtDS2qowzHQRexrjX4HVG+BcCfNR2BlabHALJqmY1Saxnc
+         HE2pECbmda8Himuhffd/NA1tqR0k4XjDsOlSEKRUkwfRYV1jcg7dLhBqCsZqE0VOeJHb
+         4iIJnwiS1A5mL54Igw1bUOiiglA20xIEKTF68jZ4BeiNpX1oNbVmvxoOP0RbsGVKTG02
+         Lh9C9oacHynhu1RsLZBgMVUjBOkjjKbHUIcaU7LLVVidv9O9wVRz7TkwqJoORkrmduRr
+         y7Np5zdZwOrk2IJfM9fIh0bw44es8W306LoVI3o+kn092f+LLQLQgK8g3eZYeG3U2Apj
+         Qoow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=gfuUfZlYZ9oJJ+/N0uMt9DhhQR0v6tIoqlaSGbKIW5Q=;
+        b=Fs+LPhikFXRkuncL0eJIVM43uMoOeHLTnANBEI14j5NnXwjKYmEw9MXa/KyYcyAY6a
+         5U7Du9rDGMgS82xEytyDXIFvv0z1WonL0uszT23myfltCDYKkBKYKNxBsaveiXC8SKP5
+         leAbi3SFxxEaEocvquCX4B6kuf2FQAMIn7S22JDazB3Rlnw6Rh1BP0aZ9z8G0rI7FLQm
+         qeWCzCyRZJFYBObPwro5eeP4aLgzkkkLepenmDrtQ6HQKudb54c2eWx1dnFD6zyNRS3e
+         PHLuYFNvx5lIp8xaeMdcWdd5YplUkl596HUwEV4s56r6qUbahlICW3PZo/DpBFfTAKXS
+         0ukQ==
+X-Gm-Message-State: APjAAAU8TxBB+Ddsc/mnO6iENzI2pktsyZErH2rs7VuH5obF9z2aKZ1V
+        XObG17D0ZKKi827X+vw+MszQWA==
+X-Google-Smtp-Source: APXvYqxDF1UT0llbpAUs7tUd+8/Bo22/yMWIlZSCpGQIlSr+dT1MkqQR6ab3Q5CqDbLhAZxbBpAWoQ==
+X-Received: by 2002:a81:a303:: with SMTP id a3mr2217302ywh.244.1570800436812;
+        Fri, 11 Oct 2019 06:27:16 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id r193sm2177467ywg.38.2019.10.11.06.27.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 06:27:16 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 09:27:15 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sean Paul <seanpaul@chromium.org>, kernel@collabora.com
+Subject: Re: [PATCH v5 0/3] RK3288 Gamma LUT
+Message-ID: <20191011132715.GO85762@art_vandelay>
+References: <20191010194351.17940-1-ezequiel@collabora.com>
+ <2314316.IrHOdPmtjk@diego>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190919160521.13820-1-kasong@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2314316.IrHOdPmtjk@diego>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 12:05:21AM +0800, Kairui Song wrote:
-> Currently, kernel fails to boot on some HyperV VMs when using EFI.
-> And it's a potential issue on all platforms.
+On Fri, Oct 11, 2019 at 03:22:00PM +0200, Heiko Stübner wrote:
+> Am Donnerstag, 10. Oktober 2019, 21:43:48 CEST schrieb Ezequiel Garcia:
+> > New iteration, seems that we are finally converging.
+> > 
+> > For this v5, we are only doing some changes on
+> > the gamma_set implementation. As a result, the code
+> > is more readable. See the changelog in patch 2 for more
+> > information.
+> > 
+> > Thanks!
 > 
-> It's caused a broken kernel relocation on EFI systems, when below three
-> conditions are met:
+> on rk3288 (and rk3399+rk3328 to make sure nothing breaks)
+> Tested-by: Heiko Stuebner <heiko@sntech.de>
 > 
-> 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
->    by the loader.
-> 2. There isn't enough room to contain the kernel, starting from the
->    default load address (eg. something else occupied part the region).
-> 3. In the memmap provided by EFI firmware, there is a memory region
->    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
->    kernel.
+
+Applied the first 2 patches to drm-misc-next for 5.5. I'll leave 3/3 for Heiko
+and the rockchip tree.
+
+Thanks to all for the reviews and testing, thanks to Ezequiel for sticking with
+this to completion!
+
+Sean
+
 > 
-> Efi stub will perform a kernel relocation when condition 1 is met. But
-> due to condition 2, efi stub can't relocate kernel to the preferred
-> address, so it fallback to query and alloc from EFI firmware for lowest
-> usable memory region.
-> 
-> It's incorrect to use the lowest memory address. In later stage, kernel
-> will assume LOAD_PHYSICAL_ADDR as the minimal acceptable relocate address,
-> but efi stub will end up relocating kernel below it.
-
-So far, so good.
-
-> Then before the kernel decompressing. Kernel will do another relocation
-> to address not lower than LOAD_PHYSICAL_ADDR, this time the relocate will
-> over write the blockage at the default load address, which efi stub tried
-> to avoid, and lead to unexpected behavior. Beside, the memory region it
-> writes to is not allocated from EFI firmware, which is also wrong.
-
-This paragraph is an unreadable mess and should be rewritten in simple,
-declarative sentences.
-
-The patch itself looks ok.
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Sean Paul, Software Engineer, Google / Chromium OS
