@@ -2,92 +2,153 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA211ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1167DECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A75214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF24E214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570792929;
+	bh=UpVUE1pMgXMKaHr/hZ3hXvl6rmcNvUunFHSq4t+QuKI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GteLIANKLeyiBQX5PK1s8bLLVqYd3eHbQvEytSX4r8Bf+DSbwrChVcuL67a6f6ipk
+	 J4QadMsjK7gYz+v18pX+8sO+iJdB17Kjd1lWSb1zZLWHW4zW51vbY+Raf+4PYFXvLZ
+	 U3zjF5PJJNQ1Yo7J1TvJDEUI06BZ6hZRoSW4Aa6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfJKLV6 (ORCPT
+        id S1728081AbfJKLWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:21:58 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38420 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfJKLV5 (ORCPT
+        Fri, 11 Oct 2019 07:22:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33844 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727538AbfJKLWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:21:57 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 795F2802A4; Fri, 11 Oct 2019 13:21:39 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 13:21:06 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 4.19 082/114] powerpc/book3s64/radix: Rename
- CPU_FTR_P9_TLBIE_BUG feature flag
-Message-ID: <20191011112106.GA28994@amd>
-References: <20191010083544.711104709@linuxfoundation.org>
- <20191010083612.352065837@linuxfoundation.org>
+        Fri, 11 Oct 2019 07:22:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/8Id3ugL0O8RKpYToVrLYrKK03KtyD4dKKaWqFDdBWU=; b=EBvEVfbOOtR5yjCP2cFOZZqem
+        X39yfTuFdhsPxutnGElu7I8hqGw/wLL+UeDTZsCAVi8Yrm4cJ5DcdkuQW+2+oLWsdqNCHB5xlbRtI
+        gr/R54GTAF2nOS5XIDZUQnfGHsNdukDDXbaV/muifi5E92HqXv82VkBdmcYaX3UXWUQi65jsPaWay
+        3M9A8g8/nQo8O+lzf0queAmHBGB0pwN6HAYGZY5r2V9bvGLjLzmn9Ukctt6XXmtEyCJLEfLZap/wl
+        CIpVTRvfgLSWbwewHRj6CNHOkkv0tueagDACg7lgtanPWnZ/QyrHR5z9GdZ8diaz9Kj0bjWYS1eKO
+        CzhnIbN7g==;
+Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIszl-0008Sl-Fk; Fri, 11 Oct 2019 11:22:05 +0000
+Date:   Fri, 11 Oct 2019 08:22:01 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 16/19] EDAC, ghes: Fix grain calculation
+Message-ID: <20191011082201.1b7c26ce@coco.lan>
+In-Reply-To: <20191010202418.25098-17-rrichter@marvell.com>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+        <20191010202418.25098-17-rrichter@marvell.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
-Content-Disposition: inline
-In-Reply-To: <20191010083612.352065837@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Thu, 10 Oct 2019 20:25:37 +0000
+Robert Richter <rrichter@marvell.com> escreveu:
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The current code to convert a physical address mask to a grain
+> (defined as granularity in bytes) is:
+> 
+> 	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+> 
+> This is broken in several ways:
+> 
+> 1) It calculates to wrong grain values. E.g., a physical address mask
+> of ~0xfff should give a grain of 0x1000. Without considering
+> PAGE_MASK, there is an off-by-one. Things are worse when also
+> filtering it with ~PAGE_MASK. This will calculate to a grain with the
+> upper bits set. In the example it even calculates to ~0.
+> 
+> 2) The grain does not depend on and is unrelated to the kernel's
+> page-size. The page-size only matters when unmapping memory in
+> memory_failure(). Smaller grains are wrongly rounded up to the
+> page-size, on architectures with a configurable page-size (e.g. arm64)
+> this could round up to the even bigger page-size of the hypervisor.
+> 
+> Fix this with:
+> 
+> 	e->grain = ~mem_err->physical_addr_mask + 1;
+> 
+> The grain_bits are defined as:
+> 
+> 	grain = 1 << grain_bits;
+> 
+> Change also the grain_bits calculation accordingly, it is the same
+> formula as in edac_mc.c now and the code can be unified.
+> 
+> The value in ->physical_addr_mask coming from firmware is assumed to
+> be contiguous, but this is not sanity-checked. However, in case the
+> mask is non-contiguous, a conversion to grain_bits effectively
+> converts the grain bit mask to a power of 2 by rounding up.
+> 
+> Suggested-by: James Morse <james.morse@arm.com>
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
 
-Hi!
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-> From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->=20
-> Rename the #define to indicate this is related to store vs tlbie
-> ordering issue. In the next patch, we will be adding another feature
-> flag that is used to handles ERAT flush vs tlbie ordering issue.
->=20
-> Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on =
-POWER9")
-> Cc: stable@vger.kernel.org # v4.16+
-> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> Link:
-> https://lore.kernel.org/r/20190924035254.24612-2-aneesh.kumar@linux.ibm.c=
-om
+> ---
+>  drivers/edac/ghes_edac.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index 851aad92e42d..97242cf18a88 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -220,6 +220,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  	/* Cleans the error report buffer */
+>  	memset(e, 0, sizeof (*e));
+>  	e->error_count = 1;
+> +	e->grain = 1;
+>  	strcpy(e->label, "unknown label");
+>  	e->msg = pvt->msg;
+>  	e->other_detail = pvt->other_detail;
+> @@ -315,7 +316,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  
+>  	/* Error grain */
+>  	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+> -		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+> +		e->grain = ~mem_err->physical_addr_mask + 1;
+>  
+>  	/* Memory error location, mapped on e->location */
+>  	p = e->location;
+> @@ -428,8 +429,13 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  	if (p > pvt->other_detail)
+>  		*(p - 1) = '\0';
+>  
+> +	/* Sanity-check driver-supplied grain value. */
+> +	if (WARN_ON_ONCE(!e->grain))
+> +		e->grain = 1;
+> +
+> +	grain_bits = fls_long(e->grain - 1);
+> +
+>  	/* Generate the trace event */
+> -	grain_bits = fls_long(e->grain);
+>  	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
+>  		 "APEI location: %s %s", e->location, e->other_detail);
+>  	trace_mc_event(e->type, e->msg, e->label, e->error_count,
 
-Apparently this is upstream commit
-09ce98cacd51fcd0fa0af2f79d1e1d3192f4cbb0 , but the changelog does not
-say so.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2gZaIACgkQMOfwapXb+vK/gQCfQ8U3ZXfQ5R+I1xfv+CI2oqBJ
-88AAnRfzH4negiIU+ZglUzpRMysY31HV
-=5f+A
------END PGP SIGNATURE-----
-
---PNTmBPCT7hxwcZjr--
+Thanks,
+Mauro
