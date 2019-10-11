@@ -2,110 +2,258 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8253C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7BBECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD922084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D1A2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:49:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="afAbI0So"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfJKWsD (ORCPT
+        id S1727985AbfJKWs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 18:48:03 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34698 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbfJKWsD (ORCPT
+        Fri, 11 Oct 2019 18:48:59 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42002 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727908AbfJKWs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 18:48:03 -0400
-Received: by mail-qk1-f194.google.com with SMTP id q203so10395159qke.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 15:48:02 -0700 (PDT)
+        Fri, 11 Oct 2019 18:48:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570834136;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7RgpO7SkaYhR0wNjaRJqhAx6MtC43nqgY8XsTUlipHM=;
+        b=afAbI0SoKPtHKqm3EeJMjp/mwwoy2tEVFANnhUavaK3gVzSM++2bbBNHJ2MXuiPRMSkHAe
+        woFGQ/ND6LtT44f8MxK1wWQ7wIVjbnPL3OrhalgWChe9KjJMq8Vhow9BdbyoYJkTR0fdVR
+        zpvP197YydJZ6IJeJN6HciLnxyEdkl8=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-3TLZE6X7PbG7pcl3aptwcA-1; Fri, 11 Oct 2019 18:48:55 -0400
+Received: by mail-qt1-f200.google.com with SMTP id h20so10965466qto.7
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 15:48:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SOKIN9Nyp1JbsZ7BUkjibIlWkzxw3BXcx3Hv1FQA6jE=;
-        b=KualsdexNgkQX8jeKWQwszOWaakiOl4IrKR9HozgZCubunWStkVpW8jIOpgMLaxAfH
-         mydk7pGzQ3vo2wEtsmNvxdLRMz6Txm0JafpMbHKQhYsorT0zgrfxy/Kbpbiiwg/R8JRl
-         jiRZwKOifim1CjNEh9uTcAf+QyBjusMVugXB6XiObkpo5O0sgW/BO4tOIwEp5opSCZDz
-         Z+9OHgLjzyjOAIkZU3cT+oAlXHi4hqXky2DL0ODpf29ba4aPJ6pOviEgvoLWszB0Rc14
-         bMtddVZP1a8Ldn+T+6vv9xZHLqGX4h+pUutlFmkq6bl35feGXQpTkwuCRHlI2w/SDDUm
-         V+8w==
-X-Gm-Message-State: APjAAAX2+tmQUQhc0ERmNwrN3XLduJaAx5ALxQ44xcT8mFuEbYbEDPDl
-        g9uKe2V1TFadyeFrmLX5hPgk4zGjU4tH74Lc4aA=
-X-Google-Smtp-Source: APXvYqwY0ItApn6Ic7IwoO2WjxHjjLQlid2e5HLIE2yCMJII+3/pFE7ZZeN+anW8mmfuckghY9tUfC0lFrSLy9QTGz0=
-X-Received: by 2002:a05:620a:218f:: with SMTP id g15mr17971150qka.3.1570834081941;
- Fri, 11 Oct 2019 15:48:01 -0700 (PDT)
+        bh=Sldpp1aOhl8UuH/6Wbt+hAC3+th/BbJ+jr5E9+Cj7TI=;
+        b=lRFxQv017adpXROZhXWZOQ8KNZgokLA8uz57d4Twf+IqBCWDwDnBnK1VTHt2s79ctw
+         HxKH+x8Nw71m2oWSeTsMzSxvYhPkYkTmAwIggjssVFgkTlN/h0vIe2cGSkdPRIz3gTeh
+         HchNEmQwxcQJlNXSK11C9l2BCvoQMGit1NKqjKaeG/BJ8/NS9F+M9qKwRSawdPQL1mO+
+         tnWtxnkCo6UYqcXhk+W22VA/Xm4uihcFdDaLLzkCwEeHIIvvHyxI0SP7hPJYp31YZ9/l
+         DxI/JoJlUc0Px8a7cYuh+h/ZX2nMjTwFfCU8u1d2BoPnqFk9QgLkqp0tt+/34q1dd3x2
+         1YrA==
+X-Gm-Message-State: APjAAAWVd1EcIcLCyItUu2VSKwK+75gE+hBc0ZnpzJw7S46i4wLmX4Sf
+        uNnG3ogL9+/SmhVrBv9fv9mIRGLG24n6SO/0UeKtTQzVPG86hIQ5W2nh6oySUIJ+QbFREv2RmvB
+        RgGeqjZMU+G1aFFY7TsV5vrY7wfVFdHYFU4JWHxVS
+X-Received: by 2002:a05:620a:13d9:: with SMTP id g25mr18415092qkl.230.1570834134402;
+        Fri, 11 Oct 2019 15:48:54 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxYCJuWwjQ9jUl8ON7adae0YZppASmE9AJmk/LEgyO+Pp7I4eJH4Vr9z/bEQRoh5e10ZPsVeVRLSO7fu9mBthA=
+X-Received: by 2002:a05:620a:13d9:: with SMTP id g25mr18415070qkl.230.1570834134123;
+ Fri, 11 Oct 2019 15:48:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190926193030.5843-1-anders.roxell@linaro.org>
- <20190926193030.5843-5-anders.roxell@linaro.org> <bf5db3a5-96da-752c-49ea-d0de899882d5@huawei.com>
- <CADYN=9LB9RHgRkQj=HcKDz1x9jqmT464Kseh2wZU5VvcLit+bQ@mail.gmail.com>
- <d978673e-cbd1-5ab5-b2a4-cdb407d0f98c@huawei.com> <CAK8P3a0kBz1-i-3miCo1vMuoM39ivXa3oxOE9VnCqDO-nfNOxw@mail.gmail.com>
- <20191011102747.lpbaur2e4nqyf7sw@willie-the-truck> <20191011103342.GL25745@shell.armlinux.org.uk>
-In-Reply-To: <20191011103342.GL25745@shell.armlinux.org.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 12 Oct 2019 00:47:45 +0200
-Message-ID: <CAK8P3a1ADTc0woWWNjpeqYEtgb=snj264P4QNWOj7ZRMDv8WNg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: configs: unset CPU_BIG_ENDIAN
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Will Deacon <will@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Chunrong Guo <chunrong.guo@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
+ <20191007051240.4410-2-andrew.smirnov@gmail.com> <CAO-hwJ+jPGa5Z7=Lopsc23m8UOqGWB0=tN+DcotykseAPM7_7w@mail.gmail.com>
+ <20191011182617.GE229325@dtor-ws> <CAO-hwJLH6SMkLb1kZGj1E+BUHJ+ZsE1n+d=xeJgsvTCjHH1Wzw@mail.gmail.com>
+ <20191011203303.GF229325@dtor-ws> <20191011203509.GG229325@dtor-ws> <20191011213349.GJ229325@dtor-ws>
+In-Reply-To: <20191011213349.GJ229325@dtor-ws>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Sat, 12 Oct 2019 00:48:42 +0200
+Message-ID: <CAO-hwJ+mMco-gw4Wt=cCAb5v1XymTiS2HNtzQqtmqMoRCiuueQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] HID: logitech-hidpp: use devres to manage FF private data
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+X-MC-Unique: 3TLZE6X7PbG7pcl3aptwcA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 12:33 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
+On Fri, Oct 11, 2019 at 11:34 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 >
-> On Fri, Oct 11, 2019 at 11:27:48AM +0100, Will Deacon wrote:
-> > Does anybody use BIG_ENDIAN? If we're not even building it then maybe we
-> > should get rid of it altogether on arm64. I don't know of any supported
-> > userspace that supports it or any CPUs that are unable to run little-endian
-> > binaries.
+> On Fri, Oct 11, 2019 at 01:35:09PM -0700, Dmitry Torokhov wrote:
+> > On Fri, Oct 11, 2019 at 01:33:03PM -0700, Dmitry Torokhov wrote:
+> > > On Fri, Oct 11, 2019 at 09:25:52PM +0200, Benjamin Tissoires wrote:
+> > > > On Fri, Oct 11, 2019 at 8:26 PM Dmitry Torokhov
+> > > > <dmitry.torokhov@gmail.com> wrote:
+> > > > >
+> > > > > On Fri, Oct 11, 2019 at 04:52:04PM +0200, Benjamin Tissoires wrot=
+e:
+> > > > > > Hi Andrey,
+> > > > > >
+> > > > > > On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@g=
+mail.com> wrote:
+> > > > > > >
+> > > > > > > To simplify resource management in commit that follows as wel=
+l as to
+> > > > > > > save a couple of extra kfree()s and simplify hidpp_ff_deinit(=
+) switch
+> > > > > > > driver code to use devres to manage the life-cycle of FF priv=
+ate data.
+> > > > > > >
+> > > > > > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > > > > > Cc: Jiri Kosina <jikos@kernel.org>
+> > > > > > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > > > > > Cc: Henrik Rydberg <rydberg@bitmath.org>
+> > > > > > > Cc: Sam Bazely <sambazley@fastmail.com>
+> > > > > > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> > > > > > > Cc: Austin Palmer <austinp@valvesoftware.com>
+> > > > > > > Cc: linux-input@vger.kernel.org
+> > > > > > > Cc: linux-kernel@vger.kernel.org
+> > > > > > > Cc: stable@vger.kernel.org
+> > > > > >
+> > > > > > This patch doesn't seem to fix any error, is there a reason to =
+send it
+> > > > > > to stable? (besides as a dependency of the rest of the series).
+> > > > > >
+> > > > > > > ---
+> > > > > > >  drivers/hid/hid-logitech-hidpp.c | 53 +++++++++++++++++-----=
+----------
+> > > > > > >  1 file changed, 29 insertions(+), 24 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/h=
+id-logitech-hidpp.c
+> > > > > > > index 0179f7ed77e5..58eb928224e5 100644
+> > > > > > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > > > > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > > > > > @@ -2079,6 +2079,11 @@ static void hidpp_ff_destroy(struct ff=
+_device *ff)
+> > > > > > >         struct hidpp_ff_private_data *data =3D ff->private;
+> > > > > > >
+> > > > > > >         kfree(data->effect_ids);
+> > > > > >
+> > > > > > Is there any reasons we can not also devm alloc data->effect_id=
+s?
+> > > > > >
+> > > > > > > +       /*
+> > > > > > > +        * Set private to NULL to prevent input_ff_destroy() =
+from
+> > > > > > > +        * freeing our devres allocated memory
+> > > > > >
+> > > > > > Ouch. There is something wrong here: input_ff_destroy() calls
+> > > > > > kfree(ff->private), when the data has not been allocated by
+> > > > > > input_ff_create(). This seems to lack a little bit of symmetry.
+> > > > >
+> > > > > Yeah, ff and ff-memless essentially take over the private data as=
+signed
+> > > > > to them. They were done before devm and the lifetime of the "priv=
+ate"
+> > > > > data pieces was tied to the lifetime of the input device to simpl=
+ify
+> > > > > error handling and teardown.
+> > > >
+> > > > Yeah, that stealing of the pointer is not good :)
+> > > > But OTOH, it helps
+> > > >
+> > > > >
+> > > > > Maybe we should clean it up a bit... I'm open to suggestions.
+> > > >
+> > > > The problem I had when doing the review was that there is no easy w=
+ay
+> > > > to have a "devm_input_ff_create_()", because the way it's built is
+> > > > already "devres-compatible": the destroy gets called by input core.
+> > >
+> > > I do not think we want devm_input_ff_create() explicitly, I think the
+> > > fact that you can "build up" an input device by allocating it, then
+> > > adding slots, poller, ff support, etc, and input core cleans it up is
+> > > all good. It is just the ownership if the driver-private data block i=
+s
+> > > not very obvious and is not compatible with allocating via devm.
+> > >
+> > > >
+> > > > So I don't have a good answer to simplify in a transparent manner
+> > > > without breaking the API.
+> > > >
+> > > > >
+> > > > > In this case maybe best way is to get rid of hidpp_ff_destroy() a=
+nd not
+> > > > > set ff->private and rely on devm to free the buffers. One can get=
+ to
+> > > > > device private data from ff methods via input_get_drvdata() since=
+ they
+> > > > > all (except destroy) are passed input device pointer.
+> > > >
+> > > > Sounds like a good idea. However, it seems there might be a race wh=
+en
+> > > > removing the workqueue:
+> > > > the workqueue gets deleted in hidpp_remove, when the input node wil=
+l
+> > > > be freed by devres, so after the call of hidpp_remove.
+> > >
+> > > Yeah, well, that is a common issue with mixing devm and normal resour=
+ces
+> > > (and workqueue here is that "normal" resource), and we should either:
+> > >
+> > > - not use devm
+> > > - use devm_add_action_or_reset() to work in custom actions that work
+> > >   freeing of non-managed resources into devm flow.
+> >
+> > Actually, there is a door #3: use system workqueue. After all the work
+> > that Tejun done on workqueues it is very rare that one actually needs
+> > a dedicated workqueue (as works usually execute on one if the system
+> > worker threads that are shared with other workqueues anyway).
+>
+> And additional note about devm:
+>
+> I think all HID input drivers that are using devm in probe, but do not
+> have proper remove() function (and maybe even some with remove) are
+> broken: hid_device_remove() calls hid_hw_stop() which potentially will
+> shut off the transport. This happens before devm starts unwinding, so
+> we still can be trying to communicate with the device in question, but
+> the transport is gone.
 
-So far, all 'allmodconfig' builds are big-endian and have been that way
-since the option was first added, so build coverage is something we
-have plenty of. It's also covered by randconfig testing, regardless of
-the default endianess.
+Well, that is by design. A driver is supposed to call hid_hw_start()
+at the very end of its .probe(). And the supposed rule is that in the
+specific .remove(), you are to call first hid_hw_stop() to stop the
+transport layer underneath. That also means that in the HID subsystem,
+at least, you are not supposed to talk to the device during the devm
+teardown of the allocated data.
 
-> 32-bit ARM experience is that telco class users really like big
-> endian.
+If you really need to communicate with the device during tear down,
+then you are supposed to write your own .remove, in which you control
+where the hid_hw_stop() happens.
 
-Right, basically anyone with a large code base migrated over from a
-big-endian MIPS or PowerPC legacy that found it cheaper to change
-the rest of the world than to fix their own code. The only other example
-of this I heard of besides networking was from banking, where they
-looked at moving from AIX on PowerPC to Linux on something cheaper,
-but IIRC they ended up going with LE after all because of the lack
-of distro support.
+We might have overlooked one or two, but I think we are on a good basis for=
+ now.
 
-Whether any users remain in use at this time, I don't know. As most
-of the larger machines require UEFI to boot, they are currently limited
-to little-endian for all practical purposes, and smaller embedded
-machines tend to have a smaller amount of legacy code and are
-easier to move over to little-endian.
+>
+> io_started/driver_input_lock is broken on removal as well as we release
+> the lock when driver may very well be still talking to the device in
+> devm teardown actions.
 
-One recent reference I could find is specifically for the NXP
-Layerscape LS1043 in
-https://www.nxp.com/docs/en/application-note/AN5129.pdf
-which apparently has some support in their codewarrior tools
-for big-endian binaries.
+Again, this is not supposed to happen. Once hid_hw_stop() is called,
+we do not have access to the transport, so drivers can't talk to the
+device. So releasing/clearing the locks is supposed to be safe now.
 
-There are also some recent openembedded bugfixes for
-big-endian arm64 from NXP:
-https://www.mail-archive.com/meta-freescale@yoctoproject.org/msg22378.html
+>
+> I think we have similar kind of issues in other buses as well (i2c, spi,
+> etc). For example, in i2c we remove the device from power domain before
+> we actually complete devm unwinding.
+>
 
-Adding Chungrong Guo to Cc for additional insight on whether
-they expect any notable big-endian users in the future.
+I agree that this looks bad.
 
-      Arnd
+I would need to have a better look at it on Monday. Time to go on week
+end (this jet lag doesn't help me to go to sleep...)
+
+Cheers,
+Benjamin
+
