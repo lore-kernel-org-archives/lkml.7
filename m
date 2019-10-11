@@ -2,120 +2,119 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB3C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B19ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F10520659
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:01:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJwL/lGc"
+	by mail.kernel.org (Postfix) with ESMTP id 6E11220659
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbfJKSB4 (ORCPT
+        id S1728778AbfJKSCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 14:01:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43449 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728470AbfJKSB4 (ORCPT
+        Fri, 11 Oct 2019 14:02:41 -0400
+Received: from smtprelay0155.hostedemail.com ([216.40.44.155]:35364 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728374AbfJKSCl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 14:01:56 -0400
-Received: by mail-lj1-f194.google.com with SMTP id n14so10660766ljj.10;
-        Fri, 11 Oct 2019 11:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XdwB9h96v+QYkQDX1YxlxUnsWei52osLfl6yOYfRoHI=;
-        b=JJwL/lGc98fPjNXsuW37YtyQjKr2sKYZbyZQItyXwRkcSDHCY0bEjaJUb4XAw7+LON
-         qFFPDarzJYA7aRj8S6Djg/uZTdTXdMY3gfsOCo/GcKE8PW0x+nv+jQ4r+CPO0Ke/pLgy
-         nmq3toEYyZahWAs1fJiHI4KEuu0q2AY121irp7lN2HLtM8mMZ+i+D3GcXZwMjpyVJ8rM
-         Fl1Jw1fbcOx263yXpePcJpyelaLm8L566qTnPFvR3hckhejYUY056kZEU4XRMODPTfT7
-         OpGwELASV8jP2Iw9XeI2rX2HYHJ+5DhvRHAf4/0q6Q/mEIgKdePdesCb341qDj+3AgQz
-         Y87w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XdwB9h96v+QYkQDX1YxlxUnsWei52osLfl6yOYfRoHI=;
-        b=CovoiUvqVzcI0epHgHlnC5k0YM02Yn9gyM66lyzcr4/9odK3v13gWlIA14UisloCxW
-         81tZrHoaXN3lPnNTiGAnUX2g5ER3XnDxys1wXHG91D9htA7cLR3OE7RgGQgQGWqriFgK
-         08o0adHz9KpveJkWIenLxcjWOyPM3WDRB93J8dJ9xD0dnAFMPlpcSZ6+yWUNBjFnpB6r
-         RChdAaO7pZGvy/jSYMmt9mX3tmsi8HjhQ5ieMoySYniIHZ+bb69IeuEDoK9P2lR8Hkl5
-         8+yu8vCkcuPI6tZ9JGjc6V6jvHywzUJ7GnC7fkDnk5BDE2fV7ou5pAiZt4aOwC/8uAdQ
-         cdlg==
-X-Gm-Message-State: APjAAAVHdUYxXDXuct+lY60fsRqyu3BAzUWLdkNs/X22071NtuUAVSls
-        Zlx7Z+EhWNndag+/KF4KqHF2U5oIS6uCOY1F/AM=
-X-Google-Smtp-Source: APXvYqwVaUA7oCBc5xvpj+PQwfoY/MvmAjkR7fClTPBR5s5J1pMVup7ak5TL4SFSjd2aW7dmhjgX6bC/i/jADMqPYd4=
-X-Received: by 2002:a2e:3a19:: with SMTP id h25mr10164297lja.129.1570816913446;
- Fri, 11 Oct 2019 11:01:53 -0700 (PDT)
+        Fri, 11 Oct 2019 14:02:41 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 5A8FE100E86C4;
+        Fri, 11 Oct 2019 18:02:39 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: crack32_8b747c21a4229
+X-Filterd-Recvd-Size: 4323
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 11 Oct 2019 18:02:38 +0000 (UTC)
+Message-ID: <a6933fa81cf1510528ed7a4cfa55f57900800fc6.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
+From:   Joe Perches <joe@perches.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Fri, 11 Oct 2019 11:02:37 -0700
+In-Reply-To: <CAL_JsqJiV-L14tQte0tZXq+-TRTXGOFW62EsSobu3cFGA8rJDw@mail.gmail.com>
+References: <20190913211349.28245-1-robh@kernel.org>
+         <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
+         <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
+         <7672dd2f651bfdcdb1615ab739e36a381b2535b1.camel@perches.com>
+         <CAL_JsqKAbP6KYjiJ6dLr=dpFG-j-e4rJPCKZ0+pZrDjsSPAUPQ@mail.gmail.com>
+         <CAL_JsqJiV-L14tQte0tZXq+-TRTXGOFW62EsSobu3cFGA8rJDw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-References: <cover.1570292505.git.joe@perches.com> <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
-In-Reply-To: <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 11 Oct 2019 20:01:42 +0200
-Message-ID: <CANiq72kDNT6iPxYYNzY_eb3ddWNUEzgg48pOenEBrJXynxsvoA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] treewide: Add 'fallthrough' pseudo-keyword
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Joe Perches <joe@perches.com>, linux-sctp@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, 2019-10-11 at 12:56 -0500, Rob Herring wrote:
+> On Fri, Sep 27, 2019 at 10:39 AM Rob Herring <robh@kernel.org> wrote:
+> > On Fri, Sep 27, 2019 at 9:29 AM Joe Perches <joe@perches.com> wrote:
+> > > On Fri, 2019-09-27 at 09:02 -0500, Rob Herring wrote:
+> > > > On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
+> > > > > On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
+> > > > > > DT bindings are moving to using a json-schema based schema format
+> > > > > > instead of freeform text. Add a checkpatch.pl check to encourage using
+> > > > > > the schema for new bindings. It's not yet a requirement, but is
+> > > > > > progressively being required by some maintainers.
+> > > > > []
+> > > > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > > > []
+> > > > > > @@ -2822,6 +2822,14 @@ sub process {
+> > > > > >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
+> > > > > >               }
+> > > > > > 
+> > > > > > +# Check for adding new DT bindings not in schema format
+> > > > > > +             if (!$in_commit_log &&
+> > > > > > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
+> > > > > > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
+> > > > > > +                     WARN("DT_SCHEMA_BINDING_PATCH",
+> > > > > > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
+> > > > > > +             }
+> > > > > > +
+> > > > > 
+> > > > > As this already seems to be git dependent, perhaps
+> > > > 
+> > > > It's quite rare to see a non git generated diff these days.
+> > > > 
+> > > > > it's easier to read with a single line test like:
+> > > > > 
+> > > > >                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
+> > > > >                         etc...
+> > > > >                 }
+> > > > 
+> > > > I frequently do 'git show $commit | scripts/checkpatch.pl' and this
+> > > > doesn't work with that. I really should have a '--pretty=email' in
+> > > > there, but I just ignore the commit msg warnings. In any case, that
+> > > > still doesn't help because there's no diffstat. There's probably some
+> > > > way to turn that on or just use git-format-patch, but really we want
+> > > > this to work with any git diff.
+> > > 
+> > > I don't understand your argument against what I proposed at all.
+> > 
+> > It is dependent on the commit message rather than the diff itself. I
+> > want it to work with or without a diffstat.
+> > 
+> > > and btw:
+> > > 
+> > > $ git format-patch -1 --stdout <commit> | ./scripts/checkpatch.pl
+> > 
+> > Yes, I stated this was possible. My concern is there are lots of ways
+> > to generate a diff in git. My way works for *all* of them. Yours
+> > doesn't.
+> 
+> Joe, are you okay with this?
 
-On Fri, Oct 11, 2019 at 6:30 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sat, Oct 5, 2019 at 9:46 AM Joe Perches <joe@perches.com> wrote:
-> >
-> > Add 'fallthrough' pseudo-keyword to enable the removal of comments
-> > like '/* fallthrough */'.
->
-> I applied patches 1-3 to my tree just to make it easier for people to
-> start doing this. Maybe some people want to do the conversion on their
-> own subsystem rather than with a global script, but even if not, this
-> looks better as a "prepare for the future" series and I feel that if
-> we're doing the "fallthrough" thing eventually, the sooner we do the
-> prepwork the better.
->
-> I'm a tiny bit worried that the actual conversion is just going to
-> cause lots of pain for the stable people, but I'll not worry about it
-> _too_ much. If the stable people decide that it's too painful for them
-> to deal with the comment vs keyword model, they may want to backport
-> these three patches too.
+Sure, Andrew Morton does most of the checkpatch upstreaming, but
+if you want to send your own pull request, I've no objection.
 
-I was waiting for a v2 series to pick it up given we had some pending changes...
+> Rob
 
-Cheers,
-Miguel
