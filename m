@@ -2,180 +2,157 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9309CECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A0AC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635C82196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H62q2teO"
+	by mail.kernel.org (Postfix) with ESMTP id 8ACC3214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfJKFwW (ORCPT
+        id S1727327AbfJKFw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 01:52:22 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44135 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727265AbfJKFwU (ORCPT
+        Fri, 11 Oct 2019 01:52:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47957 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbfJKFw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 01:52:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z9so10374876wrl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 22:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SZfiDMytUZRJp44lJpGIhXKb56niFoQv8fJMmHQ6k+Q=;
-        b=H62q2teOwJH5ebK+zs5CnU01YkWWT2VVaSnRzpi2uNOFHPYqzvw8c+8vmsqsn8mEAg
-         d7JIoYPTS5haAA47mcEKlL6FBZSEcSQVPZ+NCEczpYto9FAcv2n7guL8eTYTTKrrd3VH
-         gITCMTT4lshS5kOo3GfKuz03OO2sfIMmTNdcE2Tmy1+Ve6QnGkliu9IJ9nz01woccUz+
-         4M87ZSxrzyTgUhYE//yN8vBlfwAsyrsAS+SO1EXwrDSrsaYtLVjXffkr/vsgIQfnrYpH
-         z/UHWQS/OJKUc4bZP/BMzgLgHxmIFH2xzOcF7Hop9ZfUzmKZY5eQWVlkxsbG1AsVkrE5
-         b3lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SZfiDMytUZRJp44lJpGIhXKb56niFoQv8fJMmHQ6k+Q=;
-        b=GkVYjUTZcKqk+CMvofbjH4U8rSJx9DmLmIDzIG2gzbxA2Vgze1N8BGvN2QTHEt6AqO
-         qT49QCeM66SoDpyEaexEiXw6gjflbC86fCEAmxf301l8akK5HwtqMkQMG3P+IXiKfdkS
-         Lhmx9DwHs92nAc/8gJKIqpcK4AxrdFB2Uv1KEzjZVjlK6rFS3W8E5DAVvrpCg0jpQtZj
-         aQy0QplwaYYa7AL0DYtJJ3Ody7Auual3OtF9uHuTV14aNFT3oFb7khE9VFwtjS4DQCpP
-         XSkASlEdyalbSR6bdirg5Riup5qd5MeEjMpxoGzOYAVV8SXtVGt1dr+4+5+ycouMxTFw
-         9jPw==
-X-Gm-Message-State: APjAAAWfJt1qV6DiC+j2t2M/g6oPBR2B9uLdN68z84vK9wpYjeP2dkHz
-        U5YVpZB4t4GgXIvbvCiT2kees5O5uGpxjdeIGeTHwg==
-X-Google-Smtp-Source: APXvYqxxiTj6vtkq39Hatr4ltQFAfwTxn9rdWjyu3eWv1M6qMg4Lklqb1C8QY9amZYuQKQWADLkS8EJvB1MJpjdGZik=
-X-Received: by 2002:adf:9f08:: with SMTP id l8mr10987816wrf.325.1570773138350;
- Thu, 10 Oct 2019 22:52:18 -0700 (PDT)
+        Fri, 11 Oct 2019 01:52:27 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iInqC-0008KX-1r; Fri, 11 Oct 2019 07:51:52 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iInq9-0001Vy-3U; Fri, 11 Oct 2019 07:51:49 +0200
+Date:   Fri, 11 Oct 2019 07:51:49 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
+Message-ID: <20191011055149.4dudr4tk2znpt65u@pengutronix.de>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-11-arnd@arndb.de>
 MIME-Version: 1.0
-References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157066230358.1059972.1736585303527133478.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAKv+Gu8ih2RffZHdwAnHZicL_v8CxV9WnCy+uA1jSSyh58xapA@mail.gmail.com>
- <CAPcyv4iQ5Np3dDH=-a_7gPnWKBCHXGit2PN-h=Jw_eqj7Lb2BQ@mail.gmail.com>
- <CAKv+Gu9co_FTVYWNZsXF0H+fV1K76pZX4Yv11ANE6NwDBT3pBQ@mail.gmail.com> <CAPcyv4iCpA_a7272HXVwBY3NqR1RbyuoXbQOPWG2xFHgqN8-iA@mail.gmail.com>
-In-Reply-To: <CAPcyv4iCpA_a7272HXVwBY3NqR1RbyuoXbQOPWG2xFHgqN8-iA@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 11 Oct 2019 07:52:05 +0200
-Message-ID: <CAKv+Gu-EOaEmiT_ZA8RBatWAWNVXnNgv-wLJSp5b-zhvof3D6g@mail.gmail.com>
-Subject: Re: [PATCH v6 05/12] x86/efi: EFI soft reservation to E820 enumeration
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191010203043.1241612-11-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 at 04:39, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Thu, Oct 10, 2019 at 11:41 AM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Thu, 10 Oct 2019 at 20:31, Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Wed, Oct 9, 2019 at 11:45 PM Ard Biesheuvel
-> > > <ard.biesheuvel@linaro.org> wrote:
-> > > >
-> > > > On Thu, 10 Oct 2019 at 01:19, Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > >
-> > > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
-> > > > > interpretation of the EFI Memory Types as "reserved for a specific
-> > > > > purpose".
-> > > > >
-> > > > > The proposed Linux behavior for specific purpose memory is that it is
-> > > > > reserved for direct-access (device-dax) by default and not available for
-> > > > > any kernel usage, not even as an OOM fallback.  Later, through udev
-> > > > > scripts or another init mechanism, these device-dax claimed ranges can
-> > > > > be reconfigured and hot-added to the available System-RAM with a unique
-> > > > > node identifier. This device-dax management scheme implements "soft" in
-> > > > > the "soft reserved" designation by allowing some or all of the
-> > > > > reservation to be recovered as typical memory. This policy can be
-> > > > > disabled at compile-time with CONFIG_EFI_SOFT_RESERVE=n, or runtime with
-> > > > > efi=nosoftreserve.
-> > > > >
-> > > > > This patch introduces 2 new concepts at once given the entanglement
-> > > > > between early boot enumeration relative to memory that can optionally be
-> > > > > reserved from the kernel page allocator by default. The new concepts
-> > > > > are:
-> > > > >
-> > > > > - E820_TYPE_SOFT_RESERVED: Upon detecting the EFI_MEMORY_SP
-> > > > >   attribute on EFI_CONVENTIONAL memory, update the E820 map with this
-> > > > >   new type. Only perform this classification if the
-> > > > >   CONFIG_EFI_SOFT_RESERVE=y policy is enabled, otherwise treat it as
-> > > > >   typical ram.
-> > > > >
-> > > > > - IORES_DESC_SOFT_RESERVED: Add a new I/O resource descriptor for
-> > > > >   a device driver to search iomem resources for application specific
-> > > > >   memory. Teach the iomem code to identify such ranges as "Soft Reserved".
-> > > > >
-> > > > > A follow-on change integrates parsing of the ACPI HMAT to identify the
-> > > > > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
-> > > > > now, just identify and reserve memory of this type.
-> > > > >
-> > > > > Cc: <x86@kernel.org>
-> > > > > Cc: Borislav Petkov <bp@alien8.de>
-> > > > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > > > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > > > > Cc: Darren Hart <dvhart@infradead.org>
-> > > > > Cc: Andy Shevchenko <andy@infradead.org>
-> > > > > Cc: Andy Lutomirski <luto@kernel.org>
-> > > > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > >
-> > > > For the EFI changes
-> > > >
-> > > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > > >
-> > > > although I must admit I don't follow the enum add_efi_mode logic 100%
-> > >
-> > > I'm open to suggestions as I'm not sure it's the best possible
-> > > organization. The do_add_efi_memmap() routine has the logic to
-> > > translate EFI to E820, but unless "add_efi_memmap" is specified on the
-> > > kernel command line the EFI memory map is ignored. For
-> > > soft-reservation support I want to reuse do_add_efi_memmap(), but
-> > > otherwise avoid any other side effects of considering the EFI map.
-> > > What I'm missing is the rationale for why "add_efi_memmap" is required
-> > > before considering the EFI memory map.
-> > >
-> > > If there is a negative side effect to always using the EFI map then
-> > > the new "add_efi_mode" designation constrains it to just the
-> > > soft-reservation case.
-> > >
-> >
-> > Could we make the presence of any EFI_MEMORY_SP regions imply
-> > add_efi_memmap? That way, it is guaranteed that we don't regress
-> > existing systems, while establishing clear and unambiguous semantics
-> > for new systems that rely on these changes in order to be able to use
-> > the special purpose memory as intended.
->
-> In fact that's how it works. EFI_MEMORY_SP is unconditionally added.
-> Other EFI memory types are optionally added with the add_efi_memmap
-> option.
+On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
+> These can be build completely independently, so split
+> the two Kconfig symbols.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-That is not what I meant.
+I'd mention the two symbols' names you're working on in the commit log.
+I guess it's about PLAT_SAMSUNG and ARCH_S5PV210. And I wouldn't call it
+"split" which IMHO suggests there was only one symbol before.
 
-Why not behave as if 'add_efi_memmap' was passed if any EFI_MEMORY_SP
-regions exist?
+Maybe:
+
+	Don't imply PLAT_SAMSUNG if ARCH_S5PV210 is enabled
+
+would be a better subject line?
+
+> ---
+>  arch/arm/Kconfig.debug        | 6 +++---
+>  arch/arm/Makefile             | 1 -
+>  arch/arm/plat-samsung/Kconfig | 2 +-
+>  drivers/mmc/host/Kconfig      | 2 +-
+>  drivers/pwm/Kconfig           | 2 +-
+>  drivers/spi/Kconfig           | 2 +-
+>  drivers/tty/serial/Kconfig    | 2 +-
+>  sound/soc/samsung/Kconfig     | 2 +-
+>  8 files changed, 9 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+> index 9c4f2d6deb06..4c4e97ae4fcb 100644
+> --- a/arch/arm/Kconfig.debug
+> +++ b/arch/arm/Kconfig.debug
+> @@ -998,7 +998,7 @@ choice
+>  		  via SCIFA4 on Renesas SH-Mobile AG5 (SH73A0).
+>  
+>  	config DEBUG_S3C_UART0
+> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+>  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+>  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> @@ -1010,7 +1010,7 @@ choice
+>  		  by the boot-loader before use.
+>  
+>  	config DEBUG_S3C_UART1
+> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+>  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+>  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> @@ -1022,7 +1022,7 @@ choice
+>  		  by the boot-loader before use.
+>  
+>  	config DEBUG_S3C_UART2
+> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+>  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+>  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index f492d7c338fe..a1bc15cda751 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -235,7 +235,6 @@ machine-$(CONFIG_PLAT_SPEAR)		+= spear
+>  # by CONFIG_* macro name.
+>  plat-$(CONFIG_ARCH_OMAP)	+= omap
+>  plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
+> -plat-$(CONFIG_ARCH_S5PV210)	+= samsung
+
+Would it make more sense to make this
+
+	plat-$(PLAT_SAMSUNG) += samsung
+
+(in a separate patch)? Hmm, it seems there is no plat-y for
+PLAT_S3C24XX=y builds. Is this intended? If yes, the directory name
+containing "samsung" suggests something that seems untrue.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
