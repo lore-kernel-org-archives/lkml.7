@@ -2,114 +2,106 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D04C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21524ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05EC21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570784581;
-	bh=h5qJF0hmtg1wCO55oJJVfVPaqfb/n18+4ePM3MinMNQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tO7+HZnvPwl1zVnHBOZ+CFsSvWS46AA3rg33BvPvoykVelgjQKT2lVtXfnuIj1cov
-	 j1lhZwMxB61JFly76B9I7cCyfaxZAnYl+oIY3sYUNqoFmXVMcEJjYX+XkS4cKkHWh6
-	 AK8x5KpFUiPazKGEQQxTEZlZd36a3JTxKwk408EE=
+	by mail.kernel.org (Postfix) with ESMTP id EE1312084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:05:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sgaN4KE7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfJKJC7 (ORCPT
+        id S1727515AbfJKJFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:02:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbfJKJC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:02:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54D6D2084C;
-        Fri, 11 Oct 2019 09:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570784578;
-        bh=h5qJF0hmtg1wCO55oJJVfVPaqfb/n18+4ePM3MinMNQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jV8gVVhvuKQW7F0hZ3ZG5r9VfQHGO5OVzNZKbgFT/g4t2VSaVsxJ0/p3XjLhiCMQN
-         uFWR9Rx0hNF2XpT+zNXirlZZ68mOR4P8F44NYajP5guO7iiqkvuyMyyhi4lOe3bU9+
-         p0f2G6WgbHd6XsruQTmfda/yUSfwmsteGyKMpcN8=
-Date:   Fri, 11 Oct 2019 11:02:56 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     zhong jiang <zhongjiang@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: wfx: fix an undefined reference error when
- CONFIG_MMC=m
-Message-ID: <20191011090256.GC1076760@kroah.com>
-References: <1570762939-8735-1-git-send-email-zhongjiang@huawei.com>
- <20191011042609.GB938845@kroah.com>
- <3864047.FfxYVOUlJ1@pc-42>
+        Fri, 11 Oct 2019 05:05:13 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44401 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbfJKJFM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 05:05:12 -0400
+Received: by mail-pl1-f196.google.com with SMTP id q15so4160008pll.11;
+        Fri, 11 Oct 2019 02:05:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nPcuPeIlGeOi9YaKxS0E+IUcP4UClOCoB6akqo9MA54=;
+        b=sgaN4KE7J6nZ1zyZAXZdmNnMCJvCdAf1A9dZTN75N71vjZozqgVkF6SRCgwAlsp4QD
+         8XWapee9vlLUR7jMvU+ZgVJTqhlijr7ODzf03Fl0COjniRsj/oazOw10D4SSea4KpXB3
+         R9e6V8EG+vKLDiRYT/2AXS5bHbocBAhnGzWP4bdjedIRZG14P7KEvGWDPy07kRKJrBzZ
+         uM4OdbNzf5RlH2/C03woRXD7hg8MPZGXLj5BGUJb3gnSW9UmHYRwpkNYpWx/QsvJLk4o
+         hiC3F6G7R4Q8nfi3Ry5tgWmBqGZhD8Hg02FaRW90wkFOvFGpNgibktw8SCSWcyjWlGO6
+         5Gqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nPcuPeIlGeOi9YaKxS0E+IUcP4UClOCoB6akqo9MA54=;
+        b=Pz5BeG1B3CSZv6ZQiJJDrUegDeo9p/vyBsZ+7/m7jVB8ByQR8doi6LA5N6qF5hhKs9
+         hJ5b0m1UsNIiYOgLILKRf87BeZZIbhfjlKvzRdbgMBrksq+GFMaXiZv545GZ91tdw//+
+         JhmlKfIJ2YAHeFnRvhLShheOFTeKSyTPISKEze0zHdIMIKx5b4DbP4OfovezGLYyhDkI
+         HSbZb9sv3FRJglr3DvLFNwy+x6R/7aAaKXUK3G4Djob/yUgX9stKMl/hAEsUylE0RwiW
+         xdluOQXTCwTuAdZfw2qbD+wUF6hdm8UxYksh2Oj8XVUaTo/p3TC/h4/kmUk0SZLfV4Ap
+         7RjA==
+X-Gm-Message-State: APjAAAWGVwIkWqK/zV95Z9dAeRxwoPBCBE3lZKBgi/SCMPkbuuD1bE+y
+        MRMPA5u6lQgVwIN0GLc1t8tyCMgAvAnzTIoBBAE=
+X-Google-Smtp-Source: APXvYqxbzxppCszYm0qJzDIQnxj+XzuVTYxiUW4vwnqwrnlvr31HA/eEjVaDVkHfEVYX3aAUVyrO0WzYtlrASSdeU5Y=
+X-Received: by 2002:a17:902:b110:: with SMTP id q16mr13678309plr.262.1570784711945;
+ Fri, 11 Oct 2019 02:05:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3864047.FfxYVOUlJ1@pc-42>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191009200523.8436-1-stuart.w.hayes@gmail.com>
+ <20191009200523.8436-3-stuart.w.hayes@gmail.com> <CAHp75Vc1mZ7qxKPGaqDVAQ9d_UjNq9LJDEPWHQHaYCfw7vGrmA@mail.gmail.com>
+ <CAHp75VfNjnAxua6ESx1Vp=57O=pVM10P1UK8bGNQUk7FeY=Dmw@mail.gmail.com>
+ <CAL5oW02uRk-ZLMaE6Skt7rX6xy=sQNttfSZ2N1JRBXPfjJpZNg@mail.gmail.com>
+ <CAHp75VfEpH4Nv0J+wc3vhFWXYgVLcFdOr263dAFRZiz_ZEfZrw@mail.gmail.com> <CAHp75VeuQ0O9SxveRXqOKoRKQQJNwJ_1WX6taNfgWebiP0KdJA@mail.gmail.com>
+In-Reply-To: <CAHp75VeuQ0O9SxveRXqOKoRKQQJNwJ_1WX6taNfgWebiP0KdJA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 11 Oct 2019 12:05:01 +0300
+Message-ID: <CAHp75VesLq28L3rWfAciyU5kQjXSfuKRtnoKciuj+wZ_ogb0TQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 08:40:08AM +0000, Jerome Pouiller wrote:
-> On Friday 11 October 2019 06:26:16 CEST Greg KH wrote:
-> > CAUTION: This email originated from outside of the organization. Do not 
-> click links or open attachments unless you recognize the sender and know the 
-> content is safe.
-> > 
-> > 
-> > On Fri, Oct 11, 2019 at 11:02:19AM +0800, zhong jiang wrote:
-> > > I hit the following error when compile the kernel.
-> > >
-> > > drivers/staging/wfx/main.o: In function `wfx_core_init':
-> > > /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:488: 
-> undefined reference to `sdio_register_driver'
-> > > drivers/staging/wfx/main.o: In function `wfx_core_exit':
-> > > /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:496: 
-> undefined reference to `sdio_unregister_driver'
-> > > drivers/staging/wfx/main.o:(.debug_addr+0x1a8): undefined reference to 
-> `sdio_register_driver'
-> > > drivers/staging/wfx/main.o:(.debug_addr+0x6f0): undefined reference to 
-> `sdio_unregister_driver'
-> > >
-> > > Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> > > ---
-> > >  drivers/staging/wfx/Kconfig  | 3 ++-
-> > >  drivers/staging/wfx/Makefile | 5 +++--
-> > >  2 files changed, 5 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/staging/wfx/Kconfig b/drivers/staging/wfx/Kconfig
-> > > index 9b8a1c7..4d045513 100644
-> > > --- a/drivers/staging/wfx/Kconfig
-> > > +++ b/drivers/staging/wfx/Kconfig
-> > > @@ -1,7 +1,8 @@
-> > >  config WFX
-> > >       tristate "Silicon Labs wireless chips WF200 and further"
-> > >       depends on MAC80211
-> > > -     depends on (SPI || MMC)
-> > > +     depends on SPI
-> > > +     select MMC
-> > 
-> > How about:
-> >         depends on (SPI && MMC)
-> 
-> I dislike to force user to enable both buses while only one of them is 
-> sufficient. I would prefer to keep current dependencies and to add
-> #ifdef around problematic functions.
+On Fri, Oct 11, 2019 at 11:48 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, Oct 11, 2019 at 9:49 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Thu, Oct 10, 2019 at 11:37 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+> >
+> > > Thank you for the feedback!  An infinite loop is used several other places in
+> > > this driver--this keeps the style similar.  I can change it as you suggest,
+> > > though, if that would be preferable to consistency.
+> >
+> > Better to start the change now. I'll look into the file and see how we
+> > can improve the rest.
+>
+> I found only one infinite loop there, the other timeout loop is done
+> as do {} while.
+> I'll send a patch to refactor the infinite one.
 
-Yes, that's the better thing to do here overall.
+https://lore.kernel.org/linux-pci/20191011090230.81080-1-andriy.shevchenko@linux.intel.com/T/#u
 
-zhong, can you work on that?
-
-thanks,
-
-greg k-h
+-- 
+With Best Regards,
+Andy Shevchenko
