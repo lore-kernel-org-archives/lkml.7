@@ -2,72 +2,144 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E616FECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3105C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E53206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD578206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570792118;
+	bh=bcdSNDMOY0bqnFjMeRmqTI3dWibgolZfR//o4F+O5Sw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fLD1/YvCN3RwKVh60QYvXpPVQPH5niTb9Osp8EI2QpJzdnPUFLAF0Z+sIi9/B6vrz
+	 8+u1rCYiA5YJ7TvW2ypUAMqHvGrwLNsERVzeqMc5nYLEuRwOFh9jArGCh0UJ1RWs7r
+	 Pz1RhJfxvjL4PGeECGXA+osLA02PekDi8v0x1Zmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfJKLHs (ORCPT
+        id S1727838AbfJKLIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:07:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49958 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727198AbfJKLHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:07:48 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 84E421BF4096B01C14F3;
-        Fri, 11 Oct 2019 19:07:45 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
- 19:07:35 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <darrick.wong@oracle.com>, <bfoster@redhat.com>,
-        <dchinner@redhat.com>
-CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
-        <yi.zhang@huawei.com>, <zhangxiaoxu5@huawei.com>
-Subject: [PATCH] xfs: fix wrong struct type in ioctl definition whih cmd XFS_IOC_GETBMAPAX
-Date:   Fri, 11 Oct 2019 19:14:46 +0800
-Message-ID: <1570792486-84374-1-git-send-email-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 11 Oct 2019 07:08:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46370 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfJKLIh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 07:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JdlAz1c3xJbnUsZPJsKSq2/6IjokW6klgJgxwldSumo=; b=ZMm1uq20dA+f7muVhKSi1QI8r
+        sGYMElo+fFm4UkXJAWslhL028hc1eFwlPh+1Fn0r0xYkQKvCmvfvzKBRlNbn657HkVi5bLLU7nA4u
+        nyHlbJD0vGjYv/XMJcoRgyDYj9o40xYnCOF//0TCFeiTJ5+5vNyftmKRS/STyjCx7T/8E6a8nz7pS
+        23k3PtE/Wz2gKeQSr8ujQJa6AE5CyP0JDY8sxuP2mDH0ScnjKyvMph8PenSF00i6uv3ao2iSxoISr
+        ztWS50p7Ervy2GX+O8/hA8l/SQiApVu2BUDld7d8+LArR0mvlE0lGbsm9UUzz3Hw3VWOinPRwvUIT
+        OrOrfGX0A==;
+Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIsmc-0001Ol-Ab; Fri, 11 Oct 2019 11:08:30 +0000
+Date:   Fri, 11 Oct 2019 08:08:25 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/19] EDAC, mc: Create new function edac_inc_csrow()
+Message-ID: <20191011080825.74932496@coco.lan>
+In-Reply-To: <20191010202418.25098-15-rrichter@marvell.com>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+        <20191010202418.25098-15-rrichter@marvell.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ioctl expect 'getbmapx' as the 'arg' when the cmd is XFS_IOC_GETBMAPX.
-But the definition in 'xfs_fs.h' is 'getbmap'
+Em Thu, 10 Oct 2019 20:25:33 +0000
+Robert Richter <rrichter@marvell.com> escreveu:
 
-So, change it to 'getbmapx'
+> Have a separate function to count errors in csrow/channel. This better
+> separates code and reduces the indentation level. No functional
+> changes.
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- fs/xfs/libxfs/xfs_fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This one assumes patch 06/19, with I'm not sure if it is correct.
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 39dd2b9..cad245a 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -764,7 +764,7 @@ struct xfs_scrub_metadata {
- #define XFS_IOC_FSGETXATTRA	_IOR ('X', 45, struct fsxattr)
- /*	XFS_IOC_SETBIOSIZE ---- deprecated 46	   */
- /*	XFS_IOC_GETBIOSIZE ---- deprecated 47	   */
--#define XFS_IOC_GETBMAPX	_IOWR('X', 56, struct getbmap)
-+#define XFS_IOC_GETBMAPX	_IOWR('X', 56, struct getbmapx)
- #define XFS_IOC_ZERO_RANGE	_IOW ('X', 57, struct xfs_flock64)
- #define XFS_IOC_FREE_EOFBLOCKS	_IOR ('X', 58, struct xfs_fs_eofblocks)
- /*	XFS_IOC_GETFSMAP ------ hoisted 59         */
--- 
-2.7.4
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/edac_mc.c | 40 +++++++++++++++++++++++++---------------
+>  1 file changed, 25 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index 9e8c5716a8c0..3779204c0e21 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -1045,6 +1045,26 @@ static struct mem_ctl_info *error_desc_to_mci(struct edac_raw_error_desc *e)
+>  	return container_of(e, struct mem_ctl_info, error_desc);
+>  }
+>  
+> +static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
+> +{
+> +	struct mem_ctl_info *mci = error_desc_to_mci(e);
+> +	u16 count = e->error_count;
+> +	enum hw_event_mc_err_type type = e->type;
+> +
+> +	if (row < 0)
+> +		return;
+> +
+> +	edac_dbg(4, "csrow/channel to increment: (%d,%d)\n", row, chan);
+> +
+> +	if (type == HW_EVENT_ERR_CORRECTED) {
+> +		mci->csrows[row]->ce_count += count;
+> +		if (chan >= 0)
+> +			mci->csrows[row]->channels[chan]->ce_count += count;
+> +	} else {
+> +		mci->csrows[row]->ue_count += count;
+> +	}
+> +}
+> +
+>  void edac_raw_mc_handle_error(struct edac_raw_error_desc *e,
+>  			      struct dimm_info *dimm)
+>  {
+> @@ -1201,22 +1221,12 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  			chan = -2;
+>  	}
+>  
+> -	if (any_memory) {
+> +	if (any_memory)
+>  		strcpy(e->label, "any memory");
+> -	} else {
+> -		edac_dbg(4, "csrow/channel to increment: (%d,%d)\n", row, chan);
+> -		if (p == e->label)
+> -			strcpy(e->label, "unknown memory");
+> -		if (type == HW_EVENT_ERR_CORRECTED) {
+> -			if (row >= 0) {
+> -				mci->csrows[row]->ce_count += error_count;
+> -				if (chan >= 0)
+> -					mci->csrows[row]->channels[chan]->ce_count += error_count;
+> -			}
+> -		} else
+> -			if (row >= 0)
+> -				mci->csrows[row]->ue_count += error_count;
+> -	}
+> +	else if (!*e->label)
+> +		strcpy(e->label, "unknown memory");
+> +
+> +	edac_inc_csrow(e, row, chan);
+>  
+>  	/* Fill the RAM location data */
+>  	p = e->location;
 
+
+
+Thanks,
+Mauro
