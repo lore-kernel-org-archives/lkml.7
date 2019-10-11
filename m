@@ -2,144 +2,127 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF128C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA4DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93522190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570793373;
-	bh=+t7NRbrpSd2Z6Xu+XvjiRuQmo6oIsQY5Em4yummAbX0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aMgrvWpQ46ZYN08CxbvFbbuOzNFmkIZ6Nke/SrO6kV4ZcFTUER4Jim9IR81Qosmsy
-	 Ij1uw/s1eKefmAGcg7bNgPiWojE+Nsu+LxY5lYpr/jAtNEm8tS+e8yJC5WbM2l1ebx
-	 HjL2kAwyq2EZijIoERsqSRH7/HHzhEw7xm1UFFvg=
+	by mail.kernel.org (Postfix) with ESMTP id 2422D2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:33:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="ELZQHqIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbfJKL3c (ORCPT
+        id S1727864AbfJKLdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:29:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36924 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbfJKL3c (ORCPT
+        Fri, 11 Oct 2019 07:33:01 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44392 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfJKLdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:29:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2gnrnq0b1cJHF7UrkY83zB5NvhPCkH+k9lh4yFFL/IM=; b=DDNekGf9eQ66f2JHleru+yee5
-        N8UdvTRkKyH10olnWISCQVkCVJyfLW5DJfKua+A+tuqU7ROwqWPgtTOlTS66sCAI8ezJWCPcaN6Dv
-        z/MwufnUVYijP8EdhAoTS+GcXvuHlbA7eoUj9+LVC+XRVur33Wuc2kZvGNi4ZdNSWlfuMZ4Mb/sKT
-        s/nypfmQIfy/pwIUGpjpgqODRL88cx+bSasQFvQsCYIUcLaMEohH2paaE+A50TF6xsjdUwkejsUvY
-        HCKRHAjxyyWF0BXJ5pfn2mGA2m6efQ/0mjVKe4MB6dO7rMezHA1lB1bev9WIeQ1+IiK50wrpI/MNC
-        t0eZlJxbg==;
-Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIt6j-0002jK-JH; Fri, 11 Oct 2019 11:29:18 +0000
-Date:   Fri, 11 Oct 2019 08:29:13 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH 19/19] EDAC, Documentation: Describe CPER module
- definition and DIMM ranks
-Message-ID: <20191011082913.6514e126@coco.lan>
-In-Reply-To: <20191010202418.25098-20-rrichter@marvell.com>
-References: <20191010202418.25098-1-rrichter@marvell.com>
-        <20191010202418.25098-20-rrichter@marvell.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 11 Oct 2019 07:33:00 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 21so7637693otj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 04:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EG1xk3VNtSNli9LstHzFzW8FTASqppOx7Iz+ljSepr4=;
+        b=ELZQHqIHKthcOw+cx1/eWMPQh9CdCQe9335QiwqnmEpfsAQo5QrXsB0uM8YeRn9sZB
+         DMjCGOF3WmEWsych31ECult+qoZlba+l/4cFwD78LER9wjIOHHvdSaAoQTpzWJHDYhtC
+         nMege7elWqUs3JbT4yQBVz2Ys2N8BBYj/kpU8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EG1xk3VNtSNli9LstHzFzW8FTASqppOx7Iz+ljSepr4=;
+        b=PoOiwXIlXk772ApLIv9R4Kt/BOS0Sx8RzdT/ay6wQwYkpMrNvtQFgbTfrQyRrYTKrf
+         zxU8bM++ZSYzlsGSYyjVb8tYejhIrXHQLFui0WP43BbnTuVm08VeJtyktqwFIq6T7Mgo
+         psoI0JKj4ihdLfGob4A1ekv4f2zDg3Qz9SS3N1nWCsPRTomPzS4Nkngcdzb8IMIGQpzS
+         JJuzPvwYlrIvywBKE5BdXzUnEU5UK3d7WqqFEdcZ/i0Kg3vK/4+zapzREfdTJeqkLnpt
+         jWcimCCOe8G3iaEWz2HgfMcJLddWUhzy/c21IvPCyTzxBy6P1MQ4E2pg2mphJRJnaopt
+         NGcQ==
+X-Gm-Message-State: APjAAAXpxQhLJXOgMhy8r9iCezgfYzNGkf1OIbqHeiv5OrfVNMuZvLoX
+        SLmJAJvUUXutQ8v3zxum9GHWpCY+q0FMoEr3zLTdWQ==
+X-Google-Smtp-Source: APXvYqw5w6rNknCRSIh4ji+Ht3aKeuI8BuQd38PdEiIXjfB/PVs7LMHEEfKLiC0nZxVBQwz9I2alMQcOdbdmP3o91cs=
+X-Received: by 2002:a9d:70c3:: with SMTP id w3mr6065891otj.246.1570793579837;
+ Fri, 11 Oct 2019 04:32:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
+ <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com> <20190911140204.GA52872@aaronlu>
+ <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com> <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
+ <20190912123532.GB16200@aaronlu> <CANaguZBTiLQiRQU9MJR2Qys8S2S=-PTe66_ZPi5DVzpPbJ93zw@mail.gmail.com>
+ <CANaguZDOb+rVcDPMS+SR1DKc73fnctkBK0EbfBrf90dztr8t=Q@mail.gmail.com>
+ <20191010135436.GA67897@aaronlu> <CANaguZDCtmXpm_rpTkjsfPPBscHCwz4u1OHwUt3XztzgLJa_jA@mail.gmail.com>
+ <20191011073338.GA125778@aaronlu>
+In-Reply-To: <20191011073338.GA125778@aaronlu>
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Date:   Fri, 11 Oct 2019 07:32:48 -0400
+Message-ID: <CANaguZCkKQTmgye+9nQhzQqYBrsnCmcjA46TPmLwN60vvMQ_7w@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 10 Oct 2019 20:25:42 +0000
-Robert Richter <rrichter@marvell.com> escreveu:
+> > The reason we need to do this is because, new tasks that gets created will
+> > have a vruntime based on the new min_vruntime and old tasks will have it
+> > based on the old min_vruntime
+>
+> I think this is expected behaviour.
+>
+I don't think this is the expected behavior. If we hadn't changed the root
+cfs->min_vruntime for the core rq, then it would have been the expected
+behaviour. But now, we are updating the core rq's root cfs, min_vruntime
+without changing the the vruntime down to the tree. To explain, consider
+this example based on your patch. Let cpu 1 and 2 be siblings. And let rq(cpu1)
+be the core rq. Let rq1->cfs->min_vruntime=1000 and rq2->cfs->min_vruntime=2000.
+So in update_core_cfs_rq_min_vruntime, you update rq1->cfs->min_vruntime
+to 2000 because that is the max. So new tasks enqueued on rq1 starts with
+vruntime of 2000 while the tasks in that runqueue are still based on the old
+min_vruntime(1000). So the new tasks gets enqueued some where to the right
+of the tree and has to wait until already existing tasks catch up the
+vruntime to
+2000. This is what I meant by starvation. This happens always when we update
+the core rq's cfs->min_vruntime. Hope this clarifies.
 
-> Update on CPER DIMM naming convention and DIMM ranks.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> > and it can cause starvation based on how
+> > you set the min_vruntime.
+>
+> Care to elaborate the starvation problem?
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Explained above.
 
-> ---
->  Documentation/admin-guide/ras.rst | 31 +++++++++++++++++++------------
->  1 file changed, 19 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/ras.rst b/Documentation/admin-guide/ras.rst
-> index 2b20f5f7380d..26e02a59f0f4 100644
-> --- a/Documentation/admin-guide/ras.rst
-> +++ b/Documentation/admin-guide/ras.rst
-> @@ -330,9 +330,12 @@ There can be multiple csrows and multiple channels.
->  
->  .. [#f4] Nowadays, the term DIMM (Dual In-line Memory Module) is widely
->    used to refer to a memory module, although there are other memory
-> -  packaging alternatives, like SO-DIMM, SIMM, etc. Along this document,
-> -  and inside the EDAC system, the term "dimm" is used for all memory
-> -  modules, even when they use a different kind of packaging.
-> +  packaging alternatives, like SO-DIMM, SIMM, etc. The UEFI
-> +  specification (Version 2.7) defines a memory module in the Common
-> +  Platform Error Record (CPER) section to be an SMBIOS Memory Device
-> +  (Type 17). Along this document, and inside the EDAC system, the term
-> +  "dimm" is used for all memory modules, even when they use a
-> +  different kind of packaging.
->  
->  Memory controllers allow for several csrows, with 8 csrows being a
->  typical value. Yet, the actual number of csrows depends on the layout of
-> @@ -349,12 +352,14 @@ controllers. The following example will assume 2 channels:
->  	|            |  ``ch0``  |  ``ch1``  |
->  	+============+===========+===========+
->  	| ``csrow0`` |  DIMM_A0  |  DIMM_B0  |
-> -	+------------+           |           |
-> -	| ``csrow1`` |           |           |
-> +	|            |   rank0   |   rank0   |
-> +	+------------+     -     |     -     |
-> +	| ``csrow1`` |   rank1   |   rank1   |
->  	+------------+-----------+-----------+
->  	| ``csrow2`` |  DIMM_A1  | DIMM_B1   |
-> -	+------------+           |           |
-> -	| ``csrow3`` |           |           |
-> +	|            |   rank0   |   rank0   |
-> +	+------------+     -     |     -     |
-> +	| ``csrow3`` |   rank1   |   rank1   |
->  	+------------+-----------+-----------+
->  
->  In the above example, there are 4 physical slots on the motherboard
-> @@ -374,11 +379,13 @@ which the memory DIMM is placed. Thus, when 1 DIMM is placed in each
->  Channel, the csrows cross both DIMMs.
->  
->  Memory DIMMs come single or dual "ranked". A rank is a populated csrow.
-> -Thus, 2 single ranked DIMMs, placed in slots DIMM_A0 and DIMM_B0 above
-> -will have just one csrow (csrow0). csrow1 will be empty. On the other
-> -hand, when 2 dual ranked DIMMs are similarly placed, then both csrow0
-> -and csrow1 will be populated. The pattern repeats itself for csrow2 and
-> -csrow3.
-> +In the example above 2 dual ranked DIMMs are similarly placed. Thus,
-> +both csrow0 and csrow1 are populated. On the other hand, when 2 single
-> +ranked DIMMs are placed in slots DIMM_A0 and DIMM_B0, then they will
-> +have just one csrow (csrow0) and csrow1 will be empty. The pattern
-> +repeats itself for csrow2 and csrow3. Also note that some memory
-> +controller doesn't have any logic to identify the memory module, see
-> +``rankX`` directories below.
->  
->  The representation of the above is reflected in the directory
->  tree in EDAC's sysfs interface. Starting in directory
+> Again, what's the point of normalizing sched entities' vruntime in
+> sub-cfs_rqs? Their vruntime comparisons only happen inside their own
+> cfs_rq, we don't do cross CPU vruntime comparison for them.
 
-
+As I mentioned above, this is to avoid the starvation case. Even though we are
+not doing cross cfs_rq comparison, the whole tree's vruntime is based on the
+root cfs->min_vruntime and we will have an imbalance if we change the root
+cfs->min_vruntime without updating down the tree.
 
 Thanks,
-Mauro
+Vineeth
