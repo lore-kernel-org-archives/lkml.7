@@ -2,519 +2,821 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30EEECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33025ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9920A21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570782205;
-	bh=cKEsZZ6L9+VLbX+Uivw1cvUZ+OS2W4OjvdDUs0XnBWc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Iw3AQM2SPq13ZGhHoX6lKS/ozbnUHR7bWja9eOBR1vdvnmnDAejPxlxEirCCredPH
-	 v9o9lbdM8434AZIGEMVkxX24Xvdh19wxHzSdTSQjlcAcaa8f4O8l+Z5R93FxWMpWyL
-	 mi3512i0/+3YHPtulqOB9E748OKGcS2lnzCLYx0g=
+	by mail.kernel.org (Postfix) with ESMTP id EE46D21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfJKIXY (ORCPT
+        id S1727573AbfJKIX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:23:24 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:60389 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726174AbfJKIXY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:23:24 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iIqCa-0002DK-Fh; Fri, 11 Oct 2019 10:23:09 +0200
-Date:   Fri, 11 Oct 2019 09:23:06 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Talel Shenhar <talel@amazon.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <arnd@arndb.de>,
-        <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <paulmck@linux.ibm.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <amirkl@amazon.com>, <barakw@amazon.com>
-Subject: Re: [PATCH v4 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
- Labs Memory Controller EDAC
-Message-ID: <20191011092306.41a4c9a9@why>
-In-Reply-To: <1570708454-10784-3-git-send-email-talel@amazon.com>
-References: <1570708454-10784-1-git-send-email-talel@amazon.com>
-        <1570708454-10784-3-git-send-email-talel@amazon.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 11 Oct 2019 04:23:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45266 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbfJKIX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 04:23:26 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 78CB58372E6;
+        Fri, 11 Oct 2019 08:23:25 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-241.pek2.redhat.com [10.72.12.241])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 439FC1001956;
+        Fri, 11 Oct 2019 08:21:16 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V3 7/7] docs: sample driver to demonstrate how to implement virtio-mdev framework
+Date:   Fri, 11 Oct 2019 16:15:57 +0800
+Message-Id: <20191011081557.28302-8-jasowang@redhat.com>
+In-Reply-To: <20191011081557.28302-1-jasowang@redhat.com>
+References: <20191011081557.28302-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: talel@amazon.com, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Fri, 11 Oct 2019 08:23:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 14:54:14 +0300
-Talel Shenhar <talel@amazon.com> wrote:
+This sample driver creates mdev device that simulate virtio net device
+over virtio mdev transport. The device is implemented through vringh
+and workqueue. A device specific dma ops is to make sure HVA is used
+directly as the IOVA. This should be sufficient for kernel virtio
+driver to work.
 
-Hi Talel,
+Only 'virtio' type is supported right now. I plan to add 'vhost' type
+on top which requires some virtual IOMMU implemented in this sample
+driver.
 
-> The Amazon's Annapurna Labs Memory Controller EDAC supports ECC capability
-> for error detection and correction (Single bit error correction, Double
-> detection). This driver introduces EDAC driver for that capability.
-> 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
-> ---
->  MAINTAINERS               |   7 +
->  drivers/edac/Kconfig      |   7 +
->  drivers/edac/Makefile     |   1 +
->  drivers/edac/al_mc_edac.c | 358 ++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 373 insertions(+)
->  create mode 100644 drivers/edac/al_mc_edac.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 55199ef..d431e8f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -757,6 +757,13 @@ F:	drivers/tty/serial/altera_jtaguart.c
->  F:	include/linux/altera_uart.h
->  F:	include/linux/altera_jtaguart.h
->  
-> +AMAZON ANNAPURNA LABS MEMORY CONTROLLER EDAC
-> +M:	Talel Shenhar <talel@amazon.com>
-> +M:	Talel Shenhar <talelshenhar@gmail.com>
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-> +F:	drivers/edac/al_mc_edac.c
-> +
->  AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
->  M:	Talel Shenhar <talel@amazon.com>
->  S:	Maintained
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index 417dad6..8c7fb73 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -100,6 +100,13 @@ config EDAC_AMD64_ERROR_INJECTION
->  	  In addition, there are two control files, inject_read and inject_write,
->  	  which trigger the DRAM ECC Read and Write respectively.
->  
-> +config EDAC_AL_MC
-> +	tristate "Amazon's Annapurna Lab EDAC Memory Controller"
-> +	depends on (ARCH_ALPINE || COMPILE_TEST)
-> +	help
-> +	  Support for error detection and correction for Amazon's Annapurna
-> +	  Labs Alpine chips which allows 1 bit correction and 2 bits detection.
-> +
->  config EDAC_AMD76X
->  	tristate "AMD 76x (760, 762, 768)"
->  	depends on PCI && X86_32
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index d77200c..5288329 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
->  edac_mce_amd-y				:= mce_amd.o
->  obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
->  
-> +obj-$(CONFIG_EDAC_AL_MC)		+= al_mc_edac.o
->  obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
->  obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
->  obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-> diff --git a/drivers/edac/al_mc_edac.c b/drivers/edac/al_mc_edac.c
-> new file mode 100644
-> index 00000000..f1288c4
-> --- /dev/null
-> +++ b/drivers/edac/al_mc_edac.c
-> @@ -0,0 +1,358 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> + */
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/edac.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +#include "edac_module.h"
-> +
-> +/* Registers Offset */
-> +#define AL_MC_MSTR		0x00
-> +#define AL_MC_ECC_CFG		0x70
-> +#define AL_MC_ECC_CLEAR		0x7c
-> +#define AL_MC_ECC_ERR_COUNT	0x80
-> +#define AL_MC_ECC_CE_ADDR0	0x84
-> +#define AL_MC_ECC_CE_ADDR1	0x88
-> +#define AL_MC_ECC_UE_ADDR0	0xa4
-> +#define AL_MC_ECC_UE_ADDR1	0xa8
-> +#define AL_MC_ECC_CE_SYND0	0x8c
-> +#define AL_MC_ECC_CE_SYND1	0x90
-> +#define AL_MC_ECC_CE_SYND2	0x94
-> +#define AL_MC_ECC_UE_SYND0	0xac
-> +#define AL_MC_ECC_UE_SYND1	0xb0
-> +#define AL_MC_ECC_UE_SYND2	0xb4
-> +
-> +/* Registers Fields */
-> +#define AL_MC_MSTR_DEV_CFG		GENMASK(31, 30)
-> +#define AL_MC_MSTR_RANKS		GENMASK(27, 24)
-> +#define AL_MC_MSTR_DATA_BUS_WIDTH	GENMASK(13, 12)
-> +#define AL_MC_MSTR_DDR4			BIT(4)
-> +#define AL_MC_MSTR_DDR3			BIT(0)
-> +
-> +#define AL_MC_ECC_CFG_SCRUB_DISABLED	BIT(4)
-> +#define AL_MC_ECC_CFG_ECC_MODE		GENMASK(2, 0)
-> +
-> +#define AL_MC_ECC_CLEAR_UE_COUNT	BIT(3)
-> +#define AL_MC_ECC_CLEAR_CE_COUNT	BIT(2)
-> +#define AL_MC_ECC_CLEAR_UE_ERR		BIT(1)
-> +#define AL_MC_ECC_CLEAR_CE_ERR		BIT(0)
-> +
-> +#define AL_MC_ECC_ERR_COUNT_UE		GENMASK(31, 16)
-> +#define AL_MC_ECC_ERR_COUNT_CE		GENMASK(15, 0)
-> +
-> +#define AL_MC_ECC_CE_ADDR0_RANK		GENMASK(25, 24)
-> +#define AL_MC_ECC_CE_ADDR0_ROW		GENMASK(17, 0)
-> +
-> +#define AL_MC_ECC_CE_ADDR1_BG		GENMASK(25, 24)
-> +#define AL_MC_ECC_CE_ADDR1_BANK		GENMASK(18, 16)
-> +#define AL_MC_ECC_CE_ADDR1_COLUMN	GENMASK(11, 0)
-> +
-> +#define AL_MC_ECC_UE_ADDR0_RANK		GENMASK(25, 24)
-> +#define AL_MC_ECC_UE_ADDR0_ROW		GENMASK(17, 0)
-> +
-> +#define AL_MC_ECC_UE_ADDR1_BG		GENMASK(25, 24)
-> +#define AL_MC_ECC_UE_ADDR1_BANK		GENMASK(18, 16)
-> +#define AL_MC_ECC_UE_ADDR1_COLUMN	GENMASK(11, 0)
-> +
-> +/* Registers Values */
-> +#define AL_MC_MSTR_DEV_CFG_X4	0
-> +#define AL_MC_MSTR_DEV_CFG_X8	1
-> +#define AL_MC_MSTR_DEV_CFG_X16	2
-> +#define AL_MC_MSTR_DEV_CFG_X32	3
-> +#define AL_MC_MSTR_RANKS_MAX 4
-> +#define AL_MC_MSTR_DATA_BUS_WIDTH_X64	0
-> +
-> +#define DRV_NAME "al_mc_edac"
-> +#define AL_MC_EDAC_MSG_MAX 256
-> +#define AL_MC_EDAC_MSG(message, buffer_size, type,			\
-> +		       rank, row, bg, bank, column, syn0, syn1, syn2)	\
-> +	snprintf(message, buffer_size,					\
-> +		 "%s rank=0x%x row=0x%x bg=0x%x bank=0x%x col=0x%x "	\
-> +		 "syn0: 0x%x syn1: 0x%x syn2: 0x%x",			\
-> +		 type == HW_EVENT_ERR_UNCORRECTED ? "UE" : "CE",	\
-> +		 rank, row, bg, bank, column, syn0, syn1, syn2)
-> +
-> +struct al_mc_edac {
-> +	void __iomem *mmio_base;
-> +	spinlock_t lock;
-> +	int irq_ce;
-> +	int irq_ue;
-> +};
-> +
-> +static int al_mc_edac_handle_ce(struct mem_ctl_info *mci)
-> +{
-> +	struct al_mc_edac *al_mc = mci->pvt_info;
-> +	u32 eccerrcnt, ecccaddr0, ecccaddr1, ecccsyn0, ecccsyn1, ecccsyn2, row;
-> +	u16 ce_count, column;
-> +	u8 rank, bg, bank;
-> +	char msg[AL_MC_EDAC_MSG_MAX];
-> +	unsigned long flags;
-> +
-> +	eccerrcnt = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_ERR_COUNT);
-> +	ce_count = FIELD_GET(AL_MC_ECC_ERR_COUNT_CE, eccerrcnt);
-> +	if (!ce_count)
-> +		return 0;
-> +
-> +	ecccaddr0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_ADDR0);
-> +	ecccaddr1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_ADDR1);
-> +	ecccsyn0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND0);
-> +	ecccsyn1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND1);
-> +	ecccsyn2 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND2);
-> +
-> +	writel(AL_MC_ECC_CLEAR_CE_COUNT | AL_MC_ECC_CLEAR_CE_ERR,
-> +	       al_mc->mmio_base + AL_MC_ECC_CLEAR);
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ MAINTAINERS                |   1 +
+ samples/Kconfig            |   7 +
+ samples/vfio-mdev/Makefile |   1 +
+ samples/vfio-mdev/mvnet.c  | 691 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 700 insertions(+)
+ create mode 100644 samples/vfio-mdev/mvnet.c
 
-Why the non-relaxed write? All the accesses are ordered by virtue of
-interacting with the same device, and I can't see anything that
-requires ordering with normal memory accesses prior to this write.
-
-This pattern appears throughout the driver, and I think they can all be
-relaxed. If not, please document the reason why they can't.
-
-> +
-> +	dev_dbg(mci->pdev, "eccuaddr0=0x%08x eccuaddr1=0x%08x\n",
-> +		ecccaddr0, ecccaddr1);
-> +
-> +	rank = FIELD_GET(AL_MC_ECC_CE_ADDR0_RANK, ecccaddr0);
-> +	row = FIELD_GET(AL_MC_ECC_CE_ADDR0_ROW, ecccaddr0);
-> +
-> +	bg = FIELD_GET(AL_MC_ECC_CE_ADDR1_BG, ecccaddr1);
-> +	bank = FIELD_GET(AL_MC_ECC_CE_ADDR1_BANK, ecccaddr1);
-> +	column = FIELD_GET(AL_MC_ECC_CE_ADDR1_COLUMN, ecccaddr1);
-> +
-> +	AL_MC_EDAC_MSG(msg, sizeof(msg), HW_EVENT_ERR_CORRECTED,
-> +		       rank, row, bg, bank, column,
-> +		       ecccsyn0, ecccsyn1, ecccsyn2);
-> +
-> +	spin_lock_irqsave(&al_mc->lock, flags);
-> +	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
-> +			     ce_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
-> +	spin_unlock_irqrestore(&al_mc->lock, flags);
-> +
-> +	return ce_count;
-> +}
-> +
-> +static int al_mc_edac_handle_ue(struct mem_ctl_info *mci)
-> +{
-> +	struct al_mc_edac *al_mc = mci->pvt_info;
-> +	u32 eccerrcnt, eccuaddr0, eccuaddr1, eccusyn0, eccusyn1, eccusyn2, row;
-> +	u16 ue_count, column;
-> +	u8 rank, bg, bank;
-> +	char msg[AL_MC_EDAC_MSG_MAX];
-> +	unsigned long flags;
-> +
-> +	eccerrcnt = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_ERR_COUNT);
-> +	ue_count = FIELD_GET(AL_MC_ECC_ERR_COUNT_UE, eccerrcnt);
-> +	if (!ue_count)
-> +		return 0;
-> +
-> +	eccuaddr0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR0);
-> +	eccuaddr1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR1);
-> +	eccusyn0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND0);
-> +	eccusyn1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND1);
-> +	eccusyn2 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND2);
-> +
-> +	writel(AL_MC_ECC_CLEAR_UE_COUNT | AL_MC_ECC_CLEAR_UE_ERR,
-> +	       al_mc->mmio_base + AL_MC_ECC_CLEAR);
-> +
-> +	dev_dbg(mci->pdev, "eccuaddr0=0x%08x eccuaddr1=0x%08x\n",
-> +		eccuaddr0, eccuaddr1);
-> +
-> +	rank = FIELD_GET(AL_MC_ECC_UE_ADDR0_RANK, eccuaddr0);
-> +	row = FIELD_GET(AL_MC_ECC_UE_ADDR0_ROW, eccuaddr0);
-> +
-> +	bg = FIELD_GET(AL_MC_ECC_UE_ADDR1_BG, eccuaddr1);
-> +	bank = FIELD_GET(AL_MC_ECC_UE_ADDR1_BANK, eccuaddr1);
-> +	column = FIELD_GET(AL_MC_ECC_UE_ADDR1_COLUMN, eccuaddr1);
-> +
-> +	AL_MC_EDAC_MSG(msg, sizeof(msg), HW_EVENT_ERR_UNCORRECTED,
-> +		       rank, row, bg, bank, column,
-> +		       eccusyn0, eccusyn1, eccusyn2);
-> +
-> +	spin_lock_irqsave(&al_mc->lock, flags);
-> +	edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
-> +			     ue_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
-> +	spin_unlock_irqrestore(&al_mc->lock, flags);
-> +
-> +	return ue_count;
-> +}
-> +
-> +static void al_mc_edac_check(struct mem_ctl_info *mci)
-> +{
-> +	struct al_mc_edac *al_mc = mci->pvt_info;
-> +
-> +	if (al_mc->irq_ue <= 0)
-> +		al_mc_edac_handle_ue(mci);
-> +
-> +	if (al_mc->irq_ce <= 0)
-> +		al_mc_edac_handle_ce(mci);
-> +}
-> +
-> +static irqreturn_t al_mc_edac_irq_handler_ue(int irq, void *info)
-> +{
-> +	struct platform_device *pdev = info;
-> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-> +
-> +	if (al_mc_edac_handle_ue(mci))
-> +		return IRQ_HANDLED;
-> +	return IRQ_NONE;
-> +}
-> +
-> +static irqreturn_t al_mc_edac_irq_handler_ce(int irq, void *info)
-> +{
-> +	struct platform_device *pdev = info;
-> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-> +
-> +	if (al_mc_edac_handle_ce(mci))
-> +		return IRQ_HANDLED;
-> +	return IRQ_NONE;
-> +}
-> +
-> +static enum scrub_type al_mc_edac_get_scrub_mode(void __iomem *mmio_base)
-> +{
-> +	u32 ecccfg0;
-> +
-> +	ecccfg0 = readl(mmio_base + AL_MC_ECC_CFG);
-> +
-> +	if (FIELD_GET(AL_MC_ECC_CFG_SCRUB_DISABLED, ecccfg0))
-> +		return SCRUB_NONE;
-> +	else
-> +		return SCRUB_HW_SRC;
-> +}
-> +
-> +static int al_mc_edac_probe(struct platform_device *pdev)
-> +{
-> +	void __iomem *mmio_base;
-> +	struct edac_mc_layer layers[1];
-> +	struct mem_ctl_info *mci;
-> +	struct al_mc_edac *al_mc;
-> +	int ret;
-> +
-> +	mmio_base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(mmio_base)) {
-> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
-> +			PTR_ERR(mmio_base));
-> +		return PTR_ERR(mmio_base);
-> +	}
-> +
-> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-> +	layers[0].size = 1;
-> +	layers[0].is_virt_csrow = false;
-> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
-> +			    sizeof(struct al_mc_edac));
-> +	if (!mci)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, mci);
-> +	al_mc = mci->pvt_info;
-> +
-> +	al_mc->mmio_base = mmio_base;
-> +
-> +	al_mc->irq_ue = of_irq_get_byname(pdev->dev.of_node, "ue");
-> +	if (al_mc->irq_ue <= 0)
-> +		dev_dbg(&pdev->dev,
-> +			"no irq defined for ue - falling back to polling\n");
-> +
-> +	al_mc->irq_ce = of_irq_get_byname(pdev->dev.of_node, "ce");
-> +	if (al_mc->irq_ce <= 0)
-> +		dev_dbg(&pdev->dev,
-> +			"no irq defined for ce - falling back to polling\n");
-> +
-> +	if (al_mc->irq_ue <= 0 || al_mc->irq_ce <= 0)
-> +		edac_op_state = EDAC_OPSTATE_POLL;
-> +	else
-> +		edac_op_state = EDAC_OPSTATE_INT;
-> +
-> +	spin_lock_init(&al_mc->lock);
-> +
-> +	mci->edac_check = al_mc_edac_check;
-> +	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR4;
-> +	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
-> +	mci->edac_cap = EDAC_FLAG_SECDED;
-> +	mci->mod_name = DRV_NAME;
-> +	mci->ctl_name = "al_mc";
-> +	mci->pdev = &pdev->dev;
-> +	mci->scrub_mode = al_mc_edac_get_scrub_mode(mmio_base);
-> +
-> +	ret = edac_mc_add_mc(mci);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev,
-> +			"fail to add memory controller device (%d)\n",
-> +			ret);
-> +		goto err_add_mc;
-> +	}
-> +
-> +	if (al_mc->irq_ue > 0) {
-> +		ret = devm_request_irq(&pdev->dev,
-> +				       al_mc->irq_ue,
-> +				       al_mc_edac_irq_handler_ue,
-> +				       IRQF_SHARED,
-> +				       pdev->name,
-> +				       pdev);
-> +		if (ret != 0) {
-> +			dev_err(&pdev->dev,
-> +				"failed to request ue irq %d (%d)\n",
-> +				al_mc->irq_ue, ret);
-> +			goto err_request_irq;
-> +		}
-> +	}
-> +
-> +	if (al_mc->irq_ce > 0) {
-> +		ret = devm_request_irq(&pdev->dev,
-> +				       al_mc->irq_ce,
-> +				       al_mc_edac_irq_handler_ce,
-> +				       IRQF_SHARED,
-> +				       pdev->name,
-> +				       pdev);
-> +		if (ret != 0) {
-> +			dev_err(&pdev->dev,
-> +				"failed to request ce irq %d (%d)\n",
-> +				al_mc->irq_ce, ret);
-> +			goto err_request_irq;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err_request_irq:
-> +	edac_mc_del_mc(&pdev->dev);
-> +err_add_mc:
-> +	edac_mc_free(mci);
-> +
-> +	return ret;
-> +}
-> +
-> +static int al_mc_edac_remove(struct platform_device *pdev)
-> +{
-> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-> +	struct al_mc_edac *al_mc = mci->pvt_info;
-> +
-> +	if (al_mc->irq_ue > 0)
-> +		devm_free_irq(&pdev->dev, al_mc->irq_ue, pdev);
-> +
-> +	if (al_mc->irq_ce > 0)
-> +		devm_free_irq(&pdev->dev, al_mc->irq_ce, pdev);
-> +
-> +	edac_mc_del_mc(&pdev->dev);
-> +	edac_mc_free(mci);
-
-nit: I always find the mix of devm_* stuff with non-devm pretty
-awkward, as you end-up tracking things anyway (here, and in the error
-path of the probe function).
-
-I found the use of devm_add_action() to be pretty good at decluttering
-probe and remove entry points, as you just register destructors each
-time you allocate objects, and can forget any form of subsequent
-tracking.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id al_mc_edac_of_match[] = {
-> +	{ .compatible = "amazon,al-mc-edac", },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, al_mc_edac_of_match);
-> +
-> +static struct platform_driver al_mc_edac_driver = {
-> +	.probe = al_mc_edac_probe,
-> +	.remove = al_mc_edac_remove,
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +		.of_match_table = al_mc_edac_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(al_mc_edac_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Talel Shenhar");
-> +MODULE_DESCRIPTION("Amazon's Annapurna Lab's Memory Controller EDAC Driver");
-
-Thanks,
-
-	M.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3d196a023b5e..cb51351cd5c9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17254,6 +17254,7 @@ F:	include/linux/virtio*.h
+ F:	include/uapi/linux/virtio_*.h
+ F:	drivers/crypto/virtio/
+ F:	mm/balloon_compaction.c
++F:	samples/vfio-mdev/mvnet.c
+ 
+ VIRTIO BLOCK AND SCSI DRIVERS
+ M:	"Michael S. Tsirkin" <mst@redhat.com>
+diff --git a/samples/Kconfig b/samples/Kconfig
+index c8dacb4dda80..a1a1ca2c00b7 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -131,6 +131,13 @@ config SAMPLE_VFIO_MDEV_MDPY
+ 	  mediated device.  It is a simple framebuffer and supports
+ 	  the region display interface (VFIO_GFX_PLANE_TYPE_REGION).
+ 
++config SAMPLE_VIRTIO_MDEV_NET
++        tristate "Build virtio mdev net example mediated device sample code -- loadable modules only"
++	depends on VIRTIO_MDEV_DEVICE && VHOST_RING && m
++	help
++	  Build a networking sample device for use as a virtio
++	  mediated device.
++
+ config SAMPLE_VFIO_MDEV_MDPY_FB
+ 	tristate "Build VFIO mdpy example guest fbdev driver -- loadable module only"
+ 	depends on FB && m
+diff --git a/samples/vfio-mdev/Makefile b/samples/vfio-mdev/Makefile
+index 10d179c4fdeb..f34af90ed0a0 100644
+--- a/samples/vfio-mdev/Makefile
++++ b/samples/vfio-mdev/Makefile
+@@ -3,3 +3,4 @@ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MTTY) += mtty.o
+ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY) += mdpy.o
+ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY_FB) += mdpy-fb.o
+ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MBOCHS) += mbochs.o
++obj-$(CONFIG_SAMPLE_VIRTIO_MDEV_NET) += mvnet.o
+diff --git a/samples/vfio-mdev/mvnet.c b/samples/vfio-mdev/mvnet.c
+new file mode 100644
+index 000000000000..b218e7075611
+--- /dev/null
++++ b/samples/vfio-mdev/mvnet.c
+@@ -0,0 +1,691 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Mediated virtual virtio-net device driver.
++ *
++ * Copyright (c) 2019, Red Hat Inc. All rights reserved.
++ *     Author: Jason Wang <jasowang@redhat.com>
++ *
++ * Sample driver that creates mdev device that simulates ethernet loopback
++ * device.
++ *
++ * Usage:
++ *
++ * # modprobe virtio_mdev
++ * # modprobe mvnet
++ * # cd /sys/devices/virtual/mvnet/mvnet/mdev_supported_types/mvnet-virtio
++ * # echo "83b8f4f2-509f-382f-3c1e-e6bfe0fa1001" > ./create
++ * # cd devices/83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
++ * # ls -d virtio0
++ * virtio0
++ */
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/fs.h>
++#include <linux/poll.h>
++#include <linux/slab.h>
++#include <linux/sched.h>
++#include <linux/wait.h>
++#include <linux/uuid.h>
++#include <linux/iommu.h>
++#include <linux/sysfs.h>
++#include <linux/file.h>
++#include <linux/etherdevice.h>
++#include <linux/mdev.h>
++#include <linux/vringh.h>
++#include <linux/virtio_mdev.h>
++#include <uapi/linux/virtio_config.h>
++#include <uapi/linux/virtio_net.h>
++
++#define VERSION_STRING  "0.1"
++#define DRIVER_AUTHOR   "Red Hat Corporation"
++
++#define MVNET_CLASS_NAME "mvnet"
++#define MVNET_NAME       "mvnet"
++
++/*
++ * Global Structures
++ */
++
++static struct mvnet_dev {
++	struct class	*vd_class;
++	struct idr	vd_idr;
++	struct device	dev;
++} mvnet_dev;
++
++struct mvnet_virtqueue {
++	struct vringh vring;
++	struct vringh_kiov iov;
++	unsigned short head;
++	bool ready;
++	u64 desc_addr;
++	u64 device_addr;
++	u64 driver_addr;
++	u32 num;
++	void *private;
++	irqreturn_t (*cb)(void *data);
++};
++
++#define MVNET_QUEUE_ALIGN PAGE_SIZE
++#define MVNET_QUEUE_MAX 256
++#define MVNET_DEVICE_ID 0x1
++#define MVNET_VENDOR_ID 0
++
++u64 mvnet_features = (1ULL << VIRTIO_F_ANY_LAYOUT) |
++		     (1ULL << VIRTIO_F_VERSION_1) |
++		     (1ULL << VIRTIO_F_IOMMU_PLATFORM);
++
++/* State of each mdev device */
++struct mvnet_state {
++	struct mvnet_virtqueue vqs[2];
++	struct work_struct work;
++	spinlock_t lock;
++	struct mdev_device *mdev;
++	struct virtio_net_config config;
++	void *buffer;
++	u32 status;
++	u32 generation;
++	u64 features;
++	struct list_head next;
++};
++
++static struct mutex mdev_list_lock;
++static struct list_head mdev_devices_list;
++
++static void mvnet_queue_ready(struct mvnet_state *mvnet, unsigned int idx)
++{
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++	int ret;
++
++	ret = vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
++			       false, (struct vring_desc *)vq->desc_addr,
++			       (struct vring_avail *)vq->driver_addr,
++			       (struct vring_used *)vq->device_addr);
++}
++
++static void mvnet_vq_reset(struct mvnet_virtqueue *vq)
++{
++	vq->ready = 0;
++	vq->desc_addr = 0;
++	vq->driver_addr = 0;
++	vq->device_addr = 0;
++	vq->cb = NULL;
++	vq->private = NULL;
++	vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
++			false, 0, 0, 0);
++}
++
++static void mvnet_reset(struct mvnet_state *mvnet)
++{
++	int i;
++
++	for (i = 0; i < 2; i++)
++		mvnet_vq_reset(&mvnet->vqs[i]);
++
++	mvnet->features = 0;
++	mvnet->status = 0;
++	++mvnet->generation;
++}
++
++static void mvnet_work(struct work_struct *work)
++{
++	struct mvnet_state *mvnet = container_of(work, struct
++						 mvnet_state, work);
++	struct mvnet_virtqueue *txq = &mvnet->vqs[1];
++	struct mvnet_virtqueue *rxq = &mvnet->vqs[0];
++	size_t read, write, total_write;
++	int err;
++	int pkts = 0;
++
++	spin_lock(&mvnet->lock);
++
++	if (!txq->ready || !rxq->ready)
++		goto out;
++
++	while (true) {
++		total_write = 0;
++		err = vringh_getdesc_kern(&txq->vring, &txq->iov, NULL,
++					  &txq->head, GFP_ATOMIC);
++		if (err <= 0)
++			break;
++
++		err = vringh_getdesc_kern(&rxq->vring, NULL, &rxq->iov,
++					  &rxq->head, GFP_ATOMIC);
++		if (err <= 0) {
++			vringh_complete_kern(&txq->vring, txq->head, 0);
++			break;
++		}
++
++		while (true) {
++			read = vringh_iov_pull_kern(&txq->iov, mvnet->buffer,
++						    PAGE_SIZE);
++			if (read <= 0)
++				break;
++
++			write = vringh_iov_push_kern(&rxq->iov, mvnet->buffer,
++						     read);
++			if (write <= 0)
++				break;
++
++			total_write += write;
++		}
++
++		/* Make sure data is wrote before advancing index */
++		smp_wmb();
++
++		vringh_complete_kern(&txq->vring, txq->head, 0);
++		vringh_complete_kern(&rxq->vring, rxq->head, total_write);
++
++		/* Make sure used is visible before rasing the interrupt. */
++		smp_wmb();
++
++		local_bh_disable();
++		if (txq->cb)
++			txq->cb(txq->private);
++		if (rxq->cb)
++			rxq->cb(rxq->private);
++		local_bh_enable();
++
++		if (++pkts > 4) {
++			schedule_work(&mvnet->work);
++			goto out;
++		}
++	}
++
++out:
++	spin_unlock(&mvnet->lock);
++}
++
++static dma_addr_t mvnet_map_page(struct device *dev, struct page *page,
++				 unsigned long offset, size_t size,
++				 enum dma_data_direction dir,
++				 unsigned long attrs)
++{
++	/* Vringh can only use HVA */
++	return (dma_addr_t)(page_address(page) + offset);
++}
++
++static void mvnet_unmap_page(struct device *dev, dma_addr_t dma_addr,
++			     size_t size, enum dma_data_direction dir,
++			     unsigned long attrs)
++{
++}
++
++static void *mvnet_alloc_coherent(struct device *dev, size_t size,
++				  dma_addr_t *dma_addr, gfp_t flag,
++				  unsigned long attrs)
++{
++	void *addr = kmalloc(size, flag);
++
++	if (addr == NULL)
++		*dma_addr = DMA_MAPPING_ERROR;
++	else
++		*dma_addr = (dma_addr_t) addr;
++
++	return addr;
++}
++
++static void mvnet_free_coherent(struct device *dev, size_t size,
++				void *vaddr, dma_addr_t dma_addr,
++				unsigned long attrs)
++{
++	kfree((void *)dma_addr);
++}
++
++static const struct dma_map_ops mvnet_dma_ops = {
++	.map_page = mvnet_map_page,
++	.unmap_page = mvnet_unmap_page,
++	.alloc = mvnet_alloc_coherent,
++	.free = mvnet_free_coherent,
++};
++
++static const struct virtio_mdev_device_ops virtio_mdev_ops;
++
++static int mvnet_create(struct kobject *kobj, struct mdev_device *mdev)
++{
++	struct mvnet_state *mvnet;
++	struct virtio_net_config *config;
++	struct device *dev = mdev_dev(mdev);
++
++	if (!mdev)
++		return -EINVAL;
++
++	mvnet = kzalloc(sizeof(struct mvnet_state), GFP_KERNEL);
++	if (mvnet == NULL)
++		return -ENOMEM;
++
++	mvnet->buffer = kmalloc(PAGE_SIZE, GFP_KERNEL);
++	if (!mvnet->buffer) {
++		kfree(mvnet);
++		return -ENOMEM;
++	}
++
++	config = &mvnet->config;
++	config->mtu = 1500;
++	config->status = VIRTIO_NET_S_LINK_UP;
++	eth_random_addr(config->mac);
++
++	INIT_WORK(&mvnet->work, mvnet_work);
++
++	spin_lock_init(&mvnet->lock);
++	mvnet->mdev = mdev;
++	mdev_set_drvdata(mdev, mvnet);
++
++	mutex_lock(&mdev_list_lock);
++	list_add(&mvnet->next, &mdev_devices_list);
++	mutex_unlock(&mdev_list_lock);
++
++	dev->coherent_dma_mask = DMA_BIT_MASK(64);
++	set_dma_ops(dev, &mvnet_dma_ops);
++
++	mdev_set_class(mdev, MDEV_ID_VIRTIO, &virtio_mdev_ops);
++
++	return 0;
++}
++
++static int mvnet_remove(struct mdev_device *mdev)
++{
++	struct mvnet_state *mds, *tmp_mds;
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	int ret = -EINVAL;
++
++	mutex_lock(&mdev_list_lock);
++	list_for_each_entry_safe(mds, tmp_mds, &mdev_devices_list, next) {
++		if (mvnet == mds) {
++			list_del(&mvnet->next);
++			mdev_set_drvdata(mdev, NULL);
++			kfree(mvnet->buffer);
++			kfree(mvnet);
++			ret = 0;
++			break;
++		}
++	}
++	mutex_unlock(&mdev_list_lock);
++
++	return ret;
++}
++
++static ssize_t
++sample_mvnet_dev_show(struct device *dev, struct device_attribute *attr,
++		     char *buf)
++{
++	if (mdev_from_dev(dev))
++		return sprintf(buf, "This is MDEV %s\n", dev_name(dev));
++
++	return sprintf(buf, "\n");
++}
++
++static DEVICE_ATTR_RO(sample_mvnet_dev);
++
++static struct attribute *mvnet_dev_attrs[] = {
++	&dev_attr_sample_mvnet_dev.attr,
++	NULL,
++};
++
++static const struct attribute_group mvnet_dev_group = {
++	.name  = "mvnet_dev",
++	.attrs = mvnet_dev_attrs,
++};
++
++static const struct attribute_group *mvnet_dev_groups[] = {
++	&mvnet_dev_group,
++	NULL,
++};
++
++static ssize_t
++sample_mdev_dev_show(struct device *dev, struct device_attribute *attr,
++		     char *buf)
++{
++	if (mdev_from_dev(dev))
++		return sprintf(buf, "This is MDEV %s\n", dev_name(dev));
++
++	return sprintf(buf, "\n");
++}
++
++static DEVICE_ATTR_RO(sample_mdev_dev);
++
++static struct attribute *mdev_dev_attrs[] = {
++	&dev_attr_sample_mdev_dev.attr,
++	NULL,
++};
++
++static const struct attribute_group mdev_dev_group = {
++	.name  = "vendor",
++	.attrs = mdev_dev_attrs,
++};
++
++static const struct attribute_group *mdev_dev_groups[] = {
++	&mdev_dev_group,
++	NULL,
++};
++
++#define MVNET_STRING_LEN 16
++
++static ssize_t
++name_show(struct kobject *kobj, struct device *dev, char *buf)
++{
++	char name[MVNET_STRING_LEN];
++	const char *name_str = "virtio-net";
++
++	snprintf(name, MVNET_STRING_LEN, "%s", dev_driver_string(dev));
++	if (!strcmp(kobj->name, name))
++		return sprintf(buf, "%s\n", name_str);
++
++	return -EINVAL;
++}
++
++static MDEV_TYPE_ATTR_RO(name);
++
++static ssize_t
++available_instances_show(struct kobject *kobj, struct device *dev, char *buf)
++{
++	return sprintf(buf, "%d\n", INT_MAX);
++}
++
++static MDEV_TYPE_ATTR_RO(available_instances);
++
++static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
++			       char *buf)
++{
++	return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
++}
++
++static MDEV_TYPE_ATTR_RO(device_api);
++
++static struct attribute *mdev_types_attrs[] = {
++	&mdev_type_attr_name.attr,
++	&mdev_type_attr_device_api.attr,
++	&mdev_type_attr_available_instances.attr,
++	NULL,
++};
++
++static struct attribute_group mdev_type_group = {
++	.name  = "virtio",
++	.attrs = mdev_types_attrs,
++};
++
++/* TBD: "vhost" type */
++
++static struct attribute_group *mdev_type_groups[] = {
++	&mdev_type_group,
++	NULL,
++};
++
++static int mvnet_set_vq_address(struct mdev_device *mdev, u16 idx,
++				u64 desc_area, u64 driver_area, u64 device_area)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	vq->desc_addr = desc_area;
++	vq->driver_addr = driver_area;
++	vq->device_addr = device_area;
++
++	return 0;
++}
++
++static void mvnet_set_vq_num(struct mdev_device *mdev, u16 idx, u32 num)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	vq->num = num;
++}
++
++static void mvnet_kick_vq(struct mdev_device *mdev, u16 idx)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	if (vq->ready)
++		schedule_work(&mvnet->work);
++}
++
++static void mvnet_set_vq_cb(struct mdev_device *mdev, u16 idx,
++			    struct virtio_mdev_callback *cb)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	vq->cb = cb->callback;
++	vq->private = cb->private;
++}
++
++static void mvnet_set_vq_ready(struct mdev_device *mdev, u16 idx, bool ready)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	spin_lock(&mvnet->lock);
++	vq->ready = ready;
++	if (vq->ready)
++		mvnet_queue_ready(mvnet, idx);
++	spin_unlock(&mvnet->lock);
++}
++
++static bool mvnet_get_vq_ready(struct mdev_device *mdev, u16 idx)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++
++	return vq->ready;
++}
++
++static int mvnet_set_vq_state(struct mdev_device *mdev, u16 idx, u64 state)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++	struct vringh *vrh = &vq->vring;
++
++	spin_lock(&mvnet->lock);
++	vrh->last_avail_idx = state;
++	spin_unlock(&mvnet->lock);
++
++	return 0;
++}
++
++static u64 mvnet_get_vq_state(struct mdev_device *mdev, u16 idx)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
++	struct vringh *vrh = &vq->vring;
++
++	return vrh->last_avail_idx;
++}
++
++static u16 mvnet_get_vq_align(struct mdev_device *mdev)
++{
++	return MVNET_QUEUE_ALIGN;
++}
++
++static u64 mvnet_get_features(struct mdev_device *mdev)
++{
++	return mvnet_features;
++}
++
++static int mvnet_set_features(struct mdev_device *mdev, u64 features)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	/* DMA mapping must be done by driver */
++	if (!(features & (1ULL << VIRTIO_F_IOMMU_PLATFORM)))
++		return -EINVAL;
++
++	mvnet->features = features & mvnet_features;
++
++	return 0;
++}
++
++static void mvnet_set_config_cb(struct mdev_device *mdev,
++				struct virtio_mdev_callback *cb)
++{
++	/* We don't support config interrupt */
++}
++
++static u16 mvnet_get_vq_num_max(struct mdev_device *mdev)
++{
++	return MVNET_QUEUE_MAX;
++}
++
++static u32 mvnet_get_device_id(struct mdev_device *mdev)
++{
++	return MVNET_DEVICE_ID;
++}
++
++static u32 mvnet_get_vendor_id(struct mdev_device *mdev)
++{
++	return MVNET_VENDOR_ID;
++}
++
++static u8 mvnet_get_status(struct mdev_device *mdev)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	return mvnet->status;
++}
++
++static void mvnet_set_status(struct mdev_device *mdev, u8 status)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	mvnet->status = status;
++
++	if (status == 0) {
++		spin_lock(&mvnet->lock);
++		mvnet_reset(mvnet);
++		spin_unlock(&mvnet->lock);
++	}
++}
++
++static void mvnet_get_config(struct mdev_device *mdev, unsigned int offset,
++			     void *buf, unsigned int len)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	if (offset + len < sizeof(struct virtio_net_config))
++		memcpy(buf, &mvnet->config + offset, len);
++}
++
++static void mvnet_set_config(struct mdev_device *mdev, unsigned int offset,
++			     const void *buf, unsigned int len)
++{
++	/* No writable config supportted by mvnet */
++}
++
++static u64 mvnet_get_mdev_features(struct mdev_device *mdev)
++{
++	return VIRTIO_MDEV_F_VERSION_1;
++}
++
++static u32 mvnet_get_generation(struct mdev_device *mdev)
++{
++	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
++
++	return mvnet->generation;
++}
++
++static const struct virtio_mdev_device_ops virtio_mdev_ops = {
++	.set_vq_address         = mvnet_set_vq_address,
++	.set_vq_num             = mvnet_set_vq_num,
++	.kick_vq                = mvnet_kick_vq,
++	.set_vq_cb              = mvnet_set_vq_cb,
++	.set_vq_ready           = mvnet_set_vq_ready,
++	.get_vq_ready           = mvnet_get_vq_ready,
++	.set_vq_state           = mvnet_set_vq_state,
++	.get_vq_state           = mvnet_get_vq_state,
++	.get_vq_align           = mvnet_get_vq_align,
++	.get_features           = mvnet_get_features,
++	.set_features           = mvnet_set_features,
++	.set_config_cb          = mvnet_set_config_cb,
++	.get_vq_num_max         = mvnet_get_vq_num_max,
++	.get_device_id          = mvnet_get_device_id,
++	.get_vendor_id          = mvnet_get_vendor_id,
++	.get_status             = mvnet_get_status,
++	.set_status             = mvnet_set_status,
++	.get_config             = mvnet_get_config,
++	.set_config             = mvnet_set_config,
++	.get_mdev_features      = mvnet_get_mdev_features,
++	.get_generation         = mvnet_get_generation,
++};
++
++static const struct mdev_parent_ops mdev_fops = {
++	.owner                  = THIS_MODULE,
++	.dev_attr_groups        = mvnet_dev_groups,
++	.mdev_attr_groups       = mdev_dev_groups,
++	.supported_type_groups  = mdev_type_groups,
++	.create                 = mvnet_create,
++	.remove			= mvnet_remove,
++};
++
++static void mvnet_device_release(struct device *dev)
++{
++	dev_dbg(dev, "mvnet: released\n");
++}
++
++static int __init mvnet_dev_init(void)
++{
++	int ret = 0;
++
++	pr_info("mvnet_dev: %s\n", __func__);
++
++	memset(&mvnet_dev, 0, sizeof(mvnet_dev));
++
++	idr_init(&mvnet_dev.vd_idr);
++
++	mvnet_dev.vd_class = class_create(THIS_MODULE, MVNET_CLASS_NAME);
++
++	if (IS_ERR(mvnet_dev.vd_class)) {
++		pr_err("Error: failed to register mvnet_dev class\n");
++		ret = PTR_ERR(mvnet_dev.vd_class);
++		goto failed1;
++	}
++
++	mvnet_dev.dev.class = mvnet_dev.vd_class;
++	mvnet_dev.dev.release = mvnet_device_release;
++	dev_set_name(&mvnet_dev.dev, "%s", MVNET_NAME);
++
++	ret = device_register(&mvnet_dev.dev);
++	if (ret)
++		goto failed2;
++
++	ret = mdev_register_device(&mvnet_dev.dev, &mdev_fops);
++	if (ret)
++		goto failed3;
++
++	mutex_init(&mdev_list_lock);
++	INIT_LIST_HEAD(&mdev_devices_list);
++
++	goto all_done;
++
++failed3:
++
++	device_unregister(&mvnet_dev.dev);
++failed2:
++	class_destroy(mvnet_dev.vd_class);
++
++failed1:
++all_done:
++	return ret;
++}
++
++static void __exit mvnet_dev_exit(void)
++{
++	mvnet_dev.dev.bus = NULL;
++	mdev_unregister_device(&mvnet_dev.dev);
++
++	device_unregister(&mvnet_dev.dev);
++	idr_destroy(&mvnet_dev.vd_idr);
++	class_destroy(mvnet_dev.vd_class);
++	mvnet_dev.vd_class = NULL;
++	pr_info("mvnet_dev: Unloaded!\n");
++}
++
++module_init(mvnet_dev_init)
++module_exit(mvnet_dev_exit)
++
++MODULE_LICENSE("GPL v2");
++MODULE_INFO(supported, "Simulate loopback ethernet device over mdev");
++MODULE_VERSION(VERSION_STRING);
++MODULE_AUTHOR(DRIVER_AUTHOR);
 -- 
-Jazz is not dead. It just smells funny...
+2.19.1
+
