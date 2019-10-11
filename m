@@ -2,79 +2,97 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495D4C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E83C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A32721D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E1A2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570800829;
+	bh=I0X2xZBI6wAsH7Mdzj2OAiDGMTUbQ3ll1WxfL05QE7g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TKcquf239gctcI2iRMnu3mRQAuXRt7v54UbkgirGDjprjW6ZOUrOgT3/uOmS6SpGy
+	 0CWrbqVWf887KU2KsruL1OuT6O+KHA3WUOwooZE2kJz81etBUveYxcYTepurrbX3uL
+	 XbAVrk75txFkzJzHDXyfFoLyw8HMIlXkMXWcdi+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfJKNdX (ORCPT
+        id S1728328AbfJKNdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:33:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbfJKNdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:33:22 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F95D2084C;
-        Fri, 11 Oct 2019 13:33:21 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 09:33:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20191011093319.3ef302ff@gandalf.local.home>
-In-Reply-To: <20191011125903.GN2359@hirez.programming.kicks-ass.net>
-References: <20191007081716.07616230.8@infradead.org>
-        <20191007081945.10951536.8@infradead.org>
-        <20191008104335.6fcd78c9@gandalf.local.home>
-        <20191009224135.2dcf7767@oasis.local.home>
-        <20191010092054.GR2311@hirez.programming.kicks-ass.net>
-        <20191010091956.48fbcf42@gandalf.local.home>
-        <20191010140513.GT2311@hirez.programming.kicks-ass.net>
-        <20191010115449.22044b53@gandalf.local.home>
-        <20191010172819.GS2328@hirez.programming.kicks-ass.net>
-        <20191011125903.GN2359@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 11 Oct 2019 09:33:49 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:46759 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727709AbfJKNds (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:33:48 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iIv3A-000788-Pa; Fri, 11 Oct 2019 15:33:44 +0200
+Date:   Fri, 11 Oct 2019 14:33:43 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        rnayak@codeaurora.org, suzuki.poulose@arm.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, andrew.murray@arm.com,
+        will@kernel.org, Dave.Martin@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: Relax CPU features sanity checking on heterogeneous
+ architectures
+Message-ID: <20191011143343.541da66c@why>
+In-Reply-To: <20191011105010.GA29364@lakrids.cambridge.arm.com>
+References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
+        <20191011105010.GA29364@lakrids.cambridge.arm.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: mark.rutland@arm.com, saiprakash.ranjan@codeaurora.org, rnayak@codeaurora.org, suzuki.poulose@arm.com, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, jeremy.linton@arm.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, andrew.murray@arm.com, will@kernel.org, Dave.Martin@arm.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 14:59:03 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, 11 Oct 2019 11:50:11 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-> On Thu, Oct 10, 2019 at 07:28:19PM +0200, Peter Zijlstra wrote:
+> Hi,
 > 
-> > Really the best solution is to move all the poking into
-> > ftrace_module_init(), before we mark it RO+X. That's what I'm going to
-> > do for jump_label and static_call as well, I just need to add that extra
-> > notifier callback.  
+> On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:
+> > On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
+> > warnings are observed during bootup of big cpu cores.  
 > 
-> OK, so I started writing that patch... or rather, I wrote the patch and
-> started on the Changelog when I ran into trouble describing why we need
-> it.
+> For reference, which CPUs are in those SoCs?
 > 
-> That is, I'm struggling to explain why we cannot flip
-> prepare_coming_module() and complete_formation().
+> > SM8150:
+> > 
+> > [    0.271177] CPU features: SANITY CHECK: Unexpected variation in
+> > SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 0x00000011111112  
 > 
-> Yes, it breaks ftrace, but I'm thinking that is all it breaks. So let me
-> see if we can cure that.
+> The differing fields are EL3, EL2, and EL1: the boot CPU supports
+> AArch64 and AArch32 at those exception levels, while the secondary only
+> supports AArch64.
+> 
+> Do we handle this variation in KVM?
 
-For someone that doesn't use modules, you are making me very nervous
-with all the changes you are making to the module code! ;-)
+We do, at least at vcpu creation time (see kvm_reset_vcpu). But if one
+of the !AArch32 CPU comes in late in the game (after we've started a
+guest), all bets are off (we'll schedule the 32bit guest on that CPU,
+enter the guest, immediately take an Illegal Exception Return, and
+return to userspace with KVM_EXIT_FAIL_ENTRY).
 
--- Steve
+Not sure we could do better, given the HW. My preference would be to
+fail these CPUs if they aren't present at boot time.
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
