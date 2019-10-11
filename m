@@ -2,78 +2,116 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D62BC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1946C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4E1021D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570795960;
-	bh=YYmhhj4+C3u3Ikgul464neRhC9LZSnJz2pJQmRyo3L4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kJgPpEklPp5OTMxQ7vCwjb0rLgb/riOXkg38+7twph9mJnW9jv0SBVrxcEgC3UP3T
-	 ZLETvtT5A0H/lNnssR5SkFbkfTbj6fnhTLPucVuEDjCrn5ZIQbWwvaI1GXKnDKNa7p
-	 HY30R4uo8zmV5S0q2WD/OTmxqcyEw8ZuiLsfOd2U=
+	by mail.kernel.org (Postfix) with ESMTP id B276E21D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbfJKMMi (ORCPT
+        id S1727987AbfJKMNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58068 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 08:13:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:58308 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbfJKMMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:12:38 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1C721D56;
-        Fri, 11 Oct 2019 12:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570795958;
-        bh=YYmhhj4+C3u3Ikgul464neRhC9LZSnJz2pJQmRyo3L4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=msCgP8uxanowLP0NV6otoCt5jyV1P6vHC0x2yySmQhc5+6CfR7u45dwR/D6/Xqw7q
-         mgQbZt5wW+LZVsW7mp/LLA7cBPwGQRY/l6UWfIMGh/QE2P+8FuSvLuOZyjdYYHwdyj
-         EuqUNF0YIGOqVtrDeMPiVjRnxNapmXKJVk9w7a2g=
-Date:   Fri, 11 Oct 2019 13:12:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH v3 09/10] lib/refcount: Remove unused
- 'refcount_error_report()' function
-Message-ID: <20191011121233.agenrrq5wopvydma@willie-the-truck>
-References: <20191007154703.5574-1-will@kernel.org>
- <20191007154703.5574-10-will@kernel.org>
- <201910101349.9400E7D0@keescook>
+        id S1727198AbfJKMNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 08:13:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EFA028;
+        Fri, 11 Oct 2019 05:13:20 -0700 (PDT)
+Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBF023F6C4;
+        Fri, 11 Oct 2019 05:13:19 -0700 (PDT)
+Subject: Re: [PATCH 1/3] arm64: cpufeature: Fix the type of no FP/SIMD
+ capability
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        will@kernel.org
+References: <20191010171517.28782-1-suzuki.poulose@arm.com>
+ <20191010171517.28782-2-suzuki.poulose@arm.com>
+ <20191011113620.GG27757@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <4ba5c423-4e2a-d810-cd36-32a16ad42c91@arm.com>
+Date:   Fri, 11 Oct 2019 13:13:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201910101349.9400E7D0@keescook>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191011113620.GG27757@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 01:50:14PM -0700, Kees Cook wrote:
-> On Mon, Oct 07, 2019 at 04:47:02PM +0100, Will Deacon wrote:
-> > 'refcount_error_report()' has no callers. Remove it.
+Hi Dave
+
+On 11/10/2019 12:36, Dave Martin wrote:
+> On Thu, Oct 10, 2019 at 06:15:15PM +0100, Suzuki K Poulose wrote:
+>> The NO_FPSIMD capability is defined with scope SYSTEM, which implies
+>> that the "absence" of FP/SIMD on at least one CPU is detected only
+>> after all the SMP CPUs are brought up. However, we use the status
+>> of this capability for every context switch. So, let us change
+>> the scop to LOCAL_CPU to allow the detection of this capability
+>> as and when the first CPU without FP is brought up.
+>>
+>> Also, the current type allows hotplugged CPU to be brought up without
+>> FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
+>> up. Fix both of these issues by changing the capability to
+>> BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
+>>
+>> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   arch/arm64/kernel/cpufeature.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index 9323bcc40a58..0f9eace6c64b 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -1361,7 +1361,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>>   	{
+>>   		/* FP/SIMD is not implemented */
+>>   		.capability = ARM64_HAS_NO_FPSIMD,
+>> -		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
+>> +		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
 > 
-> Seems like this could be collapsed into patch 8? Either way:
+> ARM64_HAS_NO_FPSIMD is really a disability, not a capability.
+> 
+> Although we have other things that smell like this (CPU errata for
+> example), I wonder whether inverting the meaning in the case would
+> make the situation easier to understand.
 
-I preferred to do the heavy arch lifting in one patch, then clean up the
-remaining parts separately, since this is just cosmetic.
+Yes, it is indeed a disability, more on that below.
 
-> Acked-by: Kees Cook <keescook@chromium.org>
+> 
+> So, we'd have ARM64_HAS_FPSIMD, with a minimum (signed) feature field
+> value of 0.  Then this just looks like an ARM64_CPUCAP_SYSTEM_FEATURE
+> IIUC.  We'd just need to invert the sense of the check in
+> system_supports_fpsimd().
 
-Thanks!
+This is particularly something we want to avoid with this patch. We want
+to make sure that we have the up-to-date status of the disability right
+when it happens. i.e, a CPU without FP/SIMD is brought up. With SYSTEM_FEATURE
+you have to wait until we bring all the CPUs up. Also, for HAS_FPSIMD,
+you must wait until all the CPUs are up, unlike the negated capability.
 
-Will
+> 
+>>   		.min_field_value = 0,
+> 
+> (Does .min_field_value == 0 make sense, or is it even used?  I thought
+> only the default has_cpuid_feature() match logic uses that.)
+
+True, it is not used for this particular case.
+
+Cheers
+Suzuki
