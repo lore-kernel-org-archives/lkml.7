@@ -2,123 +2,184 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1E6ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D8FECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68462084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89A42190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=netapp.onmicrosoft.com header.i=@netapp.onmicrosoft.com header.b="V+JNz4dL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dBJnWFOo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfJKVOX (ORCPT
+        id S1728503AbfJKVRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 17:14:23 -0400
-Received: from mail-eopbgr730079.outbound.protection.outlook.com ([40.107.73.79]:65089
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726843AbfJKVOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 17:14:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VOmW7heM5X3YqQm/8iY1rKzpgDi4InCITU/KRDYem8cMUrP1rjWCQwuFeE+h80RrHpFWLdKUCjP1IAtVTov6yyYdNirdfS0xstQ6s8YDnshF7tYmJ/iH7OYHkhhRrbgpnSURmnUg3Tt4m46nb0ngMVQZ/orrEQ2cBRdnB4b/k5SJY995nW+Y4VPOHa7IAKesryniI3QTfOwiR5Bgya5HgFUKA59qwyNc/Px0h+lzu9ub4wWCgHP2OxwSSsq2NnowL7qzeOG2QExd7Pv6jsfJK209UoMHkixsN/rMDSPEuIXMz/IhZGbUx5Lnor7KHhyw/jPYhpOWtJAD20RvZggVrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kGlzSgByONXJmbZGEP2oZ0mk1/EJvkCrrkJAhsxx2pc=;
- b=DXajNayeNlMC+dZJvwr/Al5oTyKupH3ycBgx/XYZVHBgxPK/llCczVw86rGywo2IYhbS07oDsQ4wNNxXBCxKz3DTFCqGVl3yIhGk0CDMq5sJRvh3v1/Ps2bd6qUYvhIaJm9JQ9hEsGZUaROsPsv3BbHsameJbSfvPyy7qxUB0jYqIlOUaUwSdwDTmI8bWFxv8BJPBOnNm1VGqkVPp3vXdl7w8CK9YmCodFOm0thpeJaCLBfMDLUAScFKe48xINTYwVZupfLTYiFlSdNP0T+F3u9ZUX4DMggc5rLbk2VQQK9iwPqaQQ6T19JU204JhwWZHqHEphsMrib7YT2xTPFrFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
+        Fri, 11 Oct 2019 17:17:11 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36096 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfJKVRL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 17:17:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id m18so11432693wmc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 14:17:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector2-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kGlzSgByONXJmbZGEP2oZ0mk1/EJvkCrrkJAhsxx2pc=;
- b=V+JNz4dLx1NpSTvcceyhMIf113/LPxZ7kamKpPiFyTiGxE97JO4kRPnrpEhp4BRiXTVQ7cOJkDatsdF4Fbe0msLH9gvACs66BEEkGs5sTHdSuc8FtY52evcFGSiRE8+us6IfaZ+qRsm8gm18IUpCrO6bBwh8QasLt7can7q4mZo=
-Received: from BYAPR06MB6054.namprd06.prod.outlook.com (20.178.51.220) by
- BYAPR06MB5894.namprd06.prod.outlook.com (20.179.157.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Fri, 11 Oct 2019 21:14:20 +0000
-Received: from BYAPR06MB6054.namprd06.prod.outlook.com
- ([fe80::50dc:9dc2:1445:556e]) by BYAPR06MB6054.namprd06.prod.outlook.com
- ([fe80::50dc:9dc2:1445:556e%4]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
- 21:14:20 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS Client bugfixes for 5.4-rc3
-Thread-Topic: [GIT PULL] Please pull NFS Client bugfixes for 5.4-rc3
-Thread-Index: AQHVgHjZ3ta4Edi/VESse/hIgBwzog==
-Date:   Fri, 11 Oct 2019 21:14:20 +0000
-Message-ID: <5e755211af46cd98099145223b8d4929542a8141.camel@netapp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.1 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anna.Schumaker@netapp.com; 
-x-originating-ip: [68.32.74.190]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 26961586-8edd-4b05-29a5-08d74e8ffba3
-x-ms-traffictypediagnostic: BYAPR06MB5894:
-x-microsoft-antispam-prvs: <BYAPR06MB58949C56DA577991D4693D1DF8970@BYAPR06MB5894.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:403;
-x-forefront-prvs: 0187F3EA14
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(366004)(199004)(189003)(66066001)(2351001)(256004)(36756003)(6506007)(26005)(186003)(1730700003)(8936002)(102836004)(25786009)(14444005)(8676002)(478600001)(2501003)(99286004)(14454004)(71190400001)(71200400001)(81156014)(118296001)(6916009)(81166006)(58126008)(54906003)(305945005)(5660300002)(316002)(66946007)(64756008)(66446008)(66476007)(66556008)(7736002)(76116006)(91956017)(86362001)(4326008)(6116002)(6436002)(2616005)(486006)(476003)(3846002)(4001150100001)(5640700003)(6486002)(6512007)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR06MB5894;H:BYAPR06MB6054.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /SLnsTiQK0s+cmYPd+k/uoS4oCfjACSZW8qeYRD/Giwk0gviYyKdP/rUuc0n77Y6ZE7PPU1rpM+huGMQXL6tylYjYW5UT28SnWo1Z83VxQTryefNEWVy1HAmhjdF2dOb8JjVc1U9ANS7c808anMEQ95ojXb1CQafXYoVOMoin2a3gVcFD2xfsFs4iLDs9A4MtTshrZ1FjBfTGMtk2S+53qgpQz9+DbxePs5rvMeu7/B84gUQN+DQKaUaVoX2hkDMBzUzPHP6vqlCNxXN44Iyd1auia0ajTPr5tXcE9gbxgTOfA2rvsHpxFxRuhvqMoIyyZKldxQGBgbgtvBRziX9AfKET3rVX1dtby4dSgasZ1ORh9kON4CRZAUUdWyoLTTrUH9UAQz1DoQzYoRABlvutqNGK60fDGfwQbliNbb57og=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <28DDB7C0CDB79546999D730E09FD4711@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LG3n9bP9kGhQ7SFk9OxCo0gPqdU2gHnkRjsbnMNvlpY=;
+        b=dBJnWFOoIb19dqOC0j3JvCCdRfPc4OHL3xsyrufrdm7gBPTGnMnrAJ7Th95lKJlV+3
+         wrMoLQWul2U+Cq1vwvMLQ202arVVEaOUx7L6I9ehm3vPeCkqa9MDuiaciVxs7PVAbT6R
+         tOfegMjBnURzNKAMtrYiLB4ybuPKUXIq9PPnf56Isisv9H8gh6Mhmc1BG1Cnj5onhjgO
+         MFDxSNzk2+sJpHb4zfDFjl+fszrvHf6aVQJubTaMYRCjeBEjf7gtB++7ZWK6n7ql0IEJ
+         /VtPYb5cTW6aHS1MMuuxNNBmGqqhR30g3wQFGRz92BHUeTRqiCIFIy2eZUDbaThcs9/9
+         MHSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LG3n9bP9kGhQ7SFk9OxCo0gPqdU2gHnkRjsbnMNvlpY=;
+        b=VJ9Je1pMJGLfSZKRKIYEG3ZghhaGdn8sM5UM7hi86dKN9Zq3D9YPdLAA0dDIo7OzTF
+         ano/fJpWNZg/+jqlHleWisAHJaddvD/F92ryf6H2eH3FjW28XUq47jgc9vLJg4g8wrga
+         423L6p4Ha7/P63RtvOCGxD4jobMx/jbqczr00fxLKxM1QvOQIVJjnukkzvu7cZ4ZuxrF
+         cDm26Z7pBFGZOnu9roMwp3GhrnsolFLAiXCapctuyX8Q3Z+fCNICuIwlQs/0k4LxyDUH
+         cQbWWE+F4jHVIzTjVXxgl5OCOWnd1VDyrq2r4hDLKRFopBsK0ybEeNHgXBKEB2QkMLVf
+         E4Aw==
+X-Gm-Message-State: APjAAAWgrYhrbl2Bf6cPPBLsHW3OM0R+HEBkNWsa3dEyUN3md3+cY7Le
+        0NVO+NXEM75OUUvn0QTbWV0uwHRCPSag4uw=
+X-Google-Smtp-Source: APXvYqzBEVoefm0CTUlolawtZvE6I4DhOB8xVnHB4RcOwNng51oNe+T3twGd+mg4euQzW/lVWuwUFA==
+X-Received: by 2002:a7b:c387:: with SMTP id s7mr4391784wmj.110.1570828628423;
+        Fri, 11 Oct 2019 14:17:08 -0700 (PDT)
+Received: from ninjahub.lan (host-2-102-13-201.as13285.net. [2.102.13.201])
+        by smtp.googlemail.com with ESMTPSA id u2sm3265117wml.44.2019.10.11.14.17.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 14:17:07 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     gregkh@linuxfoundation.org, eric@anholt.net, wahrenst@gmx.net,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, daniela.mormocea@gmail.com,
+        dave.stevenson@raspberrypi.org, hverkuil-cisco@xs4all.nl,
+        mchehab+samsung@kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        sbranden@broadcom.com, rjui@broadcom.com, f.fainelli@gmail.com,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH] staging: vc04_services: fix warnings of lines should not end with open parenthesis
+Date:   Fri, 11 Oct 2019 22:16:37 +0100
+Message-Id: <20191011211637.19311-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26961586-8edd-4b05-29a5-08d74e8ffba3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 21:14:20.4349
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1WHCxKZc8Qwgr9ufKULcZSko8o9omcHpUGHXQe48Hf14MWWxCpz7Lr4Cj7IDLvvgq8zJP+bpomMVUOydjsL8ag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR06MB5894
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgNTRlY2I4Zjcw
-MjhjNWViM2Q3NDBiYjgyYjBmMWQ5MGYyZGY2M2M1YzoNCg0KICBMaW51eCA1LjQtcmMxICgyMDE5
-LTA5LTMwIDEwOjM1OjQwIC0wNzAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
-dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy9hbm5hL2xpbnV4
-LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuNC0yDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1
-cCB0byBhZjg0NTM3ZGJkMWIzOTUwNWQxZjNkODAyMzAyOWI0YTU5NjY2NTEzOg0KDQogIFNVTlJQ
-QzogZml4IHJhY2UgdG8gc2tfZXJyIGFmdGVyIHhzX2Vycm9yX3JlcG9ydCAoMjAxOS0xMC0xMCAx
-NjoxNDoyOCAtMDQwMCkNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KU3RhYmxlIGJ1Z2ZpeGVzOg0KLSBGaXggT19ESVJF
-Q1QgYWNjb3VudGluZyBvZiBudW1iZXIgb2YgYnl0ZXMgcmVhZC93cml0dGVuICMgdjQuMSsNCg0K
-T3RoZXIgZml4ZXM6DQotIEZpeCBuZnNpLT5ucmVxdWVzdHMgY291bnQgZXJyb3Igb24gbmZzX2lu
-b2RlX3JlbW92ZV9yZXF1ZXN0KCkNCi0gUmVtb3ZlIHJlZHVuZGFudCBtaXJyb3IgdHJhY2tpbmcg
-aW4gT19ESVJFQ1QNCi0gRml4IGxlYWsgb2YgY2xwLT5jbF9hY2NlcHRvciBzdHJpbmcNCi0gRml4
-IHJhY2UgdG8gc2tfZXJyIGFmdGVyIHhzX2Vycm9yX3JlcG9ydA0KDQpJIGhvcGUgeW91IGhhdmUg
-YSBnb29kIHdlZWtlbmQhDQpBbm5hDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpCZW5qYW1pbiBDb2RkaW5ndG9uICgxKToN
-CiAgICAgIFNVTlJQQzogZml4IHJhY2UgdG8gc2tfZXJyIGFmdGVyIHhzX2Vycm9yX3JlcG9ydA0K
-DQpDaHVjayBMZXZlciAoMSk6DQogICAgICBORlN2NDogRml4IGxlYWsgb2YgY2xwLT5jbF9hY2Nl
-cHRvciBzdHJpbmcNCg0KVHJvbmQgTXlrbGVidXN0ICgyKToNCiAgICAgIE5GUzogRml4IE9fRElS
-RUNUIGFjY291bnRpbmcgb2YgbnVtYmVyIG9mIGJ5dGVzIHJlYWQvd3JpdHRlbg0KICAgICAgTkZT
-OiBSZW1vdmUgcmVkdW5kYW50IG1pcnJvciB0cmFja2luZyBpbiBPX0RJUkVDVA0KDQpaaGFuZ1hp
-YW94dSAoMSk6DQogICAgICBuZnM6IEZpeCBuZnNpLT5ucmVxdWVzdHMgY291bnQgZXJyb3Igb24g
-bmZzX2lub2RlX3JlbW92ZV9yZXF1ZXN0DQoNCiBmcy9uZnMvZGlyZWN0LmMgICAgICAgICAgICAg
-ICAgIHwgMTA2ICsrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiBmcy9u
-ZnMvbmZzNHByb2MuYyAgICAgICAgICAgICAgIHwgICAxICsNCiBmcy9uZnMvd3JpdGUuYyAgICAg
-ICAgICAgICAgICAgIHwgICA1ICstDQogaW5jbHVkZS9saW51eC9zdW5ycGMveHBydHNvY2suaCB8
-ICAgMSArDQogbmV0L3N1bnJwYy94cHJ0c29jay5jICAgICAgICAgICB8ICAxNyArKystLS0tDQog
-NSBmaWxlcyBjaGFuZ2VkLCA0OSBpbnNlcnRpb25zKCspLCA4MSBkZWxldGlvbnMoLSkNCg==
+Fix warning of lines should not end with open parenthesis.
+Issue detected by checkpatch tool.
+
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ .../bcm2835-camera/bcm2835-camera.c           | 38 ++++++++-----------
+ 1 file changed, 16 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+index d4d1e44b16b2..c7bb6e3f529c 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+@@ -337,9 +337,8 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
+ 			if (is_capturing(dev)) {
+ 				v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
+ 					 "Grab another frame");
+-				vchiq_mmal_port_parameter_set(
+-					instance,
+-					dev->capture.camera_port,
++			vchiq_mmal_port_parameter_set(instance,
++						      dev->capture.camera_port,
+ 					MMAL_PARAMETER_CAPTURE,
+ 					&dev->capture.frame_count,
+ 					sizeof(dev->capture.frame_count));
+@@ -392,9 +391,8 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
+ 	    is_capturing(dev)) {
+ 		v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
+ 			 "Grab another frame as buffer has EOS");
+-		vchiq_mmal_port_parameter_set(
+-			instance,
+-			dev->capture.camera_port,
++		vchiq_mmal_port_parameter_set(instance,
++					      dev->capture.camera_port,
+ 			MMAL_PARAMETER_CAPTURE,
+ 			&dev->capture.frame_count,
+ 			sizeof(dev->capture.frame_count));
+@@ -1124,9 +1122,8 @@ static int mmal_setup_components(struct bm2835_mmal_dev *dev,
+ 					  dev->capture.timeperframe.numerator;
+ 		ret = vchiq_mmal_port_set_format(dev->instance, preview_port);
+ 		if (overlay_enabled) {
+-			ret = vchiq_mmal_port_connect_tunnel(
+-				dev->instance,
+-				preview_port,
++			ret = vchiq_mmal_port_connect_tunnel(dev->instance,
++							     preview_port,
+ 				&dev->component[COMP_PREVIEW]->input[0]);
+ 			if (!ret)
+ 				ret = vchiq_mmal_port_enable(dev->instance,
+@@ -1154,9 +1151,8 @@ static int mmal_setup_components(struct bm2835_mmal_dev *dev,
+ 			    camera_port->recommended_buffer.num;
+ 
+ 			ret =
+-			    vchiq_mmal_port_connect_tunnel(
+-					dev->instance,
+-					camera_port,
++			    vchiq_mmal_port_connect_tunnel(dev->instance,
++							   camera_port,
+ 					&encode_component->input[0]);
+ 			if (ret) {
+ 				v4l2_dbg(1, bcm2835_v4l2_debug,
+@@ -1655,8 +1651,8 @@ static int mmal_init(struct bm2835_mmal_dev *dev)
+ 	dev->capture.enc_level = V4L2_MPEG_VIDEO_H264_LEVEL_4_0;
+ 
+ 	/* get the preview component ready */
+-	ret = vchiq_mmal_component_init(
+-			dev->instance, "ril.video_render",
++	ret = vchiq_mmal_component_init(dev->instance,
++					"ril.video_render",
+ 			&dev->component[COMP_PREVIEW]);
+ 	if (ret < 0)
+ 		goto unreg_camera;
+@@ -1669,8 +1665,8 @@ static int mmal_init(struct bm2835_mmal_dev *dev)
+ 	}
+ 
+ 	/* get the image encoder component ready */
+-	ret = vchiq_mmal_component_init(
+-		dev->instance, "ril.image_encode",
++	ret = vchiq_mmal_component_init(dev->instance,
++					"ril.image_encode",
+ 		&dev->component[COMP_IMAGE_ENCODE]);
+ 	if (ret < 0)
+ 		goto unreg_preview;
+@@ -1731,15 +1727,13 @@ static int mmal_init(struct bm2835_mmal_dev *dev)
+ 
+ unreg_vid_encoder:
+ 	pr_err("Cleanup: Destroy video encoder\n");
+-	vchiq_mmal_component_finalise(
+-		dev->instance,
+-		dev->component[COMP_VIDEO_ENCODE]);
++	vchiq_mmal_component_finalise(dev->instance,
++				      dev->component[COMP_VIDEO_ENCODE]);
+ 
+ unreg_image_encoder:
+ 	pr_err("Cleanup: Destroy image encoder\n");
+-	vchiq_mmal_component_finalise(
+-		dev->instance,
+-		dev->component[COMP_IMAGE_ENCODE]);
++	vchiq_mmal_component_finalise(dev->instance,
++				      dev->component[COMP_IMAGE_ENCODE]);
+ 
+ unreg_preview:
+ 	pr_err("Cleanup: Destroy video render\n");
+-- 
+2.21.0
+
