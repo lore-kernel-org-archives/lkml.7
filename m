@@ -2,125 +2,96 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52260C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6F1ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285DF20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="mORW9XDH"
+	by mail.kernel.org (Postfix) with ESMTP id 6D02B21D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570780630;
+	bh=ExPB2LcrboMFCzOhxLXtekTOETsdzGtWe31It1sxYHA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aGtMmfzWVsRGTl6Zm9DVQumLmr9VjtBpheKr3lmJzTG5Qka/2HM3xCBiMjc4fd4ly
+	 fxBclz8LRZFmG43zHKitKYjEq8RTAwAmkHpjTYGwCmx3IqoaTbN13c5f0bbjBPOKNd
+	 YCPnFlWsYrq9j6ZcZd+/UId8npU/sNYXb8ep4xBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfJKHzs (ORCPT
+        id S1727600AbfJKH5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 03:55:48 -0400
-Received: from mail-eopbgr770044.outbound.protection.outlook.com ([40.107.77.44]:62998
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726461AbfJKHzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 03:55:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TRXJVCv8jrRThAvP3JyRAeSgduI9Loy7grJfo/v5/znGUkhzoFGyIlW3HBDgjTDaSjatJbHuKIq3Pufn3FMU7rbSs2hGRmXSTiv0BnGIlRaLSgUtKLzVvPVsMF+NVjnrcKwnyXJcCNAo+r//WLQmzCXCo6Iz5lYxaa5iFMyXj1rqD2REX5NdSEZCdFIqn3LWtlqedVx/dYsSjKJq381Q3Pya9sbiUtm+ZQFNTzx5qrX8cMrU5JJ9TIJKEAhBBXXwq5fNR+3UzuoZ7QzSDd5EJj29W/o1NNng/PrLPs/gxWy5DFbyHJGn+tTlFOGN6Zwz0+eJtHuTZZber9E/E0KTCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=okZTLIDlj0RBRhXFoaKKsRn+HB2lPVSL7EAKoU67yIU=;
- b=IgApdb/6BLIi/g7s8W0XbZyJhP9/UhJaoLN+VxfZBPFNWzFoXQlswZzy74AIroiP/ghIbOFeIXI4UxWm+F4OMgEciNyKwLDgeUrw1058pA+yKPOJDWfXp6v6ZpBTQPS8YW+FO1rfPIfKYks/ZRWAqH1xjyE3HEeDpegObClAYk0qGBVCluuHku2meOCtGu+oZEcvPNwRkpskv9QpUD0Y8wB4gb5vM7UajftM9Y+D6KW/tNedpbT/gELeb40TcSyysAx74n/Kttm4GHk0sm0kqyC/eT1UAdhIaAVVzYlljiGzUp5604KzRbSJNhvbVFJZ8YPPtqwipDAJHvc/r2UOhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=okZTLIDlj0RBRhXFoaKKsRn+HB2lPVSL7EAKoU67yIU=;
- b=mORW9XDHSfdVk1Rfaa6tc0stNBSUhr07Q9Mw14a5npwjof9xhDe15mv/UC5yyhw3KFn8meGGXgNixeCABeHLqXPHGVh8rxNrbxlJjsmpcgjkIKbvgrt2razGSZETdQftt1ZbWWsMEybpZg5fkQ3JHLesejcyj5x/Fnxp0ZKYFbs=
-Received: from DM6PR03MB4778.namprd03.prod.outlook.com (20.179.105.26) by
- DM6PR03MB4731.namprd03.prod.outlook.com (20.179.104.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.17; Fri, 11 Oct 2019 07:55:45 +0000
-Received: from DM6PR03MB4778.namprd03.prod.outlook.com
- ([fe80::6563:173:4df7:3edd]) by DM6PR03MB4778.namprd03.prod.outlook.com
- ([fe80::6563:173:4df7:3edd%5]) with mapi id 15.20.2347.021; Fri, 11 Oct 2019
- 07:55:45 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] pinctrl: berlin: as370: fix a typo s/spififib/spdifib
-Thread-Topic: [PATCH] pinctrl: berlin: as370: fix a typo s/spififib/spdifib
-Thread-Index: AQHVgAlJGISK+LQ82kuat3nbzX3Udg==
-Date:   Fri, 11 Oct 2019 07:55:45 +0000
-Message-ID: <20191011154321.44f08f9a@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYCPR01CA0094.jpnprd01.prod.outlook.com
- (2603:1096:405:3::34) To DM6PR03MB4778.namprd03.prod.outlook.com
- (2603:10b6:5:184::26)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 77b9c301-4060-4ae3-a6ac-08d74e206bae
-x-ms-traffictypediagnostic: DM6PR03MB4731:
-x-microsoft-antispam-prvs: <DM6PR03MB473161F55BA2184EAB406C1CED970@DM6PR03MB4731.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1186;
-x-forefront-prvs: 0187F3EA14
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(396003)(366004)(376002)(136003)(189003)(199004)(4744005)(71200400001)(71190400001)(66066001)(5660300002)(81156014)(316002)(50226002)(8676002)(54906003)(81166006)(8936002)(1076003)(3846002)(6116002)(6436002)(25786009)(186003)(6486002)(305945005)(256004)(14444005)(486006)(86362001)(6512007)(9686003)(476003)(7736002)(6916009)(386003)(6506007)(14454004)(52116002)(102836004)(26005)(66446008)(2906002)(478600001)(66476007)(66556008)(66946007)(64756008)(99286004)(4326008)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4731;H:DM6PR03MB4778.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Z+8qyjY+eb9taAeReE5ajfqhGqHS43kgJL9Js+fczMuqi1UZsCk6ZwZ652XPGorR+kIeeeFtkgWBrGB9fhKNEPfXmwiDMommUKa7qq3qUNo9PPrLcKTtepwQoOjJpRSkDkpBllegv78VDlt1FARK6kwtv24uxQg4NoDnhVR9NOr4Ym9xaJzx1uvGrpfwe6sV2lXh2vhbtN7dKkn504EN9QMMcqxzBAQbOlHsd+LPGZrlu5AclunQbQe0OrvA7fgTCPks6IZWBjsxbxK9gyw0yyZcI5571LTxoCzyzqi+vwdN+nYrtCyT4BpWvwdqy7qTwtxh5DisE0sp6hHMBoyx6HRIzDDsOGaodM4nSzruqG/SCc1gq75qhTeuiqoyLwMfnbKczuCPka6Wp6A5tultO4OxZF9YGRP77N8Zc+SuiKw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B7CC21E848F7224BB67D7EB898FF22DA@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 11 Oct 2019 03:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726461AbfJKH5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 03:57:09 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BF3820679;
+        Fri, 11 Oct 2019 07:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570780628;
+        bh=ExPB2LcrboMFCzOhxLXtekTOETsdzGtWe31It1sxYHA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T1W64LmGdrrKsHb5lcFrWm1EuOHiJhzQ6vuZZ9mmBBI1NJUOV0sEs2fPdkr4/iQZT
+         jPeOEqrSRYtipmjPoW8ugXL3sqbe7ZJyhkJaSnB7qfsQ05KIEYh8nyu5JVQM1UhfE7
+         paxcRWUwtYPnLYetmPpVXXyWWnixB+fKrCNzENjM=
+Date:   Fri, 11 Oct 2019 09:57:05 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     catalin.marinas@arm.com, davem@davemloft.net,
+        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
+        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
+        will@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 02/11] crypto: Add Allwinner sun8i-ce Crypto Engine
+Message-ID: <20191011075705.j5bqw2w6jmcrv5dz@gilmour>
+References: <20191010182328.15826-1-clabbe.montjoie@gmail.com>
+ <20191010182328.15826-3-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77b9c301-4060-4ae3-a6ac-08d74e206bae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 07:55:45.0961
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: usBhHQwTlymreBGUBfodnGPdtgGkyf7L5qfuzA7Jxi5TDzG9k5gDS5q1lvpWdePiurjVJZpy6FuxCZqwznv/9w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4731
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hxdp6s4p3ktvf5rr"
+Content-Disposition: inline
+In-Reply-To: <20191010182328.15826-3-clabbe.montjoie@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function should be spdifib, fix this typo.
 
-Fixes: 423ddc580b13 ("pinctrl: berlin: add the as370 SoC pinctrl driver")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/pinctrl/berlin/pinctrl-as370.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--hxdp6s4p3ktvf5rr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/pinctrl/berlin/pinctrl-as370.c b/drivers/pinctrl/berli=
-n/pinctrl-as370.c
-index 44f8ccdbeeff..9dfdc275ee33 100644
---- a/drivers/pinctrl/berlin/pinctrl-as370.c
-+++ b/drivers/pinctrl/berlin/pinctrl-as370.c
-@@ -43,7 +43,7 @@ static const struct berlin_desc_group as370_soc_pinctrl_g=
-roups[] =3D {
- 			BERLIN_PINCTRL_FUNCTION(0x0, "gpio"), /* GPIO5 */
- 			BERLIN_PINCTRL_FUNCTION(0x1, "i2s1"), /* DO3 */
- 			BERLIN_PINCTRL_FUNCTION(0x2, "pwm"), /* PWM5 */
--			BERLIN_PINCTRL_FUNCTION(0x3, "spififib"), /* SPDIFIB */
-+			BERLIN_PINCTRL_FUNCTION(0x3, "spdifib"), /* SPDIFIB */
- 			BERLIN_PINCTRL_FUNCTION(0x4, "spdifo"), /* SPDIFO */
- 			BERLIN_PINCTRL_FUNCTION(0x5, "phy")), /* DBG5 */
- 	BERLIN_PINCTRL_GROUP("I2S1_MCLK", 0x0, 0x3, 0x12,
---=20
-2.23.0
+On Thu, Oct 10, 2019 at 08:23:19PM +0200, Corentin Labbe wrote:
+> +	ce->reset = devm_reset_control_get_optional(&pdev->dev, "bus");
+> +	if (IS_ERR(ce->reset)) {
+> +		if (PTR_ERR(ce->reset) == -EPROBE_DEFER)
+> +			return PTR_ERR(ce->reset);
+> +		dev_err(&pdev->dev, "No reset control found\n");
+> +		return PTR_ERR(ce->reset);
+> +	}
 
+There's only one reset so you don't need that name.
+
+And I'm not sure why you're using the optional variant, it's required
+by your binding.
+
+Maxime
+
+--hxdp6s4p3ktvf5rr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXaA10QAKCRDj7w1vZxhR
+xdFDAP4z2YXaSscQlnjsH4zr2VB2gt6uDBKoFCnpm7jjmt5m8wD6A51EfrA7MNrg
++4UUrvYx5Q4Ij377kSHvZ927yk3uXAg=
+=IagG
+-----END PGP SIGNATURE-----
+
+--hxdp6s4p3ktvf5rr--
