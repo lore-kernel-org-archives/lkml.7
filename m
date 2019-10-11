@@ -6,107 +6,61 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F0FC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E74C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EA5214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082F6214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfJKNoD (ORCPT
+        id S1728492AbfJKNo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:44:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:60794 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727589AbfJKNoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:44:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B1A6337;
-        Fri, 11 Oct 2019 06:44:02 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C62613F68E;
-        Fri, 11 Oct 2019 06:44:00 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 14:43:54 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: ARM Juno r1 + CONFIG_PROVE_LOCKING=y => boot failure
-Message-ID: <20191011134354.GA31516@bogus>
-References: <CGME20191011092604eucas1p1ca11ab9c4c7508776914b0eb4f35e69b@eucas1p1.samsung.com>
- <33a83dce-e9f0-7814-923b-763d33e70257@samsung.com>
- <20191011100521.GA5122@bogus>
- <7655fb41-cd13-0bc4-e656-040e0875bab8@arm.com>
- <2bf88cd2-9c4f-11dc-4b70-f717de891cff@samsung.com>
- <20191011131058.GA26061@bogus>
- <0b02b15f-38be-7a63-14cc-eabd288782eb@samsung.com>
+        Fri, 11 Oct 2019 09:44:28 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:34128 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbfJKNo1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:44:27 -0400
+Received: from [167.98.27.226] (helo=[10.35.5.173])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iIvDV-0005kC-UC; Fri, 11 Oct 2019 14:44:26 +0100
+Subject: Re: [PATCH] arm: add kernel/fork.c function definitions
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191009140637.12443-1-ben.dooks@codethink.co.uk>
+ <20191009153316.GA25186@infradead.org>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <12dd599c-e7e8-2cdb-4363-fdf18c023bef@codethink.co.uk>
+Date:   Fri, 11 Oct 2019 14:44:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0b02b15f-38be-7a63-14cc-eabd288782eb@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191009153316.GA25186@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 03:15:32PM +0200, Marek Szyprowski wrote:
-> Hi Sudeep
->
-> On 11.10.2019 15:10, Sudeep Holla wrote:
-> > On Fri, Oct 11, 2019 at 03:02:42PM +0200, Marek Szyprowski wrote:
-> >> Hi James,
-> >>
-> >> On 11.10.2019 12:38, James Morse wrote:
-> >>> Hi guys,
-> >>>
-> >>> On 11/10/2019 11:05, Sudeep Holla wrote:
-> >>>> On Fri, Oct 11, 2019 at 11:26:04AM +0200, Marek Szyprowski wrote:
-> >>>>> Recently I've got access to ARM Juno R1 board and did some tests with
-> >>>>> current mainline kernel on it. I'm a bit surprised that enabling
-> >>>>> CONFIG_PROVE_LOCKING causes a boot failure on this board. After enabling
-> >>>>> this Kconfig option, I get no single message from the kernel, although I
-> >>>>> have earlycon enabled.
-> >>>> I don't have Juno R1 but I tried defconfig + CONFIG_PROVE_LOCKING and
-> >>>> it boots fine.
-> >>> I just tried this on my r1, v5.4-rc1 with this configuration worked just fine.
-> >>>
-> >>> My cmdline is:
-> >>> | root=/dev/sda6 loglevel=9 earlycon=pl011,0x7ff80000 hugepagesz=2M hugepages=512
-> >>> | crashkernel=1G console=ttyAMA0 resume=/dev/sda2 no_console_suspend efi=debug
-> >>>
-> >> That is a bit strange. Here is a boot log from v5.4-rc1 with pure
-> >> defconfig: https://paste.debian.net/1105851/
-> >>
-> > I see from the boot log that both Image.gz and dtb being loaded at the
-> > same address 0x82000000, will u-boot uncompress it elsewhere after loading
-> > it ? Just for my understanding.
->
-> tftp downloads Image.gz to 0x82000000, then decompress it to
-> $kernel_addr to save transfer time
->
-> my bootcmd is:
->
-> tftp ${fdt_addr} juno/Image.gz; unzip ${fdt_addr} ${kernel_addr}; tftp
-> ${fdt_addr} juno/juno-r1.dtb; booti ${kernel_addr} - ${fdt_addr};
->
+On 09/10/2019 16:33, Christoph Hellwig wrote:
+> On Wed, Oct 09, 2019 at 03:06:37PM +0100, Ben Dooks wrote:
+>> Add the definitions of arch_release_task_struct,
+>> arch_task_cache_init and arch_dup_task_struct which
+>> are used in kernel/fork.c but defined in various
+>> architecture's <asm/thread_info.h>.
+> 
+> So please lift them into a common header.  In fact I'm pretty sure
+> I had that comment before when people did the same blind sparse
+> cleanups for riscv..
 
-Thanks for the info. I got hold of R1 board(not the one James has ;))
-and it works fine on that too.
+Does anyone have a preference to where these should go?
 
-Further, with reference to the commit you mentioned make sure defconfig
-works with that as it's a commit in the middle of merge window.
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
 
-I am using gcc7 and I noticed yours is gcc6 not sure if that makes any
-difference. Just listing the differences.
-
-I will see if I can grab the exact linaro binaries.
-
---
-Regards,
-Sudeep
+https://www.codethink.co.uk/privacy.html
