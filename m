@@ -5,31 +5,31 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAECECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400EFC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE45720673
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2C421D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbfJKS2R (ORCPT
+        id S1728841AbfJKS2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 14:28:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33598 "EHLO
+        Fri, 11 Oct 2019 14:28:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33599 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728501AbfJKS2Q (ORCPT
+        with ESMTP id S1728735AbfJKS2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 14:28:16 -0400
+        Fri, 11 Oct 2019 14:28:18 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iIzdq-0008Sm-2Q; Fri, 11 Oct 2019 20:27:54 +0200
+        id 1iIzdj-0008R6-29; Fri, 11 Oct 2019 20:27:47 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B2A9E1C0324;
-        Fri, 11 Oct 2019 20:27:53 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 18:27:53 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 953461C0324;
+        Fri, 11 Oct 2019 20:27:46 +0200 (CEST)
+Date:   Fri, 11 Oct 2019 18:27:46 -0000
 From:   "tip-bot2 for Steve Wahl" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
@@ -53,7 +53,7 @@ Cc:     Steve Wahl <steve.wahl@hpe.com>, Borislav Petkov <bp@suse.de>,
 In-Reply-To: <9c011ee51b081534a7a15065b1681d200298b530.1569358539.git.steve.wahl@hpe.com>
 References: <9c011ee51b081534a7a15065b1681d200298b530.1569358539.git.steve.wahl@hpe.com>
 MIME-Version: 1.0
-Message-ID: <157081847364.9978.9626612100722839628.tip-bot2@tip-bot2>
+Message-ID: <157081846655.9978.8543242326238590954.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
