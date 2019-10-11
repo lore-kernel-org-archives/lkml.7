@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C90C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF74EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6222620B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4962196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JiDnktEV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kTqYPLOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfJKA2b (ORCPT
+        id S1727708AbfJKA2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:28:31 -0400
-Received: from mail-lj1-f173.google.com ([209.85.208.173]:42376 "EHLO
-        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727580AbfJKA23 (ORCPT
+        Thu, 10 Oct 2019 20:28:35 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38229 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfJKA2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:28:29 -0400
-Received: by mail-lj1-f173.google.com with SMTP id y23so7996663lje.9
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:28:28 -0700 (PDT)
+        Thu, 10 Oct 2019 20:28:34 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u28so5722556lfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:28:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dRRusRl3mddScRkdUTvMTuf5U4XldYcoWbxA4ajO70k=;
-        b=JiDnktEVbjGXgr5jDkjz+nyzDLWoFzL++RSonmBJ1+BCVuJHjKwvQRzKF2N/0yd6X3
-         rRShXLxxe8luonjB3if8Jju9/CgVbuDGlKy/tg8MSeZioRHeKgP5R4sAwJ5pVtugVZwQ
-         JLSmYuNW4Tkf/qJPHii/E3gkbv2vFALS202fCqRZBL05OL+6ne+UYEpmQga9PbjCPqSN
-         0nWRvKpvNQVVfZbRUm6eOPYne/3Ur1hzKNikB6xuy0ht798+2g9CoCrzv5U9X0ClflYt
-         bD2ySMU/NdPjLvXb8qgPsw5CokeevbTK2D02ulcZeGt2HKfrL+qGbxbpXdo/hefjqt84
-         jA9w==
+        bh=IxUitNmcKfvxEmpW+0pRzzeuEr0YPZuYrEHpJHWrZps=;
+        b=kTqYPLOm4wkOer6jQLN5gXRo5/W99qjv/h0pNIhkC9Ld+vW4Z+/itjrilnApQ2JV2J
+         TTWqfjhzT39OjcRXZQLH8WwhLYpDhXrr+t9IOYUK9UdEhhkN6J015Y57WnoYWF/1Fm4o
+         fDOWOcP9H6AQPh3K8REifyxBGiaZJpDkSu4Z0qX5TwElBrZNVKrTnI20OzTm2hNz2+rb
+         qh2Mk/1hUCT2Vz3vAbU9o6YoliEGiGn3QBwM+Oiz4PeCvHHS4iE3/pZ11Fgd9NkIKB1v
+         eoovDJSYruFUOZDr1MGwaSzpJW23LpPLjxnioiLCQuw5aMuBjU+oURZSl5Q7abTzX1qq
+         P5cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=dRRusRl3mddScRkdUTvMTuf5U4XldYcoWbxA4ajO70k=;
-        b=Kb/T3ggaNxnC6GysAnc2A32xpYlu4ry9eRPt+cOVQjxPi9M+iAgOlgVoSv5o4zFr8X
-         OHHoKfPf9L2jzKE7qIaXK3u2jWf21O2UGFDlXzJggSRmN0SfKWZ6EeEJx3gbHGTyDmUo
-         wmi9n7+E/0+Bmj25274Madxc8n00gW6weQ0MwdIZ2Q490Df+VHqI+LGkTDQ+X4Rk23aV
-         CmRQel8wPFKaIyTkMcZUPl3FMuw9P8DYEDjwWOgCvNAvx7rAgRH7lim4AhYbvipvhQzp
-         i/kh7NEpZg/97mJdxmrZrbkgZvMS3oijZnV/zP2UUwvnLp1ij2Acd1HzqUD3PaNuIm1x
-         mS9A==
-X-Gm-Message-State: APjAAAXifSazf5+p8LHNjDRxphiha/HkjCrWkdK/vG2tMzN1Zm3fbq0j
-        zWQEZ/UFDtyj3YytOnQw8f/Qsg==
-X-Google-Smtp-Source: APXvYqzUQuIDYXVqvleZeaiTHjhwry2+VSzhEq2mtNCyA7UuGrBLAmUOj5lnWPr/cyPl23bZHeF5gA==
-X-Received: by 2002:a2e:a211:: with SMTP id h17mr7749678ljm.251.1570753707769;
-        Thu, 10 Oct 2019 17:28:27 -0700 (PDT)
+        bh=IxUitNmcKfvxEmpW+0pRzzeuEr0YPZuYrEHpJHWrZps=;
+        b=NT0cJAn5nojM/t3hEoVe+G+WMwuiMM76brTioTibR5aYvqEWM1EC231Hb96mn6CUwv
+         erPW1z3yKKlzmbX8U7nt0uR0z5wRRihb21+jX1PfJLZ+zRNZZ8YNeHIJu8vQpmYWEYKu
+         CbbLHW+E+TqRg27mgCjah380WGKhnuXKQhrlf/3B5b3qhHWaik2XVB1eMxrD3kws2KzK
+         JBFJZR6xMrvSOE+72z5RSrJaUuCUMH4dKqh0jXpueuJ5SaBlKn2eqh1wioY96CkFBC4I
+         pny/AUlxxtRV1BGTcOmp1pIWbLWPV4d+2d4wVVVM83V3ExXYws+GW4+M5IiB95T+uMy3
+         /7Uw==
+X-Gm-Message-State: APjAAAU2PAjtA/nlOss9jakKQnSor2Mtm8RGLCJB8W8PsZV92fP/fs66
+        xtYoxMxFMvSvMsCU8j2l6ce6Tg==
+X-Google-Smtp-Source: APXvYqzHeGSBOiLyOxNG/e1y4z5FSvnF5jGGj+/MXQi9l5yutw8m/8VcVXNMlQMrzLm7F5KTInoUew==
+X-Received: by 2002:ac2:42c7:: with SMTP id n7mr4905180lfl.138.1570753710432;
+        Thu, 10 Oct 2019 17:28:30 -0700 (PDT)
 Received: from localhost.localdomain (88-201-94-178.pool.ukrtel.net. [178.94.201.88])
-        by smtp.gmail.com with ESMTPSA id 126sm2367010lfh.45.2019.10.10.17.28.26
+        by smtp.gmail.com with ESMTPSA id 126sm2367010lfh.45.2019.10.10.17.28.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 17:28:27 -0700 (PDT)
+        Thu, 10 Oct 2019 17:28:29 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
         davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
@@ -63,9 +63,9 @@ Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
         ilias.apalodimas@linaro.org, sergei.shtylyov@cogentembedded.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v5 bpf-next 05/15] samples/bpf: use __LINUX_ARM_ARCH__ selector for arm
-Date:   Fri, 11 Oct 2019 03:27:58 +0300
-Message-Id: <20191011002808.28206-6-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v5 bpf-next 07/15] samples/bpf: add makefile.target for separate CC target build
+Date:   Fri, 11 Oct 2019 03:28:00 +0300
+Message-Id: <20191011002808.28206-8-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
 References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
@@ -74,37 +74,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For arm, -D__LINUX_ARM_ARCH__=X is min version used as instruction
-set selector and is absolutely required while parsing some parts of
-headers. It's present in KBUILD_CFLAGS but not in autoconf.h, so let's
-retrieve it from and add to programs cflags. In another case errors
-like "SMP is not supported" for armv7 and bunch of other errors are
-issued resulting to incorrect final object.
+The Makefile.target is added only and will be used in
+sample/bpf/Makefile later in order to switch cross-compiling to CC
+from HOSTCC environment.
+
+The HOSTCC is supposed to build binaries and tools running on the host
+afterwards, in order to simplify build or so, like "fixdep" or else.
+In case of cross compiling "fixdep" is executed on host when the rest
+samples should run on target arch. In order to build binaries for
+target arch with CC and tools running on host with HOSTCC, lets add
+Makefile.target for simplicity, having definition and routines similar
+to ones, used in script/Makefile.host. This allows later add
+cross-compilation to samples/bpf with minimum changes.
+
+The tprog stands for target programs built with CC.
+
+Makefile.target contains only stuff needed for samples/bpf, potentially
+can be reused later and now needed only for unblocking tricky
+samples/bpf cross compilation.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- samples/bpf/Makefile | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ samples/bpf/Makefile.target | 75 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 samples/bpf/Makefile.target
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index cf882e43648a..9b33e7395eac 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -185,6 +185,14 @@ HOSTLDLIBS_map_perf_test	+= -lrt
- HOSTLDLIBS_test_overhead	+= -lrt
- HOSTLDLIBS_xdpsock		+= -pthread
- 
-+ifeq ($(ARCH), arm)
-+# Strip all except -D__LINUX_ARM_ARCH__ option needed to handle linux
-+# headers when arm instruction set identification is requested.
-+ARM_ARCH_SELECTOR := $(filter -D__LINUX_ARM_ARCH__%, $(KBUILD_CFLAGS))
-+BPF_EXTRA_CFLAGS := $(ARM_ARCH_SELECTOR)
-+KBUILD_HOSTCFLAGS += $(ARM_ARCH_SELECTOR)
+diff --git a/samples/bpf/Makefile.target b/samples/bpf/Makefile.target
+new file mode 100644
+index 000000000000..7621f55e2947
+--- /dev/null
++++ b/samples/bpf/Makefile.target
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: GPL-2.0
++# ==========================================================================
++# Building binaries on the host system
++# Binaries are not used during the compilation of the kernel, and intended
++# to be build for target board, target board can be host of course. Added to
++# build binaries to run not on host system.
++#
++# Sample syntax
++# tprogs-y := xsk_example
++# Will compile xsk_example.c and create an executable named xsk_example
++#
++# tprogs-y    := xdpsock
++# xdpsock-objs := xdpsock_1.o xdpsock_2.o
++# Will compile xdpsock_1.c and xdpsock_2.c, and then link the executable
++# xdpsock, based on xdpsock_1.o and xdpsock_2.o
++#
++# Derived from scripts/Makefile.host
++#
++__tprogs := $(sort $(tprogs-y))
++
++# C code
++# Executables compiled from a single .c file
++tprog-csingle	:= $(foreach m,$(__tprogs), \
++			$(if $($(m)-objs),,$(m)))
++
++# C executables linked based on several .o files
++tprog-cmulti	:= $(foreach m,$(__tprogs),\
++			$(if $($(m)-objs),$(m)))
++
++# Object (.o) files compiled from .c files
++tprog-cobjs	:= $(sort $(foreach m,$(__tprogs),$($(m)-objs)))
++
++tprog-csingle	:= $(addprefix $(obj)/,$(tprog-csingle))
++tprog-cmulti	:= $(addprefix $(obj)/,$(tprog-cmulti))
++tprog-cobjs	:= $(addprefix $(obj)/,$(tprog-cobjs))
++
++#####
++# Handle options to gcc. Support building with separate output directory
++
++_tprogc_flags   = $(TPROGS_CFLAGS) \
++                 $(TPROGCFLAGS_$(basetarget).o)
++
++# $(objtree)/$(obj) for including generated headers from checkin source files
++ifeq ($(KBUILD_EXTMOD),)
++ifdef building_out_of_srctree
++_tprogc_flags   += -I $(objtree)/$(obj)
++endif
 +endif
 +
- # Allows pointing LLC/CLANG to a LLVM backend with bpf support, redefine on cmdline:
- #  make samples/bpf/ LLC=~/git/llvm/build/bin/llc CLANG=~/git/llvm/build/bin/clang
- LLC ?= llc
++tprogc_flags    = -Wp,-MD,$(depfile) $(_tprogc_flags)
++
++# Create executable from a single .c file
++# tprog-csingle -> Executable
++quiet_cmd_tprog-csingle 	= CC  $@
++      cmd_tprog-csingle	= $(CC) $(tprogc_flags) $(TPROGS_LDFLAGS) -o $@ $< \
++		$(TPROGS_LDLIBS) $(TPROGLDLIBS_$(@F))
++$(tprog-csingle): $(obj)/%: $(src)/%.c FORCE
++	$(call if_changed_dep,tprog-csingle)
++
++# Link an executable based on list of .o files, all plain c
++# tprog-cmulti -> executable
++quiet_cmd_tprog-cmulti	= LD  $@
++      cmd_tprog-cmulti	= $(CC) $(tprogc_flags) $(TPROGS_LDFLAGS) -o $@ \
++			  $(addprefix $(obj)/,$($(@F)-objs)) \
++			  $(TPROGS_LDLIBS) $(TPROGLDLIBS_$(@F))
++$(tprog-cmulti): $(tprog-cobjs) FORCE
++	$(call if_changed,tprog-cmulti)
++$(call multi_depend, $(tprog-cmulti), , -objs)
++
++# Create .o file from a single .c file
++# tprog-cobjs -> .o
++quiet_cmd_tprog-cobjs	= CC  $@
++      cmd_tprog-cobjs	= $(CC) $(tprogc_flags) -c -o $@ $<
++$(tprog-cobjs): $(obj)/%.o: $(src)/%.c FORCE
++	$(call if_changed_dep,tprog-cobjs)
 -- 
 2.17.1
 
