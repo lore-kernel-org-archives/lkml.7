@@ -2,111 +2,107 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0F0C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D007ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F14521D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A392190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:32:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570807978;
+	bh=a5aI9kGd8914ij1xkvqBnSj8mL4+xJaBSyyLL2y1qdo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GYU+vlQYQBW9csOalv7upid11UxRouYzXwI9ZKRR2DBPn7uGjQvylpzhQsvOW1Qj3
+	 Uxu8Sk5RNla8aOkitbwO5x78NUyQn8ll+RFjxdO0AnrJ22fm4TeSQNy7BgeGZ8iqSF
+	 uVQM75VQaZHGE/KLBYOPl+1w4/6f9t8JaIM2LSW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfJKPcb (ORCPT
+        id S1728260AbfJKPc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:32:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:35922 "EHLO foss.arm.com"
+        Fri, 11 Oct 2019 11:32:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbfJKPcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:32:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2272A142F;
-        Fri, 11 Oct 2019 08:32:31 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A6D93F68E;
-        Fri, 11 Oct 2019 08:32:28 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 16:32:26 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Richard Henderson <richard.henderson@linaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Weimer <fweimer@redhat.com>,
-        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
-Subject: Re: [PATCH v2 05/12] arm64: Basic Branch Target Identification
- support
-Message-ID: <20191011153225.GL27757@arm.com>
-References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
- <1570733080-21015-6-git-send-email-Dave.Martin@arm.com>
- <20191011151028.GE33537@lakrids.cambridge.arm.com>
- <4e09ca54-f353-9448-64ed-4ba1e38c6ebc@linaro.org>
+        id S1726705AbfJKPc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:32:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A9F206A1;
+        Fri, 11 Oct 2019 15:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570807975;
+        bh=a5aI9kGd8914ij1xkvqBnSj8mL4+xJaBSyyLL2y1qdo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IIxhbo/m1o0kKegJEDiscNOcWjdlAh2zAfP4a0otj9vJI80QjghL+p9Bv/ovVriia
+         OFJlqvxutMFm+Q1cLz5l07hohok5rYNdIgPaOToeKJPgWiyzJJ+qKL2xOds8QaJcvQ
+         YfgcfHSXtPRAbnrrruxkjyH6y5zHCtDV4iNbB+X8=
+Date:   Fri, 11 Oct 2019 17:32:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Martijn Coenen <maco@android.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Shaun Ruffell <sruffell@sruffell.net>,
+        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-modules@vger.kernel.org
+Subject: Re: [PATCH 1/4] modpost: delegate updating namespaces to separate
+ function
+Message-ID: <20191011153253.GB1283883@kroah.com>
+References: <20191010151443.7399-1-maennich@google.com>
+ <20191010151443.7399-2-maennich@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4e09ca54-f353-9448-64ed-4ba1e38c6ebc@linaro.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20191010151443.7399-2-maennich@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:25:33AM -0400, Richard Henderson wrote:
-> On 10/11/19 11:10 AM, Mark Rutland wrote:
-> > On Thu, Oct 10, 2019 at 07:44:33PM +0100, Dave Martin wrote:
-> >> @@ -730,6 +730,11 @@ static void setup_return
-> >>  	regs->regs[29] = (unsigned long)&user->next_frame->fp;
-> >>  	regs->pc = (unsigned long)ka->sa.sa_handler;
-> >>  
-> >> +	if (system_supports_bti()) {
-> >> +		regs->pstate &= ~PSR_BTYPE_MASK;
-> >> +		regs->pstate |= PSR_BTYPE_CALL;
-> >> +	}
-> >> +
-> > 
-> > I think we might need a comment as to what we're trying to ensure here.
-> > 
-> > I was under the (perhaps mistaken) impression that we'd generate a
-> > pristine pstate for a signal handler, and it's not clear to me that we
-> > must ensure the first instruction is a target instruction.
+On Thu, Oct 10, 2019 at 04:14:40PM +0100, Matthias Maennich wrote:
+> Let the function 'sym_update_namespace' take care of updating the
+> namespace for a symbol. While this currently only replaces one single
+> location where namespaces are updated, in a following patch, this
+> function will get more call sites.
 > 
-> I think it makes sense to treat entry into a signal handler as a call.  Code
-> that has been compiled for BTI, and whose page has been marked with PROT_BTI,
-> will already have the pauth/bti markup at the beginning of the signal handler
-> function; we might as well verify that.
+> The function signature is intentionally close to sym_update_crc and
+> taking the name by char* seems like unnecessary work as the symbol has
+> to be looked up again. In a later patch of this series, this concern
+> will be addressed.
 > 
-> Otherwise sigaction becomes a hole by which an attacker can force execution to
-> start at any arbitrary address.
+> This function ensures that symbol::namespace is either NULL or has a
+> valid non-empty value. Previously, the empty string was considered 'no
+> namespace' as well and this lead to confusion.
+> 
+> Signed-off-by: Matthias Maennich <maennich@google.com>
+> ---
+>  scripts/mod/modpost.c | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
+> 
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index 4d2cdb4d71e3..9f5dcdff4d2f 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -362,6 +362,22 @@ static char *sym_extract_namespace(const char **symname)
+>  	return namespace;
+>  }
+>  
+> +static void sym_update_namespace(const char *symname, const char *namespace)
+> +{
+> +       struct symbol *s = find_symbol(symname);
+> +       /* That symbol should have been created earlier and thus this is
+> +        * actually an assertion. */
 
-Ack, that's the intended rationale -- I also outlined this in the commit
-message.
+Do we care about checkpatch issues in tools?
 
-Does this sound reasonable?
+If so, you need a blank line before the comment :)
 
+Anyway, not a big deal
 
-Either way, I feel we should do this: any function in a PROT_BTI page
-should have a suitable landing pad.  There's no reason I can see why
-a protection given to any other callback function should be omitted
-for a signal handler.
-
-Note, if the signal handler isn't in a PROT_BTI page then overriding
-BTYPE here will not trigger a Branch Target exception.
-
-I'm happy to drop a brief comment into the code also, once we're
-agreed on what the code should be doing.
-
-Cheers
----Dave
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
