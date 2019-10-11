@@ -2,146 +2,177 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B611DC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CAEC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 823A021A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:59:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="aRoUySdR"
+	by mail.kernel.org (Postfix) with ESMTP id D2D2721D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbfJKI7Z (ORCPT
+        id S1727603AbfJKI7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:59:25 -0400
-Received: from mail-eopbgr800073.outbound.protection.outlook.com ([40.107.80.73]:16992
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726310AbfJKI7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:59:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VYUz9MuZaA1lCuziKgxtI7YqqJHA1PNJbwY4EcpIXZBDQNhXmrYDeZ/ik02Xgvep6zvgUFj6HJm9MXX6EKgfw7h6cQ7FX2+wHVBsjxlOsZ0pePrewG0w8RSo4Bk1u9iHhaDa64QUDBmN6iy01/BrFBI5UBRwqbnV7rEwhD3kIwxGaA87XOmC+8gKx3ZELwuhKknxIc5N4fvT0Y2JAQe+PHSKyMZhXODOiQ3o+rGvJlRZyOe8s1UdJa8neyFlXCOV/FLAtJO+QmCeA/lMTmdp250uiFVQsj5ZQbSQnelw88Ccq+M2BBnXR2D7Yr2hATPl/Xvy/39CPqBZrkdXjjKnUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3IZfKVvhJxysuojyZ5QV2VmweEsaDOf6yWOHK2Dg0Bs=;
- b=Btq1pYci6l9zwMh14RChsLe40ieSRRP185Zeem7+d2kWFo6Fam32WM4yXAA7VKCuPGNZezuC5Ivize+fP8ZRH247OigkT1JserCYKRQo5tcElD8fYExgxauomD6J3n9L9pGTNgnMNGpY392hqLCS6qkehG2DOG2XBuSMYTAKA9wQmQFiLrU2vLe1xRP2sBxkSBduExqxDadIkUhG8SZutnIl5MzPEkPOMyYM4tdW2rrOo6pC24VwbH7EXsFcFf7CpO4Go+cFlz8jVUJQc9tt7WfUQFoVQciWoiLXLNxoAbhYL6xQEqnM4/fcBLbxHl2v6mIpo+n9JQghzGp+0lkMiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3IZfKVvhJxysuojyZ5QV2VmweEsaDOf6yWOHK2Dg0Bs=;
- b=aRoUySdRehRP2KSi5qoGAPzWCh3otA7dE7cF/1ag3b7t/l/3NdZnGMeP/RehgVHdudUCbBk9c/F0apPYMvq+wkw95KniGUa5Aac/YKjWdhZESozOUAJEZvQ7I+zoCoshaJUeZfN57sSHoCAVeQmPO6nfO646TRsARXh5f7m9Wj0=
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.230.25) by
- CH2PR02MB6455.namprd02.prod.outlook.com (10.255.155.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Fri, 11 Oct 2019 08:59:22 +0000
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::691b:556b:b63d:6482]) by CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::691b:556b:b63d:6482%6]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
- 08:59:22 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>
-CC:     Derek Kiernan <dkiernan@xilinx.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: RE: [PATCH] docs: misc: xilinx_sdfec: Actually add documentation
-Thread-Topic: [PATCH] docs: misc: xilinx_sdfec: Actually add documentation
-Thread-Index: AQHVeUNjgR5wSI9FSUekjWo2K94HoadUg5CAgAAA84CAAK0BYA==
-Date:   Fri, 11 Oct 2019 08:59:22 +0000
-Message-ID: <CH2PR02MB6359973E7718EC50FE36E9C6CB970@CH2PR02MB6359.namprd02.prod.outlook.com>
-References: <201910021000.5E421A6F8F@keescook>  <201910101535.1804FC6@keescook>
- <20191010163905.70a4d6e1@lwn.net>
-In-Reply-To: <20191010163905.70a4d6e1@lwn.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04e3c25d-dc10-496e-2519-08d74e294f16
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: CH2PR02MB6455:|CH2PR02MB6455:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6455F0ED056A45276B2B787BCB970@CH2PR02MB6455.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0187F3EA14
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(199004)(189003)(13464003)(55016002)(6116002)(3846002)(54906003)(229853002)(64756008)(66446008)(66476007)(33656002)(110136005)(99286004)(4326008)(9686003)(6306002)(66946007)(66556008)(76116006)(6436002)(316002)(86362001)(6246003)(25786009)(7736002)(305945005)(52536014)(5660300002)(74316002)(66066001)(81166006)(81156014)(8676002)(8936002)(14444005)(256004)(71200400001)(71190400001)(186003)(14454004)(966005)(6506007)(53546011)(478600001)(76176011)(102836004)(486006)(7696005)(446003)(2906002)(11346002)(26005)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6455;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I4PiRCdOJmTfaIP0Ipsc5t04AxXh6rpW6BvYu4wdaktoJYjk8P4/WV/FU8Qw4nrvmgm+97LItZ8qSg2AS9bAhwi1YoPwahP9Fmxp0hWInMCSRNpd2NNTBNjmn40qq7UJN9XZzU5hvd2hyGyfY0toMnZ48jZrqvx7XK2n7CPC5GMm1/yKBVVt+SMGyKQfOukhWMxAfPVtjzsgfVsk9Ajp7PmJGS35w8ezlBWzf6fKeYuNTN2gCPNSHKrdGkm5Wwbq615X3ZuMm0ykWaREaBRtQQomFWcKCBITLp3eiL04rpl6GS980gdNgMtNCEZth1eKgxPSeWTOI1MlnDvDZ0WcjzSOQQv0k2pZJxCTXupX7FXICKanU+tMKAxCMsvZNBlsVHpHS8IpVD043uRJtRq5uyYOpRP8hz1DWKH2E8GPUt9yI77xm1YRf+PB3fbEbRK0aHJsUeP1KWrAPeFtEN51eA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 11 Oct 2019 04:59:54 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:41896 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfJKI7y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 04:59:54 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 7EF9715C23027B;
+        Fri, 11 Oct 2019 08:59:47 +0000 (UTC)
+Received: from saetre (unknown [154.53.1.40])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Fri, 11 Oct 2019 08:59:47 +0000 (UTC)
+Message-ID: <c35284f42e127a3bd276e85d9ae39a9ad1736faf.camel@archlinux.org>
+Subject: Re: [PATCH v4 1/4] HID: logitech: Add MX Mice over Bluetooth
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Mazin Rezk <mnrzk@protonmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAO-hwJK+V=CE8_NjqRszPA6dbGq1yNJAtOAm2qmqVjgK_XzEHw@mail.gmail.com>
+References: <uBbIS3nFJ1jdYNLHcqjW5wxQAwmZv0kmYEoeoPrxNhfzi6cHwmCOY-ewdqe7S1hNEj-p4Hd9D0_Y3PymUTdh_6WFXuMmIYUkV2xaKCPMYz0=@protonmail.com>
+         <403b3e7f6d276e47c447e6ea56a3370b03c3298c.camel@archlinux.org>
+         <CAO-hwJK+V=CE8_NjqRszPA6dbGq1yNJAtOAm2qmqVjgK_XzEHw@mail.gmail.com>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-upEC0jVnkiha19KpY4hi"
+Date:   Fri, 11 Oct 2019 09:59:46 +0100
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04e3c25d-dc10-496e-2519-08d74e294f16
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 08:59:22.2182
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2IntSrI6BLcUEdtbFHDakbC/6W9O4Q6pWGP2agr69jGtNc/GTxCk3ZF6y8+oUpBKw7ezsjZR3F/est5/yD9vHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6455
+User-Agent: Evolution 3.34.1 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
 
-Yes, please add the file.
+--=-upEC0jVnkiha19KpY4hi
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you
-Regards=20
-
-> -----Original Message-----
-> From: Jonathan Corbet [mailto:corbet@lwn.net]
-> Sent: Thursday 10 October 2019 23:39
-> To: Kees Cook <keescook@chromium.org>
-> Cc: Derek Kiernan <dkiernan@xilinx.com>; Dragan Cvetic <draganc@xilinx.co=
-m>; linux-kernel@vger.kernel.org; linux-
-> doc@vger.kernel.org
-> Subject: Re: [PATCH] docs: misc: xilinx_sdfec: Actually add documentation
->=20
-> On Thu, 10 Oct 2019 15:35:41 -0700
-> Kees Cook <keescook@chromium.org> wrote:
->=20
-> > On Wed, Oct 02, 2019 at 10:03:55AM -0700, Kees Cook wrote:
-> > > From: Derek Kiernan <derek.kiernan@xilinx.com>
-> > >
-> > > Add SD-FEC driver documentation.
-> > >
-> > > Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
-> > > Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-> > > Link: https://lore.kernel.org/r/1560274185-264438-11-git-send-email-d=
-ragan.cvetic@xilinx.com
-> > > [kees: extracted from v7 as it was missing in the commit for v8]
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+On Fri, 2019-10-11 at 10:54 +0200, Benjamin Tissoires wrote:
+> On Fri, Oct 11, 2019 at 10:49 AM Filipe La=C3=ADns <lains@archlinux.org>
+> wrote:
+> > On Fri, 2019-10-11 at 00:57 +0000, Mazin Rezk wrote:
+> > > On Saturday, October 5, 2019 9:04 PM, Mazin Rezk <
+> > > mnrzk@protonmail.com> wrote:
+> > >=20
+> > > > This patch adds support for several MX mice over Bluetooth. The
+> > > > device IDs
+> > > > have been copied from the libratbag device database and their
+> > > > features
+> > > > have been based on their DJ device counterparts.
+> > >=20
+> > > No changes have been made to this patch in v4. However, it should
+> > > be
+> > > noted
+> > > that the only device that has been thoroughly tested in this
+> > > patch is
+> > > the
+> > > MX Master (b01e). Further testing for the other devices may be
+> > > required.
+> > >=20
+> > > Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
 > > > ---
-> > > As mentioned[1], this file went missing and causes a warning in ReST
-> > > parsing, so I've extracted the patch and am sending it directly to Jo=
-n.
-> > > [1] https://lore.kernel.org/lkml/201909231450.4C6CF32@keescook/
-> > > ---
-> >
-> > friendly ping! :)
-> >
-> > -Kees
+> > >  drivers/hid/hid-logitech-hidpp.c | 18 ++++++++++++++++++
+> > >  1 file changed, 18 insertions(+)
+> > >=20
+> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-
+> > > logitech-hidpp.c
+> > > index 0179f7ed77e5..85fd0c17cc2f 100644
+> > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > @@ -3773,6 +3773,24 @@ static const struct hid_device_id
+> > > hidpp_devices[] =3D {
+> > >       { /* MX5500 keyboard over Bluetooth */
+> > >         HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
+> > >         .driver_data =3D HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
+> > > +     { /* MX Anywhere 2 mouse over Bluetooth */
+> > > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb013),
+> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
+> > > +     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb018),
+> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
+> > > +     { /* MX Anywhere 2S mouse over Bluetooth */
+> > > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01a),
+> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
+> > > +     { /* MX Master mouse over Bluetooth */
+> > > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012),
+> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
+> > > +     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb017),
+> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
+> > > +     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e),
+> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
+> > > +     { /* MX Master 2S mouse over Bluetooth */
+> > > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb019),
+> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
+> > >       {}
+> > >  };
+> > >=20
+> > > --
+> > > 2.23.0
+> > >=20
+> >=20
+> > The series now looks great, thanks!
+> >=20
+> > Benjamin, I can confirm that up to now all BLE devices don't have
+> > short
+> > reports. I am not sure if you still want to only enable tested
+> > devices
+> > but from an architectural standpoint everything here should be
+> > fine.
 >=20
-> It's sitting in my queue.  I was hoping to hear from Derek that it was OK
-> to add...Derek are you out there?
+> Unfortunately yes, we need actual device tests:
+> - this series enable 0x2121 on all of those devices (is it correct?)
+> - we are not shielded from a FW error and something that goes wrong
+> when enabling one of those mice with hid-logitech-hidpp.c. All of
+> those mice works fine with hid-generic, and if we oversee one tiny
+> bit, we'll regress for no good reasons.
+
+Okay, makes sense :)
+
+> Cheers,
+> Benjamin
 >=20
-> Thanks,
->=20
-> jon
+> > Mazin, you can have my
+> >=20
+> > Reviewed-by: Filipe La=C3=ADns <lains@archlinux.org>
+> >=20
+> > for the series.
+> >=20
+> > Thank you,
+> > Filipe La=C3=ADns
+
+--=20
+Filipe La=C3=ADns
+
+--=-upEC0jVnkiha19KpY4hi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJIBAABCAAyFiEEPc5R1gkw66R4WLpBRvYzy7DrS/IFAl2gRHUUHGxhaW5zQGFy
+Y2hsaW51eC5vcmcACgkQRvYzy7DrS/Ka9BAAlb6C8hgBU1ygcDXeHmG1rnZQTZWW
+yzM98dQB0IvG1PcuwVl6XKsejr9I2DHmu7BBydTT0GFSl+iTkIhaHcgqDn/rICN9
+xyFZ/VeeT4gx+tg84KkwoUHNyuBcCIEeGgAqCmRgeKRn2N7Ax8uGeTaSnpUXkM0+
+mHoONX/b2w73uOucayXfF29erDwT66gT5mYmXuMjAtB9U2CY+uZrm8WyBiqZxoaj
+LqdgTMiIxmBRZElkDZBNz1s4n8zyMtwNZ9ehg7I8ZR7IwF+dxKV+go988rjPYVKC
+Feemi/hwtVbUDxkfPDj8pdQPM5naFfiSxfTI0xGqGPQXkSqW+HU3dcyoicMs5dZa
+CxKn9hfMHS+m9MRHJxHogQoKrFkAN8hK1l0LZSkKN7ncrOcKgdUexVR10Rb4nqju
+YmoS4EmJkr3e0s2z1WuIPVOGjlMjjcMHzsX/lyah8JX/J2+d9om/WbThwQ4LPNqu
+L8KwvFasH8BHrX0I3g4kOhataRRhxMEtR0VRFNqmRpSZlvL1Yv7NcLpcFDeihW1Z
+Be/fwjB+vrvCwDEjEdte26usP6EQmx6TskFLBbtIiYtlU0DHu4Iwc2snH8OjUkVU
+4e/kNOshmgirQsR7oUfpVoOQCZZ4nbCflzgBFh8dc3ezBhpysswQcIb4gzFBga3C
+H9r/XCeE36cDxQs=
+=qBlk
+-----END PGP SIGNATURE-----
+
+--=-upEC0jVnkiha19KpY4hi--
