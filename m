@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A277BC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402A3C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC99214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F88214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="iRPYz/k0"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="EhcGaFKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfJKBZB (ORCPT
+        id S1728387AbfJKBZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 21:25:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44094 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728281AbfJKBYb (ORCPT
+        Thu, 10 Oct 2019 21:25:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53122 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728240AbfJKBYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:24:31 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z9so9947923wrl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:30 -0700 (PDT)
+        Thu, 10 Oct 2019 21:24:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r19so8704310wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JF3wvUb/Li3fW1jOcia0wAhEt20HXglpe7GKc5WTHCs=;
-        b=iRPYz/k0uKezn5O1qS+aetYjUBXoNk/YCWFwLYv7Y80RqthM1W+U38kuz4cr+ybp6I
-         rR/2bscJeRMT8vTAFAWKtgAikm+f9m1Jzesm95BY4IAALTq6wxNOGBdp+GekPr3lES++
-         yij94G6gX9ydKmmLRw9nVxJXFiRQMnTRRLfACVEvTN17v/wFYho0XoYJjizLcI8ltJQP
-         uDg4QgBnOkM5j/dlMMdyET3gXaqsdoSqcqqBFopSBb6kdWJKQMGs/8K9fRjTYIkgMxDV
-         OD8xOfZWHlHoDAGmhNTGCFo+L/DcdhcllquO4SK3Ef06sdvUr8lSPxBJdu1s1q5Z38az
-         oxPw==
+        bh=gWD0ajueU3FDZugFOeZjcuv8DzQScIgD3lk4LddX0o0=;
+        b=EhcGaFKYu218GQzSN/qZhWvFpix+VaufF9g+EZNmmiCDUnuO0vUw4GvIPdOPE8FOCB
+         el7ZfzJwXT0tUV0pELO7ZUfUuXCer6YUVxCGH16my851zEWcBJcWE62P6IMus4ddnggb
+         DEJqUNgY7nV7hkPNdj83DNUcQ7zBrl8TC29sjPYGGw53BFsdZDi/1S9tnpORZ4bEqv6w
+         7Bc8rDvZRgVBgd5tbBovpUtXew9lMC6GkZF6x5TSceo9LhKwbfo7iEPzv9sK9zwTvDC7
+         q6nBlxZul6lqD0abv9A0axw/EfMou/IDI91CjVQL1o/SGw4Ko/kYQCHdICmoIlGqwLOQ
+         1AmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JF3wvUb/Li3fW1jOcia0wAhEt20HXglpe7GKc5WTHCs=;
-        b=HCFCMOdU6x3LvNnb03UJb63MGdJmuGhNNjbs24PZzw9npf4/u3keP2iOzpPgQvcuUh
-         8OYpAT7WcdjPYA7G9Rw610fIm3nEekg9jSrbKKpoJFEElGLen6Z7DxBd9LlYCjRW86A0
-         RpyC2T86N+WlGpaqmDCu8HuxcW8M4TYdMSfRlH/Z32O7xnCCEluYV+SNbwGA7nA+kUvI
-         vXcwADuJfVTSm+qDAX+u5LkQArRxUThsOjDZ2B05uZ2kjJv0Qt6CXPFcOSTcLPq1FDki
-         oXTm/fyseoSqENIpXMuRNU0BJnpI7Sg0IFu7scLTcps8q6CvRTW4fdhxfEDgTpxR3q9N
-         vHrA==
-X-Gm-Message-State: APjAAAWg0gsYyU3l+JYp4JSXCKk7UKm3omKX/subEmA9T1MPXOy5vTP9
-        GcEyQtlxNI0y9NSx2eE82blu0We0CJ0=
-X-Google-Smtp-Source: APXvYqwUhTPPOiHd4vT58kBkblRv96antskXBTS4cDbNuBArP6+gjUKIhFmPjwG/X3b1cxOpC9/wcg==
-X-Received: by 2002:adf:8068:: with SMTP id 95mr11575140wrk.249.1570757069862;
-        Thu, 10 Oct 2019 18:24:29 -0700 (PDT)
+        bh=gWD0ajueU3FDZugFOeZjcuv8DzQScIgD3lk4LddX0o0=;
+        b=aaPwsewzBzGQRVPEH/QzSZs4NsvAYYQW7Gy0T/BBKGbe/VokCwwGZmJSVOy6ISUU6A
+         iQx9maBtA3oXR8PjrEajPQJ679Yo2/WBn8YIi95jkmoNOi964Pe1cF4QycWoSi7c0qhJ
+         crytrt75DAP5xIJFWujAeMZKA8boM2I/FuVQWZ29HVJ+T2CycfsUVp4/QOqvToIqBCzo
+         IWD1sluw95m3cZX0hFbzv8jThvVnJBArx5FHIon+teh8Trt0Yeb9K9d5PNdnzuMqYriu
+         QolE1i04KhjaOWSsRdTOk0A+McpO2fD6Yqkl6dAl1PVHek4AqKRY/X4jOxL07M8pDZJs
+         bdZQ==
+X-Gm-Message-State: APjAAAVgAMJ/Z9Akr0J+EOjS1hASGe4X7+rxjY5lIyG7ytz2I3nsav1F
+        6Vp3oHzPTqEbO6LAz0T86CGToUiSP0s=
+X-Google-Smtp-Source: APXvYqyZbqU/RKBZIpBR6d31fGxswiRSAKkGg3hbg5igkpPVS7ppB+tsdItS7JKB0oBlnmSzkfAP3A==
+X-Received: by 2002:a1c:bc07:: with SMTP id m7mr958262wmf.103.1570757063384;
+        Thu, 10 Oct 2019 18:24:23 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:ea2:c100:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.28
+        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 18:24:29 -0700 (PDT)
+        Thu, 10 Oct 2019 18:24:22 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
         Dmitry Safonov <dima@arista.com>,
         Adrian Reber <adrian@lisas.de>,
         Andrei Vagin <avagin@openvz.org>,
@@ -76,10 +75,11 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv7 29/33] selftests/timens: Add a test for clock_nanosleep()
-Date:   Fri, 11 Oct 2019 02:23:37 +0100
-Message-Id: <20191011012341.846266-30-dima@arista.com>
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCHv7 25/33] x86/vdso: Zap vvar pages on switch a time namspace
+Date:   Fri, 11 Oct 2019 02:23:33 +0100
+Message-Id: <20191011012341.846266-26-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191011012341.846266-1-dima@arista.com>
 References: <20191011012341.846266-1-dima@arista.com>
@@ -90,204 +90,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+The VVAR page layout depends on whether a task belongs to the root or
+non-root time namespace. Whenever a task changes its namespace, the VVAR
+page tables are cleared and then they will re-faulted with a
+corresponding layout.
 
-Check that clock_nanosleep() takes into account clock offsets.
-
-Output on success:
- 1..4
- ok 1 clockid: 1 abs:0
- ok 2 clockid: 1 abs:1
- ok 3 clockid: 9 abs:0
- ok 4 clockid: 9 abs:1
-
-Output with lack of permissions:
- 1..4
- not ok 1 # SKIP need to run as root
-
-Output without support of time namespaces:
- 1..4
- not ok 1 # SKIP Time namespaces are not supported
-
+Co-developed-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- tools/testing/selftests/timens/.gitignore     |   1 +
- tools/testing/selftests/timens/Makefile       |   4 +-
- .../selftests/timens/clock_nanosleep.c        | 143 ++++++++++++++++++
- 3 files changed, 146 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/timens/clock_nanosleep.c
+ arch/x86/entry/vdso/vma.c      | 27 +++++++++++++++++++++++++++
+ include/linux/time_namespace.h |  3 +++
+ kernel/time/namespace.c        | 10 ++++++++++
+ 3 files changed, 40 insertions(+)
 
-diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
-index b609f6ee9fb9..9b6c8ddac2c8 100644
---- a/tools/testing/selftests/timens/.gitignore
-+++ b/tools/testing/selftests/timens/.gitignore
-@@ -1,2 +1,3 @@
-+clock_nanosleep
- timens
- timerfd
-diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
-index 66b90cd28e5c..801e7ab2f8bf 100644
---- a/tools/testing/selftests/timens/Makefile
-+++ b/tools/testing/selftests/timens/Makefile
-@@ -1,5 +1,5 @@
--TEST_GEN_PROGS := timens timerfd
-+TEST_GEN_PROGS := timens timerfd clock_nanosleep
+diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+index d6cb8a16f368..57ada3e95f8d 100644
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -50,6 +50,7 @@ void __init init_vdso_image(const struct vdso_image *image)
+ 						image->alt_len));
+ }
  
--CFLAGS := -Wall -Werror
-+CFLAGS := -Wall -Werror -pthread
++static const struct vm_special_mapping vvar_mapping;
+ struct linux_binprm;
  
- include ../lib.mk
-diff --git a/tools/testing/selftests/timens/clock_nanosleep.c b/tools/testing/selftests/timens/clock_nanosleep.c
-new file mode 100644
-index 000000000000..0f4eab6e4669
---- /dev/null
-+++ b/tools/testing/selftests/timens/clock_nanosleep.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <sched.h>
+ static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
+@@ -127,6 +128,32 @@ static struct page *find_timens_vvar_page(struct vm_area_struct *vma)
+ 
+ 	return NULL;
+ }
 +
-+#include <sys/timerfd.h>
-+#include <sys/syscall.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <stdint.h>
-+#include <pthread.h>
-+#include <signal.h>
-+#include <string.h>
-+
-+#include "log.h"
-+#include "timens.h"
-+
-+void test_sig(int sig) {
-+	if (sig == SIGUSR2)
-+		pthread_exit(NULL);
-+}
-+
-+struct thread_args {
-+	struct timespec *now, *rem;
-+	pthread_mutex_t *lock;
-+	int clockid;
-+	int abs;
-+};
-+
-+void *call_nanosleep(void *_args)
++/*
++ * The vvar page layout depends on whether a task belongs to the root or
++ * non-root time namespace. Whenever a task changes its namespace, the VVAR
++ * page tables are cleared and then they will re-faulted with a
++ * corresponding layout.
++ * See also the comment near timens_setup_vdso_data() for details.
++ */
++int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
 +{
-+	struct thread_args *args = _args;
-+	clock_nanosleep(args->clockid, args->abs ? TIMER_ABSTIME : 0, args->now, args->rem);
-+	pthread_mutex_unlock(args->lock);
-+	return NULL;
-+}
++	struct mm_struct *mm = task->mm;
++	struct vm_area_struct *vma;
 +
-+int run_test(int clockid, int abs)
-+{
-+	struct timespec now = {}, rem;
-+	struct thread_args args = { .now = &now, .rem = &rem, .clockid = clockid};
-+	struct timespec start;
-+	pthread_mutex_t lock;
-+	pthread_t thread;
-+	int j, ok, ret;
++	if (down_write_killable(&mm->mmap_sem))
++		return -EINTR;
 +
-+	signal(SIGUSR1, test_sig);
-+	signal(SIGUSR2, test_sig);
++	for (vma = mm->mmap; vma; vma = vma->vm_next) {
++		unsigned long size = vma->vm_end - vma->vm_start;
 +
-+	pthread_mutex_init(&lock, NULL);
-+	pthread_mutex_lock(&lock);
-+
-+	if (clock_gettime(clockid, &start) == -1)
-+		return pr_perror("clock_gettime");
-+
-+
-+	if (abs) {
-+		now.tv_sec = start.tv_sec;
-+		now.tv_nsec = start.tv_nsec;
++		if (vma_is_special_mapping(vma, &vvar_mapping))
++			zap_page_range(vma, vma->vm_start, size);
 +	}
 +
-+	now.tv_sec += 3600;
-+	args.abs = abs;
-+	args.lock = &lock;
-+	ret = pthread_create(&thread, NULL, call_nanosleep, &args);
-+	if (ret != 0) {
-+		pr_err("Unable to create a thread: %s", strerror(ret));
-+		return 1;
-+	}
-+
-+	/* Wait when the thread will call clock_nanosleep(). */
-+	ok = 0;
-+	for (j = 0; j < 8; j++) {
-+		/* The maximum timeout is about 5 seconds. */
-+		usleep(10000 << j);
-+
-+		/* Try to interrupt clock_nanosleep(). */
-+		pthread_kill(thread, SIGUSR1);
-+
-+		usleep(10000 << j);
-+		/* Check whether clock_nanosleep() has been interrupted or not. */
-+		if (pthread_mutex_trylock(&lock) == 0) {
-+			/**/
-+			ok = 1;
-+			break;
-+		}
-+	}
-+	if (!ok)
-+		pthread_kill(thread, SIGUSR2);
-+	pthread_join(thread, NULL);
-+	pthread_mutex_destroy(&lock);
-+
-+	if (!ok) {
-+		ksft_test_result_pass("clockid: %d abs:%d timeout\n", clockid, abs);
-+		return 1;
-+	}
-+
-+	if (rem.tv_sec < 3300 || rem.tv_sec > 3900) {
-+		pr_fail("clockid: %d abs: %d remain: %ld\n",
-+			clockid, abs, rem.tv_sec);
-+		return 1;
-+	}
-+	ksft_test_result_pass("clockid: %d abs:%d\n", clockid, abs);
-+
++	up_write(&mm->mmap_sem);
 +	return 0;
 +}
+ #else
+ static inline struct page *find_timens_vvar_page(struct vm_area_struct *vma)
+ {
+diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
+index c479cfda2c3e..dcf3dbf2836b 100644
+--- a/include/linux/time_namespace.h
++++ b/include/linux/time_namespace.h
+@@ -30,6 +30,9 @@ struct time_namespace {
+ extern struct time_namespace init_time_ns;
+ 
+ #ifdef CONFIG_TIME_NS
++extern int vdso_join_timens(struct task_struct *task,
++			    struct time_namespace *ns);
 +
-+int main(int argc, char *argv[])
-+{
-+	int ret, nsfd;
+ static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
+ {
+ 	kref_get(&ns->kref);
+diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
+index e14cd1ca387d..0dc0742ed1ee 100644
+--- a/kernel/time/namespace.c
++++ b/kernel/time/namespace.c
+@@ -280,6 +280,7 @@ static void timens_put(struct ns_common *ns)
+ static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+ {
+ 	struct time_namespace *ns = to_time_ns(new);
++	int err;
+ 
+ 	if (!current_is_single_threaded())
+ 		return -EUSERS;
+@@ -290,6 +291,10 @@ static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+ 
+ 	timens_set_vvar_page(current, ns);
+ 
++	err = vdso_join_timens(current, ns);
++	if (err)
++		return err;
 +
-+	nscheck();
+ 	get_time_ns(ns);
+ 	put_time_ns(nsproxy->time_ns);
+ 	nsproxy->time_ns = ns;
+@@ -304,6 +309,7 @@ int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
+ {
+ 	struct ns_common *nsc = &nsproxy->time_ns_for_children->ns;
+ 	struct time_namespace *ns = to_time_ns(nsc);
++	int err;
+ 
+ 	/* create_new_namespaces() already incremented the ref counter */
+ 	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
+@@ -311,6 +317,10 @@ int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
+ 
+ 	timens_set_vvar_page(tsk, ns);
+ 
++	err = vdso_join_timens(tsk, ns);
++	if (err)
++		return err;
 +
-+	ksft_set_plan(4);
-+
-+	if (unshare_timens())
-+		return 1;
-+
-+	if (_settime(CLOCK_MONOTONIC, 7 * 24 * 3600))
-+		return 1;
-+	if (_settime(CLOCK_BOOTTIME, 9 * 24 * 3600))
-+		return 1;
-+
-+	nsfd = open("/proc/self/ns/time_for_children", O_RDONLY);
-+	if (nsfd < 0)
-+		return pr_perror("Unable to open timens_for_children");
-+
-+	if (setns(nsfd, CLONE_NEWTIME))
-+		return pr_perror("Unable to set timens");
-+
-+	ret = 0;
-+	ret |= run_test(CLOCK_MONOTONIC, 0);
-+	ret |= run_test(CLOCK_MONOTONIC, 1);
-+	ret |= run_test(CLOCK_BOOTTIME_ALARM, 0);
-+	ret |= run_test(CLOCK_BOOTTIME_ALARM, 1);
-+
-+	if (ret)
-+		ksft_exit_fail();
-+	ksft_exit_pass();
-+	return ret;
-+}
-+
+ 	get_time_ns(ns);
+ 	put_time_ns(nsproxy->time_ns);
+ 	nsproxy->time_ns = ns;
 -- 
 2.23.0
 
