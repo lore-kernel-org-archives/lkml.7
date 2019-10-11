@@ -2,105 +2,132 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07DBC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A74C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2ABC21920
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8172053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MK2ms4+g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYUsDF5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfJKAms (ORCPT
+        id S1727640AbfJKArb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:42:48 -0400
-Received: from ozlabs.org ([203.11.71.1]:39285 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727100AbfJKAms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:42:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46q8LZ0hzdz9s7T;
-        Fri, 11 Oct 2019 11:42:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570754566;
-        bh=dkzjFR/N5K4XEgE9wFHZA5r08sFqU7VT7q7H4BUqapA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MK2ms4+g5Wu7kjY6H2dAKDxlsOqph6SmdFeNSnP4AEU5Kxr+2AdGWPs3iJmpfzZ0W
-         rSFf80HNK628NTGAe48FFclovNLw+dAg+UVk107fxqFlgvtk5pID5oHNbolkrQLV8c
-         G7L2i7VInu2TtklM7ejliho1FzUJUz0fGFlvpmVghdLMqaN6tjX/SNQ+X3uqu4wd6B
-         FkzTkSQ5zLdIkIDviidBwva8ktgB+plgcZ8OWhcoFSdCYmL6p193C5piTBdTydJ8Ve
-         1g16nBQYn+Zl9CXBVaH+hfFL66heACZHZfOa9/b8ACg0ls44bEYc2JEctEaGvVGQ4p
-         CjydHfcjgSblA==
-Date:   Fri, 11 Oct 2019 11:42:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the block tree
-Message-ID: <20191011114244.07cf0118@canb.auug.org.au>
-In-Reply-To: <9d421f2b-04f5-44dc-8a00-981b2ff09b5d@acm.org>
-References: <20191008071620.5799d02a@canb.auug.org.au>
-        <9d421f2b-04f5-44dc-8a00-981b2ff09b5d@acm.org>
+        Thu, 10 Oct 2019 20:47:31 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45808 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbfJKAra (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 20:47:30 -0400
+Received: by mail-pg1-f193.google.com with SMTP id r1so3548886pgj.12;
+        Thu, 10 Oct 2019 17:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JczpVAzRBwwAOYFIGonlJX1sjgIClw2IMnks9yUvCfI=;
+        b=XYUsDF5LK7A0bep4RfUjjO6eu7m00xiDrfzh+6ctTRAPT9U9rGrm1f18yhoiC0yNuv
+         Nh6Q/vQBZAQi46sXFInFLsQG0rJ1TvPS5C1Tzn9S2554Cx/vjGYs8EZZxhQbjpFJJD6E
+         mq8y5nzxGtZqZ1HZVJIwUBzjLVcdQnK48XQKSiZxCb5muTP28sGxfiW6xttjRfoJz1zx
+         NeVb7DJA0yv4PR4ePzAAkYf/zV1zufAalbNWeepOGoaGE35/H2qLJoSmoA/Zwa9D29j3
+         KdTdgOaUArg8q/IgOcapzDuoHM5mLyE0yT9A/fXjWCpAe9PjwgLrM34bKVinTnpaDnwf
+         ODjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JczpVAzRBwwAOYFIGonlJX1sjgIClw2IMnks9yUvCfI=;
+        b=HpU5WoO+kB1v8CJVMiWALXKWGQ4HAjWji8I9PqE4xNRImHSWREkqflqJYgLFtGMv/q
+         hEGnt4K2wFRtt5tIv8VzcCT6TPjK9vrU3CfVX92DxGwjETIRKQZp4uIAan8F+xEvLHa1
+         TKTcnbNRFDb6+/WFC1SSfgc+JOjJsqe/ppyfxJ9vHQVGtIAiNRSuTe1Xs5Nxl97E2rx+
+         S2YmYgIFd2mV2OnhPC68i9AeOOnskX7PogCqS7l+wvsKYk2fEDzPGC3s/GFtJFn1NmH+
+         wPp24bc2rS/d6I5Wqai8TN8Uuy5f6loavNmz6XdTJdK2h8Svkcw5/lvn58/83woF7E2E
+         9oAQ==
+X-Gm-Message-State: APjAAAX+Vn15IDVtXusV+n3pC0M8VclZxB8OTvsdzoYMyBynVcfLnPSk
+        3Lb3shHs+x12rYkCO2Lmi32qV+Dx
+X-Google-Smtp-Source: APXvYqzLzsgjSK5rwCHu1G+VT4kiDmY0wF5F/U3chf6VGS4WhHCVPn+dKofGWhykmg9t9+gtci7OYg==
+X-Received: by 2002:a65:66d1:: with SMTP id c17mr13897375pgw.169.1570754848017;
+        Thu, 10 Oct 2019 17:47:28 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id d76sm7692503pfd.185.2019.10.10.17.47.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 17:47:27 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 17:47:24 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 5/8] Input: silead - Switch to
+ firmware_request_platform for retreiving the fw
+Message-ID: <20191011004724.GC229325@dtor-ws>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-6-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/a727jC+1_RbUnNp=+ZbQ3QW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004145056.43267-6-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/a727jC+1_RbUnNp=+ZbQ3QW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Oct 04, 2019 at 04:50:53PM +0200, Hans de Goede wrote:
+> Unfortunately sofar we have been unable to get permission to redistribute
+> Silead touchscreen firmwares in linux-firmware. This means that people
+> need to find and install the firmware themselves before the touchscreen
+> will work
+> 
+> Some UEFI/x86 tablets with a Silead touchscreen have a copy of the fw
+> embedded in their UEFI boot-services code.
+> 
+> This commit makes the silead driver use the new firmware_request_platform
+> function, which will fallback to looking for such an embedded copy when
+> direct filesystem lookup fails. This will make the touchscreen work OOTB
+> on devices where there is a fw copy embedded in the UEFI code.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Hi Bart,
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On Thu, 10 Oct 2019 10:36:36 -0700 Bart Van Assche <bvanassche@acm.org> wro=
-te:
->
-> On 10/7/19 1:16 PM, Stephen Rothwell wrote:
-> >=20
-> >    Fixes: e34cbd307477 ("blk-wbt: add general throttling mechanism"; v4=
-.10).
->=20
-> The above fixes tag follows the recommended format except that it is=20
-> followed by a kernel version number. Is there a recommended format for=20
-> embedding the kernel version number in a Fixes: tag? I think that=20
-> information is useful. I haven't found any recommendations for how to do=
-=20
-> that in Documentation/process/submitting-patches.rst.
+> ---
+>  drivers/input/touchscreen/silead.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+> index ad8b6a2bfd36..8fa2f3b7cfd8 100644
+> --- a/drivers/input/touchscreen/silead.c
+> +++ b/drivers/input/touchscreen/silead.c
+> @@ -288,7 +288,7 @@ static int silead_ts_load_fw(struct i2c_client *client)
+>  
+>  	dev_dbg(dev, "Firmware file name: %s", data->fw_name);
+>  
+> -	error = request_firmware(&fw, data->fw_name, dev);
+> +	error = firmware_request_platform(&fw, data->fw_name, dev);
+>  	if (error) {
+>  		dev_err(dev, "Firmware request error %d\n", error);
+>  		return error;
+> -- 
+> 2.23.0
+> 
 
-I have not seen any recommended way to do that, but there is no
-necessity to embed the version as it can easily be derived:
-
-$ git describe --contains e34cbd307477
-v4.10-rc1~153^2~94
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/a727jC+1_RbUnNp=+ZbQ3QW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2f0AQACgkQAVBC80lX
-0GyRTAf/ZoZHsO4lfNEoanlXWmo1FHoJ5FdZ+YKLkBMd9VpQV3iKWX5H2vpx9Aw0
-FcTAbjCnG9UfRC/xRY7ovZgDdP1qhZ4JVKtWfEq5/Ld+ykBlLP630xH/wzJkAe4R
-oh58T3s+/Dr8KKYIguZoYKe9oznoEC6akOf8KOXAmGd7qttixs00sIGc7xRSKfh5
-GI+gVrUpxNLq7V2KgVbkIWWZgCrUakxWjdQuB51dOkBWYvkaSxvU7FSufZuXpvnd
-Nt/nYHWQG1JZtaqMvQvcnApE/f1oZ7lfv7Q6IBci+h645dWK0Ymb4lzcQoCYUD4H
-++v0Kj9/xdt7jaNHYo2PZmirJkyURQ==
-=wf+w
------END PGP SIGNATURE-----
-
---Sig_/a727jC+1_RbUnNp=+ZbQ3QW--
+-- 
+Dmitry
