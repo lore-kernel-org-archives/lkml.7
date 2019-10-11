@@ -2,251 +2,318 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C64ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804D9C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA23B206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456B2206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:27:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aDFfvbEg"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Y9BTc5gn";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Y9BTc5gn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfJKK0k (ORCPT
+        id S1727633AbfJKK1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:26:40 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54434 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfJKK0j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:26:39 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BAO4Oq013108;
-        Fri, 11 Oct 2019 10:26:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=RCbQWCPP7lHcb8exiNWxq2WV2sbQXnSqSnI0kzbr6PQ=;
- b=aDFfvbEguiVYlSs/2ebtjuV9OtSmNZlRiY+vOYlgT3BITTXZqq6Fgs3vmSYKIEnTWusz
- rMeNkAHfTHfVUueAPbiyPzeb67mz9LuHeX/5y4uRfg+m8S2JWHaFGG6ZmhaWh9dSIr1D
- ZyPykbQkhkGNez+EC6FV5PaOBZXqt3fT1JEmdvT71Fo1n0vt+Mrs4zwOJRppomK26tom
- W3FmfABYwdAEFDRgQ+jjpvMoeY+/8kvwdfheWpnRHjyjFtM4G/+UjJWEhqZ5W+g2JyWo
- 8IX4/jywKyFkSbAwaTrtN1K+LS15a0Uqbwsw/l6sUtyZsQ/YFXcSF+MNQRZb+0weInVa 6Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2vekts0eq4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Oct 2019 10:26:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BAOx1O121361;
-        Fri, 11 Oct 2019 10:26:06 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2vje2xqscj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Oct 2019 10:26:06 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9BAQ31E003053;
-        Fri, 11 Oct 2019 10:26:03 GMT
-Received: from dhcp-10-175-168-195.vpn.oracle.com (/10.175.168.195)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 11 Oct 2019 03:26:03 -0700
-Date:   Fri, 11 Oct 2019 11:25:33 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-191-48.vpn.oracle.com
-To:     Brendan Higgins <brendanhiggins@google.com>
-cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        changbin.du@intel.com, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: Re: [PATCH v2 linux-kselftest-test 1/3] kunit: allow kunit tests to
- be loaded as a module
-In-Reply-To: <CAFd5g46_6McK06XSrX=EZ9AaYYitQzd2CTvPMX+rPymisDq5uQ@mail.gmail.com>
-Message-ID: <alpine.LRH.2.20.1910111105350.21459@dhcp-10-175-191-48.vpn.oracle.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com> <1570546546-549-2-git-send-email-alan.maguire@oracle.com> <20191008213535.GB186342@google.com> <alpine.LRH.2.20.1910091726010.2517@dhcp-10-175-191-127.vpn.oracle.com>
- <CAFd5g46_6McK06XSrX=EZ9AaYYitQzd2CTvPMX+rPymisDq5uQ@mail.gmail.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Fri, 11 Oct 2019 06:27:33 -0400
+Received: from mail-eopbgr10058.outbound.protection.outlook.com ([40.107.1.58]:47133
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726546AbfJKK1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:27:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wRH/Vo7PHh+Mj/xV0P+N1GoX5oDFaK1F4F1qNakJvjc=;
+ b=Y9BTc5gn4jYu5D3B3GVHHNjUDWpCL8jrT9a2+V+KkXbpn4ctMuQ8P2Q82udEzqzRjSbQLWWPKACAEbQENdC/PO8lqcRcS88szomDSmER4K3UeH4KOe+ZGaV+4fcznhQyIDO2EhrfZwmGz4tZJ3ATYnSrSZv3JrXyYN+WwE39KUo=
+Received: from VI1PR08CA0197.eurprd08.prod.outlook.com (2603:10a6:800:d2::27)
+ by HE1PR08MB2843.eurprd08.prod.outlook.com (2603:10a6:7:37::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2327.25; Fri, 11 Oct
+ 2019 10:27:25 +0000
+Received: from DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::200) by VI1PR08CA0197.outlook.office365.com
+ (2603:10a6:800:d2::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.17 via Frontend
+ Transport; Fri, 11 Oct 2019 10:27:24 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT009.mail.protection.outlook.com (10.152.20.117) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Fri, 11 Oct 2019 10:27:22 +0000
+Received: ("Tessian outbound 851a1162fca7:v33"); Fri, 11 Oct 2019 10:27:15 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 952d77da221d4a59
+X-CR-MTA-TID: 64aa7808
+Received: from 2de4edb3fe02.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.13.53])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id D3F7BC72-3023-4573-8C60-0964E706F96D.1;
+        Fri, 11 Oct 2019 10:27:09 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04lp2053.outbound.protection.outlook.com [104.47.13.53])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 2de4edb3fe02.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 11 Oct 2019 10:27:09 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZBuyrxfDx1xOP+TYTHbGib7zeXKYHyUa5ZTAedeaReTQ858we9MCI5MvCz0aMpVY6hBKC/CWxRueomZt0rBBr/2lwLo2OF8vmC2JkPlQUyxvjsmCwMNvh8AAtNYjf2jhkR7jEY72D9KeyNBK2pix+u3/Cf4ThmvVkk8KjG5dIgiZ68BP4q/0thsC8EIb52dDSswP9oJ9zwai2Rc1KCjLC6+vsrdgeGOLA4BSjv9llHiNygeNl5Bdt0BhXTjYWGS2zTFR4jgsrap4XsRLu8JJIWrl77Mwj3jBvcs590KMF20/lQBdP8/KScejkWO6a/tYdlxYZqnMfFl6lwiVCIMBvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wRH/Vo7PHh+Mj/xV0P+N1GoX5oDFaK1F4F1qNakJvjc=;
+ b=fVxRZoCQd2XjxvrKGru5usLKBTWu+4LpI1Xs75crsro0H7pcz2TRXRVbBAojLSbAC92nErNO/Cw9gmwW03udaVkq03xU4e68KNCZvOVIo9IhgnRJAz6OjEKwgTx0pFzeoUUDgMYralm5jkfCiGA3MinFLJkcD2GB/If40PANBUeEvyYmB7//UAGdtjzgisviF6cD0HfmNjUK3i5N/u2HjBJXayvrLPWoP9ebGQFktOSKdRnutXWnQ/ilWw8LZrKKXwa40xgkvzP4qO6uVsC2O7U9gq61eFXs5zYQv53WraO7npyb27dGLfjUDk+Lwqn+4npcjDgeF8kmYHreHdV9gQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wRH/Vo7PHh+Mj/xV0P+N1GoX5oDFaK1F4F1qNakJvjc=;
+ b=Y9BTc5gn4jYu5D3B3GVHHNjUDWpCL8jrT9a2+V+KkXbpn4ctMuQ8P2Q82udEzqzRjSbQLWWPKACAEbQENdC/PO8lqcRcS88szomDSmER4K3UeH4KOe+ZGaV+4fcznhQyIDO2EhrfZwmGz4tZJ3ATYnSrSZv3JrXyYN+WwE39KUo=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB4381.eurprd08.prod.outlook.com (20.179.28.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Fri, 11 Oct 2019 10:27:06 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b%6]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
+ 10:27:06 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+CC:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "imirkin@alum.mit.edu" <imirkin@alum.mit.edu>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>
+Subject: Re: [PATCH v2 4/4] drm/komeda: Adds gamma and color-transform support
+ for DOU-IPS
+Thread-Topic: [PATCH v2 4/4] drm/komeda: Adds gamma and color-transform
+ support for DOU-IPS
+Thread-Index: AQHVf/cp1ECrFKcx7E6lw4dO6fyhYKdVM6+AgAAFQ4CAAAPyAA==
+Date:   Fri, 11 Oct 2019 10:27:06 +0000
+Message-ID: <2088952.DRTgVpPakT@e123338-lin>
+References: <20191011054459.17984-1-james.qian.wang@arm.com>
+ <8416585.jh9292Gg6g@e123338-lin>
+ <20191011101244.GA13428@lowli01-ThinkStation-P300>
+In-Reply-To: <20191011101244.GA13428@lowli01-ThinkStation-P300>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.54]
+x-clientproxiedby: LO2P265CA0152.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9::20) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: f9cba568-3d7f-44a1-bba8-08d74e359a9c
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-TrafficTypeDiagnostic: VI1PR08MB4381:|VI1PR08MB4381:|HE1PR08MB2843:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <HE1PR08MB2843D2366AAB5C1CD76188478F970@HE1PR08MB2843.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:5516;OLM:5516;
+x-forefront-prvs: 0187F3EA14
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(396003)(136003)(346002)(39860400002)(366004)(189003)(199004)(25786009)(76176011)(229853002)(6486002)(9686003)(8936002)(6512007)(99286004)(8676002)(54906003)(81166006)(6636002)(6116002)(3846002)(81156014)(446003)(11346002)(476003)(52116002)(486006)(6436002)(33716001)(102836004)(71200400001)(186003)(7736002)(26005)(6506007)(386003)(2906002)(4326008)(6246003)(66066001)(71190400001)(256004)(316002)(14454004)(5660300002)(14444005)(6862004)(66476007)(66446008)(86362001)(66946007)(478600001)(66556008)(305945005)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB4381;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 7xeH9raUzYrykU2cgAKXuolDB1g9H+wwbbmGpyyJKzJTC5h3bTOhD+Y+fWPyp4vy9DzCErsvUhsOx7Ct7n7e8g7RUllQArTGV8XBvVcvxNgDg+dX6n9JJq1dR22IBs/a0FHShwHZ/dnDrjnf0bWIGM24/Wr51TNnYjwQcH8+tjfBMm2XdrrAF8doNRBqQudTOOxPCBEItC4ZsnI/uN5GFFg7zQJ/mflBDoA8LSSpbpjeDG7jYSoN2j40Zv6E/fPPSIyHArKJ3rLYnDgGRBbhV0cSXxNztdinD0WvI12s1nwfVprtEoBZ1MGO/47FW+HhHEvISC6VbtmG5/ELYyt8zljBB06KAXiVT4xYdq2ny4ipK7cDRUN8nOcm9p8cvkO54m+C2HfQuI4GzCNb2Apg2kRlbJRf9aUs6pjOOUkin4o=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <689BC901C64D9345B9BF7D5EBDE95279@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910110099
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910110099
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4381
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(396003)(376002)(346002)(39860400002)(199004)(189003)(26826003)(86362001)(33716001)(46406003)(14454004)(47776003)(6116002)(66066001)(23726003)(478600001)(3846002)(25786009)(70206006)(356004)(22756006)(70586007)(2906002)(50466002)(76176011)(386003)(6486002)(5660300002)(14444005)(76130400001)(336012)(63350400001)(26005)(6506007)(8746002)(81156014)(11346002)(97756001)(99286004)(486006)(229853002)(186003)(446003)(126002)(316002)(54906003)(102836004)(4326008)(6636002)(305945005)(7736002)(6512007)(8676002)(476003)(9686003)(6246003)(81166006)(8936002)(6862004);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR08MB2843;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: e3ef8dc9-a32f-4d5e-e7c9-08d74e359087
+NoDisclaimer: True
+X-Forefront-PRVS: 0187F3EA14
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 06WFf47ZJoprBZ0xf4oDHeiD+qL2Va1EOg53ESj5AWfFSALB3ah1UOpJBnFm4Wk9Cb54Wa6HsIfgKWEwdiyj3TlqHtP0pRMmKgejle9ZL6XMKIKf9aT21N/mbzXJwMoosCyu6Fi/p9hRGL3/56W5vYoY1UUSWPiAWbrZnjykwDohxhMCxpqNk8MJCsY5IOVaXf+LBWOdZinsQK2cC34lajOJa04UZJR7oQcOOr7p/unZYaJtV/Sw834AxaHgRY5astcYuCDGZ5U0efEpuM525C5+ftrtk6eZ/jPdFqsZmynID9B/kC2ilpdL0mfwuq1ax0dcoygoQiVJVaNYyg4c5LYSoIj8AeYOfIA5QLnUqBuQw+ELq1oJVYKAdkw7ONtRvm1lXyi2mdGeoGdttc9JxiJhMjMbahmQUx/9mq33r5s=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2019 10:27:22.9249
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9cba568-3d7f-44a1-bba8-08d74e359a9c
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR08MB2843
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019, Brendan Higgins wrote:
+On Friday, 11 October 2019 11:12:51 BST Lowry Li (Arm Technology China) wro=
+te:
+> Hi Mihail,
+> On Fri, Oct 11, 2019 at 08:54:03AM +0000, Mihail Atanassov wrote:
+> > Hi James, Lowry,
+> >=20
+> > On Friday, 11 October 2019 06:45:50 BST james qian wang (Arm Technology=
+ China) wrote:
+> > > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+> > >=20
+> > > Adds gamma and color-transform support for DOU-IPS.
+> > > Adds two caps members fgamma_coeffs and ctm_coeffs to komeda_improc_s=
+tate.
+> > > If color management changed, set gamma and color-transform accordingl=
+y.
+> > >=20
+> > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> > > ---
+> > >  .../arm/display/komeda/d71/d71_component.c    | 24 +++++++++++++++++=
+++
+> > >  .../gpu/drm/arm/display/komeda/komeda_crtc.c  |  2 ++
+> > >  .../drm/arm/display/komeda/komeda_pipeline.h  |  3 +++
+> > >  .../display/komeda/komeda_pipeline_state.c    |  6 +++++
+> > >  4 files changed, 35 insertions(+)
+> > >=20
+> > > diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b=
+/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > > index c3d29c0b051b..e7e5a8e4430e 100644
+> > > --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > > +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > > @@ -942,15 +942,39 @@ static int d71_merger_init(struct d71_dev *d71,
+> > >  static void d71_improc_update(struct komeda_component *c,
+> > >  			      struct komeda_component_state *state)
+> > >  {
+> > > +	struct drm_crtc_state *crtc_st =3D state->crtc->state;
+> > I'm not sure it's a good idea to introduce a dependency on drm state
+> > so far down in the HW funcs, is there a good reason for the direct prod=
+?
+> We dicussed about this before. To decide using this way is to avoid of
+> duplicated state between DRM and Komeda.
+Fair, r-b me.
 
-> Sorry for the delayed reply. I will be on vacation until Wednesday,
-> October 16th.
-> 
-> On Wed, Oct 9, 2019 at 9:36 AM Alan Maguire <alan.maguire@oracle.com> wrote:
-> >
-> > On Tue, 8 Oct 2019, Brendan Higgins wrote:
-> >
-> > > On Tue, Oct 08, 2019 at 03:55:44PM +0100, Alan Maguire wrote:
-> [...]
-> > > > diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
-> > > > index e6d17aa..e4f3a97 100644
-> > > > --- a/lib/kunit/string-stream.c
-> > > > +++ b/lib/kunit/string-stream.c
-> > > > @@ -100,6 +100,7 @@ int string_stream_vadd(struct string_stream *stream,
-> > > >
-> > > >     return 0;
-> > > >  }
-> > > > +EXPORT_SYMBOL_GPL(string_stream_vadd);
-> > >
-> > > Is this actually needed by anything other than lib/kunit/test.c right
-> > > now? Maybe we should move the include file into the kunit/ directory to
-> > > hide these so no one else can use them.
-> > >
-> >
-> > I tried this, and it's the right answer I think but it exposes
-> > a problem with symbol visibility when kunit is compiled as a module.
-> > More on this below...
-> >
-> > > >  int string_stream_add(struct string_stream *stream, const char *fmt, ...)
-> > > >  {
-> > > > @@ -112,6 +113,7 @@ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
-> > > >
-> > > >     return result;
-> > > >  }
-> > > > +EXPORT_SYMBOL_GPL(string_stream_add);
-> > > [...]
-> > > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > > > index c83c0fa..e7896f1 100644
-> > > > --- a/lib/kunit/test.c
-> > > > +++ b/lib/kunit/test.c
-> > > [...]
-> > > > @@ -50,6 +51,7 @@ static unsigned long kunit_test_timeout(void)
-> > > >      * For more background on this topic, see:
-> > > >      * https://mike-bland.com/2011/11/01/small-medium-large.html
-> > > >      */
-> > > > +#ifndef MODULE
-> > >
-> > > Why is this block of code "ifndef MODULE"?
-> > >
-> >
-> > Symbol visibility is the problem again; sysctl_hung_task_timeout_secs
-> > isn't exported so when kunit is a module it can't find the symbol.
-> >
-> > I think I saw Kees mentioned something about symbol lookup too; in KTF
-> > Knut solved this by defining ktf_find_symbol(). I'd suggest we may need a
-> > kunit_find_symbol() with a function signature
-> 
-> I thought we were just talking about exposing symbols for linking
-> outside of a compilation unit (static vs. not static); nevertheless, I
-> think you are right that it is relevant here. Kees, thoughts?
-> 
-> > void *kunit_find_symbol(const char *modname, const char *symbol_name);
-> >
-> > ...which does a [module_]kallsyms_lookup_sym().
-> >
-> > If the above makes sense I can look at adding it as a patch (and adding
-> > a test of it of course!). What do you think?
-> 
-> So that won't work if you are trying to link against a symbol not in a
-> module, right? Also, it won't work against a static symbol, right?
-> 
+>=20
+> Regards,
+> Lowry
+> > >  	struct komeda_improc_state *st =3D to_improc_st(state);
+> > > +	struct d71_pipeline *pipe =3D to_d71_pipeline(c->pipeline);
+> > >  	u32 __iomem *reg =3D c->reg;
+> > >  	u32 index;
+> > > +	u32 mask =3D 0, ctrl =3D 0;
+> > > =20
+> > >  	for_each_changed_input(state, index)
+> > >  		malidp_write32(reg, BLK_INPUT_ID0 + index * 4,
+> > >  			       to_d71_input_id(state, index));
+> > > =20
+> > >  	malidp_write32(reg, BLK_SIZE, HV_SIZE(st->hsize, st->vsize));
+> > > +
+> > > +	if (crtc_st->color_mgmt_changed) {
+> > > +		mask |=3D IPS_CTRL_FT | IPS_CTRL_RGB;
+> > > +
+> > > +		if (crtc_st->gamma_lut) {
+> > > +			malidp_write_group(pipe->dou_ft_coeff_addr, FT_COEFF0,
+> > > +					   KOMEDA_N_GAMMA_COEFFS,
+> > > +					   st->fgamma_coeffs);
+> > > +			ctrl |=3D IPS_CTRL_FT; /* enable gamma */
+> > > +		}
+> > > +
+> > > +		if (crtc_st->ctm) {
+> > > +			malidp_write_group(reg, IPS_RGB_RGB_COEFF0,
+> > > +					   KOMEDA_N_CTM_COEFFS,
+> > > +					   st->ctm_coeffs);
+> > > +			ctrl |=3D IPS_CTRL_RGB; /* enable gamut */
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (mask)
+> > > +		malidp_write32_mask(reg, BLK_CONTROL, mask, ctrl);
+> > >  }
+> > > =20
+> > >  static void d71_improc_dump(struct komeda_component *c, struct seq_f=
+ile *sf)
+> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drive=
+rs/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > > index 9beeda04818b..406b9d0ca058 100644
+> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > > @@ -590,6 +590,8 @@ static int komeda_crtc_add(struct komeda_kms_dev =
+*kms,
+> > > =20
+> > >  	crtc->port =3D kcrtc->master->of_output_port;
+> > > =20
+> > > +	drm_crtc_enable_color_mgmt(crtc, 0, true, KOMEDA_COLOR_LUT_SIZE);
+> > > +
+> > >  	return err;
+> > >  }
+> > > =20
+> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/d=
+rivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> > > index b322f52ba8f2..c5ab8096c85d 100644
+> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> > > @@ -11,6 +11,7 @@
+> > >  #include <drm/drm_atomic.h>
+> > >  #include <drm/drm_atomic_helper.h>
+> > >  #include "malidp_utils.h"
+> > > +#include "komeda_color_mgmt.h"
+> > > =20
+> > >  #define KOMEDA_MAX_PIPELINES		2
+> > >  #define KOMEDA_PIPELINE_MAX_LAYERS	4
+> > > @@ -324,6 +325,8 @@ struct komeda_improc {
+> > >  struct komeda_improc_state {
+> > >  	struct komeda_component_state base;
+> > >  	u16 hsize, vsize;
+> > > +	u32 fgamma_coeffs[KOMEDA_N_GAMMA_COEFFS];
+> > > +	u32 ctm_coeffs[KOMEDA_N_CTM_COEFFS];
+> > >  };
+> > > =20
+> > >  /* display timing controller */
+> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state=
+.c b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> > > index 0ba9c6aa3708..4a40b37eb1a6 100644
+> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> > > @@ -756,6 +756,12 @@ komeda_improc_validate(struct komeda_improc *imp=
+roc,
+> > >  	st->hsize =3D dflow->in_w;
+> > >  	st->vsize =3D dflow->in_h;
+> > > =20
+> > > +	if (kcrtc_st->base.color_mgmt_changed) {
+> > > +		drm_lut_to_fgamma_coeffs(kcrtc_st->base.gamma_lut,
+> > > +					 st->fgamma_coeffs);
+> > > +		drm_ctm_to_coeffs(kcrtc_st->base.ctm, st->ctm_coeffs);
+> > > +	}
+> > > +
+> > >  	komeda_component_add_input(&st->base, &dflow->input, 0);
+> > >  	komeda_component_set_output(&dflow->input, &improc->base, 0);
+> > > =20
+> > >=20
+> >=20
+> >=20
+>=20
 
-Nope, works in both cases with the proviso that we need to use an 
-alternative name for symbols when compiling built-in.  For example
-in the case of the string-stream tests, we'd use a test init callback
-to initialize used symbols:
 
-static int string_stream_test_init(struct kunit *test)
-{
-        _alloc_string_stream = kunit_find_symbol("alloc_string_stream");
-        _string_stream_add = kunit_find_symbol("string_stream_add");
-        _string_stream_get_string = kunit_find_symbol("string_stream_get_string");
-        _string_stream_is_empty = kunit_find_symbol("string_stream_is_empty");
-        if (IS_ERR(_alloc_string_stream) ||
-            IS_ERR(_string_stream_add) ||
-            IS_ERR(_string_stream_get_string) ||
-            IS_ERR(_string_stream_is_empty))
-                return EINVAL;
-        return 0;
-} 
+--=20
+Mihail
 
-I've tested this when string-stream-test is compiled built-in and as a 
-module.  We can of course create a wrapper macro to handle these 
-assignments.
 
-To illustrate further here's the test cases I'd propose adding to 
-test-test.c with the changes. 
-
-In the first case we're grabbing the "modules" variable from the kernel,
-and in the second we're grabbing a static symbol from the test-test.ko
-module (when it is compiled as a module):
-
-/*
- * Find non-exported kernel symbol; we use the modules list as a safe
- * choice that should always be present.
- */
-static void kunit_find_symbol_kernel(struct kunit *test)
-{
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, kunit_find_symbol("modules"));
-}
-
-#ifdef MODULE
-/*
- * If we are compiled as a module, use this module for lookup.
- */
-static void kunit_find_symbol_module(struct kunit *test)
-{
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test,
-                                     kunit_find_symbol("kunit_find_symbol_kernel"));
-}
-#endif
-
- 
-> Even so, I think it is pretty wonky to expect users to either a)
-> export any symbol name to be tested,
-
-Absolutely not, I'd never advocate that.  Nothing should need to change in 
-the component under test simply to facilitate testing, especially if 
-there's a way the test framework can work around it.
-
-> or b) have to access them via
-> kunit_find_symbol.  I think it is fine to have some tests that cannot
-> be compiled as modules, if there is no other user friendly way to make
-> this work in those cases.
-
-That's fine, and I agree in some cases it's unworkable, but there are 
-going to be a lot of tristate componenets we'd like to test, and 
-restricting testing of those by requiring CONFIG_FOO=y seems like a 
-limitation too.  In practice I've found symbol lookup isn't needed 
-extensively for test development.  For cases where the weight of symbol 
-lookup is too heavy the tests can simply stay built-in - the non-exported 
-nature of the symbols is probably suggesting something about the nature of 
-the interface that makes that a more natural choice anyway.  However for 
-other cases I think there's value to having something like this feature.
-Of course there may be better ways to realize the functionality than what 
-I'm proposing.
-
-Thanks!
-
-Alan 
 
