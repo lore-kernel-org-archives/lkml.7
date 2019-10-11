@@ -2,141 +2,257 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B39C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E32EC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20511214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69989214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HvSM+J2v"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nSazSiol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfJKAEG (ORCPT
+        id S1727474AbfJKAGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:04:06 -0400
-Received: from mail-eopbgr60059.outbound.protection.outlook.com ([40.107.6.59]:56384
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726096AbfJKAEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:04:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZfW28UHq2SiDgbtOhY5jpDymm5QvXRCd+7RHcPsJ+bB2ACwJu1W9/I2cyirMrFvJ/o/Q09ULEePqNXjOJ9Od3Ag8OTgaN3QBbYbam/DS/a/Chsrn/28Yw3sSmyh9KMyyE5y2AdeMe9nL4VRP0sCUjJRI7ClckNInW0iwQ94iJBeSxWm5KHJwh4FTpKtYmyUPB6tRxG0dhWmziaI5ebDpBdQEPKUc4mysbMNbg9l4Hv7mx//XfG34IjbIIuhQt375o3E/R6n7zl1hznjfK+fD6FHIp6PcUy4bbJFf9cYlLWqjp9VIE1q1WPehPmbXiumj45D+VJMtJMikIVHXW6tG0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZAsIwOG5zThbl2IluDl1cEkIbu8RaDtk2ahPqR/4vzw=;
- b=crYVjPEmxYUhfeK+845t7eP5MbWArNJFfe75T98igFfyH0Ns0J92WGvg03xbym3hFm8mVUSHI0vNHEzN7yaZ0rwO5Q/pvyWV1aJqqkdxwZHQjQA+vjbwaro419q8hPz8knU1kPdjK9VvZ+e+Pm6KZLKHwfMl1DpX8nIAiekdhZ/1gBp2RozD+E7KfpR6ADGq7oBhf0zVKPs25Ge9TO5AUjWLlDdIpSEeWtXr14VAfa5ExE3oDaqlIHvyMuMmdaTHcsEw72L//JPMQ811/PpTEWqo7MCqez8MFJ7QjT1kPJI/bBWVK9YUfb5/MU6AMmCSU7CqWiQSb+JFmdgIZ6EFKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZAsIwOG5zThbl2IluDl1cEkIbu8RaDtk2ahPqR/4vzw=;
- b=HvSM+J2vQEPpNhM+mLrfP26db0qczwYZWOwrxF0PZJcj33uX8w6aQoc7ZXuF0P0Wt5gAKowAezhq3y/zxipF0I5S+Xt2NGPdeuG2BF0zTlhX9cntYVMEvx68I0MmOuI/giUKzoQGXjG8sgGwJbl5ot98+KeShRoADIeVBIJ4824=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3801.eurprd04.prod.outlook.com (52.134.65.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Fri, 11 Oct 2019 00:03:22 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d469:ad51:2bec:19f0]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d469:ad51:2bec:19f0%6]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
- 00:03:22 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     Andy Duan <fugang.duan@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
-        "swboyd@chromium.org" <swboyd@chromium.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] net: fec_main: Use platform_get_irq_byname_optional()
- to avoid error message
-Thread-Topic: [PATCH 1/2] net: fec_main: Use
- platform_get_irq_byname_optional() to avoid error message
-Thread-Index: AQHVforZimETp53I4UOLcQPYAMVf3qdUghaAgAAN4TA=
-Date:   Fri, 11 Oct 2019 00:03:22 +0000
-Message-ID: <DB3PR0402MB3916FF4583577B182D9BF60CF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1570616148-11571-1-git-send-email-Anson.Huang@nxp.com>
- <20191010160811.7775c819@cakuba.netronome.com>
-In-Reply-To: <20191010160811.7775c819@cakuba.netronome.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e661453-35e3-478b-f927-08d74dde6e31
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DB3PR0402MB3801:|DB3PR0402MB3801:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3801A20EDBA690F79C05CC02F5970@DB3PR0402MB3801.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0187F3EA14
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(376002)(396003)(366004)(199004)(189003)(33656002)(54906003)(14454004)(25786009)(316002)(52536014)(478600001)(86362001)(5660300002)(6246003)(4326008)(7696005)(8936002)(74316002)(81156014)(81166006)(15650500001)(66946007)(102836004)(8676002)(305945005)(486006)(6506007)(76116006)(64756008)(66066001)(229853002)(99286004)(6916009)(256004)(2906002)(55016002)(66446008)(11346002)(14444005)(446003)(9686003)(76176011)(476003)(44832011)(3846002)(6116002)(71200400001)(66476007)(26005)(66556008)(6436002)(186003)(71190400001)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3801;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: T9LQXO4hcoRGgWPuelxypd99CJ7//lku+4GbbPgXYpkJ1Zp+qd4cHZYdT8UmhVHz+WRvG2/pDjvHBEMzTN+Tw3xzZD9ms1M6B9D3Y1gvU1SHmws3Oh6bfaPzE2c7iKGcsRYAapBycqr+7U9AHSxGrIABQirN2/jdCD85WkArOLdPChSHaXDePkTRbZ2SKRpDbu9tBp8xbi1/ssdy4iJWfgkM46bLlMtjOT8RCwauJA352UN9SGYewFQ3phqXj8NPgQGBJbNyqviyzDZWbX7GKKWVu3KgHP1Z1K/VLVdNDbGIB3EdgXIG2ExWC+MLjSD3F9+yutCsOAxlWbDkU2Y9oja7s8Jk0MEhLsjHRVJ6yL/dXUAO1zFwanf+McZbNJZPlu67qtKYCkp+czAdACtAA9w4qe9ovSVpOj4DfY81WTM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e661453-35e3-478b-f927-08d74dde6e31
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 00:03:22.1852
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wKF5wlgxSns01UT3RNww3GS9sk4DOtaO064sqO/wnmZ5x7R5LgdQfvk82vMoxT9/6wjxQF1PQUROhN4R70C2zA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3801
+        Thu, 10 Oct 2019 20:06:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36427 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfJKAGW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 20:06:22 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 23so4704340pgk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=9StLK2MlJr7BNY6TFoL2FLdWEIH7MyJyYVIq4dGaZdM=;
+        b=nSazSiolb/UE6P+d6rHzH+plQd9BvPZ3YU+Man7WIT3R8sZhs7kVHXwU9QaLRP510Y
+         dorUYmhg3KsIFCy/xwIiMTBtYQUTSPbAS/cxZFArOFUrePZF8eMYBvFWZOPX367uO7AQ
+         tOtSHwKalmk9pRcI3vDDcxSyHH7wzEBksWqjA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9StLK2MlJr7BNY6TFoL2FLdWEIH7MyJyYVIq4dGaZdM=;
+        b=gk5JcEyglN5bpF6R21o9GERBs0QjrJ5cLX3vuMr58llpHdfdtAcoVXnyjaLBS60rJD
+         8jIsySO8OrKd29cwTNfpTvJjFjPxTaQ6HDvHWGqX7R77aMQHopUFn2dpUIhaoS6Zzrqx
+         3jW45dgGREsPANujprcJKDieCNGkCynoeHelvvwHapdTdcROZOuK/1nBsefBU0Oi+2T5
+         P1H3e77kZkudAbpEWYowY90aq72BpopSaYa7fLg9+8WyE/a28LA0F5dcoaH2xDOQLbKg
+         Slnk3i2xVLoLliwXKtN7q2fR38iiKhPobq2+Q2XL7OgfEaMzAA7o58sSUHP4+p8ct6BM
+         Sriw==
+X-Gm-Message-State: APjAAAXGMpg6dl/zDMyebMJ8xnSUFd7drPIgZ14qd6GMNd2y5cZERizT
+        L357oTc2JAFus3nZE2GU+7fcuA==
+X-Google-Smtp-Source: APXvYqy+BFNMKOyCmMISgn+NdoeMQkp/Wa9i8qIO2BPfpxRyHkLNqvDw/R+5rHogT97/j7uz2d63Lg==
+X-Received: by 2002:a17:90a:20cb:: with SMTP id f69mr13865338pjg.110.1570752380991;
+        Thu, 10 Oct 2019 17:06:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y2sm6740817pfe.126.2019.10.10.17.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 17:06:20 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/29] vmlinux.lds.h: Refactor EXCEPTION_TABLE and NOTES
+Date:   Thu, 10 Oct 2019 17:05:40 -0700
+Message-Id: <20191011000609.29728-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEpha3ViDQoNCj4gT24gV2VkLCAgOSBPY3QgMjAxOSAxODoxNTo0NyArMDgwMCwgQW5zb24g
-SHVhbmcgd3JvdGU6DQo+ID4gRmFpbGVkIHRvIGdldCBpcnEgdXNpbmcgbmFtZSBpcyBOT1QgZmF0
-YWwgYXMgZHJpdmVyIHdpbGwgdXNlIGluZGV4IHRvDQo+ID4gZ2V0IGlycSBpbnN0ZWFkLCB1c2Ug
-cGxhdGZvcm1fZ2V0X2lycV9ieW5hbWVfb3B0aW9uYWwoKSBpbnN0ZWFkIG9mDQo+ID4gcGxhdGZv
-cm1fZ2V0X2lycV9ieW5hbWUoKSB0byBhdm9pZCBiZWxvdyBlcnJvciBtZXNzYWdlIGR1cmluZw0K
-PiA+IHByb2JlOg0KPiA+DQo+ID4gWyAgICAwLjgxOTMxMl0gZmVjIDMwYmUwMDAwLmV0aGVybmV0
-OiBJUlEgaW50MCBub3QgZm91bmQNCj4gPiBbICAgIDAuODI0NDMzXSBmZWMgMzBiZTAwMDAuZXRo
-ZXJuZXQ6IElSUSBpbnQxIG5vdCBmb3VuZA0KPiA+IFsgICAgMC44Mjk1MzldIGZlYyAzMGJlMDAw
-MC5ldGhlcm5ldDogSVJRIGludDIgbm90IGZvdW5kDQo+ID4NCj4gPiBGaXhlczogNzcyM2Y0YzVl
-Y2RiICgiZHJpdmVyIGNvcmU6IHBsYXRmb3JtOiBBZGQgYW4gZXJyb3IgbWVzc2FnZSB0bw0KPiA+
-IHBsYXRmb3JtX2dldF9pcnEqKCkiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxB
-bnNvbi5IdWFuZ0BueHAuY29tPg0KPiANCj4gSGkgQW5zb24sDQo+IA0KPiBsb29rcyBsaWtlIHRo
-ZXJlIG1heSBiZSBzb21lIGRlcGVuZGVuY3kgd2hpY2ggaGF2ZW4ndCBsYW5kZWQgaW4gdGhlDQo+
-IG5ldHdvcmtpbmcgdHJlZSB5ZXQ/ICBCZWNhdXNlIHRoaXMgZG9lc24ndCBidWlsZDoNCj4gDQo+
-IGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9mZWNfbWFpbi5jOiBJbiBmdW5jdGlvbiDi
-gJhmZWNfcHJvYmXigJk6DQo+IGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9mZWNfbWFp
-bi5jOjM1NjE6OTogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uDQo+IG9mIGZ1bmN0aW9uIOKA
-mHBsYXRmb3JtX2dldF9pcnFfYnluYW1lX29wdGlvbmFs4oCZOyBkaWQgeW91IG1lYW4NCj4g4oCY
-cGxhdGZvcm1fZ2V0X2lycV9vcHRpb25hbOKAmT8gWy1XZXJyb3I9aW1wbGljaXQtZnVuY3Rpb24t
-ZGVjbGFyYXRpb25dDQo+ICAzNTYxIHwgICBpcnEgPSBwbGF0Zm9ybV9nZXRfaXJxX2J5bmFtZV9v
-cHRpb25hbChwZGV2LCBpcnFfbmFtZSk7DQo+ICAgICAgIHwgICAgICAgICBefn5+fn5+fn5+fn5+
-fn5+fn5+fn5+fn5+fn5+fn5+fg0KPiAgICAgICB8ICAgICAgICAgcGxhdGZvcm1fZ2V0X2lycV9v
-cHRpb25hbA0KPiBjYzE6IHNvbWUgd2FybmluZ3MgYmVpbmcgdHJlYXRlZCBhcyBlcnJvcnMNCj4g
-DQo+IENvdWxkIHlvdSBwbGVhc2UgcmVwb3N0IG9uY2UgdGhhdCdzIHJlc29sdmVkPyAgUGxlYXNl
-IGFkZCBBbmR5J3MgYW5kDQo+IFN0ZXBoZW4ncyBhY2tzIHdoZW4gcmVwb3N0aW5nLg0KPiANCj4g
-VGhhbmsgeW91IQ0KDQpTb3JyeSwgSSBkaWQgdGhpcyBwYXRjaCBzZXQgYmFzZWQgb24gbGludXgt
-bmV4dCB0cmVlLCB0aGUgYmVsb3cgcGF0Y2ggaXMgbGFuZGluZw0Kb24gTGludXgtbmV4dCB0cmVl
-IG9uIE9jdCA1dGgsIHNvIG1heWJlIG5ldHdvcmsgdHJlZSBpcyBOT1Qgc3luYyB3aXRoIExpbnV4
-LW5leHQgdHJlZT8NCkkgc2F3IG1hbnkgb3RoZXIgc2ltaWxhciBwYXRjaGVzIGFyZSBhbHJlYWR5
-IGxhbmRpbmcgb24gTGludXgtbmV4dCB0cmVlIGFsc28sIHNvIHdoYXQNCmRvIHlvdSBzdWdnZXN0
-IEkgc2hvdWxkIGRvPyBPciBjYW4geW91IHN5bmMgdGhlIG5ldHdvcmsgdHJlZSB3aXRoIExpbnV4
-LW5leHQgdHJlZSBmaXJzdD8gSSBkbw0KTk9UIGtub3cgdGhlIHJ1bGUvc2NoZWR1bGUgb2YgbmV0
-d29yayB0cmVlIHVwZGF0ZSB0byBMaW51eC1uZXh0Lg0KDQpjb21taXQgZjFkYTU2N2YxZGMxYjU1
-ZDE3OGI4ZjJkMGNmZTgzNTM4NThhYWMxOQ0KQXV0aG9yOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2Vk
-ZUByZWRoYXQuY29tPg0KRGF0ZTogICBTYXQgT2N0IDUgMjM6MDQ6NDcgMjAxOSArMDIwMA0KDQog
-ICAgZHJpdmVyIGNvcmU6IHBsYXRmb3JtOiBBZGQgcGxhdGZvcm1fZ2V0X2lycV9ieW5hbWVfb3B0
-aW9uYWwoKQ0KDQp0aGFua3MsDQpBbnNvbg0KDQo=
+Arch maintainers: please send Acks (if you haven't already) for your
+respective linker script changes; the intention is for this series to
+land via -tip.
+
+v1: https://lore.kernel.org/lkml/20190926175602.33098-1-keescook@chromium.org
+v2: clean up commit messages, rename RO_EXCEPTION_TABLE (bp)
+
+
+This series works to move the linker sections for NOTES and
+EXCEPTION_TABLE into the RO_DATA area, where they belong on most
+(all?) architectures. The problem being addressed was the discovery
+by Rick Edgecombe that the exception table was accidentally marked
+executable while he was developing his execute-only-memory series. When
+permissions were flipped from readable-and-executable to only-executable,
+the exception table became unreadable, causing things to explode rather
+badly. :)
+
+Roughly speaking, the steps are:
+
+- regularize the linker names for PT_NOTE and PT_LOAD program headers
+  (to "note" and "text" respectively)
+- regularize restoration of linker section to program header assignment
+  (when PT_NOTE exists)
+- move NOTES into RO_DATA
+- finish macro naming conversions for RO_DATA and RW_DATA
+- move EXCEPTION_TABLE into RO_DATA on architectures where this is clear
+- clean up some x86-specific reporting of kernel memory resources
+- switch x86 linker fill byte from x90 (NOP) to 0xcc (INT3), just because
+  I finally realized what that trailing ": 0x9090" meant -- and we should
+  trap, not slide, if execution lands in section padding
+
+Thanks!
+
+-Kees
+
+Kees Cook (29):
+  powerpc: Rename "notes" PT_NOTE to "note"
+  powerpc: Remove PT_NOTE workaround
+  powerpc: Rename PT_LOAD identifier "kernel" to "text"
+  alpha: Rename PT_LOAD identifier "kernel" to "text"
+  ia64: Rename PT_LOAD identifier "code" to "text"
+  s390: Move RO_DATA into "text" PT_LOAD Program Header
+  x86: Restore "text" Program Header with dummy section
+  vmlinux.lds.h: Provide EMIT_PT_NOTE to indicate export of .notes
+  vmlinux.lds.h: Move Program Header restoration into NOTES macro
+  vmlinux.lds.h: Move NOTES into RO_DATA
+  vmlinux.lds.h: Replace RODATA with RO_DATA
+  vmlinux.lds.h: Replace RO_DATA_SECTION with RO_DATA
+  vmlinux.lds.h: Replace RW_DATA_SECTION with RW_DATA
+  vmlinux.lds.h: Allow EXCEPTION_TABLE to live in RO_DATA
+  x86: Actually use _etext for end of text segment
+  x86: Move EXCEPTION_TABLE to RO_DATA segment
+  alpha: Move EXCEPTION_TABLE to RO_DATA segment
+  arm64: Move EXCEPTION_TABLE to RO_DATA segment
+  c6x: Move EXCEPTION_TABLE to RO_DATA segment
+  h8300: Move EXCEPTION_TABLE to RO_DATA segment
+  ia64: Move EXCEPTION_TABLE to RO_DATA segment
+  microblaze: Move EXCEPTION_TABLE to RO_DATA segment
+  parisc: Move EXCEPTION_TABLE to RO_DATA segment
+  powerpc: Move EXCEPTION_TABLE to RO_DATA segment
+  xtensa: Move EXCEPTION_TABLE to RO_DATA segment
+  x86/mm: Remove redundant &s on addresses
+  x86/mm: Report which part of kernel image is freed
+  x86/mm: Report actual image regions in /proc/iomem
+  x86: Use INT3 instead of NOP for linker fill bytes
+
+ arch/alpha/kernel/vmlinux.lds.S      | 18 +++++-----
+ arch/arc/kernel/vmlinux.lds.S        |  6 ++--
+ arch/arm/kernel/vmlinux-xip.lds.S    |  4 +--
+ arch/arm/kernel/vmlinux.lds.S        |  4 +--
+ arch/arm64/kernel/vmlinux.lds.S      |  9 ++---
+ arch/c6x/kernel/vmlinux.lds.S        |  8 ++---
+ arch/csky/kernel/vmlinux.lds.S       |  5 ++-
+ arch/h8300/kernel/vmlinux.lds.S      |  9 ++---
+ arch/hexagon/kernel/vmlinux.lds.S    |  5 ++-
+ arch/ia64/kernel/vmlinux.lds.S       | 20 +++++------
+ arch/m68k/kernel/vmlinux-nommu.lds   |  4 +--
+ arch/m68k/kernel/vmlinux-std.lds     |  2 +-
+ arch/m68k/kernel/vmlinux-sun3.lds    |  2 +-
+ arch/microblaze/kernel/vmlinux.lds.S |  8 ++---
+ arch/mips/kernel/vmlinux.lds.S       | 15 ++++----
+ arch/nds32/kernel/vmlinux.lds.S      |  5 ++-
+ arch/nios2/kernel/vmlinux.lds.S      |  5 ++-
+ arch/openrisc/kernel/vmlinux.lds.S   |  7 ++--
+ arch/parisc/kernel/vmlinux.lds.S     | 11 +++---
+ arch/powerpc/kernel/vmlinux.lds.S    | 37 ++++---------------
+ arch/riscv/kernel/vmlinux.lds.S      |  5 ++-
+ arch/s390/kernel/vmlinux.lds.S       | 12 +++----
+ arch/sh/kernel/vmlinux.lds.S         |  3 +-
+ arch/sparc/kernel/vmlinux.lds.S      |  3 +-
+ arch/um/include/asm/common.lds.S     |  3 +-
+ arch/unicore32/kernel/vmlinux.lds.S  |  5 ++-
+ arch/x86/include/asm/processor.h     |  2 +-
+ arch/x86/include/asm/sections.h      |  1 -
+ arch/x86/kernel/setup.c              | 12 ++++++-
+ arch/x86/kernel/vmlinux.lds.S        | 16 ++++-----
+ arch/x86/mm/init.c                   |  8 ++---
+ arch/x86/mm/init_64.c                | 16 +++++----
+ arch/x86/mm/pti.c                    |  2 +-
+ arch/xtensa/kernel/vmlinux.lds.S     |  8 ++---
+ include/asm-generic/vmlinux.lds.h    | 53 ++++++++++++++++++++--------
+ 35 files changed, 159 insertions(+), 174 deletions(-)
+
+-- 
+2.17.1
+
+
+Kees Cook (29):
+  powerpc: Rename "notes" PT_NOTE to "note"
+  powerpc: Remove PT_NOTE workaround
+  powerpc: Rename PT_LOAD identifier "kernel" to "text"
+  alpha: Rename PT_LOAD identifier "kernel" to "text"
+  ia64: Rename PT_LOAD identifier "code" to "text"
+  s390: Move RO_DATA into "text" PT_LOAD Program Header
+  x86: Restore "text" Program Header with dummy section
+  vmlinux.lds.h: Provide EMIT_PT_NOTE to indicate export of .notes
+  vmlinux.lds.h: Move Program Header restoration into NOTES macro
+  vmlinux.lds.h: Move NOTES into RO_DATA
+  vmlinux.lds.h: Replace RODATA with RO_DATA
+  vmlinux.lds.h: Replace RO_DATA_SECTION with RO_DATA
+  vmlinux.lds.h: Replace RW_DATA_SECTION with RW_DATA
+  vmlinux.lds.h: Allow EXCEPTION_TABLE to live in RO_DATA
+  x86: Actually use _etext for end of text segment
+  x86: Move EXCEPTION_TABLE to RO_DATA segment
+  alpha: Move EXCEPTION_TABLE to RO_DATA segment
+  arm64: Move EXCEPTION_TABLE to RO_DATA segment
+  c6x: Move EXCEPTION_TABLE to RO_DATA segment
+  h8300: Move EXCEPTION_TABLE to RO_DATA segment
+  ia64: Move EXCEPTION_TABLE to RO_DATA segment
+  microblaze: Move EXCEPTION_TABLE to RO_DATA segment
+  parisc: Move EXCEPTION_TABLE to RO_DATA segment
+  powerpc: Move EXCEPTION_TABLE to RO_DATA segment
+  xtensa: Move EXCEPTION_TABLE to RO_DATA segment
+  x86/mm: Remove redundant &s on addresses
+  x86/mm: Report which part of kernel image is freed
+  x86/mm: Report actual image regions in /proc/iomem
+  x86: Use INT3 instead of NOP for linker fill bytes
+
+ arch/alpha/kernel/vmlinux.lds.S      | 18 +++++-----
+ arch/arc/kernel/vmlinux.lds.S        |  6 ++--
+ arch/arm/kernel/vmlinux-xip.lds.S    |  4 +--
+ arch/arm/kernel/vmlinux.lds.S        |  4 +--
+ arch/arm64/kernel/vmlinux.lds.S      | 10 +++---
+ arch/c6x/kernel/vmlinux.lds.S        |  8 ++---
+ arch/csky/kernel/vmlinux.lds.S       |  5 ++-
+ arch/h8300/kernel/vmlinux.lds.S      |  9 ++---
+ arch/hexagon/kernel/vmlinux.lds.S    |  5 ++-
+ arch/ia64/kernel/vmlinux.lds.S       | 20 +++++------
+ arch/m68k/kernel/vmlinux-nommu.lds   |  4 +--
+ arch/m68k/kernel/vmlinux-std.lds     |  2 +-
+ arch/m68k/kernel/vmlinux-sun3.lds    |  2 +-
+ arch/microblaze/kernel/vmlinux.lds.S |  8 ++---
+ arch/mips/kernel/vmlinux.lds.S       | 15 ++++----
+ arch/nds32/kernel/vmlinux.lds.S      |  5 ++-
+ arch/nios2/kernel/vmlinux.lds.S      |  5 ++-
+ arch/openrisc/kernel/vmlinux.lds.S   |  7 ++--
+ arch/parisc/kernel/vmlinux.lds.S     | 11 +++---
+ arch/powerpc/kernel/vmlinux.lds.S    | 37 ++++---------------
+ arch/riscv/kernel/vmlinux.lds.S      |  5 ++-
+ arch/s390/kernel/vmlinux.lds.S       | 12 +++----
+ arch/sh/kernel/vmlinux.lds.S         |  3 +-
+ arch/sparc/kernel/vmlinux.lds.S      |  3 +-
+ arch/um/include/asm/common.lds.S     |  3 +-
+ arch/unicore32/kernel/vmlinux.lds.S  |  5 ++-
+ arch/x86/include/asm/processor.h     |  2 +-
+ arch/x86/include/asm/sections.h      |  1 -
+ arch/x86/kernel/setup.c              | 12 ++++++-
+ arch/x86/kernel/vmlinux.lds.S        | 16 ++++-----
+ arch/x86/mm/init.c                   |  8 ++---
+ arch/x86/mm/init_64.c                | 16 +++++----
+ arch/x86/mm/pti.c                    |  2 +-
+ arch/xtensa/kernel/vmlinux.lds.S     |  8 ++---
+ include/asm-generic/vmlinux.lds.h    | 53 ++++++++++++++++++++--------
+ 35 files changed, 159 insertions(+), 175 deletions(-)
+
+-- 
+2.17.1
+
