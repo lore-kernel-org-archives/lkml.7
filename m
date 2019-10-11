@@ -2,129 +2,155 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B39ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5598ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9B7206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:47:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5EHwYs/"
+	by mail.kernel.org (Postfix) with ESMTP id 80B89206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfJKDrT (ORCPT
+        id S1726712AbfJKDsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 23:47:19 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46760 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfJKDrS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 23:47:18 -0400
-Received: by mail-pl1-f196.google.com with SMTP id q24so3791611plr.13;
-        Thu, 10 Oct 2019 20:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JdptEyYfrrVWOU3k4HBsHHiS/OxBHfbh3xSJxXoFOXg=;
-        b=i5EHwYs/CszsgLgBqVaJ2rCHwBUm8/t6StaUxrR+WK1K3elXfzXSp5NiLQkk3nUJp/
-         4oMKE4l/wd4Nc3pLvXzaf6wJQoCyOobPN/HfU1guzjPZsW3VmHpBnGHdb3CM2jYB2Wu0
-         XQDL7Lu9aLPIZqrBHm/u23rG9xXJtCQzGmhsg42twwkb0pkN9CXo+2LFSMMXSPGda6kS
-         hhgFZ40mIpkqVTb5PBrsRxakHxQ1b9OA1qzxchzU8er9OrhxIRLNWBKcfO3qMhR/g2ZD
-         F00814nx3FnVZLdEPKScSSOtHsocSROA6S/JeStl8/3KoPS2Jtyw4X9/np2wn6o1A/2u
-         7cSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=JdptEyYfrrVWOU3k4HBsHHiS/OxBHfbh3xSJxXoFOXg=;
-        b=OwmoJCdP15oI+P4PvNPJWxkQLlGWBmjktzZxZBdVAcPyESuyaDoKD1T4s7pWVl7Vmk
-         O/uSfF22zfpJWuy4anjtpSXV6iyLOYSzvQ8Y+dpfSwEra7YMkYeoV/yqwfDjWKY6vjB1
-         oFW5F1DbI52QNYoQdPSMszuIlTw0NUA1jGZPugml1m1hZ3hg/ggMpGX73rbl6SQeLWuw
-         ORPl/HtP5jW/+p9F8sdONzCANtodek5MMgjH+bdkVknyOfOO9RjNLZDf2dONlyCJEKmw
-         lfDO7IfOMFnf9yYaqXkir7Q3Ggqf/vGAJbfubwPQFu9eyN20ppTZbl4Xc0wpG2PU5FpP
-         pWvQ==
-X-Gm-Message-State: APjAAAXPdPhZXOyWPX7hpTQfxxGTYXHhb7EehyAQ/aHZ4YNCI4uNssVM
-        1WvzLxX1xlvalMUu6WniXCM=
-X-Google-Smtp-Source: APXvYqwN0/l64V8pBpT3gRAc/OW6eNRZqdFuJPu6MfrrbbPyWTZph1XrL7MD9euTm+lbzWqRsdkvvA==
-X-Received: by 2002:a17:902:fe86:: with SMTP id x6mr13108364plm.320.1570765636491;
-        Thu, 10 Oct 2019 20:47:16 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id u3sm7493267pfn.134.2019.10.10.20.47.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 20:47:15 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        will@kernel.org, robin.murphy@arm.com
-Cc:     vdumpa@nvidia.com, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] iommu/arm-smmu: Read optional "input-address-size" property
-Date:   Thu, 10 Oct 2019 20:46:09 -0700
-Message-Id: <20191011034609.13319-3-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191011034609.13319-1-nicoleotsuka@gmail.com>
-References: <20191011034609.13319-1-nicoleotsuka@gmail.com>
+        Thu, 10 Oct 2019 23:48:30 -0400
+Received: from mx2a.mailbox.org ([80.241.60.219]:54977 "EHLO mx2a.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfJKDsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 23:48:30 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2a.mailbox.org (Postfix) with ESMTPS id 4C0B5A184E;
+        Fri, 11 Oct 2019 05:48:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id FAJIvPNj8lRh; Fri, 11 Oct 2019 05:48:21 +0200 (CEST)
+Date:   Fri, 11 Oct 2019 14:48:10 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, christian@brauner.io, keescook@chromium.org,
+        linux@rasmusvillemoes.dk, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usercopy: Avoid soft lockups in test_check_nonzero_user()
+Message-ID: <20191011034810.xkmz3e4l5ezxvq57@yavin.dot.cyphar.com>
+References: <20191010114007.o3bygjf4jlfk242e@yavin.dot.cyphar.com>
+ <20191011022447.24249-1-mpe@ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xu7xtsni3al6cjf6"
+Content-Disposition: inline
+In-Reply-To: <20191011022447.24249-1-mpe@ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some SMMU instances may not connect all input address lines physically
-but drive some upper address bits to logical zero, depending on their
-SoC designs. Some of them even connect only 39 bits that is not in the
-list of IAS/OAS from SMMU internal IDR registers.
 
-After the "input-address-size" property is added to DT bindings, this
-patch reads and applies to va_size as an input virtual address width.
+--xu7xtsni3al6cjf6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- drivers/iommu/arm-smmu.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+On 2019-10-11, Michael Ellerman <mpe@ellerman.id.au> wrote:
+> On a machine with a 64K PAGE_SIZE, the nested for loops in
+> test_check_nonzero_user() can lead to soft lockups, eg:
+>=20
+>   watchdog: BUG: soft lockup - CPU#4 stuck for 22s! [modprobe:611]
+>   Modules linked in: test_user_copy(+) vmx_crypto gf128mul crc32c_vpmsum =
+virtio_balloon ip_tables x_tables autofs4
+>   CPU: 4 PID: 611 Comm: modprobe Tainted: G             L    5.4.0-rc1-gc=
+c-8.2.0-00001-gf5a1a536fa14-dirty #1151
+>   ...
+>   NIP __might_sleep+0x20/0xc0
+>   LR  __might_fault+0x40/0x60
+>   Call Trace:
+>     check_zeroed_user+0x12c/0x200
+>     test_user_copy_init+0x67c/0x1210 [test_user_copy]
+>     do_one_initcall+0x60/0x340
+>     do_init_module+0x7c/0x2f0
+>     load_module+0x2d94/0x30e0
+>     __do_sys_finit_module+0xc8/0x150
+>     system_call+0x5c/0x68
+>=20
+> Even with a 4K PAGE_SIZE the test takes multiple seconds. Instead
+> tweak it to only scan a 1024 byte region, but make it cross the
+> page boundary.
+>=20
+> Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+> Suggested-by: Aleksa Sarai <cyphar@cyphar.com>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> ---
+>  lib/test_user_copy.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
+>=20
+> How does this look? It runs in < 1s on my machine here.
+>=20
+> cheers
+>=20
+> diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
+> index 950ee88cd6ac..9fb6bc609d4c 100644
+> --- a/lib/test_user_copy.c
+> +++ b/lib/test_user_copy.c
+> @@ -47,9 +47,26 @@ static bool is_zeroed(void *from, size_t size)
+>  static int test_check_nonzero_user(char *kmem, char __user *umem, size_t=
+ size)
+>  {
+>  	int ret =3D 0;
+> -	size_t start, end, i;
+> -	size_t zero_start =3D size / 4;
+> -	size_t zero_end =3D size - zero_start;
+> +	size_t start, end, i, zero_start, zero_end;
+> +
+> +	if (test(size < 1024, "buffer too small"))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * We want to cross a page boundary to exercise the code more
+> +	 * effectively. We assume the buffer we're passed has a page boundary at
+> +	 * size / 2. We also don't want to make the size we scan too large,
+> +	 * otherwise the test can take a long time and cause soft lockups. So
+> +	 * scan a 1024 byte region across the page boundary.
+> +	 */
+> +	start =3D size / 2 - 512;
+> +	size =3D 1024;
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index b18aac4c105e..b80a869de45b 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1805,12 +1805,14 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
- 			 "failed to set DMA mask for table walker\n");
- 
- 	if (smmu->version < ARM_SMMU_V2) {
--		smmu->va_size = smmu->ipa_size;
-+		if (!smmu->va_size)
-+			smmu->va_size = smmu->ipa_size;
- 		if (smmu->version == ARM_SMMU_V1_64K)
- 			smmu->features |= ARM_SMMU_FEAT_FMT_AARCH64_64K;
- 	} else {
- 		size = FIELD_GET(ID2_UBS, id);
--		smmu->va_size = arm_smmu_id_size_to_bits(size);
-+		if (!smmu->va_size)
-+			smmu->va_size = arm_smmu_id_size_to_bits(size);
- 		if (id & ID2_PTFS_4K)
- 			smmu->features |= ARM_SMMU_FEAT_FMT_AARCH64_4K;
- 		if (id & ID2_PTFS_16K)
-@@ -1950,6 +1952,7 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
- 	const struct arm_smmu_match_data *data;
- 	struct device *dev = &pdev->dev;
- 	bool legacy_binding;
-+	u32 va_size;
- 
- 	if (of_property_read_u32(dev->of_node, "#global-interrupts",
- 				 &smmu->num_global_irqs)) {
-@@ -1976,6 +1979,9 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
- 	if (of_dma_is_coherent(dev->of_node))
- 		smmu->features |= ARM_SMMU_FEAT_COHERENT_WALK;
- 
-+	if (!of_property_read_u32(dev->of_node, "input-address-size", &va_size))
-+		smmu->va_size = va_size;
-+
- 	return 0;
- }
- 
--- 
-2.17.1
+I don't think it's necessary to do "size / 2" here -- you can just use
+PAGE_SIZE directly and check above that "size =3D=3D 2*PAGE_SIZE" (not that
+this check is exceptionally necessary -- since there's only one caller
+of this function and it's in the same file).
 
+> +
+> +	kmem +=3D start;
+> +	umem +=3D start;
+> +
+> +	zero_start =3D size / 4;
+> +	zero_end =3D size - zero_start;
+> =20
+>  	/*
+>  	 * We conduct a series of check_nonzero_user() tests on a block of memo=
+ry
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--xu7xtsni3al6cjf6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZ/7dgAKCRCdlLljIbnQ
+EgboAQDJ8CE0F2TLUINi1TVmrSnff05vx9rNqKgWqX6FRhmwZQD/fTHxCU6/MBBj
+t/OvAUCvDgAeGUi++GX8ZCl5uljK2AE=
+=DY8J
+-----END PGP SIGNATURE-----
+
+--xu7xtsni3al6cjf6--
