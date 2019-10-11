@@ -2,159 +2,292 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A018AECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BA5ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB6321835
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD7321D82
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570820557;
+	bh=9Ap6qWI5PIWFn6GmaOft5gQw80I2V4COQHiA3zcOpko=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WI4Hv622m7c4QlGo5a+tLF9ZYIxF2rHFQ6XOgfX5KgeyBFKfU6a3ujo07yISqX3iq
+	 OlV6XXNcfe2d/1liC/5slsxV+KY56G5zjRyXsG1vqeb4iAkfumd4qQJeoi2P+V01WM
+	 3Ye27n+EPsZetdcQiOionp3uyIqqHzIoecIx1KP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbfJKTBu (ORCPT
+        id S1728934AbfJKTCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 15:01:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44340 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728738AbfJKTBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 15:01:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5ACA3B43E;
-        Fri, 11 Oct 2019 19:01:47 +0000 (UTC)
-Message-ID: <aba8aee4c78523e652e0605db844b793214b7674.camel@suse.de>
-Subject: Re: [PATCH v1 2/3] net: bcmgenet: use optional max DMA burst size
- property
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     matthias.bgg@kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Doug Berger <opendmb@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Date:   Fri, 11 Oct 2019 21:01:45 +0200
-In-Reply-To: <20191011184822.866-3-matthias.bgg@kernel.org>
-References: <20191011184822.866-1-matthias.bgg@kernel.org>
-         <20191011184822.866-3-matthias.bgg@kernel.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-j2itiBTOH1918e/nyStj"
-User-Agent: Evolution 3.32.4 
+        Fri, 11 Oct 2019 15:02:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44903 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728794AbfJKTCf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 15:02:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 21so8847237otj.11;
+        Fri, 11 Oct 2019 12:02:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P2ueQBERXk5fr1wrrlOV8NBXePtiEybTTsV17mCiemc=;
+        b=ped+7DktUS/9L7VGmiBfbYKDFuUwVmQNkJyYAPAB66WelZ54aJKPbFJnc492Zu55Hw
+         y00yvzH2OYn51P6e7A3DJ25HZqZT34TxQw5TH9z1tBn91gKACJAdXKanBkAeww5oBabi
+         y/+IRY9BOTpgre3OnOWPzATMvlX0OUJaKCyvoIYV9fj6Bmpep/k2dW+jnJWUOSwkwBx/
+         n3IWf/8T+lf8sQoZ+h7C67ElstHVZthp4oRByFkIXBmZYSQtezPntmmnkQgaHx3qhP2v
+         a91Eiswg06P+bTW3FPW1PkRMxy1ubf8JO+smo8iNuo0p0SlX5E+Yi0h5aq8P6pwKwa1h
+         Q+Dg==
+X-Gm-Message-State: APjAAAXYIByvxgBO+ru45RcPSntqUFOupq1aYq+WBRM4jYF9uJIDxKd9
+        LJ/0/JNxEnghUnq1mpr9tddlaSM=
+X-Google-Smtp-Source: APXvYqwquNB6ObuO6+tGfeRySv+8XLaUtmCr0BB4WEPkjBSqU+FHkYMoXG1mblknz/fetzKhXOdZAg==
+X-Received: by 2002:a05:6830:22e2:: with SMTP id t2mr13335511otc.164.1570820554135;
+        Fri, 11 Oct 2019 12:02:34 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id v7sm1403617oic.9.2019.10.11.12.02.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 12:02:32 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH] dt-bindings: Clean-up regulator '-supply' schemas
+Date:   Fri, 11 Oct 2019 14:02:31 -0500
+Message-Id: <20191011190231.9779-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Regulator '*-supply' properties are always a single phandle, so
+'maxItems: 1' or a $ref is not necessary. All that's needed is either
+'true' or an optional 'description'. Following this clean-up, the
+meta-schema will enforce this pattern.
 
---=-j2itiBTOH1918e/nyStj
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+There's one case in tree with 'innolux,n156bge-l21' having 2 phandles.
+This appears to be a mistake or abuse of simple-panel as it's 2 different
+voltage rails connected to 'power-supply'.
 
-Hi Matthias!
-One small comment, I'll test everything later on.
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-iio@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml   | 2 --
+ Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml  | 3 +--
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml  | 3 +--
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml   | 3 +--
+ Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml    | 3 ---
+ Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml    | 5 +----
+ Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml    | 1 -
+ Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml    | 1 -
+ .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml      | 4 +---
+ .../devicetree/bindings/iio/chemical/plantower,pms7003.yaml  | 1 -
+ Documentation/devicetree/bindings/iio/pressure/bmp085.yaml   | 2 --
+ .../devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml | 1 -
+ .../devicetree/bindings/regulator/fixed-regulator.yaml       | 1 -
+ 13 files changed, 5 insertions(+), 25 deletions(-)
 
-On Fri, 2019-10-11 at 20:48 +0200, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
->=20
-> Depending on the HW, the maximal usable DMA burst size can vary.
-> If not set accordingly a timeout in the transmit queue happens and no
-> package can be sent. Read to optional max-burst-sz property, if not
-> present, fallback to the standard value.
->=20
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> ---
->=20
->  drivers/net/ethernet/broadcom/genet/bcmgenet.c | 13 +++++++++++--
->  drivers/net/ethernet/broadcom/genet/bcmgenet.h |  1 +
->  2 files changed, 12 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> index 12cb77ef1081..a7bb822a6d83 100644
-> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> @@ -2576,7 +2576,8 @@ static int bcmgenet_init_dma(struct bcmgenet_priv *=
-priv)
->  	}
-> =20
->  	/* Init rDma */
-> -	bcmgenet_rdma_writel(priv, DMA_MAX_BURST_LENGTH, DMA_SCB_BURST_SIZE);
-> +	bcmgenet_rdma_writel(priv, priv->dma_max_burst_length,
-> +			     DMA_SCB_BURST_SIZE);
-> =20
->  	/* Initialize Rx queues */
->  	ret =3D bcmgenet_init_rx_queues(priv->dev);
-> @@ -2589,7 +2590,8 @@ static int bcmgenet_init_dma(struct bcmgenet_priv *=
-priv)
->  	}
-> =20
->  	/* Init tDma */
-> -	bcmgenet_tdma_writel(priv, DMA_MAX_BURST_LENGTH, DMA_SCB_BURST_SIZE);
-> +	bcmgenet_tdma_writel(priv, priv->dma_max_burst_length,
-> +			     DMA_SCB_BURST_SIZE);
-> =20
->  	/* Initialize Tx queues */
->  	bcmgenet_init_tx_queues(priv->dev);
-> @@ -3522,6 +3524,13 @@ static int bcmgenet_probe(struct platform_device *=
-pdev)
-> =20
->  	clk_prepare_enable(priv->clk);
-> =20
-> +	if (dn) {
-> +		of_property_read_u32(dn, "dma-burst-sz",
-> +				     &priv->dma_max_burst_length);
-
-You set the 'dma-burst-sz' binding as optional, though this assumes that if=
- a
-device node is available dma_max_burst_length comes from the device tree. I
-think you should check of_property_read_u32's return value and on failure
-default to DMA_MAX_BURST_LENGTH.
-
-> +	} else {
-> +		priv->dma_max_burst_length =3D DMA_MAX_BURST_LENGTH;
-> +	}
-> +
->  	bcmgenet_set_hw_params(priv);
-> =20
->  	/* Mii wait queue */
-> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-> b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-> index 4a8fc03d82fd..897f356eb376 100644
-> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-> @@ -663,6 +663,7 @@ struct bcmgenet_priv {
->  	bool crc_fwd_en;
-> =20
->  	unsigned int dma_rx_chk_bit;
-> +	unsigned int dma_max_burst_length;
-> =20
->  	u32 msg_enable;
-> =20
-
-Regards,
-Nicolas
-
-
---=-j2itiBTOH1918e/nyStj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2g0ZkACgkQlfZmHno8
-x/6Mdgf+Pf0ra+FPpx4Ytdj4mRSRpmN2V+b2TBbpbm4JPXpQOV0x1bq7w3QQT7FF
-KQbKhEoh/nCH1cHZ5ScFWJ3JVQHPRbgPw2c/y/aFHEnDaTkFvg6fYmm2Xjt3ABil
-kxire7snMF+4oO5l0D/y6PXJICzvPi2ofvPIdB1swteRngtCwL98mDHn9Cd+tRD0
-IyB7N9gyHgxMf6mshroxijVvn6XS6yfOV3bhC1AXlCmqTial7BoHFe8LI45Tr9+F
-w5317a+n8LnOqPVu++FH5rNfoeKLi3n0gxb3kgIGbAUGZp1JmxDJ/W/ZjoGk9gmX
-gfR2/XmNHojodv60DZs2v8RcTcWT7w==
-=mp3i
------END PGP SIGNATURE-----
-
---=-j2itiBTOH1918e/nyStj--
+diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+index fb747682006d..0da42ab8fd3a 100644
+--- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
++++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+@@ -79,8 +79,6 @@ properties:
+ 
+   hdmi-supply:
+     description: phandle to an external 5V regulator to power the HDMI logic
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   port@0:
+     type: object
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+index 5f1fd6d7ee0f..e50a0cc78fff 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+@@ -37,8 +37,7 @@ properties:
+   clocks:
+     maxItems: 1
+ 
+-  mali-supply:
+-    maxItems: 1
++  mali-supply: true
+ 
+   operating-points-v2: true
+ 
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+index 47bc1ac36426..5c576e5019c6 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+@@ -69,8 +69,7 @@ properties:
+       - const: core
+       - const: bus
+ 
+-  mali-supply:
+-    maxItems: 1
++  mali-supply: true
+ 
+   resets:
+     minItems: 1
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+index c5d93c5839d3..afde81be3c29 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+@@ -97,8 +97,7 @@ properties:
+ 
+   memory-region: true
+ 
+-  mali-supply:
+-    maxItems: 1
++  mali-supply: true
+ 
+   power-domains:
+     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+index 9692b7f719f5..e932d5aed02f 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+@@ -45,15 +45,12 @@ properties:
+ 
+   refin1-supply:
+     description: refin1 supply can be used as reference for conversion.
+-    maxItems: 1
+ 
+   refin2-supply:
+     description: refin2 supply can be used as reference for conversion.
+-    maxItems: 1
+ 
+   avdd-supply:
+     description: avdd supply can be used as reference for conversion.
+-    maxItems: 1
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+index cc544fdc38be..6eb33207a167 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+@@ -31,10 +31,7 @@ properties:
+ 
+   spi-cpha: true
+ 
+-  avcc-supply:
+-    description:
+-      Phandle to the Avcc power supply
+-    maxItems: 1
++  avcc-supply: true
+ 
+   interrupts:
+     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+index d1109416963c..9acde6d2e2d9 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+@@ -39,7 +39,6 @@ properties:
+   avdd-supply:
+     description:
+       The regulator supply for the ADC reference voltage.
+-    maxItems: 1
+ 
+   powerdown-gpios:
+     description:
+diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+index d76ece97c76c..91ab9c842273 100644
+--- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+@@ -41,7 +41,6 @@ properties:
+   avdd-supply:
+     description:
+       Definition of the regulator used as analog supply
+-    maxItems: 1
+ 
+   clock-frequency:
+     minimum: 20000
+diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+index b4c6c26681d9..9218b2efa62f 100644
+--- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+@@ -46,9 +46,7 @@ properties:
+   "#io-channel-cells":
+     const: 1
+ 
+-  vdd-supply:
+-    description: VDD input supply
+-    maxItems: 1
++  vdd-supply: true
+ 
+   samsung,syscon-phandle:
+     $ref: '/schemas/types.yaml#/definitions/phandle'
+diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+index a551d3101f93..19e53930ebf6 100644
+--- a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
++++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+@@ -25,7 +25,6 @@ properties:
+ 
+   vcc-supply:
+     description: regulator that provides power to the sensor
+-    maxItems: 1
+ 
+   plantower,set-gpios:
+     description: GPIO connected to the SET line
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+index c6721a7e8938..519137e5c170 100644
+--- a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
++++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+@@ -28,12 +28,10 @@ properties:
+   vddd-supply:
+     description:
+       digital voltage regulator (see regulator/regulator.txt)
+-    maxItems: 1
+ 
+   vdda-supply:
+     description:
+       analog voltage regulator (see regulator/regulator.txt)
+-    maxItems: 1
+ 
+   reset-gpios:
+     description:
+diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
+index 51254b4e65dd..57d8603076bd 100644
+--- a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
+@@ -36,7 +36,6 @@ properties:
+     const: 0
+ 
+   phy-supply:
+-     maxItems: 1
+      description:
+        Phandle to a regulator that provides power to the PHY. This
+        regulator will be managed during the PHY power on/off sequence.
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+index a78150c47aa2..e56d97b233f4 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+@@ -64,7 +64,6 @@ properties:
+ 
+   vin-supply:
+     description: Input supply phandle.
+-    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+ required:
+   - compatible
+-- 
+2.20.1
 
