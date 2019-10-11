@@ -2,259 +2,142 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD931C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32EBC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A657B214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1EF2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="DwQaCySn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfJKCQ2 (ORCPT
+        id S1727995AbfJKCUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 22:16:28 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43746 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727369AbfJKCQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 22:16:28 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 496E91A04D3;
-        Fri, 11 Oct 2019 04:16:25 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 308A91A01F0;
-        Fri, 11 Oct 2019 04:16:21 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 18C5140299;
-        Fri, 11 Oct 2019 10:16:16 +0800 (SGT)
-From:   Yuantian Tang <andy.tang@nxp.com>
-To:     edubezval@gmail.com, rui.zhang@intel.com, anson.huang@nxp.com
-Cc:     daniel.lezcano@linaro.org, leoyang.li@nxp.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH v3] thermal: qoriq: add thermal monitor unit version 2 support
-Date:   Fri, 11 Oct 2019 10:05:34 +0800
-Message-Id: <20191011020534.334-1-andy.tang@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 10 Oct 2019 22:20:54 -0400
+Received: from mail-eopbgr720093.outbound.protection.outlook.com ([40.107.72.93]:48103
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727518AbfJKCUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 22:20:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iL7N9KvR3x+bPAk1ypVssu3ryKMTwEhvYx3SW2l/g0gbQXse/piOnSWXpEZ0F1lWIqUSOOJcsxhlhhBRJHgbrUqwHR50PBZW38Uu7egZwiZbuZK+9dojEuuQMR87kZpHW/wxj+Ggg+Hn0PD2x7nVw8zJgZT9+b5pCX7GeYxXOBA+rFsyk/eV8uE6QUaqU1wUiKguY4f7OiJ6GLOtJoJWE/dH1tItL0t4QyO1n0Yh0HdbPx3wiZVTBPyQdd9rQ7SZHM+q8B5kHHQe+ZODA5RQia66ax3NOZ891Vl818NA75zZnMLcdD6lOSNl+b9GTNYetcCFzvzIIhVjJFAmSM8bAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NHyq6jPSnI3Q7t6UjAazwtWrFaHkWqcxqChtflfqr/c=;
+ b=cLKjmeZBM+/YYGBQIJ2oow29N0Q5V24wCILe+HWKAbHGkvVPvuiN36VTdpF0mJcywpYN5IKNye2rubXS49G4kuJG48TZeURRuonypNZjRXBRbmEcqGGpmv8OL2MW9o2qqbB3ajMHprNKwCKCMW7kmf5tao3fEcLopfJd4gFVJZzlVEhHjwd1DSuFDnS978crv0Wjd41lB8D4cHaAG2N2Y2Y2um0E1i5tCAR1Toz57tI3ArdRTta3jhX1hIYyVsHe5cJvWv/EAe0Hip17MT2Y+XbQq+Sy0UK5gkNTLcAdmMJYaa+5n3fRZnUEnuq6lWaXN7Q8Ouwt8dOn+jLxgfRQNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NHyq6jPSnI3Q7t6UjAazwtWrFaHkWqcxqChtflfqr/c=;
+ b=DwQaCySnvyPwhoYI9RAv0VngeqeSAchFjuhuVjlwMNjAJ0/e5c+15tmdJjQS7I6Ej/xB1EOqq6X3xVtnn0X+F/dhDhRu03HGZFRRfSvcrAq62qDnAxtNok8PnHnTG4YkfRMuNRc8qxfNbo/6A03p3+tq9OP575YOYqWL2LUP9Eo=
+Received: from BL0PR04MB4532.namprd04.prod.outlook.com (10.167.181.144) by
+ BL0PR04MB4610.namprd04.prod.outlook.com (10.167.241.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.24; Fri, 11 Oct 2019 02:20:48 +0000
+Received: from BL0PR04MB4532.namprd04.prod.outlook.com
+ ([fe80::c184:37a4:7e6e:aa42]) by BL0PR04MB4532.namprd04.prod.outlook.com
+ ([fe80::c184:37a4:7e6e:aa42%7]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
+ 02:20:48 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v2 0/2] Add initial support for slimport anx7625
+Thread-Topic: [PATCH v2 0/2] Add initial support for slimport anx7625
+Thread-Index: AQHVf9p+5jx9EdYoKE6ltb5FxvHRTQ==
+Date:   Fri, 11 Oct 2019 02:20:47 +0000
+Message-ID: <cover.1570760115.git.xji@analogixsemi.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK2PR06CA0005.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::17) To BL0PR04MB4532.namprd04.prod.outlook.com
+ (2603:10b6:208:4f::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a546111e-88bf-432c-cac5-08d74df1a0be
+x-ms-traffictypediagnostic: BL0PR04MB4610:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR04MB4610F8B70853CBEB74A61EE1C7970@BL0PR04MB4610.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39850400004)(136003)(346002)(396003)(366004)(53754006)(189003)(199004)(99286004)(14444005)(14454004)(36756003)(256004)(26005)(7416002)(6506007)(386003)(71190400001)(86362001)(102836004)(186003)(25786009)(71200400001)(316002)(110136005)(7736002)(52116002)(305945005)(478600001)(54906003)(2906002)(66946007)(66476007)(6436002)(66066001)(486006)(6116002)(81156014)(3846002)(66556008)(107886003)(66446008)(8676002)(4326008)(81166006)(8936002)(6512007)(6486002)(5660300002)(4744005)(64756008)(476003)(2501003)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR04MB4610;H:BL0PR04MB4532.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9rZ1uZQb2Fjcj8bBx46Kr4wAAT9INkFV1JbQq0QaDtMt/444mVVxRjUUrp0qDYiKX0Ofgd60rx+vhIkQFvFYJDbvZKatl+VRztup5cpnsyGTQZur/caaQ90KP8KaW9r9AD63FO40cL4UXZ9jWxyeGs332hkDMk87ThQNAWRGdDkWO08dN4RlQHCOxjpXccjZTYWx5jkPUH+GBFm5w6nXVjFPxf7+L4+B3FbjasrsLOowQGDARigP0l8GZl5wEHKAEkA/ucmmSxAzC4SBV5Yn62A+JY5cTD+gjAwXrk2hCTLRg4VnbJBKwFnawMKabNnqOt/CJbRpIkY8kM17QJ/tQIWb4zkHIVrn7bgLUNu/ciXF4N+f0BWeSUA1K5DxMRQkakqYcMyt8w3SFdCgylp0tojF/LCvIyOzF71RcYzi6ls=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7CFBB42D03731041B4A459D1B92C23F8@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a546111e-88bf-432c-cac5-08d74df1a0be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 02:20:48.0367
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BRMQxpSnCTyNZaiaOS/FqUwomhLb8NBo/j7JojUlROs+Lw0sEJieirq6HGdtzbb2p1h+gLDHVhriKih7smS83w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR04MB4610
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal Monitor Unit v2 is introduced on new Layscape SoC.
-Compared to v1, TMUv2 has a little different register layout
-and digital output is fairly linear.
+Hi all,
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-Reviewed-by: Anson Huang <Anson.Huang@nxp.com>
----
-v3:
-	- rebase to v5.4-rc1
+The following series add initial support for the Slimport ANX7625 transmitt=
+er, a
+ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable dev=
+ice.
 
- drivers/thermal/qoriq_thermal.c | 120 ++++++++++++++++++++++++++------
- 1 file changed, 97 insertions(+), 23 deletions(-)
+This is the initial version, any mistakes, please let me know, I will fix i=
+t in
+the next series.
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 39542c670301..45e9fcb172cc 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -13,7 +13,16 @@
- 
- #include "thermal_core.h"
- 
--#define SITES_MAX	16
-+#define SITES_MAX		16
-+#define TMR_DISABLE		0x0
-+#define TMR_ME			0x80000000
-+#define TMR_ALPF		0x0c000000
-+#define TMR_ALPF_V2		0x03000000
-+#define TMTMIR_DEFAULT	0x0000000f
-+#define TIER_DISABLE	0x0
-+#define TEUMR0_V2		0x51009c00
-+#define TMU_VER1		0x1
-+#define TMU_VER2		0x2
- 
- /*
-  * QorIQ TMU Registers
-@@ -24,17 +33,12 @@ struct qoriq_tmu_site_regs {
- 	u8 res0[0x8];
- };
- 
--struct qoriq_tmu_regs {
-+struct qoriq_tmu_regs_v1 {
- 	u32 tmr;		/* Mode Register */
--#define TMR_DISABLE	0x0
--#define TMR_ME		0x80000000
--#define TMR_ALPF	0x0c000000
- 	u32 tsr;		/* Status Register */
- 	u32 tmtmir;		/* Temperature measurement interval Register */
--#define TMTMIR_DEFAULT	0x0000000f
- 	u8 res0[0x14];
- 	u32 tier;		/* Interrupt Enable Register */
--#define TIER_DISABLE	0x0
- 	u32 tidr;		/* Interrupt Detect Register */
- 	u32 tiscr;		/* Interrupt Site Capture Register */
- 	u32 ticscr;		/* Interrupt Critical Site Capture Register */
-@@ -54,10 +58,50 @@ struct qoriq_tmu_regs {
- 	u32 ipbrr0;		/* IP Block Revision Register 0 */
- 	u32 ipbrr1;		/* IP Block Revision Register 1 */
- 	u8 res6[0x310];
--	u32 ttr0cr;		/* Temperature Range 0 Control Register */
--	u32 ttr1cr;		/* Temperature Range 1 Control Register */
--	u32 ttr2cr;		/* Temperature Range 2 Control Register */
--	u32 ttr3cr;		/* Temperature Range 3 Control Register */
-+	u32 ttrcr[4];		/* Temperature Range Control Register */
-+};
-+
-+struct qoriq_tmu_regs_v2 {
-+	u32 tmr;		/* Mode Register */
-+	u32 tsr;		/* Status Register */
-+	u32 tmsr;		/* monitor site register */
-+	u32 tmtmir;		/* Temperature measurement interval Register */
-+	u8 res0[0x10];
-+	u32 tier;		/* Interrupt Enable Register */
-+	u32 tidr;		/* Interrupt Detect Register */
-+	u8 res1[0x8];
-+	u32 tiiscr;		/* interrupt immediate site capture register */
-+	u32 tiascr;		/* interrupt average site capture register */
-+	u32 ticscr;		/* Interrupt Critical Site Capture Register */
-+	u32 res2;
-+	u32 tmhtcr;		/* monitor high temperature capture register */
-+	u32 tmltcr;		/* monitor low temperature capture register */
-+	u32 tmrtrcr;	/* monitor rising temperature rate capture register */
-+	u32 tmftrcr;	/* monitor falling temperature rate capture register */
-+	u32 tmhtitr;	/* High Temperature Immediate Threshold */
-+	u32 tmhtatr;	/* High Temperature Average Threshold */
-+	u32 tmhtactr;	/* High Temperature Average Crit Threshold */
-+	u32 res3;
-+	u32 tmltitr;	/* monitor low temperature immediate threshold */
-+	u32 tmltatr;	/* monitor low temperature average threshold register */
-+	u32 tmltactr;	/* monitor low temperature average critical threshold */
-+	u32 res4;
-+	u32 tmrtrctr;	/* monitor rising temperature rate critical threshold */
-+	u32 tmftrctr;	/* monitor falling temperature rate critical threshold*/
-+	u8 res5[0x8];
-+	u32 ttcfgr;	/* Temperature Configuration Register */
-+	u32 tscfgr;	/* Sensor Configuration Register */
-+	u8 res6[0x78];
-+	struct qoriq_tmu_site_regs site[SITES_MAX];
-+	u8 res7[0x9f8];
-+	u32 ipbrr0;		/* IP Block Revision Register 0 */
-+	u32 ipbrr1;		/* IP Block Revision Register 1 */
-+	u8 res8[0x300];
-+	u32 teumr0;
-+	u32 teumr1;
-+	u32 teumr2;
-+	u32 res9;
-+	u32 ttrcr[4];	/* Temperature Range Control Register */
- };
- 
- struct qoriq_tmu_data;
-@@ -72,7 +116,9 @@ struct qoriq_sensor {
- };
- 
- struct qoriq_tmu_data {
--	struct qoriq_tmu_regs __iomem *regs;
-+	int ver;
-+	struct qoriq_tmu_regs_v1 __iomem *regs;
-+	struct qoriq_tmu_regs_v2 __iomem *regs_v2;
- 	struct clk *clk;
- 	bool little_endian;
- 	struct qoriq_sensor	*sensor[SITES_MAX];
-@@ -132,12 +178,23 @@ static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
- 				return PTR_ERR(qdata->sensor[id]->tzd);
- 		}
- 
--		sites |= 0x1 << (15 - id);
-+		if (qdata->ver == TMU_VER1)
-+			sites |= 0x1 << (15 - id);
-+		else
-+			sites |= 0x1 << id;
- 	}
- 
- 	/* Enable monitoring */
--	if (sites != 0)
--		tmu_write(qdata, sites | TMR_ME | TMR_ALPF, &qdata->regs->tmr);
-+	if (sites != 0) {
-+		if (qdata->ver == TMU_VER1) {
-+			tmu_write(qdata, sites | TMR_ME | TMR_ALPF,
-+					&qdata->regs->tmr);
-+		} else {
-+			tmu_write(qdata, sites, &qdata->regs_v2->tmsr);
-+			tmu_write(qdata, TMR_ME | TMR_ALPF_V2,
-+					&qdata->regs_v2->tmr);
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -150,16 +207,21 @@ static int qoriq_tmu_calibration(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
- 
--	if (of_property_read_u32_array(np, "fsl,tmu-range", range, 4)) {
--		dev_err(&pdev->dev, "missing calibration range.\n");
--		return -ENODEV;
-+	len = of_property_count_u32_elems(np, "fsl,tmu-range");
-+	if (len < 0 || len > 4) {
-+		dev_err(&pdev->dev, "invalid range data.\n");
-+		return len;
-+	}
-+
-+	val = of_property_read_u32_array(np, "fsl,tmu-range", range, len);
-+	if (val != 0) {
-+		dev_err(&pdev->dev, "failed to read range data.\n");
-+		return val;
- 	}
- 
- 	/* Init temperature range registers */
--	tmu_write(data, range[0], &data->regs->ttr0cr);
--	tmu_write(data, range[1], &data->regs->ttr1cr);
--	tmu_write(data, range[2], &data->regs->ttr2cr);
--	tmu_write(data, range[3], &data->regs->ttr3cr);
-+	for (i = 0; i < len; i++)
-+		tmu_write(data, range[i], &data->regs->ttrcr[i]);
- 
- 	calibration = of_get_property(np, "fsl,tmu-calibration", &len);
- 	if (calibration == NULL || len % 8) {
-@@ -183,7 +245,12 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
- 	tmu_write(data, TIER_DISABLE, &data->regs->tier);
- 
- 	/* Set update_interval */
--	tmu_write(data, TMTMIR_DEFAULT, &data->regs->tmtmir);
-+	if (data->ver == TMU_VER1) {
-+		tmu_write(data, TMTMIR_DEFAULT, &data->regs->tmtmir);
-+	} else {
-+		tmu_write(data, TMTMIR_DEFAULT, &data->regs_v2->tmtmir);
-+		tmu_write(data, TEUMR0_V2, &data->regs_v2->teumr0);
-+	}
- 
- 	/* Disable monitoring */
- 	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
-@@ -192,6 +259,7 @@ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
- static int qoriq_tmu_probe(struct platform_device *pdev)
- {
- 	int ret;
-+	u32 ver;
- 	struct qoriq_tmu_data *data;
- 	struct device_node *np = pdev->dev.of_node;
- 
-@@ -220,6 +288,12 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/* version register offset at: 0xbf8 on both v1 and v2 */
-+	ver = tmu_read(data, &data->regs->ipbrr0);
-+	data->ver = (ver >> 8) & 0xff;
-+	if (data->ver == TMU_VER2)
-+		data->regs_v2 = (void __iomem *)data->regs;
-+
- 	qoriq_tmu_init_device(data);	/* TMU initialization */
- 
- 	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
--- 
-2.17.1
+Thanks,
+Xin
+
+
+Xin Ji (2):
+  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
+  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP bridge driver
+
+ .../bindings/display/bridge/anx7625.yaml           |   96 +
+ drivers/gpu/drm/bridge/Makefile                    |    2 +-
+ drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
+ drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+ drivers/gpu/drm/bridge/analogix/anx7625.c          | 2153 ++++++++++++++++=
+++++
+ drivers/gpu/drm/bridge/analogix/anx7625.h          |  406 ++++
+ 6 files changed, 2663 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
+5.yaml
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+
+--=20
+2.7.4
 
