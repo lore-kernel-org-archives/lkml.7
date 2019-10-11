@@ -2,153 +2,144 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1167DECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5793EECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF24E214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570792929;
-	bh=UpVUE1pMgXMKaHr/hZ3hXvl6rmcNvUunFHSq4t+QuKI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GteLIANKLeyiBQX5PK1s8bLLVqYd3eHbQvEytSX4r8Bf+DSbwrChVcuL67a6f6ipk
-	 J4QadMsjK7gYz+v18pX+8sO+iJdB17Kjd1lWSb1zZLWHW4zW51vbY+Raf+4PYFXvLZ
-	 U3zjF5PJJNQ1Yo7J1TvJDEUI06BZ6hZRoSW4Aa6c=
+	by mail.kernel.org (Postfix) with ESMTP id 3B88822459
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfJKLWI (ORCPT
+        id S1728100AbfJKLWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:22:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33844 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727538AbfJKLWI (ORCPT
+        Fri, 11 Oct 2019 07:22:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60361 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727538AbfJKLWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:22:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/8Id3ugL0O8RKpYToVrLYrKK03KtyD4dKKaWqFDdBWU=; b=EBvEVfbOOtR5yjCP2cFOZZqem
-        X39yfTuFdhsPxutnGElu7I8hqGw/wLL+UeDTZsCAVi8Yrm4cJ5DcdkuQW+2+oLWsdqNCHB5xlbRtI
-        gr/R54GTAF2nOS5XIDZUQnfGHsNdukDDXbaV/muifi5E92HqXv82VkBdmcYaX3UXWUQi65jsPaWay
-        3M9A8g8/nQo8O+lzf0queAmHBGB0pwN6HAYGZY5r2V9bvGLjLzmn9Ukctt6XXmtEyCJLEfLZap/wl
-        CIpVTRvfgLSWbwewHRj6CNHOkkv0tueagDACg7lgtanPWnZ/QyrHR5z9GdZ8diaz9Kj0bjWYS1eKO
-        CzhnIbN7g==;
-Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIszl-0008Sl-Fk; Fri, 11 Oct 2019 11:22:05 +0000
-Date:   Fri, 11 Oct 2019 08:22:01 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 16/19] EDAC, ghes: Fix grain calculation
-Message-ID: <20191011082201.1b7c26ce@coco.lan>
-In-Reply-To: <20191010202418.25098-17-rrichter@marvell.com>
-References: <20191010202418.25098-1-rrichter@marvell.com>
-        <20191010202418.25098-17-rrichter@marvell.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 11 Oct 2019 07:22:10 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iIszi-0007Cq-Ky; Fri, 11 Oct 2019 13:22:02 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 301561C0357;
+        Fri, 11 Oct 2019 13:22:02 +0200 (CEST)
+Date:   Fri, 11 Oct 2019 11:22:02 -0000
+From:   "tip-bot2 for Sami Tolvanen" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] syscalls/x86: Use COMPAT_SYSCALL_DEFINE0 for IA32
+ (rt_)sigreturn
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191008224049.115427-4-samitolvanen@google.com>
+References: <20191008224049.115427-4-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <157079292213.9978.9031904284272103742.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 10 Oct 2019 20:25:37 +0000
-Robert Richter <rrichter@marvell.com> escreveu:
+The following commit has been merged into the x86/entry branch of tip:
 
-> The current code to convert a physical address mask to a grain
-> (defined as granularity in bytes) is:
-> 
-> 	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
-> 
-> This is broken in several ways:
-> 
-> 1) It calculates to wrong grain values. E.g., a physical address mask
-> of ~0xfff should give a grain of 0x1000. Without considering
-> PAGE_MASK, there is an off-by-one. Things are worse when also
-> filtering it with ~PAGE_MASK. This will calculate to a grain with the
-> upper bits set. In the example it even calculates to ~0.
-> 
-> 2) The grain does not depend on and is unrelated to the kernel's
-> page-size. The page-size only matters when unmapping memory in
-> memory_failure(). Smaller grains are wrongly rounded up to the
-> page-size, on architectures with a configurable page-size (e.g. arm64)
-> this could round up to the even bigger page-size of the hypervisor.
-> 
-> Fix this with:
-> 
-> 	e->grain = ~mem_err->physical_addr_mask + 1;
-> 
-> The grain_bits are defined as:
-> 
-> 	grain = 1 << grain_bits;
-> 
-> Change also the grain_bits calculation accordingly, it is the same
-> formula as in edac_mc.c now and the code can be unified.
-> 
-> The value in ->physical_addr_mask coming from firmware is assumed to
-> be contiguous, but this is not sanity-checked. However, in case the
-> mask is non-contiguous, a conversion to grain_bits effectively
-> converts the grain bit mask to a power of 2 by rounding up.
-> 
-> Suggested-by: James Morse <james.morse@arm.com>
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
+Commit-ID:     00198a6eaf66609de5e4de9163bb42c7ca9dd7b7
+Gitweb:        https://git.kernel.org/tip/00198a6eaf66609de5e4de9163bb42c7ca9dd7b7
+Author:        Sami Tolvanen <samitolvanen@google.com>
+AuthorDate:    Tue, 08 Oct 2019 15:40:47 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 11 Oct 2019 12:49:18 +02:00
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+syscalls/x86: Use COMPAT_SYSCALL_DEFINE0 for IA32 (rt_)sigreturn
 
-> ---
->  drivers/edac/ghes_edac.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index 851aad92e42d..97242cf18a88 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -220,6 +220,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
->  	/* Cleans the error report buffer */
->  	memset(e, 0, sizeof (*e));
->  	e->error_count = 1;
-> +	e->grain = 1;
->  	strcpy(e->label, "unknown label");
->  	e->msg = pvt->msg;
->  	e->other_detail = pvt->other_detail;
-> @@ -315,7 +316,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
->  
->  	/* Error grain */
->  	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
-> -		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
-> +		e->grain = ~mem_err->physical_addr_mask + 1;
->  
->  	/* Memory error location, mapped on e->location */
->  	p = e->location;
-> @@ -428,8 +429,13 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
->  	if (p > pvt->other_detail)
->  		*(p - 1) = '\0';
->  
-> +	/* Sanity-check driver-supplied grain value. */
-> +	if (WARN_ON_ONCE(!e->grain))
-> +		e->grain = 1;
-> +
-> +	grain_bits = fls_long(e->grain - 1);
-> +
->  	/* Generate the trace event */
-> -	grain_bits = fls_long(e->grain);
->  	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
->  		 "APEI location: %s %s", e->location, e->other_detail);
->  	trace_mc_event(e->type, e->msg, e->label, e->error_count,
+Use COMPAT_SYSCALL_DEFINE0 to define (rt_)sigreturn() syscalls to
+replace sys32_sigreturn() and sys32_rt_sigreturn(). This fixes indirect
+call mismatches with Control-Flow Integrity (CFI) checking.
 
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191008224049.115427-4-samitolvanen@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/entry/syscalls/syscall_32.tbl | 4 ++--
+ arch/x86/ia32/ia32_signal.c            | 5 +++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-
-Thanks,
-Mauro
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index 3fe0254..2de75fd 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -130,7 +130,7 @@
+ 116	i386	sysinfo			sys_sysinfo			__ia32_compat_sys_sysinfo
+ 117	i386	ipc			sys_ipc				__ia32_compat_sys_ipc
+ 118	i386	fsync			sys_fsync			__ia32_sys_fsync
+-119	i386	sigreturn		sys_sigreturn			sys32_sigreturn
++119	i386	sigreturn		sys_sigreturn			__ia32_compat_sys_sigreturn
+ 120	i386	clone			sys_clone			__ia32_compat_sys_x86_clone
+ 121	i386	setdomainname		sys_setdomainname		__ia32_sys_setdomainname
+ 122	i386	uname			sys_newuname			__ia32_sys_newuname
+@@ -184,7 +184,7 @@
+ 170	i386	setresgid		sys_setresgid16			__ia32_sys_setresgid16
+ 171	i386	getresgid		sys_getresgid16			__ia32_sys_getresgid16
+ 172	i386	prctl			sys_prctl			__ia32_sys_prctl
+-173	i386	rt_sigreturn		sys_rt_sigreturn		sys32_rt_sigreturn
++173	i386	rt_sigreturn		sys_rt_sigreturn		__ia32_compat_sys_rt_sigreturn
+ 174	i386	rt_sigaction		sys_rt_sigaction		__ia32_compat_sys_rt_sigaction
+ 175	i386	rt_sigprocmask		sys_rt_sigprocmask		__ia32_compat_sys_rt_sigprocmask
+ 176	i386	rt_sigpending		sys_rt_sigpending		__ia32_compat_sys_rt_sigpending
+diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+index 1cee100..30416d7 100644
+--- a/arch/x86/ia32/ia32_signal.c
++++ b/arch/x86/ia32/ia32_signal.c
+@@ -21,6 +21,7 @@
+ #include <linux/personality.h>
+ #include <linux/compat.h>
+ #include <linux/binfmts.h>
++#include <linux/syscalls.h>
+ #include <asm/ucontext.h>
+ #include <linux/uaccess.h>
+ #include <asm/fpu/internal.h>
+@@ -118,7 +119,7 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 	return err;
+ }
+ 
+-asmlinkage long sys32_sigreturn(void)
++COMPAT_SYSCALL_DEFINE0(sigreturn)
+ {
+ 	struct pt_regs *regs = current_pt_regs();
+ 	struct sigframe_ia32 __user *frame = (struct sigframe_ia32 __user *)(regs->sp-8);
+@@ -144,7 +145,7 @@ badframe:
+ 	return 0;
+ }
+ 
+-asmlinkage long sys32_rt_sigreturn(void)
++COMPAT_SYSCALL_DEFINE0(rt_sigreturn)
+ {
+ 	struct pt_regs *regs = current_pt_regs();
+ 	struct rt_sigframe_ia32 __user *frame;
