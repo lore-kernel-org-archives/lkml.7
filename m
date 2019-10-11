@@ -2,85 +2,72 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B33C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42BBECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93A22054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:02:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570813326;
-	bh=bNfvlgl4vIfbzlIhAhUWzESuqRIDaq/qNbpVxGPX3sM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nDhX9PXVfutztjFJ9S3mFe/erwSS8QNU7cA/UkpyoDP/zxd9ddIWlefoyGFDU21d0
-	 tjTl/S4ccwBIgRSvgX4lqfKt96gjM2agZ3sJ/r77NAg53AWJ63KM4u0gXbokbX9Xq+
-	 NAYNtzrQUoP9E83kdPUJX0f+SVk90F0wEE+Jsm5s=
+	by mail.kernel.org (Postfix) with ESMTP id C8E6D2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbfJKRCF (ORCPT
+        id S1728693AbfJKRCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:02:05 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44839 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfJKRCF (ORCPT
+        Fri, 11 Oct 2019 13:02:21 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48740 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfJKRCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:02:05 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 21so8538179otj.11;
-        Fri, 11 Oct 2019 10:02:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vjnGO7jy/uIgC7C69kaFRlAqhB7BSVIYFxY9GpNzQxs=;
-        b=pVxFtIWESc64KwuasaK23/zGkbDxC2dGBEt24LMBxn0ioQv+Zz0FUrpA+j6ay76H8K
-         XtLlBPbnAKoIcDrqdVbrflmpB7gq1vj4X+R1lJdSvIovpKlyGW4/hCOwgsE9w/pOeJld
-         L3EIsHJ53du3NUWBmsaFHJkGrQfyraRtJ3tlgJQqfd7kbU2LcmCi7Mlj5OJCgKU1f3Su
-         AdbynD6Gc1XBnxLwl89SNwFA4+G2oKhc4eQ5Vcy9M+X8HLxYHolDsc5QFp/yBmJp+YsA
-         gpfgWyoA8F5NfhGCvI0udyUuFf4nhoE5jb8Pu0nTPY0mJ/gdDtvZ2dPsSDO4ltU5XDDx
-         awRg==
-X-Gm-Message-State: APjAAAXNwuVC53jpeuAmVL2Q10KhtLNnC+1Jhx5z165T0XT0U/Z1fyn2
-        BY71mKVBjo//cbzMhf3Pjg==
-X-Google-Smtp-Source: APXvYqwfy0Na/MAFrRtPiSxZm/TDuDknMJwUXkcoSJDIX13TLHyRN+sMhY1EV3oTRDG1UunWf6kqIg==
-X-Received: by 2002:a9d:6b0a:: with SMTP id g10mr13237581otp.303.1570813324600;
-        Fri, 11 Oct 2019 10:02:04 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a69sm2791021oib.14.2019.10.11.10.02.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 10:02:03 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 12:02:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@jms.id.au,
-        benh@kernel.crashing.org, linux-aspeed@lists.ozlabs.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: net: ftgmac100: Describe clock
- properties
-Message-ID: <20191011170203.GA16724@bogus>
-References: <20191010020756.4198-1-andrew@aj.id.au>
- <20191010020756.4198-3-andrew@aj.id.au>
+        Fri, 11 Oct 2019 13:02:21 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iIyIy-0003ES-6Q; Fri, 11 Oct 2019 17:02:16 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Rudolf Marek <r.marek@assembler.cz>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hwmon: w83793d: remove redundant assignment to variable res
+Date:   Fri, 11 Oct 2019 18:02:15 +0100
+Message-Id: <20191011170215.11539-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010020756.4198-3-andrew@aj.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 12:37:55 +1030, Andrew Jeffery wrote:
-> Critically, the AST2600 requires ungating the RMII RCLK if e.g. NCSI is
-> in use.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Acked-by: Joel Stanley <joel@jms.id.au>
-> ---
->  Documentation/devicetree/bindings/net/ftgmac100.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+From: Colin Ian King <colin.king@canonical.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+The variable res is being initialized with a value that
+is never read and is being re-assigned a little later on. The
+assignment is redundant and hence can be removed.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/hwmon/w83793.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/w83793.c b/drivers/hwmon/w83793.c
+index 9df48b70c70c..a0307e6761b8 100644
+--- a/drivers/hwmon/w83793.c
++++ b/drivers/hwmon/w83793.c
+@@ -2096,7 +2096,7 @@ static struct w83793_data *w83793_update_device(struct device *dev)
+ static u8 w83793_read_value(struct i2c_client *client, u16 reg)
+ {
+ 	struct w83793_data *data = i2c_get_clientdata(client);
+-	u8 res = 0xff;
++	u8 res;
+ 	u8 new_bank = reg >> 8;
+ 
+ 	new_bank |= data->bank & 0xfc;
+-- 
+2.20.1
+
