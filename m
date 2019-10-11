@@ -2,101 +2,80 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A4AC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F9C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654FF2190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570806068;
-	bh=+dKL3nlFRBgEOBKqcEDRWWa7FCXXcAwLRghCPvETWd4=;
-	h=From:Date:To:Cc:Cc:Cc:Cc:Cc:Subject:List-ID:From;
-	b=GZVULoaHyQhncpOAgWpwqjEti7z1JPAvhFT3+dxdncZ2H2uG6EDrwWlSwZBiZjARW
-	 u+0dKXFoYKXBvu/qV7viYN+TueHjXpjVbkACQAw8buc9NkpeIhNfB9EZJ3/bKjBB4H
-	 EafPe/B0saY05VKc4ngvftvGLQAaejI8oPhqcXyA=
+	by mail.kernel.org (Postfix) with ESMTP id DD443206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfJKPBH (ORCPT
+        id S1727677AbfJKPBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:01:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbfJKPBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:01:06 -0400
-Received: from localhost (unknown [216.243.17.14])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44699206CD;
-        Fri, 11 Oct 2019 15:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570806066;
-        bh=+dKL3nlFRBgEOBKqcEDRWWa7FCXXcAwLRghCPvETWd4=;
-        h=From:Date:To:Cc:Cc:Cc:Cc:Cc:Subject:From;
-        b=s/PPYHwKVSRDXPyMf5H4BNnvLTVBQOlHEmiGfPbCIUG83GL1WO6EAogY/cJ2IJuNc
-         MbdgocKyg7fWZOtFtGaOaR3YNp4qGIex87vjtgRW/X+bT0sF6AUj/w1cXGMqNnQf3a
-         uxE679MNdBQ+3uCkK5wM253M6Ie3eOzDtmd7yeHw=
-From:   Sasha Levin <sashal@kernel.org>
-Date:   Fri, 11 Oct 2019 11:01:05 -0400
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@microsoft.com
-Cc:     linux-hyperv@vger.kernel.org
-Cc:     kys@microsoft.com
-Cc:     sthemmin@microsoft.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Hyper-V commits for v5.4-rc
-Message-Id: <20191011150106.44699206CD@mail.kernel.org>
+        Fri, 11 Oct 2019 11:01:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3741 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726331AbfJKPBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:01:14 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 191083191309D95217E8;
+        Fri, 11 Oct 2019 23:01:12 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
+ 23:01:01 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <nuno.sa@analog.com>,
+        <ckeepax@opensource.cirrus.com>, <rf@opensource.wolfsonmicro.com>,
+        <piotrs@opensource.cirrus.com>, <npoushin@opensource.cirrus.com>,
+        <paul@crapouillou.net>, <krzk@kernel.org>,
+        <enric.balletbo@collabora.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ASoC: adau7118: Fix Kconfig warning without CONFIG_I2C
+Date:   Fri, 11 Oct 2019 23:00:42 +0800
+Message-ID: <20191011150042.20096-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+When building a kernel without CONFIG_I2C, Kconfig warns:
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+WARNING: unmet direct dependencies detected for REGMAP_I2C
+  Depends on [n]: I2C [=n]
+  Selected by [y]:
+  - SND_SOC_ADAU7118_I2C [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y]
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+Add missing I2C dependency to SND_SOC_ADAU7118_I2C to fix this.
 
-are available in the Git repository at:
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: ca514c0f12b0 ("ASOC: Add ADAU7118 8 Channel PDM-to-I2S/TDM Converter driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/soc/codecs/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index d196752..6a28741 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -416,6 +416,7 @@ config SND_SOC_ADAU7118_HW
+ 
+ config SND_SOC_ADAU7118_I2C
+ 	tristate "Analog Devices ADAU7118 8 Channel PDM-to-I2S/TDM Converter - I2C"
++	depends on I2C
+ 	select SND_SOC_ADAU7118
+ 	select REGMAP_I2C
+ 	help
+-- 
+2.7.4
 
-for you to fetch changes up to 83b50f83a96899f30c6369ef5988412fa2354ab2:
 
-  Drivers: hv: vmbus: Fix harmless building warnings without CONFIG_PM_SLEEP (2019-10-01 14:49:45 -0400)
-
-- ----------------------------------------------------------------
-Two fixes from Dexuan Cui:
-
- - Fix for a (harmless) warning when building vmbus without
-CONFIG_PM_SLEEP.
- - Fix for a memory leak (and optimization) in the hyperv mouse code.
-
-- ----------------------------------------------------------------
-Dexuan Cui (2):
-      HID: hyperv: Use in-place iterator API in the channel callback
-      Drivers: hv: vmbus: Fix harmless building warnings without CONFIG_PM_SLEEP
-
- drivers/hid/hid-hyperv.c | 56 +++++++++---------------------------------------
- drivers/hv/vmbus_drv.c   |  6 ++++++
- 2 files changed, 16 insertions(+), 46 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE4n5dijQDou9mhzu83qZv95d3LNwFAl2gmN4ACgkQ3qZv95d3
-LNxJ4Q/8DadwqP9vA75eReW1Ww55wxUprF4Vny+mtvaRYEEys4MKZwj4Dq/jSyon
-D5X6WbphZZtAy+azhD5LKda6wsUZdSP4lJCX4QOq1nTGgFwzHEudXkshm0bJwJe9
-B8nM7aAU0HuYi/RNBunEXoKUq5EZ7vNGaNs16iOWq30cnLhUSKNE/9fwTT3sC818
-XhKJBKwZTDLYLzx8TXW3lgbhG6LG9ABKqnTLaKm0IiaGjvHSNjfdgh1hdWNOFdYE
-zFPY9gT/Of7r6IM7O4G6BodGpvkkO6L+Gil6naAA9uDzasLM83NTlrFE26zYaf0l
-n9diccfxOFnrstqR2yN82bKjgrfx9iv7tEODW66NeiWIvkJBzR2GfPdB9enHQ0dA
-v3fTYny/XgaqnjIqj5WTIKwU+yGiwfiG0FjBhp/4ZFPRnfdg9ik0EoMkF7ZuK+37
-OAbdoo6wDUns3Y49Z5WofK0okGXDKMHWuUlg2EmtQzsV5COUJyOz/bJTau0h2L+r
-rp/ewkdp98+iozCyqRODDcBs9Za8pr/brME4+hYYvRiOCBunQU+RadOApev2jThe
-GMNwwMclQo+AKGNmfPmq4Nul1stDpB6NIytud2pBxXqCZkAOadKRntgt/anc/1pt
-XxEIfxVc6Ca1AqMOUoO3mxM6KoqjW6TmYx9it2sAk2aH9herwtM=
-=9JAl
------END PGP SIGNATURE-----
