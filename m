@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B393FC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118A9C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DDA3214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD72721D7A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+xUOeyO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNxAVXrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfJKFwN (ORCPT
+        id S1727259AbfJKFwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 01:52:13 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38816 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfJKFwM (ORCPT
+        Fri, 11 Oct 2019 01:52:18 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43385 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfJKFwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 01:52:12 -0400
-Received: by mail-pf1-f193.google.com with SMTP id h195so5397162pfe.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 22:52:12 -0700 (PDT)
+        Fri, 11 Oct 2019 01:52:16 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i32so5122127pgl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 22:52:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wIIpGdRKdT3hjAKKgnZBguQ5qXVsyW6bN9Y5XxQyxMc=;
-        b=f+xUOeyOxacA45AwVn6sWUl+nSjKToduHdjQ+uhdJXgZ5vDxI1PRqSYX1lw+ZMCkU7
-         wYjqHjc2YKujq2ge4STL0e5L0T7NQFwhWALEIreIitrVqC8wBD9JLVIrSCBokHtGpOPl
-         MkeXRtNA9ax/jHKMw43w+TfeEW4rLUcVZDZRembiQC4kGyGmknyUR/ytxOGHBr09Yipq
-         fhvyLQrXKPkfylVen9kET2YYqq+6Si2tuLoXkBY0wrPrcH5QZX1ZKz9DED84dllM/O5C
-         VpXPubFh3YP+HCgV/pwY9U8UZE6EZyWcihWKQUu32pu5xQAQrQCN7O4pdR65wbUDEWGV
-         QdpA==
+        bh=i1L51lOnWKHW5TJeL5qfRnIenvgB0vCtd5X2cYOSU8A=;
+        b=bNxAVXrY9EW23UPXRaicX+62+nvRJdhzdaDPzBHW6vpX0KAU2wBy3YYpxoeqh1i8dE
+         RM9seEvHE+LRr6/UGMxf0tZ+bnw07J52e3bXE27x2qTvztZ41P/vY9CHSA1mkPs1yURT
+         ElVLEpQI0iLDsh+6FgsUFaxmR0H9n+OkkNbwBelSbuT6l44GI2pIiFSJUwytkB/jSVxm
+         9vg+/VIdeQtpbZWopmEOhAfviYqAW12t7ebAVgu3AB4ukBuzgoTZvfp4rHvzFNXiuVC4
+         ePSXJFNwVdB0gw8oJy93B4eb85dVgAbtsDMCJYMTXWeTLVAlBicsJbykpiLnYyP02/9L
+         IEig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wIIpGdRKdT3hjAKKgnZBguQ5qXVsyW6bN9Y5XxQyxMc=;
-        b=P8mMw+Z6MJO7wEY+r325mitghn5eP/il/TolWSschOVDbFxxw0A3f6bAilbK2Zvguy
-         LuLqzBgCkvio4k6EUd7/ghmEGOV7virkkpv5PNRlgoOSAC1LgGZ7NCYcwAUa2Lpsz3yH
-         s+pDtmZOUYnXfGoHbDzumUrp1K82e0GDP292iYO4no2W1raqleORyM7lTR7qGlm0MKIg
-         ozntPzX17pnw6dxxOU8XxqC/QScEDhmlFy+Q/XN8eq5XVJ1Lc8pCXHoGdCfe7hfW1rV1
-         gI1oMUhuPjrsgI7L86YlDr7+R12z3TDrSUMPTXVDaf3vC9/D+glyB+aMqIdOZrCNuKum
-         giQA==
-X-Gm-Message-State: APjAAAX11cEB3zm3xiZMcXAVJISR9IbR3XeUaAfuXLiO847f8kl3Jkac
-        8GwMZq8qskcZnHn76572I1Vkq8aIZXjXwg==
-X-Google-Smtp-Source: APXvYqx5m5kGl2cgcGxoUukHl4f6QgvVCu68CUW1beVrc8BTbmcRRiJC01ouu48zZfiRd7z3Z994Hg==
-X-Received: by 2002:a65:498a:: with SMTP id r10mr15531549pgs.131.1570773131968;
-        Thu, 10 Oct 2019 22:52:11 -0700 (PDT)
+        bh=i1L51lOnWKHW5TJeL5qfRnIenvgB0vCtd5X2cYOSU8A=;
+        b=LehlEkx66xN6XOimNhwmDcg6KHcyfvBWmoJQlmDbqCEh1Pv5fIU0A05GhPlG9e3u2q
+         clEAbgo6luGN00bSX6rtDb1R70z7PKump+1bR0i6d8RzoOduHxP5AkMcVrYT/ZcPGpKt
+         Wi/sXSpJgHQThIF5/Y2W2omm9Pxz0Fg7cgRsfS09KD7RoblSm2nZx+/koYrKdB9ZmD37
+         DxouOgPsqXnnZtHFb886ltDpO6RMjhBLalBJodSvfgq9EvMrVsVNdiWSyS9gcsVRU2VV
+         vHtfoLNzTcZUL6QCHnx4C109IFLsgzR8/M+e84LfHPSDPETujVd9uH8fOkEK8dqf0PzQ
+         bxuw==
+X-Gm-Message-State: APjAAAXg/zLfFbqukgAWftN8DCOeMwIGeDlG0E0+OKU6Z3G4fod1B0oV
+        KiIj3A1VCLcR16DVfw5Gnik=
+X-Google-Smtp-Source: APXvYqwVZHzHwUMl8BA+E2Napohfu3FQGxNVsf6mi0nHXnuX8HAf8mpJAHyP1ymwqePr/diSzaRVLA==
+X-Received: by 2002:a63:44f:: with SMTP id 76mr15328817pge.164.1570773135204;
+        Thu, 10 Oct 2019 22:52:15 -0700 (PDT)
 Received: from localhost.localdomain ([45.52.215.209])
-        by smtp.gmail.com with ESMTPSA id i184sm10257782pge.5.2019.10.10.22.52.11
+        by smtp.gmail.com with ESMTPSA id i184sm10257782pge.5.2019.10.10.22.52.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 22:52:11 -0700 (PDT)
+        Thu, 10 Oct 2019 22:52:14 -0700 (PDT)
 From:   Chandra Annamaneni <chandra627@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     gneukum1@gmail.com, dan.carpenter@oracle.com,
         fabian.krueger@fau.de, michael.scheiderer@fau.de,
         chandra627@gmail.com, simon@nikanor.nu, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] KPC2000: kpc2000_spi.c: Fix style issues (alignment)
-Date:   Thu, 10 Oct 2019 22:51:54 -0700
-Message-Id: <20191011055155.4985-4-chandra627@gmail.com>
+Subject: [PATCH 5/5] KPC2000: kpc2000_spi.c: Fix style issues (Unnecessary parenthesis)
+Date:   Thu, 10 Oct 2019 22:51:55 -0700
+Message-Id: <20191011055155.4985-5-chandra627@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191011055155.4985-1-chandra627@gmail.com>
 References: <20191011055155.4985-1-chandra627@gmail.com>
@@ -76,44 +76,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resolved: "CHECK: Alignment should match open parenthesis" from checkpatch
+Resolved: CHECK: Unnecessary parentheses around table[i]
 
 Signed-off-by: Chandra Annamaneni <chandra627@gmail.com>
 ---
- drivers/staging/kpc2000/kpc2000_spi.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/staging/kpc2000/kpc2000_spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
-index 66cfa5202690..26e1e8466fb2 100644
+index 26e1e8466fb2..8cd6936eda17 100644
 --- a/drivers/staging/kpc2000/kpc2000_spi.c
 +++ b/drivers/staging/kpc2000/kpc2000_spi.c
-@@ -315,19 +315,19 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
- 		if (transfer->speed_hz > KP_SPI_CLK ||
- 		    (len && !(rx_buf || tx_buf))) {
- 			dev_dbg(kpspi->dev, "  transfer: %d Hz, %d %s%s, %d bpw\n",
--					transfer->speed_hz,
--					len,
--					tx_buf ? "tx" : "",
--					rx_buf ? "rx" : "",
--					transfer->bits_per_word);
-+				transfer->speed_hz,
-+				len,
-+				tx_buf ? "tx" : "",
-+				rx_buf ? "rx" : "",
-+				transfer->bits_per_word);
- 			dev_dbg(kpspi->dev, "  transfer -EINVAL\n");
- 			return -EINVAL;
- 		}
- 		if (transfer->speed_hz &&
- 		    transfer->speed_hz < (KP_SPI_CLK >> 15)) {
- 			dev_dbg(kpspi->dev, "speed_hz %d below minimum %d Hz\n",
--					transfer->speed_hz,
--					KP_SPI_CLK >> 15);
-+				transfer->speed_hz,
-+				KP_SPI_CLK >> 15);
- 			dev_dbg(kpspi->dev, "  speed_hz -EINVAL\n");
- 			return -EINVAL;
- 		}
+@@ -478,7 +478,7 @@ kp_spi_probe(struct platform_device *pldev)
+ 	/* register the slave boards */
+ #define NEW_SPI_DEVICE_FROM_BOARD_INFO_TABLE(table) \
+ 	for (i = 0 ; i < ARRAY_SIZE(table) ; i++) { \
+-		spi_new_device(master, &(table[i])); \
++		spi_new_device(master, &table[i]); \
+ 	}
+ 
+ 	switch ((drvdata->card_id & 0xFFFF0000) >> 16) {
 -- 
 2.20.1
 
