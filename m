@@ -2,116 +2,158 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70744C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3482ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A45721D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:27:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="RvgE9Ld3"
+	by mail.kernel.org (Postfix) with ESMTP id ADF1C206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570800548;
+	bh=Hb3l4YrnNGwIffI5tUlPhq9yuu3mrx6Ld4ewwstAiTw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=my6FfKsQB1HNXm7hbwFH/UAFqF2vVSDG71Vo7TFE3gEqdqwpHWMoCWSsa/hy3q8Fz
+	 DxkzDj0GjXD42tcAL2rH1dUgX9aHeenMNzMd3t4sWmxRKrGEKoExr8YtrQdvTPdP22
+	 2V4IAVoqomsZ3fimcQ7/rF5cvcQe+9dUo8DyM/cA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbfJKN1S (ORCPT
+        id S1728238AbfJKN3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:27:18 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:44934 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfJKN1R (ORCPT
+        Fri, 11 Oct 2019 09:29:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46716 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbfJKN3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:27:17 -0400
-Received: by mail-yw1-f68.google.com with SMTP id m13so3455334ywa.11
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 06:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=gfuUfZlYZ9oJJ+/N0uMt9DhhQR0v6tIoqlaSGbKIW5Q=;
-        b=RvgE9Ld3dkdeSZz8gPaqgtDS2qowzHQRexrjX4HVG+BcCfNR2BlabHALJqmY1Saxnc
-         HE2pECbmda8Himuhffd/NA1tqR0k4XjDsOlSEKRUkwfRYV1jcg7dLhBqCsZqE0VOeJHb
-         4iIJnwiS1A5mL54Igw1bUOiiglA20xIEKTF68jZ4BeiNpX1oNbVmvxoOP0RbsGVKTG02
-         Lh9C9oacHynhu1RsLZBgMVUjBOkjjKbHUIcaU7LLVVidv9O9wVRz7TkwqJoORkrmduRr
-         y7Np5zdZwOrk2IJfM9fIh0bw44es8W306LoVI3o+kn092f+LLQLQgK8g3eZYeG3U2Apj
-         Qoow==
+        Fri, 11 Oct 2019 09:29:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k25so7944334oiw.13;
+        Fri, 11 Oct 2019 06:29:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=gfuUfZlYZ9oJJ+/N0uMt9DhhQR0v6tIoqlaSGbKIW5Q=;
-        b=Fs+LPhikFXRkuncL0eJIVM43uMoOeHLTnANBEI14j5NnXwjKYmEw9MXa/KyYcyAY6a
-         5U7Du9rDGMgS82xEytyDXIFvv0z1WonL0uszT23myfltCDYKkBKYKNxBsaveiXC8SKP5
-         leAbi3SFxxEaEocvquCX4B6kuf2FQAMIn7S22JDazB3Rlnw6Rh1BP0aZ9z8G0rI7FLQm
-         qeWCzCyRZJFYBObPwro5eeP4aLgzkkkLepenmDrtQ6HQKudb54c2eWx1dnFD6zyNRS3e
-         PHLuYFNvx5lIp8xaeMdcWdd5YplUkl596HUwEV4s56r6qUbahlICW3PZo/DpBFfTAKXS
-         0ukQ==
-X-Gm-Message-State: APjAAAU8TxBB+Ddsc/mnO6iENzI2pktsyZErH2rs7VuH5obF9z2aKZ1V
-        XObG17D0ZKKi827X+vw+MszQWA==
-X-Google-Smtp-Source: APXvYqxDF1UT0llbpAUs7tUd+8/Bo22/yMWIlZSCpGQIlSr+dT1MkqQR6ab3Q5CqDbLhAZxbBpAWoQ==
-X-Received: by 2002:a81:a303:: with SMTP id a3mr2217302ywh.244.1570800436812;
-        Fri, 11 Oct 2019 06:27:16 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id r193sm2177467ywg.38.2019.10.11.06.27.16
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=noJDdn0TxhdYjyfk41LUPauSPjsaXFCx0lOssfNVaEg=;
+        b=kqGLcntihVrD6oILZAgntsL4MBjDQKH85VEOIpzs32ot6wxpmcdsf/Ukk/Pc6T4HvL
+         iPn9cIsqyHvqE9sbdMZfPTDJKRxb3n5LvlBItRYeYyMwm/9ahbottk8gFwdiJXE9MwyJ
+         UuU3o9jkJNGOTEsMYrRbmpOaP+w3KPOrhLfkmYoj//rVGpWZPm4mt7BcN0+SHEv6rewW
+         0G4DxGtib0ba/SDHEgxB2qHnL7+7Md1xI4vQFbIgKoC5C7wsWEI7IkcdLuKjJa6Yn71G
+         CQcyPRssjXffJMNZdCsaUAsGpO2HHsC3QuxhZgTWu90WntFNTB3Jy2Zmt9KHbluHhlFE
+         1kMQ==
+X-Gm-Message-State: APjAAAV66l49wPeojBojrrTjU13pRelswTuyQ2Be0T8aSvFeiQOEJywm
+        nzBW7uQC+QxDqrNa/kvWzG7bxQ8=
+X-Google-Smtp-Source: APXvYqwKOk7arASTVemLrM2FAbjAq/ATjlhLgHDbKr9NhgryydYK8tSNhsrhwGk9cf1KW+MhSvvP8A==
+X-Received: by 2002:aca:4794:: with SMTP id u142mr12433837oia.159.1570800546341;
+        Fri, 11 Oct 2019 06:29:06 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 11sm2868239otg.62.2019.10.11.06.29.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 06:27:16 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 09:27:15 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sean Paul <seanpaul@chromium.org>, kernel@collabora.com
-Subject: Re: [PATCH v5 0/3] RK3288 Gamma LUT
-Message-ID: <20191011132715.GO85762@art_vandelay>
-References: <20191010194351.17940-1-ezequiel@collabora.com>
- <2314316.IrHOdPmtjk@diego>
+        Fri, 11 Oct 2019 06:29:05 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 08:29:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     maz@kernel.org, mark.rutland@arm.com, arnd@arndb.de, bp@alien8.de,
+        mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, paulmck@linux.ibm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com,
+        jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com,
+        barakw@amazon.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
+ Labs Memory Controller EDAC
+Message-ID: <20191011132904.GA15595@bogus>
+References: <1570708454-10784-1-git-send-email-talel@amazon.com>
+ <1570708454-10784-2-git-send-email-talel@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2314316.IrHOdPmtjk@diego>
+In-Reply-To: <1570708454-10784-2-git-send-email-talel@amazon.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 03:22:00PM +0200, Heiko Stübner wrote:
-> Am Donnerstag, 10. Oktober 2019, 21:43:48 CEST schrieb Ezequiel Garcia:
-> > New iteration, seems that we are finally converging.
-> > 
-> > For this v5, we are only doing some changes on
-> > the gamma_set implementation. As a result, the code
-> > is more readable. See the changelog in patch 2 for more
-> > information.
-> > 
-> > Thanks!
+On Thu, Oct 10, 2019 at 02:54:13PM +0300, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
 > 
-> on rk3288 (and rk3399+rk3328 to make sure nothing breaks)
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> ---
+>  .../bindings/edac/amazon,al-mc-edac.yaml           | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+> new file mode 100644
+> index 00000000..f66b094
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Applied the first 2 patches to drm-misc-next for 5.5. I'll leave 3/3 for Heiko
-and the rockchip tree.
+Forgot to mention, please make new bindings (GPL-2.0-only OR BSD-2-Clause).
 
-Thanks to all for the reviews and testing, thanks to Ezequiel for sticking with
-this to completion!
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amazon's Annapurna Labs Memory Controller EDAC
+> +
+> +maintainers:
+> +  - Talel Shenhar <talel@amazon.com>
+> +  - Talel Shenhar <talelshenhar@gmail.com>
+> +
+> +description: |
+> +  EDAC node is defined to describe on-chip error detection and correction for
+> +  Amazon's Annapurna Labs Memory Controller.
+> +
+> +properties:
+> +
+> +  compatible:
+> +    const: amazon,al-mc-edac
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 2
+> +    items:
+> +      - description: uncorrectable error interrupt
+> +      - description: correctable error interrupt
+> +
+> +  interrupt-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: ue
+> +      - const: ce
 
-Sean
+Now the example fails to build:
 
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml: 
+edac@f0080000: interrupt-names: ['ue'] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml: 
+edac@f0080000: interrupts: [[20, 4]] is too short
+
+You either need to always have the CE irq or add 'minItems: 1' to both. 
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    edac@f0080000 {
+> +      compatible = "amazon,al-mc-edac";
+> +      reg = <0x0 0xf0080000 0x0 0x00010000>;
+> +      interrupt-parent = <&amazon_al_system_fabric>;
+> +      interrupt-names = "ue";
+> +      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> -- 
+> 2.7.4
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
