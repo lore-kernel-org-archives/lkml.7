@@ -2,289 +2,185 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB732C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B32FECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB762053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649F520659
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:33:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KISjVuAn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMeemMVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbfJKUbW (ORCPT
+        id S1729199AbfJKUdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:31:22 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36073 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728930AbfJKUbW (ORCPT
+        Fri, 11 Oct 2019 16:33:10 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37179 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728911AbfJKUdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:31:22 -0400
-Received: by mail-io1-f66.google.com with SMTP id b136so24236336iof.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 13:31:21 -0700 (PDT)
+        Fri, 11 Oct 2019 16:33:10 -0400
+Received: by mail-pl1-f196.google.com with SMTP id u20so4975620plq.4;
+        Fri, 11 Oct 2019 13:33:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lQtIpCqUeRMtNnzQ8ls8iatc+M9YfN+mnKLz1N2MKoY=;
-        b=KISjVuAnSe9J2G2N/COr2s8rOK0qoujhQlFDb+YKFoGabkgDMWt+rJY7rXRcplRuy/
-         K7pCDaq5hYTWQ+LCEh7HMpR77VFRx39WQpwfa+7vwyhZgxvsNjPvO9SkUqOfDi9dwOEL
-         RWbzbgQrKYSpqD+F5BXi6olEP9wEKO4frgO9DXs/k1aEVbil2zDq+LkgT4VZRZ5lErE0
-         sIir6mvh3jiCWeK/zc0ELhodBags16jNdSseFZGxA9r0DCECo534vO/cXwX6PihG3Pm9
-         odOnxFhkFlqoWH3Hka8D7AL8BAWyeS/hhn97GzqlyZhxd7YfkF6LjBI4UdOIPL2KHq2F
-         PJzQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YRRaZLNTEpMegqxe9gWgkWVmOKd35yZiW006NDQBsR4=;
+        b=CMeemMVrniI/ikUjxmc37aSZTdSPy3tWPjZ7XEXq089HTeymZ4GBrghzE1UN4PPv1+
+         s9SsDUDdLIMgygAX68Lij11RykAbmzWJblLnNB5fwv2z0ZCBL7yfcRP6BSs80rrGqrB9
+         vft+fHFwNT5+748kzkmAUtjtr9bVikQPqk+qar2ck7z0h81hQ2qTow9UVagJizKCqsnm
+         iVMXEJgzAk5z29/mCAyeqxiDPFaPwvSCbuRSjOhwfzZ9buyDz7j/8wzQ81W12/s5799w
+         uxlCLdwbO6tIeHqIuMfY5B8cIGDx1whyycYk6bpZCFElDSKK+ofwAjUZbFyB0ps3hjeu
+         sTXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lQtIpCqUeRMtNnzQ8ls8iatc+M9YfN+mnKLz1N2MKoY=;
-        b=L5AdM+lq2kGc0PrvhfiAndTohmjEuf7fy2MQP7/Aa0S7CnIQknlC9ILWp/5tza2LOC
-         sbzBhetjKABazKDivceOnhfj3/9KRlT6SYhX5k8PUT5VieghGwHvO9+UiQMwSe9MsYbO
-         ZBVFkkjhsZgReqLaEsTsG+X8drl+xPUWGHrpbhhGQre0CAONtKtwrTQWhtCy/R739/Ls
-         /gF6Y+F8ayZcUMXbx0k3I7FSFvaLZU4r1dVU262OZCk0FqYGhYqH1h0sfM3ZwQdoUpGn
-         EK2x7Jokpdar4N39CPdv/LJr7wNyEFoqKQpwSLFVL3KeCcBD4iV5CbIc5FaM8fwinIZb
-         UNHw==
-X-Gm-Message-State: APjAAAVvfJjx1Pt7wpK7GCSfANCYgMEbQ0Dl2BPPZHt3ly3wUPf/ve0m
-        tDh9uKT/ZN35P/WEkucu6G9zHYiiVLpl9apzCpJdwpdh
-X-Google-Smtp-Source: APXvYqxnyDJFKHvj6FgQUFn0LQRVE/S+usuUfmhao2k7voBMhuu06zhCI78zyjDAG1Uc6rOTP4k1tw6Iq5YhmkvwUQU=
-X-Received: by 2002:a6b:ee07:: with SMTP id i7mr12618562ioh.26.1570825880204;
- Fri, 11 Oct 2019 13:31:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YRRaZLNTEpMegqxe9gWgkWVmOKd35yZiW006NDQBsR4=;
+        b=ks2uq2Ljo5K2MMDX351M990NL13O3B+0HThSeUMKLXsEBRg7H6vaUMNg+m+o5BaMaZ
+         jzt3v5M7l09OQ+tQ+dAR+8z/3thrjB60vGGOujZArIoO2EnqJ2ZBoLENQE3B1L5QlPhD
+         3+wZkH/yk1sLJhsWsKhl9nN890ozCCStaxklZlezAnF6Hu40hq4VLDYwA6pmBAZAUxRT
+         0CbO1a1x/nNeHEdXsF+t4vhEnydu69+mdfCcZoLEnayY/xisL/cZTom5EpfgUfsv94jK
+         cizX6ZYLG4nPx5aQ1IRQ2x31RIvy+mi3A1Q1p4Be7XpxbChZDDY7HR0XAvGH2UoApZVm
+         OW+Q==
+X-Gm-Message-State: APjAAAVAFGNm4mSXPlht2maUDwWE99wu0LHQb2Z/nOoXwAJg+LpFZcHK
+        /KgKJABZsHuEDt0Vtb85rJk=
+X-Google-Smtp-Source: APXvYqxK1tsLlnGVNZNr/jbawpf+tr3TJiaFjC3vY9LlmkchchUphrI6jMGqMvHOndMHMkZncfQgEQ==
+X-Received: by 2002:a17:902:8642:: with SMTP id y2mr16058538plt.187.1570825987061;
+        Fri, 11 Oct 2019 13:33:07 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r19sm9164591pgj.43.2019.10.11.13.33.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 13:33:05 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 13:33:03 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/3] HID: logitech-hidpp: use devres to manage FF private
+ data
+Message-ID: <20191011203303.GF229325@dtor-ws>
+References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
+ <20191007051240.4410-2-andrew.smirnov@gmail.com>
+ <CAO-hwJ+jPGa5Z7=Lopsc23m8UOqGWB0=tN+DcotykseAPM7_7w@mail.gmail.com>
+ <20191011182617.GE229325@dtor-ws>
+ <CAO-hwJLH6SMkLb1kZGj1E+BUHJ+ZsE1n+d=xeJgsvTCjHH1Wzw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190917085304.16987-1-weijiang.yang@intel.com> <20190917085304.16987-2-weijiang.yang@intel.com>
-In-Reply-To: <20190917085304.16987-2-weijiang.yang@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 11 Oct 2019 13:31:08 -0700
-Message-ID: <CALMp9eT+P5QTGy=LfZzMozkTC7jdEhbupbfza2tTE3U1grtZkQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/9] Documentation: Introduce EPT based Subpage Protection
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        yu.c.zhang@intel.com, alazar@bitdefender.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAO-hwJLH6SMkLb1kZGj1E+BUHJ+ZsE1n+d=xeJgsvTCjHH1Wzw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 1:52 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
->
-> Co-developed-by: yi.z.zhang@linux.intel.com
-> Signed-off-by: yi.z.zhang@linux.intel.com
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  Documentation/virtual/kvm/spp_kvm.txt | 178 ++++++++++++++++++++++++++
->  1 file changed, 178 insertions(+)
->  create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
->
-> diff --git a/Documentation/virtual/kvm/spp_kvm.txt b/Documentation/virtual/kvm/spp_kvm.txt
-> new file mode 100644
-> index 000000000000..1bd1c11d0a99
-> --- /dev/null
-> +++ b/Documentation/virtual/kvm/spp_kvm.txt
-> @@ -0,0 +1,178 @@
-> +EPT-Based Sub-Page Protection (SPP) for KVM
-> +====================================================
-> +
-> +1.Overview
-> +  EPT-based Sub-Page Protection(SPP) allows VMM to specify
-> +  fine-grained(128byte per sub-page) write-protection for guest physical
-> +  memory. When it's enabled, the CPU enforces write-access permission
-> +  for the sub-pages within a 4KB page, if corresponding bit is set in
-> +  permission vector, write to sub-page region is allowed, otherwise,
-> +  it's prevented with a EPT violation.
-> +
-> +  *Note*: In current implementation, SPP is exclusive with nested flag,
-> +  if it's on, SPP feature won't work.
-> +
-> +2.SPP Operation
-> +  Sub-Page Protection Table (SPPT) is introduced to manage sub-page
-> +  write-access permission.
-> +
-> +  It is active when:
-> +  a) nested flag is turned off.
-> +  b) "sub-page write protection" VM-execution control is 1.
-> +  c) SPP is initialized with KVM_INIT_SPP ioctl.
-> +  d) Sub-page permissions are set with KVM_SUBPAGES_SET_ACCESS ioctl.
-> +     see below sections for details.
-> +
-> +  __________________________________________________________________________
-> +
-> +  How SPP hardware works:
-> +  __________________________________________________________________________
-> +
-> +  Guest write access --> GPA --> Walk EPT --> EPT leaf entry -----|
-> +  |---------------------------------------------------------------|
-> +  |-> if VMexec_control.spp && ept_leaf_entry.spp_bit (bit 61)
-> +       |
-> +       |-> <false> --> EPT legacy behavior
-> +       |
-> +       |
-> +       |-> <true>  --> if ept_leaf_entry.writable
-> +                        |
-> +                        |-> <true>  --> Ignore SPP
-> +                        |
-> +                        |-> <false> --> GPA --> Walk SPP 4-level table--|
-> +                                                                        |
-> +  |------------<----------get-the-SPPT-point-from-VMCS-filed-----<------|
-/filed/field/
-> +  |
-> +  Walk SPP L4E table
-> +  |
-> +  |---> if-entry-misconfiguration ------------>-------|-------<---------|
-> +   |                                                  |                 |
-> +  else                                                |                 |
-> +   |                                                  |                 |
-> +   |   |------------------SPP VMexit<-----------------|                 |
-> +   |   |                                                                |
-> +   |   |-> exit_qualification & sppt_misconfig --> sppt misconfig       |
-> +   |   |                                                                |
-> +   |   |-> exit_qualification & sppt_miss --> sppt miss                 |
-> +   |---|                                                                |
-> +       |                                                                |
-> +  walk SPPT L3E--|--> if-entry-misconfiguration------------>------------|
-> +                 |                                                      |
-> +                else                                                    |
-> +                 |                                                      |
-> +                 |                                                      |
-> +          walk SPPT L2E --|--> if-entry-misconfiguration-------->-------|
-> +                          |                                             |
-> +                         else                                           |
-> +                          |                                             |
-> +                          |                                             |
-> +                   walk SPPT L1E --|-> if-entry-misconfiguration--->----|
-> +                                   |
-> +                                 else
-> +                                   |
-> +                                   |-> if sub-page writable
-> +                                   |-> <true>  allow, write access
-> +                                   |-> <false> disallow, EPT violation
-> +  ______________________________________________________________________________
-> +
-> +3.IOCTL Interfaces
-> +
-> +    KVM_INIT_SPP:
-> +    Allocate storage for sub-page permission vectors and SPPT root page.
-> +
-> +    KVM_SUBPAGES_GET_ACCESS:
-> +    Get sub-page write permission vectors for given continuous guest pages.
-/continuous/contiguous/
-> +
-> +    KVM_SUBPAGES_SET_ACCESS
-> +    Set SPP bit in EPT leaf entries for given continuous guest pages. The
-/continuous/contiguous/
-> +    actual SPPT setup is triggered when SPP miss vm-exit is handled.
-> +
-> +    /* for KVM_SUBPAGES_GET_ACCESS and KVM_SUBPAGES_SET_ACCESS */
-> +    struct kvm_subpage_info {
-> +       __u64 gfn; /* the first page gfn of the continuous pages */
-/continuous/contiguous/
-> +       __u64 npages; /* number of 4K pages */
-> +       __u64 *access_map; /* sub-page write-access bitmap array */
-> +    };
-> +
-> +    #define KVM_SUBPAGES_GET_ACCESS   _IOR(KVMIO,  0x49, __u64)
-> +    #define KVM_SUBPAGES_SET_ACCESS   _IOW(KVMIO,  0x4a, __u64)
-> +    #define KVM_INIT_SPP              _IOW(KVMIO,  0x4b, __u64)
+On Fri, Oct 11, 2019 at 09:25:52PM +0200, Benjamin Tissoires wrote:
+> On Fri, Oct 11, 2019 at 8:26 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> >
+> > On Fri, Oct 11, 2019 at 04:52:04PM +0200, Benjamin Tissoires wrote:
+> > > Hi Andrey,
+> > >
+> > > On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+> > > >
+> > > > To simplify resource management in commit that follows as well as to
+> > > > save a couple of extra kfree()s and simplify hidpp_ff_deinit() switch
+> > > > driver code to use devres to manage the life-cycle of FF private data.
+> > > >
+> > > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > > Cc: Jiri Kosina <jikos@kernel.org>
+> > > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > > Cc: Henrik Rydberg <rydberg@bitmath.org>
+> > > > Cc: Sam Bazely <sambazley@fastmail.com>
+> > > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> > > > Cc: Austin Palmer <austinp@valvesoftware.com>
+> > > > Cc: linux-input@vger.kernel.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > > Cc: stable@vger.kernel.org
+> > >
+> > > This patch doesn't seem to fix any error, is there a reason to send it
+> > > to stable? (besides as a dependency of the rest of the series).
+> > >
+> > > > ---
+> > > >  drivers/hid/hid-logitech-hidpp.c | 53 +++++++++++++++++---------------
+> > > >  1 file changed, 29 insertions(+), 24 deletions(-)
+> > > >
+> > > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+> > > > index 0179f7ed77e5..58eb928224e5 100644
+> > > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > > @@ -2079,6 +2079,11 @@ static void hidpp_ff_destroy(struct ff_device *ff)
+> > > >         struct hidpp_ff_private_data *data = ff->private;
+> > > >
+> > > >         kfree(data->effect_ids);
+> > >
+> > > Is there any reasons we can not also devm alloc data->effect_ids?
+> > >
+> > > > +       /*
+> > > > +        * Set private to NULL to prevent input_ff_destroy() from
+> > > > +        * freeing our devres allocated memory
+> > >
+> > > Ouch. There is something wrong here: input_ff_destroy() calls
+> > > kfree(ff->private), when the data has not been allocated by
+> > > input_ff_create(). This seems to lack a little bit of symmetry.
+> >
+> > Yeah, ff and ff-memless essentially take over the private data assigned
+> > to them. They were done before devm and the lifetime of the "private"
+> > data pieces was tied to the lifetime of the input device to simplify
+> > error handling and teardown.
+> 
+> Yeah, that stealing of the pointer is not good :)
+> But OTOH, it helps
+> 
+> >
+> > Maybe we should clean it up a bit... I'm open to suggestions.
+> 
+> The problem I had when doing the review was that there is no easy way
+> to have a "devm_input_ff_create_()", because the way it's built is
+> already "devres-compatible": the destroy gets called by input core.
 
-The ioctls should be documented in api.txt.
+I do not think we want devm_input_ff_create() explicitly, I think the
+fact that you can "build up" an input device by allocating it, then
+adding slots, poller, ff support, etc, and input core cleans it up is
+all good. It is just the ownership if the driver-private data block is
+not very obvious and is not compatible with allocating via devm.
 
-> +4.Set Sub-Page Permission
-> +
-> +  * To enable SPP protection, system admin sets sub-page permission via
-Why system admin? Can't any kvm user do this?
-> +    KVM_SUBPAGES_SET_ACCESS ioctl:
-> +    (1) It first stores the access permissions in bitmap array.
-> +
-> +    (2) Then, if the target 4KB page is mapped as PT_PAGE_TABLE_LEVEL entry in EPT,
-/page is/pages are/
-> +       it sets SPP bit of the corresponding entry to mark sub-page protection.
-> +       If the 4KB page is mapped as PT_DIRECTORY_LEVEL or PT_PDPE_LEVEL, it
-/page is/pages are/
-> +       zapps the hugepage entry and let following memroy access to trigger EPT
-/zapps/zaps/, /entry/enttries/, /memroy/memory/
-> +       page fault, there the gfn is check against SPP permission bitmap and
-/page fault/violation/
-> +       proper level is selected to set up EPT entry.
-> +
-> +
-> +   The SPPT paging structure format is as below:
-> +
-> +   Format of the SPPT L4E, L3E, L2E:
-> +   | Bit    | Contents                                                                 |
-> +   | :----- | :------------------------------------------------------------------------|
-> +   | 0      | Valid entry when set; indicates whether the entry is present             |
-> +   | 11:1   | Reserved (0)                                                             |
-> +   | N-1:12 | Physical address of 4KB aligned SPPT LX-1 Table referenced by this entry |
-> +   | 51:N   | Reserved (0)                                                             |
-> +   | 63:52  | Reserved (0)                                                             |
-> +   Note: N is the physical address width supported by the processor. X is the page level
-> +
-> +   Format of the SPPT L1E:
-> +   | Bit   | Contents                                                          |
-> +   | :---- | :---------------------------------------------------------------- |
-> +   | 0+2i  | Write permission for i-th 128 byte sub-page region.               |
-> +   | 1+2i  | Reserved (0).                                                     |
-> +   Note: 0<=i<=31
-> +
-> +5.SPPT-induced VM exit
-> +
-> +  * SPPT miss and misconfiguration induced VM exit
-> +
-> +    A SPPT missing VM exit occurs when walk the SPPT, there is no SPPT
-> +    misconfiguration but a paging-structure entry is not
-> +    present in any of L4E/L3E/L2E entries.
-> +
-> +    A SPPT misconfiguration VM exit occurs when reserved bits or unsupported values
-> +    are set in SPPT entry.
-> +
-> +    *NOTE* SPPT miss and SPPT misconfigurations can occur only due to an
-> +    attempt to write memory with a guest physical address.
+> 
+> So I don't have a good answer to simplify in a transparent manner
+> without breaking the API.
+> 
+> >
+> > In this case maybe best way is to get rid of hidpp_ff_destroy() and not
+> > set ff->private and rely on devm to free the buffers. One can get to
+> > device private data from ff methods via input_get_drvdata() since they
+> > all (except destroy) are passed input device pointer.
+> 
+> Sounds like a good idea. However, it seems there might be a race when
+> removing the workqueue:
+> the workqueue gets deleted in hidpp_remove, when the input node will
+> be freed by devres, so after the call of hidpp_remove.
 
-Can you clarify what this means? For instance, setting an A or D bit
-in a PTE is an attempt to "write memory with a guest physical
-address," but per the SDM, it is not an operation that is eligible for
-sub-page write permissions.
+Yeah, well, that is a common issue with mixing devm and normal resources
+(and workqueue here is that "normal" resource), and we should either:
 
-> +  * SPP permission induced VM exit
-> +    SPP sub-page permission induced violation is reported as EPT violation
-> +    thesefore causes VM exit.
-/thesefore/therefore/
+- not use devm
+- use devm_add_action_or_reset() to work in custom actions that work
+  freeing of non-managed resources into devm flow.
 
-> +
-> +6.SPPT-induced VM exit handling
-> +
-> +  #define EXIT_REASON_SPP                 66
-> +
-> +  static int (*const kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
-> +    ...
-> +    [EXIT_REASON_SPP]                     = handle_spp,
-> +    ...
-> +  };
-> +
-> +  New exit qualification for SPPT-induced vmexits.
-> +
-> +  | Bit   | Contents                                                          |
-> +  | :---- | :---------------------------------------------------------------- |
-> +  | 10:0  | Reserved (0).                                                     |
-> +  | 11    | SPPT VM exit type. Set for SPPT Miss, cleared for SPPT Misconfig. |
-> +  | 12    | NMI unblocking due to IRET                                        |
-> +  | 63:13 | Reserved (0)                                                      |
-> +
-> +  In addition to the exit qualification, guest linear address and guest
-> +  physical address fields will be reported.
-> +
-> +  * SPPT miss and misconfiguration induced VM exit
-> +    Set up SPPT entries correctly.
-> +
-> +  * SPP permission induced VM exit
-> +    This kind of VM exit is left to VMI tool to handle.
-> --
-> 2.17.2
->
+Thanks.
+
+-- 
+Dmitry
