@@ -2,100 +2,111 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B296ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0914ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D935F206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570805088;
-	bh=b0TeRaA2Z1L1IRbscM7IdWaz2G4DgR2SWsjbqEMhuQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wcce+OezaVGZUEw+EP8pm9Pf2O8FryWskBkBOqnGZMwxn4FtxIp2M7NxJsQoaMYbZ
-	 vFD/B+zhoda7dNjjAmm/ert3LbzRar3PH+A/9a39UfYlZ3tY9wO/gZp2GSONgngFwX
-	 5sB4JnmzUVS8748PT+QZ/HTZjI8TqUArttBzz2MQ=
+	by mail.kernel.org (Postfix) with ESMTP id A0C92206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfJKOor (ORCPT
+        id S1728104AbfJKOo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:44:47 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39979 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfJKOor (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:44:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id y39so8161885ota.7;
-        Fri, 11 Oct 2019 07:44:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=phJrdsvrMRbz/mV66eCzb3QAhHr1D1SaioSI8xCNhC8=;
-        b=aBdi3g4gEJu75zGI0cr+jmI38y+U8zShmU8Dyh6SMtJdAu1zDtrJZq6A25cKnAfPFY
-         uc/WX5LQwV9GCOlGxbAsib0DF2sPJ029/O2StwAMXts6Y4wEEbL11AfsLQevV2zEMKI8
-         qw9yy+vYosLBy9SPZByJgfwwJXs/wXzw2w/uFMl6mxUA6FKlS6yWspjD9bpPdKpH8Msy
-         5dsuGWU6QhpjESFh+XG9ehc6p/aoxfPIX1FYghdifb9NEAb3hMfJ6xHhciiKEpZTvNOk
-         UbTKSn1a/BuN43nwX2EIk0vueBZpVy+bKqMEfmMJCZFBeZ6dtx2zFfbvTuQ0KMxf8zSW
-         e20g==
-X-Gm-Message-State: APjAAAWedcmz2H1gbutwuy7rPcpkOs9iCYjKMi/7RA+H1fmkJYk3yRsK
-        2YwMiTKBUPqhUi/OPNlNvTLiO7k=
-X-Google-Smtp-Source: APXvYqxkYBd0e9PRpOsG2+jeAtb9kPih7R7dN+N+CZabl/97Cin9YxLSpFF7SMhUpOReyysHSoilmQ==
-X-Received: by 2002:a05:6830:11cc:: with SMTP id v12mr12320371otq.362.1570805086355;
-        Fri, 11 Oct 2019 07:44:46 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y30sm2787225oix.36.2019.10.11.07.44.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 07:44:45 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 09:44:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     peda@axentia.se, leoyang.li@nxp.com, mark.rutland@arm.com,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [v2,2/2] dt-bindings: i2c-mux-pca954x: Add optional property
- i2c-mux-never-disable
-Message-ID: <20191011144445.GA2340@bogus>
-References: <20190930032503.44425-1-biwen.li@nxp.com>
- <20190930032503.44425-2-biwen.li@nxp.com>
+        Fri, 11 Oct 2019 10:44:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:34594 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726671AbfJKOo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:44:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9716142F;
+        Fri, 11 Oct 2019 07:44:56 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E268F3F68E;
+        Fri, 11 Oct 2019 07:44:53 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 15:44:51 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
+Subject: Re: [PATCH v2 12/12] KVM: arm64: BTI: Reset BTYPE when skipping
+ emulated instructions
+Message-ID: <20191011144451.GI27757@arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-13-git-send-email-Dave.Martin@arm.com>
+ <20191011142454.GD33537@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190930032503.44425-2-biwen.li@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011142454.GD33537@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 11:25:03AM +0800, Biwen Li wrote:
-> The patch adds an optional property i2c-mux-never-disable
+On Fri, Oct 11, 2019 at 03:24:55PM +0100, Mark Rutland wrote:
+> On Thu, Oct 10, 2019 at 07:44:40PM +0100, Dave Martin wrote:
+> > Since normal execution of any non-branch instruction resets the
+> > PSTATE BTYPE field to 0, so do the same thing when emulating a
+> > trapped instruction.
+> > 
+> > Branches don't trap directly, so we should never need to assign a
+> > non-zero value to BTYPE here.
+> > 
+> > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> > ---
+> >  arch/arm64/include/asm/kvm_emulate.h | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+> > index d69c1ef..33957a12 100644
+> > --- a/arch/arm64/include/asm/kvm_emulate.h
+> > +++ b/arch/arm64/include/asm/kvm_emulate.h
+> > @@ -452,8 +452,10 @@ static inline void kvm_skip_instr(struct kvm_vcpu *vcpu, bool is_wide_instr)
+> >  {
+> >  	if (vcpu_mode_is_32bit(vcpu))
+> >  		kvm_skip_instr32(vcpu, is_wide_instr);
+> > -	else
+> > +	else {
+> >  		*vcpu_pc(vcpu) += 4;
+> > +		*vcpu_cpsr(vcpu) &= ~(u64)PSR_BTYPE_MASK;
+> > +	}
 > 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v2:
-> 	- update documentation
+> Style nit: both sides of an if-else should match brace-wise. i.e. please
+> add braces to the other side.
+
+Will fix.  Strange, checkpatch didn't catch that, maybe because only one
+arm of the if was patched.
+
+> As with the prior patch, the u64 cast can also go.
 > 
->  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> index 30ac6a60f041..71b73d0fdb62 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> @@ -34,6 +34,7 @@ Optional Properties:
->      - first cell is the pin number
->      - second cell is used to specify flags.
->      See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +  - i2c-mux-never-disable: always forces mux to be enabled.
+> Otherwise, this looks right to me.
 
-Either needs to have a vendor prefix or be documented as a common 
-property.
+For some reason I thought there was a different prevailing style in the
+KVM code, but now I see no evidence of that.
 
-IIRC, we already have a property for mux default state which seems like 
-that would cover this unless you need to leave it in different states.
+Will fix.
 
-Rob
+Thanks for the review.
+
+Cheers
+---Dave
