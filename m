@@ -2,99 +2,212 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B8AC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C061ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8198E2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:54:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N0Q+r2nt"
+	by mail.kernel.org (Postfix) with ESMTP id 4C9592084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570791268;
+	bh=xPQ7vlHTZNAgTojOCCaTp7QNJZYEVPhk/tGoGCXW4uk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=labzSC5lQlT0yBxujFNq1ksE74AKzLsroiyKxOkb4bDps4nAxX7aWB6yWjLQ48ITV
+	 sFMzti4sM4Hf4qBO5PUDdkYxtWd6/OpWTRAW2AqqWItuRy8UzFEtXF0b65aCjXQoa6
+	 PPCuNq9Dm5SVKzybTjJYawOoSnVXMVbacE5CJDWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfJKKyV (ORCPT
+        id S1727664AbfJKKy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:54:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:32868 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbfJKKyV (ORCPT
+        Fri, 11 Oct 2019 06:54:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33102 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727176AbfJKKy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:54:21 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BArksG050928;
-        Fri, 11 Oct 2019 10:54:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=NNDLUAjuzBnN8yLIEy2YUgjVlFr0iYi9yRPHLnMjQQ0=;
- b=N0Q+r2nt8ZMG35ZmbWKg1fTVkkvLEJ3D0QXAADJzffAFQp6A2aNRTVj+6ylr1YotCZDc
- ksR8y0+P9mUoFq5HDGoLeyssgV5i7gzJ9HQ7KQ29u1gbT6B8dapp+kvcvR7houCMUw53
- mfQI59nFfIMWD2UL9LiLIsyLiDoQxkZfk+OYEukn4WFaHwWPD8Iif7cdKBIGwTDbh8ss
- rQ9wLeuvNrcjihYtjIArFEJuAXoQCx955HbLQvdcZtKC8qH9EwIaObUghNaGzT2yFqYH
- fisj+v0kSfpUAjPBU72uEwMYqX3SCI7dQsaCGmYDJP6JQk1oXnEgwogco6G60kouzHUz Jw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vejkv0uj3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Oct 2019 10:54:15 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BArmpu163026;
-        Fri, 11 Oct 2019 10:54:14 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2vhrxg91ka-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Oct 2019 10:54:14 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9BAsDuw030588;
-        Fri, 11 Oct 2019 10:54:13 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 11 Oct 2019 03:54:13 -0700
-Date:   Fri, 11 Oct 2019 13:54:04 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] staging: rtl8723bs: Remove comparisons to NULL in
- conditionals
-Message-ID: <20191011105404.GA4774@kadam>
-References: <cover.1570712632.git.wambui.karugax@gmail.com>
- <f4752d3a49e02193ed7b47a353e18e56d94b5a68.1570712632.git.wambui.karugax@gmail.com>
+        Fri, 11 Oct 2019 06:54:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fJx1GyploDJueI6zRxILnt9V2dKVq76fxDUt12UHdOc=; b=V671/vaKIxzppWHM+32aF2dkb
+        Z1oc3hxcXKoJcbxsUGXA1HVrKtRUhu6KPXC8PEPeBhcWIu+o8WGVf0cDZLP+M7ckJsLv77hegW5o9
+        YxNs8agAuxZp80f9EoMv5r9Qw54OIVuyW+aTZWyrVfJ+a626FvKniqk2lPRy7hjMqZURELr5RfIRM
+        6Ze+C5SYeHBNinGNM2J4mY5Ir6jKnhioMwPg1HFGvrNlsnLDTVPh+v8okcC/Akp6opNlsIFOS6VMD
+        yXvD8wGFBdU/gS8iRyvwCZJ8a+R4Sc5C1z4HcQTpasXVOWuz5JiR+qcl7EVEr9rs9T1E2Oq85ebBQ
+        0VXr/bJeQ==;
+Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIsYx-00037i-9X; Fri, 11 Oct 2019 10:54:23 +0000
+Date:   Fri, 11 Oct 2019 07:54:19 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 12/19] EDAC: Store error type in struct
+ edac_raw_error_desc
+Message-ID: <20191011075412.03458c3e@coco.lan>
+In-Reply-To: <20191010202418.25098-13-rrichter@marvell.com>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+        <20191010202418.25098-13-rrichter@marvell.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4752d3a49e02193ed7b47a353e18e56d94b5a68.1570712632.git.wambui.karugax@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910110104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910110104
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 04:15:29PM +0300, Wambui Karuga wrote:
->  	psetauthparm = rtw_zmalloc(sizeof(struct setauth_parm));
-> -	if (psetauthparm == NULL) {
-> -		kfree(pcmd);
-> +	if (!psetauthparm) {
-> +		kfree((unsigned char *)pcmd);
+Em Thu, 10 Oct 2019 20:25:29 +0000
+Robert Richter <rrichter@marvell.com> escreveu:
 
-This new cast is unnecessary and weird.
+> Store the error type in struct edac_raw_error_desc. This makes the
+> type parameter of edac_raw_mc_handle_error() obsolete.
 
->  		res = _FAIL;
->  		goto exit;
+I don't see much gain on this change, but whatever works best for
+ghes.
+
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/edac_mc.c   |  8 ++++----
+>  drivers/edac/edac_mc.h   |  4 +---
+>  drivers/edac/ghes_edac.c | 13 ++++++-------
+>  include/linux/edac.h     |  1 +
+>  4 files changed, 12 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index cdfb383f7a35..ca206854b8ee 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -1040,15 +1040,14 @@ static void edac_ue_error(struct mem_ctl_info *mci,
+>  	edac_inc_ue_error(mci, dimm, error_count);
+>  }
+>  
+> -void edac_raw_mc_handle_error(const enum hw_event_mc_err_type type,
+> -			      struct mem_ctl_info *mci,
+> +void edac_raw_mc_handle_error(struct mem_ctl_info *mci,
+>  			      struct dimm_info *dimm,
+>  			      struct edac_raw_error_desc *e)
+>  {
+>  	char detail[80];
+>  
+>  	/* Memory type dependent details about the error */
+> -	if (type == HW_EVENT_ERR_CORRECTED) {
+> +	if (e->type == HW_EVENT_ERR_CORRECTED) {
+>  		snprintf(detail, sizeof(detail),
+>  			"page:0x%lx offset:0x%lx grain:%ld syndrome:0x%lx",
+>  			e->page_frame_number, e->offset_in_page,
+> @@ -1095,6 +1094,7 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  	/* Fills the error report buffer */
+>  	memset(e, 0, sizeof (*e));
+>  	e->error_count = error_count;
+> +	e->type = type;
+>  	e->top_layer = top_layer;
+>  	e->mid_layer = mid_layer;
+>  	e->low_layer = low_layer;
+> @@ -1243,6 +1243,6 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  
+>  	dimm = edac_get_dimm(mci, top_layer, mid_layer, low_layer);
+>  
+> -	edac_raw_mc_handle_error(type, mci, dimm, e);
+> +	edac_raw_mc_handle_error(mci, dimm, e);
+>  }
+>  EXPORT_SYMBOL_GPL(edac_mc_handle_error);
+> diff --git a/drivers/edac/edac_mc.h b/drivers/edac/edac_mc.h
+> index 2c3e2fbcedc4..a8f1b5b5e873 100644
+> --- a/drivers/edac/edac_mc.h
+> +++ b/drivers/edac/edac_mc.h
+> @@ -212,7 +212,6 @@ extern int edac_mc_find_csrow_by_page(struct mem_ctl_info *mci,
+>   * edac_raw_mc_handle_error() - Reports a memory event to userspace without
+>   *	doing anything to discover the error location.
+>   *
+> - * @type:		severity of the error (CE/UE/Fatal)
+>   * @mci:		a struct mem_ctl_info pointer
+>   * @dimm:		a struct dimm_info pointer
+>   * @e:			error description
+> @@ -221,8 +220,7 @@ extern int edac_mc_find_csrow_by_page(struct mem_ctl_info *mci,
+>   * only be called directly when the hardware error come directly from BIOS,
+>   * like in the case of APEI GHES driver.
+>   */
+> -void edac_raw_mc_handle_error(const enum hw_event_mc_err_type type,
+> -			      struct mem_ctl_info *mci,
+> +void edac_raw_mc_handle_error(struct mem_ctl_info *mci,
+>  			      struct dimm_info *dimm,
+>  			      struct edac_raw_error_desc *e);
+>  
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index 4f5721cf4380..1db1c012bed9 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -194,7 +194,6 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
+>  void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  {
+>  	struct dimm_info *dimm;
+> -	enum hw_event_mc_err_type type;
+>  	struct edac_raw_error_desc *e;
+>  	struct mem_ctl_info *mci;
+>  	struct ghes_edac_pvt *pvt = ghes_pvt;
+> @@ -232,17 +231,17 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  
+>  	switch (sev) {
+>  	case GHES_SEV_CORRECTED:
+> -		type = HW_EVENT_ERR_CORRECTED;
+> +		e->type = HW_EVENT_ERR_CORRECTED;
+>  		break;
+>  	case GHES_SEV_RECOVERABLE:
+> -		type = HW_EVENT_ERR_UNCORRECTED;
+> +		e->type = HW_EVENT_ERR_UNCORRECTED;
+>  		break;
+>  	case GHES_SEV_PANIC:
+> -		type = HW_EVENT_ERR_FATAL;
+> +		e->type = HW_EVENT_ERR_FATAL;
+>  		break;
+>  	default:
+>  	case GHES_SEV_NO:
+> -		type = HW_EVENT_ERR_INFO;
+> +		e->type = HW_EVENT_ERR_INFO;
 >  	}
+>  
+>  	edac_dbg(1, "error validation_bits: 0x%08llx\n",
+> @@ -433,14 +432,14 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  	grain_bits = fls_long(e->grain);
+>  	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
+>  		 "APEI location: %s %s", e->location, e->other_detail);
+> -	trace_mc_event(type, e->msg, e->label, e->error_count,
+> +	trace_mc_event(e->type, e->msg, e->label, e->error_count,
+>  		       mci->mc_idx, e->top_layer, e->mid_layer, e->low_layer,
+>  		       (e->page_frame_number << PAGE_SHIFT) | e->offset_in_page,
+>  		       grain_bits, e->syndrome, pvt->detail_location);
+>  
+>  	dimm = edac_get_dimm_by_index(mci, e->top_layer);
+>  
+> -	edac_raw_mc_handle_error(type, mci, dimm, e);
+> +	edac_raw_mc_handle_error(mci, dimm, e);
+>  
+>  	spin_unlock_irqrestore(&ghes_lock, flags);
+>  }
+> diff --git a/include/linux/edac.h b/include/linux/edac.h
+> index 4d9673954856..587c53b87fdf 100644
+> --- a/include/linux/edac.h
+> +++ b/include/linux/edac.h
+> @@ -463,6 +463,7 @@ struct edac_raw_error_desc {
+>  	long grain;
+>  
+>  	u16 error_count;
+> +	enum hw_event_mc_err_type type;
+>  	int top_layer;
+>  	int mid_layer;
+>  	int low_layer;
 
-regards,
-dan carpenter
+
+
+Thanks,
+Mauro
