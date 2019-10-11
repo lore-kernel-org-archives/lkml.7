@@ -2,100 +2,66 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC90C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F06ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1332214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570811399;
-	bh=fnuGUPlEYnveHJBCoFm6BNlgI5r2U57EfCBDivju0X0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sSKV2zCMM71UvpduX7wRJ77vup4wYb8Lla1QXQxo1N9oqUqU9p+IWQnw9NRfBbfFH
-	 dkOieya1UcTP4qpuds+P67Fxta7sxR4DNxblt+N67dkxs0QoyNrZsN0ppTprAv8yNC
-	 fB54PGxVxajdJTz0iHVncyIRpbylrs/CC4A9SuB0=
+	by mail.kernel.org (Postfix) with ESMTP id 36F9F2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbfJKQ36 (ORCPT
+        id S1728314AbfJKQg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 12:29:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39118 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 12:36:27 -0400
+Received: from namei.org ([65.99.196.166]:53642 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbfJKQ36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 12:29:58 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B46B206A1;
-        Fri, 11 Oct 2019 16:29:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570811397;
-        bh=fnuGUPlEYnveHJBCoFm6BNlgI5r2U57EfCBDivju0X0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OomCe3cnkNKTi9sl0Vi5Ay7Kjv8WBCQ1b6XD1IwK/cm0Z+poV3hmYgh7RkrBqwCoM
-         pjntqLBD5FtPdil6R7y2/5GQGrCBGjJDN/rnwS1X4L1SuTDzWaZMxCS07pnlNkO1A9
-         MsvzOVh7vA25gXMtLUEaPzD9qiGr3zcnOdprfiRU=
-Date:   Fri, 11 Oct 2019 17:29:51 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
-        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
-        cui.zhang@mediatek.com, chao.hao@mediatek.com
-Subject: Re: [PATCH v2 3/4] iommu/mediatek: Use writel for TLB range
- invalidation
-Message-ID: <20191011162950.yg4o77mlaicacne5@willie-the-truck>
-References: <1570627143-29441-1-git-send-email-yong.wu@mediatek.com>
- <1570627143-29441-3-git-send-email-yong.wu@mediatek.com>
+        id S1726331AbfJKQg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 12:36:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x9BGZPR8008627;
+        Fri, 11 Oct 2019 16:35:25 GMT
+Date:   Sat, 12 Oct 2019 03:35:25 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>, rostedt@goodmis.org,
+        primiano@google.com, rsavitski@google.com, jeffv@google.com,
+        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH] perf_event: Add support for LSM and SELinux checks
+In-Reply-To: <20191011160330.199604-1-joel@joelfernandes.org>
+Message-ID: <alpine.LRH.2.21.1910120334280.6863@namei.org>
+References: <20191011160330.199604-1-joel@joelfernandes.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570627143-29441-3-git-send-email-yong.wu@mediatek.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 09:19:02PM +0800, Yong Wu wrote:
-> Use writel for the register F_MMU_INV_RANGE which is for triggering the
-> HW work. We expect all the setting(iova_start/iova_end...) have already
-> been finished before F_MMU_INV_RANGE.
-> 
-> Signed-off-by: Anan.Sun <anan.sun@mediatek.com>
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
-> This is a improvement rather than fixing a issue.
-> ---
->  drivers/iommu/mtk_iommu.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 24a13a6..607f92c 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -187,8 +187,7 @@ static void mtk_iommu_tlb_add_flush(unsigned long iova, size_t size,
->  		writel_relaxed(iova, data->base + REG_MMU_INVLD_START_A);
->  		writel_relaxed(iova + size - 1,
->  			       data->base + REG_MMU_INVLD_END_A);
-> -		writel_relaxed(F_MMU_INV_RANGE,
-> -			       data->base + REG_MMU_INVALIDATE);
-> +		writel(F_MMU_INV_RANGE, data->base + REG_MMU_INVALIDATE);
+On Fri, 11 Oct 2019, Joel Fernandes (Google) wrote:
 
-I don't understand this change.
+> This patch adds LSM and SELinux access checking which will be used in
+> Android to access perf_event_open(2) for the purposes of attaching BPF
+> programs to tracepoints, perf profiling and other operations from
+> userspace. These operations are intended for production systems.
 
-Why is it an "improvement" and which accesses are you ordering with the
-writel?
 
-Will
+Acked-by: James Morris <jmorris@namei.org>
+
+-- 
+James Morris
+<jmorris@namei.org>
+
