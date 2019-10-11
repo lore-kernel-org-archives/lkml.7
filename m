@@ -2,38 +2,77 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3162C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3B3C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45CF20640
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847EB2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570816011;
+	bh=tKBJouuJQWdVXGjj5BuSrhnN6DZuFyxInSsjvCn+x9M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RfxuUDo9rz8Qq2qqcNQGEFhpZ5v+2gRYfAj/UnEMC9wRtn3cUDMMXVmAKrdIxVCeN
+	 ocraF1YxPR2NIycw0rGMROJVnfHQhzXsrc1gcZTYqCt3vdPxLfPwr6W+BvF2WND1lq
+	 c/tirO8HoZLlLMKkVTTHIbTX0bp/uPtj5toA6KTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfJKRnK (ORCPT
+        id S1728650AbfJKRqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:43:10 -0400
-Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:47098 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728416AbfJKRnK (ORCPT
+        Fri, 11 Oct 2019 13:46:50 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35881 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbfJKRqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:43:10 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id A41B7181D341A;
-        Fri, 11 Oct 2019 17:43:08 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cause95_7231ee8247c49
-X-Filterd-Recvd-Size: 9632
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 11 Oct 2019 17:43:04 +0000 (UTC)
-Message-ID: <9fe980f7e28242c2835ffae34914c5f68e8268a7.camel@perches.com>
+        Fri, 11 Oct 2019 13:46:50 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so10662203ljj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 10:46:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LgOWyC4KuQvhExdqsSsy/AfsFX2Dxg7AbZdsgfAmHWQ=;
+        b=Q2UkfBZSP0S9e/7OB3SF+XNURSwl+NMXpb0vpdXJQjsdW/6qutIw5uECnuvQSRhIfS
+         ceZtY1Swy2zbGPAzUqBps7PsUDeS/0EuPPnU0Fy92rdos/7lz0dqKIiPx08pFFvzsTUD
+         k3cf62WY2m182EbDTriMmjsXhjGoXoDCawAIU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LgOWyC4KuQvhExdqsSsy/AfsFX2Dxg7AbZdsgfAmHWQ=;
+        b=lKPlj9u3OWWXDIhK6QGcDrs3UL0fHs3FRPvNgRm7r00yz8gONRULe74XEbLIVN0bOl
+         rO2hjnWTxpiQ+9UIgfR4vMH6kztzYnbv1fL416Cl0TwQz8KYNpDPu9oL3oXrQLY93NXI
+         ly7E5mswSLe7Kv22qg2dwXptdsyu7Rs4Eqkh/fi+guAnFLxNF9mv4j5pqMrDiTVDpWeZ
+         5+TmhDvYz/bXbIBpTYPdqzFuY4z/r0x4logjqHF2zU8x1un3tQDzTzTo0zBjttg/dyAs
+         4q0otByQiYRAsazrWI+AIH0h/ZCI2g6/NbYy6iIdvRV/Ba7JYcPTFvhxC7as5RyUO+iJ
+         cmDA==
+X-Gm-Message-State: APjAAAV8Fdg4kTzogTGuaXEuTX9VEqS3YpGULYfVXp9SwjJzix22lTk4
+        +3YsjDu9mlqoLL1laF0r5Miagb71t1k=
+X-Google-Smtp-Source: APXvYqwy0gTR/1PXW5KtF1L2E4XyvyOw+u0VD5KM39zaDuAfL1Cg2JagfnQXiuAyZeOzJOJCDFtsDQ==
+X-Received: by 2002:a2e:8602:: with SMTP id a2mr10358382lji.20.1570816007711;
+        Fri, 11 Oct 2019 10:46:47 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id 3sm2166897ljs.20.2019.10.11.10.46.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2019 10:46:47 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id f5so10648823ljg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 10:46:47 -0700 (PDT)
+X-Received: by 2002:a2e:6a04:: with SMTP id f4mr9892356ljc.97.1570816006661;
+ Fri, 11 Oct 2019 10:46:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1570292505.git.joe@perches.com> <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
+ <9fe980f7e28242c2835ffae34914c5f68e8268a7.camel@perches.com>
+In-Reply-To: <9fe980f7e28242c2835ffae34914c5f68e8268a7.camel@perches.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 11 Oct 2019 10:46:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi1T1m-su8zK5LeESoz_Pgf1-4hnjr516NiDLNyb4USug@mail.gmail.com>
+Message-ID: <CAHk-=wi1T1m-su8zK5LeESoz_Pgf1-4hnjr516NiDLNyb4USug@mail.gmail.com>
 Subject: Re: [PATCH 0/4] treewide: Add 'fallthrough' pseudo-keyword
-From:   Joe Perches <joe@perches.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+To:     Joe Perches <joe@perches.com>
 Cc:     linux-sctp@vger.kernel.org,
         Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Kees Cook <keescook@chromium.org>,
@@ -48,7 +87,7 @@ Cc:     linux-sctp@vger.kernel.org,
         Jiri Olsa <jolsa@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Shawn Landden <shawn@git.icu>,
-        the arch/x86 maintainers <x86@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
@@ -61,273 +100,19 @@ Cc:     linux-sctp@vger.kernel.org,
         Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
         "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
         Netdev <netdev@vger.kernel.org>
-Date:   Fri, 11 Oct 2019 10:43:03 -0700
-In-Reply-To: <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
-References: <cover.1570292505.git.joe@perches.com>
-         <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-11 at 09:29 -0700, Linus Torvalds wrote:
-> On Sat, Oct 5, 2019 at 9:46 AM Joe Perches <joe@perches.com> wrote:
-> > Add 'fallthrough' pseudo-keyword to enable the removal of comments
-> > like '/* fallthrough */'.
-> 
-> I applied patches 1-3 to my tree just to make it easier for people to
-> start doing this. Maybe some people want to do the conversion on their
-> own subsystem rather than with a global script, but even if not, this
-> looks better as a "prepare for the future" series and I feel that if
-> we're doing the "fallthrough" thing eventually, the sooner we do the
-> prepwork the better.
-> 
-> I'm a tiny bit worried that the actual conversion is just going to
-> cause lots of pain for the stable people, but I'll not worry about it
-> _too_ much. If the stable people decide that it's too painful for them
-> to deal with the comment vs keyword model, they may want to backport
-> these three patches too.
+On Fri, Oct 11, 2019 at 10:43 AM Joe Perches <joe@perches.com> wrote:
+>
+> Shouldn't a conversion script be public somewhere?
 
-Shouldn't a conversion script be public somewhere?
-The old cvt_style script could be reduced to something like the below.
+I feel the ones that might want to do the conversion on their own are
+the ones that don't necessarily trust the script.
 
-From: Joe Perches <joe@perches.com>
-Date: Fri, 11 Oct 2019 10:34:04 -0700
-Subject: [PATCH] scripts:cvt_fallthrough.pl: Add script to convert /* fallthrough */ comments
+But I don't even know if anybody does want to, I just feel it's an option.
 
-Convert /* fallthrough */ style comments to the pseudo-keyword fallthrough;
-to allow clang 10 and higher to work at finding missing fallthroughs too.
-
-Requires a git repository and this overwrites the input sources.
-
-Run with a path like:
-
-    ./scripts/cvt_fallthrough.pl block
-
-and all files in the path will be converted or a specific file like:
-
-   ./scripts/cvt_fallthrough.pl drivers/net/wireless/zydas/zd1201.c
-
-Signed-off-by: Joe Perches <joe@perches.com>
----
- scripts/cvt_fallthrough.pl | 201 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 201 insertions(+)
- create mode 100755 scripts/cvt_fallthrough.pl
-
-diff --git a/scripts/cvt_fallthrough.pl b/scripts/cvt_fallthrough.pl
-new file mode 100755
-index 000000000000..013379464f86
---- /dev/null
-+++ b/scripts/cvt_fallthrough.pl
-@@ -0,0 +1,201 @@
-+#!/usr/bin/perl -w
-+
-+# script to modify /* fallthrough */ style comments to fallthrough;
-+# use: perl cvt_fallthrough.pl <paths|files>
-+# e.g.: perl cvtfallthrough.pl drivers/net/ethernet/intel
-+
-+use strict;
-+
-+my $P = $0;
-+my $modified = 0;
-+my $quiet = 0;
-+
-+sub expand_tabs {
-+    my ($str) = @_;
-+
-+    my $res = '';
-+    my $n = 0;
-+    for my $c (split(//, $str)) {
-+	if ($c eq "\t") {
-+	    $res .= ' ';
-+	    $n++;
-+	    for (; ($n % 8) != 0; $n++) {
-+		$res .= ' ';
-+	    }
-+	    next;
-+	}
-+	$res .= $c;
-+	$n++;
-+    }
-+
-+    return $res;
-+}
-+
-+my $args = join(" ", @ARGV);
-+my $output = `git ls-files -- $args`;
-+my @files = split("\n", $output);
-+
-+foreach my $file (@files) {
-+    my $f;
-+    my $cvt = 0;
-+    my $text;
-+
-+# read the file
-+
-+    next if ((-d $file));
-+
-+    open($f, '<', $file)
-+	or die "$P: Can't open $file for read\n";
-+    $text = do { local($/) ; <$f> };
-+    close($f);
-+
-+    next if ($text eq "");
-+
-+    # for style:
-+
-+    # /* <fallthrough comment> */
-+    # case FOO:
-+
-+    # while (comment has fallthrough and next non-blank, non-continuation line is (case or default:)) {
-+    #   remove newline, whitespace before, fallthrough comment and whitespace after
-+    #   insert newline, adjusted spacing and fallthrough; newline
-+    # }
-+
-+    my $count = 0;
-+    my @fallthroughs = (
-+	'fallthrough',
-+	'@fallthrough@',
-+	'lint -fallthrough[ \t]*',
-+	'[ \t.!]*(?:ELSE,? |INTENTIONAL(?:LY)? )?',
-+	'intentional(?:ly)?[ \t]*fall(?:(?:s | |-)[Tt]|t)hr(?:ough|u|ew)',
-+	'(?:else,?\s*)?FALL(?:S | |-)?THR(?:OUGH|U|EW)[ \t.!]*(?:-[^\n\r]*)?',
-+	'[ \t.!]*(?:Else,? |Intentional(?:ly)? )?',
-+	'Fall(?:(?:s | |-)[Tt]|t)hr(?:ough|u|ew)[ \t.!]*(?:-[^\n\r]*)?',
-+	'[ \t.!]*(?:[Ee]lse,? |[Ii]ntentional(?:ly)? )?',
-+	'fall(?:s | |-)?thr(?:ough|u|ew)[ \t.!]*(?:-[^\n\r]*)?',
-+    );
-+    do {
-+	$count = 0;
-+	pos($text) = 0;
-+	foreach my $ft (@fallthroughs) {
-+	    my $regex = '(((?:[ \t]*\n)*[ \t]*)(/\*\s*(?!\*/)?\b' . "$ft" . '\s*(?!\*/)?\*/(?:[ \t]*\n)*)([ \t]*))(?:case\s+|default\s*:)';
-+
-+	    while ($text =~ m{${regex}}i) {
-+		my $all_but_case = $1;
-+		my $space_before = $2;
-+		my $fallthrough = $3;
-+		my $space_after = $4;
-+		my $pos_before = $-[1];
-+		my $pos_after = $+[3];
-+
-+		# try to maintain any additional comment on the same line
-+		my $comment = "";
-+		if ($regex =~ /\\r/) {
-+		    $comment = $fallthrough;
-+		    $comment =~ s@^/\*\s*@@;
-+		    $comment =~ s@\s*\*/\s*$@@;
-+		    $comment =~ s@^\s*(?:intentional(?:ly)?\s+|else,?\s*)?fall[s\-]*\s*thr(?:ough|u|ew)[\s\.\-]*@@i;
-+		    $comment =~ s@\s+$@@;
-+		    $comment =~ s@\.*$@@;
-+		    $comment = "\t/* $comment */" if ($comment ne "");
-+		}
-+		substr($text, $pos_before, $pos_after - $pos_before, "");
-+		substr($text, $pos_before, 0, "\n${space_after}\tfallthrough;${comment}\n");
-+		pos($text) = $pos_before;
-+		$count++;
-+	    }
-+	}
-+	$cvt += $count;
-+        } while ($count > 0);
-+
-+    # Reset the fallthroughs types to a single regex
-+
-+    @fallthroughs = (
-+	'fall(?:(?:s | |-)[Tt]|t)hr(?:ough|u|ew)'
-+    );
-+
-+    # Convert the // <fallthrough> style comments followed by case/default:
-+
-+    do {
-+	$count = 0;
-+	pos($text) = 0;
-+	foreach my $ft (@fallthroughs) {
-+	    my $regex = '(((?:[ \t]*\n)*[ \t]*)(//[ \t]*(?!\n)?\b' . "$ft" . '[ \t]*(?!\n)?\n(?:[ \t]*\n)*)([ \t]*))(?:case\s+|default\s*:)';
-+	    while ($text =~ m{${regex}}i) {
-+		my $all_but_case = $1;
-+		my $space_before = $2;
-+		my $fallthrough = $3;
-+		my $space_after = $4;
-+		my $pos_before = $-[1];
-+		my $pos_after = $+[3];
-+
-+		substr($text, $pos_before, $pos_after - $pos_before, "");
-+		substr($text, $pos_before, 0, "\n${space_after}\tfallthrough;\n");
-+		pos($text) = $pos_before;
-+		$count++;
-+	    }
-+	}
-+	$cvt += $count;
-+    } while ($count > 0);
-+
-+    # Convert /* fallthrough */ comment macro lines with trailing \
-+
-+    do {
-+	$count = 0;
-+	pos($text) = 0;
-+	foreach my $ft (@fallthroughs) {
-+	    my $regex = '((?:[ \t]*\\\\\n)*([ \t]*)(/\*[ \t]*\b' . "$ft" . '[ \t]*\*/)([ \t]*))\\\\\n*([ \t]*(?:case\s+|default\s*:))';
-+
-+	    while ($text =~ m{${regex}}i) {
-+		my $all_but_case = $1;
-+		my $space_before = $2;
-+		my $fallthrough = $3;
-+		my $space_after = $4;
-+		my $pos_before = $-[2];
-+		my $pos_after = $+[4];
-+
-+		my $oldline = "${space_before}${fallthrough}${space_after}";
-+		my $len = length(expand_tabs($oldline));
-+
-+		my $newline = "${space_before}fallthrough;${space_after}";
-+		$newline .= "\t" while (length(expand_tabs($newline)) < $len);
-+
-+		substr($text, $pos_before, $pos_after - $pos_before, "");
-+		substr($text, $pos_before, 0, "$newline");
-+		pos($text) = $pos_before;
-+		$count++;
-+	    }
-+	}
-+	$cvt += $count;
-+    } while ($count > 0);
-+
-+# write the file if something was changed
-+
-+    if ($cvt > 0) {
-+	$modified = 1;
-+
-+	open($f, '>', $file)
-+	    or die "$P: Can't open $file for write\n";
-+	print $f $text;
-+	close($f);
-+
-+	print "fallthroughs: $cvt	$file\n" if (!$quiet);
-+    }
-+}
-+
-+if ($modified && !$quiet) {
-+    print <<EOT;
-+
-+Warning: these changes may not be correct.
-+
-+These changes should be carefully reviewed manually and not combined with
-+any functional changes.
-+
-+Compile, build and test your changes.
-+
-+You should understand and be responsible for all object changes.
-+
-+Make sure you read Documentation/SubmittingPatches before sending
-+any changes to reviewers, maintainers or mailing lists.
-+EOT
-+}
--- 
-2.15.0
-
-
-
-
+              Linus
