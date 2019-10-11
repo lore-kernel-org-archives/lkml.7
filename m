@@ -2,113 +2,111 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FC2ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC102ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682B1206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5592206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:23:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkzDtjQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfJKOWh (ORCPT
+        id S1728648AbfJKOXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:22:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38664 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728348AbfJKOWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:22:37 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 44A088E582
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 14:22:37 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id z12so9609112qtn.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 07:22:37 -0700 (PDT)
+        Fri, 11 Oct 2019 10:23:03 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32958 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbfJKOXC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:23:02 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b9so12189886wrs.0;
+        Fri, 11 Oct 2019 07:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oSsh302Pu+csZ7xgzPuhonQMY9+lrqOfCEFZW1KhfS8=;
+        b=YkzDtjQyegcxDIXVHrLOrRGodGbYbIvrGtfLqnmauHdKO56uN7us77KHHdU8aytgqJ
+         bNnoUbnDiVDjtal5GKhtjsUiE1p0DuWzZdCRAskMhBwUkKvV7K7L5mqKaAWGE9PlIncZ
+         pM12m4DMw88Xtjw5x8kjeK4fZ0OeIKm/tHRe9ALTTJ9Wmb7jxzdInWdHRJeKZwaSr0X8
+         EKFmb3HQXXo/IS9d6AWLmk4SA9XRKq1xfu8rn5KoPNmKIfZkhOluEPIRKvQOnWFifUU/
+         YaD5qNy/bBiyM+UTdsRO07Frao7G4LRCq5u1UKU7OynmKYBJXPjOvtQS6G8qls/iOM6A
+         PRAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3/69IjnpthyAsYWKUyauhiINSOqY8C5ksx6fR2DlmR8=;
-        b=gh84plDS5SG17U9P3KnDGJyJbdzc1GFQExtDS2gmTr2CaaoTf2IVr8DiAhL5KD+TNo
-         mbVnh2+GxZb4kUR+2zfvBwirKQj8FDZhDwUXKp4jWwCGRnoPFQSYFzZI8ko+SE7fojZn
-         yf8sBTIm3bzOdg/5raQqAUZn0jN2WWjjVgCOqEFGD4OuUaPMjioOlBV7+MTVTYMJD9ne
-         vg2OW88hKEPy64c+amBG2dTTyCDP2cNabP/Ywqa6T3ihnNbw2QBjozyS6H3aiz55erdJ
-         rQ0tHyzHcErwMco2YrvUfxSduz+OnzLgmOgOpXJtSydoul17JMly45HVPDL42v0moY0j
-         vAuQ==
-X-Gm-Message-State: APjAAAUCc2l7+cm7maQT0Gk8NEy43OsFWFwitrgIZoDp1F6jgi2Bl5Ge
-        GprprGiVblEp7pt+izcwDD+NEOpHq0Rh2f9JpXVgDZRqBbxmAAy+R6coagZk73r+/01u1ZR1Jl1
-        fJTOy8qXUoZyud3xA14FliX3+
-X-Received: by 2002:ac8:6c4:: with SMTP id j4mr17178007qth.235.1570803756536;
-        Fri, 11 Oct 2019 07:22:36 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyypmt8JVfwhZN2RwBVS/3yah5jYZ2+VyE0up3EqHheFxjCMjltd5zsKzuYpHN6h2SBGBQ1eg==
-X-Received: by 2002:ac8:6c4:: with SMTP id j4mr17177991qth.235.1570803756356;
-        Fri, 11 Oct 2019 07:22:36 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
-        by smtp.gmail.com with ESMTPSA id q47sm6531138qtq.95.2019.10.11.07.22.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 07:22:35 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 10:22:30 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        Jorgen Hansen <jhansen@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 1/2] vsock: add half-closed socket details in the
- implementation notes
-Message-ID: <20191011101936-mutt-send-email-mst@kernel.org>
-References: <20191011130758.22134-1-sgarzare@redhat.com>
- <20191011130758.22134-2-sgarzare@redhat.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oSsh302Pu+csZ7xgzPuhonQMY9+lrqOfCEFZW1KhfS8=;
+        b=CJQ8zd52nAGVHkrhK0kFc++YO4VVfgnYijr381PtcbSOXa+npKwoGWtcjaghBnMbnP
+         Nd8qceeKrfK/gKfT0bWKFdqkQjzdog61pC4+kgXA6OLEt4n83si2aZsxUb0n82BMi8wk
+         EH9gpJP7JSsk5GuLxH3et75Aiq03tCpURHHnJAJtO4KLLGl8c0chDUgNx5QlOlXad2YQ
+         Qxc6T1qz+STrEGOiT0CZ57DgMzi0tLHX1ZUyOTxDpc/C/us002THDMCd2a4C7HvHsJ3y
+         Nm8CHTTS6NuTEo/Kir9InobAa9PkYnFYcWCdlTO1hlF8qRlWfHNPVhQX+Hjhcrut/U4h
+         ly6g==
+X-Gm-Message-State: APjAAAV0c2upUspatvEunckH8+TwtWzSttBdvptRYw3QjZABi/PGfVMj
+        cRS0LkZR83J1fX8wZ/9+IJM=
+X-Google-Smtp-Source: APXvYqzREndxRjfCDIpm3bXCE+fwFCs9sYSCEmAAfn2l++e3nTkTRa/NBdV+JHK7Vrlaklqk2uYUfA==
+X-Received: by 2002:adf:f744:: with SMTP id z4mr13921632wrp.22.1570803780129;
+        Fri, 11 Oct 2019 07:23:00 -0700 (PDT)
+Received: from gmail.com (net-93-144-2-18.cust.dsl.teletu.it. [93.144.2.18])
+        by smtp.gmail.com with ESMTPSA id v5sm3661396wrb.64.2019.10.11.07.22.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 11 Oct 2019 07:22:59 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 16:22:59 +0200
+From:   Paolo Pisati <p.pisati@gmail.com>
+To:     Loic Poulain <loic.poulain@linaro.org>
+Cc:     Paolo Pisati <p.pisati@gmail.com>,
+        Brian Masney <masneyb@onstation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: msm8996: sdhci-msm: apq8096-db820c sdhci fails to init -
+ "Timeout waiting for hardware interrupt."
+Message-ID: <20191011142259.GA1558@harukaze>
+References: <20191010143232.GA13560@harukaze>
+ <20191011060130.GA12357@onstation.org>
+ <20191011112245.GA10461@harukaze>
+ <CAMZdPi9hTQQcFHMRkj2R9t-P9AiPh01hKGPP5_F8T+MUuckVHA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011130758.22134-2-sgarzare@redhat.com>
+In-Reply-To: <CAMZdPi9hTQQcFHMRkj2R9t-P9AiPh01hKGPP5_F8T+MUuckVHA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 03:07:57PM +0200, Stefano Garzarella wrote:
-> vmci_transport never allowed half-closed socket on the host side.
-> Since we want to have the same behaviour across all transports, we
-> add a section in the "Implementation notes".
+On Fri, Oct 11, 2019 at 02:47:05PM +0200, Loic Poulain wrote:
+> > No dice, same exact problem.
+> >
+> > But the patch is present downstream[1]:
+> >
+> > commit c26727f853308dc4a6645dad09e9565429f8604f
+> > Author: Loic Poulain <loic.poulain@linaro.org>
+> > Date:   Wed Dec 12 17:51:48 2018 +0100
+> >
+> > arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
+> >
+> > In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
+> > VMMC, needs to be increased in order to prevent any voltage drop issues
+> > (due to limited current) happening with some SDCARDS or during specific
+> > operations (e.g. write).
+> >
+> > Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
+> > Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+> >
+> >
+> > so it's probably worth carrying it.
 > 
-> Cc: Jorgen Hansen <jhansen@vmware.com>
-> Cc: Adit Ranadive <aditr@vmware.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  net/vmw_vsock/af_vsock.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> index 2ab43b2bba31..27df57c2024b 100644
-> --- a/net/vmw_vsock/af_vsock.c
-> +++ b/net/vmw_vsock/af_vsock.c
-> @@ -83,6 +83,10 @@
->   *   TCP_ESTABLISHED - connected
->   *   TCP_CLOSING - disconnecting
->   *   TCP_LISTEN - listening
-> + *
-> + * - Half-closed socket is supported only on the guest side. recv() on the host
-> + * side should return EOF when the guest closes a connection, also if some
-> + * data is still in the receive queue.
->   */
->  
->  #include <linux/types.h>
+> I've sent it to LKML, but it has never landed (and I've never followed-up).
 
-That's a great way to lose data in a way that's hard to debug.
-
-VMCI sockets connect to a hypervisor so there's tight control
-of what the hypervisor can do.
-
-But vhost vsocks connect to a fully fledged Linux, so
-you can't assume this is safe. And application authors do not read
-kernel source.
-
-> -- 
-> 2.21.0
+I see - btw, do you have a recent kernel where the mmc works on the db820c?
+-- 
+bye,
+p.
