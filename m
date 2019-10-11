@@ -2,85 +2,123 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7912CECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16FBC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48917206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4DD206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570807878;
-	bh=DR7q9sQ1iVZG+eJychO/m7R6TZ8KyWcdnBQRpXquM+U=;
+	s=default; t=1570807887;
+	bh=+GZKjzPSqPq5FReUOQMqieyR9o2brMD5kkh1mJr31dk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nj9e5G2RKwHaoVA6M+Ev6TXFfZepzt/RCyDdOL/9CQRoOLF8B3ZLp44GJU9Z8v+19
-	 0Ub0KoXH+eFAw+q78sBpNI/gfoglo61lJsmwUFsF8GpYtL4qyEm0KVN4h5sU4L9PFO
-	 NjPBOoXSB0QyhhI9xQ/L/hZEtACZCHnsxjd4g67g=
+	b=wL7xdXDOZXOpRMQ7y+osFFA7/+z9wP51J1/hvKmLgFKzDoNdrEnbtj3QcJAV1xpln
+	 JJjbXb8tTJ7k3gWQ30sklNY21SIqmMjjz7HB02DNbAqsBC1M1eSZnoHeVxBKGkK94h
+	 CY6u+cuWnzWKJ7as8qYUbiq5KEAO5/GCc491UmZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfJKPbR (ORCPT
+        id S1728215AbfJKPb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:31:17 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36653 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfJKPbR (ORCPT
+        Fri, 11 Oct 2019 11:31:26 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34440 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfJKPb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:31:17 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k20so8341927oih.3;
-        Fri, 11 Oct 2019 08:31:16 -0700 (PDT)
+        Fri, 11 Oct 2019 11:31:26 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k7so4641215pll.1;
+        Fri, 11 Oct 2019 08:31:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lZBxUgx9Vl2v4FPUyNZy1vxnwneedhV9vcSMUHf/Uks=;
-        b=I3UWvZAgzFnKeXSccG/lMgWLz6PFCy4nk2tmY7PL6Pbk6/fReg2A5jGa0MfAlB0qWN
-         Z/zSjV3/2n3SY5O7U6GrAHJAuAz0VwoxcAX3Xq4wgQepqnT++FO5wKsuI7e4G5W2dhhh
-         ExjRtrJt2DP80OL9C5L64xPRP2hWQ37eJIT1h+R2nGCsyTKH0l7U+mc/TGU0Xzudvm6m
-         o5OEH5vaUecOrxr3DeuCfxzmY8z2LaN4LzYUvgFxshJ3nHkcWdA6Vf3qHu+UEGrgnIsk
-         W24k/cj2892jneIHHggU+vMy/XMRo/KVOFsg726lZpvtozO65E8FePCIaT5BM1rErIym
-         F0tg==
-X-Gm-Message-State: APjAAAWvYO8ObGFEx3+kQjMbZoj7Et0TJos1ejae1uehsuuv3SDOxGIz
-        ZheFdTuPy718QJeY8Kp2aQ==
-X-Google-Smtp-Source: APXvYqzMBwoebZPW21tZSXxF+eFrIe/IalA9934WUv0jd+BqnLTSpIqETXg/pzIyOuxUT6FoQ8E53g==
-X-Received: by 2002:aca:1a0b:: with SMTP id a11mr13082342oia.138.1570807875938;
-        Fri, 11 Oct 2019 08:31:15 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 34sm2773765otf.55.2019.10.11.08.31.14
+        bh=HUyvQUwH64RrvGUZkbUqcFnsFaCVnpHO+Cg8uCu3Wpc=;
+        b=BVKmAcwHc5cR0AHG6ybPz+hr+ih5oBY6MSfRrVvfFBSzB607C41M7PEnN0qeH/FtoU
+         dVUjXAT7gT16vqce5dCUCZgxq+LW99sOUmuALx/5mZiaLnectj9KlabkHa0Pfm/Z36Sn
+         4SchI2V40nl5gomT8dHdMRxdfgP8KbEtB9+eoNiIItw1kxOSPG7jENc5gmulO+kq+0pZ
+         q77CkhID+VgVj93FS2azHwuU2nwUm2C96Y4lcHxdmohAakFOQIMFmwaGAPvYJd+kKN1i
+         N0zUf20ipVSTmCXAiclERUAGIAPKY04+HlOLGJeW905wEagEE0VtI5LH6UB7ifo6Cd8D
+         2tiw==
+X-Gm-Message-State: APjAAAUKBWjQEojZQ/5g1Ub2vZnVIfdUvA6dtWU7kJH5XVz4+x5DVQvF
+        m38nBTeQdwWoLdQnuNAmbSI=
+X-Google-Smtp-Source: APXvYqy9OjjUaweOwEO2GnINEmaN3ojxMBKdIOmpYig9DdDwwKFJTnr1+UV1rKIX8W5F4zU7HRHCyQ==
+X-Received: by 2002:a17:902:9f81:: with SMTP id g1mr15833508plq.82.1570807884737;
+        Fri, 11 Oct 2019 08:31:24 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id r23sm9651377pgk.46.2019.10.11.08.31.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 08:31:15 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 10:31:14 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     ars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
-        alexandru.Ardelean@analog.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: light: Add binding for ADUX1020
-Message-ID: <20191011153114.GA12208@bogus>
-References: <20191007153917.13611-1-manivannan.sadhasivam@linaro.org>
- <20191007153917.13611-2-manivannan.sadhasivam@linaro.org>
+        Fri, 11 Oct 2019 08:31:22 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 4A51A403EA; Fri, 11 Oct 2019 15:31:22 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 15:31:22 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 4/8] firmware: Add new platform fallback mechanism and
+ firmware_request_platform()
+Message-ID: <20191011153122.GR16384@42.do-not-panic.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-5-hdegoede@redhat.com>
+ <20191004231733.GF22365@dtor-ws>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191007153917.13611-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20191004231733.GF22365@dtor-ws>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  7 Oct 2019 21:09:16 +0530, Manivannan Sadhasivam wrote:
-> Add devicetree binding for Analog Devices ADUX1020 Photometric
-> sensor.
+On Fri, Oct 04, 2019 at 04:17:33PM -0700, Dmitry Torokhov wrote:
+> Hi Hans,
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../bindings/iio/light/adux1020.yaml          | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/adux1020.yaml
+> On Fri, Oct 04, 2019 at 04:50:52PM +0200, Hans de Goede wrote:
+> > In some cases the platform's main firmware (e.g. the UEFI fw) may contain
+> > an embedded copy of device firmware which needs to be (re)loaded into the
+> > peripheral. Normally such firmware would be part of linux-firmware, but in
+> > some cases this is not feasible, for 2 reasons:
+> > 
+> > 1) The firmware is customized for a specific use-case of the chipset / use
+> > with a specific hardware model, so we cannot have a single firmware file
+> > for the chipset. E.g. touchscreen controller firmwares are compiled
+> > specifically for the hardware model they are used with, as they are
+> > calibrated for a specific model digitizer.
+> > 
+> > 2) Despite repeated attempts we have failed to get permission to
+> > redistribute the firmware. This is especially a problem with customized
+> > firmwares, these get created by the chip vendor for a specific ODM and the
+> > copyright may partially belong with the ODM, so the chip vendor cannot
+> > give a blanket permission to distribute these.
+> > 
+> > This commit adds a new platform fallback mechanism to the firmware loader
+> > which will try to lookup a device fw copy embedded in the platform's main
+> > firmware if direct filesystem lookup fails.
+> > 
+> > Drivers which need such embedded fw copies can enable this fallback
+> > mechanism by using the new firmware_request_platform() function.
 > 
+> Why would drivers not want to fetch firmware from system firmware if it
+> is not present on disk? I would say let driver to opt-out of this
+> fallback, but default request_firmware() should do it by default.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+It is the otherw way around, this looks first for the file on disk, and
+if not present it looks for the firmware sprinked on EFI firmware, if
+the driver was expected this fallback option for the device.
+
+  Luis
