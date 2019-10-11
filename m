@@ -2,110 +2,176 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2348C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC6CECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7704A2196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86502084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+Opywxh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViDJbvPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfJKXZ3 (ORCPT
+        id S1727211AbfJKXdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 19:25:29 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40733 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfJKXZ3 (ORCPT
+        Fri, 11 Oct 2019 19:33:13 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45564 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfJKXdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 19:25:29 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d26so6625175pgl.7;
-        Fri, 11 Oct 2019 16:25:29 -0700 (PDT)
+        Fri, 11 Oct 2019 19:33:13 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q64so11319935ljb.12;
+        Fri, 11 Oct 2019 16:33:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HnsIqNSAtnoJLnhTI4m9IprOfs8bbDJOo1Of/k4CbPs=;
-        b=D+Opywxho/fylFT2LWEAP6j5OPPr2dqlzRLD4+iZVbtAOYC2H870MSixJjPbT+a2R7
-         bRKx0sltCM9ClNnea5U/Te9lFaIaDO1ftD43XzpWZweD1itONjyjgPaxOl+Q9QP84GiN
-         mMtIDQJ2FikqJU7gEvRVRN3YW1Jd1JFVWEfYXs/kZfpZK7U1g9U+8biY74HvfB4CuJoG
-         gqj6zj8SklOgvbby165385jGh9EJcePEoQmVlVz0pGkQl4VjmKAV2zB4VC3FIMxAVXQz
-         z3agur2s4+5oqAMglWLeb5ahYTQbaVLU19+p85RVlX8hDK68ZtKokjxKvWpbUdZTorpW
-         faaA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dqUKeMBldu3J8Qo+YczW715+ytHuDyYUPQ729VlTblA=;
+        b=ViDJbvPdEkhfNnL7YgdxFbHlRF2QVLlpO/JJiNEbRZ7w0ZTCXVETifJ+gV4mHGkfe8
+         YpzVYRBxCQgmLI5gvxn6oMrTg7KC4hxnFHU7J4I14cHPknJJtOBqXOJynIwA2/tYFYy9
+         bRVy2B7zgoBTaU7L2y7OZGQ7kzZBiFfSs6FHemOO8CYv/wyWKemKnG2g944xbT/v6hbm
+         1u2ADwbrFGaxnfeUzbFtqaGcHFSkusrESPZHqfmhp/W3Ipzhd5As5Eq1PJVH9UVtfNNg
+         J53SsRbtCKps7omwz/WC+fIqxm7QKzA2foWgdsJGQcr4HO79HmBRSnTYF3ptbT1HkpnE
+         9RuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HnsIqNSAtnoJLnhTI4m9IprOfs8bbDJOo1Of/k4CbPs=;
-        b=ODISBCTuCGp/4+x/cIR4f1zfBDRZUX3odGqH0jQuMauGIm/8Pae3PDK+e4Lvz7x6qS
-         QuX+1dYBnHzfIZ1y3DBg8ZmgG6VCHjn0fz3dwI4NWc7cYj5l4EsFQUcC1/2CrhPQLqzO
-         apuqxgAbADpKZxeJ0BFIKGksV8Pnp9/WCsFjsv7ZQe4S1dDcy3zpTtKxT1DWW5PHNyWc
-         LSQMMNegQTOAzOQFVBEO/oPv/6ijgfzS2gZ8Qg7ohmIFs/ZEWQDIjOfmFfhQwVxueOIm
-         AtJckvAofG8gGxpcApT7AQWzxjT/BQ+59mv0WCJnrzBInUwRWsl2o9QuNgpdqvc0Zr4G
-         VDCA==
-X-Gm-Message-State: APjAAAWzLMARZcVVhRyZNK9gv26JktSiEG1IKcoiZ20DiIbqd0DhZ7O1
-        /RVFig9c55F2JH2nEqwsO+g=
-X-Google-Smtp-Source: APXvYqxebJmOFiwTGaq1+voYZcoiDHsNHOIOYRtB9AW9N6yBuO+rivRsq8DOFpc/+AFF1oYVf9C0Pg==
-X-Received: by 2002:a63:28f:: with SMTP id 137mr3636145pgc.336.1570836328408;
-        Fri, 11 Oct 2019 16:25:28 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id q76sm23268116pfc.86.2019.10.11.16.25.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 16:25:27 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 16:25:26 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v4 00/14] software node: add support for reference
- properties
-Message-ID: <20191011232526.GL229325@dtor-ws>
-References: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
- <20191003003227.GA246700@dtor-ws>
- <CAJZ5v0jF5vafYFSJ=p3ew_tCbj1T1zRznZDoPTL47Pdj9-rrCg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dqUKeMBldu3J8Qo+YczW715+ytHuDyYUPQ729VlTblA=;
+        b=EHN6bCqta81z3+Ntc30OW2CpZe28+RtL8aZF66OLIBln9xMOzXodSujCuhrVxzfRiu
+         Ho+rnvDOK6ASkJIc99ikbyVeuua3olPMkyeAtC57q+lVhvbuvJSPuCQoMw0Umq+qKQ1D
+         Wv0WwGi+TtMY4291a7U8l/BlA7I+AlpsgT/sKSBT8WJiOsM7VqLeyuiz8PTUjtorOTOA
+         o7wBLHMV57vxghKBRCA3VFICvRjJaOltr1pKVnS4SSRrONfpVJH28A4BMUC7FwxR/GXi
+         Yq9EuvJQewvBXfRTmMbaYmQmGHY9j6Cyn1B2xbTs2U48wI450+FgoBfn7wpRv75BLRO4
+         AeDA==
+X-Gm-Message-State: APjAAAURno++QEiPEL60q4+RCmpj8AqmJcgsB2G1kVmGCs3QNNiw7L7c
+        qVRBHHdTGEc/vxdaUtl3i2BS4SJjcnQzz0vHbY0=
+X-Google-Smtp-Source: APXvYqzbQ/bf7zsX3QEfkEEGFHRLIyF+hWVAaoYkoLmlXPMmrpD7t3Q/03q1SqYW+mwE67DGgWaUmj5YR3kUjUBnIJ4=
+X-Received: by 2002:a2e:9a4e:: with SMTP id k14mr10684321ljj.104.1570836790163;
+ Fri, 11 Oct 2019 16:33:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jF5vafYFSJ=p3ew_tCbj1T1zRznZDoPTL47Pdj9-rrCg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
+ <20191007051240.4410-4-andrew.smirnov@gmail.com> <CAO-hwJJ8tp4Rqte-umv9e=S5evR5oJTErsNR0Wk-z8wcbtR0wg@mail.gmail.com>
+ <CAHQ1cqHCYiaEXck3LMGBwYiHVDQcF=XuF=kHJ4f_v1ea6hDR2g@mail.gmail.com> <CAO-hwJ+HZEhn_riNwrODKSySt4aP4RzZq+omYDAF-7q5dLQR1Q@mail.gmail.com>
+In-Reply-To: <CAO-hwJ+HZEhn_riNwrODKSySt4aP4RzZq+omYDAF-7q5dLQR1Q@mail.gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 11 Oct 2019 16:32:58 -0700
+Message-ID: <CAHQ1cqHNca22fAWMnLFBuD-txb7MvdFrY9bY2A9uViq4P5Cikg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] HID: logitech-hidpp: add G920 device validation quirk
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 10:39:24AM +0200, Rafael J. Wysocki wrote:
-> On Thu, Oct 3, 2019 at 2:32 AM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
+On Fri, Oct 11, 2019 at 3:33 PM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> On Fri, Oct 11, 2019 at 9:39 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
 > >
-> > Hi Rafael,
-> >
-> > On Tue, Sep 10, 2019 at 10:12:17PM -0700, Dmitry Torokhov wrote:
-> > > These series implement "references" properties for software nodes as true
-> > > properties, instead of managing them completely separately.
+> > On Fri, Oct 11, 2019 at 7:56 AM Benjamin Tissoires
+> > <benjamin.tissoires@redhat.com> wrote:
 > > >
-> > > The first 10 patches are generic cleanups and consolidation and unification
-> > > of the existing code; patch #11 implements PROPERTY_EMTRY_REF() and friends;
-> > > patch #12 converts the user of references to the property syntax, and patch
-> > > #13 removes the remains of references as entities that are managed
-> > > separately.
+> > > On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+> > > >
+> > > > G920 device only advertises REPORT_ID_HIDPP_LONG and
+> > > > REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
+> > > > for REPORT_ID_HIDPP_SHORT with optional=false will always fail and
+> > > > prevent G920 to be recognized as a valid HID++ device.
+> > > >
+> > > > Modify hidpp_validate_device() to check only REPORT_ID_HIDPP_LONG with
+> > > > optional=false on G920 to fix this.
+> > > >
+> > > > Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to be handled by this module")
+> > > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204191
+> > > > Reported-by: Sam Bazely <sambazley@fastmail.com>
+> > > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > > Cc: Jiri Kosina <jikos@kernel.org>
+> > > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > > Cc: Henrik Rydberg <rydberg@bitmath.org>
+> > > > Cc: Sam Bazely <sambazley@fastmail.com>
+> > > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> > > > Cc: Austin Palmer <austinp@valvesoftware.com>
+> > > > Cc: linux-input@vger.kernel.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > > Cc: stable@vger.kernel.org
+> > > > ---
+> > > >  drivers/hid/hid-logitech-hidpp.c | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > >
+> > > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+> > > > index cadf36d6c6f3..f415bf398e17 100644
+> > > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > > @@ -3511,6 +3511,12 @@ static bool hidpp_validate_report(struct hid_device *hdev, int id,
+> > > >
+> > > >  static bool hidpp_validate_device(struct hid_device *hdev)
+> > > >  {
+> > > > +       struct hidpp_device *hidpp = hid_get_drvdata(hdev);
+> > > > +
+> > > > +       if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920)
+> > > > +               return hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+> > > > +                                            HIDPP_REPORT_SHORT_LENGTH, false);
+> > > > +
+> > >
+> > > with https://patchwork.kernel.org/patch/11184749/ we also have a need
+> > > for such a trick for BLE mice.
+> > >
+> > > I wonder if we should not have a more common way of validating the devices
+> > >
 > >
-> > Now that merge window is over could you please take a look at the
-> > series?
-> 
-> I will.
-> 
-> It would help to resend the whole series with a CC to linux-acpi, though.
+> > What about just checking for:
+> >
+> > hidpp_validate_report(REPORT_ID_HIDPP_SHORT,
+> >                                     HIDPP_REPORT_SHORT_LENGTH, true) ||
+> > hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+> >                                     HIDPP_REPORT_LONG_LENGTH, true);
+> >
+> > and probably dropping the "optional" argument for
+> > hidpp_validate_report()? Original code allows there to be devices
+> > supporting shorts reports only, but it seems that devices that support
+> > only long reports are legitimate too, so maybe the only "invalid"
+> > combination is if both are invalid length or missing?
+>
+> Well, the problem is we also want to detect 2 things:
+> - devices that do not have any of the HID++ collections, and handle
+> them as generic ones (the second mouse/keyboard collection in the
+> gaming mice should still be exported by the driver, or this will kill
+> the macros / rebinding capabilities
+> - malicious devices that pretends to have a HID++ collection but want
+> to trigger a buffer overflow by having a shorter than expected report
+> length
+>
+> Point 2 above should still be fine, but point 1 is why we have the
+> enforcement of the HID++ short report in the first place.
+>
 
-Rebased to next-20191011 and sent to linux-acpi and others.
+It sounds like the result of hidpp_validate_report() can't really be
+contained in a bool. If we modify it to return -EINVAL for bogus
+report length, -ENOTSUPP if report ID is not supported and 0 if
+everything is valid we should be able to capture all valid permutation
+by checking for with
 
-Thanks!
+int id_short = hidpp_validate_report(ID_SHORT);
+int id_long  = hidpp_validate_report(ID_LONG);
 
--- 
-Dmitry
+return (!id_short && !id_long) || (id_short == -ENOTSUPP && !id_long)
+|| (id_long == -ENOTSUPP && !id_short)
+
+no?
+
+Thanks,
+Andrey Smirnov
