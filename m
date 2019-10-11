@@ -6,153 +6,134 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A0AC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967B4ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACC3214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B3A214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfJKFw2 (ORCPT
+        id S1726866AbfJKFzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 01:52:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47957 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727265AbfJKFw1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 01:52:27 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iInqC-0008KX-1r; Fri, 11 Oct 2019 07:51:52 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iInq9-0001Vy-3U; Fri, 11 Oct 2019 07:51:49 +0200
-Date:   Fri, 11 Oct 2019 07:51:49 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
-Message-ID: <20191011055149.4dudr4tk2znpt65u@pengutronix.de>
-References: <20191010202802.1132272-1-arnd@arndb.de>
- <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-11-arnd@arndb.de>
+        Fri, 11 Oct 2019 01:55:36 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:54992 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726116AbfJKFzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 01:55:35 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 4F38FF226CE0EBD03314;
+        Fri, 11 Oct 2019 13:55:32 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 11 Oct 2019 13:55:31 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 11
+ Oct 2019 13:55:31 +0800
+Subject: Re: [RFC PATCH net] net: phy: Fix "link partner" information
+ disappear issue
+To:     Heiner Kallweit <hkallweit1@gmail.com>, <davem@davemloft.net>,
+        <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
+References: <1570699808-55313-1-git-send-email-liuyonglong@huawei.com>
+ <ee969d27-debe-9bc4-92f2-fe5b04c36a39@gmail.com>
+From:   Yonglong Liu <liuyonglong@huawei.com>
+Message-ID: <670bd6ac-54ee-ecfa-c108-fcf48a3a7dc8@huawei.com>
+Date:   Fri, 11 Oct 2019 13:55:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191010203043.1241612-11-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <ee969d27-debe-9bc4-92f2-fe5b04c36a39@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
-> These can be build completely independently, so split
-> the two Kconfig symbols.
+
+
+On 2019/10/11 3:17, Heiner Kallweit wrote:
+> On 10.10.2019 11:30, Yonglong Liu wrote:
+>> Some drivers just call phy_ethtool_ksettings_set() to set the
+>> links, for those phy drivers that use genphy_read_status(), if
+>> autoneg is on, and the link is up, than execute "ethtool -s
+>> ethx autoneg on" will cause "link partner" information disappear.
+>>
+>> The call trace is phy_ethtool_ksettings_set()->phy_start_aneg()
+>> ->linkmode_zero(phydev->lp_advertising)->genphy_read_status(),
+>> the link didn't change, so genphy_read_status() just return, and
+>> phydev->lp_advertising is zero now.
+>>
+> I think that clearing link partner advertising info in
+> phy_start_aneg() is questionable. If advertising doesn't change
+> then phy_config_aneg() basically is a no-op. Instead we may have
+> to clear the link partner advertising info in genphy_read_lpa()
+> if aneg is disabled or aneg isn't completed (basically the same
+> as in genphy_c45_read_lpa()). Something like:
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-I'd mention the two symbols' names you're working on in the commit log.
-I guess it's about PLAT_SAMSUNG and ARCH_S5PV210. And I wouldn't call it
-"split" which IMHO suggests there was only one symbol before.
-
-Maybe:
-
-	Don't imply PLAT_SAMSUNG if ARCH_S5PV210 is enabled
-
-would be a better subject line?
-
-> ---
->  arch/arm/Kconfig.debug        | 6 +++---
->  arch/arm/Makefile             | 1 -
->  arch/arm/plat-samsung/Kconfig | 2 +-
->  drivers/mmc/host/Kconfig      | 2 +-
->  drivers/pwm/Kconfig           | 2 +-
->  drivers/spi/Kconfig           | 2 +-
->  drivers/tty/serial/Kconfig    | 2 +-
->  sound/soc/samsung/Kconfig     | 2 +-
->  8 files changed, 9 insertions(+), 10 deletions(-)
+> if (!phydev->autoneg_complete) { /* also covers case that aneg is disabled */
+> 	linkmode_zero(phydev->lp_advertising);
+> } else if (phydev->autoneg == AUTONEG_ENABLE) {
+> 	...
+> }
 > 
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 9c4f2d6deb06..4c4e97ae4fcb 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -998,7 +998,7 @@ choice
->  		  via SCIFA4 on Renesas SH-Mobile AG5 (SH73A0).
->  
->  	config DEBUG_S3C_UART0
-> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-> @@ -1010,7 +1010,7 @@ choice
->  		  by the boot-loader before use.
->  
->  	config DEBUG_S3C_UART1
-> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-> @@ -1022,7 +1022,7 @@ choice
->  		  by the boot-loader before use.
->  
->  	config DEBUG_S3C_UART2
-> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index f492d7c338fe..a1bc15cda751 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -235,7 +235,6 @@ machine-$(CONFIG_PLAT_SPEAR)		+= spear
->  # by CONFIG_* macro name.
->  plat-$(CONFIG_ARCH_OMAP)	+= omap
->  plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
-> -plat-$(CONFIG_ARCH_S5PV210)	+= samsung
 
-Would it make more sense to make this
+If clear the link partner advertising info in genphy_read_lpa() and
+genphy_c45_read_lpa(), for the drivers that use genphy_read_status()
+is ok, but for those drivers that use there own read_status() may
+have problem, like aqr_read_status(), it will update lp_advertising
+first, and than call genphy_c45_read_status(), so will cause
+lp_advertising lost.
 
-	plat-$(PLAT_SAMSUNG) += samsung
+Another question, please see genphy_c45_read_status(), if clear the
+link partner advertising info in genphy_c45_read_lpa(), if autoneg is
+off, phydev->lp_advertising will not clear.
 
-(in a separate patch)? Hmm, it seems there is no plat-y for
-PLAT_S3C24XX=y builds. Is this intended? If yes, the directory name
-containing "samsung" suggests something that seems untrue.
+>> This patch call genphy_read_lpa() before the link state judgement
+>> to fix this problem.
+>>
+>> Fixes: 88d6272acaaa ("net: phy: avoid unneeded MDIO reads in genphy_read_status")
+>> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+>> ---
+>>  drivers/net/phy/phy_device.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+>> index 9d2bbb1..ef3073c 100644
+>> --- a/drivers/net/phy/phy_device.c
+>> +++ b/drivers/net/phy/phy_device.c
+>> @@ -1839,6 +1839,10 @@ int genphy_read_status(struct phy_device *phydev)
+>>  	if (err)
+>>  		return err;
+>>  
+>> +	err = genphy_read_lpa(phydev);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>>  	/* why bother the PHY if nothing can have changed */
+>>  	if (phydev->autoneg == AUTONEG_ENABLE && old_link && phydev->link)
+>>  		return 0;
+>> @@ -1848,10 +1852,6 @@ int genphy_read_status(struct phy_device *phydev)
+>>  	phydev->pause = 0;
+>>  	phydev->asym_pause = 0;
+>>  
+>> -	err = genphy_read_lpa(phydev);
+>> -	if (err < 0)
+>> -		return err;
+>> -
+>>  	if (phydev->autoneg == AUTONEG_ENABLE && phydev->autoneg_complete) {
+>>  		phy_resolve_aneg_linkmode(phydev);
+>>  	} else if (phydev->autoneg == AUTONEG_DISABLE) {
+>>
+> 
+> 
+> .
+> 
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
