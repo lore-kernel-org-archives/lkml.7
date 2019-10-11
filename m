@@ -2,54 +2,51 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2344C10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9830C4360C
 	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2C1214E0
+	by mail.kernel.org (Postfix) with ESMTP id BB62E21929
 	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfJKCuj (ORCPT
+        id S1726476AbfJKC4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 22:50:39 -0400
-Received: from mga17.intel.com ([192.55.52.151]:51685 "EHLO mga17.intel.com"
+        Thu, 10 Oct 2019 22:56:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:47710 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbfJKCui (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 22:50:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 19:50:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,282,1566889200"; 
-   d="scan'208";a="224193678"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.78]) ([10.239.196.78])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Oct 2019 19:50:35 -0700
-Subject: Re: [PATCH v1 0/2] perf stat: Support --all-kernel and --all-user
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20190925020218.8288-1-yao.jin@linux.intel.com>
- <20190929151022.GA16309@krava> <20190930182136.GD8560@tassilo.jf.intel.com>
- <20190930192800.GA13904@kernel.org>
- <20191001021755.GF8560@tassilo.jf.intel.com>
- <8a1cbcf6-2de7-3036-1c86-f3af6af077e2@linux.intel.com>
- <20191010080052.GB9616@krava>
- <9df9e60f-4998-32f2-f743-ebb0fdea4c0a@linux.intel.com>
- <20191010123309.GB19434@kernel.org>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <03b5fffb-fedf-19e6-5a23-bcf2bbf4ef98@linux.intel.com>
-Date:   Fri, 11 Oct 2019 10:50:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726177AbfJKC4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 22:56:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52B0028;
+        Thu, 10 Oct 2019 19:56:16 -0700 (PDT)
+Received: from [10.162.41.129] (p8cg001049571a15.blr.arm.com [10.162.41.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AD603F71A;
+        Thu, 10 Oct 2019 19:56:09 -0700 (PDT)
+Subject: Re: [PATCH V9 2/2] arm64/mm: Enable memory hot remove
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        will@kernel.org, mark.rutland@arm.com, david@redhat.com,
+        cai@lca.pw, logang@deltatee.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com,
+        mgorman@techsingularity.net, osalvador@suse.de,
+        ard.biesheuvel@arm.com, steve.capper@arm.com, broonie@kernel.org,
+        valentin.schneider@arm.com, Robin.Murphy@arm.com,
+        steven.price@arm.com, suzuki.poulose@arm.com, ira.weiny@intel.com
+References: <1570609308-15697-1-git-send-email-anshuman.khandual@arm.com>
+ <1570609308-15697-3-git-send-email-anshuman.khandual@arm.com>
+ <20191010113433.GI28269@mbp>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <f51cdb20-ddc4-4fb7-6c45-791d2e1e690c@arm.com>
+Date:   Fri, 11 Oct 2019 08:26:32 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191010123309.GB19434@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191010113433.GI28269@mbp>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,101 +54,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/10/2019 8:33 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Oct 10, 2019 at 04:33:57PM +0800, Jin, Yao escreveu:
->>
->>
->> On 10/10/2019 4:00 PM, Jiri Olsa wrote:
->>> On Thu, Oct 10, 2019 at 02:46:36PM +0800, Jin, Yao wrote:
->>>>
->>>>
->>>> On 10/1/2019 10:17 AM, Andi Kleen wrote:
->>>>>>> I think it's useful. Makes it easy to do kernel/user break downs.
->>>>>>> perf record should support the same.
->>>>>>
->>>>>> Don't we have this already with:
->>>>>>
->>>>>> [root@quaco ~]# perf stat -e cycles:u,instructions:u,cycles:k,instructions:k -a -- sleep 1
->>>>>
->>>>> This only works for simple cases. Try it for --topdown or multiple -M metrics.
->>>>>
->>>>> -Andi
->>>>>
->>>>
->>>> Hi Arnaldo, Jiri,
->>>>
->>>> We think it should be very useful if --all-user / --all-kernel can be
->>>> specified together, so that we can get a break down between user and kernel
->>>> easily.
->>>>
->>>> But yes, the patches for supporting this new semantics is much complicated
->>>> than the patch which just follows original perf-record behavior. I fully
->>>> understand this concern.
->>>>
->>>> So if this new semantics can be accepted, that would be very good. But if
->>>> you think the new semantics is too complicated, I'm also fine for posting a
->>>> new patch which just follows the perf-record behavior.
->>>
->>> I still need to think a bit more about this.. did you consider
->>> other options like cloning of the perf_evlist/perf_evsel and
->>> changing just the exclude* bits? might be event worse actualy ;-)
->>>
->>
->> That should be another approach, but it might be a bit more complicated than
->> just appending ":u"/":k" modifiers to the event name string.
->>
->>> or maybe if we add modifier we could add extra events/groups
->>> within the parser.. like:
->>>
->>>     "{cycles,instructions}:A,{cache-misses,cache-references}:A,cycles:A"
->>>
->>> but that might be still more complicated then what you did
->>>
->>
->> Yes agree.
->>
->>> also please add the perf record changes so we have same code
->>> and logic for both if we are going to change it
->   
->> If this new semantics can be accepted, I'd like to add perf record
->> supporting as well. :)
+On 10/10/2019 05:04 PM, Catalin Marinas wrote:
+> Hi Anshuman,
 > 
-> Changes in semantics should be avoided, when we add an option already
-> present in some other tool, we should strive to keep the semantics, so
-> that people can reuse their knowledge and just switch tools to go from
-> sampling to counting, say.
->
-
-Yes, that makes sense. We need to try our best to keep the original 
-semantics. I will post a patch for perf-stat which just follows the 
-semantics in perf-record.
-
-> So if at all possible, and without having really looked deep in this
-> specific case, I would prefer that new semantics come with a new syntax,
-> would that be possible?
+> On Wed, Oct 09, 2019 at 01:51:48PM +0530, Anshuman Khandual wrote:
+>> +static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
+>> +				    unsigned long end, bool free_mapped)
+>> +{
+>> +	unsigned long next;
+>> +	pmd_t *pmdp, pmd;
+>> +
+>> +	do {
+>> +		next = pmd_addr_end(addr, end);
+>> +		pmdp = pmd_offset(pudp, addr);
+>> +		pmd = READ_ONCE(*pmdp);
+>> +		if (pmd_none(pmd))
+>> +			continue;
+>> +
+>> +		WARN_ON(!pmd_present(pmd));
+>> +		if (pmd_sect(pmd)) {
+>> +			pmd_clear(pmdp);
+>> +			flush_tlb_kernel_range(addr, next);
 > 
+> The range here could be a whole PMD_SIZE. Since we are invalidating a
+> single block entry, one TLBI should be sufficient:
+> 
+> 			flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
 
-Yes, that's possible. Maybe we can use a new option for automatically 
-adding two copies of the events (one copy for user and the other copy 
-for kernel). The option something like "--all-space"?
+Sure, will change.
 
-Thanks
-Jin Yao
+> 
+>> +			if (free_mapped)
+>> +				free_hotplug_page_range(pmd_page(pmd),
+>> +							PMD_SIZE);
+>> +			continue;
+>> +		}
+>> +		WARN_ON(!pmd_table(pmd));
+>> +		unmap_hotplug_pte_range(pmdp, addr, next, free_mapped);
+>> +	} while (addr = next, addr < end);
+>> +}
+>> +
+>> +static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+>> +				    unsigned long end, bool free_mapped)
+>> +{
+>> +	unsigned long next;
+>> +	pud_t *pudp, pud;
+>> +
+>> +	do {
+>> +		next = pud_addr_end(addr, end);
+>> +		pudp = pud_offset(pgdp, addr);
+>> +		pud = READ_ONCE(*pudp);
+>> +		if (pud_none(pud))
+>> +			continue;
+>> +
+>> +		WARN_ON(!pud_present(pud));
+>> +		if (pud_sect(pud)) {
+>> +			pud_clear(pudp);
+>> +			flush_tlb_kernel_range(addr, next);
+> 			^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 			flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
 
-> - Arnaldo
->   
+Will change.
 
+> 
+> [...]
+>> +static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
+>> +				 unsigned long end, unsigned long floor,
+>> +				 unsigned long ceiling)
+>> +{
+>> +	pte_t *ptep, pte;
+>> +	unsigned long i, start = addr;
+>> +
+>> +	do {
+>> +		ptep = pte_offset_kernel(pmdp, addr);
+>> +		pte = READ_ONCE(*ptep);
+>> +		WARN_ON(!pte_none(pte));
+>> +	} while (addr += PAGE_SIZE, addr < end);
+> 
+> So this loop is just a sanity check (pte clearing having been done by
+> the unmap loops). That's fine, maybe a comment for future reference.
 
+Sure, will add.
+> 
+>> +
+>> +	if (!pgtable_range_aligned(start, end, floor, ceiling, PMD_MASK))
+>> +		return;
+>> +
+>> +	ptep = pte_offset_kernel(pmdp, 0UL);
+>> +	for (i = 0; i < PTRS_PER_PTE; i++) {
+>> +		if (!pte_none(READ_ONCE(ptep[i])))
+>> +			return;
+>> +	}
+> 
+> We could do with a comment for this loop along the lines of:
+> 
+> 	Check whether we can free the pte page if the rest of the
+> 	entries are empty. Overlap with other regions have been handled
+> 	by the floor/ceiling check.
 
->> Another difficulty for the new semantics is we need to create user and
->> kernel stat type in runtime_stat rblist (see patch "perf stat: Support
->> topdown with --all-kernel/--all-user"). That has to bring extra complexity.
->>
->> Thanks
->> Jin Yao
->>
->>> jirka
->>>
+Sure, will add.
+
+> 
+> Apart from the comments above, the rest of the patch looks fine. Once
+> fixed:
+> 
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> 
+> Mark Rutland mentioned at some point that, as a preparatory patch to
+> this series, we'd need to make sure we don't hot-remove memory already
+> given to the kernel at boot. Any plans here?
+
+Hmm, this series just enables platform memory hot remove as required from
+generic memory hotplug framework. The path here is triggered either from
+remove_memory() or __remove_memory() which takes physical memory range
+arguments like (nid, start, size) and do the needful. arch_remove_memory()
+should never be required to test given memory range for anything including
+being part of the boot memory.
+
+IIUC boot memory added to system with memblock_add() lose all it's identity
+after the system is up and running. In order to reject any attempt to hot
+remove boot memory, platform needs to remember all those memory that came
+early in the boot and then scan through it during arch_remove_memory().
+
+Ideally, it is the responsibility of [_]remove_memory() callers like ACPI
+driver, DAX etc to make sure they never attempt to hot remove a memory
+range, which never got hot added by them in the first place. Also, unlike
+/sys/devices/system/memory/probe there is no 'unprobe' interface where the
+user can just trigger boot memory removal. Hence, unless there is a bug in
+ACPI, DAX or other callers, there should never be any attempt to hot remove
+boot memory in the first place.
+
+> 
+> Thanks.
 > 
