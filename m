@@ -2,95 +2,123 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4054DECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2DBC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2200720659
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0DE20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfJKJtb (ORCPT
+        id S1727693AbfJKJvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:49:31 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56409 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfJKJtb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:49:31 -0400
-Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 1b220ecebb2d0121; Fri, 11 Oct 2019 11:49:29 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Andy Whitcroft <apw@canonical.com>
-Cc:     linux-pm@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PM / hibernate: memory_bm_find_bit -- tighten node optimisation
-Date:   Fri, 11 Oct 2019 11:49:29 +0200
-Message-ID: <2167643.HFCj9E3NaD@kreacher>
-In-Reply-To: <20190925143912.22593-1-apw@canonical.com>
-References: <20190925143912.22593-1-apw@canonical.com>
+        Fri, 11 Oct 2019 05:51:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49410 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726585AbfJKJvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 05:51:49 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AF53A8980E9;
+        Fri, 11 Oct 2019 09:51:48 +0000 (UTC)
+Received: from [10.36.118.168] (unknown [10.36.118.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BE58600C4;
+        Fri, 11 Oct 2019 09:51:47 +0000 (UTC)
+Subject: Re: [PATCH v1] drivers/base/memory.c: Don't access uninitialized
+ memmaps in soft_offline_page_store()
+To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191010141200.8985-1-david@redhat.com>
+ <20191011061335.GA30803@hori.linux.bs1.fc.nec.co.jp>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <2937e23d-0f27-a99c-f661-b3fe326494ca@redhat.com>
+Date:   Fri, 11 Oct 2019 11:51:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191011061335.GA30803@hori.linux.bs1.fc.nec.co.jp>
+Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 11 Oct 2019 09:51:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, September 25, 2019 4:39:12 PM CEST Andy Whitcroft wrote:
-> When looking for a bit by number we make use of the cached result from the
-> preceding lookup to speed up operation.  Firstly we check if the requested
-> pfn is within the cached zone and if not lookup the new zone.  We then
-> check if the offset for that pfn falls within the existing cached node.
-> This happens regardless of whether the node is within the zone we are
-> now scanning.  With certain memory layouts it is possible for this to
-> false trigger creating a temporary alias for the pfn to a different bit.
-> This leads the hibernation code to free memory which it was never allocated
-> with the expected fallout.
+On 11.10.19 08:13, Naoya Horiguchi wrote:
+> On Thu, Oct 10, 2019 at 04:12:00PM +0200, David Hildenbrand wrote:
+>> Uninitialized memmaps contain garbage and in the worst case trigger kernel
+>> BUGs, especially with CONFIG_PAGE_POISONING. They should not get
+>> touched.
+>>
+>> Right now, when trying to soft-offline a PFN that resides on a memory
+>> block that was never onlined, one gets a misleading error with
+>> CONFIG_PAGE_POISONING:
+>>    :/# echo 5637144576 > /sys/devices/system/memory/soft_offline_page
+>>    [   23.097167] soft offline: 0x150000 page already poisoned
+>>
+>> But the actual result depends on the garbage in the memmap.
+>>
+>> soft_offline_page() can only work with online pages, it returns -EIO in
+>> case of ZONE_DEVICE. Make sure to only forward pages that are online
+>> (iow, managed by the buddy) and, therefore, have an initialized memmap.
+>>
+>> Add a check against pfn_to_online_page() and similarly return -EIO.
+>>
+>> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>   drivers/base/memory.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>> index 6bea4f3f8040..55907c27075b 100644
+>> --- a/drivers/base/memory.c
+>> +++ b/drivers/base/memory.c
+>> @@ -540,6 +540,9 @@ static ssize_t soft_offline_page_store(struct device *dev,
+>>   	pfn >>= PAGE_SHIFT;
+>>   	if (!pfn_valid(pfn))
+>>   		return -ENXIO;
+>> +	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
+>> +	if (!pfn_to_online_page(pfn))
+>> +		return -EIO;
 > 
-> Ensure the zone we are scanning matches the cached zone before considering
-> the cached node.
+> Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 > 
-> Deep thanks go to Andrea for many, many, many hours of hacking and testing
-> that went into cornering this bug.
-> 
-> Reported-by: Andrea Righi <andrea.righi@canonical.com>
-> Tested-by: Andrea Righi <andrea.righi@canonical.com>
-> Signed-off-by: Andy Whitcroft <apw@canonical.com>
-> ---
->  kernel/power/snapshot.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-> index 83105874f255..26b9168321e7 100644
-> --- a/kernel/power/snapshot.c
-> +++ b/kernel/power/snapshot.c
-> @@ -734,8 +734,15 @@ static int memory_bm_find_bit(struct memory_bitmap *bm, unsigned long pfn,
->  	 * We have found the zone. Now walk the radix tree to find the leaf node
->  	 * for our PFN.
->  	 */
-> +
-> +	/*
-> +	 * If the zone we wish to scan is the the current zone and the
-> +	 * pfn falls into the current node then we do not need to walk
-> +	 * the tree.
-> +	 */
->  	node = bm->cur.node;
-> -	if (((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
-> +	if (zone == bm->cur.zone &&
-> +	    ((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
->  		goto node_found;
->  
->  	node      = zone->rtree;
+> I think this check could be placed in soft_offline_page(), but that requires
+> a few more unrelated lines of changes due to the mismatch on type of parameter
+> between memory_failure() and soft_offline_page(),  This is not your problem,
+> and I plan to do some cleanup on related interfaces, so this patch is fine.
 > 
 
-Applying as 5.5 material, thanks!
+Thanks,
+
+well I think when you come via madvise(), you are always guaranteed to  
+hold a reasonable page in your hands. Only when converting from  
+arbitrary pfns, we have to watch out. But yeah, feel free to cc me on  
+cleanups :)
+
+> - Naoya Horiguchi
+> 
 
 
+-- 
 
+Thanks,
 
+David / dhildenb
