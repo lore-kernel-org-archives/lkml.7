@@ -2,84 +2,105 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8706EC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EAEC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AED2218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A491B2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eLpfoF0w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfJKXmK convert rfc822-to-8bit (ORCPT
+        id S1728140AbfJKXoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 19:42:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38566 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfJKXmJ (ORCPT
+        Fri, 11 Oct 2019 19:44:08 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46653 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfJKXoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 19:42:09 -0400
-Received: from mail-wm1-f69.google.com ([209.85.128.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1iJ4Xw-0001Z8-2O
-        for linux-kernel@vger.kernel.org; Fri, 11 Oct 2019 23:42:08 +0000
-Received: by mail-wm1-f69.google.com with SMTP id z205so4819120wmb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 16:42:08 -0700 (PDT)
+        Fri, 11 Oct 2019 19:44:08 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b8so6622272pgm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 16:44:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8eY4wo42WtOKmlH068hhmD7B1nLmX1zbEw5wgAbsjlQ=;
+        b=eLpfoF0wE61FQRBmPO00nr4+AnxnTlXQ2ao2dwJB9LOttMcQVHs9oWsivwHKUTPGly
+         TPAXI9vZRGYzbtPRPD8PC45YeUKVaOuvrdQcpTzSGR/NvQNJT6/WCxv13ZGXgJ1frJyw
+         NlBcYWTxskSfXttkB+f7Kv7+DeMqZujE1PZZysCyuAz4XRtnaffRWOXVI+TplbLfHImj
+         BIZ08dOmjmuqiy3jA0XWeKcDMK6955aNInAVdxA50YLlmCWCEKb9U+b4gS57H2swLGKg
+         FhkmTWTr/N8kZajZUIgdyxy1tofrw60zgHGwg7c5kEih+b0p/53FoYT5VATXI7fGuGAp
+         NpCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=92pEGUqS/S/KSPp9bTMahlMDEufG25vdMFkXaZGplCE=;
-        b=K/DrItQaMOX2RFmFLHzZYT7AK6QVu89HRVcwgvXVyF0+AP3Y9gyfhYNHQ2Qi1YTGu3
-         KF4bqqP0suxTXuPjhGJYhSykJ4GzGU/TOUGYuQulprfkTm3rn0gXKFoMHSyfPO+b5IvL
-         HG86yq17b0sSdn7u4u9C5Zf64cUM/wfaK2mZ7HrOGsm3ZrG2r6txsMWU4VQT268G/Gg+
-         nsbtreO4e8vos328dYQaoyaqC1oxviIZifImRTfvmsZ9FAWSKyWZaj42/KxNBfLTpZRn
-         UyVvsf93UFEZCclOdtISG7lvW8O2XEbQuiCPGaTzr0EG4ZbSeONTh9Ig0DU8WSE6+6yh
-         mYxw==
-X-Gm-Message-State: APjAAAUqB2NXTero9WVpX7n9taubrMypBbZaAmSMQekqodnA4BZtzuLk
-        moVOZQ0LHMHBWFXW3oS9xJWenAGbzAH7r4Afr/vvM0bixCe0OW+ue7Lgnr8OLldFMPE+aOmR7ZF
-        iNkgj5SvPdsh6sXnxftdoPZ9vNVslU9JpWnC0r1oYJ6dsXWhvnFkmTbAUmA==
-X-Received: by 2002:a1c:6a05:: with SMTP id f5mr5125923wmc.121.1570837327857;
-        Fri, 11 Oct 2019 16:42:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqylQm8kBOrJN1wK3uuE1r9eFdnGsE1vLFTpvB9yJbMEzLxNJu9inthxOqwtdtx/wsxR+hw/CoX8TYXgKJlpkc0=
-X-Received: by 2002:a1c:6a05:: with SMTP id f5mr5125908wmc.121.1570837327692;
- Fri, 11 Oct 2019 16:42:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8eY4wo42WtOKmlH068hhmD7B1nLmX1zbEw5wgAbsjlQ=;
+        b=Su6KL68XNvYic+H4j9L6Juxk+xc2XR5Rv/Bn8vdeA2oBw6rEVEXMB4mLRlWANFcKYf
+         YmpBsCGGz9ijodHhHZ+ysonI6/zw+6pEn8QFzCWwhvTiuuvbxAO9DAt60wNZfzx7LLrp
+         NANR3N6JNTgXYKYrhHdHPUNaF5s8rDwbdAtgoxKPn9KYSCE/r/5PYTmBlI4yiMUf5L1P
+         sEumZZCWvNVQZ8k/wdr0tDFTEN3QDYKF/LqOXnnLcBLVISi1gU9lT9xMu2OvSndNZTE8
+         9wLb07OxjDj2dcgGQ7QtzCe0xqvj4FI2NtkobgEyEj7lt4aOG1XTDrFYD4HjQ+HT8hP2
+         wakA==
+X-Gm-Message-State: APjAAAUKrzJVD4imMTB9r8zD7e9N2R3ngNfcM9YWByZ/Sxoy6c2Op+24
+        iwEOqVFdBnx4e5vnEVyfiHyceA==
+X-Google-Smtp-Source: APXvYqzXusObm4NkLuSv7bqxR3WbrsWyP6ALbO3rVDrXKGNaw9fy9O32fAWsRG1xQpCh5bH97voZkg==
+X-Received: by 2002:a63:8dc2:: with SMTP id z185mr19553539pgd.228.1570837447240;
+        Fri, 11 Oct 2019 16:44:07 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 62sm11011253pfg.164.2019.10.11.16.44.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 16:44:06 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] arm64: defconfig: Enable Qualcomm CPUfreq HW driver
+Date:   Fri, 11 Oct 2019 16:44:02 -0700
+Message-Id: <20191011234402.374271-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191011223955.1435-1-gpiccoli@canonical.com> <36C2B5DF-7F21-42C6-BA77-6D86EDCB6BB3@lca.pw>
-In-Reply-To: <36C2B5DF-7F21-42C6-BA77-6D86EDCB6BB3@lca.pw>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Fri, 11 Oct 2019 20:41:31 -0300
-Message-ID: <CAHD1Q_ynd6f2Jc54k1D9JjmtD6tGhkDcAHRzd5nZt5LUdQTvaw@mail.gmail.com>
-Subject: Re: [PATCH] hugetlb: Add nohugepages parameter to prevent hugepages creation
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com,
-        linux-kernel@vger.kernel.org,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 8:36 PM Qian Cai <cai@lca.pw> wrote:
->
-> Typically, kdump kernel has its own initramfs, and don’t even need to mount a rootfs, so I can’t see how sysfs/sysctl is relevant here.
+The Qualcomm CPUfreq HW provides CPU voltage and frequency scaling on
+many modern Qualcomm SoCs. Enable the driver for this hardware block to
+enable this functionality on the SDM845 platform.
 
-Thanks for the quick response. Kdump in Ubuntu, for example, rely in
-mounting the root filesystem.
-Even in initrd-only approaches, we could have sysctl.conf being copied
-to initramfs, and hugepages end-up getting set.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Also, I don't think the "nohugepages" is useful only for kdump - I
-found odd we cannot prevent the creation of hugepages at all when
-using sysfs writes.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index dea051a64257..45e55dfe1ee4 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -85,6 +85,7 @@ CONFIG_ACPI_CPPC_CPUFREQ=m
+ CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
+ CONFIG_ARM_SCPI_CPUFREQ=y
+ CONFIG_ARM_IMX_CPUFREQ_DT=m
++CONFIG_ARM_QCOM_CPUFREQ_HW=y
+ CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
+ CONFIG_ARM_TEGRA186_CPUFREQ=y
+ CONFIG_ARM_SCPI_PROTOCOL=y
+-- 
+2.23.0
 
-Cheers,
-
-
-Guilherme
