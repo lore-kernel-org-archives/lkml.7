@@ -2,146 +2,99 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E968C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CBFC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACFB20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466B720679
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfJKOJr (ORCPT
+        id S1728467AbfJKOJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:09:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51880 "EHLO mx1.redhat.com"
+        Fri, 11 Oct 2019 10:09:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:33416 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728033AbfJKOJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:09:46 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 619E3316D8C8;
-        Fri, 11 Oct 2019 14:09:46 +0000 (UTC)
-Received: from llong.com (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 245D360BF4;
-        Fri, 11 Oct 2019 14:09:43 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <jlelli@redhat.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH RT] kernel/sched: Don't recompute cpumask weight in migrate_enable_update_cpus_allowed()
-Date:   Fri, 11 Oct 2019 10:09:08 -0400
-Message-Id: <20191011140908.5161-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 11 Oct 2019 14:09:46 +0000 (UTC)
+        id S1728033AbfJKOJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:09:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F814142F;
+        Fri, 11 Oct 2019 07:09:51 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7A8693F68E;
+        Fri, 11 Oct 2019 07:09:46 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com,
+        Jia He <justin.he@arm.com>
+Subject: [PATCH v12 0/4] fix double page fault in cow_user_page for pfn mapping
+Date:   Fri, 11 Oct 2019 22:09:35 +0800
+Message-Id: <20191011140939.6115-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At each invocation of rt_spin_unlock(), cpumask_weight() is called
-via migrate_enable_update_cpus_allowed() to recompute the weight of
-cpus_mask which doesn't change that often.
+When we tested pmdk unit test vmmalloc_fork TEST1 in arm64 guest, there
+will be a double page fault in __copy_from_user_inatomic of cow_user_page.
 
-The following is a sample output of perf-record running the testpmd
-microbenchmark on an RT kernel:
+As told by Catalin: "On arm64 without hardware Access Flag, copying from
+user will fail because the pte is old and cannot be marked young. So we
+always end up with zeroed page after fork() + CoW for pfn mappings. we
+don't always have a hardware-managed access flag on arm64."
 
-  34.77%   1.65%  testpmd  [kernel.kallsyms]  [k] rt_spin_unlock
-  34.32%   2.52%  testpmd  [kernel.kallsyms]  [k] migrate_enable
-  21.76%  21.76%  testpmd  [kernel.kallsyms]  [k] __bitmap_weight
+-Changes
+v12:
+    refine PATCH 01, remove the !! since C languages can convert unsigned
+    to bool (Catalin)
+v11:
+    refine cpu_has_hw_af in PATCH 01(Will Deacon, Suzuki)
+    change the default return value to true in arch_faults_on_old_pte
+    add PATCH 03 for overriding arch_faults_on_old_pte(false) on x86
+v10:
+    add r-b from Catalin and a-b from Kirill in PATCH 03
+    remoe Reported-by in PATCH 01
+v9: refactor cow_user_page for indention optimization (Catalin)
+    hold the ptl longer (Catalin)
+v8: change cow_user_page's return type (Matthew)
+v7: s/pte_spinlock/pte_offset_map_lock (Kirill)
+v6: fix error case of returning with spinlock taken (Catalin)
+    move kmap_atomic to avoid handling kunmap_atomic
+v5: handle the case correctly when !pte_same
+    fix kbuild test failed
+v4: introduce cpu_has_hw_af (Suzuki)
+    bail out if !pte_same (Kirill)
+v3: add vmf->ptl lock/unlock (Kirill A. Shutemov)
+    add arch_faults_on_old_pte (Matthew, Catalin)
+v2: remove FAULT_FLAG_WRITE when setting pte access flag (Catalin)
 
-By adding an extra variable to keep track of the weight of cpus_mask,
-we could eliminate the frequent call to cpumask_weight() and replace
-it with simple assignment.
+Jia He (4):
+  arm64: cpufeature: introduce helper cpu_has_hw_af()
+  arm64: mm: implement arch_faults_on_old_pte() on arm64
+  x86/mm: implement arch_faults_on_old_pte() stub on x86
+  mm: fix double page fault on arm64 if PTE_AF is cleared
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- include/linux/sched.h | 3 ++-
- init/init_task.c      | 1 +
- kernel/fork.c         | 4 +++-
- kernel/sched/core.c   | 8 +++++---
- 4 files changed, 11 insertions(+), 5 deletions(-)
+ arch/arm64/include/asm/cpufeature.h |  14 ++++
+ arch/arm64/include/asm/pgtable.h    |  14 ++++
+ arch/x86/include/asm/pgtable.h      |   6 ++
+ mm/memory.c                         | 104 ++++++++++++++++++++++++----
+ 4 files changed, 123 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 7e892e727f12..c65c75b82056 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -656,7 +656,8 @@ struct task_struct {
- #endif
- 
- 	unsigned int			policy;
--	int				nr_cpus_allowed;
-+	unsigned int			nr_cpus_allowed; /* # in cpus_ptr */
-+	unsigned int			nr_cpus_mask;	 /* # in cpus_mask */
- 	const cpumask_t			*cpus_ptr;
- 	cpumask_t			cpus_mask;
- #if defined(CONFIG_SMP) && defined(CONFIG_PREEMPT_RT_BASE)
-diff --git a/init/init_task.c b/init/init_task.c
-index e402413dc47d..36bc82439ff1 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -81,6 +81,7 @@ struct task_struct init_task
- 	.cpus_ptr	= &init_task.cpus_mask,
- 	.cpus_mask	= CPU_MASK_ALL,
- 	.nr_cpus_allowed= NR_CPUS,
-+	.nr_cpus_mask   = NR_CPUS,
- 	.mm		= NULL,
- 	.active_mm	= &init_mm,
- 	.restart_block	= {
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 3c7738d87ddb..e00b92a18444 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -935,8 +935,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
- #ifdef CONFIG_STACKPROTECTOR
- 	tsk->stack_canary = get_random_canary();
- #endif
--	if (orig->cpus_ptr == &orig->cpus_mask)
-+	if (orig->cpus_ptr == &orig->cpus_mask) {
- 		tsk->cpus_ptr = &tsk->cpus_mask;
-+		tsk->nr_cpus_allowed = tsk->nr_cpus_mask;
-+	}
- 
- 	/*
- 	 * One for us, one for whoever does the "release_task()" (usually
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 93b4ae1ecaff..a299b7dd3de0 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1126,7 +1126,9 @@ static int migration_cpu_stop(void *data)
- void set_cpus_allowed_common(struct task_struct *p, const struct cpumask *new_mask)
- {
- 	cpumask_copy(&p->cpus_mask, new_mask);
--	p->nr_cpus_allowed = cpumask_weight(new_mask);
-+	p->nr_cpus_mask = cpumask_weight(new_mask);
-+	if (p->cpus_ptr == &p->cpus_mask)
-+		p->nr_cpus_allowed = p->nr_cpus_mask;
- }
- 
- #if defined(CONFIG_SMP) && defined(CONFIG_PREEMPT_RT_BASE)
-@@ -1173,7 +1175,7 @@ void do_set_cpus_allowed(struct task_struct *p, const struct cpumask *new_mask)
- 	if (__migrate_disabled(p)) {
- 		lockdep_assert_held(&p->pi_lock);
- 
--		cpumask_copy(&p->cpus_mask, new_mask);
-+		set_cpus_allowed_common(p, new_mask);
- 		p->migrate_disable_update = 1;
- 		return;
- 	}
-@@ -7335,7 +7337,7 @@ migrate_enable_update_cpus_allowed(struct task_struct *p)
- 
- 	rq = task_rq_lock(p, &rf);
- 	p->cpus_ptr = &p->cpus_mask;
--	p->nr_cpus_allowed = cpumask_weight(&p->cpus_mask);
-+	p->nr_cpus_allowed = p->nr_cpus_mask;
- 	update_nr_migratory(p, 1);
- 	task_rq_unlock(rq, p, &rf);
- }
 -- 
-2.18.1
+2.17.1
 
