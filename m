@@ -2,124 +2,108 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D929C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14211ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC6B2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21B52089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:48:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570805296;
+	bh=VZguEQJnMJllBHyICpMc6lELM9gKnqPlcl1g3payhJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mGq2QGYMWI47Bca/OnYV92PS5vCYIUbCO3b1Lto7jOILNoYpzzglY0VFBnHmd2Gix
+	 36AS3kcS+RALUi/Xm8fnVJM/awpG33JbtdfOdzmLSdvVePk1EXadcQ126n8KYK+lfJ
+	 to8Xj7Cn3pEi2dY1EYjxrHWlCvEr+Tx9NIrudBB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfJKOrt (ORCPT
+        id S1727021AbfJKOsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:47:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:34710 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbfJKOrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:47:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD83D142F;
-        Fri, 11 Oct 2019 07:47:48 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C799A3F68E;
-        Fri, 11 Oct 2019 07:47:45 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 15:47:43 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Weimer <fweimer@redhat.com>,
-        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
-Subject: Re: [PATCH v2 11/12] arm64: BTI: Reset BTYPE when skipping emulated
- instructions
-Message-ID: <20191011144743.GJ27757@arm.com>
-References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
- <1570733080-21015-12-git-send-email-Dave.Martin@arm.com>
- <20191011142157.GC33537@lakrids.cambridge.arm.com>
+        Fri, 11 Oct 2019 10:48:16 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37773 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbfJKOsP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:48:15 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k32so8181656otc.4;
+        Fri, 11 Oct 2019 07:48:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9kELu6s8Xez72s7yjDEZd7hwsCCJDY4gV2VlEWP54QM=;
+        b=A1Omp0uwnI0AOwdEtOWKSx2b/m3irUctzOB+KNmI+BpLLDwsjBsXAAoO10lEF3RoeI
+         K1fWe0+CR7cCbhU+W9B38osApHFaPxAn2QM0PgbYmCB9Nz+Yxm4Scot09XlhC07B1esF
+         yxa6HcvvjJQNNhAjpYok7vnhHs0f4MqlEe/HS9MlC/bb/gj8qos40j80z5Wrd2zg2brz
+         ZlNbynBuZWvCHQ2ngWqTp3XLeLwSPLFin3MyLbuN8uaBKJ5iqbW1N9c2z9gFb+Dwd9Gh
+         1toC+3VGRw3PDpCV1QfPKDWyV0UZfLvdfFAO8rSR1A1oP5OSJZqu/hG9OuvnZ1HlAHvm
+         Xgig==
+X-Gm-Message-State: APjAAAVtup4jNyNKXEPgpTB8/EwfD3+xmianbBDKblgs0I/zAJ6S3dAs
+        YhOWzZ53pd12YJG6xmnwQw==
+X-Google-Smtp-Source: APXvYqxWiF9mlWpmhF4F7i28hJLZ1dDoTA6YcBMy+P+DctntpvAmW5FA4W9ZKMX5tPkbxHvi4IwDcw==
+X-Received: by 2002:a9d:6084:: with SMTP id m4mr11834429otj.18.1570805293419;
+        Fri, 11 Oct 2019 07:48:13 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o184sm2694641oia.28.2019.10.11.07.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 07:48:12 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 09:48:12 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Jamie Lentin <jm@lentin.co.uk>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: power: reset: gpio-poweroff: Add
+ 'force-mode' property
+Message-ID: <20191011144812.GA7239@bogus>
+References: <20190930141244.12311-1-oleksandr.suvorov@toradex.com>
+ <20190930141244.12311-3-oleksandr.suvorov@toradex.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011142157.GC33537@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190930141244.12311-3-oleksandr.suvorov@toradex.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 03:21:58PM +0100, Mark Rutland wrote:
-> On Thu, Oct 10, 2019 at 07:44:39PM +0100, Dave Martin wrote:
-> > Since normal execution of any non-branch instruction resets the
-> > PSTATE BTYPE field to 0, so do the same thing when emulating a
-> > trapped instruction.
-> > 
-> > Branches don't trap directly, so we should never need to assign a
-> > non-zero value to BTYPE here.
-> > 
-> > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> > ---
-> >  arch/arm64/kernel/traps.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> > index 3af2768..4d8ce50 100644
-> > --- a/arch/arm64/kernel/traps.c
-> > +++ b/arch/arm64/kernel/traps.c
-> > @@ -331,6 +331,8 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
-> >  
-> >  	if (regs->pstate & PSR_MODE32_BIT)
-> >  		advance_itstate(regs);
-> > +	else
-> > +		regs->pstate &= ~(u64)PSR_BTYPE_MASK;
+On Mon, Sep 30, 2019 at 02:12:53PM +0000, Oleksandr Suvorov wrote:
+> Add 'force-mode' property to allow the driver to load even if
+> someone has registered the pm_power_off hook earlier.
 > 
-> This looks good to me, with one nit below.
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 > 
-> We don't (currently) need the u64 cast here, and it's inconsistent with
-> what we do elsewhere. If the upper 32-bit of pstate get allocated, we'll
-> need to fix up all the other masking we do:
-
-Huh, looks like I missed that.  Dang.  Will fix.
-
-> [mark@lakrids:~/src/linux]% git grep 'pstate &= ~'
-> arch/arm64/kernel/armv8_deprecated.c:           regs->pstate &= ~PSR_AA32_E_BIT;
-> arch/arm64/kernel/cpufeature.c:         regs->pstate &= ~PSR_SSBS_BIT;
-> arch/arm64/kernel/debug-monitors.c:     regs->pstate &= ~DBG_SPSR_SS;
-> arch/arm64/kernel/insn.c:       pstate &= ~(pstate >> 1);       /* PSR_C_BIT &= ~PSR_Z_BIT */
-> arch/arm64/kernel/insn.c:       pstate &= ~(pstate >> 1);       /* PSR_C_BIT &= ~PSR_Z_BIT */
-> arch/arm64/kernel/probes/kprobes.c:     regs->pstate &= ~PSR_D_BIT;
-> arch/arm64/kernel/probes/kprobes.c:     regs->pstate &= ~DAIF_MASK;
-> arch/arm64/kernel/ptrace.c:     regs->pstate &= ~SPSR_EL1_AARCH32_RES0_BITS;
-> arch/arm64/kernel/ptrace.c:                     regs->pstate &= ~PSR_AA32_E_BIT;
-> arch/arm64/kernel/ptrace.c:     regs->pstate &= ~SPSR_EL1_AARCH64_RES0_BITS;
-> arch/arm64/kernel/ptrace.c:             regs->pstate &= ~DBG_SPSR_SS;
-> arch/arm64/kernel/ssbd.c:       task_pt_regs(task)->pstate &= ~val;
-> arch/arm64/kernel/traps.c:      regs->pstate &= ~PSR_AA32_IT_MASK;
+> ---
 > 
-> ... and at that point I'd suggest we should just ensure the bit
-> definitions are all defined as unsigned long in the first place since
-> adding casts to each use is error-prone.
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/power/reset/gpio-poweroff.txt          | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
+> index 3e56c1b34a4c..2056e299a472 100644
+> --- a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
+> +++ b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
+> @@ -31,6 +31,9 @@ Optional properties:
+>  - inactive-delay-ms: Delay (default 100) to wait after driving gpio inactive
+>  - timeout-ms: Time to wait before asserting a WARN_ON(1). If nothing is
+>                specified, 3000 ms is used.
+> +- force-mode: Force replacing pm_power_off kernel hook.
+> +  If this optional property is not specified, the driver will fail to
+> +  load if someone has registered the pm_power_off hook earlier.
 
-Are we concerned about changing the types of UAPI #defines?  That can
-cause subtle and unexpected breakage, especially when the signedness
-of a #define changes.
+What if the init order changes?
 
-Ideally, we'd just change all these to 1UL << n.
+This is too tied to a specific OS implementation to go in DT.
 
-Cheers
----Dave
+Rob
