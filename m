@@ -2,109 +2,94 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D97ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B0AC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A29B2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:11:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Mnzi4nkX"
+	by mail.kernel.org (Postfix) with ESMTP id 62B0421A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570767973;
+	bh=fLiBWE1AVc2vUnCDGC3rnCQZQF7qVTkQq7Q21C84Zlc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OPzY5xuXj/nK5Ny94h4SHn3qDsfPe48jeNcmeNdHl0g64Eu53FJo63k4HTHMxMQNM
+	 sGfPWth2hbaldGkQWHvvoiXZ27QZtM+qo2vAHGEvSqUONaWJEFxLZHiv4syIOwJQr8
+	 i9kjVrQGlr5XCWWxPJu7coHW+4xEMxYVKaBfv8LM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfJKELW (ORCPT
+        id S1726424AbfJKE0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 00:11:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42701 "EHLO ozlabs.org"
+        Fri, 11 Oct 2019 00:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfJKELW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 00:11:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726108AbfJKE0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 00:26:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46qDzC0cbcz9sDB;
-        Fri, 11 Oct 2019 15:11:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1570767079;
-        bh=olz6hcZobQUy1HClWoP+pa/+V7FHl/Qj/3t7OM/lK/U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Mnzi4nkXSqL+XgCSg4e4gNccg8MFMuS0aLo0WrdLvKduAS27EqILbsUHvsearpCPj
-         ZlrkRSTQJOia7O71jO/ggZLzK4yu5BjmTy79YqCQVkW6TA2rpdKe1xOE55KZ4BYA5n
-         wl9uMTpGnb/DUZ1IqAE0CUI6OWaNyfOv2GdQ8w+bRTYVo36YJ7q0eGbGm4MGt4F514
-         GWX2C3MmcTOkGVAWNGextdBBcUjTnqXk22lVk1vUf5R3+mZqzeWRb/RbIXIF9fDyRQ
-         8NhxqcIpZ+GF+m/gu86BrkVlnsbNliMEtsE+781kNGixrzSz1jqDm+R6EZu6oNyuqX
-         h4O78cPCL9toQ==
-Date:   Fri, 11 Oct 2019 15:11:17 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: linux-next: Fixes tag needs some work in the net tree
-Message-ID: <20191011151117.46bc6981@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 07B412089F;
+        Fri, 11 Oct 2019 04:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570767971;
+        bh=fLiBWE1AVc2vUnCDGC3rnCQZQF7qVTkQq7Q21C84Zlc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QQ6aVrxkEqC6BdoJ9p8nXAqQQzWCiL0yOUAQeFLNMMuz4r2WpwTy60CZDaQ3NraAl
+         HLMSy4qCboDujx+wdD52j5aHnH1R3oVK+W2kqQ7QIfgKRox0cMPYLpf60CZ4efPkyj
+         obpXc5i1c9XrEnDV4HIOjrNn5sH8Ji4ZLBXZX+vE=
+Date:   Fri, 11 Oct 2019 06:26:09 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     jerome.pouiller@silabs.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: wfx: fix an undefined reference error when
+ CONFIG_MMC=m
+Message-ID: <20191011042609.GB938845@kroah.com>
+References: <1570762939-8735-1-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/73SMEYNtzZwoB3.O7YpHvQ=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570762939-8735-1-git-send-email-zhongjiang@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/73SMEYNtzZwoB3.O7YpHvQ=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Oct 11, 2019 at 11:02:19AM +0800, zhong jiang wrote:
+> I hit the following error when compile the kernel.
+> 
+> drivers/staging/wfx/main.o: In function `wfx_core_init':
+> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:488: undefined reference to `sdio_register_driver'
+> drivers/staging/wfx/main.o: In function `wfx_core_exit':
+> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:496: undefined reference to `sdio_unregister_driver'
+> drivers/staging/wfx/main.o:(.debug_addr+0x1a8): undefined reference to `sdio_register_driver'
+> drivers/staging/wfx/main.o:(.debug_addr+0x6f0): undefined reference to `sdio_unregister_driver'
+> 
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> ---
+>  drivers/staging/wfx/Kconfig  | 3 ++-
+>  drivers/staging/wfx/Makefile | 5 +++--
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/wfx/Kconfig b/drivers/staging/wfx/Kconfig
+> index 9b8a1c7..4d045513 100644
+> --- a/drivers/staging/wfx/Kconfig
+> +++ b/drivers/staging/wfx/Kconfig
+> @@ -1,7 +1,8 @@
+>  config WFX
+>  	tristate "Silicon Labs wireless chips WF200 and further"
+>  	depends on MAC80211
+> -	depends on (SPI || MMC)
+> +	depends on SPI
+> +	select MMC
 
-Hi all,
+How about:
+	depends on (SPI && MMC)
 
-In commit
+instead?
 
-  2168da459404 ("net: update net_dim documentation after rename")
+thanks,
 
-Fixes tag
-
-  Fixes: 8960b38932be ("linux/dim: Rename externally used net_dim members",=
- 2019-06-25)
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
-Fixes tag
-
-  Fixes: c002bd529d71 ("linux/dim: Rename externally exposed macros", 2019-=
-06-25)
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/73SMEYNtzZwoB3.O7YpHvQ=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2gAOUACgkQAVBC80lX
-0GzYFgf8C4SW8gztXaeZIL4/2zevoCZLKTxSesy2CE1ZIOQou0JhWkchYGX2f1cp
-DjBqFHvYo/EBP9b4YkRVoK8iQaKh4j1mNMTG7K6sRZJPYJ4yHOV/xq5IrlSCkCm5
-CA+hT+ugfw84PjS9Gi4ATJwFHBi+MeiADoHLw4LffERQW3h+jJohYah2YJbLbqp/
-zRtFFu0CkA6Pjpn0bOsjo067UHZ0W7UHcuD3fkCF2r060GMf7i7DcVLvdRdTc7zC
-0g3vZXPm5KeMaDbjDhJl+tkcsP4sQVXi+hM3ayV9b8YXGeXuXuObq1JxgjsK49tu
-C0xfV+zow1uEZC6CfPToUhUbAXJsNQ==
-=LWUR
------END PGP SIGNATURE-----
-
---Sig_/73SMEYNtzZwoB3.O7YpHvQ=--
+greg k-h
