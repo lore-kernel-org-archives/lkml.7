@@ -2,120 +2,103 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8CDC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C91C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863D42084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2D42084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ut4+Z8nv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UFFCIe76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfJKK54 (ORCPT
+        id S1727809AbfJKK67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:57:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35084 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfJKK54 (ORCPT
+        Fri, 11 Oct 2019 06:58:59 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60972 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfJKK66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:57:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OCP5lhDCSBpeO5Vh7HhxpRJB7tB8MYPetbw1XJik9JM=; b=ut4+Z8nvRj2QKkHDgyZb8vChp
-        gGHdGnQ37YSZiaiaxadpetd4H/F+V6rDUn4vSWi+FKGOjMDDEdyXYBKr7+yuZqb5btAvQZs4j4z5i
-        GN3FC/HwoX4uW6vhLkY8HZIaL6TojrTJHHmnekJH90EYM/OjVH3GqPdvsCy34DOqBVMm9E6iHk+YV
-        znRagxExipiPbhfYriXkN+eLzkIqJ1+w6lMufS/B2NdSkMI6sGmRPXkuoT1RPRiDX96otpv1zD8iP
-        Ps8P1Ih9i1l1JVIggEbYxvX2phGcO4mt3xZ1C0qU1yVwE76TfYHmE5Vn5TTblLYAWD857LYNt2G+r
-        jh16CNeyA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIscE-00051A-PV; Fri, 11 Oct 2019 10:57:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4855B305BD3;
-        Fri, 11 Oct 2019 12:56:52 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DCD5520230368; Fri, 11 Oct 2019 12:57:44 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 12:57:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
-Message-ID: <20191011105744.GW2311@hirez.programming.kicks-ass.net>
-References: <20190827180622.159326993@infradead.org>
- <20190827181147.166658077@infradead.org>
- <aaffb32f-6ca9-f9e3-9b1a-627125c563ed@redhat.com>
- <20191002182106.GC4643@worktop.programming.kicks-ass.net>
- <20191003181045.7fb1a5b3@gandalf.local.home>
- <7b4196a4-b6e1-7e55-c3e1-a02d97c262c7@redhat.com>
- <20191011070126.GU2328@hirez.programming.kicks-ass.net>
- <c482a958-e1f5-d39a-21e2-ade5cd41798e@redhat.com>
+        Fri, 11 Oct 2019 06:58:58 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BAwgEI021085;
+        Fri, 11 Oct 2019 10:58:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=2+Wa7wS3oWd2Zr0vdoPEF6aAnQQ9hFaPuFRwZk86Ews=;
+ b=UFFCIe76+UOJRY1dNMZ3/CmqTTe2zkODOKNfGsAD7Hpu/Uieujl/YtNlKrdTtSc0g9UY
+ NMeNfT+gETYtv1xyDdP+JuioI6HJOFpqVL6WfUu0Br7AjeHb5/5ZHoqSJqk+Zb7K0Luo
+ Rx74KWa1PaB2ZlFnp0LwoX7vl7TXU/7TJPMhW0xMgF7KnAACY44+5gnokg1ZVDPWsAUA
+ KuNBx1Sw5CYclIEmexZpxsAKY09cDcPCa6AXc5he//Zw0yE5BNBSOkOm5N+uGyhcmyOm
+ 9MK0lbIY0mQUwvHx7Cza8vBTxXYA6BVAUbdiyFovavL0ZcErB4SLuWOsKHIsInGKGeb6 XA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2vek4r0tvy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 10:58:52 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BAwpmJ012004;
+        Fri, 11 Oct 2019 10:58:51 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vj9quk4jf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 10:58:51 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9BAwBaL032347;
+        Fri, 11 Oct 2019 10:58:11 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 11 Oct 2019 10:58:11 +0000
+Date:   Fri, 11 Oct 2019 13:58:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>, devel@driverdev.osuosl.org,
+        outreachy-kernel@googlegroups.com, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [Outreachy kernel] [PATCH 1/5] staging: octeon: remove typedef
+ declaration for cvmx_wqe_t
+Message-ID: <20191011105804.GB4774@kadam>
+References: <cover.1570773209.git.wambui.karugax@gmail.com>
+ <1b16bc880fee5711f96ed82741f8268e4dac1ae6.1570773209.git.wambui.karugax@gmail.com>
+ <alpine.DEB.2.21.1910110817340.2662@hadrien>
+ <20191011085952.GA9748@wambui>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c482a958-e1f5-d39a-21e2-ade5cd41798e@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011085952.GA9748@wambui>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910110105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1031
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910110105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 09:37:10AM +0200, Daniel Bristot de Oliveira wrote:
-> On 11/10/2019 09:01, Peter Zijlstra wrote:
-> > On Fri, Oct 04, 2019 at 10:10:47AM +0200, Daniel Bristot de Oliveira wrote:
-> >> Currently, ftrace_rec entries are ordered inside the group of functions, but
-> >> "groups of function" are not ordered. So, the current int3 handler does a (*):
-> > We can insert a sort() of the vector right before doing
-> > text_poke_bp_batch() of course...
-> 
-> I agree!
-> 
-> What I tried to do earlier this week was to order the ftrace_pages in the
-> insertion [1], and so, while sequentially reading the pages with
-> do_for_each_ftrace_rec() we would already see the "ip"s in order.
-> 
-> As ftrace_pages are inserted only at boot and during a load of a module, this
-> would push the ordering for a very very slow path.
-> 
-> It works! But under the assumption that the address of functions in a module
-> does not intersect with the address of other modules/kernel, e.g.:
-> 
-> kernel:          module A:      module B:
-> [ 1, 2, 3, 4 ]   [ 7, 8, 9 ]    [ 15, 16, 19 ]
-> 
-> But this does not happen in practice, as I saw things like:
-> 
-> kernel:          module A:      module B:
-> [ 1, 2, 3, 4 ]   [ 7, 8, 18 ]   [ 15, 16, 19 ]
->                          ^^ <--- greater than the first of the next
-> 
-> Is this expected?
+On Fri, Oct 11, 2019 at 11:59:52AM +0300, Wambui Karuga wrote:
+> On Fri, Oct 11, 2019 at 08:18:25AM +0200, Julia Lawall wrote:
+> > 
+> > 
+> > On Fri, 11 Oct 2019, Wambui Karuga wrote:
+> > 
+> > > Remove typedef declaration from struct cvmx_wqe_t in
+> > 
+> > You can remove the _t from the name as well.
+> Should I remove the _t from all the enums/structs?
 
-Expected is I think a big word. That is, I would certainly not expect
-that, but I think I can see how it can happen.
+The _t means typedef (sort of, generally).
 
-Suppose that init sections are placed at the end (didn't verify, but
-makes sense), then suppose that A's 18 is in an init section, which gets
-freed once the module load is completed. We then proceed to load B,
-which then overlaps with what used to be A's init.
+regards,
+dan carpenter
 
-If this were the case, then while we could retain the pach location for
-A's 18, we would never actually modify it, because it's gotten marked
-freed or something (that's how jump_labels work, I didn't check what
-ftrace actually does here).
-
-So while the above contains some assumptions, it is a semi plausable
-explanation for what you've described.
