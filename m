@@ -2,125 +2,77 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9734ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092B2C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB27921D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E039121D7A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfJKIV2 (ORCPT
+        id S1727426AbfJKIWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:21:28 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:41245 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726983AbfJKIVZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:21:25 -0400
-X-UUID: 683957e80d3f4b828ae9e3cf2535bbf0-20191011
-X-UUID: 683957e80d3f4b828ae9e3cf2535bbf0-20191011
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1514359459; Fri, 11 Oct 2019 16:21:11 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 11 Oct
- 2019 16:21:07 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 11 Oct 2019 16:21:07 +0800
-Message-ID: <1570782069.5044.12.camel@mhfsdcap03>
-Subject: Re: [PATCH] net: stmmac: disable/enable ptp_ref_clk in
- suspend/resume flow
-From:   biao huang <biao.huang@mediatek.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     <davem@davemloft.net>, Jose Abreu <joabreu@synopsys.com>,
-        <andrew@lunn.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <jianguo.zhang@mediatek.com>, <boon.leong.ong@intel.com>,
-        <yong.wu@mediatek.com>
-Date:   Fri, 11 Oct 2019 16:21:09 +0800
-In-Reply-To: <20191010160103.63c3c0ed@cakuba.netronome.com>
-References: <20191009085649.6736-1-biao.huang@mediatek.com>
-         <20191010160103.63c3c0ed@cakuba.netronome.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 830FACAF2A292503757689C34417C3AFCD74A88CD9AC4330D44496E1DBE6BC492000:8
-X-MTK:  N
+        Fri, 11 Oct 2019 04:22:06 -0400
+Received: from ozlabs.org ([203.11.71.1]:51951 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726458AbfJKIWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 04:22:05 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 46qLXW1hmQz9sP4; Fri, 11 Oct 2019 19:22:03 +1100 (AEDT)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: 18217da36103c25d87870624dfa569e6b9906a90
+In-Reply-To: <20190930101342.36c1afa0@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: linux-next: build failure after merge of the powerpc tree
+Message-Id: <46qLXW1hmQz9sP4@ozlabs.org>
+Date:   Fri, 11 Oct 2019 19:22:03 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Appreciate your comments!
+On Mon, 2019-09-30 at 00:13:42 UTC, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the powerpc tree, today's linux-next build (powerpc64
+> allnoconfig) failed like this:
+> 
+> arch/powerpc/mm/book3s64/pgtable.c: In function 'flush_partition':
+> arch/powerpc/mm/book3s64/pgtable.c:216:3: error: implicit declaration of fu=
+> nction 'radix__flush_all_lpid_guest'; did you mean 'radix__flush_all_lpid'?=
+>  [-Werror=3Dimplicit-function-declaration]
+>   216 |   radix__flush_all_lpid_guest(lpid);
+>       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |   radix__flush_all_lpid
+> 
+> Caused by commit
+> 
+>   99161de3a283 ("powerpc/64s/radix: tidy up TLB flushing code")
+> 
+> radix__flush_all_lpid_guest() is only declared for CONFIG_PPC_RADIX_MMU
+> which is not set for this build.
+> 
+> I am not sure why this did not show up earlier (maybe a Kconfig
+> change?).
+> 
+> I added the following hack for today.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 30 Sep 2019 10:09:17 +1000
+> Subject: [PATCH] powerpc/64s/radix: fix for "tidy up TLB flushing code" and
+>  !CONFIG_PPC_RADIX_MMU
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-On Thu, 2019-10-10 at 16:01 -0700, Jakub Kicinski wrote:
-> On Wed, 9 Oct 2019 16:56:49 +0800, Biao Huang wrote:
-> > disable ptp_ref_clk in suspend flow, and enable it in resume flow.
-> > 
-> > Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> > ---
-> >  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> > index c7c9e5f162e6..b592aeecc3dd 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> > @@ -4469,6 +4469,8 @@ int stmmac_suspend(struct device *dev)
-> >  		stmmac_mac_set(priv, priv->ioaddr, false);
-> >  		pinctrl_pm_select_sleep_state(priv->device);
-> >  		/* Disable clock in case of PWM is off */
-> > +		if (priv->plat->clk_ptp_ref)
-> > +			clk_disable_unprepare(priv->plat->clk_ptp_ref);
-> 
-> I don't know much embedded, but it seems like this should perhaps just
-> be clk_disable() without the unprepare? stmmac_hw_teardown() is called
-> when driver is removed so it needs to unprepare as well.
-> 
-> Please feel free to explain to me why this needs to be
-> clk_disable_unprepare(), as I said - not an expert.
-> 
-As our clock owner's advice, there are prepare/unprepare clk_ops for
-pll, but no enable/disable clk_ops for it, and pll will be off only when
-the prepare reference count decrease to 0.
+Reapplied to powerpc fixes, thanks.
 
-so for the sake of power saving, we'd better call clk_disable_unprepare
-to turn the parent pll off.
+https://git.kernel.org/powerpc/c/18217da36103c25d87870624dfa569e6b9906a90
 
-> Also - if this is a bug fix and you'd like to have it backported to
-> older releases you need to add a Fixes tag.
-> 
-Thanks for the reminder, I'll add the fixes tag in the next version.
-> Thanks!
-> 
-> >  		clk_disable(priv->plat->pclk);
-> >  		clk_disable(priv->plat->stmmac_clk);
-maybe it should be clk_disable_unprepare(priv->plat->pclk);
-		   clk_disable_unprepare(priv->plat->stmmac_clk);
-> >  	}
-> > @@ -4535,6 +4537,8 @@ int stmmac_resume(struct device *dev)
-> >  		/* enable the clk previously disabled */
-> >  		clk_enable(priv->plat->stmmac_clk);
-> >  		clk_enable(priv->plat->pclk);
-> > +		if (priv->plat->clk_ptp_ref)
-> > +			clk_prepare_enable(priv->plat->clk_ptp_ref);
-> >  		/* reset the phy so that it's ready */
-> >  		if (priv->mii)
-> >  			stmmac_mdio_reset(priv->mii);
-> 
-
-
+cheers
