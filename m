@@ -2,143 +2,198 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D724AC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFF5ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA81F20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3837F206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qnAwrnQg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UTdlK9x/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfJKOiI (ORCPT
+        id S1727198AbfJKOiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:38:08 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38632 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfJKOiI (ORCPT
+        Fri, 11 Oct 2019 10:38:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46602 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfJKOiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:38:08 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j31so14177969qta.5
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 07:38:07 -0700 (PDT)
+        Fri, 11 Oct 2019 10:38:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o18so12168827wrv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 07:38:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kC6tRrQSq+U5wVR80DlQ4qp9ZXmbi64kvO32OghQf7A=;
-        b=qnAwrnQgcmLQ+Fk2BGmhAB4jF/lr9XuLxBbmiAg+o+3IrZnIBzJDWoZXEPD69eWYue
-         XjEoU2s6KzprJUWFnNiJh9IPBKiW9iyMFrAnqgMHT7QTQ1zOnezSwKU7tjn8Yv9aT8CR
-         3rA3qcy7Gm94hNqzWPFL5zU+TSYoioG0329Jw8V6jS5W8SSQCmiCuSGSHF9BoVKFok0O
-         gaDN4ZFd2lgYm+tYeOSCvo01SsSOsNvaL7SNyybB4HS18sZ12xuJ3dwoEBb3Nus9QiKD
-         scsxioexObiAewHmoi0H9wIb9Q0f9owbsSTjqf7S2RGLwoSP2uEY4e3d8pcGY4llqhsU
-         svCg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S3EXoewC8ZPtCv9nLggU0Zj9HWKeOk6ECJdLQvDSMxo=;
+        b=UTdlK9x/vx8fveM4Ymm5qY3K5Zb9V6o6M4vzALGQPrWOzHaFr6hvnm1jwW8LrcgH7J
+         dpkccxBxhP9m8hDIRPMZin+5PXvypVS8n97J3rneeBef1ZG1+KubdkC7TXVXeICgWVvk
+         cTMHpkLRKWNC633al8dBhpTAazgDabazAr51o+/FiidGXKR4Z1J7yUtbfCZCBkiJWB79
+         +33riSqX4ipriuOycPRBzA9fb+hzoUYV6oLVEFaRmAS3cB5pOy9PrmWv/AkKWW75+qqX
+         p1nUobztl20ad++WMJf+rmyLxzoG4qfMXgOJTv4PalN8qrL+5aTzco5Wu6Ss2XSvpY7o
+         63gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kC6tRrQSq+U5wVR80DlQ4qp9ZXmbi64kvO32OghQf7A=;
-        b=f5VSDHhOxLl5sJMazTRdqoxZMX26YhI8MSHSdJScMusbFlm0WC4gps89Q2dog26s44
-         OjMWLH5FzD+rVXrj3hcGBKH17rk7BLRbMmveiLYOtDUPzTSN5cbh80CwxxhfsMd0g9sC
-         0Gl12xeQlPErKV0eMwvW8/Z2yuTfwzqfxFQCkVJoijVFAvl3frguzAnMXdDBLqIYn2Ip
-         fRaO7AayqI+uOwhQLvY8W3ckteLG+/dIuOdADNx/3OZDobhnaBuXEl2UZsS0DrwEbZ9O
-         hpns+OyuhA9lQfJdGVA+fwUwPaxHW6xGDdmuQsixbfXaj2X6AhGwKKIHUJyCbRmy3F5T
-         CruA==
-X-Gm-Message-State: APjAAAUZAatbdKhr2XRdLXOJvF4Or7yx7IYaO645ExB/k9g5w+zC1dU7
-        F/cAIyrXPoL6yFv8C9Qz9xE=
-X-Google-Smtp-Source: APXvYqyeGe5VIm8U6UK/rwgLW9tmWUNSy4P2MQBlBs3d22PbmkGcYAs5uQi9Fa3ndHHdeBKrsb1AMQ==
-X-Received: by 2002:a05:6214:18f:: with SMTP id q15mr16177473qvr.129.1570804687085;
-        Fri, 11 Oct 2019 07:38:07 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id c14sm4690836qta.80.2019.10.11.07.38.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 07:38:05 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 83F1E4DD66; Fri, 11 Oct 2019 11:38:03 -0300 (-03)
-Date:   Fri, 11 Oct 2019 11:38:03 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf test: Avoid infinite loop for task exit case
-Message-ID: <20191011143803.GB32176@kernel.org>
-References: <20191011091942.29841-1-leo.yan@linaro.org>
- <20191011091942.29841-2-leo.yan@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S3EXoewC8ZPtCv9nLggU0Zj9HWKeOk6ECJdLQvDSMxo=;
+        b=gptnXZckowtjh68xCchcN74t8dV0aNvRFQHuNgcPUsSL3EhO7TZtJ43bWQVqiS8f1g
+         aigslYWCZTHReJOAt1iMaPwhu7aPvjmOQ1FOFtOBv1hstxtYYBEtzxvktdioMISW34th
+         UqoCcwMG9lG68DgCcf9sS/i2J/owlmCDZaArrHHZ/K/AlbxAvy7WgEq5GJeFP+wLceEG
+         f15rPHP9ZsCypYY33HFANTsbGIWr7Z/yr8TnzyGnjFSN9Y8xYrgGPpSsbNbXmSPNdzp9
+         HPEehksjmnwB1kR+VWW7H+3SwL7p7PA9yPGF5Wh0qF8iPfbrORdfM1eBe2ewVtybS9kN
+         hYZw==
+X-Gm-Message-State: APjAAAWElE9zn/fJ+N2Jrkt9H8eRBcTT3bXeWwLsqmaNhzFC6wrWvzb6
+        UiprSGzhYsUM5m30ff7EkcSilYDCCyJuFXAkEFMqQQ==
+X-Google-Smtp-Source: APXvYqxsxEzAf/2w0nVbCqmd0KII4ILHESmIMwZwa+BBIHCY8a/Dd5SoqYe5uWe55StmwOKEHhwCbkAbdrk1X0NHzh8=
+X-Received: by 2002:a5d:6b0a:: with SMTP id v10mr12774249wrw.32.1570804698063;
+ Fri, 11 Oct 2019 07:38:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011091942.29841-2-leo.yan@linaro.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157066230358.1059972.1736585303527133478.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu8ih2RffZHdwAnHZicL_v8CxV9WnCy+uA1jSSyh58xapA@mail.gmail.com>
+ <CAPcyv4iQ5Np3dDH=-a_7gPnWKBCHXGit2PN-h=Jw_eqj7Lb2BQ@mail.gmail.com>
+ <CAKv+Gu9co_FTVYWNZsXF0H+fV1K76pZX4Yv11ANE6NwDBT3pBQ@mail.gmail.com>
+ <CAPcyv4iCpA_a7272HXVwBY3NqR1RbyuoXbQOPWG2xFHgqN8-iA@mail.gmail.com>
+ <CAKv+Gu-EOaEmiT_ZA8RBatWAWNVXnNgv-wLJSp5b-zhvof3D6g@mail.gmail.com> <CAPcyv4jHTrrfNnBNw_H_4wGWGsg1QF1582BcN-078K5KCBhNBA@mail.gmail.com>
+In-Reply-To: <CAPcyv4jHTrrfNnBNw_H_4wGWGsg1QF1582BcN-078K5KCBhNBA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 11 Oct 2019 16:38:05 +0200
+Message-ID: <CAKv+Gu-Y+0KjUj91N1WFZK=vR6CUKCtiNbQtYMxn2vY1Wh-_dg@mail.gmail.com>
+Subject: Re: [PATCH v6 05/12] x86/efi: EFI soft reservation to E820 enumeration
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Oct 11, 2019 at 05:19:42PM +0800, Leo Yan escreveu:
-> When execute task exit testing case, Perf tool stucks in this case and
-> doesn't return back on Arm64 Juno board.
-> 
-> After dig into this issue, since Juno board has Arm's big.LITTLE CPUs,
-> thus the PMUs are not compatible between the big CPUs and little CPUs.
-> This leads to PMU event cannot be enabled properly when the traced task
-> is migrated from one variant's CPU to another variant.  Finally, the
-> test case runs into infinite loop for cannot read out any event data
-> after return from polling.
+On Fri, 11 Oct 2019 at 16:35, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Thu, Oct 10, 2019 at 10:52 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> >
+> > On Fri, 11 Oct 2019 at 04:39, Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > On Thu, Oct 10, 2019 at 11:41 AM Ard Biesheuvel
+> > > <ard.biesheuvel@linaro.org> wrote:
+> > > >
+> > > > On Thu, 10 Oct 2019 at 20:31, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > >
+> > > > > On Wed, Oct 9, 2019 at 11:45 PM Ard Biesheuvel
+> > > > > <ard.biesheuvel@linaro.org> wrote:
+> > > > > >
+> > > > > > On Thu, 10 Oct 2019 at 01:19, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > > > >
+> > > > > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > > > > > > interpretation of the EFI Memory Types as "reserved for a specific
+> > > > > > > purpose".
+> > > > > > >
+> > > > > > > The proposed Linux behavior for specific purpose memory is that it is
+> > > > > > > reserved for direct-access (device-dax) by default and not available for
+> > > > > > > any kernel usage, not even as an OOM fallback.  Later, through udev
+> > > > > > > scripts or another init mechanism, these device-dax claimed ranges can
+> > > > > > > be reconfigured and hot-added to the available System-RAM with a unique
+> > > > > > > node identifier. This device-dax management scheme implements "soft" in
+> > > > > > > the "soft reserved" designation by allowing some or all of the
+> > > > > > > reservation to be recovered as typical memory. This policy can be
+> > > > > > > disabled at compile-time with CONFIG_EFI_SOFT_RESERVE=n, or runtime with
+> > > > > > > efi=nosoftreserve.
+> > > > > > >
+> > > > > > > This patch introduces 2 new concepts at once given the entanglement
+> > > > > > > between early boot enumeration relative to memory that can optionally be
+> > > > > > > reserved from the kernel page allocator by default. The new concepts
+> > > > > > > are:
+> > > > > > >
+> > > > > > > - E820_TYPE_SOFT_RESERVED: Upon detecting the EFI_MEMORY_SP
+> > > > > > >   attribute on EFI_CONVENTIONAL memory, update the E820 map with this
+> > > > > > >   new type. Only perform this classification if the
+> > > > > > >   CONFIG_EFI_SOFT_RESERVE=y policy is enabled, otherwise treat it as
+> > > > > > >   typical ram.
+> > > > > > >
+> > > > > > > - IORES_DESC_SOFT_RESERVED: Add a new I/O resource descriptor for
+> > > > > > >   a device driver to search iomem resources for application specific
+> > > > > > >   memory. Teach the iomem code to identify such ranges as "Soft Reserved".
+> > > > > > >
+> > > > > > > A follow-on change integrates parsing of the ACPI HMAT to identify the
+> > > > > > > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
+> > > > > > > now, just identify and reserve memory of this type.
+> > > > > > >
+> > > > > > > Cc: <x86@kernel.org>
+> > > > > > > Cc: Borislav Petkov <bp@alien8.de>
+> > > > > > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > > > > > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > > > > > > Cc: Darren Hart <dvhart@infradead.org>
+> > > > > > > Cc: Andy Shevchenko <andy@infradead.org>
+> > > > > > > Cc: Andy Lutomirski <luto@kernel.org>
+> > > > > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > > > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > > > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > > > > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > > > >
+> > > > > > For the EFI changes
+> > > > > >
+> > > > > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > > > >
+> > > > > > although I must admit I don't follow the enum add_efi_mode logic 100%
+> > > > >
+> > > > > I'm open to suggestions as I'm not sure it's the best possible
+> > > > > organization. The do_add_efi_memmap() routine has the logic to
+> > > > > translate EFI to E820, but unless "add_efi_memmap" is specified on the
+> > > > > kernel command line the EFI memory map is ignored. For
+> > > > > soft-reservation support I want to reuse do_add_efi_memmap(), but
+> > > > > otherwise avoid any other side effects of considering the EFI map.
+> > > > > What I'm missing is the rationale for why "add_efi_memmap" is required
+> > > > > before considering the EFI memory map.
+> > > > >
+> > > > > If there is a negative side effect to always using the EFI map then
+> > > > > the new "add_efi_mode" designation constrains it to just the
+> > > > > soft-reservation case.
+> > > > >
+> > > >
+> > > > Could we make the presence of any EFI_MEMORY_SP regions imply
+> > > > add_efi_memmap? That way, it is guaranteed that we don't regress
+> > > > existing systems, while establishing clear and unambiguous semantics
+> > > > for new systems that rely on these changes in order to be able to use
+> > > > the special purpose memory as intended.
+> > >
+> > > In fact that's how it works. EFI_MEMORY_SP is unconditionally added.
+> > > Other EFI memory types are optionally added with the add_efi_memmap
+> > > option.
+> >
+> > That is not what I meant.
+> >
+> > Why not behave as if 'add_efi_memmap' was passed if any EFI_MEMORY_SP
+> > regions exist?
+>
+> Hmm, ok, on the assumption that any platform that is modern enough to
+> specify EFI_MEMORY_SP likely does not need the opt-in?
 
-Thanks, I'll go over this after I finish the current pull request,
+Indeed.
 
-- Arnaldo
- 
-> Eventually, we need to work out formal solution to allow PMU events can
-> be freely migrated from one CPU variant to another, but this is a
-> difficult task and a different topic.  This patch tries to fix the Perf
-> test case to avoid infinite loop, when the testing detects 1000 times
-> retrying for reading empty events, it will directly bail out and return
-> failure.  This allows the Perf tool can continue its other test cases.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/tests/task-exit.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
-> index ca0a6ca43b13..d85c9f608564 100644
-> --- a/tools/perf/tests/task-exit.c
-> +++ b/tools/perf/tests/task-exit.c
-> @@ -53,6 +53,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
->  	struct perf_cpu_map *cpus;
->  	struct perf_thread_map *threads;
->  	struct mmap *md;
-> +	int retry_count = 0;
->  
->  	signal(SIGCHLD, sig_handler);
->  
-> @@ -132,6 +133,13 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
->  out_init:
->  	if (!exited || !nr_exit) {
->  		evlist__poll(evlist, -1);
-> +
-> +		if (retry_count++ > 1000) {
-> +			pr_debug("Failed after retrying 1000 times\n");
-> +			err = -1;
-> +			goto out_free_maps;
-> +		}
-> +
->  		goto retry;
->  	}
->  
-> -- 
-> 2.17.1
+> I can get on
+> board with that. It's also simple enough to undo if it causes problems
+> in practice.
 
--- 
-
-- Arnaldo
+Yes, and we'll only have one code path to reason about here.
