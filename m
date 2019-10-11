@@ -2,107 +2,179 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D80C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368F0C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B55820659
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06ED72196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:07:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TIio2u/G"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="WyVKVt5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfJKGDu (ORCPT
+        id S1727089AbfJKGHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 02:03:50 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40124 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfJKGDt (ORCPT
+        Fri, 11 Oct 2019 02:07:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34255 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfJKGHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 02:03:49 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d26so5145320pgl.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 23:03:49 -0700 (PDT)
+        Fri, 11 Oct 2019 02:07:01 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j11so10443057wrp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 23:06:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=78A7v/fFdhcM+C5XDuRJJKeqGNkh4U2EwVbQjxNiiy4=;
-        b=TIio2u/GyvX/4+US8sREUzM6Z3hhenOMPV+381jep+sjhxKO4duKvimQMh/WPE0REM
-         vQ+hdZk6PiDEiiEI5UMiLw/ELIodqrpT+mMyC4BMOpNwqbEijlZRR2UvLGuqF2TIfk/E
-         m72QSO8KEWaevDMZk1br1k5QbLZAl8VWvHZcAZsEJqnh/kvm6aU3y4x1u92gjAauMcJx
-         52kH3N0IiXPMGRJ+7CQs70UYTu0oBw38cAR1iLYvYDuypvyDYmmYbidP53/YVZAdmPVX
-         uIK1IPLS5uI3Z7/lGmjddnqWztt0vd7rZGNO01P/gZR7v2LfI8uvp9pfluKIfS5gSwga
-         yr0w==
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3c0Nh1nl7bfCKYDWMo6YBu1F2vfCDmy0MmjZnscBG0g=;
+        b=WyVKVt5QOLSPRbgNDDvSj2Y0YxDMaLTkTz+Ox7Wk4QgNlzEfXEiSD7kaqsOOZzb1Lo
+         LF2tdc8Sl8WLRUepsFc2TV35mao25gY/hIu9GOWfm1E4Rcz1N+2ehwygWpXiQ0GS4QAN
+         T33qT5Ck8xXBAUaRTJ5XeKCiuIeHdEvbdPFCNGRKM2Tm2B66Oe7D80FAl8wKU2bIzVDB
+         go8bRROgToWLqKOMGHfdaBDbgsGvt3h7Q+AekzwbxlqQkmthRiueUKxAmdyuxDMZpj52
+         8JnPxY4/SUR4zYesI5gV8uXomBt/dgHG60goR7m0tUiITI/YobwxUTTH7aERvRSg7lvO
+         Sn/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=78A7v/fFdhcM+C5XDuRJJKeqGNkh4U2EwVbQjxNiiy4=;
-        b=sZxIrTXdY1+7o3nuqTZMzrBAy/m60tAOwoxSr1n0ETJfINOokMKZsH1LBcjSMLOLDT
-         /As7UeXF41QQJn4SAgD9bGmqc1iYJPUL+/QJTSeD5wtRSnbSk+YCtNCpFkM8sR6kozeM
-         zCUBErSxB1f7+7BRtFu5rQBGuRD2AzbMbn6iYWAG7+x6I3Fy/T+uMcSXzmuifckHbC6J
-         BY8Lf9joy8GX6y+t49vc1etDbdTHH1WpGOzY8j/4kn6f215fvuBNDV95NmxGJOqffS+u
-         58sVdSNh0qEYJt9CghMu3Zxn7pW+GIb9mqqC3Bjgb302gIRWfmHN7ED1wocJ8rWMoQP7
-         yzgw==
-X-Gm-Message-State: APjAAAW9CnDwRDSB55t9oTdherJIC2DgQXu2j1BNODt02HuLc1RItyCO
-        wDG1d+lpE4fCOfnbk5TQhHY=
-X-Google-Smtp-Source: APXvYqxAbeDhratVFVpqAgrqEEyvL459IUn6tvSiUjmOrTT0qhi5OdkDFtTTk4rrCFl8KFbdt0RVOg==
-X-Received: by 2002:a62:6411:: with SMTP id y17mr14803815pfb.158.1570773827623;
-        Thu, 10 Oct 2019 23:03:47 -0700 (PDT)
-Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id p11sm9395715pgb.1.2019.10.10.23.03.41
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3c0Nh1nl7bfCKYDWMo6YBu1F2vfCDmy0MmjZnscBG0g=;
+        b=AWIKR1S8+jMx1wWvoBCxIcx6PLSgdC6Se6XfZIKRMC1A+299EpuEReXCzMsZecyo2g
+         ZGRFeprZzjsr08WzpSb3sW/CPX8sSEkTdBQE0NNyfGEU9L6Sea6Y3lmqQNzJ7pGcJo+6
+         Z/h9p4eo/lhPtzUOanXT0+Gm5JmM+sqpGTyrKsMwdCK0YTQfiMTElXrKg/mXiZycLxet
+         QZOZxYGBbo6x+RHjdMSrjXGzAxpsY6xpPENv84xD43e2YRRYxS78yG0GcuZFI7J2lYOR
+         Jiga9HdZScZWk9RLHZM2X4ZBqCz3U9z3ZK7XnelKoLk9qUe61q4AZsuYPHwEyEH41JwI
+         z0UA==
+X-Gm-Message-State: APjAAAXUNSoCC1p24zCQNfhGuxykP8PVX9jc9uNPRu6poGahW5M9pVZi
+        YJeyVow13vN7eVuXAbNvkmfXMg==
+X-Google-Smtp-Source: APXvYqyB7/z06H6vETxUm8/rkhpQb8b4m12tfU6RIXrGBDuo0eiAZgmNXMQX1rjx2aN/nQgrT/ztMQ==
+X-Received: by 2002:a5d:4ecc:: with SMTP id s12mr8554196wrv.73.1570774016719;
+        Thu, 10 Oct 2019 23:06:56 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id z22sm7618060wmf.2.2019.10.10.23.06.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 23:03:47 -0700 (PDT)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Wambui Karuga <wambui.karugax@gmail.com>
-Subject: [PATCH 5/5] staging: octeon: remove typedef declaration for cvmx_fau_op_size_t
-Date:   Fri, 11 Oct 2019 09:02:42 +0300
-Message-Id: <777c55e3bb9f2f4804765bb0daca1720d8aa5085.1570773209.git.wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1570773209.git.wambui.karugax@gmail.com>
-References: <cover.1570773209.git.wambui.karugax@gmail.com>
+        Thu, 10 Oct 2019 23:06:56 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 08:06:55 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v7 09/17] ethtool: generic handlers for GET
+ requests
+Message-ID: <20191011060655.GE2901@nanopsycho>
+References: <cover.1570654310.git.mkubecek@suse.cz>
+ <b000e461e348ba1a0af30f2e8493618bce11ec12.1570654310.git.mkubecek@suse.cz>
+ <20191010135639.GJ2223@nanopsycho>
+ <20191010180401.GD22163@unicorn.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010180401.GD22163@unicorn.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove addition of new typedef for enum cvmx_fau_op_size_t
-in drivers/staging/octeon/octeon-stubs.h.
-Issue found by checkpatch.pl
+Thu, Oct 10, 2019 at 08:04:01PM CEST, mkubecek@suse.cz wrote:
+>On Thu, Oct 10, 2019 at 03:56:39PM +0200, Jiri Pirko wrote:
+>> Wed, Oct 09, 2019 at 10:59:27PM CEST, mkubecek@suse.cz wrote:
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/staging/octeon/octeon-stubs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[...]
 
-diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-index 06e6a0223416..a0aa99e7b757 100644
---- a/drivers/staging/octeon/octeon-stubs.h
-+++ b/drivers/staging/octeon/octeon-stubs.h
-@@ -205,12 +205,12 @@ enum cvmx_fau_reg_32_t {
- 	CVMX_FAU_REG_32_START	= 0,
- };
- 
--typedef enum {
-+enum cvmx_fau_op_size_t {
- 	CVMX_FAU_OP_SIZE_8 = 0,
- 	CVMX_FAU_OP_SIZE_16 = 1,
- 	CVMX_FAU_OP_SIZE_32 = 2,
- 	CVMX_FAU_OP_SIZE_64 = 3
--} cvmx_fau_op_size_t;
-+};
- 
- typedef enum {
- 	CVMX_SPI_MODE_UNKNOWN = 0,
--- 
-2.23.0
 
+>> >+			   const struct nlmsghdr *nlhdr, struct net *net,
+>> >+			   const struct get_request_ops *request_ops,
+>> >+			   struct netlink_ext_ack *extack, bool require_dev)
+>> >+{
+>> >+	struct nlattr **tb;
+>> >+	int ret;
+>> >+
+>> >+	tb = kmalloc_array(request_ops->max_attr + 1, sizeof(tb[0]),
+>> >+			   GFP_KERNEL);
+>> >+	if (!tb)
+>> >+		return -ENOMEM;
+>> >+
+>> >+	ret = nlmsg_parse(nlhdr, GENL_HDRLEN, tb, request_ops->max_attr,
+>> >+			  request_ops->request_policy, extack);
+>> >+	if (ret < 0)
+>> >+		goto out;
+>> >+	ret = ethnl_parse_header(req_info, tb[request_ops->hdr_attr], net,
+>> >+				 extack, request_ops->header_policy,
+>> >+				 require_dev);
+>> 
+>> This is odd. It's the other way around in compare what I would expect.
+>> There is a request-specific header attr that contains common header
+>> attributes parsed in ethnl_parse_header.
+>> 
+>> Why don't you have the common header as a root then then have one nested
+>> attr that would carry the request-specific attrs?
+>> 
+>> Similar to how it is done in rtnl IFLA_INFO_KIND.
+>
+>To me, what you suggest feels much more odd. I thought about it last
+>time, I thought about it now and the only reason for such layout I could
+>come with would be to work around the unfortunate design flaw of the way
+>validation and parsing is done in genetlink (see below).
+>
+>The situation with IFLA_INFO_KIND is a bit different, what you suggest
+>would rather correspond to having only attributes common for all RTNL on
+>top level and hiding all IFLA_* attributes into a nest (and the same
+>with attributes specific to "ip addr", "ip route", "ip rule" etc.)
+>
+>> You can parse the common stuff in pre_doit/start genl ops and you
+>> don't have to explicitly call ethnl_parse_header.
+>> Also, that would allow you to benefit from the genl doit/dumpit initial
+>> attr parsing and save basically this whole function (alloc,parse).
+>> 
+>> Code would be much more simple to follow then.
+>> 
+>> Still seems to me that you use the generic netlink but you don't like
+>> the infra too much so you make it up yourself again in parallel - that is
+>> my feeling reading the code. I get the argument about the similarities
+>> of the individual requests and why you have this request_ops (alhough I
+>> don't like it too much).
+>
+>The only thing I don't like about the genetlink infrastructure is the
+>design decision that policy and corresponding maxattr is an attribute of
+>the family rather than a command. This forces anyone who wants to use it
+>to essentially have one common message format for all commands and if
+>that is not possible, to do what you suggest above, hide the actual
+>request into a nest.
+
+But that is fine, the genetlink code would parse the common attributes
+for you according to the family, then you inside ethnl_get_doit prepare
+(alloc, parse) data for ops->prepare_data and other callbacks, according
+to per-request ops->policy and ops->maxattr.
+
+Then the request callbacks would get parsed attrs according to their
+type. And you can use similar technique for set dumpit/ops. Would be
+neat.
+
+
+>
+>Whether you use one common attribute type for "command specific nest" or
+>different attribute for each request type, you do not actually make
+>things simpler, you just move the complexity one level lower. You will
+>still have to do your own (per request) parsing of the actual request,
+>the only difference is that you will do it in a different place and use
+>nla_parse_nested() rather than nlmsg_parse().
+>
+>Rather than bending the message layout to fit into the limitations of
+>unified genetlink parsing, I prefer to keep the logical message
+>structure and do the parsing on my own.
+
+You are going to still have it but the person looking at the traffic by
+nlmon would know what is happening and also you are going to use
+genetlink in non-abusive way :)
+
+>
+
+[...]
