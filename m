@@ -2,137 +2,86 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B575ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFD2ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC0D2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3888B214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbfJKOvz (ORCPT
+        id S1727575AbfJKOwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:51:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:34842 "EHLO foss.arm.com"
+        Fri, 11 Oct 2019 10:52:17 -0400
+Received: from mga01.intel.com ([192.55.52.88]:11795 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbfJKOvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:51:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 614DB142F;
-        Fri, 11 Oct 2019 07:51:54 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 607CF3F68E;
-        Fri, 11 Oct 2019 07:51:51 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 15:51:49 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>
-Cc:     Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Weimer <fweimer@redhat.com>,
-        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v2 04/12] arm64: docs: cpu-feature-registers: Document
- ID_AA64PFR1_EL1
-Message-ID: <20191011145148.GK27757@arm.com>
-References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
- <1570733080-21015-5-git-send-email-Dave.Martin@arm.com>
- <87zhi7l8qz.fsf@linaro.org>
+        id S1726174AbfJKOwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:52:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 07:52:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,284,1566889200"; 
+   d="scan'208";a="193554670"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Oct 2019 07:52:14 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DB58F16A; Fri, 11 Oct 2019 17:52:13 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Corey Minyard <minyard@acm.org>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] ipmi: use %*ph to print small buffer
+Date:   Fri, 11 Oct 2019 17:52:13 +0300
+Message-Id: <20191011145213.65082-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87zhi7l8qz.fsf@linaro.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 02:19:48PM +0100, Alex Bennée wrote:
-> 
-> Dave Martin <Dave.Martin@arm.com> writes:
-> 
-> > Commit d71be2b6c0e1 ("arm64: cpufeature: Detect SSBS and advertise
-> > to userspace") exposes ID_AA64PFR1_EL1 to userspace, but didn't
-> > update the documentation to match.
-> >
-> > Add it.
-> >
-> > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> >
-> > ---
-> >
-> > Note to maintainers:
-> >
-> >  * This patch has been racing with various other attempts to fix
-> >    the same documentation in the meantime.
-> >
-> >    Since this patch only fixes the documenting for pre-existing
-> >    features, it can safely be dropped if appropriate.
-> >
-> >    The _new_ documentation relating to BTI feature reporting
-> >    is in a subsequent patch, and needs to be retained.
-> > ---
-> >  Documentation/arm64/cpu-feature-registers.rst | 15 +++++++++++----
-> >  1 file changed, 11 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
-> > index 2955287..b86828f 100644
-> > --- a/Documentation/arm64/cpu-feature-registers.rst
-> > +++ b/Documentation/arm64/cpu-feature-registers.rst
-> > @@ -168,8 +168,15 @@ infrastructure:
-> >       +------------------------------+---------+---------+
-> >
-> >
-> > -  3) MIDR_EL1 - Main ID Register
-> > +  3) ID_AA64PFR1_EL1 - Processor Feature Register 1
-> > +     +------------------------------+---------+---------+
-> > +     | Name                         |  bits   | visible |
-> > +     +------------------------------+---------+---------+
-> > +     | SSBS                         | [7-4]   |    y    |
-> > +     +------------------------------+---------+---------+
-> > +
-> >
-> > +  4) MIDR_EL1 - Main ID Register
-> >       +------------------------------+---------+---------+
-> >       | Name                         |  bits   | visible |
-> >       +------------------------------+---------+---------+
-> > @@ -188,7 +195,7 @@ infrastructure:
-> >     as available on the CPU where it is fetched and is not a system
-> >     wide safe value.
-> >
-> > -  4) ID_AA64ISAR1_EL1 - Instruction set attribute register 1
-> > +  5) ID_AA64ISAR1_EL1 - Instruction set attribute register 1
-> 
-> If I'm not mistaken .rst has support for auto-enumeration if the #
-> character is used. That might reduce the pain of re-numbering in future.
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Ack, though it would be good to go one better and generate this document
-from the cpufeature.c tables (or from some common source).  The numbers
-are relatively easy to maintain -- remembering to update the document
-at all seems the bigger maintenance headache right now.
+Use %*ph format to print small buffer as hex string.
 
-I think this particular patch is superseded by similar fixes from other
-people, just not in torvalds/master yet.
+The change is safe since the specifier can handle up to 64 bytes and taking
+into account the buffer size of 100 bytes on stack the function has never been
+used to dump more than 32 bytes. Note, this also avoids potential buffer
+overflow if the length of the input buffer is bigger.
 
-[...]
+Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/char/ipmi/ipmi_msghandler.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-Cheers
----Dave
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index 2aab80e19ae0..d0cefd95fa57 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -48,14 +48,7 @@ static int handle_one_recv_msg(struct ipmi_smi *intf,
+ static void ipmi_debug_msg(const char *title, unsigned char *data,
+ 			   unsigned int len)
+ {
+-	int i, pos;
+-	char buf[100];
+-
+-	pos = snprintf(buf, sizeof(buf), "%s: ", title);
+-	for (i = 0; i < len; i++)
+-		pos += snprintf(buf + pos, sizeof(buf) - pos,
+-				" %2.2x", data[i]);
+-	pr_debug("%s\n", buf);
++	pr_debug("%s: %*ph\n", title, len, buf);
+ }
+ #else
+ static void ipmi_debug_msg(const char *title, unsigned char *data,
+-- 
+2.23.0
+
