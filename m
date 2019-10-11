@@ -2,184 +2,79 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF358C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D2AECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0A4214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570797854;
-	bh=MEKOQdvYjwnV7XxSeqjDPTn7gFVU7mMSkuBj2ymboMo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UH4Ei2+T4yLTZECSUXpzDfcQZ7OdV2tG+TSfaxpVYb00hHZtPCLlVMTSq6Yk/MRzP
-	 oNiE2ri0DAcCuNHCaRYrv0hSQmEG0FpBGS/LLZ6OdAk8nMDgmT4fWWj/W2fvl7MvOV
-	 KFE1NjPq/wB2uXSkV8bYCK1Bdjm+EiX9v2ftnw54=
+	by mail.kernel.org (Postfix) with ESMTP id 78E7A214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbfJKMoN (ORCPT
+        id S1728135AbfJKMo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727589AbfJKMoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:44:13 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF33221D80;
-        Fri, 11 Oct 2019 12:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570797852;
-        bh=MEKOQdvYjwnV7XxSeqjDPTn7gFVU7mMSkuBj2ymboMo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZswXe9+0nzY9X3l/t3kfrKcFduNQAtzvf6wLYtAd4LyML+5zr0+WLbeYI5A/SBhRL
-         g22T2gP80BXIk1gRH5n8sVSZamE6EyqH+DWoYmrK+ympuyzeXFLGusCA23jlsQd1WR
-         312EcVaYJoaK3EZXUvcfBjJZqGu8hrCG+epWsNz8=
-Received: by mail-qt1-f182.google.com with SMTP id o12so13666577qtf.3;
-        Fri, 11 Oct 2019 05:44:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAUwrIFVadetYfDUD4pmvh7eh/VRU8Iskecs82+ZqK9Ku+BSAehk
-        i07NyzfLGBXti83rSaDyuMViexNroasfBEjMLg==
-X-Google-Smtp-Source: APXvYqwVc+cipqk2hiwueeEGXDM/JKUDZPO53c7H1w6zenvtLkPW0FEI+rIctoU/ClWSPxDeQqBjwzaQSHKcUKdJyZ8=
-X-Received: by 2002:a0c:e606:: with SMTP id z6mr15185686qvm.135.1570797850997;
- Fri, 11 Oct 2019 05:44:10 -0700 (PDT)
+        Fri, 11 Oct 2019 08:44:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3695 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727589AbfJKMo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 08:44:58 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7A4318DD6829E73B8D62;
+        Fri, 11 Oct 2019 20:44:56 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
+ 20:44:53 +0800
+To:     <atul.gupta@chelsio.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>
+CC:     <willy@infradead.org>, <kstewart@linuxfoundation.org>,
+        <ira.weiny@intel.com>, <akpm@linux-foundation.org>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH] crypto: chtls - remove the redundant check in chtls_recvmsg()
+Message-ID: <3c88d0b1-b6c6-9641-ffdf-20104a684402@huawei.com>
+Date:   Fri, 11 Oct 2019 20:44:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20191002151410.15306-1-benjamin.gaignard@st.com>
-In-Reply-To: <20191002151410.15306-1-benjamin.gaignard@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 11 Oct 2019 07:43:59 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK0hBSzn4YfhGmFyv8a5bCDtBvW0_bdhJwk0g_N7iVFtQ@mail.gmail.com>
-Message-ID: <CAL_JsqK0hBSzn4YfhGmFyv8a5bCDtBvW0_bdhJwk0g_N7iVFtQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: media: Convert stm32 cec bindings to json-schema
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Yannick Fertre <yannick.fertre@st.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 10:14 AM Benjamin Gaignard
-<benjamin.gaignard@st.com> wrote:
->
-> Convert the STM32 cec binding to DT schema format using json-schema
+A warning message reported by a static analysis tool:
+  "
+  Either the condition 'if(skb)' is redundant or there is possible null
+  pointer dereference: skb.
+  "
 
-Similar comments here too.
+Remove the unused redundant check.
 
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/media/st,stm32-cec.txt     | 19 --------
->  .../devicetree/bindings/media/st,stm32-cec.yaml    | 57 ++++++++++++++++++++++
->  2 files changed, 57 insertions(+), 19 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-cec.txt
->  create mode 100644 Documentation/devicetree/bindings/media/st,stm32-cec.yaml
->
-> diff --git a/Documentation/devicetree/bindings/media/st,stm32-cec.txt b/Documentation/devicetree/bindings/media/st,stm32-cec.txt
-> deleted file mode 100644
-> index 6be2381c180d..000000000000
-> --- a/Documentation/devicetree/bindings/media/st,stm32-cec.txt
-> +++ /dev/null
-> @@ -1,19 +0,0 @@
-> -STMicroelectronics STM32 CEC driver
-> -
-> -Required properties:
-> - - compatible : value should be "st,stm32-cec"
-> - - reg : Physical base address of the IP registers and length of memory
-> -        mapped region.
-> - - clocks : from common clock binding: handle to CEC clocks
-> - - clock-names : from common clock binding: must be "cec" and "hdmi-cec".
-> - - interrupts : CEC interrupt number to the CPU.
-> -
-> -Example for stm32f746:
-> -
-> -cec: cec@40006c00 {
-> -       compatible = "st,stm32-cec";
-> -       reg = <0x40006C00 0x400>;
-> -       interrupts = <94>;
-> -       clocks = <&rcc 0 STM32F7_APB1_CLOCK(CEC)>, <&rcc 1 CLK_HDMI_CEC>;
-> -       clock-names = "cec", "hdmi-cec";
-> -};
-> diff --git a/Documentation/devicetree/bindings/media/st,stm32-cec.yaml b/Documentation/devicetree/bindings/media/st,stm32-cec.yaml
-> new file mode 100644
-> index 000000000000..c99144107185
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/st,stm32-cec.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/st,stm32-cec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 CEC bindings
-> +
-> +maintainers:
-> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> +  - Yannick Fertre <yannick.fertre@st.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32-cec
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module Clock
-> +      - description: Bus Clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: cec
-> +      - const: hdmi-cec
-> +
-> +  pinctrl-names: true
-> +
-> +patternProperties:
-> +  "^pinctrl-[0-9]+$": true
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ drivers/crypto/chelsio/chtls/chtls_io.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-You don't need to list the pinctrl properties.
+diff --git a/drivers/crypto/chelsio/chtls/chtls_io.c b/drivers/crypto/chelsio/chtls/chtls_io.c
+index 0891ab8..0125f4e 100644
+--- a/drivers/crypto/chelsio/chtls/chtls_io.c
++++ b/drivers/crypto/chelsio/chtls/chtls_io.c
+@@ -1841,8 +1841,7 @@ int chtls_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 			tp->urg_data = 0;
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
+ 		if (avail + offset >= skb->len) {
+-			if (likely(skb))
+-				chtls_free_skb(sk, skb);
++			chtls_free_skb(sk, skb);
+ 			buffers_freed++;
 
-additionalProperties: false
+ 			if  (copied >= target &&
+-- 
+2.7.4.3
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    cec: cec@40006c00 {
-> +        compatible = "st,stm32-cec";
-> +        reg = <0x40006c00 0x400>;
-> +        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&rcc CEC_K>, <&clk_lse>;
-> +        clock-names = "cec", "hdmi-cec";
-> +    };
-> +
-> +...
-> --
-> 2.15.0
->
