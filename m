@@ -2,91 +2,103 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B78CC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7649C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274362053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35BB2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="MTUThyLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfJKAyA (ORCPT
+        id S1727731AbfJKA5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:54:00 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3728 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727518AbfJKAx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:53:59 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DAD81C24DE4D932AB452;
-        Fri, 11 Oct 2019 08:53:57 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
- 08:53:50 +0800
-Subject: Re: [RFC PATCH 0/3] ACPI, arm64: Backport for ACPI PPTT 6.3 thread
- flag for stable 4.19.x
-To:     John Garry <john.garry@huawei.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <robert.moore@intel.com>, <erik.schmauss@intel.com>,
-        <sudeep.holla@arm.com>, <rrichter@marvell.com>,
-        <jeremy.linton@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linuxarm@huawei.com>, <gregkh@linuxfoundation.org>,
-        <wanghuiqiang@huawei.com>
-References: <1570714192-236724-1-git-send-email-john.garry@huawei.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <ed2ce119-dd68-131c-72e9-e95fc8fc6465@huawei.com>
-Date:   Fri, 11 Oct 2019 08:53:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Thu, 10 Oct 2019 20:57:07 -0400
+Received: from mail-40133.protonmail.ch ([185.70.40.133]:39155 "EHLO
+        mail-40133.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727518AbfJKA5H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 20:57:07 -0400
+Date:   Fri, 11 Oct 2019 00:57:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1570755424;
+        bh=TaWqFGzwNnSXrjd7mMijBXSMPxeqM7gfm+RUBuvzjjE=;
+        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
+        b=MTUThyLtEblJX5Ca3b2QsWgOwQWgSDEyxmQnoxabqZyXFaO1q4RWDp26EoafDESN0
+         hjbd7d33hvhGvn6k6N1Wl0wlv9lAF9kc/Z2qBWpfzDYAxMQCx9TtrCCy1BwcIppQBg
+         N2mTg+XyZUEmTdbeZWh0h1mSTYw2FKRrfTXKJQ18=
+To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
+        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: [PATCH v4 1/4] HID: logitech: Add MX Mice over Bluetooth
+Message-ID: <uBbIS3nFJ1jdYNLHcqjW5wxQAwmZv0kmYEoeoPrxNhfzi6cHwmCOY-ewdqe7S1hNEj-p4Hd9D0_Y3PymUTdh_6WFXuMmIYUkV2xaKCPMYz0=@protonmail.com>
+Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
 MIME-Version: 1.0
-In-Reply-To: <1570714192-236724-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On Saturday, October 5, 2019 9:04 PM, Mazin Rezk <mnrzk@protonmail.com> wro=
+te:
 
-On 2019/10/10 21:29, John Garry wrote:
-> This series is a backport of the ACPI PPTT 6.3 thread flag feature for
-> supporting arm64 systems.
-> 
-> The background is that some arm64 implementations are broken, in that they
-> incorrectly advertise that a CPU is mutli-threaded, when it is not - the
-> HiSilicon Taishanv110 rev 2, aka tsv110, being an example.
-> 
-> This leads to the system topology being incorrect. The reason being that
-> arm64 topology code uses a combination of ACPI PPTT (Processor Properties
-> Topology Table) and the system MPIDR (Multiprocessor Affinity Register) MT
-> bit to determine the topology.
-> 
-> Until ACPI 6.3, the PPTT did not have any method to determine whether
-> a CPU was multi-threaded, so only the MT bit is used - hence the
-> broken topology for some systems.
-> 
-> In ACPI 6.3, a PPTT thread flag was introduced, which - when supported -
-> would be used by the kernel to determine really if a CPU is multi-threaded
-> or not, so that we don't get incorrect topology.
+> This patch adds support for several MX mice over Bluetooth. The device ID=
+s
+> have been copied from the libratbag device database and their features
+> have been based on their DJ device counterparts.
 
-Thanks for doing this, and this patch set fix my CPU topology issue
-in 4.19 kernel with updated firmware.
+No changes have been made to this patch in v4. However, it should be noted
+that the only device that has been thoroughly tested in this patch is the
+MX Master (b01e). Further testing for the other devices may be required.
 
-> 
-> Note: I'm sending this as an RFC before sending to stable proper. I also
-> have a 5.2 and 5.3 backport which are almost the same, and only
-> significant change being that the ACPICA patch is not required.
+Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+---
+ drivers/hid/hid-logitech-hidpp.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-5.2 stable was end of life, so only 4.19 and 5.3 are needed I think.
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hi=
+dpp.c
+index 0179f7ed77e5..85fd0c17cc2f 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -3773,6 +3773,24 @@ static const struct hid_device_id hidpp_devices[] =
+=3D {
+ =09{ /* MX5500 keyboard over Bluetooth */
+ =09  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
+ =09  .driver_data =3D HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
++=09{ /* MX Anywhere 2 mouse over Bluetooth */
++=09  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb013),
++=09  .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
++=09{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb018),
++=09  .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
++=09{ /* MX Anywhere 2S mouse over Bluetooth */
++=09  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01a),
++=09  .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
++=09{ /* MX Master mouse over Bluetooth */
++=09  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012),
++=09  .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
++=09{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb017),
++=09  .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
++=09{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e),
++=09  .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
++=09{ /* MX Master 2S mouse over Bluetooth */
++=09  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb019),
++=09  .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
+ =09{}
+ };
 
-Thanks
-Hanjun
+--
+2.23.0
 
