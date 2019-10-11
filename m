@@ -2,178 +2,103 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30A8C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC69C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7C921920
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:39:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dtnWhUTe"
+	by mail.kernel.org (Postfix) with ESMTP id C75B421920
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:42:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfJKBjp (ORCPT
+        id S1728011AbfJKBmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 21:39:45 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:30639 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfJKBjo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:39:44 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191011013941epoutp0359d8de98908c83e572c16a658b31c804~MdA-CQtGo0976209762epoutp03K
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:39:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191011013941epoutp0359d8de98908c83e572c16a658b31c804~MdA-CQtGo0976209762epoutp03K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1570757981;
-        bh=FLiLxeLnYPsqkocvnQZ7jVry7G7CObnrO9EAQ2IVVsk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=dtnWhUTeajq58uzTao948KpLsufEFjNCKuXLUM0Q9KiyZGpQmxwUQstgd+svpron3
-         eruwlplcDBU1aXSIou2qi1CfpXJwdldVegXR9pssOpUC6PnzHx0ghOkSAOMVKioZSQ
-         xPLO08sdJV2Xb5plWySD5tmtmfDctNjIG5+MAXKk=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191011013940epcas1p19e420ea129c9d89ecaf4f0c83d910b5a~MdA_cNSaL0730507305epcas1p1j;
-        Fri, 11 Oct 2019 01:39:40 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 46q9cB0P25zMqYlh; Fri, 11 Oct
-        2019 01:39:38 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        13.C3.04144.45DDF9D5; Fri, 11 Oct 2019 10:39:32 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191011013931epcas1p2b9c547ee3cb8cc383791590104796e82~MdA2NlQvX0996609966epcas1p22;
-        Fri, 11 Oct 2019 01:39:31 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191011013931epsmtrp2f648c8987246ebd42bc9d031a8ae924e~MdA2M9oXT1193611936epsmtrp2O;
-        Fri, 11 Oct 2019 01:39:31 +0000 (GMT)
-X-AuditID: b6c32a35-2dfff70000001030-46-5d9fdd54cd71
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        11.5F.03889.35DDF9D5; Fri, 11 Oct 2019 10:39:31 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191011013931epsmtip2e5343484b72b1832aefbab4d213e1d0f~MdA1-1lD22054720547epsmtip2j;
-        Fri, 11 Oct 2019 01:39:31 +0000 (GMT)
-Subject: Re: [PATCH] extcon: sm5502: Reset registers during initialization
-To:     Stephan Gerhold <stephan@gerhold.net>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <7432858f-3a22-b7f6-ec02-4e44dc9e71b5@samsung.com>
-Date:   Fri, 11 Oct 2019 10:44:34 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Thu, 10 Oct 2019 21:42:02 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59416 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727751AbfJKBmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 21:42:02 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 18:42:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,282,1566889200"; 
+   d="scan'208";a="198555052"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga006.jf.intel.com with ESMTP; 10 Oct 2019 18:42:00 -0700
+Date:   Fri, 11 Oct 2019 09:43:54 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v7 4/7] KVM: VMX: Load Guest CET via VMCS when CET is
+ enabled in Guest
+Message-ID: <20191011014354.GA11176@local-michael-cet-test>
+References: <20190927021927.23057-1-weijiang.yang@intel.com>
+ <20190927021927.23057-5-weijiang.yang@intel.com>
+ <CALMp9eS1V2fRcwogcEkHonvVAgfc9dU=7A4V-D0Rcoc=v82VAw@mail.gmail.com>
+ <20191009064339.GC27851@local-michael-cet-test>
+ <CALMp9eS+_riWYK=Zvk330YST4G_q_GfN2LfGXWz85aVnyXmsOg@mail.gmail.com>
+ <20191010013027.GA1196@local-michael-cet-test.sh.intel.com>
+ <CALMp9eRPyyVVsWEQu_vxt7fMp9jkFcC4x3dGdMvchLVRExQ6DA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191010154720.52330-1-stephan@gerhold.net>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0gUURTm7uyOo7U2rZpnJXSdHqSg7qhra2gJhUgFSklEJjas19XcFzNr
-        tIWhSb4oyx6Qqzam2MM/1qKigigamkRhWGKFZWkYCUpaEVbU7o6R/75z7nfOd75zD0WoysgQ
-        qsBix7yFMzGkn7xrKEIblTklZmsnKlT68d4GUv+m9B6pn2yMTyHSypv2pNV0tKG0ZVdoBnGs
-        MCkfc7mY12CLwZpbYDEmMwcO5+zN0SVo2Sg2Ub+T0Vg4M05m9h3MiEotMLllGM0pzlTkTmVw
-        gsDE7E7irUV2rMm3CvZkBttyTbZEW7TAmYUiizHaYDXvYrXaWJ2beKIwX1xZRLa7qtPnP7qI
-        ErTsX40oCuh4GC4trEZ+lIruRtBaLvpIwRKCqc6a1eA7gqeLX1E18vVWjL37RUgPfQjqGluR
-        FCwimH5QT3pYAfR+uN086uPRCKQzoXMo3pMmaA2svHUpPJikI6H/06SXvoEOh5c/ZrwCSno3
-        zPVUyDxYTm+DV7MePkUF0UfhyTdOomyE0bpZuQf70onwR7yDpPbB8HpWlEk4DMo6671zAj1A
-        whNnk0IysA8ezt1aNRMAn0c6fCQcAssLfaSEz8L90UekVFyJoKN/bLU4Dvpbr8k8AxF0BLT3
-        xkjpcOj52bg6hD8sfLuokNarhMpylUTZAuPTUzIJq6Glooq8ghjnGjvONRacayw4/4s1IXkb
-        2oRtgtmIBdbGrv1rF/IeYKSuG11/dnAQ0RRi1itvhonZKgV3SnCYBxFQBBOobHY2ZKuUuZzj
-        DOatOXyRCQuDSOdedi0REmSwus/ZYs9hdbFxcXH6eDZBx7JMsFKB3H1oI2fHhRjbMP+vTkb5
-        hpQg0V88kO5Xf26PNXTIUWxMUbc8L3hx1ZSK1Znamb4HBnWQo3NE83h8uql7PnMurbwiqz3G
-        eSnvSDhWJ0Y3Fl//Ke64sO5GXixeudwwukQEh2ePbUyIKXt/Mosfbv79LN0wkvJYc8jCT1Z1
-        fZnP2z6QpKRSP/yZqLtW/bz2+OaSrYxcyOfYSIIXuL8Ee9J8lgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsWy7bCSvG7w3fmxBj9nyVpc3jWHzeJ24wo2
-        ixtzTRyYPdoW2Hv0bVnF6PF5k1wAcxSXTUpqTmZZapG+XQJXxvxf7xkLlgtVND3dxNzA+Jmv
-        i5GTQ0LAROLC/T/MXYxcHEICuxkltr47zAaRkJSYdvEoUIIDyBaWOHy4GKLmLaPEoddrwWqE
-        BbwkFi46yQ5iiwiESFw7tZAZxGYWUJD4dW8TK0RDD6NEy6FXTCAJNgEtif0vboA18wsoSlz9
-        8ZgRxOYVsJN4vrMdrIZFQFXi5hOQZk4OUYEIiefbb0DVCEqcnPmEBcTmFLCU+D9/GSPEMnWJ
-        P/MuQS0Wl7j1ZD4ThC0v0bx1NvMERuFZSNpnIWmZhaRlFpKWBYwsqxglUwuKc9Nziw0LjPJS
-        y/WKE3OLS/PS9ZLzczcxguNBS2sH44kT8YcYBTgYlXh4Z8jPjxViTSwrrsw9xCjBwawkwrto
-        1pxYId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzy+ccihQTSE0tSs1NTC1KLYLJMHJxSDYyNroa2
-        h5/tK56yYGP/v2iOqXnBsbK7WP/yqPw8njlX2G+C0ONd9232Jxy/cM3eunGCNq+3Q33vixmF
-        3naFMU3O+vk6dn4O31alqVjlzvrWoJ97e9431bVBbU7XZ7A88z01v3TqzebQb0uXTDo3b5/g
-        lfuF0X36p/yZixl3qa7kYO2UShDznabEUpyRaKjFXFScCACCW38ngwIAAA==
-X-CMS-MailID: 20191011013931epcas1p2b9c547ee3cb8cc383791590104796e82
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191010154845epcas4p2c3aa5f0afd9fad05c0ab88d99792415a
-References: <CGME20191010154845epcas4p2c3aa5f0afd9fad05c0ab88d99792415a@epcas4p2.samsung.com>
-        <20191010154720.52330-1-stephan@gerhold.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eRPyyVVsWEQu_vxt7fMp9jkFcC4x3dGdMvchLVRExQ6DA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 10. 11. 오전 12:47, Stephan Gerhold wrote:
-> On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
-> seems to keep interrupts enabled for SM5502 when booting Linux.
-> Changing the cable state (i.e. plugging in a cable) - until the driver
-> is loaded - will therefore produce an interrupt that is never read.
+On Thu, Oct 10, 2019 at 04:44:17PM -0700, Jim Mattson wrote:
+> On Wed, Oct 9, 2019 at 6:28 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> >
+> > On Wed, Oct 09, 2019 at 04:08:50PM -0700, Jim Mattson wrote:
+> > > On Tue, Oct 8, 2019 at 11:41 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> > > >
+> > > > On Wed, Oct 02, 2019 at 11:54:26AM -0700, Jim Mattson wrote:
+> > > > > On Thu, Sep 26, 2019 at 7:17 PM Yang Weijiang <weijiang.yang@intel.com> wrote:
+> > > > > > +       if (cet_on)
+> > > > > > +               vmcs_set_bits(VM_ENTRY_CONTROLS,
+> > > > > > +                             VM_ENTRY_LOAD_GUEST_CET_STATE);
+> > > > >
+> > > > > Have we ensured that this VM-entry control is supported on the platform?
+> > > > >
+> > > > If all the checks pass, is it enought to ensure the control bit supported?
+> > >
+> > > I don't think so. The only way to check to see if a VM-entry control
+> > > is supported is to check the relevant VMX capability MSR.
+> > >
+> > It's a bit odd, there's no relevant CET bit in VMX cap. MSR, so I have
+> > to check like this.
 > 
-> In this situation, the cable state will be stuck forever on the
-> initial state because SM5502 stops sending interrupts.
-> This can be avoided by clearing those pending interrupts after
-> the driver has been loaded.
-> 
-> One way to do this is to reset all registers to default state
-> by writing to SM5502_REG_RESET. This ensures that we start from
-> a clean state, with all interrupts disabled.
-> 
-> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> ---
->  drivers/extcon/extcon-sm5502.c | 4 ++++
->  drivers/extcon/extcon-sm5502.h | 2 ++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
-> index dc43847ad2b0..b3d93baf4fc5 100644
-> --- a/drivers/extcon/extcon-sm5502.c
-> +++ b/drivers/extcon/extcon-sm5502.c
-> @@ -65,6 +65,10 @@ struct sm5502_muic_info {
->  /* Default value of SM5502 register to bring up MUIC device. */
->  static struct reg_data sm5502_reg_data[] = {
->  	{
-> +		.reg = SM5502_REG_RESET,
-> +		.val = SM5502_REG_RESET_MASK,
-> +		.invert = true,
-> +	}, {
->  		.reg = SM5502_REG_CONTROL,
->  		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
->  		.invert = false,
-> diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
-> index 9dbb634d213b..ce1f1ec310c4 100644
-> --- a/drivers/extcon/extcon-sm5502.h
-> +++ b/drivers/extcon/extcon-sm5502.h
-> @@ -237,6 +237,8 @@ enum sm5502_reg {
->  #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
->  						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
->  
-> +#define SM5502_REG_RESET_MASK			(0x1)
-> +
->  /* SM5502 Interrupts */
->  enum sm5502_irq {
->  	/* INT1 */
-> 
+> Bit 52 of the IA32_VMX_ENTRY_CTLS MSR (index 484H) [and bit 52 of the
+> IA32_VMX_TRUE_ENTRY_CTLS MSR (index 490H), on hardware that supports
+> the "true" VMX capability MSRs] will be 1 if it is legal to set bit 20
+> of the VM-entry controls field to 1.
+>
+Oh, you meant this, I'll add the check, thanks.
 
-Applied it. Thanks.
+> > > BTW, what about the corresponding VM-exit control?
+> > The kernel supervisor mode CET is not implemented yet, so I don't load host CET
+> > states on VM-exit, in future, I'll add it.
+> 
+> If you don't clear the supervisor mode CET state on VM-exit and the
+> guest has set IA32_S_CET.SH_STK_EN, doesn't that mean that
+> supervisor-mode shadow stacks will then be enabled on the host after
+> VM-exit?
 
-When you send the patch on later, you better to specify the version
-on patch title as following:
-	[PATCH v2] extcon: sm5502: Reset registers during initialization
+Yeah, I should clear the MSR on VM-exit before supervisor-mode is
+implemented. Thank you!
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+BTW, I'll move this bit-set before VM-entry, vmx_set_cr4() is not a
+suitable place to set the bit.
