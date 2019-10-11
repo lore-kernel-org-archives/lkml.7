@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F44C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A328BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6712A2245A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7957121920
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bRMOq0IW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V5SSXiOU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfJKAGe (ORCPT
+        id S1727681AbfJKAGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:06:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40398 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbfJKAGb (ORCPT
+        Thu, 10 Oct 2019 20:06:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35696 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbfJKAGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:06:31 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d22so3582930pll.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:06:30 -0700 (PDT)
+        Thu, 10 Oct 2019 20:06:37 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so4958568pfw.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:06:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+3bCi815qDNxWXNrKwLag9umK9x4HOIYX8e5T++c31U=;
-        b=bRMOq0IWtWeHkkuzrRxpAOjG+rR4hWqjBGGYrfiCb+g0Wo93lleOSNL5PlbwrMlX2m
-         UcAArEZAR28PhZpJ9ZQ2+Jx+5/XMFJo+6I1v47AsbgjpXxkd6kYBN+6tNzEwHNlN3EwO
-         GygHfZgrHj6MFQQb22vJtjl9/O27IaD4iLe3I=
+        bh=ZBHIZP91az7zFwublbVFIxiUPIvhqcpifj2fGv96nM4=;
+        b=V5SSXiOU/2LqW+YWMWv2g8oE+O+8OqaVciMsltfBT6XAT+UmV5TNibrJhEtO410tXb
+         /OnY7p2PJHhLZDVx/eoiV5CS19ovJ8wYT+GUzFT433OArvUWowNhqhNxhPEcl3xsRkLc
+         lb2h6DldDdTdhb4T8VOEQWN9DqKeDub1PenXs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+3bCi815qDNxWXNrKwLag9umK9x4HOIYX8e5T++c31U=;
-        b=DAlJFN/qS0PiCEIjdT2VrV5Wis5NS++JGwm7OqamNxLNkXUKg8TwvjU7OmoX+bPdKP
-         WNu2f5rpbvozlbzQQwg3qRh3A7gxaOYm4856CERSVtWXnft6XZ0WHQPSv1JFJZYaN+t6
-         UHYAzYtocS9lY9xO3BAJCYdPCDZgsosN3lSFESxvCHXgAigrKJ8K8m7NKIEIHkZDyyUf
-         0Phehs3MGCSVn6dcRvodG7SvoJ47DBwu3gB5GMILwnf/WYX5JZdbgo25ha9ggJTQJ1Hi
-         Bdzn73XLr//qfAfTPQC9gSF+NJIGh6WqbPE/WSWwitpJG1ftzloIBTBfBjANLWX5WD4U
-         sICQ==
-X-Gm-Message-State: APjAAAXtI901gsQz6Y7sIgT61MlrImsAWPkbqe0BNtuDq5LdygoaAoCW
-        Jv9JmTPQYs132puV1aelfbYCvg==
-X-Google-Smtp-Source: APXvYqy0SXetX4NVbIikmpWxxdgAixqZ0JQVCss4X5LB0rtMMzElGLP4iAy5+ASzEE3vf1MUkTjFzA==
-X-Received: by 2002:a17:902:8218:: with SMTP id x24mr11712571pln.139.1570752390532;
-        Thu, 10 Oct 2019 17:06:30 -0700 (PDT)
+        bh=ZBHIZP91az7zFwublbVFIxiUPIvhqcpifj2fGv96nM4=;
+        b=C10/d2KfsL7Rm7zO+gOfXo+oamKh7yqFIqUxyXEyHkQ0oGLfDLOwZGCE12MmSjixHF
+         bp3nHARzmyX9h/l+ER2kwGqXat3F6rrxFn93eynQCtOko/Igm5UCannWf2ZPAWqLdBx+
+         osjZNEw52Zuq5nHo9Jfykv6tpvvh1F+4yLYHMK0tH5fG5HNoPmBA5PKMibXt3crRLSsT
+         uvQKu44VQouhH8bDF+ELIgoqMGoXSfTUG1Gheu9XAii1w9VE6RQB3efSVChuRbETtUF8
+         Y+kr0tn3VTGe7nT+sjKpzWBoImvnk2qjN5yBhR2mp0ZB7bvrUB0jFpvnjgA8oalkC6WY
+         3W7g==
+X-Gm-Message-State: APjAAAXGEU4d1HtMSAYEmFyuX25XhTefOUf6Dnv35r12mxHmsg3ZkVPs
+        WaXuGLljMejifPIbhGFiEhYXbQ==
+X-Google-Smtp-Source: APXvYqxIURRErEoWhZaXwUViGgbdz47KTCDz+s6x66JTdawkgAKVzwgCcLp2sAcohHOnlA3CSEfhcA==
+X-Received: by 2002:aa7:9157:: with SMTP id 23mr13458255pfi.73.1570752397032;
+        Thu, 10 Oct 2019 17:06:37 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i8sm7454975pgl.18.2019.10.10.17.06.23
+        by smtp.gmail.com with ESMTPSA id n15sm5864975pjt.13.2019.10.10.17.06.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 17:06:24 -0700 (PDT)
+        Thu, 10 Oct 2019 17:06:35 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Borislav Petkov <bp@alien8.de>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -70,9 +70,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/29] vmlinux.lds.h: Move Program Header restoration into NOTES macro
-Date:   Thu, 10 Oct 2019 17:05:49 -0700
-Message-Id: <20191011000609.29728-10-keescook@chromium.org>
+Subject: [PATCH v2 28/29] x86/mm: Report actual image regions in /proc/iomem
+Date:   Thu, 10 Oct 2019 17:06:08 -0700
+Message-Id: <20191011000609.29728-29-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191011000609.29728-1-keescook@chromium.org>
 References: <20191011000609.29728-1-keescook@chromium.org>
@@ -81,143 +81,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for moving NOTES into RO_DATA, make the Program Header
-assignment restoration be part of the NOTES macro itself.
+The resource reservations in /proc/iomem made for the kernel image did
+not reflect the gaps between text, rodata, and data. Add the "rodata"
+resource and update the start/end calculations to match the respective
+calls to free_kernel_image_pages().
+
+Before (booted with "nokaslr" for easier comparison):
+
+00100000-bffd9fff : System RAM
+  01000000-01e011d0 : Kernel code
+  01e011d1-025619bf : Kernel data
+  02a95000-035fffff : Kernel bss
+
+After:
+
+00100000-bffd9fff : System RAM
+  01000000-01e011d0 : Kernel code
+  02000000-023d4fff : Kernel rodata
+  02400000-025619ff : Kernel data
+  02a95000-035fffff : Kernel bss
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/alpha/kernel/vmlinux.lds.S   |  5 +----
- arch/ia64/kernel/vmlinux.lds.S    |  4 +---
- arch/mips/kernel/vmlinux.lds.S    |  3 +--
- arch/powerpc/kernel/vmlinux.lds.S |  4 +---
- arch/s390/kernel/vmlinux.lds.S    |  4 +---
- arch/x86/kernel/vmlinux.lds.S     |  3 +--
- include/asm-generic/vmlinux.lds.h | 13 +++++++++++--
- 7 files changed, 17 insertions(+), 19 deletions(-)
+ arch/x86/kernel/setup.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/alpha/kernel/vmlinux.lds.S b/arch/alpha/kernel/vmlinux.lds.S
-index 363a60ba7c31..cdfdc91ce64c 100644
---- a/arch/alpha/kernel/vmlinux.lds.S
-+++ b/arch/alpha/kernel/vmlinux.lds.S
-@@ -34,10 +34,7 @@ SECTIONS
- 	swapper_pg_dir = SWAPPER_PGD;
- 	_etext = .;	/* End of text section */
- 
--	NOTES :text :note
--	.dummy : {
--		*(.dummy)
--	} :text
-+	NOTES
- 
- 	RODATA
- 	EXCEPTION_TABLE(16)
-diff --git a/arch/ia64/kernel/vmlinux.lds.S b/arch/ia64/kernel/vmlinux.lds.S
-index 7cf4958b732d..bfc937ec168c 100644
---- a/arch/ia64/kernel/vmlinux.lds.S
-+++ b/arch/ia64/kernel/vmlinux.lds.S
-@@ -70,9 +70,7 @@ SECTIONS {
- 	/*
- 	 * Read-only data
- 	 */
--	NOTES :text :note       /* put .notes in text and mark in PT_NOTE  */
--	code_continues : {
--	} :text                /* switch back to regular program...  */
-+	NOTES
- 
- 	EXCEPTION_TABLE(16)
- 
-diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-index 1c95612eb800..6a22f531d815 100644
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -81,8 +81,7 @@ SECTIONS
- 		__stop___dbe_table = .;
- 	}
- 
--	NOTES NOTES_HEADERS
--	.dummy : { *(.dummy) } :text
-+	NOTES
- 
- 	_sdata = .;			/* Start of data section */
- 	RODATA
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-index 7e26e20c8324..4f19d814d592 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -164,9 +164,7 @@ SECTIONS
- #endif
- 	EXCEPTION_TABLE(0)
- 
--	NOTES :text :note
--	/* Restore program header away from PT_NOTE. */
--	.dummy : { *(.dummy) } :text
-+	NOTES
- 
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 77ea96b794bd..591e885a852e 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -143,6 +143,13 @@ struct boot_params boot_params;
  /*
-  * Init sections discarded at runtime
-diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index 646d939346df..f88eedeb915a 100644
---- a/arch/s390/kernel/vmlinux.lds.S
-+++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -52,9 +52,7 @@ SECTIONS
- 		_etext = .;		/* End of text section */
- 	} :text = 0x0700
- 
--	NOTES :text :note
--
--	.dummy : { *(.dummy) } :text
-+	NOTES
- 
- 	RO_DATA_SECTION(PAGE_SIZE)
- 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 2e18bf5c1aed..8be25b09c2b7 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -148,8 +148,7 @@ SECTIONS
- 		_etext = .;
- 	} :text = 0x9090
- 
--	NOTES :text :note
--	.dummy : { *(.dummy) } :text
-+	NOTES
- 
- 	EXCEPTION_TABLE(16)
- 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index f5dd45ce73f1..97d4299f14dc 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -56,10 +56,18 @@
- 
- /*
-  * Only some architectures want to have the .notes segment visible in
-- * a separate PT_NOTE ELF Program Header.
-+ * a separate PT_NOTE ELF Program Header. When this happens, it needs
-+ * to be visible in both the kernel text's PT_LOAD and the PT_NOTE
-+ * Program Headers. In this case, though, the PT_LOAD needs to be made
-+ * the default again so that all the following sections don't also end
-+ * up in the PT_NOTE Program Header.
+  * Machine setup..
   */
- #ifdef EMITS_PT_NOTE
- #define NOTES_HEADERS		:text :note
-+#define NOTES_HEADERS_RESTORE	__restore_ph : { *(.__restore_ph) } :text
-+#else
-+#define NOTES_HEADERS
-+#define NOTES_HEADERS_RESTORE
- #endif
++static struct resource rodata_resource = {
++	.name	= "Kernel rodata",
++	.start	= 0,
++	.end	= 0,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
++};
++
+ static struct resource data_resource = {
+ 	.name	= "Kernel data",
+ 	.start	= 0,
+@@ -951,7 +958,9 @@ void __init setup_arch(char **cmdline_p)
  
- /* Align . to a 8 byte boundary equals to maximum function alignment. */
-@@ -798,7 +806,8 @@
- 		__start_notes = .;					\
- 		KEEP(*(.note.*))					\
- 		__stop_notes = .;					\
--	}
-+	} NOTES_HEADERS							\
-+	NOTES_HEADERS_RESTORE
+ 	code_resource.start = __pa_symbol(_text);
+ 	code_resource.end = __pa_symbol(_etext)-1;
+-	data_resource.start = __pa_symbol(_etext);
++	rodata_resource.start = __pa_symbol(__start_rodata);
++	rodata_resource.end = __pa_symbol(__end_rodata)-1;
++	data_resource.start = __pa_symbol(_sdata);
+ 	data_resource.end = __pa_symbol(_edata)-1;
+ 	bss_resource.start = __pa_symbol(__bss_start);
+ 	bss_resource.end = __pa_symbol(__bss_stop)-1;
+@@ -1040,6 +1049,7 @@ void __init setup_arch(char **cmdline_p)
  
- #define INIT_SETUP(initsetup_align)					\
- 		. = ALIGN(initsetup_align);				\
+ 	/* after parse_early_param, so could debug it */
+ 	insert_resource(&iomem_resource, &code_resource);
++	insert_resource(&iomem_resource, &rodata_resource);
+ 	insert_resource(&iomem_resource, &data_resource);
+ 	insert_resource(&iomem_resource, &bss_resource);
+ 
 -- 
 2.17.1
 
