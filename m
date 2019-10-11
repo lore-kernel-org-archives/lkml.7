@@ -2,178 +2,70 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B0CC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78077ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABACB206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:48:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="ulyS6KHB"
+	by mail.kernel.org (Postfix) with ESMTP id 522FE2190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570816208;
+	bh=TScF5Enw8y29nxbqKbzVNfhmhUbqAYlxbTflATRRKdE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Eqa4D8ypEE0VFghwZiAgoUGDOeEXTIm22sNxXuNHcOUc1XLNDzCzbSkw9bhcm61Fg
+	 mLGaAtqOE6cnjmuXLy2xLrne8eIQP8Nd8YeN/Hk8NEYNaJRxOC5his1Yc/EFp4T0Yu
+	 tosv8VCForgOIgfXASSHuOoyejJwQnWcJ/pbHuNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfJKRsA (ORCPT
+        id S1728722AbfJKRuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:48:00 -0400
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:29066 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728620AbfJKRsA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:48:00 -0400
-Date:   Fri, 11 Oct 2019 17:47:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1570816076;
-        bh=mvyYHFIJXQlg65e3hoLOmXCGjj1vtnmvU+8bO7YTk+Q=;
-        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
-        b=ulyS6KHBE0Q+4tMVt5vPKWSwn0HSBvlVcN5jnd3ApYzAymbzjLAuf/8sDR0weXLUJ
-         gBmV5gsbMYzy/orHFRkQT+xsHXL7TjI0wrkHaiVmgNjfgRclm3bzEnUDPlejYit7At
-         DT6BehsYvyzmk33l9d8tPFXqXPlCHjg36BW+YnJ8=
-To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Cc:     "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
-        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: [PATCH v5 2/2] HID: logitech: Support WirelessDeviceStatus connect events
-Message-ID: <23olKBO7VYh8VS2ZXNY_4uBAy5jnxyXdBqzXiBZdvPxVp845bPLo6Xe_vwYMuSlozOUg2LYs5ANpE4wy6UBtF9p5YnoLz1Udq6HxW89R3tE=@protonmail.com>
-Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Fri, 11 Oct 2019 13:50:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728474AbfJKRuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 13:50:06 -0400
+Subject: Re: [GIT PULL] Hyper-V commits for v5.4-rc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570816206;
+        bh=TScF5Enw8y29nxbqKbzVNfhmhUbqAYlxbTflATRRKdE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=c1fGTldIJje0g6x+w3GxZnvBB5AHlqpVpIptg5IZ9dHbPfZVyfDUlhP+2TbPXO0Ae
+         OW9PwAFLm5bseNXjFxW/ieKmn+gcqhJCgdyJypL1HeK6skzh/HSQgcbN0uEwf6T4Cz
+         cWXwlV1pfATR3TgkWEdeH0k6AREZ+eIA2jJp76YY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191011150106.44699206CD@mail.kernel.org>
+References: <20191011150106.44699206CD@mail.kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191011150106.44699206CD@mail.kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+ tags/hyperv-fixes-signed
+X-PR-Tracked-Commit-Id: 83b50f83a96899f30c6369ef5988412fa2354ab2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 56c642e2aa1c3be3e51e136eace6502aca8116ab
+Message-Id: <157081620625.1160.10292156664410555727.pr-tracker-bot@kernel.org>
+Date:   Fri, 11 Oct 2019 17:50:06 +0000
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@microsoft.com, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, sthemmin@microsoft.com,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows WirelessDeviceStatus (0x1d4b) events to be detected as
-connection events in the hid-logitech-hidpp module.
+The pull request you sent on Fri, 11 Oct 2019 11:01:05 -0400:
 
-Devices with HIDPP_QUIRK_WIRELESS_DEVICE_STATUS use WirelessDeviceStatus
-instead of traditional connect events. Since all Bluetooth LE devices seem
-to act this way, HIDPP_QUIRK_CLASS_BLUETOOTH_LE aliases this quirk.
+> git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
 
-Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
----
- drivers/hid/hid-logitech-hidpp.c | 42 ++++++++++++++++++++++++++++----
- 1 file changed, 37 insertions(+), 5 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/56c642e2aa1c3be3e51e136eace6502aca8116ab
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hi=
-dpp.c
-index 3692fb883602..0dfa9b22b536 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -72,6 +72,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
- #define HIDPP_QUIRK_HIDPP_EXTRA_MOUSE_BTNS=09BIT(30)
- #define HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS=09BIT(31)
- #define HIDPP_QUIRK_MISSING_SHORT_REPORTS=09BIT(32)
-+#define HIDPP_QUIRK_WIRELESS_DEVICE_STATUS=09BIT(33)
+Thank you!
 
- /* These are just aliases for now */
- #define HIDPP_QUIRK_KBD_SCROLL_WHEEL HIDPP_QUIRK_HIDPP_WHEELS
-@@ -82,7 +83,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
- =09=09=09=09=09 HIDPP_QUIRK_HI_RES_SCROLL_X2120 | \
- =09=09=09=09=09 HIDPP_QUIRK_HI_RES_SCROLL_X2121)
-
--#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE=09HIDPP_QUIRK_MISSING_SHORT_REPORTS
-+#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE=09(HIDPP_QUIRK_MISSING_SHORT_REPORT=
-S | \
-+=09=09=09=09=09 HIDPP_QUIRK_WIRELESS_DEVICE_STATUS)
-
- #define HIDPP_QUIRK_DELAYED_INIT=09=09HIDPP_QUIRK_NO_HIDINPUT
-
-@@ -189,6 +191,8 @@ struct hidpp_device {
-
- =09struct hidpp_battery battery;
- =09struct hidpp_scroll_counter vertical_wheel_counter;
-+
-+=09u8 wireless_feature_index;
- };
-
- /* HID++ 1.0 error codes */
-@@ -402,10 +406,14 @@ static inline bool hidpp_match_error(struct hidpp_rep=
-ort *question,
- =09    (answer->fap.params[0] =3D=3D question->fap.funcindex_clientid);
- }
-
--static inline bool hidpp_report_is_connect_event(struct hidpp_report *repo=
-rt)
-+static inline bool hidpp_report_is_connect_event(struct hidpp_device *hidp=
-p,
-+=09=09=09=09=09=09 struct hidpp_report *report)
- {
--=09return (report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) &&
--=09=09(report->rap.sub_id =3D=3D 0x41);
-+=09return ((hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STATUS) &&
-+=09=09(report->fap.feature_index =3D=3D hidpp->wireless_feature_index)) ||
-+=09      (((report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) ||
-+=09=09(hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)) &&
-+=09=09(report->rap.sub_id =3D=3D 0x41));
- }
-
- /**
-@@ -1282,6 +1290,24 @@ static int hidpp_battery_get_property(struct power_s=
-upply *psy,
- =09return ret;
- }
-
-+/* -----------------------------------------------------------------------=
---- */
-+/* 0x1d4b: Wireless device status                                         =
-    */
-+/* -----------------------------------------------------------------------=
---- */
-+#define HIDPP_PAGE_WIRELESS_DEVICE_STATUS=09=09=090x1d4b
-+
-+static int hidpp_set_wireless_feature_index(struct hidpp_device *hidpp)
-+{
-+=09u8 feature_type;
-+=09int ret;
-+
-+=09ret =3D hidpp_root_get_feature(hidpp,
-+=09=09=09=09     HIDPP_PAGE_WIRELESS_DEVICE_STATUS,
-+=09=09=09=09     &hidpp->wireless_feature_index,
-+=09=09=09=09     &feature_type);
-+
-+=09return ret;
-+}
-+
- /* -----------------------------------------------------------------------=
---- */
- /* 0x2120: Hi-resolution scrolling                                        =
-    */
- /* -----------------------------------------------------------------------=
---- */
-@@ -3077,7 +3103,7 @@ static int hidpp_raw_hidpp_event(struct hidpp_device =
-*hidpp, u8 *data,
- =09=09}
- =09}
-
--=09if (unlikely(hidpp_report_is_connect_event(report))) {
-+=09if (unlikely(hidpp_report_is_connect_event(hidpp, report))) {
- =09=09atomic_set(&hidpp->connected,
- =09=09=09=09!(report->rap.params[0] & (1 << 6)));
- =09=09if (schedule_work(&hidpp->work) =3D=3D 0)
-@@ -3624,6 +3650,12 @@ static int hidpp_probe(struct hid_device *hdev, cons=
-t struct hid_device_id *id)
- =09=09hidpp_overwrite_name(hdev);
- =09}
-
-+=09if (connected && (hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STATUS)) =
-{
-+=09=09ret =3D hidpp_set_wireless_feature_index(hidpp);
-+=09=09if (ret)
-+=09=09=09goto hid_hw_init_fail;
-+=09}
-+
- =09if (connected && (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP)) {
- =09=09ret =3D wtp_get_config(hidpp);
- =09=09if (ret)
---
-2.23.0
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
