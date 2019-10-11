@@ -3,162 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401FCC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B906ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C70D2190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F27C2196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbfJKIJ4 (ORCPT
+        id S1727375AbfJKIKb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:09:56 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:33940 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfJKIJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:09:55 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iIpyn-0004vc-O9; Fri, 11 Oct 2019 10:08:54 +0200
-Message-ID: <94b8bb500cc3d6d4d740e472e5c083489740ec32.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next v7 09/17] ethtool: generic handlers for GET
- requests
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
-Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 11 Oct 2019 10:08:52 +0200
-In-Reply-To: <20191010200032.GH22163@unicorn.suse.cz>
-References: <cover.1570654310.git.mkubecek@suse.cz>
-         <b000e461e348ba1a0af30f2e8493618bce11ec12.1570654310.git.mkubecek@suse.cz>
-         <20191010135639.GJ2223@nanopsycho> <20191010180401.GD22163@unicorn.suse.cz>
-         <eb6cb68ff77eb4f2c680809e11142150f0d83007.camel@sipsolutions.net>
-         <20191010200032.GH22163@unicorn.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 11 Oct 2019 04:10:31 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2048 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726461AbfJKIKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 04:10:31 -0400
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 5045CC7A5D8573E9FA52;
+        Fri, 11 Oct 2019 09:10:29 +0100 (IST)
+Received: from LHREML523-MBS.china.huawei.com ([169.254.9.5]) by
+ lhreml702-cah.china.huawei.com ([10.201.108.43]) with mapi id 14.03.0415.000;
+ Fri, 11 Oct 2019 09:10:24 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>, Greg KH <greg@kroah.com>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: RE: linux-next: Fixes tag needs some work in the staging.current
+ tree
+Thread-Topic: linux-next: Fixes tag needs some work in the staging.current
+ tree
+Thread-Index: AQHVf6tMZNXkRie2YEu0GYlsfORIhKdVFtCg
+Date:   Fri, 11 Oct 2019 08:10:23 +0000
+Message-ID: <53418B0A3A5CEF439F1108674285B0A903FE8CC8@lhreml523-mbs.china.huawei.com>
+References: <20191011074242.3d78c336@canb.auug.org.au>
+In-Reply-To: <20191011074242.3d78c336@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.202.226.61]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-10 at 22:00 +0200, Michal Kubecek wrote:
-> 
-> > Having a common format is way more accessible. Generic netlink (now)
-> > even exposes the policy (if set) and all of its nested sub-policies to
-> > userspace (if you use NLA_POLICY_NESTED), so it's very easy to discover
-> > what's in the policy and how it'll be interpreted.
-> 
-> This, however, would require a different design that Jiri proposed. What
-> he proposed was one attribute type for "request specific attributes".
-> But to be able to perform nested validation of the whole message and
-> export all policies would, with current genetlink design, require having
-> one such attribute type for each request type (command).
+Hi Stephen
 
-Yes, indeed, that's true.
+Sorry, I've clearly let another one of these through.
 
-We actually used to have per-command policy in genetlink, but I removed
-it as there was only one user, and it would've made the introspection
-stuff a lot more complicated and it wasted quite a bit of memory in the
-ops tables for everyone else.
+Stupid question of the day.  Don't suppose you can share how you check these?
 
-Maybe we *do* want this back, with a nested policy pointing to the
-common like you have. Then you'd have the option to do exactly what you
-do here, but have introspection & common validation.
+Thanks,
 
-Actually, it's only half true that we had this - it was that the
-*policy* was in the op, but the *maxattr* was in the family. This never
-really makes any sense.
+Jonathan
 
-(IMHO we really should try to find a way to embed the maxattr into the
-family, passing both always is very tiring. Perhaps just having a
-terminator entry would be sufficient, or using a trick similar to what I
-did with strict_start_type, and putting it into the 0th entry that's
-usually unused? Even where the 0th entry *is* used, as long as the type
-isn't something that relies on the validation data, we could do that.
-But this is totally an aside...)
 
-> But that would also require an extra check that the request message
-> contains only the attribute matching its command (request type) so that
-> the validation performed by genetlink would still be incomplete (it will
-> always be incomplete as there are lots of strange constraints which
-> cannot be described by a policy).
+-----Original Message-----
+From: Stephen Rothwell [mailto:sfr@canb.auug.org.au] 
+Sent: 10 October 2019 21:43
+To: Greg KH <greg@kroah.com>
+Cc: Linux Next Mailing List <linux-next@vger.kernel.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Lorenzo Bianconi <lorenzo@kernel.org>; Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: linux-next: Fixes tag needs some work in the staging.current tree
 
-Also true, yes.
+Hi all,
 
-> Unless you suggest to effectively have just one command and determine
-> the request type based on which of these request specific attributes is
-> present (and define what to do if there is more than one).
+In commit
 
-Also possible, I guess, I can't say that's much better.
+  85ae3aeedecc ("iio: imu: st_lsm6dsx: forbid 0 sensor sensitivity")
 
-> ETHTOOL_A_HEADER_RFLAGS is a constant, it's always the same. Yes,
-> logically it would rather belong outside header and maybe should be
-> replaced by a (possibly empty) set of NLA_FLAG attributes. If having it
-> in the common header is such a big problem, I'll move it out.
+Fixes tag
 
-NLA_FLAG tends to be large - I think having a bitmap is fine.
+  Fixes: c8d4066c7246 ("iio: imu: st_lsm6dsx: remove invalid gain value for LSM9DS1")
 
-Btw, you can also have a common *fixed* header in the genetlink family.
-I don't think anyone does that, but it's possible.
+has these problem(s):
 
-> > But you even have *two* policies for each kind of message, one for the
-> > content and one for the header...?
-> 
-> As I said in reply to another patch, it turns out that the only reason
-> for having a per request header policy was rejecting
-> ETHTOOL_A_HEADER_RFLAGS for requests which do not define any request
-> flags but that's probably an overkill so that one universal header
-> policy would be sufficient.
+  - Target SHA1 does not exist
 
-Missed that, OK.
+Did you mean
 
-> > It almost seems though that your argument isn't so much on the actual
-> > hierarchy/nesting structure of the message itself, but the easy of
-> > parsing it?
-> 
-> It's both. I still feel that from logical point of view it makes much
-> more sense to use top level attributes for what the message is actually
-> about. Nothing you said convinced me otherwise, rather the opposite: it
-> only confirmed that the only reason for hiding the actual request
-> contents one level below is to work around the consequences of the
-> decision to make policy in genetlink per family rather than per command.
+Fixes: 0f7e17286b45 ("iio: imu: st_lsm6dsx: remove invalid gain value for LSM9DS1")
 
-As I said above, it was actually the other way around and I changed it
-relatively recently.
-
-I don't have any strong objections to changing that really, it just
-wasn't really used by anyone.
-
-> I still don't see any reason why all this could not work with per
-> command policies and would be principially dependent on having one
-> universal policy for the whole family.
-
-True, it just makes the code to expose it more complex (and uses more
-space in the ops tables.)
-
-If we do bring that back then IMHO it should be done properly and not
-have a maxattr in the family, but with each policy. There could still
-be a single maxattr (that must be >= max of all maxattrs) for the whole
-family to ease allocation, but that could also just be derived as the
-max(maxattr of all possible policies) at family registration time.
-
-I'm almost thinking if we do that we should have a "struct
-genl_ops_with_policy" and a second ops pointer in the family, so that
-families not using this don't have to have a policy pointer & maxattr
-for each op, the op struct now is 5 pointers long, so adding
-policy/maxattr would cost us an increase of 20% on 64-bit and 40% on 32-
-bit ... For families that don't need it, that's pretty large.
-
-johannes
-
+-- 
+Cheers,
+Stephen Rothwell
