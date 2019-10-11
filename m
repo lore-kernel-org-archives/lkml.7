@@ -2,179 +2,142 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 368F0C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747EAECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06ED72196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F36222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:07:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="WyVKVt5Q"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="dJGgqoI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfJKGHB (ORCPT
+        id S1727305AbfJKGHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 02:07:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34255 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfJKGHB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 02:07:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j11so10443057wrp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 23:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3c0Nh1nl7bfCKYDWMo6YBu1F2vfCDmy0MmjZnscBG0g=;
-        b=WyVKVt5QOLSPRbgNDDvSj2Y0YxDMaLTkTz+Ox7Wk4QgNlzEfXEiSD7kaqsOOZzb1Lo
-         LF2tdc8Sl8WLRUepsFc2TV35mao25gY/hIu9GOWfm1E4Rcz1N+2ehwygWpXiQ0GS4QAN
-         T33qT5Ck8xXBAUaRTJ5XeKCiuIeHdEvbdPFCNGRKM2Tm2B66Oe7D80FAl8wKU2bIzVDB
-         go8bRROgToWLqKOMGHfdaBDbgsGvt3h7Q+AekzwbxlqQkmthRiueUKxAmdyuxDMZpj52
-         8JnPxY4/SUR4zYesI5gV8uXomBt/dgHG60goR7m0tUiITI/YobwxUTTH7aERvRSg7lvO
-         Sn/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3c0Nh1nl7bfCKYDWMo6YBu1F2vfCDmy0MmjZnscBG0g=;
-        b=AWIKR1S8+jMx1wWvoBCxIcx6PLSgdC6Se6XfZIKRMC1A+299EpuEReXCzMsZecyo2g
-         ZGRFeprZzjsr08WzpSb3sW/CPX8sSEkTdBQE0NNyfGEU9L6Sea6Y3lmqQNzJ7pGcJo+6
-         Z/h9p4eo/lhPtzUOanXT0+Gm5JmM+sqpGTyrKsMwdCK0YTQfiMTElXrKg/mXiZycLxet
-         QZOZxYGBbo6x+RHjdMSrjXGzAxpsY6xpPENv84xD43e2YRRYxS78yG0GcuZFI7J2lYOR
-         Jiga9HdZScZWk9RLHZM2X4ZBqCz3U9z3ZK7XnelKoLk9qUe61q4AZsuYPHwEyEH41JwI
-         z0UA==
-X-Gm-Message-State: APjAAAXUNSoCC1p24zCQNfhGuxykP8PVX9jc9uNPRu6poGahW5M9pVZi
-        YJeyVow13vN7eVuXAbNvkmfXMg==
-X-Google-Smtp-Source: APXvYqyB7/z06H6vETxUm8/rkhpQb8b4m12tfU6RIXrGBDuo0eiAZgmNXMQX1rjx2aN/nQgrT/ztMQ==
-X-Received: by 2002:a5d:4ecc:: with SMTP id s12mr8554196wrv.73.1570774016719;
-        Thu, 10 Oct 2019 23:06:56 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id z22sm7618060wmf.2.2019.10.10.23.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 23:06:56 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 08:06:55 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 09/17] ethtool: generic handlers for GET
- requests
-Message-ID: <20191011060655.GE2901@nanopsycho>
-References: <cover.1570654310.git.mkubecek@suse.cz>
- <b000e461e348ba1a0af30f2e8493618bce11ec12.1570654310.git.mkubecek@suse.cz>
- <20191010135639.GJ2223@nanopsycho>
- <20191010180401.GD22163@unicorn.suse.cz>
+        Fri, 11 Oct 2019 02:07:11 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37771 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfJKGHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 02:07:10 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46qHXn5rSDz9sNx;
+        Fri, 11 Oct 2019 17:07:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1570774027;
+        bh=AJrLeG6G9D8YUo7VDIU/jBSRhH8l/uKAxqlBUz1bi84=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=dJGgqoI+58ENDSNA0Me5eZnopdP/yD4mODpp5k3HE+c/wOPskcBr1ocDmTL7v4ekU
+         qjpHBvYLd4OnsEYrUyo3+CrUrK6UrJQlf/73ilPLERyQb2ZKVsa3Vbj8yDLn8t5QwR
+         KPMr4dG//WxDYq8YUXXc/we22B51riMsIi4n1yiTtnV2tv23x5ROvBQXoYwEWQcb9v
+         athHfQX1DHgA/DvDMnQCT7h/mUmWgqly/W1MF+6MYlmVdd8DoSuzFTqO2XC+DgfWz8
+         z+MmLdL0VASvJOdHd+7UjOrkIAhgbUBfEZAwteAWvEXsHOdUsxtJgtEUJ/+F3yOuf0
+         PLDabEaYhHJNw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Subject: Re: [PATCH v2 02/29] powerpc: Remove PT_NOTE workaround
+In-Reply-To: <20191011000609.29728-3-keescook@chromium.org>
+References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-3-keescook@chromium.org>
+Date:   Fri, 11 Oct 2019 17:07:04 +1100
+Message-ID: <878sprx1br.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010180401.GD22163@unicorn.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thu, Oct 10, 2019 at 08:04:01PM CEST, mkubecek@suse.cz wrote:
->On Thu, Oct 10, 2019 at 03:56:39PM +0200, Jiri Pirko wrote:
->> Wed, Oct 09, 2019 at 10:59:27PM CEST, mkubecek@suse.cz wrote:
-
-[...]
-
-
->> >+			   const struct nlmsghdr *nlhdr, struct net *net,
->> >+			   const struct get_request_ops *request_ops,
->> >+			   struct netlink_ext_ack *extack, bool require_dev)
->> >+{
->> >+	struct nlattr **tb;
->> >+	int ret;
->> >+
->> >+	tb = kmalloc_array(request_ops->max_attr + 1, sizeof(tb[0]),
->> >+			   GFP_KERNEL);
->> >+	if (!tb)
->> >+		return -ENOMEM;
->> >+
->> >+	ret = nlmsg_parse(nlhdr, GENL_HDRLEN, tb, request_ops->max_attr,
->> >+			  request_ops->request_policy, extack);
->> >+	if (ret < 0)
->> >+		goto out;
->> >+	ret = ethnl_parse_header(req_info, tb[request_ops->hdr_attr], net,
->> >+				 extack, request_ops->header_policy,
->> >+				 require_dev);
->> 
->> This is odd. It's the other way around in compare what I would expect.
->> There is a request-specific header attr that contains common header
->> attributes parsed in ethnl_parse_header.
->> 
->> Why don't you have the common header as a root then then have one nested
->> attr that would carry the request-specific attrs?
->> 
->> Similar to how it is done in rtnl IFLA_INFO_KIND.
+Kees Cook <keescook@chromium.org> writes:
+> In preparation for moving NOTES into RO_DATA, remove the PT_NOTE
+> workaround since the kernel requires at least gcc 4.6 now.
 >
->To me, what you suggest feels much more odd. I thought about it last
->time, I thought about it now and the only reason for such layout I could
->come with would be to work around the unfortunate design flaw of the way
->validation and parsing is done in genetlink (see below).
->
->The situation with IFLA_INFO_KIND is a bit different, what you suggest
->would rather correspond to having only attributes common for all RTNL on
->top level and hiding all IFLA_* attributes into a nest (and the same
->with attributes specific to "ip addr", "ip route", "ip rule" etc.)
->
->> You can parse the common stuff in pre_doit/start genl ops and you
->> don't have to explicitly call ethnl_parse_header.
->> Also, that would allow you to benefit from the genl doit/dumpit initial
->> attr parsing and save basically this whole function (alloc,parse).
->> 
->> Code would be much more simple to follow then.
->> 
->> Still seems to me that you use the generic netlink but you don't like
->> the infra too much so you make it up yourself again in parallel - that is
->> my feeling reading the code. I get the argument about the similarities
->> of the individual requests and why you have this request_ops (alhough I
->> don't like it too much).
->
->The only thing I don't like about the genetlink infrastructure is the
->design decision that policy and corresponding maxattr is an attribute of
->the family rather than a command. This forces anyone who wants to use it
->to essentially have one common message format for all commands and if
->that is not possible, to do what you suggest above, hide the actual
->request into a nest.
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/powerpc/kernel/vmlinux.lds.S | 24 ++----------------------
+>  1 file changed, 2 insertions(+), 22 deletions(-)
 
-But that is fine, the genetlink code would parse the common attributes
-for you according to the family, then you inside ethnl_get_doit prepare
-(alloc, parse) data for ops->prepare_data and other callbacks, according
-to per-request ops->policy and ops->maxattr.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Then the request callbacks would get parsed attrs according to their
-type. And you can use similar technique for set dumpit/ops. Would be
-neat.
+For the archives, Joel tried a similar patch a while back which caused
+some problems, see:
 
+  https://lore.kernel.org/linuxppc-dev/20190321003253.22100-1-joel@jms.id.au/
 
->
->Whether you use one common attribute type for "command specific nest" or
->different attribute for each request type, you do not actually make
->things simpler, you just move the complexity one level lower. You will
->still have to do your own (per request) parsing of the actual request,
->the only difference is that you will do it in a different place and use
->nla_parse_nested() rather than nlmsg_parse().
->
->Rather than bending the message layout to fit into the limitations of
->unified genetlink parsing, I prefer to keep the logical message
->structure and do the parsing on my own.
+and a v2:
 
-You are going to still have it but the person looking at the traffic by
-nlmon would know what is happening and also you are going to use
-genetlink in non-abusive way :)
+  https://lore.kernel.org/linuxppc-dev/20190329064453.12761-1-joel@jms.id.au/
 
->
+This is similar to his v2. The only outstanding comment on his v2 was
+from Segher:
+  (And I do not know if there are any tools that expect the notes in a phdr,
+  or even specifically the second phdr).
 
-[...]
+But this patch solves that by not changing the note.
+
+cheers
+
+> diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+> index 81e672654789..a3c8492b2b19 100644
+> --- a/arch/powerpc/kernel/vmlinux.lds.S
+> +++ b/arch/powerpc/kernel/vmlinux.lds.S
+> @@ -20,20 +20,6 @@ ENTRY(_stext)
+>  PHDRS {
+>  	kernel PT_LOAD FLAGS(7); /* RWX */
+>  	note PT_NOTE FLAGS(0);
+> -	dummy PT_NOTE FLAGS(0);
+> -
+> -	/* binutils < 2.18 has a bug that makes it misbehave when taking an
+> -	   ELF file with all segments at load address 0 as input.  This
+> -	   happens when running "strip" on vmlinux, because of the AT() magic
+> -	   in this linker script.  People using GCC >= 4.2 won't run into
+> -	   this problem, because the "build-id" support will put some data
+> -	   into the "notes" segment (at a non-zero load address).
+> -
+> -	   To work around this, we force some data into both the "dummy"
+> -	   segment and the kernel segment, so the dummy segment will get a
+> -	   non-zero load address.  It's not enough to always create the
+> -	   "notes" segment, since if nothing gets assigned to it, its load
+> -	   address will be zero.  */
+>  }
+>  
+>  #ifdef CONFIG_PPC64
+> @@ -178,14 +164,8 @@ SECTIONS
+>  	EXCEPTION_TABLE(0)
+>  
+>  	NOTES :kernel :note
+> -
+> -	/* The dummy segment contents for the bug workaround mentioned above
+> -	   near PHDRS.  */
+> -	.dummy : AT(ADDR(.dummy) - LOAD_OFFSET) {
+> -		LONG(0)
+> -		LONG(0)
+> -		LONG(0)
+> -	} :kernel :dummy
+> +	/* Restore program header away from PT_NOTE. */
+> +	.dummy : { *(.dummy) } :kernel
+>  
+>  /*
+>   * Init sections discarded at runtime
+> -- 
+> 2.17.1
