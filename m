@@ -2,106 +2,102 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25ACECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F15C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB004206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7733206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570790992;
-	bh=KCEYNLr0ibHR+Ets6qX//+HbPd0i9dVCMdFqK3+/9Eo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Qs8NBdsZclyXjrpftmnKNVlC6WiyuoLj+HCELGosZerxdP7Xt8IcN1bIdtSKFFbgp
-	 mOOmx8I5rYGr3jgUvxcNsrV+bHf4xCX0R5RYvzTuklRLxu51Twi0LhMSMlURmgPhyN
-	 FMYgOSVBOcH2XthNAM3f1LOOuznAsWqnfcReFPTk=
+	s=default; t=1570791012;
+	bh=+GYaGvn6aQG4ujRHeTb1+lopvEhjRcfgUQWj4NEdRZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nVZzhxNMOSkuMdNt6pO+WBAV5TPXzdQFfVg1nwusySTJMroQcMQ89dWzfi5ZkXPS9
+	 UCa/XuCRGzGVFF+qW9BCtZH7P9QUHtoK/8Dzy6jpTwjktT/3I0llihWsBQJr7D3a7x
+	 6LTL5QdBa0QkoOoio7Onc4ppYTLX2kZJkNnWT3ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfJKKtv (ORCPT
+        id S1727723AbfJKKuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:49:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58004 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfJKKtv (ORCPT
+        Fri, 11 Oct 2019 06:50:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46162 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfJKKuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:49:51 -0400
+        Fri, 11 Oct 2019 06:50:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+AfVulPjUsj7Th+sjwSpz+DvIhOMKWyMUlvV/+lzk58=; b=DIc5DeEWHi+eQfSKzAZ9Eu/Ct
-        C4EQRo88RCKwPxoajqHuw0QCgyBGH7U6xNPbF5maqLu+gmks9isD361gwYRywGn+ZPu0pxaypH6e1
-        07oolnR7/3oKT0xkkjSz7gcvmsXGWBIb2u5wvgvMqmF1iV5jRgX96VBRcJm583uine9s1tLUBj+gk
-        hwyUO+4VjfSEbDeP4AP6pprcQzfr/7Cnz7spXJYasb3vEa49jQLhvltxKGQcY8SaTPcEKqCEO6y8M
-        2u30/tGNM2vTh3HSlgOQXiU6apYFoADMMQAV7dSY4CdP9JbX2qqkiH60iSEP7KrYeNzbRybQ8KQG7
-        kLUGA9xqw==;
-Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIsUS-0000SJ-K3; Fri, 11 Oct 2019 10:49:45 +0000
-Date:   Fri, 11 Oct 2019 07:49:40 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 11/19] EDAC: Remove misleading comment in struct
- edac_raw_error_desc
-Message-ID: <20191011074940.30b0764b@coco.lan>
-In-Reply-To: <20191010202418.25098-12-rrichter@marvell.com>
-References: <20191010202418.25098-1-rrichter@marvell.com>
-        <20191010202418.25098-12-rrichter@marvell.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+         bh=+GYaGvn6aQG4ujRHeTb1+lopvEhjRcfgUQWj4NEdRZ0=; b=oFF+nMW8ULTocBKQP7Rg0G0OD
+        ULnpmBNgzEV4j+EqDbOV/8Kdzb2mh5FWrQeFQm7wEwX6fdvC1FsK8ujWRciwYHXfBbq3oXwwe+HGq
+        Baau7aDhUJjlC4PE6unDctPMCzjGx3HIrkGX42kkWsJ45W2xe8WLLJQIaNMl1O16Npsb0=;
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iIsUk-0005Sr-Uf; Fri, 11 Oct 2019 10:50:03 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 3111DD0019E; Fri, 11 Oct 2019 11:50:01 +0100 (BST)
+Date:   Fri, 11 Oct 2019 11:50:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/36] ASoC: samsung: s3c2412-i2s: avoid hardcoded
+ S3C2410_PA_IIS
+Message-ID: <20191011105001.GG4741@sirena.org.uk>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-20-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rV8arf8D5Dod9UkK"
+Content-Disposition: inline
+In-Reply-To: <20191010203043.1241612-20-arnd@arndb.de>
+X-Cookie: Void where prohibited by law.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 10 Oct 2019 20:25:26 +0000
-Robert Richter <rrichter@marvell.com> escreveu:
 
-> There never has been such function edac_raw_error_desc_clean() and in
-> function ghes_edac_report_mem_error() the whole struct is zero'ed
-> including the string arrays. Remove that comment.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
+--rV8arf8D5Dod9UkK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+On Thu, Oct 10, 2019 at 10:30:04PM +0200, Arnd Bergmann wrote:
+> The constant requires indirectly including a machine header file,
+> but it's not actually used any more since commit 87b132bc0315 ("ASoC:
+> samsung: s3c24{xx,12}-i2s: port to use generic dmaengine API"), so
+> remove it completely.
 
-> ---
->  include/linux/edac.h | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/include/linux/edac.h b/include/linux/edac.h
-> index 8e72222e50b0..4d9673954856 100644
-> --- a/include/linux/edac.h
-> +++ b/include/linux/edac.h
-> @@ -458,15 +458,10 @@ struct errcount_attribute_data {
->   * @other_detail:		other driver-specific detail about the error
->   */
->  struct edac_raw_error_desc {
-> -	/*
-> -	 * NOTE: everything before grain won't be cleaned by
-> -	 * edac_raw_error_desc_clean()
-> -	 */
->  	char location[LOCATION_SIZE];
->  	char label[(EDAC_MC_LABEL_LEN + 1 + sizeof(OTHER_LABEL)) * EDAC_MAX_LABELS];
->  	long grain;
->  
-> -	/* the vars below and grain will be cleaned on every new error report */
->  	u16 error_count;
->  	int top_layer;
->  	int mid_layer;
+Acked-by: Mark Brown <broonie@kernel.org>
 
+--rV8arf8D5Dod9UkK
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Mauro
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2gXlgACgkQJNaLcl1U
+h9DRDwf/Z97B2zjL3Z9O+QU4Fp9jlers2KrllaRLXhvKAvYYwb8JNWOGuedCmQDi
+C6Gj9aBSXHmzjjFCM08/QJMG8u6TcM5H2gCjEVFOiRCMqP5DPX5qCIiiQ0SnBrdi
+G78NJlKJRTR9kLnVYFd8DRx4fOHelhaH0X7n5EPUliwMpydcV81iL9zttP39m5+h
+bTSe5rNrUxE6oNaq/1Ud7YFogrTUUSHQugLgRHDwsGakNFIYpP7HYvd9lYfAlX0C
+dz+DUqy/Yq8FJMN3SUlsUyNx3X1LVOkKbKCiKbcwoYIaXy+YyNCPAja8eRtrWVZU
+tdnsAgWDN5OszUmItgS481uI9UwV6Q==
+=6yUg
+-----END PGP SIGNATURE-----
+
+--rV8arf8D5Dod9UkK--
