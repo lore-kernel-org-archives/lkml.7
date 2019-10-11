@@ -2,151 +2,102 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F47ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E977FECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064A42064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C33DE214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:45:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NjyCqK9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbfJKNpu (ORCPT
+        id S1728726AbfJKNpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:45:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:60978 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728713AbfJKNps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:45:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFDE51000;
-        Fri, 11 Oct 2019 06:45:47 -0700 (PDT)
-Received: from e107049-lin.arm.com (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 16B923F68E;
-        Fri, 11 Oct 2019 06:45:45 -0700 (PDT)
-From:   Douglas RAILLARD <douglas.raillard@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-pm@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-        rjw@rjwysocki.net, viresh.kumar@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, douglas.raillard@arm.com,
-        dietmar.eggemann@arm.com, qperret@qperret.net,
-        patrick.bellasi@matbug.net, dh.han@samsung.com
-Subject: [RFC PATCH v3 6/6] sched/cpufreq: Add schedutil_em_tp tracepoint
-Date:   Fri, 11 Oct 2019 14:45:00 +0100
-Message-Id: <20191011134500.235736-7-douglas.raillard@arm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191011134500.235736-1-douglas.raillard@arm.com>
-References: <20191011134500.235736-1-douglas.raillard@arm.com>
+        Fri, 11 Oct 2019 09:45:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40446 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbfJKNpr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:45:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o4jbsb4dvBaig8ml694biSsHKSjMvj0oSSgRKxIGaNM=; b=NjyCqK9JzeRx63f1aRHVCfzAQ
+        ZC0YXxu70t1zyu6LTbgBhYVuxgbO7FMmz44S3RcUCf9EakR84KRhnocUf2TzvkAhB1FKC2B8xpouo
+        mSfF9e8wIaYA8xlg1Wf3oVw+WXx147TIKCLoASPw77O5qbHEwpUbBeLeh8utzS1efhNCJ9jzqMzWl
+        lvvl64cQ+q7+SYAiZk69lwhF6CJ4z1NpJURPMP8M+q2SS682fZd+P+Cg3XnNdGwlAZw9fYV1lqrzU
+        yMKThrW0G26Qs8coQwAuXQXnUicJPYUhd8RcN92W95PUYBrRsda3X6ZNpq7yPpqzBcf+21M/9x+4u
+        kVavsxVuw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIvEf-0002b5-TE; Fri, 11 Oct 2019 13:45:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5C52C305DE2;
+        Fri, 11 Oct 2019 15:44:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 08B942026F768; Fri, 11 Oct 2019 15:45:36 +0200 (CEST)
+Date:   Fri, 11 Oct 2019 15:45:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191011134535.GZ2328@hirez.programming.kicks-ass.net>
+References: <20191007081945.10951536.8@infradead.org>
+ <20191008104335.6fcd78c9@gandalf.local.home>
+ <20191009224135.2dcf7767@oasis.local.home>
+ <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+ <20191010091956.48fbcf42@gandalf.local.home>
+ <20191010140513.GT2311@hirez.programming.kicks-ass.net>
+ <20191010115449.22044b53@gandalf.local.home>
+ <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+ <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+ <20191011093319.3ef302ff@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011093319.3ef302ff@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new tracepoint reporting the effect of using the Energy
-Model inside get_next_freq() in schedutil.
+On Fri, Oct 11, 2019 at 09:33:19AM -0400, Steven Rostedt wrote:
+> On Fri, 11 Oct 2019 14:59:03 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Thu, Oct 10, 2019 at 07:28:19PM +0200, Peter Zijlstra wrote:
+> > 
+> > > Really the best solution is to move all the poking into
+> > > ftrace_module_init(), before we mark it RO+X. That's what I'm going to
+> > > do for jump_label and static_call as well, I just need to add that extra
+> > > notifier callback.  
+> > 
+> > OK, so I started writing that patch... or rather, I wrote the patch and
+> > started on the Changelog when I ran into trouble describing why we need
+> > it.
+> > 
+> > That is, I'm struggling to explain why we cannot flip
+> > prepare_coming_module() and complete_formation().
+> > 
+> > Yes, it breaks ftrace, but I'm thinking that is all it breaks. So let me
+> > see if we can cure that.
+> 
+> For someone that doesn't use modules, you are making me very nervous
+> with all the changes you are making to the module code! ;-)
 
-Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
----
- include/trace/events/power.h     |  9 +++++++++
- kernel/sched/cpufreq_schedutil.c | 20 ++++++++++++++------
- 2 files changed, 23 insertions(+), 6 deletions(-)
+Hey, today I build a kernel with modules just for you :-)
 
-diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-index f7aece721aed..87a14f5208a7 100644
---- a/include/trace/events/power.h
-+++ b/include/trace/events/power.h
-@@ -529,6 +529,15 @@ DEFINE_EVENT(dev_pm_qos_request, dev_pm_qos_remove_request,
- 
- 	TP_ARGS(name, type, new_value)
- );
-+
-+DECLARE_TRACE(schedutil_em_tp,
-+	TP_PROTO(unsigned int cpu, unsigned long util,
-+		unsigned int cost_margin, unsigned int policy_cost_margin,
-+		unsigned int base_freq, unsigned int boosted_freq),
-+	TP_ARGS(cpu, util, cost_margin, policy_cost_margin, base_freq,
-+		boosted_freq)
-+);
-+
- #endif /* _TRACE_POWER_H */
- 
- /* This part must be outside protection */
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 7c1a749fb6ef..076bbb69ff42 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -14,6 +14,8 @@
- #include <linux/sched/cpufreq.h>
- #include <trace/events/power.h>
- 
-+EXPORT_TRACEPOINT_SYMBOL_GPL(schedutil_em_tp);
-+
- #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
- 
- struct sugov_tunables {
-@@ -223,7 +225,7 @@ static unsigned long sugov_cpu_ramp_boost_update(struct sugov_cpu *sg_cpu)
- 
- /**
-  * get_next_freq - Compute a new frequency for a given cpufreq policy.
-- * @sg_policy: schedutil policy object to compute the new frequency for.
-+ * @sg_cpu: schedutil CPU object to compute the new frequency for.
-  * @util: Current CPU utilization.
-  * @max: CPU capacity.
-  * @boost: Extra power that can be spent on top of the minimum amount of power
-@@ -246,22 +248,28 @@ static unsigned long sugov_cpu_ramp_boost_update(struct sugov_cpu *sg_cpu)
-  * next_freq (as calculated above) is returned, subject to policy min/max and
-  * cpufreq driver limitations.
-  */
--static unsigned int get_next_freq(struct sugov_policy *sg_policy,
-+static unsigned int get_next_freq(struct sugov_cpu *sg_cpu,
- 				  unsigned long util, unsigned long max,
- 				  unsigned long boost)
- {
-+	struct sugov_policy *sg_policy = sg_cpu->sg_policy;
- 	struct cpufreq_policy *policy = sg_policy->policy;
- 	unsigned int freq = arch_scale_freq_invariant() ?
- 				policy->cpuinfo.max_freq : policy->cur;
- 	struct em_perf_domain *pd = sugov_policy_get_pd(sg_policy);
-+	unsigned int base_freq;
- 
--	freq = map_util_freq(util, freq, max);
-+	base_freq = map_util_freq(util, freq, max);
- 
- 	/*
- 	 * Try to get a higher frequency if one is available, given the extra
- 	 * power we are ready to spend.
- 	 */
--	freq = em_pd_get_higher_freq(pd, freq, boost);
-+	freq = em_pd_get_higher_freq(pd, base_freq, boost);
-+
-+	trace_schedutil_em_tp(sg_cpu->cpu, util,
-+				 sugov_cpu_ramp_boost(sg_cpu), boost,
-+				 base_freq, freq);
- 
- 	if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
- 		return sg_policy->next_freq;
-@@ -560,7 +568,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
- 	ramp_boost = sugov_cpu_ramp_boost_update(sg_cpu);
- 	max = sg_cpu->max;
- 	util = sugov_iowait_apply(sg_cpu, time, util, max);
--	next_f = get_next_freq(sg_policy, util, max, ramp_boost);
-+	next_f = get_next_freq(sg_cpu, util, max, ramp_boost);
- 	/*
- 	 * Do not reduce the frequency if the CPU has not been idle
- 	 * recently, as the reduction is likely to be premature then.
-@@ -616,7 +624,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
- 	}
- 
- 
--	return get_next_freq(sg_policy, util, max, ramp_boost);
-+	return get_next_freq(sg_cpu, util, max, ramp_boost);
- }
- 
- static void
--- 
-2.23.0
-
+And whatever it takes right, I just want to clean this crap up.
