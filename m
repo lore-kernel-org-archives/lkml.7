@@ -2,96 +2,169 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CCEECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75877C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C085214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:01:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570802470;
-	bh=t9/O7zaiB/c1wXAfYIz1GbBGj/mCFCn6JDKlAAphRB8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Afb4qkEYtK+J5LBoKqs4hvDatUBLzFnq8a3I3DOs9c4zvAo6rPblj5ttbXtEA0KON
-	 15gR2jBa0zt0AgnHWpVHFJ2L218wFU+bApa1RHh/jz032+gh3G+AGkdrkbDMLLf1gu
-	 PZnjFWAjenKPaYjF4qNBSi8Tza1aRezQ0ebAaWzU=
+	by mail.kernel.org (Postfix) with ESMTP id 5490C20640
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfJKOBJ (ORCPT
+        id S1728263AbfJKOCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbfJKOBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:01:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7AFF20640;
-        Fri, 11 Oct 2019 14:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570802468;
-        bh=t9/O7zaiB/c1wXAfYIz1GbBGj/mCFCn6JDKlAAphRB8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ISHTT+QtS2wdWQSmJVyksZPp3VDvO9jz9PmQhgKriiYNZzRDEh2VPDFKC1fbOH8aL
-         xUyFZ2YOT5l6a7YGGx0rK/sbeIkT3QWcVv0zWcvBa8yQGjr3zDyjXtqD0eLKuaYALh
-         uCYyJLz3f8a+xgnHTYtwPkWgtnb6Bk2rB59vtyqk=
-Date:   Fri, 11 Oct 2019 16:01:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 00/61] 4.14.149-stable review
-Message-ID: <20191011140105.GA1236002@kroah.com>
-References: <20191010083449.500442342@linuxfoundation.org>
- <ce4b3f10-eafd-1169-9240-fb3891279c2a@roeck-us.net>
- <20191011042945.GB939089@kroah.com>
- <fde4b241-2932-c543-d540-cc89f2b1eac0@roeck-us.net>
+        Fri, 11 Oct 2019 10:02:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:32857 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbfJKOCV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:02:21 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iIvUi-0001Yy-2e; Fri, 11 Oct 2019 16:02:12 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 81A081C0178;
+        Fri, 11 Oct 2019 16:02:11 +0200 (CEST)
+Date:   Fri, 11 Oct 2019 14:02:11 -0000
+From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/asm: Make more symbols local
+Cc:     Jiri Slaby <jslaby@suse.cz>, Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        hpa@zytor.com, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191011092213.31470-1-jslaby@suse.cz>
+References: <20191011092213.31470-1-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fde4b241-2932-c543-d540-cc89f2b1eac0@roeck-us.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Message-ID: <157080253134.9978.12838764433984468954.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 06:14:59AM -0700, Guenter Roeck wrote:
-> On 10/10/19 9:29 PM, Greg Kroah-Hartman wrote:
-> > On Thu, Oct 10, 2019 at 10:12:26AM -0700, Guenter Roeck wrote:
-> > > On 10/10/19 1:36 AM, Greg Kroah-Hartman wrote:
-> > > > This is the start of the stable review cycle for the 4.14.149 release.
-> > > > There are 61 patches in this series, all will be posted as a response
-> > > > to this one.  If anyone has any issues with these being applied, please
-> > > > let me know.
-> > > > 
-> > > > Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
-> > > > Anything received after that time might be too late.
-> > > > 
-> > > 
-> > > Preliminary.
-> > > 
-> > > I see several mips build failures.
-> > > 
-> > > arch/mips/kernel/proc.c: In function 'show_cpuinfo':
-> > > arch/mips/include/asm/cpu-features.h:352:31: error: implicit declaration of function '__ase'
-> > 
-> > Thanks, will go drop the lone mips patch that I think is causing this
-> > problem.
-> > 
-> 
-> Looks like it did. For v4.14.148-61-g6f45e0e87a75:
-> 
-> Build results:
-> 	total: 172 pass: 172 fail: 0
-> Qemu test results:
-> 	total: 372 pass: 372 fail: 0
+The following commit has been merged into the x86/asm branch of tip:
 
-Great!  Thanks for running this and letting me know.
+Commit-ID:     30a2441cae7b149ff484a697bf9eb8de53240a4f
+Gitweb:        https://git.kernel.org/tip/30a2441cae7b149ff484a697bf9eb8de53240a4f
+Author:        Jiri Slaby <jslaby@suse.cz>
+AuthorDate:    Fri, 11 Oct 2019 11:22:13 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 11 Oct 2019 15:56:30 +02:00
 
-greg k-h
+x86/asm: Make more symbols local
+
+During the assembly cleanup patchset review, I found more symbols which
+are used only locally. So make them really local by prepending ".L" to
+them. Namely:
+
+ - wakeup_idt is used only in realmode/rm/wakeup_asm.S.
+ - in_pm32 is used only in boot/pmjump.S.
+ - retint_user is used only in entry/entry_64.S, perhaps since commit
+   2ec67971facc ("x86/entry/64/compat: Remove most of the fast system
+   call machinery"), where entry_64_compat's caller was removed.
+
+Drop GLOBAL from all of them too. I do not see more candidates in the
+series.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Acked-by: Borislav Petkov <bp@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: hpa@zytor.com
+Link: https://lkml.kernel.org/r/20191011092213.31470-1-jslaby@suse.cz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/boot/pmjump.S            | 6 +++---
+ arch/x86/entry/entry_64.S         | 4 ++--
+ arch/x86/realmode/rm/wakeup_asm.S | 6 +++---
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/boot/pmjump.S b/arch/x86/boot/pmjump.S
+index c22f9a7..ea88d52 100644
+--- a/arch/x86/boot/pmjump.S
++++ b/arch/x86/boot/pmjump.S
+@@ -40,13 +40,13 @@ GLOBAL(protected_mode_jump)
+ 
+ 	# Transition to 32-bit mode
+ 	.byte	0x66, 0xea		# ljmpl opcode
+-2:	.long	in_pm32			# offset
++2:	.long	.Lin_pm32		# offset
+ 	.word	__BOOT_CS		# segment
+ ENDPROC(protected_mode_jump)
+ 
+ 	.code32
+ 	.section ".text32","ax"
+-GLOBAL(in_pm32)
++.Lin_pm32:
+ 	# Set up data segments for flat 32-bit mode
+ 	movl	%ecx, %ds
+ 	movl	%ecx, %es
+@@ -72,4 +72,4 @@ GLOBAL(in_pm32)
+ 	lldt	%cx
+ 
+ 	jmpl	*%eax			# Jump to the 32-bit entrypoint
+-ENDPROC(in_pm32)
++ENDPROC(.Lin_pm32)
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index b7c3ea4..86cbb22 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -616,7 +616,7 @@ ret_from_intr:
+ 	jz	retint_kernel
+ 
+ 	/* Interrupt came from user space */
+-GLOBAL(retint_user)
++.Lretint_user:
+ 	mov	%rsp,%rdi
+ 	call	prepare_exit_to_usermode
+ 	TRACE_IRQS_IRETQ
+@@ -1372,7 +1372,7 @@ ENTRY(error_exit)
+ 	TRACE_IRQS_OFF
+ 	testb	$3, CS(%rsp)
+ 	jz	retint_kernel
+-	jmp	retint_user
++	jmp	.Lretint_user
+ END(error_exit)
+ 
+ /*
+diff --git a/arch/x86/realmode/rm/wakeup_asm.S b/arch/x86/realmode/rm/wakeup_asm.S
+index 05ac9c1..dad6198 100644
+--- a/arch/x86/realmode/rm/wakeup_asm.S
++++ b/arch/x86/realmode/rm/wakeup_asm.S
+@@ -73,7 +73,7 @@ ENTRY(wakeup_start)
+ 	movw	%ax, %fs
+ 	movw	%ax, %gs
+ 
+-	lidtl	wakeup_idt
++	lidtl	.Lwakeup_idt
+ 
+ 	/* Clear the EFLAGS */
+ 	pushl $0
+@@ -171,8 +171,8 @@ END(wakeup_gdt)
+ 
+ 	/* This is the standard real-mode IDT */
+ 	.balign	16
+-GLOBAL(wakeup_idt)
++.Lwakeup_idt:
+ 	.word	0xffff		/* limit */
+ 	.long	0		/* address */
+ 	.word	0
+-END(wakeup_idt)
++END(.Lwakeup_idt)
