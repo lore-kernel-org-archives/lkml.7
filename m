@@ -2,89 +2,99 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F36C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C57C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E392084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 067902084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570790343;
+	bh=5rhBL3QPB3LDlKRZEvA7m79jcTNQUF761bud+b8RYUo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=d+nyAlsdCPET/vKN1fyxfU5DGqiqHbkMUzHPzNWebiuLD3XQdhCVC2/VYuQVfWZ8t
+	 QIjfLGLDgh32Dardj7FJK+moR1fWOFlbzRMRUzVihVLOyTtnsXbMlaKHwx1j2u6f34
+	 ipTYEtHrRRYMZZwGjgG57aATaLTR/Vf0hEgwreRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfJKKiV (ORCPT
+        id S1727668AbfJKKjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:38:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:56024 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbfJKKiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:38:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68AA228;
-        Fri, 11 Oct 2019 03:38:20 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 288213F703;
-        Fri, 11 Oct 2019 03:38:19 -0700 (PDT)
-Subject: Re: ARM Juno r1 + CONFIG_PROVE_LOCKING=y => boot failure
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <CGME20191011092604eucas1p1ca11ab9c4c7508776914b0eb4f35e69b@eucas1p1.samsung.com>
- <33a83dce-e9f0-7814-923b-763d33e70257@samsung.com>
- <20191011100521.GA5122@bogus>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <7655fb41-cd13-0bc4-e656-040e0875bab8@arm.com>
-Date:   Fri, 11 Oct 2019 11:38:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 06:39:02 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37009 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfJKKjB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:39:01 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i16so7600364oie.4;
+        Fri, 11 Oct 2019 03:39:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+tb4OyPeBvddVVgZ3mAAcmtLcYtmURpW+oNgkhTLycc=;
+        b=gNx6TnFWJfQv4bwHZ8QhYfn3NI44sWyxs+AlLC/iYVLn9kCof/sIpkbzLl2agu+OpV
+         ikkc6zhLez+OYL/RMw0GLgJ2z3xKcxA39w8ZlUVM1v2+oodD+lTbCFhd49P3DEkiKDLv
+         N45TqpTui2t7xJycakrao246LPqNVvJ4N/SxVKGK59tdheRWn7ZuSBBOa/hx3buJMs/B
+         VU8QQ62Z/BkXQOs9oi4xuOQAhGwTVZfTwMlTQO+oZp/K8QUbU1RJXVaV72fORMxoGooI
+         lDSp7UyqKtPMjvG6dEreS4o10As5HfKJPYWOmh/vkD5ee2uRv6IMRTGO+SD6TRV70YNN
+         I4wg==
+X-Gm-Message-State: APjAAAVPe1bOQnBvPPC8Y1eiTJX50/BhuuBXFrp7M+KAklvP38/pkp8d
+        hekB1lltxsvwRarVFu2Od4IQcilBPqMe201UumzB8A==
+X-Google-Smtp-Source: APXvYqxQJUnKRLLcrN7dm7Pyw1dBZn5rts9p263jE4FizkPGHP2kBVS1voppc6S+ATQ1vRGvdZx6uZtLUGnDOLoVDvY=
+X-Received: by 2002:aca:5885:: with SMTP id m127mr11800131oib.110.1570790340768;
+ Fri, 11 Oct 2019 03:39:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191011100521.GA5122@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191009130433.29134-1-sameo@linux.intel.com> <20191009130433.29134-2-sameo@linux.intel.com>
+In-Reply-To: <20191009130433.29134-2-sameo@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 11 Oct 2019 12:38:49 +0200
+Message-ID: <CAJZ5v0ioC6XnC+sFpRJmm40T+YCnqoaHhJ+_Pmk7rvvC8UPT9w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] acpi: Fail GED probe when not on hardware-reduced
+To:     Samuel Ortiz <sameo@linux.intel.com>
+Cc:     Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+On Wed, Oct 9, 2019 at 3:04 PM Samuel Ortiz <sameo@linux.intel.com> wrote:
+>
+> The Generic Event Device (GED) is a hardware-reduced platform device.
 
-On 11/10/2019 11:05, Sudeep Holla wrote:
-> On Fri, Oct 11, 2019 at 11:26:04AM +0200, Marek Szyprowski wrote:
->> Recently I've got access to ARM Juno R1 board and did some tests with
->> current mainline kernel on it. I'm a bit surprised that enabling
->> CONFIG_PROVE_LOCKING causes a boot failure on this board. After enabling
->> this Kconfig option, I get no single message from the kernel, although I
->> have earlycon enabled.
+No, it is not AFAICS.
 
-> I don't have Juno R1 but I tried defconfig + CONFIG_PROVE_LOCKING and
-> it boots fine.
+The spec doesn't say that GED cannot be used on platforms that aren't
+HW-reduced and if evged.c is going to be built in unconditionally, the
+kernel will be able to handle GED regardless.
 
-I just tried this on my r1, v5.4-rc1 with this configuration worked just fine.
-
-My cmdline is:
-| root=/dev/sda6 loglevel=9 earlycon=pl011,0x7ff80000 hugepagesz=2M hugepages=512
-| crashkernel=1G console=ttyAMA0 resume=/dev/sda2 no_console_suspend efi=debug
-
-
->> I've did my test with default defconfig and current linux-next,
->> v5.4-rc1, v5.3 and v4.19. In all cases the result is the same. I'm
->> booting kernel using a precompiled uboot from Linaro release and TFTP
->> download.
-
-> OK, I use UEFI+GRUB but I don't think that should cause any issue.
-
-... same ... this uboot binary looks like the main difference.
-Is it using u-boots UEFI support? Is it possible to turn that off?
-
-It may that lockdep is just perturbing the size of the binary. It adds an extra 4MB for me.
-
-
-Thanks,
-
-James
+> Probing this driver on fixed platforms should fail.
+>
+> Signed-off-by: Samuel Ortiz <sameo@linux.intel.com>
+> ---
+>  drivers/acpi/evged.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
+> index aba0d0027586..55de4b2d2fee 100644
+> --- a/drivers/acpi/evged.c
+> +++ b/drivers/acpi/evged.c
+> @@ -127,6 +127,9 @@ static int ged_probe(struct platform_device *pdev)
+>         struct acpi_ged_device *geddev;
+>         acpi_status acpi_ret;
+>
+> +       if (!acpi_gbl_reduced_hardware)
+> +               return -ENODEV;
+> +
+>         geddev = devm_kzalloc(&pdev->dev, sizeof(*geddev), GFP_KERNEL);
+>         if (!geddev)
+>                 return -ENOMEM;
+> --
+> 2.21.0
+>
