@@ -2,127 +2,203 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25014C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE75ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED79D206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB59B206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E0dKoxgv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LhTiVq1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfJKPZh (ORCPT
+        id S1727944AbfJKP0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:25:37 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:41568 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfJKPZh (ORCPT
+        Fri, 11 Oct 2019 11:26:23 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52106 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726328AbfJKP0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:25:37 -0400
-Received: by mail-yb1-f194.google.com with SMTP id 206so3221200ybc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 08:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hjVVG+LCl45Ap93nqrjHPaMZ4hTq+jdNOcLl2h2isR4=;
-        b=E0dKoxgvUXWjFVVVks6GzW0TjExH0yK1lnbi91wV8UOgJXhezVXn6TKlZ8HQUqA4LB
-         Ocx5BzIjuxG958WumzE9PHeFIKmdin8uJ80H+haes7A8Uss5tac+84Bu78gsZut6QXAH
-         lAk8SDxXuvS8brS+1lB1ksHLQ4k/RGyUL6wLn/UpINn7yR8VT+jswqGAyCr8ZhDTczre
-         5iQpR0zvXXa+jUNmN6dDOszzNYTbsXpTuYHQnlbsTKD8jioNaXyu0auTjxbbs/cFails
-         zGhGXYBrnMUWJ8wU2JABRejO0vxitMy0Ol37RK7oCzGgGTyKxkikYq8uCPF7weNSTt9/
-         JvtQ==
+        Fri, 11 Oct 2019 11:26:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570807581;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r91xPcIl5SV0V09jWIUEt2F7Evym3w9uEOcXPXEGEUc=;
+        b=LhTiVq1F4cxB8Ez/rsmoD152Aops5U7P35LCMuexYz41RPXTLQLoc+iEeplqVJqfoon3im
+        F5qMdCVnu2fa+l1H6gOiqs9CthOJlWcGxh4eDI4rc52Ykp9oaVlgdyS88Yhp1zRmCeA6Z5
+        Qu18Hc4lYurlU4MERdLvInop3qj9+B8=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-349-iWllrDK5NUe5uRUwk4Cj0A-1; Fri, 11 Oct 2019 11:26:17 -0400
+Received: by mail-qt1-f199.google.com with SMTP id n4so9756042qtp.19
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 08:26:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hjVVG+LCl45Ap93nqrjHPaMZ4hTq+jdNOcLl2h2isR4=;
-        b=hn8IcF3+Quwc+xCkDl3RY+Ll/tVudtTl0HTR6PNX7MAVP/3Gy73zuTQQxR5poD7lCb
-         YgEILmbDRQSz2V0f7HZT5hQCH5nPZtd0peoawIXBA/8yp648BSqLNQqd7gpRY0a5i9X8
-         JGnPtKmRLnL6E1kVQ2li4hT3blGU7WbmglT7heTBpi/xgE9kCFE8B0mFmr6ujV6v+HRD
-         RXHlFb4/EmdsvsNNUusXJEfQiSGcSU04yej6OGC5BUAcKoCnOfZnd2LvAB6W6k8mhRWA
-         26CtyJ1sn5quX7lda+f4s7h+1/buDyTyOBGSNkCWCJX8NddFGC6Q0trmLd2nq1LQQYAr
-         DTlQ==
-X-Gm-Message-State: APjAAAVBcCGWszmjZXJ2i1bChOmt7Ch1wwt7ejBYipoNR13wqmmALn+4
-        1O+pA1bqDyrWM5KlGM/sR61/eA==
-X-Google-Smtp-Source: APXvYqysY7dY5L83dfJIuaCR944gcYiW6Lfi2SqxpcDRGH/9Id6HpLLJrRLEW2oTFhfQatKUSjZZtg==
-X-Received: by 2002:a25:2d49:: with SMTP id s9mr9205759ybe.450.1570807536250;
-        Fri, 11 Oct 2019 08:25:36 -0700 (PDT)
-Received: from [192.168.1.44] (67.216.151.25.pool.hargray.net. [67.216.151.25])
-        by smtp.gmail.com with ESMTPSA id t82sm2316781ywc.26.2019.10.11.08.25.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Oct 2019 08:25:35 -0700 (PDT)
-Subject: Re: [PATCH v2 05/12] arm64: Basic Branch Target Identification
- support
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Kristina_Mart=c5=a1enko?= <kristina.martsenko@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sudakshina Das <sudi.das@arm.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
- <1570733080-21015-6-git-send-email-Dave.Martin@arm.com>
- <20191011151028.GE33537@lakrids.cambridge.arm.com>
-From:   Richard Henderson <richard.henderson@linaro.org>
-Openpgp: preference=signencrypt
-Message-ID: <4e09ca54-f353-9448-64ed-4ba1e38c6ebc@linaro.org>
-Date:   Fri, 11 Oct 2019 11:25:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eafnjM529pN7ytDsYuN9GhEVboOCnNDOd+7f++5XrSw=;
+        b=EOSRgc6o1veVrs6fE/KCElImvwql6OBcXaDxlmA8AiOJS4kvUJbCA4EawDSp7ogiKm
+         IosGiGe8hgdD3zA8/mSmgKLau86fvencvIITwk74fJTakEYYVf+ZMgVT4KF/xA+djGCl
+         G2/VSH5UwVLudrVMJ2dKF9U0c3bRGth3OgYq6XpNJpuaNrR3shtXD26PqnDWAKpHYSkK
+         2fp4knYtY9Xy48LGLi2XV3o93upUJgYD7p6SQlfc8R5fVCVHeXFftwW66SKnUJjcyPNC
+         lHjyaMNMv8wvaGpM00QMOymc1BamtCRUUabpvVeu8rQXZlZ0rSdYb+uvtX45xRen+4lz
+         I+CA==
+X-Gm-Message-State: APjAAAXoyNP8kmjH5Ih+VGG9V0yo0vwjSk7XqBdEFAtvf1QsJzFoLAQV
+        EfHJY3JwUW7hCp9m2FOyeN6RpWMI/brh1EHpjoymMWBbLfIKVWBonPsibsIarjzpX4mAVvMAyU2
+        /dQBHu0DcAFImAFf09nKS5FQHA99D0Icck3/pvgV0
+X-Received: by 2002:ac8:550d:: with SMTP id j13mr17291388qtq.260.1570807577212;
+        Fri, 11 Oct 2019 08:26:17 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwihUT7ZaSBXE6LG6Mw9e0mezUZBFwyFWl/NYeOO+TbjFoJkmo9MEWVn+fn/yd1iuBIM3qcM1cLiK80d2mFMlc=
+X-Received: by 2002:ac8:550d:: with SMTP id j13mr17291356qtq.260.1570807576936;
+ Fri, 11 Oct 2019 08:26:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191011151028.GE33537@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191001070845.9720-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20191001070845.9720-1-kai.heng.feng@canonical.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 11 Oct 2019 17:26:05 +0200
+Message-ID: <CAO-hwJJ_hjL8=D+BDTW6LQRhd86NawORuY-jnDF71mD88woiDw@mail.gmail.com>
+Subject: Re: [PATCH] Revert "Input: elantech - enable SMBus on new (2018+) systems"
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+X-MC-Unique: iWllrDK5NUe5uRUwk4Cj0A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/11/19 11:10 AM, Mark Rutland wrote:
-> On Thu, Oct 10, 2019 at 07:44:33PM +0100, Dave Martin wrote:
->> @@ -730,6 +730,11 @@ static void setup_return
->>  	regs->regs[29] = (unsigned long)&user->next_frame->fp;
->>  	regs->pc = (unsigned long)ka->sa.sa_handler;
->>  
->> +	if (system_supports_bti()) {
->> +		regs->pstate &= ~PSR_BTYPE_MASK;
->> +		regs->pstate |= PSR_BTYPE_CALL;
->> +	}
->> +
-> 
-> I think we might need a comment as to what we're trying to ensure here.
-> 
-> I was under the (perhaps mistaken) impression that we'd generate a
-> pristine pstate for a signal handler, and it's not clear to me that we
-> must ensure the first instruction is a target instruction.
+Hi Kai-Heng,
 
-I think it makes sense to treat entry into a signal handler as a call.  Code
-that has been compiled for BTI, and whose page has been marked with PROT_BTI,
-will already have the pauth/bti markup at the beginning of the signal handler
-function; we might as well verify that.
+On Tue, Oct 1, 2019 at 9:09 AM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> This reverts commit 883a2a80f79ca5c0c105605fafabd1f3df99b34c.
+>
+> Apparently use dmi_get_bios_year() as manufacturing date isn't accurate
+> and this breaks older laptops with new BIOS update.
+>
+> So let's revert this patch.
+>
+> There are still new HP laptops still need to use SMBus to support all
+> features, but it'll be enabled via a whitelist.
+>
 
-Otherwise sigaction becomes a hole by which an attacker can force execution to
-start at any arbitrary address.
+You might want to add here:
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D204771
 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-r~
+Oops, seems like you are missing my acked by:
+Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+
+Also, don't we want to send this one to stable as well? I can't
+remember if we reverted it in all the released kernels.
+
+Cheers,
+Benjamin
+
+> ---
+>  drivers/input/mouse/elantech.c | 55 ++++++++++++++++++----------------
+>  1 file changed, 29 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantec=
+h.c
+> index 04fe43440a3c..2d8434b7b623 100644
+> --- a/drivers/input/mouse/elantech.c
+> +++ b/drivers/input/mouse/elantech.c
+> @@ -1827,31 +1827,6 @@ static int elantech_create_smbus(struct psmouse *p=
+smouse,
+>                                   leave_breadcrumbs);
+>  }
+>
+> -static bool elantech_use_host_notify(struct psmouse *psmouse,
+> -                                    struct elantech_device_info *info)
+> -{
+> -       if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
+> -               return true;
+> -
+> -       switch (info->bus) {
+> -       case ETP_BUS_PS2_ONLY:
+> -               /* expected case */
+> -               break;
+> -       case ETP_BUS_SMB_HST_NTFY_ONLY:
+> -       case ETP_BUS_PS2_SMB_HST_NTFY:
+> -               /* SMbus implementation is stable since 2018 */
+> -               if (dmi_get_bios_year() >=3D 2018)
+> -                       return true;
+> -               /* fall through */
+> -       default:
+> -               psmouse_dbg(psmouse,
+> -                           "Ignoring SMBus bus provider %d\n", info->bus=
+);
+> -               break;
+> -       }
+> -
+> -       return false;
+> -}
+> -
+>  /**
+>   * elantech_setup_smbus - called once the PS/2 devices are enumerated
+>   * and decides to instantiate a SMBus InterTouch device.
+> @@ -1871,7 +1846,7 @@ static int elantech_setup_smbus(struct psmouse *psm=
+ouse,
+>                  * i2c_blacklist_pnp_ids.
+>                  * Old ICs are up to the user to decide.
+>                  */
+> -               if (!elantech_use_host_notify(psmouse, info) ||
+> +               if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
+>                     psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids=
+))
+>                         return -ENXIO;
+>         }
+> @@ -1891,6 +1866,34 @@ static int elantech_setup_smbus(struct psmouse *ps=
+mouse,
+>         return 0;
+>  }
+>
+> +static bool elantech_use_host_notify(struct psmouse *psmouse,
+> +                                    struct elantech_device_info *info)
+> +{
+> +       if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
+> +               return true;
+> +
+> +       switch (info->bus) {
+> +       case ETP_BUS_PS2_ONLY:
+> +               /* expected case */
+> +               break;
+> +       case ETP_BUS_SMB_ALERT_ONLY:
+> +               /* fall-through  */
+> +       case ETP_BUS_PS2_SMB_ALERT:
+> +               psmouse_dbg(psmouse, "Ignoring SMBus provider through ale=
+rt protocol.\n");
+> +               break;
+> +       case ETP_BUS_SMB_HST_NTFY_ONLY:
+> +               /* fall-through  */
+> +       case ETP_BUS_PS2_SMB_HST_NTFY:
+> +               return true;
+> +       default:
+> +               psmouse_dbg(psmouse,
+> +                           "Ignoring SMBus bus provider %d.\n",
+> +                           info->bus);
+> +       }
+> +
+> +       return false;
+> +}
+> +
+>  int elantech_init_smbus(struct psmouse *psmouse)
+>  {
+>         struct elantech_device_info info;
+> --
+> 2.17.1
+>
+
