@@ -2,106 +2,121 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF95ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1F7C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 445CE214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3C82089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="I/GOFBvs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sSefBXmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfJKXPT (ORCPT
+        id S1727709AbfJKXTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 19:15:19 -0400
-Received: from mout.gmx.net ([212.227.15.15]:53513 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfJKXPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 19:15:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570835365;
-        bh=5gB1OCM/eHUoF4+pE9h4tGD6did33KyXZQ7I6/0pCLU=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=I/GOFBvsXIboHGynN2mYSVXzwdIBKfSeUNMbgC3ZmtGfkTIJdQ6Zy84OQojyywLxf
-         7eM0YTeCPKP1MEwJY1l+TsumTlgikYB/1d8ntKmy57Jb1TrtezT+djMB13d8BjrS3o
-         cyGseQy18NpYsE96j3LAP4l51sQ2RyF9MDbRKy+Y=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.112]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M72oH-1iR33i0RZv-008cZL; Sat, 12
- Oct 2019 01:09:25 +0200
-Subject: Re: [PATCH v1 3/3] ARM: dts: bcm2711: Enable GENET support for the
- RPi4
-To:     matthias.bgg@kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Eric Anholt <eric@anholt.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191011184822.866-1-matthias.bgg@kernel.org>
- <20191011184822.866-4-matthias.bgg@kernel.org>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <dfe9062b-1960-f67b-2a9e-864c0680f5d3@gmx.net>
-Date:   Sat, 12 Oct 2019 01:09:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191011184822.866-4-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:hXCsfi0YzRPmoFypWyfnvbO4N7BdVxoeOYAzqfPcBP1vircEceh
- 5/gp4HUDZbiVzRFNAraPoYeULEiS7pg/NXBuAyRCOMdrkpXK0OQ4Stl6pf8E52jOsx2fc5u
- qQmvIDtmTSod/RhKuofbxsYfY1Z80h4EbuwqHZFOosz8q3Cr4WkqG08p9zxoXvmye5G59jM
- Pko4MF7b2PlzF2rWIrfmg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hioaaoAal40=:B4AdG8yOarUZYruTvKzKW9
- O6NhUfcFJuvBB6mewzVfICNLAu2JaVBVynV1qeVUxIlbZ753ObmgpRtOPMgt8eThT0m02EyR+
- 3yFmPVLKK73vR5RuVxSz4/RaFIph129QOk+XbZk3nS3cB8VfIjtdEQBdnLRlj+DWq95AsRS5M
- JE8yhLb5koUbSkaVFzr1j7TiOekkJqXdujFGg5J41jfPufT0hC4duVn4V5sgVnVRBBffvXAVv
- Li4tHsSziRkTqQkLwRgJQCNZsKBfN1G2p9iNB3QOTFucCBUlJ8KyRiChJpEhsXIu34TCuI47V
- NebesUtHLbV2z/6pZTa9kufjyV6fNgDt7L6Z76Gp9ly5XFXoVGpkDqy0GkFOoH6shacPOm3Uq
- rY8oX2NFt5Our/vUqhO8UJd6Nlb7lVuX1I1ZQvRX5efkPyIMK4MeXZOWYNFd/49fHM6WOu1zr
- jWwJJli4OuJqeTzHxXAjDYXp54pCVVFCJFkoutjoUCJAyuIxoT/pqgje9/jcKywv+UdUpgbYK
- ud7Kql66eDPRukrt5JpZYwUzeOjVyrAkYPsSY0E0u+/glVi2BE0yuI+Lrxt/BpdLZMhVC8ckp
- MBYbrpQTFnn5pdXqQ1aw0R6OcCQPSNM41z/1xpIuKbEVRfFqZuJPssQgXy+rq+VJ0F18b5IOn
- cstZHafaMYsqYylJrOheFRum7c46HvfA+xZhFpFKheFIMHNOefFM90DIKwECxwjnRCJc+A1P5
- hFWlGLh7W27xXLJfkqAWtTec4Bj6tpo0aZ7hfon9/NFLoSWuDC5gTDVcdBeqsUOiKfSVbhfhn
- N+ByNpUvsAgjIXyQ8uow044WCrdAoNMuTUcvXhVfCp6pAZ9RdZhx/XXxNmWEFIWmkyKuIYynB
- m/43Tfr7JqlNYwqtoMcuUGEOK+j4e6aJiXDkNmbpHP3aic2rI5krd/fv3tr6BJAsQS0nquGKA
- v2KGo75smbnL31aNACNvedR8XumobvIoh+YqFDkj9R+KaM1D3HdpqqSXm1Ejt0svl3VgUnv+m
- jc9YWHX+JM0al4G3uyVHqQDZXxCW7fQ0mSWo8LSL8K/eN+9/3v0gyiJID/zMcLlDYOqSMmyMT
- lh1ZcMDGoUXwIpBY5IiaD/fB5tGQs2vJiX4+P5dRyenHg4GITUfq7v9BPMnOz0U2qSyx7Ag2b
- Yi0UneKJUl0KAfeEbGVZUR9vHEW1aSZ0gyCLnYv4B0AstLu4+F0u5q56ceOTgL3FUdXVJGPkR
- zxhRo3oUMEIT18dZOZgN8O7FD44USQk3dfla4R14H0Jtwe2yZN2pEn6NHwrA=
+        Fri, 11 Oct 2019 19:19:20 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33260 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfJKXTU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 19:19:20 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d22so5140724pls.0;
+        Fri, 11 Oct 2019 16:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/G9uKyk/90w+wc42UoUQODWgnKhQYlxOUwgCeA9A5ho=;
+        b=sSefBXmyQMjx8Ggd1c55GcBum9XQOvWbUnc/XYDBHl7EbqFBk/WcM0Bni7J4jzmcwq
+         OAQq8AbZuKJJr8N7zaBsrIN4noc2yDWiLBdrNwJ16UWfY9a+U+98WGwyZ+j/p/rvTUhT
+         pR2ft0rq1MY+7HZ7HE1jB1m7TLq9JOElmY6ORGH/N5+i1AiAuiNclWabJQgJF4ZyYr7j
+         2FXuro4buGSHDMlGR2SEgCGY+4HpqyQGViMt3awUuJoLbvT1xb0tspjJkSd3ttWkF5pz
+         QsPnQSSFwQMpnefSJlBc3BTMIJDPTX+Pvi2PWbkUDZ39ik/BBTAHZ6hOlq/+Aqkh4j/G
+         6u2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/G9uKyk/90w+wc42UoUQODWgnKhQYlxOUwgCeA9A5ho=;
+        b=T0hwz1mnucB3Aqpgkn9zE+qOgyKl3A86mGIJjmV19v2Ue4MnYXacXQD1CHjxb2XGoB
+         8gMnCu80XkTdC71RkMRyhxYqdvUlfIX+ZZzWdWeKj3IHo59W3b9/WpMtyUuI6v/yaDnE
+         CqNXW9oRgLnoXMedTN5/dMYJsZyEUK2BlIQhgULSyXxpb9xkuPbMNu8SWycjkNHmjwr8
+         F2L1S0LBpT6lOr5uVEtRiwq8czl120B7JJjTnzk53BZyS+PBurqoEor9fz4yHm9fpY+d
+         6ByBxwsaK2Y0zANFRjbhKQCG9wecHXX0u/7O31hcN7H3F+hyBsaUwJZ1TB6wx08ItYFM
+         LStA==
+X-Gm-Message-State: APjAAAWu6djXGMC/W2MWjJOw1zi6PncQ5xsdPWnHlU32XiDtcsJ2sUtE
+        BpeqQHlcTUAe4OZz5JvG+znf+SJx
+X-Google-Smtp-Source: APXvYqwwVWuSHP/noxdWfl1rCLKl5ioAbmqbftaXp7u7n3bR6ooq9PcqpcLpUWdnxM5GuDmTjJtYQw==
+X-Received: by 2002:a17:902:9f94:: with SMTP id g20mr1733531plq.319.1570835958930;
+        Fri, 11 Oct 2019 16:19:18 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f185sm13311997pfb.183.2019.10.11.16.19.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 16:19:18 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     phil@raspberrypi.org, jonathan@raspberrypi.org,
+        matthias.bgg@kernel.org, linux-rpi-kernel@lists.infradead.org,
+        wahrenst@gmx.net, nsaenzjulienne@suse.de,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM GENET
+        ETHERNET DRIVER), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: bcmgenet: Generate a random MAC if none is valid
+Date:   Fri, 11 Oct 2019 16:19:15 -0700
+Message-Id: <20191011231915.9347-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 11.10.19 um 20:48 schrieb matthias.bgg@kernel.org:
-> From: Matthias Brugger <mbrugger@suse.com>
->
-> Enable Gigabit Ethernet support on the Raspberry Pi 4
-> Model B.
+Instead of having a hard failure and stopping the driver's probe
+routine, generate a random Ethernet MAC address to keep going.
 
-I asked some questions about genet to the RPi guys [1] which are
-relevant to this patch (missing clocks and interrupt, MAC address
-assignment) but i didn't get an answer yet.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-During my tests with a similiar patch series i noticed that the driver
-won't probe without a MAC address.
-
-How does it get into DT (via U-Boot)?
-
-[1] -
-https://github.com/raspberrypi/linux/issues/3101#issuecomment-534665860
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 12cb77ef1081..5c20829ffa0f 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -3461,16 +3461,10 @@ static int bcmgenet_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
+-	if (dn) {
++	if (dn)
+ 		macaddr = of_get_mac_address(dn);
+-		if (IS_ERR(macaddr)) {
+-			dev_err(&pdev->dev, "can't find MAC address\n");
+-			err = -EINVAL;
+-			goto err;
+-		}
+-	} else {
++	else
+ 		macaddr = pd->mac_address;
+-	}
+ 
+ 	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base)) {
+@@ -3482,7 +3476,10 @@ static int bcmgenet_probe(struct platform_device *pdev)
+ 
+ 	SET_NETDEV_DEV(dev, &pdev->dev);
+ 	dev_set_drvdata(&pdev->dev, dev);
+-	ether_addr_copy(dev->dev_addr, macaddr);
++	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr))
++		eth_hw_addr_random(dev);
++	else
++		ether_addr_copy(dev->dev_addr, macaddr);
+ 	dev->watchdog_timeo = 2 * HZ;
+ 	dev->ethtool_ops = &bcmgenet_ethtool_ops;
+ 	dev->netdev_ops = &bcmgenet_netdev_ops;
+-- 
+2.17.1
 
