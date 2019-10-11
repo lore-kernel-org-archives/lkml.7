@@ -2,132 +2,111 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E51DECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8224ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24C121D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8262A214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:22:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDJcmnhS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfJKLW2 (ORCPT
+        id S1728017AbfJKLWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:22:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60360 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbfJKLWK (ORCPT
+        Fri, 11 Oct 2019 07:22:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53209 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727734AbfJKLWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:22:10 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iIszi-0007D2-Uk; Fri, 11 Oct 2019 13:22:03 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 947A51C0324;
-        Fri, 11 Oct 2019 13:22:02 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 11:22:02 -0000
-From:   "tip-bot2 for Sami Tolvanen" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] syscalls/x86: Use the correct function type in
- SYSCALL_DEFINE0
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191008224049.115427-2-samitolvanen@google.com>
-References: <20191008224049.115427-2-samitolvanen@google.com>
+        Fri, 11 Oct 2019 07:22:49 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r19so10030906wmh.2;
+        Fri, 11 Oct 2019 04:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=n2u8Nbr5qrb5sy0Wxw+jsNgsLrojAZgnmC+9Kn7SuWM=;
+        b=KDJcmnhSB2UDwPft0eYEFu1fWwBG4WwlKVKfcfu0eq+k4/rbjDtno9/N0mOrWstkTC
+         yri1O2qHfBHVQ1TXo3Tdpm7fwOKmJOMiZyc8EYsYzOVVCwPSfHI+i07MWa8i5gUTlmQy
+         +bs8jQIUNMpKTxptj3AYeWaK1awgzxxAdpdVx9tAtBm2si/uTS0Wvs4tSbpQV70it8tE
+         qKd53xZtwSewfHz+4cn15nI+CXnwKx52WFoKfvNv6mVGQ9XefQUxHSJYZwEyb2vH4M5E
+         3FUItXPFwUNT3gPXxOf+oA9Unz/nf+SD2ImX5zNa2XSHnaAf3AemyGpYccYXobbsVogF
+         4hLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n2u8Nbr5qrb5sy0Wxw+jsNgsLrojAZgnmC+9Kn7SuWM=;
+        b=FzvAeX/LPx5FOsPM2aF1VVI7jpkpF+yU1/jzxD8DT4SM7UtaNHg7tU5SqeEXRGkb5F
+         Z5RmH2uljnGwZWGmMF+P8AE/Mc67FZdeht/sRnmn4GlFAkWrA3voLOXkEkEBao/QN1Dj
+         yEjw7Aw7hQjCS0gmXWFwKhqNxEcJTotsPe6FgBHVub1Co+kIg0b9TBuDN8HUVZQtlxp3
+         gaeNuM2NzNDVP0q6xxBDSNa6Xc8pTJRHjAFl1/7+81cpmNKp083dr4St70VDHFLBbQ4q
+         /Q/KOkIZysazEXDAb4OhyhALfOk449VNK75iOnFp2A5OXsCP42M4Vn8El3RFSi7kltXT
+         ph8A==
+X-Gm-Message-State: APjAAAXqVv9rGpUzxs8kIFOlerVIzkxb3ktIz0HW7MNR3249zGvCFvux
+        mnQhF5us4VhAyT1+bsHu+rUVzGOY
+X-Google-Smtp-Source: APXvYqxxjCCFZkyWTPg2aevouOvHoMlTgziLXLyl4cPQyZ81eVlUqDl3E4SX+WdCvFO9igcH5QI+1Q==
+X-Received: by 2002:a1c:bc07:: with SMTP id m7mr2848851wmf.103.1570792966561;
+        Fri, 11 Oct 2019 04:22:46 -0700 (PDT)
+Received: from gmail.com (net-93-144-2-18.cust.dsl.teletu.it. [93.144.2.18])
+        by smtp.gmail.com with ESMTPSA id y13sm11778697wrg.8.2019.10.11.04.22.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 11 Oct 2019 04:22:45 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 13:22:45 +0200
+From:   Paolo Pisati <p.pisati@gmail.com>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Paolo Pisati <p.pisati@gmail.com>, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: msm8996: sdhci-msm: apq8096-db820c sdhci fails to init -
+ "Timeout waiting for hardware interrupt."
+Message-ID: <20191011112245.GA10461@harukaze>
+References: <20191010143232.GA13560@harukaze>
+ <20191011060130.GA12357@onstation.org>
 MIME-Version: 1.0
-Message-ID: <157079292253.9978.17704020212301082450.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011060130.GA12357@onstation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/entry branch of tip:
+On Fri, Oct 11, 2019 at 02:01:30AM -0400, Brian Masney wrote:
+> I encountered that same error working on the Nexus 5 support upstream.
+> Here's the fix:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=03864e57770a9541e7ff3990bacf2d9a2fffcd5d
 
-Commit-ID:     8661d769ab77c675b5eb6c3351a372b9fbc1bf40
-Gitweb:        https://git.kernel.org/tip/8661d769ab77c675b5eb6c3351a372b9fbc1bf40
-Author:        Sami Tolvanen <samitolvanen@google.com>
-AuthorDate:    Tue, 08 Oct 2019 15:40:45 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 11 Oct 2019 12:49:18 +02:00
+No dice, same exact problem.
 
-syscalls/x86: Use the correct function type in SYSCALL_DEFINE0
+But the patch is present downstream[1]:
 
-Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
-parameters, use the correct function type to avoid type mismatches
-with Control-Flow Integrity (CFI) checking.
+commit c26727f853308dc4a6645dad09e9565429f8604f
+Author: Loic Poulain <loic.poulain@linaro.org>
+Date:   Wed Dec 12 17:51:48 2018 +0100
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191008224049.115427-2-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/include/asm/syscall_wrapper.h | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
 
-diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index e046a40..90eb70d 100644
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -48,12 +48,13 @@
-  * To keep the naming coherent, re-define SYSCALL_DEFINE0 to create an alias
-  * named __ia32_sys_*()
-  */
--#define SYSCALL_DEFINE0(sname)					\
--	SYSCALL_METADATA(_##sname, 0);				\
--	asmlinkage long __x64_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
--	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);	\
--	asmlinkage long __x64_sys_##sname(void)
-+
-+#define SYSCALL_DEFINE0(sname)						\
-+	SYSCALL_METADATA(_##sname, 0);					\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
-+	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
-+	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);		\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
- 
- #define COND_SYSCALL(name)						\
- 	cond_syscall(__x64_sys_##name);					\
-@@ -181,11 +182,11 @@
-  * macros to work correctly.
-  */
- #ifndef SYSCALL_DEFINE0
--#define SYSCALL_DEFINE0(sname)					\
--	SYSCALL_METADATA(_##sname, 0);				\
--	asmlinkage long __x64_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
--	asmlinkage long __x64_sys_##sname(void)
-+#define SYSCALL_DEFINE0(sname)						\
-+	SYSCALL_METADATA(_##sname, 0);					\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
-+	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
- #endif
- 
- #ifndef COND_SYSCALL
+In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
+VMMC, needs to be increased in order to prevent any voltage drop issues
+(due to limited current) happening with some SDCARDS or during specific
+operations (e.g. write).
+
+Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+
+
+so it's probably worth carrying it.
+
+1:
+https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/commit/arch/arm64/boot/dts/qcom?h=release/qcomlt-4.14&id=e6415afc1aef2ac9361437ff583ba1be5a932b78
+-- 
+bye,
+p.
