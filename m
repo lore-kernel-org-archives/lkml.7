@@ -2,159 +2,125 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4F3C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6689C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B88206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A56206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bnd5yfCq"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="EQf8n7ZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfJKMdA (ORCPT
+        id S1728037AbfJKMfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:33:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45074 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfJKMdA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:33:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r5so11697953wrm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 05:32:58 -0700 (PDT)
+        Fri, 11 Oct 2019 08:35:40 -0400
+Received: from mail-eopbgr700046.outbound.protection.outlook.com ([40.107.70.46]:20289
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727198AbfJKMfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 08:35:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kJg35FlqooOBOb20CsbO+MVOHrvzdTM+QRED6eZtYBs7iMXIjfRhaovUVQt1Th1qn1RQPU/7iOMn2mDptsRSo4+oMs63pMMcgeYs4WBEIkPdkgRH0uyctIp60wPHcYjulXFD0Mk44CLKwUAGXtZ+KJHz90kvN3+FNZOhFMQTgvLoKApXJL9MtYEbDOpRTPAG3TYrL+ESVGy9IbRkh2z0zouT55mr47ydpC+ckovNmmr/Ql1U73AcqCOuVkJN/QjElLha+8m2QhWG/YeHq5yBV81tUBL7v7qmHI8pRWi5At3kdwySWKvvaPOYk/oDaPNtruYhcKcW1UfTglSPQBe4GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Whxo+WgEjij0YgVG2fkbFDoF1boUtbacdjuZaVzQ6+s=;
+ b=XJnoORZlxhpUCUskkd0X+0GHrZn2gksOoYlwrIyye18rQyOhiARldDHi50d9bdqvvjjMPTmYV6Frvdv8Czbm1TgepaHLRwwdujZ6j1BBEYqRaE9Y/dQhxbJOUM3B8m/s54cs+C4zMyEi70tGboVQk52ktqzBO7m2byWqS8BTOfBgyiqhTQkVzEcxlpKexeYYJvMP4naDGmWzbEbSc5TyyHOTyR6vc8vi0CUjlhhVG/+XWWCX9ylq6zUFQhcJ8AE1NCFJ/jr/8x+BHfCTrk1U83Fa7yJFj4h1khXhlE4YiaLtYpp2C0jvPOggXTvnJJtj1yU7CUhELXepNeg7kq/+3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=kOytMM5gC8Rw7dhUX7I+Kbb6M5MxyF0glkinKL9u21w=;
-        b=Bnd5yfCqKUEaKgZOqcY1CN8kvPV2Gr+Q4fywsvrdloeri8uix9ORjvFoTPWg9s38PE
-         L6phjBKcq4O5svdzvdGK+0F0IBn4NU4oqEfyvd7vRZD+y1IMPIpxiTsKcMlmtgO7DSYV
-         Sy3ij64JmKhmMIPgaaIVVaT3vg5hW8/uIU/4LhATkdavmkvYxYy2pMh4V3Y3aojGsOcs
-         g7fcyebHP5q2nEaAMX9ETqiPBaHjiilQd1RVbZkpf2qlQwxyhwK92Tby86JtYJ+hlG/W
-         Ylah4FkZGbo9WWpyq2uPxCbkQFm29srzZOiKZ7uxSjkDRZ7J6SY8w8C0jggauuUuTi7y
-         vyRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=kOytMM5gC8Rw7dhUX7I+Kbb6M5MxyF0glkinKL9u21w=;
-        b=gFBi23JCVa7UfNEroBEar90ET1tgLFPEF8UIXMa1c2rzhySNEqtaFUR4oL44PfK8CO
-         nXxBE7TiGPjy6fTHO/5bHV2btn/0bui81GroC2wLcdWu7u8/2eJIb3J53Fxx6iBs6UMP
-         Xus/1CM4z0gOVxMc+saydj7GEcOxejATuVniaMk5GwuWtFilQR0IoX9gB5hoSh6oUEWV
-         dRFa57iGhlnmo5ASrM+oD1OaLy1/MzYsOXdQfpagQFUCoW3yIofK/2e7TFYvt6EJp9FW
-         Gt7v2Fq5YTflFbWxspMO6Ou0MQk/AM/QQ5FPG/vAC8BTECwRJIXMXZJu6k2VxOiFxNDN
-         ZR0Q==
-X-Gm-Message-State: APjAAAXlR8zCAfHJUHd63kzfMCFlfNrhE8FSqKYT8FExuP2bUX/fsevf
-        jBhbFgY60hz3b5oe+Zot1+J2q0XXz8c=
-X-Google-Smtp-Source: APXvYqyzZbUL8OhStZc+HlgbYhvSwM1wqEHLiHP4k90Cva2Yn7aztLK+n5fiCOQHcg5Dxowki5Fcfg==
-X-Received: by 2002:adf:fad1:: with SMTP id a17mr13835488wrs.148.1570797177265;
-        Fri, 11 Oct 2019 05:32:57 -0700 (PDT)
-Received: from apalos.home (ppp-94-65-93-45.home.otenet.gr. [94.65.93.45])
-        by smtp.gmail.com with ESMTPSA id r10sm10685311wml.46.2019.10.11.05.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 05:32:56 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 15:32:53 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Alexander Lobakin <alobakin@dlink.ru>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/2] net: core: use listified Rx for GRO_NORMAL
- in napi_gro_receive()
-Message-ID: <20191011123253.GA8693@apalos.home>
-References: <20191010144226.4115-1-alobakin@dlink.ru>
- <20191011122329.GA8373@apalos.home>
- <88b9c6742b1169d520376366b683df6c@dlink.ru>
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Whxo+WgEjij0YgVG2fkbFDoF1boUtbacdjuZaVzQ6+s=;
+ b=EQf8n7ZWPKc7RiAugmj2wsCID+xchJCZxg2TLcd5hP7ANFtNY5wNxb8BBRIpg7RXiBmsYaEP6wi8e6lbNXsfBfTVpP+FtHdOIhphn0EBj4DOmsfhnkr2Xq1yeLBY8l+hpQ/pXo7YZMftKHKpX2cSlC0nR1vqCZEjqEPhfqi+Rro=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB4255.namprd11.prod.outlook.com (52.135.37.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.18; Fri, 11 Oct 2019 12:35:37 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ac8c:fc55:d1e2:465f]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ac8c:fc55:d1e2:465f%5]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
+ 12:35:37 +0000
+From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
+To:     "lkp@lists.01.org" <lkp@lists.01.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] staging: wfx: fix potential vulnerability to spectre
+Thread-Topic: [PATCH] staging: wfx: fix potential vulnerability to spectre
+Thread-Index: AQHVgBzd1G9uPB5+okyjo2amDVnWB6dVWYKAgAAHBoA=
+Date:   Fri, 11 Oct 2019 12:35:36 +0000
+Message-ID: <2165496.I6CF8xJYvu@pc-42>
+References: <20191011101551.30946-1-Jerome.Pouiller@silabs.com>
+ <20191011121027.GA1144221@kroah.com>
+In-Reply-To: <20191011121027.GA1144221@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6d7cf699-eab3-41e2-c7ee-08d74e4784b6
+x-ms-traffictypediagnostic: MN2PR11MB4255:
+x-microsoft-antispam-prvs: <MN2PR11MB425505C39A3933AF66DB771493970@MN2PR11MB4255.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:949;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(376002)(366004)(136003)(396003)(39850400004)(346002)(199004)(189003)(66574012)(71200400001)(14454004)(71190400001)(4744005)(8936002)(5660300002)(2351001)(186003)(25786009)(6512007)(9686003)(2501003)(446003)(6916009)(7736002)(305945005)(11346002)(66476007)(66556008)(64756008)(76176011)(91956017)(6506007)(66446008)(86362001)(6486002)(6246003)(229853002)(26005)(76116006)(66946007)(3846002)(256004)(99286004)(2906002)(33716001)(54906003)(6436002)(66066001)(14444005)(102836004)(8676002)(81166006)(81156014)(6116002)(1730700003)(4326008)(316002)(5640700003)(486006)(478600001)(476003)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4255;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hfVpjMDPUE4nYY29xUnD4HvqYqWdSleM8mmQABblNltS2MZCMwZrtUaW/g2MuJ4uAg85T77WS/XNATEUElW412cpDn9h2l7IkV1kYcV/d6EPrrrQdCjGUVYy1hojsNOdpu70K31ojqhz8nGUiM7DKP/LQP2t/mAQ8Z0SpplBzO3zjktEtJhjWQtTvLt1o8d8/UZ3NCVaVQhm8St/HREqjhhXoAM0L/faUSxzPz3DK74Ci1ymaaH0ea0r9REaZDipi8GyuvHdb/Mm1aTOgkEY/RjcbUSyBQ4rzkcezM4TSvLI2fkk73cMzwINqiRxmxNKNU1hNIYp1kh2+bI8p8Mrimo2YaFJY/pwbI+OchHToICdqy0jupYoTrcyTRt2SyYGm4pF+9p4ZTbUFAe5Feol6q3q78QMM7d3c4apguyvoZM=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <A23DEEF861CD1F40A53617D53B4BBE1C@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <88b9c6742b1169d520376366b683df6c@dlink.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d7cf699-eab3-41e2-c7ee-08d74e4784b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 12:35:37.0901
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hr8jTAVD4aVqgJiRqFexn0rzfj4pRY7GrHYL9Qtqvcgk6bKL9mDB5XzMTTj4/o3WYSWuQvns464RJgQYv4JKxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4255
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander, 
+On Friday 11 October 2019 14:10:35 CEST Greg Kroah-Hartman wrote:
+> On Fri, Oct 11, 2019 at 10:15:54AM +0000, Jerome Pouiller wrote:
+> > From: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+> >
+> > array_index_nospec() should be applied after a bound check.
+> >
+> > Fixes: 9bca45f3d6924f19f29c0d019e961af3f41bdc9e ("staging: wfx: allow t=
+o send 802.11 frames")
+>=20
+> No need for the full sha1, this should be:
+>         Fixes: 9bca45f3d692 ("staging: wfx: allow to send 802.11 frames")
 
-On Fri, Oct 11, 2019 at 03:27:50PM +0300, Alexander Lobakin wrote:
-> Hi Ilias,
-> 
-> Ilias Apalodimas wrote 11.10.2019 15:23:
-> > Hi Alexander,
-> > 
-> > On Thu, Oct 10, 2019 at 05:42:24PM +0300, Alexander Lobakin wrote:
-> > > Hi Dave,
-> > > 
-> > > This series was written as a continuation to commit 323ebb61e32b
-> > > ("net: use listified RX for handling GRO_NORMAL skbs"), and also takes
-> > > an advantage of listified Rx for GRO. This time, however, we're
-> > > targeting at a way more common and used function, napi_gro_receive().
-> > > 
-> > > There are about ~100 call sites of this function, including gro_cells
-> > > and mac80211, so even wireless systems will benefit from it.
-> > > The only driver that cares about the return value is
-> > > ethernet/socionext/netsec, and only for updating statistics. I don't
-> > > believe that this change can break its functionality, but anyway,
-> > > we have plenty of time till next merge window to pay this change
-> > > a proper attention.
-> > 
-> > I don't think this will break anything on the netsec driver. Dropped
-> > packets
-> > will still be properly accounted for
-> > 
-> 
-> Thank you for clarification. Do I need to mention you under separate
-> Acked-by in v2?
-> 
+I copy-pasted information from kbuild robot notification.
 
-Well i only checked for the netsec part. I'll try having a look on the whole
-patch and send a proper Acked-by if i get some free time!
+I suggest that commit-id in robot notification is also cut down to 12
+characters. Or even better, to use this snippet:
 
-> > > 
-> > > Besides having this functionality implemented for napi_gro_frags()
-> > > users, the main reason is the solid performance boost that has been
-> > > shown during tests on 1-core MIPS board (with not yet mainlined
-> > > driver):
-> > > 
-> > > * no batching (5.4-rc2): ~450/450 Mbit/s
-> > > * with gro_normal_batch == 8: ~480/480 Mbit/s
-> > > * with gro_normal_batch == 16: ~500/500 Mbit/s
-> > > 
-> > > Applies on top of net-next.
-> > > Thanks.
-> > > 
-> > > Alexander Lobakin (2):
-> > >   net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
-> > >   net: core: increase the default size of GRO_NORMAL skb lists to
-> > > flush
-> > > 
-> > >  net/core/dev.c | 51
-> > > +++++++++++++++++++++++++-------------------------
-> > >  1 file changed, 26 insertions(+), 25 deletions(-)
-> > > 
-> > > --
-> > > 2.23.0
-> > > 
-> > 
-> > Thanks
-> > /Ilias
-> 
-> Regards,
-> ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: 9bca45f3d692 ("staging: wfx: allow to send 802.11 frames")
 
-Regards
-/Ilias
+(I added lkp@lists.01.org in CC but, I am not sure it is the correct
+ML. I am sorry if it is not the case)
+
+--=20
+J=E9r=F4me Pouiller
+
