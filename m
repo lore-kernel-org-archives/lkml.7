@@ -2,199 +2,112 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6016FC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FCCECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3C4206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6D8206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5Z9tUP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbfJKNOP (ORCPT
+        id S1728306AbfJKNPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:14:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728218AbfJKNOO (ORCPT
+        Fri, 11 Oct 2019 09:15:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37877 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbfJKNPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:14:14 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9BD8URL020155
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 09:14:13 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vjtbx09g9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 09:14:13 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 11 Oct 2019 14:14:11 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 11 Oct 2019 14:14:06 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9BDE4P757999396
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Oct 2019 13:14:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B3F442042;
-        Fri, 11 Oct 2019 13:14:04 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3FE844203F;
-        Fri, 11 Oct 2019 13:14:02 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.178.57])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 11 Oct 2019 13:14:02 +0000 (GMT)
-Subject: Re: [PATCH v7 5/8] ima: make process_buffer_measurement() generic
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-Date:   Fri, 11 Oct 2019 09:14:01 -0400
-In-Reply-To: <1570497267-13672-6-git-send-email-nayna@linux.ibm.com>
-References: <1570497267-13672-1-git-send-email-nayna@linux.ibm.com>
-         <1570497267-13672-6-git-send-email-nayna@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101113-4275-0000-0000-000003713179
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101113-4276-0000-0000-000038843CBB
-Message-Id: <1570799641.5250.75.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-11_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910110124
+        Fri, 11 Oct 2019 09:15:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y5so6094074pfo.4;
+        Fri, 11 Oct 2019 06:15:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5dpAxIq0oRut154BI+yiCI47QjZYC6lAR9UcaGRAy/U=;
+        b=a5Z9tUP4KnKzxAOLLHR6SNOUma9xq6R+9JSMmSRllnBoNaqF5wHZ0z9m951oOO+Fe2
+         tb32j8wbnzMtuAoEFFXQv4QS2uSr9db3fZVVKDDDUkD/hf6xHGANxMbTFnuAw2nJLIli
+         Cdki1GK31sNoP2eK1QZuJN6G+J6i2aqJWECRz4JOaZ/ZgKVITp/8H5OC6/XYRu6PpkBO
+         e/Y2p2jHBpBR5dEbZSwQPzyb5RqI3/CB3QEKMlIaEcQqkkRFC4rCBh7DopC98nQP+03y
+         sKLmT2mv+ew4hj8YtTUSgEtioY/m3rJkHz2JYzP/8udZYkS/FEANXiJnM+NuPppeYH7c
+         bJwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5dpAxIq0oRut154BI+yiCI47QjZYC6lAR9UcaGRAy/U=;
+        b=jXE6uHnArpk/L2fwFi0umMphcJKSInoJRmQvveGMTR/XlIz2fwU9zXwX+qtUZWwvFf
+         ieBzlPxNfHVIvvZ6rFEbiFYPB/5kbsXY+dEDnb3mzRNyH36/ko/spB7/TNhiSLKLUb+T
+         F3hqFDVNgqcdZLIhnELSDePZoQMLRVtU0N4MlSAiWfHbz00awDedKoLwiQxd5ghd6bMl
+         I8PylcKXS4/AY9s2CH13Itw3bUK31Ry3S/ffbZ5UyJKdZvrX3Z4/EBiKQK4TFO0EK1B6
+         1CZmjPBsrRMxuhJzHEhQN4FMkPmwcJKArlJ91Au6s6SJY63Y+kk7Bjd1BE6UGTJIyxP6
+         tfFw==
+X-Gm-Message-State: APjAAAVELGe1femVCZhZehuuGv8wJdlqW+PHiWqgrAwBpPXK15sscpAs
+        xafBct43IINTFPHCZXCic8APIwMv
+X-Google-Smtp-Source: APXvYqxpypOW/RODa2t2mycHthlzNX/Oo11hZqDdYWZm9g7iAvTUd/ddR/QjMfrCq2T6SwD91NCHbQ==
+X-Received: by 2002:aa7:924f:: with SMTP id 15mr16586251pfp.194.1570799701215;
+        Fri, 11 Oct 2019 06:15:01 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o9sm8493658pfp.67.2019.10.11.06.14.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 11 Oct 2019 06:15:00 -0700 (PDT)
+Subject: Re: [PATCH 4.14 00/61] 4.14.149-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191010083449.500442342@linuxfoundation.org>
+ <ce4b3f10-eafd-1169-9240-fb3891279c2a@roeck-us.net>
+ <20191011042945.GB939089@kroah.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <fde4b241-2932-c543-d540-cc89f2b1eac0@roeck-us.net>
+Date:   Fri, 11 Oct 2019 06:14:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191011042945.GB939089@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc'ing Prakhar Srivastava]
-
-On Mon, 2019-10-07 at 21:14 -0400, Nayna Jain wrote:
-> An additional measurement record is needed to indicate the blacklisted
-> binary. The record will measure the blacklisted binary hash.
+On 10/10/19 9:29 PM, Greg Kroah-Hartman wrote:
+> On Thu, Oct 10, 2019 at 10:12:26AM -0700, Guenter Roeck wrote:
+>> On 10/10/19 1:36 AM, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 4.14.149 release.
+>>> There are 61 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
+>>> Anything received after that time might be too late.
+>>>
+>>
+>> Preliminary.
+>>
+>> I see several mips build failures.
+>>
+>> arch/mips/kernel/proc.c: In function 'show_cpuinfo':
+>> arch/mips/include/asm/cpu-features.h:352:31: error: implicit declaration of function '__ase'
 > 
-> This patch makes the function process_buffer_measurement() generic to be
-> called by the blacklisting function. It modifies the function to handle
-> more than just the KEXEC_CMDLINE.
-
-The purpose of this patch is to make process_buffer_measurement() more
-generic.  The patch description should simply say,
-process_buffer_measurement() is limited to measuring the kexec boot
-command line.  This patch makes process_buffer_measurement() more
-generic, allowing it to measure other types of buffer data (eg.
-blacklisted binary hashes).
-
-Mimi
-
+> Thanks, will go drop the lone mips patch that I think is causing this
+> problem.
 > 
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> ---
->  security/integrity/ima/ima.h      |  3 +++
->  security/integrity/ima/ima_main.c | 29 ++++++++++++++---------------
->  2 files changed, 17 insertions(+), 15 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 3689081aaf38..ed86c1f70d7f 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -217,6 +217,9 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
->  			   struct evm_ima_xattr_data *xattr_value,
->  			   int xattr_len, const struct modsig *modsig, int pcr,
->  			   struct ima_template_desc *template_desc);
-> +void process_buffer_measurement(const void *buf, int size,
-> +				const char *eventname, int pcr,
-> +				struct ima_template_desc *template_desc);
->  void ima_audit_measurement(struct integrity_iint_cache *iint,
->  			   const unsigned char *filename);
->  int ima_alloc_init_template(struct ima_event_data *event_data,
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 60027c643ecd..77115e884496 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -626,14 +626,14 @@ int ima_load_data(enum kernel_load_data_id id)
->   * @buf: pointer to the buffer that needs to be added to the log.
->   * @size: size of buffer(in bytes).
->   * @eventname: event name to be used for the buffer entry.
-> - * @cred: a pointer to a credentials structure for user validation.
-> - * @secid: the secid of the task to be validated.
-> + * @pcr: pcr to extend the measurement
-> + * @template_desc: template description
->   *
->   * Based on policy, the buffer is measured into the ima log.
->   */
-> -static void process_buffer_measurement(const void *buf, int size,
-> -				       const char *eventname,
-> -				       const struct cred *cred, u32 secid)
-> +void process_buffer_measurement(const void *buf, int size,
-> +				const char *eventname, int pcr,
-> +				struct ima_template_desc *template_desc)
->  {
->  	int ret = 0;
->  	struct ima_template_entry *entry = NULL;
-> @@ -642,19 +642,11 @@ static void process_buffer_measurement(const void *buf, int size,
->  					    .filename = eventname,
->  					    .buf = buf,
->  					    .buf_len = size};
-> -	struct ima_template_desc *template_desc = NULL;
->  	struct {
->  		struct ima_digest_data hdr;
->  		char digest[IMA_MAX_DIGEST_SIZE];
->  	} hash = {};
->  	int violation = 0;
-> -	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-> -	int action = 0;
-> -
-> -	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr,
-> -				&template_desc);
-> -	if (!(action & IMA_MEASURE))
-> -		return;
->  
->  	iint.ima_hash = &hash.hdr;
->  	iint.ima_hash->algo = ima_hash_algo;
-> @@ -686,12 +678,19 @@ static void process_buffer_measurement(const void *buf, int size,
->   */
->  void ima_kexec_cmdline(const void *buf, int size)
->  {
-> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-> +	struct ima_template_desc *template_desc = NULL;
-> +	int action;
->  	u32 secid;
->  
->  	if (buf && size != 0) {
->  		security_task_getsecid(current, &secid);
-> -		process_buffer_measurement(buf, size, "kexec-cmdline",
-> -					   current_cred(), secid);
-> +		action = ima_get_action(NULL, current_cred(), secid, 0,
-> +					KEXEC_CMDLINE, &pcr, &template_desc);
-> +		if (!(action & IMA_MEASURE))
-> +			return;
-> +		process_buffer_measurement(buf, size, "kexec-cmdline", pcr,
-> +					   template_desc);
->  	}
->  }
->  
 
+Looks like it did. For v4.14.148-61-g6f45e0e87a75:
+
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 372 pass: 372 fail: 0
+
+Guenter
