@@ -6,280 +6,70 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E64DC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27587ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C51A2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B7F2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfJKDgR (ORCPT
+        id S1726095AbfJKDme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 23:36:17 -0400
-Received: from regular1.263xmail.com ([211.150.70.196]:38396 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfJKDgQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 23:36:16 -0400
-Received: from localhost (unknown [192.168.167.224])
-        by regular1.263xmail.com (Postfix) with ESMTP id B201AF62;
-        Fri, 11 Oct 2019 11:35:56 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.10.69] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P23682T139690625713920S1570764953706293_;
-        Fri, 11 Oct 2019 11:35:55 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <59d8890fa6dd26d2d0b2fb296bca0e01>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: james.qian.wang@arm.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
-From:   "sandy.huang" <hjc@rock-chips.com>
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
-        james.qian.wang@arm.com
-References: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
- <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
- <20190930104849.GA1208@intel.com>
- <2c46d532-f810-392d-b9c0-3b9aaccae7f4@rock-chips.com>
- <20191008113338.GP1208@intel.com>
- <a5fa3d8e-9e8e-8aa8-8abb-f00e8357acb5@rock-chips.com>
-Message-ID: <eafa5b37-e132-ad37-3876-384ac5ec9584@rock-chips.com>
-Date:   Fri, 11 Oct 2019 11:35:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 10 Oct 2019 23:42:34 -0400
+Received: from trent.utfs.org ([94.185.90.103]:51652 "EHLO trent.utfs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbfJKDme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 23:42:34 -0400
+X-Greylist: delayed 372 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Oct 2019 23:42:33 EDT
+Received: from localhost (localhost [IPv6:::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by trent.utfs.org (Postfix) with ESMTPS id C7D7B5FD09;
+        Fri, 11 Oct 2019 05:36:16 +0200 (CEST)
+Date:   Thu, 10 Oct 2019 20:36:16 -0700 (PDT)
+From:   Christian Kujau <lists@nerdbynature.de>
+To:     Micah Morton <mortonm@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [TYPO] SafeSetID.rst: Remove spurious '???' characters
+Message-ID: <alpine.DEB.2.21.99999.352.1910102033050.30236@trent.utfs.org>
+User-Agent: Alpine 2.21.99999 (DEB 352 2019-06-22)
 MIME-Version: 1.0
-In-Reply-To: <a5fa3d8e-9e8e-8aa8-8abb-f00e8357acb5@rock-chips.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi james.qian.wang,
+While reading SafeSetID.rst I stumbled across those things. This patch 
+removes these spurious '???' characters.
+    
+Signed-off-by: Christian Kujau <lists@nerdbynature.de>
 
-     Thank for you remind, fou some unknow reason, i miss the the mail 
-from you:(, i get this message from 
-https://patchwork.kernel.org/patch/11161937/
+diff --git a/Documentation/admin-guide/LSM/SafeSetID.rst b/Documentation/admin-guide/LSM/SafeSetID.rst
+index 212434ef65ad..7bff07ce4fdd 100644
+--- a/Documentation/admin-guide/LSM/SafeSetID.rst
++++ b/Documentation/admin-guide/LSM/SafeSetID.rst
+@@ -56,7 +56,7 @@ setid capabilities from the application completely and refactor the process
+ spawning semantics in the application (e.g. by using a privileged helper program
+ to do process spawning and UID/GID transitions). Unfortunately, there are a
+ number of semantics around process spawning that would be affected by this, such
+-as fork() calls where the program doesn???t immediately call exec() after the
++as fork() calls where the program doesn't immediately call exec() after the
+ fork(), parent processes specifying custom environment variables or command line
+ args for spawned child processes, or inheritance of file handles across a
+ fork()/exec(). Because of this, as solution that uses a privileged helper in
+@@ -72,7 +72,7 @@ own user namespace, and only approved UIDs/GIDs could be mapped back to the
+ initial system user namespace, affectively preventing privilege escalation.
+ Unfortunately, it is not generally feasible to use user namespaces in isolation,
+ without pairing them with other namespace types, which is not always an option.
+-Linux checks for capabilities based off of the user namespace that ???owns??? some
++Linux checks for capabilities based off of the user namespace that "owns" some
+ entity. For example, Linux has the notion that network namespaces are owned by
+ the user namespace in which they were created. A consequence of this is that
+ capability checks for access to a given network namespace are done by checking
 
-sorry about that.
+-- 
+BOFH excuse #451:
 
-     About the format block describe, I also found some unreasonable,  
-this format need 2 line aligned, so the block_h need to sed as 2, and 
-the char_per_block need set as w * h * 10 for y plane, and w * h * 2 * 
-10 for uv plane, so the following describe maybe more correct, thanks.
-
-         { .format = DRM_FORMAT_NV12_10,        .depth = 0, .num_planes = 2,
-           .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, 
-.block_h = { 2, 2, 0 },
-           .hsub = 2, .vsub = 2, .is_yuv = true},
-         { .format = DRM_FORMAT_NV21_10,        .depth = 0, .num_planes = 2,
-           .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, 
-.block_h = { 2, 2, 0 },
-           .hsub = 2, .vsub = 2, .is_yuv = true},
-         { .format = DRM_FORMAT_NV16_10,        .depth = 0, .num_planes = 2,
-           .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, 
-.block_h = { 2, 2, 0 },
-           .hsub = 2, .vsub = 1, .is_yuv = true},
-         { .format = DRM_FORMAT_NV61_10,        .depth = 0, .num_planes = 2,
-           .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, 
-.block_h = { 2, 2, 0 },
-           .hsub = 2, .vsub = 1, .is_yuv = true},
-         { .format = DRM_FORMAT_NV24_10,        .depth = 0, .num_planes = 2,
-           .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, 
-.block_h = { 2, 2, 0 },
-           .hsub = 1, .vsub = 1, .is_yuv = true},
-         { .format = DRM_FORMAT_NV42_10,        .depth = 0, .num_planes = 2,
-           .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, 
-.block_h = { 2, 2, 0 },
-           .hsub = 1, .vsub = 1, .is_yuv = true},
-
-
- > >          { .format = DRM_FORMAT_P016,        .depth = 0,  
-.num_planes = 2,
- > >            .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 }, 
-.block_h = { 1, 0, 0 },
- > >            .hsub = 2, .vsub = 2, .is_yuv = true},
- > > +        { .format = DRM_FORMAT_NV12_10,        .depth = 0,  
-.num_planes = 2,
- > > +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, 
-.block_h = { 4, 4, 0 },
-
- > Hi Sandy:
- > Their is a problem here for char_per_block size of plane[0]:
- > Since: 5 * 8 != 4 * 4 * 10;
- > Seems you mis-set the block_w/h, per your block size the block is 
-2x2, and it should be:
- >  .char_per_block = { 5, 10, 0 }, .block_w = { 2, 2, 0 }, .block_h = { 
-2, 2, 0 },
-
- > Best Regards:
- > James
-
-
-
-
-
-
-在 2019/10/8 下午7:49, sandy.huang 写道:
->
-> 在 2019/10/8 下午7:33, Ville Syrjälä 写道:
->> On Tue, Oct 08, 2019 at 10:40:20AM +0800, sandy.huang wrote:
->>> Hi ville syrjala,
->>>
->>> 在 2019/9/30 下午6:48, Ville Syrjälä 写道:
->>>> On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
->>>>> These new format is supported by some rockchip socs:
->>>>>
->>>>> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
->>>>> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
->>>>> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
->>>>>
->>>>> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
->>>>> ---
->>>>>    drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
->>>>>    include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
->>>>>    2 files changed, 32 insertions(+)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/drm_fourcc.c 
->>>>> b/drivers/gpu/drm/drm_fourcc.c
->>>>> index c630064..ccd78a3 100644
->>>>> --- a/drivers/gpu/drm/drm_fourcc.c
->>>>> +++ b/drivers/gpu/drm/drm_fourcc.c
->>>>> @@ -261,6 +261,24 @@ const struct drm_format_info 
->>>>> *__drm_format_info(u32 format)
->>>>>            { .format = DRM_FORMAT_P016,        .depth = 0,  
->>>>> .num_planes = 2,
->>>>>              .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 
->>>>> }, .block_h = { 1, 0, 0 },
->>>>>              .hsub = 2, .vsub = 2, .is_yuv = true},
->>>>> +        { .format = DRM_FORMAT_NV12_10,        .depth = 0,  
->>>>> .num_planes = 2,
->>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, 
->>>>> .block_h = { 4, 4, 0 },
->>>>> +          .hsub = 2, .vsub = 2, .is_yuv = true},
->>>>> +        { .format = DRM_FORMAT_NV21_10,        .depth = 0,  
->>>>> .num_planes = 2,
->>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, 
->>>>> .block_h = { 4, 4, 0 },
->>>>> +          .hsub = 2, .vsub = 2, .is_yuv = true},
->>>>> +        { .format = DRM_FORMAT_NV16_10,        .depth = 0,  
->>>>> .num_planes = 2,
->>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, 
->>>>> .block_h = { 4, 4, 0 },
->>>>> +          .hsub = 2, .vsub = 1, .is_yuv = true},
->>>>> +        { .format = DRM_FORMAT_NV61_10,        .depth = 0,  
->>>>> .num_planes = 2,
->>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, 
->>>>> .block_h = { 4, 4, 0 },
->>>>> +          .hsub = 2, .vsub = 1, .is_yuv = true},
->>>>> +        { .format = DRM_FORMAT_NV24_10,        .depth = 0,  
->>>>> .num_planes = 2,
->>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, 
->>>>> .block_h = { 4, 4, 0 },
->>>>> +          .hsub = 1, .vsub = 1, .is_yuv = true},
->>>>> +        { .format = DRM_FORMAT_NV42_10,        .depth = 0,  
->>>>> .num_planes = 2,
->>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, 
->>>>> .block_h = { 4, 4, 0 },
->>>>> +          .hsub = 1, .vsub = 1, .is_yuv = true},
->>>>>            { .format = DRM_FORMAT_P210,        .depth = 0,
->>>>>              .num_planes = 2, .char_per_block = { 2, 4, 0 },
->>>>>              .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 }, .hsub 
->>>>> = 2,
->>>>> diff --git a/include/uapi/drm/drm_fourcc.h 
->>>>> b/include/uapi/drm/drm_fourcc.h
->>>>> index 3feeaa3..08e2221 100644
->>>>> --- a/include/uapi/drm/drm_fourcc.h
->>>>> +++ b/include/uapi/drm/drm_fourcc.h
->>>>> @@ -238,6 +238,20 @@ extern "C" {
->>>>>    #define DRM_FORMAT_NV42        fourcc_code('N', 'V', '4', '2') 
->>>>> /* non-subsampled Cb:Cr plane */
->>>>>       /*
->>>>> + * 2 plane YCbCr
->>>>> + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
->>>>> + * index 1 = Cb:Cr plane, Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 
->>>>> 10:10:10:10:10:10:10:10
->>>>> + * or
->>>>> + * index 1 = Cr:Cb plane, Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 
->>>>> 10:10:10:10:10:10:10:10
->>>> So now you're defining it as some kind of byte aligned block.
->>>> With that specifying endianness would now make sense since
->>>> otherwise this tells us absolutely nothing about the memory
->>>> layout.
->>>>
->>>> So I'd either do that, or go back to not specifying anything and
->>>> use some weasel words like "mamory layout is implementation defined"
->>>> which of course means no one can use it for anything that involves
->>>> any kind of cross vendor stuff.
->>> /*
->>>    * 2 plane YCbCr
->>>    * index 0 = Y plane, [39: 0] Y3:Y2:Y1:Y0 10:10:10:10 little endian
->>>    * index 1 = Cb:Cr plane, [79: 0] Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0
->>> 10:10:10:10:10:10:10:10  little endian
->>>    * or
->>>    * index 1 = Cr:Cb plane, [79: 0] Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0
->>> 10:10:10:10:10:10:10:10  little endian
->>>    */
->>>
->>> Is this description ok?
->> Seems OK to me, if it actually describes the format correctly.
->>
->> Though I'm not sure why the CbCr is defines as an 80bit block
->> and Y has a 40bit block. 40bits should be enough for CbCr as well.
->>
-> well, this is taken into account yuv444,  4 y point corresponding with 
-> 4 uv point.
->
-> if only describes the layout memory, here can change to 40bit block.
->
-> thanks.
->
->>>>> + */
->>>>> +#define DRM_FORMAT_NV12_10    fourcc_code('N', 'A', '1', '2') /* 
->>>>> 2x2 subsampled Cr:Cb plane */
->>>>> +#define DRM_FORMAT_NV21_10    fourcc_code('N', 'A', '2', '1') /* 
->>>>> 2x2 subsampled Cb:Cr plane */
->>>>> +#define DRM_FORMAT_NV16_10    fourcc_code('N', 'A', '1', '6') /* 
->>>>> 2x1 subsampled Cr:Cb plane */
->>>>> +#define DRM_FORMAT_NV61_10    fourcc_code('N', 'A', '6', '1') /* 
->>>>> 2x1 subsampled Cb:Cr plane */
->>>>> +#define DRM_FORMAT_NV24_10    fourcc_code('N', 'A', '2', '4') /* 
->>>>> non-subsampled Cr:Cb plane */
->>>>> +#define DRM_FORMAT_NV42_10    fourcc_code('N', 'A', '4', '2') /* 
->>>>> non-subsampled Cb:Cr plane */
->>>>> +
->>>>> +/*
->>>>>     * 2 plane YCbCr MSB aligned
->>>>>     * index 0 = Y plane, [15:0] Y:x [10:6] little endian
->>>>>     * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little 
->>>>> endian
->>>>> -- 
->>>>> 2.7.4
->>>>>
->>>>>
->>>>>
->>>>> _______________________________________________
->>>>> dri-devel mailing list
->>>>> dri-devel@lists.freedesktop.org
->>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
+astropneumatic oscillations in the water-cooling
