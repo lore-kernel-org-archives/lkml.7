@@ -2,235 +2,115 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91250ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A788C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E38206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F29214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570803875;
+	bh=QAb4bxoTz2iQy8IO0iLYwBX2ij2Bqz40OXibaGp0LAE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CjSJWepn4I0ddRPd5i8clix8MLex2upUF5r03ODYJa2OhRqSlXQ1YghKaY6x+ekkT
+	 fHEla7tnHpP+3n4oPieZ9Dxkp/62GnOdtiFKDOR/c8UfNIlf7mlm8Wdh9n5RxDQOqh
+	 LrS0hBZVH2CTm74PcOWedg9TiFNj9zcJJPy8i8Vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfJKOX5 (ORCPT
+        id S1728671AbfJKOYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:23:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34800 "EHLO mx1.redhat.com"
+        Fri, 11 Oct 2019 10:24:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728229AbfJKOX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:23:56 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728068AbfJKOYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:24:33 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E8E422DD98
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 14:23:55 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id n3so4449768wrt.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 07:23:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Inh1bChgzLYIo/XyIlm6MOBwGzCkJw+z3PVtMeIbrcY=;
-        b=QfIpeX8MrrMD7cT3ZS8CGJJRQJ0r4/xydJTUr3yU11CFRkKwH+h4kWDR5CnJAatT1v
-         tpjdNOs1Itrt144imuKIZP15SFC5dlNPr80GIEZcLB5qphib5yNO327VacGwivHMe9aE
-         qfzZ4/Ps7tuD/mlKYHOw8/MbWHvRySyxUQUt0F4z2n9FJdns/EOr6LPFMw9yymKbqfgM
-         bIilu+sPjDkdfQy1++GuD0AgMJXTn92JJYsQYU4PLse+Yg5l6LCFwZVUafFN0ITkF4MG
-         5yWtzPB5/xTCEmiKPbBLk4gGyC8epPSqMEYPVeKnrxyhuJwmXYIZr2F/b8Z0Nbw3ZVvW
-         wD9g==
-X-Gm-Message-State: APjAAAXv3eyX8wie4Up2lyd7NcgZ/J5xcH/FS7Slo3TNQQbnh4WwNh7p
-        6xA3sid/4n6W/TZFfT/zj5tImp3LUNNwyLH69DczuUAWWiBmeSojEvTGfMCHQSctFF2p+yqAb7D
-        FLvbQZRKdrGo0uKQulOgTPMsr
-X-Received: by 2002:adf:fa12:: with SMTP id m18mr13713439wrr.248.1570803834510;
-        Fri, 11 Oct 2019 07:23:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyDo7c8BHo0Ja6il1g46hhlChmac1DdXued+IdQ+uNaFoXJkX+MUQVSkz+8b2REaIZTUO+o2g==
-X-Received: by 2002:adf:fa12:: with SMTP id m18mr13713406wrr.248.1570803834109;
-        Fri, 11 Oct 2019 07:23:54 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id w3sm13298302wru.5.2019.10.11.07.23.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 07:23:53 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 16:23:51 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
-Message-ID: <20191011142351.voqjggakqtity7od@steredhat>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-2-sgarzare@redhat.com>
- <20190729095956-mutt-send-email-mst@kernel.org>
- <20190830094059.c7qo5cxrp2nkrncd@steredhat>
- <20190901024525-mutt-send-email-mst@kernel.org>
- <CAGxU2F7fA5UtkuMQbOHHy0noOGZUtpepBNKFg5afD81bynMVUQ@mail.gmail.com>
- <20191011100826-mutt-send-email-mst@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 97B4F206A1;
+        Fri, 11 Oct 2019 14:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570803872;
+        bh=QAb4bxoTz2iQy8IO0iLYwBX2ij2Bqz40OXibaGp0LAE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uiM7sMCFSjxUZ8NgAbCBCUdtgurhfH0Ka5EmsYcs/zeD7OGnInylw6oUN60nffJ1n
+         0FqG46kIjiBOagecYOUMvejBlvompnZuw6xAu4X+92OWzdCnyhWPNa29+nFj5+MbeD
+         2AaDOlzJArudhaSe7jQZKduYIke8HXwRBQrp4ET8=
+Date:   Fri, 11 Oct 2019 15:24:27 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Martijn Coenen <maco@android.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Shaun Ruffell <sruffell@sruffell.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kbuild@vger.kernel.org, linux-modules@vger.kernel.org
+Subject: Re: [PATCH 1/4] modpost: delegate updating namespaces to separate
+ function
+Message-ID: <20191011142426.vwfhw4dtyy4nfzkv@willie-the-truck>
+References: <20191010151443.7399-1-maennich@google.com>
+ <20191010151443.7399-2-maennich@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011100826-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191010151443.7399-2-maennich@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 10:11:19AM -0400, Michael S. Tsirkin wrote:
-> On Fri, Oct 11, 2019 at 03:40:48PM +0200, Stefano Garzarella wrote:
-> > On Sun, Sep 1, 2019 at 8:56 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > On Fri, Aug 30, 2019 at 11:40:59AM +0200, Stefano Garzarella wrote:
-> > > > On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
-> > > > > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
-> > > > > > Since virtio-vsock was introduced, the buffers filled by the host
-> > > > > > and pushed to the guest using the vring, are directly queued in
-> > > > > > a per-socket list. These buffers are preallocated by the guest
-> > > > > > with a fixed size (4 KB).
-> > > > > >
-> > > > > > The maximum amount of memory used by each socket should be
-> > > > > > controlled by the credit mechanism.
-> > > > > > The default credit available per-socket is 256 KB, but if we use
-> > > > > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> > > > > > buffers, using up to 1 GB of memory per-socket. In addition, the
-> > > > > > guest will continue to fill the vring with new 4 KB free buffers
-> > > > > > to avoid starvation of other sockets.
-> > > > > >
-> > > > > > This patch mitigates this issue copying the payload of small
-> > > > > > packets (< 128 bytes) into the buffer of last packet queued, in
-> > > > > > order to avoid wasting memory.
-> > > > > >
-> > > > > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > > > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > > > >
-> > > > > This is good enough for net-next, but for net I think we
-> > > > > should figure out how to address the issue completely.
-> > > > > Can we make the accounting precise? What happens to
-> > > > > performance if we do?
-> > > > >
-> > > >
-> > > > Since I'm back from holidays, I'm restarting this thread to figure out
-> > > > how to address the issue completely.
-> > > >
-> > > > I did a better analysis of the credit mechanism that we implemented in
-> > > > virtio-vsock to get a clearer view and I'd share it with you:
-> > > >
-> > > >     This issue affect only the "host->guest" path. In this case, when the
-> > > >     host wants to send a packet to the guest, it uses a "free" buffer
-> > > >     allocated by the guest (4KB).
-> > > >     The "free" buffers available for the host are shared between all
-> > > >     sockets, instead, the credit mechanism is per-socket, I think to
-> > > >     avoid the starvation of others sockets.
-> > > >     The guests re-fill the "free" queue when the available buffers are
-> > > >     less than half.
-> > > >
-> > > >     Each peer have these variables in the per-socket state:
-> > > >        /* local vars */
-> > > >        buf_alloc        /* max bytes usable by this socket
-> > > >                            [exposed to the other peer] */
-> > > >        fwd_cnt          /* increased when RX packet is consumed by the
-> > > >                            user space [exposed to the other peer] */
-> > > >        tx_cnt                 /* increased when TX packet is sent to the other peer */
-> > > >
-> > > >        /* remote vars  */
-> > > >        peer_buf_alloc   /* peer's buf_alloc */
-> > > >        peer_fwd_cnt     /* peer's fwd_cnt */
-> > > >
-> > > >     When a peer sends a packet, it increases the 'tx_cnt'; when the
-> > > >     receiver consumes the packet (copy it to the user-space buffer), it
-> > > >     increases the 'fwd_cnt'.
-> > > >     Note: increments are made considering the payload length and not the
-> > > >     buffer length.
-> > > >
-> > > >     The value of 'buf_alloc' and 'fwd_cnt' are sent to the other peer in
-> > > >     all packet headers or with an explicit CREDIT_UPDATE packet.
-> > > >
-> > > >     The local 'buf_alloc' value can be modified by the user space using
-> > > >     setsockopt() with optname=SO_VM_SOCKETS_BUFFER_SIZE.
-> > > >
-> > > >     Before to send a packet, the peer checks the space available:
-> > > >       credit_available = peer_buf_alloc - (tx_cnt - peer_fwd_cnt)
-> > > >     and it will send up to credit_available bytes to the other peer.
-> > > >
-> > > > Possible solutions considering Michael's advice:
-> > > > 1. Use the buffer length instead of the payload length when we increment
-> > > >    the counters:
-> > > >   - This approach will account precisely the memory used per socket.
-> > > >   - This requires changes in both guest and host.
-> > > >   - It is not compatible with old drivers, so a feature should be negotiated.
-> > > > 2. Decrease the advertised 'buf_alloc' taking count of bytes queued in
-> > > >    the socket queue but not used. (e.g. 256 byte used on 4K available in
-> > > >    the buffer)
-> > > >   - pkt->hdr.buf_alloc = buf_alloc - bytes_not_used.
-> > > >   - This should be compatible also with old drivers.
-> > > >
-> > > > Maybe the second is less invasive, but will it be too tricky?
-> > > > Any other advice or suggestions?
-> > > >
-> > > > Thanks in advance,
-> > > > Stefano
-> > >
-> > > OK let me try to clarify.  The idea is this:
-> > >
-> > > Let's say we queue a buffer of 4K, and we copy if len < 128 bytes.  This
-> > > means that in the worst case (128 byte packets), each byte of credit in
-> > > the socket uses up 4K/128 = 16 bytes of kernel memory. In fact we need
-> > > to also account for the virtio_vsock_pkt since I think it's kept around
-> > > until userspace consumes it.
-> > >
-> > > Thus given X buf alloc allowed in the socket, we should publish X/16
-> > > credits to the other side. This will ensure the other side does not send
-> > > more than X/16 bytes for a given socket and thus we won't need to
-> > > allocate more than X bytes to hold the data.
-> > >
-> > > We can play with the copy break value to tweak this.
-> > >
-> > 
-> > Hi Michael,
-> > sorry for the long silence, but I focused on multi-transport.
-> > 
-> > Before to implement your idea, I tried to do some calculations and
-> > looking better to our credit mechanism:
-> > 
-> >   buf_alloc = 256 KB (default, tunable through setsockopt)
-> >   sizeof(struct virtio_vsock_pkt) = 128
-> > 
-> >   - guest (we use preallocated 4 KB buffers to receive packets, copying
-> >     small packet - < 128 -)
-> >     worst_case = 129
-> >     buf_size = 4 KB
-> >     credit2mem = (buf_size + sizeof(struct virtio_vsock_pkt)) / worst_case = 32
+On Thu, Oct 10, 2019 at 04:14:40PM +0100, Matthias Maennich wrote:
+> Let the function 'sym_update_namespace' take care of updating the
+> namespace for a symbol. While this currently only replaces one single
+> location where namespaces are updated, in a following patch, this
+> function will get more call sites.
 > 
-> Making virtio_vsock_pkt smaller will help btw.
-> E.g. why keep a work struct per packet? do we need the header there? etc
-> etc.
+> The function signature is intentionally close to sym_update_crc and
+> taking the name by char* seems like unnecessary work as the symbol has
+> to be looked up again. In a later patch of this series, this concern
+> will be addressed.
 > 
-
-Yes, I had the same feeling, I'll try to make it smaller!
-
-
-> > 
-> >     credit_published = buf_alloc / credit2mem = ~8 KB
-> >     Space for just 2 full packet (4 KB)
-> > 
-> >   - host (we copy packets from the vring, allocating the space for the payload)
-> >     worst_case = 1
-> >     buf_size = 1
-> >     credit2mem = (buf_size + sizeof(struct virtio_vsock_pkt)) / worst_case = 129
-> > 
-> >     credit_published = buf_alloc / credit2mem = ~2 KB
-> >     Less than a full packet (guest now can send up to 64 KB with a single
-> >     packet, so it will be limited to 2 KB)
+> This function ensures that symbol::namespace is either NULL or has a
+> valid non-empty value. Previously, the empty string was considered 'no
+> namespace' as well and this lead to confusion.
 > 
-> 1 byte in struct virtio_vsock_pkt is crazy. Can't we copy
+> Signed-off-by: Matthias Maennich <maennich@google.com>
+> ---
+>  scripts/mod/modpost.c | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
+> 
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index 4d2cdb4d71e3..9f5dcdff4d2f 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -362,6 +362,22 @@ static char *sym_extract_namespace(const char **symname)
+>  	return namespace;
+>  }
+>  
+> +static void sym_update_namespace(const char *symname, const char *namespace)
+> +{
+> +       struct symbol *s = find_symbol(symname);
+> +       /* That symbol should have been created earlier and thus this is
+> +        * actually an assertion. */
+> +       if (!s) {
+> +               merror("Could not update namespace(%s) for symbol %s\n",
+> +                      namespace, symname);
+> +               return;
+> +       }
+> +
+> +       free(s->namespace);
+> +       s->namespace =
+> +	       namespace && namespace[0] ? NOFAIL(strdup(namespace)) : NULL;
+> +}
 
-I know :-)
+You made me look up C operator precedence again, but it's fine so:
 
-> like we do in the guest? E.g. allocate at least 128 bytes,
-> and then we can add data to the tail of the last packet?
+Acked-by: Will Deacon <will@kernel.org>
 
-Yes, I've been thinking about trying that out. (allocate at least 128 bytes
-and do as we do in the guest).
-
-
-Thanks,
-Stefano
+Will
