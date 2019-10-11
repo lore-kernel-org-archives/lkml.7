@@ -2,87 +2,92 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008A1ECE58C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE77ECE597
 	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7BFB2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2789F2196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfJKJUP (ORCPT
+        id S1727730AbfJKJUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:20:15 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:60222 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726585AbfJKJUO (ORCPT
+        Fri, 11 Oct 2019 05:20:19 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58254 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfJKJUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:20:14 -0400
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from webmail.solarflare.com (webmail.solarflare.com [12.187.104.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id B9FD2400082;
-        Fri, 11 Oct 2019 09:20:12 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ocex03.SolarFlarecom.com
- (10.20.40.36) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 11 Oct
- 2019 02:20:07 -0700
-Subject: Re: [PATCH net-next1/2] net: core: use listified Rx for GRO_NORMAL in
- napi_gro_receive()
-To:     Alexander Lobakin <alobakin@dlink.ru>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "Paolo Abeni" <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191010144226.4115-1-alobakin@dlink.ru>
- <20191010144226.4115-2-alobakin@dlink.ru>
- <bb454c3c-1d86-f81e-a03e-86f8de3e9822@solarflare.com>
- <e7eaf0a1d236dda43f5cd73887ecfb9d@dlink.ru>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <b6d30f87-88b4-f009-bc7f-dcf2ed9a9d67@solarflare.com>
-Date:   Fri, 11 Oct 2019 10:20:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 11 Oct 2019 05:20:18 -0400
+Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 2d3f3e9dc60e16fd; Fri, 11 Oct 2019 11:20:15 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 00/13] software node: add support for reference properties
+Date:   Fri, 11 Oct 2019 11:20:15 +0200
+Message-ID: <8497734.zbLCBLinYR@kreacher>
+In-Reply-To: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
+References: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e7eaf0a1d236dda43f5cd73887ecfb9d@dlink.ru>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-24968.005
-X-TM-AS-Result: No-1.301100-4.000000-10
-X-TMASE-MatchedRID: 5+1rHnqhWUT4ECMHJTM/ufHkpkyUphL9+D+zbdY8EikZFDQxUvPcmL6Y
-        VRYkPkYCSCF6HRRH3gIN25tj8sME0kHGTQqAQaePelGHXZKLL2tfz6dKxk6eNJsoi2XrUn/JyeM
-        tMD9QOgADpAZ2/B/BlgJTU9F/2jaz3QfwsVk0UbuZ/dgf3Hl0lQdcXOftadZZanKxcCqKqviyuT
-        4uqwSyJobVjstzILx+/ULPDpIN9LRKW7e49HWSFTC7+o0dCT3gG5LP5SWKhyqq4UVeuXo1MKKAQ
-        fLsnhLrKWSt4DmvbhpicKLmK2TeKmsPn5C6nWpTiTSgm8kJVKRDDKa3G4nrLQ==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10-1.301100-4.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-24968.005
-X-MDID: 1570785613-jXSkVprpQDO2
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> On 10/10/2019 15:42, Alexander Lobakin wrote:
->>> Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
->>> skbs") made use of listified skb processing for the users of
->>> napi_gro_frags().
->>> The same technique can be used in a way more common napi_gro_receive()
->>> to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers,
->>> including gro_cells and mac80211 users.
->>>
->>> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Acked-by: Edward Cree <ecree@solarflare.com>
-but I think this needs review from the socionext folks as well.
+On Monday, September 9, 2019 10:15:44 AM CEST Dmitry Torokhov wrote:
+> These series implement "references" properties for software nodes as true
+> properties, instead of managing them completely separately.
+> 
+> The first 10 patches are generic cleanups and consolidation and unification
+> of the existing code; patch #11 implements PROPERTY_EMTRY_REF() and friends;
+> patch #12 converts the user of references to the property syntax, and patch
+> #13 removes the remains of references as entities that are managed
+> separately.
+> 
+> Changes in v3:
+> - added various cleanups before implementing reference properties
+> 
+> Changes in v2:
+> - reworked code so that even single-entry reference properties are
+>   stored as arrays (i.e. the software_node_ref_args instances are
+>   not part of property_entry structure) to avoid size increase.
+>   From user's POV nothing is changed, one can still use PROPERTY_ENTRY_REF
+>   macro to define reference "inline".
+> - dropped unused DEV_PROP_MAX
+> - rebased on linux-next
+> 
+> Dmitry Torokhov (13):
+>   software node: remove DEV_PROP_MAX
+>   software node: clean up property_copy_string_array()
+>   software node: get rid of property_set_pointer()
+>   software node: simplify property_get_pointer()
+>   software node: remove property_entry_read_uNN_array functions
+>   software node: unify PROPERTY_ENTRY_XXX macros
+>   software node: simplify property_entry_read_string_array()
+>   software node: introduce PROPERTY_ENTRY_ARRAY_XXX_LEN()
+>   efi/apple-properties: use PROPERTY_ENTRY_U8_ARRAY_LEN
+>   software node: rename is_array to is_inline
+>   software node: implement reference properties
+>   platform/x86: intel_cht_int33fe: use inline reference properties
+>   software node: remove separate handling of references
+> 
+>  drivers/base/swnode.c                    | 243 +++++++----------------
+>  drivers/firmware/efi/apple-properties.c  |   8 +-
+>  drivers/platform/x86/intel_cht_int33fe.c |  81 ++++----
+>  include/linux/property.h                 | 154 +++++++-------
+>  4 files changed, 198 insertions(+), 288 deletions(-)
+
+I think that this is still relevant, so can you please resend it with a CC
+to linux-acpi@vger.kernel.org?  It would be much easier to handle for me then.
+
+
+
