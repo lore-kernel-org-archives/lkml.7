@@ -2,121 +2,144 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE423C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE97ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A42A72053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:58:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="xhN0fejB"
+	by mail.kernel.org (Postfix) with ESMTP id B52BA20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfJKA6D (ORCPT
+        id S1727824AbfJKBHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:58:03 -0400
-Received: from mail-40130.protonmail.ch ([185.70.40.130]:62324 "EHLO
-        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727584AbfJKA6D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:58:03 -0400
-Date:   Fri, 11 Oct 2019 00:57:56 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1570755479;
-        bh=40ozhm8SAMu/Ca+SqfeDN4mOkL6t9KC8t8EHDPyCn0c=;
-        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
-        b=xhN0fejB9ReFC1TO16gDyD8ibJaaqJkpZL7gqIM7KlNtHThyiEZm/2iDmzfhbgCwE
-         ahnmLjTCIyc+y/Z552MqBIcL4B0FoaBWaUPQJyIGWA9ZBPAq8v3Xm1EclfMiky1sBg
-         uTX1sbQlY2whmccpqSsNBDgSKPMdTgRYYvKSEPnA=
-To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Cc:     "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
-        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: [PATCH v4 4/4] HID: logitech: Support WirelessDeviceStatus connect events
-Message-ID: <GOPSiaLYzQc3Hi9-MvdMQOmiF6O9whCeVYWavirKdm-9VHGb37VtawOPII8FEdYAOWZYFvk3oSQcHkPGazJKZNx8DEwBO7JfrRjLjWA84UI=@protonmail.com>
-Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 10 Oct 2019 21:07:40 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34280 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727518AbfJKBHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 21:07:40 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 830A51A04A8;
+        Fri, 11 Oct 2019 03:07:37 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 690811A01F0;
+        Fri, 11 Oct 2019 03:07:32 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DCE9340299;
+        Fri, 11 Oct 2019 09:07:25 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v8] gpio/mpc8xxx: change irq handler from chained to normal
+Date:   Fri, 11 Oct 2019 08:56:43 +0800
+Message-Id: <20191011005643.41007-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday, October 5, 2019 9:05 PM, Mazin Rezk <mnrzk@protonmail.com> wro=
-te:
+From: Song Hui <hui.song_1@nxp.com>
 
-> This patch makes WirelessDeviceStatus (0x1d4b) events get detected as
-> connection events on devices with HIDPP_QUIRK_WIRELESS_DEVICE_STATUS.
->
-> This quirk is currently an alias for HIDPP_QUIRK_CLASS_BLUETOOTH since
-> the added Bluetooth devices do not support regular connect events.
+More than one gpio controllers can share one interrupt, change the
+driver to request shared irq.
 
-No changes have been made to this patch in v4.
+While this will work, it will mess up userspace accounting of the number
+of interrupts per second in tools such as vmstat.  The reason is that
+for every GPIO interrupt, /proc/interrupts records the count against GIC
+interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
+interrupt, the total number of interrupts that the system has seen
+increments by two.
 
-Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- drivers/hid/hid-logitech-hidpp.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+Changes in v8:
+        - merge two lines as one line to fit 80 characters.
+Changes in v7:
+	- make unsigned int convert to unsigned long.
+Changes in v6:
+        - change request_irq to devm_request_irq and add commit message.
+Changes in v5:
+        - add traverse every bit function.
+Changes in v4:
+        - convert 'pr_err' to 'dev_err'.
+Changes in v3:
+        - update the patch description.
+Changes in v2:
+        - delete the compatible of ls1088a.
+ drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hi=
-dpp.c
-index 2062be922c08..b2b5fe2c74db 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -84,6 +84,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
-
- /* Just an alias for now, may possibly be a catch-all in the future */
- #define HIDPP_QUIRK_MISSING_SHORT_REPORTS=09HIDPP_QUIRK_CLASS_BLUETOOTH
-+#define HIDPP_QUIRK_WIRELESS_DEVICE_STATUS=09HIDPP_QUIRK_CLASS_BLUETOOTH
-
- #define HIDPP_QUIRK_DELAYED_INIT=09=09HIDPP_QUIRK_NO_HIDINPUT
-
-@@ -406,9 +407,22 @@ static inline bool hidpp_match_error(struct hidpp_repo=
-rt *question,
- =09    (answer->fap.params[0] =3D=3D question->fap.funcindex_clientid);
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de..58ff372 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -22,6 +22,7 @@
+ #include <linux/irq.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
++#include <linux/interrupt.h>
+ 
+ #define MPC8XXX_GPIO_PINS	32
+ 
+@@ -127,20 +128,19 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 		return -ENXIO;
  }
-
--static inline bool hidpp_report_is_connect_event(struct hidpp_report *repo=
-rt)
-+#define HIDPP_PAGE_WIRELESS_DEVICE_STATUS=09=090x1d4b
-+
-+static inline bool hidpp_report_is_connect_event(struct hidpp_device *hidp=
-p,
-+=09=09=09=09=09=09 struct hidpp_report *report)
+ 
+-static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
++static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
  {
--=09return (report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) &&
-+=09if (hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STATUS) {
-+=09=09/* If feature is invalid, skip array check */
-+=09=09if (report->fap.feature_index > hidpp->feature_count)
-+=09=09=09return false;
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
+ 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
+-	unsigned int mask;
++	unsigned long mask;
++	int i;
+ 
+ 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
+ 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
+-	if (mask)
+-		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+-						     32 - ffs(mask)));
+-	if (chip->irq_eoi)
+-		chip->irq_eoi(&desc->irq_data);
++	for_each_set_bit(i, &mask, 32)
++		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq, 31 - i));
 +
-+=09=09return (hidpp->features[report->fap.feature_index] =3D=3D
-+=09=09=09 HIDPP_PAGE_WIRELESS_DEVICE_STATUS);
-+=09}
-+
-+=09return ((report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) ||
-+=09=09(hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)) &&
- =09=09(report->rap.sub_id =3D=3D 0x41);
++	return IRQ_HANDLED;
  }
+ 
+ static void mpc8xxx_irq_unmask(struct irq_data *d)
+@@ -409,8 +409,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (devtype->gpio_dir_in_init)
+ 		devtype->gpio_dir_in_init(gc);
+ 
+-	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+-					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
++	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
++			       mpc8xxx_gpio_irq_cascade,
++			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			       mpc8xxx_gc);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
++			np->full_name, mpc8xxx_gc->irqn, ret);
++		goto err;
++	}
++
+ 	return 0;
+ err:
+ 	iounmap(mpc8xxx_gc->regs);
+-- 
+2.9.5
 
-@@ -3157,7 +3171,7 @@ static int hidpp_raw_hidpp_event(struct hidpp_device =
-*hidpp, u8 *data,
- =09=09}
- =09}
-
--=09if (unlikely(hidpp_report_is_connect_event(report))) {
-+=09if (unlikely(hidpp_report_is_connect_event(hidpp, report))) {
- =09=09atomic_set(&hidpp->connected,
- =09=09=09=09!(report->rap.params[0] & (1 << 6)));
- =09=09if (schedule_work(&hidpp->work) =3D=3D 0)
---
-2.23.0
