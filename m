@@ -2,195 +2,155 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A10FC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4003ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A51206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:17:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GV4vk4R3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KI/k2pT/"
+	by mail.kernel.org (Postfix) with ESMTP id D7456206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfJKNRq (ORCPT
+        id S1728425AbfJKNSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:17:46 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35776 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfJKNRp (ORCPT
+        Fri, 11 Oct 2019 09:18:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15946 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728309AbfJKNSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:17:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 50F96602DC; Fri, 11 Oct 2019 13:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570799864;
-        bh=ApcidzUpaRnePiIu2HzOkqsyS7w6fPauS8WsJ34U4WE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GV4vk4R3opnvjFafz4HVpuYfdP6l2CbY96iUGy1FEqpRbsyPHN+mKQ30L/yQC814e
-         pALgMsm1OLh7oOPcgqV43/b47p1Wkm7IHz4ppq8cI9lOChGVQ9R0ecmYJHb91xDpWg
-         PojnFzxyuUEggn5jBE3RK+85HhuiuoB07cLbuvPg=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id D8CC660CEC;
-        Fri, 11 Oct 2019 13:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570799860;
-        bh=ApcidzUpaRnePiIu2HzOkqsyS7w6fPauS8WsJ34U4WE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KI/k2pT/FxwgM6kFOq8NKcpwtXVF4QTFXdOFrFwDDNaimvmq+jb+a3dEkoLHuAIhM
-         hJuNn/FrDmusw94bBcaz3vmC4NYU5LbAdM0ulx1/scyki9pvdZMoCTUZkqHemy1oZF
-         RhSoQ+CpMrXAPyNX4TNi4hnQoaqgTSmcvmV+s7Yo=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 11 Oct 2019 18:47:39 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     rnayak@codeaurora.org, suzuki.poulose@arm.com,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        jeremy.linton@arm.com, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, andrew.murray@arm.com,
-        will@kernel.org, Dave.Martin@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org>
-Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
-In-Reply-To: <20191011105010.GA29364@lakrids.cambridge.arm.com>
-References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
- <20191011105010.GA29364@lakrids.cambridge.arm.com>
-X-Priority: 1 (Highest)
-Message-ID: <7910f428bd96834c15fb56262f3c10f8@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Fri, 11 Oct 2019 09:18:31 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9BD8QNB007802
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 09:18:30 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vjt08hngv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 09:18:29 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 11 Oct 2019 14:18:27 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 11 Oct 2019 14:18:22 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9BDIK0T35848280
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 13:18:20 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B4B0711C06E;
+        Fri, 11 Oct 2019 13:18:20 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7EEF711C05B;
+        Fri, 11 Oct 2019 13:18:18 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.178.57])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 11 Oct 2019 13:18:18 +0000 (GMT)
+Subject: Re: [PATCH v7 6/8] certs: add wrapper function to check blacklisted
+ binary hash
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Fri, 11 Oct 2019 09:18:17 -0400
+In-Reply-To: <1570497267-13672-7-git-send-email-nayna@linux.ibm.com>
+References: <1570497267-13672-1-git-send-email-nayna@linux.ibm.com>
+         <1570497267-13672-7-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101113-0028-0000-0000-000003A92DAB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101113-0029-0000-0000-0000246B3A28
+Message-Id: <1570799897.5250.79.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-11_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910110124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Mon, 2019-10-07 at 21:14 -0400, Nayna Jain wrote:
+> The existing is_hash_blacklisted() function returns -EKEYREJECTED
+> error code for both the blacklisted keys and binaries.
+> 
+> This patch adds a wrapper function is_binary_blacklisted() to check
+> against binary hashes and returns -EPERM.    
+> 
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
 
-Thanks a lot for the detailed explanations, I did have a look at all the 
-variations before posting this.
+This patch description describes what you're doing, not the
+motivation.
 
-On 2019-10-11 16:20, Mark Rutland wrote:
-> Hi,
-> 
-> On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:
->> On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
->> warnings are observed during bootup of big cpu cores.
-> 
-> For reference, which CPUs are in those SoCs?
-> 
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
-SM8150 is based on Cortex-A55(little cores) and Cortex-A76(big cores). 
-I'm afraid I cannot give details about SC7180 yet.
+> ---
+>  certs/blacklist.c             | 9 +++++++++
+>  include/keys/system_keyring.h | 6 ++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/certs/blacklist.c b/certs/blacklist.c
+> index ec00bf337eb6..6514f9ebc943 100644
+> --- a/certs/blacklist.c
+> +++ b/certs/blacklist.c
+> @@ -135,6 +135,15 @@ int is_hash_blacklisted(const u8 *hash, size_t hash_len, const char *type)
+>  }
+>  EXPORT_SYMBOL_GPL(is_hash_blacklisted);
+>  
+> +int is_binary_blacklisted(const u8 *hash, size_t hash_len)
+> +{
+> +	if (is_hash_blacklisted(hash, hash_len, "bin") == -EKEYREJECTED)
+> +		return -EPERM;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(is_binary_blacklisted);
+> +
+>  /*
+>   * Initialise the blacklist
+>   */
+> diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
+> index c1a96fdf598b..fb8b07daa9d1 100644
+> --- a/include/keys/system_keyring.h
+> +++ b/include/keys/system_keyring.h
+> @@ -35,12 +35,18 @@ extern int restrict_link_by_builtin_and_secondary_trusted(
+>  extern int mark_hash_blacklisted(const char *hash);
+>  extern int is_hash_blacklisted(const u8 *hash, size_t hash_len,
+>  			       const char *type);
+> +extern int is_binary_blacklisted(const u8 *hash, size_t hash_len);
+>  #else
+>  static inline int is_hash_blacklisted(const u8 *hash, size_t hash_len,
+>  				      const char *type)
+>  {
+>  	return 0;
+>  }
+> +
+> +static inline int is_binary_blacklisted(const u8 *hash, size_t hash_len)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>  
+>  #ifdef CONFIG_IMA_BLACKLIST_KEYRING
 
->> SM8150:
->> 
->> [    0.271177] CPU features: SANITY CHECK: Unexpected variation in
->> SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 
->> 0x00000011111112
-> 
-> The differing fields are EL3, EL2, and EL1: the boot CPU supports
-> AArch64 and AArch32 at those exception levels, while the secondary only
-> supports AArch64.
-> 
-> Do we handle this variation in KVM?
-
-We do not support KVM.
-
-> 
->> [    0.271184] CPU features: SANITY CHECK: Unexpected variation in
->> SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU4: 0x00000000010142
-> 
-> The differing field is (AArch32) SMC: present on the boot CPU, but
-> missing on the secondary CPU.
-> 
-> This is mandated to be zero when AArch32 isn' implemented at EL1.
-> 
-
-So this need not be strict?
-
->> [    0.271189] CPU features: SANITY CHECK: Unexpected variation in
->> SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU4: 0x00000010010000
-> 
-> The differing fields are (AArch32) Virtualization, Security, and
-> ProgMod: all present on the boot CPU, but missing on the secondary
-> CPU.
-> 
-> All mandated to be zero when AArch32 isn' implemented at EL1.
-> 
-
-Same here, this need not be strict?
-
->> SC7180:
->> 
->> [    0.812770] CPU features: SANITY CHECK: Unexpected variation in
->> SYS_CTR_EL0. Boot CPU: 0x00000084448004, CPU6: 0x0000009444c004
-> 
-> The differing fields are:
-> 
-> * IDC: present only on the secondary CPU. This is a worrying mismatch
->   because it could mean that required cache maintenance is missed in
->   some cases. Does the secondary CPU definitely broadcast PoU
->   maintenance to the boot CPU that requires it?
-> 
-
-I will get some more details from internal cpu team about this one.
-
-> * L1Ip: VIPT on the boot CPU, PIPT on the secondary CPU.
-> 
->> [    0.812838] CPU features: SANITY CHECK: Unexpected variation in
->> SYS_ID_AA64MMFR2_EL1. Boot CPU: 0x00000000001011, CPU6: 
->> 0x00000000000011
-> 
-> The differing field is IESB: presend on the boot CPU, missing on the
-> secondary CPU.
-> 
->> [    0.812876] CPU features: SANITY CHECK: Unexpected variation in
->> SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU6:
-> 0x1100000011111112
->> [    0.812924] CPU features: SANITY CHECK: Unexpected variation in
->> SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU6: 0x00000000010142
->> [    0.812950] CPU features: SANITY CHECK: Unexpected variation in
->> SYS_ID_PFR0_EL1. Boot CPU: 0x00000010000131, CPU6: 0x00000010010131
->> [    0.812977] CPU features: SANITY CHECK: Unexpected variation in
->> SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU6: 0x00000010010000
-> 
-> These are the same story as for SM8150.
-> 
->> Can we relax some sanity checking for these by making it FTR_NONSTRICT
-> or by
->> some other means? I just tried below roughly for SM8150 but I guess 
->> this
-> is
->> not correct,
->> maybe for ftr_generic_32bits we should be checking bootcpu and nonboot
-> cpu
->> partnum(to identify big.LITTLE) and then make it nonstrict?
->> These are all my wild assumptions, please correct me if I am wrong.
-> 
-> Before we make any changes, we need to check whether we do actually
-> handle this variation in a safe way, and we need to consider what this
-> means w.r.t. late CPU hotplug.
-> 
-> Even if we can handle variation at boot time, once we've determined the
-> set of system-wide features we cannot allow those to regress, and I
-> believe we'll need new code to enforce that. I don't think it's
-> sufficient to mark these as NONSTRICT, though we might do that with
-> other changes.
-> 
-> We shouldn't look at the part number at all here. We care about
-> variation across CPUs regardless of whether this is big.LITTLE or some
-> variation in tie-offs, etc.
-> 
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
