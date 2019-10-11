@@ -2,107 +2,105 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FD7ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F102EECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBE020659
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABD620659
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="YuZLY3Ew"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Qz/cN3qG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfJKGBK (ORCPT
+        id S1727337AbfJKGBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 02:01:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49499 "EHLO ozlabs.org"
+        Fri, 11 Oct 2019 02:01:31 -0400
+Received: from onstation.org ([52.200.56.107]:34028 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbfJKGBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 02:01:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726116AbfJKGBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 02:01:31 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46qHPp3F86z9sNx;
-        Fri, 11 Oct 2019 17:01:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1570773665;
-        bh=oTTi247DlGceNhM4MVDGIO6OtOx/XRmfaIEvdVAUqC8=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=YuZLY3Ew0BXM9XFrRRe1AZgVtROgn6ejFBEM7K0ehQpC93RuVYs/k+e5GJP4utQZH
-         jHueJ25x/6MWfxYFcvH3KdeC/Q1Ai2aULyAdAKYUrzTAum25QdLH6mELw/QOyL8vMo
-         z6tyN4sahqg/E1MMAQtxtjPEnjx21eDq54A/lX8w/OOhMRH7Z4lLdtVk3IKX7D71mq
-         2L6BhqGlK7Z4Nz9zIrWRRmyTX5MMpiDhJ7vag0SEbYToUTWiT+g4hcAJsWdV4w6woK
-         pv7UiCyfL7wNoDDE7p0rwC0w407xfguxq9940G0tWLyVoKfG/gESuz3YsJ3WgAUSvR
-         FkXOKyLxhVzsw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/29] powerpc: Rename "notes" PT_NOTE to "note"
-In-Reply-To: <20191011000609.29728-2-keescook@chromium.org>
-References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-2-keescook@chromium.org>
-Date:   Fri, 11 Oct 2019 17:00:59 +1100
-Message-ID: <87blunx1lw.fsf@mpe.ellerman.id.au>
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 839DE3E99D;
+        Fri, 11 Oct 2019 06:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1570773690;
+        bh=Pdr19pxEE4qP5RMto+KKW0ehdo3HshXBVfUnDOrByr0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qz/cN3qGjZokf36pEqy2tnjjr9eHqIrBUB3y0f24CZAQnmeAbJLzxl0vFeA6wQND+
+         gdwlMjQvVFXIOAj/uhyJruKaPPCMwwM312OYjILH490YWo4PTaRda9gM0ydlZPZ/Q6
+         d2qun2ouxcJliW2uUklfMYbzG26PcQKSFRRXDbZE=
+Date:   Fri, 11 Oct 2019 02:01:30 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Paolo Pisati <p.pisati@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: msm8996: sdhci-msm: apq8096-db820c sdhci fails to init -
+ "Timeout waiting for hardware interrupt."
+Message-ID: <20191011060130.GA12357@onstation.org>
+References: <20191010143232.GA13560@harukaze>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010143232.GA13560@harukaze>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-> The Program Header identifiers are internal to the linker scripts. In
-> preparation for moving the NOTES segment declaration into RO_DATA,
-> standardize the identifier for the PT_NOTE entry to "note" as used by
-> all other architectures that emit PT_NOTE.
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/powerpc/kernel/vmlinux.lds.S | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Paolo,
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+On Thu, Oct 10, 2019 at 04:32:32PM +0200, Paolo Pisati wrote:
+> Sdhci consistenlty fails to initialize (and thus work) on my apq8096-db820c.
+> 
+> The issue is present since v5.0[*] mainline up to latest v5.4-rc2, using defconfig and:
+> 
+> CONFIG_SCSI_UFS_QCOM=y
+> CONFIG_PHY_QCOM_QMP=y
+> CONFIG_PHY_QCOM_UFS=y
+> CONFIG_ATL1C=y
+> 
+> but can be 100% reproduced with a clean defconfig too.
+> 
+> During boot, when it's time to mount the sdcard, mmc0 spits out a lot of:
+> 
+> ...
+> [   13.683059] mmc0: Timeout waiting for hardware interrupt.
+> [   13.683095] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> [   13.687441] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00004902
+> [   13.693861] mmc0: sdhci: Blk size:  0x00004200 | Blk cnt:  0x00000000
+> [   13.700285] mmc0: sdhci: Argument:  0x00012444 | Trn mode: 0x00000033
+> [   13.706707] mmc0: sdhci: Present:   0x01680206 | Host ctl: 0x0000001f
+> [   13.713131] mmc0: sdhci: Power:     0x00000001 | Blk gap:  0x00000000
+> [   13.719555] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000007
+> [   13.725979] mmc0: sdhci: Timeout:   0x0000000a | Int stat: 0x00000000
+> [   13.732403] mmc0: sdhci: Int enab:  0x03ff900b | Sig enab: 0x03ff100b
+> [   13.738824] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
+> [   13.745249] mmc0: sdhci: Caps:      0x322dc8b2 | Caps_1:   0x00008007
+> [   13.751673] mmc0: sdhci: Cmd:       0x0000123a | Max curr: 0x00000000
+> [   13.758097] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x5b590000
+> [   13.764519] mmc0: sdhci: Resp[2]:   0x76b27f80 | Resp[3]:  0x0a404012
+> [   13.770944] mmc0: sdhci: Host ctl2: 0x00000000
+> [   13.777365] mmc0: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0x00000001588be200
+> [   13.781708] mmc0: sdhci: ============================================
+> [   13.888927] mmc0: Reset 0x4 never completed.
+> ...
+> [   14.004327] mmc0: Controller never released inhibit bit(s).
+> 
+> in between several sdhci register dumps.
+> 
+> Has anyone seen that before? Is sdhci-msm support broken upstream or am i missing
+> something config-wise? 
 
-cheers
+I encountered that same error working on the Nexus 5 support upstream.
+Here's the fix:
 
-> diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-> index 060a1acd7c6d..81e672654789 100644
-> --- a/arch/powerpc/kernel/vmlinux.lds.S
-> +++ b/arch/powerpc/kernel/vmlinux.lds.S
-> @@ -19,7 +19,7 @@ ENTRY(_stext)
->  
->  PHDRS {
->  	kernel PT_LOAD FLAGS(7); /* RWX */
-> -	notes PT_NOTE FLAGS(0);
-> +	note PT_NOTE FLAGS(0);
->  	dummy PT_NOTE FLAGS(0);
->  
->  	/* binutils < 2.18 has a bug that makes it misbehave when taking an
-> @@ -177,7 +177,7 @@ SECTIONS
->  #endif
->  	EXCEPTION_TABLE(0)
->  
-> -	NOTES :kernel :notes
-> +	NOTES :kernel :note
->  
->  	/* The dummy segment contents for the bug workaround mentioned above
->  	   near PHDRS.  */
-> -- 
-> 2.17.1
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=03864e57770a9541e7ff3990bacf2d9a2fffcd5d
+
+Brian
