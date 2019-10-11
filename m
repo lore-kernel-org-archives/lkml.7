@@ -2,88 +2,111 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18A5C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0F0C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD80206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570807892;
-	bh=7XYT1FrNF/XG4yYUuKPaYoFH46Pe0/yvmDiTNuOUoZo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DvFBl3g/RppSXCqQQSSNFYPr+eJU0607EcvaMe5IdCNi8x/GoIH6rgM9gzQrtNT+p
-	 zboz2PTOqrQWDU5ZFc/7zZd4jP/dQYNtTmX3yRriPRsfMnF6pBc0ysBRRhW4BsUe+v
-	 e8XJ9RoPtSQTlSBDXG4/co9+kTn+BYbYg3QS8OHA=
+	by mail.kernel.org (Postfix) with ESMTP id 4F14521D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfJKPbb (ORCPT
+        id S1727590AbfJKPcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:31:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 11:32:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:35922 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbfJKPbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:31:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6FD02190F;
-        Fri, 11 Oct 2019 15:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570807890;
-        bh=7XYT1FrNF/XG4yYUuKPaYoFH46Pe0/yvmDiTNuOUoZo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T+fcPI92HOL/DpOJYIcHbu+iQHMnLhY6qNwcmmeDA7UXS3DEmw1WP13J2hdA8xRzp
-         g3mXfgH9EEydj627HOjuhVdb9hLuLdzMUumvySgoEP1tTAynPG6QHnc+mrfdEsTjjy
-         NJfwtEUNImRD89kJVnw91KA8uQe2xC1jQYsZrz7k=
-Date:   Fri, 11 Oct 2019 17:31:27 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Jessica Yu <jeyu@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Martijn Coenen <maco@android.com>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Shaun Ruffell <sruffell@sruffell.net>,
-        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
-        linux-modules@vger.kernel.org
-Subject: Re: [PATCH 4/4] export: avoid code duplication in
- include/linux/export.h
-Message-ID: <20191011153127.GA1283883@kroah.com>
-References: <20191010151443.7399-1-maennich@google.com>
- <20191010151443.7399-5-maennich@google.com>
+        id S1726328AbfJKPcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:32:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2272A142F;
+        Fri, 11 Oct 2019 08:32:31 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A6D93F68E;
+        Fri, 11 Oct 2019 08:32:28 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 16:32:26 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Richard Henderson <richard.henderson@linaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
+Subject: Re: [PATCH v2 05/12] arm64: Basic Branch Target Identification
+ support
+Message-ID: <20191011153225.GL27757@arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-6-git-send-email-Dave.Martin@arm.com>
+ <20191011151028.GE33537@lakrids.cambridge.arm.com>
+ <4e09ca54-f353-9448-64ed-4ba1e38c6ebc@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010151443.7399-5-maennich@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <4e09ca54-f353-9448-64ed-4ba1e38c6ebc@linaro.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 04:14:43PM +0100, Matthias Maennich wrote:
-> Now that the namespace value is not part of the __ksymtab entry name
-> anymore, we can simplify the implementation of EXPORT_SYMBOL*. By
-> allowing the empty string "" to represent 'no namespace', we can unify
-> the implementation and drop a lot redundant code.  That increases
-> readability and maintainability.
+On Fri, Oct 11, 2019 at 11:25:33AM -0400, Richard Henderson wrote:
+> On 10/11/19 11:10 AM, Mark Rutland wrote:
+> > On Thu, Oct 10, 2019 at 07:44:33PM +0100, Dave Martin wrote:
+> >> @@ -730,6 +730,11 @@ static void setup_return
+> >>  	regs->regs[29] = (unsigned long)&user->next_frame->fp;
+> >>  	regs->pc = (unsigned long)ka->sa.sa_handler;
+> >>  
+> >> +	if (system_supports_bti()) {
+> >> +		regs->pstate &= ~PSR_BTYPE_MASK;
+> >> +		regs->pstate |= PSR_BTYPE_CALL;
+> >> +	}
+> >> +
+> > 
+> > I think we might need a comment as to what we're trying to ensure here.
+> > 
+> > I was under the (perhaps mistaken) impression that we'd generate a
+> > pristine pstate for a signal handler, and it's not clear to me that we
+> > must ensure the first instruction is a target instruction.
 > 
-> As Masahiro pointed out earlier,
-> "The drawback of this change is, it grows the code size. When the symbol
-> has no namespace, sym->namespace was previously NULL, but it is now am
-> empty string "". So, it increases 1 byte for every no namespace
-> EXPORT_SYMBOL. A typical kernel configuration has 10K exported symbols,
-> so it increases 10KB in rough estimation."
+> I think it makes sense to treat entry into a signal handler as a call.  Code
+> that has been compiled for BTI, and whose page has been marked with PROT_BTI,
+> will already have the pauth/bti markup at the beginning of the signal handler
+> function; we might as well verify that.
+> 
+> Otherwise sigaction becomes a hole by which an attacker can force execution to
+> start at any arbitrary address.
 
-10Kb of non-swapable memory isn't good.  But if you care about that, you
-can get it back with the option to compile away any non-used symbols,
-and that shouldn't be affected by this change, right?
+Ack, that's the intended rationale -- I also outlined this in the commit
+message.
 
-That being said, the code is a lot cleaner, so I have no objection to
-it.
+Does this sound reasonable?
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Either way, I feel we should do this: any function in a PROT_BTI page
+should have a suitable landing pad.  There's no reason I can see why
+a protection given to any other callback function should be omitted
+for a signal handler.
+
+Note, if the signal handler isn't in a PROT_BTI page then overriding
+BTYPE here will not trigger a Branch Target exception.
+
+I'm happy to drop a brief comment into the code also, once we're
+agreed on what the code should be doing.
+
+Cheers
+---Dave
