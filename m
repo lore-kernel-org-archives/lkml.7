@@ -2,152 +2,195 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F4EC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA0AECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4A020679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="gLmqucHH"
+	by mail.kernel.org (Postfix) with ESMTP id 42C1720679
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbfJKONr (ORCPT
+        id S1728395AbfJKOOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:13:47 -0400
-Received: from mout.web.de ([212.227.17.12]:60281 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbfJKONr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:13:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570803205;
-        bh=rlRCiCZokfD2wpo9d9Y2iZdR/neJVbCHqZ/ZCSX/1/g=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=gLmqucHHK8uOPyuixXvLSTYuiJfJIbnwcuiWbz8/H2RF6VbMBxulsIePyFOYl3XFW
-         TC7qvmcGbadnak3wTtccWt6vCdWvtWVDS85LxP3c1DmPtI2bHc1GgvWdhtkpGc+vZb
-         kADfvIRSo5offTdhCevpM28mivNCTtFaue348Jvw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.164.92]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LoYjO-1hqkb10Hgg-00gb29; Fri, 11
- Oct 2019 16:13:25 +0200
-Subject: Re: [v3] thunderbolt: Fix to check the return value of kmemdup
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Aditya Pakki <pakki001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        kernel-janitors@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <20190325212523.11799-1-pakki001@umn.edu>
- <f2960ada-7e06-33d1-1533-78989a3e1d2a@web.de>
- <20191011133557.GF2819@lahna.fi.intel.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <c12d7c9c-8212-ba9b-252f-7dbb61698550@web.de>
-Date:   Fri, 11 Oct 2019 16:13:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 11 Oct 2019 10:14:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43001 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728033AbfJKOOJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:14:09 -0400
+Received: from v22018046084765073.goodsrv.de ([185.183.158.195] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iIvgE-0004E0-5z; Fri, 11 Oct 2019 14:14:06 +0000
+Date:   Fri, 11 Oct 2019 16:14:05 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Thibaut Sautereau <thibaut@sautereau.fr>, dhowells@redhat.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: NULL pointer deref in put_fs_context with unprivileged LXC
+Message-ID: <20191011141403.ghjptf4nrttgg7jd@wittgenstein>
+References: <20191010213512.GA875@gandi.net>
 MIME-Version: 1.0
-In-Reply-To: <20191011133557.GF2819@lahna.fi.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:C8Tl5aj/yoYC0ydwJjJdNkHEimxh4k9hVG1Pz4cyz2+F0Z5zlQl
- qvTsB9CWwSXFeyZwmmEhUXvraBsaIBldhoeCyoIEzOk+cY8AC9qXY09S8icA5VFEKeNDLaK
- drpt03UXneHDQUODmOBV+CVWLZ9GJfppG5kwfok10SWZV/JdODhO2UemlGjDa0sS3S4EYx+
- nhBBbQjNMT7SgYzona7lA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JRop/8wFmVw=:MzZq73HHa1PZGPS7Ufc+Zf
- NE55Kfpemmw7CWv+bNmkgWejMJytkzkLb5h21Z6LaDy/KMErxT73d0s6QUwcaVuk16I+z0y9v
- Y3QxJjgytgCikaVmat5fIyFRADzNp5aK8EnpsW+E44C06PdifybZj00EdDZoHWTFnJbATFYIB
- eLntwLOwMwGE/nJ9wNw6rMMiB8rL8rLRrW3/PolPLRh6PiI8EVFR6CAfhe9t+1XvfzjQ4gTs4
- si3mikDbRa/ETewEgo6p3KaZSwklt8Kk/U+0lK3rCx0yU2bKKnnba5uUW3XCnD56EOIMuTUlQ
- HqMhhp3209G9qxbTDzm/BANAWaffKUQ6oPR/Hg5ZZl5Vk/0MDXiGvByRWrhwtzMyByvGEmVwB
- tszpNLW8iFNBRw5yc/PyMcKAPrVQDmL/ZD7gv1IIRhjXXM3DnAmDgI7Il1JUEu5OGAqgG0Rwh
- R5f2PZJ0diwMo08dHN1+b5GQ51Wpewq1du5cr9IFnQIHSj9Pjt0Knpsj2RlZwWmN2NvqzDr89
- xq/A6l4+f5dMQp3F6nZf1QCCQ7jieOASxWKFBUiT0msMTqpy0UEChvxlQtvrYqDC4ew8TuHuv
- J+dYQPG0JEzkUQ3QxBFSIC2twapFgVmGOIdFma6gvrt6om9w57dywufsuABPeNqd05hjpQxwW
- nAQWkQ30+bukPo5ruRK1HYf96sJH6DtLlv2bF4/qayZV5VWo397j6402DVfi4UmAUPXMFh9/0
- t0GQXJhinX+CuYl4twAwzCZPZuhCErFKU14o5AS3YWv5FT+mCWi0ulxkbVmEAWNA6chMyxdXd
- g+aXSMZcHuE8mamZFbG7mw0BGis5doCTv34fAk8OkHoWVlBBqkfkGnKKVuW6od/vnzRi4Z1xI
- uaKJRzvhEgEGSfVEhm6xrgcEjq77eKpw3nufCV1vQoS1Sc03BF0fyZn4IMboqeUhQR1QzBXSQ
- 2sU6Mx5uy9t3dveXVIjfKBVDPtwVSFV9PheOqTDK0AmwswQfHU9U6nlySUnIWveHYQBaOr3b7
- B2aE6Ok5LENwBhbg4L01OIWiMU/mNVkvaPJKaZFEwSXnQTU0vWEKxJ3ydx+FJc0IDllWO9Rsl
- oU4X+2/K90jSU4oL/rc/tpmHJE5f0VhJt0q4+bq5cgIxO2EcoqLsV3FchxQKC/e3CPImE2Mll
- VgvgPRQbzm/Y2UYbPOZvAimnlKxDRhvVH32rakQHEjTpJo2t8TaG95ZkT4L/TGkhoPZr8glH6
- t+vMjezn7YX5LRrhobOU0dXShUyorrG+ZG+ZG0WcVYye8cUiVdyUwHZBdzMI=
+Content-Disposition: inline
+In-Reply-To: <20191010213512.GA875@gandi.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> This source code analysis approach points out that the implementation
->> of the function =E2=80=9Cicm_handle_event=E2=80=9D contains still an un=
-checked call
->> of the function =E2=80=9Ckmemdup=E2=80=9D.
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/thunderbolt/icm.c?id=3D3cdb9446a117d5d63af823bde6fe6babc312e77b#n=
-1627
->> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/thunderbolt/ic=
-m.c#L1627
->
-> Right it misses that.
+On Thu, Oct 10, 2019 at 11:35:12PM +0200, Thibaut Sautereau wrote:
+> Since v5.1 and as of v5.3.5, I get the following oops every single time
+> I start an *unprivileged* LXC container:
+> 
+> 	BUG: kernel NULL pointer dereference, address: 0000000000000043
+> 	#PF: supervisor read access in kernel mode
+> 	#PF: error_code(0x0000) - not-present page
+> 	PGD 0 P4D 0 
+> 	Oops: 0000 [#1] SMP PTI
+> 	CPU: 3 PID: 3789 Comm: systemd Tainted: G                T 5.3.5 #5
+> 	RIP: 0010:put_fs_context+0x13/0x180
+> 	Code: e4 31 c9 eb c8 e8 1d d6 dc ff 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 41 54 55 48 89 fd 53 48 8b b>
+> 	RSP: 0018:ffffc90000777e10 EFLAGS: 00010286
+> 	RAX: 00000000fffffff3 RBX: 0000000000000000 RCX: ffffc90000777d6c
+> 	RDX: 0000000000000000 RSI: ffff8884062331e8 RDI: fffffffffffffff3
+> 	RBP: ffff8883e772dc00 R08: ffff88840d6bc680 R09: 0000000000000001
+> 	R10: 0000000000000000 R11: 0000000000000001 R12: fffffffffffffff3
+> 	R13: ffff888405ad2860 R14: ffff8883e772dc00 R15: 0000000000000027
+> 	FS:  00007998d1444980(0000) GS:ffff88840f980000(0000) knlGS:0000000000000000
+> 	CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> 	CR2: 0000000000000043 CR3: 000000040d236003 CR4: 00000000001606e0
+> 	Call Trace:
+> 	 do_mount+0x2f6/0xab0
+> 	 ksys_mount+0x79/0xc0
+> 	 __x64_sys_mount+0x1d/0x30
+> 	 do_syscall_64+0x68/0x666
+> 	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 	RIP: 0033:0x7998d23aafea
+> 	Code: 48 8b 0d a9 0e 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 4>
+> 	RSP: 002b:00007ffd4b0c8bc8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+> 	RAX: ffffffffffffffda RBX: 00005ae352a55a30 RCX: 00007998d23aafea
+> 	RDX: 00005ae3529fe0b3 RSI: 00005ae3529fe0d5 RDI: 00005ae3529fe0b3
+> 	RBP: 0000000000000007 R08: 00005ae3529fe0ca R09: 00005ae35433fb20
+> 	R10: 000000000000000e R11: 0000000000000246 R12: 00000000fffffffe
+> 	R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000001
+> 	Modules linked in:
+> 	CR2: 0000000000000043
+> 	---[ end trace 66de701522a6be46 ]---
+> 	RIP: 0010:put_fs_context+0x13/0x180
+> 	Code: e4 31 c9 eb c8 e8 1d d6 dc ff 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 41 54 55 48 89 fd 53 48 8b b>
+> 	RSP: 0018:ffffc90000777e10 EFLAGS: 00010286
+> 	RAX: 00000000fffffff3 RBX: 0000000000000000 RCX: ffffc90000777d6c
+> 	RDX: 0000000000000000 RSI: ffff8884062331e8 RDI: fffffffffffffff3
+> 	RBP: ffff8883e772dc00 R08: ffff88840d6bc680 R09: 0000000000000001
+> 	R10: 0000000000000000 R11: 0000000000000001 R12: fffffffffffffff3
+> 	R13: ffff888405ad2860 R14: ffff8883e772dc00 R15: 0000000000000027
+> 	FS:  00007998d1444980(0000) GS:ffff88840f980000(0000) knlGS:0000000000000000
+> 	CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> 	CR2: 0000000000000043 CR3: 000000040d236003 CR4: 00000000001606e0
+> 
+> According to GDB:
+> 	$ gdb fs/fs_context.o
+> 	(gdb) l *put_fs_context+0x13
+> 	0xa53 is in put_fs_context (fs/fs_context.c:494).
+> 	489	void put_fs_context(struct fs_context *fc)
+> 	490	{
+> 	491		struct super_block *sb;
+> 	492
+> 	493		if (fc->root) {
+> 	494			sb = fc->root->d_sb;
+> 	495			dput(fc->root);
+> 	496			fc->root = NULL;
+> 	497			deactivate_super(sb);
+> 	498		}
+> 
+> 	$ gdb fs/namespace.o
+> 	(gdb) l *do_mount+0x2f6
+> 	0x5506 is in do_mount (fs/namespace.c:2796).
+> 	2791			err = vfs_get_tree(fc);
+> 	2792		if (!err)
+> 	2793			err = do_new_mount_fc(fc, path, mnt_flags);
+> 	2794
+> 	2795		put_fs_context(fc);
+> 	2796		return err;
+> 	2797	}
+> 	2798
+> 	2799	int finish_automount(struct vfsmount *m, struct path *path)
+> 	2800	{
+> 
+> 
+> I don't face this issue when starting the same container as a
+> privileged one. I tried to strace the container when launched in
+> foreground and the following snippet may be related to the problem:
+> 
+> 	[pid 35813] openat(AT_FDCWD, "/sys/fs", O_RDONLY|O_CLOEXEC|O_PATH|O_DIRECTORY) = 4
+> 	[pid 35813] name_to_handle_at(4, "cgroup", {handle_bytes=128}, 0x7ffcdf6ebac4, AT_SYMLINK_FOLLOW) = -1 EOPNOTSUPP (Operation not supported)
+> 	[pid 35813] name_to_handle_at(4, "", {handle_bytes=128}, 0x7ffcdf6ebac4, AT_EMPTY_PATH) = -1 EOPNOTSUPP (Operation not supported)
+> 	[pid 35813] openat(4, "cgroup", O_RDONLY|O_CLOEXEC|O_PATH) = 5
+> 	[pid 35813] openat(AT_FDCWD, "/proc/self/fdinfo/5", O_RDONLY|O_CLOEXEC) = 6
+> 	[pid 35813] fstat(6, {st_mode=S_IFREG|0400, st_size=0, ...}) = 0
+> 	[pid 35813] fstat(6, {st_mode=S_IFREG|0400, st_size=0, ...}) = 0
+> 	[pid 35813] read(6, "pos:\t0\nflags:\t012000000\nmnt_id:\t"..., 2048) = 36
+> 	[pid 35813] read(6, "", 1024)           = 0
+> 	[pid 35813] close(6)                    = 0
+> 	[pid 35813] close(5)                    = 0
+> 	[pid 35813] openat(AT_FDCWD, "/proc/self/fdinfo/4", O_RDONLY|O_CLOEXEC) = 5
+> 	[pid 35813] fstat(5, {st_mode=S_IFREG|0400, st_size=0, ...}) = 0
+> 	[pid 35813] fstat(5, {st_mode=S_IFREG|0400, st_size=0, ...}) = 0
+> 	[pid 35813] read(5, "pos:\t0\nflags:\t012200000\nmnt_id:\t"..., 2048) = 36
+> 	[pid 35813] read(5, "", 1024)           = 0
+> 	[pid 35813] close(5)                    = 0
+> 	[pid 35813] newfstatat(4, "cgroup", {st_mode=S_IFDIR|0555, st_size=0, ...}, 0) = 0
+> 	[pid 35813] newfstatat(4, "", {st_mode=S_IFDIR|0755, st_size=0, ...}, AT_EMPTY_PATH) = 0
+> 	[pid 35813] close(4)                    = 0
+> 	[pid 35813] stat("/sys/fs", {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
+> 	[pid 35813] mkdir("/sys/fs/cgroup", 0755) = -1 EEXIST (File exists)
+> 	[pid 35813] stat("/sys/fs/cgroup", {st_mode=S_IFDIR|0555, st_size=0, ...}) = 0
+> 	[pid 35813] mount("tmpfs", "/sys/fs/cgroup", "tmpfs", MS_NOSUID|MS_NODEV|MS_NOEXEC|MS_STRICTATIME, "mode=755") = 0
+> 	[pid 35813] statfs("/sys/fs/cgroup/", {f_type=TMPFS_MAGIC, f_bsize=4096, f_blocks=2032290, f_bfree=2032290, f_bavail=2032290, f_files=2032290, f_ffree=2032289, f_fsid={val=[0, 0]}, f_namelen=255, f_frsize=4096, f_flags=ST_VALID|ST_NOSUID|ST_NODEV|ST_NOEXEC}) = 0
+> 	[pid 35813] statfs("/sys/fs/cgroup/unified/", 0x7ffcdf6ebc10) = -1 ENOENT (No such file or directory)
+> 	[pid 35813] statfs("/sys/fs/cgroup/systemd/", 0x7ffcdf6ebc10) = -1 ENOENT (No such file or directory)
+> 	[pid 35813] openat(AT_FDCWD, "/proc/1/cmdline", O_RDONLY|O_CLOEXEC) = 4
+> 	[pid 35813] prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+> 	[pid 35813] mmap(NULL, 2101248, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7999ced5b000
+> 	[pid 35813] fstat(4, {st_mode=S_IFREG|0444, st_size=0, ...}) = 0
+> 	[pid 35813] read(4, "/sbin/init\0", 1024) = 11
+> 	[pid 35813] read(4, "", 1024)           = 0
+> 	[pid 35813] mremap(0x7999ced5b000, 2101248, 4096, MREMAP_MAYMOVE) = 0x7999ced5b000
+> 	[pid 35813] close(4)                    = 0
+> 	[pid 35813] munmap(0x7999ced5b000, 4096) = 0
+> 	[pid 35813] openat(AT_FDCWD, "/", O_RDONLY|O_NOFOLLOW|O_CLOEXEC|O_PATH) = 4
+> 	[pid 35813] openat(4, "sys", O_RDONLY|O_NOFOLLOW|O_CLOEXEC|O_PATH) = 5
+> 	[pid 35813] fstat(5, {st_mode=S_IFDIR|0555, st_size=0, ...}) = 0
+> 	[pid 35813] close(4)                    = 0
+> 	[pid 35813] openat(5, "fs", O_RDONLY|O_NOFOLLOW|O_CLOEXEC|O_PATH) = 4
+> 	[pid 35813] fstat(4, {st_mode=S_IFDIR|0755, st_size=0, ...}) = 0
+> 	[pid 35813] close(5)                    = 0
+> 	[pid 35813] openat(4, "cgroup", O_RDONLY|O_NOFOLLOW|O_CLOEXEC|O_PATH) = 5
+> 	[pid 35813] fstat(5, {st_mode=S_IFDIR|0755, st_size=40, ...}) = 0
+> 	[pid 35813] close(4)                    = 0
+> 	[pid 35813] openat(5, "unified", O_RDONLY|O_NOFOLLOW|O_CLOEXEC|O_PATH) = -1 ENOENT (No such file or directory)
+> 	[pid 35813] close(5)                    = 0
+> 	[pid 35813] stat("/sys/fs/cgroup", {st_mode=S_IFDIR|0755, st_size=40, ...}) = 0
+> 	[pid 35813] mkdir("/sys/fs/cgroup/unified", 0755) = 0
+> 	[pid 35813] mount("cgroup2", "/sys/fs/cgroup/unified", "cgroup2", MS_NOSUID|MS_NODEV|MS_NOEXEC, "nsdelegate") = ?
+> 	[pid 35813] +++ killed by SIGKILL +++
+> 
+> I've been trying to reproduce by playing with user namespaces and
+> cgroup2 mounts but I didn't succeed. Only an lxc-start of an
+> unprivileged container causes an oops (every single time). I wanted to
+> dive into the code but I hadn't looked at this part of the kernel since
+> the recent rework of file system mounting internals, thus I've been
+> postponing that for weeks now and I thought it was time to report the
+> bug anyway. Sorry for the lack of more detailed info :/
 
-Thanks for your quick feedback.
+No worries.
+Let's add David to this.
 
-
-> Feel free to send a patch fixing it ;-) Or I can do that myself.
-
-Would you like to reconsider also the addition of the function call
-=E2=80=9Ctb_sw_warn(sw, "cannot allocate memory for switch\n")=E2=80=9D?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?id=3D9e208aa06c2109b45eec6be049a8e470=
-34748c20#n878
-
-Regards,
-Markus
+Thanks
+Christian
