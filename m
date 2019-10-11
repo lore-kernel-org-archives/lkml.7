@@ -2,268 +2,127 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D3EC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70434C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43EAA206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 495BE206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:55:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ie61FfgL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NuihAVEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfJKMyY (ORCPT
+        id S1728115AbfJKMzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:54:24 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36298 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727243AbfJKMyX (ORCPT
+        Fri, 11 Oct 2019 08:55:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53378 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728033AbfJKMzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:54:23 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9342E33A;
-        Fri, 11 Oct 2019 14:54:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1570798460;
-        bh=na56nwT81kmZAQn4N6ZkIrQhhyjZQWOLU7e1j5mpmBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ie61FfgLthUz7cPPIMrWn//FPuV8ni004oXZwZUs9TmXAD5EOKer+TRjmhr+4jEkP
-         JnusZknG7fUyQT9ey0usVjg95TzG1VuSb/y1IrfSJt61ZzjRZbAMbOX0y0buxw34Au
-         3XlVsF26O84xhZEKQaerlgyz5f5Vd1/+dv24MoUA=
-Date:   Fri, 11 Oct 2019 15:54:18 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Xin Ji <xji@analogixsemi.com>,
+        Fri, 11 Oct 2019 08:55:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BCs5XP158079;
+        Fri, 11 Oct 2019 12:54:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=NqqBMltJqshjqlO0unczWYT072xc5lc4mD81BsYMdno=;
+ b=NuihAVEg1zU+Dt9xpZnWOcsZG34qHhhDVxSW033srZIyTlRDDkBmwZvDU/jlxKE+xGUs
+ FPPgWNkZnTGQBL/AAHtFxIkiRVaW8zg3WkmSMkrkGAt6JA1S3RyY90J2O/Ny5/W/olwy
+ xXA3duN4yyDeYTeOUbsxo6uaiBFhSF1DhKqKaSeX5CzM9WAzvC4qHivuk4etTW4sq15a
+ cWZwRgYcQTamSPVFBcNjG6mcUzdEU0RGvvF8wkF3IlFnxviOTAF75H2UKuC9CFUbcLZg
+ 9ISGJxgYbKZXxoAqjriCZnbq98xyGa2zsjSwUW/GsoR2N+OfetUEJntrxI/pFRCZJKvT 5A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2vejkv1j1v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 12:54:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BCs4vu121731;
+        Fri, 11 Oct 2019 12:54:56 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vj9qutbgb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 12:54:55 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9BCssYi003401;
+        Fri, 11 Oct 2019 12:54:54 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 11 Oct 2019 05:54:54 -0700
+Date:   Fri, 11 Oct 2019 15:54:47 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     "lkp@lists.01.org" <lkp@lists.01.org>,
         "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Message-ID: <20191011125418.GE4882@pendragon.ideasonboard.com>
-References: <cover.1570760115.git.xji@analogixsemi.com>
- <CGME20191011022154epcas3p1a719423a23f8bf193b6136e853e66b04@epcas3p1.samsung.com>
- <75bb8a47d2c3c1f979c6d62158c21988b846e79b.1570760115.git.xji@analogixsemi.com>
- <3c6067de-9f3c-b93c-f263-fa5dd09c3270@samsung.com>
+        kbuild@01.org
+Subject: Re: [PATCH] staging: wfx: fix potential vulnerability to spectre
+Message-ID: <20191011125446.GD4774@kadam>
+References: <20191011101551.30946-1-Jerome.Pouiller@silabs.com>
+ <20191011121027.GA1144221@kroah.com>
+ <2165496.I6CF8xJYvu@pc-42>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <3c6067de-9f3c-b93c-f263-fa5dd09c3270@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2165496.I6CF8xJYvu@pc-42>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910110122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910110122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrzej,
+On Fri, Oct 11, 2019 at 12:35:36PM +0000, Jerome Pouiller wrote:
+> On Friday 11 October 2019 14:10:35 CEST Greg Kroah-Hartman wrote:
+> > On Fri, Oct 11, 2019 at 10:15:54AM +0000, Jerome Pouiller wrote:
+> > > From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> > >
+> > > array_index_nospec() should be applied after a bound check.
+> > >
+> > > Fixes: 9bca45f3d6924f19f29c0d019e961af3f41bdc9e ("staging: wfx: allow to send 802.11 frames")
+> > 
+> > No need for the full sha1, this should be:
+> >         Fixes: 9bca45f3d692 ("staging: wfx: allow to send 802.11 frames")
+> 
+> I copy-pasted information from kbuild robot notification.
+> 
+> I suggest that commit-id in robot notification is also cut down to 12
+> characters. Or even better, to use this snippet:
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Fixes: 9bca45f3d692 ("staging: wfx: allow to send 802.11 frames")
+> 
+> (I added lkp@lists.01.org in CC but, I am not sure it is the correct
+> ML. I am sorry if it is not the case)
 
-On Fri, Oct 11, 2019 at 01:21:43PM +0200, Andrzej Hajda wrote:
-> On 11.10.2019 04:21, Xin Ji wrote:
-> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
-> > for portable device. It converts MIPI to DisplayPort 1.3 4K.
-> >
-> > You can add support to your board with binding.
-> >
-> > Example:
-> > 	anx7625_bridge: encoder@58 {
-> > 		compatible = "analogix,anx7625";
-> > 		reg = <0x58>;
-> > 		status = "okay";
-> > 		panel-flags = <1>;
-> > 		enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
-> > 		reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
-> > 		#address-cells = <1>;
-> > 		#size-cells = <0>;
-> >
-> > 		port@0 {
-> > 		  reg = <0>;
-> > 		  anx_1_in: endpoint {
-> > 		    remote-endpoint = <&mipi_dsi>;
-> > 		  };
-> > 		};
-> >
-> > 		port@3 {
-> > 		  reg = <3>;
-> > 		  anx_1_out: endpoint {
-> > 		    remote-endpoint = <&panel_in>;
-> > 		  };
-> > 		};
-> > 	};
-> >
-> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
-> > ---
-> >  .../bindings/display/bridge/anx7625.yaml           | 96 ++++++++++++++++++++++
-> >  1 file changed, 96 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.yaml b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-> > new file mode 100644
-> > index 0000000..fc84683
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-> > @@ -0,0 +1,96 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright 2019 Analogix Semiconductor, Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
-> > +
-> > +maintainers:
-> > +  - Xin Ji <xji@analogixsemi.com>
-> > +
-> > +description: |
-> > +  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
-> > +  designed for portable devices.
-> > +
-> > +properties:
-> > +  "#address-cells": true
-> > +  "#size-cells": true
-> > +
-> > +  compatible:
-> > +    items:
-> > +      - const: analogix,anx7625
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  panel-flags:
-> > +    description: indicate the panel is internal or external
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  enable-gpios:
-> > +    description: used for power on chip control, POWER_EN pin D2.
-> > +    maxItems: 1
-> > +
-> > +  reset-gpios:
-> > +    description: used for reset chip control, RESET_N pin B7.
-> > +    maxItems: 1
-> > +
-> > +  port@0:
-> > +    type: object
-> > +    description:
-> > +      A port node pointing to MIPI DSI host port node.
-> > +
-> > +  port@1:
-> > +    type: object
-> > +    description:
-> > +      A port node pointing to MIPI DPI host port node.
-> > +
-> > +  port@2:
-> > +    type: object
-> > +    description:
-> > +      A port node pointing to external connector port node.
-> > +
-> > +  port@3:
-> > +    type: object
-> > +    description:
-> > +      A port node pointing to eDP port node.
-> 
-> 
-> Decrypting available product brief[1], there are following physical lines:
-> 
-> Input:
-> 
-> - MIPI DSI/DPI - video data, are DSI and DPI lines shared?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git staging-testing
+head:   d49d1c76b96ebf39539e93d5ab7943a01ef70e4f
+commit: 9bca45f3d6924f19f29c0d019e961af3f41bdc9e [55/111] staging: wfx: allow to send 802.11 frames
 
-It would be much easier if we could have access to more complete
-information. I believe the DSI and DPI pins could be muxed, but there
-should be more DPI pins than DSI pins.
+If you cut and paste then you the "[55/111] " text isn't right either.
+Also kbuild works on rebase-able trees as well as non-rebase/published
+trees so the hash could change as well.
 
-> 
-> - I2S - audio data,
-> 
-> - I2C - control line,
-> 
-> - ALERT/INTP - interrupt,
-> 
-> - USB 3.1 SSRc/Tx - for USB forwarding,
-> 
-> Output:
-> 
-> - SS1, SS2,
-> 
-> - SBU/AUX,
-> 
-> - CC1/2.
-> 
-> 
-> Having this information I try to understand ports defined by you:
-> 
-> - port@2 you have defined as pointing to external port, but here the
-> port should be rather subnode of ANX7625 - the chip has CC lines, see
-> beginning of [2].
-> 
-> - port@3 describes SS1, SS2 and SBU/AUX lines together, am I right? In
-> USB-C binding SBU and SS lines are represented by different ports,
-> different approach, but maybe better in this case.
+I am a little bit surprised that checkpatch.pl doesn't complain about
+this, though.  You could consider adding that?
 
-I believe that, when connected to a DP display (either DP or eDP), the
-DisplayPort signals are output on SS1 and/or SS2. I this really wonder
-if we need two separate ports for this, it seems that port@2 and port@3
-should be merged.
+regards,
+dan carpenter
 
-> Maybe it would be good to add 2nd example with USB-C port.
 
-That would help with the discussion, yes.
-
-> [1]:
-> https://www.analogix.com/system/files/AA-002291-PB-6-ANX7625_ProductBrief.pdf
-> 
-> [2]: Documentation/devicetree/bindings/connector/usb-connector.txt
-> 
-> > +
-> > +required:
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - compatible
-> > +  - reg
-> > +  - port@0
-> > +  - port@3
-> > +
-> > +example:
-> > +  - |
-> > +    anx7625_bridge: encoder@58 {
-> > +        compatible = "analogix,anx7625";
-> > +        reg = <0x58>;
-> > +        status = "okay";
-> > +        panel-flags = <1>;
-> > +        enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
-> > +        reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        port@0 {
-> > +          reg = <0>;
-> > +          anx_1_in: endpoint {
-> > +            remote-endpoint = <&mipi_dsi>;
-> > +          };
-> > +        };
-> > +
-> > +        port@3 {
-> > +          reg = <3>;
-> > +          anx_1_out: endpoint {
-> > +            remote-endpoint = <&panel_in>;
-> > +          };
-> > +        };
-> > +    };
-
--- 
-Regards,
-
-Laurent Pinchart
