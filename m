@@ -2,132 +2,117 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D396C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6735C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896B620659
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:23:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="aI9A4Saf"
+	by mail.kernel.org (Postfix) with ESMTP id 978A52196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfJKHXz (ORCPT
+        id S1727687AbfJKHYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 03:23:55 -0400
-Received: from fd.dlink.ru ([178.170.168.18]:45022 "EHLO fd.dlink.ru"
+        Fri, 11 Oct 2019 03:24:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:57004 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbfJKHXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 03:23:55 -0400
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id A0B0A1B21A21; Fri, 11 Oct 2019 10:23:50 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru A0B0A1B21A21
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1570778630; bh=hb/FISehiM9hahyOiNvIwmbdCTASelVfl49vOsKByI4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=aI9A4SafoL6UUNb/d+Y8xmcj0VU9FHuRF544dFIYH1WczI/uzoV+trKe9Gfm4OJYV
-         a2C7c9v8nx4Sy4DTG3nIS+3ehvtkmUovyeDM6h45Rpq6HeafBcKni1pVn7Ecw6OmCt
-         2WbhUcqqaPAb7q5DdGtFm5nFUf2iUOQmrSX+BuQk=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 301AC1B219DF;
-        Fri, 11 Oct 2019 10:23:47 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 301AC1B219DF
-Received: by mail.rzn.dlink.ru (Postfix, from userid 5000)
-        id 187561B2023E; Fri, 11 Oct 2019 10:23:47 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA id 945BA1B2023E;
-        Fri, 11 Oct 2019 10:23:37 +0300 (MSK)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 11 Oct 2019 10:23:37 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Edward Cree <ecree@solarflare.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/2] net: core: increase the default size of
- GRO_NORMAL skb lists to flush
-In-Reply-To: <c2450dc3-8ee0-f7cd-4f8a-61a061989eb7@solarflare.com>
-References: <20191010144226.4115-1-alobakin@dlink.ru>
- <20191010144226.4115-3-alobakin@dlink.ru>
- <c2450dc3-8ee0-f7cd-4f8a-61a061989eb7@solarflare.com>
-Message-ID: <1eaac2e1f1d65194a4a39232d7e45870@dlink.ru>
-X-Sender: alobakin@dlink.ru
-User-Agent: Roundcube Webmail/1.3.6
+        id S1726679AbfJKHYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 03:24:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 00:24:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,283,1566889200"; 
+   d="scan'208";a="200708984"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 11 Oct 2019 00:23:58 -0700
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
+        khlebnikov@yandex-team.ru, cai@lca.pw, shakeelb@google.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [Patch v4 1/2] mm/rmap.c: don't reuse anon_vma if we just want a copy
+Date:   Fri, 11 Oct 2019 15:22:55 +0800
+Message-Id: <20191011072256.16275-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Edward,
+Before commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
+hierarchy"), anon_vma_clone() doesn't change dst->anon_vma. While after
+this commit, anon_vma_clone() will try to reuse an exist one on forking.
 
-Edward Cree wrote 10.10.2019 21:16:
-> On 10/10/2019 15:42, Alexander Lobakin wrote:
->> Commit 323ebb61e32b ("net: use listified RX for handling GRO_NORMAL
->> skbs") have introduced a sysctl variable gro_normal_batch for defining
->> a limit for listified Rx of GRO_NORMAL skbs. The initial value of 8 is
->> purely arbitrary and has been chosen, I believe, as a minimal safe
->> default.
-> 8 was chosen by performance tests on my setup with v1 of that patch;
->  see https://www.spinics.net/lists/netdev/msg585001.html .
-> Sorry for not including that info in the final version of the patch.
-> While I didn't re-do tests on varying gro_normal_batch on the final
->  version, I think changing it needs more evidence than just "we tested
->  it; it's better".  In particular, increasing the batch size should be
->  accompanied by demonstration that latency isn't increased in e.g. a
->  multi-stream ping-pong test.
-> 
->> However, several tests show that it's rather suboptimal and doesn't
->> allow to take a full advantage of listified processing. The best and
->> the most balanced results have been achieved with a batches of 16 skbs
->> per flush.
->> So double the default value to give a yet another boost for Rx path.
-> 
->> It remains configurable via sysctl anyway, so may be fine-tuned for
->> each hardware.
-> I see this as a reason to leave the default as it is; the combination
->  of your tests and mine have established that the optimal size does
->  vary (I found 16 to be 2% slower than 8 with my setup), so any
->  tweaking of the default is likely only worthwhile if we have data
->  over lots of different hardware combinations.
+But this commit go a little bit further for the case not forking.
+anon_vma_clone() is called from __vma_split(), __split_vma(), copy_vma()
+and anon_vma_fork(). For the first three places, the purpose here is get
+a copy of src and we don't expect to touch dst->anon_vma even it is
+NULL. While after that commit, it is possible to reuse an anon_vma when
+dst->anon_vma is NULL. This is not we intend to have.
 
-Agree, if you've got slower results on 16, we must leave the default
-value, as it seems to be VERY hardware- and driver- dependent.
-So, patch 2/2 is not actual any more (I supposed that it would likely
-go away before sending this series).
+This patch stop reuse anon_vma for non-fork cases.
 
->> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
->> ---
->>  net/core/dev.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/net/core/dev.c b/net/core/dev.c
->> index a33f56b439ce..4f60444bb766 100644
->> --- a/net/core/dev.c
->> +++ b/net/core/dev.c
->> @@ -4189,7 +4189,7 @@ int dev_weight_tx_bias __read_mostly = 1;  /* 
->> bias for output_queue quota */
->>  int dev_rx_weight __read_mostly = 64;
->>  int dev_tx_weight __read_mostly = 64;
->>  /* Maximum number of GRO_NORMAL skbs to batch up for list-RX */
->> -int gro_normal_batch __read_mostly = 8;
->> +int gro_normal_batch __read_mostly = 16;
->> 
->>  /* Called with irq disabled */
->>  static inline void ____napi_schedule(struct softnet_data *sd,
+Fix commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
+hierarchy")
 
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+
+---
+v4:
+  * check dst->anon_vma in each iteration
+v3:
+  * use dst->anon_vma and src->anon_vma to get reuse state
+    pointed by Konstantin Khlebnikov
+---
+ mm/rmap.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/mm/rmap.c b/mm/rmap.c
+index d9a23bb773bf..c34414567474 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -250,13 +250,19 @@ static inline void unlock_anon_vma_root(struct anon_vma *root)
+  * Attach the anon_vmas from src to dst.
+  * Returns 0 on success, -ENOMEM on failure.
+  *
+- * If dst->anon_vma is NULL this function tries to find and reuse existing
+- * anon_vma which has no vmas and only one child anon_vma. This prevents
+- * degradation of anon_vma hierarchy to endless linear chain in case of
+- * constantly forking task. On the other hand, an anon_vma with more than one
+- * child isn't reused even if there was no alive vma, thus rmap walker has a
+- * good chance of avoiding scanning the whole hierarchy when it searches where
+- * page is mapped.
++ * anon_vma_clone() is called by __vma_split(), __split_vma(), copy_vma() and
++ * anon_vma_fork(). The first three want an exact copy of src, while the last
++ * one, anon_vma_fork(), may try to reuse an existing anon_vma to prevent
++ * endless growth of anon_vma. Since dst->anon_vma is set to NULL before call,
++ * we can identify this case by checking (!dst->anon_vma && src->anon_vma).
++ *
++ * If (!dst->anon_vma && src->anon_vma) is true, this function tries to find
++ * and reuse existing anon_vma which has no vmas and only one child anon_vma.
++ * This prevents degradation of anon_vma hierarchy to endless linear chain in
++ * case of constantly forking task. On the other hand, an anon_vma with more
++ * than one child isn't reused even if there was no alive vma, thus rmap
++ * walker has a good chance of avoiding scanning the whole hierarchy when it
++ * searches where page is mapped.
+  */
+ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+ {
+@@ -286,8 +292,8 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+ 		 * will always reuse it. Root anon_vma is never reused:
+ 		 * it has self-parent reference and at least one child.
+ 		 */
+-		if (!dst->anon_vma && anon_vma != src->anon_vma &&
+-				anon_vma->degree < 2)
++		if (!dst->anon_vma && src->anon_vma &&
++		    anon_vma != src->anon_vma && anon_vma->degree < 2)
+ 			dst->anon_vma = anon_vma;
+ 	}
+ 	if (dst->anon_vma)
+-- 
+2.17.1
+
