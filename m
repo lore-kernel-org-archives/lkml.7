@@ -2,176 +2,94 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC6CECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D42ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86502084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71882190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViDJbvPd"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="aXDs1GdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfJKXdN (ORCPT
+        id S1727661AbfJKXgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 19:33:13 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45564 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfJKXdN (ORCPT
+        Fri, 11 Oct 2019 19:36:00 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46084 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfJKXgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 19:33:13 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q64so11319935ljb.12;
-        Fri, 11 Oct 2019 16:33:11 -0700 (PDT)
+        Fri, 11 Oct 2019 19:36:00 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 201so10420604qkd.13
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 16:35:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dqUKeMBldu3J8Qo+YczW715+ytHuDyYUPQ729VlTblA=;
-        b=ViDJbvPdEkhfNnL7YgdxFbHlRF2QVLlpO/JJiNEbRZ7w0ZTCXVETifJ+gV4mHGkfe8
-         YpzVYRBxCQgmLI5gvxn6oMrTg7KC4hxnFHU7J4I14cHPknJJtOBqXOJynIwA2/tYFYy9
-         bRVy2B7zgoBTaU7L2y7OZGQ7kzZBiFfSs6FHemOO8CYv/wyWKemKnG2g944xbT/v6hbm
-         1u2ADwbrFGaxnfeUzbFtqaGcHFSkusrESPZHqfmhp/W3Ipzhd5As5Eq1PJVH9UVtfNNg
-         J53SsRbtCKps7omwz/WC+fIqxm7QKzA2foWgdsJGQcr4HO79HmBRSnTYF3ptbT1HkpnE
-         9RuQ==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=aRw8hJuPAozTmVQlfAga1PNrnmiO6p/5H/4R+qW5ALA=;
+        b=aXDs1GdPzcKKKOormFuS//NALpRaYnAjkxNTHPHLD7VaOZIKk/W9CyrGLEK/DMwtQe
+         4CSKWUm5/ZnCR4p20bpX5RPlWNUqqt+7aYwRcQBHzWhAnytQ7wvawwGBx/77oItQmAn7
+         jaifqJs4zff2zMJyOMSzLNiZ4Zd33e9LPY2QcodFP03XCmAvFTSOU8uDowX12QM4AYbq
+         cEyMJGhkg2MRKnHLcdNUbWTgUNn3q32BS3NNRuJbzpksO+RIhhgR534TjGKaiNEZGx9T
+         77iGve+xvPeZhmyoFJ+sPOTFHZ9QT8PVq/Gg/Z99FqBB6OQN77ZUT7SPPSREAaY9o0yp
+         I8XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dqUKeMBldu3J8Qo+YczW715+ytHuDyYUPQ729VlTblA=;
-        b=EHN6bCqta81z3+Ntc30OW2CpZe28+RtL8aZF66OLIBln9xMOzXodSujCuhrVxzfRiu
-         Ho+rnvDOK6ASkJIc99ikbyVeuua3olPMkyeAtC57q+lVhvbuvJSPuCQoMw0Umq+qKQ1D
-         Wv0WwGi+TtMY4291a7U8l/BlA7I+AlpsgT/sKSBT8WJiOsM7VqLeyuiz8PTUjtorOTOA
-         o7wBLHMV57vxghKBRCA3VFICvRjJaOltr1pKVnS4SSRrONfpVJH28A4BMUC7FwxR/GXi
-         Yq9EuvJQewvBXfRTmMbaYmQmGHY9j6Cyn1B2xbTs2U48wI450+FgoBfn7wpRv75BLRO4
-         AeDA==
-X-Gm-Message-State: APjAAAURno++QEiPEL60q4+RCmpj8AqmJcgsB2G1kVmGCs3QNNiw7L7c
-        qVRBHHdTGEc/vxdaUtl3i2BS4SJjcnQzz0vHbY0=
-X-Google-Smtp-Source: APXvYqzbQ/bf7zsX3QEfkEEGFHRLIyF+hWVAaoYkoLmlXPMmrpD7t3Q/03q1SqYW+mwE67DGgWaUmj5YR3kUjUBnIJ4=
-X-Received: by 2002:a2e:9a4e:: with SMTP id k14mr10684321ljj.104.1570836790163;
- Fri, 11 Oct 2019 16:33:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
- <20191007051240.4410-4-andrew.smirnov@gmail.com> <CAO-hwJJ8tp4Rqte-umv9e=S5evR5oJTErsNR0Wk-z8wcbtR0wg@mail.gmail.com>
- <CAHQ1cqHCYiaEXck3LMGBwYiHVDQcF=XuF=kHJ4f_v1ea6hDR2g@mail.gmail.com> <CAO-hwJ+HZEhn_riNwrODKSySt4aP4RzZq+omYDAF-7q5dLQR1Q@mail.gmail.com>
-In-Reply-To: <CAO-hwJ+HZEhn_riNwrODKSySt4aP4RzZq+omYDAF-7q5dLQR1Q@mail.gmail.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Fri, 11 Oct 2019 16:32:58 -0700
-Message-ID: <CAHQ1cqHNca22fAWMnLFBuD-txb7MvdFrY9bY2A9uViq4P5Cikg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] HID: logitech-hidpp: add G920 device validation quirk
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Sam Bazely <sambazley@fastmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=aRw8hJuPAozTmVQlfAga1PNrnmiO6p/5H/4R+qW5ALA=;
+        b=CdnUmERdULery6pCDfIvLbAKNFj2/pUB6MZFGkejPXR9zP6SvzKVy53uOhn82RGA6i
+         ju23+D2q8xCYY/oP7jLliYfx5qMRZtO898dI/cUzwsKMeS2VhfH5Tqnn/PXqjq7pfXPx
+         lRjZzfAzpUf44kIRIgXrbHt+CrkmdLhu5MfJq5tA+dSnBvuGniLaoS2K+dQUREJf3ccm
+         DGdFvHcSsDaR6AIX1h84+zuCMRBARiIYDX9+ohaNiD/Czi2ZCT1LjEmwkAypoBa9M+Q6
+         2yJYsdLPtKomE1si3yBMJtkopsMV0/xuvEqLK+tP1Wo3Q71rOqCXdINOSZqGi+kL/H4v
+         1wug==
+X-Gm-Message-State: APjAAAXj4+kE6P7MDOf5JiU5R2lQQqQZMD+/kWK/bLubgRsADYla5TO0
+        E/SrbtQOrnG6lm3J1Q+qNGjENg==
+X-Google-Smtp-Source: APXvYqzSc2HFdsBlaqRV99E/dFMnMal4Vn5+RT/NZBdiuRn+HdHjluTCmENwQM2s/hsIK4S0YHx/UA==
+X-Received: by 2002:a37:412:: with SMTP id 18mr13073500qke.203.1570836959114;
+        Fri, 11 Oct 2019 16:35:59 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q64sm5404232qkb.32.2019.10.11.16.35.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2019 16:35:58 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] hugetlb: Add nohugepages parameter to prevent hugepages creation
+Date:   Fri, 11 Oct 2019 19:35:57 -0400
+Message-Id: <36C2B5DF-7F21-42C6-BA77-6D86EDCB6BB3@lca.pw>
+References: <20191011223955.1435-1-gpiccoli@canonical.com>
+Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com,
+        linux-kernel@vger.kernel.org, jay.vosburgh@canonical.com,
+        kernel@gpiccoli.net
+In-Reply-To: <20191011223955.1435-1-gpiccoli@canonical.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+X-Mailer: iPhone Mail (17A860)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 3:33 PM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> On Fri, Oct 11, 2019 at 9:39 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
-> >
-> > On Fri, Oct 11, 2019 at 7:56 AM Benjamin Tissoires
-> > <benjamin.tissoires@redhat.com> wrote:
-> > >
-> > > On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
-> > > >
-> > > > G920 device only advertises REPORT_ID_HIDPP_LONG and
-> > > > REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
-> > > > for REPORT_ID_HIDPP_SHORT with optional=false will always fail and
-> > > > prevent G920 to be recognized as a valid HID++ device.
-> > > >
-> > > > Modify hidpp_validate_device() to check only REPORT_ID_HIDPP_LONG with
-> > > > optional=false on G920 to fix this.
-> > > >
-> > > > Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to be handled by this module")
-> > > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204191
-> > > > Reported-by: Sam Bazely <sambazley@fastmail.com>
-> > > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > > > Cc: Jiri Kosina <jikos@kernel.org>
-> > > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > > Cc: Henrik Rydberg <rydberg@bitmath.org>
-> > > > Cc: Sam Bazely <sambazley@fastmail.com>
-> > > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> > > > Cc: Austin Palmer <austinp@valvesoftware.com>
-> > > > Cc: linux-input@vger.kernel.org
-> > > > Cc: linux-kernel@vger.kernel.org
-> > > > Cc: stable@vger.kernel.org
-> > > > ---
-> > > >  drivers/hid/hid-logitech-hidpp.c | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > >
-> > > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-> > > > index cadf36d6c6f3..f415bf398e17 100644
-> > > > --- a/drivers/hid/hid-logitech-hidpp.c
-> > > > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > > > @@ -3511,6 +3511,12 @@ static bool hidpp_validate_report(struct hid_device *hdev, int id,
-> > > >
-> > > >  static bool hidpp_validate_device(struct hid_device *hdev)
-> > > >  {
-> > > > +       struct hidpp_device *hidpp = hid_get_drvdata(hdev);
-> > > > +
-> > > > +       if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920)
-> > > > +               return hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
-> > > > +                                            HIDPP_REPORT_SHORT_LENGTH, false);
-> > > > +
-> > >
-> > > with https://patchwork.kernel.org/patch/11184749/ we also have a need
-> > > for such a trick for BLE mice.
-> > >
-> > > I wonder if we should not have a more common way of validating the devices
-> > >
-> >
-> > What about just checking for:
-> >
-> > hidpp_validate_report(REPORT_ID_HIDPP_SHORT,
-> >                                     HIDPP_REPORT_SHORT_LENGTH, true) ||
-> > hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
-> >                                     HIDPP_REPORT_LONG_LENGTH, true);
-> >
-> > and probably dropping the "optional" argument for
-> > hidpp_validate_report()? Original code allows there to be devices
-> > supporting shorts reports only, but it seems that devices that support
-> > only long reports are legitimate too, so maybe the only "invalid"
-> > combination is if both are invalid length or missing?
->
-> Well, the problem is we also want to detect 2 things:
-> - devices that do not have any of the HID++ collections, and handle
-> them as generic ones (the second mouse/keyboard collection in the
-> gaming mice should still be exported by the driver, or this will kill
-> the macros / rebinding capabilities
-> - malicious devices that pretends to have a HID++ collection but want
-> to trigger a buffer overflow by having a shorter than expected report
-> length
->
-> Point 2 above should still be fine, but point 1 is why we have the
-> enforcement of the HID++ short report in the first place.
->
 
-It sounds like the result of hidpp_validate_report() can't really be
-contained in a bool. If we modify it to return -EINVAL for bogus
-report length, -ENOTSUPP if report ID is not supported and 0 if
-everything is valid we should be able to capture all valid permutation
-by checking for with
 
-int id_short = hidpp_validate_report(ID_SHORT);
-int id_long  = hidpp_validate_report(ID_LONG);
+> On Oct 11, 2019, at 6:40 PM, Guilherme G. Piccoli <gpiccoli@canonical.com>=
+ wrote:
+>=20
+> Kdump kernels won't benefit from hugepages - in fact it's quite opposite,
+> it may be the case hugepages on kdump kernel can lead to OOM if kernel
+> gets unable to allocate demanded pages due to the fact the preallocated
+> hugepages are consuming a lot of memory.
+>=20
+> This patch proposes a new kernel parameter to prevent the creation of
+> HugeTLB hugepages - we currently don't have a way to do that. We can
+> even have kdump scripts removing the kernel command-line options to
+> set hugepages, but it's not straightforward to prevent sysctl/sysfs
+> configuration, given it happens in later boot or anytime when the
+> system is running.
 
-return (!id_short && !id_long) || (id_short == -ENOTSUPP && !id_long)
-|| (id_long == -ENOTSUPP && !id_short)
-
-no?
-
-Thanks,
-Andrey Smirnov
+Typically, kdump kernel has its own initramfs, and don=E2=80=99t even need t=
+o mount a rootfs, so I can=E2=80=99t see how sysfs/sysctl is relevant here.=
