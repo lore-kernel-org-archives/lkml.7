@@ -2,177 +2,98 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CAEC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D744C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D2721D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5238521D6C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:00:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYC3+Ay0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfJKI7y (ORCPT
+        id S1727620AbfJKJAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:59:54 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:41896 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfJKI7y (ORCPT
+        Fri, 11 Oct 2019 05:00:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46346 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfJKJAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:59:54 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 7EF9715C23027B;
-        Fri, 11 Oct 2019 08:59:47 +0000 (UTC)
-Received: from saetre (unknown [154.53.1.40])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Fri, 11 Oct 2019 08:59:47 +0000 (UTC)
-Message-ID: <c35284f42e127a3bd276e85d9ae39a9ad1736faf.camel@archlinux.org>
-Subject: Re: [PATCH v4 1/4] HID: logitech: Add MX Mice over Bluetooth
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Mazin Rezk <mnrzk@protonmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAO-hwJK+V=CE8_NjqRszPA6dbGq1yNJAtOAm2qmqVjgK_XzEHw@mail.gmail.com>
-References: <uBbIS3nFJ1jdYNLHcqjW5wxQAwmZv0kmYEoeoPrxNhfzi6cHwmCOY-ewdqe7S1hNEj-p4Hd9D0_Y3PymUTdh_6WFXuMmIYUkV2xaKCPMYz0=@protonmail.com>
-         <403b3e7f6d276e47c447e6ea56a3370b03c3298c.camel@archlinux.org>
-         <CAO-hwJK+V=CE8_NjqRszPA6dbGq1yNJAtOAm2qmqVjgK_XzEHw@mail.gmail.com>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-upEC0jVnkiha19KpY4hi"
-Date:   Fri, 11 Oct 2019 09:59:46 +0100
+        Fri, 11 Oct 2019 05:00:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o18so10921900wrv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VxVxglgeL3qKEjfGtgRUEcui49ts/sXRyc9+Ru8EifA=;
+        b=ZYC3+Ay0TTFta5z+ySOxT1yy5LpFRPW45F3DLzdLsSnFcssZD5FOIoGQzZIffj9PRE
+         Xp7tSexxRRmFAfnkZnIO/H9xELp4WVgYngxAfGg8CAkMhxaspm/T7nIm0G2TR3GBanTM
+         HqldEpDOP6i/fQq5iP7PdzKUQ73+2B+htlySlLloN30Ckav9CMDVbj8L/1jq8qHlMuEz
+         YSYFbHAkouAl/MqRdWYzltEq+OMpzt0VkOObZO2U4wKuaPGaxKGOQoWrgL6uV88JNJd/
+         sUUF0JmM2ZIyFw0Yiq/i0uyoqVA3RTqSFnfGEK+4ptYDsw83NTiLM6z1t2Wu9kKgKTSh
+         Y0CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VxVxglgeL3qKEjfGtgRUEcui49ts/sXRyc9+Ru8EifA=;
+        b=LTyWtMeIwxUjaubJAKbdAxPJNm0D7vbkbr9KDIoubPDvaVmVSGZeLBGkzo52ss8JW6
+         ++WqYZQGsIVT+lcObQtQ0/PnNplO+D2Z5yrqL+VfbDS9p5gcrEpvlPrI14frJqbm2jim
+         kecI9T0FKfS88DxcAJnpKmu1rI4+A48G7NRQHdDIoF/FLbXpBzlKMxrLS+BV3BM219Of
+         9730la8l/x4vICUUTUGEZqA5eqpErKcM027Mfolvs92lSbQvKZ0gNjGx0kc2n+4SGpuN
+         jmsSjmHfLULh2eZoTjhRuGfuFjIdL0mR+xhg2YnAWiNSpgLRqGhiCdIH7Z9ERtnrZtqS
+         d9yQ==
+X-Gm-Message-State: APjAAAWjcFQCJ11bH44y9k1JzoLlf2SKlztj0hZmKrHs8aZxQkBlqcKz
+        Q6bdF1tGqgjZkXNjJ9J98TFMydfc6E/DUw==
+X-Google-Smtp-Source: APXvYqyR+DoSJgDCtUsig3sb1fDtuGA9PsnsC+D7kvTxXfD4QRaZRJeDBKJ/39231CiBye99kWAcyA==
+X-Received: by 2002:adf:f48c:: with SMTP id l12mr11609168wro.99.1570784397867;
+        Fri, 11 Oct 2019 01:59:57 -0700 (PDT)
+Received: from wambui ([197.237.61.225])
+        by smtp.gmail.com with ESMTPSA id b186sm11494222wmd.16.2019.10.11.01.59.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 01:59:57 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 11:59:52 +0300
+From:   Wambui Karuga <wambui.karugax@gmail.com>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [Outreachy kernel] [PATCH 1/5] staging: octeon: remove typedef
+ declaration for cvmx_wqe_t
+Message-ID: <20191011085952.GA9748@wambui>
+Reply-To: alpine.DEB.2.21.1910110817340.2662@hadrien
+References: <cover.1570773209.git.wambui.karugax@gmail.com>
+ <1b16bc880fee5711f96ed82741f8268e4dac1ae6.1570773209.git.wambui.karugax@gmail.com>
+ <alpine.DEB.2.21.1910110817340.2662@hadrien>
 MIME-Version: 1.0
-User-Agent: Evolution 3.34.1 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910110817340.2662@hadrien>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-upEC0jVnkiha19KpY4hi
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2019-10-11 at 10:54 +0200, Benjamin Tissoires wrote:
-> On Fri, Oct 11, 2019 at 10:49 AM Filipe La=C3=ADns <lains@archlinux.org>
-> wrote:
-> > On Fri, 2019-10-11 at 00:57 +0000, Mazin Rezk wrote:
-> > > On Saturday, October 5, 2019 9:04 PM, Mazin Rezk <
-> > > mnrzk@protonmail.com> wrote:
-> > >=20
-> > > > This patch adds support for several MX mice over Bluetooth. The
-> > > > device IDs
-> > > > have been copied from the libratbag device database and their
-> > > > features
-> > > > have been based on their DJ device counterparts.
-> > >=20
-> > > No changes have been made to this patch in v4. However, it should
-> > > be
-> > > noted
-> > > that the only device that has been thoroughly tested in this
-> > > patch is
-> > > the
-> > > MX Master (b01e). Further testing for the other devices may be
-> > > required.
-> > >=20
-> > > Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> > > ---
-> > >  drivers/hid/hid-logitech-hidpp.c | 18 ++++++++++++++++++
-> > >  1 file changed, 18 insertions(+)
-> > >=20
-> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-
-> > > logitech-hidpp.c
-> > > index 0179f7ed77e5..85fd0c17cc2f 100644
-> > > --- a/drivers/hid/hid-logitech-hidpp.c
-> > > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > > @@ -3773,6 +3773,24 @@ static const struct hid_device_id
-> > > hidpp_devices[] =3D {
-> > >       { /* MX5500 keyboard over Bluetooth */
-> > >         HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
-> > >         .driver_data =3D HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
-> > > +     { /* MX Anywhere 2 mouse over Bluetooth */
-> > > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb013),
-> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > > +     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb018),
-> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > > +     { /* MX Anywhere 2S mouse over Bluetooth */
-> > > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01a),
-> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > > +     { /* MX Master mouse over Bluetooth */
-> > > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012),
-> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > > +     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb017),
-> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > > +     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e),
-> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > > +     { /* MX Master 2S mouse over Bluetooth */
-> > > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb019),
-> > > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > >       {}
-> > >  };
-> > >=20
-> > > --
-> > > 2.23.0
-> > >=20
-> >=20
-> > The series now looks great, thanks!
-> >=20
-> > Benjamin, I can confirm that up to now all BLE devices don't have
-> > short
-> > reports. I am not sure if you still want to only enable tested
-> > devices
-> > but from an architectural standpoint everything here should be
-> > fine.
->=20
-> Unfortunately yes, we need actual device tests:
-> - this series enable 0x2121 on all of those devices (is it correct?)
-> - we are not shielded from a FW error and something that goes wrong
-> when enabling one of those mice with hid-logitech-hidpp.c. All of
-> those mice works fine with hid-generic, and if we oversee one tiny
-> bit, we'll regress for no good reasons.
-
-Okay, makes sense :)
-
-> Cheers,
-> Benjamin
->=20
-> > Mazin, you can have my
-> >=20
-> > Reviewed-by: Filipe La=C3=ADns <lains@archlinux.org>
-> >=20
-> > for the series.
-> >=20
-> > Thank you,
-> > Filipe La=C3=ADns
-
---=20
-Filipe La=C3=ADns
-
---=-upEC0jVnkiha19KpY4hi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQJIBAABCAAyFiEEPc5R1gkw66R4WLpBRvYzy7DrS/IFAl2gRHUUHGxhaW5zQGFy
-Y2hsaW51eC5vcmcACgkQRvYzy7DrS/Ka9BAAlb6C8hgBU1ygcDXeHmG1rnZQTZWW
-yzM98dQB0IvG1PcuwVl6XKsejr9I2DHmu7BBydTT0GFSl+iTkIhaHcgqDn/rICN9
-xyFZ/VeeT4gx+tg84KkwoUHNyuBcCIEeGgAqCmRgeKRn2N7Ax8uGeTaSnpUXkM0+
-mHoONX/b2w73uOucayXfF29erDwT66gT5mYmXuMjAtB9U2CY+uZrm8WyBiqZxoaj
-LqdgTMiIxmBRZElkDZBNz1s4n8zyMtwNZ9ehg7I8ZR7IwF+dxKV+go988rjPYVKC
-Feemi/hwtVbUDxkfPDj8pdQPM5naFfiSxfTI0xGqGPQXkSqW+HU3dcyoicMs5dZa
-CxKn9hfMHS+m9MRHJxHogQoKrFkAN8hK1l0LZSkKN7ncrOcKgdUexVR10Rb4nqju
-YmoS4EmJkr3e0s2z1WuIPVOGjlMjjcMHzsX/lyah8JX/J2+d9om/WbThwQ4LPNqu
-L8KwvFasH8BHrX0I3g4kOhataRRhxMEtR0VRFNqmRpSZlvL1Yv7NcLpcFDeihW1Z
-Be/fwjB+vrvCwDEjEdte26usP6EQmx6TskFLBbtIiYtlU0DHu4Iwc2snH8OjUkVU
-4e/kNOshmgirQsR7oUfpVoOQCZZ4nbCflzgBFh8dc3ezBhpysswQcIb4gzFBga3C
-H9r/XCeE36cDxQs=
-=qBlk
------END PGP SIGNATURE-----
-
---=-upEC0jVnkiha19KpY4hi--
+On Fri, Oct 11, 2019 at 08:18:25AM +0200, Julia Lawall wrote:
+> 
+> 
+> On Fri, 11 Oct 2019, Wambui Karuga wrote:
+> 
+> > Remove typedef declaration from struct cvmx_wqe_t in
+> 
+> You can remove the _t from the name as well.
+Should I remove the _t from all the enums/structs?
+> 
+> > drivers/staging/octeon/octeon-stubs.h.
+> 
+> It's not really necessary to give the name of the file in the log message,
+> as it can easily be seen below.
+> 
+> julia
+> 
+Okay, thought it would be clearer for the commit messages/git log.
+Thanks
