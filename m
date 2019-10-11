@@ -5,74 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AECFC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A43ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39EC0214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EEB4214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 23:50:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jllI4sbR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q+ZBRH4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfJKXsc (ORCPT
+        id S1728230AbfJKXul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 19:48:32 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41662 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbfJKXsc (ORCPT
+        Fri, 11 Oct 2019 19:50:41 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43727 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfJKXuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 19:48:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q7so6954409pfh.8
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 16:48:32 -0700 (PDT)
+        Fri, 11 Oct 2019 19:50:40 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i32so6642147pgl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 16:50:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=AmsaWR6UIYQFsskmsBUdb3fnHuvmiQm3ZQiAWL6V5Qc=;
-        b=jllI4sbRj/cCNWxGttqdKesUD1HiYXaKIvs794DXXkc+PoCdkcM6erto6iQpJ2rVud
-         8x8uYDcnaphLecfMmemcLRSW39ZOAsiY1fpX57AgoFA76OdqMj/YC0hmd4h+OiH4iynt
-         jy7YCSb1g1byOhT7+4nEcBeBc9rVr9YUKFpTFGTtrTxVmTOlwQDIvcSmMdvAyNLBEniY
-         zsaFaa8R6uL7KmJQMdTWGJv6LsPDDGctdIyqL7lENT9fX9FmOIFJyFBpld8huwIfhQDb
-         LqKAHiLoKH5XlxH+7NG4g7NzAeUnTviUWArEsPTKSF7qeUbLlSAEJWfBAp78UEmB30Ps
-         8Tqw==
+        bh=EgtZMQuv8rVlaVgRlgv5EqHSKVxfWJrgFI1xeOtDznY=;
+        b=Q+ZBRH4JMLVEz3cKNEBDilBpczI3cAfNTxVUQ0GmOaaYQMrnhMpBpG/oMkEbPv6Odf
+         8GGYfPNZshLNysepMYmTkT+3aNAgXugsY1CpHbIdxbtdrQQ60VUYCVdhNKtGJPZ9XNmZ
+         yeC9ihKcyyHJaIzy1EL8IqBelW7q7XUwmg/Hj26mRmV0FwdkKluXBx8bn/qC4si8Txjq
+         BJcMrTQsWH7JShE3N5uQdrbWPaMlnQ7E4TerYqhVVbjckQYF1dRgiIH2UwHVA4jeybRa
+         ct5jnHOzbs9B/OYFzSNZbT3pquua3lDioCSE2rTR4TEhQ2ocWM1R5k2um3dsc3fczhsT
+         9efQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=AmsaWR6UIYQFsskmsBUdb3fnHuvmiQm3ZQiAWL6V5Qc=;
-        b=sVlap4Ehu/lfm0CjuIsuYafJ03hvhwlTDLfG1TM1jII1NvoSeY2WPQOlIjU2vv3SWN
-         sLgiJyPasUUOM3ViTjVYuELJEMVV93NpR+l+DzPjqmw2Q8whAC4OuYfdLHvn3FvitgkD
-         vjM4tPmmB1myf77wj6GDKRP4jcERyJ8HBqdAAAvpas4mnxrW4K8yaZD5C13hODteDo33
-         TI6vO8t0D5gDQ5ThU5U6mOkZ6VDFPC/DnpDTb3eDibzGMFzxOv4g2ESyLDhDpJsqPX7G
-         4WDhvVJEsbEGY2PD7xM8ceOpOATorkahlqEMedufLr+7F0X2ySgPosEBWsbJdqU2lQQy
-         iQPA==
-X-Gm-Message-State: APjAAAUEv4qnHPuoS21D3OxaKIPNa/U9XNjfmczqFJT30krtjp165fDT
-        QwLFL7GicHR+WXqwRh1A6GO0Ag==
-X-Google-Smtp-Source: APXvYqzQQMfZB/vfwkNtGeT6aWfRdgIU/ygvDWyu2BePS2QK+kJUi1HassUgKqK1qK042mIzuwELyg==
-X-Received: by 2002:a17:90a:d793:: with SMTP id z19mr20089752pju.140.1570837711757;
-        Fri, 11 Oct 2019 16:48:31 -0700 (PDT)
+        bh=EgtZMQuv8rVlaVgRlgv5EqHSKVxfWJrgFI1xeOtDznY=;
+        b=OKEsapGq5MkROMwLFWISSWWM8D568SfeMd7vkrKgLV7KkC3H7YXAuKeSfBHJoBjO18
+         Lm4h3cra891EmGM+JCsOo8PnXp1Lkq0hG5QUh1fcLBKTnln1/Pu5fCGUFfLSaDovAE7+
+         GuqxUsjTSIZLx7ApQIcVOy0TenbyohBJGaVLxQpC8lCTNLuGXgGLOcPdX48g4VIXFl+u
+         YUIv2tjLioxHKLhtXvsR3N5eHSpBeTgVU80jH6R6qSL70yTMvVuPfNkUNRG/eZAnTMJR
+         eN8cQGJmUtzunQbm4srqxRdx4RvuQZRv263jU5pnSEmjnfdfXLA5Y8szrRZvAUzdIiAm
+         s7tg==
+X-Gm-Message-State: APjAAAVmWrPT4XT8GGrk2mSmo4THAou9yjOmU/PxX2odk88ALOTsaCLu
+        07+SFqo0+V6kTLCn4djdWwc5cA==
+X-Google-Smtp-Source: APXvYqxyTECy/5ImThDv0fD4LqF+cLTW2tgyxri1a1OulnP2BTV3jWbPhAnqE9psBlNscebeW3EiBg==
+X-Received: by 2002:a63:a357:: with SMTP id v23mr19518356pgn.383.1570837838628;
+        Fri, 11 Oct 2019 16:50:38 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m102sm8477015pje.5.2019.10.11.16.48.30
+        by smtp.gmail.com with ESMTPSA id ce16sm8784551pjb.29.2019.10.11.16.50.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 16:48:31 -0700 (PDT)
+        Fri, 11 Oct 2019 16:50:38 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
         Maxime Ripard <mripard@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
         Anson Huang <Anson.Huang@nxp.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         Dinh Nguyen <dinguyen@kernel.org>,
         Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org
-Subject: [PATCH] arm64: defconfig: Enable Qualcomm socinfo driver
-Date:   Fri, 11 Oct 2019 16:48:28 -0700
-Message-Id: <20191011234828.374419-1-bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: defconfig: Enable Qualcomm pseudo rng
+Date:   Fri, 11 Oct 2019 16:50:35 -0700
+Message-Id: <20191011235035.374569-1-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -81,12 +81,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Qualcomm socinfo driver provides SoC information to userspace using
-the standard soc interface as well as a number of debugfs entries.
-
-Enable this to allow certain user space tools to acquire this
-information, as well as getting developers access to the information in
-debugfs that is useful when reporting bugs.
+Most Qualcomm platforms contain a pseudo random number generator
+hardware block. Enable the driver for this block.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
@@ -94,17 +90,17 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 45e55dfe1ee4..a5953b0b382d 100644
+index a5953b0b382d..688c8f200034 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -744,6 +744,7 @@ CONFIG_QCOM_SMEM=y
- CONFIG_QCOM_SMD_RPM=y
- CONFIG_QCOM_SMP2P=y
- CONFIG_QCOM_SMSM=y
-+CONFIG_QCOM_SOCINFO=m
- CONFIG_ARCH_R8A774A1=y
- CONFIG_ARCH_R8A774C0=y
- CONFIG_ARCH_R8A7795=y
+@@ -855,6 +855,7 @@ CONFIG_NLS_ISO8859_1=y
+ CONFIG_SECURITY=y
+ CONFIG_CRYPTO_ECHAINIV=y
+ CONFIG_CRYPTO_ANSI_CPRNG=y
++CONFIG_CRYPTO_DEV_QCOM_RNG=m
+ CONFIG_DMA_CMA=y
+ CONFIG_CMA_SIZE_MBYTES=32
+ CONFIG_PRINTK_TIME=y
 -- 
 2.23.0
 
