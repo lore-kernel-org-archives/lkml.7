@@ -2,177 +2,102 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB2CECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E41FC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBD5206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:59:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="Zk7zrYDi"
+	by mail.kernel.org (Postfix) with ESMTP id 58368214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbfJKL7S (ORCPT
+        id S1727905AbfJKMCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:59:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44615 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfJKL7R (ORCPT
+        Fri, 11 Oct 2019 08:02:10 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:58957 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727198AbfJKMCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:59:17 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m13so9510254ljj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 04:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qZxcysWcGBjK40AA/XUOIdw3iHtZgIgHG9FtdNWtwBI=;
-        b=Zk7zrYDiiAloCyPwmmtaBGLskO2Fx1VMfLtS0bvFGEfrMXwqWjgwR0fLfvMCm0mhNb
-         CvaDy0a+1pSt6z/9qZkexB2994P9n/iUPRpzZL7ZHOUacbuyY2ZAbPSQJQcTp3Xkl99p
-         Py83bspMfff+i7yzB2pP/ZM5cHgVwagS0RKJHIFBsklI6O44CO+pY/NF8aZBbb+WT7Ep
-         e3UTNNptN5s+r5NWbU+5gAv2U4bxSS2MOHZbK4rmM2X+fRvYidMhfxKcE3+6y+zc5SrG
-         kSFEpHjXj3MNmevmM1KqxBJSl7swdsnabGzHoo9gG3j6zN818LNg0U24WI49R/W+Jq6d
-         m+SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qZxcysWcGBjK40AA/XUOIdw3iHtZgIgHG9FtdNWtwBI=;
-        b=d41bhDSwTBy8CxGtrktLI8TwuJyid+tudgD/x6ZKwTEgLYOtccpMsNL18e1cGQG3eH
-         F/MoOY68cJdfsgFdwM/FfqE/y8Y8pHdJ4i2aOeTfvsESPPtrUcvTF7cEOBMPQgD6a7Uu
-         JQYLsHAX054FXxnsn+1pzi/f+AT6RZfPV4k8e/zMzc4Uekp9IaFG9ue+gnIhNc3gM5RZ
-         KeGIZtm/lr+SuC/DXLn+NbFqqpL24GHNO7NMQnK9vW9Vz3PhozKmBmmKbIoap97HCRH7
-         tvisEk8jrrrjc//xOSW4UO1oOgv2nKCTWH2D4BcLbyIrAaWfrEfh/47+lgLRdG9lqO7w
-         TC8Q==
-X-Gm-Message-State: APjAAAXKzkvCoh8dxDIxi8T1QnmnVI02ShRq+YxANDAF7N6aJZmwYsF1
-        VR9U1OJPD2ona9xZ9a2y7513VZZyWs+Q8uFQDsM0aA==
-X-Google-Smtp-Source: APXvYqyu8ngFvs0Ijr0BcLjn77SktYZ8O5FQq+oWdsZebG5H9lIAvGxp6elULEAs295/M0RD9pF16TysYOraX+QU4KA=
-X-Received: by 2002:a2e:957:: with SMTP id 84mr8958337ljj.245.1570795153555;
- Fri, 11 Oct 2019 04:59:13 -0700 (PDT)
+        Fri, 11 Oct 2019 08:02:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TejlPIB_1570795316;
+Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TejlPIB_1570795316)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 11 Oct 2019 20:02:02 +0800
+Date:   Fri, 11 Oct 2019 20:01:56 +0800
+From:   Aaron Lu <aaron.lu@linux.alibaba.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20191011114851.GA8750@aaronlu>
+References: <20190911140204.GA52872@aaronlu>
+ <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
+ <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
+ <20190912123532.GB16200@aaronlu>
+ <CANaguZBTiLQiRQU9MJR2Qys8S2S=-PTe66_ZPi5DVzpPbJ93zw@mail.gmail.com>
+ <CANaguZDOb+rVcDPMS+SR1DKc73fnctkBK0EbfBrf90dztr8t=Q@mail.gmail.com>
+ <20191010135436.GA67897@aaronlu>
+ <CANaguZDCtmXpm_rpTkjsfPPBscHCwz4u1OHwUt3XztzgLJa_jA@mail.gmail.com>
+ <20191011073338.GA125778@aaronlu>
+ <CANaguZCkKQTmgye+9nQhzQqYBrsnCmcjA46TPmLwN60vvMQ_7w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191011111813.20851-1-andrzej.p@collabora.com> <20191011111813.20851-3-andrzej.p@collabora.com>
-In-Reply-To: <20191011111813.20851-3-andrzej.p@collabora.com>
-From:   Daniel Stone <daniel@fooishbar.org>
-Date:   Fri, 11 Oct 2019 12:59:02 +0100
-Message-ID: <CAPj87rNb=Sa2Hg8KZK5ioocdv0BMj9c3NHK2v4UZibMmw2DdGA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/rockchip: Add support for afbc
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANaguZCkKQTmgye+9nQhzQqYBrsnCmcjA46TPmLwN60vvMQ_7w@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrzej,
+On Fri, Oct 11, 2019 at 07:32:48AM -0400, Vineeth Remanan Pillai wrote:
+> > > The reason we need to do this is because, new tasks that gets created will
+> > > have a vruntime based on the new min_vruntime and old tasks will have it
+> > > based on the old min_vruntime
+> >
+> > I think this is expected behaviour.
+> >
+> I don't think this is the expected behavior. If we hadn't changed the root
+> cfs->min_vruntime for the core rq, then it would have been the expected
+> behaviour. But now, we are updating the core rq's root cfs, min_vruntime
+> without changing the the vruntime down to the tree. To explain, consider
+> this example based on your patch. Let cpu 1 and 2 be siblings. And let rq(cpu1)
+> be the core rq. Let rq1->cfs->min_vruntime=1000 and rq2->cfs->min_vruntime=2000.
+> So in update_core_cfs_rq_min_vruntime, you update rq1->cfs->min_vruntime
+> to 2000 because that is the max. So new tasks enqueued on rq1 starts with
+> vruntime of 2000 while the tasks in that runqueue are still based on the old
+> min_vruntime(1000). So the new tasks gets enqueued some where to the right
+> of the tree and has to wait until already existing tasks catch up the
+> vruntime to
+> 2000. This is what I meant by starvation. This happens always when we update
+> the core rq's cfs->min_vruntime. Hope this clarifies.
 
-On Fri, 11 Oct 2019 at 12:18, Andrzej Pietrasiewicz
-<andrzej.p@collabora.com> wrote:
-> @@ -32,6 +35,46 @@ rockchip_fb_alloc(struct drm_device *dev, const struct drm_mode_fb_cmd2 *mode_cm
->         int ret;
->         int i;
->
-> +       if (mode_cmd->modifier[0]) {
-> +               const struct drm_format_info *info;
-> +               int bpp;
-> +
-> +               if (mode_cmd->modifier[0] &
+Thanks for the clarification.
 
-Use != here, not &~.
+Yes, this is the initialization issue I mentioned before when core
+scheduling is initially enabled. rq1's vruntime is bumped the first time
+update_core_cfs_rq_min_vruntime() is called and if there are already
+some tasks queued, new tasks queued on rq1 will be starved to some extent.
 
-> +       case DRM_FORMAT_BGR888:
-> +               return AFBC_FMT_U8U8U8;
-> +       case DRM_FORMAT_RGB565:
-> +       case DRM_FORMAT_BGR565:
-> +               return AFBC_FMT_RGB565;
-> +       default:
-> +               DRM_ERROR("unsupported afbc format[%08x]\n", format);
+Agree that this needs fix. But we shouldn't need do this afterwards.
 
-This should not be reachable, because you shouldn't be able to create
-a framebuffer with an unsupported format/modifier combination.
-
-> +static bool rockchip_mod_supported(struct drm_plane *plane,
-> +                                  u32 format, u64 modifier)
-> +{
-> +       const struct drm_format_info *info;
-> +
-> +       if (WARN_ON(modifier == DRM_FORMAT_MOD_INVALID))
-> +               return false;
-> +
-> +       if (modifier == DRM_FORMAT_MOD_LINEAR)
-> +               return true;
-> +
-> +       if (modifier & ~DRM_FORMAT_MOD_ARM_AFBC(
-
-Again use != here.
-
-> +                               AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 |
-> +                               AFBC_FORMAT_MOD_SPARSE
-> +                       )
-> +       ) {
-> +               DRM_DEBUG_KMS("Unsupported format modifer 0x%llx\n", modifier);
-> +
-> +               return false;
-> +       }
-> +
-> +       info = drm_format_info(format);
-> +       if (info->num_planes != 1) {
-> +               DRM_DEBUG_KMS("AFBC buffers expect one plane\n");
-> +               return false;
-> +       }
-
-This is where you should reject unsupported format + AFBC
-combinations. Doing it here prevents it from ever being advertised to
-userspace in the first place.
-
-> @@ -808,6 +919,24 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
->
->         spin_lock(&vop->reg_lock);
->
-> +       if (fb->modifier == DRM_FORMAT_MOD_ARM_AFBC(
-> +               AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 | AFBC_FORMAT_MOD_SPARSE)) {
-> +               int afbc_format = vop_convert_afbc_format(fb->format->format);
-> +
-> +               VOP_AFBC_SET(vop, format, afbc_format | 1 << 4);
-
-I assume the (1 << 4) programs the 16x16 block size. Can we support
-other block sizes?
-
-> +               VOP_AFBC_SET(vop, hreg_block_split, 0);
-
-Does this mean we can also support AFBC_FORMAT_MOD_SPLIT?
-
-> +               VOP_AFBC_SET(vop, win_sel, VOP_WIN_TO_INDEX(vop_win));
-> +               VOP_AFBC_SET(vop, hdr_ptr, dma_addr);
-> +               VOP_AFBC_SET(vop, pic_size, act_info);
-> +
-> +               /*
-> +                * The window being udated becomes the AFBC window
-> +                */
-> +               vop->afbc_win = vop_win;
-> +
-> +               pr_info("AFBC on plane %s\n", plane->name);
-
-Please do not use pr_info() here. Userspace should not be able to
-trigger logging, apart from DRM_DEBUG.
-
-> +static const uint64_t format_modifiers_win_full[] = {
-> +       DRM_FORMAT_MOD_NONE,
-
-*DRM_FORMAT_MOD_LINEAR
-
-Cheers,
-Daniel
+So do I understand correctly that patch1 is meant to solve the
+initialization issue?
