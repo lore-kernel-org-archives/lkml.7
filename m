@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEEDECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B635C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C22B2196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BF521835
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570824669;
-	bh=76uKKygH9fNSEkcFBhOTTQTJRh8+mIT13FxZ9wKP6/8=;
+	s=default; t=1570824673;
+	bh=skrCT3K/eqt15gi8/6EmFta2QOrmw+Yv/2qiuO/6mwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PyHkAr45mlA7oNiCHuvOxV0lK2Kb8cqYDMsH5zcN/bfUoEBQ0v4IVLteNzKix/2PT
-	 Fxit2hcM8O4ZPIZ4FmUv014JQubiLOthIiQ6fYxEGvqgEIlkVPlRNZbLMimdP00IGa
-	 zmLFc72MXdD7RHh9dHb45DyXnAyLlkZPSuynau2w=
+	b=ELJr1OQeZacHvDnjbRwVfMAD0EPStl8kzZF95Ymqn11c0hXPt9s3BEGp2DhQE/IpD
+	 WstezjIUocOygZqbwGWDIdLpcmKGDCi4wPFr0oiQqiR8gKpurPlKdCOVvmlIlzhkAX
+	 vqsiXbzyRfS+TWjF8+9dFeTC4ih8gfA3ISvuSNg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfJKULH (ORCPT
+        id S1729765AbfJKULL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47074 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 16:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729744AbfJKULF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:11:05 -0400
+        id S1729744AbfJKULJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 16:11:09 -0400
 Received: from quaco.ghostprotocols.net (189-94-137-67.3g.claro.net.br [189.94.137.67])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8BEA222C1;
-        Fri, 11 Oct 2019 20:11:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 291C0222D2;
+        Fri, 11 Oct 2019 20:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570824664;
-        bh=76uKKygH9fNSEkcFBhOTTQTJRh8+mIT13FxZ9wKP6/8=;
+        s=default; t=1570824668;
+        bh=skrCT3K/eqt15gi8/6EmFta2QOrmw+Yv/2qiuO/6mwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xEUH3dL/+dWNCBjUtLgMHpncrFgdKteKCo8nUYRDQKpfExfpPzmXjE2maxWAjiDRn
-         oUQbaAQSXCoYXONnrlTDoUxxlcl/hXayzuu+KIBp2w8Cy4VzHkfAKnUUU/Jes8xAPT
-         69nStEj/r/dYSy8qqKmfFahPdCZ4JZgkJC28UJwI=
+        b=NlI0sLL8VMp0CFzxWB66321rG0jSBk3OGeDpjVdwYnI9nsmT3e9Xp2WTtezNm98zl
+         pGQmW2GPt0MkrcoDtxPHnedAmavVeuaPcYMgvA6a9N6asuJUBx3wfzQVIzUNsvVDbH
+         Ij2Bv9/LTXElwLGZHD2VXZv0XCR9haRyF638vSoo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 55/69] libperf: Introduce perf_evlist__mmap_ops()
-Date:   Fri, 11 Oct 2019 17:05:45 -0300
-Message-Id: <20191011200559.7156-56-acme@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 56/69] libperf: Introduce perf_evlist_mmap_ops::idx callback
+Date:   Fri, 11 Oct 2019 17:05:46 -0300
+Message-Id: <20191011200559.7156-57-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
@@ -64,103 +64,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-To be able to pass specific callbacks to evlist's mmap.
+Add the perf_evlist_mmap_ops::idx callback to be called in
+mmap_per_cpu() and mmap_per_thread() with current cpu and thread
+indexes.
 
-There will be a specific call to this function from perf's
-evlist__mmap() and libperf's perf_evlist__mmap() functions in following
-changes.
+It's used by current aux code, so perf will use this callback to set the
+aux index.
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191007125344.14268-15-jolsa@kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20191007125344.14268-16-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c                  | 24 ++++++++++++++++++------
- tools/perf/lib/include/internal/evlist.h |  8 ++++++++
- 2 files changed, 26 insertions(+), 6 deletions(-)
+ tools/perf/lib/evlist.c                  | 18 +++++++++++++-----
+ tools/perf/lib/include/internal/evlist.h |  4 ++++
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 250ad5752589..88d63f5cd9ca 100644
+index 88d63f5cd9ca..3832d3e9a3b4 100644
 --- a/tools/perf/lib/evlist.c
 +++ b/tools/perf/lib/evlist.c
-@@ -472,12 +472,16 @@ mmap_per_cpu(struct perf_evlist *evlist, struct perf_mmap_param *mp)
- 	return -1;
+@@ -426,7 +426,8 @@ mmap_per_evsel(struct perf_evlist *evlist, int idx,
  }
  
--int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
-+int perf_evlist__mmap_ops(struct perf_evlist *evlist,
-+			  struct perf_evlist_mmap_ops *ops,
-+			  struct perf_mmap_param *mp)
+ static int
+-mmap_per_thread(struct perf_evlist *evlist, struct perf_mmap_param *mp)
++mmap_per_thread(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
++		struct perf_mmap_param *mp)
  {
- 	struct perf_evsel *evsel;
- 	const struct perf_cpu_map *cpus = evlist->cpus;
- 	const struct perf_thread_map *threads = evlist->threads;
--	struct perf_mmap_param mp;
-+
-+	if (!ops)
-+		return -EINVAL;
+ 	int thread;
+ 	int nr_threads = perf_thread_map__nr(evlist->threads);
+@@ -435,6 +436,9 @@ mmap_per_thread(struct perf_evlist *evlist, struct perf_mmap_param *mp)
+ 		int output = -1;
+ 		int output_overwrite = -1;
  
- 	if (!evlist->mmap)
- 		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
-@@ -491,13 +495,21 @@ int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
- 			return -ENOMEM;
++		if (ops->idx)
++			ops->idx(evlist, mp, thread, false);
++
+ 		if (mmap_per_evsel(evlist, thread, mp, 0, thread,
+ 				   &output, &output_overwrite))
+ 			goto out_unmap;
+@@ -448,7 +452,8 @@ mmap_per_thread(struct perf_evlist *evlist, struct perf_mmap_param *mp)
+ }
+ 
+ static int
+-mmap_per_cpu(struct perf_evlist *evlist, struct perf_mmap_param *mp)
++mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
++	     struct perf_mmap_param *mp)
+ {
+ 	int nr_threads = perf_thread_map__nr(evlist->threads);
+ 	int nr_cpus    = perf_cpu_map__nr(evlist->cpus);
+@@ -458,6 +463,9 @@ mmap_per_cpu(struct perf_evlist *evlist, struct perf_mmap_param *mp)
+ 		int output = -1;
+ 		int output_overwrite = -1;
+ 
++		if (ops->idx)
++			ops->idx(evlist, mp, cpu, true);
++
+ 		for (thread = 0; thread < nr_threads; thread++) {
+ 			if (mmap_per_evsel(evlist, cpu, mp, cpu,
+ 					   thread, &output, &output_overwrite))
+@@ -496,15 +504,15 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
  	}
  
-+	if (perf_cpu_map__empty(cpus))
-+		return mmap_per_thread(evlist, mp);
-+
-+	return mmap_per_cpu(evlist, mp);
-+}
-+
-+int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
-+{
-+	struct perf_mmap_param mp;
-+	struct perf_evlist_mmap_ops ops;
-+
- 	evlist->mmap_len = (pages + 1) * page_size;
- 	mp.mask = evlist->mmap_len - page_size - 1;
+ 	if (perf_cpu_map__empty(cpus))
+-		return mmap_per_thread(evlist, mp);
++		return mmap_per_thread(evlist, ops, mp);
  
--	if (perf_cpu_map__empty(cpus))
--		return mmap_per_thread(evlist, &mp);
--
--	return mmap_per_cpu(evlist, &mp);
-+	return perf_evlist__mmap_ops(evlist, &ops, &mp);
+-	return mmap_per_cpu(evlist, mp);
++	return mmap_per_cpu(evlist, ops, mp);
  }
  
- void perf_evlist__munmap(struct perf_evlist *evlist)
+ int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
+ {
+ 	struct perf_mmap_param mp;
+-	struct perf_evlist_mmap_ops ops;
++	struct perf_evlist_mmap_ops ops = { 0 };
+ 
+ 	evlist->mmap_len = (pages + 1) * page_size;
+ 	mp.mask = evlist->mmap_len - page_size - 1;
 diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index 4438a19ceba3..e5f092ff6202 100644
+index e5f092ff6202..053f620696f3 100644
 --- a/tools/perf/lib/include/internal/evlist.h
 +++ b/tools/perf/lib/include/internal/evlist.h
-@@ -11,6 +11,7 @@
- 
- struct perf_cpu_map;
- struct perf_thread_map;
-+struct perf_mmap_param;
- 
- struct perf_evlist {
- 	struct list_head	 entries;
-@@ -26,10 +27,17 @@ struct perf_evlist {
+@@ -27,7 +27,11 @@ struct perf_evlist {
  	struct perf_mmap	*mmap_ovw;
  };
  
-+struct perf_evlist_mmap_ops {
-+};
++typedef void
++(*perf_evlist_mmap__cb_idx_t)(struct perf_evlist*, struct perf_mmap_param*, int, bool);
 +
- int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
- int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
- 			    void *ptr, short revent);
+ struct perf_evlist_mmap_ops {
++	perf_evlist_mmap__cb_idx_t	idx;
+ };
  
-+int perf_evlist__mmap_ops(struct perf_evlist *evlist,
-+			  struct perf_evlist_mmap_ops *ops,
-+			  struct perf_mmap_param *mp);
-+
- /**
-  * __perf_evlist__for_each_entry - iterate thru all the evsels
-  * @list: list_head instance to iterate
+ int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
 -- 
 2.21.0
 
