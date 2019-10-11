@@ -2,104 +2,113 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E499BC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A30C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A8E2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6771214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:01:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REQ9n4XT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GznRhmLr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfJKTAO (ORCPT
+        id S1728899AbfJKTBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 15:00:14 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40009 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728603AbfJKTAO (ORCPT
+        Fri, 11 Oct 2019 15:01:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40806 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728738AbfJKTBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 15:00:14 -0400
-Received: by mail-ot1-f67.google.com with SMTP id y39so8858492ota.7;
-        Fri, 11 Oct 2019 12:00:13 -0700 (PDT)
+        Fri, 11 Oct 2019 15:01:47 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d26so6300154pgl.7
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 12:01:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XVzDAbcWZXdsDHTskHlN8zvp0OFOMZiiZvVTqyfK5oQ=;
-        b=REQ9n4XT5uYJfOAt1+orGDMyhg6WGHfDuJEeLvDDO4/MDCtIqfiE5UKnIbXTkSUIdo
-         wTDvve84sMTKhuPtVZIVJF6cPXzRQB36Wbcf4w90zEsN57NoO7CjmH1S7wcREdGz1BlV
-         GmCUGScx8p0Da3hcjC+Hempl1kr+Q6DjJ7TC2HOX20FMVHqe7zCjqpOI3HK6JXB/FTp1
-         pjEIdCJ8apXKars5B1BRIvZCqOT6bSvcov7k9JTtKuGS7wNzygFKR4ppaOo2BALgYYYC
-         aIZf3KZ6MJxQEvO1HUPxl+L7ZxYoy2BgduTWbr/oVb5PfEyUvGE8xnAqXAc79Wpp+PZ2
-         b0ug==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=snyWrZAMzq5lG4lRitPx2HIrUxhSjSwDEgHLW43m85M=;
+        b=GznRhmLrbiSnSNMpKRKnZtnlVJUIMgZ5Igqj7k9gAh6/KvPPfvWFNm4bhCg1Mjmon4
+         QWfPt7fCzGhhjewfN7/xsx1noFZf/yGyTuHATAyzBFFdqKhf3aUtwrWOl4/GAHGDz7wN
+         m95NHX/mg+2ktdRy+xO5ADuqFShgN1Fh+GuTUMvkFeJ5230WGT1RQ6hHyY5er+XwKBVZ
+         oHeE102rEFQdllfnccTjWkHAtgT3oTF5lt+iFboSsSp8ux7FNO64p0/Qbk/zDYcS8szC
+         6edlryYvHz1TGfH/ZKKmM956bYuizF4DOVQLn9Vo9qfQo2AVRfqN/PYmw8aKHsj3gfOm
+         SVAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XVzDAbcWZXdsDHTskHlN8zvp0OFOMZiiZvVTqyfK5oQ=;
-        b=VSf96EROhCy6br2wmM1gMiP6Vx65xt5ycGEdeqteQUWHuAZ0DNb9K0xr9GKRPOuXd4
-         JUO48boIj/yjn5DmFYA9AqAp2qlQCRla8y/27inYubulrf0/zJch94Wra56Eyz1/dPii
-         F4uHV0t+a5k+yWR/E+UCxXWISlb4p3YHg0QM1Mu1/dd2FfaomRhMzktd+YYDam1QR5gG
-         VirgQJD88TVp+C+/sv8/GroTajc7Ht9+X1fIgC6Tvq74hCpaU32ncc+JiyLpXnBPvIYE
-         9oMFOBlX3I6lpcXo8oftweVHgkReemyTOqVKLXJg0blwA6591DuBTdJgI6XavsjTNvvv
-         rc5A==
-X-Gm-Message-State: APjAAAVOr2yGsnW9okK2b6VruuNMzp2h9jtdCGq4OZib136aw/jfFFXs
-        oFnX/t7mLQiJeNwVlx+eSL8=
-X-Google-Smtp-Source: APXvYqxS4oNRrteuzDW9YVSqdV0G2YAQXYVv2QQCjhlTgH68PPgJwN8VSyesKZWAz5+MV66mdeQ9iA==
-X-Received: by 2002:a9d:67d7:: with SMTP id c23mr14470404otn.0.1570820413034;
-        Fri, 11 Oct 2019 12:00:13 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 67sm3037688otq.34.2019.10.11.12.00.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 12:00:12 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] USB: host: ohci-at91: Remove unused variable regs in at91_stop_hc
-Date:   Fri, 11 Oct 2019 11:59:50 -0700
-Message-Id: <20191011185950.1470-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=snyWrZAMzq5lG4lRitPx2HIrUxhSjSwDEgHLW43m85M=;
+        b=Gz8nbXe2vKPueUyPP/laR6ZtIK+HHUcMSWWgYghZjmfRqSWZdBh2Yq/7Y82Sdmiviz
+         kw9uxYr90QI2ApsA3aEqsoAQm73PgZtr2wsabzu/WlsBVY40sXK+Mqi3ns0UEJOKYKbd
+         4KUoLfXDqwojLCSp0WhSChjRSrzFGOy66xdQk+0x7rX7KxsvOFvXms4vyTBBNbJLrDqo
+         y4n93Fi9WV0aZyYDm/UAO4cH2hni8ZjgfGf7S+MT26qlvyCpGuevwLwZoKc7R6iQCmOE
+         ZfztehVadsYOlxhot/xtbLvObhRKva5SKdwzD7jOFzP32VFEBQHVKOlMPfMEZOFW2/dr
+         WNbA==
+X-Gm-Message-State: APjAAAWzfq3mELALei5AxfDrmJeh0H7gfkB91TWxp9fM+m4VoYwZxfYV
+        F4vXpUwr4qKg8+JQn7IaBaY=
+X-Google-Smtp-Source: APXvYqyNO2jGjTM35Zx7/wYo2IA/ONK6kVXQIM80NOoaCi6xPGZ50ucYajK+oHsuTMe+0WILniPrqg==
+X-Received: by 2002:a17:90a:2ec1:: with SMTP id h1mr19140199pjs.96.1570820506438;
+        Fri, 11 Oct 2019 12:01:46 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id q13sm11663683pfn.150.2019.10.11.12.01.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 11 Oct 2019 12:01:45 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 12:01:06 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 -next] ASoC: fsl_mqs: Move static keyword to the front
+ of declarations
+Message-ID: <20191011190105.GA18114@Asurada-Nvidia.nvidia.com>
+References: <20191011105606.19428-1-yuehaibing@huawei.com>
+ <20191011143538.15300-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011143538.15300-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/usb/host/ohci-at91.c:118:28: warning: unused variable 'regs'
-[-Wunused-variable]
-        struct ohci_regs __iomem *regs = hcd->regs;
-                                  ^
-1 warning generated.
+On Fri, Oct 11, 2019 at 10:35:38PM +0800, YueHaibing wrote:
+> gcc warn about this:
+> 
+> sound/soc/fsl/fsl_mqs.c:146:1: warning:
+>  static is not at beginning of declaration [-Wold-style-declaration]
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Fixes: 9c4567fa0a44 ("USB: host: ohci-at91: completely shutdown the controller in at91_stop_hc()")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/usb/host/ohci-at91.c | 1 -
- 1 file changed, 1 deletion(-)
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-diff --git a/drivers/usb/host/ohci-at91.c b/drivers/usb/host/ohci-at91.c
-index 513e48397743..b635c6a1b1a9 100644
---- a/drivers/usb/host/ohci-at91.c
-+++ b/drivers/usb/host/ohci-at91.c
-@@ -115,7 +115,6 @@ static void at91_start_hc(struct platform_device *pdev)
- static void at91_stop_hc(struct platform_device *pdev)
- {
- 	struct usb_hcd *hcd = platform_get_drvdata(pdev);
--	struct ohci_regs __iomem *regs = hcd->regs;
- 	struct ohci_at91_priv *ohci_at91 = hcd_to_ohci_at91_priv(hcd);
- 
- 	dev_dbg(&pdev->dev, "stop\n");
--- 
-2.23.0
-
+> ---
+> v2: Fix patch title
+> ---
+>  sound/soc/fsl/fsl_mqs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
+> index f7fc44e..0c813a4 100644
+> --- a/sound/soc/fsl/fsl_mqs.c
+> +++ b/sound/soc/fsl/fsl_mqs.c
+> @@ -143,7 +143,7 @@ static void fsl_mqs_shutdown(struct snd_pcm_substream *substream,
+>  				   MQS_EN_MASK, 0);
+>  }
+>  
+> -const static struct snd_soc_component_driver soc_codec_fsl_mqs = {
+> +static const struct snd_soc_component_driver soc_codec_fsl_mqs = {
+>  	.idle_bias_on = 1,
+>  	.non_legacy_dai_naming	= 1,
+>  };
+> -- 
+> 2.7.4
+> 
+> 
