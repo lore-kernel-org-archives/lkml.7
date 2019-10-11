@@ -2,144 +2,163 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663C4C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401FCC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1212089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:05:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="NZWgPC9Q"
+	by mail.kernel.org (Postfix) with ESMTP id 1C70D2190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:09:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfJKIEX (ORCPT
+        id S1727277AbfJKIJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:04:23 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:45126 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726827AbfJKIEX (ORCPT
+        Fri, 11 Oct 2019 04:09:56 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:33940 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfJKIJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:04:23 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 622912E14AF;
-        Fri, 11 Oct 2019 11:04:19 +0300 (MSK)
-Received: from myt5-6212ef07a9ec.qloud-c.yandex.net (myt5-6212ef07a9ec.qloud-c.yandex.net [2a02:6b8:c12:3b2d:0:640:6212:ef07])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id hR2JRYzmrd-4HN8dkmf;
-        Fri, 11 Oct 2019 11:04:19 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1570781059; bh=h9sFIApiF/a6qm0OMOKwEuhHvuC11mmk0HkBxETCqFw=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=NZWgPC9QAkDXQOgmSNwN5wMUZe+xQZy2D/OyWOCS6xepPAXToOluLXT5Oqpt1Tk3+
-         apoT4UNQMRxsYc634nI2LZiOeKyCh8WjnsKU0NEbg28P6oGibdJgHHHC1NQuYqbX4u
-         LqNaGXwX6CtRzdxtfXnzPjnTLI/q61+1g8CKHgGs=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
-        by myt5-6212ef07a9ec.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id RAO3ajsomT-4HHmU4Gd;
-        Fri, 11 Oct 2019 11:04:17 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [Patch v4 1/2] mm/rmap.c: don't reuse anon_vma if we just want a
- copy
-To:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
-        cai@lca.pw, shakeelb@google.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20191011072256.16275-1-richardw.yang@linux.intel.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <77fb8811-2c95-55d2-de90-7e9ce01267a1@yandex-team.ru>
-Date:   Fri, 11 Oct 2019 11:04:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 11 Oct 2019 04:09:55 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.2)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1iIpyn-0004vc-O9; Fri, 11 Oct 2019 10:08:54 +0200
+Message-ID: <94b8bb500cc3d6d4d740e472e5c083489740ec32.camel@sipsolutions.net>
+Subject: Re: [PATCH net-next v7 09/17] ethtool: generic handlers for GET
+ requests
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 11 Oct 2019 10:08:52 +0200
+In-Reply-To: <20191010200032.GH22163@unicorn.suse.cz>
+References: <cover.1570654310.git.mkubecek@suse.cz>
+         <b000e461e348ba1a0af30f2e8493618bce11ec12.1570654310.git.mkubecek@suse.cz>
+         <20191010135639.GJ2223@nanopsycho> <20191010180401.GD22163@unicorn.suse.cz>
+         <eb6cb68ff77eb4f2c680809e11142150f0d83007.camel@sipsolutions.net>
+         <20191010200032.GH22163@unicorn.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20191011072256.16275-1-richardw.yang@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/10/2019 10.22, Wei Yang wrote:
-> Before commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
-> hierarchy"), anon_vma_clone() doesn't change dst->anon_vma. While after
-> this commit, anon_vma_clone() will try to reuse an exist one on forking.
+On Thu, 2019-10-10 at 22:00 +0200, Michal Kubecek wrote:
 > 
-> But this commit go a little bit further for the case not forking.
-> anon_vma_clone() is called from __vma_split(), __split_vma(), copy_vma()
-> and anon_vma_fork(). For the first three places, the purpose here is get
-> a copy of src and we don't expect to touch dst->anon_vma even it is
-> NULL. While after that commit, it is possible to reuse an anon_vma when
-> dst->anon_vma is NULL. This is not we intend to have.
+> > Having a common format is way more accessible. Generic netlink (now)
+> > even exposes the policy (if set) and all of its nested sub-policies to
+> > userspace (if you use NLA_POLICY_NESTED), so it's very easy to discover
+> > what's in the policy and how it'll be interpreted.
 > 
-> This patch stop reuse anon_vma for non-fork cases.
-> 
-> Fix commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
-> hierarchy")
-> 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> This, however, would require a different design that Jiri proposed. What
+> he proposed was one attribute type for "request specific attributes".
+> But to be able to perform nested validation of the whole message and
+> export all policies would, with current genetlink design, require having
+> one such attribute type for each request type (command).
 
-Yes, reusing heuristic was designed for fork.
-But this isn't strictly necessary - any vmas could share anon_vma.
-For example all vmas in system could be linked with single anon_vma.
+Yes, indeed, that's true.
 
-Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+We actually used to have per-command policy in genetlink, but I removed
+it as there was only one user, and it would've made the introspection
+stuff a lot more complicated and it wasted quite a bit of memory in the
+ops tables for everyone else.
 
+Maybe we *do* want this back, with a nested policy pointing to the
+common like you have. Then you'd have the option to do exactly what you
+do here, but have introspection & common validation.
+
+Actually, it's only half true that we had this - it was that the
+*policy* was in the op, but the *maxattr* was in the family. This never
+really makes any sense.
+
+(IMHO we really should try to find a way to embed the maxattr into the
+family, passing both always is very tiring. Perhaps just having a
+terminator entry would be sufficient, or using a trick similar to what I
+did with strict_start_type, and putting it into the 0th entry that's
+usually unused? Even where the 0th entry *is* used, as long as the type
+isn't something that relies on the validation data, we could do that.
+But this is totally an aside...)
+
+> But that would also require an extra check that the request message
+> contains only the attribute matching its command (request type) so that
+> the validation performed by genetlink would still be incomplete (it will
+> always be incomplete as there are lots of strange constraints which
+> cannot be described by a policy).
+
+Also true, yes.
+
+> Unless you suggest to effectively have just one command and determine
+> the request type based on which of these request specific attributes is
+> present (and define what to do if there is more than one).
+
+Also possible, I guess, I can't say that's much better.
+
+> ETHTOOL_A_HEADER_RFLAGS is a constant, it's always the same. Yes,
+> logically it would rather belong outside header and maybe should be
+> replaced by a (possibly empty) set of NLA_FLAG attributes. If having it
+> in the common header is such a big problem, I'll move it out.
+
+NLA_FLAG tends to be large - I think having a bitmap is fine.
+
+Btw, you can also have a common *fixed* header in the genetlink family.
+I don't think anyone does that, but it's possible.
+
+> > But you even have *two* policies for each kind of message, one for the
+> > content and one for the header...?
 > 
-> ---
-> v4:
->    * check dst->anon_vma in each iteration
-> v3:
->    * use dst->anon_vma and src->anon_vma to get reuse state
->      pointed by Konstantin Khlebnikov
-> ---
->   mm/rmap.c | 24 +++++++++++++++---------
->   1 file changed, 15 insertions(+), 9 deletions(-)
+> As I said in reply to another patch, it turns out that the only reason
+> for having a per request header policy was rejecting
+> ETHTOOL_A_HEADER_RFLAGS for requests which do not define any request
+> flags but that's probably an overkill so that one universal header
+> policy would be sufficient.
+
+Missed that, OK.
+
+> > It almost seems though that your argument isn't so much on the actual
+> > hierarchy/nesting structure of the message itself, but the easy of
+> > parsing it?
 > 
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index d9a23bb773bf..c34414567474 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -250,13 +250,19 @@ static inline void unlock_anon_vma_root(struct anon_vma *root)
->    * Attach the anon_vmas from src to dst.
->    * Returns 0 on success, -ENOMEM on failure.
->    *
-> - * If dst->anon_vma is NULL this function tries to find and reuse existing
-> - * anon_vma which has no vmas and only one child anon_vma. This prevents
-> - * degradation of anon_vma hierarchy to endless linear chain in case of
-> - * constantly forking task. On the other hand, an anon_vma with more than one
-> - * child isn't reused even if there was no alive vma, thus rmap walker has a
-> - * good chance of avoiding scanning the whole hierarchy when it searches where
-> - * page is mapped.
-> + * anon_vma_clone() is called by __vma_split(), __split_vma(), copy_vma() and
-> + * anon_vma_fork(). The first three want an exact copy of src, while the last
-> + * one, anon_vma_fork(), may try to reuse an existing anon_vma to prevent
-> + * endless growth of anon_vma. Since dst->anon_vma is set to NULL before call,
-> + * we can identify this case by checking (!dst->anon_vma && src->anon_vma).
-> + *
-> + * If (!dst->anon_vma && src->anon_vma) is true, this function tries to find
-> + * and reuse existing anon_vma which has no vmas and only one child anon_vma.
-> + * This prevents degradation of anon_vma hierarchy to endless linear chain in
-> + * case of constantly forking task. On the other hand, an anon_vma with more
-> + * than one child isn't reused even if there was no alive vma, thus rmap
-> + * walker has a good chance of avoiding scanning the whole hierarchy when it
-> + * searches where page is mapped.
->    */
->   int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->   {
-> @@ -286,8 +292,8 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->   		 * will always reuse it. Root anon_vma is never reused:
->   		 * it has self-parent reference and at least one child.
->   		 */
-> -		if (!dst->anon_vma && anon_vma != src->anon_vma &&
-> -				anon_vma->degree < 2)
-> +		if (!dst->anon_vma && src->anon_vma &&
-> +		    anon_vma != src->anon_vma && anon_vma->degree < 2)
->   			dst->anon_vma = anon_vma;
->   	}
->   	if (dst->anon_vma)
-> 
+> It's both. I still feel that from logical point of view it makes much
+> more sense to use top level attributes for what the message is actually
+> about. Nothing you said convinced me otherwise, rather the opposite: it
+> only confirmed that the only reason for hiding the actual request
+> contents one level below is to work around the consequences of the
+> decision to make policy in genetlink per family rather than per command.
+
+As I said above, it was actually the other way around and I changed it
+relatively recently.
+
+I don't have any strong objections to changing that really, it just
+wasn't really used by anyone.
+
+> I still don't see any reason why all this could not work with per
+> command policies and would be principially dependent on having one
+> universal policy for the whole family.
+
+True, it just makes the code to expose it more complex (and uses more
+space in the ops tables.)
+
+If we do bring that back then IMHO it should be done properly and not
+have a maxattr in the family, but with each policy. There could still
+be a single maxattr (that must be >= max of all maxattrs) for the whole
+family to ease allocation, but that could also just be derived as the
+max(maxattr of all possible policies) at family registration time.
+
+I'm almost thinking if we do that we should have a "struct
+genl_ops_with_policy" and a second ops pointer in the family, so that
+families not using this don't have to have a policy pointer & maxattr
+for each op, the op struct now is 5 pointers long, so adding
+policy/maxattr would cost us an increase of 20% on 64-bit and 40% on 32-
+bit ... For families that don't need it, that's pretty large.
+
+johannes
+
