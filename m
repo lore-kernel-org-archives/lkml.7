@@ -2,107 +2,176 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A85ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CC9C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E69C214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1435214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="QS6pxmtW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+WIECfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfJKF4Y (ORCPT
+        id S1727186AbfJKF4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 01:56:24 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44565 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfJKF4W (ORCPT
+        Fri, 11 Oct 2019 01:56:43 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:38138 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfJKF4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 01:56:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z9so10383395wrl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 22:56:21 -0700 (PDT)
+        Fri, 11 Oct 2019 01:56:43 -0400
+Received: by mail-yw1-f65.google.com with SMTP id s6so3078923ywe.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 22:56:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mddOv/kniAW1h65FFS1ER017AgO05a4Gs6LK6egWamM=;
-        b=QS6pxmtWmP720XjrWTu2qiOFWZhrlSSkOb8XhEaBgUhLtEYaOTvlE/fp6e27AB1EdI
-         DxQeRjF5QZGWhtC/XZkT3KcSGqy/xtRXAqMZkoFMDODXGf2+v805m3/mOlb+ikO63vMH
-         nTdvYSQUApRvx57FjtmfPMe4OcGg2bOmicea/EDH0l/Odlwp2dTlPxcFuNM720SsH/jd
-         QnaRGzba3cyYfeT1PoYclhU+CjZYDCmTLsYt845kaxK4I2SC+iTKElnFp6Gcqr6lp2Zc
-         +NAQBjWNB5XOU2WRBuOroVci76wqRvtvikXni03vxe2AmTJkTyY9KcpQMxrw7x2lw0Ad
-         tfbg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pe6e9mNl/y0Gbnhlz0OK+rTALdS40mdMde2Yhq6pRx4=;
+        b=J+WIECfJvoDfcmVnvSSBIZ4lNss2OgFow+NE64WEmLj/C9nSi5FbKuwHQr1GIMC0Yi
+         OA/dKcBPrbvi2PsqXUglXBW0UsH9BPsNcRz5nR9xyCWKr1pBrh8RPor7oujvR3fnJweD
+         E87uoLOUeUEtU2yJDO6g9bGzTblY+0i02TDSS9+E2n+PCk5QlknLelEdFq77/fvfmWoo
+         yXab8s2H1jag3DQ+ydbKr4IJ/x/1sJG0BXwjm11tn1wXZnw/UpxjWKanh+xC53DKFQWY
+         2fhgRfkrpdHpGGShABubbyl2MBd4GAW20/7A+j5xT8be423rVJFa9fMIAaUv31cemTHB
+         s6Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mddOv/kniAW1h65FFS1ER017AgO05a4Gs6LK6egWamM=;
-        b=t26aQo9cIn4az9To/STa23A03NvfIU9AzdOaiVVPg2lhg2dLTfnTWXRGVPYqPI9Gfi
-         w6N8Pt0OE3rqR8CHHwC5LNShX0ACJ4xdSIFz9iB3D8pAdpfhP1RCrAf1LyjAhB5e5KIf
-         tTvLcobIajDn5zVfHRRaf4icbfNCzMaETn4JdxZ/2u5TKv2OxHC+kqGmrzs0E9HEPsnd
-         GX5VqB57cNVz11QA2wJLw00XetKi+NU4YhDVGp/2vKB6U1innndN0xAD3U/N8rLy1KIY
-         6d8hS9C2PsYXLT7pRYt7LJOUtgnFQIZ9mvT7J22iIbNKZ1MnmLAngHAYKdapyLY/JKZK
-         kpBQ==
-X-Gm-Message-State: APjAAAUAv4xOQc4sFP+qTu+5KkjYLTWJQGdNV9AAhofXHIdM0f6iD+4o
-        G+MuPRbbPFbljPs+II0YWJ6k8A==
-X-Google-Smtp-Source: APXvYqyw8JXPeToMHbhUF/ZzWijmw1b+DbRa9QJcpT00z2ZZ/fTT8SZCawKp6bX+U/8ROQ7THIHGcw==
-X-Received: by 2002:a5d:55ca:: with SMTP id i10mr2880932wrw.12.1570773380351;
-        Thu, 10 Oct 2019 22:56:20 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id n26sm5815692wmd.42.2019.10.10.22.56.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 22:56:19 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 07:56:19 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 13/17] ethtool: add standard notification
- handler
-Message-ID: <20191011055619.GC2901@nanopsycho>
-References: <cover.1570654310.git.mkubecek@suse.cz>
- <ac2fef494116db9d4679f4501f1be6a7898ef724.1570654310.git.mkubecek@suse.cz>
- <20191010152559.GA2994@nanopsycho>
- <20191010181743.GF22163@unicorn.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pe6e9mNl/y0Gbnhlz0OK+rTALdS40mdMde2Yhq6pRx4=;
+        b=mqWsdkv6BdrgMOW8JhjAeRKcobgG0IkCD+ubzTSreJ5RaJCidQ2qZ1rIHdNFXQf3iN
+         Y0JlIp5uAu1MOSTLzTwNS0niPNclsbrjF+M0WchbV1m7GRfuV3/x86AWG1sH//7cfYJo
+         CskXjN7tiE5kJIKkv3Rju5M21COVzon5iJniGK9zArIWHFv94ih13B+mU8stjZE4IFJ4
+         iFbIs/U3ZkKwoz/aK/uuVPNJlxIfnwrSFPvyFiI9X/MkVTua5XUzfDUUCcAj2zbM0kJF
+         FxArojux5kenYAZekufyp1LAYaLSuLKYlQqDrf2jVNRX7dmBAsE7z5AyzYNjkXHMoGNp
+         QUkA==
+X-Gm-Message-State: APjAAAV++EyDMyXWGwbiWN+iMhyz0Anl+5b/XAtgnxWQbPlPqj7Ferhz
+        IdtheHcvjbyy3DKsZbJf16xOPkJrR5dZqSqgjMc=
+X-Google-Smtp-Source: APXvYqxX5Ag0UvYinmkF5SB7/dX0f1cfnLGQ4rgibnQ/l3STGcAuL5YynQVyOviGB+3r1+YI979fSLdXYgQZkCa4wKg=
+X-Received: by 2002:a81:4320:: with SMTP id q32mr1039014ywa.464.1570773402419;
+ Thu, 10 Oct 2019 22:56:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010181743.GF22163@unicorn.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1569483508-18768-1-git-send-email-candlesea@gmail.com>
+ <20190930153437.ocatny7u4z3oj7k2@willie-the-truck> <CAPnx3XMqnQ4R=_gkL6Rye=4adV=qCRUs2sm5A6kJccDCQ82xnw@mail.gmail.com>
+In-Reply-To: <CAPnx3XMqnQ4R=_gkL6Rye=4adV=qCRUs2sm5A6kJccDCQ82xnw@mail.gmail.com>
+From:   Candle Sun <candlesea@gmail.com>
+Date:   Fri, 11 Oct 2019 13:56:31 +0800
+Message-ID: <CAPnx3XN99m8NH31eHrK+tpeUXy0DLUmTppd0Q3TskSGj2e_FPg@mail.gmail.com>
+Subject: Re: [RESEND PATCH] ARM/hw_breakpoint: add ARMv8.1/ARMv8.2 debug
+ architecutre versions support in enable_monitor_mode()
+To:     Will Deacon <will@kernel.org>
+Cc:     mark.rutland@arm.com, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thu, Oct 10, 2019 at 08:17:43PM CEST, mkubecek@suse.cz wrote:
->On Thu, Oct 10, 2019 at 05:25:59PM +0200, Jiri Pirko wrote:
->> Wed, Oct 09, 2019 at 10:59:40PM CEST, mkubecek@suse.cz wrote:
+Will,
+Is the patch useful for you? Would you please give me some suggestions?
+Thank you.
 
-[...]
+Regards,
+Candle
 
 
->> >+
->> >+/* generic notification handler */
->> >+static void ethnl_std_notify(struct net_device *dev, unsigned int cmd,
->> 
->> Better "common" comparing to "standard", I believe.
+On Tue, Oct 8, 2019 at 3:20 PM Candle Sun <candlesea@gmail.com> wrote:
 >
->That's similar to ethnl_std_parse(), the idea is that this is the
->standard handler for notifications which are triggered without
->additional data and the message is the same as reply to corresponding
->"GET" request (which is generated by the standard ethnl_get_doit()
->handler). Notifications for actions and notifications for SET commands
->which cannot be generated this standard way will have to use their own
->(nonstandard) handler.
-
-So "default"? The "standard" sounds rather weird to me. It isn't any
-"standard" :)
+> Hi Will,
+> Sorry for not instant respond.
+>
+>
+> On Mon, Sep 30, 2019 at 11:34 PM Will Deacon <will@kernel.org> wrote:
+> >
+> > On Thu, Sep 26, 2019 at 03:38:28PM +0800, Candle Sun wrote:
+> > > From: Candle Sun <candle.sun@unisoc.com>
+> > >
+> > > When ARMv8.1/ARMv8.2 cores are used in AArch32 mode,
+> > > arch_hw_breakpoint_init() in arch/arm/kernel/hw_breakpoint.c will be used.
+> > >
+> > > From ARMv8 specification, different debug architecture versions defined:
+> > > * 0110 ARMv8, v8 Debug architecture.
+> > > * 0111 ARMv8.1, v8 Debug architecture, with Virtualization Host Extensions.
+> > > * 1000 ARMv8.2, v8.2 Debug architecture.
+> > >
+> > > So missing ARMv8.1/ARMv8.2 cases will cause enable_monitor_mode() function
+> > > returns -ENODEV, and arch_hw_breakpoint_init() will fail.
+> > >
+> > > Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+> > > Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+> > > ---
+> > >  arch/arm/include/asm/hw_breakpoint.h | 2 ++
+> > >  arch/arm/kernel/hw_breakpoint.c      | 2 ++
+> > >  2 files changed, 4 insertions(+)
+> >
+> > How did you test this?
+> >
+> > Will
+>
+> We have the SoC with A55 cores. On one Android project, for saving memory usage,
+> we let A55 run in aarch32 mode.
+> While the following failures occue on Android CtsBionicTestCases:
+> --sys_ptrace#watchpoint_imprecisede
+> --sys_ptrace#hardware_breakpoint
+> --sys_ptrace#watchpoint_stress
+>
+> The code snippet for testing is:
+>
+> static void check_hw_feature_supported(pid_t child, HwFeature feature) {
+> #if defined(__arm__)
+>   long capabilities;
+>   long result = ptrace(PTRACE_GETHBPREGS, child, 0, &capabilities);
+>   if (result == -1) {
+>     EXPECT_EQ(EIO, errno);
+>     GTEST_SKIP() << "Hardware debug support disabled at kernel
+> configuration time";
+>   }
+>   uint8_t hb_count = capabilities & 0xff;
+>   capabilities >>= 8;
+>   uint8_t wp_count = capabilities & 0xff;
+>   capabilities >>= 8;
+>   uint8_t max_wp_size = capabilities & 0xff;
+>   if (max_wp_size == 0) {
+>     GTEST_SKIP() << "Kernel reports zero maximum watchpoint size";
+>   } else if (feature == HwFeature::Watchpoint && wp_count == 0) {
+>     GTEST_SKIP() << "Kernel reports zero hardware watchpoints";
+>   } else if (feature == HwFeature::Breakpoint && hb_count == 0) {
+>     GTEST_SKIP() << "Kernel reports zero hardware breakpoints";
+>   }
+> #elif defined(__aarch64__)
+>   user_hwdebug_state dreg_state;
+>   iovec iov;
+>   iov.iov_base = &dreg_state;
+>   iov.iov_len = sizeof(dreg_state);
+>
+>   long result = ptrace(PTRACE_GETREGSET, child,
+>                        feature == HwFeature::Watchpoint ?
+> NT_ARM_HW_WATCH : NT_ARM_HW_BREAK, &iov);
+>   if (result == -1) {
+>     ASSERT_EQ(EINVAL, errno);
+>   }
+>   if ((dreg_state.dbg_info & 0xff) == 0) GTEST_SKIP() << "hardware
+> support missing";
+> #else
+>   // We assume watchpoints and breakpoints are always supported on x86.
+>   UNUSED(child);
+>   UNUSED(feature);
+> #endif
+> }
+>
+> The max_wp_size field returned by __ptrace() from kernel is zero,
+> which causes the test failures.
+>
+> After futher analysis, we found max_watchpoint_len variable is not
+> right initialized in kernel
+> arch_hw_breakpoint_init() function. Missing the case of ARM_DEBUG_ARCH_V8_2 in
+> enable_monitor_mode() directly aborts the arch_hw_breakpoint_int().
+>
+> Candle
+> Best regards
