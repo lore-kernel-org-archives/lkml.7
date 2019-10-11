@@ -2,150 +2,98 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EF5ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0478ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 397212064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6A92064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbfJKNxb (ORCPT
+        id S1728287AbfJKNyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:53:31 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3696 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728120AbfJKNxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:53:30 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9002AA65242DDACB8E30;
-        Fri, 11 Oct 2019 21:53:25 +0800 (CST)
-Received: from localhost (10.133.215.230) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
- 21:53:18 +0800
-From:   Zhuang Yanying <ann.zhuangyanying@huawei.com>
-To:     <ann.zhuangyanying@huawei.com>, <linfeng23@huawei.com>,
-        <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>
-CC:     <weiqi4@huawei.com>, <weidong.huang@huawei.com>
-Subject: [PATCH] KVM: fix overflow of zero page refcount  ksm use_zero_pages
-Date:   Fri, 11 Oct 2019 21:53:13 +0800
-Message-ID: <1570801993-26536-1-git-send-email-ann.zhuangyanying@huawei.com>
-X-Mailer: git-send-email 1.9.5.msysgit.1
+        Fri, 11 Oct 2019 09:54:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:32948 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727589AbfJKNyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:54:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57196337;
+        Fri, 11 Oct 2019 06:54:35 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A545F3F68E;
+        Fri, 11 Oct 2019 06:54:33 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 14:54:31 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        rnayak@codeaurora.org, suzuki.poulose@arm.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, andrew.murray@arm.com,
+        will@kernel.org, Dave.Martin@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
+Message-ID: <20191011135431.GB33537@lakrids.cambridge.arm.com>
+References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
+ <20191011105010.GA29364@lakrids.cambridge.arm.com>
+ <20191011143343.541da66c@why>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.215.230]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011143343.541da66c@why>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are testing Virtual Machine with KSM on v5.4-rc2 kernel,
-and found the zero_page refcount overflow.
-The cause of refcount overflow is increased in try_async_pf
-(get_user_page) without being decreased in mmu_set_spte()
-while handling ept violation.
-In kvm_release_pfn_clean(), only unreserved page will call
-put_page. However, zero page is reserved.
-So, as well as creating and destroy vm, the refcount of
-zero page will continue to increase until it overflows.
+On Fri, Oct 11, 2019 at 02:33:43PM +0100, Marc Zyngier wrote:
+> On Fri, 11 Oct 2019 11:50:11 +0100
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> > Hi,
+> > 
+> > On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:
+> > > On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
+> > > warnings are observed during bootup of big cpu cores.  
+> > 
+> > For reference, which CPUs are in those SoCs?
+> > 
+> > > SM8150:
+> > > 
+> > > [    0.271177] CPU features: SANITY CHECK: Unexpected variation in
+> > > SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 0x00000011111112  
+> > 
+> > The differing fields are EL3, EL2, and EL1: the boot CPU supports
+> > AArch64 and AArch32 at those exception levels, while the secondary only
+> > supports AArch64.
+> > 
+> > Do we handle this variation in KVM?
+> 
+> We do, at least at vcpu creation time (see kvm_reset_vcpu). But if one
+> of the !AArch32 CPU comes in late in the game (after we've started a
+> guest), all bets are off (we'll schedule the 32bit guest on that CPU,
+> enter the guest, immediately take an Illegal Exception Return, and
+> return to userspace with KVM_EXIT_FAIL_ENTRY).
 
-step1:
-echo 10000 > /sys/kernel/pages_to_scan/pages_to_scan
-echo 1 > /sys/kernel/pages_to_scan/run
-echo 1 > /sys/kernel/pages_to_scan/use_zero_pages
+Ouch. We certainly can't remove the warning untill we deal with that
+somehow, then.
 
-step2:
-just create several normal qemu kvm vms.
-And destroy it after 10s.
-Repeat this action all the time.
+> Not sure we could do better, given the HW. My preference would be to
+> fail these CPUs if they aren't present at boot time.
 
-After a long period of time, all domains hang because
-of the refcount of zero page overflow.
+I agree; I think we need logic to check the ID register fields against
+their EXACT, {LOWER,HIGHER}_SAFE, etc rules regardless of whether we
+have an associated cap. That can then abort a late onlining of a CPU
+which violates those rules w.r.t. the finalised system value.
 
-Qemu print error log as follow:
- …
- error: kvm run failed Bad address
- EAX=00006cdc EBX=00000008 ECX=80202001 EDX=078bfbfd
- ESI=ffffffff EDI=00000000 EBP=00000008 ESP=00006cc4
- EIP=000efd75 EFL=00010002 [-------] CPL=0 II=0 A20=1 SMM=0 HLT=0
- ES =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- CS =0008 00000000 ffffffff 00c09b00 DPL=0 CS32 [-RA]
- SS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- DS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- FS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- GS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- LDT=0000 00000000 0000ffff 00008200 DPL=0 LDT
- TR =0000 00000000 0000ffff 00008b00 DPL=0 TSS32-busy
- GDT=     000f7070 00000037
- IDT=     000f70ae 00000000
- CR0=00000011 CR2=00000000 CR3=00000000 CR4=00000000
- DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 DR3=0000000000000000
- DR6=00000000ffff0ff0 DR7=0000000000000400
- EFER=0000000000000000
- Code=00 01 00 00 00 e9 e8 00 00 00 c7 05 4c 55 0f 00 01 00 00 00 <8b> 35 00 00 01 00 8b 3d 04 00 01 00 b8 d8 d3 00 00 c1 e0 08 0c ea a3 00 00 01 00 c7 05 04
- …
+I suspect that we may want to split the notion of
+safe-for-{user,kernel-guest} in the feature tables, as if nothing else
+it will force us to consider those cases separately when adding new
+stuff.
 
-Meanwhile, a kernel warning is departed.
-
- [40914.836375] WARNING: CPU: 3 PID: 82067 at ./include/linux/mm.h:987 try_get_page+0x1f/0x30
- [40914.836412] CPU: 3 PID: 82067 Comm: CPU 0/KVM Kdump: loaded Tainted: G           OE     5.2.0-rc2 #5
- [40914.836415] RIP: 0010:try_get_page+0x1f/0x30
- [40914.836417] Code: 40 00 c3 0f 1f 84 00 00 00 00 00 48 8b 47 08 a8 01 75 11 8b 47 34 85 c0 7e 10 f0 ff 47 34 b8 01 00 00 00 c3 48 8d 78 ff eb e9 <0f> 0b 31 c0 c3 66 90 66 2e 0f 1f 84 00 0
- 0 00 00 00 48 8b 47 08 a8
- [40914.836418] RSP: 0018:ffffb4144e523988 EFLAGS: 00010286
- [40914.836419] RAX: 0000000080000000 RBX: 0000000000000326 RCX: 0000000000000000
- [40914.836420] RDX: 0000000000000000 RSI: 00004ffdeba10000 RDI: ffffdf07093f6440
- [40914.836421] RBP: ffffdf07093f6440 R08: 800000424fd91225 R09: 0000000000000000
- [40914.836421] R10: ffff9eb41bfeebb8 R11: 0000000000000000 R12: ffffdf06bbd1e8a8
- [40914.836422] R13: 0000000000000080 R14: 800000424fd91225 R15: ffffdf07093f6440
- [40914.836423] FS:  00007fb60ffff700(0000) GS:ffff9eb4802c0000(0000) knlGS:0000000000000000
- [40914.836425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- [40914.836426] CR2: 0000000000000000 CR3: 0000002f220e6002 CR4: 00000000003626e0
- [40914.836427] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- [40914.836427] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- [40914.836428] Call Trace:
- [40914.836433]  follow_page_pte+0x302/0x47b
- [40914.836437]  __get_user_pages+0xf1/0x7d0
- [40914.836441]  ? irq_work_queue+0x9/0x70
- [40914.836443]  get_user_pages_unlocked+0x13f/0x1e0
- [40914.836469]  __gfn_to_pfn_memslot+0x10e/0x400 [kvm]
- [40914.836486]  try_async_pf+0x87/0x240 [kvm]
- [40914.836503]  tdp_page_fault+0x139/0x270 [kvm]
- [40914.836523]  kvm_mmu_page_fault+0x76/0x5e0 [kvm]
- [40914.836588]  vcpu_enter_guest+0xb45/0x1570 [kvm]
- [40914.836632]  kvm_arch_vcpu_ioctl_run+0x35d/0x580 [kvm]
- [40914.836645]  kvm_vcpu_ioctl+0x26e/0x5d0 [kvm]
- [40914.836650]  do_vfs_ioctl+0xa9/0x620
- [40914.836653]  ksys_ioctl+0x60/0x90
- [40914.836654]  __x64_sys_ioctl+0x16/0x20
- [40914.836658]  do_syscall_64+0x5b/0x180
- [40914.836664]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- [40914.836666] RIP: 0033:0x7fb61cb6bfc7
-
-Signed-off-by: LinFeng <linfeng23@huawei.com>
-Signed-off-by: Zhuang Yanying <ann.zhuangyanying@huawei.com>
----
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index fd68fbe..1f1d731 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -152,7 +152,7 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
- bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
- {
- 	if (pfn_valid(pfn))
--		return PageReserved(pfn_to_page(pfn));
-+		return PageReserved(page) && !is_zero_pfn(pfn);
- 
- 	return true;
- }
--- 
-1.8.3.1
-
-
+Thanks,
+Mark.
