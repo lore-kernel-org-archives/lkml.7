@@ -2,127 +2,191 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEEEECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64765C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417A920659
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335242196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:26:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="eC1VKdI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfJKHYF (ORCPT
+        id S1727609AbfJKH0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 03:24:05 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3767 "EHLO mga18.intel.com"
+        Fri, 11 Oct 2019 03:26:39 -0400
+Received: from fd.dlink.ru ([178.170.168.18]:45558 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbfJKHYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 03:24:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 00:24:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,283,1566889200"; 
-   d="scan'208";a="219306373"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Oct 2019 00:24:01 -0700
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
-        khlebnikov@yandex-team.ru, cai@lca.pw, shakeelb@google.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [Patch v4 2/2] mm/rmap.c: reuse mergeable anon_vma as parent when fork
-Date:   Fri, 11 Oct 2019 15:22:56 +0800
-Message-Id: <20191011072256.16275-2-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191011072256.16275-1-richardw.yang@linux.intel.com>
-References: <20191011072256.16275-1-richardw.yang@linux.intel.com>
+        id S1726679AbfJKH0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 03:26:38 -0400
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 078D31B219E5; Fri, 11 Oct 2019 10:26:36 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 078D31B219E5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1570778796; bh=dOAAmZ8hjSoImka9riHogX7F0mjdr4LsS8gu4vN8Q+E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=eC1VKdI0CIfK20AIvg3zUMydFtaRLCQ9SiSDSYK30/YYpdbbrFxzHEpdqjrpAQXEX
+         ewvEBaClc23mzWj+q3pXjvadx5ne/6XlHPAon0OBErf2lidTmzJKVBNBxAPIcKd5IA
+         NmsXvXEAK0jdF1C333CI79lJ8oryNuHz3fuBv6SY=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id D5F141B219E0;
+        Fri, 11 Oct 2019 10:26:32 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru D5F141B219E0
+Received: by mail.rzn.dlink.ru (Postfix, from userid 5000)
+        id C2B1B1B2192D; Fri, 11 Oct 2019 10:26:32 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA id 156C41B2023E;
+        Fri, 11 Oct 2019 10:26:25 +0300 (MSK)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 11 Oct 2019 10:26:25 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Edward Cree <ecree@solarflare.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next1/2] net: core: use listified Rx for GRO_NORMAL in
+ napi_gro_receive()
+In-Reply-To: <bb454c3c-1d86-f81e-a03e-86f8de3e9822@solarflare.com>
+References: <20191010144226.4115-1-alobakin@dlink.ru>
+ <20191010144226.4115-2-alobakin@dlink.ru>
+ <bb454c3c-1d86-f81e-a03e-86f8de3e9822@solarflare.com>
+Message-ID: <e7eaf0a1d236dda43f5cd73887ecfb9d@dlink.ru>
+X-Sender: alobakin@dlink.ru
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function __anon_vma_prepare(), we will try to find anon_vma if it is
-possible to reuse it. While on fork, the logic is different.
+Edward Cree wrote 10.10.2019 21:23:
+> On 10/10/2019 15:42, Alexander Lobakin wrote:
+>> Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
+>> skbs") made use of listified skb processing for the users of
+>> napi_gro_frags().
+>> The same technique can be used in a way more common napi_gro_receive()
+>> to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers,
+>> including gro_cells and mac80211 users.
+>> 
+>> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+>> ---
+>>  net/core/dev.c | 49 +++++++++++++++++++++++++------------------------
+>>  1 file changed, 25 insertions(+), 24 deletions(-)
+>> 
+>> diff --git a/net/core/dev.c b/net/core/dev.c
+>> index 8bc3dce71fc0..a33f56b439ce 100644
+>> --- a/net/core/dev.c
+>> +++ b/net/core/dev.c
+>> @@ -5884,6 +5884,26 @@ struct packet_offload 
+>> *gro_find_complete_by_type(__be16 type)
+>>  }
+>>  EXPORT_SYMBOL(gro_find_complete_by_type);
+>> 
+>> +/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
+>> +static void gro_normal_list(struct napi_struct *napi)
+>> +{
+>> +	if (!napi->rx_count)
+>> +		return;
+>> +	netif_receive_skb_list_internal(&napi->rx_list);
+>> +	INIT_LIST_HEAD(&napi->rx_list);
+>> +	napi->rx_count = 0;
+>> +}
+>> +
+>> +/* Queue one GRO_NORMAL SKB up for list processing.  If batch size 
+>> exceeded,
+>> + * pass the whole batch up to the stack.
+>> + */
+>> +static void gro_normal_one(struct napi_struct *napi, struct sk_buff 
+>> *skb)
+>> +{
+>> +	list_add_tail(&skb->list, &napi->rx_list);
+>> +	if (++napi->rx_count >= gro_normal_batch)
+>> +		gro_normal_list(napi);
+>> +}
+>> +
+>>  static void napi_skb_free_stolen_head(struct sk_buff *skb)
+>>  {
+>>  	skb_dst_drop(skb);
+>> @@ -5891,12 +5911,13 @@ static void napi_skb_free_stolen_head(struct 
+>> sk_buff *skb)
+>>  	kmem_cache_free(skbuff_head_cache, skb);
+>>  }
+>> 
+>> -static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff 
+>> *skb)
+>> +static gro_result_t napi_skb_finish(struct napi_struct *napi,
+>> +				    struct sk_buff *skb,
+>> +				    gro_result_t ret)
+> Any reason why the argument order here is changed around?
 
-Since commit 5beb49305251 ("mm: change anon_vma linking to fix
-multi-process server scalability issue"), function anon_vma_clone()
-tries to allocate new anon_vma for child process. But the logic here
-will allocate a new anon_vma for each vma, even in parent this vma
-is mergeable and share the same anon_vma with its sibling. This may do
-better for scalability issue, while it is not necessary to do so
-especially after interval tree is used.
+Actually yes: to match napi_skb_finish() and napi_frags_finish()
+prototypes, as gro_normal one() required an addition of napi
+argument anyway.
 
-Commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma hierarchy")
-tries to reuse some anon_vma by counting child anon_vma and attached
-vmas. While for those mergeable anon_vmas, we can just reuse it and not
-necessary to go through the logic.
+> 
+> -Ed
+>>  {
+>>  	switch (ret) {
+>>  	case GRO_NORMAL:
+>> -		if (netif_receive_skb_internal(skb))
+>> -			ret = GRO_DROP;
+>> +		gro_normal_one(napi, skb);
+>>  		break;
+>> 
+>>  	case GRO_DROP:
+>> @@ -5928,7 +5949,7 @@ gro_result_t napi_gro_receive(struct napi_struct 
+>> *napi, struct sk_buff *skb)
+>> 
+>>  	skb_gro_reset_offset(skb);
+>> 
+>> -	ret = napi_skb_finish(dev_gro_receive(napi, skb), skb);
+>> +	ret = napi_skb_finish(napi, skb, dev_gro_receive(napi, skb));
+>>  	trace_napi_gro_receive_exit(ret);
+>> 
+>>  	return ret;
+>> @@ -5974,26 +5995,6 @@ struct sk_buff *napi_get_frags(struct 
+>> napi_struct *napi)
+>>  }
+>>  EXPORT_SYMBOL(napi_get_frags);
+>> 
+>> -/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
+>> -static void gro_normal_list(struct napi_struct *napi)
+>> -{
+>> -	if (!napi->rx_count)
+>> -		return;
+>> -	netif_receive_skb_list_internal(&napi->rx_list);
+>> -	INIT_LIST_HEAD(&napi->rx_list);
+>> -	napi->rx_count = 0;
+>> -}
+>> -
+>> -/* Queue one GRO_NORMAL SKB up for list processing.  If batch size 
+>> exceeded,
+>> - * pass the whole batch up to the stack.
+>> - */
+>> -static void gro_normal_one(struct napi_struct *napi, struct sk_buff 
+>> *skb)
+>> -{
+>> -	list_add_tail(&skb->list, &napi->rx_list);
+>> -	if (++napi->rx_count >= gro_normal_batch)
+>> -		gro_normal_list(napi);
+>> -}
+>> -
+>>  static gro_result_t napi_frags_finish(struct napi_struct *napi,
+>>  				      struct sk_buff *skb,
+>>  				      gro_result_t ret)
 
-After this change, kernel build test reduces 20% anon_vma allocation.
-
-Do the same kernel build test, it shows run time in sys reduced 11.6%.
-
-Origin:
-
-real    2m50.467s
-user    17m52.002s
-sys     1m51.953s
-
-real    2m48.662s
-user    17m55.464s
-sys     1m50.553s
-
-real    2m51.143s
-user    17m59.687s
-sys     1m53.600s
-
-Patched:
-
-real	2m39.933s
-user	17m1.835s
-sys	1m38.802s
-
-real	2m39.321s
-user	17m1.634s
-sys	1m39.206s
-
-real	2m39.575s
-user	17m1.420s
-sys	1m38.845s
-
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
----
- mm/rmap.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/mm/rmap.c b/mm/rmap.c
-index c34414567474..2c13e2bfd393 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -268,6 +268,19 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
- {
- 	struct anon_vma_chain *avc, *pavc;
- 	struct anon_vma *root = NULL;
-+	struct vm_area_struct *prev = dst->vm_prev, *pprev = src->vm_prev;
-+
-+	/*
-+	 * If parent share anon_vma with its vm_prev, keep this sharing in in
-+	 * child.
-+	 *
-+	 * 1. Parent has vm_prev, which implies we have vm_prev.
-+	 * 2. Parent and its vm_prev have the same anon_vma.
-+	 */
-+	if (!dst->anon_vma && src->anon_vma &&
-+	    pprev && pprev->anon_vma == src->anon_vma)
-+		dst->anon_vma = prev->anon_vma;
-+
- 
- 	list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
- 		struct anon_vma *anon_vma;
--- 
-2.17.1
-
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
