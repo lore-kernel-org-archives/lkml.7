@@ -2,180 +2,101 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCAFC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2875ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EE021835
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82267206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:26:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C1fId8FI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3PBlTde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbfJKT0H (ORCPT
+        id S1729006AbfJKT0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 15:26:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59566 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728776AbfJKT0G (ORCPT
+        Fri, 11 Oct 2019 15:26:15 -0400
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:39456 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728903AbfJKT0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 15:26:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570821965;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cpiu7s7hf2nZP0WQJjeZFG1TgT08vZqZIEI3ha/hazE=;
-        b=C1fId8FIlXbEHv1L+7W+bkoE0V0nu5bYzCkSrAvt9ZqNmqXLT9FUp4qRGFPmup68g6+tzO
-        +inbSet0+lmmxGfgmrPZSIerf3M2sxCficpIctj3adW8UWdHUwoyUHKstGU6ATbzKYg5pn
-        HjMDxYZbBbUNB3KiPVL8uuENukJODWc=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-ocuOaWOJMOWPOPnt8vnunw-1; Fri, 11 Oct 2019 15:26:03 -0400
-Received: by mail-qk1-f200.google.com with SMTP id b143so9973794qkg.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 12:26:03 -0700 (PDT)
+        Fri, 11 Oct 2019 15:26:14 -0400
+Received: by mail-wm1-f42.google.com with SMTP id v17so11216642wml.4;
+        Fri, 11 Oct 2019 12:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uKbKcTI5oAu/5J+XUGF85siQfBKYiDyHMWqEMwYb3R8=;
+        b=M3PBlTde+MQ1+upfHsMK7J1Rxi1Sbp1QyTwJb1ai1/tWQ1T5HfrpwfLhTOidEyJWIM
+         LfHHmr9eUbPEZj5Fbc5wReHWhd3fl3Pkgac9dAMsCWDIlFF6jGpcJvoR/tdEt5a1Qg3k
+         9esVR8sKhexmXHJE+NRZKix8cYUI+Jp0X3qCdztQDIzi1nM8tvL/zO3dDUYSzYTsvm++
+         WeZU/wTB9aOTJ6tj0yBj9z7xNiYC+djytNNo+MU9ImpmnkUGpySmL8ghPJLFhlGmuciH
+         pmnCKBupN73ORJghz7tEkuNO+bbChEuGNpeVV088rojs4ZBtpF31LL/ZZEt6rnOoc4wd
+         k8yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vm9hCEgalMjdO3brVzGiAiZDpN4MX984R0GN6bPTIZw=;
-        b=bgBVTt1l80IR9jXq28n8YNfWUJiy6pyw2A3EZnWhicfHTAg6WwT5NYQTyf4zVXmY/l
-         9qTtcNqKWpHYWEkp4tDYJ2A8Udpa+XmQmem4nzNFBztBjgxW78aDbHuTJYniEL0rMGDK
-         oezBSGFbRgiElKIFpvKeRr5ehBoaI2XHV5PssLFgKQXcaxuUNS9hljwXh3DBqpm67PaZ
-         dTpZu4ZCHY55nURmpeQh0Mip5H7pp/gboGdxVOcIS8L65Wm+zaGP20t3d6m2fBifqOck
-         krOvYgnrzaN02zd6Dw+FmwwSmm30xM2yCVjRfPPmK+Fh/YDSyfim67cJZhiApWhSeKal
-         rkng==
-X-Gm-Message-State: APjAAAWAu2WPMte2v9RqUUNHmPDYgh15KG7AJZ6CebVYmBDKQGEkzMTk
-        lvk1M49ba23VvwENCWKJdP2Q4W4g7n0jAwaqzJbacce8QyfsS9DmqyN/W/bybTrnnEYo92LsodH
-        6YyQ205WbXQSs0CyOJmlQufNYV+xXzn01PndmPuGT
-X-Received: by 2002:a37:50a:: with SMTP id 10mr16739702qkf.27.1570821963349;
-        Fri, 11 Oct 2019 12:26:03 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx05uDRWS0FZ6McnRw0wvRkHDnrcgb/JBgJnFKj/FIi/+KaVzrBJ5aRpM86Ax1WNWr/Vjw1XePH4a8Ny4dxnhM=
-X-Received: by 2002:a37:50a:: with SMTP id 10mr16739692qkf.27.1570821963111;
- Fri, 11 Oct 2019 12:26:03 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uKbKcTI5oAu/5J+XUGF85siQfBKYiDyHMWqEMwYb3R8=;
+        b=NEcNn8+r8cHF6wXYEZPIqQJbLEWDVbuQ6E9OKDtFp7epkAzkX791NdoyvkU8LiJ6mD
+         TwPN5RcWOXmkKjeyZi9XERbtkgvi6luIU5gxSCdD12rK/Z9WS4/QgA5aFQ/OalASsGIn
+         yq08AvVo+0OttLvfwX3yQK+B0kVRNBd0JRSCaBF7iPMv+S9ZySt/86WjvQA8Lg9aR9pW
+         SXphFKuwQD/MOxHn7r4MRdJ3/IDK5iSCEqs9XNHA50P9VcbIUGpuRy1eW8GxZzZoU2p/
+         hgJyTPxEsXdDa16yn72j0BMc3GoICd7rB39gPe3+UY2fd84spWiuHdssp8u0/1P3YdpO
+         EIKw==
+X-Gm-Message-State: APjAAAWH93GneB48m6SxfqdtHro0b6TvTLqYQnmeRcbv0yoyjjX8YZM9
+        WJMcbmBGBYhuV7XHuOF3zeu6cym7
+X-Google-Smtp-Source: APXvYqy3NsrGaARW3kWkbuyvJuNZIETQM9FRnCxjAmy2sTTH2QIV8nAEpj1KyvMPmkOHYi91kDn4SQ==
+X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr4459742wmj.152.1570821971183;
+        Fri, 11 Oct 2019 12:26:11 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f26:6400:a940:7bc:76e0:c57? (p200300EA8F266400A94007BC76E00C57.dip0.t-ipconnect.de. [2003:ea:8f26:6400:a940:7bc:76e0:c57])
+        by smtp.googlemail.com with ESMTPSA id g185sm13491613wme.10.2019.10.11.12.26.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 11 Oct 2019 12:26:10 -0700 (PDT)
+Subject: Re: Module loading problem since 5.3
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <8132cf72-0ae1-48ae-51fb-1a01cf00c693@gmail.com>
+ <CAB=NE6XdVXMnq7pgmXxv4Qicu7=xrtQC-b2sXAfVxiAq68NMKg@mail.gmail.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <875eecfb-618a-4989-3b9f-f8272b8d3746@gmail.com>
+Date:   Fri, 11 Oct 2019 21:26:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
- <20191007051240.4410-2-andrew.smirnov@gmail.com> <CAO-hwJ+jPGa5Z7=Lopsc23m8UOqGWB0=tN+DcotykseAPM7_7w@mail.gmail.com>
- <20191011182617.GE229325@dtor-ws>
-In-Reply-To: <20191011182617.GE229325@dtor-ws>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 11 Oct 2019 21:25:52 +0200
-Message-ID: <CAO-hwJLH6SMkLb1kZGj1E+BUHJ+ZsE1n+d=xeJgsvTCjHH1Wzw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] HID: logitech-hidpp: use devres to manage FF private data
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Sam Bazely <sambazley@fastmail.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-X-MC-Unique: ocuOaWOJMOWPOPnt8vnunw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAB=NE6XdVXMnq7pgmXxv4Qicu7=xrtQC-b2sXAfVxiAq68NMKg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 8:26 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Fri, Oct 11, 2019 at 04:52:04PM +0200, Benjamin Tissoires wrote:
-> > Hi Andrey,
-> >
-> > On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com=
-> wrote:
-> > >
-> > > To simplify resource management in commit that follows as well as to
-> > > save a couple of extra kfree()s and simplify hidpp_ff_deinit() switch
-> > > driver code to use devres to manage the life-cycle of FF private data=
-.
-> > >
-> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > > Cc: Jiri Kosina <jikos@kernel.org>
-> > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > Cc: Henrik Rydberg <rydberg@bitmath.org>
-> > > Cc: Sam Bazely <sambazley@fastmail.com>
-> > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> > > Cc: Austin Palmer <austinp@valvesoftware.com>
-> > > Cc: linux-input@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: stable@vger.kernel.org
-> >
-> > This patch doesn't seem to fix any error, is there a reason to send it
-> > to stable? (besides as a dependency of the rest of the series).
-> >
-> > > ---
-> > >  drivers/hid/hid-logitech-hidpp.c | 53 +++++++++++++++++-------------=
---
-> > >  1 file changed, 29 insertions(+), 24 deletions(-)
-> > >
-> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logit=
-ech-hidpp.c
-> > > index 0179f7ed77e5..58eb928224e5 100644
-> > > --- a/drivers/hid/hid-logitech-hidpp.c
-> > > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > > @@ -2079,6 +2079,11 @@ static void hidpp_ff_destroy(struct ff_device =
-*ff)
-> > >         struct hidpp_ff_private_data *data =3D ff->private;
-> > >
-> > >         kfree(data->effect_ids);
-> >
-> > Is there any reasons we can not also devm alloc data->effect_ids?
-> >
-> > > +       /*
-> > > +        * Set private to NULL to prevent input_ff_destroy() from
-> > > +        * freeing our devres allocated memory
-> >
-> > Ouch. There is something wrong here: input_ff_destroy() calls
-> > kfree(ff->private), when the data has not been allocated by
-> > input_ff_create(). This seems to lack a little bit of symmetry.
->
-> Yeah, ff and ff-memless essentially take over the private data assigned
-> to them. They were done before devm and the lifetime of the "private"
-> data pieces was tied to the lifetime of the input device to simplify
-> error handling and teardown.
+On 10.10.2019 19:15, Luis Chamberlain wrote:
+> 
+> 
+> On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
+> 
+>        MODULE_SOFTDEP("pre: realtek")
+> 
+>     Are you aware of any current issues with module loading
+>     that could cause this problem?
+> 
+> 
+> Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
+> 
+> If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
+> 
+>   Luis
+> 
+Maybe issue is related to a bug in introduction of symbol namespaces, see here:
+https://lkml.org/lkml/2019/10/11/659
 
-Yeah, that stealing of the pointer is not good :)
-But OTOH, it helps
-
->
-> Maybe we should clean it up a bit... I'm open to suggestions.
-
-The problem I had when doing the review was that there is no easy way
-to have a "devm_input_ff_create_()", because the way it's built is
-already "devres-compatible": the destroy gets called by input core.
-
-So I don't have a good answer to simplify in a transparent manner
-without breaking the API.
-
->
-> In this case maybe best way is to get rid of hidpp_ff_destroy() and not
-> set ff->private and rely on devm to free the buffers. One can get to
-> device private data from ff methods via input_get_drvdata() since they
-> all (except destroy) are passed input device pointer.
-
-Sounds like a good idea. However, it seems there might be a race when
-removing the workqueue:
-the workqueue gets deleted in hidpp_remove, when the input node will
-be freed by devres, so after the call of hidpp_remove.
-
-So we should probably keep hidpp_ff_destroy() to clean up the ff bits,
-and instead move the content of hidpp_ff_deinit() into
-hidpp_ff_destroy() so we ensure proper ordering.
-
-Andrey, note that ensuring the workqueue gets freed after the call of
-input_destroy_device is something that should definitively go into
-stable as this is a potential race problem.
-
-Cheers,
-Benjamin
-
+Heiner
