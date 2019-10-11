@@ -2,86 +2,153 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94BDC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E88C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989232089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8813C2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbfJKQlt (ORCPT
+        id S1728414AbfJKQmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 12:41:49 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:40291 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfJKQlt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 12:41:49 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iIxz5-000225-Gt; Fri, 11 Oct 2019 17:41:43 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iIxz4-0000BP-SJ; Fri, 11 Oct 2019 17:41:42 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm: topology: only build cpu_corepower_mask if needed
-Date:   Fri, 11 Oct 2019 17:41:42 +0100
-Message-Id: <20191011164142.659-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Fri, 11 Oct 2019 12:42:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:37440 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbfJKQmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 12:42:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36EC528;
+        Fri, 11 Oct 2019 09:42:05 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D3213F71A;
+        Fri, 11 Oct 2019 09:42:02 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 17:42:00 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
+Subject: Re: [PATCH v2 05/12] arm64: Basic Branch Target Identification
+ support
+Message-ID: <20191011164159.GP27757@arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-6-git-send-email-Dave.Martin@arm.com>
+ <20191011151028.GE33537@lakrids.cambridge.arm.com>
+ <4e09ca54-f353-9448-64ed-4ba1e38c6ebc@linaro.org>
+ <20191011153225.GL27757@arm.com>
+ <20191011154043.GG33537@lakrids.cambridge.arm.com>
+ <20191011154444.GN27757@arm.com>
+ <20191011160113.GO27757@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011160113.GO27757@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpu_corepower_mask() is only needed if CONFIG_SCHED_MC is
-enabled, so remove the warning about it not being used by
-ifdef-ing it out.
+On Fri, Oct 11, 2019 at 05:01:13PM +0100, Dave Martin wrote:
+> On Fri, Oct 11, 2019 at 04:44:45PM +0100, Dave Martin wrote:
+> > On Fri, Oct 11, 2019 at 04:40:43PM +0100, Mark Rutland wrote:
+> > > On Fri, Oct 11, 2019 at 04:32:26PM +0100, Dave Martin wrote:
+> > > > On Fri, Oct 11, 2019 at 11:25:33AM -0400, Richard Henderson wrote:
+> > > > > On 10/11/19 11:10 AM, Mark Rutland wrote:
+> > > > > > On Thu, Oct 10, 2019 at 07:44:33PM +0100, Dave Martin wrote:
+> > > > > >> @@ -730,6 +730,11 @@ static void setup_return
+> > > > > >>  	regs->regs[29] = (unsigned long)&user->next_frame->fp;
+> > > > > >>  	regs->pc = (unsigned long)ka->sa.sa_handler;
+> > > > > >>  
+> > > > > >> +	if (system_supports_bti()) {
+> > > > > >> +		regs->pstate &= ~PSR_BTYPE_MASK;
+> > > > > >> +		regs->pstate |= PSR_BTYPE_CALL;
+> > > > > >> +	}
+> > > > > >> +
+> > > > > > 
+> > > > > > I think we might need a comment as to what we're trying to ensure here.
+> > > > > > 
+> > > > > > I was under the (perhaps mistaken) impression that we'd generate a
+> > > > > > pristine pstate for a signal handler, and it's not clear to me that we
+> > > > > > must ensure the first instruction is a target instruction.
+> > > > > 
+> > > > > I think it makes sense to treat entry into a signal handler as a call.  Code
+> > > > > that has been compiled for BTI, and whose page has been marked with PROT_BTI,
+> > > > > will already have the pauth/bti markup at the beginning of the signal handler
+> > > > > function; we might as well verify that.
+> > > > > 
+> > > > > Otherwise sigaction becomes a hole by which an attacker can force execution to
+> > > > > start at any arbitrary address.
+> > > > 
+> > > > Ack, that's the intended rationale -- I also outlined this in the commit
+> > > > message.
+> > > 
+> > > Ah, sorry. I evidently did not read that thoroughly enough.
+> > > 
+> > > > Does this sound reasonable?
+> > > > 
+> > > > 
+> > > > Either way, I feel we should do this: any function in a PROT_BTI page
+> > > > should have a suitable landing pad.  There's no reason I can see why
+> > > > a protection given to any other callback function should be omitted
+> > > > for a signal handler.
+> > > > 
+> > > > Note, if the signal handler isn't in a PROT_BTI page then overriding
+> > > > BTYPE here will not trigger a Branch Target exception.
+> > > > 
+> > > > I'm happy to drop a brief comment into the code also, once we're
+> > > > agreed on what the code should be doing.
+> > > 
+> > > So long as there's a comment as to why, I have no strong feelings here.
+> > > :)
+> > 
+> > OK, I think it's worth a brief comment in the code either way, so I'll
+> > add something.
+> 
+> Hmm, come to think of it we do need special logic for a particular case
+> here:
+> 
+> If we are delivering a SIGILL here and the SIGILL handler was registered
+> with SA_NODEFER then we will get into a spin, repeatedly delivering
+> the BTI-triggered SIGILL to the same (bad) entry point.
+> 
+> Without SA_NODEFER, the SIGILL becomes fatal, which is the desired
+> behaviour, but we'll need to catch this recursion explicitly.
+> 
+> 
+> It's similar to the special force_sigsegv() case in
+> linux/kernel/signal.c...
+> 
+> Thoughts?
 
-fixes the following build warning:
+On second thought, maybe we don't need to do anything special.
 
-arch/arm/kernel/topology.c:184:30: warning: ‘cpu_corepower_mask’ defined but not used [-Wunused-function]
-  184 | static const struct cpumask *cpu_corepower_mask(int cpu)
+A SIGSEGV handler registered with (SA_NODEFER & ~SA_RESETHAND) and that
+dereferences a duff address would spin similarly.
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-KernelVersion: 5.4-rc3
+This SIGILL case doesn't really seem different.  Either way it's a
+livelock of the user task that doesn't compromise the kernel.  There
+are plenty of ways for such a livelock to happen.
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm/kernel/topology.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 05d4223d5493..61f9a28f4bfb 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -177,6 +177,7 @@ static inline void parse_dt_topology(void) {}
- static inline void update_cpu_capacity(unsigned int cpuid) {}
- #endif
- 
-+#ifdef CONFIG_SCHED_MC
- /*
-  * The current assumption is that we can power gate each core independently.
-  * This will be superseded by DT binding once available.
-@@ -185,6 +186,7 @@ static const struct cpumask *cpu_corepower_mask(int cpu)
- {
- 	return &cpu_topology[cpu].thread_sibling;
- }
-+#endif
- 
- /*
-  * store_cpu_topology is called at boot when only one cpu is running
--- 
-2.23.0
-
+Cheers
+---Dave
