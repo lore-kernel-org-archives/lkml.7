@@ -2,122 +2,110 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD81ECE58D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C7EECE597
 	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8DCC214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C31521929
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfJKC5C (ORCPT
+        id S1726628AbfJKC7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 22:57:02 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:41694 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726116AbfJKC5C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 22:57:02 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07448077|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.335335-0.0158047-0.64886;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03291;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.FjD-bDi_1570762619;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.FjD-bDi_1570762619)
-          by smtp.aliyun-inc.com(10.147.41.138);
-          Fri, 11 Oct 2019 10:56:59 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mao Han <han_mao@c-sky.com>, Guo Ren <guoren@kernel.org>
-Subject: [PATCH] csky: Initial stack protector support
-Date:   Fri, 11 Oct 2019 10:56:55 +0800
-Message-Id: <1570762615-4256-1-git-send-email-han_mao@c-sky.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 10 Oct 2019 22:59:14 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57151 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfJKC7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 22:59:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 19:59:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,282,1566889200"; 
+   d="scan'208";a="200658765"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Oct 2019 19:59:11 -0700
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
+        khlebnikov@yandex-team.ru, cai@lca.pw, shakeelb@google.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [Patch v3 1/2] mm/rmap.c: don't reuse anon_vma if we just want a copy
+Date:   Fri, 11 Oct 2019 10:58:40 +0800
+Message-Id: <20191011025841.16801-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a basic -fstack-protector support without per-task canary
-switching. The protector will report something like when stack
-corruption is detected:
+Before commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
+hierarchy"), anon_vma_clone() doesn't change dst->anon_vma. While after
+this commit, anon_vma_clone() will try to reuse an exist one on forking.
 
-stack-protector: Kernel stack is corrupted in: sys_kill+0x23c/0x23c
+But this commit go a little bit further for the case not forking.
+anon_vma_clone() is called from __vma_split(), __split_vma(), copy_vma()
+and anon_vma_fork(). For the first three places, the purpose here is get
+a copy of src and we don't expect to touch dst->anon_vma even it is
+NULL. While after that commit, it is possible to reuse an anon_vma when
+dst->anon_vma is NULL. This is not we intend to have.
 
-Tested with a local array overflow in kill system call.
+This patch stop reuse anon_vma for non-fork cases.
 
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Guo Ren <guoren@kernel.org>
+Fix commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
+hierarchy")
+
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+
 ---
- arch/csky/Kconfig                      |  1 +
- arch/csky/include/asm/stackprotector.h | 29 +++++++++++++++++++++++++++++
- arch/csky/kernel/process.c             |  6 ++++++
- 3 files changed, 36 insertions(+)
- create mode 100644 arch/csky/include/asm/stackprotector.h
+v3:
+  * use dst->anon_vma and src->anon_vma to get reuse state
+    pointed by Konstantin Khlebnikov
+---
+ mm/rmap.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-index 3973847..2852343 100644
---- a/arch/csky/Kconfig
-+++ b/arch/csky/Kconfig
-@@ -48,6 +48,7 @@ config CSKY
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_DMA_API_DEBUG
- 	select HAVE_DMA_CONTIGUOUS
-+	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select MAY_HAVE_SPARSE_IRQ
- 	select MODULES_USE_ELF_RELA if MODULES
-diff --git a/arch/csky/include/asm/stackprotector.h b/arch/csky/include/asm/stackprotector.h
-new file mode 100644
-index 0000000..d7cd4e5
---- /dev/null
-+++ b/arch/csky/include/asm/stackprotector.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_STACKPROTECTOR_H
-+#define _ASM_STACKPROTECTOR_H 1
-+
-+#include <linux/random.h>
-+#include <linux/version.h>
-+
-+extern unsigned long __stack_chk_guard;
-+
-+/*
-+ * Initialize the stackprotector canary value.
+diff --git a/mm/rmap.c b/mm/rmap.c
+index d9a23bb773bf..fc0aba7fb9b9 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -250,7 +250,13 @@ static inline void unlock_anon_vma_root(struct anon_vma *root)
+  * Attach the anon_vmas from src to dst.
+  * Returns 0 on success, -ENOMEM on failure.
+  *
+- * If dst->anon_vma is NULL this function tries to find and reuse existing
++ * anon_vma_clone() is called by __vma_split(), __split_vma(), copy_vma() and
++ * anon_vma_fork(). The first three want an exact copy of src, while the last
++ * one, anon_vma_fork(), may try to reuse an existing anon_vma to prevent
++ * endless growth of anon_vma. Since dst->anon_vma is set to NULL before call,
++ * we can identify this case by (reuse = !dst->anon_vma && src->anon_vma).
 + *
-+ * NOTE: this must only be called from functions that never return,
-+ * and it must always be inlined.
-+ */
-+static __always_inline void boot_init_stack_canary(void)
-+{
-+	unsigned long canary;
-+
-+	/* Try to get a semi random initial value. */
-+	get_random_bytes(&canary, sizeof(canary));
-+	canary ^= LINUX_VERSION_CODE;
-+	canary &= CANARY_MASK;
-+
-+	current->stack_canary = canary;
-+	__stack_chk_guard = current->stack_canary;
-+}
-+
-+#endif /* __ASM_SH_STACKPROTECTOR_H */
-diff --git a/arch/csky/kernel/process.c b/arch/csky/kernel/process.c
-index f320d92..5349cd8 100644
---- a/arch/csky/kernel/process.c
-+++ b/arch/csky/kernel/process.c
-@@ -16,6 +16,12 @@
++ * If reuse is true, this function tries to find and reuse existing
+  * anon_vma which has no vmas and only one child anon_vma. This prevents
+  * degradation of anon_vma hierarchy to endless linear chain in case of
+  * constantly forking task. On the other hand, an anon_vma with more than one
+@@ -262,6 +268,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+ {
+ 	struct anon_vma_chain *avc, *pavc;
+ 	struct anon_vma *root = NULL;
++	bool reuse = !dst->anon_vma && src->anon_vma;
  
- struct cpuinfo_csky cpu_data[NR_CPUS];
- 
-+#ifdef CONFIG_STACKPROTECTOR
-+#include <linux/stackprotector.h>
-+unsigned long __stack_chk_guard __read_mostly;
-+EXPORT_SYMBOL(__stack_chk_guard);
-+#endif
-+
- asmlinkage void ret_from_fork(void);
- asmlinkage void ret_from_kernel_thread(void);
- 
+ 	list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
+ 		struct anon_vma *anon_vma;
+@@ -286,8 +293,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+ 		 * will always reuse it. Root anon_vma is never reused:
+ 		 * it has self-parent reference and at least one child.
+ 		 */
+-		if (!dst->anon_vma && anon_vma != src->anon_vma &&
+-				anon_vma->degree < 2)
++		if (reuse && anon_vma != src->anon_vma && anon_vma->degree < 2)
+ 			dst->anon_vma = anon_vma;
+ 	}
+ 	if (dst->anon_vma)
 -- 
-2.7.4
+2.17.1
 
