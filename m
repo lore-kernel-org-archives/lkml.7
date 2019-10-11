@@ -2,187 +2,156 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCF4C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE89ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C522196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39B12084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:45:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="c4ubCPf3";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iMiMZBn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbfJKVit (ORCPT
+        id S1729268AbfJKVpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 17:38:49 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:12227
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728719AbfJKVit (ORCPT
+        Fri, 11 Oct 2019 17:45:49 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:42536 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727197AbfJKVps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 17:38:49 -0400
-X-IronPort-AV: E=Sophos;i="5.67,285,1566856800"; 
-   d="scan'208";a="322455499"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 23:38:45 +0200
-Date:   Fri, 11 Oct 2019 23:38:44 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Jules Irenge <jbi.octave@gmail.com>
-cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        eric@anholt.net, wahrenst@gmx.net, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, daniela.mormocea@gmail.com,
-        dave.stevenson@raspberrypi.org, hverkuil-cisco@xs4all.nl,
-        mchehab+samsung@kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        sbranden@broadcom.com, rjui@broadcom.com, f.fainelli@gmail.com
-Subject: Re: [Outreachy kernel] [PATCH] staging: vc04_services: fix warning
- of Logical continuations should be on the previous line
-In-Reply-To: <20191011212745.20262-1-jbi.octave@gmail.com>
-Message-ID: <alpine.DEB.2.21.1910112336440.3284@hadrien>
-References: <20191011212745.20262-1-jbi.octave@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 11 Oct 2019 17:45:48 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BLXRsj006423;
+        Fri, 11 Oct 2019 14:44:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=CuuDL2YZiDI/uSGl4NWytfpGCfSyeb96qmyqLjJYhIU=;
+ b=c4ubCPf3xCaDivBcBSgS94TH+pDKehszSFDz4ySkbiIxEjMm0WlTuAjgJlww0TUWq1Iu
+ gk2ssWT5OtNwrukTizNn2lsIwAPB/C+k77rkT8svBv4XG4N9EakPLT7mOTyGLKsjjp2x
+ y1g0q9va34LwKe/If5YSSgA2fX5cHGDa2xM= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vjwwg98md-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 11 Oct 2019 14:44:11 -0700
+Received: from prn-mbx08.TheFacebook.com (2620:10d:c081:6::22) by
+ prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 11 Oct 2019 14:44:10 -0700
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-mbx08.TheFacebook.com (2620:10d:c081:6::22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 11 Oct 2019 14:44:10 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 11 Oct 2019 14:44:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mejjs4pEs62pjzsW5FPK+pgR1h/9xfI2oLH4btRKkfycoDMsE7UyBvIf7/1MqNAS9QtCqq7caTcn2BcyZmidKEaNtzR56rD2AyUaHGIxN0lyY17r6kOs6XC3Vie5XiqYhod+VmHEguLVgJL+/VJMHfkZD0D5RAYUMoIZVZ2mPK6QDXiEsWQEba5xBRn0P8vaL49vzGGgpiXZ3wowrGzr0JbTnwsXElelnulfUOSBOOUoKPJIZIIYhIxBJxHY+1+L67go4o/y2L/J0InnPPk5kzu708Wta29UJW/7KQlIVIAp8jGwoLK9dfM4BRf4PLBcybq0HsxvHJhTrZ2QlR7vDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CuuDL2YZiDI/uSGl4NWytfpGCfSyeb96qmyqLjJYhIU=;
+ b=OrwzATCVaZF8+g209kJMKxFnKZ6OVSWcaj/DbYgtXvVH+TRX9aZwbia11zFBYCV1UKXP4H7ZNZRK4lqpyxySXt/SNUZz3cu054KMX05xjuq4f4tubJ3Znq9W4bPCxFO5q5RJbfXgJzaXTH9W/voZ2aJDS2eMKhDerFC3YcWJkIptPTdgMaRbtYzLRKqRTy7EXbeGERtCe4EmKpIv0FpE+VJ2VbmFEsGm3sD72IPmQP9k5IKLvtTSI5Y7IVVENvYLoXgfHyHbbZ0J7OJS+fH/8LWtjHw8gbxmFwvzmOnhROGVJhLArsyyTm3OuhLY0Qxlz1WSp9OK+QWvTt8GpEYd5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CuuDL2YZiDI/uSGl4NWytfpGCfSyeb96qmyqLjJYhIU=;
+ b=iMiMZBn60Z6sXiXWtwqOD0rtIZvXhd6ZTkpZLcitAfqHmDAEInlwSFdQbyzsOkAea/cx1SKmd0rEqCy5j87WzcjwKXQUnSPQdy8nX+ISkh6fdHuh4gJ36i6yFmHvP00LQEHo9IMjEvfrzisTq/yCcFVx868Zv2LNIlLINgExBrI=
+Received: from BY5PR15MB3636.namprd15.prod.outlook.com (52.133.252.91) by
+ BY5PR15MB3652.namprd15.prod.outlook.com (52.133.253.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.25; Fri, 11 Oct 2019 21:28:36 +0000
+Received: from BY5PR15MB3636.namprd15.prod.outlook.com
+ ([fe80::7887:4f9c:70df:285c]) by BY5PR15MB3636.namprd15.prod.outlook.com
+ ([fe80::7887:4f9c:70df:285c%4]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
+ 21:28:36 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        YueHaibing <yuehaibing@huawei.com>, Andrew Lunn <andrew@lunn.ch>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Subject: Re: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
+Thread-Topic: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
+Thread-Index: AQHVaCL3HHZ/0IxjZ0GB2KAMVKzdAqcld28AgAEYWwCAK1ZcgIACEkcAgAD6PQCAAL1kgA==
+Date:   Fri, 11 Oct 2019 21:28:36 +0000
+Message-ID: <AD92CCF8-91B2-4EA1-9915-812D701E9CFA@fb.com>
+References: <20190910213734.3112330-1-vijaykhemka@fb.com>
+ <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
+ <CACPK8XcS4iKfKigPbPg0BFbmjbT-kdyjiPDXjk1k5XaS5bCdAA@mail.gmail.com>
+ <95e215664612c0487808c02232852ef2188c95a5.camel@kernel.crashing.org>
+ <AF7B985F-6E42-4CD4-B3D0-4B9EA42253C9@fb.com>
+ <158fa0872643089750b3797fd2f78ba18eaf488c.camel@kernel.crashing.org>
+In-Reply-To: <158fa0872643089750b3797fd2f78ba18eaf488c.camel@kernel.crashing.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::2:f03f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5f32f8c0-b6f0-4276-c8b8-08d74e91f9b8
+x-ms-traffictypediagnostic: BY5PR15MB3652:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR15MB3652F02075E889D93F6F05E9DD970@BY5PR15MB3652.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39860400002)(366004)(396003)(136003)(199004)(189003)(446003)(6116002)(6486002)(7736002)(71190400001)(71200400001)(14454004)(186003)(305945005)(76176011)(8676002)(11346002)(8936002)(4744005)(6246003)(256004)(6512007)(4326008)(81166006)(81156014)(46003)(54906003)(110136005)(36756003)(2616005)(2906002)(476003)(99286004)(316002)(478600001)(6436002)(5660300002)(102836004)(7416002)(86362001)(229853002)(6506007)(486006)(66946007)(91956017)(66476007)(64756008)(25786009)(76116006)(66446008)(33656002)(4001150100001)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR15MB3652;H:BY5PR15MB3636.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wanMVQkG+acHU9ols1i55DMntEK+83UXVXROUhT15zhb9gwJBXyDFEC6tSssaHTJQpznC255lmVS1PIiWUJXgoSKf59eotvRs/jcwry8BAz8rn8VspBo7Sx6cG1/8187MYV6H9AgxZw7uqQqowouej7fnSsVWz0tD5tWNbXKrcdYKQ9YgxBhbmckt2w+vIvhYImIhzmcUPO64MqWp6AtVnNUzdh6m+0fVtyq6ifAjl4QRya8wz9wsgoe/kAybFbZWZjLg+4fdUO4EWLJcEp7y+BNbw6sSG9w4e5ClIoTr7kx8Ofhm2tzIpLRrdLXbRgV9qoAmV7/EnjzJu5BY+3Wl4qt0gCokIdmxPNjzVRKnkPWLu+bRGIDp9J8KeIONePzFgwLHUV1BQJCoe5o8CLs0yRtTXl9gmaNljmwAHARVgI=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8B7407B9191CBD498371EA3025D7F0A1@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f32f8c0-b6f0-4276-c8b8-08d74e91f9b8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 21:28:36.1606
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NbBi2QFsQiDpLMite05JGu0PNJ3QB3vnow61o9dg4Ga7CPUwR19sBOS4MedahgFmc0OrqMaQOQ/Qx03xpDyeVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3652
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-11_11:2019-10-10,2019-10-11 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=965
+ suspectscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ adultscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910110174
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Fri, 11 Oct 2019, Jules Irenge wrote:
-
-> Fix warning of logical continuations should be on the previous line.
-> Issue detected by checkpatch tool.
-
-There seem to be several changes mixed together in this patch.
-
-Don't have a subject line that is identical to a line in the log message.
-The subject line should be short.
-
-Keeping the arguments of && on the same line, but breaking the line after
-a == doesn't seem to be a good idea.  It would be better to have the left
-argument of == on one line and the right argument on another, if that is
-needed.
-
-julia
-
-
->
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  .../bcm2835-camera/bcm2835-camera.c           | 41 ++++++++-----------
->  1 file changed, 17 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> index d4d1e44b16b2..365bcd97e19d 100644
-> --- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> +++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> @@ -337,9 +337,8 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
->  			if (is_capturing(dev)) {
->  				v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
->  					 "Grab another frame");
-> -				vchiq_mmal_port_parameter_set(
-> -					instance,
-> -					dev->capture.camera_port,
-> +			vchiq_mmal_port_parameter_set(instance,
-> +						      dev->capture.camera_port,
->  					MMAL_PARAMETER_CAPTURE,
->  					&dev->capture.frame_count,
->  					sizeof(dev->capture.frame_count));
-> @@ -392,9 +391,8 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
->  	    is_capturing(dev)) {
->  		v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
->  			 "Grab another frame as buffer has EOS");
-> -		vchiq_mmal_port_parameter_set(
-> -			instance,
-> -			dev->capture.camera_port,
-> +		vchiq_mmal_port_parameter_set(instance,
-> +					      dev->capture.camera_port,
->  			MMAL_PARAMETER_CAPTURE,
->  			&dev->capture.frame_count,
->  			sizeof(dev->capture.frame_count));
-> @@ -1090,8 +1088,7 @@ static int mmal_setup_components(struct bm2835_mmal_dev *dev,
->
->  	ret = vchiq_mmal_port_set_format(dev->instance, camera_port);
->
-> -	if (!ret
-> -	    && camera_port ==
-> +	if (!ret && camera_port ==
->  	    &dev->component[COMP_CAMERA]->output[CAM_PORT_VIDEO]) {
->  		bool overlay_enabled =
->  		    !!dev->component[COMP_PREVIEW]->enabled;
-> @@ -1124,9 +1121,8 @@ static int mmal_setup_components(struct bm2835_mmal_dev *dev,
->  					  dev->capture.timeperframe.numerator;
->  		ret = vchiq_mmal_port_set_format(dev->instance, preview_port);
->  		if (overlay_enabled) {
-> -			ret = vchiq_mmal_port_connect_tunnel(
-> -				dev->instance,
-> -				preview_port,
-> +			ret = vchiq_mmal_port_connect_tunnel(dev->instance,
-> +							     preview_port,
->  				&dev->component[COMP_PREVIEW]->input[0]);
->  			if (!ret)
->  				ret = vchiq_mmal_port_enable(dev->instance,
-> @@ -1154,9 +1150,8 @@ static int mmal_setup_components(struct bm2835_mmal_dev *dev,
->  			    camera_port->recommended_buffer.num;
->
->  			ret =
-> -			    vchiq_mmal_port_connect_tunnel(
-> -					dev->instance,
-> -					camera_port,
-> +			    vchiq_mmal_port_connect_tunnel(dev->instance,
-> +							   camera_port,
->  					&encode_component->input[0]);
->  			if (ret) {
->  				v4l2_dbg(1, bcm2835_v4l2_debug,
-> @@ -1655,8 +1650,8 @@ static int mmal_init(struct bm2835_mmal_dev *dev)
->  	dev->capture.enc_level = V4L2_MPEG_VIDEO_H264_LEVEL_4_0;
->
->  	/* get the preview component ready */
-> -	ret = vchiq_mmal_component_init(
-> -			dev->instance, "ril.video_render",
-> +	ret = vchiq_mmal_component_init(dev->instance,
-> +					"ril.video_render",
->  			&dev->component[COMP_PREVIEW]);
->  	if (ret < 0)
->  		goto unreg_camera;
-> @@ -1669,8 +1664,8 @@ static int mmal_init(struct bm2835_mmal_dev *dev)
->  	}
->
->  	/* get the image encoder component ready */
-> -	ret = vchiq_mmal_component_init(
-> -		dev->instance, "ril.image_encode",
-> +	ret = vchiq_mmal_component_init(dev->instance,
-> +					"ril.image_encode",
->  		&dev->component[COMP_IMAGE_ENCODE]);
->  	if (ret < 0)
->  		goto unreg_preview;
-> @@ -1731,15 +1726,13 @@ static int mmal_init(struct bm2835_mmal_dev *dev)
->
->  unreg_vid_encoder:
->  	pr_err("Cleanup: Destroy video encoder\n");
-> -	vchiq_mmal_component_finalise(
-> -		dev->instance,
-> -		dev->component[COMP_VIDEO_ENCODE]);
-> +	vchiq_mmal_component_finalise(dev->instance,
-> +				      dev->component[COMP_VIDEO_ENCODE]);
->
->  unreg_image_encoder:
->  	pr_err("Cleanup: Destroy image encoder\n");
-> -	vchiq_mmal_component_finalise(
-> -		dev->instance,
-> -		dev->component[COMP_IMAGE_ENCODE]);
-> +	vchiq_mmal_component_finalise(dev->instance,
-> +				      dev->component[COMP_IMAGE_ENCODE]);
->
->  unreg_preview:
->  	pr_err("Cleanup: Destroy video render\n");
-> --
-> 2.21.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191011212745.20262-1-jbi.octave%40gmail.com.
->
+DQoNCu+7v09uIDEwLzEwLzE5LCA4OjExIFBNLCAiQmVuamFtaW4gSGVycmVuc2NobWlkdCIgPGJl
+bmhAa2VybmVsLmNyYXNoaW5nLm9yZz4gd3JvdGU6DQoNCiAgICBPbiBUaHUsIDIwMTktMTAtMTAg
+YXQgMTk6MTUgKzAwMDAsIFZpamF5IEtoZW1rYSB3cm90ZToNCiAgICA+ICAgICBBbnkgbmV3cyBv
+biB0aGlzID8gQVNUMjQwMCBoYXMgbm8gSFcgY2hlY2tzdW0gbG9naWMgaW4gSFcsIEFTVDI1MDAN
+CiAgICA+ICAgICBzaG91bGQgd29yayBmb3IgSVBWNCBmaW5lLCB3ZSBzaG91bGQgb25seSBzZWxl
+Y3RpdmVseSBkaXNhYmxlIGl0IGZvcg0KICAgID4gICAgIElQVjYuDQogICAgPiANCiAgICA+IEJl
+biwgSSBoYXZlIGFscmVhZHkgc2VudCB2MiBmb3IgdGhpcyB3aXRoIHJlcXVlc3RlZCBjaGFuZ2Ug
+d2hpY2ggb25seSBkaXNhYmxlIA0KICAgID4gZm9yIElQVjYgaW4gQVNUMjUwMC4gSSBjYW4gc2Vu
+ZCBpdCBhZ2Fpbi4NCiAgICANCiAgICBJIGRpZG4ndCBzZWUgaXQsIGRpZCB5b3UgQ0MgbWUgPyBJ
+IG1haW50YWluIHRoYXQgZHJpdmVyLi4uDQoNCkxldCBtZSBzZW5kIGFnYWluIHZpYSBnaXQgc2Vu
+ZC1lbWFpbC4NCiAgICANCiAgICBDaGVlcnMsDQogICAgQmVuLg0KICAgIA0KICAgIA0KICAgIA0K
+DQo=
