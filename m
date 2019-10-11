@@ -2,273 +2,152 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC67ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C41ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD37214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19112089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CNOnOzJm"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EpxsCUHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfJKOwX (ORCPT
+        id S1727297AbfJKOxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:52:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29760 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727587AbfJKOwW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:52:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570805540;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LjOMlr04CDEWM+WiRuQ0QvBbFcIyJJ1BMad1vbnZ+hQ=;
-        b=CNOnOzJmqRH5mhETW8/dcXcNZ8wjAxMVe9sSSw/z6uNlT+0K7ScTwRsDIXoJb9Jx699O/G
-        nOD1ROJKKPVrxu5alHaNCrJAlUwimisv+KTh0TnaY9Pea8P5l1OXih0KFeOZkztT9GIg8y
-        Q+0NFkDEilDLrPBkTAeDM1xw+KN2uNA=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-302-2PuEUBfPNq6YoOomPvurlA-1; Fri, 11 Oct 2019 10:52:16 -0400
-Received: by mail-qt1-f197.google.com with SMTP id m19so9665021qtm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 07:52:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SZ0bfU2716rhby1DyBXCXfWn03SSsmBdmRdt0EnLS1k=;
-        b=CnIALHlpS1HxBA6atwG/0kn5yzCn+d+Ypz+72Q9630d3BnsimQgu/tgamk4bAwfZob
-         bek0NBW+5EsWNWsPTKLLq3YDdSdhn93jFqCGuHwx14HkBMW2rMuzX3cw+nvxvhOldx5x
-         +xCM1I5h57KP4WvTWBgg5h80wlXwVWn0JZdAx9u/wRgvQrS9P9TCRNOKsS56J3t7zciw
-         UOt0cvpjFz6WecT5SBuQoUI9evuH9BJz+gW+rllAtaofPyY9We0ibBdwLTjyoBfcUKvN
-         UCYV7oqQ+HWJSsff8Bos7haGkd0BGnSbn2y+H+rt5c0DyjgM2Lr0J2XXlCyKBSG7tLJI
-         W11Q==
-X-Gm-Message-State: APjAAAVbDGjUWKSb53yK8IApqMBLO/Qtijj7gemPFvAs8PUquqPsBtBq
-        EKMK99jsrZk177svEgcvelxNL+IAcx/bUvBTUW4Dj3im3Hgi3db78LPOipExvkCYNiHWZrWnL1h
-        WBFlt0GpIx+1V1o601fyIfVtVHLw85YdiP+tzKPOn
-X-Received: by 2002:ae9:f306:: with SMTP id p6mr16072324qkg.169.1570805536491;
-        Fri, 11 Oct 2019 07:52:16 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzTfHCZ3UlZd2fgDUgIL/k7ZBTcdoSj99nnvjVsUswVePU8Cqx6eoHwfnLCLhbgJCWU7048/TDkRczOka2mx9A=
-X-Received: by 2002:ae9:f306:: with SMTP id p6mr16072285qkg.169.1570805536178;
- Fri, 11 Oct 2019 07:52:16 -0700 (PDT)
+        Fri, 11 Oct 2019 10:53:36 -0400
+Received: from mail-eopbgr1300112.outbound.protection.outlook.com ([40.107.130.112]:46885
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726631AbfJKOxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:53:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PQHIUHds0zFZk2xY8mpsg7L/FeZ68Ri1k5AJL8CqngTSamHClVDYPgJDK/Lajb2eWnSnEAQgy/zTBnpJdnxU4KEYEzL/jql3pnEXwzHy13ucWN8DPAyPlk6uNAqbm/p/bw3vGOMuyOIi1QQGr79TaAvU6KoN2HXB0+2EFpegY2zehGlanXus+oDHxOjNlJUISePzYAaaWqszwsdLc2zwjNB/KGrpFY7dfHVSOwNDG80ZukLkuyZUWik3owXMfsCMnMTQIt/eeUBGnOQL7SVcliRVJnmCIG6j48yOKZ2AQHDMvHiSln3yEf/ZHHOLKuw/wtqsE6sy3cHVNNxtcmZxIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fxoCUgID2niQq37EeuocyoreJT2jYFBUxU2VxdJ5IAM=;
+ b=oV/vP3ZbEdg2XlveBnA7dSPsvyq3u5o7s+lyJXW6J/14ITBMjT2mhl9iC6Cf4NqME50OBP0yfv5gg7xKpTOGD9B9wXJWevxNua7wMqh8sDtf6od4TX7PWou3o8LN9gPOv0n0Ei+oWGT38ZnFwWB5OxXcY2yxOzUsCA963OvjSPoPhlFdeYY3PyPmWYNXiS6R40iOayGGHUvfxsXdVZ/WjHoYbG9HB1J2H+LvEzrQo2e4S7OwaepQ2TsaxyXXE90hkLf+wshYocueWB1Fl1VNwfNjtu+57echK1ACGdVnHcfg9PcrY0KNsjQj2Kcdw8nzxKtDX9++7zm3wyLrdhX6+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fxoCUgID2niQq37EeuocyoreJT2jYFBUxU2VxdJ5IAM=;
+ b=EpxsCUHUQ06Kz8w70caYpH3d2QT/qJ8KiyB0F8gqbRlEUcmQ/YCZmfCU7MfE07xz2lc6ZZGuVFhaQCz+3693ZlizxKgrfz45eIif2/GphsLLz6t8FLPUCGunaNmFQ/Qvps6Ajpr4R+mmkITswJOkdUl4Ipgj8+u8UWc0z2eTN0I=
+Received: from KL1P15301MB0261.APCP153.PROD.OUTLOOK.COM (52.132.240.14) by
+ KL1P15301MB0247.APCP153.PROD.OUTLOOK.COM (10.255.255.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.2; Fri, 11 Oct 2019 14:53:08 +0000
+Received: from KL1P15301MB0261.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d4ef:dc1e:e10:7318]) by KL1P15301MB0261.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d4ef:dc1e:e10:7318%6]) with mapi id 15.20.2367.004; Fri, 11 Oct 2019
+ 14:53:07 +0000
+From:   Tianyu Lan <Tianyu.Lan@microsoft.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
+        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "bp@suse.de" <bp@suse.de>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: RE: [PATCH] mm/resource: Move child to new resource when release mem
+ region.
+Thread-Topic: [PATCH] mm/resource: Move child to new resource when release mem
+ region.
+Thread-Index: AQHVfzxrHAkRPyKAWU6JoMkPogDGmKdT788AgAF8bsA=
+Date:   Fri, 11 Oct 2019 14:53:06 +0000
+Message-ID: <KL1P15301MB0261260E5DD0E3BA4FD80BC092970@KL1P15301MB0261.APCP153.PROD.OUTLOOK.COM>
+References: <20191010072856.20079-1-Tianyu.Lan@microsoft.com>
+ <77e08231-0687-8d8d-0faf-c490a8b510d4@intel.com>
+In-Reply-To: <77e08231-0687-8d8d-0faf-c490a8b510d4@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=tiala@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-11T14:53:03.2347409Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c3a9baf7-ec20-4bf2-a413-1bf350ecfb32;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tianyu.Lan@microsoft.com; 
+x-originating-ip: [167.220.255.55]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ccfd0276-322d-44f9-06cb-08d74e5aba32
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: KL1P15301MB0247:|KL1P15301MB0247:|KL1P15301MB0247:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <KL1P15301MB0247192506E1963B0802D2BD92970@KL1P15301MB0247.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(39850400004)(346002)(136003)(396003)(189003)(199004)(10290500003)(6246003)(2201001)(10090500001)(76176011)(478600001)(9686003)(2501003)(25786009)(6506007)(55016002)(8990500004)(53546011)(102836004)(26005)(99286004)(4326008)(7696005)(1511001)(186003)(86362001)(229853002)(66066001)(486006)(7416002)(2906002)(476003)(7736002)(256004)(71200400001)(6116002)(6436002)(8936002)(54906003)(8676002)(11346002)(64756008)(66446008)(110136005)(316002)(81166006)(22452003)(81156014)(71190400001)(76116006)(3846002)(74316002)(446003)(5660300002)(14454004)(33656002)(66476007)(66556008)(52536014)(66946007)(305945005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:KL1P15301MB0247;H:KL1P15301MB0261.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6OxoW7naVAepwoAte1vZtXYGeo6CSFv689W86CABuIfdFk4C8u448OfKu6KE4eRdaIu1dsbyqKNBa6MgNmMMa91aPemqmp7Dzq28HE4EgR0H2ll3PUBslWUXCB5hxUpJQIb+9t+LEdx4jYufwVaQv/uOzUqGJ1UpWoKfAOXV9Uf9ZpMKrU7P5I+fMVhqn97E7Z8hWLM3v2BjTFPSe4qbiAP8O5WwtxosNaLES6te+0/VerZLry5S9FgnDl2LFVaEjpCbHJTRh7TIJJdCVRg9JtqTRMQs2AkG6f8m1hdOdCVI3HtDIZ/DXf8SHhpH1ZmL7Mrz9O8B6F4PZ0TsrDaDoWdQPBw9IC3CCZJhvwT7voLeC/IUkVG71m09B6ufQmIvNp1jsD6VN6oMboITllfNi9u0Q6IS8ECCl7JF5aStNyE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191007051240.4410-1-andrew.smirnov@gmail.com> <20191007051240.4410-2-andrew.smirnov@gmail.com>
-In-Reply-To: <20191007051240.4410-2-andrew.smirnov@gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 11 Oct 2019 16:52:04 +0200
-Message-ID: <CAO-hwJ+jPGa5Z7=Lopsc23m8UOqGWB0=tN+DcotykseAPM7_7w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] HID: logitech-hidpp: use devres to manage FF private data
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Sam Bazely <sambazley@fastmail.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-X-MC-Unique: 2PuEUBfPNq6YoOomPvurlA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccfd0276-322d-44f9-06cb-08d74e5aba32
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 14:53:06.8121
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QOaWu7j0dzMuX0g27j+oaqTMKY6ZPlZWQfJ8QJYO37YPAAVuzNamrCbleX43Fsm0qbOxEf4/d+GAF5HJy2ubBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0247
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
-
-On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com> wr=
-ote:
->
-> To simplify resource management in commit that follows as well as to
-> save a couple of extra kfree()s and simplify hidpp_ff_deinit() switch
-> driver code to use devres to manage the life-cycle of FF private data.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Cc: Henrik Rydberg <rydberg@bitmath.org>
-> Cc: Sam Bazely <sambazley@fastmail.com>
-> Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> Cc: Austin Palmer <austinp@valvesoftware.com>
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-
-This patch doesn't seem to fix any error, is there a reason to send it
-to stable? (besides as a dependency of the rest of the series).
-
-> ---
->  drivers/hid/hid-logitech-hidpp.c | 53 +++++++++++++++++---------------
->  1 file changed, 29 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-=
-hidpp.c
-> index 0179f7ed77e5..58eb928224e5 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -2079,6 +2079,11 @@ static void hidpp_ff_destroy(struct ff_device *ff)
->         struct hidpp_ff_private_data *data =3D ff->private;
->
->         kfree(data->effect_ids);
-
-Is there any reasons we can not also devm alloc data->effect_ids?
-
-> +       /*
-> +        * Set private to NULL to prevent input_ff_destroy() from
-> +        * freeing our devres allocated memory
-
-Ouch. There is something wrong here: input_ff_destroy() calls
-kfree(ff->private), when the data has not been allocated by
-input_ff_create(). This seems to lack a little bit of symmetry.
-
-> +        */
-> +       ff->private =3D NULL;
->  }
->
->  static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
-> @@ -2090,7 +2095,7 @@ static int hidpp_ff_init(struct hidpp_device *hidpp=
-, u8 feature_index)
->         const u16 bcdDevice =3D le16_to_cpu(udesc->bcdDevice);
->         struct ff_device *ff;
->         struct hidpp_report response;
-> -       struct hidpp_ff_private_data *data;
-> +       struct hidpp_ff_private_data *data =3D hidpp->private_data;
->         int error, j, num_slots;
->         u8 version;
->
-> @@ -2129,18 +2134,13 @@ static int hidpp_ff_init(struct hidpp_device *hid=
-pp, u8 feature_index)
->                 return error;
->         }
->
-> -       data =3D kzalloc(sizeof(*data), GFP_KERNEL);
-> -       if (!data)
-> -               return -ENOMEM;
->         data->effect_ids =3D kcalloc(num_slots, sizeof(int), GFP_KERNEL);
-> -       if (!data->effect_ids) {
-> -               kfree(data);
-> +       if (!data->effect_ids)
->                 return -ENOMEM;
-> -       }
-> +
->         data->wq =3D create_singlethread_workqueue("hidpp-ff-sendqueue");
->         if (!data->wq) {
->                 kfree(data->effect_ids);
-> -               kfree(data);
->                 return -ENOMEM;
->         }
->
-> @@ -2199,28 +2199,15 @@ static int hidpp_ff_init(struct hidpp_device *hid=
-pp, u8 feature_index)
->         return 0;
->  }
->
-> -static int hidpp_ff_deinit(struct hid_device *hid)
-> +static void hidpp_ff_deinit(struct hid_device *hid)
->  {
-> -       struct hid_input *hidinput =3D list_entry(hid->inputs.next, struc=
-t hid_input, list);
-> -       struct input_dev *dev =3D hidinput->input;
-> -       struct hidpp_ff_private_data *data;
-> -
-> -       if (!dev) {
-> -               hid_err(hid, "Struct input_dev not found!\n");
-> -               return -EINVAL;
-> -       }
-> +       struct hidpp_device *hidpp =3D hid_get_drvdata(hid);
-> +       struct hidpp_ff_private_data *data =3D hidpp->private_data;
->
->         hid_info(hid, "Unloading HID++ force feedback.\n");
-> -       data =3D dev->ff->private;
-> -       if (!data) {
-
-I am pretty sure we might need to keep a test on data not being null.
-
-> -               hid_err(hid, "Private data not found!\n");
-> -               return -EINVAL;
-> -       }
->
->         destroy_workqueue(data->wq);
->         device_remove_file(&hid->dev, &dev_attr_range);
-> -
-> -       return 0;
->  }
-
-This whole hunk seems unrelated to the devm change.
-Can you extract a patch that just stores hidpp_ff_private_data in
-hidpp->private_data and then cleans up hidpp_ff_deinit() before
-switching it to devm? (or maybe not, see below)
-
-After a few more thoughts, I don't think this mixing of devm and non
-devm is a good idea:
-we could say that the hidpp_ff_private_data and its effect_ids are
-both children of the input_dev, not the hid_device. And we would
-expect the whole thing to simplify with devm, but it's not, because ff
-is not supposed to be used with devm.
-
-I have a feeling the whole ff logic is wrong in term of where things
-should be cleaned up, but I can not come up with a good hint on where
-to start. For example, destroy_workqueue() is called in
-hidpp_ff_deinit() where it might be racy, and maybe we should call it
-in hidpp_ff_destroy()...
-
-Last, you should base this patch on top of the for-next branch, we
-recently merged a fix for the FF drivers in the HID subsystem:
-https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=3Dfor=
--next&id=3Dd9d4b1e46d9543a82c23f6df03f4ad697dab361b
-
-Would it be too complex to drop this patch from the series and do a
-proper follow up cleanup series that might not need to go to stable?
-
-Cheers,
-Benjamin
-
->
->
-> @@ -2725,6 +2712,20 @@ static int k400_connect(struct hid_device *hdev, b=
-ool connected)
->
->  #define HIDPP_PAGE_G920_FORCE_FEEDBACK                 0x8123
->
-> +static int g920_allocate(struct hid_device *hdev)
-> +{
-> +       struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
-> +       struct hidpp_ff_private_data *data;
-> +
-> +       data =3D devm_kzalloc(&hdev->dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       hidpp->private_data =3D data;
-> +
-> +       return 0;
-> +}
-> +
->  static int g920_get_config(struct hidpp_device *hidpp)
->  {
->         u8 feature_type;
-> @@ -3561,6 +3562,10 @@ static int hidpp_probe(struct hid_device *hdev, co=
-nst struct hid_device_id *id)
->                 ret =3D k400_allocate(hdev);
->                 if (ret)
->                         return ret;
-> +       } else if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920) {
-> +               ret =3D g920_allocate(hdev);
-> +               if (ret)
-> +                       return ret;
->         }
->
->         INIT_WORK(&hidpp->work, delayed_work_cb);
-> --
-> 2.21.0
->
-
+T24gMTAvMTAvMjAxOSAxMDoyOSBQTSwgRGF2ZSBIYW5zZW4gd3JvdGU6PiBPbiAxMC8xMC8xOSAx
+MjoyOCBBTSwgbGFudGlhbnl1MTk4NkBnbWFpbC5jb20gd3JvdGU6DQo+PiBXaGVuIHJlbGVhc2Ug
+bWVtIHJlZ2lvbiwgb2xkIG1lbSByZWdpb24gbWF5IGJlIHNwbGl0ZWQgdG8NCj4+IHR3byByZWdp
+b25zLiBDdXJyZW50IGFsbG9jYXRlIG5ldyBzdHJ1Y3QgcmVzb3VyY2UgZm9yIGhpZ2gNCj4+IGVu
+ZCBtZW0gcmVnaW9uIGJ1dCBub3QgbW92ZSBjaGlsZCByZXNvdXJjZXMgd2hvc2UgcmFuZ2VzIGFy
+ZQ0KPj4gaW4gdGhlIGhpZ2ggZW5kIHJhbmdlIHRvIG5ldyByZXNvdXJjZS4gV2hlbiBhZGp1c3Qg
+b2xkIG1lbQ0KPj4gcmVnaW9uJ3MgcmFuZ2UsIGFkanVzdF9yZXNvdXJjZSgpIGRldGVjdHMgY2hp
+bGQgcmVnaW9uJ3MgcmFuZ2UNCj4+IGlzIG91dCBvZiBuZXcgcmFuZ2UgYW5kIHJldHVybiBlcnJv
+ci4gTW92ZSBjaGlsZCByZXNvdXJjZXMgdG8NCj4+IGhpZ2ggZW5kIHJlc291cmNlIGJlZm9yZSBh
+ZGp1c3Rpbmcgb2xkIG1lbSByYW5nZS4NCj4gDQo+ICBGcm9tIHRoZSBjb21tZW50LCBpdCBhcHBl
+YXJzIHRoZSBvbGQgY29kZSBpbnRlbmRlZCB0byBoYXZlIHRoZSBiZWhhdmlvcg0KPiB0aGF0IHlv
+dSBhcmUgY2hhbmdpbmcuICBDb3VsZCB5b3UgZXhwbGFpbiBfd2h5XyB0aGlzIGhhcyBiZWNvbWUg
+YQ0KPiBwcm9ibGVtIGZvciB5b3U/DQpIaSBEYXZlOg0KICAgIFRoYW5rcyBmb3IgeW91ciByZXZp
+ZXcuIGN1cnJlbnQgY29kZSBhc3N1bWVzIHRoYXQgYWxsIGNoaWxkcmVuIHJlbWFpbiBpbg0KIHRo
+ZSBsb3dlciBhZGRyZXNzIGVudHJ5IGZvciBzaW1wbGljaXR5LiBGb3IgbWVtb3J5IGhvdC1yZW1v
+dmUsIHNlbGVjdGluZw0KcmVtb3ZlIHJlZ2lvbiB2aWEgc2Nhbm5pbmcgc3lzdGVtIG1lbW9yeSBt
+YXkgaGl0IGNhc2Ugb2YgY2hpbGQgaW4gdGhlDQpoaWdoZXIgYWRkcmVzcyBlbnRyeS4NCg0KRm9y
+IGV4YW1wbGUsIHRoZSBmb2xsb3dpbmcgb3V0cHV0IGZyb20gL3Byb2MvaW9tZW0gc2hvd3Mga2Vy
+bmVsIGNvZGUsDQpkYXRhIGFuZCBic3MgbG9jYXRlIGZyb20gM2EwMDAwMDAgdG8gM2I1ZmZmZmYg
+YW5kIHRoZXNlIHJlc291cmNlcyBhcmUgdGhlDQpzeXN0ZW0gcmFtIHJlc291cmNlJ3MgY2hpbGRy
+ZW4uIElmIHRoZSAzOTgwMDAwMC0zOWZmZmZmZiB3YXMgc2VsZWN0ZWQgYXMNCnJlbW92ZSByYW5n
+ZSwgdGhlIHJlc291cmNlIHdpbGwgYmUgc3BsaXQgaW50byB0d28gcmFuZ2VzIDAwMTAwMDAwLTM5
+N2ZmZmZmDQphbmQgMzk4MDAwMDAtYjg3ZjFmZmYuIEN1cnJlbnQgY29kZSBtb3ZlIGtlcm5lbCBp
+bWFnZSByZWxhdGVkIHJlc291cmNlcw0KdW5kZXIgMDAxMDAwMDAtMzk3ZmZmZmYgcmVzb3VyY2Uu
+IFRoaXMgd2lsbCBjYXVzZSBhZGp1c3RfcmVzb3VyY2UoKSByZXR1cm4NCmVycm9yIGJlY2F1c2Ug
+Y2hpbGRyZW4gYXJlIG5vdCBpbiB0aGUgcGFyZW50J3MgcmFuZ2UuDQoNCjAwMTAwMDAwLWI4N2Yx
+ZmZmIDogU3lzdGVtIFJBTQ0KICAzYTAwMDAwMC0zYWMwMGU4MCA6IEtlcm5lbCBjb2RlDQogIDNh
+YzAwZTgxLTNiMzM4ODNmIDogS2VybmVsIGRhdGENCiAgM2I0ZDMwMDAtM2I1ZmZmZmYgOiBLZXJu
+ZWwgYnNzDQoNCg0KDQo=
