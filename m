@@ -2,183 +2,176 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CD0C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785C8C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C6D214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFlQ0vsT"
+	by mail.kernel.org (Postfix) with ESMTP id 53825214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570793013;
+	bh=vb48pQyS1rsctTm/hWro+AwszRnaKqP1j3LyWPhxGUo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=h4qVHH8ybj7zEKzm/nuYni6srK3PlsQ7dBex/F19yw5PXrd2tuOMM4z5BN+S2Ira2
+	 UviuR/slvjlv0mBhonTgTL2Xg9y5D96LiG6xCD45G5Qmlz0cyy/6zx8qibC85EKNHI
+	 SuHA4x2PWq7ZZIwlLo+Kx1sPxrReIqrDP9RER7ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfJKLXZ (ORCPT
+        id S1728181AbfJKLXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:23:25 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40838 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfJKLXY (ORCPT
+        Fri, 11 Oct 2019 07:23:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33936 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfJKLXb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:23:24 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d26so5622119pgl.7;
-        Fri, 11 Oct 2019 04:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=FI82U63M+SgbahHSF1eO73vV08QgE3AQDZfaeuoWBb8=;
-        b=lFlQ0vsTQoH/B6jts5uXJD1fECl6EcI1ln6InB6KiGxqt3Mh2rwSi8g8TTKUZFk0Ax
-         i1MdkREyuNzKrz7FUNZIp202e44C2zPTd5Cix+ZziiW7L90U0ua0q4ba8Yaf8aXgqRLf
-         aN9S1MJNU9pDMFwjk0HJyRaGiowttaSVFrb4F5ydzJNIFxiueTRb2RIiFfV0zy6uL9wk
-         M7cmjeNa/h7jXsFkE39PZ5oSm+r4zobuXzqQJNfzcFLa68jZg60jRNnFiFj2oqrJW5c8
-         gttcg9jFc3khksSnuptanXV42wRbYMys3sEp5sDPBVeft1p0Og0MTmCtZ1zWoJWdexKY
-         YrcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=FI82U63M+SgbahHSF1eO73vV08QgE3AQDZfaeuoWBb8=;
-        b=ezS52G02AMJYLfgOO0lGkU661A3IGpWyuXgslD9GcAUI9rIglYz+BE2lTjLW+kVcw0
-         S4lfdg3AaKtypFayFdZ2TBdoKhGXvE9lk9rTRmPDj+pynRxEPgn6o/T8YNA6aGkPG7EL
-         5eaTtEdCK2+mQNEn9cVtMXniV+OIy8gy4N1O4+cJjv0LMSBhHm8waz9W6axuIQa6Pcs7
-         Q0jcCX+nsLRRUuo32eJh3bBvycGJWZZ2avzBhL83VVKUljjfrCMKhFA3pqoOrloWfZuh
-         K2J4hpt5Yz/oXTkN9C5yAQwpTLGJEatuYWAQF6H6obnkbLgmxlthnny672S+y/d40TPw
-         Cvcg==
-X-Gm-Message-State: APjAAAUtZDrJroaF/niIeYXAqvp+MM7qrvJEViacGMt6erVh335/PvZX
-        o5aR5Co8CiMcuEBWHPtUzgUJpILax6ZlMA==
-X-Google-Smtp-Source: APXvYqw3WshAK+s47EREjFdEAJ5D0swM8kSL34uq2bh9In2yaJzvobYTo46GBPsycSfvKz59J/nZ7Q==
-X-Received: by 2002:a63:4622:: with SMTP id t34mr16734453pga.0.1570793002922;
-        Fri, 11 Oct 2019 04:23:22 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:139e:d60:aa0c:2692:c558:75f5])
-        by smtp.gmail.com with ESMTPSA id u4sm8749841pfu.177.2019.10.11.04.23.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 04:23:22 -0700 (PDT)
-Message-ID: <b8b1e4fef9f3ece63909c38b3302621d76770caa.camel@gmail.com>
-Subject: Re: KMSAN: uninit-value in alauda_check_media
-From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
-To:     syzbot <syzbot+e7d46eb426883fb97efd@syzkaller.appspotmail.com>,
-        glider@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
-        usb-storage@lists.one-eyed-alien.net
-Date:   Fri, 11 Oct 2019 16:53:15 +0530
-In-Reply-To: <0000000000007d25ff059457342d@google.com>
-References: <0000000000007d25ff059457342d@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 11 Oct 2019 07:23:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dsaS+us45ZwRJKtxMVnmPBirfa55ePd+K+QsxKfNims=; b=M+9x6KXTQEC5pNJJj0PEEnCT/
+        eNIz6yP2H1CP+41JaDqT7OsU2Eb1V2OH3aHcm2ad+cq5Ngpm7/86a1NUu8PKg+DXifsJR1+tSJ3Ka
+        d38fDJxg26jGxYsLkTAeSjb8UkdHAprao45qOZbKQkT6hgd12Y7XX/bjcvsU86qdu8oB+iT/n6HpM
+        6VGEWRnj5PEpb4fD8O+X8NMc34cm37//Lnh5Kl6ruvgKxmPO6uCEXyVcfxffW+d9aFUmmqCrRw82p
+        5Cgbo+c/cTsKjiZ+WTga6mpQpZv6Ey5ozpnNF90+SVugIhn553oC4RM/oq4JzlFG5qhLpLo0Ejxx4
+        jbhuYH0Ww==;
+Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIt16-00009Y-1q; Fri, 11 Oct 2019 11:23:28 +0000
+Date:   Fri, 11 Oct 2019 08:23:24 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 18/19] EDAC, ghes: Unify trace_mc_event() code with
+ edac_mc driver
+Message-ID: <20191011082324.4289a2d2@coco.lan>
+In-Reply-To: <20191010202418.25098-19-rrichter@marvell.com>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+        <20191010202418.25098-19-rrichter@marvell.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-07 at 12:39 -0700, syzbot wrote:
-> Hello,
+Em Thu, 10 Oct 2019 20:25:40 +0000
+Robert Richter <rrichter@marvell.com> escreveu:
+
+> The code in ghes_edac.c and edac_mc.c for grain_bits calculation and
+> calling trace_mc_event() is now the same. Move it to a single location
+> in edac_raw_mc_handle_error().
 > 
-> syzbot found the following crash on:
+> The only difference is the missing IS_ENABLED(CONFIG_RAS) switch, but
+> this is needed for ghes too.
 > 
-> HEAD commit:    1e76a3e5 kmsan: replace __GFP_NO_KMSAN_SHADOW with
-> kmsan_i..
-> git tree:       https://github.com/google/kmsan.git master
-> console output: 
-> https://syzkaller.appspot.com/x/log.txt?x=1204cc63600000
-> kernel config:  
-> https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=e7d46eb426883fb97efd
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> syz repro:      
-> https://syzkaller.appspot.com/x/repro.syz?x=123c860d600000
-> C reproducer:   
-> https://syzkaller.appspot.com/x/repro.c?x=110631b7600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the
-> commit:
-> Reported-by: syzbot+e7d46eb426883fb97efd@syzkaller.appspotmail.com
-> 
-> =====================================================
-> BUG: KMSAN: uninit-value in alauda_transport+0x462/0x57f0  
-> drivers/usb/storage/alauda.c:1137
-> CPU: 0 PID: 12279 Comm: usb-storage Not tainted 5.3.0-rc7+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine,
-> BIOS  
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->   kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
->   __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
->   alauda_check_media+0x344/0x3310 drivers/usb/storage/alauda.c:460
->   alauda_transport+0x462/0x57f0 drivers/usb/storage/alauda.c:1137
->   usb_stor_invoke_transport+0xf5/0x27e0
-> drivers/usb/storage/transport.c:606
->   usb_stor_transparent_scsi_command+0x5d/0x70  
-> drivers/usb/storage/protocol.c:108
->   usb_stor_control_thread+0xca6/0x11a0 drivers/usb/storage/usb.c:380
->   kthread+0x4b5/0x4f0 kernel/kthread.c:256
->   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-> 
-> Local variable description: ----status@alauda_check_media
-> Variable was created at:
->   alauda_check_media+0x8e/0x3310 drivers/usb/storage/alauda.c:454
->   alauda_transport+0x462/0x57f0 drivers/usb/storage/alauda.c:1137
-> =====================================================
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 12279 Comm: usb-storage Tainted:
-> G    B             5.3.0-rc7+  
-> #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine,
-> BIOS  
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->   panic+0x3c9/0xc1e kernel/panic.c:219
->   kmsan_report+0x2a2/0x2b0 mm/kmsan/kmsan_report.c:131
->   __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
->   alauda_check_media+0x344/0x3310 drivers/usb/storage/alauda.c:460
->   alauda_transport+0x462/0x57f0 drivers/usb/storage/alauda.c:1137
->   usb_stor_invoke_transport+0xf5/0x27e0
-> drivers/usb/storage/transport.c:606
->   usb_stor_transparent_scsi_command+0x5d/0x70  
-> drivers/usb/storage/protocol.c:108
->   usb_stor_control_thread+0xca6/0x11a0 drivers/usb/storage/usb.c:380
->   kthread+0x4b5/0x4f0 kernel/kthread.c:256
->   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>  drivers/edac/edac_mc.c   | 30 +++++++++++++++---------------
+>  drivers/edac/ghes_edac.c | 13 -------------
+>  2 files changed, 15 insertions(+), 28 deletions(-)
 > 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index 3779204c0e21..e6c6e40dc760 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -1070,6 +1070,21 @@ void edac_raw_mc_handle_error(struct edac_raw_error_desc *e,
+>  {
+>  	struct mem_ctl_info *mci = error_desc_to_mci(e);
+>  	char detail[80];
+> +	u8 grain_bits;
+> +
+> +	/* Sanity-check driver-supplied grain value. */
+> +	if (WARN_ON_ONCE(!e->grain))
+> +		e->grain = 1;
+> +
+> +	grain_bits = fls_long(e->grain - 1);
+> +
+> +	/* Report the error via the trace interface */
+> +	if (IS_ENABLED(CONFIG_RAS))
+> +		trace_mc_event(e->type, e->msg, e->label, e->error_count,
+> +			       mci->mc_idx, e->top_layer, e->mid_layer,
+> +			       e->low_layer,
+> +			       (e->page_frame_number << PAGE_SHIFT) | e->offset_in_page,
+> +			       grain_bits, e->syndrome, e->other_detail);
+>  
+>  	/* Memory type dependent details about the error */
+>  	if (e->type == HW_EVENT_ERR_CORRECTED) {
+> @@ -1110,7 +1125,6 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  	int row = -1, chan = -1;
+>  	int pos[EDAC_MAX_LAYERS] = { top_layer, mid_layer, low_layer };
+>  	int i, n_labels = 0;
+> -	u8 grain_bits;
+>  	struct edac_raw_error_desc *e = &mci->error_desc;
+>  	bool any_memory = true;
+>  
+> @@ -1242,20 +1256,6 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  	if (p > e->location)
+>  		*(p - 1) = '\0';
+>  
+> -	/* Sanity-check driver-supplied grain value. */
+> -	if (WARN_ON_ONCE(!e->grain))
+> -		e->grain = 1;
+> -
+> -	grain_bits = fls_long(e->grain - 1);
+> -
+> -	/* Report the error via the trace interface */
+> -	if (IS_ENABLED(CONFIG_RAS))
+> -		trace_mc_event(type, e->msg, e->label, e->error_count,
+> -			       mci->mc_idx, e->top_layer, e->mid_layer,
+> -			       e->low_layer,
+> -			       (e->page_frame_number << PAGE_SHIFT) | e->offset_in_page,
+> -			       grain_bits, e->syndrome, e->other_detail);
+> -
+>  	dimm = edac_get_dimm(mci, top_layer, mid_layer, low_layer);
+>  
+>  	edac_raw_mc_handle_error(e, dimm);
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index 8d9d3c4dbebb..17d5b22fe000 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -198,7 +198,6 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  	struct ghes_edac_pvt *pvt = ghes_pvt;
+>  	unsigned long flags;
+>  	char *p;
+> -	u8 grain_bits;
+>  
+>  	if (!pvt)
+>  		return;
+> @@ -430,18 +429,6 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  	if (p > pvt->other_detail)
+>  		*(p - 1) = '\0';
+>  
+> -	/* Sanity-check driver-supplied grain value. */
+> -	if (WARN_ON_ONCE(!e->grain))
+> -		e->grain = 1;
+> -
+> -	grain_bits = fls_long(e->grain - 1);
+> -
+> -	/* Generate the trace event */
+> -	trace_mc_event(e->type, e->msg, e->label, e->error_count,
+> -		       mci->mc_idx, e->top_layer, e->mid_layer, e->low_layer,
+> -		       (e->page_frame_number << PAGE_SHIFT) | e->offset_in_page,
+> -		       grain_bits, e->syndrome, e->other_detail);
+> -
+>  	dimm = edac_get_dimm_by_index(mci, e->top_layer);
+>  
+>  	edac_raw_mc_handle_error(e, dimm);
 
-#syz test: https://github.com/google/kmsan.git 1e76a3e5
 
-diff --git a/drivers/usb/storage/alauda.c
-b/drivers/usb/storage/alauda.c
-index ddab2cd3d2e7..bb309b9ad65b 100644
---- a/drivers/usb/storage/alauda.c
-+++ b/drivers/usb/storage/alauda.c
-@@ -452,7 +452,7 @@ static int alauda_init_media(struct us_data *us)
- static int alauda_check_media(struct us_data *us)
- {
- 	struct alauda_info *info = (struct alauda_info *) us->extra;
--	unsigned char status[2];
-+	unsigned char *status = us->iobuf;
- 	int rc;
- 
- 	rc = alauda_get_media_status(us, status);
 
+Thanks,
+Mauro
