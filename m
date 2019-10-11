@@ -2,96 +2,96 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2CDECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CCEECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2CA214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C085214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570802209;
-	bh=au+HdzCzwi1dxfAX7PMoLowdLxP6/BHQkeUPGO1J3Yw=;
+	s=default; t=1570802470;
+	bh=t9/O7zaiB/c1wXAfYIz1GbBGj/mCFCn6JDKlAAphRB8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wve+Llvd/pMaVVBrTgGIgbWoY512Iab7dcKOHiFPW1+2U+h1k7ZE6XtRO4lrraNHd
-	 yLhmWdxTjo1ykT/5yE+oP9qe6L8L6CAHwzSPxsyF/oDNzmPs+JU5CoyFgmk+hKCMMd
-	 7G4OsRx53cQjH2jVLS8Rfba8WGVk6e36qFQocp0I=
+	b=Afb4qkEYtK+J5LBoKqs4hvDatUBLzFnq8a3I3DOs9c4zvAo6rPblj5ttbXtEA0KON
+	 15gR2jBa0zt0AgnHWpVHFJ2L218wFU+bApa1RHh/jz032+gh3G+AGkdrkbDMLLf1gu
+	 PZnjFWAjenKPaYjF4qNBSi8Tza1aRezQ0ebAaWzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfJKN4s (ORCPT
+        id S1728249AbfJKOBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:56:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46431 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfJKN4r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:56:47 -0400
-Received: by mail-pg1-f195.google.com with SMTP id b8so5830270pgm.13;
-        Fri, 11 Oct 2019 06:56:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pYZN44tcf/xxU7kx6DIe0UpJjwcz9PJmB2YvNccREKU=;
-        b=qCjcFEW/08aMG+fans3bgrmsxov+uC01SXJMtpOlo5OhWEet5s5zkSCxI7pvzHtTx9
-         D9zmNmqf8jA/c9r8GhYEa6fmw8aCfm/EBfwQezZwDTuCfrxMZpx2UtOLBTeGiWrtcK08
-         07eu8DiceRgjOcSf3qiZeeVVoUc7qjeS+4viGAhgXiD7BWXNhi1FYdZ8/QWUpq+dFKna
-         vx9lwIwKdwepilkC9mdJYU2wzXwkqIlREjMk+nandJt0cn0CSBmjQOIm24kdjHN3A8EB
-         LIPJj6g204zn5rrvRtP9GsJj6IieZh1IOvm+8mLFwJ5A8nlF8E2A00Z4PUoqv1xr481L
-         pTWg==
-X-Gm-Message-State: APjAAAW9+ABvWVLA1S0rvMFGXM1ERlNpNkpCupiTG6Lqak6hg355SdiQ
-        xGagfR3wZzhczgaWxsBrvQM=
-X-Google-Smtp-Source: APXvYqyq4Whjhv1pHWqqj6KBdO9ycjVgyQXHccB+LvUmvUApvbU2oRx83Mlu8DosconGWrSq1CRDFA==
-X-Received: by 2002:a63:f646:: with SMTP id u6mr16575972pgj.71.1570802206866;
-        Fri, 11 Oct 2019 06:56:46 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id dw19sm7901861pjb.27.2019.10.11.06.56.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 06:56:45 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id EBB72403EA; Fri, 11 Oct 2019 13:56:44 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 13:56:44 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Alessio Balsini <balsini@android.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] sysctl: Inline braces for ctl_table and ctl_table_header
-Message-ID: <20191011135644.GQ16384@42.do-not-panic.com>
-References: <20190903154906.188651-1-balsini@android.com>
+        Fri, 11 Oct 2019 10:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728123AbfJKOBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:01:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7AFF20640;
+        Fri, 11 Oct 2019 14:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570802468;
+        bh=t9/O7zaiB/c1wXAfYIz1GbBGj/mCFCn6JDKlAAphRB8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ISHTT+QtS2wdWQSmJVyksZPp3VDvO9jz9PmQhgKriiYNZzRDEh2VPDFKC1fbOH8aL
+         xUyFZ2YOT5l6a7YGGx0rK/sbeIkT3QWcVv0zWcvBa8yQGjr3zDyjXtqD0eLKuaYALh
+         uCYyJLz3f8a+xgnHTYtwPkWgtnb6Bk2rB59vtyqk=
+Date:   Fri, 11 Oct 2019 16:01:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/61] 4.14.149-stable review
+Message-ID: <20191011140105.GA1236002@kroah.com>
+References: <20191010083449.500442342@linuxfoundation.org>
+ <ce4b3f10-eafd-1169-9240-fb3891279c2a@roeck-us.net>
+ <20191011042945.GB939089@kroah.com>
+ <fde4b241-2932-c543-d540-cc89f2b1eac0@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903154906.188651-1-balsini@android.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fde4b241-2932-c543-d540-cc89f2b1eac0@roeck-us.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:49:06PM +0100, Alessio Balsini wrote:
-> Fix coding style of "struct ctl_table" and "struct ctl_table_header" to
-> have inline brances.
-> Before:
+On Fri, Oct 11, 2019 at 06:14:59AM -0700, Guenter Roeck wrote:
+> On 10/10/19 9:29 PM, Greg Kroah-Hartman wrote:
+> > On Thu, Oct 10, 2019 at 10:12:26AM -0700, Guenter Roeck wrote:
+> > > On 10/10/19 1:36 AM, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.14.149 release.
+> > > > There are 61 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > 
+> > > Preliminary.
+> > > 
+> > > I see several mips build failures.
+> > > 
+> > > arch/mips/kernel/proc.c: In function 'show_cpuinfo':
+> > > arch/mips/include/asm/cpu-features.h:352:31: error: implicit declaration of function '__ase'
+> > 
+> > Thanks, will go drop the lone mips patch that I think is causing this
+> > problem.
+> > 
 > 
-> struct ctl_table
-> {
-> 	...
+> Looks like it did. For v4.14.148-61-g6f45e0e87a75:
 > 
-> After:
-> 
-> struct ctl_table {
-> 	...
-> 
-> Besides the wide use of this proposed cose style, this change helps to
-> find at a glance the struct definition when navigating the code.
-> 
-> Signed-off-by: Alessio Balsini <balsini@android.com>
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
+> Build results:
+> 	total: 172 pass: 172 fail: 0
+> Qemu test results:
+> 	total: 372 pass: 372 fail: 0
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Great!  Thanks for running this and letting me know.
 
-  Luis
+greg k-h
