@@ -2,102 +2,98 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37883ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9208AC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 122222089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F882089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:20:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jm+pwRG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfJKJTo (ORCPT
+        id S1727639AbfJKJUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:19:44 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44156 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbfJKJTn (ORCPT
+        Fri, 11 Oct 2019 05:20:03 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38142 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbfJKJUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:19:43 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 21so7360520otj.11;
-        Fri, 11 Oct 2019 02:19:42 -0700 (PDT)
+        Fri, 11 Oct 2019 05:20:02 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 3so9471763wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 02:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=JePE8ClpvmkdREqAemoY5/Xc8Y8z7AI4rivC6NTKD84=;
+        b=Jm+pwRG0HzWyJjQGN+1v3eL2WIqd5IsEwLRdxn/PV5CkmMnZpTcCwdw/MI9JFaAQxH
+         5Bme0bpmr00gbYIaw5o1SqfSl3V3VgAjFwPXzemCtKQpeZUpAsWfaq9pjhv9UsgC0cCe
+         Y3uB5VEEmmL+i605dBiywQX/4xlOpr5emrQLVTambUIj6xa8Jnr6oZ+U4cGK48S3bcA5
+         fqEL/ctyy9UvxO9K94DZ4q56v8nnxOkcC+2OG2PslOJfYFu+6V8FjiP9Uyov4jCiHjOi
+         zoJfRSbt2cFf5Wf0uzmWlgihH8n3o/hVgZl+ZLC81fteGXF9rM+oMOWbrX+XZIl3R0lB
+         L+ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2T/zHCiz5lRoZLCCsEBaHrm43xLEtwr/JLAYUvgdwzE=;
-        b=rY3Uf9LdWgDBPCwqd0My70ixRNRbWYt9jmFcAzct/2Ytmoe4DkGa8BbaoMIeGEKdFR
-         t34MKotWVmuCHtD1xmOdvRmSZmqnmijOzXam6yRSRs0lskZvp4LzmRIPiQuFYbBEgRLn
-         xgl/Li70P0BXy19+uRoaLjIFF+TlXeqsvOe3vxnJvPABEGeGLfgstnqKqios3zicV+Tk
-         gJslr5+YODcCqUPpTLOQonRps+lQaBf1K8Yk5PatVJrdakdRrznSR0ZQ/2SzUTJRW2zU
-         eUjS9wvzRAuZzwLgZ1PxfAPlnoVQNY52od7z6+azmp/ddMgX7ccZThXDPZcTRTaH724Q
-         rVzw==
-X-Gm-Message-State: APjAAAW9xCJNZSKIm+W1gm4Py4m2UDOXqjZxPUknVrL9cIVGBUmjMMWp
-        1qeqsWxQZEYVN3QxsV9Hnt4FGjtG4OyGhOZz0SU=
-X-Google-Smtp-Source: APXvYqzLdkyO6uQN8+aYqrrf0f1ZoJ5UC4uoBKWGKBUzVnWDCeCgMeWJjJBH6Q06m328j8fpzF+F7jTX6lgsPrk7ois=
-X-Received: by 2002:a05:6830:1685:: with SMTP id k5mr11530897otr.250.1570785582416;
- Fri, 11 Oct 2019 02:19:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191010123046.15291-1-geert+renesas@glider.be>
- <20191011073515.2933918c@canb.auug.org.au> <fc7ec17b-c61b-842e-13d9-1e154ce2a654@cogentembedded.com>
-In-Reply-To: <fc7ec17b-c61b-842e-13d9-1e154ce2a654@cogentembedded.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 11 Oct 2019 11:19:30 +0200
-Message-ID: <CAMuHMdVurk2akpKFAGKoNN2YxPMBMx2VrvUfTfCX-AiUaFAcxQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Remove Simon as Renesas SoC Co-Maintainer
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JePE8ClpvmkdREqAemoY5/Xc8Y8z7AI4rivC6NTKD84=;
+        b=oYDB3NOWKzT61YOzHRHltgleiLAua3ib8v4o8M1zrBfOR4SI80ycczcMT3PCEFyrBB
+         9FknD/SKEDuu+kFdbEbHr0CXL57G4JQmqmiCZpahpU3nDRlXvkIyPnCA0SEyYXH12GsS
+         b6ZJmQ+Z6h3nV1zw+ghizS41XmVTPnNdEceZrF0JFJVqR2dxOsba1J0OQbidA1JW33iQ
+         FKyoCqZd7HUVzkO+8GX1dyTVxCrUc24Q9yQvVbucH7Ds5kV9m5uze9ZwBA4kDCTgLAWc
+         pYNpbIfeZykzUS0fpfLmT0d2q7gsuXOIkw4PjX8qjCTzsfWiz/jAF4De30sd5WQ/pRhQ
+         MD9g==
+X-Gm-Message-State: APjAAAXRcVy6MLMnI4R+3sT1TyCei2uWZaie+pPqmYas+hqgeJfuI96v
+        pOB7Ut+d19a/Hh/ZxtuTTWFduw==
+X-Google-Smtp-Source: APXvYqy81ucKBfLp4NPCr9YZdfPcNx5llAgGpYyda7UMIIHcQZiTmWkdGca5oeZff4YN1u74EfpbXg==
+X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr2463573wml.169.1570785600656;
+        Fri, 11 Oct 2019 02:20:00 -0700 (PDT)
+Received: from localhost.localdomain (li2042-79.members.linode.com. [172.105.81.79])
+        by smtp.gmail.com with ESMTPSA id u10sm8603492wmm.0.2019.10.11.02.19.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 02:19:59 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v1 1/2] perf test: Report failure for mmap events
+Date:   Fri, 11 Oct 2019 17:19:41 +0800
+Message-Id: <20191011091942.29841-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergei,
+When fail to mmap events in task exit case, it misses to set 'err' to
+-1; thus the testing will not report failure for it.
 
-On Fri, Oct 11, 2019 at 11:00 AM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 10.10.2019 23:35, Stephen Rothwell wrote:
-> >> At the end of the v5.3 upstream kernel development cycle, Simon stepped
-> >> down from his role as Renesas SoC maintainer.
-> >>
-> >> Remove his maintainership, git repository, and branch from the
-> >> MAINTAINERS file, and add an entry to the CREDITS file to honor his
-> >> work.
-> >>
-> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > So, I will remove Simon's Renesas tree from linux-next and rename the
-> > renesas-geert tree to be renesas, OK?
->
->     I thought Geert's new repo is called renesas-devel?
+This patch sets 'err' to -1 when fails to mmap events, thus Perf tool
+can report correct result.
 
-The repository is called "renesas-devel".
-The branch Stephen pulls is "next" (colloquially called "renesas-next" ;-)
-The linux-next-specific handle Stephen uses is called "renesas".
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/tests/task-exit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Cfr. "git show next-20191011:Next/Trees | grep renesas".
-
-I hope this clears up the confusion...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index bce3a4cb4c89..ca0a6ca43b13 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -110,6 +110,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 	if (evlist__mmap(evlist, 128) < 0) {
+ 		pr_debug("failed to mmap events: %d (%s)\n", errno,
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
++		err = -1;
+ 		goto out_delete_evlist;
+ 	}
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
