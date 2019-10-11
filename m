@@ -2,83 +2,237 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3016BC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CAFEECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04040206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:47:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JjXevuOd"
+	by mail.kernel.org (Postfix) with ESMTP id 3B260206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570790945;
+	bh=PhBnvg51DcFN0stQjvzfyG52vEp0wCuI5ysvpYCdupo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wU3rAUPfq0cH3o+YeUracd11AsMZSpR8h+qWkAlAvI7LKfbLYIPLVCPz3og83Vxvt
+	 hitqTKg+xkSAUvvV4yAddXvX2O5IAsC1TH6QBhNgo/hthDvvTQgl3Bv6g8VURKjICO
+	 NotkGw4gG6Fd2ZloG+RAWFEBk128ybGmJZ9B6cFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfJKKrV (ORCPT
+        id S1727512AbfJKKtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:47:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57942 "EHLO
+        Fri, 11 Oct 2019 06:49:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57982 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfJKKrV (ORCPT
+        with ESMTP id S1726290AbfJKKtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:47:21 -0400
+        Fri, 11 Oct 2019 06:49:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=a9/2VGeLnRRi35YmZhE0rouXiWagsNk2lJpliT2cEcA=; b=JjXevuOdMXBRkOmTXcphovYpz
-        D/NHu+GI/W+Aj0b1bUkoAi4m4fX8k3UKAXfTOWnx3vJFgcqsMvArBup8YNl8IApa86chDk6cI+jZ0
-        D+7m+YhVkBzdeIseTE4eYacrAeMQO2BauissKc5riJHr4ibsPmIoQK8YKOwXDNGbImI215wfuFw6I
-        uRnoRfxDCoFJvZ1ebYqlWirPY6nDEx483i3dN5Y3nHkTuvDEtSns9BgscDFAS7UCdI3s8v0V+6hHe
-        sdaXNnl8XlVmV2666hA865sqBDI0OXmlweFvBn2GOjgLBkjPeLnGIZJ1tY262ciJMPG1acLJCw5mq
-        3bbr5SVDg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+         bh=KpxDWPvz35a9kdqfFQphvMNey2YNc/+UfxTnv1nH9vc=; b=uVjSIh28fX7Nc49ea8x4QcaIh
+        2C2QtuT3kFValZ1SvZzLVM3CZ7jDU/uqdmBC2MxGtEBhhXlHO+tKCgFpUpokBqYCeuU6TYxoadmcU
+        G52awsBZNCqhvz07y+WMuHUAJCr0jtfbRwSJVagfJW5v7tT8uiLMSuv7s7g5sj6iH7y6tuPbXYuFz
+        eJ+Ihdha+2nbc7U2m+5nOUDoQllJz7CbpBRpLUXjb1TSYaVBQzHba1QESt0xvGLs+/1Ibj9yZkqWq
+        r5iKJK/dHK6dflOCdqNe3xZ8Yy/OoPcHEtLynXvJ/SzxD6gquTPV5sY6uy9YvXXPJDvJO5Llx3KPC
+        FHGqKAxog==;
+Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIsS2-0000K7-CJ; Fri, 11 Oct 2019 10:47:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8C4EA30025A;
-        Fri, 11 Oct 2019 12:46:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 37B8C201F7DBB; Fri, 11 Oct 2019 12:47:12 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 12:47:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20191011104712.GL2359@hirez.programming.kicks-ass.net>
-References: <20191007081945.10951536.8@infradead.org>
- <20191008104335.6fcd78c9@gandalf.local.home>
- <20191009224135.2dcf7767@oasis.local.home>
- <20191010092054.GR2311@hirez.programming.kicks-ass.net>
- <20191010091956.48fbcf42@gandalf.local.home>
- <20191010140513.GT2311@hirez.programming.kicks-ass.net>
- <20191010115449.22044b53@gandalf.local.home>
- <20191010172819.GS2328@hirez.programming.kicks-ass.net>
- <20191010134830.72ccef3d@gandalf.local.home>
- <20191011104552.GW2328@hirez.programming.kicks-ass.net>
+        id 1iIsTj-0000PI-7l; Fri, 11 Oct 2019 10:48:59 +0000
+Date:   Fri, 11 Oct 2019 07:48:55 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 10/19] EDAC, mc: Rework edac_raw_mc_handle_error() to
+ use struct dimm_info
+Message-ID: <20191011074855.30bd7e72@coco.lan>
+In-Reply-To: <20191010202418.25098-11-rrichter@marvell.com>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+        <20191010202418.25098-11-rrichter@marvell.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011104552.GW2328@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 12:45:52PM +0200, Peter Zijlstra wrote:
-> +	if (!ops->trampoline) {
-> +		ops->trampoline = create_trampoline(ops, &size, ftrace_ops_get_func(ops));
+Em Thu, 10 Oct 2019 20:25:24 +0000
+Robert Richter <rrichter@marvell.com> escreveu:
 
-And now that I look at what I send, I see we already pass ops, so no
-need to pass ftrace_ops_get_func().
+> The error handling functions have the pos[] array argument for
+> determing the dimm handle. Rework those functions to use the dimm
+> handle directly.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
 
-Let me respin that.
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  drivers/edac/edac_mc.c   | 28 +++++++++++++---------------
+>  drivers/edac/edac_mc.h   |  2 ++
+>  drivers/edac/ghes_edac.c |  6 +++++-
+>  3 files changed, 20 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index 6d880cf4d599..cdfb383f7a35 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -925,11 +925,9 @@ const char *edac_layer_name[] = {
+>  EXPORT_SYMBOL_GPL(edac_layer_name);
+>  
+>  static void edac_inc_ce_error(struct mem_ctl_info *mci,
+> -			      const int pos[EDAC_MAX_LAYERS],
+> +			      struct dimm_info *dimm,
+>  			      const u16 count)
+>  {
+> -	struct dimm_info *dimm = edac_get_dimm(mci, pos[0], pos[1], pos[2]);
+> -
+>  	mci->ce_mc += count;
+>  
+>  	if (dimm)
+> @@ -939,11 +937,9 @@ static void edac_inc_ce_error(struct mem_ctl_info *mci,
+>  }
+>  
+>  static void edac_inc_ue_error(struct mem_ctl_info *mci,
+> -				    const int pos[EDAC_MAX_LAYERS],
+> -				    const u16 count)
+> +			      struct dimm_info *dimm,
+> +			      const u16 count)
+>  {
+> -	struct dimm_info *dimm = edac_get_dimm(mci, pos[0], pos[1], pos[2]);
+> -
+>  	mci->ue_mc += count;
+>  
+>  	if (dimm)
+> @@ -953,8 +949,8 @@ static void edac_inc_ue_error(struct mem_ctl_info *mci,
+>  }
+>  
+>  static void edac_ce_error(struct mem_ctl_info *mci,
+> +			  struct dimm_info *dimm,
+>  			  const u16 error_count,
+> -			  const int pos[EDAC_MAX_LAYERS],
+>  			  const char *msg,
+>  			  const char *location,
+>  			  const char *label,
+> @@ -982,7 +978,7 @@ static void edac_ce_error(struct mem_ctl_info *mci,
+>  				       error_count, msg, msg_aux, label,
+>  				       location, detail);
+>  	}
+> -	edac_inc_ce_error(mci, pos, error_count);
+> +	edac_inc_ce_error(mci, dimm, error_count);
+>  
+>  	if (mci->scrub_mode == SCRUB_SW_SRC) {
+>  		/*
+> @@ -1006,8 +1002,8 @@ static void edac_ce_error(struct mem_ctl_info *mci,
+>  }
+>  
+>  static void edac_ue_error(struct mem_ctl_info *mci,
+> +			  struct dimm_info *dimm,
+>  			  const u16 error_count,
+> -			  const int pos[EDAC_MAX_LAYERS],
+>  			  const char *msg,
+>  			  const char *location,
+>  			  const char *label,
+> @@ -1041,15 +1037,15 @@ static void edac_ue_error(struct mem_ctl_info *mci,
+>  			      msg, msg_aux, label, location, detail);
+>  	}
+>  
+> -	edac_inc_ue_error(mci, pos, error_count);
+> +	edac_inc_ue_error(mci, dimm, error_count);
+>  }
+>  
+>  void edac_raw_mc_handle_error(const enum hw_event_mc_err_type type,
+>  			      struct mem_ctl_info *mci,
+> +			      struct dimm_info *dimm,
+>  			      struct edac_raw_error_desc *e)
+>  {
+>  	char detail[80];
+> -	int pos[EDAC_MAX_LAYERS] = { e->top_layer, e->mid_layer, e->low_layer };
+>  
+>  	/* Memory type dependent details about the error */
+>  	if (type == HW_EVENT_ERR_CORRECTED) {
+> @@ -1057,7 +1053,7 @@ void edac_raw_mc_handle_error(const enum hw_event_mc_err_type type,
+>  			"page:0x%lx offset:0x%lx grain:%ld syndrome:0x%lx",
+>  			e->page_frame_number, e->offset_in_page,
+>  			e->grain, e->syndrome);
+> -		edac_ce_error(mci, e->error_count, pos, e->msg, e->location,
+> +		edac_ce_error(mci, dimm, e->error_count, e->msg, e->location,
+>  			      e->label, detail, e->other_detail,
+>  			      e->page_frame_number, e->offset_in_page, e->grain);
+>  	} else {
+> @@ -1065,7 +1061,7 @@ void edac_raw_mc_handle_error(const enum hw_event_mc_err_type type,
+>  			"page:0x%lx offset:0x%lx grain:%ld",
+>  			e->page_frame_number, e->offset_in_page, e->grain);
+>  
+> -		edac_ue_error(mci, e->error_count, pos, e->msg, e->location,
+> +		edac_ue_error(mci, dimm, e->error_count, e->msg, e->location,
+>  			      e->label, detail, e->other_detail);
+>  	}
+>  
+> @@ -1245,6 +1241,8 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
+>  			       (e->page_frame_number << PAGE_SHIFT) | e->offset_in_page,
+>  			       grain_bits, e->syndrome, e->other_detail);
+>  
+> -	edac_raw_mc_handle_error(type, mci, e);
+> +	dimm = edac_get_dimm(mci, top_layer, mid_layer, low_layer);
+> +
+> +	edac_raw_mc_handle_error(type, mci, dimm, e);
+>  }
+>  EXPORT_SYMBOL_GPL(edac_mc_handle_error);
+> diff --git a/drivers/edac/edac_mc.h b/drivers/edac/edac_mc.h
+> index 02aac5c61d00..2c3e2fbcedc4 100644
+> --- a/drivers/edac/edac_mc.h
+> +++ b/drivers/edac/edac_mc.h
+> @@ -214,6 +214,7 @@ extern int edac_mc_find_csrow_by_page(struct mem_ctl_info *mci,
+>   *
+>   * @type:		severity of the error (CE/UE/Fatal)
+>   * @mci:		a struct mem_ctl_info pointer
+> + * @dimm:		a struct dimm_info pointer
+>   * @e:			error description
+>   *
+>   * This raw function is used internally by edac_mc_handle_error(). It should
+> @@ -222,6 +223,7 @@ extern int edac_mc_find_csrow_by_page(struct mem_ctl_info *mci,
+>   */
+>  void edac_raw_mc_handle_error(const enum hw_event_mc_err_type type,
+>  			      struct mem_ctl_info *mci,
+> +			      struct dimm_info *dimm,
+>  			      struct edac_raw_error_desc *e);
+>  
+>  /**
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index e0b90c6d7d63..4f5721cf4380 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -193,6 +193,7 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
+>  
+>  void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  {
+> +	struct dimm_info *dimm;
+>  	enum hw_event_mc_err_type type;
+>  	struct edac_raw_error_desc *e;
+>  	struct mem_ctl_info *mci;
+> @@ -437,7 +438,10 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  		       (e->page_frame_number << PAGE_SHIFT) | e->offset_in_page,
+>  		       grain_bits, e->syndrome, pvt->detail_location);
+>  
+> -	edac_raw_mc_handle_error(type, mci, e);
+> +	dimm = edac_get_dimm_by_index(mci, e->top_layer);
+> +
+> +	edac_raw_mc_handle_error(type, mci, dimm, e);
+> +
+>  	spin_unlock_irqrestore(&ghes_lock, flags);
+>  }
+>  
+
+
+
+Thanks,
+Mauro
