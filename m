@@ -2,188 +2,126 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9830C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49177ECE596
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB62E21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CF0214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfJKC4R (ORCPT
+        id S1726686AbfJKC76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 22:56:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:47710 "EHLO foss.arm.com"
+        Thu, 10 Oct 2019 22:59:58 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60510 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbfJKC4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 22:56:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52B0028;
-        Thu, 10 Oct 2019 19:56:16 -0700 (PDT)
-Received: from [10.162.41.129] (p8cg001049571a15.blr.arm.com [10.162.41.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AD603F71A;
-        Thu, 10 Oct 2019 19:56:09 -0700 (PDT)
-Subject: Re: [PATCH V9 2/2] arm64/mm: Enable memory hot remove
-To:     Catalin Marinas <catalin.marinas@arm.com>
+        id S1726116AbfJKC76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 22:59:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 19:59:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,282,1566889200"; 
+   d="scan'208";a="219252094"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Oct 2019 19:59:14 -0700
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
+        khlebnikov@yandex-team.ru, cai@lca.pw, shakeelb@google.com
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        will@kernel.org, mark.rutland@arm.com, david@redhat.com,
-        cai@lca.pw, logang@deltatee.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com, steve.capper@arm.com, broonie@kernel.org,
-        valentin.schneider@arm.com, Robin.Murphy@arm.com,
-        steven.price@arm.com, suzuki.poulose@arm.com, ira.weiny@intel.com
-References: <1570609308-15697-1-git-send-email-anshuman.khandual@arm.com>
- <1570609308-15697-3-git-send-email-anshuman.khandual@arm.com>
- <20191010113433.GI28269@mbp>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <f51cdb20-ddc4-4fb7-6c45-791d2e1e690c@arm.com>
-Date:   Fri, 11 Oct 2019 08:26:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191010113433.GI28269@mbp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [Patch v3 2/2] mm/rmap.c: reuse mergeable anon_vma as parent when fork
+Date:   Fri, 11 Oct 2019 10:58:41 +0800
+Message-Id: <20191011025841.16801-2-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191011025841.16801-1-richardw.yang@linux.intel.com>
+References: <20191011025841.16801-1-richardw.yang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/2019 05:04 PM, Catalin Marinas wrote:
-> Hi Anshuman,
-> 
-> On Wed, Oct 09, 2019 at 01:51:48PM +0530, Anshuman Khandual wrote:
->> +static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
->> +				    unsigned long end, bool free_mapped)
->> +{
->> +	unsigned long next;
->> +	pmd_t *pmdp, pmd;
->> +
->> +	do {
->> +		next = pmd_addr_end(addr, end);
->> +		pmdp = pmd_offset(pudp, addr);
->> +		pmd = READ_ONCE(*pmdp);
->> +		if (pmd_none(pmd))
->> +			continue;
->> +
->> +		WARN_ON(!pmd_present(pmd));
->> +		if (pmd_sect(pmd)) {
->> +			pmd_clear(pmdp);
->> +			flush_tlb_kernel_range(addr, next);
-> 
-> The range here could be a whole PMD_SIZE. Since we are invalidating a
-> single block entry, one TLBI should be sufficient:
-> 
-> 			flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+In function __anon_vma_prepare(), we will try to find anon_vma if it is
+possible to reuse it. While on fork, the logic is different.
 
-Sure, will change.
+Since commit 5beb49305251 ("mm: change anon_vma linking to fix
+multi-process server scalability issue"), function anon_vma_clone()
+tries to allocate new anon_vma for child process. But the logic here
+will allocate a new anon_vma for each vma, even in parent this vma
+is mergeable and share the same anon_vma with its sibling. This may do
+better for scalability issue, while it is not necessary to do so
+especially after interval tree is used.
 
-> 
->> +			if (free_mapped)
->> +				free_hotplug_page_range(pmd_page(pmd),
->> +							PMD_SIZE);
->> +			continue;
->> +		}
->> +		WARN_ON(!pmd_table(pmd));
->> +		unmap_hotplug_pte_range(pmdp, addr, next, free_mapped);
->> +	} while (addr = next, addr < end);
->> +}
->> +
->> +static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
->> +				    unsigned long end, bool free_mapped)
->> +{
->> +	unsigned long next;
->> +	pud_t *pudp, pud;
->> +
->> +	do {
->> +		next = pud_addr_end(addr, end);
->> +		pudp = pud_offset(pgdp, addr);
->> +		pud = READ_ONCE(*pudp);
->> +		if (pud_none(pud))
->> +			continue;
->> +
->> +		WARN_ON(!pud_present(pud));
->> +		if (pud_sect(pud)) {
->> +			pud_clear(pudp);
->> +			flush_tlb_kernel_range(addr, next);
-> 			^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 			flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+Commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma hierarchy")
+tries to reuse some anon_vma by counting child anon_vma and attached
+vmas. While for those mergeable anon_vmas, we can just reuse it and not
+necessary to go through the logic.
 
-Will change.
+After this change, kernel build test reduces 20% anon_vma allocation.
 
-> 
-> [...]
->> +static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
->> +				 unsigned long end, unsigned long floor,
->> +				 unsigned long ceiling)
->> +{
->> +	pte_t *ptep, pte;
->> +	unsigned long i, start = addr;
->> +
->> +	do {
->> +		ptep = pte_offset_kernel(pmdp, addr);
->> +		pte = READ_ONCE(*ptep);
->> +		WARN_ON(!pte_none(pte));
->> +	} while (addr += PAGE_SIZE, addr < end);
-> 
-> So this loop is just a sanity check (pte clearing having been done by
-> the unmap loops). That's fine, maybe a comment for future reference.
+Do the same kernel build test, it shows run time in sys reduced 11.5%.
 
-Sure, will add.
-> 
->> +
->> +	if (!pgtable_range_aligned(start, end, floor, ceiling, PMD_MASK))
->> +		return;
->> +
->> +	ptep = pte_offset_kernel(pmdp, 0UL);
->> +	for (i = 0; i < PTRS_PER_PTE; i++) {
->> +		if (!pte_none(READ_ONCE(ptep[i])))
->> +			return;
->> +	}
-> 
-> We could do with a comment for this loop along the lines of:
-> 
-> 	Check whether we can free the pte page if the rest of the
-> 	entries are empty. Overlap with other regions have been handled
-> 	by the floor/ceiling check.
+Origin:
 
-Sure, will add.
+real    2m50.467s
+user    17m52.002s
+sys     1m51.953s
 
-> 
-> Apart from the comments above, the rest of the patch looks fine. Once
-> fixed:
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> 
-> Mark Rutland mentioned at some point that, as a preparatory patch to
-> this series, we'd need to make sure we don't hot-remove memory already
-> given to the kernel at boot. Any plans here?
+real    2m48.662s
+user    17m55.464s
+sys     1m50.553s
 
-Hmm, this series just enables platform memory hot remove as required from
-generic memory hotplug framework. The path here is triggered either from
-remove_memory() or __remove_memory() which takes physical memory range
-arguments like (nid, start, size) and do the needful. arch_remove_memory()
-should never be required to test given memory range for anything including
-being part of the boot memory.
+real    2m51.143s
+user    17m59.687s
+sys     1m53.600s
 
-IIUC boot memory added to system with memblock_add() lose all it's identity
-after the system is up and running. In order to reject any attempt to hot
-remove boot memory, platform needs to remember all those memory that came
-early in the boot and then scan through it during arch_remove_memory().
+Patched:
 
-Ideally, it is the responsibility of [_]remove_memory() callers like ACPI
-driver, DAX etc to make sure they never attempt to hot remove a memory
-range, which never got hot added by them in the first place. Also, unlike
-/sys/devices/system/memory/probe there is no 'unprobe' interface where the
-user can just trigger boot memory removal. Hence, unless there is a bug in
-ACPI, DAX or other callers, there should never be any attempt to hot remove
-boot memory in the first place.
+real	2m40.080s
+user	17m4.644s
+sys	1m39.321s
 
-> 
-> Thanks.
-> 
+real	2m39.967s
+user	17m2.445s
+sys	1m38.850s
+
+real	2m40.581s
+user	17m1.975s
+sys	1m39.065s
+
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+---
+ mm/rmap.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/mm/rmap.c b/mm/rmap.c
+index fc0aba7fb9b9..0dd5f8b04a48 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -269,6 +269,18 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+ 	struct anon_vma_chain *avc, *pavc;
+ 	struct anon_vma *root = NULL;
+ 	bool reuse = !dst->anon_vma && src->anon_vma;
++	struct vm_area_struct *prev = dst->vm_prev, *pprev = src->vm_prev;
++
++	/*
++	 * If parent share anon_vma with its vm_prev, keep this sharing in in
++	 * child.
++	 *
++	 * 1. Parent has vm_prev, which implies we have vm_prev.
++	 * 2. Parent and its vm_prev have the same anon_vma.
++	 */
++	if (reuse && pprev && pprev->anon_vma == src->anon_vma)
++		dst->anon_vma = prev->anon_vma;
++
+ 
+ 	list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
+ 		struct anon_vma *anon_vma;
+-- 
+2.17.1
+
