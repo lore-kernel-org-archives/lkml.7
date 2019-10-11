@@ -2,102 +2,88 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C71BC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3380C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B89220673
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7232320673
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570804869;
+	bh=Hp/r5Crrw06dzsjfMgUI8IYRvCRa5tvw6FXdCNRqeeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vAQazk3/qd/dSDYrzkLYL0bWw5KWRfYU1oq75tHH09lTu0supOaxoT0oDEg8brJw4
+	 KWAIw8PjCAMwil5YDDmZKgA2DJpW5maHe2WgAeLzic8KQTYLUvq0fmYpQ15li/Xpuo
+	 IR3MpqmfifWvrWvRm6/I3yN+3ojujWXeTa7wE3vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfJKOjf (ORCPT
+        id S1726905AbfJKOlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:39:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43582 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbfJKOje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:39:34 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6BFD2C01FBD9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 14:39:34 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id c188so2861924wmd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 07:39:34 -0700 (PDT)
+        Fri, 11 Oct 2019 10:41:08 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36331 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfJKOlI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:41:08 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 67so8153437oto.3;
+        Fri, 11 Oct 2019 07:41:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=liQbAgHSmXMDz2MwPXfH9RoWMwZsEiL9QVC3TV8t25k=;
-        b=ScK6gM3hiL6QAo/BBLSvnRxxUxusAJAeLNyXex0jJ/O4UwgIXyUBFCeGhOhp+XGeIX
-         t1pe6F/5NbjJgphjlcZRKw7SatWQlJyYmHv1dA4h++FLkULd201Xb2p9kGa7BS/AKtsB
-         ngC3ZcWVi4jGX3h9r1Y6D0/EzrX0TeqnM2oCaGsdYyxreT9xgjeuiWVxCklRbMb9qmgo
-         V/VMiECJzqhTQCwogaTJr6STJykGLIsgVyaktjUgOYGKMQKRfFCAqjDOKt8CsgVs/YaS
-         u1Oki1eFsSQLjDCBX4pq890r/9cuo7ouuTq0oDr1g3lm9rBGBsYN+fh5k5vzAO5PL1lX
-         QlGg==
-X-Gm-Message-State: APjAAAUXSiGKruc6y1R+X1Ki6UuYkjiuPeNs9gpaEFQQsONg1cJbE0w9
-        qbh0w6psUWu2YQWZV0l6rj15A28o/VnFwyM20LBQURsw4XauVW0nHH2s9zqnKh+QPOLlMxY40Vz
-        ZMl0C69s4KPB6sHemWNebRIzI
-X-Received: by 2002:a5d:6984:: with SMTP id g4mr13566586wru.43.1570804773107;
-        Fri, 11 Oct 2019 07:39:33 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxOgGfiWykQOZWxvAQCAQ5lTZZlOEdFhFzDrlVB3KHciz9JN8beokYLGpmV6a5f51pd2LT9pQ==
-X-Received: by 2002:a5d:6984:: with SMTP id g4mr13566561wru.43.1570804772906;
-        Fri, 11 Oct 2019 07:39:32 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id u25sm9661696wml.4.2019.10.11.07.39.31
+        bh=13+exJToatmaIzt24oxwTrGZYM7rrhfRGi/WJDiOBwA=;
+        b=ebbDWM1+OkzY1heajDUmUY1nK4V4X7Sk33fWZiWAAq7cs19JmhixlcR5/PwcNor4Ru
+         1mksjdxhSWWCiVxbq/fcfRkofzvlxvvfJ77UBJ+SAvlKrYWGIyJavGmXIAym+9isK629
+         n9my1j57KH1mA/iPp4+/I8DG+Lzl2+DnW/C3cfein1nYG90AXRtI5F4zIjaNlVS3AG3g
+         g+qFGcLAyaxdKF+orcVngrR1emzX72+We4lgL5LwIKLDxSaqsLcZsSVNXsh2s/9ipTv6
+         JqNOQTaupvaNtkAdDXeTJtnYfW9IT1B/ZT0c9uldMubIy1rR0R8wB81gBRGjfqiFAGic
+         9BnA==
+X-Gm-Message-State: APjAAAVMCIvQTwXiGqYRptI3tEEgheimcMsvczf6FSvD+DYRkwpRTnWD
+        2omLDNonF5oc0RIRIf0Euw==
+X-Google-Smtp-Source: APXvYqwgioBIlOsE8YnkGA0AfZmGlUiR67ETRFc335JqHw8L5b/6qB4u2WDleLxV+K+60E0+AtJRLg==
+X-Received: by 2002:a9d:5e12:: with SMTP id d18mr12786439oti.220.1570804429525;
+        Fri, 11 Oct 2019 07:33:49 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w201sm2694172oie.44.2019.10.11.07.33.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 07:39:32 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 16:39:30 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        Jorgen Hansen <jhansen@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 2/2] vhost/vsock: don't allow half-closed socket in
- the host
-Message-ID: <20191011143930.hs2pkz5i2bci7igs@steredhat>
-References: <20191011130758.22134-1-sgarzare@redhat.com>
- <20191011130758.22134-3-sgarzare@redhat.com>
- <20191011102246-mutt-send-email-mst@kernel.org>
+        Fri, 11 Oct 2019 07:33:49 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 09:33:48 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au,
+        mark.rutland@arm.com, robh+dt@kernel.org, maz@kernel.org,
+        jason@lakedaemon.net, tglx@linutronix.de,
+        Eddie James <eajames@linux.ibm.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: interrupt-controller: Add Aspeed SCU
+ interrupt controller
+Message-ID: <20191011143348.GA22630@bogus>
+References: <1569617929-29055-1-git-send-email-eajames@linux.ibm.com>
+ <1569617929-29055-2-git-send-email-eajames@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011102246-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1569617929-29055-2-git-send-email-eajames@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 10:26:34AM -0400, Michael S. Tsirkin wrote:
-> On Fri, Oct 11, 2019 at 03:07:58PM +0200, Stefano Garzarella wrote:
-> > vmci_transport never allowed half-closed socket on the host side.
-> > In order to provide the same behaviour, we changed the
-> > vhost_transport_stream_has_data() to return 0 (no data available)
-> > if the peer (guest) closed the connection.
-> > 
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+On Fri, 27 Sep 2019 15:58:46 -0500, Eddie James wrote:
+> Document the Aspeed SCU interrupt controller and add an include file
+> for the interrupts it provides.
 > 
-> I don't think we should copy bugs like this.
-> Applications don't actually depend on this VMCI limitation, in fact
-> it looks like a working application can get broken by this.
-> 
-> So this looks like a userspace visible ABI change
-> which we can't really do.
-> 
-> If it turns out some application cares, it can always
-> fully close the connection. Or add an ioctl so the application
-> can find out whether half close works.
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  .../interrupt-controller/aspeed,ast2xxx-scu-ic.txt | 26 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 ++++++
+>  .../interrupt-controller/aspeed-scu-ic.h           | 23 +++++++++++++++++++
+>  3 files changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+>  create mode 100644 include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
 > 
 
-I got your point.
-Discard this patch.
-
-Thanks,
-Stefano
+Reviewed-by: Rob Herring <robh@kernel.org>
