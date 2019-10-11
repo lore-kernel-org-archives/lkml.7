@@ -2,192 +2,109 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE23ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05631C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20557206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3F22084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570800685;
+	bh=JcblHB4891afj+1Cho/6gGeaDtEnNqhWdHtUadMFYxc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nfHdlyiCLZNp3ws9ZLEkUqtYsYgdXbLQ2uuCYjDGh7M30iMiSBTraojP90SaeYsRJ
+	 W9XZnQFAyN1QB0Z5VuUjplTZxQs0qGMq7wPvtcYp6iHv1sGao28IOto/hPc7Rt2TuF
+	 M2eEE5ec3vUbde5hpk7y+kvNR5VG8nSV1jWuioyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbfJKNao (ORCPT
+        id S1728670AbfJKNbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:30:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:25839 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbfJKNao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:30:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 06:30:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,284,1566889200"; 
-   d="scan'208";a="346027002"
-Received: from fyin-mobl.ccr.corp.intel.com (HELO [10.254.209.213]) ([10.254.209.213])
-  by orsmga004.jf.intel.com with ESMTP; 11 Oct 2019 06:30:42 -0700
-Subject: Re: [RESEND] ACPI / processor_idle: use dead loop instead of io port
- access for wait
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Len Brown <lenb@kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190909073937.31554-1-fengwei.yin@intel.com>
- <12278756.3dKznOqol2@kreacher>
-From:   "Yin, Fengwei" <fengwei.yin@intel.com>
-Message-ID: <8a65bf97-c066-8e5e-ba82-75e2a6fd5b45@intel.com>
-Date:   Fri, 11 Oct 2019 21:30:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 09:31:24 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41597 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbfJKNbY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:31:24 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t3so5806977pga.8;
+        Fri, 11 Oct 2019 06:31:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PoH5MwnZ8mABUE4xEY3uv3HD3AizjwGwq9FYbMsqiJI=;
+        b=Dd1ZRQUqxJbJ4XmorKsIkCtEacO2eN09lx8ajkjbqAfiJu29ijb20yUVFhLES2aTAC
+         4QL7Kndoe+PxN+LYdFsp2lGfyuVNxnUBXgGL/HFakv10SrqS3+YzRMMBGS/5AuM0qlDn
+         VwX4247mLRYbydvGYCP7gGBNU2Uu7H+peXDi/cJUx3mDSY340fLjw2+5GB8Wc28eCZrS
+         n8QyxrNZjj0KNuY4OPv/yTNr5LKizc2oz1sB5GJD9k262ioPMubB2zzLWSBYfH526Ws9
+         AO5vQdOSr9WbeYAmcunbARwBa9vpuV9n8vty5ILql8hK+8i5Xpwgcg7QhX6eYZNQRz83
+         4QFA==
+X-Gm-Message-State: APjAAAXticFZNFAla4guUMdajszLoyuuDSFyefuqrKwJeTlx08PUfEfJ
+        ZBOLRBXD44y6QqNk+1pUpKY=
+X-Google-Smtp-Source: APXvYqx8TVKU23vxfiCJYNLm8ZBGLiP4x+3bYJYdBArplQPvFpQtfe3pjF2ftceD826I4XWYVhs9MQ==
+X-Received: by 2002:a17:90a:9f94:: with SMTP id o20mr17787166pjp.76.1570800682200;
+        Fri, 11 Oct 2019 06:31:22 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id d4sm7744375pjs.9.2019.10.11.06.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 06:31:21 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 61BD5403EA; Fri, 11 Oct 2019 13:31:20 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 13:31:20 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
+Message-ID: <20191011133120.GP16384@42.do-not-panic.com>
+References: <20190822192451.5983-1-scott.branden@broadcom.com>
+ <20190822192451.5983-3-scott.branden@broadcom.com>
+ <s5hef1crybq.wl-tiwai@suse.de>
+ <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
+ <s5hr258j6ln.wl-tiwai@suse.de>
+ <93b8285a-e5eb-d4a4-545d-426bbbeb8008@broadcom.com>
+ <s5ho90byhnv.wl-tiwai@suse.de>
+ <b440f372-45be-c06c-94a1-44ae6b1e7eb8@broadcom.com>
+ <s5hwoeyj3i5.wl-tiwai@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <12278756.3dKznOqol2@kreacher>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5hwoeyj3i5.wl-tiwai@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 27, 2019 at 12:40:02PM +0200, Takashi Iwai wrote:
+> On Mon, 26 Aug 2019 19:24:22 +0200,
+> Scott Branden wrote:
+> > 
+> > I will admit I am not familiar with every subtlety of PCI
+> > accesses. Any comments to the Valkyrie driver in this patch series are
+> > appreciated.
+> > But not all drivers need to work on all architectures. I can add a
+> > depends on x86 64bit architectures to the driver to limit it to such.
+> 
+> But it's an individual board on PCIe, and should work no matter which
+> architecture is?  Or is this really exclusive to x86?
 
-On 10/11/2019 5:05 PM, Rafael J. Wysocki wrote:
-> Sorry for the delay.
-No problem.
+Poke Scott.
 
-> 
-> On Monday, September 9, 2019 9:39:37 AM CEST Yin Fengwei wrote:
->> In function acpi_idle_do_entry(), we do an io port access to guarantee
->> hardware behavior. But it could trigger unnecessary vmexit for
->> virtualization environemnt.
-> 
-> Is this a theoretical problem, or do you actually see it?
-> 
-> If you see it, I'd like to have a pointer to a bug report regarding it
-> or similar.
-We did see this issue when we run linux as guest with ACRN hypervisor
-instead of kvm or xen. In our case, we export all native C states to
-guest and let guest choose which C state it will enter.
-
-And we observed many pm timer port access when guest tried to enter
-deeper C state (Yes, we emulate pm timer so pm timer access will trigger
-vmexit).
-
-
-> 
->>  From the comments of this part of code, we could use busy wait instead
->> of io port access to guarantee hardware behavior and avoid unnecessary
->> vmexit.
->>
->> Signed-off-by: Yin Fengwei <fengwei.yin@intel.com>
->> ---
->>   drivers/acpi/processor_idle.c | 33 ++++++++++++++++++++++++++++++---
->>   1 file changed, 30 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
->> index ed56c6d20b08..676553228e8f 100644
->> --- a/drivers/acpi/processor_idle.c
->> +++ b/drivers/acpi/processor_idle.c
->> @@ -55,6 +55,8 @@ struct cpuidle_driver acpi_idle_driver = {
->>   };
->>   
->>   #ifdef CONFIG_ACPI_PROCESSOR_CSTATE
->> +static struct timespec64 dummy_delta = {0L, 0L};
->> +
->>   static
->>   DEFINE_PER_CPU(struct acpi_processor_cx * [CPUIDLE_STATE_MAX], acpi_cstate);
->>   
->> @@ -64,6 +66,18 @@ static int disabled_by_idle_boot_param(void)
->>   		boot_option_idle_override == IDLE_HALT;
->>   }
->>   
->> +static void dummy_wait(void)
->> +{
->> +	struct timespec64 now, target;
->> +
->> +	ktime_get_real_ts64(&now);
->> +	target = timespec64_add(now, dummy_delta);
->> +
->> +	do {
->> +		ktime_get_real_ts64(&now);
->> +	} while (timespec64_compare(&now, &target) < 0);
->> +}
-> 
-> Why not to use ndelay() instead of this? ->
-Yes. ndelay should work also.
-
-> 
->> +
->>   /*
->>    * IBM ThinkPad R40e crashes mysteriously when going into C2 or C3.
->>    * For now disable this. Probably a bug somewhere else.
->> @@ -660,8 +674,12 @@ static void __cpuidle acpi_idle_do_entry(struct acpi_processor_cx *cx)
->>   		inb(cx->address);
->>   		/* Dummy wait op - must do something useless after P_LVL2 read
->>   		   because chipsets cannot guarantee that STPCLK# signal
->> -		   gets asserted in time to freeze execution properly. */
->> -		inl(acpi_gbl_FADT.xpm_timer_block.address);
->> +		   gets asserted in time to freeze execution properly.
->> +
->> +		   Previously, we do io port access here which could trigger
->> +		   unnecessary trap to HV for virtualization env. We use dead
->> +		   loop here to avoid the impact to virtualization env. */
->> +		dummy_wait();
->>   	}
->>   }
->>   
->> @@ -683,7 +701,7 @@ static int acpi_idle_play_dead(struct cpuidle_device *dev, int index)
->>   		else if (cx->entry_method == ACPI_CSTATE_SYSTEMIO) {
->>   			inb(cx->address);
->>   			/* See comment in acpi_idle_do_entry() */
->> -			inl(acpi_gbl_FADT.xpm_timer_block.address);
->> +			dummy_wait();
->>   		} else
->>   			return -ENODEV;
->>   	}
->> @@ -902,6 +920,7 @@ static inline void acpi_processor_cstate_first_run_checks(void)
->>   {
->>   	acpi_status status;
->>   	static int first_run;
->> +	struct timespec64 ts0, ts1;
->>   
->>   	if (first_run)
->>   		return;
->> @@ -912,6 +931,13 @@ static inline void acpi_processor_cstate_first_run_checks(void)
->>   			  max_cstate);
->>   	first_run++;
->>   
->> +	/* profiling the time used for dummy wait op */
->> +	ktime_get_real_ts64(&ts0);
->> +	inl(acpi_gbl_FADT.xpm_timer_block.address);
->> +	ktime_get_real_ts64(&ts1);
-> 
-> -> And simply measure the number of nsecs this takes?
-Yes. nsecs is fine here. and use udelay in dummy_wait.
-
-Regards
-Yin, Fengwei
-
-> 
->> +
->> +	dummy_delta = timespec64_sub(ts1, ts0);
->> +
->>   	if (acpi_gbl_FADT.cst_control && !nocst) {
->>   		status = acpi_os_write_port(acpi_gbl_FADT.smi_command,
->>   					    acpi_gbl_FADT.cst_control, 8);
->> @@ -920,6 +946,7 @@ static inline void acpi_processor_cstate_first_run_checks(void)
->>   					"Notifying BIOS of _CST ability failed"));
->>   	}
->>   }
->> +
->>   #else
->>   
->>   static inline int disabled_by_idle_boot_param(void) { return 0; }
->>
-> 
-> 
-> 
-> 
-
+  Luis
