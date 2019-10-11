@@ -2,127 +2,192 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E64C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F9BECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933312064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8509021835
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rp4RA62M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbfJKR2q (ORCPT
+        id S1728593AbfJKRce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:28:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:38416 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728400AbfJKR2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:28:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D97928;
-        Fri, 11 Oct 2019 10:28:45 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B3263F703;
-        Fri, 11 Oct 2019 10:28:44 -0700 (PDT)
-Subject: Re: [PATCH 1/3] arm64: cpufeature: Fix the type of no FP/SIMD
- capability
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20191010171517.28782-1-suzuki.poulose@arm.com>
- <20191010171517.28782-2-suzuki.poulose@arm.com>
- <20191011113620.GG27757@arm.com>
- <4ba5c423-4e2a-d810-cd36-32a16ad42c91@arm.com>
- <20191011142137.GH27757@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <418b0c4b-cbcd-4263-276d-1e9edc5eee0b@arm.com>
-Date:   Fri, 11 Oct 2019 18:28:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Fri, 11 Oct 2019 13:32:34 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:33557 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728400AbfJKRcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 13:32:33 -0400
+Received: by mail-yw1-f68.google.com with SMTP id w140so3765128ywd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 10:32:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lmJncVeXidMltIZGfdmFWVyQQHHQU4TMT+HqFa7kOMc=;
+        b=Rp4RA62MxqxqGPmI+Oen0nSznqGjtWzvZBTbW3kX6LjOLZJLuVwg3pIN4uQNIYNOC9
+         IRQ3dvCkYUemQbyvxPi/VPhcRQErPm82rpIovJT1dE/gX5Byh3oHST327msCReABDLFs
+         FRlyRAacPthqN7WiRrUWL1JVfP5Ef7tPuHcWcaNg5O9+kX5UeNjK5yy6AY+8p86Vlkxo
+         xHOKbDCxIqc5z/xx/jbnIoOTyU4QEUWGLnwJRxUhnfya/HKI3GJUSu4Q0Q3HEp2E7CNc
+         y9wp2Jd2iD7fiti5Ywb8DS8zQpF1AOlM8PRyOqdljYNrF6+3eB3Wkhe4e6DPLiWZyggM
+         iJXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lmJncVeXidMltIZGfdmFWVyQQHHQU4TMT+HqFa7kOMc=;
+        b=EVJNf6tBrmqmd8vWHKgT+lqzdFxvQ9Fy19gCfEFsgVnac0h8mtL2t3eEnckNId3wFX
+         z1/paTHNhNKZUHHAxelEyT0JJRPxO9VGkzqMpEbVOGjooQBStS7V7pvkRlj/dwjxItRE
+         0WXhoPUWLPyPqzlbbWyeQ4TLCLpK0Wff8VRn31pA65Qr5jQ6oyUhbRcPcr4M8HeeW1/l
+         ZVWu1P1wlv7C7oXnXqKtuhCPK/11/pEBZbqul7bFOxp69hm+j9S5wsIkOlOaufkW+3oe
+         Szl7NW0AUMV7kHg0EozirBcHfQazQJIe2soa2GmwD0xdCNkAqgsarPmrnzdddfLTWnc5
+         hWSA==
+X-Gm-Message-State: APjAAAVn6N/Z9pL8qR+vfjhrkggPT7IO5tYw4ZqhKHMXgrNz32m/GlOf
+        50YQMdUI+HZXF9uZCAwHqQYZAOQu4iCdvxfAEmCY2g==
+X-Google-Smtp-Source: APXvYqxZaonxZjZHZ847y1kn9EiJCNILTsxaNlJhU+iZBSCGDSLiFaS45ZvGraVliW5gvwSDKHTuRYeEx7T7XkJ4eew=
+X-Received: by 2002:a81:6207:: with SMTP id w7mr3473534ywb.34.1570815152103;
+ Fri, 11 Oct 2019 10:32:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191011142137.GH27757@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191010152134.38545-1-minchan@kernel.org> <20191010191747.GA31673@cmpxchg.org>
+ <20191010221105.GA115307@google.com>
+In-Reply-To: <20191010221105.GA115307@google.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 11 Oct 2019 10:32:20 -0700
+Message-ID: <CALvZod4o496R889_OpCQCRGOrsFt3TLCXgKmksHzFvBGt6Xu9Q@mail.gmail.com>
+Subject: Re: [PATCH] mm: annotate refault stalls from swap_readpage
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 10, 2019 at 3:11 PM Minchan Kim <minchan@kernel.org> wrote:
+>
+> On Thu, Oct 10, 2019 at 03:17:47PM -0400, Johannes Weiner wrote:
+> > On Thu, Oct 10, 2019 at 08:21:34AM -0700, Minchan Kim wrote:
+> > > From: Minchan Kim <minchan@google.com>
+> > >
+> > > If block device supports rw_page operation, it doesn't submit bio
+> > > so annotation in submit_bio for refault stall doesn't work.
+> > > It happens with zram in android, especially swap read path which
+> > > could consume CPU cycle for decompress. It is also a problem for
+> > > zswap which uses frontswap.
+> > >
+> > > Annotate swap_readpage() to account the synchronous IO overhead
+> > > to prevent underreport memory pressure.
+> > >
+> > > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > > Signed-off-by: Minchan Kim <minchan@google.com>
+> >
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>
+> Thanks, Johannes!
+>
+> >
+> > Can you please add a comment to the caller? Lifted from submit_bio():
+>
+> Sure, I added a little about zram.
+>
+> >
+> >       /*
+> >        * Count submission time as memory stall. When the device is
+> >        * congested, or the submitting cgroup IO-throttled,
+> >        * submission can be a significant part of overall IO time.
+> >        */
+>
+>
+> From a8ae7cbc2d3f050aca810fd68285d45cb933b825 Mon Sep 17 00:00:00 2001
+> From: Minchan Kim <minchan@google.com>
+> Date: Thu, 10 Oct 2019 08:09:06 -0700
+> Subject: [PATCH v2] mm: annotate refault stalls from swap_readpage
+>
+> If block device supports rw_page operation, it doesn't submit bio
+> so annotation in submit_bio for refault stall doesn't work.
+> It happens with zram in android, especially swap read path which
+> could consume CPU cycle for decompress. It is also a problem for
+> zswap which uses frontswap.
+>
+> Annotate swap_readpage() to account the synchronous IO overhead
+> to prevent underreport memory pressure.
+>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Minchan Kim <minchan@google.com>
 
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-On 11/10/2019 15:21, Dave Martin wrote:
-> On Fri, Oct 11, 2019 at 01:13:18PM +0100, Suzuki K Poulose wrote: > Hi Dave
->>
->> On 11/10/2019 12:36, Dave Martin wrote:
->>> On Thu, Oct 10, 2019 at 06:15:15PM +0100, Suzuki K Poulose wrote:
->>>> The NO_FPSIMD capability is defined with scope SYSTEM, which implies
->>>> that the "absence" of FP/SIMD on at least one CPU is detected only
->>>> after all the SMP CPUs are brought up. However, we use the status
->>>> of this capability for every context switch. So, let us change
->>>> the scop to LOCAL_CPU to allow the detection of this capability
->>>> as and when the first CPU without FP is brought up.
->>>>
->>>> Also, the current type allows hotplugged CPU to be brought up without
->>>> FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
->>>> up. Fix both of these issues by changing the capability to
->>>> BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
->>>>
->>>> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
->>>> Cc: Will Deacon <will@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>>> ---
->>>>   arch/arm64/kernel/cpufeature.c | 2 +-
->>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->>>> index 9323bcc40a58..0f9eace6c64b 100644
->>>> --- a/arch/arm64/kernel/cpufeature.c
->>>> +++ b/arch/arm64/kernel/cpufeature.c
->>>> @@ -1361,7 +1361,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
->>>>   	{
->>>>   		/* FP/SIMD is not implemented */
->>>>   		.capability = ARM64_HAS_NO_FPSIMD,
->>>> -		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
->>>> +		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
->>>
->>> ARM64_HAS_NO_FPSIMD is really a disability, not a capability.
->>>
->>> Although we have other things that smell like this (CPU errata for
->>> example), I wonder whether inverting the meaning in the case would
->>> make the situation easier to understand.
->>
->> Yes, it is indeed a disability, more on that below.
->>
->>>
->>> So, we'd have ARM64_HAS_FPSIMD, with a minimum (signed) feature field
->>> value of 0.  Then this just looks like an ARM64_CPUCAP_SYSTEM_FEATURE
->>> IIUC.  We'd just need to invert the sense of the check in
->>> system_supports_fpsimd().
->>
->> This is particularly something we want to avoid with this patch. We want
->> to make sure that we have the up-to-date status of the disability right
->> when it happens. i.e, a CPU without FP/SIMD is brought up. With SYSTEM_FEATURE
->> you have to wait until we bring all the CPUs up. Also, for HAS_FPSIMD,
->> you must wait until all the CPUs are up, unlike the negated capability.
-> 
-> I don't see why waiting for the random defective early CPU to come up is
-> better than waiting for all the early CPUs to come up and then deciding.
-> 
-> Kernel-mode NEON aside, the status of this cap should not matter until
-> we enter userspace for the first time.
-> 
-> The only issue is if e.g., crypto drivers that can use kernel-mode NEON
-> probe for it before all early CPUs are up, and so cache the wrong
-> decision.  The current approach doesn't cope with that anyway AFAICT.
-
-This approach does in fact. With LOCAL_CPU scope, the moment a defective
-CPU turns up, we mark the "capability" and thus the kernel cannot use
-the neon then onwards, unlike the existing case where we have time till
-we boot all the CPUs (even when the boot CPU may be defective).
-
-Cheers
-Suzuki
+> ---
+>  mm/page_io.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index 24ee600f9131..18f1f8e1d27f 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/writeback.h>
+>  #include <linux/frontswap.h>
+>  #include <linux/blkdev.h>
+> +#include <linux/psi.h>
+>  #include <linux/uio.h>
+>  #include <linux/sched/task.h>
+>  #include <asm/pgtable.h>
+> @@ -354,10 +355,20 @@ int swap_readpage(struct page *page, bool synchronous)
+>         struct swap_info_struct *sis = page_swap_info(page);
+>         blk_qc_t qc;
+>         struct gendisk *disk;
+> +       unsigned long pflags;
+>
+>         VM_BUG_ON_PAGE(!PageSwapCache(page) && !synchronous, page);
+>         VM_BUG_ON_PAGE(!PageLocked(page), page);
+>         VM_BUG_ON_PAGE(PageUptodate(page), page);
+> +
+> +       /*
+> +        * Count submission time as memory stall. When the device is
+> +        * congested, the submitting cgroup IO-throttled, or backing
+> +        * device works synchronously(e.g., zram), submission can be
+> +        * a significant part of overall IO time.
+> +        */
+> +       psi_memstall_enter(&pflags);
+> +
+>         if (frontswap_load(page) == 0) {
+>                 SetPageUptodate(page);
+>                 unlock_page(page);
+> @@ -371,7 +382,7 @@ int swap_readpage(struct page *page, bool synchronous)
+>                 ret = mapping->a_ops->readpage(swap_file, page);
+>                 if (!ret)
+>                         count_vm_event(PSWPIN);
+> -               return ret;
+> +               goto out;
+>         }
+>
+>         ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
+> @@ -382,7 +393,7 @@ int swap_readpage(struct page *page, bool synchronous)
+>                 }
+>
+>                 count_vm_event(PSWPIN);
+> -               return 0;
+> +               goto out;
+>         }
+>
+>         ret = 0;
+> @@ -418,6 +429,7 @@ int swap_readpage(struct page *page, bool synchronous)
+>         bio_put(bio);
+>
+>  out:
+> +       psi_memstall_leave(&pflags);
+>         return ret;
+>  }
+>
+> --
+> 2.23.0.581.g78d2f28ef7-goog
+>
