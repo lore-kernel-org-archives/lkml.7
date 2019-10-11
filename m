@@ -2,270 +2,171 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DCCC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1C0C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0BD20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE93621A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 02:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RpoaVGVH"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="rD51Grqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbfJKCiN (ORCPT
+        id S1726467AbfJKCju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 22:38:13 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:42796 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfJKCiN (ORCPT
+        Thu, 10 Oct 2019 22:39:50 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40586 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbfJKCju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 22:38:13 -0400
-Received: by mail-yb1-f195.google.com with SMTP id 4so2625912ybq.9;
-        Thu, 10 Oct 2019 19:38:12 -0700 (PDT)
+        Thu, 10 Oct 2019 22:39:50 -0400
+Received: by mail-ot1-f66.google.com with SMTP id y39so6707228ota.7
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 19:39:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Y1tEHg+6HV2z5eWgxuYKpYvLfaLMY0X5948/BysY1RU=;
-        b=RpoaVGVH6PqJ7HAhwjoYx++HDU0x8PWelNX+ZckxPV3qtuGMp9RJgbPYaUHXe/IvFi
-         qTHXEmti0I1TnYHK1oDXTnwFvOQWX73wEWdYkGAzuun2x7fczySKYhldWHHc90zNH0ds
-         Qn5pusvOCZgl/8h+xxoKWYuXHxOjAKLirovmDv+zT2bxGjqKQeo9maw7+wjBnF5sQ74L
-         wf2JQMEiNNYOVYWviL+mkOAmhQabZT3w4IHuV+l0zuWtIp7Sp//U/FL5GIaC+RDHd3tu
-         YYVV1s5Q8BuSgsxQ/R+k7EAbhcO6Sy8zdm2khymHpHrnB2MRPwLwvK/XF3LoM3wWq5da
-         +qug==
+        bh=kUjGfToohnRw3RfgQ+9flaCfPAIrosIOz86XDKOCA7g=;
+        b=rD51GrqogZjnKGZorLgmKzAIqApDPuKQyJfPxfapnklb83LBkH2gdg56h8iJjsNAxP
+         Lp3Xdn8v+HFnoEdG86//8jnIHywJCYDtWHz4XjD66sYaVWFTFuG5xawBbDSfVMHwxqbL
+         zJpwyYXv9QxOEG1VfWm0VW//lM5WUuwMSVNnvQqeD8bg3v3VUBZe5vmarhcKhkwl6D/G
+         FzAomM5Ft+JWRlj+Qvjc/OTxDwkCzP8ZHRpDZfOZhRk7liObRTC6k1DZHjLkDgC58QIR
+         TKQa9CiL9KrF3j/3Lp9Sz6NJ4ZwTauuCjO0J2Ga87+B7d/M9gJ6bqzK7Oybgfl/jji/O
+         rrwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Y1tEHg+6HV2z5eWgxuYKpYvLfaLMY0X5948/BysY1RU=;
-        b=ZCsBi+LpB5szOAE1FFV2eZz4zwfZUSHesD2zAINLfP6gQN+f2X93ZWtDeVGPGb9Rpy
-         8coNvWHSSTh/My08cEZq9an4SsU52wzjvW2KqHR55wyXzrMdme1piqYAPVTg88iVNKCX
-         RdTxviK5U7np+Lx2cWqBKb/2MG32NupQxiQxracsYlEk8uI1eHUHh3zxMwMYwDo1XnvJ
-         +pjU3hyRn6aHnYRUJBQ7JUlbdjcDk4ysBq9tJYSsbxdJ9EfmGoYV/3Q/PGOrtE9NHLO7
-         T9284Y0su/u2bTEIHXP0JcG+X9efut9tttQ6HbQQpoLhT7F7/TbMYF+cGH3ObRu6gYK7
-         JABA==
-X-Gm-Message-State: APjAAAXFnJn9o5L4ZHyXolR85JYSBsFknG3nJXSzagtyMrVvsDNt69NB
-        xlFJy4JD1IjPdp3irKv870HpO4hROCOfm4Qx7RQ=
-X-Google-Smtp-Source: APXvYqxYdQ0cr9jkJleuePximkqmQgPv5Ltox7xPGUWuJFED0SP41Oc5C50L6DjUQALq2vo5EoiRiQk2Fsy/wFmB93A=
-X-Received: by 2002:a25:4e84:: with SMTP id c126mr8289590ybb.407.1570761491904;
- Thu, 10 Oct 2019 19:38:11 -0700 (PDT)
+        bh=kUjGfToohnRw3RfgQ+9flaCfPAIrosIOz86XDKOCA7g=;
+        b=mTQHjrnuyN4JzoUEMJOep7aIxb+THQcud00aCag50YdNiNXbQbyZP7iI7NMBvZVdlp
+         H49e3JmRttOsClAv/AbyDChGBj4eOIr7n9rkZqRnOoPnj0x8nNvF3U9O6M3UXult+6GH
+         y9SScY3nsUaC25OmrLIfGfp7zigUAIcX6YiI6xB1J6DuyuXIi3CFOZB39CYVJqE237be
+         66tn16MBMEyZieOHf+3Hb14WEv8ZRvWBrJKVWAPMa6/vpGmwUqTuCPuUq6DAcqBic05E
+         G29CfPtn4zIZqoRalkruq8FNZ3HxWnJFqYt6LRSurlAXKXbjADbkVmWwXWKXIzoM4kGA
+         1G9w==
+X-Gm-Message-State: APjAAAVB6hQq3lmN2L5WyehnUr5W2Zf5njrEn5mhK6SP19N2oE3xQs6S
+        0Frg0eirrWtwv6XTeIsnI3jBh1KSeQNCfnDk85M5rQ==
+X-Google-Smtp-Source: APXvYqyCjQsNSbI1mxag1lzJW/e/oU312qrBqdfJ38j8KxBq45vv+72ZX6iPup9KpaNI0dTRd5UK6J3tZdFLeJ9ljeo=
+X-Received: by 2002:a9d:7843:: with SMTP id c3mr8640549otm.71.1570761589216;
+ Thu, 10 Oct 2019 19:39:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <1570625609-11083-1-git-send-email-candlesea@gmail.com> <CAO-hwJKjZedG6yySDHKQoAmG5DdQ7QPhuaoMN9g0_KmbktD9fA@mail.gmail.com>
-In-Reply-To: <CAO-hwJKjZedG6yySDHKQoAmG5DdQ7QPhuaoMN9g0_KmbktD9fA@mail.gmail.com>
-From:   Candle Sun <candlesea@gmail.com>
-Date:   Fri, 11 Oct 2019 10:38:00 +0800
-Message-ID: <CAPnx3XP2XfcAQ_YsXU3Vi1zJORp7LQaH5KEvMJ+7EsBfOzgNfw@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: core: check whether usage page item is after
- usage id item
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        =?UTF-8?B?57+f5LqsIChPcnNvbiBaaGFpKQ==?= <orson.zhai@unisoc.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
+References: <157066227329.1059972.5659620631541203458.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157066230358.1059972.1736585303527133478.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu8ih2RffZHdwAnHZicL_v8CxV9WnCy+uA1jSSyh58xapA@mail.gmail.com>
+ <CAPcyv4iQ5Np3dDH=-a_7gPnWKBCHXGit2PN-h=Jw_eqj7Lb2BQ@mail.gmail.com> <CAKv+Gu9co_FTVYWNZsXF0H+fV1K76pZX4Yv11ANE6NwDBT3pBQ@mail.gmail.com>
+In-Reply-To: <CAKv+Gu9co_FTVYWNZsXF0H+fV1K76pZX4Yv11ANE6NwDBT3pBQ@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 10 Oct 2019 19:39:38 -0700
+Message-ID: <CAPcyv4iCpA_a7272HXVwBY3NqR1RbyuoXbQOPWG2xFHgqN8-iA@mail.gmail.com>
+Subject: Re: [PATCH v6 05/12] x86/efi: EFI soft reservation to E820 enumeration
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 8:24 PM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
+On Thu, Oct 10, 2019 at 11:41 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
 >
-> On Wed, Oct 9, 2019 at 2:54 PM Candle Sun <candlesea@gmail.com> wrote:
+> On Thu, 10 Oct 2019 at 20:31, Dan Williams <dan.j.williams@intel.com> wrote:
 > >
-> > From: Candle Sun <candle.sun@unisoc.com>
+> > On Wed, Oct 9, 2019 at 11:45 PM Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org> wrote:
+> > >
+> > > On Thu, 10 Oct 2019 at 01:19, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >
+> > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > > > interpretation of the EFI Memory Types as "reserved for a specific
+> > > > purpose".
+> > > >
+> > > > The proposed Linux behavior for specific purpose memory is that it is
+> > > > reserved for direct-access (device-dax) by default and not available for
+> > > > any kernel usage, not even as an OOM fallback.  Later, through udev
+> > > > scripts or another init mechanism, these device-dax claimed ranges can
+> > > > be reconfigured and hot-added to the available System-RAM with a unique
+> > > > node identifier. This device-dax management scheme implements "soft" in
+> > > > the "soft reserved" designation by allowing some or all of the
+> > > > reservation to be recovered as typical memory. This policy can be
+> > > > disabled at compile-time with CONFIG_EFI_SOFT_RESERVE=n, or runtime with
+> > > > efi=nosoftreserve.
+> > > >
+> > > > This patch introduces 2 new concepts at once given the entanglement
+> > > > between early boot enumeration relative to memory that can optionally be
+> > > > reserved from the kernel page allocator by default. The new concepts
+> > > > are:
+> > > >
+> > > > - E820_TYPE_SOFT_RESERVED: Upon detecting the EFI_MEMORY_SP
+> > > >   attribute on EFI_CONVENTIONAL memory, update the E820 map with this
+> > > >   new type. Only perform this classification if the
+> > > >   CONFIG_EFI_SOFT_RESERVE=y policy is enabled, otherwise treat it as
+> > > >   typical ram.
+> > > >
+> > > > - IORES_DESC_SOFT_RESERVED: Add a new I/O resource descriptor for
+> > > >   a device driver to search iomem resources for application specific
+> > > >   memory. Teach the iomem code to identify such ranges as "Soft Reserved".
+> > > >
+> > > > A follow-on change integrates parsing of the ACPI HMAT to identify the
+> > > > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
+> > > > now, just identify and reserve memory of this type.
+> > > >
+> > > > Cc: <x86@kernel.org>
+> > > > Cc: Borislav Petkov <bp@alien8.de>
+> > > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > > > Cc: Darren Hart <dvhart@infradead.org>
+> > > > Cc: Andy Shevchenko <andy@infradead.org>
+> > > > Cc: Andy Lutomirski <luto@kernel.org>
+> > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > For the EFI changes
+> > >
+> > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > >
+> > > although I must admit I don't follow the enum add_efi_mode logic 100%
 > >
-> > Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-> > to Main item") adds support for Usage Page item after Usage ID items
-> > (such as keyboards manufactured by Primax).
+> > I'm open to suggestions as I'm not sure it's the best possible
+> > organization. The do_add_efi_memmap() routine has the logic to
+> > translate EFI to E820, but unless "add_efi_memmap" is specified on the
+> > kernel command line the EFI memory map is ignored. For
+> > soft-reservation support I want to reuse do_add_efi_memmap(), but
+> > otherwise avoid any other side effects of considering the EFI map.
+> > What I'm missing is the rationale for why "add_efi_memmap" is required
+> > before considering the EFI memory map.
 > >
-> > Usage Page concatenation in Main item works well for following report
-> > descriptor patterns:
+> > If there is a negative side effect to always using the EFI map then
+> > the new "add_efi_mode" designation constrains it to just the
+> > soft-reservation case.
 > >
-> >     USAGE_PAGE (Keyboard)                   05 07
-> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (8)                        95 08
-> >     INPUT (Data,Var,Abs)                    81 02
-> >
-> > -------------
-> >
-> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (8)                        95 08
-> >     USAGE_PAGE (Keyboard)                   05 07
-> >     INPUT (Data,Var,Abs)                    81 02
-> >
-> > But it makes the parser act wrong for the following report
-> > descriptor pattern(such as some Gamepads):
-> >
-> >     USAGE_PAGE (Button)                     05 09
-> >     USAGE (Button 1)                        09 01
-> >     USAGE (Button 2)                        09 02
-> >     USAGE (Button 4)                        09 04
-> >     USAGE (Button 5)                        09 05
-> >     USAGE (Button 7)                        09 07
-> >     USAGE (Button 8)                        09 08
-> >     USAGE (Button 14)                       09 0E
-> >     USAGE (Button 15)                       09 0F
-> >     USAGE (Button 13)                       09 0D
-> >     USAGE_PAGE (Consumer Devices)           05 0C
-> >     USAGE (Back)                            0a 24 02
-> >     USAGE (HomePage)                        0a 23 02
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (11)                       95 0B
-> >     INPUT (Data,Var,Abs)                    81 02
-> >
-> > With Usage Page concatenation in Main item, parser recognizes all the
-> > 11 Usages as consumer keys, it is not the HID device's real intention.
-> >
-> > This patch adds usage_page_last to flag whether Usage Page is after
-> > Usage ID items. usage_page_last is false default, it is set as true
-> > once Usage Page item is encountered and is reverted by next Usage ID
-> > item.
-> >
-> > Usage Page concatenation on the currently defined Usage Page will do
-> > firstly in Local parsing when Usage ID items encountered.
-> >
-> > When Main item is parsing, concatenation will do again with last
-> > defined Usage Page if usage_page_last flag is true.
-> >
-> > Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> > Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
-> > ---
-> > Changes in v2:
-> > - Update patch title
-> > - Add GET_COMPLETE_USAGE macro
-> > - Change the logic of checking whether to concatenate usage page again
-> >   in main parsing
-> > ---
-> >  drivers/hid/hid-core.c | 31 +++++++++++++++++++++++++------
-> >  include/linux/hid.h    |  1 +
-> >  2 files changed, 26 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> > index 3eaee2c..3394222 100644
-> > --- a/drivers/hid/hid-core.c
-> > +++ b/drivers/hid/hid-core.c
-> > @@ -35,6 +35,8 @@
-> >
-> >  #include "hid-ids.h"
-> >
-> > +#define GET_COMPLETE_USAGE(page, id) (((page) << 16) + ((id) & 0xffff))
-> > +
-> >  /*
-> >   * Version Information
-> >   */
-> > @@ -221,7 +223,15 @@ static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
-> >                 hid_err(parser->device, "usage index exceeded\n");
-> >                 return -1;
-> >         }
-> > -       parser->local.usage[parser->local.usage_index] = usage;
-> > +
-> > +       if (size <= 2) {
-> > +               parser->local.usage_page_last = false;
-> > +               parser->local.usage[parser->local.usage_index] =
-> > +                       GET_COMPLETE_USAGE(parser->global.usage_page, usage);
-> > +       } else {
-> > +               parser->local.usage[parser->local.usage_index] = usage;
-> > +       }
-> > +
-> >         parser->local.usage_size[parser->local.usage_index] = size;
-> >         parser->local.collection_index[parser->local.usage_index] =
-> >                 parser->collection_stack_ptr ?
-> > @@ -366,6 +376,7 @@ static int hid_parser_global(struct hid_parser *parser, struct hid_item *item)
-> >
-> >         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
-> >                 parser->global.usage_page = item_udata(item);
-> > +               parser->local.usage_page_last = true;
-> >                 return 0;
-> >
-> >         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-> > @@ -543,13 +554,21 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
-> >   * usage value."
-> >   */
-> >
-> > -static void hid_concatenate_usage_page(struct hid_parser *parser)
-> > +static void hid_concatenate_last_usage_page(struct hid_parser *parser)
-> >  {
-> >         int i;
-> > +       unsigned int usage;
-> > +       unsigned int usage_page = parser->global.usage_page;
-> > +
-> > +       if (!parser->local.usage_page_last)
-> > +               return;
-> >
-> >         for (i = 0; i < parser->local.usage_index; i++)
-> > -               if (parser->local.usage_size[i] <= 2)
-> > -                       parser->local.usage[i] += parser->global.usage_page << 16;
-> > +               if (parser->local.usage_size[i] <= 2) {
-> > +                       usage = parser->local.usage[i];
-> > +                       parser->local.usage[i] =
-> > +                               GET_COMPLETE_USAGE(usage_page, usage);
-> > +               }
-> >  }
-> >
-> >  /*
-> > @@ -561,7 +580,7 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
-> >         __u32 data;
-> >         int ret;
-> >
-> > -       hid_concatenate_usage_page(parser);
-> > +       hid_concatenate_last_usage_page(parser);
-> >
-> >         data = item_udata(item);
-> >
-> > @@ -772,7 +791,7 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
-> >         __u32 data;
-> >         int i;
-> >
-> > -       hid_concatenate_usage_page(parser);
-> > +       hid_concatenate_last_usage_page(parser);
-> >
-> >         data = item_udata(item);
-> >
-> > diff --git a/include/linux/hid.h b/include/linux/hid.h
-> > index cd41f20..2e0ea2f7 100644
-> > --- a/include/linux/hid.h
-> > +++ b/include/linux/hid.h
-> > @@ -412,6 +412,7 @@ struct hid_local {
-> >         unsigned usage_minimum;
-> >         unsigned delimiter_depth;
-> >         unsigned delimiter_branch;
-> > +       bool usage_page_last;      /* whether usage page is after usage id */
 >
-> We don't need that extra flag:
-> if you just check on the last element, you can guess that information:
->
->         if ((parser->local.usage[parser->local.usage_index - 1] &
-> HID_USAGE_PAGE) >> 16 == usage_page)
->               return 0;
->
-> Let's see the next version before requesting too many changes.
->
-> And yes, I agree I need the hid-tools patches or I will not merge this
-> patch (and I will advise Jiri to not take it either).
->
-> Cheers,
-> Benjamin
->
+> Could we make the presence of any EFI_MEMORY_SP regions imply
+> add_efi_memmap? That way, it is guaranteed that we don't regress
+> existing systems, while establishing clear and unambiguous semantics
+> for new systems that rely on these changes in order to be able to use
+> the special purpose memory as intended.
 
-Thanks Benjamin.
-I will rework the patch and add changes on hid-tools to test it more.
-
-Candle
+In fact that's how it works. EFI_MEMORY_SP is unconditionally added.
+Other EFI memory types are optionally added with the add_efi_memmap
+option.
