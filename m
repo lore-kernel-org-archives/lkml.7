@@ -2,215 +2,151 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51783C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CCEECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9F62064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gK82TZve"
+	by mail.kernel.org (Postfix) with ESMTP id D2F98214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfJKNzs (ORCPT
+        id S1728300AbfJKN4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:55:48 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38187 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfJKNzr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:55:47 -0400
-Received: by mail-qt1-f194.google.com with SMTP id j31so13965486qta.5
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 06:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fu5Q0Oyp6tKh2lPmfGQugA9lYbtWy5skEb6Qa4y6e/E=;
-        b=gK82TZveoLHQ58TwOBN79mw3P2zXsUn56BocsTqZsfV7GoqaDo6KDg6QINFgq5uU7l
-         eQQZZWTfi6mbz+bIs417/8r7c3UlpioGxaRSb04EoU0p4HSlc41Au+24ybgkUJq3cOuq
-         9pmsV2wg8F3gCZzf9coHpid8Jh9HnQJa6oATgTJhqrETHYRNJgoQr4Yh8UvbIyYLP/u/
-         M3+H1wPMD/z3tZbOAuXGVmAuSGDueudMF8T2ikPypAvarA0NP76H1/nANgmlyDke47vi
-         HZ0QeWR6FBwNsIEO+abyKODps1lA2TyIcPVVsKRDVhUV8rL/KGy5QGi64gOtaoFW92sq
-         nIuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fu5Q0Oyp6tKh2lPmfGQugA9lYbtWy5skEb6Qa4y6e/E=;
-        b=A/cCEpRr9GQ2DxoHdMtjhmSDmAlsnCqPAd2mz12R2IL+/P+2oUyo49J7WRNYQFpWfp
-         RhEUZQaE0bEA1H9IV0Raffs6cvHjVINqMwXbhXemv+6y2Eu9wBQO8gRM0roqPmktlUv8
-         WtG1sWmaDMmB24+mnQh0yfgBpDVG+dwIdKOIvcVXBQz818F2TCE+ci5Mj5Gri/TqRoJe
-         KtZHuVgeqyURziFxq0/GBy3VNrWwIY/yojOiHha46jh6q8tEngqPtP6fB7YsmQ9VUbvE
-         QgfMgWgBvGSlOCLv/YZVPNDxpwdOhz0N7wsrUoLemKQXzC+UbXD4jlT/ZAqc6Wqd3cDv
-         AWyA==
-X-Gm-Message-State: APjAAAW8Ik0EJWDDTi9HDiymH9PhmkgviBJzy8PfUPzHeeq14/t4N9A5
-        AbbU7XBV5ESbZ3arWTW8Emo=
-X-Google-Smtp-Source: APXvYqz2lQS2U5OIkbKO3fQGwn4Do/DWWIv2YWkaH3C3hQ+HDl632TSMtHSeF3mnzxF/eosVu85ZBA==
-X-Received: by 2002:ac8:2e61:: with SMTP id s30mr16072652qta.334.1570802145572;
-        Fri, 11 Oct 2019 06:55:45 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id 77sm4627631qke.78.2019.10.11.06.55.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 06:55:44 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 395E64DD66; Fri, 11 Oct 2019 10:55:42 -0300 (-03)
-Date:   Fri, 11 Oct 2019 10:55:42 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH] perf tools: Propagate CFLAGS to libperf
-Message-ID: <20191011135542.GA32176@kernel.org>
-References: <20191011122155.15738-1-jolsa@kernel.org>
+        Fri, 11 Oct 2019 09:56:31 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3738 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727589AbfJKN4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:56:31 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 794F6F73EC90C1896BBA;
+        Fri, 11 Oct 2019 21:56:29 +0800 (CST)
+Received: from localhost (10.133.215.230) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
+ 21:56:23 +0800
+From:   Zhuang Yanying <ann.zhuangyanying@huawei.com>
+To:     <ann.zhuangyanying@huawei.com>, <linfeng23@huawei.com>,
+        <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>
+CC:     <weiqi4@huawei.com>, <weidong.huang@huawei.com>
+Subject: [PATCH] KVM: fix overflow of zero page refcount with ksm running
+Date:   Fri, 11 Oct 2019 21:56:17 +0800
+Message-ID: <1570802177-21212-1-git-send-email-ann.zhuangyanying@huawei.com>
+X-Mailer: git-send-email 1.9.5.msysgit.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011122155.15738-1-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.215.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Oct 11, 2019 at 02:21:55PM +0200, Jiri Olsa escreveu:
-> Andi reported that 'make DEBUG=1' does not propagate
-> to the libbperf code. It's true also for the other
-> flags. Changing the code to propagate the global
-> build flags to libperf compilation.
+We are testing Virtual Machine with KSM on v5.4-rc2 kernel,
+and found the zero_page refcount overflow.
+The cause of refcount overflow is increased in try_async_pf
+(get_user_page) without being decreased in mmu_set_spte()
+while handling ept violation.
+In kvm_release_pfn_clean(), only unreserved page will call
+put_page. However, zero page is reserved.
+So, as well as creating and destroy vm, the refcount of
+zero page will continue to increase until it overflows.
 
-Thanks, applied.
+step1:
+echo 10000 > /sys/kernel/pages_to_scan/pages_to_scan
+echo 1 > /sys/kernel/pages_to_scan/run
+echo 1 > /sys/kernel/pages_to_scan/use_zero_pages
 
-- Arnaldo
+step2:
+just create several normal qemu kvm vms.
+And destroy it after 10s.
+Repeat this action all the time.
+
+After a long period of time, all domains hang because
+of the refcount of zero page overflow.
+
+Qemu print error log as follow:
+ …
+ error: kvm run failed Bad address
+ EAX=00006cdc EBX=00000008 ECX=80202001 EDX=078bfbfd
+ ESI=ffffffff EDI=00000000 EBP=00000008 ESP=00006cc4
+ EIP=000efd75 EFL=00010002 [-------] CPL=0 II=0 A20=1 SMM=0 HLT=0
+ ES =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+ CS =0008 00000000 ffffffff 00c09b00 DPL=0 CS32 [-RA]
+ SS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+ DS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+ FS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+ GS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+ LDT=0000 00000000 0000ffff 00008200 DPL=0 LDT
+ TR =0000 00000000 0000ffff 00008b00 DPL=0 TSS32-busy
+ GDT=     000f7070 00000037
+ IDT=     000f70ae 00000000
+ CR0=00000011 CR2=00000000 CR3=00000000 CR4=00000000
+ DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 DR3=0000000000000000
+ DR6=00000000ffff0ff0 DR7=0000000000000400
+ EFER=0000000000000000
+ Code=00 01 00 00 00 e9 e8 00 00 00 c7 05 4c 55 0f 00 01 00 00 00 <8b> 35 00 00 01 00 8b 3d 04 00 01 00 b8 d8 d3 00 00 c1 e0 08 0c ea a3 00 00 01 00 c7 05 04
+ …
+
+Meanwhile, a kernel warning is departed.
+
+ [40914.836375] WARNING: CPU: 3 PID: 82067 at ./include/linux/mm.h:987 try_get_page+0x1f/0x30
+ [40914.836412] CPU: 3 PID: 82067 Comm: CPU 0/KVM Kdump: loaded Tainted: G           OE     5.2.0-rc2 #5
+ [40914.836415] RIP: 0010:try_get_page+0x1f/0x30
+ [40914.836417] Code: 40 00 c3 0f 1f 84 00 00 00 00 00 48 8b 47 08 a8 01 75 11 8b 47 34 85 c0 7e 10 f0 ff 47 34 b8 01 00 00 00 c3 48 8d 78 ff eb e9 <0f> 0b 31 c0 c3 66 90 66 2e 0f 1f 84 00 0
+ 0 00 00 00 48 8b 47 08 a8
+ [40914.836418] RSP: 0018:ffffb4144e523988 EFLAGS: 00010286
+ [40914.836419] RAX: 0000000080000000 RBX: 0000000000000326 RCX: 0000000000000000
+ [40914.836420] RDX: 0000000000000000 RSI: 00004ffdeba10000 RDI: ffffdf07093f6440
+ [40914.836421] RBP: ffffdf07093f6440 R08: 800000424fd91225 R09: 0000000000000000
+ [40914.836421] R10: ffff9eb41bfeebb8 R11: 0000000000000000 R12: ffffdf06bbd1e8a8
+ [40914.836422] R13: 0000000000000080 R14: 800000424fd91225 R15: ffffdf07093f6440
+ [40914.836423] FS:  00007fb60ffff700(0000) GS:ffff9eb4802c0000(0000) knlGS:0000000000000000
+ [40914.836425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ [40914.836426] CR2: 0000000000000000 CR3: 0000002f220e6002 CR4: 00000000003626e0
+ [40914.836427] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ [40914.836427] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ [40914.836428] Call Trace:
+ [40914.836433]  follow_page_pte+0x302/0x47b
+ [40914.836437]  __get_user_pages+0xf1/0x7d0
+ [40914.836441]  ? irq_work_queue+0x9/0x70
+ [40914.836443]  get_user_pages_unlocked+0x13f/0x1e0
+ [40914.836469]  __gfn_to_pfn_memslot+0x10e/0x400 [kvm]
+ [40914.836486]  try_async_pf+0x87/0x240 [kvm]
+ [40914.836503]  tdp_page_fault+0x139/0x270 [kvm]
+ [40914.836523]  kvm_mmu_page_fault+0x76/0x5e0 [kvm]
+ [40914.836588]  vcpu_enter_guest+0xb45/0x1570 [kvm]
+ [40914.836632]  kvm_arch_vcpu_ioctl_run+0x35d/0x580 [kvm]
+ [40914.836645]  kvm_vcpu_ioctl+0x26e/0x5d0 [kvm]
+ [40914.836650]  do_vfs_ioctl+0xa9/0x620
+ [40914.836653]  ksys_ioctl+0x60/0x90
+ [40914.836654]  __x64_sys_ioctl+0x16/0x20
+ [40914.836658]  do_syscall_64+0x5b/0x180
+ [40914.836664]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ [40914.836666] RIP: 0033:0x7fb61cb6bfc7
+
+Signed-off-by: LinFeng <linfeng23@huawei.com>
+Signed-off-by: Zhuang Yanying <ann.zhuangyanying@huawei.com>
+---
+ virt/kvm/kvm_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index fd68fbe..1f1d731 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -152,7 +152,7 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+ bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+ {
+ 	if (pfn_valid(pfn))
+-		return PageReserved(pfn_to_page(pfn));
++		return PageReserved(page) && !is_zero_pfn(pfn);
  
-> Reported-by: Andi Kleen <ak@linux.intel.com>
-> Link: http://lkml.kernel.org/n/tip-sgq5yeyvitp655s2iq3e75ls@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/Makefile.config | 28 +++++++++++++++-------------
->  tools/perf/Makefile.perf   |  2 +-
->  tools/perf/lib/core.c      |  3 ++-
->  3 files changed, 18 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 46f7fba2306c..063202c53b64 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -188,7 +188,7 @@ endif
->  
->  # Treat warnings as errors unless directed not to
->  ifneq ($(WERROR),0)
-> -  CFLAGS += -Werror
-> +  CORE_CFLAGS += -Werror
->    CXXFLAGS += -Werror
->  endif
->  
-> @@ -198,9 +198,9 @@ endif
->  
->  ifeq ($(DEBUG),0)
->  ifeq ($(CC_NO_CLANG), 0)
-> -  CFLAGS += -O3
-> +  CORE_CFLAGS += -O3
->  else
-> -  CFLAGS += -O6
-> +  CORE_CFLAGS += -O6
->  endif
->  endif
->  
-> @@ -245,12 +245,12 @@ FEATURE_CHECK_LDFLAGS-libaio = -lrt
->  
->  FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
->  
-> -CFLAGS += -fno-omit-frame-pointer
-> -CFLAGS += -ggdb3
-> -CFLAGS += -funwind-tables
-> -CFLAGS += -Wall
-> -CFLAGS += -Wextra
-> -CFLAGS += -std=gnu99
-> +CORE_CFLAGS += -fno-omit-frame-pointer
-> +CORE_CFLAGS += -ggdb3
-> +CORE_CFLAGS += -funwind-tables
-> +CORE_CFLAGS += -Wall
-> +CORE_CFLAGS += -Wextra
-> +CORE_CFLAGS += -std=gnu99
->  
->  CXXFLAGS += -std=gnu++11 -fno-exceptions -fno-rtti
->  CXXFLAGS += -Wall
-> @@ -272,12 +272,12 @@ include $(FEATURES_DUMP)
->  endif
->  
->  ifeq ($(feature-stackprotector-all), 1)
-> -  CFLAGS += -fstack-protector-all
-> +  CORE_CFLAGS += -fstack-protector-all
->  endif
->  
->  ifeq ($(DEBUG),0)
->    ifeq ($(feature-fortify-source), 1)
-> -    CFLAGS += -D_FORTIFY_SOURCE=2
-> +    CORE_CFLAGS += -D_FORTIFY_SOURCE=2
->    endif
->  endif
->  
-> @@ -301,10 +301,12 @@ INC_FLAGS += -I$(src-perf)/util
->  INC_FLAGS += -I$(src-perf)
->  INC_FLAGS += -I$(srctree)/tools/lib/
->  
-> -CFLAGS   += $(INC_FLAGS)
-> +CORE_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
-> +
-> +CFLAGS   += $(CORE_CFLAGS) $(INC_FLAGS)
->  CXXFLAGS += $(INC_FLAGS)
->  
-> -CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
-> +LIBPERF_CFLAGS := $(CORE_CFLAGS) $(EXTRA_CFLAGS)
->  
->  ifeq ($(feature-sync-compare-and-swap), 1)
->    CFLAGS += -DHAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 45c14dc24f4b..a099a8a89447 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -769,7 +769,7 @@ $(LIBBPF)-clean:
->  	$(Q)$(MAKE) -C $(BPF_DIR) O=$(OUTPUT) clean >/dev/null
->  
->  $(LIBPERF): FORCE
-> -	$(Q)$(MAKE) -C $(LIBPERF_DIR) O=$(OUTPUT) $(OUTPUT)libperf.a
-> +	$(Q)$(MAKE) -C $(LIBPERF_DIR) EXTRA_CFLAGS="$(LIBPERF_CFLAGS)" O=$(OUTPUT) $(OUTPUT)libperf.a
->  
->  $(LIBPERF)-clean:
->  	$(call QUIET_CLEAN, libperf)
-> diff --git a/tools/perf/lib/core.c b/tools/perf/lib/core.c
-> index d0b9ae422b9f..58fc894b76c5 100644
-> --- a/tools/perf/lib/core.c
-> +++ b/tools/perf/lib/core.c
-> @@ -5,11 +5,12 @@
->  #include <stdio.h>
->  #include <stdarg.h>
->  #include <unistd.h>
-> +#include <linux/compiler.h>
->  #include <perf/core.h>
->  #include <internal/lib.h>
->  #include "internal.h"
->  
-> -static int __base_pr(enum libperf_print_level level, const char *format,
-> +static int __base_pr(enum libperf_print_level level __maybe_unused, const char *format,
->  		     va_list args)
->  {
->  	return vfprintf(stderr, format, args);
-> -- 
-> 2.21.0
-
+ 	return true;
+ }
 -- 
+1.8.3.1
 
-- Arnaldo
+
