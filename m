@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D372C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C02ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D3120673
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B869520673
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570824679;
-	bh=5lJJeeZBUm/4jKagwHdSWBTJsGqg1Kqv/NfYFI31uOI=;
+	s=default; t=1570824684;
+	bh=iUXnGaxn1alWNiSeYdp9M1nblfM9RQCjdIfucXr3a8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GuGZuplFa621SHxk15ybf6bKyriPQKZAsjbLGNgzo/ff7aildDB4NoxDTq6bK0vOf
-	 0QBT4LL9k1d9tZN4OiE+9Ur0I32a6gXQBtRuS5SF2D9MKFiAcegkT13bPNsKegx2RZ
-	 ERRXQh0/zxpvbPeltxnwJUBHLEXaZsdRUUEKWSF8=
+	b=gUbEQtXQvTDILYc0PO909E1z7PqeEqgppRWw2+lQkZ319HCS8CLn2TzaG6v50F9Zn
+	 VRkuA/0J6IfKT0KCJbtksj1NcQaW3K0iMnyeyX84KCs4OOjzJ8po8WQNl5A7Kc5xRX
+	 Zne6gzsiYDmgOujvGJjhEYWLSxaX+rqI088lpuYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbfJKULR (ORCPT
+        id S1729799AbfJKULW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:11:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47306 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 16:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729744AbfJKULQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:11:16 -0400
+        id S1729396AbfJKULU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 16:11:20 -0400
 Received: from quaco.ghostprotocols.net (189-94-137-67.3g.claro.net.br [189.94.137.67])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28E9A2196E;
-        Fri, 11 Oct 2019 20:11:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BC1721D71;
+        Fri, 11 Oct 2019 20:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570824675;
-        bh=5lJJeeZBUm/4jKagwHdSWBTJsGqg1Kqv/NfYFI31uOI=;
+        s=default; t=1570824680;
+        bh=iUXnGaxn1alWNiSeYdp9M1nblfM9RQCjdIfucXr3a8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lSx9uzXT0PRkOc1+5+YVLr6++KUqCybEE/9qYbBEoGpe9gBJoRL+9MzDo57N5cYtL
-         vUY0qD0SkrsNCW6UckYbt50DMWXbbvG/f/igv/97gdSREN3eNpkq9DB+shHQzvVRn7
-         PweskfWW0f/dTsyCkc3CZV1OdlZGA6GbFWK2OhxI=
+        b=SBIRTwvj4jzO/xbJb5hXvJ60oeSHnBTFlkX9FOF8PRuGaQcKE3qWf94MFJVf/Bnvw
+         UdFyhmyZcfoZbpsCKR9BGLFE8XhQ7TLisv8Mbn0eyR81gvxU/rxwvMn2GG9T4P1XdC
+         yb3R3AbE1aWjPnuHkJ1tzm28akusPLqu9q59LWoc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 58/69] libperf: Introduce perf_evlist_mmap_ops::mmap callback
-Date:   Fri, 11 Oct 2019 17:05:48 -0300
-Message-Id: <20191011200559.7156-59-acme@kernel.org>
+Subject: [PATCH 59/69] perf tools: Introduce perf_evlist__mmap_cb_idx()
+Date:   Fri, 11 Oct 2019 17:05:49 -0300
+Message-Id: <20191011200559.7156-60-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
@@ -64,107 +64,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add the perf_evlist_mmap_ops::mmap callback to be called in
-mmap_per_evsel() to actually mmap the map.
-
-Add libperf's perf_evlist__mmap_cb_mmap() function as libperf's mmap
-callback.
-
-New mmaped map gets refcount set to 2 in mmap__mmap(), we follow that in
-mmap callback. We will move this to common place after we switch to
-perf_evlist__mmap().
+Add perf_evlist__mmap_cb_idx function to call auxtrace_mmap_params__set_idx()
+on each new index during perf_evlist__mmap_ops call.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191007125344.14268-18-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20191007125344.14268-19-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c                  | 29 +++++++++++++++++++++---
- tools/perf/lib/include/internal/evlist.h |  3 +++
- 2 files changed, 29 insertions(+), 3 deletions(-)
+ tools/perf/util/evlist.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 4f49de5e8f7c..b69722627779 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -358,6 +358,28 @@ perf_evlist__mmap_cb_get(struct perf_evlist *evlist, bool overwrite, int idx)
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index a9b189ac859b..11716f2b965a 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -739,6 +739,17 @@ static int evlist__mmap_per_evsel(struct evlist *evlist, int idx,
+ 	return 0;
+ }
  
- #define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
- 
-+static int
-+perf_evlist__mmap_cb_mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
-+			  int output, int cpu)
++static void
++perf_evlist__mmap_cb_idx(struct perf_evlist *_evlist,
++			 struct perf_mmap_param *_mp,
++			 int idx, bool per_cpu)
 +{
-+	/*
-+	 * The last one will be done at perf_mmap__consume(), so that we
-+	 * make sure we don't prevent tools from consuming every last event in
-+	 * the ring buffer.
-+	 *
-+	 * I.e. we can get the POLLHUP meaning that the fd doesn't exist
-+	 * anymore, but the last events for it are still in the ring buffer,
-+	 * waiting to be consumed.
-+	 *
-+	 * Tools can chose to ignore this at their own discretion, but the
-+	 * evlist layer can't just drop it when filtering events in
-+	 * perf_evlist__filter_pollfd().
-+	 */
-+	refcount_set(&map->refcnt, 2);
++	struct evlist *evlist = container_of(_evlist, struct evlist, core);
++	struct mmap_params *mp = container_of(_mp, struct mmap_params, core);
 +
-+	return perf_mmap__mmap(map, mp, output, cpu);
++	auxtrace_mmap_params__set_idx(&mp->auxtrace_mp, evlist, idx, per_cpu);
 +}
 +
- static int
- mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 	       int idx, struct perf_mmap_param *mp, int cpu_idx,
-@@ -396,7 +418,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 		if (*output == -1) {
- 			*output = fd;
- 
--			if (perf_mmap__mmap(map, mp, *output, evlist_cpu) < 0)
-+			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
- 				return -1;
- 		} else {
- 			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
-@@ -488,7 +510,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 	const struct perf_cpu_map *cpus = evlist->cpus;
- 	const struct perf_thread_map *threads = evlist->threads;
- 
--	if (!ops || !ops->get)
-+	if (!ops || !ops->get || !ops->mmap)
- 		return -EINVAL;
+ static int evlist__mmap_per_cpu(struct evlist *evlist,
+ 				     struct mmap_params *mp)
+ {
+@@ -935,6 +946,9 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 		.flush		= flush,
+ 		.comp_level	= comp_level
+ 	};
++	struct perf_evlist_mmap_ops ops __maybe_unused = {
++		.idx = perf_evlist__mmap_cb_idx,
++	};
  
  	if (!evlist->mmap)
-@@ -513,7 +535,8 @@ int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
- {
- 	struct perf_mmap_param mp;
- 	struct perf_evlist_mmap_ops ops = {
--		.get = perf_evlist__mmap_cb_get,
-+		.get  = perf_evlist__mmap_cb_get,
-+		.mmap = perf_evlist__mmap_cb_mmap,
- 	};
- 
- 	evlist->mmap_len = (pages + 1) * page_size;
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index 9bc3a21643ea..b2019700cdc0 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -31,10 +31,13 @@ typedef void
- (*perf_evlist_mmap__cb_idx_t)(struct perf_evlist*, struct perf_mmap_param*, int, bool);
- typedef struct perf_mmap*
- (*perf_evlist_mmap__cb_get_t)(struct perf_evlist*, bool, int);
-+typedef int
-+(*perf_evlist_mmap__cb_mmap_t)(struct perf_mmap*, struct perf_mmap_param*, int, int);
- 
- struct perf_evlist_mmap_ops {
- 	perf_evlist_mmap__cb_idx_t	idx;
- 	perf_evlist_mmap__cb_get_t	get;
-+	perf_evlist_mmap__cb_mmap_t	mmap;
- };
- 
- int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
+ 		evlist->mmap = evlist__alloc_mmap(evlist, false);
 -- 
 2.21.0
 
