@@ -2,176 +2,144 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9616DC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF128C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0C8214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93522190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570793373;
+	bh=+t7NRbrpSd2Z6Xu+XvjiRuQmo6oIsQY5Em4yummAbX0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aMgrvWpQ46ZYN08CxbvFbbuOzNFmkIZ6Nke/SrO6kV4ZcFTUER4Jim9IR81Qosmsy
+	 Ij1uw/s1eKefmAGcg7bNgPiWojE+Nsu+LxY5lYpr/jAtNEm8tS+e8yJC5WbM2l1ebx
+	 HjL2kAwyq2EZijIoERsqSRH7/HHzhEw7xm1UFFvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfJKL0s (ORCPT
+        id S1727813AbfJKL3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:26:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:57326 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727538AbfJKL0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:26:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 559B828;
-        Fri, 11 Oct 2019 04:26:47 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B85E3F703;
-        Fri, 11 Oct 2019 04:26:46 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 12:26:44 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        will@kernel.org
-Subject: Re: [PATCH 2/3] arm64: nofpsmid: Clear TIF_FOREIGN_FPSTATE flag for
- early tasks
-Message-ID: <20191011112642.GF27757@arm.com>
-References: <20191010171517.28782-1-suzuki.poulose@arm.com>
- <20191010171517.28782-3-suzuki.poulose@arm.com>
+        Fri, 11 Oct 2019 07:29:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36924 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbfJKL3c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 07:29:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2gnrnq0b1cJHF7UrkY83zB5NvhPCkH+k9lh4yFFL/IM=; b=DDNekGf9eQ66f2JHleru+yee5
+        N8UdvTRkKyH10olnWISCQVkCVJyfLW5DJfKua+A+tuqU7ROwqWPgtTOlTS66sCAI8ezJWCPcaN6Dv
+        z/MwufnUVYijP8EdhAoTS+GcXvuHlbA7eoUj9+LVC+XRVur33Wuc2kZvGNi4ZdNSWlfuMZ4Mb/sKT
+        s/nypfmQIfy/pwIUGpjpgqODRL88cx+bSasQFvQsCYIUcLaMEohH2paaE+A50TF6xsjdUwkejsUvY
+        HCKRHAjxyyWF0BXJ5pfn2mGA2m6efQ/0mjVKe4MB6dO7rMezHA1lB1bev9WIeQ1+IiK50wrpI/MNC
+        t0eZlJxbg==;
+Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIt6j-0002jK-JH; Fri, 11 Oct 2019 11:29:18 +0000
+Date:   Fri, 11 Oct 2019 08:29:13 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH 19/19] EDAC, Documentation: Describe CPER module
+ definition and DIMM ranks
+Message-ID: <20191011082913.6514e126@coco.lan>
+In-Reply-To: <20191010202418.25098-20-rrichter@marvell.com>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+        <20191010202418.25098-20-rrichter@marvell.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010171517.28782-3-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 06:15:16PM +0100, Suzuki K Poulose wrote:
-> We detect the absence of FP/SIMD after we boot the SMP CPUs, and by then
-> we have kernel threads running already with TIF_FOREIGN_FPSTATE set which
-> could be inherited by early userspace applications (e.g, modprobe triggered
-> from initramfs). This could end up in the applications stuck in
-> do_nofity_resume() as we never clear the TIF flag, once we now know that
-> we don't support FP.
+Em Thu, 10 Oct 2019 20:25:42 +0000
+Robert Richter <rrichter@marvell.com> escreveu:
+
+> Update on CPER DIMM naming convention and DIMM ranks.
 > 
-> Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
-> for tasks which may have them set, as we would have done in the normal
-> case, but avoiding touching the hardware state (since we don't support any).
-> 
-> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
 > ---
->  arch/arm64/kernel/fpsimd.c | 26 ++++++++++++++++----------
->  1 file changed, 16 insertions(+), 10 deletions(-)
+>  Documentation/admin-guide/ras.rst | 31 +++++++++++++++++++------------
+>  1 file changed, 19 insertions(+), 12 deletions(-)
 > 
-> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-> index 37d3912cfe06..dfcdd077aeca 100644
-> --- a/arch/arm64/kernel/fpsimd.c
-> +++ b/arch/arm64/kernel/fpsimd.c
-> @@ -1128,12 +1128,19 @@ void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *st, void *sve_state,
->   */
->  void fpsimd_restore_current_state(void)
->  {
-> -	if (!system_supports_fpsimd())
-> -		return;
-> -
->  	get_cpu_fpsimd_context();
-> -
-> -	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE)) {
-> +	/*
-> +	 * For the tasks that were created before we detected the absence of
-> +	 * FP/SIMD, the TIF_FOREIGN_FPSTATE could be set via fpsimd_thread_switch()
-> +	 * and/or could be inherited from the parent(init_task has this set). Even
-> +	 * though userspace has not run yet, this could be inherited by the
-> +	 * processes forked from one of those tasks (e.g, modprobe from initramfs).
-> +	 * If the system doesn't support FP/SIMD, we must clear the flag for the
-> +	 * tasks mentioned above, to indicate that the FPSTATE is clean (as we
-> +	 * can't have one) to avoid looping for ever to clear the flag.
-> +	 */
-> +	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE) &&
-> +	    system_supports_fpsimd()) {
-
-I'm not too keen on this approach: elsewhere we just stub out all the
-FPSIMD handling logic if !system_supports_fpsimd() -- I think we should
-be using this test everywhere rather than relying on TIF_FOREIGN_FPSTATE.
-
-Rather, I feel that TIF_FOREIGN_FPSTATE means "if this is a user task
-and this task is current() and the system supports FPSIMD at all, this
-task's FPSIMD state is not loaded in the cpu".
-
-I think we should ensure that any check on TIF_FOREIGN_FPSTATE is
-shadowed by a check on system_supports_fpsimd() somewhere.  This already
-exists in many places -- we just need to fill in the missing ones.
-
-fpsimd_save() is a backend function that should only be called if
-system_supports_fpsimd(), so that should not need any check internally,
-but we should make sure that calls to this function are appropriately
-protected with in if (system_supports_fpsimd()).
-
-For other maintenance functions intended for outside callers:
-
- * fpsimd_bind_task_to_cpu()
- * fpsimd_bind_state_to_cpu()
- * fpsimd_flush_task_state()
- * fpsimd_save_and_flush_cpu_state()
-
-the situation is less clear.  Does is make sense to call these at all
-if !system_supports_fpsimd()?  I'm not currently sure.  We could at
-least drop some WARN_ON() into these to check, after revieweing their
-callsites.
-
->  		task_fpsimd_load();
->  		fpsimd_bind_task_to_cpu();
->  	}
-> @@ -1148,17 +1155,16 @@ void fpsimd_restore_current_state(void)
->   */
->  void fpsimd_update_current_state(struct user_fpsimd_state const *state)
->  {
-> -	if (!system_supports_fpsimd())
-> -		return;
-> -
->  	get_cpu_fpsimd_context();
+> diff --git a/Documentation/admin-guide/ras.rst b/Documentation/admin-guide/ras.rst
+> index 2b20f5f7380d..26e02a59f0f4 100644
+> --- a/Documentation/admin-guide/ras.rst
+> +++ b/Documentation/admin-guide/ras.rst
+> @@ -330,9 +330,12 @@ There can be multiple csrows and multiple channels.
 >  
->  	current->thread.uw.fpsimd_state = *state;
->  	if (system_supports_sve() && test_thread_flag(TIF_SVE))
->  		fpsimd_to_sve(current);
-
-Why should we do this stuff on a system that doesn't support FP?
-
-> -	task_fpsimd_load();
-> -	fpsimd_bind_task_to_cpu();
-> +	if (system_supports_fpsimd()) {
-> +		task_fpsimd_load();
-> +		fpsimd_bind_task_to_cpu();
-> +	}
+>  .. [#f4] Nowadays, the term DIMM (Dual In-line Memory Module) is widely
+>    used to refer to a memory module, although there are other memory
+> -  packaging alternatives, like SO-DIMM, SIMM, etc. Along this document,
+> -  and inside the EDAC system, the term "dimm" is used for all memory
+> -  modules, even when they use a different kind of packaging.
+> +  packaging alternatives, like SO-DIMM, SIMM, etc. The UEFI
+> +  specification (Version 2.7) defines a memory module in the Common
+> +  Platform Error Record (CPER) section to be an SMBIOS Memory Device
+> +  (Type 17). Along this document, and inside the EDAC system, the term
+> +  "dimm" is used for all memory modules, even when they use a
+> +  different kind of packaging.
 >  
->  	clear_thread_flag(TIF_FOREIGN_FPSTATE);
+>  Memory controllers allow for several csrows, with 8 csrows being a
+>  typical value. Yet, the actual number of csrows depends on the layout of
+> @@ -349,12 +352,14 @@ controllers. The following example will assume 2 channels:
+>  	|            |  ``ch0``  |  ``ch1``  |
+>  	+============+===========+===========+
+>  	| ``csrow0`` |  DIMM_A0  |  DIMM_B0  |
+> -	+------------+           |           |
+> -	| ``csrow1`` |           |           |
+> +	|            |   rank0   |   rank0   |
+> +	+------------+     -     |     -     |
+> +	| ``csrow1`` |   rank1   |   rank1   |
+>  	+------------+-----------+-----------+
+>  	| ``csrow2`` |  DIMM_A1  | DIMM_B1   |
+> -	+------------+           |           |
+> -	| ``csrow3`` |           |           |
+> +	|            |   rank0   |   rank0   |
+> +	+------------+     -     |     -     |
+> +	| ``csrow3`` |   rank1   |   rank1   |
+>  	+------------+-----------+-----------+
+>  
+>  In the above example, there are 4 physical slots on the motherboard
+> @@ -374,11 +379,13 @@ which the memory DIMM is placed. Thus, when 1 DIMM is placed in each
+>  Channel, the csrows cross both DIMMs.
+>  
+>  Memory DIMMs come single or dual "ranked". A rank is a populated csrow.
+> -Thus, 2 single ranked DIMMs, placed in slots DIMM_A0 and DIMM_B0 above
+> -will have just one csrow (csrow0). csrow1 will be empty. On the other
+> -hand, when 2 dual ranked DIMMs are similarly placed, then both csrow0
+> -and csrow1 will be populated. The pattern repeats itself for csrow2 and
+> -csrow3.
+> +In the example above 2 dual ranked DIMMs are similarly placed. Thus,
+> +both csrow0 and csrow1 are populated. On the other hand, when 2 single
+> +ranked DIMMs are placed in slots DIMM_A0 and DIMM_B0, then they will
+> +have just one csrow (csrow0) and csrow1 will be empty. The pattern
+> +repeats itself for csrow2 and csrow3. Also note that some memory
+> +controller doesn't have any logic to identify the memory module, see
+> +``rankX`` directories below.
+>  
+>  The representation of the above is reflected in the directory
+>  tree in EDAC's sysfs interface. Starting in directory
 
-[...]
 
-Not in scope for a stable fix, but:
 
-It would be interesting to try to strip out TIF_FOREIGN_FPSTATE
-entirely and do some benchmarks and irq latency measurements:
-
-TIF_FOREIGN_FPSTATE is just a cached copy of the wrong_task || wrong_cpu
-condition defined in fpsimd_thread_switch() --
-
-That means we have to do maintenance on it all over the place to keep
-it in sync with the condition it represents -- this has proven to be
-a source of complexity and subtle bugs, as well as making the code
-fragile to maintain.
-
-The only point of all this is so that there is a thread flag for
-do_notify_resume() to check.  Now that do_notify_resume() is C it would
-be trivial to check the real condition -- there would be a cost
-increase and interrupt latency increase here, but maybe not that much.
-
-This wouldn't solve the whole problem, but it might remove a layer of
-complexity.
-
-Cheers
----Dave
+Thanks,
+Mauro
