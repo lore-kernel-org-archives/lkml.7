@@ -2,319 +2,251 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56BFC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C64ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D27E2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA23B206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:26:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aDFfvbEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfJKKZw (ORCPT
+        id S1727615AbfJKK0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:25:52 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36028 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfJKKZt (ORCPT
+        Fri, 11 Oct 2019 06:26:40 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54434 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfJKK0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:25:49 -0400
-Received: from v22018046084765073.goodsrv.de ([185.183.158.195] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iIs7G-0007GP-ND; Fri, 11 Oct 2019 10:25:46 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>, libc-alpha@sourceware.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
+        Fri, 11 Oct 2019 06:26:39 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BAO4Oq013108;
+        Fri, 11 Oct 2019 10:26:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=RCbQWCPP7lHcb8exiNWxq2WV2sbQXnSqSnI0kzbr6PQ=;
+ b=aDFfvbEguiVYlSs/2ebtjuV9OtSmNZlRiY+vOYlgT3BITTXZqq6Fgs3vmSYKIEnTWusz
+ rMeNkAHfTHfVUueAPbiyPzeb67mz9LuHeX/5y4uRfg+m8S2JWHaFGG6ZmhaWh9dSIr1D
+ ZyPykbQkhkGNez+EC6FV5PaOBZXqt3fT1JEmdvT71Fo1n0vt+Mrs4zwOJRppomK26tom
+ W3FmfABYwdAEFDRgQ+jjpvMoeY+/8kvwdfheWpnRHjyjFtM4G/+UjJWEhqZ5W+g2JyWo
+ 8IX4/jywKyFkSbAwaTrtN1K+LS15a0Uqbwsw/l6sUtyZsQ/YFXcSF+MNQRZb+0weInVa 6Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2vekts0eq4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 10:26:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BAOx1O121361;
+        Fri, 11 Oct 2019 10:26:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vje2xqscj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 10:26:06 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9BAQ31E003053;
+        Fri, 11 Oct 2019 10:26:03 GMT
+Received: from dhcp-10-175-168-195.vpn.oracle.com (/10.175.168.195)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 11 Oct 2019 03:26:03 -0700
+Date:   Fri, 11 Oct 2019 11:25:33 +0100 (BST)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@dhcp-10-175-191-48.vpn.oracle.com
+To:     Brendan Higgins <brendanhiggins@google.com>
+cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-api@vger.kernel.org
-Subject: [PATCH v2 2/2] tests: test CLONE3_CLEAR_SIGHAND
-Date:   Fri, 11 Oct 2019 12:25:37 +0200
-Message-Id: <20191011102537.27502-2-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191011102537.27502-1-christian.brauner@ubuntu.com>
-References: <20191011102537.27502-1-christian.brauner@ubuntu.com>
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        changbin.du@intel.com, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: Re: [PATCH v2 linux-kselftest-test 1/3] kunit: allow kunit tests to
+ be loaded as a module
+In-Reply-To: <CAFd5g46_6McK06XSrX=EZ9AaYYitQzd2CTvPMX+rPymisDq5uQ@mail.gmail.com>
+Message-ID: <alpine.LRH.2.20.1910111105350.21459@dhcp-10-175-191-48.vpn.oracle.com>
+References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com> <1570546546-549-2-git-send-email-alan.maguire@oracle.com> <20191008213535.GB186342@google.com> <alpine.LRH.2.20.1910091726010.2517@dhcp-10-175-191-127.vpn.oracle.com>
+ <CAFd5g46_6McK06XSrX=EZ9AaYYitQzd2CTvPMX+rPymisDq5uQ@mail.gmail.com>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910110099
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910110099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test that CLONE3_CLEAR_SIGHAND resets signal handlers to SIG_DFL for the
-child process and that CLONE3_CLEAR_SIGHAND and CLONE_SIGHAND are
-mutually exclusive.
+On Fri, 11 Oct 2019, Brendan Higgins wrote:
 
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: libc-alpha@sourceware.org
-Cc: linux-api@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v1 */
-Link: https://lore.kernel.org/r/20191010133518.5420-2-christian.brauner@ubuntu.com
+> Sorry for the delayed reply. I will be on vacation until Wednesday,
+> October 16th.
+> 
+> On Wed, Oct 9, 2019 at 9:36 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> >
+> > On Tue, 8 Oct 2019, Brendan Higgins wrote:
+> >
+> > > On Tue, Oct 08, 2019 at 03:55:44PM +0100, Alan Maguire wrote:
+> [...]
+> > > > diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
+> > > > index e6d17aa..e4f3a97 100644
+> > > > --- a/lib/kunit/string-stream.c
+> > > > +++ b/lib/kunit/string-stream.c
+> > > > @@ -100,6 +100,7 @@ int string_stream_vadd(struct string_stream *stream,
+> > > >
+> > > >     return 0;
+> > > >  }
+> > > > +EXPORT_SYMBOL_GPL(string_stream_vadd);
+> > >
+> > > Is this actually needed by anything other than lib/kunit/test.c right
+> > > now? Maybe we should move the include file into the kunit/ directory to
+> > > hide these so no one else can use them.
+> > >
+> >
+> > I tried this, and it's the right answer I think but it exposes
+> > a problem with symbol visibility when kunit is compiled as a module.
+> > More on this below...
+> >
+> > > >  int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+> > > >  {
+> > > > @@ -112,6 +113,7 @@ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+> > > >
+> > > >     return result;
+> > > >  }
+> > > > +EXPORT_SYMBOL_GPL(string_stream_add);
+> > > [...]
+> > > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> > > > index c83c0fa..e7896f1 100644
+> > > > --- a/lib/kunit/test.c
+> > > > +++ b/lib/kunit/test.c
+> > > [...]
+> > > > @@ -50,6 +51,7 @@ static unsigned long kunit_test_timeout(void)
+> > > >      * For more background on this topic, see:
+> > > >      * https://mike-bland.com/2011/11/01/small-medium-large.html
+> > > >      */
+> > > > +#ifndef MODULE
+> > >
+> > > Why is this block of code "ifndef MODULE"?
+> > >
+> >
+> > Symbol visibility is the problem again; sysctl_hung_task_timeout_secs
+> > isn't exported so when kunit is a module it can't find the symbol.
+> >
+> > I think I saw Kees mentioned something about symbol lookup too; in KTF
+> > Knut solved this by defining ktf_find_symbol(). I'd suggest we may need a
+> > kunit_find_symbol() with a function signature
+> 
+> I thought we were just talking about exposing symbols for linking
+> outside of a compilation unit (static vs. not static); nevertheless, I
+> think you are right that it is relevant here. Kees, thoughts?
+> 
+> > void *kunit_find_symbol(const char *modname, const char *symbol_name);
+> >
+> > ...which does a [module_]kallsyms_lookup_sym().
+> >
+> > If the above makes sense I can look at adding it as a patch (and adding
+> > a test of it of course!). What do you think?
+> 
+> So that won't work if you are trying to link against a symbol not in a
+> module, right? Also, it won't work against a static symbol, right?
+> 
 
-/* v2 */
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - remove unused variable
-  - reuse variable in child process instead od declaring a new one
-  - move check for mutual exclusivity of CLONE_SIGHAND and
-    CLONE3_CLEAR_SIGHAND to top of test before setting up signal
-    handlers
-  - rename variables
----
- MAINTAINERS                                   |   1 +
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/clone3/.gitignore     |   1 +
- tools/testing/selftests/clone3/Makefile       |   7 +
- .../selftests/clone3/clone3_clear_sighand.c   | 172 ++++++++++++++++++
- 5 files changed, 182 insertions(+)
- create mode 100644 tools/testing/selftests/clone3/.gitignore
- create mode 100644 tools/testing/selftests/clone3/Makefile
- create mode 100644 tools/testing/selftests/clone3/clone3_clear_sighand.c
+Nope, works in both cases with the proviso that we need to use an 
+alternative name for symbols when compiling built-in.  For example
+in the case of the string-stream tests, we'd use a test init callback
+to initialize used symbols:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55199ef7fa74..582275d85607 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12828,6 +12828,7 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
- F:	samples/pidfd/
- F:	tools/testing/selftests/pidfd/
-+F:	tools/testing/selftests/clone3/
- K:	(?i)pidfd
- K:	(?i)clone3
- K:	\b(clone_args|kernel_clone_args)\b
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index c3feccb99ff5..6bf7aeb47650 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -4,6 +4,7 @@ TARGETS += bpf
- TARGETS += breakpoints
- TARGETS += capabilities
- TARGETS += cgroup
-+TARGETS += clone3
- TARGETS += cpufreq
- TARGETS += cpu-hotplug
- TARGETS += drivers/dma-buf
-diff --git a/tools/testing/selftests/clone3/.gitignore b/tools/testing/selftests/clone3/.gitignore
-new file mode 100644
-index 000000000000..6c9f98097774
---- /dev/null
-+++ b/tools/testing/selftests/clone3/.gitignore
-@@ -0,0 +1 @@
-+clone3_clear_sighand
-diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selftests/clone3/Makefile
-new file mode 100644
-index 000000000000..3ecd56ebc99d
---- /dev/null
-+++ b/tools/testing/selftests/clone3/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+CFLAGS += -g -I../../../../usr/include/
-+
-+TEST_GEN_PROGS := clone3_clear_sighand
-+
-+include ../lib.mk
-+
-diff --git a/tools/testing/selftests/clone3/clone3_clear_sighand.c b/tools/testing/selftests/clone3/clone3_clear_sighand.c
-new file mode 100644
-index 000000000000..1a3adc206e74
---- /dev/null
-+++ b/tools/testing/selftests/clone3/clone3_clear_sighand.c
-@@ -0,0 +1,172 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <linux/sched.h>
-+#include <linux/types.h>
-+#include <sys/syscall.h>
-+#include <sys/wait.h>
-+
-+#include "../kselftest.h"
-+
-+#ifndef CLONE3_CLEAR_SIGHAND
-+#define CLONE3_CLEAR_SIGHAND 0x100000000ULL
-+#endif
-+
-+#ifndef __NR_clone3
-+#define __NR_clone3 -1
-+struct clone_args {
-+	__aligned_u64 flags;
-+	__aligned_u64 pidfd;
-+	__aligned_u64 child_tid;
-+	__aligned_u64 parent_tid;
-+	__aligned_u64 exit_signal;
-+	__aligned_u64 stack;
-+	__aligned_u64 stack_size;
-+	__aligned_u64 tls;
-+};
-+#endif
-+
-+static pid_t sys_clone3(struct clone_args *args, size_t size)
-+{
-+	return syscall(__NR_clone3, args, size);
-+}
-+
-+static void test_clone3_supported(void)
-+{
-+	pid_t pid;
-+	struct clone_args args = {};
-+
-+	if (__NR_clone3 < 0)
-+		ksft_exit_skip("clone3() syscall is not supported\n");
-+
-+	/* Set to something that will always cause EINVAL. */
-+	args.exit_signal = -1;
-+	pid = sys_clone3(&args, sizeof(args));
-+	if (!pid)
-+		exit(EXIT_SUCCESS);
-+
-+	if (pid > 0) {
-+		wait(NULL);
-+		ksft_exit_fail_msg(
-+			"Managed to create child process with invalid exit_signal\n");
-+	}
-+
-+	if (errno == ENOSYS)
-+		ksft_exit_skip("clone3() syscall is not supported\n");
-+
-+	ksft_print_msg("clone3() syscall supported\n");
-+}
-+
-+static void nop_handler(int signo)
-+{
-+}
-+
-+static int wait_for_pid(pid_t pid)
-+{
-+	int status, ret;
-+
-+again:
-+	ret = waitpid(pid, &status, 0);
-+	if (ret == -1) {
-+		if (errno == EINTR)
-+			goto again;
-+
-+		return -1;
-+	}
-+
-+	if (!WIFEXITED(status))
-+		return -1;
-+
-+	return WEXITSTATUS(status);
-+}
-+
-+static void test_clone3_clear_sighand(void)
-+{
-+	int ret;
-+	pid_t pid;
-+	struct clone_args args = {};
-+	struct sigaction act;
-+
-+	/*
-+	 * Check that CLONE3_CLEAR_SIGHAND and CLONE_SIGHAND are mutually
-+	 * exclusive.
-+	 */
-+	args.flags |= CLONE3_CLEAR_SIGHAND | CLONE_SIGHAND;
-+	args.exit_signal = SIGCHLD;
-+	pid = sys_clone3(&args, sizeof(args));
-+	if (pid > 0)
-+		ksft_exit_fail_msg(
-+			"clone3(CLONE3_CLEAR_SIGHAND | CLONE_SIGHAND) succeeded\n");
-+
-+	act.sa_handler = nop_handler;
-+	ret = sigemptyset(&act.sa_mask);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s - sigemptyset() failed\n",
-+				   strerror(errno));
-+
-+	act.sa_flags = 0;
-+
-+	/* Register signal handler for SIGUSR1 */
-+	ret = sigaction(SIGUSR1, &act, NULL);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s - sigaction(SIGUSR1, &act, NULL) failed\n",
-+			strerror(errno));
-+
-+	/* Register signal handler for SIGUSR2 */
-+	ret = sigaction(SIGUSR2, &act, NULL);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s - sigaction(SIGUSR2, &act, NULL) failed\n",
-+			strerror(errno));
-+
-+	/* Check that CLONE3_CLEAR_SIGHAND works. */
-+	args.flags = CLONE3_CLEAR_SIGHAND;
-+	pid = sys_clone3(&args, sizeof(args));
-+	if (pid < 0)
-+		ksft_exit_fail_msg("%s - clone3(CLONE3_CLEAR_SIGHAND) failed\n",
-+				   strerror(errno));
-+
-+	if (pid == 0) {
-+		ret = sigaction(SIGUSR1, NULL, &act);
-+		if (ret < 0)
-+			exit(EXIT_FAILURE);
-+
-+		if (act.sa_handler != SIG_DFL)
-+			exit(EXIT_FAILURE);
-+
-+		ret = sigaction(SIGUSR2, NULL, &act);
-+		if (ret < 0)
-+			exit(EXIT_FAILURE);
-+
-+		if (act.sa_handler != SIG_DFL)
-+			exit(EXIT_FAILURE);
-+
-+		exit(EXIT_SUCCESS);
-+	}
-+
-+	ret = wait_for_pid(pid);
-+	if (ret)
-+		ksft_exit_fail_msg(
-+			"Failed to clear signal handler for child process\n");
-+
-+	ksft_test_result_pass("Cleared signal handlers for child process\n");
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+	ksft_set_plan(1);
-+
-+	test_clone3_supported();
-+	test_clone3_clear_sighand();
-+
-+	return ksft_exit_pass();
-+}
--- 
-2.23.0
+static int string_stream_test_init(struct kunit *test)
+{
+        _alloc_string_stream = kunit_find_symbol("alloc_string_stream");
+        _string_stream_add = kunit_find_symbol("string_stream_add");
+        _string_stream_get_string = kunit_find_symbol("string_stream_get_string");
+        _string_stream_is_empty = kunit_find_symbol("string_stream_is_empty");
+        if (IS_ERR(_alloc_string_stream) ||
+            IS_ERR(_string_stream_add) ||
+            IS_ERR(_string_stream_get_string) ||
+            IS_ERR(_string_stream_is_empty))
+                return EINVAL;
+        return 0;
+} 
+
+I've tested this when string-stream-test is compiled built-in and as a 
+module.  We can of course create a wrapper macro to handle these 
+assignments.
+
+To illustrate further here's the test cases I'd propose adding to 
+test-test.c with the changes. 
+
+In the first case we're grabbing the "modules" variable from the kernel,
+and in the second we're grabbing a static symbol from the test-test.ko
+module (when it is compiled as a module):
+
+/*
+ * Find non-exported kernel symbol; we use the modules list as a safe
+ * choice that should always be present.
+ */
+static void kunit_find_symbol_kernel(struct kunit *test)
+{
+        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, kunit_find_symbol("modules"));
+}
+
+#ifdef MODULE
+/*
+ * If we are compiled as a module, use this module for lookup.
+ */
+static void kunit_find_symbol_module(struct kunit *test)
+{
+        KUNIT_ASSERT_NOT_ERR_OR_NULL(test,
+                                     kunit_find_symbol("kunit_find_symbol_kernel"));
+}
+#endif
+
+ 
+> Even so, I think it is pretty wonky to expect users to either a)
+> export any symbol name to be tested,
+
+Absolutely not, I'd never advocate that.  Nothing should need to change in 
+the component under test simply to facilitate testing, especially if 
+there's a way the test framework can work around it.
+
+> or b) have to access them via
+> kunit_find_symbol.  I think it is fine to have some tests that cannot
+> be compiled as modules, if there is no other user friendly way to make
+> this work in those cases.
+
+That's fine, and I agree in some cases it's unworkable, but there are 
+going to be a lot of tristate componenets we'd like to test, and 
+restricting testing of those by requiring CONFIG_FOO=y seems like a 
+limitation too.  In practice I've found symbol lookup isn't needed 
+extensively for test development.  For cases where the weight of symbol 
+lookup is too heavy the tests can simply stay built-in - the non-exported 
+nature of the symbols is probably suggesting something about the nature of 
+the interface that makes that a more natural choice anyway.  However for 
+other cases I think there's value to having something like this feature.
+Of course there may be better ways to realize the functionality than what 
+I'm proposing.
+
+Thanks!
+
+Alan 
 
