@@ -6,138 +6,95 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B156C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF99ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F5321835
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3109C206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbfJKQ7A (ORCPT
+        id S1728500AbfJKRAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 12:59:00 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48670 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728167AbfJKQ67 (ORCPT
+        Fri, 11 Oct 2019 13:00:45 -0400
+Received: from mail-pg1-f179.google.com ([209.85.215.179]:44243 "EHLO
+        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728086AbfJKRAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 12:58:59 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iIyFh-0002XC-RN; Fri, 11 Oct 2019 16:58:53 +0000
-Date:   Fri, 11 Oct 2019 18:58:53 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Christian Kellner <ckellner@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Christian Kellner <christian@kellner.me>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH v3 1/2] pidfd: show pids for nested pid namespaces in
- fdinfo
-Message-ID: <20191011165851.gf5i6qw2fwbunshr@wittgenstein>
-References: <20191009160532.20674-1-ckellner@redhat.com>
- <20191011122323.7770-1-ckellner@redhat.com>
- <CAG48ez1xNonmxwa3DRD44WJiComOHRxdHud5+LWea3OXzr4hkg@mail.gmail.com>
- <20191011151700.hdvztoxonpvogadv@wittgenstein>
- <CAG48ez2_YX0eXQP_YP2Ya20AxRGg9uGFjjkuSBxAV=hxvM9VZw@mail.gmail.com>
+        Fri, 11 Oct 2019 13:00:44 -0400
+Received: by mail-pg1-f179.google.com with SMTP id e10so2135180pgd.11;
+        Fri, 11 Oct 2019 10:00:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OKGWBUoxMayF3T/j4ufkanWg28YnrdRQH1PezhJ8qHw=;
+        b=M4/RsPfmEy7qjawshMo2QYhzuBUHg/p7I+k81pq6WhxxPXFsPj8YGZat22X+o1OX5D
+         AgePYsdSIM16j27C/X5IEQAgQ457nYqnK8CSXn8Ydj+p1Rg8wJbinEHgtVF2DxmYrqYS
+         moYOjiwVM/99HS7MJhfUudJ48YUkZLle+O7mk48vxtHuSxkyRjgNCaJ+r8xYIoIi1r7k
+         M17YKO7Ln0kkJ+QLigixmJDzT58w+8JQntBUiaQMWjQYf8G+qFi85IHsEAKhIRWIrC51
+         kLwLjii++ixcXIHrvs+S8RuyyzYiL1XuXYBHxbRi9sPFUakMdwFRxUrJr0cBva5daIOD
+         65pQ==
+X-Gm-Message-State: APjAAAWjvCgf4Wsuo3LN7ZSJUjQSeTgg+WoMzVMgute9ftABOMEIs4kd
+        Rjt2lVvOe9+APaRJ7k1DPEXHP25w
+X-Google-Smtp-Source: APXvYqwFac5zhGscS4LGq/zNcTYHsmwYguLxLfTV758NqKQPjgyn5vnlMT2VObNhextpjTbXZ6lFlw==
+X-Received: by 2002:aa7:98c9:: with SMTP id e9mr17932097pfm.142.1570813243804;
+        Fri, 11 Oct 2019 10:00:43 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id x72sm13692986pfc.89.2019.10.11.10.00.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2019 10:00:42 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] blk-mq: fill header with kernel-doc
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        axboe@kernel.dk, kernel@collabora.com
+References: <20191008001416.12656-1-andrealmeid@collabora.com>
+ <854l0j19go.fsf@collabora.com> <6aa48cd2-5f23-a4be-f777-d65bf755a976@acm.org>
+ <85zhibyt14.fsf@collabora.com> <86de2c88-5812-4a87-b5d8-1b7b1808d013@acm.org>
+ <8e20f2c6-c165-5b5f-7497-9472913d0ba8@collabora.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <66011772-9f04-dfc3-611e-7dc820d9263f@acm.org>
+Date:   Fri, 11 Oct 2019 10:00:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAG48ez2_YX0eXQP_YP2Ya20AxRGg9uGFjjkuSBxAV=hxvM9VZw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <8e20f2c6-c165-5b5f-7497-9472913d0ba8@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 05:30:03PM +0200, Jann Horn wrote:
-> On Fri, Oct 11, 2019 at 5:17 PM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > On Fri, Oct 11, 2019 at 04:55:59PM +0200, Jann Horn wrote:
-> > > On Fri, Oct 11, 2019 at 2:23 PM Christian Kellner <ckellner@redhat.com> wrote:
-> > > > The fdinfo file for a process file descriptor already contains the
-> > > > pid of the process in the callers namespaces. Additionally, if pid
-> > > > namespaces are configured, show the process ids of the process in
-> > > > all nested namespaces in the same format as in the procfs status
-> > > > file, i.e. "NSPid:\t%d\%d...". This allows the easy identification
-> > > > of the processes in nested namespaces.
-> > > [...]
-> > > >  #ifdef CONFIG_PROC_FS
-> > > > +static inline void print_pidfd_nspid(struct seq_file *m, struct pid *pid,
-> > > > +                                    struct pid_namespace *ns)
-> > >
-> > > `ns` is the namespace of the PID namespace of the procfs instance
-> > > through which the file descriptor is being viewed.
-> > >
-> > > > +{
-> > > > +#ifdef CONFIG_PID_NS
-> > > > +       int i;
-> > > > +
-> > > > +       seq_puts(m, "\nNSpid:");
-> > > > +       for (i = ns->level; i <= pid->level; i++) {
-> > >
-> > > ns->level is the level of the PID namespace associated with the procfs
-> > > instance through which the file descriptor is being viewed. pid->level
-> > > is the level of the PID associated with the pidfd.
-> > >
-> > > > +               ns = pid->numbers[i].ns;
-> > > > +               seq_put_decimal_ull(m, "\t", pid_nr_ns(pid, ns));
-> > > > +       }
-> > > > +#endif
-> > > > +}
-> > >
-> > > I think you assumed that `ns` is always going to contain `pid`.
-> > > However, that's not the case. Consider the following scenario:
-> > >
-> > >  - the init_pid_ns has two child PID namespaces, A and B (each with
-> > > its own mount namespace and procfs instance)
-> > >  - process P1 lives in A
-> > >  - process P2 lives in B
-> > >  - P1 opens a pidfd for itself
-> > >  - P1 passes the pidfd to P2 (e.g. via a unix domain socket)
-> > >  - P2 reads /proc/self/fdinfo/$pidfd
-> > >
-> > > Now the loop will print the ID of P1 in A. I don't think that's what
-> > > you intended? You might want to bail out if "pid_nr_ns(pid, ns) == 0",
-> > > or something like that.
-> >
-> > I assumed the same thing happens when you pass around an fd for
-> > /proc/self/status and that's why I didn't object to this behavior.
+On 10/10/19 1:38 PM, André Almeida wrote:
+> Seems that it's not clear for me the role of these members. Could you
+> please check if those definitions make sense for you?
 > 
-> I don't see how /proc/$pid/status is relevant. In the
-> /proc/$pid/status case, the output is the list of PIDs starting at the
-> PID namespace the procfs is associated with; and the process is always
-> contained in that namespace, which also means that the first PID
-> listed is the one in the PID namespace of the procfs instance. In the
-> pidfd case, the process is not necessarily contained in that
-> namespace, and the output doesn't make sense.
+> - hctx->dispatch: This queue is used for requests that are ready to be
+> dispatched to the hardware but for some reason (e.g. lack of resources,
+> the hardware is to busy and can't get more requests) could not be sent
+> to the hardware. As soon as the driver can send new requests, those
+> queued at this list will be sent first for a more fair dispatch. Since
+> those requests are at the hctx, they can't be requeued or rescheduled
+> anymore.
+> 
+> - request_queue->requeue_list: This list is used when it's not possible
+> to send the request to the associated hctx. This can happen if the
+> associated CPU or hctx is not available anymore. When requeueing those
+> requests, it will be possible to send them to new and function queues.
 
-I might be misreading what you're saying.
-(Maybe I'm doing something obviously wrong.)
-If I compile the following two programs:
-b2: https://paste.ubuntu.com/p/xthMsCXy3s/
-c2: https://paste.ubuntu.com/p/y5HSzyMQJr/
+Hi André,
 
-Then in shell1
-sudo unshare --mount --pid --fork --mount-proc
+The hctx->dispatch description looks mostly fine. Can the following part 
+be left out since it looks confusing to me: "Since those requests are at 
+the hctx, they can't be requeued or rescheduled anymore."
 
-and in shell2
-sudo unshare --mount --pid --fork --mount-proc
+How about changing the requeue_list description into the following: 
+"requests requeued by a call to blk_mq_requeue_request()".
 
-and run b2 in shell1 and c2 in shell2 which sends around an fd for
-/proc/b2/status to c2. Now c2 reads b2's status file via the fd it
-received. The c2 will see the pid of b2 in b2's pid namespace even
-though the process is not contained in the pid namespace of c2.
+Thanks,
 
-Christian
+Bart.
+
+
