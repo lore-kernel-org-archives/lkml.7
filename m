@@ -2,145 +2,115 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103E0ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A15ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC23A218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570819723;
-	bh=m+vq97srCtSAkMQJp5pj1AGqRJNlXFC1HTKheGMdwMw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kYJjVRnKEtuJCTIl0kXZaWSjzqa3qs1S2dbgLDoDbkR7n8FiaB/pociNY9dmz8Z4D
-	 sn9CKjEeQ0SbbgbxTtgcaSkM1w/FRw+Q80l4+yuwjXX08Z5pPo+M8cLaKcDShYYBsm
-	 GjqlkQyK1COBXOtBrashEg1eDJ+aCprjH6PNd7YQ=
+	by mail.kernel.org (Postfix) with ESMTP id B03EB2190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:49:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YAVjU4WB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbfJKSsm (ORCPT
+        id S1728950AbfJKStF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 14:48:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbfJKSsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 14:48:39 -0400
-Received: from ziggy.de (unknown [37.223.145.112])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEBEF2190F;
-        Fri, 11 Oct 2019 18:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570819718;
-        bh=m+vq97srCtSAkMQJp5pj1AGqRJNlXFC1HTKheGMdwMw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ofrxxdcFTleX+rEmnybr+Wk0kFjoyRBSwGegV1iuF09a25k2yfXoc5pbf1bQIZ13c
-         ChWvNAKUYUcR2u3ObdEcRq+Eup0U4zyDQ2W75C4CdpPYZ970ouTaUxRHs0qePr3L4V
-         2DhSaDBf9wRXVW1llOyPf9iIGVX5Emq1/oDFnh4c=
-From:   matthias.bgg@kernel.org
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Matthias Brugger <matthias.bgg@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Eric Anholt <eric@anholt.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] ARM: dts: bcm2711: Enable GENET support for the RPi4
-Date:   Fri, 11 Oct 2019 20:48:21 +0200
-Message-Id: <20191011184822.866-4-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191011184822.866-1-matthias.bgg@kernel.org>
-References: <20191011184822.866-1-matthias.bgg@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 11 Oct 2019 14:49:05 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40578 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728883AbfJKStF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 14:49:05 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d26so6282830pgl.7
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 11:49:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3hh4TNXeWC2abuzUA3dw2QguzTS8GrKE46mE5KRqr2A=;
+        b=YAVjU4WBuFGNK4F38f6RI358mzpqqVlbvkTNULkaE7tTcQ0/6vTYJtMYdTLojfXP8R
+         t762Azd2ip6Kfx/3uiO91biwKIV2KnzUryzQfitLyK/WwWiBy7LCzFrOdZ99LeJJFXov
+         j+rpsa14OrgmMqhLmcn6VXKgc2xDgkA2+BnaqapTcZrwKXQZS7K2qsZfOkdGaby3Qubg
+         kkm5o+RuBMKI58xWsXHZgzhb36O1IIzHTKQvuLX6PKg59WKQ0w+31v2OkTo46mKQyrfB
+         kAGYNKpVHa/oTIofk/o6kqs+tduuIaAHCUDuNCjjUUXXDkVve1PcXGSfGbdRxfYAd0I1
+         uofg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3hh4TNXeWC2abuzUA3dw2QguzTS8GrKE46mE5KRqr2A=;
+        b=XaWJSGOzy9y2gy1caryfBvpaJ2bjRvdd+4slFSH3tNwLoL6qxVLqrWFGGqWmHkow+V
+         z/j6Cfa69TXISyITN/4knmsG8ll895gwbOxguL3+4PuS46zvH7Z1LFJOuC04iRkcTR8g
+         BB7xbBG3EdTspGu/EVsRvf61f2jeZIeIsGwqzrQ488F65nL6qwXo02lkpPtuEajTFm7Z
+         LrCuZioItk+BQEfLEposl0TppY2k9sRrQo3IUwXgyTEMwnt404EmYiEkpoS2qPzQaqb3
+         AhiMiU739UqIOyltsQ130+H2aijRF7e/oc6Y3zQ+Gb++KcSjQXzmBFrIYwefEu8jxmOk
+         Fbdw==
+X-Gm-Message-State: APjAAAVZliVjn+yClLg+ddKH36/Y6sYXS9KzM4/PqlxbpghKwOedLCkb
+        kIFhT4l/eM3eyxtF3dS5nYaA
+X-Google-Smtp-Source: APXvYqwbU1T1lDyiLexli5AHsFB8JJxIeao+xaaGAaJCT6SgjtII8kFWdRUAOXPbiGX+WZzsGNkUkA==
+X-Received: by 2002:aa7:870f:: with SMTP id b15mr18293731pfo.123.1570819744225;
+        Fri, 11 Oct 2019 11:49:04 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:6407:a090:18a3:ff6e:e66c:65b0])
+        by smtp.gmail.com with ESMTPSA id 68sm10031497pgb.39.2019.10.11.11.48.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 11:49:03 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org
+Cc:     alexandru.Ardelean@analog.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/2] Add support for ADUX1020 sensor
+Date:   Sat, 12 Oct 2019 00:18:50 +0530
+Message-Id: <20191011184852.12202-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+Hello,
 
-Enable Gigabit Ethernet support on the Raspberry Pi 4
-Model B.
+This patchset adds initial IIO driver support for ADUX1020 Photometric
+sensor from Analog Devices. This sensor is usable for multiple optical
+measurement applications, including gesture control and proximity sensing.
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+This initial driver includes support for only proximity mode with event
+based interrupt. The driver validation has been performed using Shiratech
+LTE mezzanine [1] connected to 96Boards Dragonboard410c [2].
 
----
+Thanks,
+Mani
 
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 22 ++++++++++++++++++++++
- arch/arm/boot/dts/bcm2711.dtsi        | 18 ++++++++++++++++++
- 2 files changed, 40 insertions(+)
+[1] https://www.96boards.org/product/shiratech-lte/
+[2] https://www.96boards.org/product/dragonboard410c/
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index cccc1ccd19be..958553d62670 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -97,6 +97,28 @@
- 	status = "okay";
- };
- 
-+&genet {
-+	phy-handle = <&phy1>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+	dma-burst-sz = <0x08>;
-+
-+	mdio@e14 {
-+		compatible = "brcm,genet-mdio-v5";
-+		reg = <0xe14 0x8>;
-+		reg-names = "mdio";
-+		#address-cells = <0x0>;
-+		#size-cells = <0x1>;
-+
-+		phy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			/* No PHY interrupt */
-+			max-speed = <1000>;
-+			reg = <0x1>;
-+		};
-+	};
-+};
-+
- /* uart0 communicates with the BT module */
- &uart0 {
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-index ac83dac2e6ba..e2e837fcad59 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -305,6 +305,24 @@
- 			cpu-release-addr = <0x0 0x000000f0>;
- 		};
- 	};
-+
-+	scb {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+
-+		ranges = <0x0 0x7c000000  0x0 0xfc000000  0x03800000>;
-+
-+		genet: ethernet@7d580000 {
-+			compatible = "brcm,genet-v5";
-+			reg = <0x0 0x7d580000 0x10000>;
-+			#address-cells = <0x1>;
-+			#size-cells = <0x1>;
-+			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+	};
- };
- 
- &clk_osc {
+Changes in v3:
+
+Based on the review by Ardelean and Jonathan:
+
+* Added error checks for regmap calls
+* Added mutex locks where applicable
+* Switched to devm_iio API
+* Misc changes to the driver
+* Added Reivewed-by tag from Rob for the bindings patch
+
+Changes in v2:
+
+* Converted the devicetree binding to YAML
+
+Manivannan Sadhasivam (2):
+  dt-bindings: iio: light: Add binding for ADUX1020
+  iio: light: Add support for ADUX1020 sensor
+
+ .../bindings/iio/light/adux1020.yaml          |  47 +
+ drivers/iio/light/Kconfig                     |  11 +
+ drivers/iio/light/Makefile                    |   1 +
+ drivers/iio/light/adux1020.c                  | 849 ++++++++++++++++++
+ 4 files changed, 908 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/adux1020.yaml
+ create mode 100644 drivers/iio/light/adux1020.c
+
 -- 
-2.23.0
+2.17.1
 
