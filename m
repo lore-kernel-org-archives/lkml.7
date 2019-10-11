@@ -2,114 +2,100 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1983C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B296ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E93206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D935F206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570805088;
+	bh=b0TeRaA2Z1L1IRbscM7IdWaz2G4DgR2SWsjbqEMhuQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wcce+OezaVGZUEw+EP8pm9Pf2O8FryWskBkBOqnGZMwxn4FtxIp2M7NxJsQoaMYbZ
+	 vFD/B+zhoda7dNjjAmm/ert3LbzRar3PH+A/9a39UfYlZ3tY9wO/gZp2GSONgngFwX
+	 5sB4JnmzUVS8748PT+QZ/HTZjI8TqUArttBzz2MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfJKOnw (ORCPT
+        id S1728093AbfJKOor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:43:52 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:44439 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfJKOnw (ORCPT
+        Fri, 11 Oct 2019 10:44:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39979 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfJKOor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:43:52 -0400
-Received: from xps13.stephanxp.local (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 167AE240008;
-        Fri, 11 Oct 2019 14:43:48 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 0/8] Introduce max12xx ADC support
-Date:   Fri, 11 Oct 2019 16:43:39 +0200
-Message-Id: <20191011144347.19146-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 11 Oct 2019 10:44:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id y39so8161885ota.7;
+        Fri, 11 Oct 2019 07:44:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=phJrdsvrMRbz/mV66eCzb3QAhHr1D1SaioSI8xCNhC8=;
+        b=aBdi3g4gEJu75zGI0cr+jmI38y+U8zShmU8Dyh6SMtJdAu1zDtrJZq6A25cKnAfPFY
+         uc/WX5LQwV9GCOlGxbAsib0DF2sPJ029/O2StwAMXts6Y4wEEbL11AfsLQevV2zEMKI8
+         qw9yy+vYosLBy9SPZByJgfwwJXs/wXzw2w/uFMl6mxUA6FKlS6yWspjD9bpPdKpH8Msy
+         5dsuGWU6QhpjESFh+XG9ehc6p/aoxfPIX1FYghdifb9NEAb3hMfJ6xHhciiKEpZTvNOk
+         UbTKSn1a/BuN43nwX2EIk0vueBZpVy+bKqMEfmMJCZFBeZ6dtx2zFfbvTuQ0KMxf8zSW
+         e20g==
+X-Gm-Message-State: APjAAAWedcmz2H1gbutwuy7rPcpkOs9iCYjKMi/7RA+H1fmkJYk3yRsK
+        2YwMiTKBUPqhUi/OPNlNvTLiO7k=
+X-Google-Smtp-Source: APXvYqxkYBd0e9PRpOsG2+jeAtb9kPih7R7dN+N+CZabl/97Cin9YxLSpFF7SMhUpOReyysHSoilmQ==
+X-Received: by 2002:a05:6830:11cc:: with SMTP id v12mr12320371otq.362.1570805086355;
+        Fri, 11 Oct 2019 07:44:46 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y30sm2787225oix.36.2019.10.11.07.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 07:44:45 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 09:44:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     peda@axentia.se, leoyang.li@nxp.com, mark.rutland@arm.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [v2,2/2] dt-bindings: i2c-mux-pca954x: Add optional property
+ i2c-mux-never-disable
+Message-ID: <20191011144445.GA2340@bogus>
+References: <20190930032503.44425-1-biwen.li@nxp.com>
+ <20190930032503.44425-2-biwen.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930032503.44425-2-biwen.li@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, here is a patchset updating the existing max1027.c driver (for
-10-bit max1027/29/31 ADCs) with a few corrections/improvements and
-then introducing their 12-bit cousins named max1227/29/31.
+On Mon, Sep 30, 2019 at 11:25:03AM +0800, Biwen Li wrote:
+> The patch adds an optional property i2c-mux-never-disable
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v2:
+> 	- update documentation
+> 
+>  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> index 30ac6a60f041..71b73d0fdb62 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> @@ -34,6 +34,7 @@ Optional Properties:
+>      - first cell is the pin number
+>      - second cell is used to specify flags.
+>      See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +  - i2c-mux-never-disable: always forces mux to be enabled.
 
-As on my hardware setup the "start conversion" and "end of conversion"
-pin are not wired (which is absolutely fine for this chip), I also
-updated the driver and the bindings to support optional interrupts. In
-this case, triggered buffers are not available and the user must poll
-the value from sysfs.
+Either needs to have a vendor prefix or be documented as a common 
+property.
 
-Thanks,
-Miquèl
+IIRC, we already have a property for mux default state which seems like 
+that would cover this unless you need to leave it in different states.
 
-
-Changes in v4:
-==============
-* In the v3, I removed the bindings documentation for the max10xx
-  devices, in favor of the trivial devices bindings. Unfortunately, I
-  didn't spot that in the following patch adding support for the
-  max12xx series, I was adding the compatibles to the trivial devices
-  list but also re-introducing the bindings documentation with the
-  three new compatibles. Just drop this part of the last patch to only
-  have the trivial devices file, not the specific bindings. All the
-  rest is the same.
-
-Changes in v3:
-==============
-* Updated the commit message of the patch adding debugfs read access
-  to better explain why I decided to limit the number of bytes read to
-  two.
-* Updated the macros to define the number of channels per device as
-  proposed by Jonathan.
-* Re-used the realbits entry instead of adding my own (called .depth).
-* Started doing DT-bindings yaml conversion, but realized that after
-  the first patch offering the interrupt as optional, the
-  documentation was fitting pretty well the trivial devices
-  representation. Dropped the specific bindings files and updated the
-  trivial devices list instead.
-
-Changes in v2:
-==============
-* Removed the addition of three compatibles from patch 4 (the
-  preparation patch) to add these lines back in patch 5 (the actual
-  introduction).
-
-
-Miquel Raynal (8):
-  iio: adc: max1027: Add debugfs register read support
-  iio: adc: max1027: Make it optional to use interrupts
-  iio: adc: max1027: Reset the device at probe time
-  iio: adc: max1027: Prepare the introduction of different resolutions
-  iio: adc: max1027: Introduce 12-bit devices support
-  dt-bindings: iio: adc: max1027: Mark interrupts as optional
-  dt-bindings: Add 1027/1029/1031 SPI ADCs as trivial devices
-  dt-bindings: Add max12xx SPI ADC series as trivial devices
-
- .../bindings/iio/adc/max1027-adc.txt          |  20 --
- .../devicetree/bindings/trivial-devices.yaml  |  12 ++
- drivers/iio/adc/Kconfig                       |   4 +-
- drivers/iio/adc/max1027.c                     | 180 +++++++++++-------
- 4 files changed, 125 insertions(+), 91 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-
--- 
-2.20.1
-
+Rob
