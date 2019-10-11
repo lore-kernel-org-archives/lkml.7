@@ -2,74 +2,87 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792A8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E042C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB1F214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20A22196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570776459;
+	bh=F9PU0iHZAUB5dvz6HHkRKuomppsyOg6pcXNb0u08bIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bFHVf1pg8Amj3silLM9huiokdXP48SXTTybDYcmHTUMEaFahEdPGNfc3pQ3Xit9tq
+	 JmtaJ0CivITTBQUSRioM/ujnSEYqCkQyhySXPyMaYCb+Vf89kXTFJFstIVe+Tu1NqK
+	 Su5Ol+e4SQaxce/x3P/bN6KGl4co6INwHT1BJG/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfJKGrN (ORCPT
+        id S1727498AbfJKGri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 02:47:13 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:60888 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfJKGrN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 02:47:13 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.2)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iIohY-0003Kb-Qd; Fri, 11 Oct 2019 08:47:00 +0200
-Message-ID: <dfc9572f853713577e3798b3ff0449483ce274f3.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next v7 00/17] ethtool netlink interface, part 1
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 11 Oct 2019 08:46:59 +0200
-In-Reply-To: <20191010174839.6e44158b@cakuba.netronome.com> (sfid-20191011_024857_967575_978B3526)
-References: <cover.1570654310.git.mkubecek@suse.cz>
-         <20191010174839.6e44158b@cakuba.netronome.com>
-         (sfid-20191011_024857_967575_978B3526)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 11 Oct 2019 02:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbfJKGrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 02:47:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5814214E0;
+        Fri, 11 Oct 2019 06:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570776457;
+        bh=F9PU0iHZAUB5dvz6HHkRKuomppsyOg6pcXNb0u08bIs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FTrf686pbZT2wz3fFzvKWjUlhlSXy454F43VPSiXXYA55vcFPEwU6p0RymCiCFp78
+         DsVPxawfE0xYni3UyULz7O3wqLmopAr54UEk3Qk/TJy/wl4UNDBkapz2Ir2kUdl+Fj
+         Can7/msPBnheQRI/bz+lRMbeCWZ39/pQgyspIgFE=
+Date:   Fri, 11 Oct 2019 08:47:34 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.3 000/148] 5.3.6-stable review
+Message-ID: <20191011064734.GA1064179@kroah.com>
+References: <20191010083609.660878383@linuxfoundation.org>
+ <ac86815e-774a-7655-0619-9d3cae5e9ba0@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac86815e-774a-7655-0619-9d3cae5e9ba0@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-10 at 17:48 -0700, Jakub Kicinski wrote:
-> On Wed,  9 Oct 2019 22:59:00 +0200 (CEST), Michal Kubecek wrote:
-> > This is first part of netlink based alternative userspace interface for
-> > ethtool. It aims to address some long known issues with the ioctl
-> > interface, mainly lack of extensibility, raciness, limited error reporting
-> > and absence of notifications. The goal is to allow userspace ethtool
-> > utility to provide all features it currently does but without using the
-> > ioctl interface. However, some features provided by ethtool ioctl API will
-> > be available through other netlink interfaces (rtnetlink, devlink) if it's
-> > more appropriate.
+On Thu, Oct 10, 2019 at 09:02:45PM -0600, shuah wrote:
+> On 10/10/19 2:34 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.3.6 release.
+> > There are 148 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.6-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> Looks like perhaps with ETHTOOL_A_HEADER_RFLAGS checking taken out of
-> the picture we can proceed as is and potentially work on defining some
-> best practices around attrs and nesting for the future generations? :)
-> 
-> I was trying to find a way to perhaps start merging something.. Would
-> it make sense to spin out patches 1, 2, 3, and 8 as they seem to be
-> ready (possibly 11, too if the reorder isn't painful)?
+> Compiled and booted on my test system. No dmesg regressions.
 
-I was surprised 3 didn't go in even last time this was posted, it seems
-such an obvious thing and not necessary just for ethtool :)
+Thanks for testing these and letting me know.
 
-johannes
-
+greg k-h
