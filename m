@@ -2,155 +2,241 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5598ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EEEC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B89206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990DF2196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfJKDsa (ORCPT
+        id S1726215AbfJKDzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 23:48:30 -0400
-Received: from mx2a.mailbox.org ([80.241.60.219]:54977 "EHLO mx2a.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfJKDsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 23:48:30 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2a.mailbox.org (Postfix) with ESMTPS id 4C0B5A184E;
-        Fri, 11 Oct 2019 05:48:26 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id FAJIvPNj8lRh; Fri, 11 Oct 2019 05:48:21 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 14:48:10 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     mingo@redhat.com, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, christian@brauner.io, keescook@chromium.org,
-        linux@rasmusvillemoes.dk, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usercopy: Avoid soft lockups in test_check_nonzero_user()
-Message-ID: <20191011034810.xkmz3e4l5ezxvq57@yavin.dot.cyphar.com>
-References: <20191010114007.o3bygjf4jlfk242e@yavin.dot.cyphar.com>
- <20191011022447.24249-1-mpe@ellerman.id.au>
+        Thu, 10 Oct 2019 23:55:07 -0400
+Received: from regular1.263xmail.com ([211.150.70.196]:47612 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfJKDzG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 23:55:06 -0400
+Received: from localhost (unknown [192.168.167.8])
+        by regular1.263xmail.com (Postfix) with ESMTP id ACAB7FAF;
+        Fri, 11 Oct 2019 11:55:01 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.10.69] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P704T139743631226624S1570766100752839_;
+        Fri, 11 Oct 2019 11:55:01 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <8ff3db43a3ec19bb6916ddc4c458b6dd>
+X-RL-SENDER: hjc@rock-chips.com
+X-SENDER: hjc@rock-chips.com
+X-LOGIN-NAME: hjc@rock-chips.com
+X-FST-TO: laurent.pinchart@ideasonboard.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_1/1=5d_drm/rockchip=3a_vop=3a_add_the_defi?=
+ =?UTF-8?B?bml0aW9uIG9mIGRjbGtfcG9s44CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGludXgt?=
+ =?UTF-8?Q?rockchip-bounces+sandy=2ehuang=3drock-chips=2ecom=40lists=2einfra?=
+ =?UTF-8?B?ZGVhZC5vcmfku6Plj5HjgJE=?=
+To:     Nickey Yang <nickey.yang@rock-chips.com>, heiko@sntech.de
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, seanpaul@chromium.org,
+        laurent.pinchart@ideasonboard.com
+References: <20191010034452.20260-1-nickey.yang@rock-chips.com>
+ <20191010034452.20260-2-nickey.yang@rock-chips.com>
+From:   "sandy.huang" <hjc@rock-chips.com>
+Message-ID: <e253e853-b213-4d99-234e-388aad060103@rock-chips.com>
+Date:   Fri, 11 Oct 2019 11:55:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xu7xtsni3al6cjf6"
-Content-Disposition: inline
-In-Reply-To: <20191011022447.24249-1-mpe@ellerman.id.au>
+In-Reply-To: <20191010034452.20260-2-nickey.yang@rock-chips.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Reviewed-by: Sandy Huang <hjc@rock-chips.com>
 
---xu7xtsni3al6cjf6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-10-11, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> On a machine with a 64K PAGE_SIZE, the nested for loops in
-> test_check_nonzero_user() can lead to soft lockups, eg:
->=20
->   watchdog: BUG: soft lockup - CPU#4 stuck for 22s! [modprobe:611]
->   Modules linked in: test_user_copy(+) vmx_crypto gf128mul crc32c_vpmsum =
-virtio_balloon ip_tables x_tables autofs4
->   CPU: 4 PID: 611 Comm: modprobe Tainted: G             L    5.4.0-rc1-gc=
-c-8.2.0-00001-gf5a1a536fa14-dirty #1151
->   ...
->   NIP __might_sleep+0x20/0xc0
->   LR  __might_fault+0x40/0x60
->   Call Trace:
->     check_zeroed_user+0x12c/0x200
->     test_user_copy_init+0x67c/0x1210 [test_user_copy]
->     do_one_initcall+0x60/0x340
->     do_init_module+0x7c/0x2f0
->     load_module+0x2d94/0x30e0
->     __do_sys_finit_module+0xc8/0x150
->     system_call+0x5c/0x68
->=20
-> Even with a 4K PAGE_SIZE the test takes multiple seconds. Instead
-> tweak it to only scan a 1024 byte region, but make it cross the
-> page boundary.
->=20
-> Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
-> Suggested-by: Aleksa Sarai <cyphar@cyphar.com>
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+ÔÚ 2019/10/10 ÉÏÎç11:44, Nickey Yang Ð´µÀ:
+> Some VOP's (such as px30) dclk_pol bit is at the last.
+> So it is necessary to distinguish dclk_pol and pin_pol.
+>
+> Signed-off-by: Nickey Yang <nickey.yang@rock-chips.com>
 > ---
->  lib/test_user_copy.c | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
->=20
-> How does this look? It runs in < 1s on my machine here.
->=20
-> cheers
->=20
-> diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
-> index 950ee88cd6ac..9fb6bc609d4c 100644
-> --- a/lib/test_user_copy.c
-> +++ b/lib/test_user_copy.c
-> @@ -47,9 +47,26 @@ static bool is_zeroed(void *from, size_t size)
->  static int test_check_nonzero_user(char *kmem, char __user *umem, size_t=
- size)
->  {
->  	int ret =3D 0;
-> -	size_t start, end, i;
-> -	size_t zero_start =3D size / 4;
-> -	size_t zero_end =3D size - zero_start;
-> +	size_t start, end, i, zero_start, zero_end;
-> +
-> +	if (test(size < 1024, "buffer too small"))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * We want to cross a page boundary to exercise the code more
-> +	 * effectively. We assume the buffer we're passed has a page boundary at
-> +	 * size / 2. We also don't want to make the size we scan too large,
-> +	 * otherwise the test can take a long time and cause soft lockups. So
-> +	 * scan a 1024 byte region across the page boundary.
-> +	 */
-> +	start =3D size / 2 - 512;
-> +	size =3D 1024;
+>   drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 12 +++---
+>   drivers/gpu/drm/rockchip/rockchip_drm_vop.h |  8 +++-
+>   drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 45 ++++++++++++++-------
+>   3 files changed, 43 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index 613404f86668..0d6682ed9e15 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -1085,9 +1085,7 @@ static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
+>   		DRM_DEV_ERROR(vop->dev, "Failed to enable vop (%d)\n", ret);
+>   		return;
+>   	}
+> -
+> -	pin_pol = BIT(DCLK_INVERT);
+> -	pin_pol |= (adjusted_mode->flags & DRM_MODE_FLAG_PHSYNC) ?
+> +	pin_pol = (adjusted_mode->flags & DRM_MODE_FLAG_PHSYNC) ?
+>   		   BIT(HSYNC_POSITIVE) : 0;
+>   	pin_pol |= (adjusted_mode->flags & DRM_MODE_FLAG_PVSYNC) ?
+>   		   BIT(VSYNC_POSITIVE) : 0;
+> @@ -1096,25 +1094,29 @@ static void vop_crtc_atomic_enable(struct drm_crtc *crtc,
+>   
+>   	switch (s->output_type) {
+>   	case DRM_MODE_CONNECTOR_LVDS:
+> -		VOP_REG_SET(vop, output, rgb_en, 1);
+> +		VOP_REG_SET(vop, output, rgb_dclk_pol, 1);
+>   		VOP_REG_SET(vop, output, rgb_pin_pol, pin_pol);
+> +		VOP_REG_SET(vop, output, rgb_en, 1);
+>   		break;
+>   	case DRM_MODE_CONNECTOR_eDP:
+> +		VOP_REG_SET(vop, output, edp_dclk_pol, 1);
+>   		VOP_REG_SET(vop, output, edp_pin_pol, pin_pol);
+>   		VOP_REG_SET(vop, output, edp_en, 1);
+>   		break;
+>   	case DRM_MODE_CONNECTOR_HDMIA:
+> +		VOP_REG_SET(vop, output, hdmi_dclk_pol, 1);
+>   		VOP_REG_SET(vop, output, hdmi_pin_pol, pin_pol);
+>   		VOP_REG_SET(vop, output, hdmi_en, 1);
+>   		break;
+>   	case DRM_MODE_CONNECTOR_DSI:
+> +		VOP_REG_SET(vop, output, mipi_dclk_pol, 1);
+>   		VOP_REG_SET(vop, output, mipi_pin_pol, pin_pol);
+>   		VOP_REG_SET(vop, output, mipi_en, 1);
+>   		VOP_REG_SET(vop, output, mipi_dual_channel_en,
+>   			    !!(s->output_flags & ROCKCHIP_OUTPUT_DSI_DUAL));
+>   		break;
+>   	case DRM_MODE_CONNECTOR_DisplayPort:
+> -		pin_pol &= ~BIT(DCLK_INVERT);
+> +		VOP_REG_SET(vop, output, dp_dclk_pol, 0);
+>   		VOP_REG_SET(vop, output, dp_pin_pol, pin_pol);
+>   		VOP_REG_SET(vop, output, dp_en, 1);
+>   		break;
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> index 2149a889c29d..ea1f97a5aa5d 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> @@ -46,10 +46,15 @@ struct vop_modeset {
+>   struct vop_output {
+>   	struct vop_reg pin_pol;
+>   	struct vop_reg dp_pin_pol;
+> +	struct vop_reg dp_dclk_pol;
+>   	struct vop_reg edp_pin_pol;
+> +	struct vop_reg edp_dclk_pol;
+>   	struct vop_reg hdmi_pin_pol;
+> +	struct vop_reg hdmi_dclk_pol;
+>   	struct vop_reg mipi_pin_pol;
+> +	struct vop_reg mipi_dclk_pol;
+>   	struct vop_reg rgb_pin_pol;
+> +	struct vop_reg rgb_dclk_pol;
+>   	struct vop_reg dp_en;
+>   	struct vop_reg edp_en;
+>   	struct vop_reg hdmi_en;
+> @@ -294,8 +299,7 @@ enum dither_down_mode_sel {
+>   enum vop_pol {
+>   	HSYNC_POSITIVE = 0,
+>   	VSYNC_POSITIVE = 1,
+> -	DEN_NEGATIVE   = 2,
+> -	DCLK_INVERT    = 3
+> +	DEN_NEGATIVE   = 2
+>   };
+>   
+>   #define FRAC_16_16(mult, div)    (((mult) << 16) / (div))
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> index d1494be14471..f92c899d656c 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> @@ -214,9 +214,11 @@ static const struct vop_modeset px30_modeset = {
+>   };
+>   
+>   static const struct vop_output px30_output = {
+> -	.rgb_pin_pol = VOP_REG(PX30_DSP_CTRL0, 0xf, 1),
+> -	.mipi_pin_pol = VOP_REG(PX30_DSP_CTRL0, 0xf, 25),
+> +	.rgb_dclk_pol = VOP_REG(PX30_DSP_CTRL0, 0x1, 1),
+> +	.rgb_pin_pol = VOP_REG(PX30_DSP_CTRL0, 0x7, 2),
+>   	.rgb_en = VOP_REG(PX30_DSP_CTRL0, 0x1, 0),
+> +	.mipi_dclk_pol = VOP_REG(PX30_DSP_CTRL0, 0x1, 25),
+> +	.mipi_pin_pol = VOP_REG(PX30_DSP_CTRL0, 0x7, 26),
+>   	.mipi_en = VOP_REG(PX30_DSP_CTRL0, 0x1, 24),
+>   };
+>   
+> @@ -717,10 +719,14 @@ static const struct vop_win_data rk3368_vop_win_data[] = {
+>   };
+>   
+>   static const struct vop_output rk3368_output = {
+> -	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 16),
+> -	.hdmi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 20),
+> -	.edp_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 24),
+> -	.mipi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 28),
+> +	.rgb_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 19),
+> +	.hdmi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 23),
+> +	.edp_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 27),
+> +	.mipi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 31),
+> +	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 16),
+> +	.hdmi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 20),
+> +	.edp_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 24),
+> +	.mipi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 28),
+>   	.rgb_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 12),
+>   	.hdmi_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 13),
+>   	.edp_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 14),
+> @@ -764,11 +770,16 @@ static const struct vop_data rk3366_vop = {
+>   };
+>   
+>   static const struct vop_output rk3399_output = {
+> -	.dp_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0xf, 16),
+> -	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 16),
+> -	.hdmi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 20),
+> -	.edp_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 24),
+> -	.mipi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0xf, 28),
+> +	.dp_dclk_pol = VOP_REG(RK3399_DSP_CTRL1, 0x1, 19),
+> +	.rgb_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 19),
+> +	.hdmi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 23),
+> +	.edp_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 27),
+> +	.mipi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 31),
+> +	.dp_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0x7, 16),
+> +	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 16),
+> +	.hdmi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 20),
+> +	.edp_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 24),
+> +	.mipi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 28),
+>   	.dp_en = VOP_REG(RK3399_SYS_CTRL, 0x1, 11),
+>   	.rgb_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 12),
+>   	.hdmi_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 13),
+> @@ -872,14 +883,18 @@ static const struct vop_modeset rk3328_modeset = {
+>   };
+>   
+>   static const struct vop_output rk3328_output = {
+> +	.rgb_dclk_pol = VOP_REG(RK3328_DSP_CTRL1, 0x1, 19),
+> +	.hdmi_dclk_pol = VOP_REG(RK3328_DSP_CTRL1, 0x1, 23),
+> +	.edp_dclk_pol = VOP_REG(RK3328_DSP_CTRL1, 0x1, 27),
+> +	.mipi_dclk_pol = VOP_REG(RK3328_DSP_CTRL1, 0x1, 31),
+>   	.rgb_en = VOP_REG(RK3328_SYS_CTRL, 0x1, 12),
+>   	.hdmi_en = VOP_REG(RK3328_SYS_CTRL, 0x1, 13),
+>   	.edp_en = VOP_REG(RK3328_SYS_CTRL, 0x1, 14),
+>   	.mipi_en = VOP_REG(RK3328_SYS_CTRL, 0x1, 15),
+> -	.rgb_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0xf, 16),
+> -	.hdmi_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0xf, 20),
+> -	.edp_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0xf, 24),
+> -	.mipi_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0xf, 28),
+> +	.rgb_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0x7, 16),
+> +	.hdmi_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0x7, 20),
+> +	.edp_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0x7, 24),
+> +	.mipi_pin_pol = VOP_REG(RK3328_DSP_CTRL1, 0x7, 28),
+>   };
+>   
+>   static const struct vop_misc rk3328_misc = {
 
-I don't think it's necessary to do "size / 2" here -- you can just use
-PAGE_SIZE directly and check above that "size =3D=3D 2*PAGE_SIZE" (not that
-this check is exceptionally necessary -- since there's only one caller
-of this function and it's in the same file).
 
-> +
-> +	kmem +=3D start;
-> +	umem +=3D start;
-> +
-> +	zero_start =3D size / 4;
-> +	zero_end =3D size - zero_start;
-> =20
->  	/*
->  	 * We conduct a series of check_nonzero_user() tests on a block of memo=
-ry
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---xu7xtsni3al6cjf6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZ/7dgAKCRCdlLljIbnQ
-EgboAQDJ8CE0F2TLUINi1TVmrSnff05vx9rNqKgWqX6FRhmwZQD/fTHxCU6/MBBj
-t/OvAUCvDgAeGUi++GX8ZCl5uljK2AE=
-=DY8J
------END PGP SIGNATURE-----
-
---xu7xtsni3al6cjf6--
