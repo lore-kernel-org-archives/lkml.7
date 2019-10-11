@@ -2,75 +2,195 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370F0C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A10FC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E538206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A51206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:17:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GV4vk4R3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KI/k2pT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfJKNRG (ORCPT
+        id S1728342AbfJKNRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:17:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41426 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfJKNRF (ORCPT
+        Fri, 11 Oct 2019 09:17:46 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35776 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbfJKNRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:17:05 -0400
-Received: from v22018046084765073.goodsrv.de ([185.183.158.195] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iIun0-0000d2-W0; Fri, 11 Oct 2019 13:17:03 +0000
-Date:   Fri, 11 Oct 2019 15:17:01 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Christian Kellner <ckellner@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Christian Kellner <christian@kellner.me>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH v3 1/2] pidfd: show pids for nested pid namespaces in
- fdinfo
-Message-ID: <20191011131659.pqzmrh2527l2oz7b@wittgenstein>
-References: <20191009160532.20674-1-ckellner@redhat.com>
- <20191011122323.7770-1-ckellner@redhat.com>
+        Fri, 11 Oct 2019 09:17:45 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 50F96602DC; Fri, 11 Oct 2019 13:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570799864;
+        bh=ApcidzUpaRnePiIu2HzOkqsyS7w6fPauS8WsJ34U4WE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GV4vk4R3opnvjFafz4HVpuYfdP6l2CbY96iUGy1FEqpRbsyPHN+mKQ30L/yQC814e
+         pALgMsm1OLh7oOPcgqV43/b47p1Wkm7IHz4ppq8cI9lOChGVQ9R0ecmYJHb91xDpWg
+         PojnFzxyuUEggn5jBE3RK+85HhuiuoB07cLbuvPg=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id D8CC660CEC;
+        Fri, 11 Oct 2019 13:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570799860;
+        bh=ApcidzUpaRnePiIu2HzOkqsyS7w6fPauS8WsJ34U4WE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KI/k2pT/FxwgM6kFOq8NKcpwtXVF4QTFXdOFrFwDDNaimvmq+jb+a3dEkoLHuAIhM
+         hJuNn/FrDmusw94bBcaz3vmC4NYU5LbAdM0ulx1/scyki9pvdZMoCTUZkqHemy1oZF
+         RhSoQ+CpMrXAPyNX4TNi4hnQoaqgTSmcvmV+s7Yo=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191011122323.7770-1-ckellner@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 11 Oct 2019 18:47:39 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     rnayak@codeaurora.org, suzuki.poulose@arm.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, andrew.murray@arm.com,
+        will@kernel.org, Dave.Martin@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org>
+Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
+In-Reply-To: <20191011105010.GA29364@lakrids.cambridge.arm.com>
+References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
+ <20191011105010.GA29364@lakrids.cambridge.arm.com>
+X-Priority: 1 (Highest)
+Message-ID: <7910f428bd96834c15fb56262f3c10f8@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 02:23:20PM +0200, Christian Kellner wrote:
-> From: Christian Kellner <christian@kellner.me>
+Hi Mark,
+
+Thanks a lot for the detailed explanations, I did have a look at all the 
+variations before posting this.
+
+On 2019-10-11 16:20, Mark Rutland wrote:
+> Hi,
 > 
-> The fdinfo file for a process file descriptor already contains the
-> pid of the process in the callers namespaces. Additionally, if pid
-> namespaces are configured, show the process ids of the process in
-> all nested namespaces in the same format as in the procfs status
-> file, i.e. "NSPid:\t%d\%d...". This allows the easy identification
-> of the processes in nested namespaces.
+> On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:
+>> On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
+>> warnings are observed during bootup of big cpu cores.
 > 
-> Signed-off-by: Christian Kellner <christian@kellner.me>
+> For reference, which CPUs are in those SoCs?
+> 
 
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+SM8150 is based on Cortex-A55(little cores) and Cortex-A76(big cores). 
+I'm afraid I cannot give details about SC7180 yet.
 
-If I hear no technical objections I'll pick this up targeting the 5.5
-merge window.
+>> SM8150:
+>> 
+>> [    0.271177] CPU features: SANITY CHECK: Unexpected variation in
+>> SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 
+>> 0x00000011111112
+> 
+> The differing fields are EL3, EL2, and EL1: the boot CPU supports
+> AArch64 and AArch32 at those exception levels, while the secondary only
+> supports AArch64.
+> 
+> Do we handle this variation in KVM?
 
-Thanks!
-Christian
+We do not support KVM.
+
+> 
+>> [    0.271184] CPU features: SANITY CHECK: Unexpected variation in
+>> SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU4: 0x00000000010142
+> 
+> The differing field is (AArch32) SMC: present on the boot CPU, but
+> missing on the secondary CPU.
+> 
+> This is mandated to be zero when AArch32 isn' implemented at EL1.
+> 
+
+So this need not be strict?
+
+>> [    0.271189] CPU features: SANITY CHECK: Unexpected variation in
+>> SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU4: 0x00000010010000
+> 
+> The differing fields are (AArch32) Virtualization, Security, and
+> ProgMod: all present on the boot CPU, but missing on the secondary
+> CPU.
+> 
+> All mandated to be zero when AArch32 isn' implemented at EL1.
+> 
+
+Same here, this need not be strict?
+
+>> SC7180:
+>> 
+>> [    0.812770] CPU features: SANITY CHECK: Unexpected variation in
+>> SYS_CTR_EL0. Boot CPU: 0x00000084448004, CPU6: 0x0000009444c004
+> 
+> The differing fields are:
+> 
+> * IDC: present only on the secondary CPU. This is a worrying mismatch
+>   because it could mean that required cache maintenance is missed in
+>   some cases. Does the secondary CPU definitely broadcast PoU
+>   maintenance to the boot CPU that requires it?
+> 
+
+I will get some more details from internal cpu team about this one.
+
+> * L1Ip: VIPT on the boot CPU, PIPT on the secondary CPU.
+> 
+>> [    0.812838] CPU features: SANITY CHECK: Unexpected variation in
+>> SYS_ID_AA64MMFR2_EL1. Boot CPU: 0x00000000001011, CPU6: 
+>> 0x00000000000011
+> 
+> The differing field is IESB: presend on the boot CPU, missing on the
+> secondary CPU.
+> 
+>> [    0.812876] CPU features: SANITY CHECK: Unexpected variation in
+>> SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU6:
+> 0x1100000011111112
+>> [    0.812924] CPU features: SANITY CHECK: Unexpected variation in
+>> SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU6: 0x00000000010142
+>> [    0.812950] CPU features: SANITY CHECK: Unexpected variation in
+>> SYS_ID_PFR0_EL1. Boot CPU: 0x00000010000131, CPU6: 0x00000010010131
+>> [    0.812977] CPU features: SANITY CHECK: Unexpected variation in
+>> SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU6: 0x00000010010000
+> 
+> These are the same story as for SM8150.
+> 
+>> Can we relax some sanity checking for these by making it FTR_NONSTRICT
+> or by
+>> some other means? I just tried below roughly for SM8150 but I guess 
+>> this
+> is
+>> not correct,
+>> maybe for ftr_generic_32bits we should be checking bootcpu and nonboot
+> cpu
+>> partnum(to identify big.LITTLE) and then make it nonstrict?
+>> These are all my wild assumptions, please correct me if I am wrong.
+> 
+> Before we make any changes, we need to check whether we do actually
+> handle this variation in a safe way, and we need to consider what this
+> means w.r.t. late CPU hotplug.
+> 
+> Even if we can handle variation at boot time, once we've determined the
+> set of system-wide features we cannot allow those to regress, and I
+> believe we'll need new code to enforce that. I don't think it's
+> sufficient to mark these as NONSTRICT, though we might do that with
+> other changes.
+> 
+> We shouldn't look at the part number at all here. We care about
+> variation across CPUs regardless of whether this is big.LITTLE or some
+> variation in tie-offs, etc.
+> 
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
