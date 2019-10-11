@@ -2,156 +2,134 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0B3ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E071CC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4218214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:51:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="unGk2LSs";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="S5o8UbLS"
+	by mail.kernel.org (Postfix) with ESMTP id BF147214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfJKGvC (ORCPT
+        id S1727506AbfJKGvv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 02:51:02 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:11200 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726481AbfJKGvC (ORCPT
+        Fri, 11 Oct 2019 02:51:51 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:53918 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfJKGvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 02:51:02 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9B6oes0019548;
-        Thu, 10 Oct 2019 23:50:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=MGQcYHfSIQApuo3rLLKHfJaeyJ3EOXIKpAj8qT7EXto=;
- b=unGk2LSs61625INBynAPHJJH1hjBu0miobMgjj2hPv79tsOM3iquRsne778+skWO9Xu/
- /7V5spHYXTg/F8VV0u7M0Rob1Wyj3QJ2SKzAbcJas3fjBQU7+KiCBzmN3dsszCD392fk
- FNOp/6RUoW7svlgat41x0fDl9t8aWxJ5wmxqkB/RLU3f0pZFZZCJVDSKP5Wr6woLmAni
- pKHTlUTkOlmAtKUGOEdSPxNSbSq4SPxOfmmFdGTD1rqqEC2ulWJec3xT8TCYcFekyVan
- fDvHZoq3pq3BE9wkU1FCfFSIvBhYK6EsVrv7U++4yZ+SrklHY8ambOAMCxbT/o4tCh/s /g== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2vhdxc0j1a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 10 Oct 2019 23:50:40 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 10 Oct
- 2019 23:50:38 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (104.47.42.59) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 10 Oct 2019 23:50:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RDaKANdqcygYhKx4j6K7QSdWQiV89icdUjJtwM7f40G2R3SXA1sJtzUPCLQr3OU8IhL1d7MTqJHTDinN5Zi4vWlCS1zt51qbdAhMcHnt0M/2qwnJFAr2gxbr4aO9kvojlWQKfTXqU4lPjTbOPdpwdhly6dffk7uZQ/CfNDStHKdru3kSwLiz05rETrICliqhG55aJpPcSWH+PI974RndSvSniomaiVJDanVxYva3YlH+x9M8HzBHQ6IuOrqhyKOyqiAcbxZUw2ybQNujCV+n3BGN9o/yXbHhoNrj7My2m6mVM4LjxE1pWZfr6ESshM9cZrVW1IuWiTqBGlMqKokTaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MGQcYHfSIQApuo3rLLKHfJaeyJ3EOXIKpAj8qT7EXto=;
- b=ihK2MW7WtHhQu524E3QCf/gBH+h9Jes3mzA48RHmoaRbrgw6kWytzWINOKFWzRgULIuZH+jvLiuCf5TVzIz9q9eBN8ZCdEKkGclqXfuAKmyPDQJUD/Ttd3kuNTNW43rmDvHnAlvxEhR9QyazN2p+IS1mA4z9T56ASv5RJaYAb1pNKl4tapyn6SEir1TZumxHNSxXWhDtRnVwylQm+9SNRfyT6Xtz59r8oqtV6aLemSwa1NPwADr0VPZJRWfYzxgxPVz9NEXPg1FY2LYkC+FwKs0ENAztX7Jcu4Uzm5CEYDK1oCviEfv1iDktwbcoXdfKy0b86SK+7gZB97YeWiHZOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MGQcYHfSIQApuo3rLLKHfJaeyJ3EOXIKpAj8qT7EXto=;
- b=S5o8UbLS5eS+CqQenZFEo2JsEhmmyHfYCMmS8EuSnRfPd+ihjtXgO+m2MLyiTMXaouELs55QQcuFzemfs1HBmQZNkT+6ZTOe10f31g9vXXkcS9Wjkg9ZQORgHapHnz3GrGehKAS1guzDodbttHdTkzqVE62F7Vrx4WLTHGMSC5w=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB3439.namprd18.prod.outlook.com (10.255.236.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.19; Fri, 11 Oct 2019 06:50:36 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763%3]) with mapi id 15.20.2327.026; Fri, 11 Oct 2019
- 06:50:36 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Joe Perches <joe@perches.com>
-CC:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/19] EDAC, mc: Reduce indentation level in
- edac_mc_handle_error()
-Thread-Topic: [PATCH 05/19] EDAC, mc: Reduce indentation level in
- edac_mc_handle_error()
-Thread-Index: AQHVgAAvFlgoLlgFxEOHNrk1mFE8Kg==
+        Fri, 11 Oct 2019 02:51:51 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9B6pbYx017817
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 11 Oct 2019 15:51:37 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9B6pb4S023079;
+        Fri, 11 Oct 2019 15:51:37 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9B6oWag017958;
+        Fri, 11 Oct 2019 15:51:37 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.151] [10.38.151.151]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-9398317; Fri, 11 Oct 2019 15:50:37 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC23GP.gisp.nec.co.jp ([10.38.151.151]) with mapi id 14.03.0439.000; Fri,
+ 11 Oct 2019 15:50:37 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     David Hildenbrand <david@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
+ memmaps in memory_failure()
+Thread-Topic: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
+ memmaps in memory_failure()
+Thread-Index: AQHVfq1QC/9/3IlYuEK91tWnhgAEnKdSbnGAgABy8ACAAYrDAA==
 Date:   Fri, 11 Oct 2019 06:50:36 +0000
-Message-ID: <20191011065027.dfdr3a26k24r26ag@rric.localdomain>
-References: <20191010202418.25098-1-rrichter@marvell.com>
- <20191010202418.25098-6-rrichter@marvell.com>
- <19dc4500bbfbb9d09f9730764a2b59353534358d.camel@perches.com>
-In-Reply-To: <19dc4500bbfbb9d09f9730764a2b59353534358d.camel@perches.com>
-Accept-Language: en-US
-Content-Language: en-US
+Message-ID: <20191011065036.GB30500@hori.linux.bs1.fc.nec.co.jp>
+References: <20191009142435.3975-1-david@redhat.com>
+ <20191009142435.3975-3-david@redhat.com>
+ <20191010002619.GB3585@hori.linux.bs1.fc.nec.co.jp>
+ <134d4f03-a40a-fe62-fb93-53d209a91d2e@redhat.com>
+In-Reply-To: <134d4f03-a40a-fe62-fb93-53d209a91d2e@redhat.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0402CA0036.eurprd04.prod.outlook.com
- (2603:10a6:7:7c::25) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 43ab7a49-e2ec-451a-c192-08d74e1751c7
-x-ms-traffictypediagnostic: MN2PR18MB3439:
-x-microsoft-antispam-prvs: <MN2PR18MB3439D9C9E127B61DC518E828D9970@MN2PR18MB3439.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0187F3EA14
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(199004)(189003)(99286004)(316002)(8676002)(6916009)(4326008)(71190400001)(53546011)(6506007)(52116002)(386003)(256004)(76176011)(71200400001)(305945005)(2906002)(7736002)(102836004)(478600001)(25786009)(186003)(26005)(14454004)(66066001)(446003)(11346002)(86362001)(9686003)(6436002)(486006)(6512007)(8936002)(4744005)(4001150100001)(5660300002)(81166006)(81156014)(54906003)(6486002)(6116002)(3846002)(1076003)(229853002)(476003)(66946007)(64756008)(66446008)(66556008)(6246003)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3439;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: E34IGFKGTgo/iAFu4Viky3KKV/R90Ro5Zv8nWcn5jRUEynfdBOsTDHwXnvox9svJoBnljqa29VrtahmyRaaDmerAiOWpXf5+8pPNAhl76V+qf1JduDVHhw/rA1lKZc24LBY7FO+U3m+WZTyaXDixyEXE4bY0GvRezT1V6/jS6MKhN1k+C/Te26j4AZq6x66pfRpH3ECZ9hUCPaPlN2QdIZM6a+w92ebhi1Pkon7MGEPoW4IEWr1KFrXG/Xn2WhrMlLOH4eI4gJgrg1/K71LzOMA6bHO056iZ5AFKmjxwOXoGI0g9nthtg+yIU4OkSqdOPrx+YQgUZ9Nd18DVW1c88GZS4B5gHjOwKJ6U6goPWXP9erzZqv2npIV6ywjKXWNG6DAdKdckBNkInOW+hXq7a7+PVa0t21kyLpZfStBuNJk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5C2CB04970140347A92212D3CCF230B4@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-originating-ip: [10.34.125.96]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <D19DDD501EA4B140AC1A4B2E53DBD620@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43ab7a49-e2ec-451a-c192-08d74e1751c7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 06:50:36.1293
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: K0I6dkvj8HnVEdlZHgi39bVxQNIy+I4i4Cdpx8LNU/4dOc3HoqkvpqW70b/4Oi9w8NsLIUpJogEcu5pfsdxzvA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3439
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-11_04:2019-10-10,2019-10-11 signatures=0
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.10.19 15:10:53, Joe Perches wrote:
-> On Thu, 2019-10-10 at 20:25 +0000, Robert Richter wrote:
-> > Reduce the indentation level in edac_mc_handle_error() a bit by using
-> > continue. No functional changes.
->=20
-> Seems fine, but trivially below:
->=20
-> > diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> []
-> > @@ -1171,37 +1171,38 @@ void edac_mc_handle_error(const enum hw_event_m=
-c_err_type type,
-> []
-> > +		strcpy(p, dimm->label);
-> > +		p +=3D strlen(p);
-> > +		*p =3D '\0';
->=20
-> This *p =3D '\0' is unnecessary as the strcpy already did that.
+On Thu, Oct 10, 2019 at 09:17:42AM +0200, David Hildenbrand wrote:
+> On 10.10.19 02:26, Naoya Horiguchi wrote:
+> > On Wed, Oct 09, 2019 at 04:24:35PM +0200, David Hildenbrand wrote:
+> >> We should check for pfn_to_online_page() to not access uninitialized
+> >> memmaps. Reshuffle the code so we don't have to duplicate the error
+> >> message.
+> >>
+> >> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Cc: Michal Hocko <mhocko@kernel.org>
+> >> Signed-off-by: David Hildenbrand <david@redhat.com>
+> >> ---
+> >>  mm/memory-failure.c | 14 ++++++++------
+> >>  1 file changed, 8 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> >> index 7ef849da8278..e866e6e5660b 100644
+> >> --- a/mm/memory-failure.c
+> >> +++ b/mm/memory-failure.c
+> >> @@ -1253,17 +1253,19 @@ int memory_failure(unsigned long pfn, int flags)
+> >>  	if (!sysctl_memory_failure_recovery)
+> >>  		panic("Memory failure on page %lx", pfn);
+> >>  
+> >> -	if (!pfn_valid(pfn)) {
+> >> +	p = pfn_to_online_page(pfn);
+> >> +	if (!p) {
+> >> +		if (pfn_valid(pfn)) {
+> >> +			pgmap = get_dev_pagemap(pfn, NULL);
+> >> +			if (pgmap)
+> >> +				return memory_failure_dev_pagemap(pfn, flags,
+> >> +								  pgmap);
+> >> +		}
+> >>  		pr_err("Memory failure: %#lx: memory outside kernel control\n",
+> >>  			pfn);
+> >>  		return -ENXIO;
+> >>  	}
+> >>  
+> >> -	pgmap = get_dev_pagemap(pfn, NULL);
+> >> -	if (pgmap)
+> >> -		return memory_failure_dev_pagemap(pfn, flags, pgmap);
+> >> -
+> >> -	p = pfn_to_page(pfn);
+> > 
+> > This change seems to assume that memory_failure_dev_pagemap() is never
+> > called for online pages. Is it an intended behavior?
+> > Or the concept "online pages" is not applicable to zone device pages?
+> 
+> Yes, that's the real culprit. ZONE_DEVICE/devmem pages are never online
+> (SECTION_IS_ONLINE). The terminology "online" only applies to pages that
+> were given to the buddy. And as we support sup-section hotadd for
+> devmem, we cannot easily make use of the section flag it. I already
+> proposed somewhere to convert SECTION_IS_ONLINE to a subsection bitmap
+> and call it something like pfn_active().
+> 
+> pfn_online() would then be "pfn_active() && zone != ZONE_DEVICE". And we
+> could use pfn_active() everywhere to test for initialized memmaps (well,
+> besides some special cases like device reserved memory that does not
+> span full sub-sections). Until now, nobody volunteered and I have other
+> things to do.
 
-Other changes than the indentation are not the aim of this patch.
-However, on the occasion and if there won't be any objections I could
-include this trivial change in the patch in my next version of the
-series.
+Thank you for explanation.  I'm not sure how hard now but we try to do this.
+You fix the problem from online/offline viewpoint now, and leave remaining
+part untouched. I agree with that approach, and the suggested change looks
+good to me.
 
-Thanks for review.
-
--Robert
+Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
