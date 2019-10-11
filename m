@@ -2,92 +2,111 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3914C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AC6C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C43206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="hUTUq2OF"
+	by mail.kernel.org (Postfix) with ESMTP id D6805218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:29:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570807760;
+	bh=l0UcNBCqGXLlFgQm3cpWwpimh18vbPr8+KRVLD4L0yM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vJAGQOvIWQ+kUo5oGyQU36yT9CUKVnh97A2Oe2puB7MwSwEWmUvIishQ44BBl4WB/
+	 A/8ZRXPpoilybsCSt02Dp2jHTqZzRchPwPdUNparqAzZKWZ/X6WFuLdCDpnFQLCrRJ
+	 /anDTU0LBZtFFRoFlelrLzCqiMOzHNuaumycjaY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfJKP1s (ORCPT
+        id S1727894AbfJKP3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:27:48 -0400
-Received: from one.firstfloor.org ([193.170.194.197]:50938 "EHLO
-        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbfJKP1s (ORCPT
+        Fri, 11 Oct 2019 11:29:19 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37149 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfJKP3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:27:48 -0400
-Received: by one.firstfloor.org (Postfix, from userid 503)
-        id 27D6A868DE; Fri, 11 Oct 2019 17:27:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
-        s=mail; t=1570807665;
-        bh=LWf4Mf2c6cmPhu3atJhi75qc62kg/5WZ5L8xBUnpSnw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hUTUq2OF4NerTT3sgcefuV/i+dJf2RLNpQdpDtV1Xl4Vg06AlPz8ESAOlTtFPSLQ+
-         x5yfwc60E6MRgx689dUh5xHLxF+QTlNAgza5AWzg1EqYWBxWWh7qpsbyiHso0GgZZZ
-         zbd9+2oBRXbP68d27O8B8KZnaBY52MdSw/+pf15w=
-Date:   Fri, 11 Oct 2019 08:27:44 -0700
-From:   Andi Kleen <andi@firstfloor.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH] perf data: Fix babeltrace detection
-Message-ID: <20191011152744.kfuogoz66zcbifyj@two.firstfloor.org>
-References: <20191007174120.12330-1-andi@firstfloor.org>
- <20191008115240.GE10009@krava>
- <20191008142143.ts5se4pzwfnfnbsh@two.firstfloor.org>
- <20191011140548.GA20544@krava>
+        Fri, 11 Oct 2019 11:29:19 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i16so8345636oie.4;
+        Fri, 11 Oct 2019 08:29:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0s3hufvwfwMdyJj0mwE2L9llFOTjdMrZMVagGqojKGE=;
+        b=Q90x6icxmP90WcZa9MqLLwe6UG+Vx/UpC7IwuJKuZIzozPjx4TfuYBkGkNIzh+Hzr+
+         QP7BG7BDIcdkivfeufNgYQ94Mop2YuTTlO/8lKtFp6rAdjfjaK6dUJ/bFgPgTq7nGJkD
+         AScmi+U9UvYw62Y35+bZ4MwyrrHbE1Wj0HO55S2AcLXQIviSUzktwDXH5xYANE6s4XxO
+         Nw/wrAN44bvU0bCuw61/Z/jalGT+xri+L1OwQntqjm+SnhantveeM9R1zLK1/nAhcYys
+         fi6LSs9OWe+ildpFVLz0pTxdTutjF3GIklHDKBamfjfe9ytD6h4op/8n8poH1teMvls0
+         GsXw==
+X-Gm-Message-State: APjAAAUBj+2CqKQTlv22utPwEj8F2JBFavx6grwU8gaDH92QhLQenjxu
+        NywO6uuzxPPdKkzJ5LezxyQSb6A=
+X-Google-Smtp-Source: APXvYqxeDPc60Gv0vPS7Jk4X6ZnvVuf3tdXagFg2ciEOg66lig/oXXT0T5cR1LJ+l+65qGRarYvnIg==
+X-Received: by 2002:a05:6808:249:: with SMTP id m9mr12789827oie.49.1570807758412;
+        Fri, 11 Oct 2019 08:29:18 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 100sm2739791otl.48.2019.10.11.08.29.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 08:29:17 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 10:29:17 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     bjorn.andersson@linaro.org, georgi.djakov@linaro.org,
+        agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        jonathan@marek.ca
+Subject: Re: [PATCH v2 1/2] dt-bindings: interconnect: qcom: add msm8974
+ bindings
+Message-ID: <20191011152917.GA28441@bogus>
+References: <20191005114605.5279-1-masneyb@onstation.org>
+ <20191005114605.5279-2-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011140548.GA20544@krava>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191005114605.5279-2-masneyb@onstation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 04:05:48PM +0200, Jiri Olsa wrote:
-> On Tue, Oct 08, 2019 at 07:21:44AM -0700, Andi Kleen wrote:
-> > On Tue, Oct 08, 2019 at 01:52:40PM +0200, Jiri Olsa wrote:
-> > > On Mon, Oct 07, 2019 at 10:41:20AM -0700, Andi Kleen wrote:
-> > > > From: Andi Kleen <ak@linux.intel.com>
-> > > > 
-> > > > The symbol the feature file checks for is now actually in -lbabeltrace,
-> > > > not -lbabeltrace-ctf, at least as of libbabeltrace-1.5.6-2.fc30.x86_64
-> > > > 
-> > > > Always add both libraries to fix the feature detection.
-> > > 
-> > > well, we link with libbabeltrace-ctf.so which links with libbabeltrace.so
-> > > 
-> > > I guess we can link it as well, but where do you see it fail?
-> > 
-> > On FC30 the .so file is just a symlink, so it doesn't pull
-> > in the other library.
-> > 
-> > $ gcc test-libbabeltrace.c -lbabeltrace-ctf
-> > /usr/bin/ld:
-> > /usr/lib/gcc/x86_64-redhat-linux/9/../../../../lib64/libbabeltrace-ctf.so:
-> > undefined reference to `bt_packet_seek_get_error'
-> > /usr/bin/ld:
-> > /usr/lib/gcc/x86_64-redhat-linux/9/../../../../lib64/libbabeltrace-ctf.so:
-> > undefined reference to `bt_packet_seek_set_error'
-> > collect2: error: ld returned 1 exit status
+On Sat, Oct 05, 2019 at 07:46:04AM -0400, Brian Masney wrote:
+> Add device tree bindings for the Qualcomm MSM8974 interconnect providers
+> that support setting system bandwidth requirements between various
+> network-on-chip fabrics.
 > 
-> I'm confused,
-> the test-libbabeltrace.c checks for bt_ctf_stream_class_get_packet_context_type
-> which is in libbabeltrace-ctf:
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Rob: I included in the next patch at the top a rough diagram showing the
+> relationship between different buses. I wanted to include that diagram
+> here, however I didn't since I assume that this document will be
+> transformed into HTML. I've seen some of the text bindings in the IIO
+> subsystem have nice ASCII-art diagrams, such as
+> Documentation/devicetree/bindings/iio/dac/dpot-dac.txt. Do you have any
+> suggestions for how this can go in the YAML bindings? Prefix the line
+> with four spaces, similiar to what is done in markdown?
 
-AFAIK libbabeltrace-ctf uses these symbols from the object containing
-bt_ctf_stream_class_get_packet_context_type
+The long term plan (dream?) is to extract schema into rST and there's 
+been some experimenting with embedded rST into description which seems 
+to work. But I don't see that happening anytime soon really. We've got 
+3500 bindings to convert...
 
-I assume you have FC30 so you should be able to reproduce it
+So put whatever you like in the description as long as it's parseable 
+yaml.
 
--Andi
+> 
+> Changes since v1:
+> - Don't include all compatibles in the examples. Removed interconnect
+>   GPU client from example as well.
+> - Dual license header file: BSD or GPL 2.0
+> 
+>  .../bindings/interconnect/qcom,msm8974.yaml   |  62 ++++++++
+>  .../dt-bindings/interconnect/qcom,msm8974.h   | 146 ++++++++++++++++++
+>  2 files changed, 208 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+>  create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
+
+Reviewed-by: Rob Herring <robh@kernel.org>
