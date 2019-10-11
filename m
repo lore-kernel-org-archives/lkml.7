@@ -2,159 +2,137 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651C7ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50360ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34ED220679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2292F20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:55:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SY0fhP6a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfJKJyD (ORCPT
+        id S1727763AbfJKJze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:54:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50948 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbfJKJyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:54:03 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5D19618C8902;
-        Fri, 11 Oct 2019 09:54:02 +0000 (UTC)
-Received: from [10.36.118.168] (unknown [10.36.118.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 84D1A6092F;
-        Fri, 11 Oct 2019 09:53:58 +0000 (UTC)
-Subject: Re: [PATCH v1] mm: Fix access of uninitialized memmaps in
- fs/proc/page.c
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>, Qian Cai <cai@lca.pw>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        Konstantin Khlebnikov <koct9i@gmail.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <20191009091205.11753-1-david@redhat.com>
- <20191009095721.GC20971@hori.linux.bs1.fc.nec.co.jp>
- <f0fcdacc-814b-49d6-78da-beeb1fa6b67a@redhat.com>
- <20191011001124.GA17127@hori.linux.bs1.fc.nec.co.jp>
- <20191011005042.GB18881@hori.linux.bs1.fc.nec.co.jp>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <21d97a65-aa66-75ee-9c63-b5a3dad13b43@redhat.com>
-Date:   Fri, 11 Oct 2019 11:53:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Fri, 11 Oct 2019 05:55:34 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46431 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbfJKJzd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 05:55:33 -0400
+Received: by mail-ed1-f67.google.com with SMTP id t3so8109329edw.13;
+        Fri, 11 Oct 2019 02:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8hoPXDC+s9C+BBsraF6QCIxAJppoYPYRK/IA+JbIMow=;
+        b=SY0fhP6aBRiFpoLKFx/gUF4Tck2U3lKERej0/p3zoUbK+LpHRCPo3Lcdqx/zLNSN+y
+         0gOmh+K7sQgJVzTQhk+FjRaLHQUZvIBnRq+nrgwVYMhX7p0GKzoCJ0OK1MmQmJGdo7xB
+         H/bScAGmI22ClYwB+1YVfh7Ttc5v+j16GHfrtU3YXJd4hh3czmt7vXGM3S+p66n9OLoz
+         rZLx9m1vuRhRpkZS3ltuM7v1jND3RbS1CQiXKcgdn8ndeyxeTwQdSjLT9Tct2VuYiKeF
+         XFuqdpdyfs1/OaB6xAvKN6f3jhhgg618BTYU00PNUbbpTGyryAqHgnVBWkC9wD5ySPe+
+         g+lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8hoPXDC+s9C+BBsraF6QCIxAJppoYPYRK/IA+JbIMow=;
+        b=SPU0NCmcS5nZofyafKVtdBXfs8oQl68qhyzsKIhQHtpZOLfkA9oheVNvNdjCPwpDAP
+         R4O6weEzgmQ6wNt/2CLbt9LV5NJytpsDDf+d7rnobUzj31ldoctMI0jPHNBSGgX5kvPw
+         gud9Tnd306aX3GcR5i7Q97PAZ63cq9ykv8cf10pSZV8hgaSRGrJFLhpVyajnf2liCnxh
+         MzdxyCMijV2Jpg6tNiCOFG3wauUAQRqkImDwgNiiYVhOka6Uiv5m0rMMPk5NFQwj5eqn
+         6Ah8U8pflnt4eqSGy34cmh44Ra76qD/cPNa43zJTC8grFqCi7zyVkoA+KnRg2GsJqOVB
+         jcyQ==
+X-Gm-Message-State: APjAAAWmf0kwnx8bFtmKStOOwpNmfA07Sb67VkSEWlvA0BaMx/4s+g8O
+        6OGgZHDdHJ/o9LYjYwR+UbccYgUOPW+UXm+wTwE=
+X-Google-Smtp-Source: APXvYqx9eON2U3EP3MRvIxzMFOg/hA6mAs3RgdQ+yAt6YG37GmMUG4D2m4YlnAODHDYa7P9oEFvBHyq2DCCTanHMXrk=
+X-Received: by 2002:a05:6402:13d6:: with SMTP id a22mr12629963edx.165.1570787731657;
+ Fri, 11 Oct 2019 02:55:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191011005042.GB18881@hori.linux.bs1.fc.nec.co.jp>
-Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Fri, 11 Oct 2019 09:54:02 +0000 (UTC)
+References: <1570616148-11571-1-git-send-email-Anson.Huang@nxp.com>
+ <20191010160811.7775c819@cakuba.netronome.com> <DB3PR0402MB3916FF4583577B182D9BF60CF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20191010173246.2cd02164@cakuba.netronome.com> <DB3PR0402MB3916284A326512CE2FDF597EF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20191010175320.1fe5f6b3@cakuba.netronome.com> <DB3PR0402MB3916F0AC3E3AEC2AC1900BCCF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916F0AC3E3AEC2AC1900BCCF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 11 Oct 2019 12:55:20 +0300
+Message-ID: <CA+h21hpp5L-tcJNxXWaJaCKZyFzm-qPzUZ32LU+vKOv99PJ9ng@mail.gmail.com>
+Subject: Re: [PATCH 1/2] net: fec_main: Use platform_get_irq_byname_optional()
+ to avoid error message
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+        "swboyd@chromium.org" <swboyd@chromium.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.10.19 02:50, Naoya Horiguchi wrote:
-> On Fri, Oct 11, 2019 at 12:11:25AM +0000, Horiguchi Naoya(堀口 直也) wrote:
->> On Thu, Oct 10, 2019 at 09:30:01AM +0200, David Hildenbrand wrote:
->>> On 09.10.19 11:57, Naoya Horiguchi wrote:
->>>> Hi David,
->>>>
->>>> On Wed, Oct 09, 2019 at 11:12:04AM +0200, David Hildenbrand wrote:
->>>>> There are various places where we access uninitialized memmaps, namely:
->>>>> - /proc/kpagecount
->>>>> - /proc/kpageflags
->>>>> - /proc/kpagecgroup
->>>>> - memory_failure() - which reuses stable_page_flags() from fs/proc/page.c
->>>>
->>>> Ah right, memory_failure is another victim of this bug.
->>>>
->>>>>
->>>>> We have initialized memmaps either when the section is online or when
->>>>> the page was initialized to the ZONE_DEVICE. Uninitialized memmaps contain
->>>>> garbage and in the worst case trigger kernel BUGs, especially with
->>>>> CONFIG_PAGE_POISONING.
->>>>>
->>>>> For example, not onlining a DIMM during boot and calling /proc/kpagecount
->>>>> with CONFIG_PAGE_POISONING:
->>>>> :/# cat /proc/kpagecount > tmp.test
->>>>> [   95.600592] BUG: unable to handle page fault for address: fffffffffffffffe
->>>>> [   95.601238] #PF: supervisor read access in kernel mode
->>>>> [   95.601675] #PF: error_code(0x0000) - not-present page
->>>>> [   95.602116] PGD 114616067 P4D 114616067 PUD 114618067 PMD 0
->>>>> [   95.602596] Oops: 0000 [#1] SMP NOPTI
->>>>> [   95.602920] CPU: 0 PID: 469 Comm: cat Not tainted 5.4.0-rc1-next-20191004+ #11
->>>>> [   95.603547] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
->>>>> [   95.604521] RIP: 0010:kpagecount_read+0xce/0x1e0
->>>>> [   95.604917] Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 e7 48 c1 e7 06 48 03 3d ab 51 01 01 74 1d 48 8b 57 08 480
->>>>> [   95.606450] RSP: 0018:ffffa14e409b7e78 EFLAGS: 00010202
->>>>> [   95.606904] RAX: fffffffffffffffe RBX: 0000000000020000 RCX: 0000000000000000
->>>>> [   95.607519] RDX: 0000000000000001 RSI: 00007f76b5595000 RDI: fffff35645000000
->>>>> [   95.608128] RBP: 00007f76b5595000 R08: 0000000000000001 R09: 0000000000000000
->>>>> [   95.608731] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
->>>>> [   95.609327] R13: 0000000000020000 R14: 00007f76b5595000 R15: ffffa14e409b7f08
->>>>> [   95.609924] FS:  00007f76b577d580(0000) GS:ffff8f41bd400000(0000) knlGS:0000000000000000
->>>>> [   95.610599] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>>> [   95.611083] CR2: fffffffffffffffe CR3: 0000000078960000 CR4: 00000000000006f0
->>>>> [   95.611686] Call Trace:
->>>>> [   95.611906]  proc_reg_read+0x3c/0x60
->>>>> [   95.612228]  vfs_read+0xc5/0x180
->>>>> [   95.612505]  ksys_read+0x68/0xe0
->>>>> [   95.612785]  do_syscall_64+0x5c/0xa0
->>>>> [   95.613092]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>>>
->>>>> Note that there are still two possible races as far as I can see:
->>>>> - pfn_to_online_page() succeeding but the memory getting offlined and
->>>>>    removed. get_online_mems() could help once we run into this.
->>>>> - pfn_zone_device() succeeding but the memmap not being fully
->>>>>    initialized yet. As the memmap is initialized outside of the memory
->>>>>    hoptlug lock, get_online_mems() can't help.
->>>>>
->>>>> Let's keep the existing interfaces working with ZONE_DEVICE memory. We
->>>>> can later come back and fix these rare races and eventually speed-up the
->>>>> ZONE_DEVICE detection.
->>>>
->>>> Actually, Toshiki is writing code to refactor and optimize the pfn walking
->>>> part, where we find the pfn ranges covered by zone devices by running over
->>>> xarray pgmap_array and use the range info to reduce pointer dereferences
->>>> to speed up pfn walk. I hope he will share it soon.
->>>
->>> AFAIKT, Michal is not a friend of special-casing PFN walkers in that
->>> way. We should have a mechanism to detect if a memmap was initialized
->>> without having to go via pgmap, special-casing. See my other mail where
->>> I draft one basic approach.
->>
->> OK, so considering your v2 approach, we could have another pfn_to_page()
->> variant like pfn_to_zone_device_page(), where we check that a given pfn
->> belongs to the memory section backed by zone memory, then another check if
->> the pfn has initialized memmap or not, and return NULL if memmap not
->> initialied.  We'll try this approach then, but if you find problems/concerns,
->> please let me know.
-> 
-> Sorry, you already mentioned detail here,
-> https://lore.kernel.org/lkml/c6198acd-8ff7-c40c-cb4e-f0f12f841b38@redhat.com/
-> 
+Hi Anson,
 
-I'm planning on sending a proper writeup of the overall approach and  
-pitfalls maybe next week. Feel free to ping me in case I forget.
+On Fri, 11 Oct 2019 at 04:11, Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Hi, Jakub
+>
+> > On Fri, 11 Oct 2019 00:38:50 +0000, Anson Huang wrote:
+> > > > Hm. Looks like the commit you need is commit f1da567f1dc1 ("driver core:
+> > > > platform: Add platform_get_irq_byname_optional()") and it's
+> > > > currently in Greg's tree. You have to wait for that commit to make
+> > > > its way into Linus'es main tree and then for Dave Miller to pull from Linus.
+> > > >
+> > > > I'd suggest you check if your patches builds on the net tree:
+> > > >
+> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+> > > >
+> > > > once a week. My guess is it'll probably take two weeks or so for
+> > > > Greg's patches to propagate to Dave.
+> > >
+> > > Thanks for explanation of how these trees work, so could you please
+> > > wait the necessary patch landing on network tree then apply this patch
+> > > series, thanks for help.
+> >
+> > Unfortunately the networking subsystem sees around a 100 patches
+> > submitted each day, it'd be very hard to keep track of patches which have
+> > external dependencies and when to merge them. That's why we need the
+> > submitters to do this work for us and resubmit when the patch can be
+> > applied cleanly.
+>
+> OK, I will resend this patch series once the necessary patch lands on the network
+> tree.
 
--- 
+What has not been mentioned is that you can't create future
+dependencies for patches which have a Fixes: tag.
 
-Thanks,
+git describe --tags 7723f4c5ecdb # driver core: platform: Add an error
+message to platform_get_irq*()
+v5.3-rc1-13-g7723f4c5ecdb
 
-David / dhildenb
+git describe --tags f1da567f1dc # driver core: platform: Add
+platform_get_irq_byname_optional()
+v5.4-rc1-46-gf1da567f1dc1
+
+So you have to consider whether the patch is really fixing anything
+(it is only getting rid of a non-fatal error message).
+And it's not reasonable anyway to say that you're fixing the patch
+that added the error message in the generic framework.
+The fallback logic has always been there in the driver. So you might
+want to drop the Fixes: tag when you resend.
+
+>
+> Thanks,
+> Anson
+
+Regards,
+-Vladimir
