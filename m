@@ -2,28 +2,28 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D03ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1983C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D71206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1E93206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfJKOoO (ORCPT
+        id S1727670AbfJKOnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:44:14 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:45629 "EHLO
+        Fri, 11 Oct 2019 10:43:52 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:44439 "EHLO
         relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727856AbfJKOn7 (ORCPT
+        with ESMTP id S1726551AbfJKOnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:43:59 -0400
+        Fri, 11 Oct 2019 10:43:52 -0400
 Received: from xps13.stephanxp.local (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 3FAFC240005;
-        Fri, 11 Oct 2019 14:43:57 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 167AE240008;
+        Fri, 11 Oct 2019 14:43:48 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -35,125 +35,81 @@ Cc:     <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 5/8] iio: adc: max1027: Introduce 12-bit devices support
-Date:   Fri, 11 Oct 2019 16:43:44 +0200
-Message-Id: <20191011144347.19146-6-miquel.raynal@bootlin.com>
+Subject: [PATCH v4 0/8] Introduce max12xx ADC support
+Date:   Fri, 11 Oct 2019 16:43:39 +0200
+Message-Id: <20191011144347.19146-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191011144347.19146-1-miquel.raynal@bootlin.com>
-References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxim's max12xx series is very similar to the max10xx series, with the
-difference of the measurements depth which is upgraded from 10 to 12
-bits per channel. Everything else looks the same.
+Hello, here is a patchset updating the existing max1027.c driver (for
+10-bit max1027/29/31 ADCs) with a few corrections/improvements and
+then introducing their 12-bit cousins named max1227/29/31.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/iio/adc/Kconfig   |  4 ++--
- drivers/iio/adc/max1027.c | 38 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 39 insertions(+), 3 deletions(-)
+As on my hardware setup the "start conversion" and "end of conversion"
+pin are not wired (which is absolutely fine for this chip), I also
+updated the driver and the bindings to support optional interrupts. In
+this case, triggered buffers are not available and the user must poll
+the value from sysfs.
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index f0af3a42f53c..6ac16d738822 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -508,8 +508,8 @@ config MAX1027
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
- 	help
--	  Say yes here to build support for Maxim SPI ADC models
--	  max1027, max1029 and max1031.
-+	  Say yes here to build support for Maxim SPI {10,12}-bit ADC models:
-+	  max1027, max1029, max1031, max1227, max1229 and max1231.
- 
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called max1027.
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 8b449044bef5..e171db20c04a 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -63,12 +63,18 @@ enum max1027_id {
- 	max1027,
- 	max1029,
- 	max1031,
-+	max1227,
-+	max1229,
-+	max1231,
- };
- 
- static const struct spi_device_id max1027_id[] = {
- 	{"max1027", max1027},
- 	{"max1029", max1029},
- 	{"max1031", max1031},
-+	{"max1227", max1227},
-+	{"max1229", max1229},
-+	{"max1231", max1231},
- 	{}
- };
- MODULE_DEVICE_TABLE(spi, max1027_id);
-@@ -78,6 +84,9 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
- 	{ .compatible = "maxim,max1027" },
- 	{ .compatible = "maxim,max1029" },
- 	{ .compatible = "maxim,max1031" },
-+	{ .compatible = "maxim,max1227" },
-+	{ .compatible = "maxim,max1229" },
-+	{ .compatible = "maxim,max1231" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
-@@ -153,6 +162,18 @@ static const struct iio_chan_spec max1031_channels[] = {
- 	MAX1X31_CHANNELS(10),
- };
- 
-+static const struct iio_chan_spec max1227_channels[] = {
-+	MAX1X27_CHANNELS(12),
-+};
-+
-+static const struct iio_chan_spec max1229_channels[] = {
-+	MAX1X29_CHANNELS(12),
-+};
-+
-+static const struct iio_chan_spec max1231_channels[] = {
-+	MAX1X31_CHANNELS(12),
-+};
-+
- static const unsigned long max1027_available_scan_masks[] = {
- 	0x000001ff,
- 	0x00000000,
-@@ -190,6 +211,21 @@ static const struct max1027_chip_info max1027_chip_info_tbl[] = {
- 		.num_channels = ARRAY_SIZE(max1031_channels),
- 		.available_scan_masks = max1031_available_scan_masks,
- 	},
-+	[max1227] = {
-+		.channels = max1227_channels,
-+		.num_channels = ARRAY_SIZE(max1227_channels),
-+		.available_scan_masks = max1027_available_scan_masks,
-+	},
-+	[max1229] = {
-+		.channels = max1229_channels,
-+		.num_channels = ARRAY_SIZE(max1229_channels),
-+		.available_scan_masks = max1029_available_scan_masks,
-+	},
-+	[max1231] = {
-+		.channels = max1231_channels,
-+		.num_channels = ARRAY_SIZE(max1231_channels),
-+		.available_scan_masks = max1031_available_scan_masks,
-+	},
- };
- 
- struct max1027_state {
-@@ -486,5 +522,5 @@ static struct spi_driver max1027_driver = {
- module_spi_driver(max1027_driver);
- 
- MODULE_AUTHOR("Philippe Reynes <tremyfr@yahoo.fr>");
--MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
-+MODULE_DESCRIPTION("MAX1X27/MAX1X29/MAX1X31 ADC");
- MODULE_LICENSE("GPL v2");
+Thanks,
+Miquèl
+
+
+Changes in v4:
+==============
+* In the v3, I removed the bindings documentation for the max10xx
+  devices, in favor of the trivial devices bindings. Unfortunately, I
+  didn't spot that in the following patch adding support for the
+  max12xx series, I was adding the compatibles to the trivial devices
+  list but also re-introducing the bindings documentation with the
+  three new compatibles. Just drop this part of the last patch to only
+  have the trivial devices file, not the specific bindings. All the
+  rest is the same.
+
+Changes in v3:
+==============
+* Updated the commit message of the patch adding debugfs read access
+  to better explain why I decided to limit the number of bytes read to
+  two.
+* Updated the macros to define the number of channels per device as
+  proposed by Jonathan.
+* Re-used the realbits entry instead of adding my own (called .depth).
+* Started doing DT-bindings yaml conversion, but realized that after
+  the first patch offering the interrupt as optional, the
+  documentation was fitting pretty well the trivial devices
+  representation. Dropped the specific bindings files and updated the
+  trivial devices list instead.
+
+Changes in v2:
+==============
+* Removed the addition of three compatibles from patch 4 (the
+  preparation patch) to add these lines back in patch 5 (the actual
+  introduction).
+
+
+Miquel Raynal (8):
+  iio: adc: max1027: Add debugfs register read support
+  iio: adc: max1027: Make it optional to use interrupts
+  iio: adc: max1027: Reset the device at probe time
+  iio: adc: max1027: Prepare the introduction of different resolutions
+  iio: adc: max1027: Introduce 12-bit devices support
+  dt-bindings: iio: adc: max1027: Mark interrupts as optional
+  dt-bindings: Add 1027/1029/1031 SPI ADCs as trivial devices
+  dt-bindings: Add max12xx SPI ADC series as trivial devices
+
+ .../bindings/iio/adc/max1027-adc.txt          |  20 --
+ .../devicetree/bindings/trivial-devices.yaml  |  12 ++
+ drivers/iio/adc/Kconfig                       |   4 +-
+ drivers/iio/adc/max1027.c                     | 180 +++++++++++-------
+ 4 files changed, 125 insertions(+), 91 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+
 -- 
 2.20.1
 
