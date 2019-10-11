@@ -2,255 +2,237 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734C0ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15A8C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8F42064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6BE2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbfJKNqS (ORCPT
+        id S1728466AbfJKNr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:46:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46380 "EHLO mx1.redhat.com"
+        Fri, 11 Oct 2019 09:47:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37790 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728794AbfJKNqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:46:12 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727950AbfJKNr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:47:28 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 00F725946B
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 13:46:11 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id n59so9443309qtd.8
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 06:46:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F6im2lqehevFxSustm2POiIh1ja/Qr07vzdrmumUKhs=;
-        b=GHjhTQERg7MD3ISmUoCheYAMRJ2DuADlr5YJIvrIz46+C50/2pyeRx93+dSfZnRINy
-         NRJLnoKWRyVWQmLK1V6luVMAgy4QQd7eWdrXzVLqwuZCPhKVuWc0NwCtTqsbEg5L3T88
-         7gfC6KjBaW2hFq79KOFc4+kce5rQ3XaZoBIK9Lfec5T2Rq8akPsNupCKnhC01X2qipbo
-         rDK0i1bSLBYDMR6wNEzpUSJbD8DnDqFYhQs1l4UHCjfZ9BlFlgU4tD0NPWKdpRNYcAjp
-         kXfd3/lU/qbyQyGZ2WgynkHEOUncf5OZ9JlFj1OckjvhgF+VZL4F8w23vKoDYa/KMZXa
-         F/Tw==
-X-Gm-Message-State: APjAAAVQK0EmqPdwx9X8cWOyypG74EUWf6jfdtmhPAvlDpfPn6WXrg/q
-        e3g0DxhmNv/Tnauo2+5vMmiGRjrexbF+ffLaxNeYRXH7wyOruRj5n+am7PE/ajSOAHYEvG3pRqk
-        CFE0mKWuVsECnuTuKybTpWMHs
-X-Received: by 2002:a37:553:: with SMTP id 80mr15786583qkf.353.1570801569681;
-        Fri, 11 Oct 2019 06:46:09 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzBSNIWMgDBULGnfcG8KW2du/s9n4p7y1d/at9ywE/QoZx3W9olBNIl/DZPL5u6Jq/Z1/F99g==
-X-Received: by 2002:a37:553:: with SMTP id 80mr15786541qkf.353.1570801569335;
-        Fri, 11 Oct 2019 06:46:09 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
-        by smtp.gmail.com with ESMTPSA id y58sm5129799qta.1.2019.10.11.06.46.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 06:46:08 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 09:46:04 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id E4EC510C0311;
+        Fri, 11 Oct 2019 13:47:27 +0000 (UTC)
+Received: from thinkpad.redhat.com (ovpn-116-143.ams2.redhat.com [10.36.116.143])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B6248600C4;
+        Fri, 11 Oct 2019 13:47:25 +0000 (UTC)
+From:   Laurent Vivier <lvivier@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH RFC v1 2/2] vhost: batching fetches
-Message-ID: <20191011134358.16912-3-mst@redhat.com>
-References: <20191011134358.16912-1-mst@redhat.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-crypto@vger.kernel.org,
+        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
+        Laurent Vivier <lvivier@redhat.com>
+Subject: [PATCH v2] hwrng: core - move add_early_randomness() out of rng_mutex
+Date:   Fri, 11 Oct 2019 15:47:24 +0200
+Message-Id: <20191011134724.28651-1-lvivier@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011134358.16912-1-mst@redhat.com>
-X-Mailer: git-send-email 2.22.0.678.g13338e74b8
-X-Mutt-Fcc: =sent
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Fri, 11 Oct 2019 13:47:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With this patch applied, new and old code perform identically.
+add_early_randomness() is called every time a new rng backend is added
+and every time it is set as the current rng provider.
 
-Lots of extra optimizations are now possible, e.g.
-we can fetch multiple heads with copy_from/to_user now.
-We can get rid of maintaining the log array.  Etc etc.
+add_early_randomness() is called from functions locking rng_mutex,
+and if it hangs all the hw_random framework hangs: we can't read sysfs,
+add or remove a backend.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+This patch moves add_early_randomness() out of the rng_mutex zone.
+It only needs the reading_mutex.
+
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
 ---
- drivers/vhost/test.c  |  2 +-
- drivers/vhost/vhost.c | 50 ++++++++++++++++++++++++++++++++++++-------
- drivers/vhost/vhost.h |  4 +++-
- 3 files changed, 46 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
-index 39a018a7af2d..e3a8e9db22cd 100644
---- a/drivers/vhost/test.c
-+++ b/drivers/vhost/test.c
-@@ -128,7 +128,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
- 	dev = &n->dev;
- 	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
- 	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
--	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
-+	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
- 		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
- 
- 	f->private_data = n;
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 36661d6cb51f..aa383e847865 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -302,6 +302,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
- {
- 	vq->num = 1;
- 	vq->ndescs = 0;
-+	vq->first_desc = 0;
- 	vq->desc = NULL;
- 	vq->avail = NULL;
- 	vq->used = NULL;
-@@ -390,6 +391,7 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
- 	for (i = 0; i < dev->nvqs; ++i) {
- 		vq = dev->vqs[i];
- 		vq->max_descs = dev->iov_limit;
-+		vq->batch_descs = dev->iov_limit - UIO_MAXIOV;
- 		vq->descs = kmalloc_array(vq->max_descs,
- 					  sizeof(*vq->descs),
- 					  GFP_KERNEL);
-@@ -2366,6 +2368,8 @@ static void pop_split_desc(struct vhost_virtqueue *vq)
- 	--vq->ndescs;
+Notes:
+    v2: in hwrng_register, take rng->ref only if rng is the new current_rng
+
+ drivers/char/hw_random/core.c | 61 +++++++++++++++++++++++++----------
+ 1 file changed, 44 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
+index 80b850ef1bf6..d85c6e18a2d2 100644
+--- a/drivers/char/hw_random/core.c
++++ b/drivers/char/hw_random/core.c
+@@ -112,6 +112,14 @@ static void drop_current_rng(void)
  }
  
-+#define VHOST_DESC_FLAGS (VRING_DESC_F_INDIRECT | VRING_DESC_F_WRITE | \
-+			  VRING_DESC_F_NEXT)
- static int push_split_desc(struct vhost_virtqueue *vq, struct vring_desc *desc, u16 id)
- {
- 	struct vhost_desc *h;
-@@ -2375,7 +2379,7 @@ static int push_split_desc(struct vhost_virtqueue *vq, struct vring_desc *desc,
- 	h = &vq->descs[vq->ndescs++];
- 	h->addr = vhost64_to_cpu(vq, desc->addr);
- 	h->len = vhost32_to_cpu(vq, desc->len);
--	h->flags = vhost16_to_cpu(vq, desc->flags);
-+	h->flags = vhost16_to_cpu(vq, desc->flags) & VHOST_DESC_FLAGS;
- 	h->id = id;
- 
- 	return 0;
-@@ -2450,7 +2454,7 @@ static int fetch_indirect_descs(struct vhost_virtqueue *vq,
- 	return 0;
- }
- 
--static int fetch_descs(struct vhost_virtqueue *vq)
-+static int fetch_buf(struct vhost_virtqueue *vq)
- {
- 	struct vring_desc desc;
- 	unsigned int i, head, found = 0;
-@@ -2462,7 +2466,11 @@ static int fetch_descs(struct vhost_virtqueue *vq)
- 	/* Check it isn't doing very strange things with descriptor numbers. */
- 	last_avail_idx = vq->last_avail_idx;
- 
--	if (vq->avail_idx == vq->last_avail_idx) {
-+	if (unlikely(vq->avail_idx == vq->last_avail_idx)) {
-+		/* If we already have work to do, don't bother re-checking. */
-+		if (likely(vq->ndescs))
-+			return vq->num;
-+
- 		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
- 			vq_err(vq, "Failed to access avail idx at %p\n",
- 				&vq->avail->idx);
-@@ -2541,6 +2549,24 @@ static int fetch_descs(struct vhost_virtqueue *vq)
- 	return 0;
- }
- 
-+static int fetch_descs(struct vhost_virtqueue *vq)
+ /* Returns ERR_PTR(), NULL or refcounted hwrng */
++static struct hwrng *get_current_rng_nolock(void)
 +{
-+	int ret = 0;
++	if (current_rng)
++		kref_get(&current_rng->ref);
 +
-+	if (unlikely(vq->first_desc >= vq->ndescs)) {
-+		vq->first_desc = 0;
-+		vq->ndescs = 0;
-+	}
-+
-+	if (vq->ndescs)
-+		return 0;
-+
-+	while (!ret && vq->ndescs <= vq->batch_descs)
-+		ret = fetch_buf(vq);
-+
-+	return vq->ndescs ? 0 : ret;
++	return current_rng;
 +}
 +
- /* This looks in the virtqueue and for the first available buffer, and converts
-  * it to an iovec for convenient access.  Since descriptors consist of some
-  * number of output then some number of input descriptors, it's actually two
-@@ -2562,6 +2588,8 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
- 	if (ret)
- 		return ret;
+ static struct hwrng *get_current_rng(void)
+ {
+ 	struct hwrng *rng;
+@@ -119,9 +127,7 @@ static struct hwrng *get_current_rng(void)
+ 	if (mutex_lock_interruptible(&rng_mutex))
+ 		return ERR_PTR(-ERESTARTSYS);
  
-+	/* Note: indirect descriptors are not batched */
-+	/* TODO: batch up to a limit */
- 	last = peek_split_desc(vq);
- 	id = last->id;
+-	rng = current_rng;
+-	if (rng)
+-		kref_get(&rng->ref);
++	rng = get_current_rng_nolock();
  
-@@ -2584,12 +2612,12 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
- 	if (unlikely(log))
- 		*log_num = 0;
+ 	mutex_unlock(&rng_mutex);
+ 	return rng;
+@@ -156,8 +162,6 @@ static int hwrng_init(struct hwrng *rng)
+ 	reinit_completion(&rng->cleanup_done);
  
--	for (i = 0; i < vq->ndescs; ++i) {
-+	for (i = vq->first_desc; i < vq->ndescs; ++i) {
- 		unsigned iov_count = *in_num + *out_num;
- 		struct vhost_desc *desc = &vq->descs[i];
- 		int access;
+ skip_init:
+-	add_early_randomness(rng);
+-
+ 	current_quality = rng->quality ? : default_quality;
+ 	if (current_quality > 1024)
+ 		current_quality = 1024;
+@@ -321,12 +325,13 @@ static ssize_t hwrng_attr_current_store(struct device *dev,
+ 					const char *buf, size_t len)
+ {
+ 	int err = -ENODEV;
+-	struct hwrng *rng;
++	struct hwrng *rng, *old_rng, *new_rng;
  
--		if (desc->flags & ~(VRING_DESC_F_INDIRECT | VRING_DESC_F_WRITE)) {
-+		if (desc->flags & ~VHOST_DESC_FLAGS) {
- 			vq_err(vq, "Unexpected flags: 0x%x at descriptor id 0x%x\n",
- 			       desc->flags, desc->id);
- 			ret = -EINVAL;
-@@ -2628,15 +2656,21 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
+ 	err = mutex_lock_interruptible(&rng_mutex);
+ 	if (err)
+ 		return -ERESTARTSYS;
+ 
++	old_rng = current_rng;
+ 	if (sysfs_streq(buf, "")) {
+ 		err = enable_best_rng();
+ 	} else {
+@@ -338,9 +343,15 @@ static ssize_t hwrng_attr_current_store(struct device *dev,
  			}
- 			*out_num += ret;
  		}
+ 	}
+-
++	new_rng = get_current_rng_nolock();
+ 	mutex_unlock(&rng_mutex);
+ 
++	if (new_rng) {
++		if (new_rng != old_rng)
++			add_early_randomness(new_rng);
++		put_rng(new_rng);
++	}
 +
-+		ret = desc->id;
+ 	return err ? : len;
+ }
+ 
+@@ -460,13 +471,15 @@ static void start_khwrngd(void)
+ int hwrng_register(struct hwrng *rng)
+ {
+ 	int err = -EINVAL;
+-	struct hwrng *old_rng, *tmp;
++	struct hwrng *tmp;
+ 	struct list_head *rng_list_ptr;
++	bool is_new_current = false;
+ 
+ 	if (!rng->name || (!rng->data_read && !rng->read))
+ 		goto out;
+ 
+ 	mutex_lock(&rng_mutex);
 +
-+		if (!(desc->flags & VRING_DESC_F_NEXT))
-+			break;
+ 	/* Must not register two RNGs with the same name. */
+ 	err = -EEXIST;
+ 	list_for_each_entry(tmp, &rng_list, list) {
+@@ -485,10 +498,8 @@ int hwrng_register(struct hwrng *rng)
+ 	}
+ 	list_add_tail(&rng->list, rng_list_ptr);
+ 
+-	old_rng = current_rng;
+-	err = 0;
+-	if (!old_rng ||
+-	    (!cur_rng_set_by_user && rng->quality > old_rng->quality)) {
++	if (!current_rng ||
++	    (!cur_rng_set_by_user && rng->quality > current_rng->quality)) {
+ 		/*
+ 		 * Set new rng as current as the new rng source
+ 		 * provides better entropy quality and was not
+@@ -497,19 +508,26 @@ int hwrng_register(struct hwrng *rng)
+ 		err = set_current_rng(rng);
+ 		if (err)
+ 			goto out_unlock;
++		/* to use current_rng in add_early_randomness() we need
++		 * to take a ref
++		 */
++		is_new_current = true;
++		kref_get(&rng->ref);
+ 	}
+-
+-	if (old_rng && !rng->init) {
++	mutex_unlock(&rng_mutex);
++	if (is_new_current || !rng->init) {
+ 		/*
+ 		 * Use a new device's input to add some randomness to
+ 		 * the system.  If this rng device isn't going to be
+ 		 * used right away, its init function hasn't been
+-		 * called yet; so only use the randomness from devices
+-		 * that don't need an init callback.
++		 * called yet by set_current_rng(); so only use the
++		 * randomness from devices that don't need an init callback
+ 		 */
+ 		add_early_randomness(rng);
+ 	}
+-
++	if (is_new_current)
++		put_rng(rng);
++	return 0;
+ out_unlock:
+ 	mutex_unlock(&rng_mutex);
+ out:
+@@ -519,10 +537,12 @@ EXPORT_SYMBOL_GPL(hwrng_register);
+ 
+ void hwrng_unregister(struct hwrng *rng)
+ {
++	struct hwrng *old_rng, *new_rng;
+ 	int err;
+ 
+ 	mutex_lock(&rng_mutex);
+ 
++	old_rng = current_rng;
+ 	list_del(&rng->list);
+ 	if (current_rng == rng) {
+ 		err = enable_best_rng();
+@@ -532,6 +552,7 @@ void hwrng_unregister(struct hwrng *rng)
+ 		}
  	}
  
--	ret = id;
--	vq->ndescs = 0;
-+	vq->first_desc = i + 1;
++	new_rng = get_current_rng_nolock();
+ 	if (list_empty(&rng_list)) {
+ 		mutex_unlock(&rng_mutex);
+ 		if (hwrng_fill)
+@@ -539,6 +560,12 @@ void hwrng_unregister(struct hwrng *rng)
+ 	} else
+ 		mutex_unlock(&rng_mutex);
  
- 	return ret;
- 
- err:
--	vhost_discard_vq_desc(vq, 1);
-+	for (i = vq->first_desc; i < vq->ndescs; ++i)
-+		if (!(desc->flags & VRING_DESC_F_NEXT))
-+			vhost_discard_vq_desc(vq, 1);
- 	vq->ndescs = 0;
- 
- 	return ret;
-diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-index 1724f61b6c2d..8b88e0c903da 100644
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -100,7 +100,9 @@ struct vhost_virtqueue {
- 
- 	struct vhost_desc *descs;
- 	int ndescs;
-+	int first_desc;
- 	int max_descs;
-+	int batch_descs;
- 
- 	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
- 	struct file *kick;
-@@ -245,7 +247,7 @@ ssize_t vhost_chr_write_iter(struct vhost_dev *dev,
- int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
- 
- #define vq_err(vq, fmt, ...) do {                                  \
--		pr_debug(pr_fmt(fmt), ##__VA_ARGS__);       \
-+		pr_err(pr_fmt(fmt), ##__VA_ARGS__);       \
- 		if ((vq)->error_ctx)                               \
- 				eventfd_signal((vq)->error_ctx, 1);\
- 	} while (0)
++	if (new_rng) {
++		if (old_rng != new_rng)
++			add_early_randomness(new_rng);
++		put_rng(new_rng);
++	}
++
+ 	wait_for_completion(&rng->cleanup_done);
+ }
+ EXPORT_SYMBOL_GPL(hwrng_unregister);
 -- 
-MST
+2.21.0
 
