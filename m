@@ -2,144 +2,132 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE97ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8409AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52BA20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3DA20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:10:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aLbgQTwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbfJKBHk (ORCPT
+        id S1727816AbfJKBK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 21:07:40 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34280 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfJKBHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:07:40 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 830A51A04A8;
-        Fri, 11 Oct 2019 03:07:37 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 690811A01F0;
-        Fri, 11 Oct 2019 03:07:32 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DCE9340299;
-        Fri, 11 Oct 2019 09:07:25 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH v8] gpio/mpc8xxx: change irq handler from chained to normal
-Date:   Fri, 11 Oct 2019 08:56:43 +0800
-Message-Id: <20191011005643.41007-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 10 Oct 2019 21:10:28 -0400
+Received: from mail-eopbgr30049.outbound.protection.outlook.com ([40.107.3.49]:33861
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727518AbfJKBK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 21:10:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mzLzqHv1/kmNm2DvrwUBoJXSCqX1Yhg+aniI0WEWJ1+5yq4Uv186QMS6e+90tqY7TJfw1NMgdgQi+I/h4gZwO/sA3q5kWdA1CZ0xK8n7uHeLwu2sLJcT+qY71n7ha1eMBGSjbGRPp6i/jZGjzMd6pTe53qzmgUr8oOZK2bd2X5KLz1xkdO+YSSj4UlWsqAoJf0rZypOBlqvx0pHYE/cjS2LWoIUMZ9WEhCMXQAr5H9eBGOHU4l9bSjr2B+B/X8dcDE+uRNb9eco0tHLLyjhlQzkhO9mUYwgfFh0pXVXlBj3X/YN5c88ILsQ0fkZAdNqHHbccPv57+ZSG4/I+PLqIaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HQuqtqitp+YZ/TmvqzWGeol+x5QMF5tIJTqYVU7qaw0=;
+ b=X/KQwNlasK6erKFJxf/nNxc56TkfGpJEJwES4ZV16HiCa8QFcxy8KSCEKok6SD6RyI8a08jQ/SxQhwBE712MegyaYBJk4kGvA7p4Zoi6TOpk50A6VpiiYBigxAV9OGDMVEljCs01uNolA4A0b85KyvZH9mErl1wq5iVLjVyP1j2R03UHxsbJbSsTyCcw4TKAqzQRo9zgOSOP0Q0S0tNOCTPb3AHiRfiuDpRJgDqklPjGCxEmlDUKyhO/EtJITc79JCrgo2W941Q/ZeuVpxB4iywEwZEm3pEGbALNysLZ0LiTjJkh9XOC5jy8Ec9z6VahaFnWgjIeqA2LnBHTdqJatg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HQuqtqitp+YZ/TmvqzWGeol+x5QMF5tIJTqYVU7qaw0=;
+ b=aLbgQTwo6h9TwSCIi2M7G6kKwaFRxgWo69N/nXWQZXiijslSHq+iWWQG3qosopkvU9xbATg/jmx7oPxLCzymYYByNH9+mIKM34ft9r5ZHR8JzkmNb4uT+uEZ879VUwykVCS+t3gWJDH+IipuFit5E9OmYu2GcRjKEjxFXtvHOCs=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3850.eurprd04.prod.outlook.com (52.134.65.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Fri, 11 Oct 2019 01:10:23 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d469:ad51:2bec:19f0]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d469:ad51:2bec:19f0%6]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
+ 01:10:23 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     Andy Duan <fugang.duan@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+        "swboyd@chromium.org" <swboyd@chromium.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] net: fec_main: Use platform_get_irq_byname_optional()
+ to avoid error message
+Thread-Topic: [PATCH 1/2] net: fec_main: Use
+ platform_get_irq_byname_optional() to avoid error message
+Thread-Index: AQHVforZimETp53I4UOLcQPYAMVf3qdUghaAgAAN4TCAAAnBAIAAAP3QgAAEwgCAAARvAA==
+Date:   Fri, 11 Oct 2019 01:10:23 +0000
+Message-ID: <DB3PR0402MB3916F0AC3E3AEC2AC1900BCCF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1570616148-11571-1-git-send-email-Anson.Huang@nxp.com>
+        <20191010160811.7775c819@cakuba.netronome.com>
+        <DB3PR0402MB3916FF4583577B182D9BF60CF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        <20191010173246.2cd02164@cakuba.netronome.com>
+        <DB3PR0402MB3916284A326512CE2FDF597EF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20191010175320.1fe5f6b3@cakuba.netronome.com>
+In-Reply-To: <20191010175320.1fe5f6b3@cakuba.netronome.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9f4d2be7-4a8c-4fbc-9a14-08d74de7cad2
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DB3PR0402MB3850:|DB3PR0402MB3850:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3850F14936237A925BD4139BF5970@DB3PR0402MB3850.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(136003)(396003)(39850400004)(189003)(199004)(25786009)(6246003)(7736002)(8676002)(8936002)(229853002)(81166006)(11346002)(81156014)(86362001)(476003)(44832011)(446003)(9686003)(4326008)(55016002)(305945005)(486006)(6436002)(74316002)(66066001)(64756008)(66556008)(66476007)(478600001)(186003)(71190400001)(54906003)(52536014)(66946007)(5660300002)(76116006)(14454004)(2906002)(26005)(99286004)(6506007)(76176011)(102836004)(316002)(71200400001)(7696005)(6116002)(33656002)(3846002)(6916009)(256004)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3850;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ryk5eoettjZCEWr5c4Vot3w0Xwil6qfZEtm+2Zj3q2ynaEit9T9acrQdSROPgureS+RQfr6FVt8U+s6/9sDX8aaj4eUCphFdmskyZX1ncMADGDdcIFyyHQUNEzsPtikVw2GODtJuiykCCW/LlR+uPa9H5FsvkyC6M0epYrLGMtDmyCJfPsRB6dyb2Cy4FGZrZRvjuPsY7zdeBy1l9/UBJkQHKwuZ5ePJDESNr34FZtdHGQwe+B4NjnQ8+W2pos2XrXo4OBvZgP0C3sYyZtBgFMXBJreAaSflfwkPU3kg+CSKoRpI9kW7j8x7ivOkFxMJNj0zMWKIihRg6ZArAJEIn+UXP8PZYKay+BYRJdIbBmkuf+PZpN/dOyHnt6IobwcDU5tBP78NCBif8+xcr9d2uI2jY9x56ea2KXBF62vMT/0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f4d2be7-4a8c-4fbc-9a14-08d74de7cad2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 01:10:23.0738
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BPSYCYnySmKxty98eqN2yJe55/hv2p9d8z2bGhvmbOHMPFS558BTTqzpUa4cm/toEnB8qPjugomnu3yz1JjrMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3850
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
-
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
-
-While this will work, it will mess up userspace accounting of the number
-of interrupts per second in tools such as vmstat.  The reason is that
-for every GPIO interrupt, /proc/interrupts records the count against GIC
-interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
-interrupt, the total number of interrupts that the system has seen
-increments by two.
-
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
-Changes in v8:
-        - merge two lines as one line to fit 80 characters.
-Changes in v7:
-	- make unsigned int convert to unsigned long.
-Changes in v6:
-        - change request_irq to devm_request_irq and add commit message.
-Changes in v5:
-        - add traverse every bit function.
-Changes in v4:
-        - convert 'pr_err' to 'dev_err'.
-Changes in v3:
-        - update the patch description.
-Changes in v2:
-        - delete the compatible of ls1088a.
- drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..58ff372 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,20 +128,19 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
--	unsigned int mask;
-+	unsigned long mask;
-+	int i;
- 
- 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
- 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
--	if (mask)
--		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
--						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+	for_each_set_bit(i, &mask, 32)
-+		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq, 31 - i));
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -409,8 +409,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
-+			       mpc8xxx_gpio_irq_cascade,
-+			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-+			       mpc8xxx_gc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
-+			np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
-
+SGksIEpha3ViDQoNCj4gT24gRnJpLCAxMSBPY3QgMjAxOSAwMDozODo1MCArMDAwMCwgQW5zb24g
+SHVhbmcgd3JvdGU6DQo+ID4gPiBIbS4gTG9va3MgbGlrZSB0aGUgY29tbWl0IHlvdSBuZWVkIGlz
+IGNvbW1pdCBmMWRhNTY3ZjFkYzEgKCJkcml2ZXIgY29yZToNCj4gPiA+IHBsYXRmb3JtOiBBZGQg
+cGxhdGZvcm1fZ2V0X2lycV9ieW5hbWVfb3B0aW9uYWwoKSIpIGFuZCBpdCdzDQo+ID4gPiBjdXJy
+ZW50bHkgaW4gR3JlZydzIHRyZWUuIFlvdSBoYXZlIHRvIHdhaXQgZm9yIHRoYXQgY29tbWl0IHRv
+IG1ha2UNCj4gPiA+IGl0cyB3YXkgaW50byBMaW51cydlcyBtYWluIHRyZWUgYW5kIHRoZW4gZm9y
+IERhdmUgTWlsbGVyIHRvIHB1bGwgZnJvbSBMaW51cy4NCj4gPiA+DQo+ID4gPiBJJ2Qgc3VnZ2Vz
+dCB5b3UgY2hlY2sgaWYgeW91ciBwYXRjaGVzIGJ1aWxkcyBvbiB0aGUgbmV0IHRyZWU6DQo+ID4g
+Pg0KPiA+ID4gICBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQv
+bmV0ZGV2L25ldC5naXQNCj4gPiA+DQo+ID4gPiBvbmNlIGEgd2Vlay4gTXkgZ3Vlc3MgaXMgaXQn
+bGwgcHJvYmFibHkgdGFrZSB0d28gd2Vla3Mgb3Igc28gZm9yDQo+ID4gPiBHcmVnJ3MgcGF0Y2hl
+cyB0byBwcm9wYWdhdGUgdG8gRGF2ZS4NCj4gPg0KPiA+IFRoYW5rcyBmb3IgZXhwbGFuYXRpb24g
+b2YgaG93IHRoZXNlIHRyZWVzIHdvcmssIHNvIGNvdWxkIHlvdSBwbGVhc2UNCj4gPiB3YWl0IHRo
+ZSBuZWNlc3NhcnkgcGF0Y2ggbGFuZGluZyBvbiBuZXR3b3JrIHRyZWUgdGhlbiBhcHBseSB0aGlz
+IHBhdGNoDQo+ID4gc2VyaWVzLCB0aGFua3MgZm9yIGhlbHAuDQo+IA0KPiBVbmZvcnR1bmF0ZWx5
+IHRoZSBuZXR3b3JraW5nIHN1YnN5c3RlbSBzZWVzIGFyb3VuZCBhIDEwMCBwYXRjaGVzDQo+IHN1
+Ym1pdHRlZCBlYWNoIGRheSwgaXQnZCBiZSB2ZXJ5IGhhcmQgdG8ga2VlcCB0cmFjayBvZiBwYXRj
+aGVzIHdoaWNoIGhhdmUNCj4gZXh0ZXJuYWwgZGVwZW5kZW5jaWVzIGFuZCB3aGVuIHRvIG1lcmdl
+IHRoZW0uIFRoYXQncyB3aHkgd2UgbmVlZCB0aGUNCj4gc3VibWl0dGVycyB0byBkbyB0aGlzIHdv
+cmsgZm9yIHVzIGFuZCByZXN1Ym1pdCB3aGVuIHRoZSBwYXRjaCBjYW4gYmUNCj4gYXBwbGllZCBj
+bGVhbmx5Lg0KDQpPSywgSSB3aWxsIHJlc2VuZCB0aGlzIHBhdGNoIHNlcmllcyBvbmNlIHRoZSBu
+ZWNlc3NhcnkgcGF0Y2ggbGFuZHMgb24gdGhlIG5ldHdvcmsNCnRyZWUuDQoNClRoYW5rcywNCkFu
+c29uDQo=
