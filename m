@@ -2,106 +2,180 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29835ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCAFC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC97206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570821919;
-	bh=98065Bg8MTyfPeB4ywZiFBsrc13EdLd6EYrQt4VTnrA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ll/dJJd/gJ0+co3hUJgRS1LoEPbzjaHifQCu4BhjAen6tv1nL06shnNG1FdWVVZRj
-	 EduiROepacubcYHG07HFZ4CH6JPjYpdL9+U8Zwoyz29NEX1JFllaXZyskcgWRSWk7u
-	 adMvskH0GkRT+zCmiiQhxKxvq3Ycs6+c4WFYXlVs=
+	by mail.kernel.org (Postfix) with ESMTP id 15EE021835
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:26:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C1fId8FI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbfJKTYr (ORCPT
+        id S1728986AbfJKT0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 15:24:47 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42027 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728915AbfJKTYp (ORCPT
+        Fri, 11 Oct 2019 15:26:07 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59566 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728776AbfJKT0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 15:24:45 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so10863032lje.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 12:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dk+GYmDk3Umblq0gC3zhCmwGbz+fKRKvXXa9PqPr9oI=;
-        b=RKelw3XTZWr2fMIszm4fiPSJKM6JXno/egHsKyWt4ulwFQMu6s8kxaUjF9a1NatARA
-         65uN4laUlTdl8ZdvrQailFcDmEk9gIgZTIaz5xoo01WNPvC19FeRMUmzCV3ux4iR0luW
-         Hfue3vcmZOaTSmgI2TQ+rRt/J+LpNSEzf8wgM=
+        Fri, 11 Oct 2019 15:26:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570821965;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cpiu7s7hf2nZP0WQJjeZFG1TgT08vZqZIEI3ha/hazE=;
+        b=C1fId8FIlXbEHv1L+7W+bkoE0V0nu5bYzCkSrAvt9ZqNmqXLT9FUp4qRGFPmup68g6+tzO
+        +inbSet0+lmmxGfgmrPZSIerf3M2sxCficpIctj3adW8UWdHUwoyUHKstGU6ATbzKYg5pn
+        HjMDxYZbBbUNB3KiPVL8uuENukJODWc=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-ocuOaWOJMOWPOPnt8vnunw-1; Fri, 11 Oct 2019 15:26:03 -0400
+Received: by mail-qk1-f200.google.com with SMTP id b143so9973794qkg.9
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 12:26:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Dk+GYmDk3Umblq0gC3zhCmwGbz+fKRKvXXa9PqPr9oI=;
-        b=sEyhiCxQDghgntUqRR5FU26kEiI5BjeUkAqCN7oc2pjt13NP6JcJUT5fK95Ohr49y2
-         byCoberDX7k845DxWmvYVHIryswHDPgcK1FeV2s6l3ps6PHWHyQvILRBzP5SQ0ee7Ny1
-         6agbf+0v+TX/+Mh60Qg3WfjGkx0yVj3SJP1fArCv3qhKVjVcm0afFL06eM4cTZ3WXPvM
-         e4UNcdPAQJe4YVH7tjnCNPIiZdtenvLUg2qhOURK8nHCGJaXjdgPAsu7U7mw9FAj8diB
-         XDOSpUU2AXBfT0u5hPLEVZx2bdMBZUZKEHVRqWWQXFaBuEcVvsz/SkZmQ6KupRIemFzv
-         uldQ==
-X-Gm-Message-State: APjAAAXYc8orCnd1tZbvEaKFIdQbxSdLX5NtOnHDY7pTHul/rpMASFuh
-        SG/KTEZYImhSJ4AeiV+o74+XB5gMKGo=
-X-Google-Smtp-Source: APXvYqwZ20Lj8/z5KoLIPnbehAKvd3X2DUrfcdSUnMTY89F5tQByF+X9Umk7OmntHduTuwO083vPoQ==
-X-Received: by 2002:a2e:86cd:: with SMTP id n13mr3164148ljj.27.1570821882363;
-        Fri, 11 Oct 2019 12:24:42 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id t27sm2149215lfl.48.2019.10.11.12.24.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Oct 2019 12:24:40 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id 7so10889900ljw.7
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 12:24:40 -0700 (PDT)
-X-Received: by 2002:a2e:8310:: with SMTP id a16mr4366223ljh.48.1570821879742;
- Fri, 11 Oct 2019 12:24:39 -0700 (PDT)
+        bh=Vm9hCEgalMjdO3brVzGiAiZDpN4MX984R0GN6bPTIZw=;
+        b=bgBVTt1l80IR9jXq28n8YNfWUJiy6pyw2A3EZnWhicfHTAg6WwT5NYQTyf4zVXmY/l
+         9qTtcNqKWpHYWEkp4tDYJ2A8Udpa+XmQmem4nzNFBztBjgxW78aDbHuTJYniEL0rMGDK
+         oezBSGFbRgiElKIFpvKeRr5ehBoaI2XHV5PssLFgKQXcaxuUNS9hljwXh3DBqpm67PaZ
+         dTpZu4ZCHY55nURmpeQh0Mip5H7pp/gboGdxVOcIS8L65Wm+zaGP20t3d6m2fBifqOck
+         krOvYgnrzaN02zd6Dw+FmwwSmm30xM2yCVjRfPPmK+Fh/YDSyfim67cJZhiApWhSeKal
+         rkng==
+X-Gm-Message-State: APjAAAWAu2WPMte2v9RqUUNHmPDYgh15KG7AJZ6CebVYmBDKQGEkzMTk
+        lvk1M49ba23VvwENCWKJdP2Q4W4g7n0jAwaqzJbacce8QyfsS9DmqyN/W/bybTrnnEYo92LsodH
+        6YyQ205WbXQSs0CyOJmlQufNYV+xXzn01PndmPuGT
+X-Received: by 2002:a37:50a:: with SMTP id 10mr16739702qkf.27.1570821963349;
+        Fri, 11 Oct 2019 12:26:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx05uDRWS0FZ6McnRw0wvRkHDnrcgb/JBgJnFKj/FIi/+KaVzrBJ5aRpM86Ax1WNWr/Vjw1XePH4a8Ny4dxnhM=
+X-Received: by 2002:a37:50a:: with SMTP id 10mr16739692qkf.27.1570821963111;
+ Fri, 11 Oct 2019 12:26:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191011135458.7399da44@gandalf.local.home> <CAHk-=wj7fGPKUspr579Cii-w_y60PtRaiDgKuxVtBAMK0VNNkA@mail.gmail.com>
- <20191011143610.21bcd9c0@gandalf.local.home>
-In-Reply-To: <20191011143610.21bcd9c0@gandalf.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 11 Oct 2019 12:24:23 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh_JH5-hC3yk8X3Ja8XMTuW68-ozuqZdMw7fcHpcpHuUw@mail.gmail.com>
-Message-ID: <CAHk-=wh_JH5-hC3yk8X3Ja8XMTuW68-ozuqZdMw7fcHpcpHuUw@mail.gmail.com>
-Subject: Re: [PATCH] tracefs: Do not allocate and free proxy_ops for lockdown
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
+ <20191007051240.4410-2-andrew.smirnov@gmail.com> <CAO-hwJ+jPGa5Z7=Lopsc23m8UOqGWB0=tN+DcotykseAPM7_7w@mail.gmail.com>
+ <20191011182617.GE229325@dtor-ws>
+In-Reply-To: <20191011182617.GE229325@dtor-ws>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 11 Oct 2019 21:25:52 +0200
+Message-ID: <CAO-hwJLH6SMkLb1kZGj1E+BUHJ+ZsE1n+d=xeJgsvTCjHH1Wzw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] HID: logitech-hidpp: use devres to manage FF private data
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+X-MC-Unique: ocuOaWOJMOWPOPnt8vnunw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:36 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, Oct 11, 2019 at 8:26 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 >
-> On Fri, 11 Oct 2019 11:20:30 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> On Fri, Oct 11, 2019 at 04:52:04PM +0200, Benjamin Tissoires wrote:
+> > Hi Andrey,
+> >
+> > On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com=
+> wrote:
+> > >
+> > > To simplify resource management in commit that follows as well as to
+> > > save a couple of extra kfree()s and simplify hidpp_ff_deinit() switch
+> > > driver code to use devres to manage the life-cycle of FF private data=
+.
+> > >
+> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > Cc: Jiri Kosina <jikos@kernel.org>
+> > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > Cc: Henrik Rydberg <rydberg@bitmath.org>
+> > > Cc: Sam Bazely <sambazley@fastmail.com>
+> > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> > > Cc: Austin Palmer <austinp@valvesoftware.com>
+> > > Cc: linux-input@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Cc: stable@vger.kernel.org
+> >
+> > This patch doesn't seem to fix any error, is there a reason to send it
+> > to stable? (besides as a dependency of the rest of the series).
+> >
+> > > ---
+> > >  drivers/hid/hid-logitech-hidpp.c | 53 +++++++++++++++++-------------=
+--
+> > >  1 file changed, 29 insertions(+), 24 deletions(-)
+> > >
+> > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logit=
+ech-hidpp.c
+> > > index 0179f7ed77e5..58eb928224e5 100644
+> > > --- a/drivers/hid/hid-logitech-hidpp.c
+> > > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > > @@ -2079,6 +2079,11 @@ static void hidpp_ff_destroy(struct ff_device =
+*ff)
+> > >         struct hidpp_ff_private_data *data =3D ff->private;
+> > >
+> > >         kfree(data->effect_ids);
+> >
+> > Is there any reasons we can not also devm alloc data->effect_ids?
+> >
+> > > +       /*
+> > > +        * Set private to NULL to prevent input_ff_destroy() from
+> > > +        * freeing our devres allocated memory
+> >
+> > Ouch. There is something wrong here: input_ff_destroy() calls
+> > kfree(ff->private), when the data has not been allocated by
+> > input_ff_create(). This seems to lack a little bit of symmetry.
 >
-> > Willing to do that instead?
->
-> Honestly, what you described was my preferred solution ;-)
->
-> I just didn't want to upset the lockdown crowd if a new tracefs file
-> was opened without doing this.
+> Yeah, ff and ff-memless essentially take over the private data assigned
+> to them. They were done before devm and the lifetime of the "private"
+> data pieces was tied to the lifetime of the input device to simplify
+> error handling and teardown.
 
-Well, since they introduced a bug in your code that killed your
-machine with the patch _they_ did, I don't think they get to complain
-when you fix it the way you (and me) want to...
+Yeah, that stealing of the pointer is not good :)
+But OTOH, it helps
 
-Fair is fair.
+>
+> Maybe we should clean it up a bit... I'm open to suggestions.
 
-             Linus
+The problem I had when doing the review was that there is no easy way
+to have a "devm_input_ff_create_()", because the way it's built is
+already "devres-compatible": the destroy gets called by input core.
+
+So I don't have a good answer to simplify in a transparent manner
+without breaking the API.
+
+>
+> In this case maybe best way is to get rid of hidpp_ff_destroy() and not
+> set ff->private and rely on devm to free the buffers. One can get to
+> device private data from ff methods via input_get_drvdata() since they
+> all (except destroy) are passed input device pointer.
+
+Sounds like a good idea. However, it seems there might be a race when
+removing the workqueue:
+the workqueue gets deleted in hidpp_remove, when the input node will
+be freed by devres, so after the call of hidpp_remove.
+
+So we should probably keep hidpp_ff_destroy() to clean up the ff bits,
+and instead move the content of hidpp_ff_deinit() into
+hidpp_ff_destroy() so we ensure proper ordering.
+
+Andrey, note that ensuring the workqueue gets freed after the call of
+input_destroy_device is something that should definitively go into
+stable as this is a potential race problem.
+
+Cheers,
+Benjamin
+
