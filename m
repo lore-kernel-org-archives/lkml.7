@@ -2,140 +2,103 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2037C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AA1ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3B42089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:48:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570805318;
-	bh=22g+Qc5vnHI4MaHmLb7axBtVNMHinDcv1vV8Wh7dykw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gtScOdxKT7YfmPx6wsGoxw1vejf2NHulNmoYxvGleYWk2FjiQxPJnQPbB/0WgHQLG
-	 p8dPbZMrReHRrvvesK/aZhXE2zPThWe9z1K8i+ntim11M3J/il3bkzpy2WEWvhWM9C
-	 YMfVbptb3+47RSVkNk4Nik4rl0UQ76Erg8A6soDU=
+	by mail.kernel.org (Postfix) with ESMTP id 970012089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfJKOsi (ORCPT
+        id S1727452AbfJKOtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:48:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36137 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfJKOsh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:48:37 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so6242533pfr.3;
-        Fri, 11 Oct 2019 07:48:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iPc5NZD98rq6lmQmCZyD8Q7eBmoCyRmt8Bt4JVgrKYo=;
-        b=X7ACOdrrOwaKaQILEcyWGQJ3CcY3Hmwo/l29HtfZACmaXT2h7OrovRtt0ULpoR20Ke
-         W8h3O3wrVhJ9iz/xwUbW7l/gZ0rXycOaMTIKPQuWY4KL4/jMC3jCWl5VdGgXMVL6aCoT
-         PuSpZrOdsve3wBlNRriC0hXWfK56BOvR816MaZPt86bYD4inPUGtdSX537fatuJIUxl5
-         BBBtHbruwTcZ+Po2Y5EBjpYzqwjp98GVqchOa0osffxygOBrbDNpk6RKKboWFXt9pweR
-         7y15vmvkaGPow/Q7gI6+WAiC4ggfQuIvPhu3oX7snLgT/JwTJcGDdBuZyLharr0XOs9J
-         ONnA==
-X-Gm-Message-State: APjAAAWSHf7OzmP7t7e8iejXeWJNObtgx6pATQEJ0BK+1wpKWnnXVsoM
-        2YWSP/qNIG8uPRl0VBrwS/s=
-X-Google-Smtp-Source: APXvYqzUrZcbx+ZWRjUoweN3gS8eeZhjKA3OdK5K+Zw6lT7R/kHLFmtnbH3pcVRrCWmlWUzEIX8jWQ==
-X-Received: by 2002:a63:5406:: with SMTP id i6mr13547064pgb.1.1570805316463;
-        Fri, 11 Oct 2019 07:48:36 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 7sm8008752pgj.35.2019.10.11.07.48.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 07:48:35 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 98CF6403EA; Fri, 11 Oct 2019 14:48:34 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 14:48:34 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v7 2/8] efi: Add embedded peripheral firmware support
-Message-ID: <20191011144834.GL16384@42.do-not-panic.com>
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-3-hdegoede@redhat.com>
+        Fri, 11 Oct 2019 10:49:01 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40616 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726331AbfJKOtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:49:01 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EEBF05B08FA61B399531;
+        Fri, 11 Oct 2019 22:48:58 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
+ 22:48:57 +0800
+Message-ID: <5DA09659.9070401@huawei.com>
+Date:   Fri, 11 Oct 2019 22:48:57 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191004145056.43267-3-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     Jerome Pouiller <Jerome.Pouiller@silabs.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: wfx: fix an undefined reference error when CONFIG_MMC=m
+References: <1570762939-8735-1-git-send-email-zhongjiang@huawei.com> <20191011042609.GB938845@kroah.com> <3864047.FfxYVOUlJ1@pc-42> <20191011090256.GC1076760@kroah.com>
+In-Reply-To: <20191011090256.GC1076760@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 04:50:50PM +0200, Hans de Goede wrote:
-> +static int __init efi_check_md_for_embedded_firmware(
-> +	efi_memory_desc_t *md, const struct efi_embedded_fw_desc *desc)
-> +{
-> +	const u64 prefix = *((u64 *)desc->prefix);
-> +	struct sha256_state sctx;
-> +	struct embedded_fw *fw;
-> +	u8 sha256[32];
-> +	u64 i, size;
-> +	void *map;
-> +
-> +	size = md->num_pages << EFI_PAGE_SHIFT;
-> +	map = memremap(md->phys_addr, size, MEMREMAP_WB);
+On 2019/10/11 17:02, Greg KH wrote:
+> On Fri, Oct 11, 2019 at 08:40:08AM +0000, Jerome Pouiller wrote:
+>> On Friday 11 October 2019 06:26:16 CEST Greg KH wrote:
+>>> CAUTION: This email originated from outside of the organization. Do not 
+>> click links or open attachments unless you recognize the sender and know the 
+>> content is safe.
+>>>
+>>> On Fri, Oct 11, 2019 at 11:02:19AM +0800, zhong jiang wrote:
+>>>> I hit the following error when compile the kernel.
+>>>>
+>>>> drivers/staging/wfx/main.o: In function `wfx_core_init':
+>>>> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:488: 
+>> undefined reference to `sdio_register_driver'
+>>>> drivers/staging/wfx/main.o: In function `wfx_core_exit':
+>>>> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:496: 
+>> undefined reference to `sdio_unregister_driver'
+>>>> drivers/staging/wfx/main.o:(.debug_addr+0x1a8): undefined reference to 
+>> `sdio_register_driver'
+>>>> drivers/staging/wfx/main.o:(.debug_addr+0x6f0): undefined reference to 
+>> `sdio_unregister_driver'
+>>>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>>>> ---
+>>>>  drivers/staging/wfx/Kconfig  | 3 ++-
+>>>>  drivers/staging/wfx/Makefile | 5 +++--
+>>>>  2 files changed, 5 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/staging/wfx/Kconfig b/drivers/staging/wfx/Kconfig
+>>>> index 9b8a1c7..4d045513 100644
+>>>> --- a/drivers/staging/wfx/Kconfig
+>>>> +++ b/drivers/staging/wfx/Kconfig
+>>>> @@ -1,7 +1,8 @@
+>>>>  config WFX
+>>>>       tristate "Silicon Labs wireless chips WF200 and further"
+>>>>       depends on MAC80211
+>>>> -     depends on (SPI || MMC)
+>>>> +     depends on SPI
+>>>> +     select MMC
+>>> How about:
+>>>         depends on (SPI && MMC)
+>> I dislike to force user to enable both buses while only one of them is 
+>> sufficient. I would prefer to keep current dependencies and to add
+>> #ifdef around problematic functions.
+> Yes, that's the better thing to do here overall.
+>
+> zhong, can you work on that?
+I will repost as Jerome said.  Thanks
 
-Since our limitaiton is the init process must have mostly finished,
-it implies early x86 boot code cannot use this, what measures can we
-take to prevent / check for such conditions to be detected and
-gracefully errored out?
+Sincerely,
+zhong jiang
+> thanks,
+>
+> greg k-h
+>
+> .
+>
 
-> +	if (!map) {
-> +		pr_err("Error mapping EFI mem at %#llx\n", md->phys_addr);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	size -= desc->length;
 
-Remind me again, why we decrement the size here?
-I was going to ask if we didn't need a:
-
-if (desc->length > size) {
-	memunmap(map);
-	return -EINVAL;
-}
-
-> +	for (i = 0; i < size; i += 8) {
-> +		u64 *mem = map + i;
-> +
-> +		if (*mem != prefix)
-> +			continue;
-> +
-> +		sha256_init(&sctx);
-> +		sha256_update(&sctx, map + i, desc->length);
-> +		sha256_final(&sctx, sha256);
-> +		if (memcmp(sha256, desc->sha256, 32) == 0)
-> +			break;
-> +	}
-> +	if (i >= size) {
-> +		memunmap(map);
-> +		return -ENOENT;
-> +	}
-> +
-> +	pr_info("Found EFI embedded fw '%s'\n", desc->name);
-
-Otherwise looks good.
-
-  Luis
