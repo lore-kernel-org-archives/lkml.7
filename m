@@ -2,134 +2,100 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6A4ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB6EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131912190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B802190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:48:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PKMm3t0O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzwLeD8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfJKIsp (ORCPT
+        id S1727495AbfJKIsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:48:45 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:17314 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726310AbfJKIsp (ORCPT
+        Fri, 11 Oct 2019 04:48:53 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41058 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfJKIsw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:48:45 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9B8jVnm018619;
-        Fri, 11 Oct 2019 10:48:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=dn57trJDwkZf1zTqrirKMCOuNO/LkBA2sd55GnG6NrU=;
- b=PKMm3t0OsAVAyHFmAAlnAP0bWm6GHiWzxQmRPaq1eXJD1wgLj5zdV8OvDjkWAtvgOdYR
- 8ii3smM+kk5ljgpYs+HOATNvoJG1BIBTlvlNi5mpmQjjy+hfac7Q8+qFBWsipIUzfiHj
- O0ALWBKDhiIs4PSeevSExUmfbcjbPTMd5lPnaRXzk8LUox7HIeg4Ld0GtTL/O9sWaZhb
- UL0yG/OJC35RRR8oSNysU+ktBDANlgq1OsXl4f7LdpTdr0esEJfaJtfJI1RY7S67PXY1
- s6wuaRxaW+wNtVD/l8xUtM5vlCPjHopuYdMhPFBHRgcJB9yizr6MDxRfp/d7ERK2ZhpC EA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vegahhecn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 10:48:20 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A6F1710002A;
-        Fri, 11 Oct 2019 10:48:19 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 19BF12AF4B7;
-        Fri, 11 Oct 2019 10:48:19 +0200 (CEST)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 11 Oct
- 2019 10:48:19 +0200
-Received: from localhost (10.201.21.218) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 11 Oct 2019 10:48:18
- +0200
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
-        <arnaud.pouliquen@st.com>
-Subject: [PATCH] ASoC: stm32: spdifrx: retry synchronization in sync state
-Date:   Fri, 11 Oct 2019 10:48:16 +0200
-Message-ID: <20191011084816.14279-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 11 Oct 2019 04:48:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q7so5669487pfh.8;
+        Fri, 11 Oct 2019 01:48:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZE64hLgDWtbp5oSPHrZjFkaTZsSqEnl+J/6l+xL0R68=;
+        b=ZzwLeD8APeW7v7gmHQ4brO/MpKDK5jv5GzZp6zGocmM93eqzhIhS5shfEp+tlUwmLd
+         rDQF7RURyjqfi/ExjsSKGrkJ+209sPYbo1cajBUsWOZoDxOpCZC3uVi0iUtLcVo79ntG
+         FPgUjHavDuw9h/AliOkJCDoVBRplw1WS0w/M3F2G0vJ1FipWWe41baGRMXpL0ODGzwrD
+         CfemUW1YOmfmDLz9zM6PVQ9J0AKXpudfSrVxZ6G+XfpmzNnkzbzXPtbb0EnwiQM5lYgD
+         7lDb9PDx0OqUy+x6SeakcN+U17CS8xYpdK/sbHYVAzxhNYp5Q/KyeuyWRrnCki7Mdcyb
+         Wzuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZE64hLgDWtbp5oSPHrZjFkaTZsSqEnl+J/6l+xL0R68=;
+        b=ESoCszE7wsxfRIqUTpfV16KiNmSFFPCl0YODGh4BK6+3ohfjW8X6JkR+HaxMy7IHb1
+         TJs5kz9MR0IFk3z7xk8hPFhdmC76k/g7aLiQlsJ+4O5ZwMVWAXJPWj8QF40uPRs+O/m7
+         IL8yAkaj8LVvVnOKH52QhF/uxkbHiVjVmSyNwWBUJLkFTtMaf3d+2TFCg3mUXf9l0K3G
+         vEm5Es1blKc1VSJ6Pf78k2pwfF/myMb970Wpo/P3ZhjO4pWgsJL4MUX/cIcESy0nvPLF
+         AVgALJ+F0J/pWpVute7w8X7RAxlaB3K64YW3M8qdekji4peBOHPTf0a7R5Apb+dwFD+B
+         JyfA==
+X-Gm-Message-State: APjAAAXKMa7IewTCmIvrUumxIJwh3fWEjq4LeHytf403lzO4YhqPh84J
+        4F9OhawKIBUY1hju6qK2/rnBxdZGJtUKJmEg+jQ=
+X-Google-Smtp-Source: APXvYqyKqcLTN8qXhhUEJ5W9vQ79+Sa+VSx6rO4e4Aiud4YwnJ7oAtWN35B+bR2sgwouozH9FsEwTy2cE0vixNDWQOY=
+X-Received: by 2002:a63:d0a:: with SMTP id c10mr13786067pgl.203.1570783731894;
+ Fri, 11 Oct 2019 01:48:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.21.218]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-11_06:2019-10-10,2019-10-11 signatures=0
+References: <20191009200523.8436-1-stuart.w.hayes@gmail.com>
+ <20191009200523.8436-3-stuart.w.hayes@gmail.com> <CAHp75Vc1mZ7qxKPGaqDVAQ9d_UjNq9LJDEPWHQHaYCfw7vGrmA@mail.gmail.com>
+ <CAHp75VfNjnAxua6ESx1Vp=57O=pVM10P1UK8bGNQUk7FeY=Dmw@mail.gmail.com>
+ <CAL5oW02uRk-ZLMaE6Skt7rX6xy=sQNttfSZ2N1JRBXPfjJpZNg@mail.gmail.com> <CAHp75VfEpH4Nv0J+wc3vhFWXYgVLcFdOr263dAFRZiz_ZEfZrw@mail.gmail.com>
+In-Reply-To: <CAHp75VfEpH4Nv0J+wc3vhFWXYgVLcFdOr263dAFRZiz_ZEfZrw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 11 Oct 2019 11:48:41 +0300
+Message-ID: <CAHp75VeuQ0O9SxveRXqOKoRKQQJNwJ_1WX6taNfgWebiP0KdJA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: pciehp: Wait for PDS if in-band presence is disabled
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When STM32 SPDIFRX is in sync state, allow multiple
-synchro attempts, instead of exiting on first unsuccessful
-trial. This is useful when spdif signal is not immediately
-available on input. This also allows Pulseaudio to check
-iec capture device availability when no signal is present.
+On Fri, Oct 11, 2019 at 9:49 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Oct 10, 2019 at 11:37 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+>
+> > Thank you for the feedback!  An infinite loop is used several other places in
+> > this driver--this keeps the style similar.  I can change it as you suggest,
+> > though, if that would be preferable to consistency.
+>
+> Better to start the change now. I'll look into the file and see how we
+> can improve the rest.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_spdifrx.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+I found only one infinite loop there, the other timeout loop is done
+as do {} while.
+I'll send a patch to refactor the infinite one.
 
-diff --git a/sound/soc/stm/stm32_spdifrx.c b/sound/soc/stm/stm32_spdifrx.c
-index cd4b235fce57..3fd28ee01675 100644
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -351,6 +351,8 @@ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
- 		     SPDIFRX_CR_CUMSK | SPDIFRX_CR_PTMSK | SPDIFRX_CR_RXSTEO;
- 		cr_mask = cr;
- 
-+		cr |= SPDIFRX_CR_NBTRSET(SPDIFRX_NBTR_63);
-+		cr_mask |= SPDIFRX_CR_NBTR_MASK;
- 		cr |= SPDIFRX_CR_SPDIFENSET(SPDIFRX_SPDIFEN_SYNC);
- 		cr_mask |= SPDIFRX_CR_SPDIFEN_MASK;
- 		ret = regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
-@@ -666,7 +668,7 @@ static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
- 	struct snd_pcm_substream *substream = spdifrx->substream;
- 	struct platform_device *pdev = spdifrx->pdev;
- 	unsigned int cr, mask, sr, imr;
--	unsigned int flags;
-+	unsigned int flags, sync_state;
- 	int err = 0, err_xrun = 0;
- 
- 	regmap_read(spdifrx->regmap, STM32_SPDIFRX_SR, &sr);
-@@ -726,11 +728,23 @@ static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
- 	}
- 
- 	if (err) {
--		/* SPDIFRX in STATE_STOP. Disable SPDIFRX to clear errors */
-+		regmap_read(spdifrx->regmap, STM32_SPDIFRX_CR, &cr);
-+		sync_state = FIELD_GET(SPDIFRX_CR_SPDIFEN_MASK, cr) &&
-+			     SPDIFRX_SPDIFEN_SYNC;
-+
-+		/* SPDIFRX is in STATE_STOP. Disable SPDIFRX to clear errors */
- 		cr = SPDIFRX_CR_SPDIFENSET(SPDIFRX_SPDIFEN_DISABLE);
- 		regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
- 				   SPDIFRX_CR_SPDIFEN_MASK, cr);
- 
-+		/* If SPDIFRX was in STATE_SYNC, retry synchro */
-+		if (sync_state) {
-+			cr = SPDIFRX_CR_SPDIFENSET(SPDIFRX_SPDIFEN_SYNC);
-+			regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
-+					   SPDIFRX_CR_SPDIFEN_MASK, cr);
-+			return IRQ_HANDLED;
-+		}
-+
- 		if (substream)
- 			snd_pcm_stop(substream, SNDRV_PCM_STATE_DISCONNECTED);
- 
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
