@@ -2,85 +2,273 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6475ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDB9C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D822084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7DD2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:37:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iPIcDDch"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ftbuwlbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfJKKd7 (ORCPT
+        id S1727387AbfJKKhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:33:59 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:59008 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfJKKd5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:33:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wiz4slvf1z02zzwamxtNr+wkEajcyA8vgoY7rPowzHY=; b=iPIcDDchS+lDan8D2NcJ447cX
-        di0PD/1ruOXInVaPPqA+Ot4vUoLVncIvIzB0n9p+50ITyo6Sh1lCyMRhHeSh9ljdNwqvBN/jSANIM
-        L5fiFMgmAdRHp9Q0DcumTYuUEj0/8Isj77eXe8AL80lkhdk/zOFvSMCEG/lybpjQRXOePNUjby9z7
-        SBg8chnrDkYgAzMDxyr1cn1jDcra3l7BCZaS7RCSGOCt8BX5ULxR9gR1zuKH6jJTMkhYTJUaYyT0G
-        +J5AQkFZmOl84mhGTLB5ly9D8lo3wzRSrY0hfcvW7QP2KbJdjmIwejVbTYhSEdVaNNmQpNgjnzNgs
-        lQfym6qIA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42728)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iIsF1-0004dD-4o; Fri, 11 Oct 2019 11:33:47 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iIsEw-00013D-PC; Fri, 11 Oct 2019 11:33:42 +0100
-Date:   Fri, 11 Oct 2019 11:33:42 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Will Deacon <will@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        John Garry <john.garry@huawei.com>,
+        Fri, 11 Oct 2019 06:37:07 -0400
+Received: from ozlabs.org ([203.11.71.1]:45531 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726885AbfJKKhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:37:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46qPXG114zz9sNx;
+        Fri, 11 Oct 2019 21:37:01 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1570790223;
+        bh=mmnFvz3+OLMxbtvM61F4sakF+nEt3C7jllRIDZGcOOE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ftbuwlbQdi4PQkRslrffdTmpXVegArHshm9LJwmTVH0jzR4T9PqyHstQgFz0e1y3W
+         dnVkGxkI1Puy1CbrkxcvuFFWmTunUDokmpvdubsktxo8bEvcSkCH3eh/9Ag8iWiNqo
+         AhPveiGfbO55Gs9YDx3uZn8OIDl8LgHaHNJvYUc5u2Dqt6bQxBWUBFomqZKNwwxpmH
+         EHBYTR/srP6D/RUuiJwPnjUC4cb4k5L6GABT0nixBEykGIY9mRcnoSYvRtA4mVWCec
+         HxWAwW840kudBvdlHL1QgJNarb5RgI6X3+C7YhYQwbFk1mtXo410Pfi9bKYxNYKW5G
+         QnNx3hEBxD+bw==
+Date:   Fri, 11 Oct 2019 21:36:10 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc:     Greg KH <greg@kroah.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/3] arm64: configs: unset CPU_BIG_ENDIAN
-Message-ID: <20191011103342.GL25745@shell.armlinux.org.uk>
-References: <20190926193030.5843-1-anders.roxell@linaro.org>
- <20190926193030.5843-5-anders.roxell@linaro.org>
- <bf5db3a5-96da-752c-49ea-d0de899882d5@huawei.com>
- <CADYN=9LB9RHgRkQj=HcKDz1x9jqmT464Kseh2wZU5VvcLit+bQ@mail.gmail.com>
- <d978673e-cbd1-5ab5-b2a4-cdb407d0f98c@huawei.com>
- <CAK8P3a0kBz1-i-3miCo1vMuoM39ivXa3oxOE9VnCqDO-nfNOxw@mail.gmail.com>
- <20191011102747.lpbaur2e4nqyf7sw@willie-the-truck>
+        Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the staging.current
+ tree
+Message-ID: <20191011213610.5943cdea@canb.auug.org.au>
+In-Reply-To: <20191011082902.GA1074099@kroah.com>
+References: <20191011074242.3d78c336@canb.auug.org.au>
+        <53418B0A3A5CEF439F1108674285B0A903FE8CC8@lhreml523-mbs.china.huawei.com>
+        <20191011082902.GA1074099@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011102747.lpbaur2e4nqyf7sw@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/iOC_WsRrM=mA3RCCF2xloc=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:27:48AM +0100, Will Deacon wrote:
-> Does anybody use BIG_ENDIAN? If we're not even building it then maybe we
-> should get rid of it altogether on arm64. I don't know of any supported
-> userspace that supports it or any CPUs that are unable to run little-endian
-> binaries.
+--Sig_/iOC_WsRrM=mA3RCCF2xloc=
+Content-Type: multipart/mixed; boundary="MP_/Hz/8KkJCMNEkaM.JTGvZ4I7"
 
-32-bit ARM experience is that telco class users really like big
-endian.
+--MP_/Hz/8KkJCMNEkaM.JTGvZ4I7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Hi Jonathan,
+
+On Fri, 11 Oct 2019 10:29:02 +0200 Greg KH <greg@kroah.com> wrote:
+>
+> On Fri, Oct 11, 2019 at 08:10:23AM +0000, Jonathan Cameron wrote:
+> > Hi Stephen
+> >=20
+> > Sorry, I've clearly let another one of these through.
+> >=20
+> > Stupid question of the day.  Don't suppose you can share how you check =
+these? =20
+>=20
+> There's a script, that I posted to the workflows mailing list, that
+> should check these, based on Stephen's script.
+>=20
+> But it didn't seem to catch this problem, which is odd, I must have
+> messed something up...
+
+Attached is my script.  It takes a range of commits to check.  Usually
+after I fetch a tree I pass it "^origin/master <old head of tree>...<new he=
+ad of tree>".
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--MP_/Hz/8KkJCMNEkaM.JTGvZ4I7
+Content-Type: application/x-shellscript
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment; filename=check_fixes
+
+#!/bin/bash
+
+if [ "$#" -lt 1 ]; then
+        printf 'Usage: %s <commit range>\n', "$0" 1>&2
+        exit 1
+fi
+
+commits=3D$(git rev-list --no-merges -i --grep=3D'^[[:space:]]*Fixes:' "$@")
+if [ -z "$commits" ]; then
+        exit 0
+fi
+
+# This should be a git tree that contains *only* Linus' tree
+Linus_tree=3D"${HOME}/kernels/linus.git"
+
+split_re=3D'^([Cc][Oo][Mm][Mm][Ii][Tt])?[[:space:]]*([[:xdigit:]]{5,})([[:s=
+pace:]]*)(.*)$'
+nl=3D$'\n'
+tab=3D$'\t'
+
+# Strip the leading and training spaces from a string
+strip_spaces()
+{
+	[[ "$1" =3D~ ^[[:space:]]*(.*[^[:space:]])[[:space:]]*$ ]]
+	echo "${BASH_REMATCH[1]}"
+}
+
+for c in $commits; do
+
+	commit_log=3D$(git log -1 --format=3D'%h ("%s")' "$c")
+	commit_msg=3D"In commit
+
+  $commit_log
+
+"
+
+	fixes_lines=3D$(git log -1 --format=3D'%B' "$c" |
+			grep -i '^[[:space:]]*Fixes:')
+
+	while read -r fline; do
+		[[ "$fline" =3D~ ^[[:space:]]*[Ff][Ii][Xx][Ee][Ss]:[[:space:]]*(.*)$ ]]
+		f=3D"${BASH_REMATCH[1]}"
+		fixes_msg=3D"Fixes tag
+
+  $fline
+
+has these problem(s):
+
+"
+		sha=3D
+		subject=3D
+		msg=3D
+		if [[ "$f" =3D~ $split_re ]]; then
+			first=3D"${BASH_REMATCH[1]}"
+			sha=3D"${BASH_REMATCH[2]}"
+			spaces=3D"${BASH_REMATCH[3]}"
+			subject=3D"${BASH_REMATCH[4]}"
+			if [ "$first" ]; then
+				msg=3D"${msg:+${msg}${nl}}  - leading word '$first' unexpected"
+			fi
+			if [ -z "$subject" ]; then
+				msg=3D"${msg:+${msg}${nl}}  - missing subject"
+			elif [ -z "$spaces" ]; then
+				msg=3D"${msg:+${msg}${nl}}  - missing space between the SHA1 and the su=
+bject"
+			fi
+		else
+			printf '%s%s  - %s\n' "$commit_msg" "$fixes_msg" 'No SHA1 recognised'
+			commit_msg=3D''
+			continue
+		fi
+		if ! git rev-parse -q --verify "$sha" >/dev/null; then
+			printf '%s%s  - %s\n' "$commit_msg" "$fixes_msg" 'Target SHA1 does not e=
+xist'
+			commit_msg=3D''
+			continue
+		fi
+
+		if [ "${#sha}" -lt 12 ]; then
+			msg=3D"${msg:+${msg}${nl}}  - SHA1 should be at least 12 digits long${nl=
+}    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11$=
+{nl}    or later) just making sure it is not set (or set to \"auto\")."
+		fi
+		# reduce the subject to the part between () if there
+		if [[ "$subject" =3D~ ^\((.*)\) ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+		elif [[ "$subject" =3D~ ^\((.*) ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+			msg=3D"${msg:+${msg}${nl}}  - Subject has leading but no trailing parent=
+heses"
+		fi
+
+		# strip matching quotes at the start and end of the subject
+		# the unicode characters in the classes are
+		# U+201C LEFT DOUBLE QUOTATION MARK
+		# U+201D RIGHT DOUBLE QUOTATION MARK
+		# U+2018 LEFT SINGLE QUOTATION MARK
+		# U+2019 RIGHT SINGLE QUOTATION MARK
+		re1=3D$'^[\"\u201C](.*)[\"\u201D]$'
+		re2=3D$'^[\'\u2018](.*)[\'\u2019]$'
+		re3=3D$'^[\"\'\u201C\u2018](.*)$'
+		if [[ "$subject" =3D~ $re1 ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+		elif [[ "$subject" =3D~ $re2 ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+		elif [[ "$subject" =3D~ $re3 ]]; then
+			subject=3D"${BASH_REMATCH[1]}"
+			msg=3D"${msg:+${msg}${nl}}  - Subject has leading but no trailing quotes"
+		fi
+
+		subject=3D$(strip_spaces "$subject")
+
+		target_subject=3D$(git log -1 --format=3D'%s' "$sha")
+		target_subject=3D$(strip_spaces "$target_subject")
+
+		# match with ellipses
+		case "$subject" in
+		*...)	subject=3D"${subject%...}"
+			target_subject=3D"${target_subject:0:${#subject}}"
+			;;
+		...*)	subject=3D"${subject#...}"
+			target_subject=3D"${target_subject: -${#subject}}"
+			;;
+		*\ ...\ *)
+			s1=3D"${subject% ... *}"
+			s2=3D"${subject#* ... }"
+			subject=3D"$s1 $s2"
+			t1=3D"${target_subject:0:${#s1}}"
+			t2=3D"${target_subject: -${#s2}}"
+			target_subject=3D"$t1 $t2"
+			;;
+		esac
+		subject=3D$(strip_spaces "$subject")
+		target_subject=3D$(strip_spaces "$target_subject")
+
+		if [ "$subject" !=3D "${target_subject:0:${#subject}}" ]; then
+			msg=3D"${msg:+${msg}${nl}}  - Subject does not match target commit subje=
+ct${nl}    Just use${nl}${tab}git log -1 --format=3D'Fixes: %h (\"%s\")'"
+		fi
+		lsha=3D$(cd "$Linus_tree" && git rev-parse -q --verify "$sha")
+		if [ -z "$lsha" ]; then
+			count=3D$(git rev-list --count "$sha".."$c")
+			if [ "$count" -eq 0 ]; then
+				msg=3D"${msg:+${msg}${nl}}  - Target is not an ancestor of this commit"
+			fi
+		fi
+		if [ "$msg" ]; then
+			printf '%s%s%s\n' "$commit_msg" "$fixes_msg" "$msg"
+			commit_msg=3D''
+		fi
+	done <<< "$fixes_lines"
+done
+
+exit 0
+
+--MP_/Hz/8KkJCMNEkaM.JTGvZ4I7--
+
+--Sig_/iOC_WsRrM=mA3RCCF2xloc=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2gWxoACgkQAVBC80lX
+0GwQEgf+P4EM9MGOL4SvF4ALESz4GHDw9MPBeOG7QfjZC0MYn8NgtkXmc2PSyU4E
+DnF5f3+fun5zg1p/VyssZL0T9QCSoV6cvkN6xX7vvKGlk0nKj2awYFsW3TQUPV/I
+2Ap9704rW6lI65UtejMCwC8XDa6hjvOxJza+/med+e3hyNo9Mt8IdUY+ymJ7PHyn
+LAax4SAnC+z35BAfj6avHtGimdOwAsgRFkqB1AiSQlkB2SM4N4m4J9niWypUVOjm
+MM+VxCIc2ZF3h7MWKw4jLVKhFQw7QS019IlC6fl+NoD1u1Q90hCWf++AJcSw6MJw
+hCAEqBYwpvP9qBfMim76TUQ4QyoO3Q==
+=9H2Z
+-----END PGP SIGNATURE-----
+
+--Sig_/iOC_WsRrM=mA3RCCF2xloc=--
