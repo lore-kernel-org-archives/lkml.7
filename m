@@ -2,69 +2,87 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBC9C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7048C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C69206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BBF20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfJKDLd (ORCPT
+        id S1726877AbfJKDXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 23:11:33 -0400
-Received: from gate.crashing.org ([63.228.1.57]:55148 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfJKDLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 23:11:32 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9B3AiNi016659;
-        Thu, 10 Oct 2019 22:10:45 -0500
-Message-ID: <158fa0872643089750b3797fd2f78ba18eaf488c.camel@kernel.crashing.org>
-Subject: Re: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Vijay Khemka <vijaykhemka@fb.com>, Joel Stanley <joel@jms.id.au>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        YueHaibing <yuehaibing@huawei.com>, Andrew Lunn <andrew@lunn.ch>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Date:   Fri, 11 Oct 2019 14:10:44 +1100
-In-Reply-To: <AF7B985F-6E42-4CD4-B3D0-4B9EA42253C9@fb.com>
-References: <20190910213734.3112330-1-vijaykhemka@fb.com>
-         <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
-         <CACPK8XcS4iKfKigPbPg0BFbmjbT-kdyjiPDXjk1k5XaS5bCdAA@mail.gmail.com>
-         <95e215664612c0487808c02232852ef2188c95a5.camel@kernel.crashing.org>
-         <AF7B985F-6E42-4CD4-B3D0-4B9EA42253C9@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Thu, 10 Oct 2019 23:23:51 -0400
+Received: from smtprelay0153.hostedemail.com ([216.40.44.153]:60053 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726423AbfJKDXv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 23:23:51 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 6C2C6181D33FC;
+        Fri, 11 Oct 2019 03:23:49 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fire16_2146810e4a71c
+X-Filterd-Recvd-Size: 1756
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 11 Oct 2019 03:23:48 +0000 (UTC)
+Message-ID: <8720b5d432ca5ba5e128c241efee22674e012af8.camel@perches.com>
+Subject: Re: checkpatch: comparisons with a constant on the left
+From:   Joe Perches <joe@perches.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 10 Oct 2019 20:23:47 -0700
+In-Reply-To: <20191011015225.GA27495@jagdpanzerIV>
+References: <20191011015225.GA27495@jagdpanzerIV>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-10 at 19:15 +0000, Vijay Khemka wrote:
->     Any news on this ? AST2400 has no HW checksum logic in HW, AST2500
->     should work for IPV4 fine, we should only selectively disable it for
->     IPV6.
+On Fri, 2019-10-11 at 10:52 +0900, Sergey Senozhatsky wrote:
+> Hi Joe,
+
+Hi Sergey.
+
+> I noticed that this code
 > 
-> Ben, I have already sent v2 for this with requested change which only disable 
-> for IPV6 in AST2500. I can send it again.
+> 	#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 18, 0)
+> 
+> triggers checkpatch's warning:
+> 
+> 	"WARNING: Comparisons should place the constant on
+> 		  the right side of the test"
+> 
+> Both LINUX_VERSION_CODE and KERNEL_VERSION are constants, so
+> I'm wondering if it's worth it to improve that check a tiny
+> bit.
 
-I didn't see it, did you CC me ? I maintain that driver...
+Probably not.
 
-Cheers,
-Ben.
+My preference is for people to ignore checkpatch
+message bleats when they don't make overall sense.
 
+checkpatch thinks anything that uses a form like
+"name(<args...>)" is a function.
+
+> I'm sure you'll have a better idea.
+
+I suggest reversing the test if it really bothers you.
+
+# if KERNEL_VERSION(4.18.0) < LINUX_VERSION_CODE
+
+but then again just using LINUX_VERSION_CODE emits a
+warning message, so it's better to remove whatever is
+in the block anyway... <smile>
+
+cheers, Joe
 
