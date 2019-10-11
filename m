@@ -2,117 +2,262 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5156ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE7BECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF437206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2034214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570806151;
-	bh=BdMo57XMf+QsQfyGYbuX0aQcMbk/Nkmyg+UCgLM1BDs=;
+	s=default; t=1570806227;
+	bh=wmzKXszFXADx7E79A+Klk2pmPS9g69LOqyaLIPSL4Uo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FnW5sIc9E8Sjs9xWaEKOAUq4zC0JBWNKb1xHDN1SBVi9m6RAQCYd4j+tAEJWOriFd
-	 BWpZek8pWpvBBam8yVUheV5A26oOJ4iDIWaHCahfNsAGS3PErjnWu8tzze+wQVfMNn
-	 FHuNw96ldNAKo7/dgfQnP0QD1IdiZ6Swg6aPpRNI=
+	b=XFljkaFsSL8EiEGZsv8vBkF2OVIhACN+iCYxDgNqT4mFK6J7yuoP3lX3rjSWo3qXJ
+	 zBrbV/HXTJMmBH9oKouCrivrvqw5cpizGNIySAH8RNjibVIE5e9Ru1HLCpbGCXCTmU
+	 +6N81Vzi49WcTDGuKnsUm83kkRnD2TjolLNwqr8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfJKPCa (ORCPT
+        id S1727872AbfJKPDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:02:30 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33958 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfJKPCa (ORCPT
+        Fri, 11 Oct 2019 11:03:46 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44623 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfJKPDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:02:30 -0400
-Received: by mail-pl1-f193.google.com with SMTP id k7so4606668pll.1;
-        Fri, 11 Oct 2019 08:02:29 -0700 (PDT)
+        Fri, 11 Oct 2019 11:03:46 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w6so8211697oie.11;
+        Fri, 11 Oct 2019 08:03:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BMw6A0ySkqQiHBiai+B0CQpXt1FaZKXX8wNTsnQc/K0=;
-        b=Kr4TcxoIMagG1aOtgJcN6J3+geo1bECM8/MhHlwlaxS97GuwZtjyR1gZF4cr4qk1By
-         HWm6ooEfzS1P+ngkp6l6KfFo52LcCUpjTYy/3uZX0Cev0I8Q2k09+2d7Epd8jD9IQqdE
-         SY/zsTE5HIR/Z57TJQDHtuCP70Elgj06RIhL8ad7AnzQtbxVgbituIhr7KArl3SCNJue
-         +JdK5QVb8/KqxFMinjdJoiFY/oX0YmmiTjpbSWeGR99VPwYEJWl9Ks021YqafAzchnmT
-         Ra3uwV22zBFnccUgEG6yGvCIVDnzDdytGmXIuDOcpe1UwOBqekb3bUX+JHNrIz/WpQi4
-         Q2Ag==
-X-Gm-Message-State: APjAAAUQUbsveecKypjETih7UsEvQcVJw68mqoP4uRPvCvIqZJcE9YRP
-        /TjT77zG4tNcVXq8i5L1kYc=
-X-Google-Smtp-Source: APXvYqwiHpLlmejt3NOWkh5ZzK0HvNb2LO/lm/1gCZziXECNv4ZVkshN0LjJ36LM8n4uhzFARU3Xug==
-X-Received: by 2002:a17:902:d909:: with SMTP id c9mr15684424plz.216.1570806149053;
-        Fri, 11 Oct 2019 08:02:29 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id l1sm15633824pja.30.2019.10.11.08.02.27
+        bh=zf/wVL1pxkzfv+aCf542wtXl7xxXSJSAoS259hxFzdU=;
+        b=ZT5G1Ep9m9sdmxD9aRrI7JBV+1iAH1nziaVnT5UuhjykMWAH0y43egukN3LdF+HdLF
+         hgg9kq6479FfkTH2hVxTQ5TMvdgUw0FQ8SnAPr8n8E9GSe0x6dw8mqvoUqX0m4G91oGj
+         6aZ69DB5gBW9HrrQQujqCjFx//kQOgHlIcEjtf5mSm1xRGmUqn8PGr8qXqIpAxxQrHz5
+         2JdSSjr7vEuXJ84R8UtRSHmDkU9XvIG7G087MV+HPwzJcVy+YFZuD9B6t+lv0/EAeW/X
+         4MfZmXmLSLQwoteKTwnCZHibAkVIOqVxSnBoh0GHS1CnbYsAqW7gIaiiC4In1pImA+0y
+         acwA==
+X-Gm-Message-State: APjAAAXU5Jerg4nkTnRn4lU7BKjsh5kzsq5okUOAKcLbtTQo+r5mPaoH
+        Q0Wts09wFLHAdcackwUKxQ==
+X-Google-Smtp-Source: APXvYqyV76Nvy442IRIoZov+TB1OwfgmfaBvOSHiGvU7dcH19CN5WjOOfWxDjsuT1iB1kLR3NqyaCA==
+X-Received: by 2002:aca:5786:: with SMTP id l128mr12933151oib.34.1570806222672;
+        Fri, 11 Oct 2019 08:03:42 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l47sm2791691ota.56.2019.10.11.08.03.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 08:02:28 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 4BE50403EA; Fri, 11 Oct 2019 15:02:27 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 15:02:27 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v7 3/8] firmware: Rename FW_OPT_NOFALLBACK to
- FW_OPT_NOFALLBACK_SYSFS
-Message-ID: <20191011150227.GO16384@42.do-not-panic.com>
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-4-hdegoede@redhat.com>
+        Fri, 11 Oct 2019 08:03:39 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 10:03:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: power: Convert Generic Power Domain
+ bindings to json-schema
+Message-ID: <20191011150339.GA16245@bogus>
+References: <20191002160632.11140-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004145056.43267-4-hdegoede@redhat.com>
+In-Reply-To: <20191002160632.11140-1-krzk@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 04:50:51PM +0200, Hans de Goede wrote:
-> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-> index 62ee90b4db56..665b350419cb 100644
-> --- a/drivers/base/firmware_loader/fallback.c
-> +++ b/drivers/base/firmware_loader/fallback.c
-> @@ -606,7 +606,7 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
->  		return false;
->  	}
->  
-> -	if ((opt_flags & FW_OPT_NOFALLBACK))
-> +	if ((opt_flags & FW_OPT_NOFALLBACK_SYSFS))
->  		return false;
->  
->  	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
-> @@ -630,10 +630,11 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
->   * interface. Userspace is in charge of loading the firmware through the sysfs
->   * loading interface. This sysfs fallback mechanism may be disabled completely
->   * on a system by setting the proc sysctl value ignore_sysfs_fallback to true.
-> - * If this false we check if the internal API caller set the @FW_OPT_NOFALLBACK
-> - * flag, if so it would also disable the fallback mechanism. A system may want
-> - * to enfoce the sysfs fallback mechanism at all times, it can do this by
-> - * setting ignore_sysfs_fallback to false and force_sysfs_fallback to true.
-> + * If this false we check if the internal API caller set the
-         ignore_sysfs_fallback set to true or force_sysfs_fallback is
-	 set to false
+On Wed, Oct 02, 2019 at 06:06:30PM +0200, Krzysztof Kozlowski wrote:
+> Convert Generic Power Domain bindings to DT schema format using
+> json-schema.  The consumer bindings are split to separate file.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v1:
+> 1. Select all nodes for consumers,
+> 2. Remove from consumers duplicated properties with dt-schema,
+> 3. Fix power domain pattern,
+> 4. Remove unneeded types.
+> ---
+>  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
+>  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
+>  .../bindings/arm/freescale/fsl,scu.txt        |   2 +-
+>  .../bindings/clock/clk-exynos-audss.txt       |   2 +-
+>  .../bindings/clock/exynos5433-clock.txt       |   4 +-
+>  .../bindings/clock/renesas,cpg-mssr.txt       |   2 +-
+>  .../clock/renesas,r8a7778-cpg-clocks.txt      |   2 +-
+>  .../clock/renesas,r8a7779-cpg-clocks.txt      |   2 +-
+>  .../clock/renesas,rcar-gen2-cpg-clocks.txt    |   2 +-
+>  .../bindings/clock/renesas,rz-cpg-clocks.txt  |   2 +-
+>  .../bindings/clock/ti/davinci/psc.txt         |   2 +-
+>  .../bindings/display/etnaviv/etnaviv-drm.txt  |   2 +-
+>  .../devicetree/bindings/display/msm/dpu.txt   |   2 +-
+>  .../devicetree/bindings/display/msm/mdp5.txt  |   2 +-
+>  .../devicetree/bindings/dsp/fsl,dsp.yaml      |   2 +-
+>  .../firmware/nvidia,tegra186-bpmp.txt         |   2 +-
+>  .../bindings/media/imx7-mipi-csi2.txt         |   3 +-
+>  .../bindings/media/mediatek-jpeg-decoder.txt  |   3 +-
+>  .../bindings/media/mediatek-mdp.txt           |   3 +-
+>  .../bindings/opp/qcom-nvmem-cpufreq.txt       |   2 +-
+>  .../devicetree/bindings/pci/pci-keystone.txt  |   2 +-
+>  .../bindings/phy/ti,phy-am654-serdes.txt      |   2 +-
+>  .../bindings/power/amlogic,meson-gx-pwrc.txt  |   2 +-
+>  .../devicetree/bindings/power/fsl,imx-gpc.txt |   2 +-
+>  .../bindings/power/fsl,imx-gpcv2.txt          |   2 +-
+>  .../power/power-domain-consumers.yaml         | 105 +++++++++
+>  .../bindings/power/power-domain.yaml          | 134 ++++++++++++
+>  .../bindings/power/power_domain.txt           | 205 ------------------
+>  .../devicetree/bindings/power/qcom,rpmpd.txt  |   2 +-
+>  .../bindings/power/renesas,rcar-sysc.txt      |   2 +-
+>  .../bindings/power/renesas,sysc-rmobile.txt   |   2 +-
+>  .../bindings/power/xlnx,zynqmp-genpd.txt      |   2 +-
+>  .../bindings/soc/bcm/brcm,bcm2835-pm.txt      |   2 +-
+>  .../bindings/soc/mediatek/scpsys.txt          |   2 +-
+>  .../bindings/soc/ti/sci-pm-domain.txt         |   2 +-
+>  .../bindings/usb/nvidia,tegra124-xusb.txt     |   4 +-
+>  MAINTAINERS                                   |   2 +-
+>  37 files changed, 278 insertions(+), 241 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/power-domain-consumers.yaml
+>  create mode 100644 Documentation/devicetree/bindings/power/power-domain.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/power/power_domain.txt
 
-Otherwise looks good. You can add:
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+> diff --git a/Documentation/devicetree/bindings/power/power-domain-consumers.yaml b/Documentation/devicetree/bindings/power/power-domain-consumers.yaml
+> new file mode 100644
+> index 000000000000..f65078e1260e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/power-domain-consumers.yaml
+> @@ -0,0 +1,105 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/power-domain-consumers.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PM domain consumers
+> +
+> +maintainers:
+> +  - Rafael J. Wysocki <rjw@rjwysocki.net>
+> +  - Kevin Hilman <khilman@kernel.org>
+> +  - Ulf Hansson <ulf.hansson@linaro.org>
+> +
+> +description: |+
+> +  See power-domain.yaml
+> +
+> +select: true
+> +
+> +allOf:
+> +  - $ref: /schemas/power-domain/power-domain-consumer.yaml
 
-  Luis
+I don't like this split. We should move the contents of this file to the 
+above file.
+
+I checked the authorship of the relevant lines and they are all except 
+for a small number of lines from Linaro authors (Viresh and Ulf). I have 
+permission from Linaro to dual license Linaro authored bindings, so it's 
+not a problem to move this. I can do that and you can just drop this file.
+
+> +
+> +properties:
+> +  required-opps:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      This contains phandle to an OPP node in another device's OPP table.
+> +      It may contain an array of phandles, where each phandle points to an OPP
+> +      of a different device. It should not contain multiple phandles to the OPP
+> +      nodes in the same OPP table. This specifies the minimum required OPP
+> +      of the device(s), whose OPP's phandle is present in this property,
+> +      for the functioning of the current device at the current OPP (where this
+> +      property is present).
+> +
+> +examples:
+> +  - |
+> +    leaky-device@12350000 {
+> +      compatible = "foo,i-leak-current";
+> +      reg = <0x12350000 0x1000>;
+> +      power-domains = <&power 0>;
+> +      power-domain-names = "io";
+> +    };
+> +
+> +    leaky-device@12351000 {
+> +      compatible = "foo,i-leak-current";
+> +      reg = <0x12351000 0x1000>;
+> +      power-domains = <&power 0>, <&power 1> ;
+> +      power-domain-names = "io", "clk";
+> +    };
+> +
+> +    // The first example above defines a typical PM domain consumer device, which is
+> +    // located inside a PM domain with index 0 of a power controller represented by a
+> +    // node with the label "power".
+> +    // In the second example the consumer device are partitioned across two PM domains,
+> +    // the first with index 0 and the second with index 1, of a power controller that
+> +    // is represented by a node with the label "power".
+> +
+> +  - |
+> +    // Example with  OPP table for domain provider that provides two domains:
+> +
+> +    domain0_opp_table: opp-table0 {
+> +      compatible = "operating-points-v2";
+> +
+> +      domain0_opp_0: opp-1000000000 {
+> +        opp-hz = /bits/ 64 <1000000000>;
+> +        opp-microvolt = <975000 970000 985000>;
+> +      };
+> +      domain0_opp_1: opp-1100000000 {
+> +        opp-hz = /bits/ 64 <1100000000>;
+> +        opp-microvolt = <1000000 980000 1010000>;
+> +      };
+> +    };
+> +
+> +    domain1_opp_table: opp-table1 {
+> +      compatible = "operating-points-v2";
+> +
+> +      domain1_opp_0: opp-1200000000 {
+> +        opp-hz = /bits/ 64 <1200000000>;
+> +        opp-microvolt = <975000 970000 985000>;
+> +      };
+> +      domain1_opp_1: opp-1300000000 {
+> +        opp-hz = /bits/ 64 <1300000000>;
+> +        opp-microvolt = <1000000 980000 1010000>;
+> +      };
+> +    };
+> +
+> +    power: power-controller@12340000 {
+> +      compatible = "foo,power-controller";
+> +      reg = <0x12340000 0x1000>;
+> +      #power-domain-cells = <1>;
+> +      operating-points-v2 = <&domain0_opp_table>, <&domain1_opp_table>;
+> +    };
+> +
+> +    leaky-device0@12350000 {
+> +      compatible = "foo,i-leak-current";
+> +      reg = <0x12350000 0x1000>;
+> +      power-domains = <&power 0>;
+> +      required-opps = <&domain0_opp_0>;
+> +    };
+> +
+> +    leaky-device1@12350000 {
+> +      compatible = "foo,i-leak-current";
+> +      reg = <0x12350000 0x1000>;
+> +      power-domains = <&power 1>;
+> +      required-opps = <&domain1_opp_1>;
+> +    };
