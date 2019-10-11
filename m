@@ -2,71 +2,90 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12F6ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0DCC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8169E2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF01F21D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570811904;
+	bh=UIrbTvOv9QKqF83S/AKjXmvyctYGwMKLVkq82CPwi70=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G1NCKQtbn/UZ8r46iC/0ylIIefx3rGggJb0veUkInkcoYkUNrvu+d4IxqLoZJim0l
+	 +I1f6WvhNMEYoW3JiCxWV0cGsqOE+nkrCoLNOJMmBvgLmUwNJOaHjMWa7TGHwKpOGC
+	 fZJPkaZixuJjpg2W94YwOmZWmhAdKf1WcfbaKFk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbfJKQiF (ORCPT
+        id S1728459AbfJKQiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 12:38:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34892 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726331AbfJKQiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 12:38:05 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0808EAF98D74329A173A;
-        Sat, 12 Oct 2019 00:38:03 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 12 Oct 2019 00:37:56 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <Jerome.Pouiller@silabs.com>, <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <zhongjiang@huawei.com>
-Subject: [PATCH RESEND v2] staging: wfx: fix an undefined reference error when CONFIG_MMC=m
-Date:   Sat, 12 Oct 2019 00:34:07 +0800
-Message-ID: <1570811647-64905-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Fri, 11 Oct 2019 12:38:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726728AbfJKQiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 12:38:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 630182089F;
+        Fri, 11 Oct 2019 16:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570811901;
+        bh=UIrbTvOv9QKqF83S/AKjXmvyctYGwMKLVkq82CPwi70=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dmjMtTFOJvWQ6edtMZcA75r3UwgB6An3fwXeO5WVg5bAjWA+vxuvA2jLyUenphRZi
+         TdfHqtMIUido8alCVmhsFAyJ+hfhOOxOJfDCOwcF/knhNSUKKpPy28rLYF7x8UUl10
+         i7ndEnHFQ00z5rHi7sRdmONTMFWujnvnUf16EOlg=
+Date:   Fri, 11 Oct 2019 18:38:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
+ support
+Message-ID: <20191011163819.GA1295750@kroah.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191011141036.GK16384@42.do-not-panic.com>
+ <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
+ <20191011153823.GS16384@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011153823.GS16384@42.do-not-panic.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I hit the following error when compile the kernel.
+On Fri, Oct 11, 2019 at 03:38:23PM +0000, Luis Chamberlain wrote:
+> On Fri, Oct 11, 2019 at 04:31:26PM +0200, Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 10/11/19 4:10 PM, Luis Chamberlain wrote:
+> > > Hey Hans, thanks for staying on top of this and follow up! For some
+> > > reason the universe conspired against your first and last patch ([1/8],
+> > > [8/8]), and I never got them. Could you bounce these or resend in case
+> > > others confirm they also didn't get it?
+> > 
+> > I have received feedback from others on the first patch, so at least
+> > that one has reached others. I've bounced patches 1 and 8 to you.
+> 
+> Thanks, can you also bounce the feedback received?
 
-drivers/staging/wfx/main.o: In function `wfx_core_init':
-/home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:488: undefined reference to `sdio_register_driver'
-drivers/staging/wfx/main.o: In function `wfx_core_exit':
-/home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:496: undefined reference to `sdio_unregister_driver'
-drivers/staging/wfx/main.o:(.debug_addr+0x1a8): undefined reference to `sdio_register_driver'
-drivers/staging/wfx/main.o:(.debug_addr+0x6f0): undefined reference to `sdio_unregister_driver'
-
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- drivers/staging/wfx/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/wfx/Makefile b/drivers/staging/wfx/Makefile
-index 0d9c1ed..77d68b7 100644
---- a/drivers/staging/wfx/Makefile
-+++ b/drivers/staging/wfx/Makefile
-@@ -19,6 +19,6 @@ wfx-y := \
- 	sta.o \
- 	debug.o
- wfx-$(CONFIG_SPI) += bus_spi.o
--wfx-$(subst m,y,$(CONFIG_MMC)) += bus_sdio.o
-+wfx-$(CONFIG_MMC) += bus_sdio.o
- 
- obj-$(CONFIG_WFX) += wfx.o
--- 
-1.7.12.4
-
+That is what lore.kernel.org is for...
