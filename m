@@ -2,75 +2,104 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6283FC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D96C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 443D52089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E55F2089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:16:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="DwJ0PqYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfJKJQp (ORCPT
+        id S1727521AbfJKJQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:16:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:54162 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbfJKJQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:16:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2597A337;
-        Fri, 11 Oct 2019 02:16:44 -0700 (PDT)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6239F3F703;
-        Fri, 11 Oct 2019 02:16:42 -0700 (PDT)
-Subject: Re: [PATCH 0/2] iommu/arm-smmu: Add an optional "input-address-size"
- property
-To:     Nicolin Chen <nicoleotsuka@gmail.com>, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, will@kernel.org
-Cc:     vdumpa@nvidia.com, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191011034609.13319-1-nicoleotsuka@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e99e07c2-88c6-e4d8-af80-c46d36bc6cd0@arm.com>
-Date:   Fri, 11 Oct 2019 10:16:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 11 Oct 2019 05:16:58 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38756 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbfJKJQ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 05:16:57 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 3so9461254wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 02:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YIAO0bdZaQFb74O/6xtQbACiIf7IB3jqcbsiEt3Cf8I=;
+        b=DwJ0PqYL0C5d5E4BAAPjFxM5w7QqDbFaVB3IBgocI76BWEcDB6rlaz3TZWztUpwRVA
+         t191aTFNWMIW17eUDW7MUuBInq7Q/WgZc2gvF4i8vk+/aSG9W27vm2BqbMAWDrsAwznt
+         GRaYBzVlp1hRFlcdAVf+4zOcu7z2l8Zh2jowvljzZdwFOaKiJzqhXfBwfOUoySfy+2Ur
+         n9PCZt1Q1FvN7pbGGGJ+ap8qhMPs666Cc/c/RnKdzIs+jPHGse86vB8we4YNhS1aMrXw
+         M9bex96lvJdSGDNVUmhh/tlUWJKtBHqT8eQHyPP36pzrmOo+5fs3yKeN7gj3pG6ApuE4
+         U1DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YIAO0bdZaQFb74O/6xtQbACiIf7IB3jqcbsiEt3Cf8I=;
+        b=iOGTj9MtJfZfbsgp92dLfsbBTdQAzRlhVchoRbIpOaG9Jih7PHJtQO3zmjIrLL8Tza
+         rRbbU70xAhqG/BSX4Ywj0cb0DJHd/xIalphHqFUXoGQGzOc6dCoQnVTlzk3YI93p5TK8
+         vwS0EkSTV/Zn0vIqQXuedI5quwtesWjLwEAGzS6LZ913jhtqMBcFuhlr5TYLtqGgmat/
+         PDS2BS8D3Ek8/iHjP4/15NlBax9Ddwsy+BMgOWIjwWGX5f0lMIC21hbEqcN3AaSBm2Us
+         WL3F6ktrmjoB7WVQyFx/3rgPbUcsiANlOb2KTPcT8y1e0+QIoJubTKsACHYl4Ebbhd1i
+         RqOA==
+X-Gm-Message-State: APjAAAWHeyWox97IeXAbPYgjll4/hgy2eK2XG8YGlFcow3bWB+iVkyTX
+        brIu1A5GbwLINB7eRehFCemAqQ==
+X-Google-Smtp-Source: APXvYqzDedr9xgqiM5TMIJH5fp4aE3lgiLkYnrKH7amHl6sEZUWjsEKx3YbzgtO0k1ANP4F0NbWhEw==
+X-Received: by 2002:a7b:caea:: with SMTP id t10mr2302487wml.118.1570785413878;
+        Fri, 11 Oct 2019 02:16:53 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id f13sm8233327wmj.17.2019.10.11.02.16.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 02:16:53 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 11:16:52 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3] genetlink: do not parse attributes for
+ families with zero maxattr
+Message-ID: <20191011091652.GH2901@nanopsycho>
+References: <20191011084544.91E73E378C@unicorn.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20191011034609.13319-1-nicoleotsuka@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011084544.91E73E378C@unicorn.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-11 4:46 am, Nicolin Chen wrote:
-> This series of patches add an optional DT property to allow an SoC to
-> specify how many bits being physically connected to its SMMU instance,
-> depending on the SoC design.
+Fri, Oct 11, 2019 at 09:40:09AM CEST, mkubecek@suse.cz wrote:
+>Commit c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing
+>to a separate function") moved attribute buffer allocation and attribute
+>parsing from genl_family_rcv_msg_doit() into a separate function
+>genl_family_rcv_msg_attrs_parse() which, unlike the previous code, calls
+>__nlmsg_parse() even if family->maxattr is 0 (i.e. the family does its own
+>parsing). The parser error is ignored and does not propagate out of
+>genl_family_rcv_msg_attrs_parse() but an error message ("Unknown attribute
+>type") is set in extack and if further processing generates no error or
+>warning, it stays there and is interpreted as a warning by userspace.
+>
+>Dumpit requests are not affected as genl_family_rcv_msg_dumpit() bypasses
+>the call of genl_family_rcv_msg_attrs_parse() if family->maxattr is zero.
+>Move this logic inside genl_family_rcv_msg_attrs_parse() so that we don't
+>have to handle it in each caller.
+>
+>v3: put the check inside genl_family_rcv_msg_attrs_parse()
+>v2: adjust also argument of genl_family_rcv_msg_attrs_free()
+>
+>Fixes: c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing to a separate function")
+>Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
-This has come up before, and it doesn't work in general because a single 
-SMMU instance can have many master interfaces, with potentially 
-different sizes of address bus wired up to each. It's also a 
-conceptually-wrong approach anyway, since this isn't a property of the 
-SMMU; it's a property of the interconnect(s) upstream of the SMMU.
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 
-IIRC you were working on Tegra - if so, Thierry already has a plan, see 
-this thread: 
-https://lore.kernel.org/linux-arm-kernel/20190930133510.GA1904140@ulmo/
-
-Robin.
-
-> 
-> Nicolin Chen (2):
->    dt-bindings: arm-smmu: Add an optional "input-address-size" property
->    iommu/arm-smmu: Read optional "input-address-size" property
-> 
->   Documentation/devicetree/bindings/iommu/arm,smmu.txt |  7 +++++++
->   drivers/iommu/arm-smmu.c                             | 10 ++++++++--
->   2 files changed, 15 insertions(+), 2 deletions(-)
-> 
+Thanks!
