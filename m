@@ -2,70 +2,99 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1242ECE596
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED074ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0A72190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68EA21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:25:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vspBJqWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfJKMZt (ORCPT
+        id S1728113AbfJKMZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:25:49 -0400
-Received: from mga11.intel.com ([192.55.52.93]:15558 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbfJKMZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:25:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 05:25:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,284,1566889200"; 
-   d="scan'208";a="184748548"
-Received: from mkaltenb-mobl.ger.corp.intel.com (HELO localhost) ([10.251.83.92])
-  by orsmga007.jf.intel.com with ESMTP; 11 Oct 2019 05:25:40 -0700
-Date:   Fri, 11 Oct 2019 15:25:33 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     dhowells@redhat.com, peterhuewe@gmx.de, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-security-module@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net, jgg@ziepe.ca, arnd@arndb.de,
-        gregkh@linuxfoundation.org, jejb@linux.ibm.com,
-        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
-        jsnitsel@redhat.com, linux-kernel@vger.kernel.org,
-        daniel.thompson@linaro.org
-Subject: Re: [Patch v7 4/4] KEYS: trusted: Move TPM2 trusted keys code
-Message-ID: <20191011122533.GC3129@linux.intel.com>
-References: <1570425935-7435-1-git-send-email-sumit.garg@linaro.org>
- <1570425935-7435-5-git-send-email-sumit.garg@linaro.org>
+        Fri, 11 Oct 2019 08:25:51 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59818 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbfJKMZu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 08:25:50 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9BCPfVt067140;
+        Fri, 11 Oct 2019 07:25:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1570796741;
+        bh=HpS8+JtsrSkPNqh+2hbehEID2iehq7ANLODOvnBMIjE=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=vspBJqWTpDOHWWCpZNWi+3SdbINO7ZjNMWy6k3B8y0sWRNzOIVfaGIulpjKIiFs6V
+         XcXHysl2Nw6hQMBICMsenuzPoYBq5vgYHLq/VcyZQ+36ecnn/9uA1o7c0l3U/3iDAh
+         TREx/afjgZMguKsEndScG9B8x434xWuL4xZS+flI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9BCPfO5029425;
+        Fri, 11 Oct 2019 07:25:41 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 11
+ Oct 2019 07:25:41 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 11 Oct 2019 07:25:37 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x9BCPf2t030553;
+        Fri, 11 Oct 2019 07:25:41 -0500
+Date:   Fri, 11 Oct 2019 07:28:17 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: Re: linux-next: Fixes tag needs some work in the v4l-dvb tree
+Message-ID: <20191011122817.dlqlmayxlvghuphq@ti.com>
+References: <20191011074702.1ebb98a7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1570425935-7435-5-git-send-email-sumit.garg@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011074702.1ebb98a7@canb.auug.org.au>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 07, 2019 at 10:55:35AM +0530, Sumit Garg wrote:
-> Move TPM2 trusted keys code to trusted keys subsystem. The reason
-> being it's better to consolidate all the trusted keys code to a single
-> location so that it can be maintained sanely.
+Stephen Rothwell <sfr@canb.auug.org.au> wrote on Fri [2019-Oct-11 07:47:02 +1100]:
+> Hi all,
 > 
-> Also, utilize existing tpm_send() exported API which wraps the internal
-> tpm_transmit_cmd() API.
+> In commit
 > 
-> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+>   e20b248051ca ("media: ti-vpe: vpe: Make sure YUYV is set as default format")
+> 
+> Fixes tag
+> 
+>   Fixes: 40cc823f7005 ("media: ti-vpe: Add support for NV21 format")
+> 
+> has these problem(s):
+> 
+>   - Target SHA1 does not exist
+> 
+> Did you mean
+> 
+> Fixes: b2bb3d822f2c ("media: ti-vpe: Add support for NV21 format")
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Ah, yes.
+This was obviously missed through the rebase, sorry.
 
-/Jarkko
+Benoit
+
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+
+
