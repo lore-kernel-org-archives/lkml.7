@@ -2,276 +2,155 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361C2C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DEBC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31702190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570753896;
-	bh=SrXtq3TOWB75B21fuBsOi6Zw9WO+puD8V9RwMlP4TaU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=izk7ODlJwGDfHnTP13H5EYHwFb8r9SciAQAsMlNzyFd2J7ws46D9ltu3cu4n/rHAf
-	 2Y3Wjd0epqcZTzS7JatJG2DWzzRmxHxC1xtVFTj50ahDYgCspNOAU9qVNfx1EVMVMW
-	 eKUFv1Ie1xm3IwcflqFl+jJrfybRBtXP4AZ7dYgc=
+	by mail.kernel.org (Postfix) with ESMTP id 42B102190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:33:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="SpxtKcru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfJKAbe (ORCPT
+        id S1727577AbfJKAdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:31:34 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40507 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbfJKAbe (ORCPT
+        Thu, 10 Oct 2019 20:33:05 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39006 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfJKAdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:31:34 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 7so8029245ljw.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:31:32 -0700 (PDT)
+        Thu, 10 Oct 2019 20:33:04 -0400
+Received: by mail-qt1-f193.google.com with SMTP id n7so11430729qtb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:33:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6KQIXJS5Udq31xzSnClQQSZeps+FhrzYgeAcUAUA6PU=;
-        b=JeuC2gx/w7gTNLQ92rY9af/8CotmQsFCuqZDiZ9wsZ4VAsaw/TD2OdFD3Vu+FohN4r
-         oeAkelE3JN/HqpmVpTh6dM1qyfOglJI4J2qyus/w1lucezztBOV+uSy8DP0pLac60lWo
-         8Oe65x/igi99IVKwWzf0erDJ3oOV6YoqbRV0Y=
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=7/A8Xxx5/kwMMMCkC8UKPkaUdHo3nQv3ZdijCXAMEqs=;
+        b=SpxtKcrus8Kh6IrZX4AjyUhmRTkWpipAW9IrgqMoZ7Ci8WRgCe8vTmxqpk7Njdv1YC
+         WQutXDfCh8zexf3jblsyhAAEu00bWbb+P7Qzq7p2M7EbQieOMLpG6AYGSxiOZP9YN4BY
+         ddXZKtoWR9Rh4/QTRaSeAuUGzKR9EqmTAVsvRbufIfdtOvMAEOHXBb1X46TwnPA44zIu
+         r49+KLWW1LGBb9l4HulH/jZs1ZnjDgyzjIa8ciAHGyWhWTq9XAJqRLwk4Nj+6qXycqzC
+         vNNzMAHKrrw0xSuUgjt6xg358nf6cfFCW2hvJ3qctyM6UIW3zuEoodRD6lkoWJd9PfRa
+         /Ymw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6KQIXJS5Udq31xzSnClQQSZeps+FhrzYgeAcUAUA6PU=;
-        b=cyr8gKtQFx+OaksLlPgwj0Q5kxqtl4QFoezas7jD4QTGFzkBvC8pDQ8QJZvUXYosfk
-         FPSEcfgfZsU923vhP1Cn76PwEuOPgjall+2KGzcCwkJgHWevZkfTJaIYvKfyEiKkpqt+
-         aGHOcSDH0s3Rga6RO2XZBCZwX98GdOdcmI/GgUANa4hJOsXdxxAt+BLr+sg9Lh4klkqE
-         1HKgbsa088iIRPE3OQ0C7tsk0pbOxcGQGpFFpofzeF1rruhYF3Do1EzqIxitovr4jTlp
-         EM+Q/7F4cgjAwskZzVgzM+7sEmpDRrD9sg3WYgpgDyEB1upvlh37iggKfuord3wl92iL
-         nQ9g==
-X-Gm-Message-State: APjAAAUwTqx6bdkwicouJ6ea9msyRytyesfUz7jntrc5X5roDXxUpUug
-        +/LAKQTh+vc8DTBMCTij3e9/u0E+mmw=
-X-Google-Smtp-Source: APXvYqz6wSJkWSFoW3ihilT7ScbwUjJ0SJDNMr2lb3v3onY1e61cPRhCp+Hy8giO0xVddbWsgYJ1hA==
-X-Received: by 2002:a2e:8ec2:: with SMTP id e2mr7115733ljl.126.1570753891460;
-        Thu, 10 Oct 2019 17:31:31 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id k7sm1550329lja.19.2019.10.10.17.31.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2019 17:31:30 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id f5so8033588ljg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:31:30 -0700 (PDT)
-X-Received: by 2002:a2e:2b91:: with SMTP id r17mr7894454ljr.1.1570753889932;
- Thu, 10 Oct 2019 17:31:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=7/A8Xxx5/kwMMMCkC8UKPkaUdHo3nQv3ZdijCXAMEqs=;
+        b=OtdyGuW59df1NhPipGrbTVA3Xk7euIPWfA/k+JIPgjLN+hsia5SDw/IFuxnlCkEFZi
+         HmdjA2mt3Z7JWShpdWC7dJmrcC/zGd6Bv+VTLJG++7ulOzDFM69E3Sw/GGxhwrEhT9f2
+         RClDe64E5PTzjb3I1af1eeV93qwl6CxYQy/5DlSHqklJVPoEQfafEzoBOknr7r3Gl1AU
+         kWVPoijpO7OEDNmrQPoZEmSSTWjEeJvsk2qxOp27oO6pZrgPPSe2VIACn4u60dFK6Tx9
+         k60O1fidr2GfPge3VijvDk1TDMG43AH6nsxqx+Keh8Ae2pjV6qpBu+/pTsvTP0t7slC3
+         dMkg==
+X-Gm-Message-State: APjAAAWOetLHu29R1kV8qJ86qKJ9Le1UkXY18jdUXNFUs7ojpmj/1+4T
+        xup7AGPJhp5ujjXT4TxgjNb71Q==
+X-Google-Smtp-Source: APXvYqwEAUW7wANQwbHXyoWUib3bzwrwaHcZZ908+vAdpeLcDM4zbN0Ops9wHNFwTX+BlU66vUuuYw==
+X-Received: by 2002:a0c:aedd:: with SMTP id n29mr13472783qvd.139.1570753983741;
+        Thu, 10 Oct 2019 17:33:03 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id x19sm3364445qkf.26.2019.10.10.17.33.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 17:33:03 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 17:32:46 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Andy Duan <fugang.duan@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+        "swboyd@chromium.org" <swboyd@chromium.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/2] net: fec_main: Use
+ platform_get_irq_byname_optional() to avoid error message
+Message-ID: <20191010173246.2cd02164@cakuba.netronome.com>
+In-Reply-To: <DB3PR0402MB3916FF4583577B182D9BF60CF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1570616148-11571-1-git-send-email-Anson.Huang@nxp.com>
+        <20191010160811.7775c819@cakuba.netronome.com>
+        <DB3PR0402MB3916FF4583577B182D9BF60CF5970@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <20191007012437.GK26530@ZenIV.linux.org.uk> <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
- <20191007025046.GL26530@ZenIV.linux.org.uk> <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
- <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
- <20191008032912.GQ26530@ZenIV.linux.org.uk> <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
- <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
- <20191010195504.GI26530@ZenIV.linux.org.uk> <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
- <20191011001104.GJ26530@ZenIV.linux.org.uk>
-In-Reply-To: <20191011001104.GJ26530@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 10 Oct 2019 17:31:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
-Message-ID: <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000a3dcf4059497a30d"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000a3dcf4059497a30d
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, 11 Oct 2019 00:03:22 +0000, Anson Huang wrote:
+> > On Wed,  9 Oct 2019 18:15:47 +0800, Anson Huang wrote: =20
+> > > Failed to get irq using name is NOT fatal as driver will use index to
+> > > get irq instead, use platform_get_irq_byname_optional() instead of
+> > > platform_get_irq_byname() to avoid below error message during
+> > > probe:
+> > >
+> > > [    0.819312] fec 30be0000.ethernet: IRQ int0 not found
+> > > [    0.824433] fec 30be0000.ethernet: IRQ int1 not found
+> > > [    0.829539] fec 30be0000.ethernet: IRQ int2 not found
+> > >
+> > > Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to
+> > > platform_get_irq*()")
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com> =20
+> >=20
+> > Hi Anson,
+> >=20
+> > looks like there may be some dependency which haven't landed in the
+> > networking tree yet?  Because this doesn't build:
+> >=20
+> > drivers/net/ethernet/freescale/fec_main.c: In function =E2=80=98fec_pro=
+be=E2=80=99:
+> > drivers/net/ethernet/freescale/fec_main.c:3561:9: error: implicit decla=
+ration
+> > of function =E2=80=98platform_get_irq_byname_optional=E2=80=99; did you=
+ mean
+> > =E2=80=98platform_get_irq_optional=E2=80=99? [-Werror=3Dimplicit-functi=
+on-declaration]
+> >  3561 |   irq =3D platform_get_irq_byname_optional(pdev, irq_name);
+> >       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >       |         platform_get_irq_optional
+> > cc1: some warnings being treated as errors
+> >=20
+> > Could you please repost once that's resolved?  Please add Andy's and
+> > Stephen's acks when reposting.
+> >=20
+> > Thank you! =20
+>=20
+> Sorry, I did this patch set based on linux-next tree, the below patch is =
+landing
+> on Linux-next tree on Oct 5th, so maybe network tree is NOT sync with Lin=
+ux-next tree?
 
-On Thu, Oct 10, 2019 at 5:11 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Thu, Oct 10, 2019 at 03:12:49PM -0700, Linus Torvalds wrote:
->
-> > But I've not gotten around to rewriting those disgusting sequences to
-> > the unsafe_get/put_user() model. I did look at it, and it requires
-> > some changes exactly *because* the _ex() functions are broken and
-> > continue, but also because the current code ends up also doing other
-> > things inside the try/catch region that you're not supposed to do in a
-> > user_access_begin/end() region .
->
-> Hmm...  Which one was that?  AFAICS, we have
->         do_sys_vm86: only get_user_ex()
->         restore_sigcontext(): get_user_ex(), set_user_gs()
->         ia32_restore_sigcontext(): get_user_ex()
+linux-next is an integration tree, which merges all development trees
+together to help with conflict resolution. Subsystem maintainers never
+pull from it.
 
-Try this patch.
+> I saw many other similar patches are already landing on Linux-next tree a=
+lso, so what
+> do you suggest I should do? Or can you sync the network tree with Linux-n=
+ext tree first? I do
+> NOT know the rule/schedule of network tree update to Linux-next.
+>=20
+> commit f1da567f1dc1b55d178b8f2d0cfe8353858aac19
+> Author: Hans de Goede <hdegoede@redhat.com>
+> Date:   Sat Oct 5 23:04:47 2019 +0200
+>=20
+>     driver core: platform: Add platform_get_irq_byname_optional()
 
-It works fine (well, it worked fine the lastr time I tried this, I
-might have screwed something up just now: I re-created the patch since
-I hadn't saved it).
+Hm. Looks like the commit you need is commit f1da567f1dc1 ("driver core:
+platform: Add platform_get_irq_byname_optional()") and it's currently
+in Greg's tree. You have to wait for that commit to make its way into
+Linus'es main tree and then for Dave Miller to pull from Linus.
 
-It's nice and clean, and does
+I'd suggest you check if your patches builds on the net tree:
 
- 1 file changed, 9 insertions(+), 91 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
 
-by just deleting all the nasty *_ex() macros entirely, replacing them
-with unsafe_get/put_user() calls.
-
-And now those try/catch regions actually work like try/catch regions,
-and a fault branches to the catch.
-
-BUT.
-
-It does change semantics, and you get warnings like
-
-  arch/x86/ia32/ia32_signal.c: In function =E2=80=98ia32_restore_sigcontext=
-=E2=80=99:
-  arch/x86/ia32/ia32_signal.c:114:9: warning: =E2=80=98buf=E2=80=99 may be =
-used
-uninitialized in this function [-Wmaybe-uninitialized]
-    114 |  err |=3D fpu__restore_sig(buf, 1);
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~
-  arch/x86/ia32/ia32_signal.c:64:27: warning: =E2=80=98ds=E2=80=99 may be u=
-sed
-uninitialized in this function [-Wmaybe-uninitialized]
-     64 |  unsigned int pre =3D (seg) | 3;  \
-        |                           ^
-  arch/x86/ia32/ia32_signal.c:74:18: note: =E2=80=98ds=E2=80=99 was declare=
-d here
-...
-  arch/x86/kernel/signal.c: In function =E2=80=98restore_sigcontext=E2=80=
-=99:
-  arch/x86/kernel/signal.c:152:9: warning: =E2=80=98buf=E2=80=99 may be use=
-d
-uninitialized in this function [-Wmaybe-uninitialized]
-    152 |  err |=3D fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-because it's true: those things reall may not be initialized, because
-the catch thing could have jumped out.
-
-So the code actually needs to properly return the error early, or
-initialize the segments that didn't get loaded to 0, or something.
-
-And when I posted that, Luto said "just get rid of the get_user_ex()
-entirely, instead of changing semantics of the existing ones to be
-sane.
-
-Which is probably right. There aren't that many.
-
-I *thought* there were also cases of us doing some questionably things
-inside the get_user_try sections, but those seem to have gotten fixed
-already independently, so it's really just the "make try/catch really
-try/catch" change that needs some editing of our current broken stuff
-that depends on it not actually *catching* exceptions, but on just
-continuing on to the next one.
-
-                Linus
-
---000000000000a3dcf4059497a30d
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k1ldzs220>
-X-Attachment-Id: f_k1ldzs220
-
-IGFyY2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaCB8IDEwMCArKysrLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwg
-OTEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vdWFjY2Vz
-cy5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vdWFjY2Vzcy5oCmluZGV4IDYxZDkzZjA2MmEzNi4u
-ZTg3ZDg5MTFkYzUzIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS91YWNjZXNzLmgK
-KysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vdWFjY2Vzcy5oCkBAIC0xOTMsMjMgKzE5MywxMiBA
-QCBfX3R5cGVvZl9fKF9fYnVpbHRpbl9jaG9vc2VfZXhwcihzaXplb2YoeCkgPiBzaXplb2YoMFVM
-KSwgMFVMTCwgMFVMKSkKIAkJICAgICA6IDogIkEiICh4KSwgInIiIChhZGRyKQkJCVwKIAkJICAg
-ICA6IDogbGFiZWwpCiAKLSNkZWZpbmUgX19wdXRfdXNlcl9hc21fZXhfdTY0KHgsIGFkZHIpCQkJ
-CQlcCi0JYXNtIHZvbGF0aWxlKCJcbiIJCQkJCQlcCi0JCSAgICAgIjE6CW1vdmwgJSVlYXgsMCgl
-MSlcbiIJCQlcCi0JCSAgICAgIjI6CW1vdmwgJSVlZHgsNCglMSlcbiIJCQlcCi0JCSAgICAgIjM6
-IgkJCQkJCVwKLQkJICAgICBfQVNNX0VYVEFCTEVfRVgoMWIsIDJiKQkJCQlcCi0JCSAgICAgX0FT
-TV9FWFRBQkxFX0VYKDJiLCAzYikJCQkJXAotCQkgICAgIDogOiAiQSIgKHgpLCAiciIgKGFkZHIp
-KQotCiAjZGVmaW5lIF9fcHV0X3VzZXJfeDgoeCwgcHRyLCBfX3JldF9wdSkJCQkJXAogCWFzbSB2
-b2xhdGlsZSgiY2FsbCBfX3B1dF91c2VyXzgiIDogIj1hIiAoX19yZXRfcHUpCVwKIAkJICAgICA6
-ICJBIiAoKHR5cGVvZigqKHB0cikpKSh4KSksICJjIiAocHRyKSA6ICJlYngiKQogI2Vsc2UKICNk
-ZWZpbmUgX19wdXRfdXNlcl9nb3RvX3U2NCh4LCBwdHIsIGxhYmVsKSBcCiAJX19wdXRfdXNlcl9n
-b3RvKHgsIHB0ciwgInEiLCAiIiwgImVyIiwgbGFiZWwpCi0jZGVmaW5lIF9fcHV0X3VzZXJfYXNt
-X2V4X3U2NCh4LCBhZGRyKQlcCi0JX19wdXRfdXNlcl9hc21fZXgoeCwgYWRkciwgInEiLCAiIiwg
-ImVyIikKICNkZWZpbmUgX19wdXRfdXNlcl94OCh4LCBwdHIsIF9fcmV0X3B1KSBfX3B1dF91c2Vy
-X3goOCwgeCwgcHRyLCBfX3JldF9wdSkKICNlbmRpZgogCkBAIC0yODksMzEgKzI3OCw2IEBAIGRv
-IHsJCQkJCQkJCQlcCiAJfQkJCQkJCQkJXAogfSB3aGlsZSAoMCkKIAotLyoKLSAqIFRoaXMgZG9l
-c24ndCBkbyBfX3VhY2Nlc3NfYmVnaW4vZW5kIC0gdGhlIGV4Y2VwdGlvbiBoYW5kbGluZwotICog
-YXJvdW5kIGl0IG11c3QgZG8gdGhhdC4KLSAqLwotI2RlZmluZSBfX3B1dF91c2VyX3NpemVfZXgo
-eCwgcHRyLCBzaXplKQkJCQlcCi1kbyB7CQkJCQkJCQkJXAotCV9fY2hrX3VzZXJfcHRyKHB0cik7
-CQkJCQkJXAotCXN3aXRjaCAoc2l6ZSkgewkJCQkJCQlcCi0JY2FzZSAxOgkJCQkJCQkJXAotCQlf
-X3B1dF91c2VyX2FzbV9leCh4LCBwdHIsICJiIiwgImIiLCAiaXEiKTsJCVwKLQkJYnJlYWs7CQkJ
-CQkJCVwKLQljYXNlIDI6CQkJCQkJCQlcCi0JCV9fcHV0X3VzZXJfYXNtX2V4KHgsIHB0ciwgInci
-LCAidyIsICJpciIpOwkJXAotCQlicmVhazsJCQkJCQkJXAotCWNhc2UgNDoJCQkJCQkJCVwKLQkJ
-X19wdXRfdXNlcl9hc21fZXgoeCwgcHRyLCAibCIsICJrIiwgImlyIik7CQlcCi0JCWJyZWFrOwkJ
-CQkJCQlcCi0JY2FzZSA4OgkJCQkJCQkJXAotCQlfX3B1dF91c2VyX2FzbV9leF91NjQoKF9fdHlw
-ZW9mX18oKnB0cikpKHgpLCBwdHIpOwlcCi0JCWJyZWFrOwkJCQkJCQlcCi0JZGVmYXVsdDoJCQkJ
-CQkJXAotCQlfX3B1dF91c2VyX2JhZCgpOwkJCQkJXAotCX0JCQkJCQkJCVwKLX0gd2hpbGUgKDAp
-Ci0KICNpZmRlZiBDT05GSUdfWDg2XzMyCiAjZGVmaW5lIF9fZ2V0X3VzZXJfYXNtX3U2NCh4LCBw
-dHIsIHJldHZhbCwgZXJycmV0KQkJCVwKICh7CQkJCQkJCQkJXApAQCAtMzM0LDEzICsyOTgsOSBA
-QCBkbyB7CQkJCQkJCQkJXAogCQkgICAgIDogIm0iIChfX20oX19wdHIpKSwgIm0iIF9fbSgoKHUz
-MiBfX3VzZXIgKikoX19wdHIpKSArIDEpLAlcCiAJCSAgICAgICAiaSIgKGVycnJldCksICIwIiAo
-cmV0dmFsKSk7CQkJXAogfSkKLQotI2RlZmluZSBfX2dldF91c2VyX2FzbV9leF91NjQoeCwgcHRy
-KQkJCSh4KSA9IF9fZ2V0X3VzZXJfYmFkKCkKICNlbHNlCiAjZGVmaW5lIF9fZ2V0X3VzZXJfYXNt
-X3U2NCh4LCBwdHIsIHJldHZhbCwgZXJycmV0KSBcCiAJIF9fZ2V0X3VzZXJfYXNtKHgsIHB0ciwg
-cmV0dmFsLCAicSIsICIiLCAiPXIiLCBlcnJyZXQpCi0jZGVmaW5lIF9fZ2V0X3VzZXJfYXNtX2V4
-X3U2NCh4LCBwdHIpIFwKLQkgX19nZXRfdXNlcl9hc21fZXgoeCwgcHRyLCAicSIsICIiLCAiPXIi
-KQogI2VuZGlmCiAKICNkZWZpbmUgX19nZXRfdXNlcl9zaXplKHgsIHB0ciwgc2l6ZSwgcmV0dmFs
-LCBlcnJyZXQpCQkJXApAQCAtMzkwLDQxICszNTAsNiBAQCBkbyB7CQkJCQkJCQkJXAogCQkgICAg
-IDogIj1yIiAoZXJyKSwgbHR5cGUoeCkJCQkJXAogCQkgICAgIDogIm0iIChfX20oYWRkcikpLCAi
-aSIgKGVycnJldCksICIwIiAoZXJyKSkKIAotLyoKLSAqIFRoaXMgZG9lc24ndCBkbyBfX3VhY2Nl
-c3NfYmVnaW4vZW5kIC0gdGhlIGV4Y2VwdGlvbiBoYW5kbGluZwotICogYXJvdW5kIGl0IG11c3Qg
-ZG8gdGhhdC4KLSAqLwotI2RlZmluZSBfX2dldF91c2VyX3NpemVfZXgoeCwgcHRyLCBzaXplKQkJ
-CQlcCi1kbyB7CQkJCQkJCQkJXAotCV9fY2hrX3VzZXJfcHRyKHB0cik7CQkJCQkJXAotCXN3aXRj
-aCAoc2l6ZSkgewkJCQkJCQlcCi0JY2FzZSAxOgkJCQkJCQkJXAotCQlfX2dldF91c2VyX2FzbV9l
-eCh4LCBwdHIsICJiIiwgImIiLCAiPXEiKTsJCVwKLQkJYnJlYWs7CQkJCQkJCVwKLQljYXNlIDI6
-CQkJCQkJCQlcCi0JCV9fZ2V0X3VzZXJfYXNtX2V4KHgsIHB0ciwgInciLCAidyIsICI9ciIpOwkJ
-XAotCQlicmVhazsJCQkJCQkJXAotCWNhc2UgNDoJCQkJCQkJCVwKLQkJX19nZXRfdXNlcl9hc21f
-ZXgoeCwgcHRyLCAibCIsICJrIiwgIj1yIik7CQlcCi0JCWJyZWFrOwkJCQkJCQlcCi0JY2FzZSA4
-OgkJCQkJCQkJXAotCQlfX2dldF91c2VyX2FzbV9leF91NjQoeCwgcHRyKTsJCQkJXAotCQlicmVh
-azsJCQkJCQkJXAotCWRlZmF1bHQ6CQkJCQkJCVwKLQkJKHgpID0gX19nZXRfdXNlcl9iYWQoKTsJ
-CQkJCVwKLQl9CQkJCQkJCQlcCi19IHdoaWxlICgwKQotCi0jZGVmaW5lIF9fZ2V0X3VzZXJfYXNt
-X2V4KHgsIGFkZHIsIGl0eXBlLCBydHlwZSwgbHR5cGUpCQkJXAotCWFzbSB2b2xhdGlsZSgiMToJ
-bW92Iml0eXBlIiAlMSwlInJ0eXBlIjBcbiIJCVwKLQkJICAgICAiMjpcbiIJCQkJCQlcCi0JCSAg
-ICAgIi5zZWN0aW9uIC5maXh1cCxcImF4XCJcbiIJCQkJXAotICAgICAgICAgICAgICAgICAgICAg
-IjM6eG9yIml0eXBlIiAlInJ0eXBlIjAsJSJydHlwZSIwXG4iCQlcCi0JCSAgICAgIiAgam1wIDJi
-XG4iCQkJCQlcCi0JCSAgICAgIi5wcmV2aW91c1xuIgkJCQkJXAotCQkgICAgIF9BU01fRVhUQUJM
-RV9FWCgxYiwgM2IpCQkJCVwKLQkJICAgICA6IGx0eXBlKHgpIDogIm0iIChfX20oYWRkcikpKQot
-CiAjZGVmaW5lIF9fcHV0X3VzZXJfbm9jaGVjayh4LCBwdHIsIHNpemUpCQkJXAogKHsJCQkJCQkJ
-CVwKIAlfX2xhYmVsX18gX19wdV9sYWJlbDsJCQkJCVwKQEAgLTQ4MCwyNyArNDA1LDI1IEBAIHN0
-cnVjdCBfX2xhcmdlX3N0cnVjdCB7IHVuc2lnbmVkIGxvbmcgYnVmWzEwMF07IH07CiAJcmV0dmFs
-ID0gX19wdXRfdXNlcl9mYWlsZWQoeCwgYWRkciwgaXR5cGUsIHJ0eXBlLCBsdHlwZSwgZXJycmV0
-KTsJXAogfSB3aGlsZSAoMCkKIAotI2RlZmluZSBfX3B1dF91c2VyX2FzbV9leCh4LCBhZGRyLCBp
-dHlwZSwgcnR5cGUsIGx0eXBlKQkJCVwKLQlhc20gdm9sYXRpbGUoIjE6CW1vdiJpdHlwZSIgJSJy
-dHlwZSIwLCUxXG4iCQlcCi0JCSAgICAgIjI6XG4iCQkJCQkJXAotCQkgICAgIF9BU01fRVhUQUJM
-RV9FWCgxYiwgMmIpCQkJCVwKLQkJICAgICA6IDogbHR5cGUoeCksICJtIiAoX19tKGFkZHIpKSkK
-LQogLyoKICAqIHVhY2Nlc3NfdHJ5IGFuZCBjYXRjaAogICovCiAjZGVmaW5lIHVhY2Nlc3NfdHJ5
-CWRvIHsJCQkJCQlcCi0JY3VycmVudC0+dGhyZWFkLnVhY2Nlc3NfZXJyID0gMDsJCQkJXAorCV9f
-bGFiZWxfXyBfX3VhY2Nlc3NfY2F0Y2hfZWZhdWx0OwkJCQlcCiAJX191YWNjZXNzX2JlZ2luKCk7
-CQkJCQkJXAogCWJhcnJpZXIoKTsKIAogI2RlZmluZSB1YWNjZXNzX3RyeV9ub3NwZWMgZG8gewkJ
-CQkJCVwKLQljdXJyZW50LT50aHJlYWQudWFjY2Vzc19lcnIgPSAwOwkJCQlcCisJX19sYWJlbF9f
-IF9fdWFjY2Vzc19jYXRjaF9lZmF1bHQ7CQkJCVwKIAlfX3VhY2Nlc3NfYmVnaW5fbm9zcGVjKCk7
-CQkJCQlcCiAKICNkZWZpbmUgdWFjY2Vzc19jYXRjaChlcnIpCQkJCQkJXAogCV9fdWFjY2Vzc19l
-bmQoKTsJCQkJCQlcCi0JKGVycikgfD0gKGN1cnJlbnQtPnRocmVhZC51YWNjZXNzX2VyciA/IC1F
-RkFVTFQgOiAwKTsJCVwKKwkoZXJyKSA9IDA7CQkJCQkJCVwKKwlicmVhazsJCQkJCQkJCVwKK19f
-dWFjY2Vzc19jYXRjaF9lZmF1bHQ6CQkJCQkJCVwKKwlfX3VhY2Nlc3NfZW5kKCk7CQkJCQkJXAor
-CShlcnIpID0gLUVGQVVMVDsJCQkJCQlcCiB9IHdoaWxlICgwKQogCiAvKioKQEAgLTU2MiwxNyAr
-NDg1LDEyIEBAIHN0cnVjdCBfX2xhcmdlX3N0cnVjdCB7IHVuc2lnbmVkIGxvbmcgYnVmWzEwMF07
-IH07CiAjZGVmaW5lIGdldF91c2VyX3RyeQkJdWFjY2Vzc190cnlfbm9zcGVjCiAjZGVmaW5lIGdl
-dF91c2VyX2NhdGNoKGVycikJdWFjY2Vzc19jYXRjaChlcnIpCiAKLSNkZWZpbmUgZ2V0X3VzZXJf
-ZXgoeCwgcHRyKQlkbyB7CQkJCQlcCi0JdW5zaWduZWQgbG9uZyBfX2d1ZV92YWw7CQkJCQlcCi0J
-X19nZXRfdXNlcl9zaXplX2V4KChfX2d1ZV92YWwpLCAocHRyKSwgKHNpemVvZigqKHB0cikpKSk7
-CVwKLQkoeCkgPSAoX19mb3JjZSBfX3R5cGVvZl9fKCoocHRyKSkpX19ndWVfdmFsOwkJCVwKLX0g
-d2hpbGUgKDApCisjZGVmaW5lIGdldF91c2VyX2V4KHgsIHB0cikJdW5zYWZlX2dldF91c2VyKHgs
-IHB0ciwgX191YWNjZXNzX2NhdGNoX2VmYXVsdCkKIAogI2RlZmluZSBwdXRfdXNlcl90cnkJCXVh
-Y2Nlc3NfdHJ5CiAjZGVmaW5lIHB1dF91c2VyX2NhdGNoKGVycikJdWFjY2Vzc19jYXRjaChlcnIp
-CiAKLSNkZWZpbmUgcHV0X3VzZXJfZXgoeCwgcHRyKQkJCQkJCVwKLQlfX3B1dF91c2VyX3NpemVf
-ZXgoKF9fdHlwZW9mX18oKihwdHIpKSkoeCksIChwdHIpLCBzaXplb2YoKihwdHIpKSkKKyNkZWZp
-bmUgcHV0X3VzZXJfZXgoeCwgcHRyKQl1bnNhZmVfcHV0X3VzZXIoeCwgcHRyLCBfX3VhY2Nlc3Nf
-Y2F0Y2hfZWZhdWx0KQogCiBleHRlcm4gdW5zaWduZWQgbG9uZwogY29weV9mcm9tX3VzZXJfbm1p
-KHZvaWQgKnRvLCBjb25zdCB2b2lkIF9fdXNlciAqZnJvbSwgdW5zaWduZWQgbG9uZyBuKTsK
---000000000000a3dcf4059497a30d--
+once a week. My guess is it'll probably take two weeks or so for
+Greg's patches to propagate to Dave.
