@@ -2,97 +2,72 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09521C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39BCC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB88214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570809930;
-	bh=VLCpLlsGJdIt9QQjzE4HufyIf5Lzrt0iRXPBoqHHuf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uYeV0hewTe1MPZL+moVW6aCiY+rWzQJ0mIwX6kGqfHKYG4cahdnTUDjzcAhRh396l
-	 BrODFRR/m9RmhepznjKDa/az/psovrpgbQ6D7+kPLnDC7K0PH1COIC858bn7BvrvMJ
-	 jvEnnhu9LuRXFl//UHnkJhEV564XxS+BpwWtI8no=
+	by mail.kernel.org (Postfix) with ESMTP id D2F64206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:05:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbfJKQF3 (ORCPT
+        id S1728305AbfJKQFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 12:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34604 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 12:05:48 -0400
+Received: from mga06.intel.com ([134.134.136.31]:10104 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfJKQF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 12:05:29 -0400
-Received: from localhost (unknown [131.107.147.255])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29843206CD;
-        Fri, 11 Oct 2019 16:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570809929;
-        bh=VLCpLlsGJdIt9QQjzE4HufyIf5Lzrt0iRXPBoqHHuf0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=laY7xpyZCQaV4aQz6mpW5LvNJojBdkwFJJ2pflkPf2h8HYyJ1DP2fcoFxK4Yw14Qc
-         vA5kT9GHWbib1sDQcF4TQEXMdhWJYuZ4fS59P2/QMNyxt8+c5mqP7Y9T90Uz/HBRo3
-         fy1ljQY0YoHtPyxGsocmXM19P2wZKFPjUsGvZML4=
-Date:   Fri, 11 Oct 2019 12:05:28 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 4.19 082/114] powerpc/book3s64/radix: Rename
- CPU_FTR_P9_TLBIE_BUG feature flag
-Message-ID: <20191011160528.GD2635@sasha-vm>
-References: <20191010083544.711104709@linuxfoundation.org>
- <20191010083612.352065837@linuxfoundation.org>
- <20191011112106.GA28994@amd>
- <20191011125838.GA1147624@kroah.com>
+        id S1726910AbfJKQFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 12:05:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 09:05:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,284,1566889200"; 
+   d="scan'208";a="278166191"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 11 Oct 2019 09:05:42 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iIxQD-0001Rq-7i; Fri, 11 Oct 2019 19:05:41 +0300
+Date:   Fri, 11 Oct 2019 19:05:41 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Corey Minyard <minyard@acm.org>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ipmi: Convert ipmi_debug_msg to pr_debug and use %*ph
+Message-ID: <20191011160541.GG32742@smile.fi.intel.com>
+References: <20191011145213.65082-1-andriy.shevchenko@linux.intel.com>
+ <4eaca9a1bcbf9d87c1fb3c9135876c3ecb72a91b.camel@perches.com>
+ <20191011151220.GB32742@smile.fi.intel.com>
+ <e0b24ff49eb69a216b11f97db1fc26c5d3b971b4.camel@perches.com>
+ <7831759661d9f3d47bd304b2e98e65e5d6c5d167.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011125838.GA1147624@kroah.com>
+In-Reply-To: <7831759661d9f3d47bd304b2e98e65e5d6c5d167.camel@perches.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 02:58:38PM +0200, Greg Kroah-Hartman wrote:
->On Fri, Oct 11, 2019 at 01:21:06PM +0200, Pavel Machek wrote:
->> Hi!
->>
->> > From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->> >
->> > Rename the #define to indicate this is related to store vs tlbie
->> > ordering issue. In the next patch, we will be adding another feature
->> > flag that is used to handles ERAT flush vs tlbie ordering issue.
->> >
->> > Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
->> > Cc: stable@vger.kernel.org # v4.16+
->> > Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->> > Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
->> > Link:
->> > https://lore.kernel.org/r/20190924035254.24612-2-aneesh.kumar@linux.ibm.com
->>
->> Apparently this is upstream commit
->> 09ce98cacd51fcd0fa0af2f79d1e1d3192f4cbb0 , but the changelog does not
->> say so.
->
->Yeah, somehow when Sasha backported this, he didn't add that :(
->
->Nor did he add his signed-off-by :(
->
->I'll go fix it up and add mine, thanks for noticing it.
+On Fri, Oct 11, 2019 at 08:46:41AM -0700, Joe Perches wrote:
+> Using %*ph format to print small buffers as hex string reduces
+> overall object size and allows the removal of the two variants
+> of ipmi_debug_msg.
+> 
+> This also removes unnecessary duplicate colons from output when
+> enabled by #DEBUG or newly possible CONFIG_DYNAMIC_DEBUG.
 
-I forgot to run my "prettyfying" script on it, sorry and thanks for
-catching it.
+I have sent v2 with slightly better approach (no need to have %s).
 
 -- 
-Thanks,
-Sasha
+With Best Regards,
+Andy Shevchenko
+
+
