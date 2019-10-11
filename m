@@ -2,184 +2,118 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CA0ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C5DC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C07214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:10:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="V+/1YHgB"
+	by mail.kernel.org (Postfix) with ESMTP id 86F61214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfJKAKz (ORCPT
+        id S1727530AbfJKALJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:10:55 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46158 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbfJKAKy (ORCPT
+        Thu, 10 Oct 2019 20:11:09 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:43330 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727478AbfJKALI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:10:54 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 89so6461877oth.13
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:10:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CuWkKPMdB1z+o+XfUfQqodALV/gMtOa1+iT3xGY2djM=;
-        b=V+/1YHgBwaJ9G2xcvRbf0wcjQADYe+tc7H7ZIRB7G1sOOk836UV02AeFA/O5/6uGBT
-         9nDajgKdzPf7ZRtDvF31VQ/FHVVJPLSPoOv22VRoezeLKolwFKGjdfKlG+IlwzA2e8n2
-         0BW9sJtbOq5sGr4eL8Jh8x9OwG5s2bJ0qO7A9RjB3P3Lz0K+nT2EsqZ2QL3ADcDUbv2P
-         sdm0g5BsD4mHrgJT8Br7uZ9O2tAWROQhhddwUZnJlGb/AC0vtckBaGv9BJqIJXfa4Huc
-         SJNgdhq8vYH/xOX+be8gAGhR7ND7CBqEAEVlFn72LIH0B3Hv8u1e94R8e+YZnU3QUU3d
-         TWCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CuWkKPMdB1z+o+XfUfQqodALV/gMtOa1+iT3xGY2djM=;
-        b=tnn6WxzO68e9SMaJUqoRQRybjRiQuoNirXJU2IYtr8zKEqUln3/swCHN1gEi/2AnSc
-         uD5AkYDIKO5XVljcAoAmbpFWnLr1A7nFyHcf/B1KQT+CjuTDyS8D0nzNQr6iCgUa9nfb
-         bVt1OYarT4QDXPgRFfb44iaLPdUX90nhoAGsQA5H+T9k4wzhfEAin9kzPp97t9WmrO5E
-         OVV1mZ0DpsOmaJ4w+p5za4Dj1R76C0aAK6IkdOwwE3/V3acXk51rPolSbCsdagpzqLlI
-         OHKB+FvLzbSFFa8lgrnzrfW9QJSXf84GoT/pOnDbmODnmrEwB3X93YoAJUC2oBRqH7OL
-         mPvw==
-X-Gm-Message-State: APjAAAXWJiEXPNJZ0iPr/JosON4lCMoP+kJ9ygeZrM9aYj6NS/NS/UkC
-        +JYVhJRoiDM1ZM1mg+JcaY4RpIMRHApOdw+uSozFkg==
-X-Google-Smtp-Source: APXvYqxZtpd1aw+WFgfMgVMfM/xQ2kYk0LHsr36Je/tEarbEcU93KFwlv3DkanirryaTd1tkYOZSPT3ZJwWCtI5udb4=
-X-Received: by 2002:a05:6830:1685:: with SMTP id k5mr10285631otr.250.1570752651991;
- Thu, 10 Oct 2019 17:10:51 -0700 (PDT)
+        Thu, 10 Oct 2019 20:11:08 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iIiWO-0000GI-J7; Fri, 11 Oct 2019 00:11:04 +0000
+Date:   Fri, 11 Oct 2019 01:11:04 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+Message-ID: <20191011001104.GJ26530@ZenIV.linux.org.uk>
+References: <20191007012437.GK26530@ZenIV.linux.org.uk>
+ <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+ <20191007025046.GL26530@ZenIV.linux.org.uk>
+ <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+ <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+ <20191008032912.GQ26530@ZenIV.linux.org.uk>
+ <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
+ <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
+ <20191010195504.GI26530@ZenIV.linux.org.uk>
+ <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191010023205.8071-1-hui.song_1@nxp.com>
-In-Reply-To: <20191010023205.8071-1-hui.song_1@nxp.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 11 Oct 2019 02:10:41 +0200
-Message-ID: <CAMpxmJXyoMu-Z0E0wejLSrgW3aE73fHxHxS3kANBoVY+FhfmGg@mail.gmail.com>
-Subject: Re: [PATCH v7] gpio/mpc8xxx: change irq handler from chained to normal
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 10 pa=C5=BA 2019 o 04:42 Hui Song <hui.song_1@nxp.com> napisa=C5=82(a=
-):
->
-> From: Song Hui <hui.song_1@nxp.com>
->
-> More than one gpio controllers can share one interrupt, change the
-> driver to request shared irq.
->
-> While this will work, it will mess up userspace accounting of the number
-> of interrupts per second in tools such as vmstat.  The reason is that
-> for every GPIO interrupt, /proc/interrupts records the count against GIC
-> interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
-> interrupt, the total number of interrupts that the system has seen
-> increments by two.
->
-> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
-> Changes in v7:
->         - make unsigned int convert to unsigned long.
-> Changes in v6:
->         - change request_irq to devm_request_irq and add commit message.
-> Changes in v5:
->         - add traverse every bit function.
-> Changes in v4:
->         - convert 'pr_err' to 'dev_err'.
-> Changes in v3:
->         - update the patch description.
-> Changes in v2:
->         - delete the compatible of ls1088a.
->  drivers/gpio/gpio-mpc8xxx.c | 29 +++++++++++++++++++----------
->  1 file changed, 19 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 16a47de..5a0f030 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -22,6 +22,7 @@
->  #include <linux/irq.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/bitops.h>
-> +#include <linux/interrupt.h>
->
->  #define MPC8XXX_GPIO_PINS      32
->
-> @@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc=
-, unsigned offset)
->                 return -ENXIO;
->  }
->
-> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
->  {
-> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D irq_desc_get_handler_dat=
-a(desc);
-> -       struct irq_chip *chip =3D irq_desc_get_chip(desc);
-> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D data;
->         struct gpio_chip *gc =3D &mpc8xxx_gc->gc;
-> -       unsigned int mask;
-> +       unsigned long mask;
-> +       int i;
->
->         mask =3D gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
->                 & gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
-> -       if (mask)
-> +       for_each_set_bit(i, &mask, 32)
->                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
-> -                                                    32 - ffs(mask)));
-> -       if (chip->irq_eoi)
-> -               chip->irq_eoi(&desc->irq_data);
-> +                                                    31 - i));
+On Thu, Oct 10, 2019 at 03:12:49PM -0700, Linus Torvalds wrote:
+> On Thu, Oct 10, 2019 at 12:55 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > Anyway, another question you way: what do you think of try/catch approaches
+> > to __get_user() blocks, like e.g. restore_sigcontext() is doing?
+> 
+> I'd rather have them converted to our unsafe_get/put_user() instead.
+> 
+> We don't generate great code for the "get" case (because of how gcc
+> doesn't allow us to mix "asm goto" and outputs), but I really despise
+> the x86-specific "{get,put}_user_ex()" machinery. It's not actually
+> doing a real try/catch at all, and will just keep taking faults if one
+> happens.
+> 
+> But I've not gotten around to rewriting those disgusting sequences to
+> the unsafe_get/put_user() model. I did look at it, and it requires
+> some changes exactly *because* the _ex() functions are broken and
+> continue, but also because the current code ends up also doing other
+> things inside the try/catch region that you're not supposed to do in a
+> user_access_begin/end() region .
 
-This will now fit in 80 characters.
+Hmm...  Which one was that?  AFAICS, we have
+	do_sys_vm86: only get_user_ex()
+	restore_sigcontext(): get_user_ex(), set_user_gs()
+	ia32_restore_sigcontext(): get_user_ex()
 
-Bart
+So at least get_user_try/get_user_ex/get_user_catch should be killable.
+The other side...
+	save_v86_state(): put_user_ex()
+	setup_sigcontext(): put_user_ex()
+	__setup_rt_frame(): put_user_ex(), static_cpu_has()
+	another one in __setup_rt_frame(): put_user_ex()
+	x32_setup_rt_frame(): put_user_ex()
+	ia32_setup_sigcontext(): put_user_ex()
+	ia32_setup_frame(): put_user_ex()
+	another one in ia32_setup_frame(): put_user_ex(), static_cpu_has()
 
-> +
-> +       return IRQ_HANDLED;
->  }
->
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pde=
-v)
->         if (devtype->gpio_dir_in_init)
->                 devtype->gpio_dir_in_init(gc);
->
-> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -                                        mpc8xxx_gpio_irq_cascade, mpc8xx=
-x_gc);
-> +       ret =3D devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
-> +                              mpc8xxx_gpio_irq_cascade,
-> +                              IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascad=
-e",
-> +                              mpc8xxx_gc);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), =
-ret =3D %d\n",
-> +                       np->full_name, mpc8xxx_gc->irqn, ret);
-> +               goto err;
-> +       }
-> +
->         return 0;
->  err:
->         iounmap(mpc8xxx_gc->regs);
-> --
-> 2.9.5
->
+IDGI...  Is static_cpu_has() not allowed in there?  Looks like it's all inlines
+and doesn't do any potentially risky memory accesses...  What am I missing?
+
+As for the try/catch model...  How about
+	if (!user_access_begin())
+		sod off
+	...
+	unsafe_get_user(..., l);
+	...
+	unsafe_get_user_nojump();
+	...
+	unsafe_get_user_nojump();
+	...
+	if (user_access_did_fail())
+		goto l;
+
+	user_access_end()
+	...
+	return 0;
+l:
+	...
+	user_access_end()
+	return -EFAULT;
+
+making it clear that we are delaying the check for failures until it's
+more convenient.  And *not* trying to trick C parser into enforcing
+anything - let objtool do it and to hell with do { and } while (0) in
+magic macros.  Could be mixed with the normal unsafe_..._user() without
+any problems, AFAICS...
