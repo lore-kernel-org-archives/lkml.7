@@ -2,129 +2,86 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48D5C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C954CC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA4F206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bbv7ZbvP"
+	by mail.kernel.org (Postfix) with ESMTP id A362D214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570806617;
+	bh=hTclBREpwHO5bvCBEuVHn8DTtphjWf98a0ir/K68uV0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oZl3aYgLfyXGJKIzQny/c0jrWs4CjU+O1545mcCQ1lj7lufUTESFSlAXGnnJRbcRY
+	 vYxMxFfeVpgE/zOOZwH283prjy+cm6AvIsrYlArY0zVepYwQ+LRIYPJqQrAqWb3jhM
+	 Q2TVdhB2qZhltU81mBfwlGJxSSU3YVq4H44m4QC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfJKPJ5 (ORCPT
+        id S1727888AbfJKPKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:09:57 -0400
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:40566 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfJKPJ4 (ORCPT
+        Fri, 11 Oct 2019 11:10:16 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34696 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfJKPKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:09:56 -0400
-Received: by mail-oi1-f170.google.com with SMTP id k9so8270641oib.7
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 08:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZJr8HBzMfU7kmiZCz9sHwsjTkr7yVBKTvuMk3ztn6oM=;
-        b=bbv7ZbvPGd2Vy+OW6XTx5v8DO1t5PRQQIoAJ3CmOQOCFC+f4NEnTZbLbCAVKBxwxcH
-         IIngYatL20o7Of46857CmUx5iKZmPTbazlS1+ULBxf1QsIdSeP/YDKCiDFIN++VIzLKG
-         0g2Ja9ORAfWqhWGb2EM0A/6k18qXtfm4iKtWkLaCsxVA8Gv/gw+bMvouYSK8in6vYkDO
-         czztQZBwBaxe89EtKiMuvMo6XGe728fyynOUlLtMgZ/Tc968p3+fuly7UgUqljSMnyoH
-         LefxFFqhTB19GCYmjNMV6wrAZXtwJg9/Sf8cJapx9ICK8FfZCaBpmPvzdAiF48oOBs3m
-         v7Sw==
+        Fri, 11 Oct 2019 11:10:16 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m19so8264829otp.1;
+        Fri, 11 Oct 2019 08:10:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZJr8HBzMfU7kmiZCz9sHwsjTkr7yVBKTvuMk3ztn6oM=;
-        b=C3o7P7AQBGdAH/KVAVqA8oPEJBbpPY56SUx6fr2s4x2tZ/vQNV1cKwqNENYE+KQNO5
-         piKiLYs943muGxzLp+6me6p96cxnKkt43BELJ4aeLzb6UPFWnoYTvyWv5QMalPMkJxIa
-         /rnYWGqucW50zYAQanPvfstjEiHfIXFBv0HEiiA/kuRs2JFcw4ZefvpSopr6TjcHGaSU
-         OLPQ87heBFlcmF1nlxCxyaud8I5H5OWzsROUGICv14LM6uJ/jscBPG0lAInea/9RmG4U
-         IQpe1Zp+WPKJTmvXvPvIbJGJgSm74GEKk8dPMfEzq4X7Xk4OYYso3PHke2SRCvBuhLcf
-         vGzg==
-X-Gm-Message-State: APjAAAXXqj1zgbGMdI97XA95/5CXyzMAFQSprTiuP27UKTmsSFAMDXKd
-        w6Pxi9rG4sW9U97ZMOJIeYedIN3zkwykUMw2OeT348fAYqc=
-X-Google-Smtp-Source: APXvYqxiUBiNWI0ojBaKuc9Wss6TByn/XWZWY72Z0YR+e6hD15VDtY6gxIhOQWm62gzHt+xWgxTf/fn46FfNp0cj1p4=
-X-Received: by 2002:a05:6808:95:: with SMTP id s21mr12669138oic.68.1570806595398;
- Fri, 11 Oct 2019 08:09:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AYqY8ptTKV39xxtFZyc1+8jrTs0a76lcIovZ+BLPMag=;
+        b=nQ2DLP/XVGil9naV8d2EwI93UN/S2WvNyxN1AtE2Lhw4aXOOAmgAfEE/qoGjP3wOQf
+         Zg6BRloeF7rPCjiIDL+DOqK4+8f11yzdoKXtK45oHqOKl1AZROXJuX/xY9IevTRCk2MW
+         Qod2G2SHABfcUdNspksak21n5w6OuRK6yM+KUXMfD1ZkarwP8/oVm7MQtjO7YZROIe6G
+         h7A+hKfKeEtetfmnTE/yLov+2PcxpQEcmFK9fMb/uCWjpxmAGpq7w+wKgByF2tCzLrmx
+         yM852KfVSn4o3Fmm998CdjqYxqrLDRT0uHxgrvvmBUxLveLg7XmX4qeDL/5gVpMpA0l5
+         pRDg==
+X-Gm-Message-State: APjAAAX9U0OCtJ+xFrMXf3cbk+aojNdyFvOilm6Lo/sBMkkFU13QwCf5
+        E8726rEZ8eSDbP9TQdapBg==
+X-Google-Smtp-Source: APXvYqwkpn2Rm6NPxteihd3r7HUcq/7kBVqTZFOHHnjYbh6GQJSC3s6NgoJrW3CK0nueqj8fb335Cg==
+X-Received: by 2002:a9d:7345:: with SMTP id l5mr3406363otk.39.1570806615029;
+        Fri, 11 Oct 2019 08:10:15 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k2sm2719648oih.38.2019.10.11.08.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 08:10:14 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 10:10:13 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        u.kleine-koenig@pengutronix.de, alexandre.torgue@st.com,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
+        fabrice.gasnier@st.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, benjamin.gaignard@st.com,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: pwm-stm32: document pinctrl sleep
+ state
+Message-ID: <20191011151013.GA12791@bogus>
+References: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
+ <1570193633-6600-2-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-References: <20191008133641.23019-1-ckellner@redhat.com> <20191009160532.20674-1-ckellner@redhat.com>
- <20191009160532.20674-2-ckellner@redhat.com>
-In-Reply-To: <20191009160532.20674-2-ckellner@redhat.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 11 Oct 2019 17:09:29 +0200
-Message-ID: <CAG48ez0MyiTKO2MpNVQqavoTKo7FZXYAyohx1JTR=M9Uw=QJWQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pidfd: add tests for NSpid info in fdinfo
-To:     Christian Kellner <ckellner@redhat.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Christian Kellner <christian@kellner.me>,
-        Christian Brauner <christian@brauner.io>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570193633-6600-2-git-send-email-fabrice.gasnier@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 6:10 PM Christian Kellner <ckellner@redhat.com> wrote:
-> Add tests that check that if pid namespaces are configured the fdinfo
-> file of a pidfd contains an NSpid: entry containing the process id
-> in the current and additionally all nested namespaces.
-[...]
-> +static int compare_fdinfo_nspid(int pidfd, char *expect, size_t len)
-> +{
-> +       char path[512];
-> +       FILE *f;
-> +       size_t n = 0;
-> +       ssize_t k;
-> +       char *line = NULL;
-> +       int r = -1;
-> +
-> +       snprintf(path, sizeof(path), "/proc/self/fdinfo/%d", pidfd);
+On Fri, 4 Oct 2019 14:53:51 +0200, Fabrice Gasnier wrote:
+> Add documentation for pinctrl sleep state that can be used by
+> STM32 timers PWM.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-stm32.txt | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
 
-(Maybe at some point the selftests code should add some more concise
-alternative to snprintf() calls on separate lines. A macro or
-something like that so that you can write stuff like `f =
-fopen(tprintf("/proc/self/fdinfo/%d", pidfd), "re")`.)
-
-> +       f = fopen(path, "re");
-> +       if (!f)
-> +               return -1;
-> +
-> +       while ((k = getline(&line, &n, f)) != -1) {
-> +               if (strncmp(line, "NSpid:", 6))
-> +                       continue;
-> +
-> +               line[k - 1] = '\0';
-> +               ksft_print_msg("Child: fdinfo NSpid line: '%s'.\n", line);
-> +               r = strncmp(line + 6, expect, len);
-
-Wouldn't it be better to get rid of the nullbyte assignment and change
-the strncmp() into a strcmp() here...
-
-[...]
-> +       /* The child will have pid 1 in the new pid namespace,
-> +        * so the line must be 'NSPid:\t<pid>\t1'
-> +        */
-> +       n = snprintf(expect, sizeof(expect), "\t%d\t%d", pid, 1);
-
-... and add a "\n" to the format string? It's shorter and doesn't
-silently ignore it if the line doesn't end at that point.
+Reviewed-by: Rob Herring <robh@kernel.org>
