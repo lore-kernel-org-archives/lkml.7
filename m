@@ -2,199 +2,380 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21928ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E892C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97BF206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XFAmu9vx"
+	by mail.kernel.org (Postfix) with ESMTP id 0F31A2190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbfJKRx6 (ORCPT
+        id S1728752AbfJKRzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:53:58 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42632 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbfJKRx6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:53:58 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e5so4785795pls.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 10:53:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qgzfqj6sxvLl+nWKisyq4PH5jXle+OPHl08Pk/Xlhsw=;
-        b=XFAmu9vxP7eFOCLOKNj/NHpDOwxfNt71RntEp2l7ofcGL52eyVuwXsCIe8ZERMlkfQ
-         BGtkhO//mpmTcmlEzHJyXNui8FBxQl9p1yvwiEI5NDFlYn2fGOQ6n1kPknpZ0hMdWjuG
-         pMFTXnvP8tPLmV5lthtkug0clYn9CHVij7ElmoSNCfFFZq3A8P4Mu8byVBpkZQlw0lpZ
-         f20FWuVGBJirlRVIwfk+bMPm2rilNqHPMi4wDuV64/JJBBvdfmcw6kMff/oCfTGYKupr
-         FD2EsPNy3KBqn+BIZWN342L8v1Lwd62u49kB66L3gN4+5keoOFBZfkOWLa3rnnJJ0Yju
-         X0WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qgzfqj6sxvLl+nWKisyq4PH5jXle+OPHl08Pk/Xlhsw=;
-        b=PLKfdE755OOd4187950ee9q/srK/34CAb+rUisF905c9RHyBHQQmW6lQfXOdixdKF7
-         oX0VJ/Z+kkx85y1+ISorOOTpIBBgCZ1MNH018jcP0ODwBgAgvy+d4ho9suOe7WVpp8PM
-         Ym8xF4k/R58Eizcc1dVG3p0AqO4CjPDVoFKm4izDnwIyflrs1np+RAbz4KNkLwoWtFE/
-         T6092jt0EEueBA4uTm3atB3cCHqgWySMoHLtlWALuGMybtgS6fzXoQHodFChIkz7hrkC
-         67TELIZ1p0R7gufbuPZv/pt5PcfnG/p4xN+JKCw0AifcfY4flRWxTVl+P7DC1qzj6em5
-         FelA==
-X-Gm-Message-State: APjAAAWUuDhcG2KcbIVGeAHwdLdKxaOG8ARH5OSptwDROQnZUz83CKwz
-        uSW+TDN+ggByCGh5DoW1E73Z3w==
-X-Google-Smtp-Source: APXvYqwXraISadvG5/9oA2Hw4IVHCd6smGm+dh76RTLray/g6iCvl+deoh/FyzRpWEFCwmXB3EjjUw==
-X-Received: by 2002:a17:902:8642:: with SMTP id y2mr15426654plt.187.1570816436891;
-        Fri, 11 Oct 2019 10:53:56 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id s97sm13598540pjc.4.2019.10.11.10.53.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 11 Oct 2019 10:53:56 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 11:53:53 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Leach <mike.leach@linaro.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v3 3/6] perf cs-etm: Support thread stack
-Message-ID: <20191011175353.GA13688@xps15>
-References: <20191005091614.11635-1-leo.yan@linaro.org>
- <20191005091614.11635-4-leo.yan@linaro.org>
+        Fri, 11 Oct 2019 13:55:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728689AbfJKRzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 13:55:02 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F2ED206A1;
+        Fri, 11 Oct 2019 17:55:00 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 13:54:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Matthew Garrett <matthewgarrett@google.com>, jmorris@namei.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] tracefs: Do not allocate and free proxy_ops for lockdown
+Message-ID: <20191011135458.7399da44@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191005091614.11635-4-leo.yan@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/mixed; boundary="MP_/S_xZo.4ffMMJN//_08r1b1i"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 05, 2019 at 05:16:11PM +0800, Leo Yan wrote:
-> Since Arm CoreSight doesn't support thread stack, the decoding cannot
-> display symbols with indented spaces to reflect the stack depth.
-> 
-> This patch adds support thread stack for Arm CoreSight, this allows
-> 'perf script' to display properly for option '-F,+callindent'.
-> 
-> Before:
-> 
->   # perf script -F,+callindent
->             main  2808          1          branches: coresight_test1                      ffff8634f5c8 coresight_test1+0x3c (/root/coresight_test/libcstest.so)
->             main  2808          1          branches: printf@plt                           aaaaba8d37ec main+0x28 (/root/coresight_test/main)
->             main  2808          1          branches: printf@plt                           aaaaba8d36bc printf@plt+0xc (/root/coresight_test/main)
->             main  2808          1          branches: _init                                aaaaba8d3650 _init+0x30 (/root/coresight_test/main)
->             main  2808          1          branches: _dl_fixup                            ffff86373b4c _dl_runtime_resolve+0x40 (/lib/aarch64-linux-gnu/ld-2.28.so)
->             main  2808          1          branches: _dl_lookup_symbol_x                  ffff8636e078 _dl_fixup+0xb8 (/lib/aarch64-linux-gnu/ld-2.28.so)
->   [...]
-> 
-> After:
-> 
->   # perf script -F,+callindent
->             main  2808          1          branches:                 coresight_test1                                      ffff8634f5c8 coresight_test1+0x3c (/root/coresight_test/libcstest.so)
->             main  2808          1          branches:                 printf@plt                                           aaaaba8d37ec main+0x28 (/root/coresight_test/main)
->             main  2808          1          branches:                     printf@plt                                       aaaaba8d36bc printf@plt+0xc (/root/coresight_test/main)
->             main  2808          1          branches:                     _init                                            aaaaba8d3650 _init+0x30 (/root/coresight_test/main)
->             main  2808          1          branches:                     _dl_fixup                                        ffff86373b4c _dl_runtime_resolve+0x40 (/lib/aarch64-linux-gnu/ld-2.28.s
->             main  2808          1          branches:                         _dl_lookup_symbol_x                          ffff8636e078 _dl_fixup+0xb8 (/lib/aarch64-linux-gnu/ld-2.28.so)
->   [...]
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/util/cs-etm.c | 44 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 58ceba7b91d5..780abbfd1833 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1117,6 +1117,45 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
->  			   sample->insn_len, (void *)sample->insn);
->  }
->  
-> +static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
-> +				    struct cs_etm_traceid_queue *tidq)
-> +{
-> +	struct cs_etm_auxtrace *etm = etmq->etm;
-> +	u8 trace_chan_id = tidq->trace_chan_id;
-> +	int insn_len;
-> +	u64 from_ip, to_ip;
-> +
-> +	if (etm->synth_opts.thread_stack) {
-> +		from_ip = cs_etm__last_executed_instr(tidq->prev_packet);
-> +		to_ip = cs_etm__first_executed_instr(tidq->packet);
-> +
-> +		insn_len = cs_etm__instr_size(etmq, trace_chan_id,
-> +					      tidq->prev_packet->isa, from_ip);
-> +
-> +		/*
-> +		 * Create thread stacks by keeping track of calls and returns;
-> +		 * any call pushes thread stack, return pops the stack, and
-> +		 * flush stack when the trace is discontinuous.
-> +		 */
-> +		thread_stack__event(tidq->thread, tidq->prev_packet->cpu,
-> +				    tidq->prev_packet->flags,
-> +				    from_ip, to_ip, insn_len,
-> +				    etmq->buffer->buffer_nr);
-
-Details are a little fuzzy in my head but I'm pretty sure
-we want trace_chan_id here.  
+--MP_/S_xZo.4ffMMJN//_08r1b1i
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 
-> +	} else {
-> +		/*
-> +		 * The thread stack can be output via thread_stack__process();
-> +		 * thus the detailed information about paired calls and returns
-> +		 * will be facilitated by Python script for the db-export.
-> +		 *
-> +		 * Need to set trace buffer number and flush thread stack if the
-> +		 * trace buffer number has been alternate.
-> +		 */
-> +		thread_stack__set_trace_nr(tidq->thread,
-> +					   tidq->prev_packet->cpu,
-> +					   etmq->buffer->buffer_nr);
+[ Attached the reproducers to this email ]
 
-Same here.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-> +	}
-> +}
-> +
->  static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->  					    struct cs_etm_traceid_queue *tidq,
->  					    u64 addr, u64 period)
-> @@ -1393,6 +1432,9 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->  		tidq->period_instructions = instrs_over;
->  	}
->  
-> +	if (tidq->prev_packet->last_instr_taken_branch)
-> +		cs_etm__add_stack_event(etmq, tidq);
-> +
->  	if (etm->sample_branches) {
->  		bool generate_sample = false;
->  
-> @@ -2593,6 +2635,8 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->  		itrace_synth_opts__set_default(&etm->synth_opts,
->  				session->itrace_synth_opts->default_no_sample);
->  		etm->synth_opts.callchain = false;
-> +		etm->synth_opts.thread_stack =
-> +				session->itrace_synth_opts->thread_stack;
->  	}
->  
->  	err = cs_etm__synth_events(etm, session);
-> -- 
-> 2.17.1
-> 
+Running the latest kernel through my "make instances" stress tests, I
+triggered the following bug (with KASAN and kmemleak enabled):
+
+mkdir invoked oom-killer:
+gfp_mask=0x40cd0(GFP_KERNEL|__GFP_COMP|__GFP_RECLAIMABLE), order=0,
+oom_score_adj=0
+CPU: 1 PID: 2229 Comm: mkdir Not tainted 5.4.0-rc2-test #325
+Hardware name: MSI MS-7823/CSM-H87M-G43 (MS-7823), BIOS V1.6 02/22/2014
+Call Trace:
+ dump_stack+0x64/0x8c
+ dump_header+0x43/0x3b7
+ ? trace_hardirqs_on+0x48/0x4a
+ oom_kill_process+0x68/0x2d5
+ out_of_memory+0x2aa/0x2d0
+ __alloc_pages_nodemask+0x96d/0xb67
+ __alloc_pages_node+0x19/0x1e
+ alloc_slab_page+0x17/0x45
+ new_slab+0xd0/0x234
+ ___slab_alloc.constprop.86+0x18f/0x336
+ ? alloc_inode+0x2c/0x74
+ ? irq_trace+0x12/0x1e
+ ? tracer_hardirqs_off+0x1d/0xd7
+ ? __slab_alloc.constprop.85+0x21/0x53
+ __slab_alloc.constprop.85+0x31/0x53
+ ? __slab_alloc.constprop.85+0x31/0x53
+ ? alloc_inode+0x2c/0x74
+ kmem_cache_alloc+0x50/0x179
+ ? alloc_inode+0x2c/0x74
+ alloc_inode+0x2c/0x74
+ new_inode_pseudo+0xf/0x48
+ new_inode+0x15/0x25
+ tracefs_get_inode+0x23/0x7c
+ ? lookup_one_len+0x54/0x6c
+ tracefs_create_file+0x53/0x11d
+ trace_create_file+0x15/0x33
+ event_create_dir+0x2a3/0x34b
+ __trace_add_new_event+0x1c/0x26
+ event_trace_add_tracer+0x56/0x86
+ trace_array_create+0x13e/0x1e1
+ instance_mkdir+0x8/0x17
+ tracefs_syscall_mkdir+0x39/0x50
+ ? get_dname+0x31/0x31
+ vfs_mkdir+0x78/0xa3
+ do_mkdirat+0x71/0xb0
+ sys_mkdir+0x19/0x1b
+ do_fast_syscall_32+0xb0/0xed
+
+I bisected this down to the addition of the proxy_ops into tracefs for
+lockdown. It appears that the allocation of the proxy_ops and then freeing
+it in the destroy_inode callback, is causing havoc with the memory system.
+Reading the documentation about destroy_inode, I'm not sure that this is the
+proper way to handle allocating and then freeing the fops of the inode.
+
+Instead of allocating the proxy_ops (and then having to free it), I created
+a static proxy_ops. As tracefs only uses a subset of all the file_operations
+methods, that subset can be defined in the static proxy_ops, and then the
+passed in fops during the creation of the inode is saved in the dentry, and
+that is use to call the real functions by the proxy_ops.
+
+Fixes: ccbd54ff54e8 ("tracefs: Restrict tracefs when the kernel is locked down")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ fs/tracefs/inode.c | 153 +++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 135 insertions(+), 18 deletions(-)
+
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 9fc14e38927f..d0e8e4a16812 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -20,6 +20,7 @@
+ #include <linux/parser.h>
+ #include <linux/magic.h>
+ #include <linux/slab.h>
++#include <linux/poll.h>
+ #include <linux/security.h>
+ 
+ #define TRACEFS_DEFAULT_MODE	0700
+@@ -28,7 +29,7 @@ static struct vfsmount *tracefs_mount;
+ static int tracefs_mount_count;
+ static bool tracefs_registered;
+ 
+-static int default_open_file(struct inode *inode, struct file *filp)
++static int proxy_open(struct inode *inode, struct file *filp)
+ {
+ 	struct dentry *dentry = filp->f_path.dentry;
+ 	struct file_operations *real_fops;
+@@ -47,6 +48,138 @@ static int default_open_file(struct inode *inode, struct file *filp)
+ 	return real_fops->open(inode, filp);
+ }
+ 
++static ssize_t proxy_read(struct file *file, char __user *buf,
++			  size_t count, loff_t *pos)
++{
++	struct dentry *dentry = file->f_path.dentry;
++	struct file_operations *real_fops;
++
++	if (!dentry)
++		return -EINVAL;
++
++	real_fops = dentry->d_fsdata;
++
++	if (real_fops->read)
++		return real_fops->read(file, buf, count, pos);
++	else
++		return -EINVAL;
++}
++
++static ssize_t proxy_write(struct file *file, const char __user *p,
++			   size_t count, loff_t *pos)
++{
++	struct dentry *dentry = file->f_path.dentry;
++	struct file_operations *real_fops;
++
++	if (!dentry)
++		return -EINVAL;
++
++	real_fops = dentry->d_fsdata;
++
++	if (real_fops->write)
++		return real_fops->write(file, p, count, pos);
++	else
++		return -EINVAL;
++}
++
++static loff_t proxy_llseek(struct file *file, loff_t offset, int whence)
++{
++	struct dentry *dentry = file->f_path.dentry;
++	struct file_operations *real_fops;
++	loff_t (*fn)(struct file *, loff_t, int);
++
++	if (!dentry)
++		return -EINVAL;
++
++	real_fops = dentry->d_fsdata;
++
++	fn = no_llseek;
++	if (file->f_mode & FMODE_LSEEK) {
++		if (real_fops->llseek)
++			fn = real_fops->llseek;
++	}
++	return fn(file, offset, whence);
++}
++
++static int proxy_release(struct inode *inode, struct file *filp)
++{
++	struct dentry *dentry = filp->f_path.dentry;
++	struct file_operations *real_fops;
++
++	if (!dentry)
++		return 0;
++
++	real_fops = dentry->d_fsdata;
++
++	if (real_fops->release)
++		return real_fops->release(inode, filp);
++	return 0;
++}
++
++static __poll_t proxy_poll(struct file *file, struct poll_table_struct *pt)
++{
++	struct dentry *dentry = file->f_path.dentry;
++	struct file_operations *real_fops;
++
++	if (!dentry)
++		return 0;
++
++	real_fops = dentry->d_fsdata;
++
++	if (unlikely(!real_fops->poll))
++		return DEFAULT_POLLMASK;
++	return real_fops->poll(file, pt);
++}
++
++static ssize_t proxy_splice_read(struct file *in, loff_t *ppos,
++				 struct pipe_inode_info *pipe, size_t len,
++				 unsigned int flags)
++{
++	struct dentry *dentry = in->f_path.dentry;
++	struct file_operations *real_fops;
++	ssize_t (*splice_read)(struct file *, loff_t *,
++			       struct pipe_inode_info *, size_t, unsigned int);
++
++	if (!dentry)
++		return 0;
++
++	real_fops = dentry->d_fsdata;
++
++	if (real_fops->splice_read)
++		splice_read = real_fops->splice_read;
++	else
++		splice_read = generic_file_splice_read;
++
++	return splice_read(in, ppos, pipe, len, flags);
++}
++
++static int proxy_mmap(struct file *file, struct vm_area_struct *vma)
++{
++	struct dentry *dentry = file->f_path.dentry;
++	struct file_operations *real_fops;
++
++	if (!dentry)
++		return 0;
++
++	real_fops = dentry->d_fsdata;
++
++	if (!real_fops->mmap)
++		return -ENODEV;
++
++	return real_fops->mmap(file, vma);
++}
++
++static const struct file_operations proxy_fops = {
++	.open		= proxy_open,
++	.read		= proxy_read,
++	.write		= proxy_write,
++	.llseek		= proxy_llseek,
++	.release	= proxy_release,
++	.poll		= proxy_poll,
++	.splice_read	= proxy_splice_read,
++	.mmap		= proxy_mmap,
++};
++
+ static ssize_t default_read_file(struct file *file, char __user *buf,
+ 				 size_t count, loff_t *ppos)
+ {
+@@ -241,12 +374,6 @@ static int tracefs_apply_options(struct super_block *sb)
+ 	return 0;
+ }
+ 
+-static void tracefs_destroy_inode(struct inode *inode)
+-{
+-	if (S_ISREG(inode->i_mode))
+-		kfree(inode->i_fop);
+-}
+-
+ static int tracefs_remount(struct super_block *sb, int *flags, char *data)
+ {
+ 	int err;
+@@ -283,7 +410,6 @@ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
+ static const struct super_operations tracefs_super_operations = {
+ 	.statfs		= simple_statfs,
+ 	.remount_fs	= tracefs_remount,
+-	.destroy_inode  = tracefs_destroy_inode,
+ 	.show_options	= tracefs_show_options,
+ };
+ 
+@@ -414,7 +540,6 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ 				   struct dentry *parent, void *data,
+ 				   const struct file_operations *fops)
+ {
+-	struct file_operations *proxy_fops;
+ 	struct dentry *dentry;
+ 	struct inode *inode;
+ 
+@@ -430,20 +555,12 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ 	if (unlikely(!inode))
+ 		return failed_creating(dentry);
+ 
+-	proxy_fops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
+-	if (unlikely(!proxy_fops)) {
+-		iput(inode);
+-		return failed_creating(dentry);
+-	}
+-
+ 	if (!fops)
+ 		fops = &tracefs_file_operations;
+ 
+ 	dentry->d_fsdata = (void *)fops;
+-	memcpy(proxy_fops, fops, sizeof(*proxy_fops));
+-	proxy_fops->open = default_open_file;
+ 	inode->i_mode = mode;
+-	inode->i_fop = proxy_fops;
++	inode->i_fop = &proxy_fops;
+ 	inode->i_private = data;
+ 	d_instantiate(dentry, inode);
+ 	fsnotify_create(dentry->d_parent->d_inode, dentry);
+-- 
+2.20.1
+
+
+--MP_/S_xZo.4ffMMJN//_08r1b1i
+Content-Type: application/octet-stream; name=ftrace-test-mkinstances
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=ftrace-test-mkinstances
+
+IyEvYmluL2Jhc2gKCnRyYWNlZnM9YGNhdCAvcHJvYy9tb3VudHMgIHxncmVwIHRyYWNlZnN8IGhl
+YWQgLTEgfCBjdXQgLWQnICcgLWYyYAoKaWYgWyAteiAiJHRyYWNlZnMiIF07IHRoZW4KCWVjaG8g
+InRyYWNlZnMgbm90IG1vdW50ZWQiCglleGl0IDAKZmkKCmlmIFsgISAtZCAkdHJhY2Vmcy9pbnN0
+YW5jZXMgXTsgdGhlbgoJZWNobyAiTm8gaW5zdGFuY2VzIGRpcmVjdG9yeSIKCWV4aXQgMApmaQoK
+Y2QgJHRyYWNlZnMvaW5zdGFuY2VzCgpta2RpciB4CnJtZGlyIHgKcmVzdWx0PSQ/CgppZiBbICRy
+ZXN1bHQgLW5lIDAgXTsgdGhlbgoJZWNobyAiaW5zdGFuY2Ugcm1kaXIgbm90IHN1cHBvcnRlZCwg
+c2tpcHBpbmcgdGhpcyB0ZXN0IgoJZXhpdCAwCmZpCgppbnN0YW5jZV9zbGFtKCkgewoJd2hpbGUg
+OjsgZG8KCQlta2RpciB4CgkJbWtkaXIgeQoJCW1rZGlyIHoKCQlybWRpciB4CgkJcm1kaXIgeQoJ
+CXJtZGlyIHoKCWRvbmUgMj4vZGV2L251bGwKfQoKaW5zdGFuY2Vfc2xhbSAmCnAxPSQhCmVjaG8g
+JHAxCgppbnN0YW5jZV9zbGFtICYKcDI9JCEKZWNobyAkcDIKCmluc3RhbmNlX3NsYW0gJgpwMz0k
+IQplY2hvICRwMwoKaW5zdGFuY2Vfc2xhbSAmCnA0PSQhCmVjaG8gJHA0CgppbnN0YW5jZV9zbGFt
+ICYKcDU9JCEKZWNobyAkcDUKCmZvciBpIGluIGBzZXEgMTBgOyBkbwoJbHMKCXNsZWVwIDEKZG9u
+ZQpraWxsIC0xICRwMSAKa2lsbCAtMSAkcDIKa2lsbCAtMSAkcDMKa2lsbCAtMSAkcDQKa2lsbCAt
+MSAkcDUKCmVjaG8gIldhaXQgZm9yIHByb2Nlc3NlcyB0byBmaW5pc2giCndhaXQgJHAxICRwMiAk
+cDMgJHA0ICRwNQplY2hvICJhbGwgcHJvY2Vzc2VzIGZpbmlzaGVkLCB3YWl0IGZvciBjbGVhbnVw
+IgpzbGVlcCAyCgpta2RpciB4IHkgegpscyB4IHkgegpybWRpciB4IHkgegpmb3IgZCBpbiB4IHkg
+ejsgZG8KCWlmIFsgLWQgJGQgXTsgdGhlbgoJCWVjaG8gJGQgc3RpbGwgZXhpc3RzCgkJZXhpdCAt
+MQoJZmkKZG9uZQplY2hvIFNVQ0NFU1MKZXhpdCAwCg==
+
+--MP_/S_xZo.4ffMMJN//_08r1b1i
+Content-Type: application/octet-stream; name=ftrace-test-mkinstances-2
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=ftrace-test-mkinstances-2
+
+IyEvYmluL2Jhc2gKCnRyYWNlZnM9YGNhdCAvcHJvYy9tb3VudHMgIHxncmVwIHRyYWNlZnN8IGhl
+YWQgLTEgfCBjdXQgLWQnICcgLWYyYAoKaWYgWyAteiAiJHRyYWNlZnMiIF07IHRoZW4KCWVjaG8g
+InRyYWNlZnMgbm90IG1vdW50ZWQiCglleGl0IDAKZmkKCmlmIFsgISAtZCAkdHJhY2Vmcy9pbnN0
+YW5jZXMgXTsgdGhlbgoJZWNobyAiTm8gaW5zdGFuY2VzIGRpcmVjdG9yeSIKCWV4aXQgMApmaQoK
+Y2QgJHRyYWNlZnMvaW5zdGFuY2VzCgppbnN0YW5jZV9zbGFtKCkgewoJd2hpbGUgOjsgZG8KCQlt
+a2RpciBmb28gJj4gL2Rldi9udWxsCgkJcm1kaXIgZm9vICY+IC9kZXYvbnVsbAoJZG9uZQp9Cgpp
+bnN0YW5jZV9yZWFkKCkgewoJd2hpbGUgOjsgZG8KCQljYXQgZm9vL3RyYWNlICY+IC9kZXYvbnVs
+bAoJZG9uZQp9CgppbnN0YW5jZV9zZXQoKSB7Cgl3aGlsZSA6OyBkbwoJCWVjaG8gMSA+IGZvby9l
+dmVudHMvc2NoZWQvc2NoZWRfc3dpdGNoCglkb25lIDI+IC9kZXYvbnVsbAp9CgppbnN0YW5jZV9z
+bGFtICYKeD1gam9icyAtbGAKcDE9YGVjaG8gJHggfCBjdXQgLWQnICcgLWYyYAplY2hvICRwMQoK
+aW5zdGFuY2Vfc2V0ICYKeD1gam9icyAtbCB8IHRhaWwgLTFgCnAyPWBlY2hvICR4IHwgY3V0IC1k
+JyAnIC1mMmAKZWNobyAkcDIKCnNsZWVwIDEwCgpraWxsIC0xICRwMSAKa2lsbCAtMSAkcDIKCmVj
+aG8gIldhaXQgZm9yIHByb2Nlc3NlcyB0byBmaW5pc2giCndhaXQgJHAxICRwMgplY2hvICJhbGwg
+cHJvY2Vzc2VzIGZpbmlzaGVkLCB3YWl0IGZvciBjbGVhbnVwIgpzbGVlcCAyCgpta2RpciBmb28K
+bHMgZm9vCnJtZGlyIGZvbwppZiBbIC1kIGZvbyBdOyB0aGVuCgllY2hvIGZvbyBzdGlsbCBleGlz
+dHMKCWV4aXQgLTEKZmkKZWNobyBTVUNDRVNTCmV4aXQgMAo=
+
+--MP_/S_xZo.4ffMMJN//_08r1b1i--
