@@ -2,94 +2,82 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B0AC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13711ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B0421A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32EC21A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570767973;
-	bh=fLiBWE1AVc2vUnCDGC3rnCQZQF7qVTkQq7Q21C84Zlc=;
+	s=default; t=1570768191;
+	bh=gCx5YHH5VjxJhgJJ/tLxPkRAC3Lkst3E5Co1aLOBd6g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OPzY5xuXj/nK5Ny94h4SHn3qDsfPe48jeNcmeNdHl0g64Eu53FJo63k4HTHMxMQNM
-	 sGfPWth2hbaldGkQWHvvoiXZ27QZtM+qo2vAHGEvSqUONaWJEFxLZHiv4syIOwJQr8
-	 i9kjVrQGlr5XCWWxPJu7coHW+4xEMxYVKaBfv8LM=
+	b=mDj3Qtz1uG9PjjER4shV15yQ3l0Qy+yQmrjrniGmIu2zmJfWIYgpvNOZL/zYiAyfn
+	 Ht0b9MnpeQEX7HRlUVEqwDk06LSpv8DCy93jQhY+SCHkkbbJ7ScFV8wHVz0royQX/j
+	 v4EFo1I7dY3HUEg77D6d70gRFjG6qZWllLAtFKFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfJKE0M (ORCPT
+        id S1726489AbfJKE3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 00:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51388 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 00:29:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbfJKE0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 00:26:12 -0400
+        id S1726099AbfJKE3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 00:29:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07B412089F;
-        Fri, 11 Oct 2019 04:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98A502089F;
+        Fri, 11 Oct 2019 04:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570767971;
-        bh=fLiBWE1AVc2vUnCDGC3rnCQZQF7qVTkQq7Q21C84Zlc=;
+        s=default; t=1570768188;
+        bh=gCx5YHH5VjxJhgJJ/tLxPkRAC3Lkst3E5Co1aLOBd6g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QQ6aVrxkEqC6BdoJ9p8nXAqQQzWCiL0yOUAQeFLNMMuz4r2WpwTy60CZDaQ3NraAl
-         HLMSy4qCboDujx+wdD52j5aHnH1R3oVK+W2kqQ7QIfgKRox0cMPYLpf60CZ4efPkyj
-         obpXc5i1c9XrEnDV4HIOjrNn5sH8Ji4ZLBXZX+vE=
-Date:   Fri, 11 Oct 2019 06:26:09 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     jerome.pouiller@silabs.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: wfx: fix an undefined reference error when
- CONFIG_MMC=m
-Message-ID: <20191011042609.GB938845@kroah.com>
-References: <1570762939-8735-1-git-send-email-zhongjiang@huawei.com>
+        b=joLF3Qm28BCaRxQD0Xoh0sQvgQhU2FaCdONduvk/OWb/lgqu6Hb55k6YURoW4FD0A
+         Xd2Rvz0Y/YSnkYbGqc85fK69SCGqAAdtRIWNBK1GMhdOzbFS9+cRAQ04wtmK78ZA5l
+         yRquX6XkltDVmQjtUveeO2V885sTNnt3eYI/Y2ZE=
+Date:   Fri, 11 Oct 2019 06:29:45 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/61] 4.14.149-stable review
+Message-ID: <20191011042945.GB939089@kroah.com>
+References: <20191010083449.500442342@linuxfoundation.org>
+ <ce4b3f10-eafd-1169-9240-fb3891279c2a@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1570762939-8735-1-git-send-email-zhongjiang@huawei.com>
+In-Reply-To: <ce4b3f10-eafd-1169-9240-fb3891279c2a@roeck-us.net>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:02:19AM +0800, zhong jiang wrote:
-> I hit the following error when compile the kernel.
+On Thu, Oct 10, 2019 at 10:12:26AM -0700, Guenter Roeck wrote:
+> On 10/10/19 1:36 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.14.149 release.
+> > There are 61 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
+> > Anything received after that time might be too late.
+> > 
 > 
-> drivers/staging/wfx/main.o: In function `wfx_core_init':
-> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:488: undefined reference to `sdio_register_driver'
-> drivers/staging/wfx/main.o: In function `wfx_core_exit':
-> /home/z00352263/linux-next/linux-next/drivers/staging/wfx/main.c:496: undefined reference to `sdio_unregister_driver'
-> drivers/staging/wfx/main.o:(.debug_addr+0x1a8): undefined reference to `sdio_register_driver'
-> drivers/staging/wfx/main.o:(.debug_addr+0x6f0): undefined reference to `sdio_unregister_driver'
+> Preliminary.
 > 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  drivers/staging/wfx/Kconfig  | 3 ++-
->  drivers/staging/wfx/Makefile | 5 +++--
->  2 files changed, 5 insertions(+), 3 deletions(-)
+> I see several mips build failures.
 > 
-> diff --git a/drivers/staging/wfx/Kconfig b/drivers/staging/wfx/Kconfig
-> index 9b8a1c7..4d045513 100644
-> --- a/drivers/staging/wfx/Kconfig
-> +++ b/drivers/staging/wfx/Kconfig
-> @@ -1,7 +1,8 @@
->  config WFX
->  	tristate "Silicon Labs wireless chips WF200 and further"
->  	depends on MAC80211
-> -	depends on (SPI || MMC)
-> +	depends on SPI
-> +	select MMC
+> arch/mips/kernel/proc.c: In function 'show_cpuinfo':
+> arch/mips/include/asm/cpu-features.h:352:31: error: implicit declaration of function '__ase'
 
-How about:
-	depends on (SPI && MMC)
-
-instead?
-
-thanks,
+Thanks, will go drop the lone mips patch that I think is causing this
+problem.
 
 greg k-h
