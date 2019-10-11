@@ -2,97 +2,127 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CF8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AD8ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F111420679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Munmuilw"
+	by mail.kernel.org (Postfix) with ESMTP id 9272620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570802780;
+	bh=BKLkCo9lU9uB6s3TCR8UIDVS3m9R9buwDlzJ/ZetjhI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DEjfppWYPG7nl/JFk8abSVSFuK45lxMy7dgR7i2b2bjCviVq6k32M5cYS4Meu7cTx
+	 DJgwVpYYEfkqTJAxHugGHuej9XMqkSYWBJ0x+k6JZbwM2tXs08apsovVkSuD/7QlNx
+	 DujyGyB+0gS+8BRsHbb1zPAWdj4iSyrptMWnGaZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbfJKOGR (ORCPT
+        id S1728723AbfJKOGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:06:17 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37624 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728483AbfJKOGP (ORCPT
+        Fri, 11 Oct 2019 10:06:18 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:60603 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728691AbfJKOGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Oct 2019 10:06:15 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BDuP5F008342;
-        Fri, 11 Oct 2019 16:05:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=X2MS2dG8XiA3LBnlrQGs02rZISjkvk2yFLJA4idPnL4=;
- b=Munmuilwc1UmIcseIEJAD8efaUj9y6slZeTesd7CZgqCl+PiswJ2JcsHR/1DgKPJM0mW
- IBqBOzedqFx2MkLPt+eIzYtDy8FWjcG3u27nDmdbFNbQ9Lmmb1Uqa8M2abtS0LZcpovV
- UhXsdcLvSx37jpaNp8d64S+9JVh9ODsRKOOl1dubfGJemORltTc+GwqrKkr+0FlRgrJS
- 6jG5zMFegf2z4vnnKkZGEdRgxesoFNhp2eYH6n80O98wEoyJ9WVW5BXRe8U86lSh+dak
- CUiq8xt+J1xYlaJir//H28W5VGMhAnXp3v6zoKr+zjWBCrEz9b1+PdDMz/KBE4HiLpo9 pA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vegn1a8r1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 16:05:41 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3FA0C10002A;
-        Fri, 11 Oct 2019 16:05:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 329A82AD739;
-        Fri, 11 Oct 2019 16:05:41 +0200 (CEST)
-Received: from localhost (10.75.127.51) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 11 Oct 2019 16:05:40
- +0200
-From:   Pascal Paillet <p.paillet@st.com>
-To:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <p.paillet@st.com>
-Subject: [PATCH 4/4] ARM: dts: stm32: disable active-discharge for vbus_otg on stm32mp157a-avenger96
-Date:   Fri, 11 Oct 2019 16:05:33 +0200
-Message-ID: <20191011140533.32619-5-p.paillet@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191011140533.32619-1-p.paillet@st.com>
-References: <20191011140533.32619-1-p.paillet@st.com>
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iIvYa-0007hw-Ao; Fri, 11 Oct 2019 16:06:12 +0200
+Date:   Fri, 11 Oct 2019 15:06:10 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        rnayak@codeaurora.org, suzuki.poulose@arm.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, andrew.murray@arm.com,
+        will@kernel.org, Dave.Martin@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: Relax CPU features sanity checking on heterogeneous
+ architectures
+Message-ID: <20191011150610.4e528a2d@why>
+In-Reply-To: <20191011135431.GB33537@lakrids.cambridge.arm.com>
+References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
+        <20191011105010.GA29364@lakrids.cambridge.arm.com>
+        <20191011143343.541da66c@why>
+        <20191011135431.GB33537@lakrids.cambridge.arm.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-11_08:2019-10-10,2019-10-11 signatures=0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: mark.rutland@arm.com, saiprakash.ranjan@codeaurora.org, rnayak@codeaurora.org, suzuki.poulose@arm.com, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, jeremy.linton@arm.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, andrew.murray@arm.com, will@kernel.org, Dave.Martin@arm.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Active discharge is not needed on vbus_otg and generate unneeded current
-consumption.
+On Fri, 11 Oct 2019 14:54:31 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
----
- arch/arm/boot/dts/stm32mp157a-avenger96.dts | 1 -
- 1 file changed, 1 deletion(-)
+> On Fri, Oct 11, 2019 at 02:33:43PM +0100, Marc Zyngier wrote:
+> > On Fri, 11 Oct 2019 11:50:11 +0100
+> > Mark Rutland <mark.rutland@arm.com> wrote:
+> >   
+> > > Hi,
+> > > 
+> > > On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:  
+> > > > On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
+> > > > warnings are observed during bootup of big cpu cores.    
+> > > 
+> > > For reference, which CPUs are in those SoCs?
+> > >   
+> > > > SM8150:
+> > > > 
+> > > > [    0.271177] CPU features: SANITY CHECK: Unexpected variation in
+> > > > SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 0x00000011111112    
+> > > 
+> > > The differing fields are EL3, EL2, and EL1: the boot CPU supports
+> > > AArch64 and AArch32 at those exception levels, while the secondary only
+> > > supports AArch64.
+> > > 
+> > > Do we handle this variation in KVM?  
+> > 
+> > We do, at least at vcpu creation time (see kvm_reset_vcpu). But if one
+> > of the !AArch32 CPU comes in late in the game (after we've started a
+> > guest), all bets are off (we'll schedule the 32bit guest on that CPU,
+> > enter the guest, immediately take an Illegal Exception Return, and
+> > return to userspace with KVM_EXIT_FAIL_ENTRY).  
+> 
+> Ouch. We certainly can't remove the warning untill we deal with that
+> somehow, then.
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-index d1cc42a92d3f..628c74a45a25 100644
---- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-@@ -252,7 +252,6 @@
- 				regulator-name = "vbus_otg";
- 				interrupts = <IT_OCP_OTG 0>;
- 				interrupt-parent = <&pmic>;
--				regulator-active-discharge = <1>;
- 			};
- 
- 			vbus_sw: pwr_sw2 {
+Indeed. Same thing applies for hot-removing the AArch32-capable CPUs,
+by the way. You'd end-up in a situation where guests can't run, despite
+the initial contract that we're happy that configuration.
+
+> > Not sure we could do better, given the HW. My preference would be to
+> > fail these CPUs if they aren't present at boot time.  
+> 
+> I agree; I think we need logic to check the ID register fields against
+> their EXACT, {LOWER,HIGHER}_SAFE, etc rules regardless of whether we
+> have an associated cap. That can then abort a late onlining of a CPU
+> which violates those rules w.r.t. the finalised system value.
+> 
+> I suspect that we may want to split the notion of
+> safe-for-{user,kernel-guest} in the feature tables, as if nothing else
+> it will force us to consider those cases separately when adding new
+> stuff.
+
+Probably. There are bizarre overlaps, in the sense that some
+capabilities (such as this AArch32 EL1 support) are firmly kernel
+related, and yet have a direct impact on userspace. KVM blurs the lines
+in "interesting" ways... :-(.
+
+Thanks,
+
+	M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
