@@ -2,250 +2,276 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF6BC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361C2C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099D420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iAsoVQsf"
+	by mail.kernel.org (Postfix) with ESMTP id F31702190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570753896;
+	bh=SrXtq3TOWB75B21fuBsOi6Zw9WO+puD8V9RwMlP4TaU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=izk7ODlJwGDfHnTP13H5EYHwFb8r9SciAQAsMlNzyFd2J7ws46D9ltu3cu4n/rHAf
+	 2Y3Wjd0epqcZTzS7JatJG2DWzzRmxHxC1xtVFTj50ahDYgCspNOAU9qVNfx1EVMVMW
+	 eKUFv1Ie1xm3IwcflqFl+jJrfybRBtXP4AZ7dYgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfJKA3u (ORCPT
+        id S1727545AbfJKAbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:29:50 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35482 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfJKA2Z (ORCPT
+        Thu, 10 Oct 2019 20:31:34 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40507 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbfJKAbe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:28:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m7so8056820lji.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:28:22 -0700 (PDT)
+        Thu, 10 Oct 2019 20:31:34 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 7so8029245ljw.7
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:31:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=rEOxUviEkcCW48fJxCH3+DMoe12h6LP7M/4uKtZsbx8=;
-        b=iAsoVQsfqYvDGQefSDs72eSXfctA8ou9qKor43CyO+fvRlLcBxhAkT+k9IgpVXaICJ
-         kRjr8e/8uDi7Y9FOENx9GD2n8DKbgz4VmLfNlKSN3It8fQyg/R/r92ZCnng20zvOL5nE
-         aHqeBAreNBQ3nj4FhEe1ntRsaP/5r65kyq88wbXfif2UmVCnOl2jKyJBBma/5+B9kdoT
-         z7bW+tH/oOvSZ16Da6PINXm+KQzR2nUztMgY5uUhipADqMYIkgrIpkbp3JJJ/irrHkHl
-         yqJ0RCTq6U10iy1qnw8K2rissPKQH6ef8c7WjcubOzGNsBpxeaqbbl/QTlZI3XsV/gKL
-         +GHw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6KQIXJS5Udq31xzSnClQQSZeps+FhrzYgeAcUAUA6PU=;
+        b=JeuC2gx/w7gTNLQ92rY9af/8CotmQsFCuqZDiZ9wsZ4VAsaw/TD2OdFD3Vu+FohN4r
+         oeAkelE3JN/HqpmVpTh6dM1qyfOglJI4J2qyus/w1lucezztBOV+uSy8DP0pLac60lWo
+         8Oe65x/igi99IVKwWzf0erDJ3oOV6YoqbRV0Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rEOxUviEkcCW48fJxCH3+DMoe12h6LP7M/4uKtZsbx8=;
-        b=t05zTN9m8deEhD9L7/8tblEMw0RdbfkRPG1Z3Bu1nM07jgjxEz+RQHJJ4peV/WFU7q
-         26lxY2iIg/FgQjs0UJk6JazT3uURHcrPBsApHyaArY2FV8Thcz28M3VFlRzulrCNNagG
-         jZ5nrPjJpS58dXVWOsUX56GL7DHJDtEQpISRpBfW+mZUPVEiky94jKqEPnFrJkEXPrky
-         kPDJjPsW+QU6tNN9yCPZhTPNG7zvjQ/dZubuci7y0/CkeNwtC0d6GEC+vIvQW0hKdYqY
-         XDGQd9W2dKEAdTj8Ram3boxMVmFbOBOuGkdiCBpbuD5rr2QcIwB/tmFIwbReh/IoT+X9
-         5wmA==
-X-Gm-Message-State: APjAAAVS4WGvB927T4y4zX1YwGBi4UkmE7THBPl2em5Wn51zRdDHrPOO
-        Zl/1xmgvqASkSSMbrN6XHAY/9w==
-X-Google-Smtp-Source: APXvYqzUkWLaQzQ4RKtJ766ONIeoAFL2izNCMqCZ9sYzesa5PcjDZfpdLcxKnVMci/uTGGyWLuFkew==
-X-Received: by 2002:a2e:584b:: with SMTP id x11mr8035721ljd.90.1570753701013;
-        Thu, 10 Oct 2019 17:28:21 -0700 (PDT)
-Received: from localhost.localdomain (88-201-94-178.pool.ukrtel.net. [178.94.201.88])
-        by smtp.gmail.com with ESMTPSA id 126sm2367010lfh.45.2019.10.10.17.28.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 17:28:20 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        ilias.apalodimas@linaro.org, sergei.shtylyov@cogentembedded.com,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v5 bpf-next 00/15] samples: bpf: improve/fix cross-compilation
-Date:   Fri, 11 Oct 2019 03:27:53 +0300
-Message-Id: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6KQIXJS5Udq31xzSnClQQSZeps+FhrzYgeAcUAUA6PU=;
+        b=cyr8gKtQFx+OaksLlPgwj0Q5kxqtl4QFoezas7jD4QTGFzkBvC8pDQ8QJZvUXYosfk
+         FPSEcfgfZsU923vhP1Cn76PwEuOPgjall+2KGzcCwkJgHWevZkfTJaIYvKfyEiKkpqt+
+         aGHOcSDH0s3Rga6RO2XZBCZwX98GdOdcmI/GgUANa4hJOsXdxxAt+BLr+sg9Lh4klkqE
+         1HKgbsa088iIRPE3OQ0C7tsk0pbOxcGQGpFFpofzeF1rruhYF3Do1EzqIxitovr4jTlp
+         EM+Q/7F4cgjAwskZzVgzM+7sEmpDRrD9sg3WYgpgDyEB1upvlh37iggKfuord3wl92iL
+         nQ9g==
+X-Gm-Message-State: APjAAAUwTqx6bdkwicouJ6ea9msyRytyesfUz7jntrc5X5roDXxUpUug
+        +/LAKQTh+vc8DTBMCTij3e9/u0E+mmw=
+X-Google-Smtp-Source: APXvYqz6wSJkWSFoW3ihilT7ScbwUjJ0SJDNMr2lb3v3onY1e61cPRhCp+Hy8giO0xVddbWsgYJ1hA==
+X-Received: by 2002:a2e:8ec2:: with SMTP id e2mr7115733ljl.126.1570753891460;
+        Thu, 10 Oct 2019 17:31:31 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id k7sm1550329lja.19.2019.10.10.17.31.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2019 17:31:30 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id f5so8033588ljg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:31:30 -0700 (PDT)
+X-Received: by 2002:a2e:2b91:: with SMTP id r17mr7894454ljr.1.1570753889932;
+ Thu, 10 Oct 2019 17:31:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191007012437.GK26530@ZenIV.linux.org.uk> <CAHk-=whKJfX579+2f-CHc4_YmEmwvMe_Csr0+CPfLAsSAdfDoA@mail.gmail.com>
+ <20191007025046.GL26530@ZenIV.linux.org.uk> <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+ <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+ <20191008032912.GQ26530@ZenIV.linux.org.uk> <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
+ <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
+ <20191010195504.GI26530@ZenIV.linux.org.uk> <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
+ <20191011001104.GJ26530@ZenIV.linux.org.uk>
+In-Reply-To: <20191011001104.GJ26530@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 10 Oct 2019 17:31:13 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
+Message-ID: <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000a3dcf4059497a30d"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series contains mainly fixes/improvements for cross-compilation
-but not only, tested for arm, arm64, and intended for any arch.
-Also verified on native build (not cross compilation) for x86_64
-and arm, arm64.
+--000000000000a3dcf4059497a30d
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Initial RFC link:
-https://lkml.org/lkml/2019/8/29/1665
+On Thu, Oct 10, 2019 at 5:11 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Thu, Oct 10, 2019 at 03:12:49PM -0700, Linus Torvalds wrote:
+>
+> > But I've not gotten around to rewriting those disgusting sequences to
+> > the unsafe_get/put_user() model. I did look at it, and it requires
+> > some changes exactly *because* the _ex() functions are broken and
+> > continue, but also because the current code ends up also doing other
+> > things inside the try/catch region that you're not supposed to do in a
+> > user_access_begin/end() region .
+>
+> Hmm...  Which one was that?  AFAICS, we have
+>         do_sys_vm86: only get_user_ex()
+>         restore_sigcontext(): get_user_ex(), set_user_gs()
+>         ia32_restore_sigcontext(): get_user_ex()
 
-Prev. version:
-https://lkml.org/lkml/2019/10/9/1045
+Try this patch.
 
-Besides the patches given here, the RFC also contains couple patches
-related to llvm clang
-  arm: include: asm: swab: mask rev16 instruction for clang
-  arm: include: asm: unified: mask .syntax unified for clang
-They are necessarily to verify arm 32 build.
+It works fine (well, it worked fine the lastr time I tried this, I
+might have screwed something up just now: I re-created the patch since
+I hadn't saved it).
 
-Also, couple more fixes were added but are not merged in bpf-next yet,
-they can be needed for verification/configuration steps, if not in
-your tree the fixes can be taken here:
-https://www.spinics.net/lists/netdev/msg601716.html
-https://www.spinics.net/lists/netdev/msg601714.html
-https://www.spinics.net/lists/linux-kbuild/msg23468.html
+It's nice and clean, and does
 
-Now, to build samples, SAMPLE_BPF should be enabled in config.
+ 1 file changed, 9 insertions(+), 91 deletions(-)
 
-The change touches not only cross-compilation and can have impact on
-other archs and build environments, so might be good idea to verify
-it in order to add appropriate changes, some warn options could be
-tuned also.
+by just deleting all the nasty *_ex() macros entirely, replacing them
+with unsafe_get/put_user() calls.
 
-All is tested on x86-64 with clang installed (has to be built containing
-targets for arm, arm64..., see llc --version, usually it's present already)
+And now those try/catch regions actually work like try/catch regions,
+and a fault branches to the catch.
 
-Instructions to test native on x86_64
-=================================================
-Native build on x86_64 is done in usual way and shouldn't have difference
-except HOSTCC is now printed as CC wile building the samples.
+BUT.
 
-Instructions to test cross compilation on arm64
-=================================================
-#Toolchain used for test:
-gcc version 8.3.0
-(GNU Toolchain for the A-profile Architecture 8.3-2019.03 (arm-rel-8.36))
+It does change semantics, and you get warnings like
 
-# Get some arm64 FS, containing at least libelf
-I've used sdk for TI am65x got here:
-http://downloads.ti.com/processor-sdk-linux/esd/AM65X/latest/exports/\
-ti-processor-sdk-linux-am65xx-evm-06.00.00.07-Linux-x86-Install.bin
+  arch/x86/ia32/ia32_signal.c: In function =E2=80=98ia32_restore_sigcontext=
+=E2=80=99:
+  arch/x86/ia32/ia32_signal.c:114:9: warning: =E2=80=98buf=E2=80=99 may be =
+used
+uninitialized in this function [-Wmaybe-uninitialized]
+    114 |  err |=3D fpu__restore_sig(buf, 1);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~
+  arch/x86/ia32/ia32_signal.c:64:27: warning: =E2=80=98ds=E2=80=99 may be u=
+sed
+uninitialized in this function [-Wmaybe-uninitialized]
+     64 |  unsigned int pre =3D (seg) | 3;  \
+        |                           ^
+  arch/x86/ia32/ia32_signal.c:74:18: note: =E2=80=98ds=E2=80=99 was declare=
+d here
+...
+  arch/x86/kernel/signal.c: In function =E2=80=98restore_sigcontext=E2=80=
+=99:
+  arch/x86/kernel/signal.c:152:9: warning: =E2=80=98buf=E2=80=99 may be use=
+d
+uninitialized in this function [-Wmaybe-uninitialized]
+    152 |  err |=3D fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Install this binary to some dir, say "sdk".
-# Configure kernel (use defconfig as no matter), but clean everything
-# before.
-make ARCH=arm64 -C tools/ clean
-make ARCH=arm64 -C samples/bpf clean
-make ARCH=arm64 clean
-make ARCH=arm64 defconfig
+because it's true: those things reall may not be initialized, because
+the catch thing could have jumped out.
 
-# Enable SAMPLE_BPF and it's dependencies in config
+So the code actually needs to properly return the error early, or
+initialize the segments that didn't get loaded to 0, or something.
 
-# The kernel version used in sdk doesn't correspond to checked one,
-# but for this verification only headers need to be syched,
-# so install them (can be enabled in config):
-make ARCH=arm64 headers_install
+And when I posted that, Luto said "just get rid of the get_user_ex()
+entirely, instead of changing semantics of the existing ones to be
+sane.
 
-# or on SDK if need keep them in sync (not necessarily to verify):
+Which is probably right. There aren't that many.
 
-make ARCH=arm64 INSTALL_HDR_PATH=/../sdk/\
-ti-processor-sdk-linux-am65xx-evm-06.00.00.07/linux-devkit/sysroots/\
-aarch64-linux/usr headers_install
+I *thought* there were also cases of us doing some questionably things
+inside the get_user_try sections, but those seem to have gotten fixed
+already independently, so it's really just the "make try/catch really
+try/catch" change that needs some editing of our current broken stuff
+that depends on it not actually *catching* exceptions, but on just
+continuing on to the next one.
 
-# Build samples
-make samples/bpf/ ARCH=arm64 CROSS_COMPILE="aarch64-linux-gnu-"\
-SYSROOT="/../sdk/ti-processor-sdk-linux-am65xx-evm-06.00.00.07/\
-linux-devkit/sysroots/aarch64-linux"
+                Linus
 
-Instructions to test cross compilation on arm
-=================================================
-#Toolchains used for test:
-arm-linux-gnueabihf-gcc (Linaro GCC 7.2-2017.11) 7.2.1 20171011
-or
-arm-linux-gnueabihf-gcc
-(GNU Toolchain for the A-profile Architecture 8.3-2019.03 \
-(arm-rel-8.36)) 8.3.0
+--000000000000a3dcf4059497a30d
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k1ldzs220>
+X-Attachment-Id: f_k1ldzs220
 
-# Get some FS, I've used sdk for TI am52xx got here:
-http://downloads.ti.com/processor-sdk-linux/esd/AM57X/05_03_00_07/exports/\
-ti-processor-sdk-linux-am57xx-evm-05.03.00.07-Linux-x86-Install.bin
-
-# Install this binary to some dir, say "sdk".
-# Configure kernel, but clean everything before.
-make ARCH=arm -C tools/ clean
-make ARCH=arm -C samples/bpf clean
-make ARCH=arm clean
-make ARCH=arm omap2plus_defconfig
-
-# The kernel version used in sdk doesn't correspond to checked one, but
-# headers only should be synched,
-# so install them (can be enabled in config):
-
-make ARCH=arm headers_install
-
-# or on SDK if need keep them in sync (not necessarily):
-
-make ARCH=arm INSTALL_HDR_PATH=/../sdk/\
-ti-processor-sdk-linux-am57xx-evm-05.03.00.07/linux-devkit/sysroots/\
-armv7ahf-neon-linux-gnueabi/usr headers_install
-
-# Build samples
-make samples/bpf/ ARCH=arm CROSS_COMPILE="arm-linux-gnueabihf-"\
-SYSROOT="/../sdk/ti-processor-sdk-linux-am57xx-evm-05.03\
-.00.07/linux-devkit/sysroots/armv7ahf-neon-linux-gnueabi"
-
-
-Based on bpf-next/master
-
-v5..v4:
-- any changes, only missed SOBs are added
-
-v4..v3:
-- renamed CLANG_EXTRA_CFLAGS on BPF_EXTRA_CFLAGS
-- used filter for ARCH_ARM_SELECTOR
-- omit "-fomit-frame-pointer" and use same flags for native and "cross"
-- used sample/bpf prefixes
-- use C instead of C++ compiler for test_libbpf target
-
-v3..v2:
-- renamed makefile.progs to makeifle.target, as more appropriate
-- left only __LINUX_ARM_ARCH__ for D options for arm
-- for host build - left options from KBUILD_HOST for compatibility reasons
-- split patch adding c/cxx/ld flags to libbpf by modules
-- moved readme change to separate patch
-- added patch setting options for cross-compile
-- fixed issue with option error for syscall_nrs.S,
-  avoiding overlap for ccflags-y.
-
-v2..v1:
-- restructured patches order
-- split "samples: bpf: Makefile: base progs build on Makefile.progs"
-  to make change more readable. It added couple nice extra patches.
-- removed redundant patch:
-  "samples: bpf: Makefile: remove target for native build"
-- added fix:
-  "samples: bpf: makefile: fix cookie_uid_helper_example obj build"
-- limited -D option filter only for arm
-- improved comments
-- added couple instructions to verify cross compilation for arm and
-  arm64 arches based on TI am57xx and am65xx sdks.
-- corrected include a little order
-
-Ivan Khoronzhuk (15):
-  samples/bpf: fix HDR_PROBE "echo"
-  samples/bpf: fix cookie_uid_helper_example obj build
-  samples/bpf: use --target from cross-compile
-  samples/bpf: use own EXTRA_CFLAGS for clang commands
-  samples/bpf: use __LINUX_ARM_ARCH__ selector for arm
-  samples/bpf: drop unnecessarily inclusion for bpf_load
-  samples/bpf: add makefile.target for separate CC target build
-  samples/bpf: base target programs rules on Makefile.target
-  samples/bpf: use own flags but not HOSTCFLAGS
-  samples/bpf: use target CC environment for HDR_PROBE
-  libbpf: don't use cxx to test_libpf target
-  libbpf: add C/LDFLAGS to libbpf.so and test_libpf targets
-  samples/bpf: provide C/LDFLAGS to libbpf
-  samples/bpf: add sysroot support
-  samples/bpf: add preparation steps and sysroot info to readme
-
- samples/bpf/Makefile                          | 164 ++++++++++--------
- samples/bpf/Makefile.target                   |  75 ++++++++
- samples/bpf/README.rst                        |  41 ++++-
- tools/lib/bpf/Makefile                        |  23 +--
- .../bpf/{test_libbpf.cpp => test_libbpf.c}    |  14 +-
- 5 files changed, 218 insertions(+), 99 deletions(-)
- create mode 100644 samples/bpf/Makefile.target
- rename tools/lib/bpf/{test_libbpf.cpp => test_libbpf.c} (61%)
-
--- 
-2.17.1
-
+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaCB8IDEwMCArKysrLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwg
+OTEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vdWFjY2Vz
+cy5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vdWFjY2Vzcy5oCmluZGV4IDYxZDkzZjA2MmEzNi4u
+ZTg3ZDg5MTFkYzUzIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS91YWNjZXNzLmgK
+KysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vdWFjY2Vzcy5oCkBAIC0xOTMsMjMgKzE5MywxMiBA
+QCBfX3R5cGVvZl9fKF9fYnVpbHRpbl9jaG9vc2VfZXhwcihzaXplb2YoeCkgPiBzaXplb2YoMFVM
+KSwgMFVMTCwgMFVMKSkKIAkJICAgICA6IDogIkEiICh4KSwgInIiIChhZGRyKQkJCVwKIAkJICAg
+ICA6IDogbGFiZWwpCiAKLSNkZWZpbmUgX19wdXRfdXNlcl9hc21fZXhfdTY0KHgsIGFkZHIpCQkJ
+CQlcCi0JYXNtIHZvbGF0aWxlKCJcbiIJCQkJCQlcCi0JCSAgICAgIjE6CW1vdmwgJSVlYXgsMCgl
+MSlcbiIJCQlcCi0JCSAgICAgIjI6CW1vdmwgJSVlZHgsNCglMSlcbiIJCQlcCi0JCSAgICAgIjM6
+IgkJCQkJCVwKLQkJICAgICBfQVNNX0VYVEFCTEVfRVgoMWIsIDJiKQkJCQlcCi0JCSAgICAgX0FT
+TV9FWFRBQkxFX0VYKDJiLCAzYikJCQkJXAotCQkgICAgIDogOiAiQSIgKHgpLCAiciIgKGFkZHIp
+KQotCiAjZGVmaW5lIF9fcHV0X3VzZXJfeDgoeCwgcHRyLCBfX3JldF9wdSkJCQkJXAogCWFzbSB2
+b2xhdGlsZSgiY2FsbCBfX3B1dF91c2VyXzgiIDogIj1hIiAoX19yZXRfcHUpCVwKIAkJICAgICA6
+ICJBIiAoKHR5cGVvZigqKHB0cikpKSh4KSksICJjIiAocHRyKSA6ICJlYngiKQogI2Vsc2UKICNk
+ZWZpbmUgX19wdXRfdXNlcl9nb3RvX3U2NCh4LCBwdHIsIGxhYmVsKSBcCiAJX19wdXRfdXNlcl9n
+b3RvKHgsIHB0ciwgInEiLCAiIiwgImVyIiwgbGFiZWwpCi0jZGVmaW5lIF9fcHV0X3VzZXJfYXNt
+X2V4X3U2NCh4LCBhZGRyKQlcCi0JX19wdXRfdXNlcl9hc21fZXgoeCwgYWRkciwgInEiLCAiIiwg
+ImVyIikKICNkZWZpbmUgX19wdXRfdXNlcl94OCh4LCBwdHIsIF9fcmV0X3B1KSBfX3B1dF91c2Vy
+X3goOCwgeCwgcHRyLCBfX3JldF9wdSkKICNlbmRpZgogCkBAIC0yODksMzEgKzI3OCw2IEBAIGRv
+IHsJCQkJCQkJCQlcCiAJfQkJCQkJCQkJXAogfSB3aGlsZSAoMCkKIAotLyoKLSAqIFRoaXMgZG9l
+c24ndCBkbyBfX3VhY2Nlc3NfYmVnaW4vZW5kIC0gdGhlIGV4Y2VwdGlvbiBoYW5kbGluZwotICog
+YXJvdW5kIGl0IG11c3QgZG8gdGhhdC4KLSAqLwotI2RlZmluZSBfX3B1dF91c2VyX3NpemVfZXgo
+eCwgcHRyLCBzaXplKQkJCQlcCi1kbyB7CQkJCQkJCQkJXAotCV9fY2hrX3VzZXJfcHRyKHB0cik7
+CQkJCQkJXAotCXN3aXRjaCAoc2l6ZSkgewkJCQkJCQlcCi0JY2FzZSAxOgkJCQkJCQkJXAotCQlf
+X3B1dF91c2VyX2FzbV9leCh4LCBwdHIsICJiIiwgImIiLCAiaXEiKTsJCVwKLQkJYnJlYWs7CQkJ
+CQkJCVwKLQljYXNlIDI6CQkJCQkJCQlcCi0JCV9fcHV0X3VzZXJfYXNtX2V4KHgsIHB0ciwgInci
+LCAidyIsICJpciIpOwkJXAotCQlicmVhazsJCQkJCQkJXAotCWNhc2UgNDoJCQkJCQkJCVwKLQkJ
+X19wdXRfdXNlcl9hc21fZXgoeCwgcHRyLCAibCIsICJrIiwgImlyIik7CQlcCi0JCWJyZWFrOwkJ
+CQkJCQlcCi0JY2FzZSA4OgkJCQkJCQkJXAotCQlfX3B1dF91c2VyX2FzbV9leF91NjQoKF9fdHlw
+ZW9mX18oKnB0cikpKHgpLCBwdHIpOwlcCi0JCWJyZWFrOwkJCQkJCQlcCi0JZGVmYXVsdDoJCQkJ
+CQkJXAotCQlfX3B1dF91c2VyX2JhZCgpOwkJCQkJXAotCX0JCQkJCQkJCVwKLX0gd2hpbGUgKDAp
+Ci0KICNpZmRlZiBDT05GSUdfWDg2XzMyCiAjZGVmaW5lIF9fZ2V0X3VzZXJfYXNtX3U2NCh4LCBw
+dHIsIHJldHZhbCwgZXJycmV0KQkJCVwKICh7CQkJCQkJCQkJXApAQCAtMzM0LDEzICsyOTgsOSBA
+QCBkbyB7CQkJCQkJCQkJXAogCQkgICAgIDogIm0iIChfX20oX19wdHIpKSwgIm0iIF9fbSgoKHUz
+MiBfX3VzZXIgKikoX19wdHIpKSArIDEpLAlcCiAJCSAgICAgICAiaSIgKGVycnJldCksICIwIiAo
+cmV0dmFsKSk7CQkJXAogfSkKLQotI2RlZmluZSBfX2dldF91c2VyX2FzbV9leF91NjQoeCwgcHRy
+KQkJCSh4KSA9IF9fZ2V0X3VzZXJfYmFkKCkKICNlbHNlCiAjZGVmaW5lIF9fZ2V0X3VzZXJfYXNt
+X3U2NCh4LCBwdHIsIHJldHZhbCwgZXJycmV0KSBcCiAJIF9fZ2V0X3VzZXJfYXNtKHgsIHB0ciwg
+cmV0dmFsLCAicSIsICIiLCAiPXIiLCBlcnJyZXQpCi0jZGVmaW5lIF9fZ2V0X3VzZXJfYXNtX2V4
+X3U2NCh4LCBwdHIpIFwKLQkgX19nZXRfdXNlcl9hc21fZXgoeCwgcHRyLCAicSIsICIiLCAiPXIi
+KQogI2VuZGlmCiAKICNkZWZpbmUgX19nZXRfdXNlcl9zaXplKHgsIHB0ciwgc2l6ZSwgcmV0dmFs
+LCBlcnJyZXQpCQkJXApAQCAtMzkwLDQxICszNTAsNiBAQCBkbyB7CQkJCQkJCQkJXAogCQkgICAg
+IDogIj1yIiAoZXJyKSwgbHR5cGUoeCkJCQkJXAogCQkgICAgIDogIm0iIChfX20oYWRkcikpLCAi
+aSIgKGVycnJldCksICIwIiAoZXJyKSkKIAotLyoKLSAqIFRoaXMgZG9lc24ndCBkbyBfX3VhY2Nl
+c3NfYmVnaW4vZW5kIC0gdGhlIGV4Y2VwdGlvbiBoYW5kbGluZwotICogYXJvdW5kIGl0IG11c3Qg
+ZG8gdGhhdC4KLSAqLwotI2RlZmluZSBfX2dldF91c2VyX3NpemVfZXgoeCwgcHRyLCBzaXplKQkJ
+CQlcCi1kbyB7CQkJCQkJCQkJXAotCV9fY2hrX3VzZXJfcHRyKHB0cik7CQkJCQkJXAotCXN3aXRj
+aCAoc2l6ZSkgewkJCQkJCQlcCi0JY2FzZSAxOgkJCQkJCQkJXAotCQlfX2dldF91c2VyX2FzbV9l
+eCh4LCBwdHIsICJiIiwgImIiLCAiPXEiKTsJCVwKLQkJYnJlYWs7CQkJCQkJCVwKLQljYXNlIDI6
+CQkJCQkJCQlcCi0JCV9fZ2V0X3VzZXJfYXNtX2V4KHgsIHB0ciwgInciLCAidyIsICI9ciIpOwkJ
+XAotCQlicmVhazsJCQkJCQkJXAotCWNhc2UgNDoJCQkJCQkJCVwKLQkJX19nZXRfdXNlcl9hc21f
+ZXgoeCwgcHRyLCAibCIsICJrIiwgIj1yIik7CQlcCi0JCWJyZWFrOwkJCQkJCQlcCi0JY2FzZSA4
+OgkJCQkJCQkJXAotCQlfX2dldF91c2VyX2FzbV9leF91NjQoeCwgcHRyKTsJCQkJXAotCQlicmVh
+azsJCQkJCQkJXAotCWRlZmF1bHQ6CQkJCQkJCVwKLQkJKHgpID0gX19nZXRfdXNlcl9iYWQoKTsJ
+CQkJCVwKLQl9CQkJCQkJCQlcCi19IHdoaWxlICgwKQotCi0jZGVmaW5lIF9fZ2V0X3VzZXJfYXNt
+X2V4KHgsIGFkZHIsIGl0eXBlLCBydHlwZSwgbHR5cGUpCQkJXAotCWFzbSB2b2xhdGlsZSgiMToJ
+bW92Iml0eXBlIiAlMSwlInJ0eXBlIjBcbiIJCVwKLQkJICAgICAiMjpcbiIJCQkJCQlcCi0JCSAg
+ICAgIi5zZWN0aW9uIC5maXh1cCxcImF4XCJcbiIJCQkJXAotICAgICAgICAgICAgICAgICAgICAg
+IjM6eG9yIml0eXBlIiAlInJ0eXBlIjAsJSJydHlwZSIwXG4iCQlcCi0JCSAgICAgIiAgam1wIDJi
+XG4iCQkJCQlcCi0JCSAgICAgIi5wcmV2aW91c1xuIgkJCQkJXAotCQkgICAgIF9BU01fRVhUQUJM
+RV9FWCgxYiwgM2IpCQkJCVwKLQkJICAgICA6IGx0eXBlKHgpIDogIm0iIChfX20oYWRkcikpKQot
+CiAjZGVmaW5lIF9fcHV0X3VzZXJfbm9jaGVjayh4LCBwdHIsIHNpemUpCQkJXAogKHsJCQkJCQkJ
+CVwKIAlfX2xhYmVsX18gX19wdV9sYWJlbDsJCQkJCVwKQEAgLTQ4MCwyNyArNDA1LDI1IEBAIHN0
+cnVjdCBfX2xhcmdlX3N0cnVjdCB7IHVuc2lnbmVkIGxvbmcgYnVmWzEwMF07IH07CiAJcmV0dmFs
+ID0gX19wdXRfdXNlcl9mYWlsZWQoeCwgYWRkciwgaXR5cGUsIHJ0eXBlLCBsdHlwZSwgZXJycmV0
+KTsJXAogfSB3aGlsZSAoMCkKIAotI2RlZmluZSBfX3B1dF91c2VyX2FzbV9leCh4LCBhZGRyLCBp
+dHlwZSwgcnR5cGUsIGx0eXBlKQkJCVwKLQlhc20gdm9sYXRpbGUoIjE6CW1vdiJpdHlwZSIgJSJy
+dHlwZSIwLCUxXG4iCQlcCi0JCSAgICAgIjI6XG4iCQkJCQkJXAotCQkgICAgIF9BU01fRVhUQUJM
+RV9FWCgxYiwgMmIpCQkJCVwKLQkJICAgICA6IDogbHR5cGUoeCksICJtIiAoX19tKGFkZHIpKSkK
+LQogLyoKICAqIHVhY2Nlc3NfdHJ5IGFuZCBjYXRjaAogICovCiAjZGVmaW5lIHVhY2Nlc3NfdHJ5
+CWRvIHsJCQkJCQlcCi0JY3VycmVudC0+dGhyZWFkLnVhY2Nlc3NfZXJyID0gMDsJCQkJXAorCV9f
+bGFiZWxfXyBfX3VhY2Nlc3NfY2F0Y2hfZWZhdWx0OwkJCQlcCiAJX191YWNjZXNzX2JlZ2luKCk7
+CQkJCQkJXAogCWJhcnJpZXIoKTsKIAogI2RlZmluZSB1YWNjZXNzX3RyeV9ub3NwZWMgZG8gewkJ
+CQkJCVwKLQljdXJyZW50LT50aHJlYWQudWFjY2Vzc19lcnIgPSAwOwkJCQlcCisJX19sYWJlbF9f
+IF9fdWFjY2Vzc19jYXRjaF9lZmF1bHQ7CQkJCVwKIAlfX3VhY2Nlc3NfYmVnaW5fbm9zcGVjKCk7
+CQkJCQlcCiAKICNkZWZpbmUgdWFjY2Vzc19jYXRjaChlcnIpCQkJCQkJXAogCV9fdWFjY2Vzc19l
+bmQoKTsJCQkJCQlcCi0JKGVycikgfD0gKGN1cnJlbnQtPnRocmVhZC51YWNjZXNzX2VyciA/IC1F
+RkFVTFQgOiAwKTsJCVwKKwkoZXJyKSA9IDA7CQkJCQkJCVwKKwlicmVhazsJCQkJCQkJCVwKK19f
+dWFjY2Vzc19jYXRjaF9lZmF1bHQ6CQkJCQkJCVwKKwlfX3VhY2Nlc3NfZW5kKCk7CQkJCQkJXAor
+CShlcnIpID0gLUVGQVVMVDsJCQkJCQlcCiB9IHdoaWxlICgwKQogCiAvKioKQEAgLTU2MiwxNyAr
+NDg1LDEyIEBAIHN0cnVjdCBfX2xhcmdlX3N0cnVjdCB7IHVuc2lnbmVkIGxvbmcgYnVmWzEwMF07
+IH07CiAjZGVmaW5lIGdldF91c2VyX3RyeQkJdWFjY2Vzc190cnlfbm9zcGVjCiAjZGVmaW5lIGdl
+dF91c2VyX2NhdGNoKGVycikJdWFjY2Vzc19jYXRjaChlcnIpCiAKLSNkZWZpbmUgZ2V0X3VzZXJf
+ZXgoeCwgcHRyKQlkbyB7CQkJCQlcCi0JdW5zaWduZWQgbG9uZyBfX2d1ZV92YWw7CQkJCQlcCi0J
+X19nZXRfdXNlcl9zaXplX2V4KChfX2d1ZV92YWwpLCAocHRyKSwgKHNpemVvZigqKHB0cikpKSk7
+CVwKLQkoeCkgPSAoX19mb3JjZSBfX3R5cGVvZl9fKCoocHRyKSkpX19ndWVfdmFsOwkJCVwKLX0g
+d2hpbGUgKDApCisjZGVmaW5lIGdldF91c2VyX2V4KHgsIHB0cikJdW5zYWZlX2dldF91c2VyKHgs
+IHB0ciwgX191YWNjZXNzX2NhdGNoX2VmYXVsdCkKIAogI2RlZmluZSBwdXRfdXNlcl90cnkJCXVh
+Y2Nlc3NfdHJ5CiAjZGVmaW5lIHB1dF91c2VyX2NhdGNoKGVycikJdWFjY2Vzc19jYXRjaChlcnIp
+CiAKLSNkZWZpbmUgcHV0X3VzZXJfZXgoeCwgcHRyKQkJCQkJCVwKLQlfX3B1dF91c2VyX3NpemVf
+ZXgoKF9fdHlwZW9mX18oKihwdHIpKSkoeCksIChwdHIpLCBzaXplb2YoKihwdHIpKSkKKyNkZWZp
+bmUgcHV0X3VzZXJfZXgoeCwgcHRyKQl1bnNhZmVfcHV0X3VzZXIoeCwgcHRyLCBfX3VhY2Nlc3Nf
+Y2F0Y2hfZWZhdWx0KQogCiBleHRlcm4gdW5zaWduZWQgbG9uZwogY29weV9mcm9tX3VzZXJfbm1p
+KHZvaWQgKnRvLCBjb25zdCB2b2lkIF9fdXNlciAqZnJvbSwgdW5zaWduZWQgbG9uZyBuKTsK
+--000000000000a3dcf4059497a30d--
