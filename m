@@ -2,746 +2,289 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD87CC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB732C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546C6218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB762053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KISjVuAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbfJKUZX (ORCPT
+        id S1729148AbfJKUbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729026AbfJKUZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:25:22 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9C4C2084C;
-        Fri, 11 Oct 2019 20:25:19 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 16:25:18 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] tracefs: Do not allocate and free proxy_ops for
- lockdown
-Message-ID: <20191011162518.2f8c99ca@gandalf.local.home>
-In-Reply-To: <CAHk-=wj7fGPKUspr579Cii-w_y60PtRaiDgKuxVtBAMK0VNNkA@mail.gmail.com>
-References: <20191011135458.7399da44@gandalf.local.home>
-        <CAHk-=wj7fGPKUspr579Cii-w_y60PtRaiDgKuxVtBAMK0VNNkA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 11 Oct 2019 16:31:22 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36073 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728930AbfJKUbW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 16:31:22 -0400
+Received: by mail-io1-f66.google.com with SMTP id b136so24236336iof.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 13:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lQtIpCqUeRMtNnzQ8ls8iatc+M9YfN+mnKLz1N2MKoY=;
+        b=KISjVuAnSe9J2G2N/COr2s8rOK0qoujhQlFDb+YKFoGabkgDMWt+rJY7rXRcplRuy/
+         K7pCDaq5hYTWQ+LCEh7HMpR77VFRx39WQpwfa+7vwyhZgxvsNjPvO9SkUqOfDi9dwOEL
+         RWbzbgQrKYSpqD+F5BXi6olEP9wEKO4frgO9DXs/k1aEVbil2zDq+LkgT4VZRZ5lErE0
+         sIir6mvh3jiCWeK/zc0ELhodBags16jNdSseFZGxA9r0DCECo534vO/cXwX6PihG3Pm9
+         odOnxFhkFlqoWH3Hka8D7AL8BAWyeS/hhn97GzqlyZhxd7YfkF6LjBI4UdOIPL2KHq2F
+         PJzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lQtIpCqUeRMtNnzQ8ls8iatc+M9YfN+mnKLz1N2MKoY=;
+        b=L5AdM+lq2kGc0PrvhfiAndTohmjEuf7fy2MQP7/Aa0S7CnIQknlC9ILWp/5tza2LOC
+         sbzBhetjKABazKDivceOnhfj3/9KRlT6SYhX5k8PUT5VieghGwHvO9+UiQMwSe9MsYbO
+         ZBVFkkjhsZgReqLaEsTsG+X8drl+xPUWGHrpbhhGQre0CAONtKtwrTQWhtCy/R739/Ls
+         /gF6Y+F8ayZcUMXbx0k3I7FSFvaLZU4r1dVU262OZCk0FqYGhYqH1h0sfM3ZwQdoUpGn
+         EK2x7Jokpdar4N39CPdv/LJr7wNyEFoqKQpwSLFVL3KeCcBD4iV5CbIc5FaM8fwinIZb
+         UNHw==
+X-Gm-Message-State: APjAAAVvfJjx1Pt7wpK7GCSfANCYgMEbQ0Dl2BPPZHt3ly3wUPf/ve0m
+        tDh9uKT/ZN35P/WEkucu6G9zHYiiVLpl9apzCpJdwpdh
+X-Google-Smtp-Source: APXvYqxnyDJFKHvj6FgQUFn0LQRVE/S+usuUfmhao2k7voBMhuu06zhCI78zyjDAG1Uc6rOTP4k1tw6Iq5YhmkvwUQU=
+X-Received: by 2002:a6b:ee07:: with SMTP id i7mr12618562ioh.26.1570825880204;
+ Fri, 11 Oct 2019 13:31:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190917085304.16987-1-weijiang.yang@intel.com> <20190917085304.16987-2-weijiang.yang@intel.com>
+In-Reply-To: <20190917085304.16987-2-weijiang.yang@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 11 Oct 2019 13:31:08 -0700
+Message-ID: <CALMp9eT+P5QTGy=LfZzMozkTC7jdEhbupbfza2tTE3U1grtZkQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/9] Documentation: Introduce EPT based Subpage Protection
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        yu.c.zhang@intel.com, alazar@bitdefender.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 11:20:30 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Tue, Sep 17, 2019 at 1:52 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
+>
+> Co-developed-by: yi.z.zhang@linux.intel.com
+> Signed-off-by: yi.z.zhang@linux.intel.com
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  Documentation/virtual/kvm/spp_kvm.txt | 178 ++++++++++++++++++++++++++
+>  1 file changed, 178 insertions(+)
+>  create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+>
+> diff --git a/Documentation/virtual/kvm/spp_kvm.txt b/Documentation/virtual/kvm/spp_kvm.txt
+> new file mode 100644
+> index 000000000000..1bd1c11d0a99
+> --- /dev/null
+> +++ b/Documentation/virtual/kvm/spp_kvm.txt
+> @@ -0,0 +1,178 @@
+> +EPT-Based Sub-Page Protection (SPP) for KVM
+> +====================================================
+> +
+> +1.Overview
+> +  EPT-based Sub-Page Protection(SPP) allows VMM to specify
+> +  fine-grained(128byte per sub-page) write-protection for guest physical
+> +  memory. When it's enabled, the CPU enforces write-access permission
+> +  for the sub-pages within a 4KB page, if corresponding bit is set in
+> +  permission vector, write to sub-page region is allowed, otherwise,
+> +  it's prevented with a EPT violation.
+> +
+> +  *Note*: In current implementation, SPP is exclusive with nested flag,
+> +  if it's on, SPP feature won't work.
+> +
+> +2.SPP Operation
+> +  Sub-Page Protection Table (SPPT) is introduced to manage sub-page
+> +  write-access permission.
+> +
+> +  It is active when:
+> +  a) nested flag is turned off.
+> +  b) "sub-page write protection" VM-execution control is 1.
+> +  c) SPP is initialized with KVM_INIT_SPP ioctl.
+> +  d) Sub-page permissions are set with KVM_SUBPAGES_SET_ACCESS ioctl.
+> +     see below sections for details.
+> +
+> +  __________________________________________________________________________
+> +
+> +  How SPP hardware works:
+> +  __________________________________________________________________________
+> +
+> +  Guest write access --> GPA --> Walk EPT --> EPT leaf entry -----|
+> +  |---------------------------------------------------------------|
+> +  |-> if VMexec_control.spp && ept_leaf_entry.spp_bit (bit 61)
+> +       |
+> +       |-> <false> --> EPT legacy behavior
+> +       |
+> +       |
+> +       |-> <true>  --> if ept_leaf_entry.writable
+> +                        |
+> +                        |-> <true>  --> Ignore SPP
+> +                        |
+> +                        |-> <false> --> GPA --> Walk SPP 4-level table--|
+> +                                                                        |
+> +  |------------<----------get-the-SPPT-point-from-VMCS-filed-----<------|
+/filed/field/
+> +  |
+> +  Walk SPP L4E table
+> +  |
+> +  |---> if-entry-misconfiguration ------------>-------|-------<---------|
+> +   |                                                  |                 |
+> +  else                                                |                 |
+> +   |                                                  |                 |
+> +   |   |------------------SPP VMexit<-----------------|                 |
+> +   |   |                                                                |
+> +   |   |-> exit_qualification & sppt_misconfig --> sppt misconfig       |
+> +   |   |                                                                |
+> +   |   |-> exit_qualification & sppt_miss --> sppt miss                 |
+> +   |---|                                                                |
+> +       |                                                                |
+> +  walk SPPT L3E--|--> if-entry-misconfiguration------------>------------|
+> +                 |                                                      |
+> +                else                                                    |
+> +                 |                                                      |
+> +                 |                                                      |
+> +          walk SPPT L2E --|--> if-entry-misconfiguration-------->-------|
+> +                          |                                             |
+> +                         else                                           |
+> +                          |                                             |
+> +                          |                                             |
+> +                   walk SPPT L1E --|-> if-entry-misconfiguration--->----|
+> +                                   |
+> +                                 else
+> +                                   |
+> +                                   |-> if sub-page writable
+> +                                   |-> <true>  allow, write access
+> +                                   |-> <false> disallow, EPT violation
+> +  ______________________________________________________________________________
+> +
+> +3.IOCTL Interfaces
+> +
+> +    KVM_INIT_SPP:
+> +    Allocate storage for sub-page permission vectors and SPPT root page.
+> +
+> +    KVM_SUBPAGES_GET_ACCESS:
+> +    Get sub-page write permission vectors for given continuous guest pages.
+/continuous/contiguous/
+> +
+> +    KVM_SUBPAGES_SET_ACCESS
+> +    Set SPP bit in EPT leaf entries for given continuous guest pages. The
+/continuous/contiguous/
+> +    actual SPPT setup is triggered when SPP miss vm-exit is handled.
+> +
+> +    /* for KVM_SUBPAGES_GET_ACCESS and KVM_SUBPAGES_SET_ACCESS */
+> +    struct kvm_subpage_info {
+> +       __u64 gfn; /* the first page gfn of the continuous pages */
+/continuous/contiguous/
+> +       __u64 npages; /* number of 4K pages */
+> +       __u64 *access_map; /* sub-page write-access bitmap array */
+> +    };
+> +
+> +    #define KVM_SUBPAGES_GET_ACCESS   _IOR(KVMIO,  0x49, __u64)
+> +    #define KVM_SUBPAGES_SET_ACCESS   _IOW(KVMIO,  0x4a, __u64)
+> +    #define KVM_INIT_SPP              _IOW(KVMIO,  0x4b, __u64)
 
-> So from a quick glance, just making tracing_open_generic() do the
-> lockdown testing will take care of most cases.  Add a few other cases
-> to fill up the whole set, and your'e done.
-> 
-> Willing to do that instead?
+The ioctls should be documented in api.txt.
 
-OK, so I tried this approach, and there's a bit more than just a "few"
-extra cases that use tracing_open_generic(). Below is the full patch.
+> +4.Set Sub-Page Permission
+> +
+> +  * To enable SPP protection, system admin sets sub-page permission via
+Why system admin? Can't any kvm user do this?
+> +    KVM_SUBPAGES_SET_ACCESS ioctl:
+> +    (1) It first stores the access permissions in bitmap array.
+> +
+> +    (2) Then, if the target 4KB page is mapped as PT_PAGE_TABLE_LEVEL entry in EPT,
+/page is/pages are/
+> +       it sets SPP bit of the corresponding entry to mark sub-page protection.
+> +       If the 4KB page is mapped as PT_DIRECTORY_LEVEL or PT_PDPE_LEVEL, it
+/page is/pages are/
+> +       zapps the hugepage entry and let following memroy access to trigger EPT
+/zapps/zaps/, /entry/enttries/, /memroy/memory/
+> +       page fault, there the gfn is check against SPP permission bitmap and
+/page fault/violation/
+> +       proper level is selected to set up EPT entry.
+> +
+> +
+> +   The SPPT paging structure format is as below:
+> +
+> +   Format of the SPPT L4E, L3E, L2E:
+> +   | Bit    | Contents                                                                 |
+> +   | :----- | :------------------------------------------------------------------------|
+> +   | 0      | Valid entry when set; indicates whether the entry is present             |
+> +   | 11:1   | Reserved (0)                                                             |
+> +   | N-1:12 | Physical address of 4KB aligned SPPT LX-1 Table referenced by this entry |
+> +   | 51:N   | Reserved (0)                                                             |
+> +   | 63:52  | Reserved (0)                                                             |
+> +   Note: N is the physical address width supported by the processor. X is the page level
+> +
+> +   Format of the SPPT L1E:
+> +   | Bit   | Contents                                                          |
+> +   | :---- | :---------------------------------------------------------------- |
+> +   | 0+2i  | Write permission for i-th 128 byte sub-page region.               |
+> +   | 1+2i  | Reserved (0).                                                     |
+> +   Note: 0<=i<=31
+> +
+> +5.SPPT-induced VM exit
+> +
+> +  * SPPT miss and misconfiguration induced VM exit
+> +
+> +    A SPPT missing VM exit occurs when walk the SPPT, there is no SPPT
+> +    misconfiguration but a paging-structure entry is not
+> +    present in any of L4E/L3E/L2E entries.
+> +
+> +    A SPPT misconfiguration VM exit occurs when reserved bits or unsupported values
+> +    are set in SPPT entry.
+> +
+> +    *NOTE* SPPT miss and SPPT misconfigurations can occur only due to an
+> +    attempt to write memory with a guest physical address.
 
-Here's the diffstat:
+Can you clarify what this means? For instance, setting an A or D bit
+in a PTE is an attempt to "write memory with a guest physical
+address," but per the SDM, it is not an operation that is eligible for
+sub-page write permissions.
 
- fs/tracefs/inode.c                  |   42 --------------------
- kernel/trace/ftrace.c               |   29 +++++++++++++-
- kernel/trace/trace.c                |   73 ++++++++++++++++++++++++++++++++++--
- kernel/trace/trace_dynevent.c       |    5 ++
- kernel/trace/trace_events.c         |   10 ++++
- kernel/trace/trace_events_hist.c    |   11 +++++
- kernel/trace/trace_events_trigger.c |    8 +++
- kernel/trace/trace_kprobe.c         |   11 +++++
- kernel/trace/trace_printk.c         |    7 +++
- kernel/trace/trace_stack.c          |    8 +++
- kernel/trace/trace_stat.c           |    6 ++
- kernel/trace/trace_uprobe.c         |   11 +++++
- 12 files changed, 173 insertions(+), 48 deletions(-)
+> +  * SPP permission induced VM exit
+> +    SPP sub-page permission induced violation is reported as EPT violation
+> +    thesefore causes VM exit.
+/thesefore/therefore/
 
-Compared to the patch with the full wrapper:
-
- fs/tracefs/inode.c | 153 +++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 135 insertions(+), 18 deletions(-)
-
-I'm thinking that the full wrapper may not be as bad. But then again, I
-could probably clean up some of this code and have a single check for
-both the lockdown and the "tracing_disabled" check.
-
--- Steve
-
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 9fc14e38927f..eeeae0475da9 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -20,7 +20,6 @@
- #include <linux/parser.h>
- #include <linux/magic.h>
- #include <linux/slab.h>
--#include <linux/security.h>
- 
- #define TRACEFS_DEFAULT_MODE	0700
- 
-@@ -28,25 +27,6 @@ static struct vfsmount *tracefs_mount;
- static int tracefs_mount_count;
- static bool tracefs_registered;
- 
--static int default_open_file(struct inode *inode, struct file *filp)
--{
--	struct dentry *dentry = filp->f_path.dentry;
--	struct file_operations *real_fops;
--	int ret;
--
--	if (!dentry)
--		return -EINVAL;
--
--	ret = security_locked_down(LOCKDOWN_TRACEFS);
--	if (ret)
--		return ret;
--
--	real_fops = dentry->d_fsdata;
--	if (!real_fops->open)
--		return 0;
--	return real_fops->open(inode, filp);
--}
--
- static ssize_t default_read_file(struct file *file, char __user *buf,
- 				 size_t count, loff_t *ppos)
- {
-@@ -241,12 +221,6 @@ static int tracefs_apply_options(struct super_block *sb)
- 	return 0;
- }
- 
--static void tracefs_destroy_inode(struct inode *inode)
--{
--	if (S_ISREG(inode->i_mode))
--		kfree(inode->i_fop);
--}
--
- static int tracefs_remount(struct super_block *sb, int *flags, char *data)
- {
- 	int err;
-@@ -283,7 +257,6 @@ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
- static const struct super_operations tracefs_super_operations = {
- 	.statfs		= simple_statfs,
- 	.remount_fs	= tracefs_remount,
--	.destroy_inode  = tracefs_destroy_inode,
- 	.show_options	= tracefs_show_options,
- };
- 
-@@ -414,7 +387,6 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
- 				   struct dentry *parent, void *data,
- 				   const struct file_operations *fops)
- {
--	struct file_operations *proxy_fops;
- 	struct dentry *dentry;
- 	struct inode *inode;
- 
-@@ -430,20 +402,8 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
- 	if (unlikely(!inode))
- 		return failed_creating(dentry);
- 
--	proxy_fops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
--	if (unlikely(!proxy_fops)) {
--		iput(inode);
--		return failed_creating(dentry);
--	}
--
--	if (!fops)
--		fops = &tracefs_file_operations;
--
--	dentry->d_fsdata = (void *)fops;
--	memcpy(proxy_fops, fops, sizeof(*proxy_fops));
--	proxy_fops->open = default_open_file;
- 	inode->i_mode = mode;
--	inode->i_fop = proxy_fops;
-+	inode->i_fop = fops ? fops : &tracefs_file_operations;
- 	inode->i_private = data;
- 	d_instantiate(dentry, inode);
- 	fsnotify_create(dentry->d_parent->d_inode, dentry);
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 62a50bf399d6..326253b4de93 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -18,6 +18,7 @@
- #include <linux/clocksource.h>
- #include <linux/sched/task.h>
- #include <linux/kallsyms.h>
-+#include <linux/security.h>
- #include <linux/seq_file.h>
- #include <linux/tracefs.h>
- #include <linux/hardirq.h>
-@@ -3486,6 +3487,11 @@ static int
- ftrace_avail_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_iterator *iter;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
- 
- 	if (unlikely(ftrace_disabled))
- 		return -ENODEV;
-@@ -3504,6 +3510,11 @@ static int
- ftrace_enabled_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_iterator *iter;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
- 
- 	iter = __seq_open_private(file, &show_ftrace_seq_ops, sizeof(*iter));
- 	if (!iter)
-@@ -3540,7 +3551,11 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
- 	struct ftrace_hash *hash;
- 	struct list_head *mod_head;
- 	struct trace_array *tr = ops->private;
--	int ret = 0;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
- 
- 	ftrace_ops_init(ops);
- 
-@@ -3618,6 +3633,7 @@ ftrace_filter_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_ops *ops = inode->i_private;
- 
-+	/* Checks for tracefs lockdown */
- 	return ftrace_regex_open(ops,
- 			FTRACE_ITER_FILTER | FTRACE_ITER_DO_PROBES,
- 			inode, file);
-@@ -3628,6 +3644,7 @@ ftrace_notrace_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_ops *ops = inode->i_private;
- 
-+	/* Checks for tracefs lockdown */
- 	return ftrace_regex_open(ops, FTRACE_ITER_NOTRACE,
- 				 inode, file);
- }
-@@ -5194,9 +5211,13 @@ static int
- __ftrace_graph_open(struct inode *inode, struct file *file,
- 		    struct ftrace_graph_data *fgd)
- {
--	int ret = 0;
-+	int ret;
- 	struct ftrace_hash *new_hash = NULL;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (file->f_mode & FMODE_WRITE) {
- 		const int size_bits = FTRACE_HASH_DEFAULT_BITS;
- 
-@@ -6537,6 +6558,10 @@ ftrace_pid_open(struct inode *inode, struct file *file)
- 	struct seq_file *m;
- 	int ret = 0;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (trace_array_get(tr) < 0)
- 		return -ENODEV;
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 252f79c435f8..4be1be27d064 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -17,6 +17,7 @@
- #include <linux/stacktrace.h>
- #include <linux/writeback.h>
- #include <linux/kallsyms.h>
-+#include <linux/security.h>
- #include <linux/seq_file.h>
- #include <linux/notifier.h>
- #include <linux/irqflags.h>
-@@ -4140,6 +4141,12 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 
- int tracing_open_generic(struct inode *inode, struct file *filp)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-@@ -4159,6 +4166,11 @@ bool tracing_is_disabled(void)
- static int tracing_open_generic_tr(struct inode *inode, struct file *filp)
- {
- 	struct trace_array *tr = inode->i_private;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
- 
- 	if (tracing_disabled)
- 		return -ENODEV;
-@@ -4233,7 +4245,11 @@ static int tracing_open(struct inode *inode, struct file *file)
- {
- 	struct trace_array *tr = inode->i_private;
- 	struct trace_iterator *iter;
--	int ret = 0;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
- 
- 	if (trace_array_get(tr) < 0)
- 		return -ENODEV;
-@@ -4352,6 +4368,10 @@ static int show_traces_open(struct inode *inode, struct file *file)
- 	struct seq_file *m;
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-@@ -4697,6 +4717,10 @@ static int tracing_trace_options_open(struct inode *inode, struct file *file)
- 	struct trace_array *tr = inode->i_private;
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-@@ -5038,6 +5062,12 @@ static const struct seq_operations tracing_saved_tgids_seq_ops = {
- 
- static int tracing_saved_tgids_open(struct inode *inode, struct file *filp)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-@@ -5115,6 +5145,12 @@ static const struct seq_operations tracing_saved_cmdlines_seq_ops = {
- 
- static int tracing_saved_cmdlines_open(struct inode *inode, struct file *filp)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-@@ -5280,6 +5316,12 @@ static const struct seq_operations tracing_eval_map_seq_ops = {
- 
- static int tracing_eval_map_open(struct inode *inode, struct file *filp)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-@@ -5804,7 +5846,11 @@ static int tracing_open_pipe(struct inode *inode, struct file *filp)
- {
- 	struct trace_array *tr = inode->i_private;
- 	struct trace_iterator *iter;
--	int ret = 0;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
- 
- 	if (tracing_disabled)
- 		return -ENODEV;
-@@ -6547,6 +6593,10 @@ static int tracing_clock_open(struct inode *inode, struct file *file)
- 	struct trace_array *tr = inode->i_private;
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-@@ -6581,6 +6631,10 @@ static int tracing_time_stamp_mode_open(struct inode *inode, struct file *file)
- 	struct trace_array *tr = inode->i_private;
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-@@ -6638,7 +6692,11 @@ static int tracing_snapshot_open(struct inode *inode, struct file *file)
- 	struct trace_array *tr = inode->i_private;
- 	struct trace_iterator *iter;
- 	struct seq_file *m;
--	int ret = 0;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
- 
- 	if (trace_array_get(tr) < 0)
- 		return -ENODEV;
-@@ -6786,6 +6844,7 @@ static int snapshot_raw_open(struct inode *inode, struct file *filp)
- 	struct ftrace_buffer_info *info;
- 	int ret;
- 
-+	/* The following checks for tracefs lockdown */
- 	ret = tracing_buffers_open(inode, filp);
- 	if (ret < 0)
- 		return ret;
-@@ -7105,6 +7164,10 @@ static int tracing_err_log_open(struct inode *inode, struct file *file)
- 	struct trace_array *tr = inode->i_private;
- 	int ret = 0;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (trace_array_get(tr) < 0)
- 		return -ENODEV;
- 
-@@ -7157,6 +7220,10 @@ static int tracing_buffers_open(struct inode *inode, struct file *filp)
- 	struct ftrace_buffer_info *info;
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-index a41fed46c285..7a731416bbdd 100644
---- a/kernel/trace/trace_dynevent.c
-+++ b/kernel/trace/trace_dynevent.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2018 Masami Hiramatsu <mhiramat@kernel.org>
-  */
- 
-+#include <linux/security.h>
- #include <linux/debugfs.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-@@ -174,6 +175,10 @@ static int dyn_event_open(struct inode *inode, struct file *file)
- {
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
- 		ret = dyn_events_release_all(NULL);
- 		if (ret < 0)
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index b89cdfe20bc1..cc02257fd6df 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -12,6 +12,7 @@
- #define pr_fmt(fmt) fmt
- 
- #include <linux/workqueue.h>
-+#include <linux/security.h>
- #include <linux/spinlock.h>
- #include <linux/kthread.h>
- #include <linux/tracefs.h>
-@@ -1294,6 +1295,10 @@ static int trace_format_open(struct inode *inode, struct file *file)
- 	struct seq_file *m;
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	ret = seq_open(file, &trace_format_seq_ops);
- 	if (ret < 0)
- 		return ret;
-@@ -1771,6 +1776,10 @@ ftrace_event_open(struct inode *inode, struct file *file,
- 	struct seq_file *m;
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	ret = seq_open(file, seq_ops);
- 	if (ret < 0)
- 		return ret;
-@@ -1795,6 +1804,7 @@ ftrace_event_avail_open(struct inode *inode, struct file *file)
- {
- 	const struct seq_operations *seq_ops = &show_event_seq_ops;
- 
-+	/* Checks for tracefs lockdown */
- 	return ftrace_event_open(inode, file, seq_ops);
- }
- 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 9468bd8d44a2..71dfe6889d62 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -7,6 +7,7 @@
- 
- #include <linux/module.h>
- #include <linux/kallsyms.h>
-+#include <linux/security.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/stacktrace.h>
-@@ -1448,6 +1449,10 @@ static int synth_events_open(struct inode *inode, struct file *file)
- {
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
- 		ret = dyn_events_release_all(&synth_event_ops);
- 		if (ret < 0)
-@@ -5515,6 +5520,12 @@ static int hist_show(struct seq_file *m, void *v)
- 
- static int event_hist_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return single_open(file, hist_show, file);
- }
- 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 2a2912cb4533..2cd53ca21b51 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2013 Tom Zanussi <tom.zanussi@linux.intel.com>
-  */
- 
-+#include <linux/security.h>
- #include <linux/module.h>
- #include <linux/ctype.h>
- #include <linux/mutex.h>
-@@ -173,7 +174,11 @@ static const struct seq_operations event_triggers_seq_ops = {
- 
- static int event_trigger_regex_open(struct inode *inode, struct file *file)
- {
--	int ret = 0;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
- 
- 	mutex_lock(&event_mutex);
- 
-@@ -292,6 +297,7 @@ event_trigger_write(struct file *filp, const char __user *ubuf,
- static int
- event_trigger_open(struct inode *inode, struct file *filp)
- {
-+	/* Checks for tracefs lockdown */
- 	return event_trigger_regex_open(inode, filp);
- }
- 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 324ffbea3556..e4422746cb4c 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -7,6 +7,7 @@
-  */
- #define pr_fmt(fmt)	"trace_kprobe: " fmt
- 
-+#include <linux/security.h>
- #include <linux/module.h>
- #include <linux/uaccess.h>
- #include <linux/rculist.h>
-@@ -936,6 +937,10 @@ static int probes_open(struct inode *inode, struct file *file)
- {
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
- 		ret = dyn_events_release_all(&trace_kprobe_ops);
- 		if (ret < 0)
-@@ -988,6 +993,12 @@ static const struct seq_operations profile_seq_op = {
- 
- static int profile_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return seq_open(file, &profile_seq_op);
- }
- 
-diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-index c3fd849d4a8f..d4e31e969206 100644
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -6,6 +6,7 @@
-  *
-  */
- #include <linux/seq_file.h>
-+#include <linux/security.h>
- #include <linux/uaccess.h>
- #include <linux/kernel.h>
- #include <linux/ftrace.h>
-@@ -348,6 +349,12 @@ static const struct seq_operations show_format_seq_ops = {
- static int
- ftrace_formats_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return seq_open(file, &show_format_seq_ops);
- }
- 
-diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-index ec9a34a97129..4df9a209f7ca 100644
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -5,6 +5,7 @@
-  */
- #include <linux/sched/task_stack.h>
- #include <linux/stacktrace.h>
-+#include <linux/security.h>
- #include <linux/kallsyms.h>
- #include <linux/seq_file.h>
- #include <linux/spinlock.h>
-@@ -470,6 +471,12 @@ static const struct seq_operations stack_trace_seq_ops = {
- 
- static int stack_trace_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return seq_open(file, &stack_trace_seq_ops);
- }
- 
-@@ -487,6 +494,7 @@ stack_trace_filter_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_ops *ops = inode->i_private;
- 
-+	/* Checks for tracefs lockdown */
- 	return ftrace_regex_open(ops, FTRACE_ITER_FILTER,
- 				 inode, file);
- }
-diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
-index 75bf1bcb4a8a..9ab0a1a7ad5e 100644
---- a/kernel/trace/trace_stat.c
-+++ b/kernel/trace/trace_stat.c
-@@ -9,7 +9,7 @@
-  *
-  */
- 
--
-+#include <linux/security.h>
- #include <linux/list.h>
- #include <linux/slab.h>
- #include <linux/rbtree.h>
-@@ -238,6 +238,10 @@ static int tracing_stat_open(struct inode *inode, struct file *file)
- 	struct seq_file *m;
- 	struct stat_session *session = inode->i_private;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	ret = stat_seq_init(session);
- 	if (ret)
- 		return ret;
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index dd884341f5c5..352073d36585 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -7,6 +7,7 @@
-  */
- #define pr_fmt(fmt)	"trace_uprobe: " fmt
- 
-+#include <linux/security.h>
- #include <linux/ctype.h>
- #include <linux/module.h>
- #include <linux/uaccess.h>
-@@ -769,6 +770,10 @@ static int probes_open(struct inode *inode, struct file *file)
- {
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
- 		ret = dyn_events_release_all(&trace_uprobe_ops);
- 		if (ret)
-@@ -818,6 +823,12 @@ static const struct seq_operations profile_seq_op = {
- 
- static int profile_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return seq_open(file, &profile_seq_op);
- }
- 
+> +
+> +6.SPPT-induced VM exit handling
+> +
+> +  #define EXIT_REASON_SPP                 66
+> +
+> +  static int (*const kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
+> +    ...
+> +    [EXIT_REASON_SPP]                     = handle_spp,
+> +    ...
+> +  };
+> +
+> +  New exit qualification for SPPT-induced vmexits.
+> +
+> +  | Bit   | Contents                                                          |
+> +  | :---- | :---------------------------------------------------------------- |
+> +  | 10:0  | Reserved (0).                                                     |
+> +  | 11    | SPPT VM exit type. Set for SPPT Miss, cleared for SPPT Misconfig. |
+> +  | 12    | NMI unblocking due to IRET                                        |
+> +  | 63:13 | Reserved (0)                                                      |
+> +
+> +  In addition to the exit qualification, guest linear address and guest
+> +  physical address fields will be reported.
+> +
+> +  * SPPT miss and misconfiguration induced VM exit
+> +    Set up SPPT entries correctly.
+> +
+> +  * SPP permission induced VM exit
+> +    This kind of VM exit is left to VMI tool to handle.
+> --
+> 2.17.2
+>
