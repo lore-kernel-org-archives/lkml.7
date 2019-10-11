@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5EAC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17DFECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96CD52196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9788521D6C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qRw947YL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCsQiH4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfJKGD1 (ORCPT
+        id S1727413AbfJKGDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 02:03:27 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40082 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfJKGDT (ORCPT
+        Fri, 11 Oct 2019 02:03:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42067 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727379AbfJKGD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 02:03:19 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d26so5144622pgl.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 23:03:19 -0700 (PDT)
+        Fri, 11 Oct 2019 02:03:29 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e5so3944464pls.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 23:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Qz3Pn3iXTIAiE5Vxrx22/mL18yJZNqUc+hQQr9LyuGk=;
-        b=qRw947YLIcc9aPdljmXnyA/xH0POdjYEa92ZTsYn+nL5Xdk2MjpmQIMKvPT+Fk8PNT
-         CNoQPCcCnEkBxcZlxSeGajPaVjv8ive0kdMZN1tZhV5xmpbZbdnrruqT70ceWXUsNjEH
-         tVPp++edETPFa5n7v/TL2CRj11yWwyTWoUMQS1Mg2lfcxByj5xKSlb2xNCivzshc/F2z
-         vdEk1+Pup1096N721pH2WV7vA+B4OQgGF4q8StprvbbbSUsPWl6hSLUy0L3Qn6bYiaWp
-         3/nYTzz9v2MpWYcIdbnyavV6lyeX2W0QMecnG8E+wxFwXH7F2XW8FX6G352oXeYOz8QH
-         WGgQ==
+        bh=ZhH7y9bWqrYq0GkntR2sqe3cFWsNeqnTiNZ167qd4Ww=;
+        b=QCsQiH4zWuKHwsrNSls2v4R+pgugagGbeWEx0Jxi05GUkcoh3J8oTImD/N5SqDx11B
+         DKgkcanC09fKw+B+TmxVc8a5cEBEg75rnu47ckfW3U/ariFlcLaSfcKay4RdHgc71Sv7
+         UyPem8oI1w5WSHT+6pdXHHOGLoqcb1S+93dT1rlBWr5NcLznYSzaiRmTbwfnICVl3pUe
+         RSsLpBCAHFmNC0rKM4Hiy8eevrSCU4G/FS4D402e8pJ8qa6swip9P/UsRmtLa3kXGJ5a
+         VBJfiBa62PBLkawRSn/QA7A2POcOhqMprIz7xU5cpGj5boKYxe4vUF9/jD7Uilm83BuX
+         Vpsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Qz3Pn3iXTIAiE5Vxrx22/mL18yJZNqUc+hQQr9LyuGk=;
-        b=lbNdjMtWHKClYIGDC11Gm2JPyhSoW94XEZUCe8yM2TP3zvRCWudthcvOTyrRwZX+23
-         DCg5XZ4c1g+OG6fo65PhCT6llD9Hu7g5iQPQyCFPSkgxi//wkfMaWpHHx5ijSKia01zm
-         K0MqN2qINEyc813CEuaFm3P7Mlo4fa+ByOMazBvgVdFkVvwCqgQ+GbolG8KcAkWB/rLn
-         Hy/leGnE8cf290cf5h3RyVLA9vH7Ktq5zB5BnowJMrJUtDKDfVXjMpML2/SviCQ1vHN1
-         dBVM6DhOKQDmKi9CqJcAaEZ0NNRMtGkTjWeUyznW0F5/zpmFzR7c8JslnsM//PRGaV/e
-         uW8A==
-X-Gm-Message-State: APjAAAXyXvx1LtYDQzdqr9yrcyPczyTZL6qtoSWM42U706CF6pzDrJa6
-        HBuBKwGuynqM0bRk7bg5Pe0=
-X-Google-Smtp-Source: APXvYqwyzKMM75Cft1OKVW9Jt6akVe0ytXSGjl13uwCrlJOem0eKVsftuj36yrTACVJiv/+7Y/ISWw==
-X-Received: by 2002:a17:90a:de14:: with SMTP id m20mr15695383pjv.10.1570773798627;
-        Thu, 10 Oct 2019 23:03:18 -0700 (PDT)
+        bh=ZhH7y9bWqrYq0GkntR2sqe3cFWsNeqnTiNZ167qd4Ww=;
+        b=gI2ykOqdV2EKrf4T63C/dpdrR+rbClT9KgqGx+8Irh7uF0t2EjrdmYMkLNoRq/63Od
+         jiB5o0PE6Z+SiEZK/FDm3UeoR1VxlQivIrT5clzLODmitpmowY0f5iwB4xzi+ztmZRsc
+         HcxHJsmyhVElekAF0dW+eo+dSF2MsL1E6zAhFwqn4VI/ucHPZVKQFtS79fPKGoHXgPHE
+         abG1o/gxdm7qrgQV2Psd7kIc4lA85KB8oRbG1tTi5cPtmnQ9HTyYNNmPGqgM5u8aMVNv
+         wH14OieWAhN2Ote16RwGFolNiweACCAPG8X6ZEC/HEQshE4+7vgDpG/GN5aUnHTnLVRL
+         bKzA==
+X-Gm-Message-State: APjAAAVNost9+Y/QBYFdF4HsJcQkeA0Ptt1NsIfnIUsH6WueTztn5It4
+        DItNej3jLoaIx/CrnNOYFYA=
+X-Google-Smtp-Source: APXvYqznc/4K8eKHZ0HdkF8LED+YFxKkZxoms/0qMxEZcPi6+7/VNjd9bd2jMFWr/6i33HKwFK1QTA==
+X-Received: by 2002:a17:902:aa07:: with SMTP id be7mr13517839plb.242.1570773809093;
+        Thu, 10 Oct 2019 23:03:29 -0700 (PDT)
 Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id p11sm9395715pgb.1.2019.10.10.23.03.12
+        by smtp.googlemail.com with ESMTPSA id p11sm9395715pgb.1.2019.10.10.23.03.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 23:03:17 -0700 (PDT)
+        Thu, 10 Oct 2019 23:03:28 -0700 (PDT)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     outreachy-kernel@googlegroups.com
 Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
         Wambui Karuga <wambui.karugax@gmail.com>
-Subject: [PATCH 2/5] staging: octeon: remove typedef declaration for cvmx_helper_link_info_t
-Date:   Fri, 11 Oct 2019 09:02:39 +0300
-Message-Id: <78e2c3a4089261e416e9b890cdf81ef029966b75.1570773209.git.wambui.karugax@gmail.com>
+Subject: [PATCH 3/5] staging: octeon: remove typedef declaration for cvmx_fau_reg_32_t
+Date:   Fri, 11 Oct 2019 09:02:40 +0300
+Message-Id: <b4ac58c4f17ec98e014980ae7084db16ffd9d97c.1570773209.git.wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1570773209.git.wambui.karugax@gmail.com>
 References: <cover.1570773209.git.wambui.karugax@gmail.com>
@@ -75,149 +75,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove declaration of union cvmx_helper_link_info_t as typedef in
+Remove typedef declaration for enum cvmx_fau_reg_32_t in
 drivers/staging/octeon/octeon-stubs.h.
-Also replace its previous uses with new union declaration.
+Also replace its previous uses with new declaration format.
 Issue found by checkpatch.pl
 
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/staging/octeon/ethernet-mdio.c   |  6 +++---
- drivers/staging/octeon/ethernet-rgmii.c  |  4 ++--
- drivers/staging/octeon/ethernet.c        |  4 ++--
- drivers/staging/octeon/octeon-ethernet.h |  2 +-
- drivers/staging/octeon/octeon-stubs.h    | 10 +++++-----
- 5 files changed, 13 insertions(+), 13 deletions(-)
+ drivers/staging/octeon/octeon-stubs.h | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/octeon/ethernet-mdio.c b/drivers/staging/octeon/ethernet-mdio.c
-index ffac0c4b3f5c..847081549373 100644
---- a/drivers/staging/octeon/ethernet-mdio.c
-+++ b/drivers/staging/octeon/ethernet-mdio.c
-@@ -65,7 +65,7 @@ int cvm_oct_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
- }
- 
- void cvm_oct_note_carrier(struct octeon_ethernet *priv,
--			  cvmx_helper_link_info_t li)
-+			  union cvmx_helper_link_info_t li)
- {
- 	if (li.s.link_up) {
- 		pr_notice_ratelimited("%s: %u Mbps %s duplex, port %d, queue %d\n",
-@@ -81,7 +81,7 @@ void cvm_oct_note_carrier(struct octeon_ethernet *priv,
- void cvm_oct_adjust_link(struct net_device *dev)
- {
- 	struct octeon_ethernet *priv = netdev_priv(dev);
--	cvmx_helper_link_info_t link_info;
-+	union cvmx_helper_link_info_t link_info;
- 
- 	link_info.u64		= 0;
- 	link_info.s.link_up	= dev->phydev->link ? 1 : 0;
-@@ -106,7 +106,7 @@ int cvm_oct_common_stop(struct net_device *dev)
- {
- 	struct octeon_ethernet *priv = netdev_priv(dev);
- 	int interface = INTERFACE(priv->port);
--	cvmx_helper_link_info_t link_info;
-+	union cvmx_helper_link_info_t link_info;
- 	union cvmx_gmxx_prtx_cfg gmx_cfg;
- 	int index = INDEX(priv->port);
- 
-diff --git a/drivers/staging/octeon/ethernet-rgmii.c b/drivers/staging/octeon/ethernet-rgmii.c
-index d91fd5ce9e68..f815be830ce0 100644
---- a/drivers/staging/octeon/ethernet-rgmii.c
-+++ b/drivers/staging/octeon/ethernet-rgmii.c
-@@ -53,7 +53,7 @@ static void cvm_oct_set_hw_preamble(struct octeon_ethernet *priv, bool enable)
- static void cvm_oct_check_preamble_errors(struct net_device *dev)
- {
- 	struct octeon_ethernet *priv = netdev_priv(dev);
--	cvmx_helper_link_info_t link_info;
-+	union cvmx_helper_link_info_t link_info;
- 	unsigned long flags;
- 
- 	link_info.u64 = priv->link_info;
-@@ -103,7 +103,7 @@ static void cvm_oct_check_preamble_errors(struct net_device *dev)
- static void cvm_oct_rgmii_poll(struct net_device *dev)
- {
- 	struct octeon_ethernet *priv = netdev_priv(dev);
--	cvmx_helper_link_info_t link_info;
-+	union cvmx_helper_link_info_t link_info;
- 	bool status_change;
- 
- 	link_info = cvmx_helper_link_get(priv->port);
-diff --git a/drivers/staging/octeon/ethernet.c b/drivers/staging/octeon/ethernet.c
-index 3de209b7d0ec..1f7a7ebe1a60 100644
---- a/drivers/staging/octeon/ethernet.c
-+++ b/drivers/staging/octeon/ethernet.c
-@@ -460,7 +460,7 @@ int cvm_oct_common_open(struct net_device *dev,
- 	struct octeon_ethernet *priv = netdev_priv(dev);
- 	int interface = INTERFACE(priv->port);
- 	int index = INDEX(priv->port);
--	cvmx_helper_link_info_t link_info;
-+	union cvmx_helper_link_info_t link_info;
- 	int rv;
- 
- 	rv = cvm_oct_phy_setup_device(dev);
-@@ -496,7 +496,7 @@ int cvm_oct_common_open(struct net_device *dev,
- void cvm_oct_link_poll(struct net_device *dev)
- {
- 	struct octeon_ethernet *priv = netdev_priv(dev);
--	cvmx_helper_link_info_t link_info;
-+	union cvmx_helper_link_info_t link_info;
- 
- 	link_info = cvmx_helper_link_get(priv->port);
- 	if (link_info.u64 == priv->link_info)
-diff --git a/drivers/staging/octeon/octeon-ethernet.h b/drivers/staging/octeon/octeon-ethernet.h
-index 042220d86d33..5a0d754b0c70 100644
---- a/drivers/staging/octeon/octeon-ethernet.h
-+++ b/drivers/staging/octeon/octeon-ethernet.h
-@@ -91,7 +91,7 @@ int cvm_oct_common_stop(struct net_device *dev);
- int cvm_oct_common_open(struct net_device *dev,
- 			void (*link_poll)(struct net_device *));
- void cvm_oct_note_carrier(struct octeon_ethernet *priv,
--			  cvmx_helper_link_info_t li);
-+			  union cvmx_helper_link_info_t li);
- void cvm_oct_link_poll(struct net_device *dev);
- 
- extern int always_use_pow;
 diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-index fd7522f70f7e..78f42597cee5 100644
+index 78f42597cee5..1725d54523de 100644
 --- a/drivers/staging/octeon/octeon-stubs.h
 +++ b/drivers/staging/octeon/octeon-stubs.h
-@@ -191,7 +191,7 @@ struct cvmx_wqe_t {
- 	uint8_t packet_data[96];
+@@ -201,9 +201,9 @@ union cvmx_helper_link_info_t {
+ 	} s;
  };
  
--typedef union {
-+union cvmx_helper_link_info_t {
- 	uint64_t u64;
- 	struct {
- 		uint64_t reserved_20_63:44;
-@@ -199,7 +199,7 @@ typedef union {
- 		uint64_t full_duplex:1;	    /**< 1 if the link is full duplex */
- 		uint64_t speed:18;	    /**< Speed of the link in Mbps */
- 	} s;
--} cvmx_helper_link_info_t;
+-typedef enum {
++enum cvmx_fau_reg_32_t {
+ 	CVMX_FAU_REG_32_START	= 0,
+-} cvmx_fau_reg_32_t;
 +};
  
  typedef enum {
- 	CVMX_FAU_REG_32_START	= 0,
-@@ -1267,15 +1267,15 @@ static inline cvmx_helper_interface_mode_t cvmx_helper_interface_get_mode(int
- 	return 0;
- }
+ 	CVMX_FAU_OP_SIZE_8 = 0,
+@@ -1178,16 +1178,18 @@ union cvmx_gmxx_rxx_rx_inbnd {
+ 	} s;
+ };
  
--static inline cvmx_helper_link_info_t cvmx_helper_link_get(int ipd_port)
-+static inline union cvmx_helper_link_info_t cvmx_helper_link_get(int ipd_port)
+-static inline int32_t cvmx_fau_fetch_and_add32(cvmx_fau_reg_32_t reg,
++static inline int32_t cvmx_fau_fetch_and_add32(enum cvmx_fau_reg_32_t reg,
+ 					       int32_t value)
  {
--	cvmx_helper_link_info_t ret = { .u64 = 0 };
-+	union cvmx_helper_link_info_t ret = { .u64 = 0 };
- 
- 	return ret;
+ 	return value;
  }
  
- static inline int cvmx_helper_link_set(int ipd_port,
--				cvmx_helper_link_info_t link_info)
-+				       union cvmx_helper_link_info_t link_info)
- {
- 	return 0;
+-static inline void cvmx_fau_atomic_add32(cvmx_fau_reg_32_t reg, int32_t value)
++static inline void cvmx_fau_atomic_add32(enum cvmx_fau_reg_32_t reg,
++					 int32_t value)
+ { }
+ 
+-static inline void cvmx_fau_atomic_write32(cvmx_fau_reg_32_t reg, int32_t value)
++static inline void cvmx_fau_atomic_write32(enum cvmx_fau_reg_32_t reg,
++					   int32_t value)
+ { }
+ 
+ static inline uint64_t cvmx_scratch_read64(uint64_t address)
+@@ -1364,7 +1366,7 @@ static inline int cvmx_spi_restart_interface(int interface,
  }
+ 
+ static inline void cvmx_fau_async_fetch_and_add32(uint64_t scraddr,
+-						  cvmx_fau_reg_32_t reg,
++						  enum cvmx_fau_reg_32_t reg,
+ 						  int32_t value)
+ { }
+ 
 -- 
 2.23.0
 
