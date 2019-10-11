@@ -2,166 +2,239 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CD0ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DDDC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E472190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A56721A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:57:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ewhBCjlS"
+	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="VE+8lVxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfJKIyc (ORCPT
+        id S1727367AbfJKI5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:54:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34636 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726397AbfJKIyc (ORCPT
+        Fri, 11 Oct 2019 04:57:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43553 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfJKI5l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:54:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570784071;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eqByrLt5Vdti/Qv9DsLf8UE4W1FmXeVxkyclk9rGeTo=;
-        b=ewhBCjlSyoYni7FZ4mjVogXwvqXeL+POI5VpfPaRIh7NehkHhi5aPgEGTxU7xHC+UerP4s
-        h37ZQIU36RgOMDALgqsaiSRB8Glq1liyq+sj1u6BxkU/qKau58liZRDiBUsb8GOc9krCKB
-        /sLYwQTlijzBMcYyMNLjArzYAlSEWYM=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-110-8Gfy7x_-PwOUaMJspJUgyQ-1; Fri, 11 Oct 2019 04:54:28 -0400
-Received: by mail-qk1-f200.google.com with SMTP id v143so8203635qka.21
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:54:28 -0700 (PDT)
+        Fri, 11 Oct 2019 04:57:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j18so10939128wrq.10
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:57:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=mxoi4denfFjBanodar5aeA8F5xRb+IVFF07ncuSoD20=;
+        b=VE+8lVxRG2UATnor1rRNd7CkNsFD9vL27RGS9hzkLHrOLbpFXwkDl8hE4gUSxore43
+         Qxyj/RLsTMnL2m5lkVxX+c+J8iSMfB3JDlgRW4Q/pFsi/W8bUs7tpCvFJH9y2S/hH4Ee
+         SCfHv7HrehUBgKtRXPav7HUGswrmcSmA403TiBc2BgoewYF6K4hUNdAULyAsb/3SnW7g
+         u81T2/lKzGQNZR/B25dY+CHpnhESHv4xPf+vt26LSFKOinrAOiYqTY8qsZt8gbz9F4J9
+         8APpDPid1vRKNGAptVO/uPhPVQpkhCo6ZzIFTxcMWrzhJ4yS5nhooBQ1Te/oVQpOzsWg
+         8rRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eqByrLt5Vdti/Qv9DsLf8UE4W1FmXeVxkyclk9rGeTo=;
-        b=sFn2jHq20X7vgK6/hFnNeeeKHMs01v1BzA3/FXo/bCuZGfvUeW3P2J9xyNH9WE3p/3
-         HqNv1R14aWgyw3mdgaVRsJHWQc8Wok352lQRFK7S25OYBzqFkL9YTcwGhV0XtbUh0Cg+
-         +yFEG4YOi9O47dGwzO2+Yy8kBdwrdtnGGJQ/xiyA/41kSfxT6a+dbY+kcgs+zTz0yJ32
-         +WCEjhMVPbsZvXUt6ZyVoOuJ8KVfpPAvEn+RXXwQKhxP3qMti4Pd8x6/QcbdvSzTyt5Z
-         B8jI0ZzTbmx5q2G7sU8PHKFUYUX79W1l6GHSeySQ5JvMnUpj3frrkMSTUnPxAnNi5J+M
-         NI0g==
-X-Gm-Message-State: APjAAAUR2F+HnbW0QnCPd2l6rdVT38yrL7XzEyIyEpcJWrEMb5r3gmjB
-        K/n+X3LGIjYppSxKKAscGY7qo9hmDN6bsfqTWmU2x4a9CmM5h24k2IjnpSRikRKaCkp6jN2m4+j
-        vDIlUnumB2JBsbYv3/HkFc+tgPh5wbGWQwedfeMTY
-X-Received: by 2002:ac8:1e83:: with SMTP id c3mr15568222qtm.294.1570784067989;
-        Fri, 11 Oct 2019 01:54:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz/V9+A0WSqZaDO7OFXISc9+GZq/Vzaj7Pjxou3mKbEZVfAG4wXOTvSoN+Hl6CCsx6TQjBqFMcXfero/+VIBpA=
-X-Received: by 2002:ac8:1e83:: with SMTP id c3mr15568215qtm.294.1570784067809;
- Fri, 11 Oct 2019 01:54:27 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=mxoi4denfFjBanodar5aeA8F5xRb+IVFF07ncuSoD20=;
+        b=X8uOTShJbIM2SEsVsxFzWsTg8XlMfSIXpB2HJolMEmflBuzjF0LHdEoWVvXDsU7wx8
+         zosmFD2bH4kghjgEjbAJXfIACcw14N3Mo1qXmZxPFcxvI54PQmx9hAidyTYNwhyyxgT7
+         lheV6R5sqc1+XBMd5Hi/hiqPhTgrc15oUOrVnwsMfOEGw3NTniZhoX/3bhdHg4Vr5aJY
+         SvyfMIz4YqTaflLJ+5hWKX0vXQheNXIF2uRuJbPUUQ7xeDkHvJkiEveT/v6dVLOW3K8o
+         M25HeG5Lj1/0ICOCUXmRBZjPI1sglvO3DhAp0OPes8NpgwtTeUWXaqZFXNEqE7HkMPTt
+         mdPw==
+X-Gm-Message-State: APjAAAX+lPwJ3czDoXId4rUbRt7GjWTsDHAjhMm88rAwVnW1TAG2hisX
+        MTUW8+kBcNf9fPkvHXdbJE2xNxnrKk4g0A==
+X-Google-Smtp-Source: APXvYqyvUs1tjKzNTJDb+4QHaGuwWmmRABn4WjvTnAw4P7LRmy3nQF3Qdf5OkGt9YFgdlMLuVebpNA==
+X-Received: by 2002:a5d:6745:: with SMTP id l5mr8677850wrw.51.1570784258135;
+        Fri, 11 Oct 2019 01:57:38 -0700 (PDT)
+Received: from linux.fritz.box (p200300D99705BE00E22045ECB41D901D.dip0.t-ipconnect.de. [2003:d9:9705:be00:e220:45ec:b41d:901d])
+        by smtp.googlemail.com with ESMTPSA id r140sm11036455wme.47.2019.10.11.01.57.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2019 01:57:36 -0700 (PDT)
+Subject: Re: wake_q memory ordering
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        1vier1@web.de, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+References: <990690aa-8281-41da-4a46-99bb8f9fec31@colorfullife.com>
+ <20191010114244.GS2311@hirez.programming.kicks-ass.net>
+ <7af22b09-2ab9-78c9-3027-8281f020e2e8@colorfullife.com>
+ <20191010123219.GO2328@hirez.programming.kicks-ass.net>
+ <20191010192508.3yvpc5r6oqjq5tbr@linux-p48b>
+From:   Manfred Spraul <manfred@colorfullife.com>
+Message-ID: <0312fc72-74f1-ea3e-8301-f94bba742735@colorfullife.com>
+Date:   Fri, 11 Oct 2019 10:57:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <uBbIS3nFJ1jdYNLHcqjW5wxQAwmZv0kmYEoeoPrxNhfzi6cHwmCOY-ewdqe7S1hNEj-p4Hd9D0_Y3PymUTdh_6WFXuMmIYUkV2xaKCPMYz0=@protonmail.com>
- <403b3e7f6d276e47c447e6ea56a3370b03c3298c.camel@archlinux.org>
-In-Reply-To: <403b3e7f6d276e47c447e6ea56a3370b03c3298c.camel@archlinux.org>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 11 Oct 2019 10:54:16 +0200
-Message-ID: <CAO-hwJK+V=CE8_NjqRszPA6dbGq1yNJAtOAm2qmqVjgK_XzEHw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] HID: logitech: Add MX Mice over Bluetooth
-To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
-Cc:     Mazin Rezk <mnrzk@protonmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-X-MC-Unique: 8Gfy7x_-PwOUaMJspJUgyQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191010192508.3yvpc5r6oqjq5tbr@linux-p48b>
+Content-Type: multipart/mixed;
+ boundary="------------62DA3BF5D4ACDC7006B98085"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 10:49 AM Filipe La=C3=ADns <lains@archlinux.org> wr=
-ote:
->
-> On Fri, 2019-10-11 at 00:57 +0000, Mazin Rezk wrote:
-> > On Saturday, October 5, 2019 9:04 PM, Mazin Rezk <
-> > mnrzk@protonmail.com> wrote:
-> >
-> > > This patch adds support for several MX mice over Bluetooth. The
-> > > device IDs
-> > > have been copied from the libratbag device database and their
-> > > features
-> > > have been based on their DJ device counterparts.
-> >
-> > No changes have been made to this patch in v4. However, it should be
-> > noted
-> > that the only device that has been thoroughly tested in this patch is
-> > the
-> > MX Master (b01e). Further testing for the other devices may be
-> > required.
-> >
-> > Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> > ---
-> >  drivers/hid/hid-logitech-hidpp.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >
-> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-
-> > logitech-hidpp.c
-> > index 0179f7ed77e5..85fd0c17cc2f 100644
-> > --- a/drivers/hid/hid-logitech-hidpp.c
-> > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > @@ -3773,6 +3773,24 @@ static const struct hid_device_id
-> > hidpp_devices[] =3D {
-> >       { /* MX5500 keyboard over Bluetooth */
-> >         HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
-> >         .driver_data =3D HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
-> > +     { /* MX Anywhere 2 mouse over Bluetooth */
-> > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb013),
-> > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > +     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb018),
-> > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > +     { /* MX Anywhere 2S mouse over Bluetooth */
-> > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01a),
-> > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > +     { /* MX Master mouse over Bluetooth */
-> > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012),
-> > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > +     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb017),
-> > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > +     { HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e),
-> > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> > +     { /* MX Master 2S mouse over Bluetooth */
-> > +       HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb019),
-> > +       .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> >       {}
-> >  };
-> >
-> > --
-> > 2.23.0
-> >
->
-> The series now looks great, thanks!
->
-> Benjamin, I can confirm that up to now all BLE devices don't have short
-> reports. I am not sure if you still want to only enable tested devices
-> but from an architectural standpoint everything here should be fine.
+This is a multi-part message in MIME format.
+--------------62DA3BF5D4ACDC7006B98085
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Unfortunately yes, we need actual device tests:
-- this series enable 0x2121 on all of those devices (is it correct?)
-- we are not shielded from a FW error and something that goes wrong
-when enabling one of those mice with hid-logitech-hidpp.c. All of
-those mice works fine with hid-generic, and if we oversee one tiny
-bit, we'll regress for no good reasons.
+Hi Davidlohr,
 
-Cheers,
-Benjamin
+On 10/10/19 9:25 PM, Davidlohr Bueso wrote:
+> On Thu, 10 Oct 2019, Peter Zijlstra wrote:
+>
+>> On Thu, Oct 10, 2019 at 02:13:47PM +0200, Manfred Spraul wrote:
+>>
+>>> Therefore smp_mb__{before,after}_atomic() may be combined with
+>>> cmpxchg_relaxed, to form a full memory barrier, on all archs.
+>>
+>> Just so.
+>
+> We might want something like this?
+>
+> ----8<---------------------------------------------------------
+>
+> From: Davidlohr Bueso <dave@stgolabs.net>
+> Subject: [PATCH] Documentation/memory-barriers.txt: Mention 
+> smp_mb__{before,after}_atomic() and CAS
+>
+> Explicitly mention possible usages to guarantee serialization even upon
+> failed cmpxchg (or similar) calls along with 
+> smp_mb__{before,after}_atomic().
+>
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> ---
+> Documentation/memory-barriers.txt | 12 ++++++++++++
+> 1 file changed, 12 insertions(+)
+>
+> diff --git a/Documentation/memory-barriers.txt 
+> b/Documentation/memory-barriers.txt
+> index 1adbb8a371c7..5d2873d4b442 100644
+> --- a/Documentation/memory-barriers.txt
+> +++ b/Documentation/memory-barriers.txt
+> @@ -1890,6 +1890,18 @@ There are some more advanced barrier functions:
+>      This makes sure that the death mark on the object is perceived to 
+> be set
+>      *before* the reference counter is decremented.
+>
+> +     Similarly, these barriers can be used to guarantee serialization 
+> for atomic
+> +     RMW calls on architectures which may not imply memory barriers 
+> upon failure.
+> +
+> +    obj->next = NULL;
+> +    smp_mb__before_atomic()
+> +    if (cmpxchg(&obj->ptr, NULL, val))
+> +        return;
+> +
+> +     This makes sure that the store to the next pointer always has 
+> smp_store_mb()
+> +     semantics. As such, smp_mb__{before,after}_atomic() calls allow 
+> optimizing
+> +     the barrier usage by finer grained serialization.
+> +
+>      See Documentation/atomic_{t,bitops}.txt for more information.
+>
+>
+I don't know. The new documentation would not have answered my question 
+(is it ok to combine smp_mb__before_atomic() with atomic_relaxed()?). 
+And it copies content already present in atomic_t.txt.
 
->
-> Mazin, you can have my
->
-> Reviewed-by: Filipe La=C3=ADns <lains@archlinux.org>
->
-> for the series.
->
-> Thank you,
-> Filipe La=C3=ADns
+Thus: I would prefer if the first sentence of the paragraph is replaced: 
+The list of operations should end with "...", and it should match what 
+is in atomic_t.txt
 
+Ok?
+
+--
+
+     Manfred
+
+
+
+--------------62DA3BF5D4ACDC7006B98085
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0004-Documentation-memory-barriers.txt-Clarify-cmpxchg.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0004-Documentation-memory-barriers.txt-Clarify-cmpxchg.patch"
+
+From 8df60211228042672ba0cd89c3566c5145e8b203 Mon Sep 17 00:00:00 2001
+From: Manfred Spraul <manfred@colorfullife.com>
+Date: Fri, 11 Oct 2019 10:33:26 +0200
+Subject: [PATCH 4/4] Documentation/memory-barriers.txt:  Clarify cmpxchg()
+
+The documentation in memory-barriers.txt claims that
+smp_mb__{before,after}_atomic() are for atomic ops that do not return a
+value.
+
+This is misleading and doesn't match the example in atomic_t.txt,
+and e.g. smp_mb__before_atomic() may and is used together with
+cmpxchg_relaxed() in the wake_q code.
+
+The purpose of e.g. smp_mb__before_atomic() is to "upgrade" a following
+RMW atomic operation to a full memory barrier.
+The return code of the atomic operation has no impact, so all of the
+following examples are valid:
+
+1)
+	smp_mb__before_atomic();
+	atomic_add();
+
+2)
+	smp_mb__before_atomic();
+	atomic_xchg_relaxed();
+
+3)
+	smp_mb__before_atomic();
+	atomic_fetch_add_relaxed();
+
+Invalid would be:
+	smp_mb__before_atomic();
+	atomic_set();
+
+Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+---
+ Documentation/memory-barriers.txt | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+index 1adbb8a371c7..52076b057400 100644
+--- a/Documentation/memory-barriers.txt
++++ b/Documentation/memory-barriers.txt
+@@ -1873,12 +1873,13 @@ There are some more advanced barrier functions:
+  (*) smp_mb__before_atomic();
+  (*) smp_mb__after_atomic();
+ 
+-     These are for use with atomic (such as add, subtract, increment and
+-     decrement) functions that don't return a value, especially when used for
+-     reference counting.  These functions do not imply memory barriers.
++     These are for use with atomic RMW functions (such as add, subtract,
++     increment, decrement, failed conditional operations, ...) that do
++     not imply memory barriers, but where the code needs a memory barrier,
++     for example when used for reference counting.
+ 
+-     These are also used for atomic bitop functions that do not return a
+-     value (such as set_bit and clear_bit).
++     These are also used for atomic RMW bitop functions that do imply a full
++     memory barrier (such as set_bit and clear_bit).
+ 
+      As an example, consider a piece of code that marks an object as being dead
+      and then decrements the object's reference count:
+-- 
+2.21.0
+
+
+--------------62DA3BF5D4ACDC7006B98085--
