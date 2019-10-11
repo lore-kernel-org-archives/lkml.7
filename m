@@ -2,167 +2,144 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20545C47404
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47222ECE58C
 	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DBF2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7ED21A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 05:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="AOu22roD"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="nsU0TBpJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfJKFQF (ORCPT
+        id S1726725AbfJKFQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 01:16:05 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40091 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfJKFQF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 01:16:05 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d26so5082099pgl.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 22:16:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=JNE3qIp3GwZhiIaVERKeTReBCbfaT6qnnngWA97+jmk=;
-        b=AOu22roDAjo2Iw+3ow0fVFNymLA4XBqbwMDgFJZyPjBxC4xlTXYjrRBrz2nneQ5BxF
-         sbxK7nQd39Xz28F4U95JzmCvqagYnkud8AjfEHFfy1gzZ0Xf5ELRIiKXZHiGMtS6LAgp
-         5GYBEWP2o+WH4nxjrWEq08XdmsoVQ9uFUxcWY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=JNE3qIp3GwZhiIaVERKeTReBCbfaT6qnnngWA97+jmk=;
-        b=A7j5Hj6BYfCtYQ4qZWoAZxaN+0Za3vwyWlVfnd+NAzMpGMaEuZkFhWHejtOi/PeW3m
-         4liz8Kb7MX4PZGl376PADzQYiIj9ys4qikblY3L+cZvnjAnCi2hb399TzQg1xMkzjhrJ
-         s7BweAGKtIUDnXuokHHkyqXxGM3XQymosgdvaqg4fI3UMGyBSYIv2d05+uGfn/imJGe5
-         u9svTO2RsebjU0HaemQL+KRrtRtwLb2N0nvwHRJPGMFWOnxzpeueImZ5J4Bx/+3gN9o6
-         Em5AhI9aQvgsr9LCSHa5QQaWjpimhjIQwFC7VBQWKgdHrizJeFmL/TPBmlpUwouuhmk4
-         kcSw==
-X-Gm-Message-State: APjAAAWLgzAM/SeVjacHC8yOGPTj1DCdZ8NY8PQvp4PUGUhFgCMKCzQt
-        i7VWAza+3dMHv4J6VHLd7i7e/tZ2sJ0zJw==
-X-Google-Smtp-Source: APXvYqyssA7gSzANSBd3uHeJuSuJcZZ6Tgu3LYuU0Dw0BEbm5M5u9xetMF08ol8pUsyxy0slgFZujw==
-X-Received: by 2002:aa7:8dd9:: with SMTP id j25mr12341886pfr.94.1570770964627;
-        Thu, 10 Oct 2019 22:16:04 -0700 (PDT)
-Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
-        by smtp.gmail.com with ESMTPSA id x125sm7795793pfb.93.2019.10.10.22.16.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 22:16:03 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        dvyukov@google.com, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com
-Subject: Re: [PATCH v8 1/5] kasan: support backing vmalloc space with real shadow memory
-In-Reply-To: <20191007080209.GA22997@pc636>
-References: <20191001065834.8880-1-dja@axtens.net> <20191001065834.8880-2-dja@axtens.net> <20191007080209.GA22997@pc636>
-Date:   Fri, 11 Oct 2019 16:15:59 +1100
-Message-ID: <87sgnzuak0.fsf@dja-thinkpad.axtens.net>
+        Fri, 11 Oct 2019 01:16:38 -0400
+Received: from mout.web.de ([212.227.15.4]:46871 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbfJKFQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 01:16:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1570770956;
+        bh=bdfZdfv0kDFiJjag8bHGUhUdVn4C4VGy8330bt1MT9A=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=nsU0TBpJW+ShOJ5XqcmvvjFyUy3YPVdNAxGWs0rsbaTBqSE9gfVFB+eXtOYXr60nR
+         BkLXSpBY8xJina3TRetCdM5Bj6LIFw35GjCgcUt5pnvUReffnrez6OHgAuvilOiCom
+         e1yf6aRNS2exOhMAlp8EQVXacRHHd/npa1Jy9Pkc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.164.92]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MaJc8-1icfbw0kEi-00Jsim; Fri, 11
+ Oct 2019 07:15:56 +0200
+Subject: Re: Searching for missing variable checks
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        kernel-janitors@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Aditya Pakki <pakki001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Coccinelle <cocci@systeme.lip6.fr>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+References: <75f70e5e-9ece-d6d1-a2c5-2f3ad79b9ccb@web.de>
+ <954c5d70-742f-7b0e-57ad-ea967e93be89@rasmusvillemoes.dk>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <dd1adf86-1bc1-2ffe-1af8-3d7082c5a468@web.de>
+Date:   Fri, 11 Oct 2019 07:15:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <954c5d70-742f-7b0e-57ad-ea967e93be89@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:T/VUbhIi6SXgqdz3828YL5FmNXv409l4EkBDA1njed6Ts4T1WRY
+ 1h86oiKchdYB9Q8OkV5VT9oqYRsggXOkXJLGdWo5ativOnLHqXB486YFdX0i+m/gMtUH0B9
+ urb4LWdfCHfsSiZt2E3EROGQpl2IezgPrrBZ1DYpeP2PjODj5D+YijBeLELtDEEIFki+ewH
+ mYT3pjEdAxjdQ2qTnp+MA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zfP7ojbHTrg=:vep1Nd6qZ0lRDogOPNrJy3
+ Zscr2NbH2d1CJCAiCzoNi7Zly+nIy2oIvKDQ7jcDvjUEHl/a6YyicJrCdOVx5Cbq8EZqAfrLB
+ vsUSElXYc9vE10r1EBbDmSSpQ+ENSK6ivo4b9HB7r/ub8oQ26h5F/1SSNYeQGHvjbs0YS6GiD
+ 6FP3+Z5ZBMyMEJmpVZ7w0igzm4LOhUaqWG3bJz1xywz0AMOnJBpAZCjNLEWizdIP84+MH6Sqg
+ 46S1fZb9MjjY1qU438rL6/ARnJCkrf1wh9dv3+NnfiIFkPw7U4ljDcvhXJodoDvFkTrMMrCoI
+ CXh3k+I2MeUXrKym/vEGYI7kJArI4r6zsDncxkrUU8l3ZkTYo05orSiSxb2BUeAZWszjbrJlc
+ JG/zKgVAzCHzGMGFoA+nKxFXIItj5JGukQqPbAy39I6x/sTxBGS/mU7CIH/CPtXtDTkbz7xHY
+ 25CGw11S7rHbAurQ5k5yFgsEXkISGOCTZvwrAPODx/JcfJDoWMgjIVDWF8pRO9rT1zWbORr0r
+ tR1ByF01qjbL8jr0NrBjgusmvG3EQm5nuwaztCzNZWYEMJrgbCwJ37e+niiJYZc97nw4FTtBC
+ GDagekI3qTR6MA65gZGZiF+zn34TyRvQHc5XoEMfzBEsrp8g2QVpxVGfUYrcy/AqoDzOssnh6
+ BONJ52aymyqyHbO/SXS0Qlb56BG6KWLFn4BXy41bRY8kDNVTKR3uqewVEaHinPXuGoOc4C9Rg
+ dal02KTBnjmZyvTsmiL6jCJt+81/wLhZXtgBQr/xFy2l4ZFh+zjiMmQ8YaRnTal5XkjnFzM4V
+ cQhn4+FLB+E0B3XcfF5awn57xhZA5wEYtPx80BL+fM9PKV6Td5eg5m+2EP7v0wLgsPcJggfiJ
+ UCm56y3infpr2IQs+PVGLyVDcjCW2T2jDEPp+x/hAekc2UAp55WbC9Sr3Ag8G0/S25IdAYEUt
+ L9w8Snez1W2gOGVu8Xh/IywBGoDUDRgQijcHGuUG7eYiv2ZGbjkXeJphnYl4nl0oyxFlqi/3R
+ MhetKoiDS0GRUCh+a9VitXGdTvlEI7dUuPHYccRNuzI8i8YVHWyLl9p+wYB7wCu0V7DTejOe+
+ ZcBRM2bn0TbrR3ybEVCJiJGt+e3EZfPqcLUdOqiG93AJOaq9/NttPdAzqPbEwPSMcOBeXDkBt
+ y6SSqBEOPmyjFQF/queYieKDh/YO0H5bZZuwuZ+S7xC2gL01OplRnc2O1qszEAAMT0BOGp3HI
+ 9N1WxzcCPAtaDGoWzSEsBCbSASZgGfZaGfb+7XMzf40tu++7DJS7/0jc8jeY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uladzislau,
+> The problem is the __must_check does not mean that the
+> return value must be followed by a comparison to NULL and bailing out
+> (that can't really be checked), it simply ensures the return value is
+> assigned somewhere or used in an if(). So foo->bar = kstrdup() not
+> followed by a check of foo->bar won't warn.
 
-
-> Looking at it one more, i think above part of code is a bit wrong
-> and should be separated from merge_or_add_vmap_area() logic. The
-> reason is to keep it simple and do only what it is supposed to do:
-> merging or adding.
->
-> Also the kasan_release_vmalloc() gets called twice there and looks like
-> a duplication. Apart of that, merge_or_add_vmap_area() can be called via
-> recovery path when vmap/vmaps is/are not even setup. See percpu
-> allocator.
->
-> I guess your part could be moved directly to the __purge_vmap_area_lazy()
-> where all vmaps are lazily freed. To do so, we also need to modify
-> merge_or_add_vmap_area() to return merged area:
-
-Thanks for the review. I've integrated your snippet - it seems to work
-fine, and I agree that it is much simpler and clearer. so I've rolled it
-in to v9 which I will post soon.
+Higher level source code analysis tools like the semantic patch language
+(Coccinelle software) can help to find such missing checks.
+Would you like to point any additional development tools out
+for this purpose?
 
 Regards,
-Daniel
-
->
-> <snip>
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index e92ff5f7dd8b..fecde4312d68 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -683,7 +683,7 @@ insert_vmap_area_augment(struct vmap_area *va,
->   * free area is inserted. If VA has been merged, it is
->   * freed.
->   */
-> -static __always_inline void
-> +static __always_inline struct vmap_area *
->  merge_or_add_vmap_area(struct vmap_area *va,
->         struct rb_root *root, struct list_head *head)
->  {
-> @@ -750,7 +750,10 @@ merge_or_add_vmap_area(struct vmap_area *va,
->  
->                         /* Free vmap_area object. */
->                         kmem_cache_free(vmap_area_cachep, va);
-> -                       return;
-> +
-> +                       /* Point to the new merged area. */
-> +                       va = sibling;
-> +                       merged = true;
->                 }
->         }
->  
-> @@ -759,6 +762,8 @@ merge_or_add_vmap_area(struct vmap_area *va,
->                 link_va(va, root, parent, link, head);
->                 augment_tree_propagate_from(va);
->         }
-> +
-> +       return va;
->  }
->  
->  static __always_inline bool
-> @@ -1172,7 +1177,7 @@ static void __free_vmap_area(struct vmap_area *va)
->         /*
->          * Merge VA with its neighbors, otherwise just add it.
->          */
-> -       merge_or_add_vmap_area(va,
-> +       (void) merge_or_add_vmap_area(va,
->                 &free_vmap_area_root, &free_vmap_area_list);
->  }
->  
-> @@ -1279,15 +1284,20 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
->         spin_lock(&vmap_area_lock);
->         llist_for_each_entry_safe(va, n_va, valist, purge_list) {
->                 unsigned long nr = (va->va_end - va->va_start) >> PAGE_SHIFT;
-> +               unsigned long orig_start = va->va_start;
-> +               unsigned long orig_end = va->va_end;
->  
->                 /*
->                  * Finally insert or merge lazily-freed area. It is
->                  * detached and there is no need to "unlink" it from
->                  * anything.
->                  */
-> -               merge_or_add_vmap_area(va,
-> +               va = merge_or_add_vmap_area(va,
->                         &free_vmap_area_root, &free_vmap_area_list);
->  
-> +               kasan_release_vmalloc(orig_start,
-> +                       orig_end, va->va_start, va->va_end);
-> +
->                 atomic_long_sub(nr, &vmap_lazy_nr);
->  
->                 if (atomic_long_read(&vmap_lazy_nr) < resched_threshold)
-> <snip>
->
-> --
-> Vlad Rezki
+Markus
