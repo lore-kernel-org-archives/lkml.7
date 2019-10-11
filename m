@@ -2,99 +2,75 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF99ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9873ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3109C206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF3A206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbfJKRAp (ORCPT
+        id S1728580AbfJKRAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 11 Oct 2019 13:00:45 -0400
-Received: from mail-pg1-f179.google.com ([209.85.215.179]:44243 "EHLO
-        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbfJKRAo (ORCPT
+Received: from imap1.codethink.co.uk ([176.9.8.82]:40669 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfJKRAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:00:44 -0400
-Received: by mail-pg1-f179.google.com with SMTP id e10so2135180pgd.11;
-        Fri, 11 Oct 2019 10:00:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OKGWBUoxMayF3T/j4ufkanWg28YnrdRQH1PezhJ8qHw=;
-        b=M4/RsPfmEy7qjawshMo2QYhzuBUHg/p7I+k81pq6WhxxPXFsPj8YGZat22X+o1OX5D
-         AgePYsdSIM16j27C/X5IEQAgQ457nYqnK8CSXn8Ydj+p1Rg8wJbinEHgtVF2DxmYrqYS
-         moYOjiwVM/99HS7MJhfUudJ48YUkZLle+O7mk48vxtHuSxkyRjgNCaJ+r8xYIoIi1r7k
-         M17YKO7Ln0kkJ+QLigixmJDzT58w+8JQntBUiaQMWjQYf8G+qFi85IHsEAKhIRWIrC51
-         kLwLjii++ixcXIHrvs+S8RuyyzYiL1XuXYBHxbRi9sPFUakMdwFRxUrJr0cBva5daIOD
-         65pQ==
-X-Gm-Message-State: APjAAAWjvCgf4Wsuo3LN7ZSJUjQSeTgg+WoMzVMgute9ftABOMEIs4kd
-        Rjt2lVvOe9+APaRJ7k1DPEXHP25w
-X-Google-Smtp-Source: APXvYqwFac5zhGscS4LGq/zNcTYHsmwYguLxLfTV758NqKQPjgyn5vnlMT2VObNhextpjTbXZ6lFlw==
-X-Received: by 2002:aa7:98c9:: with SMTP id e9mr17932097pfm.142.1570813243804;
-        Fri, 11 Oct 2019 10:00:43 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id x72sm13692986pfc.89.2019.10.11.10.00.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Oct 2019 10:00:42 -0700 (PDT)
-Subject: Re: [PATCH v2 1/1] blk-mq: fill header with kernel-doc
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        axboe@kernel.dk, kernel@collabora.com
-References: <20191008001416.12656-1-andrealmeid@collabora.com>
- <854l0j19go.fsf@collabora.com> <6aa48cd2-5f23-a4be-f777-d65bf755a976@acm.org>
- <85zhibyt14.fsf@collabora.com> <86de2c88-5812-4a87-b5d8-1b7b1808d013@acm.org>
- <8e20f2c6-c165-5b5f-7497-9472913d0ba8@collabora.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <66011772-9f04-dfc3-611e-7dc820d9263f@acm.org>
-Date:   Fri, 11 Oct 2019 10:00:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 13:00:45 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iIyHQ-0002Mv-Ei; Fri, 11 Oct 2019 18:00:40 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iIyHQ-0004CR-0t; Fri, 11 Oct 2019 18:00:40 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: include internal.h for missing declarations
+Date:   Fri, 11 Oct 2019 18:00:39 +0100
+Message-Id: <20191011170039.16100-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <8e20f2c6-c165-5b5f-7497-9472913d0ba8@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/19 1:38 PM, André Almeida wrote:
-> Seems that it's not clear for me the role of these members. Could you
-> please check if those definitions make sense for you?
-> 
-> - hctx->dispatch: This queue is used for requests that are ready to be
-> dispatched to the hardware but for some reason (e.g. lack of resources,
-> the hardware is to busy and can't get more requests) could not be sent
-> to the hardware. As soon as the driver can send new requests, those
-> queued at this list will be sent first for a more fair dispatch. Since
-> those requests are at the hctx, they can't be requeued or rescheduled
-> anymore.
-> 
-> - request_queue->requeue_list: This list is used when it's not possible
-> to send the request to the associated hctx. This can happen if the
-> associated CPU or hctx is not available anymore. When requeueing those
-> requests, it will be possible to send them to new and function queues.
+The declarations of __block_write_begin_int and guard_bio_eod
+are needed from internal.h so include it to fix the following
+sparse warnings:
 
-Hi André,
+fs/buffer.c:1930:5: warning: symbol '__block_write_begin_int' was not declared. Should it be static?
+fs/buffer.c:2994:6: warning: symbol 'guard_bio_eod' was not declared. Should it be static?
 
-The hctx->dispatch description looks mostly fine. Can the following part 
-be left out since it looks confusing to me: "Since those requests are at 
-the hctx, they can't be requeued or rescheduled anymore."
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/buffer.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-How about changing the requeue_list description into the following: 
-"requests requeued by a call to blk_mq_requeue_request()".
-
-Thanks,
-
-Bart.
-
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 86a38b979323..792f22a88e67 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -48,6 +48,8 @@
+ #include <linux/sched/mm.h>
+ #include <trace/events/block.h>
+ 
++#include "internal.h"
++
+ static int fsync_buffers_list(spinlock_t *lock, struct list_head *list);
+ static int submit_bh_wbc(int op, int op_flags, struct buffer_head *bh,
+ 			 enum rw_hint hint, struct writeback_control *wbc);
+-- 
+2.23.0
 
