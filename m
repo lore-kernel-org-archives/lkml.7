@@ -2,333 +2,130 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD8CECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3C9ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDE221D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D5621835
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570818052;
+	bh=wMDEsltzULFcANZjZoQLiL8tYBb0zmiQz+OvrPFe7aw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OVwUhGkPVzSIXPm2DIpJei5jy3aBfLDvefFSEF/KxAAkgmZqHBaRkyyIr2nhMTj5M
+	 lJSC6ZdIslTvkJYuK5mWllmQn8mpKd+j3XT0a6lR9ZBJ42oIPVBIcohjqi7tNJ6elL
+	 5IcSY0BEX/HT2iDQbMXT2bHOQsW//r2TS7afV6uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbfJKSUC (ORCPT
+        id S1728877AbfJKSUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 14:20:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:39482 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbfJKSUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 14:20:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A63BB142F;
-        Fri, 11 Oct 2019 11:20:01 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A5C63F703;
-        Fri, 11 Oct 2019 11:19:59 -0700 (PDT)
-Subject: Re: [PATCH v6 15/17] arm64: kexec: add expandable argument to
- relocation function
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
- <20191004185234.31471-16-pasha.tatashin@soleen.com>
-From:   James Morse <james.morse@arm.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        vladimir.murzin@arm.com, matthias.bgg@gmail.com,
-        bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
-Message-ID: <fe5a4aae-fae3-f30f-db15-f3eced229a6e@arm.com>
-Date:   Fri, 11 Oct 2019 19:19:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 14:20:51 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46582 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbfJKSUu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 14:20:50 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t8so7655612lfc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 11:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YtOmkJTgWRCiTrhHWdgBsH5ShPsUcHo7wVkWA6GbOWw=;
+        b=EJ30jg4up9E+EQq6XyhxqytCcLcjMUfxQCZiv0SKtis+tP16d1Y2taYObSlT7PNzA1
+         LGvyUzk0LpW338viCdWts370M1zgQU++Pz96/cPXXnweOuhIbBFPJd8E204RnpU17teD
+         QyB1KSmlKzHIBlccl6i4fb67lW6F+y5JeJUAQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YtOmkJTgWRCiTrhHWdgBsH5ShPsUcHo7wVkWA6GbOWw=;
+        b=KlebYj/G12Di8IvYgbpEKDUPxwp6XTrC1S/tlALk0IyjaF7FQ88BrjcoEo/KhKpbdu
+         +wxlPwulUPJVcc1KQJjn0Td8b/coGiwd68128iGz2wJwVO28531DWG75S01x0qGqapb4
+         Ffx/awhYCUInVyeyjIO9TI7DLmp/YrEmYaE+IsE9qxL44+S6lzdy1bTehDn7Qd7ImlZg
+         YcgAu4bihW+KK78nZsOBqv3gKAlwz64LIk+NBez/TqGbqihknW6CzbtZyp0yzXrHfVFm
+         qBc6oKdH4nqV7HAYm6nySqfMtmfB4Zv/3ymngRt1GgGidoYGB+Y1xCg4A9PCvMjpData
+         TF6g==
+X-Gm-Message-State: APjAAAWKRuDiKrTilQHB4yb7etGmiqfgEJcHxBEcBzGR/eV5YH4XZQtJ
+        Q22CZrtaRkzP/RDL1iTKY+soS7ua04o=
+X-Google-Smtp-Source: APXvYqwYd5DP7VR1dMWLhwgPNlwDedI+MsBV+8Y3wr3UkGSdJ2UTTFrPffEPfXVOET2oRov1IwJ8Kg==
+X-Received: by 2002:ac2:4d05:: with SMTP id r5mr9357659lfi.26.1570818047503;
+        Fri, 11 Oct 2019 11:20:47 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id t24sm2110815lfq.13.2019.10.11.11.20.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2019 11:20:46 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id v24so10753096ljj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 11:20:46 -0700 (PDT)
+X-Received: by 2002:a2e:8315:: with SMTP id a21mr598855ljh.133.1570818045940;
+ Fri, 11 Oct 2019 11:20:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191004185234.31471-16-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191011135458.7399da44@gandalf.local.home>
+In-Reply-To: <20191011135458.7399da44@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 11 Oct 2019 11:20:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj7fGPKUspr579Cii-w_y60PtRaiDgKuxVtBAMK0VNNkA@mail.gmail.com>
+Message-ID: <CAHk-=wj7fGPKUspr579Cii-w_y60PtRaiDgKuxVtBAMK0VNNkA@mail.gmail.com>
+Subject: Re: [PATCH] tracefs: Do not allocate and free proxy_ops for lockdown
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Fri, Oct 11, 2019 at 10:55 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> I bisected this down to the addition of the proxy_ops into tracefs for
+> lockdown. It appears that the allocation of the proxy_ops and then freeing
+> it in the destroy_inode callback, is causing havoc with the memory system.
+> Reading the documentation about destroy_inode, I'm not sure that this is the
+> proper way to handle allocating and then freeing the fops of the inode.
 
-On 04/10/2019 19:52, Pavel Tatashin wrote:
-> Currently, kexec relocation function (arm64_relocate_new_kernel) accepts
-> the following arguments:
-> 
-> head:		start of array that contains relocation information.
-> entry:		entry point for new kernel or purgatory.
-> dtb_mem:	first and only argument to entry.
-> 
-> The number of arguments cannot be easily expended, because this
-> function is also called from HVC_SOFT_RESTART, which preserves only
-> three arguments. And, also arm64_relocate_new_kernel is written in
-> assembly but called without stack, thus no place to move extra
-> arguments to free registers.
-> 
-> Soon, we will need to pass more arguments: once we enable MMU we
-> will need to pass information about page tables.
+What is happening is that *because* it has a "destroy_inode()"
+callback, it now expects destroy_inode to not just free free the proxy
+ops, but to also schedule the inode itself for freeing.
 
+Which that tracefs)destroy_inode() doesn't do.
 
-> Another benefit of allowing this function to accept more arguments, is that
-> kernel can actually accept up to 4 arguments (x0-x3), however currently
-> only one is used, but if in the future we will need for more (for example,
-> pass information about when previous kernel exited to have a precise
-> measurement in time spent in purgatory), we won't be easilty do that
-> if arm64_relocate_new_kernel can't accept more arguments.
+So the inode never gets free'd at all - and you eventually run out of
+memory due to the inode leak.
 
-(That is just a little niche)
+The trivial fix would be to instead use the "free_inode()" callback
+(which is called after the required RCU grace period) and then free
+the proxy op there _and_ call free_inode_nonrcu() too.
 
+But I think your patch to not need a proxy op allocation at all is
+probably better.
 
-> So, add a new struct: kern_reloc_arg, and place it in kexec safe page (i.e
-> memory that is not overwritten during relocation).
-> Thus, make arm64_relocate_new_kernel to only take one argument, that
-> contains all the needed information.
+That said, I think the _best_ option would be to just getting rid of
+the proxy fops _entirely_, and just make the (very few)
+tracefs_create_file() cases do that LOCKDOWN_TRACEFS in their open in
+the first place.
 
+The proxy_fops was a hacky attempt to make the patch smaller. Your
+"just wrap all ops" thing now made the patch bigger than just doing
+the lockdown thing in all the callers.
 
-> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index d15ca1ca1e83..d5b79d4c7fae 100644
-> --- a/arch/arm64/include/asm/kexec.h
-> +++ b/arch/arm64/include/asm/kexec.h
-> @@ -90,12 +90,30 @@ static inline void crash_prepare_suspend(void) {}
->  static inline void crash_post_resume(void) {}
->  #endif
->  
-> +/*
-> + * kern_reloc_arg is passed to kernel relocation function as an argument.
-> + * head		kimage->head, allows to traverse through relocation segments.
-> + * entry_addr	kimage->start, where to jump from relocation function (new
-> + *		kernel, or purgatory entry address).
-> + * kern_arg0	first argument to kernel is its dtb address. The other
-> + *		arguments are currently unused, and must be set to 0
-> + */
-> +struct kern_reloc_arg {
-> +	unsigned long	head;
-> +	unsigned long	entry_addr;
-> +	unsigned long	kern_arg0;
-> +	unsigned long	kern_arg1;
-> +	unsigned long	kern_arg2;
-> +	unsigned long	kern_arg3;
+In fact, many of them use tracing_open_generic(). And others - like
+subsystem_open() already call tracing_open_generic() as part of their
+open.
 
-... at least one of these should by phys_addr_t!
+So from a quick glance, just making tracing_open_generic() do the
+lockdown testing will take care of most cases.  Add a few other cases
+to fill up the whole set, and your'e done.
 
-While the sizes are the same on arm64, this reminds the reader what kind of address this
-is, and lets the compiler warn you if you make a mistake.
+Willing to do that instead?
 
-
-> +};
-
-> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-> index 214685760e1c..900394907fd8 100644
-> --- a/arch/arm64/kernel/asm-offsets.c
-> +++ b/arch/arm64/kernel/asm-offsets.c
-> @@ -23,6 +23,7 @@
->  #include <asm/suspend.h>
->  #include <linux/kbuild.h>
->  #include <linux/arm-smccc.h>
-> +#include <linux/kexec.h>
->  
->  int main(void)
->  {
-> @@ -126,6 +127,14 @@ int main(void)
->  #ifdef CONFIG_ARM_SDE_INTERFACE
->    DEFINE(SDEI_EVENT_INTREGS,	offsetof(struct sdei_registered_event, interrupted_regs));
->    DEFINE(SDEI_EVENT_PRIORITY,	offsetof(struct sdei_registered_event, priority));
-> +#endif
-> +#ifdef CONFIG_KEXEC_CORE
-> +  DEFINE(KRELOC_HEAD,		offsetof(struct kern_reloc_arg, head));
-> +  DEFINE(KRELOC_ENTRY_ADDR,	offsetof(struct kern_reloc_arg, entry_addr));
-> +  DEFINE(KRELOC_KERN_ARG0,	offsetof(struct kern_reloc_arg, kern_arg0));
-> +  DEFINE(KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, kern_arg1));
-> +  DEFINE(KRELOC_KERN_ARG2,	offsetof(struct kern_reloc_arg, kern_arg2));
-> +  DEFINE(KRELOC_KERN_ARG3,	offsetof(struct kern_reloc_arg, kern_arg3));
-
-Please use kexec as the prefix. The kernel also applies relocations during early boot.
-These are global values, and in isolation doesn't imply kexec.
-
-
->  #endif
->    return 0;
->  }
-
-> diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-> index ed50e9587ad8..7a8720ff186f 100644
-> --- a/arch/arm64/kernel/cpu-reset.h
-> +++ b/arch/arm64/kernel/cpu-reset.h
-> @@ -11,12 +11,10 @@
->  #include <asm/virt.h>
->  
->  void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
-> -	unsigned long arg0, unsigned long arg1, unsigned long arg2);
-> +			unsigned long arg);
-
-phys_addr_t
-
-
->  static inline void __noreturn cpu_soft_restart(unsigned long entry,
-> -					       unsigned long arg0,
-> -					       unsigned long arg1,
-> -					       unsigned long arg2)
-> +					       unsigned long arg)
-
-phys_addr_t
-
-
->  {
->  	typeof(__cpu_soft_restart) *restart;
->  
-
-> diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-> index c1d7db71a726..d352faf7cbe6 100644
-> --- a/arch/arm64/kernel/relocate_kernel.S
-> +++ b/arch/arm64/kernel/relocate_kernel.S
-
-> @@ -17,86 +17,58 @@
->  /*
->   * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
->   *
-> - * The memory that the old kernel occupies may be overwritten when coping the
-> + * The memory that the old kernel occupies may be overwritten when copying the
->   * new image to its final location.  To assure that the
->   * arm64_relocate_new_kernel routine which does that copy is not overwritten,
->   * all code and data needed by arm64_relocate_new_kernel must be between the
->   * symbols arm64_relocate_new_kernel and arm64_relocate_new_kernel_end.  The
->   * machine_kexec() routine will copy arm64_relocate_new_kernel to the kexec
-> - * control_code_page, a special page which has been set up to be preserved
-> - * during the copy operation.
-> + * safe memory that has been set up to be preserved during the copy operation.
->   */
->  ENTRY(arm64_relocate_new_kernel)
-> -
-> -	/* Setup the list loop variables. */
-> -	mov	x18, x2				/* x18 = dtb address */
-> -	mov	x17, x1				/* x17 = kimage_start */
-> -	mov	x16, x0				/* x16 = kimage_head */
-> -	raw_dcache_line_size x15, x0		/* x15 = dcache line size */
-> -	mov	x14, xzr			/* x14 = entry ptr */
-> -	mov	x13, xzr			/* x13 = copy dest */
-> -
->  	/* Clear the sctlr_el2 flags. */
-> -	mrs	x0, CurrentEL
-> -	cmp	x0, #CurrentEL_EL2
-> +	mrs	x2, CurrentEL
-> +	cmp	x2, #CurrentEL_EL2
->  	b.ne	1f
-> -	mrs	x0, sctlr_el2
-> +	mrs	x2, sctlr_el2
->  	ldr	x1, =SCTLR_ELx_FLAGS
-> -	bic	x0, x0, x1
-> +	bic	x2, x2, x1
->  	pre_disable_mmu_workaround
-> -	msr	sctlr_el2, x0
-> +	msr	sctlr_el2, x2
->  	isb
-> -1:
-> -
-> -	/* Check if the new image needs relocation. */
-> +1:	/* Check if the new image needs relocation. */
-> +	ldr	x16, [x0, #KRELOC_HEAD]		/* x16 = kimage_head */
->  	tbnz	x16, IND_DONE_BIT, .Ldone
-> -
-> +	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
->  .Lloop:
->  	and	x12, x16, PAGE_MASK		/* x12 = addr */
-> -
->  	/* Test the entry flags. */
->  .Ltest_source:
->  	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
->  
->  	/* Invalidate dest page to PoC. */
-> -	mov     x0, x13
-> -	add     x20, x0, #PAGE_SIZE
-> +	mov     x2, x13
-> +	add     x20, x2, #PAGE_SIZE
->  	sub     x1, x15, #1
-> -	bic     x0, x0, x1
-> -2:	dc      ivac, x0
-> -	add     x0, x0, x15
-> -	cmp     x0, x20
-> +	bic     x2, x2, x1
-> +2:	dc      ivac, x2
-> +	add     x2, x2, x15
-> +	cmp     x2, x20
->  	b.lo    2b
->  	dsb     sy
->  
-> -	mov x20, x13
-> -	mov x21, x12
-> -	copy_page x20, x21, x0, x1, x2, x3, x4, x5, x6, x7
-> -
-> -	/* dest += PAGE_SIZE */
-> -	add	x13, x13, PAGE_SIZE
-> +	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
->  	b	.Lnext
-> -
->  .Ltest_indirection:
->  	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
-> -
-> -	/* ptr = addr */
-> -	mov	x14, x12
-> +	mov	x14, x12			/* ptr = addr */
->  	b	.Lnext
-> -
->  .Ltest_destination:
->  	tbz	x16, IND_DESTINATION_BIT, .Lnext
-> -
-> -	/* dest = addr */
-> -	mov	x13, x12
-> -
-> +	mov	x13, x12			/* dest = addr */
->  .Lnext:
-> -	/* entry = *ptr++ */
-> -	ldr	x16, [x14], #8
-> -
-> -	/* while (!(entry & DONE)) */
-> -	tbz	x16, IND_DONE_BIT, .Lloop
-> -
-> +	ldr	x16, [x14], #8			/* entry = *ptr++ */
-> +	tbz	x16, IND_DONE_BIT, .Lloop	/* while (!(entry & DONE)) */
->  .Ldone:
->  	/* wait for writes from copy_page to finish */
->  	dsb	nsh
-> @@ -105,18 +77,16 @@ ENTRY(arm64_relocate_new_kernel)
->  	isb
->  
->  	/* Start new image. */
-> -	mov	x0, x18
-> -	mov	x1, xzr
-> -	mov	x2, xzr
-> -	mov	x3, xzr
-> -	br	x17
-> -
-> -ENDPROC(arm64_relocate_new_kernel)
-> +	ldr	x4, [x0, #KRELOC_ENTRY_ADDR]	/* x4 = kimage_start */
-> +	ldr	x3, [x0, #KRELOC_KERN_ARG3]
-> +	ldr	x2, [x0, #KRELOC_KERN_ARG2]
-> +	ldr	x1, [x0, #KRELOC_KERN_ARG1]
-> +	ldr	x0, [x0, #KRELOC_KERN_ARG0]	/* x0 = dtb address */
-> +	br	x4
-> +END(arm64_relocate_new_kernel)
->  
->  .ltorg
-> -
->  .align 3	/* To keep the 64-bit values below naturally aligned. */
-> -
->  .Lcopy_end:
->  .org	KEXEC_CONTROL_PAGE_SIZE
->  
-
-My eyes!
-
-Please don't make unnecessary changes. Its hard enough to read the assembly, moving
-whitespace, comments and re-allocating the register guarantees that no-one can work out
-what is happening.
-
-If something needs cleaning up to make the change obvious, it needs doing as a previous
-patch. Mechanical changes are fairly easy to review.
-Functional changes behind a whirlwind of mechanical changes will cause the reviewer to
-give up.
-
-
-James
+                Linus
