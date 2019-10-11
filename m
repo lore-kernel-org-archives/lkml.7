@@ -2,244 +2,143 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD3DECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A728EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1753B206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C05206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:00:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="TSvjsmsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfJKNAc (ORCPT
+        id S1728476AbfJKNAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:00:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:59586 "EHLO foss.arm.com"
+        Fri, 11 Oct 2019 09:00:36 -0400
+Received: from mout.web.de ([212.227.17.11]:51915 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbfJKNAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728406AbfJKNAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Oct 2019 09:00:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB86128;
-        Fri, 11 Oct 2019 06:00:30 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9CD53F6C4;
-        Fri, 11 Oct 2019 06:00:29 -0700 (PDT)
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: fix RockPro64 sdmmc settings
-To:     Soeren Moch <smoch@web.de>, Jonas Karlman <jonas@kwiboo.se>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191003215036.15023-1-smoch@web.de>
- <20191003215036.15023-3-smoch@web.de>
- <31181f3c-20ec-e717-1f7e-8b35cd54d96d@arm.com>
- <a8b20c45-0426-ee42-4efc-52e56ea6bb20@web.de>
- <120e2dbc-55eb-2205-b00f-7e50928ec706@rock-chips.com>
- <1c452b8b-853f-8f58-5f3a-0bbecbe20557@web.de>
- <fc7dce53-ad39-26e3-7c19-ab60ff4cc332@arm.com>
- <0c6fdb65-be2a-68e3-a686-14ce9b0a00a4@rock-chips.com>
- <e4aaddc2-441b-b835-380e-374a3d935474@web.de>
- <HE1PR06MB40115FDF385886FDDE122CD6AC970@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <13064e01-9472-fc4d-2c7f-c186fa2a9a91@web.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <64a7d056-28d0-b6d8-6148-b98b58265c08@arm.com>
-Date:   Fri, 11 Oct 2019 14:00:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1570798816;
+        bh=NgL6zGAAGZZ/ba87NQfyScnMOpeIlLDG6n+WCdQWllw=;
+        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
+        b=TSvjsmsJ9/zaJgZBR+FGOQVMJwWrPE1bft7Xr5MP80M36XTh/EWnXk1RVLQca3kBM
+         NGzbqm8AlWLwj35RBJ2N6spXbhL/xIVbfTfNzEoALZNxX+g91E0YAC72LrLOWRmD8Q
+         SJpFZu6VufBZ66FBFQk0cziGIgEC/0oiwXfFWt9E=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.164.92]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M8zOD-1iDdju3dVd-00CQTF; Fri, 11
+ Oct 2019 15:00:16 +0200
+Cc:     linux-kernel@vger.kernel.org
+References: <20190325212523.11799-1-pakki001@umn.edu>
+Subject: Re: [v3] thunderbolt: Fix to check the return value of kmemdup
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Aditya Pakki <pakki001@umn.edu>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Kangjie Lu <kjlu@umn.edu>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        kernel-janitors@vger.kernel.org
+Message-ID: <f2960ada-7e06-33d1-1533-78989a3e1d2a@web.de>
+Date:   Fri, 11 Oct 2019 15:00:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <13064e01-9472-fc4d-2c7f-c186fa2a9a91@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190325212523.11799-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0Qs05se5kp5/XXW7uyPGar13wVW2Imrz9QjdzEBUDILjZUhPyuH
+ NEI2s/vW+JwNK7rqE8MVis1C/CnewOR7g8ANndHeKLQWaDF/Z7YGcZhVTpwurZ2T9uGd3M4
+ hAZp58RG87bswmkyObIW09bSmQizA7dkYSsUAPVN5DXmT2zACHMWBRmsvZfRGZewK2+wrDu
+ 1FYgQCf0t1J9GbtO/IN/g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FyHqf6r6FPA=:U79YlzLpl3+o0bFhWP7G3Y
+ uHTNDuOMGv0NB/LPilvNQEeJP09cby2o0dLxqnsR0htX+Nt4UU34QFYw2SWjC6iaxPZy5Ic8B
+ J0jxbvrN3LGhzzT60lp5gW6gVsgekJYS/E3z50vaVnAi8hb4YVEPtOyTUJvviQtcJyzCZOQxt
+ X/9RXj6XKi7tC7Uw/OQxkB8qVmYxMp1wHN2Ht1qRUayy8Q4yHM2wPCUPaNTbBT+/bAEc7yid7
+ V1KV4KvOxLvAcY8bR0Kk4ikBkGrXzqPiFKu7oLeg+2VlVnqpr9FRbDouUWrfBJwbfQCG3/faK
+ JHF1bo8Z/rnzlgSXQgL/gu0Ybj6M4yoH4eEPu6S6l5GcBKiyDB0LOO2gzuPXZ0+P7dIpp1S2S
+ 7cFvSfQ4oxWf0TJrOYStoj4eFvFtIsPqWaV1tMqsi+wXzKCTk8AkeNIRcxkc1R+7AOontofzj
+ ro9OeJea24VJF5fGYX5RiPTilxiXB91KDdJrSkeMEN3fwZxwSxWrkAKuY8h2cw6AltA3AIilt
+ Bafr7uggpzjzCqA5rYHn33y8bBD2nVC8pv2KQWx1L/yWP9gsK+AE1W1MuzJhWrBe43uCF3xt9
+ wsSzVy/TSGlug8uJWTma64GzOfXxZKUVYwFieIZx9uIE1C79IpfXTyCdIa2TcDmzRn6l9ekV5
+ 8hPCgWiIUWgCNdRJ7jdI07WkOyhYSFGyB4Zelfe4fAlvKSiUsjMzkBbLAbKqHCPy/zSIF1rgR
+ iol8mRFJlRxhmyEOFSwmMbVtDbgkMnsjSvLeTNbcSqQKA5GFQa0o+ecBxGKQLLs3pYQpJU+Jh
+ G4KYlSKUg0rbI+fkYG1Eb9MnVnPVJB5z8xSHdBMYji451qSbpMxvO5N3CQHpOZojVkn1uh+9a
+ 7PaQpgAvNhxXFtHGmAwyOACMFt+WSzWobiChhs45/LX3XodE4wWFJxrvKR1XTUV1oW+P4fpED
+ OOaThMF7iS3ho3VU1tAuHGy4zbvX6pbVZQqyu9Gac7osNxD6HYyppFIiR6cdkv0mUy0w8xX9o
+ sg5GRPMbHJcUt1Rik57pVdh3gZ7cq9C+dc53voYtglncvjqKsQYHxPBvcPmODUW7p74p++BnM
+ NDOsf+GU0BELcpgA+FWr61V40ox7fuAVmo1Er/YKSFsfNh9hx3KaOaLTZeeNoIvef/o4VRDw+
+ kHljeDs5rfoSL7usLapCrUMczZ2+2xIaPpa02UeOT4l6JuDAJ594ejZyytIG4k5ZHGj/DMCQ1
+ keBtnpheIIBcZBTsdrYXViUgbNXoOINVhSWULDLIDe+1bdyJe+tBiqSAPH0E=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/10/2019 12:40, Soeren Moch wrote:
-> 
-> 
-> On 11.10.19 10:22, Jonas Karlman wrote:
->> On 2019-10-04 19:24, Sören Moch wrote:
->>> On 04.10.19 17:33, Shawn Lin wrote:
->>>> On 2019/10/4 22:20, Robin Murphy wrote:
->>>>> On 04/10/2019 04:39, Soeren Moch wrote:
->>>>>> On 04.10.19 04:13, Shawn Lin wrote:
->>>>>>> On 2019/10/4 8:53, Soeren Moch wrote:
->>>>>>>> On 04.10.19 02:01, Robin Murphy wrote:
->>>>>>>>> On 2019-10-03 10:50 pm, Soeren Moch wrote:
->>>>>>>>>> According to the RockPro64 schematic [1] the rk3399 sdmmc
->>>>>>>>>> controller is
->>>>>>>>>> connected to a microSD (TF card) slot, which cannot be switched to
->>>>>>>>>> 1.8V.
->>>>>>>>> Really? AFAICS the SDMMC0 wiring looks pretty much identical to the
->>>>>>>>> NanoPC-T4 schematic (it's the same reference design, after all),
->>>>>>>>> and I
->>>>>>>>> know that board can happily drive a UHS-I microSD card with 1.8v
->>>>>>>>> I/Os,
->>>>>>>>> because mine's doing so right now.
->>>>>>>>>
->>>>>>>>> Robin.
->>>>>>>> OK, the RockPro64 does not allow a card reset (power cycle) since
->>>>>>>> VCC3V0_SD is directly connected to VCC3V3_SYS (via R89555), the
->>>>>>>> SDMMC0_PWH_H signal is not connected. So the card fails to identify
->>>>>>>> itself after suspend or reboot when switched to 1.8V operation.
->>>>> Ah, thanks for clarifying - I did overlook the subtlety that U12 and
->>>>> friends have "NC" as alternative part numbers, even though they
->>>>> aren't actually marked as DNP. So it's still not so much "cannot be
->>>>> switched" as "switching can lead to other problems".
->>>>>
->>>>>>> I believe we addressed this issue long time ago, please check:
->>>>>>>
->>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6a11fc47f175c8d87018e89cb58e2d36c66534cb
->>>>>>>
->>>>>>>
->>>>>> Thanks for the pointer.
->>>>>> In this case I guess I should use following patch instead:
->>>>>>
->>>>>> --- rk3399-rockpro64.dts.bak    2019-10-03 22:14:00.067745799 +0200
->>>>>> +++ rk3399-rockpro64.dts    2019-10-04 00:02:50.047892366 +0200
->>>>>> @@ -619,6 +619,8 @@
->>>>>>        max-frequency = <150000000>;
->>>>>>        pinctrl-names = "default";
->>>>>>        pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
->>>>>> +    sd-uhs-sdr104;
->>>>>> +    vqmmc-supply = <&vcc_sdio>;
->>>>>>        status = "okay";
->>>>>>    };
->>>>>> When I do so, the sd card is detected as SDR104, but a reboot hangs:
->>>>>>
->>>>>> Boot1: 2018-06-26, version: 1.14
->>>>>> CPUId = 0x0
->>>>>> ChipType = 0x10, 286
->>>>>> Spi_ChipId = c84018
->>>>>> no find rkpartition
->>>>>> SpiBootInit:ffffffff
->>>>>> mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
->>>>>> mmc: ERROR: Card did not respond to voltage select!
->>>>>> emmc reinit
->>>>>> mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
->>>>>> mmc: ERROR: Card did not respond to voltage select!
->>>>>> emmc reinit
->>>>>> mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
->>>>>> mmc: ERROR: Card did not respond to voltage select!
->>>>>> SdmmcInit=2 1
->>>>>> mmc0:cmd5,32
->>>>>> mmc0:cmd7,32
->>>>>> mmc0:cmd5,32
->>>>>> mmc0:cmd7,32
->>>>>> mmc0:cmd5,32
->>>>>> mmc0:cmd7,32
->>>>>> SdmmcInit=0 1
->>>>>>
->>>>>> So I guess I should use a different miniloader for this reboot to
->>>>>> work!?
->>>>>> Or what else could be wrong here?
->>>>> Hmm, I guess this is "the Tinkerboard problem" again - the patch
->>>>> above would be OK if we could get as far as the kernel, but can't
->>>>> help if the
->>>> I didn't realize that SD was used as boot medium for RockPro64, but I
->>>> did patch the vendor tree to solve the issue for Tinkerboard, see
->>>> https://github.com/rockchip-linux/kernel/commit/a4ccde21f5a9f04f996fb02479cb9f16d3dc8dc0
->>>>
->>>>
->>>> My initial plan was to patching upstream kernel by adding ->shutdown,but
->>>> never finish it.
->>>>
->>>>> offending card is itself the boot medium. There was a proposal here:
->>>>>
->>>>> https://patchwork.kernel.org/patch/10817217/
->>>> This RFC also looks good to me, but seems it needs volunteers
->>>> to push it again.
->>> Oh, I think this is a totally wrong way.
->>>
->>> While this might work for some cards, setting the controller's i/o
->>> voltage to 3.3V while leaving the card at 1.8V configuration is totally
->>> against the specification, can lead to all kinds of strange behaviour
->>> and even cause hardware damage. It also would actively defend the
->>> purpose of the above mentioned patch (6a11fc4) where the kernel guesses
->>> the i/o voltage from the card configuration and switches the controller
->>> accordingly. We would end up with a 1.8V card and controller
->>> configuration and a regulator voltage of 3.3V. This would only work with
->>> good luck. Even if the kernel driver would switch the regulator back to
->>> 1.8V in this case, the voltage mismatch remains in the bootloader when
->>> this card contains the boot image.
->>>
->>> The only sane way I see to handle this is implementing the same
->>> workaround (mode guessing) also in the bootloader (rockchip miniloader
->>> and u-boot SPL since both bootloader chains are supported for this board).
->>>
->>> Or maybe I miss something?
->> Thanks for your input, I have made a new series [1] with a similar approach but is limited to dw_mmc-rockchip
->> and only changes the regulator at power_off after the regulator has been disabled (the vqmmc regulator in affected devices is always-on).
-> Thanks for your work on this. Unfortunately I still think that this is
-> the wrong approach.
-> I see several problems in your patch series:
-> - You introduced GPIO0_PA1 as regulator enable for RockPro64.
-> Unfortunately Pine64 decided to disable this regulator on Board Version
-> 2.1 (real product version), see above. I have no idea why they did this.
-> - You changed the i/o voltage from 3.0V to 3.3V. This is not allowed on
-> RK3399 I/O bank F.
-> 
-> Changing the i/o voltage to 3.0V/3.3V while the sd card is configured
-> for 1.8V is against the specification and dangerous. While experimenting
-> with different images (ayufan, armbian) for my newly bought RockPro64 I
-> killed a SD card (32GB Samsung UHS-I). I cannot reconstruct the exact
-> circumstances, but I'm pretty sure this happened due to the voltage
-> mismatch. Of course I'm not keen to experiment further with this and
-> kill more sd cards. This is not just an theoretical issue.
->> To my knowledge the problem is not with the rockchip miniloader or u-boot SPL, it is the initial boot rom that tries to load
->> the miniloader/SPL from a SD-card, so nothing that can be updated.
-> What I observed on my RockPro64:
-> The ROM bootloader always was able to load the next stage, maybe due to
-> the low initial clock of 400kHz? Also the ROM bootloader cannot change
-> voltage regulator settings. So if the i/o voltage still is at 1.8V and
-> matching the sd card setting, there is no problem for the ROM bootloader.
+> uuid in add_switch is allocted via kmemdup which can fail.
 
-Hmm, that makes me wonder if the problem might be not so much that the 
-level of SDMMC0_VDD itself stays at 1.8V, but that at some point after 
-the bootrom the GRF_IO_VSEL bit gets reset so the controller just stops 
-being able to read anything as logic-high.
+I have tried another script for the semantic patch language out.
+This source code analysis approach points out that the implementation
+of the function =E2=80=9Cicm_handle_event=E2=80=9D contains still an unche=
+cked call
+of the function =E2=80=9Ckmemdup=E2=80=9D.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
+ivers/thunderbolt/icm.c?id=3D3cdb9446a117d5d63af823bde6fe6babc312e77b#n162=
+7
+https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/thunderbolt/icm.c=
+#L1627
 
-Robin.
+How do you think about to improve it?
 
-> So I think the normal reboot handling should be:
-> If the sd card can be switched off (preferred solution), do so and reset
-> the controller i/o voltage to 3.0V/3.3V.
-> If the sd card can not be switched off, make sure to leave the
-> controller i/o voltage at the current setting. Make sure in later boot
-> stages to not change the controller i/o voltage to 3.0V/3.3V when the
-> card is configured for 1.8V. According to the patch mentioned above this
-> behaviour already is implemented in linux, we also need this for the
-> bootloaders.
-> 
-> Regards,
-> Soeren
->>
->> I have observed this issue on the following devices, and the patches at [1] makes it possible to reboot from SD-card after UHS has been enabled.
->> - Asus Tinker Board (RK3288)
->> - Rockchip Sapphire Board (RK3399)
->> - Radxa Rock Pi 4 (RK3399)
->> - Pine64 RockPro64 (RK3399)
->> All of the above seem to use the RK808 regulator for sd io voltage.
->>
->> The ROC-RK3328-CC did not have this issue and seem to automatically reset to 3.3v.
->>
->> [1] https://github.com/Kwiboo/linux-rockchip/compare/next-20191011...next-20191011-mmc
->>
->> Regards,
->> Jonas
->>
->>> Soeren
->>>
->>>
->>>>> although I'm not sure what if any progress has been made since then.
->>>>>
->>>>> Robin.
->>>>>
-> 
-> 
+Regards,
+Markus
