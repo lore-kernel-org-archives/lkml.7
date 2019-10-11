@@ -2,109 +2,128 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692B6ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAAEECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401AD206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368B5206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OGEl8+OX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YmT7Pvem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbfJKSjp (ORCPT
+        id S1728832AbfJKSl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 14:39:45 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42818 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728721AbfJKSjo (ORCPT
+        Fri, 11 Oct 2019 14:41:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33262 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728603AbfJKSl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 14:39:44 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q12so6575115pff.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 11:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lwWZ1BSEiAs6avMUbGhrgTIvNodesvQRhyRgPzlrHsQ=;
-        b=OGEl8+OXDAIs8vJC1UB0yr5NA4I9xd/0/Uc6k8efasx0S90iUqOOdUJdjiaZTNQpOk
-         Z4otOBVHj6ZB05PknrEdkOUDQxIcBdkg8SmYUgX2VLIZRoQcLurAoIfkExCBhrLpQfFP
-         F/Jzv71PvpMamtM0I7nx5+Cnx7DYmvotb5y9Lr4Byh4tw8+EboCI20DKJ+S/qLoD/ecM
-         OTpcvvP592CAKBkzScEvOnTQ80jr7eHK4NMyGOv4bcrzWrfnqTvoxxBnWZxGLYFknbOD
-         BM+R72yblf+mENBnsN0hapKq7yaOlVO4gE5HRSmvLWN2wdKwot/kz3MAYteXNZyn6/MR
-         djVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lwWZ1BSEiAs6avMUbGhrgTIvNodesvQRhyRgPzlrHsQ=;
-        b=pX0DvJZxWG6hyfB2lmcYSmGfhDp+E9Hzbyb8w/q1BKxsFVoIz239FYqf3o4FVVZ5zB
-         tgcFMB0f2BCCXEDwyBsd4oqUhCh+DzqcV/txillzvBo+0iia4+rgn3JP6IkINWjmhGrf
-         R3NhXYhsuD+0E73WuEAIV1sk73Db6rgi/vkqomOaaWxhcRGkojSGZqGK3DbAshxNKwxs
-         VXkGCoG7gwfmw0i2a61VqrooukIVrP+UIHW9J6CXmNpOUQrv7Kwo0NnKuEaCEvHFHADr
-         /C4hAwHnzY3nkm9qHeY1vWi6AvknjE/wjDERC47+aUGkwUOQWEHFnkmuw0d+oERprraa
-         vpNQ==
-X-Gm-Message-State: APjAAAXyt8K4F8+Bzg6bAEN3luX5QF0MMe/Gvz1YBPPJRI2QwcYiuwI2
-        koReaG+GCZsJp/w1cZLpSQDYaQ==
-X-Google-Smtp-Source: APXvYqyWDMUhtm6lJueqy/HUEdKliXxg7NyE8TkTIUdm5qMsSZ5p7RDl7MDX95I1LPZLE3rI7eaq/w==
-X-Received: by 2002:a63:77cc:: with SMTP id s195mr5854243pgc.147.1570819182473;
-        Fri, 11 Oct 2019 11:39:42 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c62sm13279165pfa.92.2019.10.11.11.39.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 11:39:41 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 11:39:39 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Chris Lew <clew@codeaurora.org>
-Cc:     andy.gross@linaro.org, david.brown@linaro.org,
-        aneela@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rpmsg: glink: Set tail pointer to 0 at end of FIFO
-Message-ID: <20191011183939.GA30457@tuxbook-pro>
-References: <1530148797-31904-1-git-send-email-clew@codeaurora.org>
+        Fri, 11 Oct 2019 14:41:28 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BIdaJ8049496;
+        Fri, 11 Oct 2019 18:40:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=q+1C5Mtn23BF1SUx+RWPFEV8zs3fXl/8LqWIqbp/bIE=;
+ b=YmT7Pvemj9GSVzgF5YKzbCzsXUu1HgLCCz70z9IZ2m02RqMz1f8TliBIZCc72vV9r8wY
+ k37BxKQ2NxjvwM5Rdn3fvbahdL4o45zl3V2txJaXhg/8tC720bmu95RDsUG2khp1ASXj
+ ZtBQJUJH/7vLM0Q0/68B1DCDBkwzpupKR3gGbwvaVjLEHWAbHRU31FEZ+ylaaRuf/JBM
+ R3kKU4v7F0ESTudEzAXcexQtH3H11szLvmh8FOVJhsI6vAp/cwu/Is+97tVY7yLcR/Mz
+ G7djLQ730xW0Ec1uAcEZ3i2CMKsxxzH7WgZqGvcSN4LDCGfCAajfMqiiOMcfL/cVRWaD wQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2vekts35vg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 18:40:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9BIc9m3173341;
+        Fri, 11 Oct 2019 18:40:42 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2vje2yhmns-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 18:40:41 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9BIeeLN002646;
+        Fri, 11 Oct 2019 18:40:40 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 11 Oct 2019 18:40:39 +0000
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 0061F6A00F3; Fri, 11 Oct 2019 14:43:57 -0400 (EDT)
+Date:   Fri, 11 Oct 2019 14:43:57 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Daniel Kiper <daniel.kiper@oracle.com>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, ard.biesheuvel@linaro.org,
+        boris.ostrovsky@oracle.com, bp@alien8.de, corbet@lwn.net,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        eric.snowberg@oracle.com, hpa@zytor.com, jgross@suse.com,
+        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
+Subject: Re: [PATCH v3 1/3] x86/boot: Introduce the kernel_info
+Message-ID: <20191011184357.GI691@char.us.oracle.com>
+References: <20191009105358.32256-1-daniel.kiper@oracle.com>
+ <20191009105358.32256-2-daniel.kiper@oracle.com>
+ <181249b6-5833-6f29-7d38-6dacc3f8ee62@infradead.org>
+ <20191010094349.la3sjiuiikmegjck@tomti.i.net-space.pl>
+ <cb5bcff5-e787-82c4-790d-71695291d552@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1530148797-31904-1-git-send-email-clew@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <cb5bcff5-e787-82c4-790d-71695291d552@infradead.org>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9407 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=985
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910110156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9407 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910110156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 27 Jun 18:19 PDT 2018, Chris Lew wrote:
-
-> When wrapping around the FIFO, the remote expects the tail pointer to
-> be reset to 0 on the edge case where the tail equals the FIFO length.
+> >>> +be prefixed with header/magic and its size, e.g.:
+> >>> +
+> >>> +  kernel_info:
+> >>> +          .ascii  "LToP"          /* Header, Linux top (structure). */
+> >>> +          .long   kernel_info_var_len_data - kernel_info
+> >>> +          .long   kernel_info_end - kernel_info
+> >>> +          .long   0x01234567      /* Some fixed size data for the bootloaders. */
+> >>> +  kernel_info_var_len_data:
+> >>> +  example_struct:                 /* Some variable size data for the bootloaders. */
+> >>> +          .ascii  "EsTT"          /* Header/Magic. */
+> >>> +          .long   example_struct_end - example_struct
+> >>> +          .ascii  "Struct"
+> >>> +          .long   0x89012345
+> >>> +  example_struct_end:
+> >>> +  example_strings:                /* Some variable size data for the bootloaders. */
+> >>> +          .ascii  "EsTs"          /* Header/Magic. */
+> >>
+> >> Where do the Magic values "EsTT" and "EsTs" come from?
+> >> where are they defined?
+> > 
+> > EsTT == Example STrucT
+> > EsTs == Example STringS
+> > 
+> > Anyway, it can be anything which does not collide with existing variable
+> > length data magics. There are none right now. So, it can be anything.
+> > Maybe I should add something saying that.
 > 
+> Yes, please.
 
-Applied
+Or make it very clear they are examples, says "1234" or "ABCD" or such.
 
-Thanks,
-Bjorn
-
-> Signed-off-by: Chris Lew <clew@codeaurora.org>
-> ---
->  drivers/rpmsg/qcom_glink_smem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
-> index 2b5cf2790954..7a276be598d6 100644
-> --- a/drivers/rpmsg/qcom_glink_smem.c
-> +++ b/drivers/rpmsg/qcom_glink_smem.c
-> @@ -109,7 +109,7 @@ static void glink_smem_rx_advance(struct qcom_glink_pipe *np,
->  	tail = le32_to_cpu(*pipe->tail);
->  
->  	tail += count;
-> -	if (tail > pipe->native.length)
-> +	if (tail >= pipe->native.length)
->  		tail -= pipe->native.length;
->  
->  	*pipe->tail = cpu_to_le32(tail);
+> thanks.
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+> ~Randy
