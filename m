@@ -2,113 +2,193 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB67C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D83C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484C821920
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F9A20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QKMy1WMI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oC4Fp5S8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfJKANk (ORCPT
+        id S1727463AbfJKAVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:13:40 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36994 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfJKAMy (ORCPT
+        Thu, 10 Oct 2019 20:21:38 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37435 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfJKAVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:12:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so4959360pfo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:12:54 -0700 (PDT)
+        Thu, 10 Oct 2019 20:21:37 -0400
+Received: by mail-ed1-f65.google.com with SMTP id r4so7106895edy.4;
+        Thu, 10 Oct 2019 17:21:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aXC4EKkSKWAzbgJ5UkNW5ASNd77O0uNGfoVDwB8PV7o=;
-        b=QKMy1WMIao8eo2h9Q1TmJ+NvwxmYIJS5BiRFvnKXyWnyHt2NVU1sSJRyaYkSK0bnTI
-         3g26hGi2M+7oPqpQxxO8mfA0+ckl3W/NOZq89OJYBy8zqpl256YQ/kRKmZl3wcK/Al8o
-         WR97u6SnuI6udJBDDM4eXoslNY2BMQS6h8HHA=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TnvHggbNdZnxLx93jjXuWj1lKLV5ZUH/jWX6zccU648=;
+        b=oC4Fp5S8XZjQ/EHu2XVmd/wB456wr+Y51FM8HgElHSQFEPjS8mEKxHgCD4LDkPFo4+
+         3GASddiWQef8qUYA2hgELKn0G3WQAxTMCWfmTqUT/b39ksZV+WvrIFce152sR4T/qp4b
+         s+xtD9kyspjGotLgEOxG3kUpJAyh+47Rvn36aoTmT5eH/OFIcUpyQMooGH9R3a/hPHmE
+         h819hjMR1f+3bEwrUi4r6gbPGEe8wnb/oq9fIWmyoQr8ZA/RfkPlteh1w+X+5BOshEBI
+         NjxLSopm88N7+/nDBtpR0SWuMz9kXH4g5kNQRkawYbtre/gErwWhtYUg5jOdMmG/pb8L
+         ftjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=aXC4EKkSKWAzbgJ5UkNW5ASNd77O0uNGfoVDwB8PV7o=;
-        b=lma9lm83gA2trxx6DrBmEUtHjZk15iNT10ntCGYwZT3uOGMj0QS4MpMPyGZPXDgCHN
-         0Am3VZmqoYthIvL0MbohyPshGsGeXODLZNnvJhC3J3/wr2plQ7cGKE4dSp6pcZVZVGsY
-         1kZdUxnbFWEgFCO/4F3F2VvwX2LwRJHxHsnZjDDr3kSwsCskKC166x3gvliiX5Tvc4Y+
-         i7AGIjI30fEbBcweANAvNz4qY+05krhJJkYNBn5OSOBaEQpoQAnQANIYRID/MtdWBU3x
-         7rIhE+upeMVWiXiHMwNyvqNzZJZDZ1ig36FXPdt2/yy1R6rHuHFiODMQp7V+1vvOo77q
-         0KqA==
-X-Gm-Message-State: APjAAAU88ywLgBM9WTqEHoJ+clp8LGbu1nh4wg/0Cs8oeFqRSdX9E2tX
-        pGBGHEx6Gk+GeInidb5K3xvVKw==
-X-Google-Smtp-Source: APXvYqwyN8mvkbsH6LAVRfjY92v44FJMaCqPYldcWqY2MvbBlNQ7Douul4dniL7y8RNurjH2A60mLg==
-X-Received: by 2002:a17:90a:1617:: with SMTP id n23mr14581628pja.75.1570752773811;
-        Thu, 10 Oct 2019 17:12:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w10sm5837436pjq.3.2019.10.10.17.12.52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TnvHggbNdZnxLx93jjXuWj1lKLV5ZUH/jWX6zccU648=;
+        b=FmE4xhCw9zlvVC+Cz+2vZPRIZH+/TahyXe7+clX8m70+yJyIhx1HRAFk0bYfCPLIZ4
+         c7KPkq2Co1zqEPdvd+b0wt+ih5OnL23FBDHJmb6HrV5/5cp8Zze0Wpayfo1eFiyCio0+
+         ULNaSB2QImnZZG9E67HM6gn6yFu7KXOqDpVe+u6Wmj+jhnUlPmI+HiVU5GfrLN1JJ5bz
+         xdZ+0EBcrwj9bB6EzBDHiROchw4ejmEFBNchVib11Oz0LaIVGs2gLjmJGVSBmhAkSoKK
+         iSwGg0s2WdvBCZ8FOVZSuUu0WMi9enO019rTaCEJLbvgWHAJF9qb1F2TQYk1lrH1SVlm
+         X+jQ==
+X-Gm-Message-State: APjAAAWU3NML+rjOAc5f3UUzt6ZlimpYq7CMaRvJ+djSq+twhyM4YcNZ
+        mS2EzOm2pYp+6YFVXre5yYY2e68Gcoc=
+X-Google-Smtp-Source: APXvYqx/5reMp+KKgPRIKqPQawTCneYc8u/1O8vhsGY9L9+jDzKJYaAKqPTkK+11x2lfw/oWLD2LeQ==
+X-Received: by 2002:a05:6402:7ca:: with SMTP id u10mr10850683edy.20.1570753293536;
+        Thu, 10 Oct 2019 17:21:33 -0700 (PDT)
+Received: from continental.suse.de ([191.35.238.90])
+        by smtp.gmail.com with ESMTPSA id 36sm1228582edz.92.2019.10.10.17.21.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 17:12:52 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 25/29] xtensa: Move EXCEPTION_TABLE to RO_DATA segment
-Date:   Thu, 10 Oct 2019 17:06:05 -0700
-Message-Id: <20191011000609.29728-26-keescook@chromium.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191011000609.29728-1-keescook@chromium.org>
-References: <20191011000609.29728-1-keescook@chromium.org>
+        Thu, 10 Oct 2019 17:21:32 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     dsterba@suse.com, clm@fb.com
+Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] btrfs: ioctl: Try to use btrfs_fs_info instead of *file
+Date:   Thu, 10 Oct 2019 21:23:11 -0300
+Message-Id: <20191011002311.12459-1-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the EXCEPTION_TABLE is read-only, collapse it into RO_DATA.
+Some functions are doing some bikeshedding to reach the btrfs_fs_info
+struct. Change these functions to receive a btrfs_fs_info struct instead
+of a *file.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 ---
- arch/xtensa/kernel/vmlinux.lds.S | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ The kernel survived btrfs-progs tests with this patch applied.
 
-diff --git a/arch/xtensa/kernel/vmlinux.lds.S b/arch/xtensa/kernel/vmlinux.lds.S
-index bdbd7c4056c1..0043d5858f14 100644
---- a/arch/xtensa/kernel/vmlinux.lds.S
-+++ b/arch/xtensa/kernel/vmlinux.lds.S
-@@ -14,6 +14,8 @@
-  * Joe Taylor <joe@tensilica.com, joetylr@yahoo.com>
-  */
+ fs/btrfs/ioctl.c | 36 +++++++++++++++---------------------
+ 1 file changed, 15 insertions(+), 21 deletions(-)
+
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index de730e56d3f5..870e5c48b362 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -479,10 +479,9 @@ static int btrfs_ioctl_getversion(struct file *file, int __user *arg)
+ 	return put_user(inode->i_generation, arg);
+ }
  
-+#define RO_EXCEPTION_TABLE_ALIGN	16
-+
- #include <asm-generic/vmlinux.lds.h>
- #include <asm/page.h>
- #include <asm/thread_info.h>
-@@ -130,7 +132,6 @@ SECTIONS
+-static noinline int btrfs_ioctl_fitrim(struct file *file, void __user *arg)
++static noinline int btrfs_ioctl_fitrim(struct btrfs_fs_info *fs_info,
++					void __user *arg)
+ {
+-	struct inode *inode = file_inode(file);
+-	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	struct btrfs_device *device;
+ 	struct request_queue *q;
+ 	struct fstrim_range range;
+@@ -4960,10 +4959,9 @@ static long btrfs_ioctl_quota_rescan(struct file *file, void __user *arg)
+ 	return ret;
+ }
  
-   .fixup   : { *(.fixup) }
+-static long btrfs_ioctl_quota_rescan_status(struct file *file, void __user *arg)
++static long btrfs_ioctl_quota_rescan_status(struct btrfs_fs_info *fs_info,
++						void __user *arg)
+ {
+-	struct inode *inode = file_inode(file);
+-	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	struct btrfs_ioctl_quota_rescan_args *qsa;
+ 	int ret = 0;
  
--  EXCEPTION_TABLE(16)
-   /* Data section */
+@@ -4986,11 +4984,9 @@ static long btrfs_ioctl_quota_rescan_status(struct file *file, void __user *arg)
+ 	return ret;
+ }
  
-   _sdata = .;
+-static long btrfs_ioctl_quota_rescan_wait(struct file *file, void __user *arg)
++static long btrfs_ioctl_quota_rescan_wait(struct btrfs_fs_info *fs_info,
++						void __user *arg)
+ {
+-	struct inode *inode = file_inode(file);
+-	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+-
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
+@@ -5162,10 +5158,9 @@ static long btrfs_ioctl_set_received_subvol(struct file *file,
+ 	return ret;
+ }
+ 
+-static int btrfs_ioctl_get_fslabel(struct file *file, void __user *arg)
++static int btrfs_ioctl_get_fslabel(struct btrfs_fs_info *fs_info,
++					void __user *arg)
+ {
+-	struct inode *inode = file_inode(file);
+-	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	size_t len;
+ 	int ret;
+ 	char label[BTRFS_LABEL_SIZE];
+@@ -5249,10 +5244,9 @@ int btrfs_ioctl_get_supported_features(void __user *arg)
+ 	return 0;
+ }
+ 
+-static int btrfs_ioctl_get_features(struct file *file, void __user *arg)
++static int btrfs_ioctl_get_features(struct btrfs_fs_info *fs_info,
++					void __user *arg)
+ {
+-	struct inode *inode = file_inode(file);
+-	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	struct btrfs_super_block *super_block = fs_info->super_copy;
+ 	struct btrfs_ioctl_feature_flags features;
+ 
+@@ -5453,11 +5447,11 @@ long btrfs_ioctl(struct file *file, unsigned int
+ 	case FS_IOC_GETVERSION:
+ 		return btrfs_ioctl_getversion(file, argp);
+ 	case FS_IOC_GETFSLABEL:
+-		return btrfs_ioctl_get_fslabel(file, argp);
++		return btrfs_ioctl_get_fslabel(fs_info, argp);
+ 	case FS_IOC_SETFSLABEL:
+ 		return btrfs_ioctl_set_fslabel(file, argp);
+ 	case FITRIM:
+-		return btrfs_ioctl_fitrim(file, argp);
++		return btrfs_ioctl_fitrim(fs_info, argp);
+ 	case BTRFS_IOC_SNAP_CREATE:
+ 		return btrfs_ioctl_snap_create(file, argp, 0);
+ 	case BTRFS_IOC_SNAP_CREATE_V2:
+@@ -5562,15 +5556,15 @@ long btrfs_ioctl(struct file *file, unsigned int
+ 	case BTRFS_IOC_QUOTA_RESCAN:
+ 		return btrfs_ioctl_quota_rescan(file, argp);
+ 	case BTRFS_IOC_QUOTA_RESCAN_STATUS:
+-		return btrfs_ioctl_quota_rescan_status(file, argp);
++		return btrfs_ioctl_quota_rescan_status(fs_info, argp);
+ 	case BTRFS_IOC_QUOTA_RESCAN_WAIT:
+-		return btrfs_ioctl_quota_rescan_wait(file, argp);
++		return btrfs_ioctl_quota_rescan_wait(fs_info, argp);
+ 	case BTRFS_IOC_DEV_REPLACE:
+ 		return btrfs_ioctl_dev_replace(fs_info, argp);
+ 	case BTRFS_IOC_GET_SUPPORTED_FEATURES:
+ 		return btrfs_ioctl_get_supported_features(argp);
+ 	case BTRFS_IOC_GET_FEATURES:
+-		return btrfs_ioctl_get_features(file, argp);
++		return btrfs_ioctl_get_features(fs_info, argp);
+ 	case BTRFS_IOC_SET_FEATURES:
+ 		return btrfs_ioctl_set_features(file, argp);
+ 	case FS_IOC_FSGETXATTR:
 -- 
-2.17.1
+2.23.0
 
