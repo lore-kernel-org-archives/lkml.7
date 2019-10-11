@@ -2,242 +2,95 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F1EC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FE4C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3F820679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67EED21A4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570803041;
+	bh=1c1anca7QOciCl6pNyhUYLtNYKxWoWBf2XcUviOaBXg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XwPzpyyD7/DdQdfROYMTy6gkVNHxL9aHVqhWoSQSFLf37GS2EucgeQsLjnYZBAVsd
+	 gQtg5NNgyG9RcaCgiSteUj6UDEl1PQWLm5KFR3NPfS6cyo2tTFEDe15cXVGSK3QwT3
+	 R13esLM29gHU47Ewdi3iEg8WrGX/59t/hV+7MOjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbfJKOKL (ORCPT
+        id S1728704AbfJKOKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:10:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:33528 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728190AbfJKOKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:10:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ED60142F;
-        Fri, 11 Oct 2019 07:10:11 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 884983F68E;
-        Fri, 11 Oct 2019 07:10:06 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com,
-        Jia He <justin.he@arm.com>
-Subject: [PATCH v12 4/4] mm: fix double page fault on arm64 if PTE_AF is cleared
-Date:   Fri, 11 Oct 2019 22:09:39 +0800
-Message-Id: <20191011140939.6115-5-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191011140939.6115-1-justin.he@arm.com>
-References: <20191011140939.6115-1-justin.he@arm.com>
+        Fri, 11 Oct 2019 10:10:39 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46249 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728123AbfJKOKj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:10:39 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so6149202pfg.13;
+        Fri, 11 Oct 2019 07:10:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5mnGbwefIqKastaz5advYFrncKnKjfcU7jtCva8kk2g=;
+        b=nqPJcD8xo+8r8hakIm9r1b4zrovgP79c9J4rDTuUEWdYZOc6qhxediZSVCm6FSUxca
+         EXjXQsIIpUDh8Sb8nZpKGcCNAwLhOTXgF7DYo4w4nzs+6jUIhMm1pPh8zQCZSm424t4R
+         1zEYG5sY/HYzc3LKNolgx1FS5VCPg96KFFL2H2OYZYfS3+JE9iE4cnsOj2uMV5cm6Pos
+         A+VwyNsDA3/OUcdHX8+AuJDX5dx3/1Lq2z35jQC0nzyWaMXnxgN4HHqYQX5+ikBf28VQ
+         TnkLzuZD6kuGGUrZr6NWcuu5jrrkGn0tMesR5PuwUIqzEbZ4Mt6JxN+Pmc3PZ1HQ04jH
+         vexQ==
+X-Gm-Message-State: APjAAAX2QuPhxIN9IVmOwVz7SNtkuuDl+dH5o57tcNq5OvDFlQM6M6gv
+        2m+PVLQrFGP8GIyO5YH05Jw21YQr+Zk=
+X-Google-Smtp-Source: APXvYqwulWIrQ2LtNREeNBuPTIuNGsJh5aG7oVSCrF2HLnZ4G+Es9m/PbNEpUdA1QGMF+yma+Hgm8w==
+X-Received: by 2002:a65:6910:: with SMTP id s16mr17061184pgq.284.1570803038188;
+        Fri, 11 Oct 2019 07:10:38 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id h68sm12740598pfb.149.2019.10.11.07.10.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 07:10:37 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 47128403EA; Fri, 11 Oct 2019 14:10:36 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 14:10:36 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
+ support
+Message-ID: <20191011141036.GK16384@42.do-not-panic.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004145056.43267-1-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we tested pmdk unit test [1] vmmalloc_fork TEST3 on arm64 guest, there
-will be a double page fault in __copy_from_user_inatomic of cow_user_page.
+Hey Hans, thanks for staying on top of this and follow up! For some
+reason the universe conspired against your first and last patch ([1/8],
+[8/8]), and I never got them. Could you bounce these or resend in case
+others confirm they also didn't get it?
 
-To reproduce the bug, the cmd is as follows after you deployed everything:
-make -C src/test/vmmalloc_fork/ TEST_TIME=60m check
+While at it, can you Cc scott.branden@broadcom.com in further
+communications about this patchset, he's interest in some other changes
+we'll need to coordinate if we get to have some other development in
+line for the next merge window.
 
-Below call trace is from arm64 do_page_fault for debugging purpose:
-[  110.016195] Call trace:
-[  110.016826]  do_page_fault+0x5a4/0x690
-[  110.017812]  do_mem_abort+0x50/0xb0
-[  110.018726]  el1_da+0x20/0xc4
-[  110.019492]  __arch_copy_from_user+0x180/0x280
-[  110.020646]  do_wp_page+0xb0/0x860
-[  110.021517]  __handle_mm_fault+0x994/0x1338
-[  110.022606]  handle_mm_fault+0xe8/0x180
-[  110.023584]  do_page_fault+0x240/0x690
-[  110.024535]  do_mem_abort+0x50/0xb0
-[  110.025423]  el0_da+0x20/0x24
-
-The pte info before __copy_from_user_inatomic is (PTE_AF is cleared):
-[ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003,
-               pmd=000000023d4b3003, pte=360000298607bd3
-
-As told by Catalin: "On arm64 without hardware Access Flag, copying from
-user will fail because the pte is old and cannot be marked young. So we
-always end up with zeroed page after fork() + CoW for pfn mappings. we
-don't always have a hardware-managed access flag on arm64."
-
-This patch fixes it by calling pte_mkyoung. Also, the parameter is
-changed because vmf should be passed to cow_user_page()
-
-Add a WARN_ON_ONCE when __copy_from_user_inatomic() returns error
-in case there can be some obscure use-case (by Kirill).
-
-[1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
-
-Signed-off-by: Jia He <justin.he@arm.com>
-Reported-by: Yibo Cai <Yibo.Cai@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- mm/memory.c | 104 ++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 89 insertions(+), 15 deletions(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index b1ca51a079f2..b6a5d6a08438 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -118,6 +118,18 @@ int randomize_va_space __read_mostly =
- 					2;
- #endif
- 
-+#ifndef arch_faults_on_old_pte
-+static inline bool arch_faults_on_old_pte(void)
-+{
-+	/*
-+	 * Those arches which don't have hw access flag feature need to
-+	 * implement their own helper. By default, "true" means pagefault
-+	 * will be hit on old pte.
-+	 */
-+	return true;
-+}
-+#endif
-+
- static int __init disable_randmaps(char *s)
- {
- 	randomize_va_space = 0;
-@@ -2145,32 +2157,82 @@ static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
- 	return same;
- }
- 
--static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
-+static inline bool cow_user_page(struct page *dst, struct page *src,
-+				 struct vm_fault *vmf)
- {
-+	bool ret;
-+	void *kaddr;
-+	void __user *uaddr;
-+	bool force_mkyoung;
-+	struct vm_area_struct *vma = vmf->vma;
-+	struct mm_struct *mm = vma->vm_mm;
-+	unsigned long addr = vmf->address;
-+
- 	debug_dma_assert_idle(src);
- 
-+	if (likely(src)) {
-+		copy_user_highpage(dst, src, addr, vma);
-+		return true;
-+	}
-+
- 	/*
- 	 * If the source page was a PFN mapping, we don't have
- 	 * a "struct page" for it. We do a best-effort copy by
- 	 * just copying from the original user address. If that
- 	 * fails, we just zero-fill it. Live with it.
- 	 */
--	if (unlikely(!src)) {
--		void *kaddr = kmap_atomic(dst);
--		void __user *uaddr = (void __user *)(va & PAGE_MASK);
-+	kaddr = kmap_atomic(dst);
-+	uaddr = (void __user *)(addr & PAGE_MASK);
-+
-+	/*
-+	 * On architectures with software "accessed" bits, we would
-+	 * take a double page fault, so mark it accessed here.
-+	 */
-+	force_mkyoung = arch_faults_on_old_pte() && !pte_young(vmf->orig_pte);
-+	if (force_mkyoung) {
-+		pte_t entry;
-+
-+		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
-+		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-+			/*
-+			 * Other thread has already handled the fault
-+			 * and we don't need to do anything. If it's
-+			 * not the case, the fault will be triggered
-+			 * again on the same address.
-+			 */
-+			ret = false;
-+			goto pte_unlock;
-+		}
- 
-+		entry = pte_mkyoung(vmf->orig_pte);
-+		if (ptep_set_access_flags(vma, addr, vmf->pte, entry, 0))
-+			update_mmu_cache(vma, addr, vmf->pte);
-+	}
-+
-+	/*
-+	 * This really shouldn't fail, because the page is there
-+	 * in the page tables. But it might just be unreadable,
-+	 * in which case we just give up and fill the result with
-+	 * zeroes.
-+	 */
-+	if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
- 		/*
--		 * This really shouldn't fail, because the page is there
--		 * in the page tables. But it might just be unreadable,
--		 * in which case we just give up and fill the result with
--		 * zeroes.
-+		 * Give a warn in case there can be some obscure
-+		 * use-case
- 		 */
--		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
--			clear_page(kaddr);
--		kunmap_atomic(kaddr);
--		flush_dcache_page(dst);
--	} else
--		copy_user_highpage(dst, src, va, vma);
-+		WARN_ON_ONCE(1);
-+		clear_page(kaddr);
-+	}
-+
-+	ret = true;
-+
-+pte_unlock:
-+	if (force_mkyoung)
-+		pte_unmap_unlock(vmf->pte, vmf->ptl);
-+	kunmap_atomic(kaddr);
-+	flush_dcache_page(dst);
-+
-+	return ret;
- }
- 
- static gfp_t __get_fault_gfp_mask(struct vm_area_struct *vma)
-@@ -2327,7 +2389,19 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 				vmf->address);
- 		if (!new_page)
- 			goto oom;
--		cow_user_page(new_page, old_page, vmf->address, vma);
-+
-+		if (!cow_user_page(new_page, old_page, vmf)) {
-+			/*
-+			 * COW failed, if the fault was solved by other,
-+			 * it's fine. If not, userspace would re-fault on
-+			 * the same address and we will handle the fault
-+			 * from the second attempt.
-+			 */
-+			put_page(new_page);
-+			if (old_page)
-+				put_page(old_page);
-+			return 0;
-+		}
- 	}
- 
- 	if (mem_cgroup_try_charge_delay(new_page, mm, GFP_KERNEL, &memcg, false))
--- 
-2.17.1
-
+  Luis
