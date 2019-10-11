@@ -2,68 +2,134 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103F9C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169ABC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35A12089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC060218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 16:01:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EE48D9Sv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbfJKQAT (ORCPT
+        id S1728196AbfJKQBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 12:00:19 -0400
-Received: from ms.lwn.net ([45.79.88.28]:39258 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfJKQAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 12:00:19 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 194AC2E6;
-        Fri, 11 Oct 2019 16:00:19 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 10:00:18 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Christian Kujau <lists@nerdbynature.de>
-Cc:     Micah Morton <mortonm@chromium.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [TYPO] SafeSetID.rst: Remove spurious '???' characters
-Message-ID: <20191011100018.0e9fff37@lwn.net>
-In-Reply-To: <alpine.DEB.2.21.99999.352.1910102033050.30236@trent.utfs.org>
-References: <alpine.DEB.2.21.99999.352.1910102033050.30236@trent.utfs.org>
-Organization: LWN.net
+        Fri, 11 Oct 2019 12:01:14 -0400
+Received: from mail-pf1-f171.google.com ([209.85.210.171]:33347 "EHLO
+        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfJKQBO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 12:01:14 -0400
+Received: by mail-pf1-f171.google.com with SMTP id q10so6363239pfl.0;
+        Fri, 11 Oct 2019 09:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=itQoi2dgqCgMSiWT5e6lfORl7lgUJoSIb5pqH2SRdb8=;
+        b=EE48D9SvWa4Y7ktBRPyGiJaOJitENY9e4a+b3iU214qrQtkjkdd5J8p0xVi1lSqLtB
+         ykuxzJhICU9bhPoAq2AvypqBylXUp1e+UQs/wnq7TnOGY20q/VGxZVYy8QomZ2rxf8d/
+         QVgHdWUC2Df2hnhkyRPRdBbRsH9ZBhx7lHXxzl2Awanb2kIAEPeY4OuPvnxunRdaQIHq
+         uDdvPLmA48EB2uzgmbLlDJKxTH4GKYavhSQC2D8DDIvmbkbE8S4wePLK4EWdno9DNWh8
+         z7WSK4Mg7Kiir0wAa+Fq+RipQSGF1EpPei+luszijXebtRkRB1/M1NxFiaJ/MQL7ED65
+         Ns1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=itQoi2dgqCgMSiWT5e6lfORl7lgUJoSIb5pqH2SRdb8=;
+        b=jtd1vW0Gt+gfqUKNu2dd/3FdDwTdqYDP2OfogkySH8aNcS4EF6Y2TU4ZRm8A62Dp6W
+         dKBs9Avfvalt5XRCqpYd9puryFeVFZbHGOgSmdNUbu0muZq4AXNtbctCVw7tb0DVnNKZ
+         Nw1Zt0ujYvOIo1D8gjWn2/M4z3CKirRQFsipHHSQpmsx1Z/dI9+4+ZRBinUD3RzCP2lC
+         TePGZ+3PbQvGHOadVDy0d5Nj/AUsj7pa3fPRCwwzSqCBejr3iQ3c3tEp25tU0J91t2Fs
+         GAt0+xUshG/9cdgVW6LAB72hAiWLehB2WgJtINXfDjA8IN3fW6FwsLcxhxcM9DT9MlkO
+         2QPQ==
+X-Gm-Message-State: APjAAAWmngMoeGkfE8joqJsWvETXUuUMNxjUlUUMa1bHz7CKtOi/Wfq2
+        oxSP3w59OraRWv9AXAOLAgIzHG8I
+X-Google-Smtp-Source: APXvYqytD3kiUVj/n9RgfT3nJvTuGMHAhCgy20cz+KMDm2IZ22jcZi7jUehEPkoqNqvwexRDVPYYXg==
+X-Received: by 2002:a17:90a:a781:: with SMTP id f1mr18939245pjq.29.1570809673513;
+        Fri, 11 Oct 2019 09:01:13 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id y2sm10375535pfe.126.2019.10.11.09.01.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2019 09:01:11 -0700 (PDT)
+Subject: Re: Potential NULL pointer deference in spi
+To:     Yizhuo Zhai <yzhai003@ucr.edu>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
+        Chengyu Song <csong@cs.ucr.edu>
+References: <CABvMjLToYzmCue-TiDhR4Yu4v3+Z+-UV9WhixV7uvwoMh2m5Lw@mail.gmail.com>
+ <f3ce1620-c421-b41f-440b-efe3ff6e91fe@gmail.com>
+ <CABvMjLTrGprdgFTP-+2XC_p+vE+tVWeYvyuLGkKj1dY7KR+JDg@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <214886b4-ec40-3959-35ff-f9b5a2507300@gmail.com>
+Date:   Fri, 11 Oct 2019 09:01:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABvMjLTrGprdgFTP-+2XC_p+vE+tVWeYvyuLGkKj1dY7KR+JDg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 20:36:16 -0700 (PDT)
-Christian Kujau <lists@nerdbynature.de> wrote:
 
-> While reading SafeSetID.rst I stumbled across those things. This patch 
-> removes these spurious '???' characters.
->     
-> Signed-off-by: Christian Kujau <lists@nerdbynature.de>
 
-I've applied this, thanks.  I did take the liberty of rewriting the
-changelog to adhere to normal standards:
+On 10/10/19 10:31 PM, Yizhuo Zhai wrote:
+> Hi Eric:
+> 
+> My apologies for bothering, we got those report via static analysis
+> and haven't got a good method to verify the path to trigger them.
+> Therefore I sent those email to you maintainers first since you
+> know much better about the details. Sorry again for your time and
+> I take your suggestions.
 
-Author: Christian Kujau <lists@nerdbynature.de>
-Date:   Thu Oct 10 20:36:16 2019 -0700
+My suggestion is that you need to make deep investigations on your own,
+before sending mails to lkml@, reaching thousands of people on the planet.
 
-    docs: SafeSetID.rst: Remove spurious '???' characters
-    
-    It appears that some smart quotes were changed to "???" by even smarter
-    software; change them to the dumb but legible variety.
-    
-    Signed-off-by: Christian Kujau <lists@nerdbynature.de>
-    Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+Static analysis tools having too many false positive are not worth
+the time spent by humans.
 
-Thanks,
+I knew nothing about drivers/spi/spi.c, but after few minutes reading the code,
+it was clear your report was wrong.
 
-jon
+Do not ask us to do what you should do yourself.
+
+Thanks.
+
+> 
+> On Wed, Oct 9, 2019 at 10:48 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>>
+>>
+>>
+>> On 10/9/19 10:37 PM, Yizhuo Zhai wrote:
+>>> Hi All:
+>>>
+>>> drivers/spi/spi.c:
+>>>
+>>> The function to_spi_device() could return NULL, but some callers
+>>> in this file does not check the return value while directly dereference
+>>> it, which seems potentially unsafe.
+>>>
+>>> Such callers include spidev_release(),  spi_dev_check(),
+>>> driver_override_store(), etc.
+>>>
+>>>
+>>
+>>
+>> Many of your reports are completely bogus.
+>>
+>> I suggest you spend more time before sending such emails to very large audience
+>> and risk being ignored at some point.
+>>
+>> Thanks.
+> 
+> 
+> 
