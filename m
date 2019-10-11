@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402A3C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7883EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F88214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475AD214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="EhcGaFKY"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="S9PDlLoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfJKBZE (ORCPT
+        id S1728244AbfJKBYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 21:25:04 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53122 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728240AbfJKBYZ (ORCPT
+        Thu, 10 Oct 2019 21:24:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42841 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbfJKBYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:24:25 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r19so8704310wmh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:24 -0700 (PDT)
+        Thu, 10 Oct 2019 21:24:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n14so9927305wrw.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gWD0ajueU3FDZugFOeZjcuv8DzQScIgD3lk4LddX0o0=;
-        b=EhcGaFKYu218GQzSN/qZhWvFpix+VaufF9g+EZNmmiCDUnuO0vUw4GvIPdOPE8FOCB
-         el7ZfzJwXT0tUV0pELO7ZUfUuXCer6YUVxCGH16my851zEWcBJcWE62P6IMus4ddnggb
-         DEJqUNgY7nV7hkPNdj83DNUcQ7zBrl8TC29sjPYGGw53BFsdZDi/1S9tnpORZ4bEqv6w
-         7Bc8rDvZRgVBgd5tbBovpUtXew9lMC6GkZF6x5TSceo9LhKwbfo7iEPzv9sK9zwTvDC7
-         q6nBlxZul6lqD0abv9A0axw/EfMou/IDI91CjVQL1o/SGw4Ko/kYQCHdICmoIlGqwLOQ
-         1AmA==
+        bh=Z80Wkv7hDeZaQtsThmwjgnLBl5TKdyqw3gtOu26TDPU=;
+        b=S9PDlLoUEuTbf+JAC1FRVJK2a/lzy1G1g2AWK0X7aFZ7FXuHRfpWZ48q7tsyCqw6a4
+         7T8yJx7Z/fj9chrIftBa6G1Tyd/K0JSdApFsgF94A8K63drSTKgqx5fV4Pqln8Rrji4o
+         qdDL433EzadqDiHF79jq/saPuOMnG/2BKjRJWywgWvGym57LCsngKUhvZUIGXDvZHPm7
+         71MWgrGyscnXpXi+Yh9oEzPdQxqKNTgd3SewHym6wDLlKp6+fpNh8csw7bzQMTqe7SBq
+         yzieZ++bqjrleRAPwiF4mMsjg7CA1dtTTFbuvyzxNAxXCR47DauGo4RqG73CEUs2B4G9
+         WUmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gWD0ajueU3FDZugFOeZjcuv8DzQScIgD3lk4LddX0o0=;
-        b=aaPwsewzBzGQRVPEH/QzSZs4NsvAYYQW7Gy0T/BBKGbe/VokCwwGZmJSVOy6ISUU6A
-         iQx9maBtA3oXR8PjrEajPQJ679Yo2/WBn8YIi95jkmoNOi964Pe1cF4QycWoSi7c0qhJ
-         crytrt75DAP5xIJFWujAeMZKA8boM2I/FuVQWZ29HVJ+T2CycfsUVp4/QOqvToIqBCzo
-         IWD1sluw95m3cZX0hFbzv8jThvVnJBArx5FHIon+teh8Trt0Yeb9K9d5PNdnzuMqYriu
-         QolE1i04KhjaOWSsRdTOk0A+McpO2fD6Yqkl6dAl1PVHek4AqKRY/X4jOxL07M8pDZJs
-         bdZQ==
-X-Gm-Message-State: APjAAAVgAMJ/Z9Akr0J+EOjS1hASGe4X7+rxjY5lIyG7ytz2I3nsav1F
-        6Vp3oHzPTqEbO6LAz0T86CGToUiSP0s=
-X-Google-Smtp-Source: APXvYqyZbqU/RKBZIpBR6d31fGxswiRSAKkGg3hbg5igkpPVS7ppB+tsdItS7JKB0oBlnmSzkfAP3A==
-X-Received: by 2002:a1c:bc07:: with SMTP id m7mr958262wmf.103.1570757063384;
-        Thu, 10 Oct 2019 18:24:23 -0700 (PDT)
+        bh=Z80Wkv7hDeZaQtsThmwjgnLBl5TKdyqw3gtOu26TDPU=;
+        b=PMVyk3W9yYmzzkK13e3zf/KT4AdRC12//iwiWIvLomzkpm5wuAmkA689T7DKvQtN3T
+         qHAtYSChI/VLH5y0msQPl10Xv5NYRJrpuz9xO2g5LKvxYfhntBGQJyglveBDdq2izuZr
+         ONZhFs5idhJnImijTAN+84N8fFCE3cNcem6u/jEezL3U6FvYVvwM5BBHY72oRAnl+iNl
+         OgXYZDF64+v0JmZzHCXHqDfkYiBgtsaGXOq91fcBElutaBmnygWAVIqcca2q5ockIRP3
+         nqFeosCNzKaFnE/ikf4rkyUly2ITa6VwfCv3pAVrIgpji3q5u5jwsffHM3XEQsaLmjP4
+         KG7g==
+X-Gm-Message-State: APjAAAUGzauTjKvoJR6pl+ieqrGrMHCvByjFEHdiQjP3wm94Q7yqMsCH
+        LaXQoFOAstGF+4cwowZ/blVtedeGVOk=
+X-Google-Smtp-Source: APXvYqzNY4wzWTtAh17rW7vc590vD8YLN/GsEofDTRRhUBA6BBnJx58A27oe2UlcdVyo96o6+uNA6w==
+X-Received: by 2002:a5d:50c9:: with SMTP id f9mr10341944wrt.36.1570757057403;
+        Thu, 10 Oct 2019 18:24:17 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:ea2:c100:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.22
+        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 18:24:22 -0700 (PDT)
+        Thu, 10 Oct 2019 18:24:16 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -75,11 +75,10 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org,
-        Andrei Vagin <avagin@gmail.com>
-Subject: [PATCHv7 25/33] x86/vdso: Zap vvar pages on switch a time namspace
-Date:   Fri, 11 Oct 2019 02:23:33 +0100
-Message-Id: <20191011012341.846266-26-dima@arista.com>
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: [PATCHv7 21/33] x86/vdso: Add timens page
+Date:   Fri, 11 Oct 2019 02:23:29 +0100
+Message-Id: <20191011012341.846266-22-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191011012341.846266-1-dima@arista.com>
 References: <20191011012341.846266-1-dima@arista.com>
@@ -90,121 +89,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VVAR page layout depends on whether a task belongs to the root or
-non-root time namespace. Whenever a task changes its namespace, the VVAR
-page tables are cleared and then they will re-faulted with a
-corresponding layout.
+To support time namespaces in the VDSO with a minimal impact on regular non
+time namespace affected tasks, the namespace handling needs to be hidden in
+a slow path.
 
-Co-developed-by: Andrei Vagin <avagin@gmail.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
+The most obvious place is vdso_seq_begin(). If a task belongs to a time
+namespace then the VVAR page which contains the system wide VDSO data is
+replaced with a namespace specific page which has the same layout as the
+VVAR page. That page has vdso_data->seq set to 1 to enforce the slow path
+and vdso_data->clock_mode set to VCLOCK_TIMENS to enforce the time
+namespace handling path.
+
+The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
+update of the VDSO data is in progress, is not really affecting regular
+tasks which are not part of a time namespace as the task is spin waiting
+for the update to finish and vdso_data->seq to become even again.
+
+If a time namespace task hits that code path, it invokes the corresponding
+time getter function which retrieves the real VVAR page, reads host time
+and then adds the offset for the requested clock which is stored in the
+special VVAR page.
+
+Allocate Timens page among VVAR pages and place vdso_data on it.
+Provide __arch_get_timens_vdso_data() helper for VDSO code to get the
+code-relative position of VVARs on that special page.
+
+Co-developed-by: Andrei Vagin <avagin@openvz.org>
+Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/entry/vdso/vma.c      | 27 +++++++++++++++++++++++++++
- include/linux/time_namespace.h |  3 +++
- kernel/time/namespace.c        | 10 ++++++++++
- 3 files changed, 40 insertions(+)
+ arch/x86/Kconfig                         |  1 +
+ arch/x86/entry/vdso/vdso-layout.lds.S    | 11 +++++++++--
+ arch/x86/entry/vdso/vdso2c.c             |  3 +++
+ arch/x86/include/asm/vdso.h              |  1 +
+ arch/x86/include/asm/vdso/gettimeofday.h |  9 +++++++++
+ arch/x86/include/asm/vvar.h              |  5 ++++-
+ 6 files changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-index d6cb8a16f368..57ada3e95f8d 100644
---- a/arch/x86/entry/vdso/vma.c
-+++ b/arch/x86/entry/vdso/vma.c
-@@ -50,6 +50,7 @@ void __init init_vdso_image(const struct vdso_image *image)
- 						image->alt_len));
- }
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index d6e1faa28c58..15f076eb2b1c 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -226,6 +226,7 @@ config X86
+ 	select VIRT_TO_BUS
+ 	select X86_FEATURE_NAMES		if PROC_FS
+ 	select PROC_PID_ARCH_STATUS		if PROC_FS
++	select VDSO_TIMENS			if TIME_NS
  
-+static const struct vm_special_mapping vvar_mapping;
- struct linux_binprm;
+ config INSTRUCTION_DECODER
+ 	def_bool y
+diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
+index 2330daad67c3..ea7e0155c604 100644
+--- a/arch/x86/entry/vdso/vdso-layout.lds.S
++++ b/arch/x86/entry/vdso/vdso-layout.lds.S
+@@ -16,8 +16,8 @@ SECTIONS
+ 	 * segment.
+ 	 */
  
- static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
-@@ -127,6 +128,32 @@ static struct page *find_timens_vvar_page(struct vm_area_struct *vma)
+-	vvar_start = . - 3 * PAGE_SIZE;
+-	vvar_page = vvar_start;
++	vvar_start = . - 4 * PAGE_SIZE;
++	vvar_page  = vvar_start;
  
- 	return NULL;
- }
+ 	/* Place all vvars at the offsets in asm/vvar.h. */
+ #define EMIT_VVAR(name, offset) vvar_ ## name = vvar_page + offset;
+@@ -26,6 +26,13 @@ SECTIONS
+ 
+ 	pvclock_page = vvar_start + PAGE_SIZE;
+ 	hvclock_page = vvar_start + 2 * PAGE_SIZE;
++	timens_page  = vvar_start + 3 * PAGE_SIZE;
 +
-+/*
-+ * The vvar page layout depends on whether a task belongs to the root or
-+ * non-root time namespace. Whenever a task changes its namespace, the VVAR
-+ * page tables are cleared and then they will re-faulted with a
-+ * corresponding layout.
-+ * See also the comment near timens_setup_vdso_data() for details.
-+ */
-+int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
++#undef _ASM_X86_VVAR_H
++	/* Place all vvars in timens too at the offsets in asm/vvar.h. */
++#define EMIT_VVAR(name, offset) timens_ ## name = timens_page + offset;
++#include <asm/vvar.h>
++#undef EMIT_VVAR
+ 
+ 	. = SIZEOF_HEADERS;
+ 
+diff --git a/arch/x86/entry/vdso/vdso2c.c b/arch/x86/entry/vdso/vdso2c.c
+index 3a4d8d4d39f8..3842873b3ae3 100644
+--- a/arch/x86/entry/vdso/vdso2c.c
++++ b/arch/x86/entry/vdso/vdso2c.c
+@@ -75,12 +75,14 @@ enum {
+ 	sym_vvar_page,
+ 	sym_pvclock_page,
+ 	sym_hvclock_page,
++	sym_timens_page,
+ };
+ 
+ const int special_pages[] = {
+ 	sym_vvar_page,
+ 	sym_pvclock_page,
+ 	sym_hvclock_page,
++	sym_timens_page,
+ };
+ 
+ struct vdso_sym {
+@@ -93,6 +95,7 @@ struct vdso_sym required_syms[] = {
+ 	[sym_vvar_page] = {"vvar_page", true},
+ 	[sym_pvclock_page] = {"pvclock_page", true},
+ 	[sym_hvclock_page] = {"hvclock_page", true},
++	[sym_timens_page] = {"timens_page", true},
+ 	{"VDSO32_NOTE_MASK", true},
+ 	{"__kernel_vsyscall", true},
+ 	{"__kernel_sigreturn", true},
+diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
+index 230474e2ddb5..bbcdc7b8f963 100644
+--- a/arch/x86/include/asm/vdso.h
++++ b/arch/x86/include/asm/vdso.h
+@@ -21,6 +21,7 @@ struct vdso_image {
+ 	long sym_vvar_page;
+ 	long sym_pvclock_page;
+ 	long sym_hvclock_page;
++	long sym_timens_page;
+ 	long sym_VDSO32_NOTE_MASK;
+ 	long sym___kernel_sigreturn;
+ 	long sym___kernel_rt_sigreturn;
+diff --git a/arch/x86/include/asm/vdso/gettimeofday.h b/arch/x86/include/asm/vdso/gettimeofday.h
+index e9ee139cf29e..39a551df4fea 100644
+--- a/arch/x86/include/asm/vdso/gettimeofday.h
++++ b/arch/x86/include/asm/vdso/gettimeofday.h
+@@ -21,6 +21,7 @@
+ #include <clocksource/hyperv_timer.h>
+ 
+ #define __vdso_data (VVAR(_vdso_data))
++#define __timens_vdso_data (TIMENS(_vdso_data))
+ 
+ #define VDSO_HAS_TIME 1
+ 
+@@ -56,6 +57,14 @@ extern struct ms_hyperv_tsc_page hvclock_page
+ 	__attribute__((visibility("hidden")));
+ #endif
+ 
++#ifdef CONFIG_VDSO_TIMENS
++static __always_inline
++const struct vdso_data *__arch_get_timens_vdso_data(void)
 +{
-+	struct mm_struct *mm = task->mm;
-+	struct vm_area_struct *vma;
-+
-+	if (down_write_killable(&mm->mmap_sem))
-+		return -EINTR;
-+
-+	for (vma = mm->mmap; vma; vma = vma->vm_next) {
-+		unsigned long size = vma->vm_end - vma->vm_start;
-+
-+		if (vma_is_special_mapping(vma, &vvar_mapping))
-+			zap_page_range(vma, vma->vm_start, size);
-+	}
-+
-+	up_write(&mm->mmap_sem);
-+	return 0;
++	return __timens_vdso_data;
 +}
- #else
- static inline struct page *find_timens_vvar_page(struct vm_area_struct *vma)
- {
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index c479cfda2c3e..dcf3dbf2836b 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -30,6 +30,9 @@ struct time_namespace {
- extern struct time_namespace init_time_ns;
- 
- #ifdef CONFIG_TIME_NS
-+extern int vdso_join_timens(struct task_struct *task,
-+			    struct time_namespace *ns);
++#endif
 +
- static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
- {
- 	kref_get(&ns->kref);
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index e14cd1ca387d..0dc0742ed1ee 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -280,6 +280,7 @@ static void timens_put(struct ns_common *ns)
- static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
- {
- 	struct time_namespace *ns = to_time_ns(new);
-+	int err;
+ #ifndef BUILD_VDSO32
  
- 	if (!current_is_single_threaded())
- 		return -EUSERS;
-@@ -290,6 +291,10 @@ static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+ static __always_inline
+diff --git a/arch/x86/include/asm/vvar.h b/arch/x86/include/asm/vvar.h
+index ff2de3025388..183e98e49ab9 100644
+--- a/arch/x86/include/asm/vvar.h
++++ b/arch/x86/include/asm/vvar.h
+@@ -33,9 +33,12 @@ extern char __vvar_page;
  
- 	timens_set_vvar_page(current, ns);
+ #define DECLARE_VVAR(offset, type, name)				\
+ 	extern type vvar_ ## name[CS_BASES]				\
+-	__attribute__((visibility("hidden")));
++	__attribute__((visibility("hidden")));				\
++	extern type timens_ ## name[CS_BASES]				\
++	__attribute__((visibility("hidden")));				\
  
-+	err = vdso_join_timens(current, ns);
-+	if (err)
-+		return err;
-+
- 	get_time_ns(ns);
- 	put_time_ns(nsproxy->time_ns);
- 	nsproxy->time_ns = ns;
-@@ -304,6 +309,7 @@ int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
- {
- 	struct ns_common *nsc = &nsproxy->time_ns_for_children->ns;
- 	struct time_namespace *ns = to_time_ns(nsc);
-+	int err;
+ #define VVAR(name) (vvar_ ## name)
++#define TIMENS(name) (timens_ ## name)
  
- 	/* create_new_namespaces() already incremented the ref counter */
- 	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
-@@ -311,6 +317,10 @@ int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
- 
- 	timens_set_vvar_page(tsk, ns);
- 
-+	err = vdso_join_timens(tsk, ns);
-+	if (err)
-+		return err;
-+
- 	get_time_ns(ns);
- 	put_time_ns(nsproxy->time_ns);
- 	nsproxy->time_ns = ns;
+ #define DEFINE_VVAR(type, name)						\
+ 	type name[CS_BASES]						\
 -- 
 2.23.0
 
