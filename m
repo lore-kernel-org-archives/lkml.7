@@ -2,401 +2,166 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CD9C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42892ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3007B2196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:24:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="kkSOi0sr"
+	by mail.kernel.org (Postfix) with ESMTP id 2566F21D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:24:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfJKBYV (ORCPT
+        id S1728228AbfJKBYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 21:24:21 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33352 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbfJKBYR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:24:17 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r17so8281585wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=enMABrB8FqvW0RFa16fWEbk7Tde/XS0DcQh4Q7RT8Xk=;
-        b=kkSOi0srLgmHRGQ6gsxHjFzHxmWrNhOb6Vk2idjSzdB8je3lntax0jf8LM3yfgdP/f
-         9Wdk3l0gtNS0EusEpmgHD2IsDms3ipF/M+NceVbTYtucsFmuhzIONZ9EckLuE4nvSzF0
-         l0sf7wyM1dxOEJltECdMhXEFTsZsSHsFyDwZfhbAzxUKIAEL66dXB4gUP3/O8CVhBPNq
-         5iTp06Ou+8/9zzvJdFv7DHv+hd55FXVbsWgb/Ie1UjAfFJxSRn1lT+i/NiMrrIZvoOnE
-         Nce67BXFQmId6y4eSIHXq+NHJbOnw6VfDa/azPkU0W+RJmi/DzpQUGANJReDOvnln1B3
-         H66g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=enMABrB8FqvW0RFa16fWEbk7Tde/XS0DcQh4Q7RT8Xk=;
-        b=snXDOKRQusD1v5dSD54NdjDYt8EG5tl71zg52Ggnip7t8fVNBQw81zjrVsxUHoXr6q
-         JJ/0GVhRjxMq2ZgZHXqbMvHD0EUzY+5WAXDoKkChNufsjUIvYuzUJuVLoJlXKRHga7B7
-         do0EHHZOsDApu27ATzcGAKYOTMc1byhajwTgl6Temrqd15KylJZMh3B+UhRvG0UpBr9i
-         4sxmyWw3SU4M2UBFq+YoKFCE2HsJuCLFdf+8houyVuvYPxtwo160tDu6lVajv/puW1Mj
-         4U1q8CUnytcuFSYnwroKlU3zpS3nNvpWkzbpD7LnqOSR5CSRQKhcymGWZxerjPnl3iuG
-         THdA==
-X-Gm-Message-State: APjAAAWBeFMYT66E3ITW36dWDoQcwQTRaEge+45ClNu0xHhELr+fJH+q
-        ltW7o7je0kzIikxQLAUma/NBVB1kejA=
-X-Google-Smtp-Source: APXvYqyKryNJ4Nl8Gg8pIAZRWrFJEqKI0mtEY96/+TWsiRXMOjnLuaunpFfH/ZBsFsz/+NRETK2SiA==
-X-Received: by 2002:a7b:c313:: with SMTP id k19mr1051460wmj.6.1570757054208;
-        Thu, 10 Oct 2019 18:24:14 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8084:ea2:c100:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 18:24:13 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org,
-        Andrei Vagin <avagin@gmail.com>
-Subject: [PATCHv7 19/33] lib/vdso: Prepare for time namespace support
-Date:   Fri, 11 Oct 2019 02:23:27 +0100
-Message-Id: <20191011012341.846266-20-dima@arista.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191011012341.846266-1-dima@arista.com>
-References: <20191011012341.846266-1-dima@arista.com>
+        Thu, 10 Oct 2019 21:24:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:35610 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728201AbfJKBYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 21:24:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 18:24:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,282,1566889200"; 
+   d="scan'208";a="193388536"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga008.fm.intel.com with ESMTP; 10 Oct 2019 18:24:16 -0700
+Date:   Fri, 11 Oct 2019 09:23:59 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
+        cai@lca.pw, shakeelb@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2 1/2] mm/rmap.c: don't reuse anon_vma if we just want a
+ copy
+Message-ID: <20191011012359.GA3883@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191010135825.28153-1-richardw.yang@linux.intel.com>
+ <2a8a03bb-de72-62b0-1cb6-bc9b3b68b258@yandex-team.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a8a03bb-de72-62b0-1cb6-bc9b3b68b258@yandex-team.ru>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Thu, Oct 10, 2019 at 06:29:32PM +0300, Konstantin Khlebnikov wrote:
+>On 10/10/2019 16.58, Wei Yang wrote:
+>> Before commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
+>> hierarchy"), anon_vma_clone() doesn't change dst->anon_vma. While after
+>> this commit, anon_vma_clone() will try to reuse an exist one on forking.
+>> 
+>> But this commit go a little bit further for the case not forking.
+>> anon_vma_clone() is called from __vma_split(), __split_vma(), copy_vma()
+>> and anon_vma_fork(). For the first three places, the purpose here is get
+>> a copy of src and we don't expect to touch dst->anon_vma even it is
+>> NULL. While after that commit, it is possible to reuse an anon_vma when
+>> dst->anon_vma is NULL. This is not we intend to have.
+>
+>In all these cases dst->anon_vma is a copy of src->anon_vma except
+>anon_vma_fork where dst_>anon_vma explicitly set to NULL before call.
+>
+>So reuse == true iff (!dst->anon_vma && src->anon_vma)
+>
 
-To support time namespaces in the vdso with a minimal impact on regular non
-time namespace affected tasks, the namespace handling needs to be hidden in
-a slow path.
+Ok, I think you are right. Thanks
 
-The most obvious place is vdso_seq_begin(). If a task belongs to a time
-namespace then the VVAR page which contains the system wide vdso data is
-replaced with a namespace specific page which has the same layout as the
-VVAR page. That page has vdso_data->seq set to 1 to enforce the slow path
-and vdso_data->clock_mode set to VCLOCK_TIMENS to enforce the time
-namespace handling path.
+>> 
+>> This patch stop reuse anon_vma for non-fork cases.
+>> 
+>> Fix commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
+>> hierarchy")
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> ---
+>>   include/linux/rmap.h | 3 ++-
+>>   mm/mmap.c            | 6 +++---
+>>   mm/rmap.c            | 7 ++++---
+>>   3 files changed, 9 insertions(+), 7 deletions(-)
+>> 
+>> diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+>> index 988d176472df..963e6ab09b9b 100644
+>> --- a/include/linux/rmap.h
+>> +++ b/include/linux/rmap.h
+>> @@ -142,7 +142,8 @@ static inline void anon_vma_unlock_read(struct anon_vma *anon_vma)
+>>   void anon_vma_init(void);	/* create anon_vma_cachep */
+>>   int  __anon_vma_prepare(struct vm_area_struct *);
+>>   void unlink_anon_vmas(struct vm_area_struct *);
+>> -int anon_vma_clone(struct vm_area_struct *, struct vm_area_struct *);
+>> +int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src,
+>> +		   bool reuse);
+>>   int anon_vma_fork(struct vm_area_struct *, struct vm_area_struct *);
+>>   static inline int anon_vma_prepare(struct vm_area_struct *vma)
+>> diff --git a/mm/mmap.c b/mm/mmap.c
+>> index 93f221785956..21e94f8ac4c7 100644
+>> --- a/mm/mmap.c
+>> +++ b/mm/mmap.c
+>> @@ -791,7 +791,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>>   			int error;
+>>   			importer->anon_vma = exporter->anon_vma;
+>> -			error = anon_vma_clone(importer, exporter);
+>> +			error = anon_vma_clone(importer, exporter, false);
+>>   			if (error)
+>>   				return error;
+>>   		}
+>> @@ -2666,7 +2666,7 @@ int __split_vma(struct mm_struct *mm, struct vm_area_struct *vma,
+>>   	if (err)
+>>   		goto out_free_vma;
+>> -	err = anon_vma_clone(new, vma);
+>> +	err = anon_vma_clone(new, vma, false);
+>>   	if (err)
+>>   		goto out_free_mpol;
+>> @@ -3247,7 +3247,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+>>   		new_vma->vm_pgoff = pgoff;
+>>   		if (vma_dup_policy(vma, new_vma))
+>>   			goto out_free_vma;
+>> -		if (anon_vma_clone(new_vma, vma))
+>> +		if (anon_vma_clone(new_vma, vma, false))
+>>   			goto out_free_mempol;
+>>   		if (new_vma->vm_file)
+>>   			get_file(new_vma->vm_file);
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index d9a23bb773bf..f729e4013613 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -258,7 +258,8 @@ static inline void unlock_anon_vma_root(struct anon_vma *root)
+>>    * good chance of avoiding scanning the whole hierarchy when it searches where
+>>    * page is mapped.
+>>    */
+>> -int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+>> +int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src,
+>> +		   bool reuse)
+>>   {
+>>   	struct anon_vma_chain *avc, *pavc;
+>>   	struct anon_vma *root = NULL;
+>> @@ -286,7 +287,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+>>   		 * will always reuse it. Root anon_vma is never reused:
+>>   		 * it has self-parent reference and at least one child.
+>>   		 */
+>> -		if (!dst->anon_vma && anon_vma != src->anon_vma &&
+>> +		if (reuse && !dst->anon_vma && anon_vma != src->anon_vma &&
+>>   				anon_vma->degree < 2)
+>>   			dst->anon_vma = anon_vma;
+>>   	}
+>> @@ -329,7 +330,7 @@ int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
+>>   	 * First, attach the new VMA to the parent VMA's anon_vmas,
+>>   	 * so rmap can find non-COWed pages in child processes.
+>>   	 */
+>> -	error = anon_vma_clone(vma, pvma);
+>> +	error = anon_vma_clone(vma, pvma, true);
+>>   	if (error)
+>>   		return error;
+>> 
 
-The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
-update of the vdso data is in progress, is not really affecting regular
-tasks which are not part of a time namespace as the task is spin waiting
-for the update to finish and vdso_data->seq to become even again.
-
-If a time namespace task hits that code path, it invokes the corresponding
-time getter function which retrieves the real VVAR page, reads host time
-and then adds the offset for the requested clock which is stored in the
-special VVAR page.
-
-If VDSO time namespace support is disabled the whole magic is compiled out.
-
-Initial testing shows that the disabled case is almost identical to the
-host case which does not take the slow timens path. With the special timens
-page installed the performance hit is constant time and in the range of
-5-7%.
-
-For the vdso functions which are not using the sequence count an
-unconditional check for vdso_data->clock_mode is added which switches to
-the real vdso when the clock_mode is VCLOCK_TIMENS.
-
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- include/linux/time.h    |   6 ++
- include/vdso/datapage.h |  19 +++++-
- lib/vdso/Kconfig        |   6 ++
- lib/vdso/gettimeofday.c | 128 +++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 155 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/time.h b/include/linux/time.h
-index 27d83fd2ae61..b1a592638d7d 100644
---- a/include/linux/time.h
-+++ b/include/linux/time.h
-@@ -96,4 +96,10 @@ static inline bool itimerspec64_valid(const struct itimerspec64 *its)
-  */
- #define time_after32(a, b)	((s32)((u32)(b) - (u32)(a)) < 0)
- #define time_before32(b, a)	time_after32(a, b)
-+
-+struct timens_offset {
-+	s64	sec;
-+	u64	nsec;
-+};
-+
- #endif
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index 2e302c0f41f7..65a38acce27e 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -21,6 +21,8 @@
- #define CS_RAW		1
- #define CS_BASES	(CS_RAW + 1)
- 
-+#define VCLOCK_TIMENS	UINT_MAX
-+
- /**
-  * struct vdso_timestamp - basetime per clock_id
-  * @sec:	seconds
-@@ -48,6 +50,7 @@ struct vdso_timestamp {
-  * @mult:		clocksource multiplier
-  * @shift:		clocksource shift
-  * @basetime[clock_id]:	basetime per clock_id
-+ * @offset[clock_id]:	time namespace offset per clock_id
-  * @tz_minuteswest:	minutes west of Greenwich
-  * @tz_dsttime:		type of DST correction
-  * @hrtimer_res:	hrtimer resolution
-@@ -55,6 +58,17 @@ struct vdso_timestamp {
-  *
-  * vdso_data will be accessed by 64 bit and compat code at the same time
-  * so we should be careful before modifying this structure.
-+ *
-+ * @basetime is used to store the base time for the system wide time getter
-+ * VVAR page.
-+ *
-+ * @offset is used by the special time namespace VVAR pages which are
-+ * installed instead of the real VVAR page. These namespace pages must set
-+ * @seq to 1 and @clock_mode to VLOCK_TIMENS to force the code into the
-+ * time namespace slow path. The namespace aware functions retrieve the
-+ * real system wide VVAR page, read host time and add the per clock offset.
-+ * For clocks which are not affected by time namespace adjustement the
-+ * offset must be zero.
-  */
- struct vdso_data {
- 	u32			seq;
-@@ -65,7 +79,10 @@ struct vdso_data {
- 	u32			mult;
- 	u32			shift;
- 
--	struct vdso_timestamp	basetime[VDSO_BASES];
-+	union {
-+		struct vdso_timestamp	basetime[VDSO_BASES];
-+		struct timens_offset	offset[VDSO_BASES];
-+	};
- 
- 	s32			tz_minuteswest;
- 	s32			tz_dsttime;
-diff --git a/lib/vdso/Kconfig b/lib/vdso/Kconfig
-index 9fe698ff62ec..85276de70dba 100644
---- a/lib/vdso/Kconfig
-+++ b/lib/vdso/Kconfig
-@@ -24,4 +24,10 @@ config GENERIC_COMPAT_VDSO
- 	help
- 	  This config option enables the compat VDSO layer.
- 
-+config VDSO_TIMENS
-+	bool
-+	help
-+	  Selected by architectures which support time namespaces in the
-+	  VDSO
-+
- endif
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index e630e7ff57f1..25244b677823 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -38,6 +38,51 @@ u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
- }
- #endif
- 
-+#ifndef CONFIG_VDSO_TIMENS
-+static __always_inline
-+const struct vdso_data *__arch_get_timens_vdso_data(void)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
-+		      struct __kernel_timespec *ts)
-+{
-+	const struct vdso_data *vd = __arch_get_timens_vdso_data();
-+	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
-+	const struct timens_offset *offs = &vdns->offset[clk];
-+	u64 cycles, last, ns;
-+	s64 sec;
-+	u32 seq;
-+
-+	do {
-+		seq = vdso_read_begin(vd);
-+		cycles = __arch_get_hw_counter(vd->clock_mode);
-+		ns = vdso_ts->nsec;
-+		last = vd->cycle_last;
-+		if (unlikely((s64)cycles < 0))
-+			return -1;
-+
-+		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
-+		ns >>= vd->shift;
-+		sec = vdso_ts->sec;
-+	} while (unlikely(vdso_read_retry(vd, seq)));
-+
-+	/* Add the namespace offset */
-+	sec += offs->sec;
-+	ns += offs->nsec;
-+
-+	/*
-+	 * Do this outside the loop: a race inside the loop could result
-+	 * in __iter_div_u64_rem() being extremely slow.
-+	 */
-+	ts->tv_sec = sec + __iter_div_u64_rem(ns, NSEC_PER_SEC, &ns);
-+	ts->tv_nsec = ns;
-+
-+	return 0;
-+}
-+
- static int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		   struct __kernel_timespec *ts)
- {
-@@ -46,7 +91,28 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
- 	u32 seq;
- 
- 	do {
--		seq = vdso_read_begin(vd);
-+		/*
-+		 * Open coded to handle VCLOCK_TIMENS. Time namespace
-+		 * enabled tasks have a special VVAR page installed which
-+		 * has vd->seq set to 1 and vd->clock_mode set to
-+		 * VCLOCK_TIMENS. For non time namespace affected tasks
-+		 * this does not affect performance because if vd->seq is
-+		 * odd, i.e. a concurrent update is in progress the extra
-+		 * check for vd->clock_mode is just a few extra
-+		 * instructions while spin waiting for vd->seq to become
-+		 * even again.
-+		 */
-+		while (1) {
-+			seq = READ_ONCE(vd->seq);
-+			if (likely(!(seq & 1)))
-+				break;
-+			if (IS_ENABLED(CONFIG_VDSO_TIMENS) &&
-+			    vd->clock_mode == VCLOCK_TIMENS)
-+				return do_hres_timens(vd, clk, ts);
-+			cpu_relax();
-+		}
-+		smp_rmb();
-+
- 		cycles = __arch_get_hw_counter(vd->clock_mode);
- 		ns = vdso_ts->nsec;
- 		last = vd->cycle_last;
-@@ -68,6 +134,34 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
- 	return 0;
- }
- 
-+static void do_coarse_timens(const struct vdso_data *vdns, clockid_t clk,
-+			 struct __kernel_timespec *ts)
-+{
-+	const struct vdso_data *vd = __arch_get_timens_vdso_data();
-+	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
-+	const struct timens_offset *offs = &vdns->offset[clk];
-+	u64 nsec;
-+	s64 sec;
-+	s32 seq;
-+
-+	do {
-+		seq = vdso_read_begin(vd);
-+		sec = vdso_ts->sec;
-+		nsec = vdso_ts->nsec;
-+	} while (unlikely(vdso_read_retry(vd, seq)));
-+
-+	/* Add the namespace offset */
-+	sec += offs->sec;
-+	nsec += offs->nsec;
-+
-+	/*
-+	 * Do this outside the loop: a race inside the loop could result
-+	 * in __iter_div_u64_rem() being extremely slow.
-+	 */
-+	ts->tv_sec = sec + __iter_div_u64_rem(nsec, NSEC_PER_SEC, &nsec);
-+	ts->tv_nsec = nsec;
-+}
-+
- static void do_coarse(const struct vdso_data *vd, clockid_t clk,
- 		      struct __kernel_timespec *ts)
- {
-@@ -75,7 +169,23 @@ static void do_coarse(const struct vdso_data *vd, clockid_t clk,
- 	u32 seq;
- 
- 	do {
--		seq = vdso_read_begin(vd);
-+		/*
-+		 * Open coded to handle VCLOCK_TIMENS. See comment in
-+		 * do_hres().
-+		 */
-+		while (1) {
-+			seq = READ_ONCE(vd->seq);
-+			if (likely(!(seq & 1)))
-+				break;
-+			if (IS_ENABLED(CONFIG_VDSO_TIMENS) &&
-+			    vd->clock_mode == VCLOCK_TIMENS) {
-+				do_coarse_timens(vd, clk, ts);
-+				return;
-+			}
-+			cpu_relax();
-+		}
-+		smp_rmb();
-+
- 		ts->tv_sec = vdso_ts->sec;
- 		ts->tv_nsec = vdso_ts->nsec;
- 	} while (unlikely(vdso_read_retry(vd, seq)));
-@@ -156,6 +266,10 @@ __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
- 	}
- 
- 	if (unlikely(tz != NULL)) {
-+		if (IS_ENABLED(CONFIG_VDSO_TIMENS) &&
-+		    vd->clock_mode == VCLOCK_TIMENS)
-+			vd = __arch_get_timens_vdso_data();
-+
- 		tz->tz_minuteswest = vd[CS_HRES_COARSE].tz_minuteswest;
- 		tz->tz_dsttime = vd[CS_HRES_COARSE].tz_dsttime;
- 	}
-@@ -167,7 +281,12 @@ __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
- static __maybe_unused time_t __cvdso_time(time_t *time)
- {
- 	const struct vdso_data *vd = __arch_get_vdso_data();
--	time_t t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
-+	time_t t;
-+
-+	if (IS_ENABLED(CONFIG_VDSO_TIMENS) && vd->clock_mode == VCLOCK_TIMENS)
-+		vd = __arch_get_timens_vdso_data();
-+
-+	t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
- 
- 	if (time)
- 		*time = t;
-@@ -189,6 +308,9 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
- 	if (unlikely((u32) clock >= MAX_CLOCKS))
- 		return -1;
- 
-+	if (IS_ENABLED(CONFIG_VDSO_TIMENS) && vd->clock_mode == VCLOCK_TIMENS)
-+		vd = __arch_get_timens_vdso_data();
-+
- 	hrtimer_res = READ_ONCE(vd[CS_HRES_COARSE].hrtimer_res);
- 	/*
- 	 * Convert the clockid to a bitmask and use it to check which
 -- 
-2.23.0
-
+Wei Yang
+Help you, Help me
