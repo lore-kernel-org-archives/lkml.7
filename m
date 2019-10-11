@@ -2,160 +2,248 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5744DC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B7AECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2412084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570791397;
-	bh=6z8qD7o3nl/67fiGM+myIVfZodSWcwivgMPAZzHbSt4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=E53NCM4hw02Gt+uIewDmKwh3l5N4fVUZ+ouBZlPOMrPHSMTicV9DZHd1rM+IaQZgC
-	 FJNd1FewgsTOTR5AgQk3f3V2Jzvqnfoi94b/qR19TybMRv3zR2rcrsl8AZWbfute0i
-	 6vBjZjaQ4t+qFPQLKXJrdIpSZsjiwYcQH9mIkHYM=
+	by mail.kernel.org (Postfix) with ESMTP id 4FFF22084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="N6pkXLkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfJKK4g (ORCPT
+        id S1727758AbfJKK4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:56:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34506 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfJKK4f (ORCPT
+        Fri, 11 Oct 2019 06:56:52 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:47702 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726885AbfJKK4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:56:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6PFef9FNs2cvQhskMlq+Tm+WVZZqlMFamwKzZ4ex8TI=; b=iWXodMFOPvrgKIzjTWXRK25xN
-        PXsoEyb1Eh3+sn0J8h9DuXOQJKboGAUC2aGHfqAX71mpqdMSfn88Yypqhdd9XzvyeK+2WDuUSz9Fg
-        b+1P7rpxB3XUKzi4e5nCDuCnZ0vBp5StzzRhLrmXBWTYveAD3/k3MecMKB0QTj3+HL3tid/eRwx7i
-        J5GizMNjNs686k9KJfnUs0d2bTURjRV0CPLn5aYx6ouvR0o3HVgA/fjMUj2ZJKaVMkIK91Tvo0eyr
-        1K98a6t78YADirYA6+yat4+7zBL0wg3V34lAqrZ92l0SCCcovigTJR9RnZXrr+y9cNWqa53n7WXw0
-        ITIpEd3NQ==;
-Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIsb1-0004c8-4w; Fri, 11 Oct 2019 10:56:31 +0000
-Date:   Fri, 11 Oct 2019 07:56:26 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 13/19] EDAC, mc: Determine mci pointer from the error
- descriptor
-Message-ID: <20191011075626.5d13372f@coco.lan>
-In-Reply-To: <20191010202418.25098-14-rrichter@marvell.com>
-References: <20191010202418.25098-1-rrichter@marvell.com>
-        <20191010202418.25098-14-rrichter@marvell.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 11 Oct 2019 06:56:52 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BAs0BL019686;
+        Fri, 11 Oct 2019 06:56:49 -0400
+Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2056.outbound.protection.outlook.com [104.47.32.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ver39trhe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Oct 2019 06:56:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D6ZgBArBOSLTOh4t2s+VHI7slN9oow2zTbVfPW/PFrvEYQ2MlxDjEqJ6ZJedcfdnttMUSGVtPgVBp53u9gETXhfvtAv9ITL498gepmCiycxY91UHhPGRwPzjvBm8gYzFUM9sNYPnBio/SunL7f4pqGxanc/luq50Lexqpvs9AiDAS83pKxG4+pRY6WtdQqpS9NlnXt4RL0moPc8xY1RLi86WkXUECiZ68OMGAqiN2AWPxWBS6LpX6uhhbAcDC0NhCc3IxGelCwvhGFpTxbhNQjxE9ulpl6LNRm8goM7drQkhkKugvkl+4oi8emL35pspTVUAz4UVGW5E3lpE2aSMpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BUz0Mgj6pHxFSPib/25TdciWnwYws0TeatnCKS5FZvw=;
+ b=jPLjAk0xPu771UzVmrsbnDcqT6zb9nWVeeSLgQnjmCdYJkYjUS1iWixukSnW5Snk1IpYxMF9Xt1hZ7dbwN0jytk/mphMIY0FQLIgOAZ8Mxw+Y1vqt3FoZwjsOGFpD2ZNcr+nfyiyBe59YDwGIGKZ7cWfVoEyMP+nGPUu5kAnu4cNwI0qWe2R1UkiXvCPJgIe/lnEcw8gWeca7wga0WCfpqs2fxNlixbYOy6hIAYliqx7YxhIhrKqTxE8huovfcWL6bWBXloVVkKCB2l1hvdLsqMWaqTigSsqSe80sQ9uIdDH0SNU4br5T0e8hMClq7RkraQacQ6xpexr4/g9jrkCkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BUz0Mgj6pHxFSPib/25TdciWnwYws0TeatnCKS5FZvw=;
+ b=N6pkXLkXJeCZWa/61I4TP70i2xF044kNyws+counfk56IBNkoZzXAI2wzuNpd52zIkTYplGeuX5+G+Ea7ue27XoWxLvHHaBlvahQUQdoiYnDxCsxA73NKAj8nv5d9pMrg+VFPYWHwC4jMw8oLqT6mDhy7sMkWb6cWya5+fIPV98=
+Received: from MWHPR03CA0019.namprd03.prod.outlook.com (2603:10b6:300:117::29)
+ by DM6PR03MB4713.namprd03.prod.outlook.com (2603:10b6:5:181::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16; Fri, 11 Oct
+ 2019 10:56:46 +0000
+Received: from CY1NAM02FT013.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::207) by MWHPR03CA0019.outlook.office365.com
+ (2603:10b6:300:117::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16 via Frontend
+ Transport; Fri, 11 Oct 2019 10:56:46 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT013.mail.protection.outlook.com (10.152.75.162) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2347.16
+ via Frontend Transport; Fri, 11 Oct 2019 10:56:46 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x9BAudfA031229
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 11 Oct 2019 03:56:39 -0700
+Received: from saturn.ad.analog.com (10.48.65.112) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 11 Oct 2019 06:56:45 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <sre@kernel.org>, Stefan Popa <stefan.popa@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v3][RESEND] adp5061: Add support for battery charging enable
+Date:   Fri, 11 Oct 2019 13:56:49 +0300
+Message-ID: <20191011105649.22357-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1523459436-31746-1-git-send-email-stefan.popa@analog.com>
+References: <1523459436-31746-1-git-send-email-stefan.popa@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(396003)(136003)(189003)(199004)(316002)(70206006)(246002)(305945005)(14444005)(8676002)(11346002)(44832011)(426003)(446003)(2616005)(76176011)(48376002)(7636002)(336012)(476003)(86362001)(70586007)(126002)(486006)(106002)(50466002)(2906002)(186003)(356004)(107886003)(51416003)(1076003)(36756003)(478600001)(47776003)(4326008)(50226002)(110136005)(54906003)(5660300002)(8936002)(2870700001)(26005)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4713;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b4f27307-987a-4bba-a439-08d74e39b59e
+X-MS-TrafficTypeDiagnostic: DM6PR03MB4713:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB4713CD26F5C5D19E15777856F9970@DM6PR03MB4713.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0187F3EA14
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FR+bRtLr0a21OujitWy73ewFdyfba3+z4icA+jf7zYNk7W91y5oBOz6qwqXXdZrbn81gB2W6xya1BBq6/qgTigElb5rzbl+H7vHzcaxYLSVDkzoYyyNCUVgRcc+AOMaU87l8WsdUP4E0fwl2QMi3GQHXExC4E3FHX+s+BF+zhNpNcQYMrtzA6DjoUBoASo/OENgrsHm35l0R/SeQG5xMxrceQFliL1ZDo76/A4I0AVOxo/QsRrvlp/ybqjJEyPalipYIDtdDIhE2vSWC4psClSBDz4vLBSkt1xV2fa8H8QUVJEhbMVWMJG8Ievq3RlCBp14tnPyGIsDHPuV+dSxYpdbGhm+NBhpmZaqR2VNOQn5GXN2EPVgcz5mu3oykfp6H+CLQQmWnPu8/TlNPLSei6YaPrIiKpGSbkitKHPjPnoQ=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2019 10:56:46.2128
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4f27307-987a-4bba-a439-08d74e39b59e
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4713
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-11_07:2019-10-10,2019-10-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0 suspectscore=0
+ lowpriorityscore=0 clxscore=1011 malwarescore=0 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910110104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 10 Oct 2019 20:25:31 +0000
-Robert Richter <rrichter@marvell.com> escreveu:
+From: Stefan Popa <stefan.popa@analog.com>
 
-> Each struct mci has its own error descriptor. Create a function
-> error_desc_to_mci() to determine the corresponding mci from an error
-> descriptor. This eases the parameter list of edac_raw_mc_handle_
-> error() as the mci pointer do not need to be passed any longer.
-> 
-> While at it, reorder parameters of edac_raw_mc_handle_error().
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
+This patch adds the option to enable/disable battery charging. This
+option is not configurable via the power_supply properties, therefore,
+access via sysfs was provided to examine and modify this attribute on the
+fly.
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-> ---
->  drivers/edac/edac_mc.c   | 13 +++++++++----
->  drivers/edac/edac_mc.h   |  8 +++-----
->  drivers/edac/ghes_edac.c |  2 +-
->  3 files changed, 13 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index ca206854b8ee..9e8c5716a8c0 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -1040,10 +1040,15 @@ static void edac_ue_error(struct mem_ctl_info *mci,
->  	edac_inc_ue_error(mci, dimm, error_count);
->  }
->  
-> -void edac_raw_mc_handle_error(struct mem_ctl_info *mci,
-> -			      struct dimm_info *dimm,
-> -			      struct edac_raw_error_desc *e)
-> +static struct mem_ctl_info *error_desc_to_mci(struct edac_raw_error_desc *e)
-> +{
-> +	return container_of(e, struct mem_ctl_info, error_desc);
-> +}
-> +
-> +void edac_raw_mc_handle_error(struct edac_raw_error_desc *e,
-> +			      struct dimm_info *dimm)
->  {
-> +	struct mem_ctl_info *mci = error_desc_to_mci(e);
->  	char detail[80];
->  
->  	/* Memory type dependent details about the error */
-> @@ -1243,6 +1248,6 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,
->  
->  	dimm = edac_get_dimm(mci, top_layer, mid_layer, low_layer);
->  
-> -	edac_raw_mc_handle_error(mci, dimm, e);
-> +	edac_raw_mc_handle_error(e, dimm);
->  }
->  EXPORT_SYMBOL_GPL(edac_mc_handle_error);
-> diff --git a/drivers/edac/edac_mc.h b/drivers/edac/edac_mc.h
-> index a8f1b5b5e873..3b01d5d9d7bc 100644
-> --- a/drivers/edac/edac_mc.h
-> +++ b/drivers/edac/edac_mc.h
-> @@ -212,17 +212,15 @@ extern int edac_mc_find_csrow_by_page(struct mem_ctl_info *mci,
->   * edac_raw_mc_handle_error() - Reports a memory event to userspace without
->   *	doing anything to discover the error location.
->   *
-> - * @mci:		a struct mem_ctl_info pointer
-> - * @dimm:		a struct dimm_info pointer
->   * @e:			error description
-> + * @dimm:		a struct dimm_info pointer
->   *
->   * This raw function is used internally by edac_mc_handle_error(). It should
->   * only be called directly when the hardware error come directly from BIOS,
->   * like in the case of APEI GHES driver.
->   */
-> -void edac_raw_mc_handle_error(struct mem_ctl_info *mci,
-> -			      struct dimm_info *dimm,
-> -			      struct edac_raw_error_desc *e);
-> +void edac_raw_mc_handle_error(struct edac_raw_error_desc *e,
-> +			      struct dimm_info *dimm);
->  
->  /**
->   * edac_mc_handle_error() - Reports a memory event to userspace.
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index 1db1c012bed9..8078d4ec9631 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -439,7 +439,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
->  
->  	dimm = edac_get_dimm_by_index(mci, e->top_layer);
->  
-> -	edac_raw_mc_handle_error(mci, dimm, e);
-> +	edac_raw_mc_handle_error(e, dimm);
->  
->  	spin_unlock_irqrestore(&ghes_lock, flags);
->  }
+I could not find any traces about this patch being denied and why.
+So this is a RESEND to [re]trigger a discussion if needed.
 
+ .../ABI/testing/sysfs-class-power-adp5061     | 10 +++
+ drivers/power/supply/adp5061.c                | 63 +++++++++++++++++++
+ 2 files changed, 73 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-power-adp5061
 
+diff --git a/Documentation/ABI/testing/sysfs-class-power-adp5061 b/Documentation/ABI/testing/sysfs-class-power-adp5061
+new file mode 100644
+index 000000000000..0d056aa103b5
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-power-adp5061
+@@ -0,0 +1,10 @@
++What: /sys/class/power_supply/adp5061/charging_enabled
++Description:
++	Enable/disable battery charging.
++
++	The ADP5061 charging function can be enabled by setting
++	this attribute to 1. See device datasheet for details.
++
++	Valid values:
++		- 1: enabled
++		- 0: disabled
+diff --git a/drivers/power/supply/adp5061.c b/drivers/power/supply/adp5061.c
+index 003557043ab3..6e09a6b710e8 100644
+--- a/drivers/power/supply/adp5061.c
++++ b/drivers/power/supply/adp5061.c
+@@ -74,6 +74,10 @@
+ #define ADP5061_CHG_STATUS_2_RCH_LIM_INFO(x)	(((x) >> 3) & 0x1)
+ #define ADP5061_CHG_STATUS_2_BAT_STATUS(x)	(((x) >> 0) & 0x7)
+ 
++/* ADP5061_FUNC_SET_1 */
++#define ADP5061_FUNC_SET_1_EN_CHG_MSK		BIT(0)
++#define ADP5061_FUNC_SET_1_EN_CHG_MODE(x)	(((x) & 0x01) << 0)
++
+ /* ADP5061_IEND */
+ #define ADP5061_IEND_IEND_MSK			GENMASK(7, 5)
+ #define ADP5061_IEND_IEND_MODE(x)		(((x) & 0x07) << 5)
+@@ -691,11 +695,64 @@ static const struct power_supply_desc adp5061_desc = {
+ 	.num_properties		= ARRAY_SIZE(adp5061_props),
+ };
+ 
++static int adp5061_get_charging_enabled(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	struct power_supply *psy = dev_get_drvdata(dev);
++	struct adp5061_state *st = power_supply_get_drvdata(psy);
++	unsigned int regval;
++	int ret;
++
++	ret = regmap_read(st->regmap, ADP5061_FUNC_SET_1, &regval);
++	if (ret < 0)
++		return ret;
++
++	regval &= ADP5061_FUNC_SET_1_EN_CHG_MSK;
++	return sprintf(buf, "%d\n", regval);
++}
++
++static int adp5061_set_charging_enabled(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t count)
++{
++	struct power_supply *psy = dev_get_drvdata(dev);
++	struct adp5061_state *st = power_supply_get_drvdata(psy);
++	u8 chg_en;
++	int ret;
++
++	ret = kstrtou8(buf, 0, &chg_en);
++	if (ret < 0)
++		return ret;
++
++	ret = regmap_update_bits(st->regmap, ADP5061_FUNC_SET_1,
++				 ADP5061_FUNC_SET_1_EN_CHG_MSK,
++				 ADP5061_FUNC_SET_1_EN_CHG_MODE(!!chg_en));
++
++	if (ret < 0)
++		return ret;
++
++	return count;
++}
++
++static DEVICE_ATTR(charging_enabled, 0644, adp5061_get_charging_enabled,
++		   adp5061_set_charging_enabled);
++
++static struct attribute *adp5061_attributes[] = {
++	&dev_attr_charging_enabled.attr,
++	NULL
++};
++
++static const struct attribute_group adp5061_attr_group = {
++	.attrs = adp5061_attributes,
++};
++
+ static int adp5061_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
+ 	struct power_supply_config psy_cfg = {};
+ 	struct adp5061_state *st;
++	int ret;
+ 
+ 	st = devm_kzalloc(&client->dev, sizeof(*st), GFP_KERNEL);
+ 	if (!st)
+@@ -721,6 +778,12 @@ static int adp5061_probe(struct i2c_client *client,
+ 		return PTR_ERR(st->psy);
+ 	}
+ 
++	ret = sysfs_create_group(&st->psy->dev.kobj, &adp5061_attr_group);
++	if (ret < 0) {
++		dev_err(&client->dev, "failed to create sysfs group\n");
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
 
-Thanks,
-Mauro
