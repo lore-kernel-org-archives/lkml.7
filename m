@@ -2,81 +2,161 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8E5ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8860DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6EDA20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8BC20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:52:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="cS3PCk+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfJKHua (ORCPT
+        id S1727434AbfJKHwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 03:50:30 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:36338 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfJKHua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 03:50:30 -0400
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iIpgx-0000mF-Tj; Fri, 11 Oct 2019 09:50:27 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-Subject: Re: [PATCH v7 0/6] tpm: Add driver for cr50
-Date:   Fri, 11 Oct 2019 09:50:27 +0200
-Message-ID: <4042311.vcUrecXYXX@diego>
-In-Reply-To: <20191006223831.GA10397@linux.intel.com>
-References: <20190920183240.181420-1-swboyd@chromium.org> <20191006223831.GA10397@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+        Fri, 11 Oct 2019 03:52:09 -0400
+Received: from mail-eopbgr680101.outbound.protection.outlook.com ([40.107.68.101]:2479
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726633AbfJKHwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 03:52:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F3IwkygC1AMTN07vkq0dbTh7uHjZ15J1KvWcxV6ZeStHKJitUhA1Bsk5jUBecaFLGKbqEB1akx9/5nehVHbyy0g+F0O1gjUjy/TyKZmyl6R5Qk3OKpCR524nPJnGZkiqvN0Q0pQKr2y8ZQBr8bfzIg7l/gck9uGbNdmz5E2RpRNJGpQm0YH+ByV7AmRZG40CbHGp1N31MM0wt3FXPwb89MV1JHdCsaNQG7OcJKjkncnWirt2bzWTClhyogcb1Qp+do7XJzbnqMnyyw/uBxhUsnyjfwDxRlrrDb1h8ilXS5Wq5IcEqCeSXDasHkG2qo2uuztR1aRy1YTSBWcfEL1k+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CDbHP/9aR2tv027b/L5g11T/XkXT4O5sq7twKVQLbdY=;
+ b=f1wDcgK2ZbAxqXKgM5Ffmb+rcHmf99gaRBErMhDol8Wu+IrTTzn/ouUbbISv2401cLMCK33XFYy+4SdNUX+bHOYjUNVfvLQOyMjjmURyeSz0jBxXkmOqcvk3zW6xjYkiofdYA/ZZHY8Q0YJALO2miCwrxXP4vjIiq1x6V2TiY1poQsAswpf6EFDT4P38Q83eFlu/x8/Mfl/KD2EPxGX1YC+JHvo3j3D+ZgN+q2SQSMIkfhxGVnFfTvW6TwU5MZh7m8poJn2/iwqKqQz6LIxPGw/5xNSiy85EK096ZaxiMx0y1/T3Tc+S7eRdq0r/cegzEwnl54JlF1OWk9ji44bQDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CDbHP/9aR2tv027b/L5g11T/XkXT4O5sq7twKVQLbdY=;
+ b=cS3PCk+zWubceG9BMFBYnjYhPN3dSkxFyHhAcP2QGEKAlVoPjIa3iNdiUAgXwM1LS/J4ieF2WUg9YrJy6BuXNzTauviOdNWZAUz28DVVHBbR20pF5znVNKBUYn4yV3mywETre9D8CzzPm9nUvTmIhATesfNga909Ef1xVv8DfYY=
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com (52.135.120.29) by
+ SN6PR04MB4846.namprd04.prod.outlook.com (52.135.122.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.17; Fri, 11 Oct 2019 07:52:03 +0000
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::c55e:6c70:adbb:cf87]) by SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::c55e:6c70:adbb:cf87%5]) with mapi id 15.20.2347.021; Fri, 11 Oct 2019
+ 07:52:03 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v2 0/2] Add initial support for slimport anx7625
+Thread-Topic: [PATCH v2 0/2] Add initial support for slimport anx7625
+Thread-Index: AQHVf9p+5jx9EdYoKE6ltb5FxvHRTadU9iCAgAAbpwA=
+Date:   Fri, 11 Oct 2019 07:52:03 +0000
+Message-ID: <20191011075152.GA26183@xin-VirtualBox>
+References: <CGME20191011022055epcas5p37790ed31cbe63d0be0f6b5786ce1392a@epcas5p3.samsung.com>
+ <cover.1570760115.git.xji@analogixsemi.com>
+ <1544211b-d2c7-601c-93b3-a130178b8697@samsung.com>
+In-Reply-To: <1544211b-d2c7-601c-93b3-a130178b8697@samsung.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK2PR03CA0058.apcprd03.prod.outlook.com
+ (2603:1096:202:17::28) To SN6PR04MB4543.namprd04.prod.outlook.com
+ (2603:10b6:805:a8::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: faebfdc0-abb3-463a-ae1a-08d74e1fe750
+x-ms-traffictypediagnostic: SN6PR04MB4846:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR04MB4846876866B4362557ADBD01C7970@SN6PR04MB4846.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0187F3EA14
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(39850400004)(396003)(136003)(366004)(376002)(199004)(189003)(53754006)(5660300002)(1076003)(102836004)(446003)(476003)(11346002)(6916009)(7736002)(2906002)(26005)(486006)(186003)(305945005)(33716001)(6116002)(3846002)(7416002)(54906003)(316002)(6512007)(9686003)(229853002)(6436002)(6486002)(86362001)(33656002)(66066001)(53546011)(6506007)(386003)(76176011)(99286004)(52116002)(25786009)(4326008)(6246003)(14454004)(107886003)(478600001)(64756008)(66446008)(66476007)(66946007)(66556008)(8936002)(81166006)(8676002)(81156014)(14444005)(256004)(71200400001)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4846;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nBnOBEz8AiMnpPhMFXjd+SovByA1Nhe3/73/MT8gOhuI6LbW+4lrF13A2kD5EBW3VQBZqDdWL+Rn+/uNDTaMg8+guvF+3INltvygosPn5Ief9rNHmqRfOIVffY809kWhZQge5FYDHyFsD3wzKpK5sHMfixOuZYumNdlPpy9fB57GANFLydCug57Cmh3lcbZ18bLvP+51Suwp65do3CNkHo5zT8WxCkSSvNI1x2Nq/tWriRTxPYU/fX9RBCD2+HW/BbE/jjwUcSfe+lI0v8NvZzkMeikP4fYT0/tj+PMvohoV+2yhpHrfWFRqjwPjJ66r2WgJ1QYdnPjY8YI8z0yLcGRsJyJj1ai/grVah2zuRKMnqOtN2Z9t89eU1jhdPTcv9Z0t6CNx6MT4Fk9F8Se9+qWIgM9Y6F3BhPDVhBQsc88=
 Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F27D817832AD7645982B845ED0B03618@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: faebfdc0-abb3-463a-ae1a-08d74e1fe750
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 07:52:03.3908
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MEr8Y0mZ96eP1+UNYXA6tGTra3o0/TWpTw1K8YPu9cPyV17vP1awgZ9KWLRSorsjYNYTN8vrwSQzR0YJXi0mig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4846
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 7. Oktober 2019, 00:39:00 CEST schrieb Jarkko Sakkinen:
-> On Fri, Sep 20, 2019 at 11:32:34AM -0700, Stephen Boyd wrote:
-> > This patch series adds support for the H1 secure microcontroller
-> > running cr50 firmware found on various recent Chromebooks. This driver
-> > is necessary to boot into a ChromeOS userspace environment. It
-> > implements support for several functions, including TPM-like
-> > functionality over a SPI interface.
-> > 
-> > The last time this was series sent looks to be [1]. I've looked over the
-> > patches and review comments and tried to address any feedback that
-> > Andrey didn't address (really minor things like newlines). I've reworked
-> > the patches from the last version to layer on top of the existing TPM
-> > TIS SPI implementation in tpm_tis_spi.c. Hopefully this is more
-> > palatable than combining the two drivers together into one file.
-> > 
-> > Please review so we can get the approach to supporting this device
-> > sorted out.
-> > 
-> > [1] https://lkml.kernel.org/r/1469757314-116169-1-git-send-email-apronin@chromium.org
+Hi Andrzej, OK, I'll increment patchset version number next time.
 
-[...]
+Thanks,
+Xin
 
-> OK, so, I put these to my master in hopes to get testing exposure.
-> I think the changes are in great shape now. Thank you.
-
-on a rk3399-gru-bob it works nicely for me, so
-Tested-by: Heiko Stuebner <heiko@sntech.de>
-
-Thanks
-Heiko
-
-
+On Fri, Oct 11, 2019 at 08:12:53AM +0200, Andrzej Hajda wrote:
+> On 11.10.2019 04:20, Xin Ji wrote:
+> > Hi all,
+> >
+> > The following series add initial support for the Slimport ANX7625 trans=
+mitter, a
+> > ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable=
+ device.
+> >
+> > This is the initial version, any mistakes, please let me know, I will f=
+ix it in
+> > the next series.
+> >
+> > Thanks,
+> > Xin
+>=20
+>=20
+> Next time please increment patchset version number - this is third
+> iteration of v2.
+>=20
+>=20
+> Regards
+>=20
+> Andrzej
+>=20
+>=20
+> >
+> >
+> > Xin Ji (2):
+> >   dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
+> >   drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP bridge driver
+> >
+> >  .../bindings/display/bridge/anx7625.yaml           |   96 +
+> >  drivers/gpu/drm/bridge/Makefile                    |    2 +-
+> >  drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
+> >  drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+> >  drivers/gpu/drm/bridge/analogix/anx7625.c          | 2153 ++++++++++++=
+++++++++
+> >  drivers/gpu/drm/bridge/analogix/anx7625.h          |  406 ++++
+> >  6 files changed, 2663 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/an=
+x7625.yaml
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+> >
