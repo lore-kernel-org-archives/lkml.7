@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808F4C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F088EC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBD020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE9420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:29:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YKc0wBOK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="deZb/gvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfJKA3k (ORCPT
+        id S1728008AbfJKA3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:29:40 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39235 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbfJKA22 (ORCPT
+        Thu, 10 Oct 2019 20:29:48 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45255 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbfJKA2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:28:28 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 72so5725524lfh.6
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:28:25 -0700 (PDT)
+        Thu, 10 Oct 2019 20:28:25 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q64so7990931ljb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:28:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=X+OYdLBkIYv08X2eKXt3TCPXQ11so0VYCO7f1mswfR4=;
-        b=YKc0wBOK5kw1DdbXCuiOee6bbytIkRtP7xcVtvuTLj4UdL6r5TUv6DcZgG/ZDsLP69
-         ulWquw4+7tsUAsKSiFy2Cfty4cW+bXLlKps9odJRuCeWnw/lGdGvLR5rkISefH9Phe91
-         /CAtfzmy5wtryrSDvREOHdPKvSRLjAPu5s7+k7zxv+jQtm2PN0fja1E8kM5N4INyKxLu
-         /Vf7ncX5Q0YaTUYo17CjLST2nR75D+SCZ8tWLmJkPS9ENAAQArYJ0M+MYo6mSMcqEXu7
-         Tnhwc+jAV+FrQNEWwOXtNudFWCGl6uLf0ZpPNG8Nqh7N9/l5U6zwHP+DruNqbB9COdF4
-         akmA==
+        bh=y12OqUDXt0uUd8S/w/N9B4j5fJB9b6dEGe48WxLpJQ0=;
+        b=deZb/gvn8tRBWJ8EkwM4ZsgQbv8cKKMpAA2vf6G4xRFrYVAvufEMhW8txzk+WL8jog
+         mRr7UCSlsEoukk0CBSI3WVyQH2ebrmaFhmUpX304VfwuEzwcBbYogWTqta96NzGab23d
+         K4u1cCqe2+htE/tMhpH0wwPbB+TmlaC0g94WcpLpPrLjELHj2jJyPZ6ogY2MzYAw8D6P
+         xiaMOcdpUxjpfkClJCQrCd/Z9r5gWMRFGbTxrsrxqzuBe9eeDepyP96MWN2DtWB+gp76
+         Dh5lfo5p3ACqIH0MOgfKt9xTZNOPlHqr4iAdNt7BnklttINOkT2odQBy2BjW8oPe/YK7
+         n0ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=X+OYdLBkIYv08X2eKXt3TCPXQ11so0VYCO7f1mswfR4=;
-        b=a3b1aM3+uhHLMhJbogNVPG5d78SNr/MAl455ONTCsTxYeNczeJ2iXAGPpWuuU6LKfy
-         PQzM/1tUPnUH+KNd1ECMZlmDvop6WPI0P9m2jcsv4xYyhHD8ZAVVicQ0ZsN/DtKabi1X
-         LBYKhURfXj7Pbvt9x2ohryQfk5ul+OmAnLTj9FJTkg0K/XIANvTpkg9pfQ54XG4zkn0M
-         QB6QKZUeRBLWWHq+TOgOtq38177xciyEGoCy1W73LH9g7/RRcb+3Z8grHt67A1RRX92s
-         4tHUKj+de8Ah/g2Zsgr7MOPqoypDk7rfK/GYQol1gx3Risfli7FPHvDA5Utdn6xNQzKG
-         Ecyg==
-X-Gm-Message-State: APjAAAW4Y7VTKhFa/7Hhg01/OqparMLzun6k/Z2rQbN1Ug8dPDS1xais
-        bpRsGYgDQbFCcssK8aYS9AVuuQ==
-X-Google-Smtp-Source: APXvYqzxfrVPEHNBW9hrD6Av/hCkqGzGXRR9boh0fDIihTSKCgluCdKMc7ty+RTqXr4lDuRPE/0FPQ==
-X-Received: by 2002:ac2:41d4:: with SMTP id d20mr7390173lfi.24.1570753705056;
-        Thu, 10 Oct 2019 17:28:25 -0700 (PDT)
+        bh=y12OqUDXt0uUd8S/w/N9B4j5fJB9b6dEGe48WxLpJQ0=;
+        b=dKLplWVB9ldxGjPy2JthoC5SLznLzECQVIanw/Dwkp74bgiyVSsVV5Mczpe1JexEqb
+         2ejWSpVqEpkbfG6Nnn0uLEImq7so39YCxnboIlD/jCFfJJ6PXArWPBd2PwDVgVM6XffE
+         atkpK5hOH0r+Nvm8YRTNL+IyKlqqVCZ8n/QncZOO37gJpAv8KeEF3rwtXEYul54b98Ty
+         82OL0B7OQIx9zy62ZLn9P0Mu8cU2Kjq5iQKSOYGM/HNO9nT9UKiGv369ULRQmNv+xaEo
+         cG5/c2nWQOkYK9Bh1Gsx62TiHUeGimZM9AYD2lAq6pCmsKsYRZhV5oML5pxuc3+L9bzK
+         rvAw==
+X-Gm-Message-State: APjAAAU+zP7gY2oAQCGrJee+04uORN0n4ASdZsne2348eAEY6Vz90NXp
+        iXUGYxGoZSyPQJPgvIhtU+x9nA==
+X-Google-Smtp-Source: APXvYqwWFJ/4w/zxqlpX/lyhfjX06c8HYdKUcp1cZYhrWQvMou4/PGZf9SVP2Yk3dHJtL69Dvrhq1w==
+X-Received: by 2002:a2e:82cd:: with SMTP id n13mr7735053ljh.116.1570753703648;
+        Thu, 10 Oct 2019 17:28:23 -0700 (PDT)
 Received: from localhost.localdomain (88-201-94-178.pool.ukrtel.net. [178.94.201.88])
-        by smtp.gmail.com with ESMTPSA id 126sm2367010lfh.45.2019.10.10.17.28.23
+        by smtp.gmail.com with ESMTPSA id 126sm2367010lfh.45.2019.10.10.17.28.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 17:28:24 -0700 (PDT)
+        Thu, 10 Oct 2019 17:28:23 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
         davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
@@ -63,9 +63,9 @@ Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
         ilias.apalodimas@linaro.org, sergei.shtylyov@cogentembedded.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v5 bpf-next 03/15] samples/bpf: use --target from cross-compile
-Date:   Fri, 11 Oct 2019 03:27:56 +0300
-Message-Id: <20191011002808.28206-4-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v5 bpf-next 02/15] samples/bpf: fix cookie_uid_helper_example obj build
+Date:   Fri, 11 Oct 2019 03:27:55 +0300
+Message-Id: <20191011002808.28206-3-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
 References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
@@ -74,29 +74,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For cross compiling the target triple can be inherited from
-cross-compile prefix as it's done in CLANG_FLAGS from kernel makefile.
-So copy-paste this decision from kernel Makefile.
+Don't list userspace "cookie_uid_helper_example" object in list for
+bpf objects.
+
+'always' target is used for listing bpf programs, but
+'cookie_uid_helper_example.o' is a user space ELF file, and covered
+by rule `per_socket_stats_example`, so shouldn't be in 'always'.
+Let us remove `always += cookie_uid_helper_example.o`, which avoids
+breaking cross compilation due to mismatched includes.
 
 Acked-by: Andrii Nakryiko <andriin@fb.com>
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- samples/bpf/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ samples/bpf/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 045fa43842e6..9c8c9872004d 100644
+index 4f61725b1d86..045fa43842e6 100644
 --- a/samples/bpf/Makefile
 +++ b/samples/bpf/Makefile
-@@ -195,7 +195,7 @@ BTF_PAHOLE ?= pahole
- # Detect that we're cross compiling and use the cross compiler
- ifdef CROSS_COMPILE
- HOSTCC = $(CROSS_COMPILE)gcc
--CLANG_ARCH_ARGS = -target $(ARCH)
-+CLANG_ARCH_ARGS = --target=$(notdir $(CROSS_COMPILE:%-=%))
- endif
- 
- # Don't evaluate probes and warnings if we need to run make recursively
+@@ -145,7 +145,6 @@ always += sampleip_kern.o
+ always += lwt_len_hist_kern.o
+ always += xdp_tx_iptunnel_kern.o
+ always += test_map_in_map_kern.o
+-always += cookie_uid_helper_example.o
+ always += tcp_synrto_kern.o
+ always += tcp_rwnd_kern.o
+ always += tcp_bufs_kern.o
 -- 
 2.17.1
 
