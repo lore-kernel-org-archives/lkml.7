@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F1DC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BB3C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1106721920
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DD92196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:07:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TBJeuKMY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zkm/RKe8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfJKAH1 (ORCPT
+        id S1727802AbfJKAHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:07:27 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45788 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbfJKAGZ (ORCPT
+        Thu, 10 Oct 2019 20:07:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35014 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727499AbfJKAGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:06:25 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r1so3497686pgj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:06:24 -0700 (PDT)
+        Thu, 10 Oct 2019 20:06:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p30so4699620pgl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:06:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7MxClQbH59XRrbTRajW1Gh8uACzcU2+htsVcXyM7D1g=;
-        b=TBJeuKMY2z8zTRQ1bFw/ImZS5YFoYQAHk+uSCJMry9jQKOeGheQ5i7gXGHU01GWcTB
-         uOgoFqPErAXZia+mP12x9qnkRfY1Ys9PjUB5SmB5We4kWHLZQ5n99yhQi0dIKcFUZu6/
-         hILLkVhE9upOn1PuRtaesOlh4SL00TV9kLm5U=
+        bh=7dmckIaKuL5uoyVhYLyxQgvD7laB8s0ddXfS7YNycCU=;
+        b=Zkm/RKe8e+Liv+qZ7ZPm9kwWeSr+NIaspEW7t3lmnI5dNpUpSo6dTzux6vNvY1O0iZ
+         mXmbpcaYzINbphQms11pCzDFWcPo5ulCRYCfFRW5DOq8KNnHUZoPg9cYONZAaxdOzKmE
+         WYECp/MY1nFT0o4uteh9HzWwnmK7DhrJcJDFU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=7MxClQbH59XRrbTRajW1Gh8uACzcU2+htsVcXyM7D1g=;
-        b=IomQNa+VujFjGuY+4XhjPnYADzJW7gY3xpoXHfjlbxXRSc3oDLwhBs+FI5RKl39ORb
-         k9G9JXeIaWxTbqMJ1VqwyCeJSrVNLcZ1cM4/6Nxw6x4pgbVBAPfe2NbDitLFoXfhIjjy
-         gpcBt8VSgZGJmPvSyewmMpVS0vCXGMyt/13XrNnaZcdROcnn2i1bBZiDD4MV0ouiBwAO
-         Bzq6yggCGIdNA8vGbqrtq0kUCJSa6lMwTc0tcwN2cJDpLnb+rOsStrxJoNjFPEIWFSAl
-         LNLGAgpGeacGxOxOwbGt4P37w7bgX2UBHbVf+bIIx/CRD5aF8gWgVdjjS19P7DiG/Vtx
-         L4pQ==
-X-Gm-Message-State: APjAAAX439azLk/BXNGH4jwgPRTgoa5dszbNkjLM3GS4pw82FXWPH2wx
-        nstec0Jh1sxFXLHxlXWchhyDxA==
-X-Google-Smtp-Source: APXvYqwg7IWyK5GALjp45zOGgCtbjryTtA5MoWvVIZiHDTE9GJEt+Ue8rYJCs4VD37qrCGGbQgqtBg==
-X-Received: by 2002:a62:5bc1:: with SMTP id p184mr12930072pfb.180.1570752383534;
-        Thu, 10 Oct 2019 17:06:23 -0700 (PDT)
+        bh=7dmckIaKuL5uoyVhYLyxQgvD7laB8s0ddXfS7YNycCU=;
+        b=LxKjz/2e9a1JAt28AZQd8fWKVy+Ue54bP6NlV0V7niRUOO5GJ1uN0yiE0adtT8HBqA
+         0W+qWNje2R8nek6rLihrdPnJGbsSAOVqMDXSXAaQFcaWmV/fq7xPpyR4ODO8PiXuvZO2
+         XrtT/p9m4AovrhwJYUxl0+GIPCjly7Zx6HtayppmlaRnWA8j4OL2ad8dhKXJjHeTFqRz
+         DTssR+izEVCmNKvkjifHSSt6vWKNYY6t1scD9QgOWKW99oVdf8tIV+aWJcv1WKIGq0o5
+         e0SucwWI0wmxR44v8oGeEBkbJKlYhl2YbL+CkUc3ISJmV37meOoH6IvdM/p2CjNyUUdk
+         ntTg==
+X-Gm-Message-State: APjAAAWC8gm5o4ddYe6pPcpQS+5EqUspZngw6+qM2i+Y5fpjXmP6fR+D
+        M7nRYasqBNQFn+stHcZNwm5CQg==
+X-Google-Smtp-Source: APXvYqy8lBsu/lNnf25rns+8k/zkBM8oQHwDv9L6rfwj03NX/IG4fGJ+vORVfGqdbtbZOe/1C8n/Lw==
+X-Received: by 2002:a63:554b:: with SMTP id f11mr13613094pgm.151.1570752381593;
+        Thu, 10 Oct 2019 17:06:21 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d5sm5372814pjw.31.2019.10.10.17.06.19
+        by smtp.gmail.com with ESMTPSA id o42sm12777771pjo.32.2019.10.10.17.06.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 10 Oct 2019 17:06:20 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -70,9 +70,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/29] alpha: Rename PT_LOAD identifier "kernel" to "text"
-Date:   Thu, 10 Oct 2019 17:05:44 -0700
-Message-Id: <20191011000609.29728-5-keescook@chromium.org>
+Subject: [PATCH v2 02/29] powerpc: Remove PT_NOTE workaround
+Date:   Thu, 10 Oct 2019 17:05:42 -0700
+Message-Id: <20191011000609.29728-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191011000609.29728-1-keescook@chromium.org>
 References: <20191011000609.29728-1-keescook@chromium.org>
@@ -81,46 +81,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for moving NOTES into RO_DATA, rename the linker script
-internal identifier for the PT_LOAD Program Header from "kernel" to
-"text" to match other architectures.
+In preparation for moving NOTES into RO_DATA, remove the PT_NOTE
+workaround since the kernel requires at least gcc 4.6 now.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/alpha/kernel/vmlinux.lds.S | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/vmlinux.lds.S | 24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
-diff --git a/arch/alpha/kernel/vmlinux.lds.S b/arch/alpha/kernel/vmlinux.lds.S
-index c4b5ceceab52..781090cacc96 100644
---- a/arch/alpha/kernel/vmlinux.lds.S
-+++ b/arch/alpha/kernel/vmlinux.lds.S
-@@ -8,7 +8,7 @@
- OUTPUT_FORMAT("elf64-alpha")
- OUTPUT_ARCH(alpha)
- ENTRY(__start)
--PHDRS { kernel PT_LOAD; note PT_NOTE; }
-+PHDRS { text PT_LOAD; note PT_NOTE; }
- jiffies = jiffies_64;
- SECTIONS
- {
-@@ -27,14 +27,14 @@ SECTIONS
- 		LOCK_TEXT
- 		*(.fixup)
- 		*(.gnu.warning)
--	} :kernel
-+	} :text
- 	swapper_pg_dir = SWAPPER_PGD;
- 	_etext = .;	/* End of text section */
+diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+index 81e672654789..a3c8492b2b19 100644
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -20,20 +20,6 @@ ENTRY(_stext)
+ PHDRS {
+ 	kernel PT_LOAD FLAGS(7); /* RWX */
+ 	note PT_NOTE FLAGS(0);
+-	dummy PT_NOTE FLAGS(0);
+-
+-	/* binutils < 2.18 has a bug that makes it misbehave when taking an
+-	   ELF file with all segments at load address 0 as input.  This
+-	   happens when running "strip" on vmlinux, because of the AT() magic
+-	   in this linker script.  People using GCC >= 4.2 won't run into
+-	   this problem, because the "build-id" support will put some data
+-	   into the "notes" segment (at a non-zero load address).
+-
+-	   To work around this, we force some data into both the "dummy"
+-	   segment and the kernel segment, so the dummy segment will get a
+-	   non-zero load address.  It's not enough to always create the
+-	   "notes" segment, since if nothing gets assigned to it, its load
+-	   address will be zero.  */
+ }
  
--	NOTES :kernel :note
-+	NOTES :text :note
- 	.dummy : {
- 		*(.dummy)
--	} :kernel
-+	} :text
+ #ifdef CONFIG_PPC64
+@@ -178,14 +164,8 @@ SECTIONS
+ 	EXCEPTION_TABLE(0)
  
- 	RODATA
- 	EXCEPTION_TABLE(16)
+ 	NOTES :kernel :note
+-
+-	/* The dummy segment contents for the bug workaround mentioned above
+-	   near PHDRS.  */
+-	.dummy : AT(ADDR(.dummy) - LOAD_OFFSET) {
+-		LONG(0)
+-		LONG(0)
+-		LONG(0)
+-	} :kernel :dummy
++	/* Restore program header away from PT_NOTE. */
++	.dummy : { *(.dummy) } :kernel
+ 
+ /*
+  * Init sections discarded at runtime
 -- 
 2.17.1
 
