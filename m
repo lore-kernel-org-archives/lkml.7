@@ -2,62 +2,64 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABDAC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18596C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9E52089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="A6IYKky8"
+	by mail.kernel.org (Postfix) with ESMTP id D63242089F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfJKWia (ORCPT
+        id S1727799AbfJKWkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 18:38:30 -0400
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:36840 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726642AbfJKWi3 (ORCPT
+        Fri, 11 Oct 2019 18:40:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37830 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfJKWkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 18:38:29 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 80CEFC04A7;
-        Fri, 11 Oct 2019 22:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1570833508; bh=E0P1RFAQD2Jf3g/rlBhYfNzwHdOeyXPqBOG/QZTvieM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6IYKky8AdyUQ2QMjcIa2Uj+0XJjLeGbu6SH7JKVYKXMO6VLVywzRybptkCdTakG0
-         RDHIGz82Gfiajkpm4OCoDCz9X4UjVucNxnWyUWfz+tlwwNcSs1lfGeqyUqmRKJ3LFS
-         tBwLL8Ru9EXyP/LBxMEtY6xAHed0FQeC59VOQqR9UUlgMl+BFNEPVVNI9SqOd5WLg0
-         jRQ+NyVOSXkfzBGVDgUyBMjNBT83MBQiNVhn3m6ENnXJdTZM9bDCep+rLXiai1UQkv
-         UIYZzv9FSGgroLSDe0WPaDu0yK3CsCcEcUiNmvP+v0zljLl4HIl6q2weZjeDtxqIVu
-         zIeuNs1TDq8ZA==
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.61])
-        by mailhost.synopsys.com (Postfix) with ESMTP id AC1E4A006B;
-        Fri, 11 Oct 2019 22:38:21 +0000 (UTC)
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+        Fri, 11 Oct 2019 18:40:13 -0400
+Received: from mail-pg1-f198.google.com ([209.85.215.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1iJ3a0-0005jY-6Z
+        for linux-kernel@vger.kernel.org; Fri, 11 Oct 2019 22:40:12 +0000
+Received: by mail-pg1-f198.google.com with SMTP id 195so1923233pgc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 15:40:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bFQOsU0Yw2SX6audeMgxRQZjWA+ky677CyE7FshJP3k=;
+        b=F+6unRpTEA1ThIXznLayrpA14n4fWx6OfIhzq+kXt6nCJGLGrNFWtnI87fgByz03MW
+         yJQvv1VL1Mmxu/xfWW7iHtIl0VKd9w9AwKJbOD1OA0Sl18qB8P3foA7lamQ833pbLAGf
+         Dp3WND0MmaPM6FDxsahxeoPue387X9HkBNKSWmDPf8UwmUGrxILnvlat6re2Xk5UXBRj
+         Jan2miiH4QF5Gt0p6KhLiI1lHe1jRkFkLl67t7kyVM+GvrPTaUHc+nq539NFgOd5JRgn
+         baadEm/AmD7xHZBlqJqSVUTe0qszvFJAW3o7y02w+SF5Di/aqRgzwf4qj9JO6k3IQUHa
+         I15A==
+X-Gm-Message-State: APjAAAWbmx3CsFBib/UwCM7JL5U8MfgAGScb7b7zGXjMU/t8XoEYCtdz
+        iyIHuvgyxmUnNSpuj4Bn6f3WfrmDar30dF55MxwhDGfoE9bb9perujy7A+dUl7lXny/ts7ZPTv+
+        6um3xNi3Cz2iREZo0gyl9Un2vEMVDeKUFmTLEZV6oJA==
+X-Received: by 2002:a17:90a:cb88:: with SMTP id a8mr20411311pju.85.1570833610433;
+        Fri, 11 Oct 2019 15:40:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyooSuvk39320EB5pXd8iQc4RdUqGq6tYyCPa/eZWG8r9ggKLSkR6rfbGDRKVfzLQEAMCAGKw==
+X-Received: by 2002:a17:90a:cb88:: with SMTP id a8mr20411269pju.85.1570833610073;
+        Fri, 11 Oct 2019 15:40:10 -0700 (PDT)
+Received: from localhost (201-92-249-168.dsl.telesp.net.br. [201.92.249.168])
+        by smtp.gmail.com with ESMTPSA id 7sm8656370pgj.35.2019.10.11.15.40.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 11 Oct 2019 15:40:09 -0700 (PDT)
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
 To:     linux-mm@kvack.org
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [RFC] asm-generic/tlb: stub out pmd_free_tlb() if __PAGETABLE_PMD_FOLDED
-Date:   Fri, 11 Oct 2019 15:38:18 -0700
-Message-Id: <20191011223818.7238-1-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191011121951.nxna6hruuskvdxod@box>
-References: <20191011121951.nxna6hruuskvdxod@box>
+Cc:     mike.kravetz@oracle.com, linux-kernel@vger.kernel.org,
+        jay.vosburgh@canonical.com, gpiccoli@canonical.com,
+        kernel@gpiccoli.net
+Subject: [PATCH] hugetlb: Add nohugepages parameter to prevent hugepages creation
+Date:   Fri, 11 Oct 2019 19:39:55 -0300
+Message-Id: <20191011223955.1435-1-gpiccoli@canonical.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,64 +67,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is inine with similar patches for nopud [1] and nop4d [2] cases.
+Currently there are 2 ways for setting HugeTLB hugepages in kernel; either
+users pass parameters on kernel command-line or they can write to sysfs
+files (which is effectively the sysctl way).
 
-  However I'm not really sure I understand clearly how the nopmd code is
-  supposed to work (for a 2 tier paging system) - hence the RFC.
-  Consider free_pmd_range() simplified/annotated below
+Kdump kernels won't benefit from hugepages - in fact it's quite opposite,
+it may be the case hugepages on kdump kernel can lead to OOM if kernel
+gets unable to allocate demanded pages due to the fact the preallocated
+hugepages are consuming a lot of memory.
 
-  free_pmd_range
-  ...
-	pmd = pmd_offset(pud, addr);
-	do {
-		next = pmd_addr_end(addr, end);
-		if (pmd_none_or_clear_bad(pmd)) => *pmd_bad()/pmd_clear_bad() [a]*
-			continue;
-		free_pte_range(tlb, pmd, addr);
-	} while (pmd++, addr = next, addr != end);
-   ...
-	*pmd_free_tlb(tlb, pmd, start); => [b]*
+This patch proposes a new kernel parameter to prevent the creation of
+HugeTLB hugepages - we currently don't have a way to do that. We can
+even have kdump scripts removing the kernel command-line options to
+set hugepages, but it's not straightforward to prevent sysctl/sysfs
+configuration, given it happens in later boot or anytime when the
+system is running.
 
-   For ARC/nopmd case [a] is actually checking pgd and consequently
-   pmd_clear_bad() can't be stubbed out for PMD_FOLDED case. However it seems
-   case [b] can be stubbed out (hence this patch) along same lines as [1] and [2]
-
-| bloat-o-meter2 vmlinux-E-elide-p?d_clear_bad vmlinux-F-elide-pmd_free_tlb
-| add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-112 (-112)
-| function                                     old     new   delta
-| free_pgd_range                               422     310    -112
-| Total: Before=4137002, After=4136890, chg -1.000000%
-
-[1] http://lists.infradead.org/pipermail/linux-snps-arc/2019-October/006266.html
-[2] http://lists.infradead.org/pipermail/linux-snps-arc/2019-October/006265.html
-
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
 ---
- include/asm-generic/tlb.h | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index f3dad87f4ecc..a1edad7d4170 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -574,6 +574,7 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- 	} while (0)
- #endif
+About some decisions took in this patch:
+
+* early_param() was used because I couldn't find a way to enforce
+parameters' ordering when using __setup(), and we need nohugepages
+processed before all other hugepages options.
+
+* The return when sysctl handler is prevented to progress due to
+nohugepages is -EINVAL, but could be changed; I've just followed
+present code there, but I'm OK changing that if we have suggestions.
+
+Thanks in advance for the review!
+Cheers,
+
+
+Guilherme
+
+ Documentation/admin-guide/kernel-parameters.txt |  4 ++++
+ mm/hugetlb.c                                    | 16 ++++++++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index c7ac2f3ac99f..eebe0e7b30cf 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2982,6 +2982,10 @@
  
-+#ifndef __PAGETABLE_PMD_FOLDED
- #ifndef pmd_free_tlb
- #define pmd_free_tlb(tlb, pmdp, address)			\
- 	do {							\
-@@ -583,6 +584,9 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- 		__pmd_free_tlb(tlb, pmdp, address);		\
- 	} while (0)
- #endif
-+#else
-+#define pmd_free_tlb(tlb, pmdp, address)        do { } while (0)
-+#endif
+ 	nohugeiomap	[KNL,x86,PPC] Disable kernel huge I/O mappings.
  
- #ifndef __PAGETABLE_PUD_FOLDED
- #ifndef pud_free_tlb
++	nohugepages	[KNL] Disable HugeTLB hugepages completely, preventing
++			its setting either by kernel parameter or sysfs;
++			useful specially in kdump kernel.
++
+ 	nosmt		[KNL,S390] Disable symmetric multithreading (SMT).
+ 			Equivalent to smt=1.
+ 
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index ef37c85423a5..a6c7a68152e5 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -43,6 +43,7 @@
+ int hugetlb_max_hstate __read_mostly;
+ unsigned int default_hstate_idx;
+ struct hstate hstates[HUGE_MAX_HSTATE];
++static int disable_hugepages;
+ /*
+  * Minimum page order among possible hugepage sizes, set to a proper value
+  * at boot time.
+@@ -2550,6 +2551,9 @@ static ssize_t __nr_hugepages_store_common(bool obey_mempolicy,
+ 	int err;
+ 	nodemask_t nodes_allowed, *n_mask;
+ 
++	if (disable_hugepages)
++		return -EINVAL;
++
+ 	if (hstate_is_gigantic(h) && !gigantic_page_runtime_supported())
+ 		return -EINVAL;
+ 
+@@ -2978,6 +2982,9 @@ static int __init hugetlb_nrpages_setup(char *s)
+ 	unsigned long *mhp;
+ 	static unsigned long *last_mhp;
+ 
++	if (disable_hugepages)
++		return 1;
++
+ 	if (!parsed_valid_hugepagesz) {
+ 		pr_warn("hugepages = %s preceded by "
+ 			"an unsupported hugepagesz, ignoring\n", s);
+@@ -3022,6 +3029,15 @@ static int __init hugetlb_default_setup(char *s)
+ }
+ __setup("default_hugepagesz=", hugetlb_default_setup);
+ 
++static int __init nohugepages_setup(char *str)
++{
++	disable_hugepages = 1;
++	pr_info("HugeTLB: hugepages disabled by kernel parameter\n");
++
++	return 0;
++}
++early_param("nohugepages", nohugepages_setup);
++
+ static unsigned int cpuset_mems_nr(unsigned int *array)
+ {
+ 	int node;
 -- 
-2.20.1
+2.23.0
 
