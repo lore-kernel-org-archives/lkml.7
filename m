@@ -2,126 +2,297 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6222ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FB5ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0AEC2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570816629;
-	bh=SObEEAc6zI0j5H5m9jLmy2w0NgYlIpfEcaRb3ydotPA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RfwbGrhG/9hJKWYr+VRsdLxYHdbPRdW1zLA43w5LxIobw9Jn8q0FUNq6Jf+SbAnkM
-	 3KelJVGRDtLvXIAGDyHNyc+ZRYepf6hpE3OPl+NdvwacE+PK73QGme0Vvm+VZ8+Xbl
-	 eXmlBij8R0uDPsygjBBw+8d4QAXkhDg/4EeRLFDQ=
+	by mail.kernel.org (Postfix) with ESMTP id 10D3E2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ykg12PFZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="erwjxUld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbfJKR5I (ORCPT
+        id S1728749AbfJKR7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:57:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728374AbfJKR5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:57:07 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C0B521835;
-        Fri, 11 Oct 2019 17:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570816626;
-        bh=SObEEAc6zI0j5H5m9jLmy2w0NgYlIpfEcaRb3ydotPA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Lt/DCW1vRF3k063Akb79j35F8iGpAAtftvFkNFSslSvW1i3mF6lC2JoAUefz+uT3q
-         FxdrzYFn44DRnT17XiTwTVDMZkFtTZ5JPfVQVTY5Wg+RgPUq6HY2nyuIZSE5TZDmbD
-         tnGQNdrW/aDzpxbNLeARHUn9wG+x1GTj/NjqZOmw=
-Received: by mail-qk1-f172.google.com with SMTP id u184so9700002qkd.4;
-        Fri, 11 Oct 2019 10:57:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAXvjoM5i3GNFEW1v/MP9cyxza84Mybddn3VNuZdyUlXqKDDdEiw
-        hlsr0BrjY+exO3AqvNpfSvOOhdJR44/WzPjUaA==
-X-Google-Smtp-Source: APXvYqzfirT8CwFQsBvNkzgWwfbtb9jNrANMi1nJuuxFtGGswdD+eerzYcuDeoWIMKhpFN3OKv+AcPBF/srpOGdqoGU=
-X-Received: by 2002:a37:9847:: with SMTP id a68mr17321115qke.223.1570816625730;
- Fri, 11 Oct 2019 10:57:05 -0700 (PDT)
+        Fri, 11 Oct 2019 13:59:15 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51062 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728472AbfJKR7O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 13:59:14 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2FAB26083C; Fri, 11 Oct 2019 17:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570816753;
+        bh=dEIHNtPJMeVe0/U1DX6bBGn/UKV/780n6No7ph7w8yw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ykg12PFZxT3nlVFtqTIhn/ikrDlmLyXYQarYtasJm3LbVyNw1Fz57B12hB+1YPDM9
+         6LJGerahP2a6tl7FZJHSWwMkodCM0qAt/hwJxmR+DthNHoGHCAuw2tg2L5ZsqP4E/Q
+         6wPXvWTDQ399qJ7dp/et0vHhzJTHV5V3MkzPxiPw=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id C154460AA8;
+        Fri, 11 Oct 2019 17:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1570816751;
+        bh=dEIHNtPJMeVe0/U1DX6bBGn/UKV/780n6No7ph7w8yw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=erwjxUldW6GlHm6A6jcnS4u/PE5qvU7lC+CFWLChnB2fTSNBAayRrlR3yr02FrHtL
+         j9sbYg75buj9H5hd5WKvylgrlxFaYqV9WhnuGQok/00O3pJmTuhNuBDbeVPav3XpNk
+         NLLhdJFUZEa6OwgZ9YkDGijCyM85w2BdKE5zuUVw=
 MIME-Version: 1.0
-References: <20190913211349.28245-1-robh@kernel.org> <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
- <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
- <7672dd2f651bfdcdb1615ab739e36a381b2535b1.camel@perches.com> <CAL_JsqKAbP6KYjiJ6dLr=dpFG-j-e4rJPCKZ0+pZrDjsSPAUPQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqKAbP6KYjiJ6dLr=dpFG-j-e4rJPCKZ0+pZrDjsSPAUPQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 11 Oct 2019 12:56:54 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJiV-L14tQte0tZXq+-TRTXGOFW62EsSobu3cFGA8rJDw@mail.gmail.com>
-Message-ID: <CAL_JsqJiV-L14tQte0tZXq+-TRTXGOFW62EsSobu3cFGA8rJDw@mail.gmail.com>
-Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
-To:     Joe Perches <joe@perches.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Whitcroft <apw@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 11 Oct 2019 10:59:11 -0700
+From:   Jeykumar Sankaran <jsanka@codeaurora.org>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH] drm/meson: fix max mode_config height/width
+In-Reply-To: <20191009104727.GX16989@phenom.ffwll.local>
+References: <1538642563-22465-1-git-send-email-narmstrong@baylibre.com>
+ <20181004100958.GI31561@phenom.ffwll.local>
+ <0ef7fa13-ce77-f8a5-f5f3-6568be3d6145@baylibre.com>
+ <CAKMK7uHxiDF3z19cMBb0o2o4Ev0DFJkhMR7Ny6U2776Ry4oc=A@mail.gmail.com>
+ <8e980de4-5a52-8f3d-fba2-734617e40d1b@baylibre.com>
+ <CAKMK7uE71OeOdDPb+5-cs9bByD-unYPxBV_R1t+4A0Nb4H6CAw@mail.gmail.com>
+ <5dbd6337-7e08-f3f7-6d4a-d6bcaddfd3be@baylibre.com>
+ <91cd8a2aebefd4ea3e9bcee5a4ef796a@codeaurora.org>
+ <20191009104727.GX16989@phenom.ffwll.local>
+Message-ID: <27976f3eca6bd96dcea071db97c229b1@codeaurora.org>
+X-Sender: jsanka@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 10:39 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Sep 27, 2019 at 9:29 AM Joe Perches <joe@perches.com> wrote:
-> >
-> > On Fri, 2019-09-27 at 09:02 -0500, Rob Herring wrote:
-> > > On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
-> > > > On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
-> > > > > DT bindings are moving to using a json-schema based schema format
-> > > > > instead of freeform text. Add a checkpatch.pl check to encourage using
-> > > > > the schema for new bindings. It's not yet a requirement, but is
-> > > > > progressively being required by some maintainers.
-> > > > []
-> > > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > > []
-> > > > > @@ -2822,6 +2822,14 @@ sub process {
-> > > > >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
-> > > > >               }
-> > > > >
-> > > > > +# Check for adding new DT bindings not in schema format
-> > > > > +             if (!$in_commit_log &&
-> > > > > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
-> > > > > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
-> > > > > +                     WARN("DT_SCHEMA_BINDING_PATCH",
-> > > > > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
-> > > > > +             }
-> > > > > +
-> > > >
-> > > > As this already seems to be git dependent, perhaps
-> > >
-> > > It's quite rare to see a non git generated diff these days.
-> > >
-> > > > it's easier to read with a single line test like:
-> > > >
-> > > >                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
-> > > >                         etc...
-> > > >                 }
-> > >
-> > > I frequently do 'git show $commit | scripts/checkpatch.pl' and this
-> > > doesn't work with that. I really should have a '--pretty=email' in
-> > > there, but I just ignore the commit msg warnings. In any case, that
-> > > still doesn't help because there's no diffstat. There's probably some
-> > > way to turn that on or just use git-format-patch, but really we want
-> > > this to work with any git diff.
-> >
-> > I don't understand your argument against what I proposed at all.
->
-> It is dependent on the commit message rather than the diff itself. I
-> want it to work with or without a diffstat.
->
-> > and btw:
-> >
-> > $ git format-patch -1 --stdout <commit> | ./scripts/checkpatch.pl
->
-> Yes, I stated this was possible. My concern is there are lots of ways
-> to generate a diff in git. My way works for *all* of them. Yours
-> doesn't.
+On 2019-10-09 03:47, Daniel Vetter wrote:
+> On Tue, Sep 24, 2019 at 10:28:48AM -0700, Jeykumar Sankaran wrote:
+>> Reviving this thread from the context of the below conversion:
+>> 
+>> 
+> https://lore.kernel.org/linux-arm-msm/db26145b-3f64-a334-f698-76f972332881
+> @baylibre.com/T/#u
+>> 
+>> On 2018-10-05 01:19, Neil Armstrong wrote:
+>> > On 05/10/2018 09:58, Daniel Vetter wrote:
+>> > > On Fri, Oct 5, 2018 at 9:39 AM Neil Armstrong
+>> > > <narmstrong@baylibre.com> wrote:
+>> > > >
+>> >
+>> > [...]
+>> >
+>> > > > OK, won't this be enough ?
+>> > > > --- a/include/drm/drm_mode_config.h
+>> > > > +++ b/include/drm/drm_mode_config.h
+>> > > > @@ -333,6 +333,8 @@ struct drm_mode_config_funcs {
+>> > > >   * @min_height: minimum fb pixel height on this device
+>> > > >   * @max_width: maximum fb pixel width on this device
+>> > > >   * @max_height: maximum fb pixel height on this device
+>> > > > + * @max_fb_width: maximum fb buffer width if differs from
+> max_width
+>> > > > + * @max_fb_height: maximum fb buffer height if differs from
+>> > > > max_height
+>> > > >   * @funcs: core driver provided mode setting functions
+>> > > >   * @fb_base: base address of the framebuffer
+>> > > >   * @poll_enabled: track polling support for this device
+>> > > > @@ -508,6 +510,7 @@ struct drm_mode_config {
+>> > > >
+>> > > >         int min_width, min_height;
+>> > > >         int max_width, max_height;
+>> > > > +       int max_fb_width, max_fb_height;
+>> > > >         const struct drm_mode_config_funcs *funcs;
+>> > > >         resource_size_t fb_base;
+>> > > >
+>> > > > --- a/drivers/gpu/drm/drm_framebuffer.c
+>> > > > +++ b/drivers/gpu/drm/drm_framebuffer.c
+>> > > > @@ -283,14 +283,20 @@ drm_internal_framebuffer_create(struct
+>> > > > drm_device *dev,
+>> > > >                 return ERR_PTR(-EINVAL);
+>> > > >         }
+>> > > >
+>> > > > -       if ((config->min_width > r->width) || (r->width >
+>> > > > config->max_width)) {
+>> > > > +       if ((config->min_width > r->width) ||
+>> > > > +           (!config->max_fb_width && r->width >
+>> > > > config->max_width) ||
+>> > > > +           (config->max_fb_width && r->width >
+>> > > > config->max_fb_width)) {
+>> > > >                 DRM_DEBUG_KMS("bad framebuffer width %d, should
+>> > > > be >= %d && <= %d\n",
+>> > > > -                         r->width, config->min_width,
+>> > > > config->max_width);
+>> > > > +                         r->width, config->min_width,
+>> > > > config->max_fb_width ?
+>> > > > +                         config->max_fb_width :
+> config->max_width);
+>> > > >                 return ERR_PTR(-EINVAL);
+>> > > >         }
+>> > > > -       if ((config->min_height > r->height) || (r->height >
+>> > > > config->max_height)) {
+>> > > > +       if ((config->min_height > r->height) ||
+>> > > > +           (!config->max_fb_height && r->height >
+>> > > > config->max_height) ||
+>> > > > +           (config->max_fb_height && r->height >
+>> > > > config->max_fb_height)) {
+>> > > >                 DRM_DEBUG_KMS("bad framebuffer height %d, should
+>> > > > be >= %d && <= %d\n",
+>> > > > -                         r->height, config->min_height,
+>> > > > config->max_height);
+>> > > > +                         r->height, config->min_height,
+>> > > > config->max_fb_height ?
+>> > > > +                         config->max_fb_height :
+>> > > > config->max_height);
+>> > > >                 return ERR_PTR(-EINVAL);
+>> > > >         }
+>> > > >
+>> > > > and in the driver :
+>> > > >
+>> > > > +       drm->mode_config.max_width = 4096;
+>> > > > +       drm->mode_config.max_height = 3840;
+>> > > > +       drm->mode_config.max_fb_width = 16384;
+>> > > > +       drm->mode_config.max_fb_height = 8192;
+>> > > >
+>> > > > With this I leave the mode filtering intact.
+>> > >
+>> > > Not enough. See
+>> > >
+> https://dri.freedesktop.org/docs/drm/gpu/drm-kms-helpers.html#c.drm_connec
+> tor_helper_funcs
+>> > > and scroll down to mode_valid. You need to filter modes both in the
+>> > > detect paths, and the atomic_check paths.
+>> > >
+>> > > Detect is explicitly filtered out, but atomic_check was only
+>> > > implicitly filtered, through the max fb size checks. Ok, you could
+>> > > light up a mode that's bigger than max fb, but in practice, no
+>> > > userspace ever did that.
+>> 
+>> Daniel, MSM and few other vendor hardware have upscale blocks where 
+>> the
+>> driver can expose fb sizes smaller than
+>> the mode resolution and use h/w upscaling to fill the screen. This 
+>> would
+>> optimize the fetch bandwidth.
+>> 
+>> But with your code we're missing crucial
+>> > > validation now, and userspace could fall over that. What I think we
+>> > > need is to add mode filter against mode_config.max_width/height in
+>> > > drm_atomic_helper_check_modeset(). Probably best to stuff that into
+>> > > the mode_valid() function.
+>> >
+>> Agreed! Since the above patch from Niel is taking care of cases where
+>> max/min fb values
+>> are not set, by checking against the original max/min values, can we
+>> separate out this
+>> core change from the driver level mode_valid changes? If Niel couldn't
+> find
+>> the time, I can
+>> repost the above change.
+> 
+> Sure, I think Neil wouldn't mind if you take this over and get it ready
+> for merging. Just need to make sure we're not leaving any validation 
+> gaps
+> in core/helper code.
+> -Daniel
+> 
+I guess you are a bit late for the party!
 
-Joe, are you okay with this?
+I did post the patch on the forum. The latest on the thread can be found 
+here: https://lkml.org/lkml/2019/10/2/369
 
-Rob
+The basic concern is if FB limits are different (especially smaller) 
+than the display (mode) limits, it
+will break the existing user space, who are creating unscaled FB's out 
+of exposed mode limits.
+
+Thanks and Regards,
+Jeykumar S.
+
+>> 
+>> Thanks and Regards,
+>> Jeykumar S.
+>> 
+>> > Ok I understood now, thanks for pointer, I'll try to add this.
+>> >
+>> > Neil
+>> >
+>> > >
+>> > > Cheers, Daniel
+>> > > >
+>> > > > Neil
+>> > > >
+>> > > >
+>> > > > > -Daniel
+>> > > > >
+>> > > > > >
+>> > > > > > Neil
+>> > > > > >
+>> > > > > > >
+>> > > > > > > Bunch of igt to make sure we're not missing anything
+>> > > > > > > would be sweet on
+>> > > > > > > top, e.g. e.g. trying to set a mode over the limit
+>> > > > > > > and making sure it
+>> > > > > > > fails.
+>> > > > > > >
+>> > > > > > > Cheers, Daniel
+>> > > > > > >
+>> > > > > > > > ---
+>> > > > > > > >  drivers/gpu/drm/meson/meson_drv.c | 4 ++--
+>> > > > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+>> > > > > > > >
+>> > > > > > > > diff --git a/drivers/gpu/drm/meson/meson_drv.c
+>> > > > > > > > b/drivers/gpu/drm/meson/meson_drv.c
+>> > > > > > > > index d344312..2e29968 100644
+>> > > > > > > > --- a/drivers/gpu/drm/meson/meson_drv.c
+>> > > > > > > > +++ b/drivers/gpu/drm/meson/meson_drv.c
+>> > > > > > > > @@ -243,8 +243,8 @@ static int
+>> > > > > > > > meson_drv_bind_master(struct device *dev, bool
+>> > > > > > > > has_components)
+>> > > > > > > >              goto free_drm;
+>> > > > > > > >
+>> > > > > > > >      drm_mode_config_init(drm);
+>> > > > > > > > -    drm->mode_config.max_width = 3840;
+>> > > > > > > > -    drm->mode_config.max_height = 2160;
+>> > > > > > > > +    drm->mode_config.max_width = 16384;
+>> > > > > > > > +    drm->mode_config.max_height = 8192;
+>> > > > > > > >      drm->mode_config.funcs = &meson_mode_config_funcs;
+>> > > > > > > >
+>> > > > > > > >      /* Hardware Initialization */
+>> > > > > > > > --
+>> > > > > > > > 2.7.4
+>> > > > > > > >
+>> > > > > > > > _______________________________________________
+>> > > > > > > > dri-devel mailing list
+>> > > > > > > > dri-devel@lists.freedesktop.org
+>> > > > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>> > > > > > >
+>> > > > > >
+>> > > > > > _______________________________________________
+>> > > > > > dri-devel mailing list
+>> > > > > > dri-devel@lists.freedesktop.org
+>> > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>> > > > >
+>> > > > >
+>> > > > >
+>> > > >
+>> > >
+>> > >
+>> >
+>> > _______________________________________________
+>> > dri-devel mailing list
+>> > dri-devel@lists.freedesktop.org
+>> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>> 
+>> --
+>> Jeykumar S
+
+-- 
+Jeykumar S
