@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE944C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FF6C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97CBB214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D648214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="SREuUiH9"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="EjAnH+Up"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfJKBZd (ORCPT
+        id S1728448AbfJKBZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 21:25:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34286 "EHLO
+        Thu, 10 Oct 2019 21:25:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37037 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbfJKBYF (ORCPT
+        with ESMTP id S1728102AbfJKBYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:24:05 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j11so9979673wrp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:04 -0700 (PDT)
+        Thu, 10 Oct 2019 21:24:03 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p14so9959983wro.4
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iERz2FP0YlBkmC86yLcDq0+jGuy+OmV9tA9oUfgYUPk=;
-        b=SREuUiH93YhFhC5Wk6DuJA9lF09LZo9G/0AScXGNMdjd1BAJugvPWp9DnSl59RjMnX
-         qO2tvfFUKsFRHnB2WaGSHnb3jBBJQPhKVQwAanWssnis5KKeFRSsM64yuAWb8DheWK8U
-         aXp4L6DhBB1BdwVZaGR1tACkG5ee/jky6efQuwP3ywWnZvyZPj+voEsEspZoG7JDF0RY
-         UvJnKILLbNjhLJSolk3xGp75sE9yeVobfbJowSY4HQJyqSxCxjc2+/lJ+8KWDPZ/kVFN
-         JZTj0STi6gFrmMQ1Y9L8W8C2QjIuFA705SFattbbMHANa1pUd0hqIsvMltaGmBxQHcFm
-         MUjA==
+        bh=NZwK+S94n8+kuxECVrn+dJbtZsya6IRammowz8Zd06g=;
+        b=EjAnH+Up6qu7vsX0veTfZxyxwpJyu/LTnvpcgQ/9g3/OYYhs7cCrGZZZ143rfx+YuN
+         tm+SWRL3uTMBoHkLKHPZrGBl50GIHvxODlvb5OSlR8bRAVw0oMVa0mR0VDhc3lbcLvmH
+         0Mmr8og/CPAwGHDf73pm+tO0ryAo8H916ev/UzKNLLXUBHF6mlrPDw2Cs/qfchNjVUQb
+         gQRfKixxLj14Ns51EUvri8JIHJyS+f8Voianj8hp/RdObBhsF/ZtjAHD9wLBbaDebY/z
+         DWUquEv9lk9QSsjuVb6PYrnjuZt1rKY/c8n2itNhc5vJbXlmph7n6Hph7Af3E6qx5Fxj
+         0Sdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iERz2FP0YlBkmC86yLcDq0+jGuy+OmV9tA9oUfgYUPk=;
-        b=N/340Aqy3BXZ7EcPrlv3z6n9MkzAX/nPeeHm8k7hEjYB+R/JtO9n32O+/z+hwyA+3x
-         1Uwg/VmNbUK8LNCiJ/JTYzGoybVrFePzt6Yy7nCgACjgzcXh1ZM2nOdPaU65hqlbshVR
-         x332MOZNgDFS3fV64q09j3OGOw94Ljbdal+V1EKa2fVLWDseW6A1J9FkZ7NOGSqUnbap
-         uBM2VoFm5YMOR2pvJSbKrwCp/g8YvKNgYvQlfCECSVZgvVmlS5jXfOk3MYtKovW7Dew7
-         MLhJMhAEFWPf1Gx2AEEyYWCwIvxpAGSn46iM7c4p28hG7us/DJIkrTrckL4DZFP2LnuC
-         1yOQ==
-X-Gm-Message-State: APjAAAVyh+84eBjwLpsXtVU26LB6Hyzbdl806PVF4unGr8Tux5XZaGF6
-        alz7U3tMwY0fJl3l2hrtqY+Kv+umqn4=
-X-Google-Smtp-Source: APXvYqy1yEYoyp6noua76ezIvjrnsLos8kkhjoGHWWcb1oezxvWWE8mjNfmD1TtOtdyK+apMpaHcng==
-X-Received: by 2002:adf:f145:: with SMTP id y5mr153370wro.330.1570757043333;
-        Thu, 10 Oct 2019 18:24:03 -0700 (PDT)
+        bh=NZwK+S94n8+kuxECVrn+dJbtZsya6IRammowz8Zd06g=;
+        b=KQJy3q91tItDr5sXbXEFeZEezrQWJGG88/oPxo0gEzDzb5WXyxy9fuiQljYrh4iU2l
+         vB6woDNRSvswDFko+OTQaqH5Y65WJ1uw7ZGb6avkqBar23Zw/llKz5TNUssyrhKcLTKx
+         6kfyLDEPB4w5ZYFOA91pkcqFfnm3fStH0omyPPJbwYshqBzUGzaDkavnZL1ECgan9Ilu
+         Swx5SrmRSmLdht/K3MImCGV2nvCrDfkcSpapLHCQe3kJ769g4IuA9CsZ0/XOUyKgfXpb
+         XHngxbQZHN0rDbe5jkIpF/HDJnVUVYgF+qBWUJaFFCZCSvMYm2kYIPWRXrCtJNygiJwa
+         vz4g==
+X-Gm-Message-State: APjAAAXcMq+xYlB5vvsKDZi28GPp1Zw3EjrEFV1ZPrEVghGMWhfthao8
+        xMb2yGccqTcY67K6Rx0Wf36wqUn9I2w=
+X-Google-Smtp-Source: APXvYqw5OUm4NHXxoFn4k+ZROCcl6LeUPiH8VPyth6eBe+oA075nwaLbwXgNQFx4j299LNaZpr6suQ==
+X-Received: by 2002:a5d:62cd:: with SMTP id o13mr11032327wrv.101.1570757041900;
+        Thu, 10 Oct 2019 18:24:01 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:ea2:c100:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.01
+        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 18:24:02 -0700 (PDT)
+        Thu, 10 Oct 2019 18:24:01 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -77,9 +77,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv7 12/33] posix-timers: Make timer_settime() time namespace aware
-Date:   Fri, 11 Oct 2019 02:23:20 +0100
-Message-Id: <20191011012341.846266-13-dima@arista.com>
+Subject: [PATCHv7 11/33] timerfd: Make timerfd_settime() time namespace aware
+Date:   Fri, 11 Oct 2019 02:23:19 +0100
+Message-Id: <20191011012341.846266-12-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191011012341.846266-1-dima@arista.com>
 References: <20191011012341.846266-1-dima@arista.com>
@@ -92,39 +92,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrei Vagin <avagin@gmail.com>
 
-Wire timer_settime() syscall into time namespace virtualization.
+timerfd_settime() accepts an absolute value of the expiration time if
+TFD_TIMER_ABSTIME is specified. This value is in task's time namespace
+and has to be converted to the host's time namespace.
 
-sys_timer_settime() calls the ktime->timer_set() callback. Right now,
-common_timer_set() is the only implementation for the callback.
-
-There user-supplied timer's value is converted from timespec64 to ktime
-and then timens_ktime_to_host() can be used to convert namespace's time
-to the host time.
-
-Inside a time namespace kernel's time differ on a fixed offset from
-a user-supplied, but only absolute values (TIMER_ABSTIME) must
-be converted.
-
-Signed-off-by: Andrei Vagin <avagin@openvz.org>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- kernel/time/posix-timers.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/timerfd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index d8b5bd4cbae1..6e350cc8f600 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -885,6 +885,8 @@ int common_timer_set(struct k_itimer *timr, int flags,
+diff --git a/fs/timerfd.c b/fs/timerfd.c
+index 48305ba41e3c..f9da5752a79e 100644
+--- a/fs/timerfd.c
++++ b/fs/timerfd.c
+@@ -26,6 +26,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/compat.h>
+ #include <linux/rcupdate.h>
++#include <linux/time_namespace.h>
  
- 	timr->it_interval = timespec64_to_ktime(new_setting->it_interval);
- 	expires = timespec64_to_ktime(new_setting->it_value);
-+	if (flags & TIMER_ABSTIME)
-+		expires = timens_ktime_to_host(timr->it_clock, expires);
- 	sigev_none = timr->it_sigev_notify == SIGEV_NONE;
+ struct timerfd_ctx {
+ 	union {
+@@ -196,6 +197,8 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int flags,
+ 	}
  
- 	kc->timer_arm(timr, expires, flags & TIMER_ABSTIME, sigev_none);
+ 	if (texp != 0) {
++		if (flags & TFD_TIMER_ABSTIME)
++			texp = timens_ktime_to_host(clockid, texp);
+ 		if (isalarm(ctx)) {
+ 			if (flags & TFD_TIMER_ABSTIME)
+ 				alarm_start(&ctx->t.alarm, texp);
 -- 
 2.23.0
 
