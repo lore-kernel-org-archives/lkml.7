@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC097ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10F8ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB1321835
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A832190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570824412;
-	bh=D+SEfww0+B4ZZ7/jBnxcDK2oaMy/NSv+CnJyV1i5tUE=;
+	s=default; t=1570824416;
+	bh=vg43QH1RPy++/kfKsY8qGwuiCs5Yp/ELD6nbRJSMeeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lFznVsBHR5RE5+lobIhgRdzgUjWaPVZdHP1gYgzW09ome1wXG8Aw74KvWqqo3NEDR
-	 59Gw+mwab/kMAB7IvHQHNNGRX3bdq2HH0j9PPHiXzWARBz2LZKf0Ys/eGLOTAbeNFS
-	 QmplMTX6N4JH4bKeHAyy4ux3L12UOU7WGkS0FMok=
+	b=MgqtzovsDZdq36tJCMEIJTxBQS3hSXy8zlsV/j8tDI1Lfi4BTwNjFPw0JctlDOs+Q
+	 qBq1q43z6Vtrbcm9J/T3ReLmrfAsHG9f7p22hbGjCX34rczQGJUZBQVXBhjE5HRFmJ
+	 md0BaeoX/sx3JEKtkKFx+/0r403P7W5L04dLVmNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbfJKUGv (ORCPT
+        id S1729198AbfJKUGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:06:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43186 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 16:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729129AbfJKUGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:06:49 -0400
+        id S1729129AbfJKUGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 16:06:54 -0400
 Received: from quaco.ghostprotocols.net (189-94-137-67.3g.claro.net.br [189.94.137.67])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3973821D71;
-        Fri, 11 Oct 2019 20:06:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 879642245B;
+        Fri, 11 Oct 2019 20:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570824408;
-        bh=D+SEfww0+B4ZZ7/jBnxcDK2oaMy/NSv+CnJyV1i5tUE=;
+        s=default; t=1570824413;
+        bh=vg43QH1RPy++/kfKsY8qGwuiCs5Yp/ELD6nbRJSMeeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKHFa4uph5qmC5nap5PPITrnP0DixaFpxWUbk6R5NSzvn7hDSZm2N4gK5AhVDw9wC
-         dtY14uKT7J2xzUIm9GdEM7DrbWXljnBqjkly/gz7KAxOkUBARN4jt6eki2W90OZ2x+
-         3J52QpJi3DWGWxmKY6vDMxAAxhkybUvQRXaPsupE=
+        b=bDNQHazTfiDGPeHLsjRDsrxlAHYe9njBwXw/fawYhQEPwDm58D1j0lQWVUFLOfwxK
+         oI4nb5ytEF2xsIrsVWj5VeUTERFn6UYDd6HOAQEQGkqzet/UFI4Py/5oGC5MnsEpp2
+         g3WBmTB2FmAEIzL0ZN30ZwEfT4iBS819XCNJWm6Y=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
         <lclaudio@redhat.com>
-Subject: [PATCH 05/69] perf trace: Separate 'struct syscall_fmt' definition from syscall_fmts variable
-Date:   Fri, 11 Oct 2019 17:04:55 -0300
-Message-Id: <20191011200559.7156-6-acme@kernel.org>
+Subject: [PATCH 06/69] perf trace: Generalize the syscall_fmt find routines
+Date:   Fri, 11 Oct 2019 17:04:56 -0300
+Message-Id: <20191011200559.7156-7-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
@@ -65,58 +65,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As this has all the things needed to format tracepoints events, not just
-syscalls, that, after all, are just tracepoints with a set in stone ABI,
-i.e. order and number of parameters.
-
-For tracepoints we'll create a
-
-  static struct syscall_fmt tracepoint_fmts[]
-
-array and will fill the ->arg[] entries with the beautifier for each
-positional argument and record the name, then, when we need it, we'll
-just check that the position has the same name, maybe even type, so that
-we can do some check that the tracepoint hasn't changed, if it has, we
-can even reorder things.
-
-Keep calling it syscall_fmt but use it as well for tracepoints, do it
-this way to minimize changes and reuse what is in place for syscalls,
-we'll see.
+To allow them to be used with other stuff, such as tracepoints.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-2x1jgiev13zt4njaanlnne0d@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-od3gzg77ppqgnnrxqv40fvgx@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/builtin-trace.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index ee330f50b450..cb853434d761 100644
+index cb853434d761..313dfc1cefc5 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -702,7 +702,7 @@ struct syscall_arg_fmt {
- 	bool	   show_zero;
- };
+@@ -966,24 +966,35 @@ static int syscall_fmt__cmp(const void *name, const void *fmtp)
+ 	return strcmp(name, fmt->name);
+ }
  
--static struct syscall_fmt {
-+struct syscall_fmt {
- 	const char *name;
- 	const char *alias;
- 	struct {
-@@ -714,7 +714,9 @@ static struct syscall_fmt {
- 	bool	   errpid;
- 	bool	   timeout;
- 	bool	   hexret;
--} syscall_fmts[] = {
-+};
++static struct syscall_fmt *__syscall_fmt__find(struct syscall_fmt *fmts, const int nmemb, const char *name)
++{
++	return bsearch(name, fmts, nmemb, sizeof(struct syscall_fmt), syscall_fmt__cmp);
++}
 +
-+static struct syscall_fmt syscall_fmts[] = {
- 	{ .name	    = "access",
- 	  .arg = { [1] = { .scnprintf = SCA_ACCMODE,  /* mode */ }, }, },
- 	{ .name	    = "arch_prctl",
+ static struct syscall_fmt *syscall_fmt__find(const char *name)
+ {
+ 	const int nmemb = ARRAY_SIZE(syscall_fmts);
+-	return bsearch(name, syscall_fmts, nmemb, sizeof(struct syscall_fmt), syscall_fmt__cmp);
++	return __syscall_fmt__find(syscall_fmts, nmemb, name);
+ }
+ 
+-static struct syscall_fmt *syscall_fmt__find_by_alias(const char *alias)
++static struct syscall_fmt *__syscall_fmt__find_by_alias(struct syscall_fmt *fmts, const int nmemb, const char *alias)
+ {
+-	int i, nmemb = ARRAY_SIZE(syscall_fmts);
++	int i;
+ 
+ 	for (i = 0; i < nmemb; ++i) {
+-		if (syscall_fmts[i].alias && strcmp(syscall_fmts[i].alias, alias) == 0)
+-			return &syscall_fmts[i];
++		if (fmts[i].alias && strcmp(fmts[i].alias, alias) == 0)
++			return &fmts[i];
+ 	}
+ 
+ 	return NULL;
+ }
+ 
++static struct syscall_fmt *syscall_fmt__find_by_alias(const char *alias)
++{
++	const int nmemb = ARRAY_SIZE(syscall_fmts);
++	return __syscall_fmt__find_by_alias(syscall_fmts, nmemb, alias);
++}
++
+ /*
+  * is_exit: is this "exit" or "exit_group"?
+  * is_open: is this "open" or "openat"? To associate the fd returned in sys_exit with the pathname in sys_enter.
 -- 
 2.21.0
 
