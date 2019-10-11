@@ -2,101 +2,165 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C66C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606ABECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E882084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B562084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfJKKZq (ORCPT
+        id S1727414AbfJKKZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:25:46 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46425 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfJKKZq (ORCPT
+        Fri, 11 Oct 2019 06:25:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36026 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfJKKZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:25:46 -0400
-Received: by mail-qt1-f193.google.com with SMTP id u22so13059265qtq.13
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 03:25:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t/rs8Xp1pdPpdAkD8nGvsvdxNs69qOBQmbpI4r5piqI=;
-        b=SnsKyICNl0eCgp4yGtCfzH5pL1nuwlM1/FPVlqy2PhDPZ7pqun6kNv/IXnVIw5mF4u
-         I4IKStm7bodX/K2LqoQHErHCQdv10/a5xZbQJY8RoV6y9WVdvgxhbz0gVpMWZoKN4fLf
-         lY9j89IPWC2ZDSv/6WtKgfRI1gnb+lPcmTIr0uesRkAM1B0ivjaf+B3cgeV48N92QqQf
-         EOqmThXDywHX9hXOnkI0PzXLSeK7WX5uZuBH+1xAzHj8eZwb8Os54KziwJshX5cfsIBy
-         dl6xeo09iIG3ZNcpY0Bx5SU4ShV/VJiy68yOsWvjvxmpVwH//ZHLMpdVGvBDa5bnL7WY
-         5HOQ==
-X-Gm-Message-State: APjAAAVjp4OoO2mAvxfNmcl53zinBVajcnCoJWZalZku9O+joPHjyRYc
-        qzBwsUW19e7io51uJ5JP/slrcHQRQYdaB2mbuoY=
-X-Google-Smtp-Source: APXvYqwjulTSV7kS+w6qp4MRoCgoWGqaIzzGWNbblq62PsnCyHSrbBi44lgcajzslUmbSED4Th05TzD/0I+F9s+Wedk=
-X-Received: by 2002:a0c:fde8:: with SMTP id m8mr15279083qvu.4.1570789545038;
- Fri, 11 Oct 2019 03:25:45 -0700 (PDT)
+        Fri, 11 Oct 2019 06:25:47 -0400
+Received: from v22018046084765073.goodsrv.de ([185.183.158.195] helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iIs7F-0007GP-1e; Fri, 11 Oct 2019 10:25:45 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>, libc-alpha@sourceware.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        linux-kselftest@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-api@vger.kernel.org
+Subject: [PATCH v2 1/2] clone3: add CLONE3_CLEAR_SIGHAND
+Date:   Fri, 11 Oct 2019 12:25:36 +0200
+Message-Id: <20191011102537.27502-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20190926193030.5843-1-anders.roxell@linaro.org>
- <20190926193030.5843-5-anders.roxell@linaro.org> <bf5db3a5-96da-752c-49ea-d0de899882d5@huawei.com>
- <CADYN=9LB9RHgRkQj=HcKDz1x9jqmT464Kseh2wZU5VvcLit+bQ@mail.gmail.com> <d978673e-cbd1-5ab5-b2a4-cdb407d0f98c@huawei.com>
-In-Reply-To: <d978673e-cbd1-5ab5-b2a4-cdb407d0f98c@huawei.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 11 Oct 2019 12:25:29 +0200
-Message-ID: <CAK8P3a0kBz1-i-3miCo1vMuoM39ivXa3oxOE9VnCqDO-nfNOxw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: configs: unset CPU_BIG_ENDIAN
-To:     John Garry <john.garry@huawei.com>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 1:15 PM John Garry <john.garry@huawei.com> wrote:
-> On 03/10/2019 08:40, Anders Roxell wrote:
-> > On Tue, 1 Oct 2019 at 16:04, John Garry <john.garry@huawei.com> wrote:
-> >> On 26/09/2019 20:30, Anders Roxell wrote:
-> >>> it doesn't get enabled when building allmodconfig kernels. When doing a
-> >>> 'make savedefconfig' CONFIG_CPU_BIG_ENDIAN will be dropped.
-> >>
-> >> So without having to pass KCONFIG_ALLCONFIG or do anything else, what
-> >> about a config for CONFIG_CPU_LITTLE_ENDIAN instead? I'm not sure if
-> >> that was omitted for a specific reason.
-> >
-> > Oh, I tried to elaborate on the idea in the cover letter, that using
-> > the defconfig
-> > as base and then configure the rest as modules is to get a bootable kernel
-> > that have as many features turned on as possible. That will make it possible
-> > to run as wide a range of testsuites as possible on a single kernel.
-> >
-> > Does that make it clearer ?
->
-> Hi Anders,
->
-> Yeah, I got the idea.
->
-> So when you say "'make savedefconfig' CONFIG_CPU_BIG_ENDIAN will be
-> dropped", I don't know what the rules are in terms of resyncing the
-> common defconfig (I was under the impression that it's done per release
-> cycle by the arm soc maintainers, but can't find evidence as such), but
-> your change may be easily lost in this way.
+Reset all signal handlers of the child not set to SIG_IGN to SIG_DFL.
+Mutually exclusive with CLONE_SIGHAND to not disturb other thread's
+signal handler.
 
-We don't do it every release, but occasionally someone sends a patch
-with a refresh, and this might easily get missed.
+In the spirit of closer cooperation between glibc developers and kernel
+developers (cf. [2]) this patchset came out of a discussion on the glibc
+mailing list for improving posix_spawn() (cf. [1], [3], [4]). Kernel
+support for this feature has been explicitly requested by glibc and I
+see no reason not to help them with this.
 
-We could force the allmodconfig kernel to be little-endian by default,
-using a choice statement to pick endianess like arch/mips and arch/sh
-do, the effect would be that an allmodconfig kernel gains a few more
-options that depend on !BIG_ENDIAN, but we would no longer catch
-a class of endianess bugs in drivers that we otherwise get warnings
-for. No idea what is better here.
+The child helper process on Linux posix_spawn must ensure that no signal
+handlers are enabled, so the signal disposition must be either SIG_DFL
+or SIG_IGN. However, it requires a sigprocmask to obtain the current
+signal mask and at least _NSIG sigaction calls to reset the signal
+handlers for each posix_spawn call or complex state tracking that might
+lead to data corruption in glibc. Adding this flags lets glibc avoid
+these problems.
 
-       Arnd
+[1]: https://www.sourceware.org/ml/libc-alpha/2019-10/msg00149.html
+[3]: https://www.sourceware.org/ml/libc-alpha/2019-10/msg00158.html
+[4]: https://www.sourceware.org/ml/libc-alpha/2019-10/msg00160.html
+[2]: https://lwn.net/Articles/799331/
+     '[...] by asking for better cooperation with the C-library projects
+     in general. They should be copied on patches containing ABI
+     changes, for example. I noted that there are often times where
+     C-library developers wish the kernel community had done things
+     differently; how could those be avoided in the future? Members of
+     the audience suggested that more glibc developers should perhaps
+     join the linux-api list. The other suggestion was to "copy Florian
+     on everything".'
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: libc-alpha@sourceware.org
+Cc: linux-api@vger.kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v1 */
+Link: https://lore.kernel.org/r/20191010133518.5420-1-christian.brauner@ubuntu.com
+
+/* v2 */
+- Florian Weimer <fweimer@redhat.com>:
+  - update comment in clone3_args_valid()
+---
+ include/uapi/linux/sched.h |  3 +++
+ kernel/fork.c              | 16 +++++++++++-----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+index 99335e1f4a27..c583720f689f 100644
+--- a/include/uapi/linux/sched.h
++++ b/include/uapi/linux/sched.h
+@@ -33,6 +33,9 @@
+ #define CLONE_NEWNET		0x40000000	/* New network namespace */
+ #define CLONE_IO		0x80000000	/* Clone io context */
+ 
++/* Flags for the clone3() syscall */
++#define CLONE3_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler and reset to SIG_DFL. */
++
+ #ifndef __ASSEMBLY__
+ /**
+  * struct clone_args - arguments for the clone3 syscall
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 1f6c45f6a734..0a0269cb2c18 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1517,6 +1517,11 @@ static int copy_sighand(unsigned long clone_flags, struct task_struct *tsk)
+ 	spin_lock_irq(&current->sighand->siglock);
+ 	memcpy(sig->action, current->sighand->action, sizeof(sig->action));
+ 	spin_unlock_irq(&current->sighand->siglock);
++
++	/* Reset all signal handler not set to SIG_IGN to SIG_DFL. */
++	if (clone_flags & CLONE3_CLEAR_SIGHAND)
++		flush_signal_handlers(tsk, 0);
++
+ 	return 0;
+ }
+ 
+@@ -2563,11 +2568,8 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 
+ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
+ {
+-	/*
+-	 * All lower bits of the flag word are taken.
+-	 * Verify that no other unknown flags are passed along.
+-	 */
+-	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
++	/* Verify that no unknown flags are passed along. */
++	if (kargs->flags & ~(CLONE_LEGACY_FLAGS | CLONE3_CLEAR_SIGHAND))
+ 		return false;
+ 
+ 	/*
+@@ -2577,6 +2579,10 @@ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
+ 	if (kargs->flags & (CLONE_DETACHED | CSIGNAL))
+ 		return false;
+ 
++	if ((kargs->flags & (CLONE_SIGHAND | CLONE3_CLEAR_SIGHAND)) ==
++	    (CLONE_SIGHAND | CLONE3_CLEAR_SIGHAND))
++		return false;
++
+ 	if ((kargs->flags & (CLONE_THREAD | CLONE_PARENT)) &&
+ 	    kargs->exit_signal)
+ 		return false;
+-- 
+2.23.0
+
