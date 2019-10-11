@@ -2,87 +2,177 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033CDC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB2CECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8759206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EBD5206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dcyAOLXl";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eCT6yiCW"
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="Zk7zrYDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbfJKL5d (ORCPT
+        id S1727957AbfJKL7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:57:33 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37928 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfJKL5d (ORCPT
+        Fri, 11 Oct 2019 07:59:18 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44615 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbfJKL7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:57:33 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 173FC60ADE; Fri, 11 Oct 2019 11:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570795052;
-        bh=EPYe5kTBBGci2tg48EPs5GLHdxzLBPQNaqpnWCbvN0A=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=dcyAOLXlc63HacOqTCRkTOezC44jm2EsyeUorxd4Y2Czh0nylMKLnukFv2yIPyDC6
-         gSEkVyhOQ9ZCuAADkDBMe2oepgpoWIS6GeGE5xrcy8lb2+J7dP2OL3jy6rJbjCP01C
-         +IHbZyPOYgUzaj0GS9Nt+pRHzcpRXpJGfgV2qm1w=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B19BB602EE;
-        Fri, 11 Oct 2019 11:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570795051;
-        bh=EPYe5kTBBGci2tg48EPs5GLHdxzLBPQNaqpnWCbvN0A=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=eCT6yiCW4z23JIr4WE8iA1QhYZu/HoLLv/OdH8G5QEa5TVLcY4VigfBIS5uGhmp5d
-         ds0tQP+w3Vc91Niy04tYYt51RBcWIsQeY182WQVCX9JPWZIQEo5T4etyqE2VxVguwl
-         07Ii9gVVw/vvgqEa50iIDZK8TnIqgB7yHP0PYHaI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B19BB602EE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 11 Oct 2019 07:59:17 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m13so9510254ljj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 04:59:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qZxcysWcGBjK40AA/XUOIdw3iHtZgIgHG9FtdNWtwBI=;
+        b=Zk7zrYDiiAloCyPwmmtaBGLskO2Fx1VMfLtS0bvFGEfrMXwqWjgwR0fLfvMCm0mhNb
+         CvaDy0a+1pSt6z/9qZkexB2994P9n/iUPRpzZL7ZHOUacbuyY2ZAbPSQJQcTp3Xkl99p
+         Py83bspMfff+i7yzB2pP/ZM5cHgVwagS0RKJHIFBsklI6O44CO+pY/NF8aZBbb+WT7Ep
+         e3UTNNptN5s+r5NWbU+5gAv2U4bxSS2MOHZbK4rmM2X+fRvYidMhfxKcE3+6y+zc5SrG
+         kSFEpHjXj3MNmevmM1KqxBJSl7swdsnabGzHoo9gG3j6zN818LNg0U24WI49R/W+Jq6d
+         m+SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qZxcysWcGBjK40AA/XUOIdw3iHtZgIgHG9FtdNWtwBI=;
+        b=d41bhDSwTBy8CxGtrktLI8TwuJyid+tudgD/x6ZKwTEgLYOtccpMsNL18e1cGQG3eH
+         F/MoOY68cJdfsgFdwM/FfqE/y8Y8pHdJ4i2aOeTfvsESPPtrUcvTF7cEOBMPQgD6a7Uu
+         JQYLsHAX054FXxnsn+1pzi/f+AT6RZfPV4k8e/zMzc4Uekp9IaFG9ue+gnIhNc3gM5RZ
+         KeGIZtm/lr+SuC/DXLn+NbFqqpL24GHNO7NMQnK9vW9Vz3PhozKmBmmKbIoap97HCRH7
+         tvisEk8jrrrjc//xOSW4UO1oOgv2nKCTWH2D4BcLbyIrAaWfrEfh/47+lgLRdG9lqO7w
+         TC8Q==
+X-Gm-Message-State: APjAAAXKzkvCoh8dxDIxi8T1QnmnVI02ShRq+YxANDAF7N6aJZmwYsF1
+        VR9U1OJPD2ona9xZ9a2y7513VZZyWs+Q8uFQDsM0aA==
+X-Google-Smtp-Source: APXvYqyu8ngFvs0Ijr0BcLjn77SktYZ8O5FQq+oWdsZebG5H9lIAvGxp6elULEAs295/M0RD9pF16TysYOraX+QU4KA=
+X-Received: by 2002:a2e:957:: with SMTP id 84mr8958337ljj.245.1570795153555;
+ Fri, 11 Oct 2019 04:59:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath10k: Correct error check of dma_map_single()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191010162653.141303-1-bjorn.andersson@linaro.org>
-References: <20191010162653.141303-1-bjorn.andersson@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        stable@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191011115732.173FC60ADE@smtp.codeaurora.org>
-Date:   Fri, 11 Oct 2019 11:57:32 +0000 (UTC)
+References: <20191011111813.20851-1-andrzej.p@collabora.com> <20191011111813.20851-3-andrzej.p@collabora.com>
+In-Reply-To: <20191011111813.20851-3-andrzej.p@collabora.com>
+From:   Daniel Stone <daniel@fooishbar.org>
+Date:   Fri, 11 Oct 2019 12:59:02 +0100
+Message-ID: <CAPj87rNb=Sa2Hg8KZK5ioocdv0BMj9c3NHK2v4UZibMmw2DdGA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/rockchip: Add support for afbc
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+Hi Andrzej,
 
-> The return value of dma_map_single() should be checked for errors using
-> dma_mapping_error(), rather than testing for NULL. Correct this.
-> 
-> Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
-> Cc: stable@vger.kernel.org
-> Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Fri, 11 Oct 2019 at 12:18, Andrzej Pietrasiewicz
+<andrzej.p@collabora.com> wrote:
+> @@ -32,6 +35,46 @@ rockchip_fb_alloc(struct drm_device *dev, const struct drm_mode_fb_cmd2 *mode_cm
+>         int ret;
+>         int i;
+>
+> +       if (mode_cmd->modifier[0]) {
+> +               const struct drm_format_info *info;
+> +               int bpp;
+> +
+> +               if (mode_cmd->modifier[0] &
 
-Did this fix any real bug? Or is this just something found during code review?
+Use != here, not &~.
 
--- 
-https://patchwork.kernel.org/patch/11183923/
+> +       case DRM_FORMAT_BGR888:
+> +               return AFBC_FMT_U8U8U8;
+> +       case DRM_FORMAT_RGB565:
+> +       case DRM_FORMAT_BGR565:
+> +               return AFBC_FMT_RGB565;
+> +       default:
+> +               DRM_ERROR("unsupported afbc format[%08x]\n", format);
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+This should not be reachable, because you shouldn't be able to create
+a framebuffer with an unsupported format/modifier combination.
 
+> +static bool rockchip_mod_supported(struct drm_plane *plane,
+> +                                  u32 format, u64 modifier)
+> +{
+> +       const struct drm_format_info *info;
+> +
+> +       if (WARN_ON(modifier == DRM_FORMAT_MOD_INVALID))
+> +               return false;
+> +
+> +       if (modifier == DRM_FORMAT_MOD_LINEAR)
+> +               return true;
+> +
+> +       if (modifier & ~DRM_FORMAT_MOD_ARM_AFBC(
+
+Again use != here.
+
+> +                               AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 |
+> +                               AFBC_FORMAT_MOD_SPARSE
+> +                       )
+> +       ) {
+> +               DRM_DEBUG_KMS("Unsupported format modifer 0x%llx\n", modifier);
+> +
+> +               return false;
+> +       }
+> +
+> +       info = drm_format_info(format);
+> +       if (info->num_planes != 1) {
+> +               DRM_DEBUG_KMS("AFBC buffers expect one plane\n");
+> +               return false;
+> +       }
+
+This is where you should reject unsupported format + AFBC
+combinations. Doing it here prevents it from ever being advertised to
+userspace in the first place.
+
+> @@ -808,6 +919,24 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
+>
+>         spin_lock(&vop->reg_lock);
+>
+> +       if (fb->modifier == DRM_FORMAT_MOD_ARM_AFBC(
+> +               AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 | AFBC_FORMAT_MOD_SPARSE)) {
+> +               int afbc_format = vop_convert_afbc_format(fb->format->format);
+> +
+> +               VOP_AFBC_SET(vop, format, afbc_format | 1 << 4);
+
+I assume the (1 << 4) programs the 16x16 block size. Can we support
+other block sizes?
+
+> +               VOP_AFBC_SET(vop, hreg_block_split, 0);
+
+Does this mean we can also support AFBC_FORMAT_MOD_SPLIT?
+
+> +               VOP_AFBC_SET(vop, win_sel, VOP_WIN_TO_INDEX(vop_win));
+> +               VOP_AFBC_SET(vop, hdr_ptr, dma_addr);
+> +               VOP_AFBC_SET(vop, pic_size, act_info);
+> +
+> +               /*
+> +                * The window being udated becomes the AFBC window
+> +                */
+> +               vop->afbc_win = vop_win;
+> +
+> +               pr_info("AFBC on plane %s\n", plane->name);
+
+Please do not use pr_info() here. Userspace should not be able to
+trigger logging, apart from DRM_DEBUG.
+
+> +static const uint64_t format_modifiers_win_full[] = {
+> +       DRM_FORMAT_MOD_NONE,
+
+*DRM_FORMAT_MOD_LINEAR
+
+Cheers,
+Daniel
