@@ -2,80 +2,117 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F9C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5156ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD443206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF437206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570806151;
+	bh=BdMo57XMf+QsQfyGYbuX0aQcMbk/Nkmyg+UCgLM1BDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FnW5sIc9E8Sjs9xWaEKOAUq4zC0JBWNKb1xHDN1SBVi9m6RAQCYd4j+tAEJWOriFd
+	 BWpZek8pWpvBBam8yVUheV5A26oOJ4iDIWaHCahfNsAGS3PErjnWu8tzze+wQVfMNn
+	 FHuNw96ldNAKo7/dgfQnP0QD1IdiZ6Swg6aPpRNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfJKPBO (ORCPT
+        id S1727798AbfJKPCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:01:14 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3741 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726331AbfJKPBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:01:14 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 191083191309D95217E8;
-        Fri, 11 Oct 2019 23:01:12 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
- 23:01:01 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <nuno.sa@analog.com>,
-        <ckeepax@opensource.cirrus.com>, <rf@opensource.wolfsonmicro.com>,
-        <piotrs@opensource.cirrus.com>, <npoushin@opensource.cirrus.com>,
-        <paul@crapouillou.net>, <krzk@kernel.org>,
-        <enric.balletbo@collabora.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ASoC: adau7118: Fix Kconfig warning without CONFIG_I2C
-Date:   Fri, 11 Oct 2019 23:00:42 +0800
-Message-ID: <20191011150042.20096-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 11 Oct 2019 11:02:30 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33958 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfJKPCa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:02:30 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k7so4606668pll.1;
+        Fri, 11 Oct 2019 08:02:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BMw6A0ySkqQiHBiai+B0CQpXt1FaZKXX8wNTsnQc/K0=;
+        b=Kr4TcxoIMagG1aOtgJcN6J3+geo1bECM8/MhHlwlaxS97GuwZtjyR1gZF4cr4qk1By
+         HWm6ooEfzS1P+ngkp6l6KfFo52LcCUpjTYy/3uZX0Cev0I8Q2k09+2d7Epd8jD9IQqdE
+         SY/zsTE5HIR/Z57TJQDHtuCP70Elgj06RIhL8ad7AnzQtbxVgbituIhr7KArl3SCNJue
+         +JdK5QVb8/KqxFMinjdJoiFY/oX0YmmiTjpbSWeGR99VPwYEJWl9Ks021YqafAzchnmT
+         Ra3uwV22zBFnccUgEG6yGvCIVDnzDdytGmXIuDOcpe1UwOBqekb3bUX+JHNrIz/WpQi4
+         Q2Ag==
+X-Gm-Message-State: APjAAAUQUbsveecKypjETih7UsEvQcVJw68mqoP4uRPvCvIqZJcE9YRP
+        /TjT77zG4tNcVXq8i5L1kYc=
+X-Google-Smtp-Source: APXvYqwiHpLlmejt3NOWkh5ZzK0HvNb2LO/lm/1gCZziXECNv4ZVkshN0LjJ36LM8n4uhzFARU3Xug==
+X-Received: by 2002:a17:902:d909:: with SMTP id c9mr15684424plz.216.1570806149053;
+        Fri, 11 Oct 2019 08:02:29 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id l1sm15633824pja.30.2019.10.11.08.02.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 08:02:28 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 4BE50403EA; Fri, 11 Oct 2019 15:02:27 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 15:02:27 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 3/8] firmware: Rename FW_OPT_NOFALLBACK to
+ FW_OPT_NOFALLBACK_SYSFS
+Message-ID: <20191011150227.GO16384@42.do-not-panic.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191004145056.43267-4-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004145056.43267-4-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building a kernel without CONFIG_I2C, Kconfig warns:
+On Fri, Oct 04, 2019 at 04:50:51PM +0200, Hans de Goede wrote:
+> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+> index 62ee90b4db56..665b350419cb 100644
+> --- a/drivers/base/firmware_loader/fallback.c
+> +++ b/drivers/base/firmware_loader/fallback.c
+> @@ -606,7 +606,7 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
+>  		return false;
+>  	}
+>  
+> -	if ((opt_flags & FW_OPT_NOFALLBACK))
+> +	if ((opt_flags & FW_OPT_NOFALLBACK_SYSFS))
+>  		return false;
+>  
+>  	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
+> @@ -630,10 +630,11 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
+>   * interface. Userspace is in charge of loading the firmware through the sysfs
+>   * loading interface. This sysfs fallback mechanism may be disabled completely
+>   * on a system by setting the proc sysctl value ignore_sysfs_fallback to true.
+> - * If this false we check if the internal API caller set the @FW_OPT_NOFALLBACK
+> - * flag, if so it would also disable the fallback mechanism. A system may want
+> - * to enfoce the sysfs fallback mechanism at all times, it can do this by
+> - * setting ignore_sysfs_fallback to false and force_sysfs_fallback to true.
+> + * If this false we check if the internal API caller set the
+         ignore_sysfs_fallback set to true or force_sysfs_fallback is
+	 set to false
 
-WARNING: unmet direct dependencies detected for REGMAP_I2C
-  Depends on [n]: I2C [=n]
-  Selected by [y]:
-  - SND_SOC_ADAU7118_I2C [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y]
+Otherwise looks good. You can add:
 
-Add missing I2C dependency to SND_SOC_ADAU7118_I2C to fix this.
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: ca514c0f12b0 ("ASOC: Add ADAU7118 8 Channel PDM-to-I2S/TDM Converter driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/codecs/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index d196752..6a28741 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -416,6 +416,7 @@ config SND_SOC_ADAU7118_HW
- 
- config SND_SOC_ADAU7118_I2C
- 	tristate "Analog Devices ADAU7118 8 Channel PDM-to-I2S/TDM Converter - I2C"
-+	depends on I2C
- 	select SND_SOC_ADAU7118
- 	select REGMAP_I2C
- 	help
--- 
-2.7.4
-
-
+  Luis
