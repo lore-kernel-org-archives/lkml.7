@@ -2,166 +2,121 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22636C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634EEECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E25218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DDB21D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AL3PEHkS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5+owO0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfJKUvY (ORCPT
+        id S1728461AbfJKUvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:51:24 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23676 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726354AbfJKUvX (ORCPT
+        Fri, 11 Oct 2019 16:51:41 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46111 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfJKUvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:51:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1570827081;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wuK6DATQ4V//HJO+1AZKISVwFlXejco5yABCuAYRLxo=;
-        b=AL3PEHkSekwcM0FAP6EGSlYToDNhDtwz36rGUikHVGbp3Yy027tZSlfmPFtLY4Lb71So4J
-        UMpnGRiyHcmYgarX2KRaAejcnI6ElHfqALZgFi2N8C2t0GRMiF9z4DNbJHg0N0WEOJyEid
-        rSeqIaRVv27y0Q+v3HtAPMnD6GQa1+w=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-70-UeiqB8VLNCKYl97poSEVQQ-1; Fri, 11 Oct 2019 16:51:18 -0400
-Received: by mail-qk1-f200.google.com with SMTP id k67so10227742qkc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 13:51:17 -0700 (PDT)
+        Fri, 11 Oct 2019 16:51:40 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k25so9113592oiw.13;
+        Fri, 11 Oct 2019 13:51:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zrEgjwTXu2e1AK4KY5c5H2BpvKoCQ9sDkx7vQ3qZ69U=;
+        b=f5+owO0poH7hdM2zrY8pY7qeT//OgD/2pdSy6KXiI11ZSs9McjDAA3rknePxFeDhsT
+         OAA23OYQHcd/QPqemc7gz4VDW5XCjIqgr+612Ua8xqiTj23gS4vGRbWEYx6jV60Ls+3B
+         c0Mn3F2vN72EZfRrdP24inkbv1sGinwgcwzuUUTq2TO6awp01LSsF+6OIHN4pKr6tVy+
+         +dTUaUDChX1ocONaDx3a4V6u/NYq0zwg3FzzzhGm9WEivW2TzGLLlleUTSRzgQ9sawA5
+         6+HNKriAIT0lZSc90lsGH/SBbnxzO6SvhWSxAW3Ehnx7hU1VgYwCqCpPtmWPe7Vc79DM
+         DI0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=+zuu7eYogEulpZPtegnHbQEtBXGwniTgDcVuXagVfdg=;
-        b=dAN7626s5LRRMzgKiCTT2gfVIsM+JzoaMurtrfdhcHVFBnveKGDnMlzH3LRxncGIcZ
-         3+OAs9FvfEXRjOMPNu/Pt130stqKX2K6CzAeXlO+Qznr9h5IVFLg0sFP42J3CaIGQg5R
-         ++4+s0rFJ9x2fApuw0BswG9nF2StFfphNUmcKJilcMz1feZqsP46sZoENolfAdBW0oni
-         DyhnzMtE2/6Rpgu9VKWmBCftS+lJe+mQZ69fupVxHaqQ5NdQAyfZxHbsjeq85Nixo3gS
-         yJafbr7TaxI3x20Rk+LbYrA3lvgwhGIkU65Ugdk6gpBQoz5F/ci92agtlmxHRDdX22wU
-         5c3g==
-X-Gm-Message-State: APjAAAX5u2yS1G6kyo+JPb7Z8KVjGXXhDDayxQ1Nl3n5hX45SDjQExfv
-        EF0K1S1WWMz33MCVIcu2YB9T/DLrvgVQ+ZSQdv9sJTy1J8Nb/4c1YVs6JwYPe+kidnLs2KBofaP
-        1I2gBYGSbtwRXoZJSPehQTqpe
-X-Received: by 2002:a37:e402:: with SMTP id y2mr18042919qkf.327.1570827077507;
-        Fri, 11 Oct 2019 13:51:17 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxMuFWtg72ENPlm8d+3ToMm4o8BcOZE4MnLrCafgNV5fwjnZME1flLvapsRIKa2DLsEeUPY2w==
-X-Received: by 2002:a37:e402:: with SMTP id y2mr18042892qkf.327.1570827077207;
-        Fri, 11 Oct 2019 13:51:17 -0700 (PDT)
-Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id e5sm5888785qtk.35.2019.10.11.13.51.15
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zrEgjwTXu2e1AK4KY5c5H2BpvKoCQ9sDkx7vQ3qZ69U=;
+        b=VvxmUjoV1D7bK7H8Z5MxU+37sPpqEr/6OarIu8J4NhbrzFgvKVYqLuhqSNnzELxKIk
+         v3HW4fLB6sax3kvxZBKmKYT0YPbpjfqawRXRCY+6h/I6Q6OZZXiFUhb4spjLfFk6RzoE
+         6I7XKCIvkVn8QLbWwa6gz/GsQ2aoP6wSMVY0ttWSQcWl58JjGLMR6aazPo317r8B/dG6
+         NLe7r9VIVeLhzNIefnplVF/4Z95z0YWgL0GCJX0Uyj+wDlPXQ1RQMZBTas1o7nqFqKmq
+         pmPjrFCT6mNl7RRBzDGg6Vv9zFNrkq8P8TfbVKexc6jLrhhz5PleBcEr3yJIr4gYFmdF
+         w2uQ==
+X-Gm-Message-State: APjAAAV3nEqzN+Q6rIuddnYneO7exrhuLCN7KROMHOD3SSHqI6raV/fo
+        ILQeXVUaDbhBdEv1+QoZYz8=
+X-Google-Smtp-Source: APXvYqygwyh+a1e7EywDD/FeWLqzc0RvoWAsGDCGgiibEfCFmr6X0kiDX5NyFwDKUFEZWY9x+DSejg==
+X-Received: by 2002:aca:1207:: with SMTP id 7mr13519089ois.168.1570827099671;
+        Fri, 11 Oct 2019 13:51:39 -0700 (PDT)
+Received: from localhost.localdomain ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id i5sm2900875otk.10.2019.10.11.13.51.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 13:51:16 -0700 (PDT)
-Message-ID: <2d813b2fdf39756ebee087d97f9ee4b2965f4193.camel@redhat.com>
-Subject: Re: [PATCH 5/6] drm/amdgpu/dm/mst: Report possible_crtcs
- incorrectly, for now
-From:   Lyude Paul <lyude@redhat.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
-Cc:     amd-gfx@lists.freedesktop.org,
-        Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Mario Kleiner <mario.kleiner.de@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date:   Fri, 11 Oct 2019 16:51:13 -0400
-In-Reply-To: <20191009150155.GD16989@phenom.ffwll.local>
-References: <20190926225122.31455-1-lyude@redhat.com>
-         <20190926225122.31455-6-lyude@redhat.com>
-         <20190927152741.GU218215@art_vandelay>
-         <20191009150155.GD16989@phenom.ffwll.local>
-Organization: Red Hat
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30)
-MIME-Version: 1.0
-X-MC-Unique: UeiqB8VLNCKYl97poSEVQQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Fri, 11 Oct 2019 13:51:38 -0700 (PDT)
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH v2 0/3] PCI: pciehp: Do not turn off slot if presence comes up after link
+Date:   Fri, 11 Oct 2019 16:51:24 -0400
+Message-Id: <20191011205127.4884-1-stuart.w.hayes@gmail.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-a little late but: i915 does have this hack (or rather-possible_crtcs with =
-MST
-in i915 has been broken for a while and got fixed, but had to get reverted
-because of this issue), it's where this originally came from.
+In older PCIe specs, PDS (presence detect) would come up when the
+"in-band" presence detect pin connected, and would be up before DLLLA
+(link active).
 
-On Wed, 2019-10-09 at 17:01 +0200, Daniel Vetter wrote:
-> On Fri, Sep 27, 2019 at 11:27:41AM -0400, Sean Paul wrote:
-> > On Thu, Sep 26, 2019 at 06:51:07PM -0400, Lyude Paul wrote:
-> > > This commit is seperate from the previous one to make it easier to
-> > > revert in the future. Basically, there's multiple userspace applicati=
-ons
-> > > that interpret possible_crtcs very wrong:
-> > >=20
-> > > https://gitlab.freedesktop.org/xorg/xserver/merge_requests/277
-> > > https://gitlab.gnome.org/GNOME/mutter/issues/759
-> > >=20
-> > > While work is ongoing to fix these issues in userspace, we need to
-> > > report ->possible_crtcs incorrectly for now in order to avoid
-> > > introducing a regression in in userspace. Once these issues get fixed=
-,
-> > > this commit should be reverted.
-> > >=20
-> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > > Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
-> > > ---
-> > >  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > >=20
-> > > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > index b404f1ae6df7..fe8ac801d7a5 100644
-> > > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > @@ -4807,6 +4807,17 @@ static int amdgpu_dm_crtc_init(struct
-> > > amdgpu_display_manager *dm,
-> > >  =09if (!acrtc->mst_encoder)
-> > >  =09=09goto fail;
-> > > =20
-> > > +=09/*
-> > > +=09 * FIXME: This is a hack to workaround the following issues:
-> > > +=09 *
-> > > +=09 * https://gitlab.gnome.org/GNOME/mutter/issues/759
-> > > +=09 * https://gitlab.freedesktop.org/xorg/xserver/merge_requests/277
-> > > +=09 *
-> > > +=09 * One these issues are closed, this should be removed
-> >=20
-> > Even when these issues are closed, we'll still be introducing a regress=
-ion
-> > if we
-> > revert this change. Time for actually_possible_crtcs? :)
-> >=20
-> > You also might want to briefly explain the u/s bug in case the links go
-> > sour.
-> >=20
-> > > +=09 */
-> > > +=09acrtc->mst_encoder->base.possible_crtcs =3D
-> > > +=09=09amdgpu_dm_get_encoder_crtc_mask(dm->adev);
-> >=20
-> > Why don't we put this hack in amdgpu_dm_dp_create_fake_mst_encoder()?
->=20
-> If we don't have the same hack for i915 mst I think we shouldn't merge
-> this ... broken userspace is broken.
-> -Daniel
---=20
-Cheers,
-=09Lyude Paul
+In PCIe 4.0 (as an ECN) and in PCIe 5.0, there is a new bit to show if
+in-band presence detection can be disabled for the slot, and another bit
+that disables it--and a recommendation that it should be disabled if it
+can be. In addition, certain OEMs disable in-band presence detection
+without implementing these bits.
+
+This means it is possible to get a "card present" interrupt after the
+link is up and the driver is loaded.  This causes an erroneous removal
+of the device driver, followed by an immediate re-probing.
+
+This patch set defines these new bits, uses them to disable in-band
+presence detection if it can be, waits for PDS to go up if in-band
+presence detection is disabled, and adds a DMI table that will let us
+know if we should assume in-band presence is disabled on a system.
+
+The first two patches in this set come from a patch set that was
+submitted but not accepted many months ago by Alexandru Gagniuc [1].
+The first is unmodified, the second has the commit message and timeout 
+modified.
+
+[1] https://patchwork.kernel.org/cover/10909167/
+    [v3,0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
+
+v2:
+- modify loop in pcie_wait_for_presence to do..while
+
+Alexandru Gagniuc (2):
+  PCI: pciehp: Add support for disabling in-band presence
+  PCI: pciehp: Wait for PDS if in-band presence is disabled
+
+Stuart Hayes (1):
+  PCI: pciehp: Add dmi table for in-band presence disabled
+
+ drivers/pci/hotplug/pciehp.h     |  1 +
+ drivers/pci/hotplug/pciehp_hpc.c | 45 +++++++++++++++++++++++++++++++-
+ include/uapi/linux/pci_regs.h    |  2 ++
+ 3 files changed, 47 insertions(+), 1 deletion(-)
+
+-- 
+2.18.1
 
