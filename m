@@ -2,133 +2,94 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30348ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B75ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1413921D56
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AB22196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570789267;
+	bh=uM2zt1W2HzaqshBH+eafm1rRYxd1MY7piXAxPLvP5UA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BvE8FxWD1tQidq1GaCTYfrKwmaBZPEWqMS4CXYEBsOwkWS8McxWKbQkCexrjka3Ah
+	 CyAZ7Km9L3VhoMe/OFlylCIsSigst6D5ooeTqxXuMreSbWTFsLAAEbUEztaf6b/Kgj
+	 9a8DW6OqKMdBlVMtZmTbIsbuJF9q8ehsLuxaSS3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfJKKSx (ORCPT
+        id S1727093AbfJKKVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:18:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33580 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfJKKSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:18:52 -0400
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9615085537
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 10:18:52 +0000 (UTC)
-Received: by mail-io1-f69.google.com with SMTP id q18so14015542ios.8
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 03:18:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ezldw/W3yEUUaRQBM2UsDlZ+1NBlrPJRQgRQBE4bfow=;
-        b=j5x7Q+FCDKi08INlgC3+VRGnG0UL78b3UGL/6kSDKwK/nBP/PKxaVa9yWzMioAMkrg
-         SsekjW+y499CoSf2mjmP3bbYkL+Ro7kInsMoPnKclwarwvBgMRLrtdJBUnNOHoLu7mnR
-         Gb+Ne2+Qk49WCy0GXm5riSqjRUWuO2fNwGvBSGISauGM1poRcHleG8P2EDfLcE8NDczb
-         n/bh4B1tHWdcfd4hRvCsQ3ieVD6j3ntO3chd7KuNupBGGqjkkPcvDwmesVUFjbZyHfj9
-         r+2XwgLw42R1Jck5CYydKgScqxLP/PHCA0MlSwjzYUb0ZkZuQSdJ3dDAodYwxpnvVYz1
-         g3Gw==
-X-Gm-Message-State: APjAAAU7nPtdV3Y050jXxSkLQoTRdtEDfdb9B3dOmGCjpHpNL1Sv59b7
-        sRjB6QTZkfLy+1brj2WwtqwwxmoVu9GnPUdFEFGqNupceuttPNZdgIdBlonD2RfT1RlA7FYn53u
-        0S+JvTE8QuPrn37/uZkFAozF5wQQmyor3c0cOyH5l
-X-Received: by 2002:a6b:ee1a:: with SMTP id i26mr1250930ioh.202.1570789131887;
-        Fri, 11 Oct 2019 03:18:51 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxMBTtYTtzqHW6IhTVWq3xS7QTn71g8GWmBZ0Svz/a1YAShKUhbb/aYerCE+8iT34WwAPUSfQvd49bQufhMra0=
-X-Received: by 2002:a6b:ee1a:: with SMTP id i26mr1250893ioh.202.1570789131530;
- Fri, 11 Oct 2019 03:18:51 -0700 (PDT)
+        Fri, 11 Oct 2019 06:21:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59936 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfJKKVF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:21:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qti+5pZBdvQNuWk/xly3sdA3/A5zKsS2T8r+qwx9wyE=; b=ofgUsQR69ol2W/cQ6XmPzk6aE
+        WUDBGY/xe93HRgE1/2DPR2PUDwE/plCoaXA9Odk/VQ1C7NYPJ/TaYWappQPH8b1WIAqEtRogv8o7j
+        JS2FzPM6hCOFZwBAoqKiepoKlWimQzctydkeoPeAtzinh88vPku4iNYHtwHEBw76aQIQ2pyXXKRbT
+        5V6AsyOd6VNsvJvrwN2ydQmubzLxZsP2C6Edj5kPvLH0LcnGrbBBKbABXR4XljlqdkrkXbWAjJUgq
+        LuSk8HA5ML0yJd/e3BiF2zEGNT44qGTo4BTYaeR2ErpwenTEUzUkFs/mFm0ZKQN2Gm0HuWk0C7l+y
+        gNepZ9VGQ==;
+Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIs2g-0004pr-4f; Fri, 11 Oct 2019 10:21:02 +0000
+Date:   Fri, 11 Oct 2019 07:20:57 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/19] EDAC, mc: Reduce indentation level in
+ edac_mc_handle_error()
+Message-ID: <20191011071920.3fb8c45c@coco.lan>
+In-Reply-To: <19dc4500bbfbb9d09f9730764a2b59353534358d.camel@perches.com>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+        <20191010202418.25098-6-rrichter@marvell.com>
+        <19dc4500bbfbb9d09f9730764a2b59353534358d.camel@perches.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190919160521.13820-1-kasong@redhat.com> <CAKv+Gu95NGPF7m9_K-0MDmti7XN++cfyYWRj6WEXqpYzDM9Btg@mail.gmail.com>
- <CACPcB9c=DzGrqnm1WrEtr85v5f_F41NQ-di5NV-F2ukbbrpTTw@mail.gmail.com>
-In-Reply-To: <CACPcB9c=DzGrqnm1WrEtr85v5f_F41NQ-di5NV-F2ukbbrpTTw@mail.gmail.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Fri, 11 Oct 2019 18:18:40 +0800
-Message-ID: <CACPcB9cdKR-t+jNsYYzZBVqr3pGSkO7Yq7xTS6Oi-h7VX+pkFw@mail.gmail.com>
-Subject: Re: [PATCH v2] x86, efi: never relocate kernel below lowest
- acceptable address
-To:     "the arch/x86 maintainers" <x86@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 1:36 AM Kairui Song <kasong@redhat.com> wrote:
->
-> On Wed, Sep 25, 2019 at 11:25 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Thu, 19 Sep 2019 at 18:06, Kairui Song <kasong@redhat.com> wrote:
-> > >
-> > > Currently, kernel fails to boot on some HyperV VMs when using EFI.
-> > > And it's a potential issue on all platforms.
-> > >
-> > > It's caused a broken kernel relocation on EFI systems, when below three
-> > > conditions are met:
-> > >
-> > > 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
-> > >    by the loader.
-> > > 2. There isn't enough room to contain the kernel, starting from the
-> > >    default load address (eg. something else occupied part the region).
-> > > 3. In the memmap provided by EFI firmware, there is a memory region
-> > >    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
-> > >    kernel.
-> > >
-> > > Efi stub will perform a kernel relocation when condition 1 is met. But
-> > > due to condition 2, efi stub can't relocate kernel to the preferred
-> > > address, so it fallback to query and alloc from EFI firmware for lowest
-> > > usable memory region.
-> > >
-> > > It's incorrect to use the lowest memory address. In later stage, kernel
-> > > will assume LOAD_PHYSICAL_ADDR as the minimal acceptable relocate address,
-> > > but efi stub will end up relocating kernel below it.
-> > >
-> > > Then before the kernel decompressing. Kernel will do another relocation
-> > > to address not lower than LOAD_PHYSICAL_ADDR, this time the relocate will
-> > > over write the blockage at the default load address, which efi stub tried
-> > > to avoid, and lead to unexpected behavior. Beside, the memory region it
-> > > writes to is not allocated from EFI firmware, which is also wrong.
-> > >
-> > > To fix it, just don't let efi stub relocate the kernel to any address
-> > > lower than lowest acceptable address.
-> > >
-> > > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > >
-> >
-> > Hello Kairui,
-> >
-> > This patch looks correct to me, but it needs an ack from the x86
-> > maintainers, since the rules around LOAD_PHYSICAL_ADDR are specific to
-> > the x86 architecture.
-> >
-> >
->
-> Thanks for the review, Ard.
->
-> Can any x86 maintainer help provide some review?
->
-> --
-> Best Regards,
-> Kairui Song
+Em Thu, 10 Oct 2019 15:10:53 -0700
+Joe Perches <joe@perches.com> escreveu:
 
-Ping? Any comments?
+> On Thu, 2019-10-10 at 20:25 +0000, Robert Richter wrote:
+> > Reduce the indentation level in edac_mc_handle_error() a bit by using
+> > continue. No functional changes.  
+> 
+> Seems fine, but trivially below:
+> 
+> > diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c  
+> []
+> > @@ -1171,37 +1171,38 @@ void edac_mc_handle_error(const enum hw_event_mc_err_type type,  
+> []
+> > +		strcpy(p, dimm->label);
+> > +		p += strlen(p);
+> > +		*p = '\0';  
+> 
+> This *p = '\0' is unnecessary as the strcpy already did that.
 
---
-Best Regards,
-Kairui Song
+True, but better to put it on a separate patch, as it makes
+easier to review if you don't mix code de-indent with changes.
+
+Also, maybe there are other occurrences of this pattern.
+
+Thanks,
+Mauro
