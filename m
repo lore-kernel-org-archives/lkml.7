@@ -2,246 +2,129 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD42ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48D5C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8CB206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA4F206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:09:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bbv7ZbvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfJKPIS (ORCPT
+        id S1727535AbfJKPJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:08:18 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37016 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfJKPIS (ORCPT
+        Fri, 11 Oct 2019 11:09:57 -0400
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:40566 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbfJKPJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:08:18 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 54C4C29102D
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH v4] wilco_ec: Add Dell's USB PowerShare Policy control
-To:     Nick Crews <ncrews@chromium.org>,
-        Daniel Campello <campello@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>
-References: <20191008161749.1.I4476e6e2b1026ff388eb11813310264e25aa9cc9@changeid>
- <CAHX4x85WTGKMDn22T6SmaemVS1km8yNRgXNj3AgyAzB=69B3nA@mail.gmail.com>
-Message-ID: <8a4d9abb-7230-7e65-ceb7-e2983c8486cc@collabora.com>
-Date:   Fri, 11 Oct 2019 17:08:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 11:09:56 -0400
+Received: by mail-oi1-f170.google.com with SMTP id k9so8270641oib.7
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 08:09:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZJr8HBzMfU7kmiZCz9sHwsjTkr7yVBKTvuMk3ztn6oM=;
+        b=bbv7ZbvPGd2Vy+OW6XTx5v8DO1t5PRQQIoAJ3CmOQOCFC+f4NEnTZbLbCAVKBxwxcH
+         IIngYatL20o7Of46857CmUx5iKZmPTbazlS1+ULBxf1QsIdSeP/YDKCiDFIN++VIzLKG
+         0g2Ja9ORAfWqhWGb2EM0A/6k18qXtfm4iKtWkLaCsxVA8Gv/gw+bMvouYSK8in6vYkDO
+         czztQZBwBaxe89EtKiMuvMo6XGe728fyynOUlLtMgZ/Tc968p3+fuly7UgUqljSMnyoH
+         LefxFFqhTB19GCYmjNMV6wrAZXtwJg9/Sf8cJapx9ICK8FfZCaBpmPvzdAiF48oOBs3m
+         v7Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZJr8HBzMfU7kmiZCz9sHwsjTkr7yVBKTvuMk3ztn6oM=;
+        b=C3o7P7AQBGdAH/KVAVqA8oPEJBbpPY56SUx6fr2s4x2tZ/vQNV1cKwqNENYE+KQNO5
+         piKiLYs943muGxzLp+6me6p96cxnKkt43BELJ4aeLzb6UPFWnoYTvyWv5QMalPMkJxIa
+         /rnYWGqucW50zYAQanPvfstjEiHfIXFBv0HEiiA/kuRs2JFcw4ZefvpSopr6TjcHGaSU
+         OLPQ87heBFlcmF1nlxCxyaud8I5H5OWzsROUGICv14LM6uJ/jscBPG0lAInea/9RmG4U
+         IQpe1Zp+WPKJTmvXvPvIbJGJgSm74GEKk8dPMfEzq4X7Xk4OYYso3PHke2SRCvBuhLcf
+         vGzg==
+X-Gm-Message-State: APjAAAXXqj1zgbGMdI97XA95/5CXyzMAFQSprTiuP27UKTmsSFAMDXKd
+        w6Pxi9rG4sW9U97ZMOJIeYedIN3zkwykUMw2OeT348fAYqc=
+X-Google-Smtp-Source: APXvYqxiUBiNWI0ojBaKuc9Wss6TByn/XWZWY72Z0YR+e6hD15VDtY6gxIhOQWm62gzHt+xWgxTf/fn46FfNp0cj1p4=
+X-Received: by 2002:a05:6808:95:: with SMTP id s21mr12669138oic.68.1570806595398;
+ Fri, 11 Oct 2019 08:09:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHX4x85WTGKMDn22T6SmaemVS1km8yNRgXNj3AgyAzB=69B3nA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191008133641.23019-1-ckellner@redhat.com> <20191009160532.20674-1-ckellner@redhat.com>
+ <20191009160532.20674-2-ckellner@redhat.com>
+In-Reply-To: <20191009160532.20674-2-ckellner@redhat.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 11 Oct 2019 17:09:29 +0200
+Message-ID: <CAG48ez0MyiTKO2MpNVQqavoTKo7FZXYAyohx1JTR=M9Uw=QJWQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pidfd: add tests for NSpid info in fdinfo
+To:     Christian Kellner <ckellner@redhat.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Christian Kellner <christian@kellner.me>,
+        Christian Brauner <christian@brauner.io>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel, Nick
+On Wed, Oct 9, 2019 at 6:10 PM Christian Kellner <ckellner@redhat.com> wrote:
+> Add tests that check that if pid namespaces are configured the fdinfo
+> file of a pidfd contains an NSpid: entry containing the process id
+> in the current and additionally all nested namespaces.
+[...]
+> +static int compare_fdinfo_nspid(int pidfd, char *expect, size_t len)
+> +{
+> +       char path[512];
+> +       FILE *f;
+> +       size_t n = 0;
+> +       ssize_t k;
+> +       char *line = NULL;
+> +       int r = -1;
+> +
+> +       snprintf(path, sizeof(path), "/proc/self/fdinfo/%d", pidfd);
 
-On 9/10/19 17:00, Nick Crews wrote:
-> On Tue, Oct 8, 2019 at 4:18 PM Daniel Campello <campello@chromium.org> wrote:
->>
->> USB PowerShare is a policy which affects charging via the special
->> USB PowerShare port (marked with a small lightning bolt or battery icon)
->> when in low power states:
->> - In S0, the port will always provide power.
->> - In S0ix, if usb_charge is enabled, then power will be supplied to
->>   the port when on AC or if battery is > 50%. Else no power is supplied.
->> - In S5, if usb_charge is enabled, then power will be supplied to
->>   the port when on AC. Else no power is supplied.
->>
->> Signed-off-by: Daniel Campello <campello@chromium.org>
->> Signed-off-by: Nick Crews <ncrews@chromium.org>
->> ---
->>
->> v4 changes:
->> - Renamed from usb_power_share to usb_charge to match existing feature
->> in other platforms in the kernel (i.e., sony-laptop, samsung-laptop,
->> lg-laptop)
-> 
-> Daniel and I put in considerable effort trying to get this integrated
-> with the USB subsystem. However, it was becoming much too
-> complicated, so we hoped that if we made this more consistent
-> with the three existing examples it would be acceptable.
-> 
+(Maybe at some point the selftests code should add some more concise
+alternative to snprintf() calls on separate lines. A macro or
+something like that so that you can write stuff like `f =
+fopen(tprintf("/proc/self/fdinfo/%d", pidfd), "re")`.)
 
-Agree, let's land as is for now. Prefixed the patch subject with
-"platform/chrome: ", replaced tabs for space in the documentation (to be
-coherent with the rest of the file) and queued for autobuilders to play with. If
-all goes well will be applied for 5.5.
+> +       f = fopen(path, "re");
+> +       if (!f)
+> +               return -1;
+> +
+> +       while ((k = getline(&line, &n, f)) != -1) {
+> +               if (strncmp(line, "NSpid:", 6))
+> +                       continue;
+> +
+> +               line[k - 1] = '\0';
+> +               ksft_print_msg("Child: fdinfo NSpid line: '%s'.\n", line);
+> +               r = strncmp(line + 6, expect, len);
 
-Thanks,
- Enric
+Wouldn't it be better to get rid of the nullbyte assignment and change
+the strncmp() into a strcmp() here...
 
+[...]
+> +       /* The child will have pid 1 in the new pid namespace,
+> +        * so the line must be 'NSPid:\t<pid>\t1'
+> +        */
+> +       n = snprintf(expect, sizeof(expect), "\t%d\t%d", pid, 1);
 
-> Thanks for the thoughts,
-> Nick
-> 
->> v3 changes:
->> - Drop a silly blank line
->> - Use val > 1 instead of val != 0 && val != 1
->> v2 changes:
->> - Move documentation to Documentation/ABI/testing/sysfs-platform-wilco-ec
->> - Zero out reserved bytes in requests.
->>
->>  .../ABI/testing/sysfs-platform-wilco-ec       | 17 ++++
->>  drivers/platform/chrome/wilco_ec/sysfs.c      | 91 +++++++++++++++++++
->>  2 files changed, 108 insertions(+)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-platform-wilco-ec b/Documentation/ABI/testing/sysfs-platform-wilco-ec
->> index 8827a734f933..bb7ba67cae97 100644
->> --- a/Documentation/ABI/testing/sysfs-platform-wilco-ec
->> +++ b/Documentation/ABI/testing/sysfs-platform-wilco-ec
->> @@ -31,6 +31,23 @@ Description:
->>                 Output will a version string be similar to the example below:
->>                 08B6
->>
->> +What:          /sys/bus/platform/devices/GOOG000C\:00/usb_charge
->> +Date:          October 2019
->> +KernelVersion: 5.5
->> +Description:
->> +               Control the USB PowerShare Policy. USB PowerShare is a policy
->> +               which affects charging via the special USB PowerShare port
->> +               (marked with a small lightning bolt or battery icon) when in
->> +               low power states:
->> +               - In S0, the port will always provide power.
->> +               - In S0ix, if usb_charge is enabled, then power will be
->> +                 supplied to the port when on AC or if battery is > 50%.
->> +                 Else no power is supplied.
->> +               - In S5, if usb_charge is enabled, then power will be supplied
->> +                 to the port when on AC. Else no power is supplied.
->> +
->> +               Input should be either "0" or "1".
->> +
->>  What:          /sys/bus/platform/devices/GOOG000C\:00/version
->>  Date:          May 2019
->>  KernelVersion: 5.3
->> diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
->> index 3b86a21005d3..f0d174b6bb21 100644
->> --- a/drivers/platform/chrome/wilco_ec/sysfs.c
->> +++ b/drivers/platform/chrome/wilco_ec/sysfs.c
->> @@ -23,6 +23,26 @@ struct boot_on_ac_request {
->>         u8 reserved7;
->>  } __packed;
->>
->> +#define CMD_USB_CHARGE 0x39
->> +
->> +enum usb_charge_op {
->> +       USB_CHARGE_GET = 0,
->> +       USB_CHARGE_SET = 1,
->> +};
->> +
->> +struct usb_charge_request {
->> +       u8 cmd;         /* Always CMD_USB_CHARGE */
->> +       u8 reserved;
->> +       u8 op;          /* One of enum usb_charge_op */
->> +       u8 val;         /* When setting, either 0 or 1 */
->> +} __packed;
->> +
->> +struct usb_charge_response {
->> +       u8 reserved;
->> +       u8 status;      /* Set by EC to 0 on success, other value on failure */
->> +       u8 val;         /* When getting, set by EC to either 0 or 1 */
->> +} __packed;
->> +
->>  #define CMD_EC_INFO                    0x38
->>  enum get_ec_info_op {
->>         CMD_GET_EC_LABEL        = 0,
->> @@ -131,12 +151,83 @@ static ssize_t model_number_show(struct device *dev,
->>
->>  static DEVICE_ATTR_RO(model_number);
->>
->> +static int send_usb_charge(struct wilco_ec_device *ec,
->> +                               struct usb_charge_request *rq,
->> +                               struct usb_charge_response *rs)
->> +{
->> +       struct wilco_ec_message msg;
->> +       int ret;
->> +
->> +       memset(&msg, 0, sizeof(msg));
->> +       msg.type = WILCO_EC_MSG_LEGACY;
->> +       msg.request_data = rq;
->> +       msg.request_size = sizeof(*rq);
->> +       msg.response_data = rs;
->> +       msg.response_size = sizeof(*rs);
->> +       ret = wilco_ec_mailbox(ec, &msg);
->> +       if (ret < 0)
->> +               return ret;
->> +       if (rs->status)
->> +               return -EIO;
->> +
->> +       return 0;
->> +}
->> +
->> +static ssize_t usb_charge_show(struct device *dev,
->> +                                   struct device_attribute *attr, char *buf)
->> +{
->> +       struct wilco_ec_device *ec = dev_get_drvdata(dev);
->> +       struct usb_charge_request rq;
->> +       struct usb_charge_response rs;
->> +       int ret;
->> +
->> +       memset(&rq, 0, sizeof(rq));
->> +       rq.cmd = CMD_USB_CHARGE;
->> +       rq.op = USB_CHARGE_GET;
->> +
->> +       ret = send_usb_charge(ec, &rq, &rs);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return sprintf(buf, "%d\n", rs.val);
->> +}
->> +
->> +static ssize_t usb_charge_store(struct device *dev,
->> +                                    struct device_attribute *attr,
->> +                                    const char *buf, size_t count)
->> +{
->> +       struct wilco_ec_device *ec = dev_get_drvdata(dev);
->> +       struct usb_charge_request rq;
->> +       struct usb_charge_response rs;
->> +       int ret;
->> +       u8 val;
->> +
->> +       ret = kstrtou8(buf, 10, &val);
->> +       if (ret < 0)
->> +               return ret;
->> +       if (val > 1)
->> +               return -EINVAL;
->> +
->> +       memset(&rq, 0, sizeof(rq));
->> +       rq.cmd = CMD_USB_CHARGE;
->> +       rq.op = USB_CHARGE_SET;
->> +       rq.val = val;
->> +
->> +       ret = send_usb_charge(ec, &rq, &rs);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return count;
->> +}
->> +
->> +static DEVICE_ATTR_RW(usb_charge);
->>
->>  static struct attribute *wilco_dev_attrs[] = {
->>         &dev_attr_boot_on_ac.attr,
->>         &dev_attr_build_date.attr,
->>         &dev_attr_build_revision.attr,
->>         &dev_attr_model_number.attr,
->> +       &dev_attr_usb_charge.attr,
->>         &dev_attr_version.attr,
->>         NULL,
->>  };
->> --
->> 2.23.0.581.g78d2f28ef7-goog
->>
+... and add a "\n" to the format string? It's shorter and doesn't
+silently ignore it if the line doesn't end at that point.
