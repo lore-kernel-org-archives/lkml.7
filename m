@@ -4,93 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A021AECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1753DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857C7206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED464206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfJKRJJ (ORCPT
+        id S1728521AbfJKRN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:09:09 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:40872 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbfJKRJJ (ORCPT
+        Fri, 11 Oct 2019 13:13:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49055 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbfJKRN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:09:09 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iIyOv-0002WN-J8; Fri, 11 Oct 2019 18:08:25 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iIyOv-0007sJ-5L; Fri, 11 Oct 2019 18:08:25 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] rcu: add declarations of undeclared items
-Date:   Fri, 11 Oct 2019 18:08:24 +0100
-Message-Id: <20191011170824.30228-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Fri, 11 Oct 2019 13:13:56 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iIyUE-0004eM-Ig; Fri, 11 Oct 2019 17:13:54 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: lm3646: remove redundant assignment to variable rval
+Date:   Fri, 11 Oct 2019 18:13:54 +0100
+Message-Id: <20191011171354.13787-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rcu_state, rcu_rnp_online_cpus and rcu_dynticks_curr_cpu_in_eqs
-do not have declarations in a header. Add these to remove the
-following sparse warnings:
+From: Colin Ian King <colin.king@canonical.com>
 
-kernel/rcu/tree.c:87:18: warning: symbol 'rcu_state' was not declared. Should it be static?
-kernel/rcu/tree.c:191:15: warning: symbol 'rcu_rnp_online_cpus' was not declared. Should it be static?
-kernel/rcu/tree.c:297:6: warning: symbol 'rcu_dynticks_curr_cpu_in_eqs' was not declared. Should it be static?
+The variable rval is being initialized with a value that
+is never read and is being re-assigned a little later on. The
+assignment is redundant and hence can be removed.
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- kernel/rcu/tree.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/media/i2c/lm3646.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index c612f306fe89..1f88351b9014 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -352,6 +352,8 @@ struct rcu_state {
- 						/*  GP pre-initialization. */
- };
+diff --git a/drivers/media/i2c/lm3646.c b/drivers/media/i2c/lm3646.c
+index d8a8853f9a2b..c76ccf67a909 100644
+--- a/drivers/media/i2c/lm3646.c
++++ b/drivers/media/i2c/lm3646.c
+@@ -134,7 +134,7 @@ static int lm3646_set_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct lm3646_flash *flash = to_lm3646_flash(ctrl);
+ 	unsigned int reg_val;
+-	int rval = -EINVAL;
++	int rval;
  
-+extern struct rcu_state rcu_state;
-+
- /* Values for rcu_state structure's gp_flags field. */
- #define RCU_GP_FLAG_INIT 0x1	/* Need grace-period initialization. */
- #define RCU_GP_FLAG_FQS  0x2	/* Need grace-period quiescent-state forcing. */
-@@ -472,3 +474,7 @@ static void rcu_iw_handler(struct irq_work *iwp);
- static void check_cpu_stall(struct rcu_data *rdp);
- static void rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
- 				     const unsigned long gpssdelay);
-+
-+extern unsigned long rcu_rnp_online_cpus(struct rcu_node *rnp);
-+extern bool rcu_dynticks_curr_cpu_in_eqs(void);
-+
+ 	switch (ctrl->id) {
+ 	case V4L2_CID_FLASH_LED_MODE:
 -- 
-2.23.0
+2.20.1
 
