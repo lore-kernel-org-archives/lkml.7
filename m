@@ -2,133 +2,333 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAA3ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD8CECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6BC20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:19:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZitRdHD8"
+	by mail.kernel.org (Postfix) with ESMTP id 1DDE221D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbfJKSTV (ORCPT
+        id S1728784AbfJKSUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 14:19:21 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35691 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728724AbfJKSTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 14:19:20 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m7so10755186lji.2;
-        Fri, 11 Oct 2019 11:19:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xHWcMVkKfQW5YQem89Ki4hx7rEYLgwMaVLaDcNFHxy8=;
-        b=ZitRdHD87CyRQIneWCmXl1JH8KlL+SIIhXhoiLpXORD5GW6dQ4yO2WiIerdf0bJ2rC
-         wUIs05umiInQpgYVYSzaGowJCrR7h+xoRI0/md0VCmx7q7eKzF6mZwS+5Lb3JW/H3xf4
-         9KhLNzHwWvlwsaFiR6P/HvbZVmE0tUMjqQ7ojKFWGdOmPaej7UMMQ353sPS8eqOCMgqB
-         U5IynYXDJEu6rYq9MdQCI+JDrjB2VH6Bj6RfAem9zODV5MnIwlyVSkrmXxXjlBbbaQEL
-         09XKfbNsUh+ZW58fuyg8XISKtFursl1Qa70MyffXE1zHJpVgcMu+gN0zPH1pllLmSRV+
-         YS/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xHWcMVkKfQW5YQem89Ki4hx7rEYLgwMaVLaDcNFHxy8=;
-        b=QUUc+CiNj/3TKB/xIxD/8BPlHNkMvOWj15EOsMuaPw8wXoSiqqtDa4x+oCjBFt3Pv8
-         hnrpCM5se4rMGGoYW6BC0F7YOnIEBgsW58OglckfP7alAsYWcaFtdwBFhOXLL7VoADeV
-         txow6eE0Ew25zZwKNVfATrdZU0FTKmMNiBuutxTD1krWs3GhecJoDVz/oiNB3B/TS9zO
-         R+i0joV6CTgVS5HYIGZWB4VwYLzeloWb/HeyrxrTajZh59rH/LLVbmGBPytNYRyMX7wb
-         ss0KTjm/K/xLoHO+OPe5NJJHaoqsUVdQTKfE6RP2u0Yw/+YOhUph0+cOWithhF5qX1mH
-         OH2w==
-X-Gm-Message-State: APjAAAWGN5J3di+KatpZ4c5mhsYGDGNcMZXQrv0UPDc5jPeHrH3PxK+F
-        VHG0Bol/wz5LSd+PZ4zaoJ6VvKZsJU1CBsL6UYo=
-X-Google-Smtp-Source: APXvYqwO4XnX5MCioj8PA5AMXbwa8nrtJcTry+BdWADG12SbJ5G62YDioP1sbk25PGgCsqOv1NdDCRa73Z+MNvJJ2fQ=
-X-Received: by 2002:a2e:865a:: with SMTP id i26mr9866394ljj.107.1570817958321;
- Fri, 11 Oct 2019 11:19:18 -0700 (PDT)
+        Fri, 11 Oct 2019 14:20:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:39482 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728587AbfJKSUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 14:20:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A63BB142F;
+        Fri, 11 Oct 2019 11:20:01 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A5C63F703;
+        Fri, 11 Oct 2019 11:19:59 -0700 (PDT)
+Subject: Re: [PATCH v6 15/17] arm64: kexec: add expandable argument to
+ relocation function
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
+ <20191004185234.31471-16-pasha.tatashin@soleen.com>
+From:   James Morse <james.morse@arm.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        vladimir.murzin@arm.com, matthias.bgg@gmail.com,
+        bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
+Message-ID: <fe5a4aae-fae3-f30f-db15-f3eced229a6e@arm.com>
+Date:   Fri, 11 Oct 2019 19:19:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191007051240.4410-1-andrew.smirnov@gmail.com> <CAO-hwJ+=pDmvPbLVO8mViygJof7O1YeX3KO951nqN4dNaKz83g@mail.gmail.com>
-In-Reply-To: <CAO-hwJ+=pDmvPbLVO8mViygJof7O1YeX3KO951nqN4dNaKz83g@mail.gmail.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Fri, 11 Oct 2019 11:19:07 -0700
-Message-ID: <CAHQ1cqHU2DmKzAtcDCPLtUXwkzhyCynki3GKOwgULnN0ya6POg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Logitech G920 fixes
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Sam Bazely <sambazley@fastmail.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191004185234.31471-16-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 7:53 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> Hi,
->
-> Finally, someone who takes care of the G920!
-> Note that when I sent my first initial version that Hans reused, I
-> surely broke it (looking at your patch 3/3), but no one cared to test
-> it :(
->
-> On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
-> >
-> > Everyone:
-> >
-> > This series contains patches to fix a couple of regressions in G920
-> > wheel support by hid-logitech-hidpp driver. Without the patches the
-> > wheel remains stuck in autocentering mode ("resisting" any attempt to
-> > trun) as well as missing support for any FF action.
->
-> So, you are talking about regressions, and for that I would like to be
-> able to push the patches to stable.
->
-> However, I would need more information:
-> - patch 3/3 seems simple enough to go in stable, and is clearly a
-> regression from the recent series. Can you put it in first and add
-> stable@vger.kernel.org in a CC field (and possibly with a Fixes tag as
-> well)?
+Hi Pavel,
 
-It patch 3/3 on purpose because applying it by itself, without fix in
-2/3 in place would lead to a segfault and a non working wheel. Maybe
-that FF for-next fix you pointed out can prevent that from happening,
-but as is the series is pretty atomic and can't be divided.
+On 04/10/2019 19:52, Pavel Tatashin wrote:
+> Currently, kexec relocation function (arm64_relocate_new_kernel) accepts
+> the following arguments:
+> 
+> head:		start of array that contains relocation information.
+> entry:		entry point for new kernel or purgatory.
+> dtb_mem:	first and only argument to entry.
+> 
+> The number of arguments cannot be easily expended, because this
+> function is also called from HVC_SOFT_RESTART, which preserves only
+> three arguments. And, also arm64_relocate_new_kernel is written in
+> assembly but called without stack, thus no place to move extra
+> arguments to free registers.
+> 
+> Soon, we will need to pass more arguments: once we enable MMU we
+> will need to pass information about page tables.
 
-Patch 3/3 already has stable in CC and Fixes tag.
 
-> - I am not sure which patch fixes the wheel remains stuck in
-> autocentering mode. Is it patch 2/3?
+> Another benefit of allowing this function to accept more arguments, is that
+> kernel can actually accept up to 4 arguments (x0-x3), however currently
+> only one is used, but if in the future we will need for more (for example,
+> pass information about when previous kernel exited to have a precise
+> measurement in time spent in purgatory), we won't be easilty do that
+> if arm64_relocate_new_kernel can't accept more arguments.
 
-There's no specific patch that does that. There were two G920
-regressions in the driver and both need to be fixed for wheel to be
-configured properly. The specific code that releases the wheel is in
-g920_ff_set_autocenter().
+(That is just a little niche)
 
-> - was the "wheel remains stuck in autocentering mode" bug present from
-> on of the recent patch or was it always there since we introduced
-> support in hid-logitech-hidpp, but the game would need to unlock the
-> wheel first?
 
-The wheel worked as expected prior to
+> So, add a new struct: kern_reloc_arg, and place it in kexec safe page (i.e
+> memory that is not overwritten during relocation).
+> Thus, make arm64_relocate_new_kernel to only take one argument, that
+> contains all the needed information.
 
-fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to be
-handled by this module")
-91cf9a98ae41 ("HID: logitech-hidpp: make .probe usbhid capable")
 
-It's not the game that needs to unlock the wheel, but the driver itself.
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> index d15ca1ca1e83..d5b79d4c7fae 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -90,12 +90,30 @@ static inline void crash_prepare_suspend(void) {}
+>  static inline void crash_post_resume(void) {}
+>  #endif
+>  
+> +/*
+> + * kern_reloc_arg is passed to kernel relocation function as an argument.
+> + * head		kimage->head, allows to traverse through relocation segments.
+> + * entry_addr	kimage->start, where to jump from relocation function (new
+> + *		kernel, or purgatory entry address).
+> + * kern_arg0	first argument to kernel is its dtb address. The other
+> + *		arguments are currently unused, and must be set to 0
+> + */
+> +struct kern_reloc_arg {
+> +	unsigned long	head;
+> +	unsigned long	entry_addr;
+> +	unsigned long	kern_arg0;
+> +	unsigned long	kern_arg1;
+> +	unsigned long	kern_arg2;
+> +	unsigned long	kern_arg3;
 
-Thanks,
-Andrey Smirnov
+... at least one of these should by phys_addr_t!
+
+While the sizes are the same on arm64, this reminds the reader what kind of address this
+is, and lets the compiler warn you if you make a mistake.
+
+
+> +};
+
+> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+> index 214685760e1c..900394907fd8 100644
+> --- a/arch/arm64/kernel/asm-offsets.c
+> +++ b/arch/arm64/kernel/asm-offsets.c
+> @@ -23,6 +23,7 @@
+>  #include <asm/suspend.h>
+>  #include <linux/kbuild.h>
+>  #include <linux/arm-smccc.h>
+> +#include <linux/kexec.h>
+>  
+>  int main(void)
+>  {
+> @@ -126,6 +127,14 @@ int main(void)
+>  #ifdef CONFIG_ARM_SDE_INTERFACE
+>    DEFINE(SDEI_EVENT_INTREGS,	offsetof(struct sdei_registered_event, interrupted_regs));
+>    DEFINE(SDEI_EVENT_PRIORITY,	offsetof(struct sdei_registered_event, priority));
+> +#endif
+> +#ifdef CONFIG_KEXEC_CORE
+> +  DEFINE(KRELOC_HEAD,		offsetof(struct kern_reloc_arg, head));
+> +  DEFINE(KRELOC_ENTRY_ADDR,	offsetof(struct kern_reloc_arg, entry_addr));
+> +  DEFINE(KRELOC_KERN_ARG0,	offsetof(struct kern_reloc_arg, kern_arg0));
+> +  DEFINE(KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, kern_arg1));
+> +  DEFINE(KRELOC_KERN_ARG2,	offsetof(struct kern_reloc_arg, kern_arg2));
+> +  DEFINE(KRELOC_KERN_ARG3,	offsetof(struct kern_reloc_arg, kern_arg3));
+
+Please use kexec as the prefix. The kernel also applies relocations during early boot.
+These are global values, and in isolation doesn't imply kexec.
+
+
+>  #endif
+>    return 0;
+>  }
+
+> diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+> index ed50e9587ad8..7a8720ff186f 100644
+> --- a/arch/arm64/kernel/cpu-reset.h
+> +++ b/arch/arm64/kernel/cpu-reset.h
+> @@ -11,12 +11,10 @@
+>  #include <asm/virt.h>
+>  
+>  void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
+> -	unsigned long arg0, unsigned long arg1, unsigned long arg2);
+> +			unsigned long arg);
+
+phys_addr_t
+
+
+>  static inline void __noreturn cpu_soft_restart(unsigned long entry,
+> -					       unsigned long arg0,
+> -					       unsigned long arg1,
+> -					       unsigned long arg2)
+> +					       unsigned long arg)
+
+phys_addr_t
+
+
+>  {
+>  	typeof(__cpu_soft_restart) *restart;
+>  
+
+> diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
+> index c1d7db71a726..d352faf7cbe6 100644
+> --- a/arch/arm64/kernel/relocate_kernel.S
+> +++ b/arch/arm64/kernel/relocate_kernel.S
+
+> @@ -17,86 +17,58 @@
+>  /*
+>   * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
+>   *
+> - * The memory that the old kernel occupies may be overwritten when coping the
+> + * The memory that the old kernel occupies may be overwritten when copying the
+>   * new image to its final location.  To assure that the
+>   * arm64_relocate_new_kernel routine which does that copy is not overwritten,
+>   * all code and data needed by arm64_relocate_new_kernel must be between the
+>   * symbols arm64_relocate_new_kernel and arm64_relocate_new_kernel_end.  The
+>   * machine_kexec() routine will copy arm64_relocate_new_kernel to the kexec
+> - * control_code_page, a special page which has been set up to be preserved
+> - * during the copy operation.
+> + * safe memory that has been set up to be preserved during the copy operation.
+>   */
+>  ENTRY(arm64_relocate_new_kernel)
+> -
+> -	/* Setup the list loop variables. */
+> -	mov	x18, x2				/* x18 = dtb address */
+> -	mov	x17, x1				/* x17 = kimage_start */
+> -	mov	x16, x0				/* x16 = kimage_head */
+> -	raw_dcache_line_size x15, x0		/* x15 = dcache line size */
+> -	mov	x14, xzr			/* x14 = entry ptr */
+> -	mov	x13, xzr			/* x13 = copy dest */
+> -
+>  	/* Clear the sctlr_el2 flags. */
+> -	mrs	x0, CurrentEL
+> -	cmp	x0, #CurrentEL_EL2
+> +	mrs	x2, CurrentEL
+> +	cmp	x2, #CurrentEL_EL2
+>  	b.ne	1f
+> -	mrs	x0, sctlr_el2
+> +	mrs	x2, sctlr_el2
+>  	ldr	x1, =SCTLR_ELx_FLAGS
+> -	bic	x0, x0, x1
+> +	bic	x2, x2, x1
+>  	pre_disable_mmu_workaround
+> -	msr	sctlr_el2, x0
+> +	msr	sctlr_el2, x2
+>  	isb
+> -1:
+> -
+> -	/* Check if the new image needs relocation. */
+> +1:	/* Check if the new image needs relocation. */
+> +	ldr	x16, [x0, #KRELOC_HEAD]		/* x16 = kimage_head */
+>  	tbnz	x16, IND_DONE_BIT, .Ldone
+> -
+> +	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
+>  .Lloop:
+>  	and	x12, x16, PAGE_MASK		/* x12 = addr */
+> -
+>  	/* Test the entry flags. */
+>  .Ltest_source:
+>  	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
+>  
+>  	/* Invalidate dest page to PoC. */
+> -	mov     x0, x13
+> -	add     x20, x0, #PAGE_SIZE
+> +	mov     x2, x13
+> +	add     x20, x2, #PAGE_SIZE
+>  	sub     x1, x15, #1
+> -	bic     x0, x0, x1
+> -2:	dc      ivac, x0
+> -	add     x0, x0, x15
+> -	cmp     x0, x20
+> +	bic     x2, x2, x1
+> +2:	dc      ivac, x2
+> +	add     x2, x2, x15
+> +	cmp     x2, x20
+>  	b.lo    2b
+>  	dsb     sy
+>  
+> -	mov x20, x13
+> -	mov x21, x12
+> -	copy_page x20, x21, x0, x1, x2, x3, x4, x5, x6, x7
+> -
+> -	/* dest += PAGE_SIZE */
+> -	add	x13, x13, PAGE_SIZE
+> +	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
+>  	b	.Lnext
+> -
+>  .Ltest_indirection:
+>  	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
+> -
+> -	/* ptr = addr */
+> -	mov	x14, x12
+> +	mov	x14, x12			/* ptr = addr */
+>  	b	.Lnext
+> -
+>  .Ltest_destination:
+>  	tbz	x16, IND_DESTINATION_BIT, .Lnext
+> -
+> -	/* dest = addr */
+> -	mov	x13, x12
+> -
+> +	mov	x13, x12			/* dest = addr */
+>  .Lnext:
+> -	/* entry = *ptr++ */
+> -	ldr	x16, [x14], #8
+> -
+> -	/* while (!(entry & DONE)) */
+> -	tbz	x16, IND_DONE_BIT, .Lloop
+> -
+> +	ldr	x16, [x14], #8			/* entry = *ptr++ */
+> +	tbz	x16, IND_DONE_BIT, .Lloop	/* while (!(entry & DONE)) */
+>  .Ldone:
+>  	/* wait for writes from copy_page to finish */
+>  	dsb	nsh
+> @@ -105,18 +77,16 @@ ENTRY(arm64_relocate_new_kernel)
+>  	isb
+>  
+>  	/* Start new image. */
+> -	mov	x0, x18
+> -	mov	x1, xzr
+> -	mov	x2, xzr
+> -	mov	x3, xzr
+> -	br	x17
+> -
+> -ENDPROC(arm64_relocate_new_kernel)
+> +	ldr	x4, [x0, #KRELOC_ENTRY_ADDR]	/* x4 = kimage_start */
+> +	ldr	x3, [x0, #KRELOC_KERN_ARG3]
+> +	ldr	x2, [x0, #KRELOC_KERN_ARG2]
+> +	ldr	x1, [x0, #KRELOC_KERN_ARG1]
+> +	ldr	x0, [x0, #KRELOC_KERN_ARG0]	/* x0 = dtb address */
+> +	br	x4
+> +END(arm64_relocate_new_kernel)
+>  
+>  .ltorg
+> -
+>  .align 3	/* To keep the 64-bit values below naturally aligned. */
+> -
+>  .Lcopy_end:
+>  .org	KEXEC_CONTROL_PAGE_SIZE
+>  
+
+My eyes!
+
+Please don't make unnecessary changes. Its hard enough to read the assembly, moving
+whitespace, comments and re-allocating the register guarantees that no-one can work out
+what is happening.
+
+If something needs cleaning up to make the change obvious, it needs doing as a previous
+patch. Mechanical changes are fairly easy to review.
+Functional changes behind a whirlwind of mechanical changes will cause the reviewer to
+give up.
+
+
+James
