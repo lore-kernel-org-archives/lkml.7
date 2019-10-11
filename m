@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC645C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81488C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71FAD214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5030D21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570824396;
-	bh=OHBNbX10bKKwrCvE393nsaHjXnENeS8KG+cFTrix2x4=;
+	s=default; t=1570824401;
+	bh=LPj9dTzhpJsBECL7/gTfppERK4IlrDo9SugAQoGD4XE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aoIF9quWhOvPz3jILvL3briT0f19hOdNvXDvprDO5bAPbhbJtQMeWsNwAJmKA0srB
-	 zuU1PXwlFzIybDgB+Aq4O++siR1dh17H7BZPwQOCdE3XzAMropyeuiZYPI71LkDd/c
-	 reIWk8wEkbX+0x2fn08v282HpXmqYhldsNXdYuCw=
+	b=dvySj0gydUazRqLJ1/hw/p+2jQ8l/XIgqzd+2jQwb3lTi03hJPZLjldnTvtQfJ/8J
+	 ilCY4mbA5lHSTNRHgAn+lVTaeavg0B131odMbuCQeM018Br6khY957/hQVlps9FX7w
+	 Dfq98IDj7hEPJbLPCQVTT4JkWOiAfr1uNX1OO8wQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbfJKUGf (ORCPT
+        id S1729147AbfJKUGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:06:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42954 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 16:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbfJKUGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:06:34 -0400
+        id S1728799AbfJKUGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 16:06:39 -0400
 Received: from quaco.ghostprotocols.net (189-94-137-67.3g.claro.net.br [189.94.137.67])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79A0F21835;
-        Fri, 11 Oct 2019 20:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 597C221D80;
+        Fri, 11 Oct 2019 20:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570824393;
-        bh=OHBNbX10bKKwrCvE393nsaHjXnENeS8KG+cFTrix2x4=;
+        s=default; t=1570824398;
+        bh=LPj9dTzhpJsBECL7/gTfppERK4IlrDo9SugAQoGD4XE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SFM6wBbU/qnvsjegbEj5UD9z2gNdAc7zPlMRr1rAixxOGbzO0feLS8ZaP/bejkeoH
-         dSwqEK/jjsIN5eyVNPPXDfpH7cqswUiuO/7ZXHlUD/Km0iq7Kd0oreQlvT291Qf9kK
-         U7Xv5jDirY6YbJez5i+0wOGBf1S9qBHW8RiJ4BYE=
+        b=bhqUk9298z//v07Vm2eJtEz1fcSdTJbAcn2gSpz/qvEbCMQuG9dJZIB1E6HAKTJM5
+         kTjoj+rAawxstXkk3cv2YLhAtaPCtnDWc2V1R+lTjfhQ7BHRU4m4XTggyui9jlKY4Q
+         THE9rSwDJwxlMPua5Y9VO4R4N98tnFaPWtjaHIWw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 02/69] perf top: Initialize perf_env->cpuid, needed by the per arch annotation init routine
-Date:   Fri, 11 Oct 2019 17:04:52 -0300
-Message-Id: <20191011200559.7156-3-acme@kernel.org>
+Subject: [PATCH 03/69] perf evlist: Adopt __set_tracepoint_handlers method from perf_session
+Date:   Fri, 11 Oct 2019 17:04:53 -0300
+Message-Id: <20191011200559.7156-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
@@ -62,44 +62,133 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Just read it so that later on the per arch init routine can use it,
-e.g. x86__annotate_init().
-
-When using a perf.data file this is obtained from a header that was put
-there by 'perf record', and then it may be for another machine, another
-arch.
+It all operates on the evsels in the session's evlist, so move it to the
+evlist layer to make it useful to tools not using perf_session, just
+evlists, like 'perf trace' in live mode.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-4t4n3o8l8s0tc2b1pq53hyr4@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-9oc53gnfi53vg82fvolkm85g@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/perf/util/evlist.c  | 24 ++++++++++++++++++++++++
+ tools/perf/util/evlist.h  |  7 +++++++
+ tools/perf/util/session.c | 29 -----------------------------
+ tools/perf/util/session.h |  6 +-----
+ 4 files changed, 32 insertions(+), 34 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 1f60124eb19b..611d03030abc 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1560,6 +1560,17 @@ int cmd_top(int argc, const char **argv)
- 	status = perf_config(perf_top_config, &top);
- 	if (status)
- 		return status;
-+	/*
-+	 * Since the per arch annotation init routine may need the cpuid, read
-+	 * it here, since we are not getting this from the perf.data header.
-+	 */
-+	status = perf_env__read_cpuid(&perf_env);
-+	if (status) {
-+		pr_err("Couldn't read the cpuid for this machine: %s\n",
-+		       str_error_r(errno, errbuf, sizeof(errbuf)));
-+		goto out_delete_evlist;
-+	}
-+	top.evlist->env = &perf_env;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index d277a98e62df..b4c43ac4583f 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -186,6 +186,30 @@ void perf_evlist__splice_list_tail(struct evlist *evlist,
+ 	}
+ }
  
- 	argc = parse_options(argc, argv, options, top_usage, 0);
- 	if (argc)
++int __evlist__set_tracepoints_handlers(struct evlist *evlist,
++				       const struct evsel_str_handler *assocs, size_t nr_assocs)
++{
++	struct evsel *evsel;
++	size_t i;
++	int err;
++
++	for (i = 0; i < nr_assocs; i++) {
++		// Adding a handler for an event not in this evlist, just ignore it.
++		evsel = perf_evlist__find_tracepoint_by_name(evlist, assocs[i].name);
++		if (evsel == NULL)
++			continue;
++
++		err = -EEXIST;
++		if (evsel->handler != NULL)
++			goto out;
++		evsel->handler = assocs[i].handler;
++	}
++
++	err = 0;
++out:
++	return err;
++}
++
+ void __perf_evlist__set_leader(struct list_head *list)
+ {
+ 	struct evsel *evsel, *leader;
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 7cfe75522ba5..00eab9435847 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -118,6 +118,13 @@ void perf_evlist__stop_sb_thread(struct evlist *evlist);
+ int perf_evlist__add_newtp(struct evlist *evlist,
+ 			   const char *sys, const char *name, void *handler);
+ 
++int __evlist__set_tracepoints_handlers(struct evlist *evlist,
++				       const struct evsel_str_handler *assocs,
++				       size_t nr_assocs);
++
++#define evlist__set_tracepoints_handlers(evlist, array) \
++	__evlist__set_tracepoints_handlers(evlist, array, ARRAY_SIZE(array))
++
+ void __perf_evlist__set_sample_bit(struct evlist *evlist,
+ 				   enum perf_event_sample_format bit);
+ void __perf_evlist__reset_sample_bit(struct evlist *evlist,
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 061bb4d6a3f5..6cc32f5ec043 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -2355,35 +2355,6 @@ void perf_session__fprintf_info(struct perf_session *session, FILE *fp,
+ 	fprintf(fp, "# ========\n#\n");
+ }
+ 
+-
+-int __perf_session__set_tracepoints_handlers(struct perf_session *session,
+-					     const struct evsel_str_handler *assocs,
+-					     size_t nr_assocs)
+-{
+-	struct evsel *evsel;
+-	size_t i;
+-	int err;
+-
+-	for (i = 0; i < nr_assocs; i++) {
+-		/*
+-		 * Adding a handler for an event not in the session,
+-		 * just ignore it.
+-		 */
+-		evsel = perf_evlist__find_tracepoint_by_name(session->evlist, assocs[i].name);
+-		if (evsel == NULL)
+-			continue;
+-
+-		err = -EEXIST;
+-		if (evsel->handler != NULL)
+-			goto out;
+-		evsel->handler = assocs[i].handler;
+-	}
+-
+-	err = 0;
+-out:
+-	return err;
+-}
+-
+ int perf_event__process_id_index(struct perf_session *session,
+ 				 union perf_event *event)
+ {
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index b4c9428c18f0..8456e1d868fd 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -120,12 +120,8 @@ void perf_session__fprintf_info(struct perf_session *s, FILE *fp, bool full);
+ 
+ struct evsel_str_handler;
+ 
+-int __perf_session__set_tracepoints_handlers(struct perf_session *session,
+-					     const struct evsel_str_handler *assocs,
+-					     size_t nr_assocs);
+-
+ #define perf_session__set_tracepoints_handlers(session, array) \
+-	__perf_session__set_tracepoints_handlers(session, array, ARRAY_SIZE(array))
++	__evlist__set_tracepoints_handlers(session->evlist, array, ARRAY_SIZE(array))
+ 
+ extern volatile int session_done;
+ 
 -- 
 2.21.0
 
