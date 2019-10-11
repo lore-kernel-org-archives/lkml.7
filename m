@@ -2,112 +2,265 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC2CC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F67ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4821420679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97DE320679
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:33:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LYPoWSg7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PG6UTeBg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfJKIdY (ORCPT
+        id S1727163AbfJKIde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:33:24 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:14884 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfJKIdX (ORCPT
+        Fri, 11 Oct 2019 04:33:34 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49692 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726310AbfJKIde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:33:23 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da03e540000>; Fri, 11 Oct 2019 01:33:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 11 Oct 2019 01:33:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 11 Oct 2019 01:33:22 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 11 Oct
- 2019 08:33:22 +0000
-Received: from [10.21.133.51] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 11 Oct
- 2019 08:33:20 +0000
-Subject: Re: [PATCH 4.14 00/61] 4.14.149-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191010083449.500442342@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <fa909a7c-70d3-c1e9-45a0-584b2c8d0732@nvidia.com>
-Date:   Fri, 11 Oct 2019 09:33:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 04:33:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570782812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lv2n8RzBNjzNOOEAtify7kjX8BgxZSVCxmsWP+/vN9Q=;
+        b=PG6UTeBg8LPb2CpANfkRJtmym7bFl6ow/frk7Y9rii51q0mOKwvvsBmw5e5rr1iyiiS/1t
+        ClVUBdOjqwVYn3+JV8OVs3Jb+C21ajji2PD9LrCc9oyG+Hag9o1oXKgKWpKHr7yZzPv7HH
+        zMGB14HO9nlstALEVQEnl9IL5il0YAY=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-9ENhuOPcORSwlvQlczllBA-1; Fri, 11 Oct 2019 04:33:29 -0400
+Received: by mail-qk1-f199.google.com with SMTP id z128so8219787qke.8
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:33:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g1m12iP4A4oey/2qiBNQwWMQi5T63Im+boUgNroy/4M=;
+        b=C5SaD29VeWsYoClFH9hSOByjvZKAmnAjzCXxRMy1ccNW1T1lUyLDB3AdEdA4h2ECt8
+         rtV6tzKLclmPBMB2XXy51nJi6+Io2u27l38kqyCiO9EURVR4aJxESTQBpknNO+L2BRSL
+         OBEk74me0tPiMo7oGreHdPSH1f3hio1UGlyxXt+tYSsp0Y47Z+3UsINPiJRy6fDFHVG4
+         sPouSshBs3QBCzXjrMESyLtDsg3eSc9aWrC29X12ZrblGPag6KdCDW0M4SpGCuygLfq5
+         S20YvHMyjyYibAxo4O7oUMAZI9zNN5oJbljxTlUD+muo1qHI9kVg1t6RRs1hn8tEZ21g
+         bsNA==
+X-Gm-Message-State: APjAAAUVSsapTC3wqTqc7hzMwI9l91In2pAjvLTDR+nvgO9bylqSwBTC
+        DCiFGr1v+Y8vJ79FF1uQMiWsr8shBvo/d3ZHdAvvr7ZPoyYtrsMDKSXFsFtgT8F8p8VuZ2c9nxa
+        XtunvmboLmFu6GzavdpnPlhv21j654LpmpW4aYh7/
+X-Received: by 2002:ac8:38bb:: with SMTP id f56mr15339768qtc.154.1570782808778;
+        Fri, 11 Oct 2019 01:33:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwrBUY7D0ncicSSgdQf9OCKamMf2CWq0DECsBnwxxQ9O17fpMOJkRIhh72Qx77LcJrpX+6z4uE9OgoeJF5BZj4=
+X-Received: by 2002:ac8:38bb:: with SMTP id f56mr15339749qtc.154.1570782808537;
+ Fri, 11 Oct 2019 01:33:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1570782804; bh=BK4Vx06gW4Dt0bUV1MaP4NBOPEX3gOTzi8e/W6roW0c=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=LYPoWSg7Eydj9Lq3CIjDV0qbws38QkK1vLbvoZMys25abHRix/qHFH7aPpN4nI1EW
-         s1Nko0NknXm6G/t0z/LbxRQSF/3pSoZ04By9si7gPMSPG1nTcG7GLnJVldNUAlUu+/
-         EgxBNMvttvYE4YnGwRFwxoPTT6ag9jW3Ww6+4+cjJWTIpWeZ10irIcnXQPutTRhYWr
-         I//Yf6GSfJo/zqy8G9GnnB3+N3A5qu/UvGyaHrquziVo8uoH5KjKER7mNn06yt6OjV
-         4WtUkGj5ECfDGkYwf9cOeAaWWrgUbTf6T0Vl+RITbCSvl22882dhFu+R6ZKxe/5zDK
-         Uaell/eHZZ8Ew==
+References: <jCmT1QOunDmSu59iO1T1xj2-WfFeGhMn_i5knEWTCoph9VH1oxjpYf3Q6CWH7BRrq1NTVYBsAVJcIgu8azAEmFZJA8PzLfH3bHBcWNbFqeY=@protonmail.com>
+In-Reply-To: <jCmT1QOunDmSu59iO1T1xj2-WfFeGhMn_i5knEWTCoph9VH1oxjpYf3Q6CWH7BRrq1NTVYBsAVJcIgu8azAEmFZJA8PzLfH3bHBcWNbFqeY=@protonmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 11 Oct 2019 10:33:17 +0200
+Message-ID: <CAO-hwJ+AMmNUOhas+vq6K4sRcCspyJuAefKO8oomAH4=CDHoJw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] HID: logitech: Add feature 0x0001: FeatureSet
+To:     Mazin Rezk <mnrzk@protonmail.com>
+Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
+X-MC-Unique: 9ENhuOPcORSwlvQlczllBA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 11, 2019 at 2:57 AM Mazin Rezk <mnrzk@protonmail.com> wrote:
+>
+> On Saturday, October 5, 2019 9:04 PM, Mazin Rezk <mnrzk@protonmail.com> w=
+rote:
+>
+> > This patch adds support for the 0x0001 (FeatureSet) feature. This featu=
+re
+> > is used to look up the feature ID of a feature index on a device and li=
+st
+> > the total count of features on the device.
+> >
+> > I also added the hidpp20_get_features function which iterates through a=
+ll
+> > feature indexes on the device and stores a map of them in features an
+> > hidpp_device struct. This function runs when an HID++ 2.0 device is pro=
+bed.
+>
+> Changes in the version:
+>  - Renamed hidpp20_featureset_get_feature to
+>    hidpp20_featureset_get_feature_id.
+>
+>  - Re-ordered hidpp20_featureset_get_count and
+>    hidpp20_featureset_get_feature_id based on their command IDs.
+>
+>  - Made feature_count initialize to 0 before running hidpp20_get_features=
+.
 
-On 10/10/2019 09:36, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.149 release.
-> There are 61 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.149-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+I still need to decide whether or not we need to take this one. We
+historically did not do this to mimic the Windows driver at the time.
+However, the driver is full of quirks that could be detected instead
+of hardcoded thanks to this functions. So we might want to switch to
+auto-detection of those quirks so we can keep 'quirks' for actual
+defects that can't be auto-detected.
 
+But, if we want to go this route, we need to actually make use of it.
+So this patch should be part of a series where we use it, not added by
+its own.
 
-All tests passing for Tegra ...
+Can you drop it from the series?
+And maybe possibly work on a cleanup of some of the auto detection,
+like the HIDPP_QUIRK_HI_RES_SCROLL_X2121 which you can easily test?
+But this would need to happen in a second series, once this one gets
+merged in.
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    24 tests:	24 pass, 0 fail
+Cheers,
+Benjamin
 
-Linux version:	4.14.149-rc1-g8952ae7352b2
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+>
+> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+> ---
+>  drivers/hid/hid-logitech-hidpp.c | 90 ++++++++++++++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-=
+hidpp.c
+> index a0efa8a43213..2062be922c08 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -190,6 +190,9 @@ struct hidpp_device {
+>
+>         struct hidpp_battery battery;
+>         struct hidpp_scroll_counter vertical_wheel_counter;
+> +
+> +       u16 *features;
+> +       u8 feature_count;
+>  };
+>
+>  /* HID++ 1.0 error codes */
+> @@ -911,6 +914,82 @@ static int hidpp_root_get_protocol_version(struct hi=
+dpp_device *hidpp)
+>         return 0;
+>  }
+>
+> +/* ---------------------------------------------------------------------=
+----- */
+> +/* 0x0001: FeatureSet                                                   =
+      */
+> +/* ---------------------------------------------------------------------=
+----- */
+> +
+> +#define HIDPP_PAGE_FEATURESET                          0x0001
+> +
+> +#define CMD_FEATURESET_GET_COUNT                       0x00
+> +#define CMD_FEATURESET_GET_FEATURE                     0x11
+> +
+> +static int hidpp20_featureset_get_count(struct hidpp_device *hidpp,
+> +       u8 feature_index, u8 *count)
+> +{
+> +       struct hidpp_report response;
+> +       int ret;
+> +
+> +       ret =3D hidpp_send_fap_command_sync(hidpp, feature_index,
+> +               CMD_FEATURESET_GET_COUNT, NULL, 0, &response);
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       *count =3D response.fap.params[0];
+> +
+> +       return ret;
+> +}
+> +
+> +static int hidpp20_featureset_get_feature_id(struct hidpp_device *hidpp,
+> +       u8 featureset_index, u8 feature_index, u16 *feature_id)
+> +{
+> +       struct hidpp_report response;
+> +       int ret;
+> +
+> +       ret =3D hidpp_send_fap_command_sync(hidpp, featureset_index,
+> +               CMD_FEATURESET_GET_FEATURE, &feature_index, 1, &response)=
+;
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       *feature_id =3D (response.fap.params[0] << 8) | response.fap.para=
+ms[1];
+> +
+> +       return ret;
+> +}
+> +
+> +static int hidpp20_get_features(struct hidpp_device *hidpp)
+> +{
+> +       int ret;
+> +       u8 featureset_index, featureset_type;
+> +       u8 i;
+> +
+> +       ret =3D hidpp_root_get_feature(hidpp, HIDPP_PAGE_FEATURESET,
+> +                                    &featureset_index, &featureset_type)=
+;
+> +
+> +       if (ret =3D=3D -ENOENT) {
+> +               hid_warn(hidpp->hid_dev, "Unable to retrieve feature set.=
+");
+> +               return 0;
+> +       }
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D hidpp20_featureset_get_count(hidpp, featureset_index,
+> +               &hidpp->feature_count);
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       hidpp->features =3D devm_kzalloc(&hidpp->hid_dev->dev,
+> +                       hidpp->feature_count * sizeof(u16), GFP_KERNEL);
+> +
+> +       for (i =3D 0; i < hidpp->feature_count && !ret; i++)
+> +               ret =3D hidpp20_featureset_get_feature_id(hidpp, features=
+et_index,
+> +                               i, &(hidpp->features[i]));
+> +
+> +       return ret;
+> +}
+> +
+>  /* ---------------------------------------------------------------------=
+----- */
+>  /* 0x0005: GetDeviceNameType                                            =
+      */
+>  /* ---------------------------------------------------------------------=
+----- */
+> @@ -3625,6 +3704,17 @@ static int hidpp_probe(struct hid_device *hdev, co=
+nst struct hid_device_id *id)
+>                 hidpp_overwrite_name(hdev);
+>         }
+>
+> +       /* Cache feature indexes and IDs to check reports faster */
+> +       hidpp->feature_count =3D 0;
+> +
+> +       if (hidpp->protocol_major >=3D 2) {
+> +               if (hidpp20_get_features(hidpp)) {
+> +                       hid_err(hdev, "%s:hidpp20_get_features returned e=
+rror\n",
+> +                               __func__);
+> +                       goto hid_hw_init_fail;
+> +               }
+> +       }
+> +
+>         if (connected && (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP)) {
+>                 ret =3D wtp_get_config(hidpp);
+>                 if (ret)
+> --
+> 2.23.0
 
-Cheers
-Jon
-
--- 
-nvpublic
