@@ -2,179 +2,131 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AABC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498A6ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9711214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570796521;
-	bh=MqUX+JZgCizRiDntKWuJryUxEwcAdUMB3acOw5wvjFY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RqgsVkjR6x04iD1+Ykvyi7n3bogutiMz0RutrmeGnUSma8KTIxTYjXQdPt7YZqlfN
-	 SEoNAeQB3G1IlOkIusJYNU5wJosWkj8ry5YK2/kffN5F4y6x+SX+aQ9BjYvlMEaxIN
-	 LSN+e9ZD0UiIb8h1sCJs1qJgEV5Xxg9wP0znLcf4=
+	by mail.kernel.org (Postfix) with ESMTP id 1DE322190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:23:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MdmGDn+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbfJKMV7 (ORCPT
+        id S1728025AbfJKMXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:21:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44100 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbfJKMV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:21:58 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D5B4885537;
-        Fri, 11 Oct 2019 12:21:57 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.206.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ED3A76012A;
-        Fri, 11 Oct 2019 12:21:55 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH] perf tools: Propagate CFLAGS to libperf
-Date:   Fri, 11 Oct 2019 14:21:55 +0200
-Message-Id: <20191011122155.15738-1-jolsa@kernel.org>
+        Fri, 11 Oct 2019 08:23:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45756 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbfJKMXf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 08:23:35 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r5so11664298wrm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 05:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R2syL0YW+TeHAd/jZ19BY501P3Ze8eSUts4hhsrlbTg=;
+        b=MdmGDn+RPpTN1sIesf3XhQOrqh33u0TrgoP2gSZ8orSGCtJjwhJpCAEXcl9mb9mrWx
+         KsPGLx2e2QdgGf1g5jnTXTiwC1VvFT0CxS4vB+w8iW1BdmqkgZDiM4wdq7lvf+dlf1Jz
+         vOh+GR18Aer/0dOMhZRG+BH9R57WLWThrrC9S+bUDud6eyigoKRH/kIqe79bysPPWwVq
+         3/6hoXfMx3W+JjlXPoUb4kRuDOqHDUrKZBgqCKl+K4GvvPdQ/998vZ0iWIcL33p8S9F/
+         uvgpLQQbCMPur8ttpcN2FwHMax8ISTC697dIzuXhP1ZIfuVzDQKBRgadvIcP7V0R/MTt
+         PnTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R2syL0YW+TeHAd/jZ19BY501P3Ze8eSUts4hhsrlbTg=;
+        b=kiw5FIqdkA8xKkS3oNJyXPP9YpRDKU38pNCmpTvHdGgqa0RKOIusuejeGIENxjqTL/
+         KciJNc1t3H9/ubbi411xe3MltyMUenNMuAQcxZWAf8mhol0IldIQmv6s/V6Lydu/F4Zl
+         4jf6FOKCRfnIWu28kIcNzH3mRDnYZ5ws7iHX3b257L2Tx4pvB4Mi1dRLCH1KEG3ttcWY
+         yzKA7ZKBLZbypTbtmkR5iyrcxtHXc1BQv/yvW0iu1HIq35vjWJxPHN6yEcVnTcPbm/cZ
+         OTac0AGHtXzAoqWi0WaJNMsa7xDxTc1SUVmSEpW4iSVMptUvX1thjO8Dp3b5/u8Ww58y
+         9Zew==
+X-Gm-Message-State: APjAAAWzyOWGjVNiBaZDnLSYco3wZ1fxVS3eISdVqolgPQIg6Owovggv
+        U185qvNt/NBANndBgEo/xnUB1w==
+X-Google-Smtp-Source: APXvYqwVVTPqEFScgyagl6Zg7GstkjAmqaiWUrDab1xs8aw1wGbEDjQMh+7jovkqImHb+sxNiZEIAQ==
+X-Received: by 2002:adf:f98b:: with SMTP id f11mr3017198wrr.350.1570796613172;
+        Fri, 11 Oct 2019 05:23:33 -0700 (PDT)
+Received: from apalos.home (ppp-94-65-93-45.home.otenet.gr. [94.65.93.45])
+        by smtp.gmail.com with ESMTPSA id f18sm7670788wrv.38.2019.10.11.05.23.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 05:23:32 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 15:23:29 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/2] net: core: use listified Rx for GRO_NORMAL
+ in napi_gro_receive()
+Message-ID: <20191011122329.GA8373@apalos.home>
+References: <20191010144226.4115-1-alobakin@dlink.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 11 Oct 2019 12:21:58 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010144226.4115-1-alobakin@dlink.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andi reported that 'make DEBUG=1' does not propagate
-to the libbperf code. It's true also for the other
-flags. Changing the code to propagate the global
-build flags to libperf compilation.
+Hi Alexander,
 
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Link: http://lkml.kernel.org/n/tip-sgq5yeyvitp655s2iq3e75ls@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/Makefile.config | 28 +++++++++++++++-------------
- tools/perf/Makefile.perf   |  2 +-
- tools/perf/lib/core.c      |  3 ++-
- 3 files changed, 18 insertions(+), 15 deletions(-)
+On Thu, Oct 10, 2019 at 05:42:24PM +0300, Alexander Lobakin wrote:
+> Hi Dave,
+> 
+> This series was written as a continuation to commit 323ebb61e32b
+> ("net: use listified RX for handling GRO_NORMAL skbs"), and also takes
+> an advantage of listified Rx for GRO. This time, however, we're
+> targeting at a way more common and used function, napi_gro_receive().
+> 
+> There are about ~100 call sites of this function, including gro_cells
+> and mac80211, so even wireless systems will benefit from it.
+> The only driver that cares about the return value is
+> ethernet/socionext/netsec, and only for updating statistics. I don't
+> believe that this change can break its functionality, but anyway,
+> we have plenty of time till next merge window to pay this change
+> a proper attention.
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 46f7fba2306c..063202c53b64 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -188,7 +188,7 @@ endif
- 
- # Treat warnings as errors unless directed not to
- ifneq ($(WERROR),0)
--  CFLAGS += -Werror
-+  CORE_CFLAGS += -Werror
-   CXXFLAGS += -Werror
- endif
- 
-@@ -198,9 +198,9 @@ endif
- 
- ifeq ($(DEBUG),0)
- ifeq ($(CC_NO_CLANG), 0)
--  CFLAGS += -O3
-+  CORE_CFLAGS += -O3
- else
--  CFLAGS += -O6
-+  CORE_CFLAGS += -O6
- endif
- endif
- 
-@@ -245,12 +245,12 @@ FEATURE_CHECK_LDFLAGS-libaio = -lrt
- 
- FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
- 
--CFLAGS += -fno-omit-frame-pointer
--CFLAGS += -ggdb3
--CFLAGS += -funwind-tables
--CFLAGS += -Wall
--CFLAGS += -Wextra
--CFLAGS += -std=gnu99
-+CORE_CFLAGS += -fno-omit-frame-pointer
-+CORE_CFLAGS += -ggdb3
-+CORE_CFLAGS += -funwind-tables
-+CORE_CFLAGS += -Wall
-+CORE_CFLAGS += -Wextra
-+CORE_CFLAGS += -std=gnu99
- 
- CXXFLAGS += -std=gnu++11 -fno-exceptions -fno-rtti
- CXXFLAGS += -Wall
-@@ -272,12 +272,12 @@ include $(FEATURES_DUMP)
- endif
- 
- ifeq ($(feature-stackprotector-all), 1)
--  CFLAGS += -fstack-protector-all
-+  CORE_CFLAGS += -fstack-protector-all
- endif
- 
- ifeq ($(DEBUG),0)
-   ifeq ($(feature-fortify-source), 1)
--    CFLAGS += -D_FORTIFY_SOURCE=2
-+    CORE_CFLAGS += -D_FORTIFY_SOURCE=2
-   endif
- endif
- 
-@@ -301,10 +301,12 @@ INC_FLAGS += -I$(src-perf)/util
- INC_FLAGS += -I$(src-perf)
- INC_FLAGS += -I$(srctree)/tools/lib/
- 
--CFLAGS   += $(INC_FLAGS)
-+CORE_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
-+
-+CFLAGS   += $(CORE_CFLAGS) $(INC_FLAGS)
- CXXFLAGS += $(INC_FLAGS)
- 
--CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
-+LIBPERF_CFLAGS := $(CORE_CFLAGS) $(EXTRA_CFLAGS)
- 
- ifeq ($(feature-sync-compare-and-swap), 1)
-   CFLAGS += -DHAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 45c14dc24f4b..a099a8a89447 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -769,7 +769,7 @@ $(LIBBPF)-clean:
- 	$(Q)$(MAKE) -C $(BPF_DIR) O=$(OUTPUT) clean >/dev/null
- 
- $(LIBPERF): FORCE
--	$(Q)$(MAKE) -C $(LIBPERF_DIR) O=$(OUTPUT) $(OUTPUT)libperf.a
-+	$(Q)$(MAKE) -C $(LIBPERF_DIR) EXTRA_CFLAGS="$(LIBPERF_CFLAGS)" O=$(OUTPUT) $(OUTPUT)libperf.a
- 
- $(LIBPERF)-clean:
- 	$(call QUIET_CLEAN, libperf)
-diff --git a/tools/perf/lib/core.c b/tools/perf/lib/core.c
-index d0b9ae422b9f..58fc894b76c5 100644
---- a/tools/perf/lib/core.c
-+++ b/tools/perf/lib/core.c
-@@ -5,11 +5,12 @@
- #include <stdio.h>
- #include <stdarg.h>
- #include <unistd.h>
-+#include <linux/compiler.h>
- #include <perf/core.h>
- #include <internal/lib.h>
- #include "internal.h"
- 
--static int __base_pr(enum libperf_print_level level, const char *format,
-+static int __base_pr(enum libperf_print_level level __maybe_unused, const char *format,
- 		     va_list args)
- {
- 	return vfprintf(stderr, format, args);
--- 
-2.21.0
+I don't think this will break anything on the netsec driver. Dropped packets
+will still be properly accounted for
 
+> 
+> Besides having this functionality implemented for napi_gro_frags()
+> users, the main reason is the solid performance boost that has been
+> shown during tests on 1-core MIPS board (with not yet mainlined
+> driver):
+> 
+> * no batching (5.4-rc2): ~450/450 Mbit/s
+> * with gro_normal_batch == 8: ~480/480 Mbit/s
+> * with gro_normal_batch == 16: ~500/500 Mbit/s
+> 
+> Applies on top of net-next.
+> Thanks.
+> 
+> Alexander Lobakin (2):
+>   net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
+>   net: core: increase the default size of GRO_NORMAL skb lists to flush
+> 
+>  net/core/dev.c | 51 +++++++++++++++++++++++++-------------------------
+>  1 file changed, 26 insertions(+), 25 deletions(-)
+> 
+> -- 
+> 2.23.0
+> 
+
+Thanks
+/Ilias
