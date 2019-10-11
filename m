@@ -2,43 +2,43 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5055ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51020ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCDA21835
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0446214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 20:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570824520;
-	bh=aie6CxpK/7qLbS1b0yymZogYb8gZquurq36TLH2jHo8=;
+	s=default; t=1570824526;
+	bh=miaKK8SdghzfzoYT8l83Ku3BT6XqiqlmtdbKTNZh5u4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9vy3j33EBM7Zx7QFBNzoNoETxIBjOy/6Im0+v4dB7g29ugwOwO6/9xdbBNObN+Nb
-	 AG5OTGc/vEwlsdhvpMOUJy1WZBkI/Oe42MZ8tWQrj143G6ONMa8DWDpd+tRfJSVj9C
-	 IDsSXl/fy5So+/NKp3pmCgkVAXhYLIu+VWLp5APM=
+	b=VYTi1H9NEYbgCG+GOrhINIg9Rnc7yXelxtotltEl4+mdt+QNOn2OhowXs6TBqhAE1
+	 6EZzaygpqQTiUFrM+ZVvqHMnDWqBvb3cFW0im8vokLZc3YOfHHsA+QnAVEEcW+3/bU
+	 bBs4MW3KnTB/TmSA/vVAXLeoobZPxZNeEb6RPQEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbfJKUIj (ORCPT
+        id S1729452AbfJKUIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 16:08:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44444 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 16:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729032AbfJKUIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 16:08:38 -0400
+        id S1729102AbfJKUIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 16:08:43 -0400
 Received: from quaco.ghostprotocols.net (189-94-137-67.3g.claro.net.br [189.94.137.67])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FF9121D56;
-        Fri, 11 Oct 2019 20:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAA232190F;
+        Fri, 11 Oct 2019 20:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570824517;
-        bh=aie6CxpK/7qLbS1b0yymZogYb8gZquurq36TLH2jHo8=;
+        s=default; t=1570824522;
+        bh=miaKK8SdghzfzoYT8l83Ku3BT6XqiqlmtdbKTNZh5u4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m4mqbqqAeUW99L/i5MQCLDr/1hpulwJf98pxTxYBhe3TQJ49m+JDcXoZNAE5ucmYI
-         6HrvGjMaB9BVaagD3msEKnMfCh9w2hShflkFSYSuWovx0vcaz3sLd1NYmid7MJgBN+
-         CZYyjrtzypj9JSIJtfvaOTA0imD1lyTJfe921Zlw=
+        b=n2LO1QEZxiDRB/97pO7gKJbGY9QbR+iISDqHnC134kGd13utUWVZNl0tUSg9TQYsl
+         bQFKEWnC1c231C/QIIpnsm7nYTTU7nbtXG0ty4BexxW/ZjZ9rvkGmPjg5ucXMG2N4p
+         9FI9S2Pdw9mJ9HxniJHBlYmJvZHkcRLh4iAxL6WM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,17 +46,14 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>
-Subject: [PATCH 24/69] perf trace: Allow choosing how to augment the tracepoint arguments
-Date:   Fri, 11 Oct 2019 17:05:14 -0300
-Message-Id: <20191011200559.7156-25-acme@kernel.org>
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 25/69] tools arch x86: Grab a copy of the file containing the MSR numbers
+Date:   Fri, 11 Oct 2019 17:05:15 -0300
+Message-Id: <20191011200559.7156-26-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,224 +62,896 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So far we used the libtraceevent printing routines when showing
-tracepoint arguments, but since 'perf trace' has a lot of beautifiers
-for syscall arguments, and since some of those can be used to augment
-tracepoint arguments, add a routine to make use of those beautifiers
-and allow the user to choose which one to use.
-
-The default now is to use the same beautifiers used for the strace-like
-sys_enter+sys_exit lines, but the user can choose the libtraceevent ones
-by either using the:
-
-    perf trace --libtraceevent_print
-
-command line option, or by setting:
-
-  # cat ~/.perfconfig
-  [trace]
-	tracepoint_beautifiers = libtraceevent
-
-For instance, here are some examples:
-
-  # perf trace -e sched:*switch,*sleep,sched:*wakeup,exit*,sched:*exit sleep 1
-       0.000 sched:sched_wakeup(comm: "perf", pid: 5273 (perf), prio: 120, success: 1, target_cpu: 6)
-       0.621 nanosleep(rqtp: 0x7ffdd06d1140, rmtp: NULL) ...
-       0.628 sched:sched_switch(prev_comm: "sleep", prev_pid: 5273 (sleep), prev_prio: 120, prev_state: 1, next_comm: "swapper/6", next_pid: 0, next_prio: 120)
-    1000.879 sched:sched_wakeup(comm: "sleep", pid: 5273 (sleep), prio: 120, success: 1, target_cpu: 6)
-       0.621  ... [continued]: nanosleep())          = 0
-    1001.026 exit_group(error_code: 0)               = ?
-    1001.216 sched:sched_process_exit(comm: "sleep", pid: 5273 (sleep), prio: 120)
-  #
-
-And then using libtraceevent, as before:
-
-  # perf trace --libtraceevent_print -e sched:*switch,*sleep,sched:*wakeup,exit*,sched:*exit sleep 1
-       0.000 sched:sched_wakeup(comm=perf pid=5288 prio=120 target_cpu=001)
-       0.739 nanosleep(rqtp: 0x7ffeba6c2f40, rmtp: NULL) ...
-       0.747 sched:sched_switch(prev_comm=sleep prev_pid=5288 prev_prio=120 prev_state=S ==> next_comm=swapper/1 next_pid=0 next_prio=120)
-    1000.902 sched:sched_wakeup(comm=sleep pid=5288 prio=120 target_cpu=001)
-       0.739  ... [continued]: nanosleep())          = 0
-    1001.012 exit_group(error_code: 0)               = ?
-  #
-
-The new default allocates an array of 'struct syscall_arg_fmt' for the
-tracepoint arguments and, just like with syscall arguments, tries to
-find suitable syscall_arg__scnprintf_NAME() routines to augment those
-tracepoint arguments based on their type (as in the tracefs "format"
-file), or even in their name + type, for instance arguntents with names
-ending in "fd" with type "int" get the fd scnprintf beautifier attached,
+We'll use it to generate a table and then convert the
+msr:{read,write}_msr 'msr' option in things like perf trace, script,
 etc.
-
-Soon this will take advantage of the kernel BTF information to augment
-enumerations based on the tracefs "format" type info.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-o8qdluotkcb3b1x2gjqrejcl@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-y1f4s0y1s43d4drh7pd2huzn@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt |  5 ++
- tools/perf/Documentation/perf-trace.txt  |  5 ++
- tools/perf/builtin-trace.c               | 83 +++++++++++++++++++++++-
- 3 files changed, 90 insertions(+), 3 deletions(-)
+ tools/arch/x86/include/asm/msr-index.h | 857 +++++++++++++++++++++++++
+ tools/perf/check-headers.sh            |   1 +
+ 2 files changed, 858 insertions(+)
+ create mode 100644 tools/arch/x86/include/asm/msr-index.h
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index c599623a1f3d..c4dd23c4b478 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -561,6 +561,11 @@ trace.*::
- 	trace.show_zeros::
- 		Do not suppress syscall arguments that are equal to zero.
- 
-+	trace.tracepoint_beautifiers::
-+		Use "libtraceevent" to use that library to augment the tracepoint arguments,
-+		"libbeauty", the default, to use the same argument beautifiers used in the
-+		strace-like sys_enter+sys_exit lines.
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+new file mode 100644
+index 000000000000..20ce682a2540
+--- /dev/null
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -0,0 +1,857 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_MSR_INDEX_H
++#define _ASM_X86_MSR_INDEX_H
 +
- llvm.*::
- 	llvm.clang-path::
- 		Path to clang. If omit, search it from $PATH.
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index 25b74fdb36fa..ba16cd5b680f 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -219,6 +219,11 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
- 	may happen, for instance, when a thread gets migrated to a different CPU
- 	while processing a syscall.
- 
-+--libtraceevent_print::
-+	Use libtraceevent to print tracepoint arguments. By default 'perf trace' uses
-+	the same beautifiers used in the strace-like enter+exit lines to augment the
-+	tracepoint arguments.
++#include <linux/bits.h>
 +
- --map-dump::
- 	Dump BPF maps setup by events passed via -e, for instance the augmented_raw_syscalls
- 	living in tools/perf/examples/bpf/augmented_raw_syscalls.c. For now this
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 297aeaa9f69d..8303d83cb93c 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -175,6 +175,7 @@ struct trace {
- 	bool			print_sample;
- 	bool			show_tool_stats;
- 	bool			trace_syscalls;
-+	bool			libtraceevent_print;
- 	bool			kernel_syscallchains;
- 	s16			args_alignment;
- 	bool			show_tstamp;
-@@ -2397,6 +2398,71 @@ static void bpf_output__fprintf(struct trace *trace,
- 	++trace->nr_events_printed;
- }
- 
-+static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
-+				       struct thread *thread, void *augmented_args, int augmented_args_size)
-+{
-+	char bf[2048];
-+	size_t size = sizeof(bf);
-+	struct tep_format_field *field = evsel->tp_format->format.fields;
-+	struct syscall_arg_fmt *arg = evsel->priv;
-+	size_t printed = 0;
-+	unsigned long val;
-+	u8 bit = 1;
-+	struct syscall_arg syscall_arg = {
-+		.augmented = {
-+			.size = augmented_args_size,
-+			.args = augmented_args,
-+		},
-+		.idx	= 0,
-+		.mask	= 0,
-+		.trace  = trace,
-+		.thread = thread,
-+		.show_string_prefix = trace->show_string_prefix,
-+	};
++/*
++ * CPU model specific register (MSR) numbers.
++ *
++ * Do not add new entries to this file unless the definitions are shared
++ * between multiple compilation units.
++ */
 +
-+	for (; field && arg; field = field->next, ++syscall_arg.idx, bit <<= 1, ++arg) {
-+		if (syscall_arg.mask & bit)
-+			continue;
++/* x86-64 specific MSRs */
++#define MSR_EFER		0xc0000080 /* extended feature register */
++#define MSR_STAR		0xc0000081 /* legacy mode SYSCALL target */
++#define MSR_LSTAR		0xc0000082 /* long mode SYSCALL target */
++#define MSR_CSTAR		0xc0000083 /* compat mode SYSCALL target */
++#define MSR_SYSCALL_MASK	0xc0000084 /* EFLAGS mask for syscall */
++#define MSR_FS_BASE		0xc0000100 /* 64bit FS base */
++#define MSR_GS_BASE		0xc0000101 /* 64bit GS base */
++#define MSR_KERNEL_GS_BASE	0xc0000102 /* SwapGS GS shadow */
++#define MSR_TSC_AUX		0xc0000103 /* Auxiliary TSC */
 +
-+		syscall_arg.fmt = arg;
-+		if (field->flags & TEP_FIELD_IS_ARRAY)
-+			val = (uintptr_t)(sample->raw_data + field->offset);
-+		else
-+			val = format_field__intval(field, sample, evsel->needs_swap);
-+		/*
-+		 * Some syscall args need some mask, most don't and
-+		 * return val untouched.
-+		 */
-+		val = syscall_arg_fmt__mask_val(arg, &syscall_arg, val);
++/* EFER bits: */
++#define _EFER_SCE		0  /* SYSCALL/SYSRET */
++#define _EFER_LME		8  /* Long mode enable */
++#define _EFER_LMA		10 /* Long mode active (read-only) */
++#define _EFER_NX		11 /* No execute enable */
++#define _EFER_SVME		12 /* Enable virtualization */
++#define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
++#define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
 +
-+		/*
-+		 * Suppress this argument if its value is zero and
-+		 * and we don't have a string associated in an
-+		 * strarray for it.
-+		 */
-+		if (val == 0 &&
-+		    !trace->show_zeros &&
-+		    !((arg->show_zero ||
-+		       arg->scnprintf == SCA_STRARRAY ||
-+		       arg->scnprintf == SCA_STRARRAYS) &&
-+		      arg->parm))
-+			continue;
++#define EFER_SCE		(1<<_EFER_SCE)
++#define EFER_LME		(1<<_EFER_LME)
++#define EFER_LMA		(1<<_EFER_LMA)
++#define EFER_NX			(1<<_EFER_NX)
++#define EFER_SVME		(1<<_EFER_SVME)
++#define EFER_LMSLE		(1<<_EFER_LMSLE)
++#define EFER_FFXSR		(1<<_EFER_FFXSR)
 +
-+		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
++/* Intel MSRs. Some also available on other CPUs */
 +
-+		/*
-+		 * XXX Perhaps we should have a show_tp_arg_names,
-+		 * leaving show_arg_names just for syscalls?
-+		 */
-+		if (1 || trace->show_arg_names)
-+			printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
++#define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
++#define SPEC_CTRL_IBRS			BIT(0)	   /* Indirect Branch Restricted Speculation */
++#define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
++#define SPEC_CTRL_STIBP			BIT(SPEC_CTRL_STIBP_SHIFT)	/* STIBP mask */
++#define SPEC_CTRL_SSBD_SHIFT		2	   /* Speculative Store Bypass Disable bit */
++#define SPEC_CTRL_SSBD			BIT(SPEC_CTRL_SSBD_SHIFT)	/* Speculative Store Bypass Disable */
 +
-+		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
-+	}
++#define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
++#define PRED_CMD_IBPB			BIT(0)	   /* Indirect Branch Prediction Barrier */
 +
-+	return printed + fprintf(trace->output, "%s", bf);
-+}
++#define MSR_PPIN_CTL			0x0000004e
++#define MSR_PPIN			0x0000004f
 +
- static int trace__event_handler(struct trace *trace, struct evsel *evsel,
- 				union perf_event *event __maybe_unused,
- 				struct perf_sample *sample)
-@@ -2457,9 +2523,13 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
- 	} else if (evsel->tp_format) {
- 		if (strncmp(evsel->tp_format->name, "sys_enter_", 10) ||
- 		    trace__fprintf_sys_enter(trace, evsel, sample)) {
--			event_format__fprintf(evsel->tp_format, sample->cpu,
--					      sample->raw_data, sample->raw_size,
--					      trace->output);
-+			if (trace->libtraceevent_print) {
-+				event_format__fprintf(evsel->tp_format, sample->cpu,
-+						      sample->raw_data, sample->raw_size,
-+						      trace->output);
-+			} else {
-+				trace__fprintf_tp_fields(trace, evsel, sample, thread, NULL, 0);
-+			}
- 			++trace->nr_events_printed;
- 
- 			if (evsel->max_events != ULONG_MAX && ++evsel->nr_events_printed == evsel->max_events) {
-@@ -4150,6 +4220,11 @@ static int trace__config(const char *var, const char *value, void *arg)
- 		int args_alignment = 0;
- 		if (perf_config_int(&args_alignment, var, value) == 0)
- 			trace->args_alignment = args_alignment;
-+	} else if (!strcmp(var, "trace.tracepoint_beautifiers")) {
-+		if (strcasecmp(value, "libtraceevent") == 0)
-+			trace->libtraceevent_print = true;
-+		else if (strcasecmp(value, "libbeauty") == 0)
-+			trace->libtraceevent_print = false;
- 	}
- out:
- 	return err;
-@@ -4239,6 +4314,8 @@ int cmd_trace(int argc, const char **argv)
- 	OPT_CALLBACK(0, "call-graph", &trace.opts,
- 		     "record_mode[,record_size]", record_callchain_help,
- 		     &record_parse_callchain_opt),
-+	OPT_BOOLEAN(0, "libtraceevent_print", &trace.libtraceevent_print,
-+		    "Use libtraceevent to print the tracepoint arguments."),
- 	OPT_BOOLEAN(0, "kernel-syscall-graph", &trace.kernel_syscallchains,
- 		    "Show the kernel callchains on the syscall exit path"),
- 	OPT_ULONG(0, "max-events", &trace.max_events,
++#define MSR_IA32_PERFCTR0		0x000000c1
++#define MSR_IA32_PERFCTR1		0x000000c2
++#define MSR_FSB_FREQ			0x000000cd
++#define MSR_PLATFORM_INFO		0x000000ce
++#define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
++#define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
++
++#define MSR_IA32_UMWAIT_CONTROL			0xe1
++#define MSR_IA32_UMWAIT_CONTROL_C02_DISABLE	BIT(0)
++#define MSR_IA32_UMWAIT_CONTROL_RESERVED	BIT(1)
++/*
++ * The time field is bit[31:2], but representing a 32bit value with
++ * bit[1:0] zero.
++ */
++#define MSR_IA32_UMWAIT_CONTROL_TIME_MASK	(~0x03U)
++
++#define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
++#define NHM_C3_AUTO_DEMOTE		(1UL << 25)
++#define NHM_C1_AUTO_DEMOTE		(1UL << 26)
++#define ATM_LNC_C6_AUTO_DEMOTE		(1UL << 25)
++#define SNB_C3_AUTO_UNDEMOTE		(1UL << 27)
++#define SNB_C1_AUTO_UNDEMOTE		(1UL << 28)
++
++#define MSR_MTRRcap			0x000000fe
++
++#define MSR_IA32_ARCH_CAPABILITIES	0x0000010a
++#define ARCH_CAP_RDCL_NO		BIT(0)	/* Not susceptible to Meltdown */
++#define ARCH_CAP_IBRS_ALL		BIT(1)	/* Enhanced IBRS support */
++#define ARCH_CAP_SKIP_VMENTRY_L1DFLUSH	BIT(3)	/* Skip L1D flush on vmentry */
++#define ARCH_CAP_SSB_NO			BIT(4)	/*
++						 * Not susceptible to Speculative Store Bypass
++						 * attack, so no Speculative Store Bypass
++						 * control required.
++						 */
++#define ARCH_CAP_MDS_NO			BIT(5)   /*
++						  * Not susceptible to
++						  * Microarchitectural Data
++						  * Sampling (MDS) vulnerabilities.
++						  */
++
++#define MSR_IA32_FLUSH_CMD		0x0000010b
++#define L1D_FLUSH			BIT(0)	/*
++						 * Writeback and invalidate the
++						 * L1 data cache.
++						 */
++
++#define MSR_IA32_BBL_CR_CTL		0x00000119
++#define MSR_IA32_BBL_CR_CTL3		0x0000011e
++
++#define MSR_IA32_SYSENTER_CS		0x00000174
++#define MSR_IA32_SYSENTER_ESP		0x00000175
++#define MSR_IA32_SYSENTER_EIP		0x00000176
++
++#define MSR_IA32_MCG_CAP		0x00000179
++#define MSR_IA32_MCG_STATUS		0x0000017a
++#define MSR_IA32_MCG_CTL		0x0000017b
++#define MSR_IA32_MCG_EXT_CTL		0x000004d0
++
++#define MSR_OFFCORE_RSP_0		0x000001a6
++#define MSR_OFFCORE_RSP_1		0x000001a7
++#define MSR_TURBO_RATIO_LIMIT		0x000001ad
++#define MSR_TURBO_RATIO_LIMIT1		0x000001ae
++#define MSR_TURBO_RATIO_LIMIT2		0x000001af
++
++#define MSR_LBR_SELECT			0x000001c8
++#define MSR_LBR_TOS			0x000001c9
++#define MSR_LBR_NHM_FROM		0x00000680
++#define MSR_LBR_NHM_TO			0x000006c0
++#define MSR_LBR_CORE_FROM		0x00000040
++#define MSR_LBR_CORE_TO			0x00000060
++
++#define MSR_LBR_INFO_0			0x00000dc0 /* ... 0xddf for _31 */
++#define LBR_INFO_MISPRED		BIT_ULL(63)
++#define LBR_INFO_IN_TX			BIT_ULL(62)
++#define LBR_INFO_ABORT			BIT_ULL(61)
++#define LBR_INFO_CYCLES			0xffff
++
++#define MSR_IA32_PEBS_ENABLE		0x000003f1
++#define MSR_PEBS_DATA_CFG		0x000003f2
++#define MSR_IA32_DS_AREA		0x00000600
++#define MSR_IA32_PERF_CAPABILITIES	0x00000345
++#define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
++
++#define MSR_IA32_RTIT_CTL		0x00000570
++#define RTIT_CTL_TRACEEN		BIT(0)
++#define RTIT_CTL_CYCLEACC		BIT(1)
++#define RTIT_CTL_OS			BIT(2)
++#define RTIT_CTL_USR			BIT(3)
++#define RTIT_CTL_PWR_EVT_EN		BIT(4)
++#define RTIT_CTL_FUP_ON_PTW		BIT(5)
++#define RTIT_CTL_FABRIC_EN		BIT(6)
++#define RTIT_CTL_CR3EN			BIT(7)
++#define RTIT_CTL_TOPA			BIT(8)
++#define RTIT_CTL_MTC_EN			BIT(9)
++#define RTIT_CTL_TSC_EN			BIT(10)
++#define RTIT_CTL_DISRETC		BIT(11)
++#define RTIT_CTL_PTW_EN			BIT(12)
++#define RTIT_CTL_BRANCH_EN		BIT(13)
++#define RTIT_CTL_MTC_RANGE_OFFSET	14
++#define RTIT_CTL_MTC_RANGE		(0x0full << RTIT_CTL_MTC_RANGE_OFFSET)
++#define RTIT_CTL_CYC_THRESH_OFFSET	19
++#define RTIT_CTL_CYC_THRESH		(0x0full << RTIT_CTL_CYC_THRESH_OFFSET)
++#define RTIT_CTL_PSB_FREQ_OFFSET	24
++#define RTIT_CTL_PSB_FREQ		(0x0full << RTIT_CTL_PSB_FREQ_OFFSET)
++#define RTIT_CTL_ADDR0_OFFSET		32
++#define RTIT_CTL_ADDR0			(0x0full << RTIT_CTL_ADDR0_OFFSET)
++#define RTIT_CTL_ADDR1_OFFSET		36
++#define RTIT_CTL_ADDR1			(0x0full << RTIT_CTL_ADDR1_OFFSET)
++#define RTIT_CTL_ADDR2_OFFSET		40
++#define RTIT_CTL_ADDR2			(0x0full << RTIT_CTL_ADDR2_OFFSET)
++#define RTIT_CTL_ADDR3_OFFSET		44
++#define RTIT_CTL_ADDR3			(0x0full << RTIT_CTL_ADDR3_OFFSET)
++#define MSR_IA32_RTIT_STATUS		0x00000571
++#define RTIT_STATUS_FILTEREN		BIT(0)
++#define RTIT_STATUS_CONTEXTEN		BIT(1)
++#define RTIT_STATUS_TRIGGEREN		BIT(2)
++#define RTIT_STATUS_BUFFOVF		BIT(3)
++#define RTIT_STATUS_ERROR		BIT(4)
++#define RTIT_STATUS_STOPPED		BIT(5)
++#define RTIT_STATUS_BYTECNT_OFFSET	32
++#define RTIT_STATUS_BYTECNT		(0x1ffffull << RTIT_STATUS_BYTECNT_OFFSET)
++#define MSR_IA32_RTIT_ADDR0_A		0x00000580
++#define MSR_IA32_RTIT_ADDR0_B		0x00000581
++#define MSR_IA32_RTIT_ADDR1_A		0x00000582
++#define MSR_IA32_RTIT_ADDR1_B		0x00000583
++#define MSR_IA32_RTIT_ADDR2_A		0x00000584
++#define MSR_IA32_RTIT_ADDR2_B		0x00000585
++#define MSR_IA32_RTIT_ADDR3_A		0x00000586
++#define MSR_IA32_RTIT_ADDR3_B		0x00000587
++#define MSR_IA32_RTIT_CR3_MATCH		0x00000572
++#define MSR_IA32_RTIT_OUTPUT_BASE	0x00000560
++#define MSR_IA32_RTIT_OUTPUT_MASK	0x00000561
++
++#define MSR_MTRRfix64K_00000		0x00000250
++#define MSR_MTRRfix16K_80000		0x00000258
++#define MSR_MTRRfix16K_A0000		0x00000259
++#define MSR_MTRRfix4K_C0000		0x00000268
++#define MSR_MTRRfix4K_C8000		0x00000269
++#define MSR_MTRRfix4K_D0000		0x0000026a
++#define MSR_MTRRfix4K_D8000		0x0000026b
++#define MSR_MTRRfix4K_E0000		0x0000026c
++#define MSR_MTRRfix4K_E8000		0x0000026d
++#define MSR_MTRRfix4K_F0000		0x0000026e
++#define MSR_MTRRfix4K_F8000		0x0000026f
++#define MSR_MTRRdefType			0x000002ff
++
++#define MSR_IA32_CR_PAT			0x00000277
++
++#define MSR_IA32_DEBUGCTLMSR		0x000001d9
++#define MSR_IA32_LASTBRANCHFROMIP	0x000001db
++#define MSR_IA32_LASTBRANCHTOIP		0x000001dc
++#define MSR_IA32_LASTINTFROMIP		0x000001dd
++#define MSR_IA32_LASTINTTOIP		0x000001de
++
++/* DEBUGCTLMSR bits (others vary by model): */
++#define DEBUGCTLMSR_LBR			(1UL <<  0) /* last branch recording */
++#define DEBUGCTLMSR_BTF_SHIFT		1
++#define DEBUGCTLMSR_BTF			(1UL <<  1) /* single-step on branches */
++#define DEBUGCTLMSR_TR			(1UL <<  6)
++#define DEBUGCTLMSR_BTS			(1UL <<  7)
++#define DEBUGCTLMSR_BTINT		(1UL <<  8)
++#define DEBUGCTLMSR_BTS_OFF_OS		(1UL <<  9)
++#define DEBUGCTLMSR_BTS_OFF_USR		(1UL << 10)
++#define DEBUGCTLMSR_FREEZE_LBRS_ON_PMI	(1UL << 11)
++#define DEBUGCTLMSR_FREEZE_PERFMON_ON_PMI	(1UL << 12)
++#define DEBUGCTLMSR_FREEZE_IN_SMM_BIT	14
++#define DEBUGCTLMSR_FREEZE_IN_SMM	(1UL << DEBUGCTLMSR_FREEZE_IN_SMM_BIT)
++
++#define MSR_PEBS_FRONTEND		0x000003f7
++
++#define MSR_IA32_POWER_CTL		0x000001fc
++
++#define MSR_IA32_MC0_CTL		0x00000400
++#define MSR_IA32_MC0_STATUS		0x00000401
++#define MSR_IA32_MC0_ADDR		0x00000402
++#define MSR_IA32_MC0_MISC		0x00000403
++
++/* C-state Residency Counters */
++#define MSR_PKG_C3_RESIDENCY		0x000003f8
++#define MSR_PKG_C6_RESIDENCY		0x000003f9
++#define MSR_ATOM_PKG_C6_RESIDENCY	0x000003fa
++#define MSR_PKG_C7_RESIDENCY		0x000003fa
++#define MSR_CORE_C3_RESIDENCY		0x000003fc
++#define MSR_CORE_C6_RESIDENCY		0x000003fd
++#define MSR_CORE_C7_RESIDENCY		0x000003fe
++#define MSR_KNL_CORE_C6_RESIDENCY	0x000003ff
++#define MSR_PKG_C2_RESIDENCY		0x0000060d
++#define MSR_PKG_C8_RESIDENCY		0x00000630
++#define MSR_PKG_C9_RESIDENCY		0x00000631
++#define MSR_PKG_C10_RESIDENCY		0x00000632
++
++/* Interrupt Response Limit */
++#define MSR_PKGC3_IRTL			0x0000060a
++#define MSR_PKGC6_IRTL			0x0000060b
++#define MSR_PKGC7_IRTL			0x0000060c
++#define MSR_PKGC8_IRTL			0x00000633
++#define MSR_PKGC9_IRTL			0x00000634
++#define MSR_PKGC10_IRTL			0x00000635
++
++/* Run Time Average Power Limiting (RAPL) Interface */
++
++#define MSR_RAPL_POWER_UNIT		0x00000606
++
++#define MSR_PKG_POWER_LIMIT		0x00000610
++#define MSR_PKG_ENERGY_STATUS		0x00000611
++#define MSR_PKG_PERF_STATUS		0x00000613
++#define MSR_PKG_POWER_INFO		0x00000614
++
++#define MSR_DRAM_POWER_LIMIT		0x00000618
++#define MSR_DRAM_ENERGY_STATUS		0x00000619
++#define MSR_DRAM_PERF_STATUS		0x0000061b
++#define MSR_DRAM_POWER_INFO		0x0000061c
++
++#define MSR_PP0_POWER_LIMIT		0x00000638
++#define MSR_PP0_ENERGY_STATUS		0x00000639
++#define MSR_PP0_POLICY			0x0000063a
++#define MSR_PP0_PERF_STATUS		0x0000063b
++
++#define MSR_PP1_POWER_LIMIT		0x00000640
++#define MSR_PP1_ENERGY_STATUS		0x00000641
++#define MSR_PP1_POLICY			0x00000642
++
++/* Config TDP MSRs */
++#define MSR_CONFIG_TDP_NOMINAL		0x00000648
++#define MSR_CONFIG_TDP_LEVEL_1		0x00000649
++#define MSR_CONFIG_TDP_LEVEL_2		0x0000064A
++#define MSR_CONFIG_TDP_CONTROL		0x0000064B
++#define MSR_TURBO_ACTIVATION_RATIO	0x0000064C
++
++#define MSR_PLATFORM_ENERGY_STATUS	0x0000064D
++
++#define MSR_PKG_WEIGHTED_CORE_C0_RES	0x00000658
++#define MSR_PKG_ANY_CORE_C0_RES		0x00000659
++#define MSR_PKG_ANY_GFXE_C0_RES		0x0000065A
++#define MSR_PKG_BOTH_CORE_GFXE_C0_RES	0x0000065B
++
++#define MSR_CORE_C1_RES			0x00000660
++#define MSR_MODULE_C6_RES_MS		0x00000664
++
++#define MSR_CC6_DEMOTION_POLICY_CONFIG	0x00000668
++#define MSR_MC6_DEMOTION_POLICY_CONFIG	0x00000669
++
++#define MSR_ATOM_CORE_RATIOS		0x0000066a
++#define MSR_ATOM_CORE_VIDS		0x0000066b
++#define MSR_ATOM_CORE_TURBO_RATIOS	0x0000066c
++#define MSR_ATOM_CORE_TURBO_VIDS	0x0000066d
++
++
++#define MSR_CORE_PERF_LIMIT_REASONS	0x00000690
++#define MSR_GFX_PERF_LIMIT_REASONS	0x000006B0
++#define MSR_RING_PERF_LIMIT_REASONS	0x000006B1
++
++/* Hardware P state interface */
++#define MSR_PPERF			0x0000064e
++#define MSR_PERF_LIMIT_REASONS		0x0000064f
++#define MSR_PM_ENABLE			0x00000770
++#define MSR_HWP_CAPABILITIES		0x00000771
++#define MSR_HWP_REQUEST_PKG		0x00000772
++#define MSR_HWP_INTERRUPT		0x00000773
++#define MSR_HWP_REQUEST 		0x00000774
++#define MSR_HWP_STATUS			0x00000777
++
++/* CPUID.6.EAX */
++#define HWP_BASE_BIT			(1<<7)
++#define HWP_NOTIFICATIONS_BIT		(1<<8)
++#define HWP_ACTIVITY_WINDOW_BIT		(1<<9)
++#define HWP_ENERGY_PERF_PREFERENCE_BIT	(1<<10)
++#define HWP_PACKAGE_LEVEL_REQUEST_BIT	(1<<11)
++
++/* IA32_HWP_CAPABILITIES */
++#define HWP_HIGHEST_PERF(x)		(((x) >> 0) & 0xff)
++#define HWP_GUARANTEED_PERF(x)		(((x) >> 8) & 0xff)
++#define HWP_MOSTEFFICIENT_PERF(x)	(((x) >> 16) & 0xff)
++#define HWP_LOWEST_PERF(x)		(((x) >> 24) & 0xff)
++
++/* IA32_HWP_REQUEST */
++#define HWP_MIN_PERF(x) 		(x & 0xff)
++#define HWP_MAX_PERF(x) 		((x & 0xff) << 8)
++#define HWP_DESIRED_PERF(x)		((x & 0xff) << 16)
++#define HWP_ENERGY_PERF_PREFERENCE(x)	(((unsigned long long) x & 0xff) << 24)
++#define HWP_EPP_PERFORMANCE		0x00
++#define HWP_EPP_BALANCE_PERFORMANCE	0x80
++#define HWP_EPP_BALANCE_POWERSAVE	0xC0
++#define HWP_EPP_POWERSAVE		0xFF
++#define HWP_ACTIVITY_WINDOW(x)		((unsigned long long)(x & 0xff3) << 32)
++#define HWP_PACKAGE_CONTROL(x)		((unsigned long long)(x & 0x1) << 42)
++
++/* IA32_HWP_STATUS */
++#define HWP_GUARANTEED_CHANGE(x)	(x & 0x1)
++#define HWP_EXCURSION_TO_MINIMUM(x)	(x & 0x4)
++
++/* IA32_HWP_INTERRUPT */
++#define HWP_CHANGE_TO_GUARANTEED_INT(x)	(x & 0x1)
++#define HWP_EXCURSION_TO_MINIMUM_INT(x)	(x & 0x2)
++
++#define MSR_AMD64_MC0_MASK		0xc0010044
++
++#define MSR_IA32_MCx_CTL(x)		(MSR_IA32_MC0_CTL + 4*(x))
++#define MSR_IA32_MCx_STATUS(x)		(MSR_IA32_MC0_STATUS + 4*(x))
++#define MSR_IA32_MCx_ADDR(x)		(MSR_IA32_MC0_ADDR + 4*(x))
++#define MSR_IA32_MCx_MISC(x)		(MSR_IA32_MC0_MISC + 4*(x))
++
++#define MSR_AMD64_MCx_MASK(x)		(MSR_AMD64_MC0_MASK + (x))
++
++/* These are consecutive and not in the normal 4er MCE bank block */
++#define MSR_IA32_MC0_CTL2		0x00000280
++#define MSR_IA32_MCx_CTL2(x)		(MSR_IA32_MC0_CTL2 + (x))
++
++#define MSR_P6_PERFCTR0			0x000000c1
++#define MSR_P6_PERFCTR1			0x000000c2
++#define MSR_P6_EVNTSEL0			0x00000186
++#define MSR_P6_EVNTSEL1			0x00000187
++
++#define MSR_KNC_PERFCTR0               0x00000020
++#define MSR_KNC_PERFCTR1               0x00000021
++#define MSR_KNC_EVNTSEL0               0x00000028
++#define MSR_KNC_EVNTSEL1               0x00000029
++
++/* Alternative perfctr range with full access. */
++#define MSR_IA32_PMC0			0x000004c1
++
++/* Auto-reload via MSR instead of DS area */
++#define MSR_RELOAD_PMC0			0x000014c1
++#define MSR_RELOAD_FIXED_CTR0		0x00001309
++
++/*
++ * AMD64 MSRs. Not complete. See the architecture manual for a more
++ * complete list.
++ */
++#define MSR_AMD64_PATCH_LEVEL		0x0000008b
++#define MSR_AMD64_TSC_RATIO		0xc0000104
++#define MSR_AMD64_NB_CFG		0xc001001f
++#define MSR_AMD64_CPUID_FN_1		0xc0011004
++#define MSR_AMD64_PATCH_LOADER		0xc0010020
++#define MSR_AMD_PERF_CTL		0xc0010062
++#define MSR_AMD_PERF_STATUS		0xc0010063
++#define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
++#define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
++#define MSR_AMD64_OSVW_STATUS		0xc0010141
++#define MSR_AMD64_LS_CFG		0xc0011020
++#define MSR_AMD64_DC_CFG		0xc0011022
++#define MSR_AMD64_BU_CFG2		0xc001102a
++#define MSR_AMD64_IBSFETCHCTL		0xc0011030
++#define MSR_AMD64_IBSFETCHLINAD		0xc0011031
++#define MSR_AMD64_IBSFETCHPHYSAD	0xc0011032
++#define MSR_AMD64_IBSFETCH_REG_COUNT	3
++#define MSR_AMD64_IBSFETCH_REG_MASK	((1UL<<MSR_AMD64_IBSFETCH_REG_COUNT)-1)
++#define MSR_AMD64_IBSOPCTL		0xc0011033
++#define MSR_AMD64_IBSOPRIP		0xc0011034
++#define MSR_AMD64_IBSOPDATA		0xc0011035
++#define MSR_AMD64_IBSOPDATA2		0xc0011036
++#define MSR_AMD64_IBSOPDATA3		0xc0011037
++#define MSR_AMD64_IBSDCLINAD		0xc0011038
++#define MSR_AMD64_IBSDCPHYSAD		0xc0011039
++#define MSR_AMD64_IBSOP_REG_COUNT	7
++#define MSR_AMD64_IBSOP_REG_MASK	((1UL<<MSR_AMD64_IBSOP_REG_COUNT)-1)
++#define MSR_AMD64_IBSCTL		0xc001103a
++#define MSR_AMD64_IBSBRTARGET		0xc001103b
++#define MSR_AMD64_IBSOPDATA4		0xc001103d
++#define MSR_AMD64_IBS_REG_COUNT_MAX	8 /* includes MSR_AMD64_IBSBRTARGET */
++#define MSR_AMD64_SEV			0xc0010131
++#define MSR_AMD64_SEV_ENABLED_BIT	0
++#define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
++
++#define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
++
++/* Fam 17h MSRs */
++#define MSR_F17H_IRPERF			0xc00000e9
++
++/* Fam 16h MSRs */
++#define MSR_F16H_L2I_PERF_CTL		0xc0010230
++#define MSR_F16H_L2I_PERF_CTR		0xc0010231
++#define MSR_F16H_DR1_ADDR_MASK		0xc0011019
++#define MSR_F16H_DR2_ADDR_MASK		0xc001101a
++#define MSR_F16H_DR3_ADDR_MASK		0xc001101b
++#define MSR_F16H_DR0_ADDR_MASK		0xc0011027
++
++/* Fam 15h MSRs */
++#define MSR_F15H_PERF_CTL		0xc0010200
++#define MSR_F15H_PERF_CTL0		MSR_F15H_PERF_CTL
++#define MSR_F15H_PERF_CTL1		(MSR_F15H_PERF_CTL + 2)
++#define MSR_F15H_PERF_CTL2		(MSR_F15H_PERF_CTL + 4)
++#define MSR_F15H_PERF_CTL3		(MSR_F15H_PERF_CTL + 6)
++#define MSR_F15H_PERF_CTL4		(MSR_F15H_PERF_CTL + 8)
++#define MSR_F15H_PERF_CTL5		(MSR_F15H_PERF_CTL + 10)
++
++#define MSR_F15H_PERF_CTR		0xc0010201
++#define MSR_F15H_PERF_CTR0		MSR_F15H_PERF_CTR
++#define MSR_F15H_PERF_CTR1		(MSR_F15H_PERF_CTR + 2)
++#define MSR_F15H_PERF_CTR2		(MSR_F15H_PERF_CTR + 4)
++#define MSR_F15H_PERF_CTR3		(MSR_F15H_PERF_CTR + 6)
++#define MSR_F15H_PERF_CTR4		(MSR_F15H_PERF_CTR + 8)
++#define MSR_F15H_PERF_CTR5		(MSR_F15H_PERF_CTR + 10)
++
++#define MSR_F15H_NB_PERF_CTL		0xc0010240
++#define MSR_F15H_NB_PERF_CTR		0xc0010241
++#define MSR_F15H_PTSC			0xc0010280
++#define MSR_F15H_IC_CFG			0xc0011021
++#define MSR_F15H_EX_CFG			0xc001102c
++
++/* Fam 10h MSRs */
++#define MSR_FAM10H_MMIO_CONF_BASE	0xc0010058
++#define FAM10H_MMIO_CONF_ENABLE		(1<<0)
++#define FAM10H_MMIO_CONF_BUSRANGE_MASK	0xf
++#define FAM10H_MMIO_CONF_BUSRANGE_SHIFT 2
++#define FAM10H_MMIO_CONF_BASE_MASK	0xfffffffULL
++#define FAM10H_MMIO_CONF_BASE_SHIFT	20
++#define MSR_FAM10H_NODE_ID		0xc001100c
++#define MSR_F10H_DECFG			0xc0011029
++#define MSR_F10H_DECFG_LFENCE_SERIALIZE_BIT	1
++#define MSR_F10H_DECFG_LFENCE_SERIALIZE		BIT_ULL(MSR_F10H_DECFG_LFENCE_SERIALIZE_BIT)
++
++/* K8 MSRs */
++#define MSR_K8_TOP_MEM1			0xc001001a
++#define MSR_K8_TOP_MEM2			0xc001001d
++#define MSR_K8_SYSCFG			0xc0010010
++#define MSR_K8_SYSCFG_MEM_ENCRYPT_BIT	23
++#define MSR_K8_SYSCFG_MEM_ENCRYPT	BIT_ULL(MSR_K8_SYSCFG_MEM_ENCRYPT_BIT)
++#define MSR_K8_INT_PENDING_MSG		0xc0010055
++/* C1E active bits in int pending message */
++#define K8_INTP_C1E_ACTIVE_MASK		0x18000000
++#define MSR_K8_TSEG_ADDR		0xc0010112
++#define MSR_K8_TSEG_MASK		0xc0010113
++#define K8_MTRRFIXRANGE_DRAM_ENABLE	0x00040000 /* MtrrFixDramEn bit    */
++#define K8_MTRRFIXRANGE_DRAM_MODIFY	0x00080000 /* MtrrFixDramModEn bit */
++#define K8_MTRR_RDMEM_WRMEM_MASK	0x18181818 /* Mask: RdMem|WrMem    */
++
++/* K7 MSRs */
++#define MSR_K7_EVNTSEL0			0xc0010000
++#define MSR_K7_PERFCTR0			0xc0010004
++#define MSR_K7_EVNTSEL1			0xc0010001
++#define MSR_K7_PERFCTR1			0xc0010005
++#define MSR_K7_EVNTSEL2			0xc0010002
++#define MSR_K7_PERFCTR2			0xc0010006
++#define MSR_K7_EVNTSEL3			0xc0010003
++#define MSR_K7_PERFCTR3			0xc0010007
++#define MSR_K7_CLK_CTL			0xc001001b
++#define MSR_K7_HWCR			0xc0010015
++#define MSR_K7_HWCR_SMMLOCK_BIT		0
++#define MSR_K7_HWCR_SMMLOCK		BIT_ULL(MSR_K7_HWCR_SMMLOCK_BIT)
++#define MSR_K7_FID_VID_CTL		0xc0010041
++#define MSR_K7_FID_VID_STATUS		0xc0010042
++
++/* K6 MSRs */
++#define MSR_K6_WHCR			0xc0000082
++#define MSR_K6_UWCCR			0xc0000085
++#define MSR_K6_EPMR			0xc0000086
++#define MSR_K6_PSOR			0xc0000087
++#define MSR_K6_PFIR			0xc0000088
++
++/* Centaur-Hauls/IDT defined MSRs. */
++#define MSR_IDT_FCR1			0x00000107
++#define MSR_IDT_FCR2			0x00000108
++#define MSR_IDT_FCR3			0x00000109
++#define MSR_IDT_FCR4			0x0000010a
++
++#define MSR_IDT_MCR0			0x00000110
++#define MSR_IDT_MCR1			0x00000111
++#define MSR_IDT_MCR2			0x00000112
++#define MSR_IDT_MCR3			0x00000113
++#define MSR_IDT_MCR4			0x00000114
++#define MSR_IDT_MCR5			0x00000115
++#define MSR_IDT_MCR6			0x00000116
++#define MSR_IDT_MCR7			0x00000117
++#define MSR_IDT_MCR_CTRL		0x00000120
++
++/* VIA Cyrix defined MSRs*/
++#define MSR_VIA_FCR			0x00001107
++#define MSR_VIA_LONGHAUL		0x0000110a
++#define MSR_VIA_RNG			0x0000110b
++#define MSR_VIA_BCR2			0x00001147
++
++/* Transmeta defined MSRs */
++#define MSR_TMTA_LONGRUN_CTRL		0x80868010
++#define MSR_TMTA_LONGRUN_FLAGS		0x80868011
++#define MSR_TMTA_LRTI_READOUT		0x80868018
++#define MSR_TMTA_LRTI_VOLT_MHZ		0x8086801a
++
++/* Intel defined MSRs. */
++#define MSR_IA32_P5_MC_ADDR		0x00000000
++#define MSR_IA32_P5_MC_TYPE		0x00000001
++#define MSR_IA32_TSC			0x00000010
++#define MSR_IA32_PLATFORM_ID		0x00000017
++#define MSR_IA32_EBL_CR_POWERON		0x0000002a
++#define MSR_EBC_FREQUENCY_ID		0x0000002c
++#define MSR_SMI_COUNT			0x00000034
++#define MSR_IA32_FEATURE_CONTROL        0x0000003a
++#define MSR_IA32_TSC_ADJUST             0x0000003b
++#define MSR_IA32_BNDCFGS		0x00000d90
++
++#define MSR_IA32_BNDCFGS_RSVD		0x00000ffc
++
++#define MSR_IA32_XSS			0x00000da0
++
++#define FEATURE_CONTROL_LOCKED				(1<<0)
++#define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
++#define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
++#define FEATURE_CONTROL_LMCE				(1<<20)
++
++#define MSR_IA32_APICBASE		0x0000001b
++#define MSR_IA32_APICBASE_BSP		(1<<8)
++#define MSR_IA32_APICBASE_ENABLE	(1<<11)
++#define MSR_IA32_APICBASE_BASE		(0xfffff<<12)
++
++#define MSR_IA32_TSCDEADLINE		0x000006e0
++
++#define MSR_IA32_UCODE_WRITE		0x00000079
++#define MSR_IA32_UCODE_REV		0x0000008b
++
++#define MSR_IA32_SMM_MONITOR_CTL	0x0000009b
++#define MSR_IA32_SMBASE			0x0000009e
++
++#define MSR_IA32_PERF_STATUS		0x00000198
++#define MSR_IA32_PERF_CTL		0x00000199
++#define INTEL_PERF_CTL_MASK		0xffff
++
++#define MSR_IA32_MPERF			0x000000e7
++#define MSR_IA32_APERF			0x000000e8
++
++#define MSR_IA32_THERM_CONTROL		0x0000019a
++#define MSR_IA32_THERM_INTERRUPT	0x0000019b
++
++#define THERM_INT_HIGH_ENABLE		(1 << 0)
++#define THERM_INT_LOW_ENABLE		(1 << 1)
++#define THERM_INT_PLN_ENABLE		(1 << 24)
++
++#define MSR_IA32_THERM_STATUS		0x0000019c
++
++#define THERM_STATUS_PROCHOT		(1 << 0)
++#define THERM_STATUS_POWER_LIMIT	(1 << 10)
++
++#define MSR_THERM2_CTL			0x0000019d
++
++#define MSR_THERM2_CTL_TM_SELECT	(1ULL << 16)
++
++#define MSR_IA32_MISC_ENABLE		0x000001a0
++
++#define MSR_IA32_TEMPERATURE_TARGET	0x000001a2
++
++#define MSR_MISC_FEATURE_CONTROL	0x000001a4
++#define MSR_MISC_PWR_MGMT		0x000001aa
++
++#define MSR_IA32_ENERGY_PERF_BIAS	0x000001b0
++#define ENERGY_PERF_BIAS_PERFORMANCE		0
++#define ENERGY_PERF_BIAS_BALANCE_PERFORMANCE	4
++#define ENERGY_PERF_BIAS_NORMAL			6
++#define ENERGY_PERF_BIAS_BALANCE_POWERSAVE	8
++#define ENERGY_PERF_BIAS_POWERSAVE		15
++
++#define MSR_IA32_PACKAGE_THERM_STATUS		0x000001b1
++
++#define PACKAGE_THERM_STATUS_PROCHOT		(1 << 0)
++#define PACKAGE_THERM_STATUS_POWER_LIMIT	(1 << 10)
++
++#define MSR_IA32_PACKAGE_THERM_INTERRUPT	0x000001b2
++
++#define PACKAGE_THERM_INT_HIGH_ENABLE		(1 << 0)
++#define PACKAGE_THERM_INT_LOW_ENABLE		(1 << 1)
++#define PACKAGE_THERM_INT_PLN_ENABLE		(1 << 24)
++
++/* Thermal Thresholds Support */
++#define THERM_INT_THRESHOLD0_ENABLE    (1 << 15)
++#define THERM_SHIFT_THRESHOLD0        8
++#define THERM_MASK_THRESHOLD0          (0x7f << THERM_SHIFT_THRESHOLD0)
++#define THERM_INT_THRESHOLD1_ENABLE    (1 << 23)
++#define THERM_SHIFT_THRESHOLD1        16
++#define THERM_MASK_THRESHOLD1          (0x7f << THERM_SHIFT_THRESHOLD1)
++#define THERM_STATUS_THRESHOLD0        (1 << 6)
++#define THERM_LOG_THRESHOLD0           (1 << 7)
++#define THERM_STATUS_THRESHOLD1        (1 << 8)
++#define THERM_LOG_THRESHOLD1           (1 << 9)
++
++/* MISC_ENABLE bits: architectural */
++#define MSR_IA32_MISC_ENABLE_FAST_STRING_BIT		0
++#define MSR_IA32_MISC_ENABLE_FAST_STRING		(1ULL << MSR_IA32_MISC_ENABLE_FAST_STRING_BIT)
++#define MSR_IA32_MISC_ENABLE_TCC_BIT			1
++#define MSR_IA32_MISC_ENABLE_TCC			(1ULL << MSR_IA32_MISC_ENABLE_TCC_BIT)
++#define MSR_IA32_MISC_ENABLE_EMON_BIT			7
++#define MSR_IA32_MISC_ENABLE_EMON			(1ULL << MSR_IA32_MISC_ENABLE_EMON_BIT)
++#define MSR_IA32_MISC_ENABLE_BTS_UNAVAIL_BIT		11
++#define MSR_IA32_MISC_ENABLE_BTS_UNAVAIL		(1ULL << MSR_IA32_MISC_ENABLE_BTS_UNAVAIL_BIT)
++#define MSR_IA32_MISC_ENABLE_PEBS_UNAVAIL_BIT		12
++#define MSR_IA32_MISC_ENABLE_PEBS_UNAVAIL		(1ULL << MSR_IA32_MISC_ENABLE_PEBS_UNAVAIL_BIT)
++#define MSR_IA32_MISC_ENABLE_ENHANCED_SPEEDSTEP_BIT	16
++#define MSR_IA32_MISC_ENABLE_ENHANCED_SPEEDSTEP		(1ULL << MSR_IA32_MISC_ENABLE_ENHANCED_SPEEDSTEP_BIT)
++#define MSR_IA32_MISC_ENABLE_MWAIT_BIT			18
++#define MSR_IA32_MISC_ENABLE_MWAIT			(1ULL << MSR_IA32_MISC_ENABLE_MWAIT_BIT)
++#define MSR_IA32_MISC_ENABLE_LIMIT_CPUID_BIT		22
++#define MSR_IA32_MISC_ENABLE_LIMIT_CPUID		(1ULL << MSR_IA32_MISC_ENABLE_LIMIT_CPUID_BIT)
++#define MSR_IA32_MISC_ENABLE_XTPR_DISABLE_BIT		23
++#define MSR_IA32_MISC_ENABLE_XTPR_DISABLE		(1ULL << MSR_IA32_MISC_ENABLE_XTPR_DISABLE_BIT)
++#define MSR_IA32_MISC_ENABLE_XD_DISABLE_BIT		34
++#define MSR_IA32_MISC_ENABLE_XD_DISABLE			(1ULL << MSR_IA32_MISC_ENABLE_XD_DISABLE_BIT)
++
++/* MISC_ENABLE bits: model-specific, meaning may vary from core to core */
++#define MSR_IA32_MISC_ENABLE_X87_COMPAT_BIT		2
++#define MSR_IA32_MISC_ENABLE_X87_COMPAT			(1ULL << MSR_IA32_MISC_ENABLE_X87_COMPAT_BIT)
++#define MSR_IA32_MISC_ENABLE_TM1_BIT			3
++#define MSR_IA32_MISC_ENABLE_TM1			(1ULL << MSR_IA32_MISC_ENABLE_TM1_BIT)
++#define MSR_IA32_MISC_ENABLE_SPLIT_LOCK_DISABLE_BIT	4
++#define MSR_IA32_MISC_ENABLE_SPLIT_LOCK_DISABLE		(1ULL << MSR_IA32_MISC_ENABLE_SPLIT_LOCK_DISABLE_BIT)
++#define MSR_IA32_MISC_ENABLE_L3CACHE_DISABLE_BIT	6
++#define MSR_IA32_MISC_ENABLE_L3CACHE_DISABLE		(1ULL << MSR_IA32_MISC_ENABLE_L3CACHE_DISABLE_BIT)
++#define MSR_IA32_MISC_ENABLE_SUPPRESS_LOCK_BIT		8
++#define MSR_IA32_MISC_ENABLE_SUPPRESS_LOCK		(1ULL << MSR_IA32_MISC_ENABLE_SUPPRESS_LOCK_BIT)
++#define MSR_IA32_MISC_ENABLE_PREFETCH_DISABLE_BIT	9
++#define MSR_IA32_MISC_ENABLE_PREFETCH_DISABLE		(1ULL << MSR_IA32_MISC_ENABLE_PREFETCH_DISABLE_BIT)
++#define MSR_IA32_MISC_ENABLE_FERR_BIT			10
++#define MSR_IA32_MISC_ENABLE_FERR			(1ULL << MSR_IA32_MISC_ENABLE_FERR_BIT)
++#define MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX_BIT		10
++#define MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX		(1ULL << MSR_IA32_MISC_ENABLE_FERR_MULTIPLEX_BIT)
++#define MSR_IA32_MISC_ENABLE_TM2_BIT			13
++#define MSR_IA32_MISC_ENABLE_TM2			(1ULL << MSR_IA32_MISC_ENABLE_TM2_BIT)
++#define MSR_IA32_MISC_ENABLE_ADJ_PREF_DISABLE_BIT	19
++#define MSR_IA32_MISC_ENABLE_ADJ_PREF_DISABLE		(1ULL << MSR_IA32_MISC_ENABLE_ADJ_PREF_DISABLE_BIT)
++#define MSR_IA32_MISC_ENABLE_SPEEDSTEP_LOCK_BIT		20
++#define MSR_IA32_MISC_ENABLE_SPEEDSTEP_LOCK		(1ULL << MSR_IA32_MISC_ENABLE_SPEEDSTEP_LOCK_BIT)
++#define MSR_IA32_MISC_ENABLE_L1D_CONTEXT_BIT		24
++#define MSR_IA32_MISC_ENABLE_L1D_CONTEXT		(1ULL << MSR_IA32_MISC_ENABLE_L1D_CONTEXT_BIT)
++#define MSR_IA32_MISC_ENABLE_DCU_PREF_DISABLE_BIT	37
++#define MSR_IA32_MISC_ENABLE_DCU_PREF_DISABLE		(1ULL << MSR_IA32_MISC_ENABLE_DCU_PREF_DISABLE_BIT)
++#define MSR_IA32_MISC_ENABLE_TURBO_DISABLE_BIT		38
++#define MSR_IA32_MISC_ENABLE_TURBO_DISABLE		(1ULL << MSR_IA32_MISC_ENABLE_TURBO_DISABLE_BIT)
++#define MSR_IA32_MISC_ENABLE_IP_PREF_DISABLE_BIT	39
++#define MSR_IA32_MISC_ENABLE_IP_PREF_DISABLE		(1ULL << MSR_IA32_MISC_ENABLE_IP_PREF_DISABLE_BIT)
++
++/* MISC_FEATURES_ENABLES non-architectural features */
++#define MSR_MISC_FEATURES_ENABLES	0x00000140
++
++#define MSR_MISC_FEATURES_ENABLES_CPUID_FAULT_BIT	0
++#define MSR_MISC_FEATURES_ENABLES_CPUID_FAULT		BIT_ULL(MSR_MISC_FEATURES_ENABLES_CPUID_FAULT_BIT)
++#define MSR_MISC_FEATURES_ENABLES_RING3MWAIT_BIT	1
++
++#define MSR_IA32_TSC_DEADLINE		0x000006E0
++
++
++#define MSR_TSX_FORCE_ABORT		0x0000010F
++
++#define MSR_TFA_RTM_FORCE_ABORT_BIT	0
++#define MSR_TFA_RTM_FORCE_ABORT		BIT_ULL(MSR_TFA_RTM_FORCE_ABORT_BIT)
++
++/* P4/Xeon+ specific */
++#define MSR_IA32_MCG_EAX		0x00000180
++#define MSR_IA32_MCG_EBX		0x00000181
++#define MSR_IA32_MCG_ECX		0x00000182
++#define MSR_IA32_MCG_EDX		0x00000183
++#define MSR_IA32_MCG_ESI		0x00000184
++#define MSR_IA32_MCG_EDI		0x00000185
++#define MSR_IA32_MCG_EBP		0x00000186
++#define MSR_IA32_MCG_ESP		0x00000187
++#define MSR_IA32_MCG_EFLAGS		0x00000188
++#define MSR_IA32_MCG_EIP		0x00000189
++#define MSR_IA32_MCG_RESERVED		0x0000018a
++
++/* Pentium IV performance counter MSRs */
++#define MSR_P4_BPU_PERFCTR0		0x00000300
++#define MSR_P4_BPU_PERFCTR1		0x00000301
++#define MSR_P4_BPU_PERFCTR2		0x00000302
++#define MSR_P4_BPU_PERFCTR3		0x00000303
++#define MSR_P4_MS_PERFCTR0		0x00000304
++#define MSR_P4_MS_PERFCTR1		0x00000305
++#define MSR_P4_MS_PERFCTR2		0x00000306
++#define MSR_P4_MS_PERFCTR3		0x00000307
++#define MSR_P4_FLAME_PERFCTR0		0x00000308
++#define MSR_P4_FLAME_PERFCTR1		0x00000309
++#define MSR_P4_FLAME_PERFCTR2		0x0000030a
++#define MSR_P4_FLAME_PERFCTR3		0x0000030b
++#define MSR_P4_IQ_PERFCTR0		0x0000030c
++#define MSR_P4_IQ_PERFCTR1		0x0000030d
++#define MSR_P4_IQ_PERFCTR2		0x0000030e
++#define MSR_P4_IQ_PERFCTR3		0x0000030f
++#define MSR_P4_IQ_PERFCTR4		0x00000310
++#define MSR_P4_IQ_PERFCTR5		0x00000311
++#define MSR_P4_BPU_CCCR0		0x00000360
++#define MSR_P4_BPU_CCCR1		0x00000361
++#define MSR_P4_BPU_CCCR2		0x00000362
++#define MSR_P4_BPU_CCCR3		0x00000363
++#define MSR_P4_MS_CCCR0			0x00000364
++#define MSR_P4_MS_CCCR1			0x00000365
++#define MSR_P4_MS_CCCR2			0x00000366
++#define MSR_P4_MS_CCCR3			0x00000367
++#define MSR_P4_FLAME_CCCR0		0x00000368
++#define MSR_P4_FLAME_CCCR1		0x00000369
++#define MSR_P4_FLAME_CCCR2		0x0000036a
++#define MSR_P4_FLAME_CCCR3		0x0000036b
++#define MSR_P4_IQ_CCCR0			0x0000036c
++#define MSR_P4_IQ_CCCR1			0x0000036d
++#define MSR_P4_IQ_CCCR2			0x0000036e
++#define MSR_P4_IQ_CCCR3			0x0000036f
++#define MSR_P4_IQ_CCCR4			0x00000370
++#define MSR_P4_IQ_CCCR5			0x00000371
++#define MSR_P4_ALF_ESCR0		0x000003ca
++#define MSR_P4_ALF_ESCR1		0x000003cb
++#define MSR_P4_BPU_ESCR0		0x000003b2
++#define MSR_P4_BPU_ESCR1		0x000003b3
++#define MSR_P4_BSU_ESCR0		0x000003a0
++#define MSR_P4_BSU_ESCR1		0x000003a1
++#define MSR_P4_CRU_ESCR0		0x000003b8
++#define MSR_P4_CRU_ESCR1		0x000003b9
++#define MSR_P4_CRU_ESCR2		0x000003cc
++#define MSR_P4_CRU_ESCR3		0x000003cd
++#define MSR_P4_CRU_ESCR4		0x000003e0
++#define MSR_P4_CRU_ESCR5		0x000003e1
++#define MSR_P4_DAC_ESCR0		0x000003a8
++#define MSR_P4_DAC_ESCR1		0x000003a9
++#define MSR_P4_FIRM_ESCR0		0x000003a4
++#define MSR_P4_FIRM_ESCR1		0x000003a5
++#define MSR_P4_FLAME_ESCR0		0x000003a6
++#define MSR_P4_FLAME_ESCR1		0x000003a7
++#define MSR_P4_FSB_ESCR0		0x000003a2
++#define MSR_P4_FSB_ESCR1		0x000003a3
++#define MSR_P4_IQ_ESCR0			0x000003ba
++#define MSR_P4_IQ_ESCR1			0x000003bb
++#define MSR_P4_IS_ESCR0			0x000003b4
++#define MSR_P4_IS_ESCR1			0x000003b5
++#define MSR_P4_ITLB_ESCR0		0x000003b6
++#define MSR_P4_ITLB_ESCR1		0x000003b7
++#define MSR_P4_IX_ESCR0			0x000003c8
++#define MSR_P4_IX_ESCR1			0x000003c9
++#define MSR_P4_MOB_ESCR0		0x000003aa
++#define MSR_P4_MOB_ESCR1		0x000003ab
++#define MSR_P4_MS_ESCR0			0x000003c0
++#define MSR_P4_MS_ESCR1			0x000003c1
++#define MSR_P4_PMH_ESCR0		0x000003ac
++#define MSR_P4_PMH_ESCR1		0x000003ad
++#define MSR_P4_RAT_ESCR0		0x000003bc
++#define MSR_P4_RAT_ESCR1		0x000003bd
++#define MSR_P4_SAAT_ESCR0		0x000003ae
++#define MSR_P4_SAAT_ESCR1		0x000003af
++#define MSR_P4_SSU_ESCR0		0x000003be
++#define MSR_P4_SSU_ESCR1		0x000003bf /* guess: not in manual */
++
++#define MSR_P4_TBPU_ESCR0		0x000003c2
++#define MSR_P4_TBPU_ESCR1		0x000003c3
++#define MSR_P4_TC_ESCR0			0x000003c4
++#define MSR_P4_TC_ESCR1			0x000003c5
++#define MSR_P4_U2L_ESCR0		0x000003b0
++#define MSR_P4_U2L_ESCR1		0x000003b1
++
++#define MSR_P4_PEBS_MATRIX_VERT		0x000003f2
++
++/* Intel Core-based CPU performance counters */
++#define MSR_CORE_PERF_FIXED_CTR0	0x00000309
++#define MSR_CORE_PERF_FIXED_CTR1	0x0000030a
++#define MSR_CORE_PERF_FIXED_CTR2	0x0000030b
++#define MSR_CORE_PERF_FIXED_CTR_CTRL	0x0000038d
++#define MSR_CORE_PERF_GLOBAL_STATUS	0x0000038e
++#define MSR_CORE_PERF_GLOBAL_CTRL	0x0000038f
++#define MSR_CORE_PERF_GLOBAL_OVF_CTRL	0x00000390
++
++/* PERF_GLOBAL_OVF_CTL bits */
++#define MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI_BIT	55
++#define MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI		(1ULL << MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI_BIT)
++#define MSR_CORE_PERF_GLOBAL_OVF_CTRL_OVF_BUF_BIT		62
++#define MSR_CORE_PERF_GLOBAL_OVF_CTRL_OVF_BUF			(1ULL <<  MSR_CORE_PERF_GLOBAL_OVF_CTRL_OVF_BUF_BIT)
++#define MSR_CORE_PERF_GLOBAL_OVF_CTRL_COND_CHGD_BIT		63
++#define MSR_CORE_PERF_GLOBAL_OVF_CTRL_COND_CHGD			(1ULL << MSR_CORE_PERF_GLOBAL_OVF_CTRL_COND_CHGD_BIT)
++
++/* Geode defined MSRs */
++#define MSR_GEODE_BUSCONT_CONF0		0x00001900
++
++/* Intel VT MSRs */
++#define MSR_IA32_VMX_BASIC              0x00000480
++#define MSR_IA32_VMX_PINBASED_CTLS      0x00000481
++#define MSR_IA32_VMX_PROCBASED_CTLS     0x00000482
++#define MSR_IA32_VMX_EXIT_CTLS          0x00000483
++#define MSR_IA32_VMX_ENTRY_CTLS         0x00000484
++#define MSR_IA32_VMX_MISC               0x00000485
++#define MSR_IA32_VMX_CR0_FIXED0         0x00000486
++#define MSR_IA32_VMX_CR0_FIXED1         0x00000487
++#define MSR_IA32_VMX_CR4_FIXED0         0x00000488
++#define MSR_IA32_VMX_CR4_FIXED1         0x00000489
++#define MSR_IA32_VMX_VMCS_ENUM          0x0000048a
++#define MSR_IA32_VMX_PROCBASED_CTLS2    0x0000048b
++#define MSR_IA32_VMX_EPT_VPID_CAP       0x0000048c
++#define MSR_IA32_VMX_TRUE_PINBASED_CTLS  0x0000048d
++#define MSR_IA32_VMX_TRUE_PROCBASED_CTLS 0x0000048e
++#define MSR_IA32_VMX_TRUE_EXIT_CTLS      0x0000048f
++#define MSR_IA32_VMX_TRUE_ENTRY_CTLS     0x00000490
++#define MSR_IA32_VMX_VMFUNC             0x00000491
++
++/* VMX_BASIC bits and bitmasks */
++#define VMX_BASIC_VMCS_SIZE_SHIFT	32
++#define VMX_BASIC_TRUE_CTLS		(1ULL << 55)
++#define VMX_BASIC_64		0x0001000000000000LLU
++#define VMX_BASIC_MEM_TYPE_SHIFT	50
++#define VMX_BASIC_MEM_TYPE_MASK	0x003c000000000000LLU
++#define VMX_BASIC_MEM_TYPE_WB	6LLU
++#define VMX_BASIC_INOUT		0x0040000000000000LLU
++
++/* MSR_IA32_VMX_MISC bits */
++#define MSR_IA32_VMX_MISC_INTEL_PT                 (1ULL << 14)
++#define MSR_IA32_VMX_MISC_VMWRITE_SHADOW_RO_FIELDS (1ULL << 29)
++#define MSR_IA32_VMX_MISC_PREEMPTION_TIMER_SCALE   0x1F
++/* AMD-V MSRs */
++
++#define MSR_VM_CR                       0xc0010114
++#define MSR_VM_IGNNE                    0xc0010115
++#define MSR_VM_HSAVE_PA                 0xc0010117
++
++#endif /* _ASM_X86_MSR_INDEX_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index cea13cb987d0..93c46d38024e 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -28,6 +28,7 @@ arch/x86/include/asm/disabled-features.h
+ arch/x86/include/asm/required-features.h
+ arch/x86/include/asm/cpufeatures.h
+ arch/x86/include/asm/inat_types.h
++arch/x86/include/asm/msr-index.h
+ arch/x86/include/uapi/asm/prctl.h
+ arch/x86/lib/x86-opcode-map.txt
+ arch/x86/tools/gen-insn-attr-x86.awk
 -- 
 2.21.0
 
