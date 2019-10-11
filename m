@@ -2,119 +2,118 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E17ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FD9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD7C2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:05:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vi3AsMoB"
+	by mail.kernel.org (Postfix) with ESMTP id 4E6E221835
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:05:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570813518;
+	bh=wQr9Xw1bo34AcsQZottMZdr1xDK0NOPvZ+QopSy8uTE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=CW/oGb3tc5KEoyNq6Q/W0cIxz/mZ0yaLw61Xdl7QeGGlRLVQ0UQhGr28M5amWxEuV
+	 0Sby5HRH770tIC698seoMAyCn63/i0R/hApRZ/uznbYQ9IU+hME5+rbFeQionjqzw2
+	 W0xNaIu0yXsZfSGkkY0Ru6lorN2xhBcEkLJUB+gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbfJKRFL (ORCPT
+        id S1728629AbfJKRFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:05:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43688 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728474AbfJKRFK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:05:10 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a2so6433884pfo.10
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 10:05:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gH8CN6ifApnuUIuL6rRcDtc3+x1r+DnUSfP1BvRM+tU=;
-        b=vi3AsMoBjn6t2StCoswScx6ITgLZ5Dgh/dkl10r9QPfaugvfwAw+Ks8xKYxym1++tD
-         hvzb7DfDTq4FZZsRTjHm5lK07UpQR6ElOaQUNQh1vMdFAB9EJtAXJ5oRLCJ/gAyvebLp
-         Y3GV0qJzrWd+xi/FPiAMnEJA2HE+WRUffyThCEm0vZX8MhhZCNZUfP4eUuHhX4RiUxMk
-         UU42FAkEi+pbCIS8fIWqciAEA4L0F6B52OPRrzwBXuxRFdbC9yYQi87WND1dKMvBIaRH
-         AhAc1Y3Z+JgaiNtoMDqv2EWxSrCg492dY9oa0cnWWSGU9eXqCgVgLip0sBwe9cQlgmfY
-         tKbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gH8CN6ifApnuUIuL6rRcDtc3+x1r+DnUSfP1BvRM+tU=;
-        b=Y5gl/5/J5NIUYyCbZ6YHGXVjJ2VtolL8Y1Ae9c5DF3c0f+Z2MzSOcWSBW98LYBBkNN
-         yFW2jjze1WxLk13MiZtgJTh6SpVY0z6Uqr0IUjEfPw2zTgY76/bpOV8ncUqEdaSbbmBq
-         IrUcW3jfIHHyTaQcDc/ss6Ch5tjSjsaQYpKEh8PFALP8WSNRj/bTm2EwFXZ4/dSP5IKa
-         gn6Kplcv/Tb3amcbQqDNXF5WK+MIxrcKIiwdBuAWNf1o8xqZ1Gu6jClfJhqE+QdBCd6P
-         tN5lhSneeMSlxXbUixIpl3ISeDsKiqCUcllpRW7KiGA3IAMqckevvYT+BlQn9wJkMVJW
-         ZkhA==
-X-Gm-Message-State: APjAAAVhed50HvoIYAMAxD2esp+nsvwHIyBwyvmQMhLIsBiMmNuCnTyg
-        Yvp5Qy902XRG7sgDKyFJeq8Pug==
-X-Google-Smtp-Source: APXvYqxCYyvcatZuXiUrQiYQSR8LloHnPBCD0DgKGggGvjPKWDeBhtnUDZ0YgxWXDlWKV/vjoimEdg==
-X-Received: by 2002:a62:2581:: with SMTP id l123mr17786124pfl.197.1570813509739;
-        Fri, 11 Oct 2019 10:05:09 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 199sm10116069pfv.152.2019.10.11.10.05.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 10:05:08 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 10:05:06 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     georgi.djakov@linaro.org, robh+dt@kernel.org, agross@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jonathan@marek.ca
-Subject: Re: [PATCH v2 2/2] interconnect: qcom: add msm8974 driver
-Message-ID: <20191011170506.GD571@minitux>
-References: <20191005114605.5279-1-masneyb@onstation.org>
- <20191005114605.5279-3-masneyb@onstation.org>
+        Fri, 11 Oct 2019 13:05:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727984AbfJKRFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 13:05:16 -0400
+Received: from linux-8ccs (ip5f5adbed.dynamic.kabel-deutschland.de [95.90.219.237])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB14B2054F;
+        Fri, 11 Oct 2019 17:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570813516;
+        bh=wQr9Xw1bo34AcsQZottMZdr1xDK0NOPvZ+QopSy8uTE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UdFLX1G7OocXQprUHRZk3ow7pupXx1gjGEmrVvCfIvBG0joH28HVFJuO7s4ZM6ypx
+         qH0yXlcVMaajpL6FKgKtHgzO8NAvS0ETRq/Q/nVES5cTun0hCQ5yNqo1yXqlTWEaDY
+         j4AZOnjrnmNBwOOrDWmycSztkbP0/4yOyVILyS+Y=
+Date:   Fri, 11 Oct 2019 19:05:06 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Modules fixes for v5.4-rc3
+Message-ID: <20191011170506.GA19908@linux-8ccs>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191005114605.5279-3-masneyb@onstation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 05 Oct 04:46 PDT 2019, Brian Masney wrote:
-> diff --git a/drivers/interconnect/qcom/msm8974.c b/drivers/interconnect/qcom/msm8974.c
-[..]
-> +static void msm8974_icc_rpm_smd_send(struct device *dev, int rsc_type,
-> +				     char *name, int id, u64 val)
-> +{
-> +	int ret;
-> +
-> +	if (id == -1)
-> +		return;
-> +
-> +	/*
-> +	 * Setting the bandwidth requests for some nodes fails and this same
-> +	 * behavior occurs on the downstream MSM 3.4 kernel sources based on
-> +	 * errors like this in that kernel:
-> +	 *
-> +	 *   msm_rpm_get_error_from_ack(): RPM NACK Unsupported resource
-> +	 *   AXI: msm_bus_rpm_req(): RPM: Ack failed
-> +	 *   AXI: msm_bus_rpm_commit_arb(): RPM: Req fail: mas:32, bw:240000000
-> +	 *
-> +	 * Since there's no publicly available documentation for this hardware,
-> +	 * and the bandwidth for some nodes in the path can be set properly,
-> +	 * let's not return an error.
-> +	 */
+Hi Linus,
 
-So presumably all that matters for paths including these endpoints is
-the clk_set_rate() on the bus itself. But I prefer that we merge it like
-you propose and then swing back to work out the details.
+Please pull this set of fixes for v5.4-rc3, consisting of code
+cleanups and kbuild/namespace related fixups from Masahiro. Most
+importantly, it fixed a namespace-related modpost issue for external
+module builds. Details can be found in the signed tag.
 
-> +	ret = qcom_icc_rpm_smd_send(QCOM_SMD_RPM_ACTIVE_STATE, rsc_type, id,
-> +				    val);
-> +	if (ret)
-> +		dev_dbg(dev, "Cannot set bandwidth for node %s (%d): %d\n",
-> +			name, id, ret);
-> +}
-> +
+Thanks,
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Jessica
 
-Regards,
-Bjorn
+-----
+
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git tags/modules-for-v5.4-rc3
+
+for you to fetch changes up to fcfacb9f83745d9fa97937b8bc94a73bb0607912:
+
+  doc: move namespaces.rst from kbuild/ to core-api/ (2019-10-08 17:40:01 +0200)
+
+----------------------------------------------------------------
+Modules fixes for v5.4-rc3
+
+- Fix broken external module builds due to a modpost bug in read_dump(),
+  where the namespace was not being strdup'd and sym->namespace would be
+  set to bogus data.
+- Various namespace-related kbuild fixes and cleanups thanks to
+  Masahiro Yamada.
+
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
+
+----------------------------------------------------------------
+Masahiro Yamada (7):
+      module: swap the order of symbol.namespace
+      modpost: fix broken sym->namespace for external module builds
+      module: rename __kstrtab_ns_* to __kstrtabns_* to avoid symbol conflict
+      kbuild: fix build error of 'make nsdeps' in clean tree
+      nsdeps: fix hashbang of scripts/nsdeps
+      nsdeps: make generated patches independent of locale
+      doc: move namespaces.rst from kbuild/ to core-api/
+
+YueHaibing (1):
+      scripts: add_namespace: Fix coccicheck failed
+
+ Documentation/core-api/index.rst                   |  1 +
+ .../symbol-namespaces.rst}                         |  0
+ MAINTAINERS                                        |  1 +
+ Makefile                                           |  2 +-
+ include/linux/export.h                             | 10 ++++----
+ scripts/coccinelle/misc/add_namespace.cocci        |  2 ++
+ scripts/mod/modpost.c                              | 29 +++++++++++-----------
+ scripts/nsdeps                                     |  4 +--
+ 8 files changed, 27 insertions(+), 22 deletions(-)
+ rename Documentation/{kbuild/namespaces.rst => core-api/symbol-namespaces.rst} (100%)
