@@ -2,133 +2,123 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6087C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F76C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66A720679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8668820679
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfJKOGr (ORCPT
+        id S1728335AbfJKOI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:06:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43338 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbfJKOGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:06:47 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4DB19307C829;
-        Fri, 11 Oct 2019 14:06:46 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-27.ams2.redhat.com [10.36.117.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CBF8B5D721;
-        Fri, 11 Oct 2019 14:06:38 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2] mm/page_owner: Don't access uninitialized memmaps when reading /proc/pagetypeinfo
-Date:   Fri, 11 Oct 2019 16:06:38 +0200
-Message-Id: <20191011140638.8160-1-david@redhat.com>
+        Fri, 11 Oct 2019 10:08:28 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:41596 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728068AbfJKOI2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:08:28 -0400
+Received: (qmail 1736 invoked by uid 2102); 11 Oct 2019 10:08:27 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 11 Oct 2019 10:08:27 -0400
+Date:   Fri, 11 Oct 2019 10:08:27 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Jaskaran Singh <jaskaransingh7654321@gmail.com>
+cc:     syzbot <syzbot+e7d46eb426883fb97efd@syzkaller.appspotmail.com>,
+        <glider@google.com>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>,
+        <usb-storage@lists.one-eyed-alien.net>
+Subject: Re: KMSAN: uninit-value in alauda_check_media
+In-Reply-To: <b8b1e4fef9f3ece63909c38b3302621d76770caa.camel@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1910111003100.1529-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 11 Oct 2019 14:06:46 +0000 (UTC)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+On Fri, 11 Oct 2019, Jaskaran Singh wrote:
 
-Uninitialized memmaps contain garbage and in the worst case trigger
-kernel BUGs, especially with CONFIG_PAGE_POISONING. They should not get
-touched.
+> On Mon, 2019-10-07 at 12:39 -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    1e76a3e5 kmsan: replace __GFP_NO_KMSAN_SHADOW with
+> > kmsan_i..
+> > git tree:       https://github.com/google/kmsan.git master
+> > console output: 
+> > https://syzkaller.appspot.com/x/log.txt?x=1204cc63600000
+> > kernel config:  
+> > https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
+> > dashboard link: 
+> > https://syzkaller.appspot.com/bug?extid=e7d46eb426883fb97efd
+> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+> > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> > syz repro:      
+> > https://syzkaller.appspot.com/x/repro.syz?x=123c860d600000
+> > C reproducer:   
+> > https://syzkaller.appspot.com/x/repro.c?x=110631b7600000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the
+> > commit:
+> > Reported-by: syzbot+e7d46eb426883fb97efd@syzkaller.appspotmail.com
+> > 
+> > =====================================================
+> > BUG: KMSAN: uninit-value in alauda_transport+0x462/0x57f0  
+> > drivers/usb/storage/alauda.c:1137
+> > CPU: 0 PID: 12279 Comm: usb-storage Not tainted 5.3.0-rc7+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine,
+> > BIOS  
+> > Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+> >   kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
+> >   __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
+> >   alauda_check_media+0x344/0x3310 drivers/usb/storage/alauda.c:460
+> >   alauda_transport+0x462/0x57f0 drivers/usb/storage/alauda.c:1137
+> >   usb_stor_invoke_transport+0xf5/0x27e0
+> > drivers/usb/storage/transport.c:606
+> >   usb_stor_transparent_scsi_command+0x5d/0x70  
+> > drivers/usb/storage/protocol.c:108
+> >   usb_stor_control_thread+0xca6/0x11a0 drivers/usb/storage/usb.c:380
+> >   kthread+0x4b5/0x4f0 kernel/kthread.c:256
+> >   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-For example, when not onlining a memory block that is spanned by a zone
-and reading /proc/pagetypeinfo with CONFIG_DEBUG_VM_PGFLAGS and
-CONFIG_PAGE_POISONING, we can trigger a kernel BUG:
 
-:/# echo 1 > /sys/devices/system/memory/memory40/online
-:/# echo 1 > /sys/devices/system/memory/memory42/online
-:/# cat /proc/pagetypeinfo > test.file
-  [   42.489856] page:fffff2c585200000 is uninitialized and poisoned
-  [   42.489861] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-  [   42.492235] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-  [   42.493501] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-  [   42.494533] There is not page extension available.
-  [   42.495358] ------------[ cut here ]------------
-  [   42.496163] kernel BUG at include/linux/mm.h:1107!
-  [   42.497069] invalid opcode: 0000 [#1] SMP NOPTI
+> #syz test: https://github.com/google/kmsan.git 1e76a3e5
+> 
+> diff --git a/drivers/usb/storage/alauda.c
+> b/drivers/usb/storage/alauda.c
+> index ddab2cd3d2e7..bb309b9ad65b 100644
+> --- a/drivers/usb/storage/alauda.c
+> +++ b/drivers/usb/storage/alauda.c
+> @@ -452,7 +452,7 @@ static int alauda_init_media(struct us_data *us)
+>  static int alauda_check_media(struct us_data *us)
+>  {
+>  	struct alauda_info *info = (struct alauda_info *) us->extra;
+> -	unsigned char status[2];
+> +	unsigned char *status = us->iobuf;
+>  	int rc;
+>  
+>  	rc = alauda_get_media_status(us, status);
 
-Please not that this change does not affect ZONE_DEVICE, because
-pagetypeinfo_showmixedcount_print() is called from
-mm/vmstat.c:pagetypeinfo_showmixedcount() only for populated zones, and
-ZONE_DEVICE is never populated (zone->present_pages always 0).
+That is absolutely not the correct fix.
 
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
-Signed-off-by: Qian Cai <cai@lca.pw>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Miles Chen <miles.chen@mediatek.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[ move check to outer loop, add comment, rephrase description ]
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
+The problem is that after this call, the code does not check rc to see 
+if an error occurred.  If there was an error, the value of status is 
+meaningless so there's no point examining it at all.
 
-Cai asked me to follow up on:
-	[PATCH] mm/page_owner: fix a crash after memory offline
+Now yes, it's true that defining status as an array on the stack is 
+also a bug, since USB transfer buffers are not allowed to be stack 
+variables.  And the change you made _is_ the right way to fix that bug.  
+But that is a separate bug, not the one that syzbot found.
 
----
- mm/page_owner.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index dee931184788..7d149211f6be 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -284,7 +284,8 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
- 	 * not matter as the mixed block count will still be correct
- 	 */
- 	for (; pfn < end_pfn; ) {
--		if (!pfn_valid(pfn)) {
-+		page = pfn_to_online_page(pfn);
-+		if (!page) {
- 			pfn = ALIGN(pfn + 1, MAX_ORDER_NR_PAGES);
- 			continue;
- 		}
-@@ -292,13 +293,13 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
- 		block_end_pfn = ALIGN(pfn + 1, pageblock_nr_pages);
- 		block_end_pfn = min(block_end_pfn, end_pfn);
- 
--		page = pfn_to_page(pfn);
- 		pageblock_mt = get_pageblock_migratetype(page);
- 
- 		for (; pfn < block_end_pfn; pfn++) {
- 			if (!pfn_valid_within(pfn))
- 				continue;
- 
-+			/* The pageblock is online, no need to recheck. */
- 			page = pfn_to_page(pfn);
- 
- 			if (page_zone(page) != zone)
--- 
-2.21.0
+Alan Stern
 
