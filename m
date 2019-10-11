@@ -2,229 +2,143 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B571ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A244AECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6AF92084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F422084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="UNbf2toR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ck3sqG+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbfJKTiJ (ORCPT
+        id S1729035AbfJKTi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 15:38:09 -0400
-Received: from mail-eopbgr770083.outbound.protection.outlook.com ([40.107.77.83]:9201
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728974AbfJKTiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 15:38:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nb0/1IyY9llDvmeLZJDDzdUyeqcXgfJe5GT655LDsIhM4Mrd3Sh8E1cRK6tG3FCNPH5pdZO4ug0fRcgpxqRDw1JkFpiLpYtA12NIJ2tipv38OT97rT8P+WbBE9pFulpJBOEoLfkwCA11ICNcz2u3g7h6h8G6fC4mY6Tv/tRDYyVcW0zz5oqtsb9L9CmEC/2C5/Fdw/hrWvU/OC8vas0fBGaeCs4OgQo3AZZZSUrMaVZrxWofScj+TC3OJOzvV2492yezqid91IwkT1CY2zjbhMUchmy4LVbfacnLjkHbT6xk2G+LxATxJZFm9+O790Gwut76x8Mpx+4xJh8X9jHwqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I9p0P0Toe6zw87H3a09vvXCta+K80/rdZcAk6pOfK1c=;
- b=SBXp3y0kj8tFYHZs1KAH6M8jJ0Myb0oMOSj2bTvgYmEJO9L0eS9tIpB9wEy5FPA31TsbAsPTe7OjfEJHzTH2BtfsI/GBFLops2Z11cG269Xt0lxnAhcGoCQPCiYEs6Lsl8AB/nLXIjfuP0Trr/QGq1+72C0ZijBZDso+jlaeUSsfiVEfaM9YgH8oAzMz4D8LaJoSeLsNV4+ZTB9UnG3QpSPgJNbCSoWaqirxSnznqsjqxbSFB5sMHY7FnPz1zTCEsOfFUXVHLenaAdx/qA88ywmkTfVY1xt8aaKGbhE1ICpT9NIhE51t3D+Cgqojrn3iRTDjhgRs36AcBTghgTnWWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 11 Oct 2019 15:38:59 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37551 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728974AbfJKTi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 15:38:59 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l21so10946559lje.4;
+        Fri, 11 Oct 2019 12:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I9p0P0Toe6zw87H3a09vvXCta+K80/rdZcAk6pOfK1c=;
- b=UNbf2toR0VBuwJ0pzKoeMdvlt1Pyw4vsVUOxV2C3NZYW+Yybx9TgnqFdPRTIVNEdpFQMOTc9l6olSOWfWWeVopxvdD8+txTfYjIVT1oEv3OuYrYrrrQTOiAKcR3kZtWozcJ59MfieEbufIMShyfn8RANDw7ZpMF5w6+QwX6DFVU=
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) by
- SN6PR12MB2816.namprd12.prod.outlook.com (52.135.107.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Fri, 11 Oct 2019 19:37:56 +0000
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::b1e3:1867:e650:796c]) by SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::b1e3:1867:e650:796c%6]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
- 19:37:56 +0000
-From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-To:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
-        Pu Wen <puwen@hygon.com>, Borislav Petkov <bp@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-Subject: [PATCHv2 2/3] cpupower: mperf_monitor: Introduce per_cpu_schedule
- flag
-Thread-Topic: [PATCHv2 2/3] cpupower: mperf_monitor: Introduce
- per_cpu_schedule flag
-Thread-Index: AQHVgGthysllBZ56ukW20e1QLXbBzQ==
-Date:   Fri, 11 Oct 2019 19:37:55 +0000
-Message-ID: <bb4b0e4137b62651b9d028925fa8f09ca5fbd989.1570819652.git.Janakarajan.Natarajan@amd.com>
-References: <cover.1570819652.git.Janakarajan.Natarajan@amd.com>
-In-Reply-To: <cover.1570819652.git.Janakarajan.Natarajan@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0201CA0060.namprd02.prod.outlook.com
- (2603:10b6:803:20::22) To SN6PR12MB2736.namprd12.prod.outlook.com
- (2603:10b6:805:77::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.78.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: aa19112c-cdec-4356-3147-08d74e828366
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: SN6PR12MB2816:|SN6PR12MB2816:
-x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR12MB281609B366D770F04C0D08A5E7970@SN6PR12MB2816.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
-x-forefront-prvs: 0187F3EA14
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(136003)(376002)(366004)(199004)(189003)(386003)(7736002)(14454004)(6506007)(36756003)(11346002)(6116002)(476003)(2616005)(2501003)(478600001)(25786009)(3846002)(446003)(486006)(2906002)(52116002)(66556008)(66946007)(64756008)(99286004)(102836004)(66476007)(66446008)(76176011)(186003)(26005)(7416002)(305945005)(118296001)(6512007)(316002)(8936002)(8676002)(6436002)(54906003)(110136005)(6486002)(81166006)(81156014)(256004)(50226002)(71190400001)(71200400001)(4326008)(86362001)(66066001)(5660300002)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2816;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2XTTwVaZ14uVQcWewoxBR9/H4c/sBaMmh1GU+juO/z6siLSWNkhl76igCuLVRIJzfUWD3HU6NvX1c1iv+9epb2FaXLQLCkSFtE3WQc9Q3/TM7djTNetvI1+iZBsyurqCX4gK4+58F0wvW8G5jhVJdDMS/z6bw/1bLnRzGJUjC18PETfVN74jO/0gcZl6wS0IV1CrGaNiqu0ssCmyO0mNXAilaY4zKCqL4Ku0Mj6J1g8qoWVOJsTaFwweWdD2F50D9GKnhJetd8ymqdH76C3o5YiZV6O4l9tyHP8EYPLszdJu7UAXVEuEGOY6vtDeOa6s2gyxWElis4Jd2Xjgqe/fO0rmzkIY971T3OnVrAcJl/W7c7R8i5oQ01uqzy8aMSCL59F9/Qd4DUmeIR/TqpUeh6AedutgJD8aAI9N2s/UxJw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bvbkgPji/VuFLHgjt9B1Ec11lPx0dB/Mf4ZgfY2WJ0A=;
+        b=ck3sqG+HCuBS2PvbPgzkGeex+ksEJxtGvTPTGlxGOaGI1cnWQYSMN9Qg4Gsqwm10VQ
+         5tXVXoM+GaRPf+9EkOcXabZocewWMNtzOdAB6Fe52D6yMM2CyLqZDSVURiONLwxhuyBF
+         bi/oHXoJpFSMCljG4rVs/XDL11NVgk54RWeVgwSPAM7n+uJiKS3Ozlwmw84govq9xul8
+         WGU/EP8F0/jkbBWEkaUsHfX/S3A61cPFcP4ph2oa+9ldb6WyNSr5KxyreW0eEx7XB1u6
+         ninfVvXwsmEveVNmGBwH2wFHDmaxCqV5ELHWKFjGMa/9MinsjI1h8ipsiiaxhEw72pVZ
+         ZYwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bvbkgPji/VuFLHgjt9B1Ec11lPx0dB/Mf4ZgfY2WJ0A=;
+        b=Y9VfbMHtqt/O1CisulGsMnHQPLSHr1qQX0LnXf50q+bJHVaM9jSWYIitvM3rvtle+A
+         SSp9+tWb/zdMa2NvKAbBTmko8yvJNRlj023ZjIbiB1tRme4dGTffFcb/DK4Pn2kyQtxB
+         O1It6hNGBYGuaYXQJ5C+6NM0mYXGNMQl/3vQSvFhLOK2FjNB9/R2242RhQyVLlvbwGHL
+         mT1OKnUzZq6AE9yWKYNHtzx4Iv8Qru5f4dH+rCHEbi+tfwsfLLkBVeJvIz3ZJHSPAaiU
+         Ic3KXEO8iraFrzWlrWz8sX+tEbCFj/gVaHY8YmIQv/8lIOCa3rERIfecyx3NNKESR1zh
+         y7WQ==
+X-Gm-Message-State: APjAAAXOGIh6MTh11o9gICSAoaZXHT4xT3A4EUi7lKcX8jh5T2k/lzOF
+        44HW2Tvyx1zV+V6gHOXBk0K9PIQl4pytkP4R3nK2+vTAyPU=
+X-Google-Smtp-Source: APXvYqyLYRKd5FFwzw51/dkToQP/WtKREB+bxrHW6EtZpBon38cz6MKrSZce2CyBZAxOghYhkiemxpVu0oOi/aDuBjU=
+X-Received: by 2002:a2e:97ca:: with SMTP id m10mr8645293ljj.168.1570822736617;
+ Fri, 11 Oct 2019 12:38:56 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa19112c-cdec-4356-3147-08d74e828366
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 19:37:55.6140
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tCbbig3UoMH+9LtEcdFtK91+KkaWSzeKyqBacKTOHBF5Mu45Y6MrjA9BMfG/TnWdhWpuZ1PMjaoQJFYwJu8M8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2816
+References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
+ <20191007051240.4410-4-andrew.smirnov@gmail.com> <CAO-hwJJ8tp4Rqte-umv9e=S5evR5oJTErsNR0Wk-z8wcbtR0wg@mail.gmail.com>
+In-Reply-To: <CAO-hwJJ8tp4Rqte-umv9e=S5evR5oJTErsNR0Wk-z8wcbtR0wg@mail.gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 11 Oct 2019 12:38:45 -0700
+Message-ID: <CAHQ1cqHCYiaEXck3LMGBwYiHVDQcF=XuF=kHJ4f_v1ea6hDR2g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] HID: logitech-hidpp: add G920 device validation quirk
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The per_cpu_schedule flag is used to move the cpupower process to the cpu
-on which we are looking to read the APERF/MPERF registers.
+On Fri, Oct 11, 2019 at 7:56 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+> >
+> > G920 device only advertises REPORT_ID_HIDPP_LONG and
+> > REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
+> > for REPORT_ID_HIDPP_SHORT with optional=false will always fail and
+> > prevent G920 to be recognized as a valid HID++ device.
+> >
+> > Modify hidpp_validate_device() to check only REPORT_ID_HIDPP_LONG with
+> > optional=false on G920 to fix this.
+> >
+> > Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to be handled by this module")
+> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204191
+> > Reported-by: Sam Bazely <sambazley@fastmail.com>
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Jiri Kosina <jikos@kernel.org>
+> > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > Cc: Henrik Rydberg <rydberg@bitmath.org>
+> > Cc: Sam Bazely <sambazley@fastmail.com>
+> > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> > Cc: Austin Palmer <austinp@valvesoftware.com>
+> > Cc: linux-input@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: stable@vger.kernel.org
+> > ---
+> >  drivers/hid/hid-logitech-hidpp.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+> > index cadf36d6c6f3..f415bf398e17 100644
+> > --- a/drivers/hid/hid-logitech-hidpp.c
+> > +++ b/drivers/hid/hid-logitech-hidpp.c
+> > @@ -3511,6 +3511,12 @@ static bool hidpp_validate_report(struct hid_device *hdev, int id,
+> >
+> >  static bool hidpp_validate_device(struct hid_device *hdev)
+> >  {
+> > +       struct hidpp_device *hidpp = hid_get_drvdata(hdev);
+> > +
+> > +       if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920)
+> > +               return hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+> > +                                            HIDPP_REPORT_SHORT_LENGTH, false);
+> > +
+>
+> with https://patchwork.kernel.org/patch/11184749/ we also have a need
+> for such a trick for BLE mice.
+>
+> I wonder if we should not have a more common way of validating the devices
+>
 
-This prevents IPIs from being generated by read_msr()s as we are already
-on the cpu of interest.
+What about just checking for:
 
-Ex: If cpupower is running on CPU 0 and we execute
+hidpp_validate_report(REPORT_ID_HIDPP_SHORT,
+                                    HIDPP_REPORT_SHORT_LENGTH, true) ||
+hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+                                    HIDPP_REPORT_LONG_LENGTH, true);
 
-    read_msr(20, MSR_APERF, val) then,
-    read_msr(20, MSR_MPERF, val)
+and probably dropping the "optional" argument for
+hidpp_validate_report()? Original code allows there to be devices
+supporting shorts reports only, but it seems that devices that support
+only long reports are legitimate too, so maybe the only "invalid"
+combination is if both are invalid length or missing?
 
-    the msr module will generate an IPI from CPU 0 to CPU 20 to query
-    for the MSR_APERF and then the MSR_MPERF in separate IPIs.
-
-This delay, caused by IPI latency, between reading the APERF and MPERF
-registers may cause both of them to go out of sync.
-
-The use of the per_cpu_schedule flag reduces the probability of this
-from happening. It comes at the cost of a negligible increase in cpu
-consumption caused by the migration of cpupower across each of the
-cpus of the system.
-
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
----
- .../utils/idle_monitor/cpupower-monitor.h     |  1 +
- .../utils/idle_monitor/mperf_monitor.c        | 42 ++++++++++++++-----
- 2 files changed, 33 insertions(+), 10 deletions(-)
-
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/t=
-ools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-index 9b612d999660..5b5eb1da0cce 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-@@ -62,6 +62,7 @@ struct cpuidle_monitor {
- 	unsigned int overflow_s;
- 	struct {
- 		unsigned int needs_root:1;
-+		unsigned int per_cpu_schedule:1;
- 	} flags;
- };
-=20
-diff --git a/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c b/tool=
-s/power/cpupower/utils/idle_monitor/mperf_monitor.c
-index 7cae74202a4d..afb2e6f8edd3 100644
---- a/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c
-@@ -86,15 +86,35 @@ static int mperf_get_tsc(unsigned long long *tsc)
- 	return ret;
- }
-=20
-+static int get_aperf_mperf(int cpu, unsigned long long *aval,
-+				    unsigned long long *mval)
-+{
-+	int ret;
-+
-+	/*
-+	 * Running on the cpu from which we read the registers will
-+	 * prevent APERF/MPERF from going out of sync because of IPI
-+	 * latency introduced by read_msr()s.
-+	 */
-+	if (mperf_monitor.flags.per_cpu_schedule) {
-+		if (bind_cpu(cpu))
-+			return 1;
-+	}
-+
-+	ret  =3D read_msr(cpu, MSR_APERF, aval);
-+	ret |=3D read_msr(cpu, MSR_MPERF, mval);
-+
-+	return ret;
-+}
-+
- static int mperf_init_stats(unsigned int cpu)
- {
--	unsigned long long val;
-+	unsigned long long aval, mval;
- 	int ret;
-=20
--	ret =3D read_msr(cpu, MSR_APERF, &val);
--	aperf_previous_count[cpu] =3D val;
--	ret |=3D read_msr(cpu, MSR_MPERF, &val);
--	mperf_previous_count[cpu] =3D val;
-+	ret =3D get_aperf_mperf(cpu, &aval, &mval);
-+	aperf_previous_count[cpu] =3D aval;
-+	mperf_previous_count[cpu] =3D mval;
- 	is_valid[cpu] =3D !ret;
-=20
- 	return 0;
-@@ -102,13 +122,12 @@ static int mperf_init_stats(unsigned int cpu)
-=20
- static int mperf_measure_stats(unsigned int cpu)
- {
--	unsigned long long val;
-+	unsigned long long aval, mval;
- 	int ret;
-=20
--	ret =3D read_msr(cpu, MSR_APERF, &val);
--	aperf_current_count[cpu] =3D val;
--	ret |=3D read_msr(cpu, MSR_MPERF, &val);
--	mperf_current_count[cpu] =3D val;
-+	ret =3D get_aperf_mperf(cpu, &aval, &mval);
-+	aperf_current_count[cpu] =3D aval;
-+	mperf_current_count[cpu] =3D mval;
- 	is_valid[cpu] =3D !ret;
-=20
- 	return 0;
-@@ -305,6 +324,9 @@ struct cpuidle_monitor *mperf_register(void)
- 	if (init_maxfreq_mode())
- 		return NULL;
-=20
-+	if (cpupower_cpu_info.vendor =3D=3D X86_VENDOR_AMD)
-+		mperf_monitor.flags.per_cpu_schedule =3D 1;
-+
- 	/* Free this at program termination */
- 	is_valid =3D calloc(cpu_count, sizeof(int));
- 	mperf_previous_count =3D calloc(cpu_count, sizeof(unsigned long long));
---=20
-2.17.1
-
+Thanks,
+Andrey Smirnov
