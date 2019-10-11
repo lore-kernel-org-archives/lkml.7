@@ -2,318 +2,343 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804D9C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48592ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456B2206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:27:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Y9BTc5gn";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Y9BTc5gn"
+	by mail.kernel.org (Postfix) with ESMTP id 1A222206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfJKK1d (ORCPT
+        id S1727666AbfJKK1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 11 Oct 2019 06:27:33 -0400
-Received: from mail-eopbgr10058.outbound.protection.outlook.com ([40.107.1.58]:47133
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726546AbfJKK1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:27:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wRH/Vo7PHh+Mj/xV0P+N1GoX5oDFaK1F4F1qNakJvjc=;
- b=Y9BTc5gn4jYu5D3B3GVHHNjUDWpCL8jrT9a2+V+KkXbpn4ctMuQ8P2Q82udEzqzRjSbQLWWPKACAEbQENdC/PO8lqcRcS88szomDSmER4K3UeH4KOe+ZGaV+4fcznhQyIDO2EhrfZwmGz4tZJ3ATYnSrSZv3JrXyYN+WwE39KUo=
-Received: from VI1PR08CA0197.eurprd08.prod.outlook.com (2603:10a6:800:d2::27)
- by HE1PR08MB2843.eurprd08.prod.outlook.com (2603:10a6:7:37::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2327.25; Fri, 11 Oct
- 2019 10:27:25 +0000
-Received: from DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::200) by VI1PR08CA0197.outlook.office365.com
- (2603:10a6:800:d2::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.17 via Frontend
- Transport; Fri, 11 Oct 2019 10:27:24 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT009.mail.protection.outlook.com (10.152.20.117) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2305.15 via Frontend Transport; Fri, 11 Oct 2019 10:27:22 +0000
-Received: ("Tessian outbound 851a1162fca7:v33"); Fri, 11 Oct 2019 10:27:15 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 952d77da221d4a59
-X-CR-MTA-TID: 64aa7808
-Received: from 2de4edb3fe02.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.13.53])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id D3F7BC72-3023-4573-8C60-0964E706F96D.1;
-        Fri, 11 Oct 2019 10:27:09 +0000
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04lp2053.outbound.protection.outlook.com [104.47.13.53])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 2de4edb3fe02.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 11 Oct 2019 10:27:09 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZBuyrxfDx1xOP+TYTHbGib7zeXKYHyUa5ZTAedeaReTQ858we9MCI5MvCz0aMpVY6hBKC/CWxRueomZt0rBBr/2lwLo2OF8vmC2JkPlQUyxvjsmCwMNvh8AAtNYjf2jhkR7jEY72D9KeyNBK2pix+u3/Cf4ThmvVkk8KjG5dIgiZ68BP4q/0thsC8EIb52dDSswP9oJ9zwai2Rc1KCjLC6+vsrdgeGOLA4BSjv9llHiNygeNl5Bdt0BhXTjYWGS2zTFR4jgsrap4XsRLu8JJIWrl77Mwj3jBvcs590KMF20/lQBdP8/KScejkWO6a/tYdlxYZqnMfFl6lwiVCIMBvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wRH/Vo7PHh+Mj/xV0P+N1GoX5oDFaK1F4F1qNakJvjc=;
- b=fVxRZoCQd2XjxvrKGru5usLKBTWu+4LpI1Xs75crsro0H7pcz2TRXRVbBAojLSbAC92nErNO/Cw9gmwW03udaVkq03xU4e68KNCZvOVIo9IhgnRJAz6OjEKwgTx0pFzeoUUDgMYralm5jkfCiGA3MinFLJkcD2GB/If40PANBUeEvyYmB7//UAGdtjzgisviF6cD0HfmNjUK3i5N/u2HjBJXayvrLPWoP9ebGQFktOSKdRnutXWnQ/ilWw8LZrKKXwa40xgkvzP4qO6uVsC2O7U9gq61eFXs5zYQv53WraO7npyb27dGLfjUDk+Lwqn+4npcjDgeF8kmYHreHdV9gQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wRH/Vo7PHh+Mj/xV0P+N1GoX5oDFaK1F4F1qNakJvjc=;
- b=Y9BTc5gn4jYu5D3B3GVHHNjUDWpCL8jrT9a2+V+KkXbpn4ctMuQ8P2Q82udEzqzRjSbQLWWPKACAEbQENdC/PO8lqcRcS88szomDSmER4K3UeH4KOe+ZGaV+4fcznhQyIDO2EhrfZwmGz4tZJ3ATYnSrSZv3JrXyYN+WwE39KUo=
-Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
- VI1PR08MB4381.eurprd08.prod.outlook.com (20.179.28.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Fri, 11 Oct 2019 10:27:06 +0000
-Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
- ([fe80::7d25:d1f2:e3eb:868b]) by VI1PR08MB4078.eurprd08.prod.outlook.com
- ([fe80::7d25:d1f2:e3eb:868b%6]) with mapi id 15.20.2347.016; Fri, 11 Oct 2019
- 10:27:06 +0000
-From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-CC:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "imirkin@alum.mit.edu" <imirkin@alum.mit.edu>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        nd <nd@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Ben Davis <Ben.Davis@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>
-Subject: Re: [PATCH v2 4/4] drm/komeda: Adds gamma and color-transform support
- for DOU-IPS
-Thread-Topic: [PATCH v2 4/4] drm/komeda: Adds gamma and color-transform
- support for DOU-IPS
-Thread-Index: AQHVf/cp1ECrFKcx7E6lw4dO6fyhYKdVM6+AgAAFQ4CAAAPyAA==
-Date:   Fri, 11 Oct 2019 10:27:06 +0000
-Message-ID: <2088952.DRTgVpPakT@e123338-lin>
-References: <20191011054459.17984-1-james.qian.wang@arm.com>
- <8416585.jh9292Gg6g@e123338-lin>
- <20191011101244.GA13428@lowli01-ThinkStation-P300>
-In-Reply-To: <20191011101244.GA13428@lowli01-ThinkStation-P300>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [217.140.106.54]
-x-clientproxiedby: LO2P265CA0152.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9::20) To VI1PR08MB4078.eurprd08.prod.outlook.com
- (2603:10a6:803:e5::28)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Mihail.Atanassov@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: f9cba568-3d7f-44a1-bba8-08d74e359a9c
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-TrafficTypeDiagnostic: VI1PR08MB4381:|VI1PR08MB4381:|HE1PR08MB2843:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR08MB2843D2366AAB5C1CD76188478F970@HE1PR08MB2843.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:5516;OLM:5516;
-x-forefront-prvs: 0187F3EA14
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(396003)(136003)(346002)(39860400002)(366004)(189003)(199004)(25786009)(76176011)(229853002)(6486002)(9686003)(8936002)(6512007)(99286004)(8676002)(54906003)(81166006)(6636002)(6116002)(3846002)(81156014)(446003)(11346002)(476003)(52116002)(486006)(6436002)(33716001)(102836004)(71200400001)(186003)(7736002)(26005)(6506007)(386003)(2906002)(4326008)(6246003)(66066001)(71190400001)(256004)(316002)(14454004)(5660300002)(14444005)(6862004)(66476007)(66446008)(86362001)(66946007)(478600001)(66556008)(305945005)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB4381;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 7xeH9raUzYrykU2cgAKXuolDB1g9H+wwbbmGpyyJKzJTC5h3bTOhD+Y+fWPyp4vy9DzCErsvUhsOx7Ct7n7e8g7RUllQArTGV8XBvVcvxNgDg+dX6n9JJq1dR22IBs/a0FHShwHZ/dnDrjnf0bWIGM24/Wr51TNnYjwQcH8+tjfBMm2XdrrAF8doNRBqQudTOOxPCBEItC4ZsnI/uN5GFFg7zQJ/mflBDoA8LSSpbpjeDG7jYSoN2j40Zv6E/fPPSIyHArKJ3rLYnDgGRBbhV0cSXxNztdinD0WvI12s1nwfVprtEoBZ1MGO/47FW+HhHEvISC6VbtmG5/ELYyt8zljBB06KAXiVT4xYdq2ny4ipK7cDRUN8nOcm9p8cvkO54m+C2HfQuI4GzCNb2Apg2kRlbJRf9aUs6pjOOUkin4o=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <689BC901C64D9345B9BF7D5EBDE95279@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Received: from mga11.intel.com ([192.55.52.93]:10251 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726357AbfJKK1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:27:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 03:27:28 -0700
+X-IronPort-AV: E=Sophos;i="5.67,283,1566889200"; 
+   d="scan'208";a="200752857"
+Received: from jkrzyszt-desk.igk.intel.com (HELO jkrzyszt-desk.ger.corp.intel.com) ([172.22.244.17])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 03:27:26 -0700
+From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        =?utf-8?B?TWljaGHFgg==?= Wajdeczko <michal.wajdeczko@intel.com>,
+        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+Subject: Re: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device hot re-plug
+Date:   Fri, 11 Oct 2019 12:27:15 +0200
+Message-ID: <1638600.GGFdda3v3R@jkrzyszt-desk.ger.corp.intel.com>
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
+In-Reply-To: <19f435fc-7318-4abd-5c73-78ce253d5f07@linux.intel.com>
+References: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com> <2674326.ZPvzKFr69O@jkrzyszt-desk.ger.corp.intel.com> <19f435fc-7318-4abd-5c73-78ce253d5f07@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4381
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Mihail.Atanassov@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(396003)(376002)(346002)(39860400002)(199004)(189003)(26826003)(86362001)(33716001)(46406003)(14454004)(47776003)(6116002)(66066001)(23726003)(478600001)(3846002)(25786009)(70206006)(356004)(22756006)(70586007)(2906002)(50466002)(76176011)(386003)(6486002)(5660300002)(14444005)(76130400001)(336012)(63350400001)(26005)(6506007)(8746002)(81156014)(11346002)(97756001)(99286004)(486006)(229853002)(186003)(446003)(126002)(316002)(54906003)(102836004)(4326008)(6636002)(305945005)(7736002)(6512007)(8676002)(476003)(9686003)(6246003)(81166006)(8936002)(6862004);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR08MB2843;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: e3ef8dc9-a32f-4d5e-e7c9-08d74e359087
-NoDisclaimer: True
-X-Forefront-PRVS: 0187F3EA14
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 06WFf47ZJoprBZ0xf4oDHeiD+qL2Va1EOg53ESj5AWfFSALB3ah1UOpJBnFm4Wk9Cb54Wa6HsIfgKWEwdiyj3TlqHtP0pRMmKgejle9ZL6XMKIKf9aT21N/mbzXJwMoosCyu6Fi/p9hRGL3/56W5vYoY1UUSWPiAWbrZnjykwDohxhMCxpqNk8MJCsY5IOVaXf+LBWOdZinsQK2cC34lajOJa04UZJR7oQcOOr7p/unZYaJtV/Sw834AxaHgRY5astcYuCDGZ5U0efEpuM525C5+ftrtk6eZ/jPdFqsZmynID9B/kC2ilpdL0mfwuq1ax0dcoygoQiVJVaNYyg4c5LYSoIj8AeYOfIA5QLnUqBuQw+ELq1oJVYKAdkw7ONtRvm1lXyi2mdGeoGdttc9JxiJhMjMbahmQUx/9mq33r5s=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2019 10:27:22.9249
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9cba568-3d7f-44a1-bba8-08d74e359a9c
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR08MB2843
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, 11 October 2019 11:12:51 BST Lowry Li (Arm Technology China) wro=
-te:
-> Hi Mihail,
-> On Fri, Oct 11, 2019 at 08:54:03AM +0000, Mihail Atanassov wrote:
-> > Hi James, Lowry,
-> >=20
-> > On Friday, 11 October 2019 06:45:50 BST james qian wang (Arm Technology=
- China) wrote:
-> > > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-> > >=20
-> > > Adds gamma and color-transform support for DOU-IPS.
-> > > Adds two caps members fgamma_coeffs and ctm_coeffs to komeda_improc_s=
-tate.
-> > > If color management changed, set gamma and color-transform accordingl=
-y.
-> > >=20
-> > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> > > ---
-> > >  .../arm/display/komeda/d71/d71_component.c    | 24 +++++++++++++++++=
-++
-> > >  .../gpu/drm/arm/display/komeda/komeda_crtc.c  |  2 ++
-> > >  .../drm/arm/display/komeda/komeda_pipeline.h  |  3 +++
-> > >  .../display/komeda/komeda_pipeline_state.c    |  6 +++++
-> > >  4 files changed, 35 insertions(+)
-> > >=20
-> > > diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b=
-/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> > > index c3d29c0b051b..e7e5a8e4430e 100644
-> > > --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> > > +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> > > @@ -942,15 +942,39 @@ static int d71_merger_init(struct d71_dev *d71,
-> > >  static void d71_improc_update(struct komeda_component *c,
-> > >  			      struct komeda_component_state *state)
-> > >  {
-> > > +	struct drm_crtc_state *crtc_st =3D state->crtc->state;
-> > I'm not sure it's a good idea to introduce a dependency on drm state
-> > so far down in the HW funcs, is there a good reason for the direct prod=
-?
-> We dicussed about this before. To decide using this way is to avoid of
-> duplicated state between DRM and Komeda.
-Fair, r-b me.
+Hi Baolu,
 
->=20
-> Regards,
-> Lowry
-> > >  	struct komeda_improc_state *st =3D to_improc_st(state);
-> > > +	struct d71_pipeline *pipe =3D to_d71_pipeline(c->pipeline);
-> > >  	u32 __iomem *reg =3D c->reg;
-> > >  	u32 index;
-> > > +	u32 mask =3D 0, ctrl =3D 0;
-> > > =20
-> > >  	for_each_changed_input(state, index)
-> > >  		malidp_write32(reg, BLK_INPUT_ID0 + index * 4,
-> > >  			       to_d71_input_id(state, index));
-> > > =20
-> > >  	malidp_write32(reg, BLK_SIZE, HV_SIZE(st->hsize, st->vsize));
-> > > +
-> > > +	if (crtc_st->color_mgmt_changed) {
-> > > +		mask |=3D IPS_CTRL_FT | IPS_CTRL_RGB;
-> > > +
-> > > +		if (crtc_st->gamma_lut) {
-> > > +			malidp_write_group(pipe->dou_ft_coeff_addr, FT_COEFF0,
-> > > +					   KOMEDA_N_GAMMA_COEFFS,
-> > > +					   st->fgamma_coeffs);
-> > > +			ctrl |=3D IPS_CTRL_FT; /* enable gamma */
-> > > +		}
-> > > +
-> > > +		if (crtc_st->ctm) {
-> > > +			malidp_write_group(reg, IPS_RGB_RGB_COEFF0,
-> > > +					   KOMEDA_N_CTM_COEFFS,
-> > > +					   st->ctm_coeffs);
-> > > +			ctrl |=3D IPS_CTRL_RGB; /* enable gamut */
-> > > +		}
-> > > +	}
-> > > +
-> > > +	if (mask)
-> > > +		malidp_write32_mask(reg, BLK_CONTROL, mask, ctrl);
-> > >  }
-> > > =20
-> > >  static void d71_improc_dump(struct komeda_component *c, struct seq_f=
-ile *sf)
-> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drive=
-rs/gpu/drm/arm/display/komeda/komeda_crtc.c
-> > > index 9beeda04818b..406b9d0ca058 100644
-> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-> > > @@ -590,6 +590,8 @@ static int komeda_crtc_add(struct komeda_kms_dev =
-*kms,
-> > > =20
-> > >  	crtc->port =3D kcrtc->master->of_output_port;
-> > > =20
-> > > +	drm_crtc_enable_color_mgmt(crtc, 0, true, KOMEDA_COLOR_LUT_SIZE);
-> > > +
-> > >  	return err;
-> > >  }
-> > > =20
-> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/d=
-rivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> > > index b322f52ba8f2..c5ab8096c85d 100644
-> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> > > @@ -11,6 +11,7 @@
-> > >  #include <drm/drm_atomic.h>
-> > >  #include <drm/drm_atomic_helper.h>
-> > >  #include "malidp_utils.h"
-> > > +#include "komeda_color_mgmt.h"
-> > > =20
-> > >  #define KOMEDA_MAX_PIPELINES		2
-> > >  #define KOMEDA_PIPELINE_MAX_LAYERS	4
-> > > @@ -324,6 +325,8 @@ struct komeda_improc {
-> > >  struct komeda_improc_state {
-> > >  	struct komeda_component_state base;
-> > >  	u16 hsize, vsize;
-> > > +	u32 fgamma_coeffs[KOMEDA_N_GAMMA_COEFFS];
-> > > +	u32 ctm_coeffs[KOMEDA_N_CTM_COEFFS];
-> > >  };
-> > > =20
-> > >  /* display timing controller */
-> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state=
-.c b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> > > index 0ba9c6aa3708..4a40b37eb1a6 100644
-> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> > > @@ -756,6 +756,12 @@ komeda_improc_validate(struct komeda_improc *imp=
-roc,
-> > >  	st->hsize =3D dflow->in_w;
-> > >  	st->vsize =3D dflow->in_h;
-> > > =20
-> > > +	if (kcrtc_st->base.color_mgmt_changed) {
-> > > +		drm_lut_to_fgamma_coeffs(kcrtc_st->base.gamma_lut,
-> > > +					 st->fgamma_coeffs);
-> > > +		drm_ctm_to_coeffs(kcrtc_st->base.ctm, st->ctm_coeffs);
-> > > +	}
-> > > +
-> > >  	komeda_component_add_input(&st->base, &dflow->input, 0);
-> > >  	komeda_component_set_output(&dflow->input, &improc->base, 0);
-> > > =20
-> > >=20
-> >=20
-> >=20
->=20
+On Friday, October 11, 2019 8:54:09 AM CEST Lu Baolu wrote:
+> Hi Janusz,
+> 
+> On 9/3/19 3:41 PM, Janusz Krzysztofik wrote:
+> > Hi Baolu,
+> > 
+> > On Tuesday, September 3, 2019 3:29:40 AM CEST Lu Baolu wrote:
+> >> Hi Janusz,
+> >>
+> >> On 9/2/19 4:37 PM, Janusz Krzysztofik wrote:
+> >>>> I am not saying that keeping data is not acceptable. I just want to
+> >>>> check whether there are any other solutions.
+> >>> Then reverting 458b7c8e0dde and applying this patch still resolves the
+> > issue
+> >>> for me.  No errors appear when mappings are unmapped on device close after
+> > the
+> >>> device has been removed, and domain info preserved on device removal is
+> >>> successfully reused on device re-plug.
+> >> This patch doesn't look good to me although I agree that keeping data is
+> >> acceptable. It updates dev->archdata.iommu, but leaves the hardware
+> >> context/pasid table unchanged. This might cause problems somewhere.
+> >>
+> >>> Is there anything else I can do to help?
+> >> Can you please tell me how to reproduce the problem?
+> > The most simple way to reproduce the issue, assuming there are no non-Intel
+> > graphics adapters installed, is to run the following shell commands:
+> > 
+> > #!/bin/sh
+> > # load i915 module
+> > modprobe i915
+> > # open an i915 device and keep it open in background
+> > cat /dev/dri/card0 >/dev/null &
+> > sleep 2
+> > # simulate device unplug
+> > echo 1 >/sys/class/drm/card0/device/remove
+> > # make the background process close the device on exit
+> > kill $!
+> > 
+> 
+> I tried to reproduce the issue with above instructions. I got below
+> kernel messages after above operation. Is it the same as what you've
+> seen? I can't find anything explicitly related to iommu except an IOMMU
+> fault generated after device got removed and the DMA translation
+> structures got torn down. Can you please help me to understand how IOMMU
+> driver triggers the issue?
+> 
+> 
+> [  182.217672] ------------[ cut here ]------------
+> [  182.217679] WARNING: CPU: 1 PID: 1285 at 
+> drivers/gpu/drm/drm_mode_config.c:495 drm_mode_config_cleanup+0x2cb/0x2e0
+> [  182.217680] Modules linked in: nls_iso8859_1 snd_soc_skl 
+> snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core 
+> snd_soc_acpi_intel_match snd_soc_acpi snd_soc_core intel_rapl_msr 
+> snd_hda_codec_hdmi snd_hda_codec_realtek snd_compress 
+> snd_hda_codec_generic ledtrig_audio ac97_bus snd_pcm_dmaengine 
+> snd_hda_intel snd_intel_nhlt snd_hda_codec snd_hda_core snd_hwdep 
+> snd_pcm intel_rapl_common x86_pkg_temp_thermal intel_powerclamp coretemp 
+> kvm_intel kvm snd_seq_midi irqbypass snd_seq_midi_event snd_rawmidi 
+> crct10dif_pclmul crc32_pclmul ghash_clmulni_intel iwlmvm snd_seq 
+> mac80211 libarc4 aesni_intel snd_seq_device snd_timer crypto_simd 
+> ipu3_cio2 cryptd glue_helper iwlwifi v4l2_fwnode intel_cstate 
+> videobuf2_dma_sg videobuf2_memops intel_rapl_perf asix videobuf2_v4l2 
+> videobuf2_common usbnet mii cfg80211 input_leds serio_raw 
+> intel_wmi_thunderbolt snd mei_me videodev soundcore 
+> intel_xhci_usb_role_switch mei 8250_dw mc roles intel_pch_thermal 
+> hid_sensor_magn_3d hid_sensor_accel_3d hid_sensor_press
+> [  182.217709]  hid_sensor_incl_3d hid_sensor_als hid_sensor_rotation 
+> hid_sensor_gyro_3d hid_sensor_trigger industrialio_triggered_buffer 
+> kfifo_buf hid_sensor_iio_common industrialio intel_vbtn mac_hid 
+> intel_hid acpi_pad sparse_keymap sch_fq_codel parport_pc ppdev lp 
+> parport ip_tables x_tables hid_sensor_custom hid_sensor_hub 
+> intel_ishtp_hid hid_generic dwc3 ulpi udc_core i2c_designware_platform 
+> i2c_designware_core e1000e psmouse i2c_i801 tg3 usbhid dwc3_pci hid 
+> intel_ish_ipc intel_lpss_pci intel_ishtp intel_lpss wmi 
+> pinctrl_sunrisepoint pinctrl_intel
+> [  182.217727] CPU: 1 PID: 1285 Comm: bash Not tainted 5.4.0-rc2+ #2704
+> [  182.217728] Hardware name: Intel Corporation Skylake Client 
+> platform/Skylake Y LPDDR3 RVP3, BIOS SKLSE2R1.R00.B105.B00.1512051901 
+> 12/05/2015
+> [  182.217731] RIP: 0010:drm_mode_config_cleanup+0x2cb/0x2e0
+> [  182.217732] Code: eb 0c 48 8b 70 48 4c 89 e7 e8 31 f4 ff ff 48 8d 7d 
+> a0 e8 d8 95 ff ff 48 85 c0 75 e6 48 8d 7d a0 e8 1a 87 ff ff e9 ef fd ff 
+> ff <0f> 0b e9 ed fe ff ff 0f 0b eb 98 e8 05 ec 98 ff 0f 1f 44 00 00 0f
+> [  182.217733] RSP: 0018:ffffa1c481d37c78 EFLAGS: 00010216
+> [  182.217735] RAX: ffff95c7da326e08 RBX: ffff95c7dcf60000 RCX: 
+> 000000008010000e
+> [  182.217735] RDX: ffff95c7dcf603b8 RSI: 000000008010000e RDI: 
+> ffff95c7dcf60390
+> [  182.217736] RBP: ffffa1c481d37cd8 R08: 0000000000000000 R09: 
+> ffffffff9e035e00
+> [  182.217737] R10: ffffa1c481d37be0 R11: 0000000000000001 R12: 
+> ffff95c7dcf60250
+> [  182.217737] R13: ffff95c7dcf603b8 R14: ffffa1c481d37ee8 R15: 
+> fffffffffffffff2
+> [  182.217739] FS:  00007f804af7f740(0000) GS:ffff95c7e7a80000(0000) 
+> knlGS:0000000000000000
+> [  182.217739] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  182.217740] CR2: 00007ffebc530cec CR3: 0000000137e0e003 CR4: 
+> 00000000003606e0
+> [  182.217741] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
+> 0000000000000000
+> [  182.217742] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
+> 0000000000000400
+> [  182.217742] Call Trace:
+> [  182.217748]  ? _cond_resched+0x19/0x40
+> [  182.217752]  intel_modeset_driver_remove+0xd1/0x150
+> [  182.217754]  i915_driver_remove+0xb8/0x120
+> [  182.217756]  i915_pci_remove+0x23/0x40
+> [  182.217758]  pci_device_remove+0x3e/0xc0
+> [  182.217761]  device_release_driver_internal+0xec/0x1b0
+> [  182.217762]  device_release_driver+0x12/0x20
+> [  182.217764]  pci_stop_bus_device+0x68/0x90
+> [  182.217766]  pci_stop_and_remove_bus_device_locked+0x1a/0x30
+> [  182.217767]  remove_store+0x7c/0x90
+> [  182.217770]  dev_attr_store+0x17/0x30
+> [  182.217772]  sysfs_kf_write+0x3c/0x50
+> [  182.217773]  kernfs_fop_write+0x125/0x1a0
+> [  182.217776]  __vfs_write+0x1b/0x40
+> [  182.217778]  vfs_write+0xb1/0x1a0
+> [  182.217779]  ksys_write+0xa7/0xe0
+> [  182.217780]  __x64_sys_write+0x1a/0x20
+> [  182.217783]  do_syscall_64+0x57/0x1c0
+> [  182.217785]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  182.217787] RIP: 0033:0x7f804b08f024
+> [  182.217788] Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 
+> 80 00 00 00 00 48 8d 05 b9 d3 0d 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 
+> 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 49 89 d4 55 48 89 f5 53
+> [  182.217789] RSP: 002b:00007ffdbe4bc0b8 EFLAGS: 00000246 ORIG_RAX: 
+> 0000000000000001
+> [  182.217790] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 
+> 00007f804b08f024
+> [  182.217791] RDX: 0000000000000002 RSI: 000055bf20640470 RDI: 
+> 0000000000000001
+> [  182.217792] RBP: 000055bf20640470 R08: 000000000000000a R09: 
+> 0000000000008000
+> [  182.217792] R10: 000000000000000a R11: 0000000000000246 R12: 
+> 00007f804b167760
+> [  182.217793] R13: 0000000000000002 R14: 00007f804b168560 R15: 
+> 00007f804b167960
+> [  182.217795] ---[ end trace 292e6caf66ddf0df ]---
+> [  182.217797] [leaked fb] framebuffer[118]:
+> [  182.217798] [leaked fb] 	allocated by = gnome-shell
 
+It looks like you may be trying to reproduce the issue with a graphics adapter 
+which is occupied by a graphical environment.  While maybe this should be 
+possible, other issues seem to interfere, making the picture less clear.  
+Would you be able to try on an otherwise unused device?
 
---=20
-Mihail
+Thanks,
+Janusz
+
+> [  182.217799] [leaked fb] 	refcount=1
+> [  182.217801] [leaked fb] 	format=XR24 little-endian (0x34325258)
+> [  182.217802] [leaked fb] 	modifier=0x100000000000001
+> [  182.217803] [leaked fb] 	size=3200x1800
+> [  182.217803] [leaked fb] 	layers:
+> [  182.217805] [leaked fb] 		size[0]=3200x1800
+> [  182.217805] [leaked fb] 		pitch[0]=12800
+> [  182.217806] [leaked fb] 		offset[0]=0
+> [  182.217807] [leaked fb] 		obj[0]:
+> [  182.217808] [leaked fb] 			name=0
+> [  182.217809] [leaked fb] 			refcount=3
+> [  182.217810] [leaked fb] 			start=00000000
+> [  182.217810] [leaked fb] 			size=25165824
+> [  182.217811] [leaked fb] 			imported=no
+> [  182.241857] pci 0000:00:02.0: Removing from iommu group 1
+> [  182.241858] DMAR: DRHD: handling fault status reg 2
+> [  182.241864] DMAR: [DMA Write] Request device [00:02.0] PASID ffffffff 
+> fault addr 0 [fault reason 02] Present bit in context entry is clear
+> [  189.181789] general protection fault: 0000 [#1] SMP PTI
+> [  189.181795] CPU: 0 PID: 836 Comm: gdbus Tainted: G        W 
+> 5.4.0-rc2+ #2704
+> [  189.181797] Hardware name: Intel Corporation Skylake Client 
+> platform/Skylake Y LPDDR3 RVP3, BIOS SKLSE2R1.R00.B105.B00.1512051901 
+> 12/05/2015
+> [  189.181804] RIP: 0010:drm_mode_object_unregister+0xe/0x70
+> [  189.181806] Code: 54 00 4c 89 e7 e8 d2 d8 56 00 5b 41 5c 41 5d 5d c3 
+> 90 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 55 41 54 
+> 53 <48> 8b 47 20 48 89 fb 49 89 f5 48 83 38 00 74 3a 4c 8d a3 d8 01 00
+> [  189.181809] RSP: 0018:ffffa1c481e73b60 EFLAGS: 00010246
+> [  189.181811] RAX: ffffffff9e502a90 RBX: ffff95c7da326e28 RCX: 
+> 0000000000000001
+> [  189.181813] RDX: 0000000000000000 RSI: ffff95c7da326e18 RDI: 
+> f1ca50a8ff50515a
+> [  189.181815] RBP: ffffa1c481e73b78 R08: 0000000000000001 R09: 
+> 0000000000000000
+> [  189.181817] R10: 0000000000000008 R11: ffff95c7dcf53770 R12: 
+> ffff95c7da326e00
+> [  189.181818] R13: ffffa1c481e73bf0 R14: ffff95c7e3cb7ac8 R15: 
+> ffff95c7e6cb23c0
+> [  189.181821] FS:  00007f688ccf1700(0000) GS:ffff95c7e7a00000(0000) 
+> knlGS:0000000000000000
+> [  189.181823] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  189.181825] CR2: 000056427674ff10 CR3: 000000015e376004 CR4: 
+> 00000000003606f0
+> [  189.181826] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
+> 0000000000000000
+> [  189.181828] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
+> 0000000000000400
+> [  189.181829] Call Trace:
+> [  189.181834]  drm_framebuffer_free+0x21/0x40
+> [  189.181837]  drm_mode_object_put.part.2+0x3c/0x40
+> [  189.181839]  drm_mode_object_put+0x15/0x20
+> [  189.181841]  drm_fb_release+0xbc/0x130
+> [  189.181845]  drm_file_free.part.5+0x2ac/0x2e0
+> [  189.181847]  drm_close_helper.isra.6+0x60/0x70
+> [  189.181850]  drm_release+0x50/0x80
+> [  189.181853]  __fput+0xc6/0x260
+> [  189.181856]  ____fput+0xe/0x10
+> [  189.181859]  task_work_run+0x9d/0xc0
+> [  189.181862]  do_exit+0x2ed/0xbb0
+> [  189.181866]  ? poll_select_finish+0x210/0x210
+> [  189.181869]  do_group_exit+0x43/0xa0
+> [  189.181872]  get_signal+0x144/0x840
+> [  189.181876]  ? eventfd_read+0xe9/0x260
+> [  189.181879]  do_signal+0x34/0x6d0
+> [  189.181884]  exit_to_usermode_loop+0x8e/0x100
+> [  189.181887]  do_syscall_64+0x186/0x1c0
+> [  189.181890]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  189.181895] RIP: 0033:0x7f6895119729
+> [  189.181899] Code: Bad RIP value.
+> [  189.181901] RSP: 002b:00007f688ccf08a0 EFLAGS: 00000293 ORIG_RAX: 
+> 0000000000000007
+> [  189.181903] RAX: fffffffffffffdfc RBX: 00007f687c023170 RCX: 
+> 00007f6895119729
+> [  189.181905] RDX: 00000000ffffffff RSI: 0000000000000005 RDI: 
+> 00007f687c023170
+> [  189.181906] RBP: 0000000000000005 R08: 0000000000000000 R09: 
+> 0000000000000001
+> [  189.181908] R10: 000055cc6ed5dd80 R11: 0000000000000293 R12: 
+> 00000000ffffffff
+> [  189.181909] R13: 00007f6895d8b4c0 R14: 00000000ffffffff R15: 
+> 0000000000000005
+> [  189.181911] Modules linked in: nls_iso8859_1 snd_soc_skl 
+> snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core 
+> snd_soc_acpi_intel_match snd_soc_acpi snd_soc_core intel_rapl_msr 
+> snd_hda_codec_hdmi snd_hda_codec_realtek snd_compress 
+> snd_hda_codec_generic ledtrig_audio ac97_bus snd_pcm_dmaengine 
+> snd_hda_intel snd_intel_nhlt snd_hda_codec snd_hda_core snd_hwdep 
+> snd_pcm intel_rapl_common x86_pkg_temp_thermal intel_powerclamp coretemp 
+> kvm_intel kvm snd_seq_midi irqbypass snd_seq_midi_event snd_rawmidi 
+> crct10dif_pclmul crc32_pclmul ghash_clmulni_intel iwlmvm snd_seq 
+> mac80211 libarc4 aesni_intel snd_seq_device snd_timer crypto_simd 
+> ipu3_cio2 cryptd glue_helper iwlwifi v4l2_fwnode intel_cstate 
+> videobuf2_dma_sg videobuf2_memops intel_rapl_perf asix videobuf2_v4l2 
+> videobuf2_common usbnet mii cfg80211 input_leds serio_raw 
+> intel_wmi_thunderbolt snd mei_me videodev soundcore 
+> intel_xhci_usb_role_switch mei 8250_dw mc roles intel_pch_thermal 
+> hid_sensor_magn_3d hid_sensor_accel_3d hid_sensor_press
+> [  189.181950]  hid_sensor_incl_3d hid_sensor_als hid_sensor_rotation 
+> hid_sensor_gyro_3d hid_sensor_trigger industrialio_triggered_buffer 
+> kfifo_buf hid_sensor_iio_common industrialio intel_vbtn mac_hid 
+> intel_hid acpi_pad sparse_keymap sch_fq_codel parport_pc ppdev lp 
+> parport ip_tables x_tables hid_sensor_custom hid_sensor_hub 
+> intel_ishtp_hid hid_generic dwc3 ulpi udc_core i2c_designware_platform 
+> i2c_designware_core e1000e psmouse i2c_i801 tg3 usbhid dwc3_pci hid 
+> intel_ish_ipc intel_lpss_pci intel_ishtp intel_lpss wmi 
+> pinctrl_sunrisepoint pinctrl_intel
+> [  189.181981] ---[ end trace 292e6caf66ddf0e0 ]---
+> [  189.201970] RIP: 0010:drm_mode_object_unregister+0xe/0x70
+> [  189.201975] Code: 54 00 4c 89 e7 e8 d2 d8 56 00 5b 41 5c 41 5d 5d c3 
+> 90 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 55 41 54 
+> 53 <48> 8b 47 20 48 89 fb 49 89 f5 48 83 38 00 74 3a 4c 8d a3 d8 01 00
+> [  189.201978] RSP: 0018:ffffa1c481e73b60 EFLAGS: 00010246
+> [  189.201981] RAX: ffffffff9e502a90 RBX: ffff95c7da326e28 RCX: 
+> 0000000000000001
+> [  189.201982] RDX: 0000000000000000 RSI: ffff95c7da326e18 RDI: 
+> f1ca50a8ff50515a
+> [  189.201984] RBP: ffffa1c481e73b78 R08: 0000000000000001 R09: 
+> 0000000000000000
+> [  189.201986] R10: 0000000000000008 R11: ffff95c7dcf53770 R12: 
+> ffff95c7da326e00
+> [  189.201987] R13: ffffa1c481e73bf0 R14: ffff95c7e3cb7ac8 R15: 
+> ffff95c7e6cb23c0
+> [  189.201990] FS:  00007f688ccf1700(0000) GS:ffff95c7e7a00000(0000) 
+> knlGS:0000000000000000
+> [  189.201991] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  189.201993] CR2: 00007f68951196ff CR3: 000000015e376004 CR4: 
+> 00000000003606f0
+> [  189.201995] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
+> 0000000000000000
+> [  189.201997] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
+> 0000000000000400
+> 
+> Best regards,
+> Baolu
+> 
+
 
 
 
