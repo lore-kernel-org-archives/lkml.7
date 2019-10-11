@@ -2,297 +2,120 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FB5ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB3C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D3E2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F10520659
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ykg12PFZ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="erwjxUld"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJwL/lGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfJKR7P (ORCPT
+        id S1728745AbfJKSB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:59:15 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51062 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728472AbfJKR7O (ORCPT
+        Fri, 11 Oct 2019 14:01:56 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43449 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbfJKSB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:59:14 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2FAB26083C; Fri, 11 Oct 2019 17:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570816753;
-        bh=dEIHNtPJMeVe0/U1DX6bBGn/UKV/780n6No7ph7w8yw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ykg12PFZxT3nlVFtqTIhn/ikrDlmLyXYQarYtasJm3LbVyNw1Fz57B12hB+1YPDM9
-         6LJGerahP2a6tl7FZJHSWwMkodCM0qAt/hwJxmR+DthNHoGHCAuw2tg2L5ZsqP4E/Q
-         6wPXvWTDQ399qJ7dp/et0vHhzJTHV5V3MkzPxiPw=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id C154460AA8;
-        Fri, 11 Oct 2019 17:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570816751;
-        bh=dEIHNtPJMeVe0/U1DX6bBGn/UKV/780n6No7ph7w8yw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=erwjxUldW6GlHm6A6jcnS4u/PE5qvU7lC+CFWLChnB2fTSNBAayRrlR3yr02FrHtL
-         j9sbYg75buj9H5hd5WKvylgrlxFaYqV9WhnuGQok/00O3pJmTuhNuBDbeVPav3XpNk
-         NLLhdJFUZEa6OwgZ9YkDGijCyM85w2BdKE5zuUVw=
+        Fri, 11 Oct 2019 14:01:56 -0400
+Received: by mail-lj1-f194.google.com with SMTP id n14so10660766ljj.10;
+        Fri, 11 Oct 2019 11:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XdwB9h96v+QYkQDX1YxlxUnsWei52osLfl6yOYfRoHI=;
+        b=JJwL/lGc98fPjNXsuW37YtyQjKr2sKYZbyZQItyXwRkcSDHCY0bEjaJUb4XAw7+LON
+         qFFPDarzJYA7aRj8S6Djg/uZTdTXdMY3gfsOCo/GcKE8PW0x+nv+jQ4r+CPO0Ke/pLgy
+         nmq3toEYyZahWAs1fJiHI4KEuu0q2AY121irp7lN2HLtM8mMZ+i+D3GcXZwMjpyVJ8rM
+         Fl1Jw1fbcOx263yXpePcJpyelaLm8L566qTnPFvR3hckhejYUY056kZEU4XRMODPTfT7
+         OpGwELASV8jP2Iw9XeI2rX2HYHJ+5DhvRHAf4/0q6Q/mEIgKdePdesCb341qDj+3AgQz
+         Y87w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XdwB9h96v+QYkQDX1YxlxUnsWei52osLfl6yOYfRoHI=;
+        b=CovoiUvqVzcI0epHgHlnC5k0YM02Yn9gyM66lyzcr4/9odK3v13gWlIA14UisloCxW
+         81tZrHoaXN3lPnNTiGAnUX2g5ER3XnDxys1wXHG91D9htA7cLR3OE7RgGQgQGWqriFgK
+         08o0adHz9KpveJkWIenLxcjWOyPM3WDRB93J8dJ9xD0dnAFMPlpcSZ6+yWUNBjFnpB6r
+         RChdAaO7pZGvy/jSYMmt9mX3tmsi8HjhQ5ieMoySYniIHZ+bb69IeuEDoK9P2lR8Hkl5
+         8+yu8vCkcuPI6tZ9JGjc6V6jvHywzUJ7GnC7fkDnk5BDE2fV7ou5pAiZt4aOwC/8uAdQ
+         cdlg==
+X-Gm-Message-State: APjAAAVHdUYxXDXuct+lY60fsRqyu3BAzUWLdkNs/X22071NtuUAVSls
+        Zlx7Z+EhWNndag+/KF4KqHF2U5oIS6uCOY1F/AM=
+X-Google-Smtp-Source: APXvYqwVaUA7oCBc5xvpj+PQwfoY/MvmAjkR7fClTPBR5s5J1pMVup7ak5TL4SFSjd2aW7dmhjgX6bC/i/jADMqPYd4=
+X-Received: by 2002:a2e:3a19:: with SMTP id h25mr10164297lja.129.1570816913446;
+ Fri, 11 Oct 2019 11:01:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 11 Oct 2019 10:59:11 -0700
-From:   Jeykumar Sankaran <jsanka@codeaurora.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
+References: <cover.1570292505.git.joe@perches.com> <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
+In-Reply-To: <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 11 Oct 2019 20:01:42 +0200
+Message-ID: <CANiq72kDNT6iPxYYNzY_eb3ddWNUEzgg48pOenEBrJXynxsvoA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] treewide: Add 'fallthrough' pseudo-keyword
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Joe Perches <joe@perches.com>, linux-sctp@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH] drm/meson: fix max mode_config height/width
-In-Reply-To: <20191009104727.GX16989@phenom.ffwll.local>
-References: <1538642563-22465-1-git-send-email-narmstrong@baylibre.com>
- <20181004100958.GI31561@phenom.ffwll.local>
- <0ef7fa13-ce77-f8a5-f5f3-6568be3d6145@baylibre.com>
- <CAKMK7uHxiDF3z19cMBb0o2o4Ev0DFJkhMR7Ny6U2776Ry4oc=A@mail.gmail.com>
- <8e980de4-5a52-8f3d-fba2-734617e40d1b@baylibre.com>
- <CAKMK7uE71OeOdDPb+5-cs9bByD-unYPxBV_R1t+4A0Nb4H6CAw@mail.gmail.com>
- <5dbd6337-7e08-f3f7-6d4a-d6bcaddfd3be@baylibre.com>
- <91cd8a2aebefd4ea3e9bcee5a4ef796a@codeaurora.org>
- <20191009104727.GX16989@phenom.ffwll.local>
-Message-ID: <27976f3eca6bd96dcea071db97c229b1@codeaurora.org>
-X-Sender: jsanka@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Miller <davem@davemloft.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-09 03:47, Daniel Vetter wrote:
-> On Tue, Sep 24, 2019 at 10:28:48AM -0700, Jeykumar Sankaran wrote:
->> Reviving this thread from the context of the below conversion:
->> 
->> 
-> https://lore.kernel.org/linux-arm-msm/db26145b-3f64-a334-f698-76f972332881
-> @baylibre.com/T/#u
->> 
->> On 2018-10-05 01:19, Neil Armstrong wrote:
->> > On 05/10/2018 09:58, Daniel Vetter wrote:
->> > > On Fri, Oct 5, 2018 at 9:39 AM Neil Armstrong
->> > > <narmstrong@baylibre.com> wrote:
->> > > >
->> >
->> > [...]
->> >
->> > > > OK, won't this be enough ?
->> > > > --- a/include/drm/drm_mode_config.h
->> > > > +++ b/include/drm/drm_mode_config.h
->> > > > @@ -333,6 +333,8 @@ struct drm_mode_config_funcs {
->> > > >   * @min_height: minimum fb pixel height on this device
->> > > >   * @max_width: maximum fb pixel width on this device
->> > > >   * @max_height: maximum fb pixel height on this device
->> > > > + * @max_fb_width: maximum fb buffer width if differs from
-> max_width
->> > > > + * @max_fb_height: maximum fb buffer height if differs from
->> > > > max_height
->> > > >   * @funcs: core driver provided mode setting functions
->> > > >   * @fb_base: base address of the framebuffer
->> > > >   * @poll_enabled: track polling support for this device
->> > > > @@ -508,6 +510,7 @@ struct drm_mode_config {
->> > > >
->> > > >         int min_width, min_height;
->> > > >         int max_width, max_height;
->> > > > +       int max_fb_width, max_fb_height;
->> > > >         const struct drm_mode_config_funcs *funcs;
->> > > >         resource_size_t fb_base;
->> > > >
->> > > > --- a/drivers/gpu/drm/drm_framebuffer.c
->> > > > +++ b/drivers/gpu/drm/drm_framebuffer.c
->> > > > @@ -283,14 +283,20 @@ drm_internal_framebuffer_create(struct
->> > > > drm_device *dev,
->> > > >                 return ERR_PTR(-EINVAL);
->> > > >         }
->> > > >
->> > > > -       if ((config->min_width > r->width) || (r->width >
->> > > > config->max_width)) {
->> > > > +       if ((config->min_width > r->width) ||
->> > > > +           (!config->max_fb_width && r->width >
->> > > > config->max_width) ||
->> > > > +           (config->max_fb_width && r->width >
->> > > > config->max_fb_width)) {
->> > > >                 DRM_DEBUG_KMS("bad framebuffer width %d, should
->> > > > be >= %d && <= %d\n",
->> > > > -                         r->width, config->min_width,
->> > > > config->max_width);
->> > > > +                         r->width, config->min_width,
->> > > > config->max_fb_width ?
->> > > > +                         config->max_fb_width :
-> config->max_width);
->> > > >                 return ERR_PTR(-EINVAL);
->> > > >         }
->> > > > -       if ((config->min_height > r->height) || (r->height >
->> > > > config->max_height)) {
->> > > > +       if ((config->min_height > r->height) ||
->> > > > +           (!config->max_fb_height && r->height >
->> > > > config->max_height) ||
->> > > > +           (config->max_fb_height && r->height >
->> > > > config->max_fb_height)) {
->> > > >                 DRM_DEBUG_KMS("bad framebuffer height %d, should
->> > > > be >= %d && <= %d\n",
->> > > > -                         r->height, config->min_height,
->> > > > config->max_height);
->> > > > +                         r->height, config->min_height,
->> > > > config->max_fb_height ?
->> > > > +                         config->max_fb_height :
->> > > > config->max_height);
->> > > >                 return ERR_PTR(-EINVAL);
->> > > >         }
->> > > >
->> > > > and in the driver :
->> > > >
->> > > > +       drm->mode_config.max_width = 4096;
->> > > > +       drm->mode_config.max_height = 3840;
->> > > > +       drm->mode_config.max_fb_width = 16384;
->> > > > +       drm->mode_config.max_fb_height = 8192;
->> > > >
->> > > > With this I leave the mode filtering intact.
->> > >
->> > > Not enough. See
->> > >
-> https://dri.freedesktop.org/docs/drm/gpu/drm-kms-helpers.html#c.drm_connec
-> tor_helper_funcs
->> > > and scroll down to mode_valid. You need to filter modes both in the
->> > > detect paths, and the atomic_check paths.
->> > >
->> > > Detect is explicitly filtered out, but atomic_check was only
->> > > implicitly filtered, through the max fb size checks. Ok, you could
->> > > light up a mode that's bigger than max fb, but in practice, no
->> > > userspace ever did that.
->> 
->> Daniel, MSM and few other vendor hardware have upscale blocks where 
->> the
->> driver can expose fb sizes smaller than
->> the mode resolution and use h/w upscaling to fill the screen. This 
->> would
->> optimize the fetch bandwidth.
->> 
->> But with your code we're missing crucial
->> > > validation now, and userspace could fall over that. What I think we
->> > > need is to add mode filter against mode_config.max_width/height in
->> > > drm_atomic_helper_check_modeset(). Probably best to stuff that into
->> > > the mode_valid() function.
->> >
->> Agreed! Since the above patch from Niel is taking care of cases where
->> max/min fb values
->> are not set, by checking against the original max/min values, can we
->> separate out this
->> core change from the driver level mode_valid changes? If Niel couldn't
-> find
->> the time, I can
->> repost the above change.
-> 
-> Sure, I think Neil wouldn't mind if you take this over and get it ready
-> for merging. Just need to make sure we're not leaving any validation 
-> gaps
-> in core/helper code.
-> -Daniel
-> 
-I guess you are a bit late for the party!
+Hi Linus,
 
-I did post the patch on the forum. The latest on the thread can be found 
-here: https://lkml.org/lkml/2019/10/2/369
+On Fri, Oct 11, 2019 at 6:30 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sat, Oct 5, 2019 at 9:46 AM Joe Perches <joe@perches.com> wrote:
+> >
+> > Add 'fallthrough' pseudo-keyword to enable the removal of comments
+> > like '/* fallthrough */'.
+>
+> I applied patches 1-3 to my tree just to make it easier for people to
+> start doing this. Maybe some people want to do the conversion on their
+> own subsystem rather than with a global script, but even if not, this
+> looks better as a "prepare for the future" series and I feel that if
+> we're doing the "fallthrough" thing eventually, the sooner we do the
+> prepwork the better.
+>
+> I'm a tiny bit worried that the actual conversion is just going to
+> cause lots of pain for the stable people, but I'll not worry about it
+> _too_ much. If the stable people decide that it's too painful for them
+> to deal with the comment vs keyword model, they may want to backport
+> these three patches too.
 
-The basic concern is if FB limits are different (especially smaller) 
-than the display (mode) limits, it
-will break the existing user space, who are creating unscaled FB's out 
-of exposed mode limits.
+I was waiting for a v2 series to pick it up given we had some pending changes...
 
-Thanks and Regards,
-Jeykumar S.
-
->> 
->> Thanks and Regards,
->> Jeykumar S.
->> 
->> > Ok I understood now, thanks for pointer, I'll try to add this.
->> >
->> > Neil
->> >
->> > >
->> > > Cheers, Daniel
->> > > >
->> > > > Neil
->> > > >
->> > > >
->> > > > > -Daniel
->> > > > >
->> > > > > >
->> > > > > > Neil
->> > > > > >
->> > > > > > >
->> > > > > > > Bunch of igt to make sure we're not missing anything
->> > > > > > > would be sweet on
->> > > > > > > top, e.g. e.g. trying to set a mode over the limit
->> > > > > > > and making sure it
->> > > > > > > fails.
->> > > > > > >
->> > > > > > > Cheers, Daniel
->> > > > > > >
->> > > > > > > > ---
->> > > > > > > >  drivers/gpu/drm/meson/meson_drv.c | 4 ++--
->> > > > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
->> > > > > > > >
->> > > > > > > > diff --git a/drivers/gpu/drm/meson/meson_drv.c
->> > > > > > > > b/drivers/gpu/drm/meson/meson_drv.c
->> > > > > > > > index d344312..2e29968 100644
->> > > > > > > > --- a/drivers/gpu/drm/meson/meson_drv.c
->> > > > > > > > +++ b/drivers/gpu/drm/meson/meson_drv.c
->> > > > > > > > @@ -243,8 +243,8 @@ static int
->> > > > > > > > meson_drv_bind_master(struct device *dev, bool
->> > > > > > > > has_components)
->> > > > > > > >              goto free_drm;
->> > > > > > > >
->> > > > > > > >      drm_mode_config_init(drm);
->> > > > > > > > -    drm->mode_config.max_width = 3840;
->> > > > > > > > -    drm->mode_config.max_height = 2160;
->> > > > > > > > +    drm->mode_config.max_width = 16384;
->> > > > > > > > +    drm->mode_config.max_height = 8192;
->> > > > > > > >      drm->mode_config.funcs = &meson_mode_config_funcs;
->> > > > > > > >
->> > > > > > > >      /* Hardware Initialization */
->> > > > > > > > --
->> > > > > > > > 2.7.4
->> > > > > > > >
->> > > > > > > > _______________________________________________
->> > > > > > > > dri-devel mailing list
->> > > > > > > > dri-devel@lists.freedesktop.org
->> > > > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->> > > > > > >
->> > > > > >
->> > > > > > _______________________________________________
->> > > > > > dri-devel mailing list
->> > > > > > dri-devel@lists.freedesktop.org
->> > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->> > > > >
->> > > > >
->> > > > >
->> > > >
->> > >
->> > >
->> >
->> > _______________________________________________
->> > dri-devel mailing list
->> > dri-devel@lists.freedesktop.org
->> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->> 
->> --
->> Jeykumar S
-
--- 
-Jeykumar S
+Cheers,
+Miguel
