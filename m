@@ -2,80 +2,47 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C404C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5147EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2454D206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:28:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ffak985F";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WElkEaJm"
+	by mail.kernel.org (Postfix) with ESMTP id 2D1362084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfJKK2Y (ORCPT
+        id S1727314AbfJKKbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:28:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49134 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfJKK2X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:28:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0487060F37; Fri, 11 Oct 2019 10:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570789702;
-        bh=o7sRI5k365dR5XmrQKMQ1PnIHDR0knJ4nKOksc1JaTA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ffak985Fp7BSbad9dg/e+6GlJrzkNiqq+q8avsY5/jkZ/u5jAc0ZExRui/hJHON8P
-         RmDFnTRHq5RPMVhBjp7Zn5FKUJxQ0YhokXNBfXuQRIIMLbDY+hHfKmNbYD8+JD4VFn
-         ctiZkdGvgr+vHdD6pKnVjWXeFwi5AigcYrCz24LE=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC27760F37;
-        Fri, 11 Oct 2019 10:28:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1570789700;
-        bh=o7sRI5k365dR5XmrQKMQ1PnIHDR0knJ4nKOksc1JaTA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WElkEaJmeNpCsqzDOa4da/turGp2HNilPBu5PM8bJGNaFlNb0KmC6pAvYRK2HDzUl
-         X64O6IR8InOWhqhB7xTFzAiejDHuK0nSi1KSCQ8mHsLvT+2+BP9ZkdUuuGy/XUTz64
-         GkQAcvTM9osdVIR1Thz6J4Jru6mT18n8gizg2vGs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BC27760F37
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20190918095018.17979-1-tdas@codeaurora.org>
- <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
- <20190925130346.42E0820640@mail.kernel.org>
- <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
- <20191001143825.CD3212054F@mail.kernel.org>
- <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
- <20191003160130.5A19B222D0@mail.kernel.org>
- <81a2fa46-a7e6-66a2-9649-009f22813c81@codeaurora.org>
- <20191004232022.062A1215EA@mail.kernel.org>
- <d17dad3d-d32c-b71c-0e56-d15cb246f742@codeaurora.org>
- <20191010041629.6E771208C3@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <9fef7f3d-984e-9011-b207-c7f287691000@codeaurora.org>
-Date:   Fri, 11 Oct 2019 15:58:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 06:31:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:55828 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbfJKKbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:31:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA01528;
+        Fri, 11 Oct 2019 03:31:41 -0700 (PDT)
+Received: from [10.1.199.68] (e108754-lin.cambridge.arm.com [10.1.199.68])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B9C773F703;
+        Fri, 11 Oct 2019 03:31:40 -0700 (PDT)
+Subject: Re: [PATCH 1/4] arm64: add support for the AMU extension v1
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     will@kernel.org, maz@kernel.org, corbet@lwn.net,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20190917134228.5369-1-ionela.voinescu@arm.com>
+ <20190917134228.5369-2-ionela.voinescu@arm.com>
+ <20191010172058.GD40923@arrakis.emea.arm.com>
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+Message-ID: <4e82e891-1d47-7a4f-abc9-e6bf2cce7f91@arm.com>
+Date:   Fri, 11 Oct 2019 11:31:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191010041629.6E771208C3@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191010172058.GD40923@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,36 +50,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi Catalin,
 
-On 10/10/2019 9:46 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-10-09 02:19:39)
->> Hi Stephen,
->>
->> On 10/5/2019 4:50 AM, Stephen Boyd wrote:
->>> Quoting Taniya Das (2019-10-04 10:39:31)
->>>>
->>>> Could you please confirm if you are referring to update the below?
->>>
->>> I wasn't suggesting that explicitly but sure. Something like this would
->>> be necessary to make clk_get() pass back a NULL pointer to the caller.
->>> Does everything keep working with this change?
->>>
->>
->> Even if I pass back NULL, I don't see it working. Please suggest how to
->> take it forward.
->>
+On 10/10/2019 18:20, Catalin Marinas wrote:
+> Hi Ionela,
 > 
-> Why doesn't it work?
+> On Tue, Sep 17, 2019 at 02:42:25PM +0100, Ionela Voinescu wrote:
+>> +#ifdef CONFIG_ARM64_AMU_EXTN
+>> +
+>> +/*
+>> + * This per cpu variable only signals that the CPU implementation supports the
+>> + * AMU but does not provide information regarding all the events that it
+>> + * supports.
+>> + * When this amu_feat per CPU variable is true, the user of this feature can
+>> + * only rely on the presence of the 4 fixed counters. But this does not
+>> + * guarantee that the counters are enabled or access to these counters is
+>> + * provided by code executed at higher exception levels.
+>> + */
+>> +DEFINE_PER_CPU(bool, amu_feat) = false;
+>> +
+>> +static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
+>> +{
+>> +	if (has_cpuid_feature(cap, SCOPE_LOCAL_CPU)) {
+>> +		pr_info("detected CPU%d: Activity Monitors extension\n",
+>> +			smp_processor_id());
+>> +		this_cpu_write(amu_feat, true);
+>> +	}
+>> +}
+> 
+> Sorry if I missed anything as I just skimmed through this series. I
+> can't see the amu_feat used anywhere in these patches, so on its own it
+> doesn't make much sense.
 > 
 
-My bad, I messed up with the kernel and my testing was showing failures. 
-Have tested it on SC7180 & Cheza and it works as expected.
+No worries, you are correct, at the moment the per-cpu amu_feat is not
+yet used anywhere. But the intention is to use it to discover the
+feature at CPU level as some CPUs might implement AMU and some might
+not.
 
-I will submit the changes in common.c to return NULL.
+I'll soon submit some patches using the counters for the scheduler's
+frequency invariance - to discover the frequency the CPUs are actually
+running at in case there is power or thermal mitigation happening
+outside of the OS.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+> I also can't see the advantage of allowing mismatched CPU
+> implementations for this feature. What's the intended use-case?
+> 
 
---
+Just to clarify things, the intention is to allow a mix of CPUs where
+some of them implement AMU (v8.4 - V1) and some don't. The current
+implementation does not currently support a mix of CPUs with different
+implementations of AMU. Although that would be easy to add when we have
+a new version of AMU.
+
+The reason to allow a mix of CPUs with and without support for activity
+monitor counters is due to the fact that these counters are intended to
+reflect activity on a CPU, independent of other CPUs. Some of the
+counters might show common information to all CPUs (for example the
+constant counter that ticks at the frequency of the system timer),
+some of information might be common to a subset of CPUs (cycle counter
+will tick at the same rate for CPUs in the same frequency domain -
+except when WFI), and some will be fully specific to the CPU
+(instructions retired and memory stalls). This per-cpu information is
+useful whether or not all CPUs can provide this information.
+
+More practically, it's possible that we'll see big.LITTLE platforms
+where the big CPUs only will implement activity monitors and for those
+CPUs it will be useful to get more accurate information on the current
+frequency, for example, as power and thermal mitigation is more
+probable to happen in the power domain of the big CPUs.
+
+For this usecase and for others, it will be good for generic support to
+allow detection of the feature at a per-cpu level (this is where the
+usefulness of the per-cpu amu_feat comes in) while further checks and
+aggregation will be done when the counters are used, depending on the
+usecase.
+
+Thanks,
+Ionela.
+
+> Thanks.
+> 
