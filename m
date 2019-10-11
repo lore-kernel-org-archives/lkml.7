@@ -2,212 +2,171 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE02C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE1DC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5E42084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD622084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsKQK3U7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Db87KbZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbfJKTkw (ORCPT
+        id S1728955AbfJKTod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 15:40:52 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46649 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728889AbfJKTkv (ORCPT
+        Fri, 11 Oct 2019 15:44:33 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40566 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728783AbfJKToc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 15:40:51 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o18so13093981wrv.13;
-        Fri, 11 Oct 2019 12:40:49 -0700 (PDT)
+        Fri, 11 Oct 2019 15:44:32 -0400
+Received: by mail-wm1-f67.google.com with SMTP id b24so11253453wmj.5;
+        Fri, 11 Oct 2019 12:44:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=az5ld5XgdF0H2M1Bu2HqLoXmNMtXfnpvceh2+J0pVic=;
-        b=SsKQK3U77EuN/5R69bkzCVSaFLrB8tGb54ccO4OzP7I82Klll+jYfpXeF4geEk6Diu
-         kupieeMIG1tEqVQfSBHMQkaFOTRzewuy1Ny74OP5Kb95qy11Bza4onGC81daBm7ToDvJ
-         N9wda6qs+PBs/QLBUaVgu+5Udi/5joGIATTzF1z6AqSQtQhsDQqBeUG42reK9pJWp2Fa
-         t9Sg5pqHTFnC0uh/rm5GZEehpj0M6lB4Xn42hRv4bc0pfKpllVOC0Xj9flWvU/BPS/Ag
-         ktiZjsWqDZrh9goHchuVp0nhdz7Tt0iXxw3KalotNIDYMMkbmHNitoqC9/CW4AiPCncD
-         S/xw==
+        h=from:to:cc:subject:date:message-id;
+        bh=/3bS4G5Y0I+plz0u2dyxfCOEMTUK76uRvLiuR7/nWEY=;
+        b=Db87KbZqbSS83AEg5Tr203MMM0ypVYmyWiVGOBPWn7qoDCRjtAqo2YLiRh14/52nXe
+         XTlDtHdULRYmGVlWKml8XqGNheSQdP9CCLUJ+0TbgmDzzuvuRz5l8hlqy8gyk8uqQDK6
+         E62S2KqftvNXPKz/SdsTNF5X4G4NCJx4W6HODlXem30zT10bmbBK2Y13HpxctwCNdB5/
+         DQu1GItvLZ3dKMD3YiVsRBVRhAE89tjhEFopqzfmzZLMAEnmKzFZBVU+FQJfJIHBOnz9
+         5tpgyED2GJ4zHEz/Lioy8hdEQH8+9Di2Kym7ZyP/Ywag7Ls/nbeUdiOqcrTLTwxegEau
+         Lexg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=az5ld5XgdF0H2M1Bu2HqLoXmNMtXfnpvceh2+J0pVic=;
-        b=kp3cZFU8ofLBpaqjA2DffzOrg/b+7LLpwHMZspYyHWNDDSf+xRubmk3FcTdrCAmjea
-         qG5smlq61soc/NuQ1nztrtwXQBGznEms3NLjMnkWV0AHVK59EYtXcjPZMGwWB6mkqxAN
-         pY07ju2xNDrf9tH73HM+aA8yiRddVsfFCU12RaiQEQjgQ/D5XecB3mPR3laBsAHZNLUs
-         zJCJvDkykX1j5PsQfr1L6AzS2muOy98p1aRxVurZtq/JS69gxFnpyxHn2SBkET4mSNO6
-         D/VOXWJjPHx30DM0A4KPvs9rDCTqkz9DZ/lQzCNv0mN9aE1hQU28BExxd+iLpp4aCQrN
-         A9DA==
-X-Gm-Message-State: APjAAAXdDolooguEoYADBu2S+CfuhtnFgumEexL7rcEvF8uV5CGAcCm3
-        Ohc8nQimhYN/i9PUBepK/w+U8lcj
-X-Google-Smtp-Source: APXvYqzbeIkxT2Rs4R77qx8P3jrkU4oPbxdbXt4zxEcZu7eQnZnxznzgbcc7aW9c/LkQZPajO392Zw==
-X-Received: by 2002:a5d:5552:: with SMTP id g18mr1018560wrw.79.1570822848108;
-        Fri, 11 Oct 2019 12:40:48 -0700 (PDT)
-Received: from [192.168.1.19] (cjl71.neoplus.adsl.tpnet.pl. [83.31.61.71])
-        by smtp.gmail.com with ESMTPSA id o18sm22622108wrw.90.2019.10.11.12.40.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Oct 2019 12:40:47 -0700 (PDT)
-Subject: Re: [PATCH v12 00/16] Multicolor Framework v12
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191011130657.4713-1-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
- eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
- FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
- X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
- 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
- Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
- FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
- osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
- IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
- ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
- emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAlgEEwEIAEICGwMHCwkIBwMC
- AQYVCAIJCgsDFgIBAh4BAheABQkJZgNMFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAl05/9sC
- GQEACgkQvWpQHLeLfCarMQ/9FN/WqJdN2tf6xkP0RFyS4ft0sT04zkOCFfOMxs8mZ+KZoMU+
- X3a+fEppDL7xgRFpHyGaEel7lSi1eqtzsqZ5JiHbDS1Ht1G8TtATb8q8id68qeSeW2mfzaLQ
- 98NPELGfUXFoUqUQkG5z2p92UrGF4Muj1vOIW93pwvE4uDpNsl+jriwHomLtjIUoZtIRjGfZ
- RCyUQI0vi5LYzXCebuzAjGD7Jh2YAp7fDGrv3qTq8sX+DUJ4H/+I8PiL+jXKkEeppqIhlBJJ
- l4WcgggMu3c2uljYDuqRYghte33BXyCPAocfO2/sN+yJRUTVuRFlOxUk4srz/W8SQDwOAwtK
- V7TzdyF1/jOGBxWwS13EjMb4u3XwPMzcPlEQNdIqz76NFmJ99xYEvgkAmFmRioxuBTRv8Fs1
- c1jQ00WWJ5vezqY6lccdDroPalXWeFzfPjIhKbV3LAYTlqv0It75GW9+0TBhPqdTM15DrCVX
- B7Ues7UnD5FBtWwewTnwr+cu8te449VDMzN2I+a9YKJ1s6uZmzh5HnuKn6tAfGyQh8MujSOM
- lZrNHrRsIsLXOjeGVa84Qk/watEcOoyQ7d+YaVosU0OCZl0GldvbGp1z2u8cd2N/HJ7dAgFh
- Q7dtGXmdXpt2WKQvTvQXhIrCWVQErNYbDZDD2V0TZtlPBaZP4fkUDkvH+Sy5Ag0EVaN9oQEQ
- AMPNymBNoCWc13U6qOztXrIKBVsLGZXq/yOaR2n7gFbFACD0TU7XuH2UcnwvNR+uQFwSrRqa
- EczX2V6iIy2CITXKg5Yvg12yn09gTmafuoIyKoU16XvC3aZQQ2Bn3LO2sRP0j/NuMD9GlO37
- pHCVRpI2DPxFE39TMm1PLbHnDG8+lZql+dpNwWw8dDaRgyXx2Le542CcTBT52VCeeWDtqd2M
- wOr4LioYlfGfAqmwcwucBdTEBUxklQaOR3VbJQx6ntI2oDOBlNGvjnVDzZe+iREd5l40l+Oj
- TaiWvBGXkv6OI+wx5TFPp+BM6ATU+6UzFRTUWbj+LqVA/JMqYHQp04Y4H5GtjbHCa8abRvBw
- IKEvpwTyWZlfXPtp8gRlNmxYn6gQlTyEZAWodXwE7CE+KxNnq7bPHeLvrSn8bLNK682PoTGr
- 0Y00bguYLfyvEwuDYek1/h9YSXtHaCR3CEj4LU1B561G1j7FVaeYbX9bKBAoy/GxAW8J5O1n
- mmw7FnkSHuwO/QDe0COoO0QZ620Cf9IBWYHW4m2M2yh5981lUaiMcNM2kPgsJFYloFo2XGn6
- lWU9BrWjEoNDhHZtF+yaPEuwjZo6x/3E2Tu3E5Jj0VpVcE9U1Zq/fquDY79l2RJn5ENogOs5
- +Pi0GjVpEYQVWfm0PTCxNPOzOzGR4QB3BNFvABEBAAGJAiUEGAEIAA8FAlWjfaECGwwFCQlm
- AYAACgkQvWpQHLeLfCZqGxAAlWBWVvjU6xj70GwengiqYZwmW1i8gfS4TNibQT/KRq0zkBnE
- wgKwXRbVoW38pYVuGa5x/JDQMJDrLAJ0wrCOS3XxbSHCWOl/k2ZD9OaxUeXq6N+OmGTzfrYv
- PUvWS1Hy04q9AD1dIaMNruZQmvnRfkOk2UDncDIg0166/NTHiYI09H5mpWGpHn/2aT6dmpVw
- uoM9/rHlF5s5qAAo95tZ0QW2BtIceG9/rbYlL57waSMPF49awvwLQX5RhWoF8mPS5LsBrXXK
- hmizIsn40tLbi2RtWjzDWgZYitqmmqijeCnDvISN4qJ/nCLO4DjiSGs59w5HR+l0nwePDhOC
- A4RYZqS1e2Clx1VSkDXFpL3egabcIsqK7CZ6a21r8lXVpo4RnMlQsmXZTnRx4SajFvX7PrRg
- /02C811fLfh2r5O5if8sKQ6BKKlHpuuioqfj/w9z3B0aQ71e4n1zNJBO1kcdznikPLAbr7jG
- gkBUXT1yJiwpTfRQr5y2Uo12IJsKxohnNFVYtK8X/R6S0deKPjrZWvAkllgIPcHjMi2Va8yw
- KTj/JgcpUO5KN906Pf7ywZISe7Kbcc/qnE0YjPPSqFOvoeZvHe6EZCMW9+xZsaipvlqpByQV
- UHnVg09K9YFvjUBsBPdC8ef6YwgfR9o6AnPmxl0oMUIXkCCC5c99fzJY/k+JAq0EGAEIACAW
- IQS/HfwKVo8F95V1cJC9alAct4t8JgUCWwqKhgIbAgCBCRC9alAct4t8JnYgBBkWCAAdFiEE
- FMMcSshOZf56bfAEYhBsURv0pdsFAlsKioYACgkQYhBsURv0pdvELgD/U+y3/hsz0bIjMQJY
- 0LLxM/rFY9Vz1L43+lQHXjL3MPsA/1lNm5sailsY7aFBVJxAzTa8ZAGWBdVaGo6KCvimDB8G
- 7joP/jx+oGOmdRogs7mG//H+w9DTnBfPpnfkeiiokGYo/+huWO5V0Ac9tTqZeFc//t/YuYJn
- wWvS0Rx+KL0fT3eh9BQo47uF4yDiZIiWLNh4Agpup1MUSVsz4MjD0lW6ghtnLcGlIgoVHW0v
- tPW1m9jATYyJSOG/MC1iDrcYcp9uVYn5tKfkEeQNspuG6iSfS0q3tajPKnT1nJxMTxVOD2RW
- EIGfaV9Scrou92VD/eC+/8INRsiWS93j3hOKIAV5XRNINFqtzkagPYAP8r6wksjSjh01fSTB
- p5zxjfsIwWDDzDrqgzwv83CvrLXRV3OlG1DNUDYA52qJr47paH5QMWmHW5TNuoBX8qb6RW/H
- M3DzPgT+l+r1pPjMPfvL1t7civZUoPuNzoyFpQRj6TvWi2bGGMQKryeYksXG2zi2+avMFnLe
- lOxGdUZ7jn1SJ6Abba5WL3VrXCP+TUE6bZLgfw8kYa8QSXP3ysyeMI0topHFntBZ8a0KXBNs
- qqFCBWmTHXfwsfW0VgBmRtPO7eXVBybjJ1VXKR2RZxwSq/GoNXh/yrRXQxbcpZ+QP3/Tttsb
- FdKciZ4u3ts+5UwYra0BRuvb51RiZR2wRNnUeBnXWagJVTlG7RHBO/2jJOE6wrcdCMjs0Iiw
- PNWmiVoZA930TvHA5UeGENxdGqo2MvMdRJ54YaIR
-Message-ID: <47e924dd-ae75-b822-b79e-9156d09b8b1a@gmail.com>
-Date:   Fri, 11 Oct 2019 21:40:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191011130657.4713-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/3bS4G5Y0I+plz0u2dyxfCOEMTUK76uRvLiuR7/nWEY=;
+        b=NhCvyp5pDWwbyZhYP0aVjK1uvW9AMWYSkySwVKQRjlhjTHxDgmTsWAwRcQb0pnlmvt
+         cR4ElHjqtsJA0LZ6F+wvgNOzsBFq18yfIr0371F0DYzI4OX/do2gmK1qkPWykIQ1Zf+b
+         sYPQwFKFEkLrtVaD2oVAmyMfQP1r+H6kf84AoMlqrVnMZriafHPFZ2l5FZvAP+ijEA8e
+         yzluSdtktsqrTIAofkAGfzVxMTNq0bCbezZH5Z1pZflfICCwBNmQ0nKO3Gce5njKh7U/
+         hc14PsyMbqrPBgcNncsUCufICZGMByZO8nOg/9//NC/xKNYLAGRsivqChQGXUhpWYyrO
+         LHGA==
+X-Gm-Message-State: APjAAAWST7khaUvHStWgjNVZ177ucaqj53VPZ1gDxbwQHV/jp/ymr285
+        9cAM9JxZpfU3UwmnkJNbcA0MAnGrA1Q69w==
+X-Google-Smtp-Source: APXvYqy8l56uvD7/O+QYIBhPcTuUWQfS5Wn3DR3JSEyPQBSwnYY198UknSBfplyXjTsqF60Ol688BA==
+X-Received: by 2002:a7b:c8c5:: with SMTP id f5mr4427343wml.170.1570823070119;
+        Fri, 11 Oct 2019 12:44:30 -0700 (PDT)
+Received: from localhost.localdomain ([89.216.49.66])
+        by smtp.gmail.com with ESMTPSA id x16sm6622451wrl.32.2019.10.11.12.44.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 11 Oct 2019 12:44:29 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benjamin Valentin <benpicco@googlemail.com>,
+        Sean Young <sean@mess.org>, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] media: rc: add keymap for Tronsmart Vega S95/S96 remote
+Date:   Fri, 11 Oct 2019 23:43:42 +0400
+Message-Id: <1570823022-3827-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+Add a keymap for the Tronsmart Vega S95 and S96 Android (Amlogic S905/S912)
+STB devices. Both use the same IR remote.
 
-On 10/11/19 3:06 PM, Dan Murphy wrote:
-> Hello
-> 
-> Minor changes per review comments.
-> https://lore.kernel.org/patchwork/project/lkml/list/?series=413385
-> 
-> Rebased the series on top of Pavel's next branch.
-> 
-> Multicolor changes:
-> Rename led_mc_calc_brightness to led_mc_calc_color_components
-> Updated the binding example for the function from STATUS to CHARGING
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ drivers/media/rc/keymaps/Makefile      |  1 +
+ drivers/media/rc/keymaps/rc-vega-s9x.c | 56 ++++++++++++++++++++++++++++++++++
+ include/media/rc-map.h                 |  1 +
+ 3 files changed, 58 insertions(+)
+ create mode 100644 drivers/media/rc/keymaps/rc-vega-s9x.c
 
-I see STATUS is still there, as well ass "Child".
-
-> LP50xx changes:
-> None
-> 
-> LP55xx changes:
-> Changed color_component array allocation from COLOR_MAX_ID to MAX_GROUPED_CHANNELS
-> Updated MC API to call led_mc_calc_color_components
-> 
-> Dan
-> 
-> Dan Murphy (16):
->   dt: bindings: Add multicolor class dt bindings documention
->   dt-bindings: leds: Add multicolor ID to the color ID list
->   leds: Add multicolor ID to the color ID list
->   leds: multicolor: Introduce a multicolor class definition
->   dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
->   leds: lp50xx: Add the LP50XX family of the RGB LED driver
->   dt: bindings: lp55xx: Be consistent in the document with LED acronym
->   dt: bindings: lp55xx: Update binding for Multicolor Framework
->   ARM: dts: n900: Add reg property to the LP5523 channel node
->   ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
->   ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
->   leds: lp55xx: Add multicolor framework support to lp55xx
->   leds: lp5523: Update the lp5523 code to add intensity function
->   leds: lp5521: Add multicolor framework intensity support
->   leds: lp55xx: Fix checkpatch file permissions issues
->   leds: lp5523: Fix checkpatch issues in the code
-> 
->  .../ABI/testing/sysfs-class-led-multicolor    |  36 +
->  .../bindings/leds/leds-class-multicolor.txt   |  98 +++
->  .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++
->  .../devicetree/bindings/leds/leds-lp55xx.txt  | 155 +++-
->  Documentation/leds/index.rst                  |   1 +
->  Documentation/leds/leds-class-multicolor.rst  |  96 +++
->  arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
->  arch/arm/boot/dts/omap3-n900.dts              |  29 +-
->  arch/arm/boot/dts/ste-href.dtsi               |  22 +-
->  drivers/leds/Kconfig                          |  22 +
->  drivers/leds/Makefile                         |   2 +
->  drivers/leds/led-class-multicolor.c           | 271 ++++++
->  drivers/leds/led-core.c                       |   1 +
->  drivers/leds/leds-lp50xx.c                    | 799 ++++++++++++++++++
->  drivers/leds/leds-lp5521.c                    |  20 +
->  drivers/leds/leds-lp5523.c                    |  39 +-
->  drivers/leds/leds-lp55xx-common.c             | 198 ++++-
->  drivers/leds/leds-lp55xx-common.h             |   9 +
->  include/dt-bindings/leds/common.h             |   3 +-
->  include/linux/led-class-multicolor.h          | 143 ++++
->  include/linux/platform_data/leds-lp55xx.h     |   7 +
->  21 files changed, 2020 insertions(+), 93 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->  create mode 100644 Documentation/leds/leds-class-multicolor.rst
->  create mode 100644 drivers/leds/led-class-multicolor.c
->  create mode 100644 drivers/leds/leds-lp50xx.c
->  create mode 100644 include/linux/led-class-multicolor.h
-> 
-
+diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
+index a56fc63..4ab4af0 100644
+--- a/drivers/media/rc/keymaps/Makefile
++++ b/drivers/media/rc/keymaps/Makefile
+@@ -114,6 +114,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
+ 			rc-tt-1500.o \
+ 			rc-twinhan-dtv-cab-ci.o \
+ 			rc-twinhan1027.o \
++			rc-vega-s9x.o \
+ 			rc-videomate-m1f.o \
+ 			rc-videomate-s350.o \
+ 			rc-videomate-tv-pvr.o \
+diff --git a/drivers/media/rc/keymaps/rc-vega-s9x.c b/drivers/media/rc/keymaps/rc-vega-s9x.c
+new file mode 100644
+index 0000000..a573acc
+--- /dev/null
++++ b/drivers/media/rc/keymaps/rc-vega-s9x.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Copyright (C) 2019 Christian Hewitt <christianshewitt@gmail.com>
++
++#include <media/rc-map.h>
++#include <linux/module.h>
++
++//
++// Keytable for the Tronsmart Vega S9x remote control
++//
++
++static struct rc_map_table vega_s9x[] = {
++
++	{ 0x18, KEY_POWER },
++	{ 0x17, KEY_MUTE }, // mouse
++
++	{ 0x46, KEY_UP },
++	{ 0x47, KEY_LEFT },
++	{ 0x55, KEY_OK },
++	{ 0x15, KEY_RIGHT },
++	{ 0x16, KEY_DOWN },
++
++	{ 0x06, KEY_HOME },
++	{ 0x42, KEY_PLAYPAUSE},
++	{ 0x40, KEY_BACK },
++
++	{ 0x14, KEY_VOLUMEDOWN },
++	{ 0x04, KEY_MENU },
++	{ 0x10, KEY_VOLUMEUP },
++
++};
++
++static struct rc_map_list vega_s9x_map = {
++	.map = {
++		.scan     = vega_s9x,
++		.size     = ARRAY_SIZE(vega_s9x),
++		.rc_proto = RC_PROTO_NEC,
++		.name     = RC_MAP_VEGA_S9X,
++	}
++};
++
++static int __init init_rc_map_vega_s9x(void)
++{
++	return rc_map_register(&vega_s9x_map);
++}
++
++static void __exit exit_rc_map_vega_s9x(void)
++{
++	rc_map_unregister(&vega_s9x_map);
++}
++
++module_init(init_rc_map_vega_s9x)
++module_exit(exit_rc_map_vega_s9x)
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Christian Hewitt <christianshewitt@gmail.com");
+diff --git a/include/media/rc-map.h b/include/media/rc-map.h
+index afd2ab3..04b5efc 100644
+--- a/include/media/rc-map.h
++++ b/include/media/rc-map.h
+@@ -268,6 +268,7 @@ struct rc_map *rc_map_get(const char *name);
+ #define RC_MAP_TT_1500                   "rc-tt-1500"
+ #define RC_MAP_TWINHAN_DTV_CAB_CI        "rc-twinhan-dtv-cab-ci"
+ #define RC_MAP_TWINHAN_VP1027_DVBS       "rc-twinhan1027"
++#define RC_MAP_VEGA_S9X                  "rc-vega-s9x"
+ #define RC_MAP_VIDEOMATE_K100            "rc-videomate-k100"
+ #define RC_MAP_VIDEOMATE_S350            "rc-videomate-s350"
+ #define RC_MAP_VIDEOMATE_TV_PVR          "rc-videomate-tv-pvr"
 -- 
-Best regards,
-Jacek Anaszewski
+2.7.4
+
