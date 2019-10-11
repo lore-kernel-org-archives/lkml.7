@@ -2,109 +2,186 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28ABCECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BADECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017CF21D7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAD82190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="nb0Zcb4R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d3LP3nZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfJKIt4 (ORCPT
+        id S1727496AbfJKIvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:49:56 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46747 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfJKItz (ORCPT
+        Fri, 11 Oct 2019 04:51:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59817 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726508AbfJKIvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:49:55 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t8so6422002lfc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZcGygTCwpeNMQnDZaCGXMswzs4Pr+XRxJbo6OSQ+isc=;
-        b=nb0Zcb4RKQs4XAJskwL04LDvLPrFFtP6zspQ09KQsXlbet2m8FFqEIGvVo0SwccZyy
-         mhOYR5vQVYBEnLD6RM5JJYdFpkwi4P/roo3DzdWh4Tt+5LNM0WDagm4/kDoVzpgHYDbN
-         ShoO2ppVI9uOOEsH2pbVHRKrUlUm9l2AwcfSN3dqfV9PJ+CRBkLryyJ/l1qe8STGrCI6
-         044bOXEGsLgy6pOjkjdaN7Pd4GMs6yZqU5pqWrltzqcaOI5FvWPO0hw2yqGYBpDPurLm
-         FkxGJTH4701MBBnYA36jG/vaiEs7u8VPtf997ggd+nQV/WGLM5MSTJN/xsM3pAYJjtxX
-         kROw==
+        Fri, 11 Oct 2019 04:51:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570783895;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wu/Rf3zNUutfn3m2zM9kQv92cgKYcwMDqv7vUduVPBc=;
+        b=d3LP3nZK+Yrp/0UOWuw1dUtzjHGvt0m0f6nGfc1FhXxtO0wMRUIMgiCbL8krXBVImcCOK1
+        Y/6FxFsLhmX2FQB0mIx9mfXlmWxwaax2EzfRO88hWK3W9ib3vt81wisetrjGIADHtaPyx/
+        lj4mF71K4mAZiDCouzJnHJ4Zs+s63vI=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-5bRFKRJzNBmsC3M5Ae6RGw-1; Fri, 11 Oct 2019 04:51:33 -0400
+Received: by mail-qt1-f197.google.com with SMTP id n4so8671960qtp.19
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:51:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZcGygTCwpeNMQnDZaCGXMswzs4Pr+XRxJbo6OSQ+isc=;
-        b=KnbhkfT79/D6S5Rhc7STBRphiDlzxDCRqHTODRJM3jbN/I7LPxTYvZB11ANGNUhKbQ
-         kk9tMvqjTpLjAxJnPWwcrYkog3W5X9qFXaUU8iEsdUncgP5OfXCBPO5x/YmsPt2k2XQ8
-         yRuJN0YNxIKYzFRtpN8KL7pNjB5EGBzjC+FX5gy/CRCLWLRAwC8U+Fqy0kj16I6rLLqi
-         fXcR9Nm5sb/DbkdAeZlW1aD/jfbLEhkm6MLBEmp2F4fr//s3o37yUs5zpjQf9s5GbA86
-         8QeLjpPJiSYfLZGbEr/GujzJvCRRpCdJpmAWeoeXc1/QAwBSfMduOdDcS15CHX/Xll13
-         NnXw==
-X-Gm-Message-State: APjAAAWu8NOEOLDr2q0j74dzyWkMzhp46IzU7bANkgmln+OwYCNgVhW+
-        IbIzVrrkDi6UF584xzaus7SYrA==
-X-Google-Smtp-Source: APXvYqztfz/Zby4n3sMo4oPARCaeMlUEm5fXgfozoP48jy0PPYbpLqM6rlUBu2PLYt6kNEFjCMgWRg==
-X-Received: by 2002:ac2:4830:: with SMTP id 16mr8261983lft.2.1570783793946;
-        Fri, 11 Oct 2019 01:49:53 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:86c:2e5e:9033:59d0:e194:cd55? ([2a00:1fa0:86c:2e5e:9033:59d0:e194:cd55])
-        by smtp.gmail.com with ESMTPSA id k28sm1901704lfj.33.2019.10.11.01.49.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Oct 2019 01:49:53 -0700 (PDT)
-Subject: Re: [PATCH v5 bpf-next 09/15] samples/bpf: use own flags but not
- HOSTCFLAGS
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, ast@kernel.org,
-        daniel@iogearbox.net, yhs@fb.com, davem@davemloft.net,
-        jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        ilias.apalodimas@linaro.org
-References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
- <20191011002808.28206-10-ivan.khoronzhuk@linaro.org>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <99f76e2f-ed76-77e0-a470-36ae07567111@cogentembedded.com>
-Date:   Fri, 11 Oct 2019 11:49:38 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N10/dTN197PTl0+siuLFDZWqlAaRDfdqpN7eV7M6lL0=;
+        b=fiRHPPdGQC52D32e73xeuwl5wDrxdSaJGUngqOv93Z6QVTCefJIsk/T8wh+RibrGz+
+         obonHmK05x3OZkIxARkyFdItgPlPzEeo/U/fxpJBF+QrMxcM0RdWtqzgSIkp1u2enKnC
+         N1/kvostbeunPG2e4nAzG4lNVCJQ+U2qqJZDMWMDjY6zJ9BRzAo1afSnjNKI6f+M7S3x
+         xlvqv0pSTxvU8UwQ9x58clm275emtGTw7LQ0vdC5dPRVk2twc549L6RAcpAJB26zP/zA
+         1CM315cwUI6SV07ell7sstLKsLN32v/PwTYN8NGfd0JEG/7WJEeOu64p2SFbxNfPnXVO
+         RNVQ==
+X-Gm-Message-State: APjAAAV/sfsLgeINT6Jvu1fNpsj1JAkmvi1OfrKYOAiFsyPtI/j0Ft9d
+        yKORaWlbCrUJo1elu7OvK+kQZvB1dnvt+UeqMCpcn+oy/8pWc7dCke9hNIvcVZSBRYf4SjMESGk
+        i1okzVxQ6uOOF+1mAfUaM1p2HkBhKIRoB6hoXwWRZ
+X-Received: by 2002:a37:648d:: with SMTP id y135mr13907182qkb.459.1570783893299;
+        Fri, 11 Oct 2019 01:51:33 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqySLoMI6pvZ557naSRkGTpWHJHszarZ6iWrS7WWNjAZXtz1Nf2y0fUJ33374bS3uf3RZwpModlRILODHjD/gQI=
+X-Received: by 2002:a37:648d:: with SMTP id y135mr13907169qkb.459.1570783893028;
+ Fri, 11 Oct 2019 01:51:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191011002808.28206-10-ivan.khoronzhuk@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <GOPSiaLYzQc3Hi9-MvdMQOmiF6O9whCeVYWavirKdm-9VHGb37VtawOPII8FEdYAOWZYFvk3oSQcHkPGazJKZNx8DEwBO7JfrRjLjWA84UI=@protonmail.com>
+In-Reply-To: <GOPSiaLYzQc3Hi9-MvdMQOmiF6O9whCeVYWavirKdm-9VHGb37VtawOPII8FEdYAOWZYFvk3oSQcHkPGazJKZNx8DEwBO7JfrRjLjWA84UI=@protonmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 11 Oct 2019 10:51:22 +0200
+Message-ID: <CAO-hwJL=j_toocbX2qqjt7JJdZS9CswPBo2fXich-7yYgKyd0A@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] HID: logitech: Support WirelessDeviceStatus
+ connect events
+To:     Mazin Rezk <mnrzk@protonmail.com>
+Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
+X-MC-Unique: 5bRFKRJzNBmsC3M5Ae6RGw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-    More grammar nitpicking...
+On Fri, Oct 11, 2019 at 2:58 AM Mazin Rezk <mnrzk@protonmail.com> wrote:
+>
+> On Saturday, October 5, 2019 9:05 PM, Mazin Rezk <mnrzk@protonmail.com> w=
+rote:
+>
+> > This patch makes WirelessDeviceStatus (0x1d4b) events get detected as
+> > connection events on devices with HIDPP_QUIRK_WIRELESS_DEVICE_STATUS.
+> >
+> > This quirk is currently an alias for HIDPP_QUIRK_CLASS_BLUETOOTH since
+> > the added Bluetooth devices do not support regular connect events.
+>
+> No changes have been made to this patch in v4.
+>
+> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+> ---
+>  drivers/hid/hid-logitech-hidpp.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-=
+hidpp.c
+> index 2062be922c08..b2b5fe2c74db 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -84,6 +84,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
+>
+>  /* Just an alias for now, may possibly be a catch-all in the future */
+>  #define HIDPP_QUIRK_MISSING_SHORT_REPORTS      HIDPP_QUIRK_CLASS_BLUETOO=
+TH
+> +#define HIDPP_QUIRK_WIRELESS_DEVICE_STATUS     HIDPP_QUIRK_CLASS_BLUETOO=
+TH
 
-On 11.10.2019 3:28, Ivan Khoronzhuk wrote:
+Hmm, I don't like the idea of aliasing quirks on a class. Either it's
+a class of devices, and you use it as such in the code, either you
+want to use individual quirks, and so each one of those needs its own
+bit definition.
 
-> While compiling natively, the host's cflags and ldflags are equal to
-> ones used from HOSTCFLAGS and HOSTLDFLAGS. When cross compiling it
-> should have own, used for target arch. While verification, for arm,
+If you take my advice in 2/4, please assign a new bit for
+HIDPP_QUIRK_WIRELESS_DEVICE_STATUS (0x1f IIRC), and logically and it
+on the HIDPP_QUIRK_CLASS_BLUETOOTH here.
 
-    While verifying.
 
-> arm64 and x86_64 the following flags were used always:
-> 
-> -Wall -O2
-> -fomit-frame-pointer
-> -Wmissing-prototypes
-> -Wstrict-prototypes
-> 
-> So, add them as they were verified and used before adding
-> Makefile.target and lets omit "-fomit-frame-pointer" as were proposed
-> while review, as no sense in such optimization for samples.
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-[...]
 
-MBR, Sergei
+>
+>  #define HIDPP_QUIRK_DELAYED_INIT               HIDPP_QUIRK_NO_HIDINPUT
+>
+> @@ -406,9 +407,22 @@ static inline bool hidpp_match_error(struct hidpp_re=
+port *question,
+>             (answer->fap.params[0] =3D=3D question->fap.funcindex_clienti=
+d);
+>  }
+>
+> -static inline bool hidpp_report_is_connect_event(struct hidpp_report *re=
+port)
+> +#define HIDPP_PAGE_WIRELESS_DEVICE_STATUS              0x1d4b
+> +
+> +static inline bool hidpp_report_is_connect_event(struct hidpp_device *hi=
+dpp,
+> +                                                struct hidpp_report *rep=
+ort)
+>  {
+> -       return (report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) &&
+> +       if (hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STATUS) {
+> +               /* If feature is invalid, skip array check */
+> +               if (report->fap.feature_index > hidpp->feature_count)
+> +                       return false;
+
+This should probably be merged with the next return (if bool0, return
+false else return bool1 can easily be transformed into return !bool0
+&& bool1)
+
+> +
+> +               return (hidpp->features[report->fap.feature_index] =3D=3D
+> +                        HIDPP_PAGE_WIRELESS_DEVICE_STATUS);
+
+Oh, so that's why you need the feature enumeration.
+
+Though, it's a costly operation when you could simply:
+- add a wireless_feature_index in struct hidpp_device,
+- gets this feature index at probe with a single call to
+hidpp_root_get_feature()
+- and check here if this feature index of the report is not null and
+equal to wireless_feature_index.
+
+Cheers,
+Benjamin
+
+> +       }
+> +
+> +       return ((report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) ||
+> +               (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)) &&
+>                 (report->rap.sub_id =3D=3D 0x41);
+>  }
+>
+> @@ -3157,7 +3171,7 @@ static int hidpp_raw_hidpp_event(struct hidpp_devic=
+e *hidpp, u8 *data,
+>                 }
+>         }
+>
+> -       if (unlikely(hidpp_report_is_connect_event(report))) {
+> +       if (unlikely(hidpp_report_is_connect_event(hidpp, report))) {
+>                 atomic_set(&hidpp->connected,
+>                                 !(report->rap.params[0] & (1 << 6)));
+>                 if (schedule_work(&hidpp->work) =3D=3D 0)
+> --
+> 2.23.0
+
