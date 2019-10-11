@@ -2,100 +2,224 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2539EECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7BDECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D392190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570788933;
-	bh=0ciLuj9YIK2mUFfDquD11yazSrN2RophVhZPt0Li4Qs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0He6kKgCcbeuUPojmRPkpmOnZXOayOlSNBdFPjLIOStDEpMCOuOCtQn5Of8L7OSQD
-	 OUJyhwBf5ubzL4RC1hA/irscYL6jX0xL6y2YEYxRniLM3M8uOdgt9drm6yU7CHxHhJ
-	 9GtXLXd2TcbG1OZ1+qHiyraPHtryxpdRGA6KDbA8=
+	by mail.kernel.org (Postfix) with ESMTP id 2C00F2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfJKKPc (ORCPT
+        id S1727774AbfJKKPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:15:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58290 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbfJKKPb (ORCPT
+        Fri, 11 Oct 2019 06:15:40 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:64302 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfJKKPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:15:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hwAR1Sr46cSaooqzU/ZAWX1QuPmPGh5n5goPhXbgX84=; b=CqYZPhQ8646YFp3Ha820yNtHl
-        Q/IBaN2sO82C028r3cQGksf7M/GL/Dgt1xQxyZdEhgBkmrHRT/MjH6gMLUoVr4IOoeR53fQxdhRbP
-        jRyQjW2fPKTn9rWWPMh0axSwPq4OSxzvpttwcpZn2tqEC/vw+iTicF1bUaEMsiz/EJNrRu3nXtDVL
-        3i4cDEkQgaIL/F/mOBLgES0IB5JlKw1HwqS3UIq1yGPiaVCeIrjWUIH8067ABH+9s0EtqLgX1cSlz
-        /UZBts90XbVn7MG2KMHCRQH8/TNw4ancp3jPx4HEv7dOQ+B/q9gFUeG5fcf7Rol87pfAihNhrKgcN
-        idJc0GRqw==;
-Received: from 177.17.141.107.dynamic.adsl.gvt.net.br ([177.17.141.107] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIrxH-00034M-W1; Fri, 11 Oct 2019 10:15:28 +0000
-Date:   Fri, 11 Oct 2019 07:15:23 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/19] EDAC, mc: Do not BUG_ON() in edac_mc_alloc()
-Message-ID: <20191011071523.1f121599@coco.lan>
-In-Reply-To: <20191010202418.25098-5-rrichter@marvell.com>
-References: <20191010202418.25098-1-rrichter@marvell.com>
-        <20191010202418.25098-5-rrichter@marvell.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 11 Oct 2019 06:15:39 -0400
+Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x9BAF3O6061629;
+        Fri, 11 Oct 2019 19:15:03 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp);
+ Fri, 11 Oct 2019 19:15:03 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x9BAEwA6061563
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 11 Oct 2019 19:15:02 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+References: <00000000000056268e05737dcb95@google.com>
+ <0000000000007d22100573d66078@google.com>
+Cc:     syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        ddstreet@ieee.org, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, bpf@vger.kernel.org
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <063a57ba-7723-6513-043e-ee99c5797271@I-love.SAKURA.ne.jp>
+Date:   Fri, 11 Oct 2019 19:14:54 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <0000000000007d22100573d66078@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 10 Oct 2019 20:25:12 +0000
-Robert Richter <rrichter@marvell.com> escreveu:
+Hello.
 
-> No need to crash the system in case edac_mc_alloc() is called with
-> invalid arguments, just warn and return. This would cause a checkpatch
-> warning when touching the code later, so just fix it.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
+I noticed that syzbot is reporting that refcount incremented by bpf(BPF_MAP_UPDATE_ELEM)
+syscall is not decremented when unregister_netdevice() is called. Is this a BPF bug?
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Kernel: 9e208aa06c2109b45eec6be049a8e47034748c20 on linux.git
+Config: https://syzkaller.appspot.com/text?tag=KernelConfig&x=73c2aace7604ab7
+Reproducer: https://syzkaller.appspot.com/text?tag=ReproC&x=1215afaf600000
+Debug printk patch:
+----------------------------------------
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 9eda1c31d1f7..542a47fe6998 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -3732,10 +3732,7 @@ void netdev_run_todo(void);
+  *
+  * Release reference to device to allow it to be freed.
+  */
+-static inline void dev_put(struct net_device *dev)
+-{
+-	this_cpu_dec(*dev->pcpu_refcnt);
+-}
++extern void dev_put(struct net_device *dev);
+ 
+ /**
+  *	dev_hold - get reference to device
+@@ -3743,10 +3740,7 @@ static inline void dev_put(struct net_device *dev)
+  *
+  * Hold reference to device to keep it from being freed.
+  */
+-static inline void dev_hold(struct net_device *dev)
+-{
+-	this_cpu_inc(*dev->pcpu_refcnt);
+-}
++extern void dev_hold(struct net_device *dev);
+ 
+ /* Carrier loss detection, dial on demand. The functions netif_carrier_on
+  * and _off may be called from IRQ context, but it is caller
+diff --git a/net/core/dev.c b/net/core/dev.c
+index bf3ed413abaf..21f82aa92fad 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -8968,8 +8968,8 @@ static void netdev_wait_allrefs(struct net_device *dev)
+ 		refcnt = netdev_refcnt_read(dev);
+ 
+ 		if (refcnt && time_after(jiffies, warning_time + 10 * HZ)) {
+-			pr_emerg("unregister_netdevice: waiting for %s to become free. Usage count = %d\n",
+-				 dev->name, refcnt);
++			pr_emerg("unregister_netdevice: waiting for %s to become free. Usage count = %d %px\n",
++				 dev->name, refcnt, dev);
+ 			warning_time = jiffies;
+ 		}
+ 	}
+@@ -9930,3 +9930,24 @@ static int __init net_dev_init(void)
+ }
+ 
+ subsys_initcall(net_dev_init);
++
++
++void dev_put(struct net_device *dev)
++{
++	this_cpu_dec(*dev->pcpu_refcnt);
++	if (!strcmp(dev->name, "bridge_slave_0")) {
++		printk("dev_put: %px %d", dev, netdev_refcnt_read(dev));
++		dump_stack();
++	}
++}
++EXPORT_SYMBOL(dev_put);
++
++void dev_hold(struct net_device *dev)
++{
++	if (!strcmp(dev->name, "bridge_slave_0")) {
++		printk("dev_hold: %px %d", dev, netdev_refcnt_read(dev));
++		dump_stack();
++	}
++	this_cpu_inc(*dev->pcpu_refcnt);
++}
++EXPORT_SYMBOL(dev_hold);
+----------------------------------------
 
-> ---
->  drivers/edac/edac_mc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index c5240bb4c6c0..f2cbca77bc50 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -323,7 +323,9 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
->  	int i, j, row, chn, n, len;
->  	bool per_rank = false;
->  
-> -	BUG_ON(n_layers > EDAC_MAX_LAYERS || n_layers == 0);
-> +	if (WARN_ON(n_layers > EDAC_MAX_LAYERS || n_layers == 0))
-> +		return NULL;
-> +
->  	/*
->  	 * Calculate the total amount of dimms and csrows/cschannels while
->  	 * in the old API emulation mode
+----------------------------------------
+Oct 11 14:33:06 ubuntu kernel: [  114.251175][ T8866] dev_hold: ffff888091fd2000 100
+Oct 11 14:33:06 ubuntu kernel: [  114.251185][ T8866] CPU: 3 PID: 8866 Comm: a.out Not tainted 5.4.0-rc2+ #217
+Oct 11 14:33:06 ubuntu kernel: [  114.251199][ T8866] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+Oct 11 14:33:06 ubuntu kernel: [  114.251208][ T8866] Call Trace:
+Oct 11 14:33:06 ubuntu kernel: [  114.251232][ T8866]  dump_stack+0x154/0x1c5
+Oct 11 14:33:06 ubuntu kernel: [  114.251253][ T8866]  dev_hold+0x73/0x80
+Oct 11 14:33:06 ubuntu kernel: [  114.251267][ T8866]  dev_get_by_index+0x1b3/0x2d0
+Oct 11 14:33:06 ubuntu kernel: [  114.251280][ T8866]  __dev_map_alloc_node+0x1c7/0x360
+Oct 11 14:33:06 ubuntu kernel: [  114.251299][ T8866]  dev_map_hash_update_elem+0x485/0x670
+Oct 11 14:33:06 ubuntu kernel: [  114.251320][ T8866]  __do_sys_bpf+0x35d6/0x38c0
+Oct 11 14:33:06 ubuntu kernel: [  114.251337][ T8866]  ? bpf_prog_load+0x1470/0x1470
+Oct 11 14:33:06 ubuntu kernel: [  114.251351][ T8866]  ? do_wp_page+0x3c8/0x1310
+Oct 11 14:33:06 ubuntu kernel: [  114.251364][ T8866]  ? finish_mkwrite_fault+0x300/0x300
+Oct 11 14:33:06 ubuntu kernel: [  114.251381][ T8866]  ? find_held_lock+0x35/0x1e0
+Oct 11 14:33:06 ubuntu kernel: [  114.251397][ T8866]  ? __do_page_fault+0x504/0xb60
+Oct 11 14:33:06 ubuntu kernel: [  114.251413][ T8866]  ? lock_downgrade+0x900/0x900
+Oct 11 14:33:06 ubuntu kernel: [  114.251426][ T8866]  ? __pmd_alloc+0x410/0x410
+Oct 11 14:33:06 ubuntu kernel: [  114.251446][ T8866]  ? __kasan_check_write+0x14/0x20
+Oct 11 14:33:06 ubuntu kernel: [  114.251457][ T8866]  ? up_read+0x1b6/0x7a0
+Oct 11 14:33:06 ubuntu kernel: [  114.251471][ T8866]  ? down_read_nested+0x480/0x480
+Oct 11 14:33:06 ubuntu kernel: [  114.251494][ T8866]  ? do_syscall_64+0x26/0x6a0
+Oct 11 14:33:06 ubuntu kernel: [  114.251507][ T8866]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Oct 11 14:33:06 ubuntu kernel: [  114.251515][ T8866]  ? do_syscall_64+0x26/0x6a0
+Oct 11 14:33:06 ubuntu kernel: [  114.251528][ T8866]  __x64_sys_bpf+0x73/0xb0
+Oct 11 14:33:06 ubuntu kernel: [  114.251541][ T8866]  do_syscall_64+0xde/0x6a0
+Oct 11 14:33:06 ubuntu kernel: [  114.251559][ T8866]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+(...snipped...)
+Oct 11 14:33:10 ubuntu kernel: [  117.459637][ T9584] dev_hold: ffff888091fd2000 200
+Oct 11 14:33:10 ubuntu kernel: [  117.459644][ T9584] CPU: 4 PID: 9584 Comm: a.out Not tainted 5.4.0-rc2+ #217
+Oct 11 14:33:10 ubuntu kernel: [  117.459652][ T9584] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+Oct 11 14:33:10 ubuntu kernel: [  117.459656][ T9584] Call Trace:
+Oct 11 14:33:10 ubuntu kernel: [  117.459669][ T9584]  dump_stack+0x154/0x1c5
+Oct 11 14:33:10 ubuntu kernel: [  117.459682][ T9584]  dev_hold+0x73/0x80
+Oct 11 14:33:10 ubuntu kernel: [  117.459695][ T9584]  dev_get_by_index+0x1b3/0x2d0
+Oct 11 14:33:10 ubuntu kernel: [  117.459706][ T9584]  __dev_map_alloc_node+0x1c7/0x360
+Oct 11 14:33:10 ubuntu kernel: [  117.459720][ T9584]  dev_map_hash_update_elem+0x485/0x670
+Oct 11 14:33:10 ubuntu kernel: [  117.459749][ T9584]  __do_sys_bpf+0x35d6/0x38c0
+Oct 11 14:33:10 ubuntu kernel: [  117.459762][ T9584]  ? bpf_prog_load+0x1470/0x1470
+Oct 11 14:33:10 ubuntu kernel: [  117.459769][ T9584]  ? do_wp_page+0x3c8/0x1310
+Oct 11 14:33:10 ubuntu kernel: [  117.459778][ T9584]  ? finish_mkwrite_fault+0x300/0x300
+Oct 11 14:33:10 ubuntu kernel: [  117.459787][ T9584]  ? find_held_lock+0x35/0x1e0
+Oct 11 14:33:10 ubuntu kernel: [  117.459797][ T9584]  ? __do_page_fault+0x504/0xb60
+Oct 11 14:33:10 ubuntu kernel: [  117.459807][ T9584]  ? lock_downgrade+0x900/0x900
+Oct 11 14:33:10 ubuntu kernel: [  117.459814][ T9584]  ? __pmd_alloc+0x410/0x410
+Oct 11 14:33:10 ubuntu kernel: [  117.459828][ T9584]  ? __kasan_check_write+0x14/0x20
+Oct 11 14:33:10 ubuntu kernel: [  117.459835][ T9584]  ? up_read+0x1b6/0x7a0
+Oct 11 14:33:10 ubuntu kernel: [  117.459846][ T9584]  ? down_read_nested+0x480/0x480
+Oct 11 14:33:10 ubuntu kernel: [  117.459862][ T9584]  ? do_syscall_64+0x26/0x6a0
+Oct 11 14:33:10 ubuntu kernel: [  117.459871][ T9584]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Oct 11 14:33:10 ubuntu kernel: [  117.459878][ T9584]  ? do_syscall_64+0x26/0x6a0
+Oct 11 14:33:10 ubuntu kernel: [  117.459891][ T9584]  __x64_sys_bpf+0x73/0xb0
+Oct 11 14:33:10 ubuntu kernel: [  117.459901][ T9584]  do_syscall_64+0xde/0x6a0
+Oct 11 14:33:10 ubuntu kernel: [  117.459911][ T9584]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+(...snipped...)
+Oct 11 14:33:26 ubuntu kernel: [  134.146838][T13860] dev_hold: ffff888091fd2000 850
+Oct 11 14:33:26 ubuntu kernel: [  134.146847][T13860] CPU: 4 PID: 13860 Comm: a.out Not tainted 5.4.0-rc2+ #217
+Oct 11 14:33:26 ubuntu kernel: [  134.146853][T13860] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+Oct 11 14:33:26 ubuntu kernel: [  134.146859][T13860] Call Trace:
+Oct 11 14:33:26 ubuntu kernel: [  134.146872][T13860]  dump_stack+0x154/0x1c5
+Oct 11 14:33:26 ubuntu kernel: [  134.146885][T13860]  dev_hold+0x73/0x80
+Oct 11 14:33:26 ubuntu kernel: [  134.146893][T13860]  dev_get_by_index+0x1b3/0x2d0
+Oct 11 14:33:26 ubuntu kernel: [  134.146903][T13860]  __dev_map_alloc_node+0x1c7/0x360
+Oct 11 14:33:26 ubuntu kernel: [  134.146918][T13860]  dev_map_hash_update_elem+0x485/0x670
+Oct 11 14:33:26 ubuntu kernel: [  134.146932][T13860]  __do_sys_bpf+0x35d6/0x38c0
+Oct 11 14:33:26 ubuntu kernel: [  134.146944][T13860]  ? bpf_prog_load+0x1470/0x1470
+Oct 11 14:33:26 ubuntu kernel: [  134.146953][T13860]  ? do_wp_page+0x3c8/0x1310
+Oct 11 14:33:26 ubuntu kernel: [  134.146964][T13860]  ? finish_mkwrite_fault+0x300/0x300
+Oct 11 14:33:26 ubuntu kernel: [  134.146975][T13860]  ? find_held_lock+0x35/0x1e0
+Oct 11 14:33:26 ubuntu kernel: [  134.146985][T13860]  ? __do_page_fault+0x504/0xb60
+Oct 11 14:33:26 ubuntu kernel: [  134.146994][T13860]  ? lock_downgrade+0x900/0x900
+Oct 11 14:33:26 ubuntu kernel: [  134.147002][T13860]  ? __pmd_alloc+0x410/0x410
+Oct 11 14:33:26 ubuntu kernel: [  134.147017][T13860]  ? __kasan_check_write+0x14/0x20
+Oct 11 14:33:26 ubuntu kernel: [  134.147024][T13860]  ? up_read+0x1b6/0x7a0
+Oct 11 14:33:26 ubuntu kernel: [  134.147033][T13860]  ? down_read_nested+0x480/0x480
+Oct 11 14:33:26 ubuntu kernel: [  134.147048][T13860]  ? do_syscall_64+0x26/0x6a0
+Oct 11 14:33:26 ubuntu kernel: [  134.147056][T13860]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Oct 11 14:33:26 ubuntu kernel: [  134.147063][T13860]  ? do_syscall_64+0x26/0x6a0
+Oct 11 14:33:26 ubuntu kernel: [  134.147074][T13860]  __x64_sys_bpf+0x73/0xb0
+Oct 11 14:33:26 ubuntu kernel: [  134.147084][T13860]  do_syscall_64+0xde/0x6a0
+Oct 11 14:33:26 ubuntu kernel: [  134.147095][T13860]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+(...snipped...)
+Oct 11 14:33:41 ubuntu kernel: [  148.384539][ T4514] unregister_netdevice: waiting for bridge_slave_0 to become free. Usage count = 850 ffff888091fd2000
+----------------------------------------
 
-
-
-Thanks,
-Mauro
