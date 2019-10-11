@@ -2,123 +2,109 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFC8C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28ABCECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4762190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017CF21D7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:49:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="nb0Zcb4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfJKIto (ORCPT
+        id S1727608AbfJKIt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:49:44 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:41392 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfJKIto (ORCPT
+        Fri, 11 Oct 2019 04:49:56 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46747 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfJKItz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:49:44 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id EC5C115C20A53D;
-        Fri, 11 Oct 2019 08:49:35 +0000 (UTC)
-Received: from saetre (unknown [154.53.1.40])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Fri, 11 Oct 2019 08:49:35 +0000 (UTC)
-Message-ID: <403b3e7f6d276e47c447e6ea56a3370b03c3298c.camel@archlinux.org>
-Subject: Re: [PATCH v4 1/4] HID: logitech: Add MX Mice over Bluetooth
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Mazin Rezk <mnrzk@protonmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Cc:     "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <uBbIS3nFJ1jdYNLHcqjW5wxQAwmZv0kmYEoeoPrxNhfzi6cHwmCOY-ewdqe7S1hNEj-p4Hd9D0_Y3PymUTdh_6WFXuMmIYUkV2xaKCPMYz0=@protonmail.com>
-References: <uBbIS3nFJ1jdYNLHcqjW5wxQAwmZv0kmYEoeoPrxNhfzi6cHwmCOY-ewdqe7S1hNEj-p4Hd9D0_Y3PymUTdh_6WFXuMmIYUkV2xaKCPMYz0=@protonmail.com>
-Organization: Archlinux
-Content-Type: text/plain; charset="UTF-8"
-Date:   Fri, 11 Oct 2019 09:49:34 +0100
+        Fri, 11 Oct 2019 04:49:55 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t8so6422002lfc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 01:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZcGygTCwpeNMQnDZaCGXMswzs4Pr+XRxJbo6OSQ+isc=;
+        b=nb0Zcb4RKQs4XAJskwL04LDvLPrFFtP6zspQ09KQsXlbet2m8FFqEIGvVo0SwccZyy
+         mhOYR5vQVYBEnLD6RM5JJYdFpkwi4P/roo3DzdWh4Tt+5LNM0WDagm4/kDoVzpgHYDbN
+         ShoO2ppVI9uOOEsH2pbVHRKrUlUm9l2AwcfSN3dqfV9PJ+CRBkLryyJ/l1qe8STGrCI6
+         044bOXEGsLgy6pOjkjdaN7Pd4GMs6yZqU5pqWrltzqcaOI5FvWPO0hw2yqGYBpDPurLm
+         FkxGJTH4701MBBnYA36jG/vaiEs7u8VPtf997ggd+nQV/WGLM5MSTJN/xsM3pAYJjtxX
+         kROw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZcGygTCwpeNMQnDZaCGXMswzs4Pr+XRxJbo6OSQ+isc=;
+        b=KnbhkfT79/D6S5Rhc7STBRphiDlzxDCRqHTODRJM3jbN/I7LPxTYvZB11ANGNUhKbQ
+         kk9tMvqjTpLjAxJnPWwcrYkog3W5X9qFXaUU8iEsdUncgP5OfXCBPO5x/YmsPt2k2XQ8
+         yRuJN0YNxIKYzFRtpN8KL7pNjB5EGBzjC+FX5gy/CRCLWLRAwC8U+Fqy0kj16I6rLLqi
+         fXcR9Nm5sb/DbkdAeZlW1aD/jfbLEhkm6MLBEmp2F4fr//s3o37yUs5zpjQf9s5GbA86
+         8QeLjpPJiSYfLZGbEr/GujzJvCRRpCdJpmAWeoeXc1/QAwBSfMduOdDcS15CHX/Xll13
+         NnXw==
+X-Gm-Message-State: APjAAAWu8NOEOLDr2q0j74dzyWkMzhp46IzU7bANkgmln+OwYCNgVhW+
+        IbIzVrrkDi6UF584xzaus7SYrA==
+X-Google-Smtp-Source: APXvYqztfz/Zby4n3sMo4oPARCaeMlUEm5fXgfozoP48jy0PPYbpLqM6rlUBu2PLYt6kNEFjCMgWRg==
+X-Received: by 2002:ac2:4830:: with SMTP id 16mr8261983lft.2.1570783793946;
+        Fri, 11 Oct 2019 01:49:53 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:86c:2e5e:9033:59d0:e194:cd55? ([2a00:1fa0:86c:2e5e:9033:59d0:e194:cd55])
+        by smtp.gmail.com with ESMTPSA id k28sm1901704lfj.33.2019.10.11.01.49.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 11 Oct 2019 01:49:53 -0700 (PDT)
+Subject: Re: [PATCH v5 bpf-next 09/15] samples/bpf: use own flags but not
+ HOSTCFLAGS
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, ast@kernel.org,
+        daniel@iogearbox.net, yhs@fb.com, davem@davemloft.net,
+        jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        ilias.apalodimas@linaro.org
+References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
+ <20191011002808.28206-10-ivan.khoronzhuk@linaro.org>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <99f76e2f-ed76-77e0-a470-36ae07567111@cogentembedded.com>
+Date:   Fri, 11 Oct 2019 11:49:38 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-User-Agent: Evolution 3.34.1 
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191011002808.28206-10-ivan.khoronzhuk@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-11 at 00:57 +0000, Mazin Rezk wrote:
-> On Saturday, October 5, 2019 9:04 PM, Mazin Rezk <
-> mnrzk@protonmail.com> wrote:
-> 
-> > This patch adds support for several MX mice over Bluetooth. The
-> > device IDs
-> > have been copied from the libratbag device database and their
-> > features
-> > have been based on their DJ device counterparts.
-> 
-> No changes have been made to this patch in v4. However, it should be
-> noted
-> that the only device that has been thoroughly tested in this patch is
-> the
-> MX Master (b01e). Further testing for the other devices may be
-> required.
-> 
-> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> ---
->  drivers/hid/hid-logitech-hidpp.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-
-> logitech-hidpp.c
-> index 0179f7ed77e5..85fd0c17cc2f 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -3773,6 +3773,24 @@ static const struct hid_device_id
-> hidpp_devices[] = {
->  	{ /* MX5500 keyboard over Bluetooth */
->  	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
->  	  .driver_data = HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
-> +	{ /* MX Anywhere 2 mouse over Bluetooth */
-> +	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb013),
-> +	  .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> +	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb018),
-> +	  .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> +	{ /* MX Anywhere 2S mouse over Bluetooth */
-> +	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01a),
-> +	  .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> +	{ /* MX Master mouse over Bluetooth */
-> +	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012),
-> +	  .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> +	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb017),
-> +	  .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> +	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e),
-> +	  .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
-> +	{ /* MX Master 2S mouse over Bluetooth */
-> +	  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb019),
-> +	  .driver_data = HIDPP_QUIRK_HI_RES_SCROLL_X2121 },
->  	{}
->  };
-> 
-> --
-> 2.23.0
-> 
+    More grammar nitpicking...
 
-The series now looks great, thanks!
+On 11.10.2019 3:28, Ivan Khoronzhuk wrote:
 
-Benjamin, I can confirm that up to now all BLE devices don't have short
-reports. I am not sure if you still want to only enable tested devices
-but from an architectural standpoint everything here should be fine.
+> While compiling natively, the host's cflags and ldflags are equal to
+> ones used from HOSTCFLAGS and HOSTLDFLAGS. When cross compiling it
+> should have own, used for target arch. While verification, for arm,
 
-Mazin, you can have my
+    While verifying.
 
-Reviewed-by: Filipe Laíns <lains@archlinux.org>
+> arm64 and x86_64 the following flags were used always:
+> 
+> -Wall -O2
+> -fomit-frame-pointer
+> -Wmissing-prototypes
+> -Wstrict-prototypes
+> 
+> So, add them as they were verified and used before adding
+> Makefile.target and lets omit "-fomit-frame-pointer" as were proposed
+> while review, as no sense in such optimization for samples.
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+[...]
 
-for the series.
-
-Thank you,
-Filipe Laíns
+MBR, Sergei
