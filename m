@@ -2,92 +2,85 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06469ECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2165C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2E2218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570830921;
-	bh=gd8GAu0tkKp0TCBgtng5DI6iLgkG7+iNpGuxcQi/knA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lGfHhX9rUNji2IarFuNkJA59hR6vNgE0+ktqK/79G/6vDaOQEU7dc047Zp6cxGIC1
-	 strpiPYUjdl492L9VD38F7dSqcBuo3vWut2Kg7SoEPbZ58VGfYQmldn4RYOoVGILMz
-	 Y7KIa2NkeeNARgw6+YT8tx1Rfr5Ix9TYPK1Lotr0=
+	by mail.kernel.org (Postfix) with ESMTP id 8E06E2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 21:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbfJKVzV (ORCPT
+        id S1729181AbfJKV4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 17:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbfJKVzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 17:55:20 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B39B62084C;
-        Fri, 11 Oct 2019 21:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570830920;
-        bh=gd8GAu0tkKp0TCBgtng5DI6iLgkG7+iNpGuxcQi/knA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xbODnkmKqLvt+vMAiqzr5JnHjM/KSN2k/ERgprBZVFV8y2sT8beQvYqrkep4D3bMI
-         jE2bE005KDpC/x40l1Qb3PnuSkYYy+0tKTSypdeepNKTxF4DVe4/RdL9/3W6PWtuqa
-         IyXs7JFv76ptET5PXKIr9ePK2vbJ+CtMW4AFfqf8=
-Date:   Fri, 11 Oct 2019 14:55:19 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Gow <davidgow@google.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH linux-kselftest/test v2] lib/list-test: add a test for
- the 'list' doubly linked list
-Message-Id: <20191011145519.7b7a1d16ecdead9bec212c01@linux-foundation.org>
-In-Reply-To: <CABVgOS=UwWxwD97c6y-XzbLWVhznPjBO3qvQEzX=8jTJ-gBi3A@mail.gmail.com>
-References: <20191010185631.26541-1-davidgow@google.com>
-        <20191011140727.49160042fafa20d5867f8df7@linux-foundation.org>
-        <CABVgOS=UwWxwD97c6y-XzbLWVhznPjBO3qvQEzX=8jTJ-gBi3A@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 11 Oct 2019 17:56:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35756 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728993AbfJKV4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 17:56:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 493C4ACA8;
+        Fri, 11 Oct 2019 21:56:44 +0000 (UTC)
+Subject: Re: [PATCH v2 1/1] mm/vmalloc: remove preempt_disable/enable when do
+ preloading
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20191010223318.28115-1-urezki@gmail.com>
+ <20191011181532.nardqmokz7yxtsu3@linutronix.de>
+From:   Daniel Wagner <dwagner@suse.de>
+Message-ID: <c5b522c3-2d38-a8c8-b9e9-b3e3448ed8fa@suse.de>
+Date:   Fri, 11 Oct 2019 23:56:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <20191011181532.nardqmokz7yxtsu3@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 14:37:25 -0700 David Gow <davidgow@google.com> wrote:
 
-> On Fri, Oct 11, 2019 at 2:05 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > <looks at kunit>
-> >
-> > Given that everything runs at late_initcall time, shouldn't everything
-> > be __init, __initdata etc so all the code and data doesn't hang around
-> > for ever?
-> >
+
+On 10/11/19 8:15 PM, Sebastian Andrzej Siewior wrote:
+> On 2019-10-11 00:33:18 [+0200], Uladzislau Rezki (Sony) wrote:
+>> Get rid of preempt_disable() and preempt_enable() when the
+>> preload is done for splitting purpose. The reason is that
+>> calling spin_lock() with disabled preemtion is forbidden in
+>> CONFIG_PREEMPT_RT kernel.
+>>
+>> Therefore, we do not guarantee that a CPU is preloaded, instead
+>> we minimize the case when it is not with this change.
+>>
+>> For example i run the special test case that follows the preload
+>> pattern and path. 20 "unbind" threads run it and each does
+>> 1000000 allocations. Only 3.5 times among 1000000 a CPU was
+>> not preloaded. So it can happen but the number is negligible.
+>>
+>> V1 -> V2:
+>>    - move __this_cpu_cmpxchg check when spin_lock is taken,
+>>      as proposed by Andrew Morton
+>>    - add more explanation in regard of preloading
+>>    - adjust and move some comments
+>>
+>> Fixes: 82dd23e84be3 ("mm/vmalloc.c: preload a CPU with one object for split purpose")
+>> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 > 
-> That's an interesting point. We haven't done this for KUnit tests to
-> date, and there is certainly a possibility down the line that we may
-> want to be able to run these tests in other circumstances. (There's
-> some work being done to allow KUnit and KUnit tests to be built as
-> modules here: https://lkml.org/lkml/2019/10/8/628 for example.) Maybe
-> it'd be worth having macros which wrap __init/__initdata etc as a way
-> of futureproofing tests against such a change?
-> 
-> Either way, I suspect this is something that should probably be
-> considered for KUnit as a whole, rather than on a test-by-test basis.
+> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Sure, a new set of macros for this makes sense.  Can be retrofitted any
-time.
+Acked-by: Daniel Wagner <dwagner@suse.de>
 
-There might be a way of loading all of list_test.o into a discardable
-section at link time instead of sprinkling annotation all over the .c
-code.
