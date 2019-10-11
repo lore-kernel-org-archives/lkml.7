@@ -2,143 +2,122 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB46C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834D1C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C52820679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 579F42196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570783176;
+	bh=/DrW5ph3A5E4Hgsb7Sd3CajDjM9gMywett8FftQi6PM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ur5JSZSX2NFrUYtTI/GF88twS9bjgoSQlJ6OeI7+Y312Tm37IcNhL/l7mNbRKDDqp
+	 cIiV4pRyWPH714o6SvPJ+A998ZYyGnt8VexC6RAthZQQ+rJD5fTnhyLRkSKqwgaEBa
+	 YsYe6l4fLKB+Af7kQBJypnGYm3ga0+9VKZ1EkJEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfJKIjW (ORCPT
+        id S1727488AbfJKIjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:39:22 -0400
-Received: from mga02.intel.com ([134.134.136.20]:61897 "EHLO mga02.intel.com"
+        Fri, 11 Oct 2019 04:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbfJKIjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:39:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 01:39:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,283,1566889200"; 
-   d="scan'208";a="224268506"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Oct 2019 01:39:19 -0700
-Date:   Fri, 11 Oct 2019 16:39:03 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        jglisse@redhat.com, mike.kravetz@oracle.com, riel@surriel.com,
-        cai@lca.pw, shakeelb@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v4 1/2] mm/rmap.c: don't reuse anon_vma if we just want a
- copy
-Message-ID: <20191011083903.GB17297@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191011072256.16275-1-richardw.yang@linux.intel.com>
- <77fb8811-2c95-55d2-de90-7e9ce01267a1@yandex-team.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77fb8811-2c95-55d2-de90-7e9ce01267a1@yandex-team.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1727066AbfJKIje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 04:39:34 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA7820679;
+        Fri, 11 Oct 2019 08:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570783174;
+        bh=/DrW5ph3A5E4Hgsb7Sd3CajDjM9gMywett8FftQi6PM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=s0mQaGhluvgb8qCJ2TOMEfGY32AjQDL9MrXwsO8ByB4lc5WvP2EE8v3fg7uOSxoYa
+         iEsY0b0R6mDLLwl5XwZrJZR8pHCbegt7rrilqksIJmCvcuKHRMaJ+hA2RnlvggPYRb
+         3x8zGilA3kzegeDzbIHb5RYqfzbW2LxKuu8Bf1j0=
+Date:   Fri, 11 Oct 2019 17:39:29 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC][PATCH] kprobes/x86: While list ftrace locations in kprobe
+ blacklist areas
+Message-Id: <20191011173929.9462a1414ff3a94ec93d6e98@kernel.org>
+In-Reply-To: <20191010175216.4ceb3cf1@gandalf.local.home>
+References: <20191010175216.4ceb3cf1@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:04:16AM +0300, Konstantin Khlebnikov wrote:
->On 11/10/2019 10.22, Wei Yang wrote:
->> Before commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
->> hierarchy"), anon_vma_clone() doesn't change dst->anon_vma. While after
->> this commit, anon_vma_clone() will try to reuse an exist one on forking.
->> 
->> But this commit go a little bit further for the case not forking.
->> anon_vma_clone() is called from __vma_split(), __split_vma(), copy_vma()
->> and anon_vma_fork(). For the first three places, the purpose here is get
->> a copy of src and we don't expect to touch dst->anon_vma even it is
->> NULL. While after that commit, it is possible to reuse an anon_vma when
->> dst->anon_vma is NULL. This is not we intend to have.
->> 
->> This patch stop reuse anon_vma for non-fork cases.
->> 
->> Fix commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma
->> hierarchy")
->> 
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->
->Yes, reusing heuristic was designed for fork.
->But this isn't strictly necessary - any vmas could share anon_vma.
->For example all vmas in system could be linked with single anon_vma.
+Hi Steve,
 
-Yes, agree with you.
+On Thu, 10 Oct 2019 17:52:16 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thanks for your comment :-)
+> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> I noticed some of my old tests failing on kprobes, and realized that
+> this was due to black listing irq_entry functions on x86 from being
+> used by kprobes. IIRC, this was due to the cr2 being corrupted and
+> such, and I believe other things were to cause. But black listing all
+> irq_entry code is a big hammer to this.
 
->
->Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->
->> 
->> ---
->> v4:
->>    * check dst->anon_vma in each iteration
->> v3:
->>    * use dst->anon_vma and src->anon_vma to get reuse state
->>      pointed by Konstantin Khlebnikov
->> ---
->>   mm/rmap.c | 24 +++++++++++++++---------
->>   1 file changed, 15 insertions(+), 9 deletions(-)
->> 
->> diff --git a/mm/rmap.c b/mm/rmap.c
->> index d9a23bb773bf..c34414567474 100644
->> --- a/mm/rmap.c
->> +++ b/mm/rmap.c
->> @@ -250,13 +250,19 @@ static inline void unlock_anon_vma_root(struct anon_vma *root)
->>    * Attach the anon_vmas from src to dst.
->>    * Returns 0 on success, -ENOMEM on failure.
->>    *
->> - * If dst->anon_vma is NULL this function tries to find and reuse existing
->> - * anon_vma which has no vmas and only one child anon_vma. This prevents
->> - * degradation of anon_vma hierarchy to endless linear chain in case of
->> - * constantly forking task. On the other hand, an anon_vma with more than one
->> - * child isn't reused even if there was no alive vma, thus rmap walker has a
->> - * good chance of avoiding scanning the whole hierarchy when it searches where
->> - * page is mapped.
->> + * anon_vma_clone() is called by __vma_split(), __split_vma(), copy_vma() and
->> + * anon_vma_fork(). The first three want an exact copy of src, while the last
->> + * one, anon_vma_fork(), may try to reuse an existing anon_vma to prevent
->> + * endless growth of anon_vma. Since dst->anon_vma is set to NULL before call,
->> + * we can identify this case by checking (!dst->anon_vma && src->anon_vma).
->> + *
->> + * If (!dst->anon_vma && src->anon_vma) is true, this function tries to find
->> + * and reuse existing anon_vma which has no vmas and only one child anon_vma.
->> + * This prevents degradation of anon_vma hierarchy to endless linear chain in
->> + * case of constantly forking task. On the other hand, an anon_vma with more
->> + * than one child isn't reused even if there was no alive vma, thus rmap
->> + * walker has a good chance of avoiding scanning the whole hierarchy when it
->> + * searches where page is mapped.
->>    */
->>   int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->>   {
->> @@ -286,8 +292,8 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->>   		 * will always reuse it. Root anon_vma is never reused:
->>   		 * it has self-parent reference and at least one child.
->>   		 */
->> -		if (!dst->anon_vma && anon_vma != src->anon_vma &&
->> -				anon_vma->degree < 2)
->> +		if (!dst->anon_vma && src->anon_vma &&
->> +		    anon_vma != src->anon_vma && anon_vma->degree < 2)
->>   			dst->anon_vma = anon_vma;
->>   	}
->>   	if (dst->anon_vma)
->> 
+OK, I think if we can use ftrace for hooking, probing on "that address"
+is good, but the function body still can not be probed.
+
+> 
+>  (See commit 0eae81dc9f026 "x86/kprobes: Prohibit probing on IRQ
+>  handlers directly" for more details)
+> 
+> Anyway, if kprobes is using ftrace as a hook, there shouldn't be any
+> problems here. If we white list ftrace locations in the range of
+> kprobe_add_area_blacklist(), it should be safe.
+
+Agreed.
+
+> 
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index d9770a5393c8..9d28a279282c 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2124,6 +2124,11 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
+>  	int ret = 0;
+>  
+>  	for (entry = start; entry < end; entry += ret) {
+> +#ifdef CONFIG_KPROBES_ON_FTRACE
+> +		/* We are safe if using ftrace */
+> +		if (ftrace_location(entry))
+> +			continue;
+> +#endif
+
+Have you tested the patch? it doesn't measure the entry function's size.
+(kprobe_add_ksym_blacklist(entry) returns the function size)
+
+Could you do this in kprobe_add_ksym_blacklist()?
+Instead of continue, increment ent->start_addr by MCOUNT size(?) will be OK.
+(Note that since each blacklist symbol is managed independently, you can make
+ a "gap" between them as a safe area)
+
+Thank you,
+
+>  		ret = kprobe_add_ksym_blacklist(entry);
+>  		if (ret < 0)
+>  			return ret;
+
 
 -- 
-Wei Yang
-Help you, Help me
+Masami Hiramatsu <mhiramat@kernel.org>
