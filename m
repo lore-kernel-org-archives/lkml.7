@@ -2,146 +2,133 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A8BECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAA3ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3EFD2245A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6BC20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZitRdHD8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfJKSTR (ORCPT
+        id S1728874AbfJKSTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 14:19:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:39434 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728724AbfJKSTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 14:19:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43859142F;
-        Fri, 11 Oct 2019 11:19:16 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BAC13F703;
-        Fri, 11 Oct 2019 11:19:14 -0700 (PDT)
-Subject: Re: [PATCH v6 14/17] arm64: kexec: move relocation function setup and
- clean up
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
- <20191004185234.31471-15-pasha.tatashin@soleen.com>
-From:   James Morse <james.morse@arm.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        vladimir.murzin@arm.com, matthias.bgg@gmail.com,
-        bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
-Message-ID: <f1c50a5f-103e-e6d7-e93d-e873a169833e@arm.com>
-Date:   Fri, 11 Oct 2019 19:19:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 14:19:21 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35691 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728724AbfJKSTU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 14:19:20 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m7so10755186lji.2;
+        Fri, 11 Oct 2019 11:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xHWcMVkKfQW5YQem89Ki4hx7rEYLgwMaVLaDcNFHxy8=;
+        b=ZitRdHD87CyRQIneWCmXl1JH8KlL+SIIhXhoiLpXORD5GW6dQ4yO2WiIerdf0bJ2rC
+         wUIs05umiInQpgYVYSzaGowJCrR7h+xoRI0/md0VCmx7q7eKzF6mZwS+5Lb3JW/H3xf4
+         9KhLNzHwWvlwsaFiR6P/HvbZVmE0tUMjqQ7ojKFWGdOmPaej7UMMQ353sPS8eqOCMgqB
+         U5IynYXDJEu6rYq9MdQCI+JDrjB2VH6Bj6RfAem9zODV5MnIwlyVSkrmXxXjlBbbaQEL
+         09XKfbNsUh+ZW58fuyg8XISKtFursl1Qa70MyffXE1zHJpVgcMu+gN0zPH1pllLmSRV+
+         YS/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xHWcMVkKfQW5YQem89Ki4hx7rEYLgwMaVLaDcNFHxy8=;
+        b=QUUc+CiNj/3TKB/xIxD/8BPlHNkMvOWj15EOsMuaPw8wXoSiqqtDa4x+oCjBFt3Pv8
+         hnrpCM5se4rMGGoYW6BC0F7YOnIEBgsW58OglckfP7alAsYWcaFtdwBFhOXLL7VoADeV
+         txow6eE0Ew25zZwKNVfATrdZU0FTKmMNiBuutxTD1krWs3GhecJoDVz/oiNB3B/TS9zO
+         R+i0joV6CTgVS5HYIGZWB4VwYLzeloWb/HeyrxrTajZh59rH/LLVbmGBPytNYRyMX7wb
+         ss0KTjm/K/xLoHO+OPe5NJJHaoqsUVdQTKfE6RP2u0Yw/+YOhUph0+cOWithhF5qX1mH
+         OH2w==
+X-Gm-Message-State: APjAAAWGN5J3di+KatpZ4c5mhsYGDGNcMZXQrv0UPDc5jPeHrH3PxK+F
+        VHG0Bol/wz5LSd+PZ4zaoJ6VvKZsJU1CBsL6UYo=
+X-Google-Smtp-Source: APXvYqwO4XnX5MCioj8PA5AMXbwa8nrtJcTry+BdWADG12SbJ5G62YDioP1sbk25PGgCsqOv1NdDCRa73Z+MNvJJ2fQ=
+X-Received: by 2002:a2e:865a:: with SMTP id i26mr9866394ljj.107.1570817958321;
+ Fri, 11 Oct 2019 11:19:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191004185234.31471-15-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191007051240.4410-1-andrew.smirnov@gmail.com> <CAO-hwJ+=pDmvPbLVO8mViygJof7O1YeX3KO951nqN4dNaKz83g@mail.gmail.com>
+In-Reply-To: <CAO-hwJ+=pDmvPbLVO8mViygJof7O1YeX3KO951nqN4dNaKz83g@mail.gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 11 Oct 2019 11:19:07 -0700
+Message-ID: <CAHQ1cqHU2DmKzAtcDCPLtUXwkzhyCynki3GKOwgULnN0ya6POg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Logitech G920 fixes
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Fri, Oct 11, 2019 at 7:53 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> Hi,
+>
+> Finally, someone who takes care of the G920!
+> Note that when I sent my first initial version that Hans reused, I
+> surely broke it (looking at your patch 3/3), but no one cared to test
+> it :(
+>
+> On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+> >
+> > Everyone:
+> >
+> > This series contains patches to fix a couple of regressions in G920
+> > wheel support by hid-logitech-hidpp driver. Without the patches the
+> > wheel remains stuck in autocentering mode ("resisting" any attempt to
+> > trun) as well as missing support for any FF action.
+>
+> So, you are talking about regressions, and for that I would like to be
+> able to push the patches to stable.
+>
+> However, I would need more information:
+> - patch 3/3 seems simple enough to go in stable, and is clearly a
+> regression from the recent series. Can you put it in first and add
+> stable@vger.kernel.org in a CC field (and possibly with a Fixes tag as
+> well)?
 
-On 04/10/2019 19:52, Pavel Tatashin wrote:
-> Currently, kernel relocation function is configured in machine_kexec()
-> at the time of kexec reboot by using control_code_page.
-> 
-> This operation, however, is more logical to be done during kexec_load,
-> and thus remove from reboot time. Move, setup of this function to
-> newly added machine_kexec_post_load().
-> 
-> In addition, do some cleanup: add infor about reloction function to
+It patch 3/3 on purpose because applying it by itself, without fix in
+2/3 in place would lead to a segfault and a non working wheel. Maybe
+that FF for-next fix you pointed out can prevent that from happening,
+but as is the series is pretty atomic and can't be divided.
 
-infor ? reloction?
+Patch 3/3 already has stable in CC and Fixes tag.
 
+> - I am not sure which patch fixes the wheel remains stuck in
+> autocentering mode. Is it patch 2/3?
 
-> kexec_image_info(), and remove extra messages from machine_kexec().
+There's no specific patch that does that. There were two G920
+regressions in the driver and both need to be fixed for wheel to be
+configured properly. The specific code that releases the wheel is in
+g920_ff_set_autocenter().
 
+> - was the "wheel remains stuck in autocentering mode" bug present from
+> on of the recent patch or was it always there since we introduced
+> support in hid-logitech-hidpp, but the game would need to unlock the
+> wheel first?
 
-> Make dtb_mem, always available, if CONFIG_KEXEC_FILE is not configured
-> dtb_mem is set to zero anyway.
+The wheel worked as expected prior to
 
-This is unrelated cleanup, please do it as an earlier patch to make it clearer what you
-are changing here.
+fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to be
+handled by this module")
+91cf9a98ae41 ("HID: logitech-hidpp: make .probe usbhid capable")
 
-(I'm not convinced you need to cache va<->pa)
-
-
-> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index 12a561a54128..d15ca1ca1e83 100644
-> --- a/arch/arm64/include/asm/kexec.h
-> +++ b/arch/arm64/include/asm/kexec.h
-> @@ -90,14 +90,15 @@ static inline void crash_prepare_suspend(void) {}
->  static inline void crash_post_resume(void) {}
->  #endif
->  
-> -#ifdef CONFIG_KEXEC_FILE
->  #define ARCH_HAS_KIMAGE_ARCH
->  
->  struct kimage_arch {
->  	void *dtb;
->  	unsigned long dtb_mem;
-
-> +	unsigned long kern_reloc;
-
-This is cache-ing the physical address of an all-architectures value from struct kimage,
-in the arch specific part of struct kiamge. Why?
-
-(You must have the struct kimage on hand to access this thing at all!)
-
-If its supposed to be a physical address, please use phys_addr_t.
-
->  };
-
-
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> index 0df8493624e0..9b41da50e6f7 100644
-> --- a/arch/arm64/kernel/machine_kexec.c
-> +++ b/arch/arm64/kernel/machine_kexec.c
-> @@ -42,6 +42,7 @@ static void _kexec_image_info(const char *func, int line,
->  	pr_debug("    start:       %lx\n", kimage->start);
->  	pr_debug("    head:        %lx\n", kimage->head);
->  	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
-> +	pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
->  
->  	for (i = 0; i < kimage->nr_segments; i++) {
->  		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
-> @@ -58,6 +59,19 @@ void machine_kexec_cleanup(struct kimage *kimage)
->  	/* Empty routine needed to avoid build errors. */
->  }
->  
-> +int machine_kexec_post_load(struct kimage *kimage)
-> +{
-> +	unsigned long kern_reloc;
-> +
-> +	kern_reloc = page_to_phys(kimage->control_code_page);
-
-kern_reloc should be phys_addr_t.
-
-
-> +	memcpy(__va(kern_reloc), arm64_relocate_new_kernel,
-> +	       arm64_relocate_new_kernel_size);
-> +	kimage->arch.kern_reloc = kern_reloc;
-
-
-Please move the cache maintenance in here too. This will save us doing it late during
-kdump. This will also group the mmu-on changes together.
-
-
-> +}
-
+It's not the game that needs to unlock the wheel, but the driver itself.
 
 Thanks,
-
-James
+Andrey Smirnov
