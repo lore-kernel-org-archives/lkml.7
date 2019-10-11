@@ -2,269 +2,249 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE569ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1894AECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E8B206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCEA6206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:12:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jm+bx9/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfJKPKf (ORCPT
+        id S1727714AbfJKPMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:10:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:35370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbfJKPKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:10:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C38A142F;
-        Fri, 11 Oct 2019 08:10:34 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63DC13F68E;
-        Fri, 11 Oct 2019 08:10:31 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 16:10:29 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Sudakshina Das <sudi.das@arm.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 05/12] arm64: Basic Branch Target Identification
- support
-Message-ID: <20191011151028.GE33537@lakrids.cambridge.arm.com>
-References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
- <1570733080-21015-6-git-send-email-Dave.Martin@arm.com>
+        Fri, 11 Oct 2019 11:12:22 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34790 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfJKPMW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:12:22 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j19so10220788lja.1;
+        Fri, 11 Oct 2019 08:12:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+1ypOR9fZA4lK0XmIF+p9uuR9SMEDVTW7L0xDQwfOfI=;
+        b=jm+bx9/q/ioKZOdw2XGXOjjcH1GmMTp4LFxIbat9a+vh/MpLrqoGJTv/CI2EngbYxK
+         sj/uEd3k5DSLnd3Km2fK9oICh410C29fiaBA4W4/zXRIWr1KpBKD9Ic7YYVta7yp3YBA
+         86xIid8ulN3JjBBjRwT4ICWXCYlrVUmHFjI5is9YTasblknqR/IO+7tDgDmQztlNiEzi
+         02pLHhZDzPpOCl2lg/KSt5hdV6DWpoqkDtdj4Ouz3aG+MN6CqH2f7EMU2/viDp1zu9iU
+         LCan+qndJN4GxU72ZnCFDn+kocUAU1sG+NH59SEvgYEjCA/xDtrzUgNaTweVrVVHbim7
+         j9FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+1ypOR9fZA4lK0XmIF+p9uuR9SMEDVTW7L0xDQwfOfI=;
+        b=iv/9TKnkg6uGE/+1Vhe8gc0aMiD7UcGAlq3AAp5Y7iQWg7ARDQFz5HIW1oydGUnrF2
+         BO/0YgtPcOD3nCobkRc0yW8i3MJW5LPa4aMq5T1jgp+PebMMeBOTWOa1xxYrVFUMwRX0
+         dqcCIXmoPdNuo+WMJH//LJ+plQ52UjqenxwChHvODAdiaBn4zGOHjsekYy4yltZAXEmi
+         iPYNL5l1zhVcLw+st32YKnixaYnTDuyBrXXUopS2F5Fhq41R515mK2emhEGOduka16dd
+         4XCdYfG6jZG+2tqrVqpGnye1D4UTdrWjlb9nNVCaFjh7IFb4FrnEUNe0KniDhNlHPc1m
+         XoQA==
+X-Gm-Message-State: APjAAAXDlyUbHu9xiFw1B1xaG2b6DQsxsr5ulOQxEE3iRF6ZD70Byh6Q
+        3BG9GUKKWaYMjd5+v3veNUMBjP3eIKX3sPZuMfs=
+X-Google-Smtp-Source: APXvYqz0LPu+wPH8jBZSVzpaolRLdSgVVQw+WRtDn3tslIV/n+p9hir0bkcXgYqEC/6nIFdtHBrAjQYmc+zg7TXtF9g=
+X-Received: by 2002:a2e:9bc1:: with SMTP id w1mr4215737ljj.136.1570806738540;
+ Fri, 11 Oct 2019 08:12:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570733080-21015-6-git-send-email-Dave.Martin@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <00000000000056268e05737dcb95@google.com> <0000000000007d22100573d66078@google.com>
+ <063a57ba-7723-6513-043e-ee99c5797271@I-love.SAKURA.ne.jp>
+In-Reply-To: <063a57ba-7723-6513-043e-ee99c5797271@I-love.SAKURA.ne.jp>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 11 Oct 2019 08:12:06 -0700
+Message-ID: <CAADnVQJ7BZMVSt9on4updWrWsFWq6b5J1qEGwTdGYV+BLqH7tg@mail.gmail.com>
+Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        ddstreet@ieee.org, Dmitry Vyukov <dvyukov@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 07:44:33PM +0100, Dave Martin wrote:
-> This patch adds the bare minimum required to expose the ARMv8.5
-> Branch Target Identification feature to userspace.
-> 
-> By itself, this does _not_ automatically enable BTI for any initial
-> executable pages mapped by execve().  This will come later, but for
-> now it should be possible to enable BTI manually on those pages by
-> using mprotect() from within the target process.
-> 
-> Other arches already using the generic mman.h are already using
-> 0x10 for arch-specific prot flags, so we use that for PROT_BTI
-> here.
-> 
-> For consistency, signal handler entry points in BTI guarded pages
-> are required to be annotated as such, just like any other function.
-> This blocks a relatively minor attack vector, but comforming
-> userspace will have the annotations anyway, so we may as well
-> enforce them.
-> 
-> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> 
-> ---
-> 
-> Changes since v1:
-> 
->  * Configure SCTLR_EL1.BTx to disallow BR onto a PACIxSP instruction
->    (except via X16/X17):
-> 
->    The AArch64 procedure call standard requires binaries marked with
->    GNU_PROPERTY_AARCH64_FEATURE_1_BTI to use X16/X17 in trampolines
->    and tail calls, so it makes no sense to be permissive.
-> 
->  * Rename PROT_BTI_GUARDED to PROT_BTI.
-> 
->  * Rename VM_ARM64_GP to VM_ARM64_BTI:
-> 
->    Although the architectural name for the BTI page table bit is "GP",
->    BTI is nonetheless the feature it controls.  So avoid introducing
->    the "GP" naming just for this -- it's just an unecessary extra
->    source of confusion.
-> 
->  * Tidy up masking with ~PSR_BTYPE_MASK.
-> 
->  * Drop masking out of BTYPE on SVC, with a comment outlining why.
-> 
->  * Split PSR_BTYPE_SHIFT definition into this patch.  It's not
->    useful yet, but it makes sense to define PSR_BTYPE_* using this
->    from the outset.
-> 
->  * Migrate to ct_user_exit_irqoff in entry.S:el0_bti.
+On Fri, Oct 11, 2019 at 3:15 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> Hello.
+>
+> I noticed that syzbot is reporting that refcount incremented by bpf(BPF_MAP_UPDATE_ELEM)
+> syscall is not decremented when unregister_netdevice() is called. Is this a BPF bug?
 
-[...]
+Jesper, Toke,
+please take a look.
 
-> diff --git a/arch/arm64/include/asm/mman.h b/arch/arm64/include/asm/mman.h
-> new file mode 100644
-> index 0000000..cbfe3238
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/mman.h
-> @@ -0,0 +1,33 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ASM_MMAN_H__
-> +#define __ASM_MMAN_H__
-> +
-> +#include <uapi/asm/mman.h>
-> +
-> +#define arch_calc_vm_prot_bits(prot, pkey) arm64_calc_vm_prot_bits(prot)
-> +static inline unsigned long arm64_calc_vm_prot_bits(unsigned long prot)
-> +{
-> +	if (system_supports_bti() && (prot & PROT_BTI))
-> +		return VM_ARM64_BTI;
-> +
-> +	return 0;
-> +}
-
-Can we call this arch_calc_vm_prot_bits() directly, with all the
-arguments:
-
-static inline unsigned long arch_calc_vm_prot_bits(unsigned long prot,
-						   unsigned long pkey)
-{
-	...
-}
-#define arch_calc_vm_prot_bits arch_calc_vm_prot_bits
-
-... as that makes it a bit easier to match definition with use, and just
-definign the name makes it a bit clearer that that's probably for the
-benefit of some ifdeffery.
-
-Likewise for the other functions here.
-
-> +#define arch_vm_get_page_prot(vm_flags) arm64_vm_get_page_prot(vm_flags)
-> +static inline pgprot_t arm64_vm_get_page_prot(unsigned long vm_flags)
-> +{
-> +	return (vm_flags & VM_ARM64_BTI) ? __pgprot(PTE_GP) : __pgprot(0);
-> +}
-> +
-> +#define arch_validate_prot(prot, addr) arm64_validate_prot(prot, addr)
-> +static inline int arm64_validate_prot(unsigned long prot, unsigned long addr)
-> +{
-> +	unsigned long supported = PROT_READ | PROT_WRITE | PROT_EXEC | PROT_SEM;
-> +
-> +	if (system_supports_bti())
-> +		supported |= PROT_BTI;
-> +
-> +	return (prot & ~supported) == 0;
-> +}
-
-If we have this check, can we ever get into arm64_calc_vm_prot_bits()
-with PROT_BIT but !system_supports_bti()?
-
-... or can that become:
-
-	return (prot & PROT_BTI) ? VM_ARM64_BTI : 0;
-
-> +#endif /* ! __ASM_MMAN_H__ */
-> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-> index 3df60f9..f85d1fc 100644
-> --- a/arch/arm64/include/asm/pgtable-hwdef.h
-> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
-> @@ -150,6 +150,7 @@
->  #define PTE_SHARED		(_AT(pteval_t, 3) << 8)		/* SH[1:0], inner shareable */
->  #define PTE_AF			(_AT(pteval_t, 1) << 10)	/* Access Flag */
->  #define PTE_NG			(_AT(pteval_t, 1) << 11)	/* nG */
-> +#define PTE_GP			(_AT(pteval_t, 1) << 50)	/* BTI guarded */
-
-As a heads-up for anyone looking at the latest ARM ARM (ARM DDI
-0487E.a), GP is missing from some of the descriptions of the table
-formats in section D5.3.1 in the latest ARM ARM (ARM DDI 0487E.a), which
-imply it's RES0.
-
-It looks like that'll be fixed for the next release.
-
-[...]
-
-> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> index 84a8227..6c5adea 100644
-> --- a/arch/arm64/kernel/entry.S
-> +++ b/arch/arm64/kernel/entry.S
-> @@ -737,6 +737,8 @@ el0_sync:
->  	b.eq	el0_pc
->  	cmp	x24, #ESR_ELx_EC_UNKNOWN	// unknown exception in EL0
->  	b.eq	el0_undef
-> +	cmp	x24, #ESR_ELx_EC_BTI		// branch target exception
-> +	b.eq	el0_bti
->  	cmp	x24, #ESR_ELx_EC_BREAKPT_LOW	// debug exception in EL0
->  	b.ge	el0_dbg
->  	b	el0_inv
-> @@ -887,6 +889,15 @@ el0_undef:
->  	mov	x0, sp
->  	bl	do_undefinstr
->  	b	ret_to_user
-> +el0_bti:
-> +	/*
-> +	 * Branch target exception
-> +	 */
-> +	ct_user_exit_irqoff
-> +	enable_daif
-> +	mov	x0, sp
-> +	bl	do_bti
-> +	b	ret_to_user
-
-As a heads-up, this'll conflict with James's conversion of the sync
-entry points to C.
-
-> diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
-> index dd2cdc0..4a3bd32 100644
-> --- a/arch/arm64/kernel/signal.c
-> +++ b/arch/arm64/kernel/signal.c
-> @@ -730,6 +730,11 @@ static void setup_return(struct pt_regs *regs, struct k_sigaction *ka,
->  	regs->regs[29] = (unsigned long)&user->next_frame->fp;
->  	regs->pc = (unsigned long)ka->sa.sa_handler;
->  
-> +	if (system_supports_bti()) {
-> +		regs->pstate &= ~PSR_BTYPE_MASK;
-> +		regs->pstate |= PSR_BTYPE_CALL;
-> +	}
-> +
-
-I think we might need a comment as to what we're trying to ensure here.
-
-I was under the (perhaps mistaken) impression that we'd generate a
-pristine pstate for a signal handler, and it's not clear to me that we
-must ensure the first instruction is a target instruction.
-
-[...]
-
-> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> index 34739e8..15e3c4f 100644
-> --- a/arch/arm64/kernel/traps.c
-> +++ b/arch/arm64/kernel/traps.c
-> @@ -406,6 +406,12 @@ asmlinkage void __exception do_undefinstr(struct pt_regs *regs)
->  	force_signal_inject(SIGILL, ILL_ILLOPC, regs->pc);
+> Kernel: 9e208aa06c2109b45eec6be049a8e47034748c20 on linux.git
+> Config: https://syzkaller.appspot.com/text?tag=KernelConfig&x=73c2aace7604ab7
+> Reproducer: https://syzkaller.appspot.com/text?tag=ReproC&x=1215afaf600000
+> Debug printk patch:
+> ----------------------------------------
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 9eda1c31d1f7..542a47fe6998 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -3732,10 +3732,7 @@ void netdev_run_todo(void);
+>   *
+>   * Release reference to device to allow it to be freed.
+>   */
+> -static inline void dev_put(struct net_device *dev)
+> -{
+> -       this_cpu_dec(*dev->pcpu_refcnt);
+> -}
+> +extern void dev_put(struct net_device *dev);
+>
+>  /**
+>   *     dev_hold - get reference to device
+> @@ -3743,10 +3740,7 @@ static inline void dev_put(struct net_device *dev)
+>   *
+>   * Hold reference to device to keep it from being freed.
+>   */
+> -static inline void dev_hold(struct net_device *dev)
+> -{
+> -       this_cpu_inc(*dev->pcpu_refcnt);
+> -}
+> +extern void dev_hold(struct net_device *dev);
+>
+>  /* Carrier loss detection, dial on demand. The functions netif_carrier_on
+>   * and _off may be called from IRQ context, but it is caller
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index bf3ed413abaf..21f82aa92fad 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -8968,8 +8968,8 @@ static void netdev_wait_allrefs(struct net_device *dev)
+>                 refcnt = netdev_refcnt_read(dev);
+>
+>                 if (refcnt && time_after(jiffies, warning_time + 10 * HZ)) {
+> -                       pr_emerg("unregister_netdevice: waiting for %s to become free. Usage count = %d\n",
+> -                                dev->name, refcnt);
+> +                       pr_emerg("unregister_netdevice: waiting for %s to become free. Usage count = %d %px\n",
+> +                                dev->name, refcnt, dev);
+>                         warning_time = jiffies;
+>                 }
+>         }
+> @@ -9930,3 +9930,24 @@ static int __init net_dev_init(void)
 >  }
->  
-> +asmlinkage void __exception do_bti(struct pt_regs *regs)
+>
+>  subsys_initcall(net_dev_init);
+> +
+> +
+> +void dev_put(struct net_device *dev)
 > +{
-> +	BUG_ON(!user_mode(regs));
-> +	force_signal_inject(SIGILL, ILL_ILLOPC, regs->pc);
+> +       this_cpu_dec(*dev->pcpu_refcnt);
+> +       if (!strcmp(dev->name, "bridge_slave_0")) {
+> +               printk("dev_put: %px %d", dev, netdev_refcnt_read(dev));
+> +               dump_stack();
+> +       }
 > +}
-
-This was only wired up into the EL0 sync entry paths, so I think we can
-drop the BUG_ON() -- we don't have similar in other EL0-only paths.
-
-Thanks,
-Mark.
+> +EXPORT_SYMBOL(dev_put);
+> +
+> +void dev_hold(struct net_device *dev)
+> +{
+> +       if (!strcmp(dev->name, "bridge_slave_0")) {
+> +               printk("dev_hold: %px %d", dev, netdev_refcnt_read(dev));
+> +               dump_stack();
+> +       }
+> +       this_cpu_inc(*dev->pcpu_refcnt);
+> +}
+> +EXPORT_SYMBOL(dev_hold);
+> ----------------------------------------
+>
+> ----------------------------------------
+> Oct 11 14:33:06 ubuntu kernel: [  114.251175][ T8866] dev_hold: ffff888091fd2000 100
+> Oct 11 14:33:06 ubuntu kernel: [  114.251185][ T8866] CPU: 3 PID: 8866 Comm: a.out Not tainted 5.4.0-rc2+ #217
+> Oct 11 14:33:06 ubuntu kernel: [  114.251199][ T8866] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+> Oct 11 14:33:06 ubuntu kernel: [  114.251208][ T8866] Call Trace:
+> Oct 11 14:33:06 ubuntu kernel: [  114.251232][ T8866]  dump_stack+0x154/0x1c5
+> Oct 11 14:33:06 ubuntu kernel: [  114.251253][ T8866]  dev_hold+0x73/0x80
+> Oct 11 14:33:06 ubuntu kernel: [  114.251267][ T8866]  dev_get_by_index+0x1b3/0x2d0
+> Oct 11 14:33:06 ubuntu kernel: [  114.251280][ T8866]  __dev_map_alloc_node+0x1c7/0x360
+> Oct 11 14:33:06 ubuntu kernel: [  114.251299][ T8866]  dev_map_hash_update_elem+0x485/0x670
+> Oct 11 14:33:06 ubuntu kernel: [  114.251320][ T8866]  __do_sys_bpf+0x35d6/0x38c0
+> Oct 11 14:33:06 ubuntu kernel: [  114.251337][ T8866]  ? bpf_prog_load+0x1470/0x1470
+> Oct 11 14:33:06 ubuntu kernel: [  114.251351][ T8866]  ? do_wp_page+0x3c8/0x1310
+> Oct 11 14:33:06 ubuntu kernel: [  114.251364][ T8866]  ? finish_mkwrite_fault+0x300/0x300
+> Oct 11 14:33:06 ubuntu kernel: [  114.251381][ T8866]  ? find_held_lock+0x35/0x1e0
+> Oct 11 14:33:06 ubuntu kernel: [  114.251397][ T8866]  ? __do_page_fault+0x504/0xb60
+> Oct 11 14:33:06 ubuntu kernel: [  114.251413][ T8866]  ? lock_downgrade+0x900/0x900
+> Oct 11 14:33:06 ubuntu kernel: [  114.251426][ T8866]  ? __pmd_alloc+0x410/0x410
+> Oct 11 14:33:06 ubuntu kernel: [  114.251446][ T8866]  ? __kasan_check_write+0x14/0x20
+> Oct 11 14:33:06 ubuntu kernel: [  114.251457][ T8866]  ? up_read+0x1b6/0x7a0
+> Oct 11 14:33:06 ubuntu kernel: [  114.251471][ T8866]  ? down_read_nested+0x480/0x480
+> Oct 11 14:33:06 ubuntu kernel: [  114.251494][ T8866]  ? do_syscall_64+0x26/0x6a0
+> Oct 11 14:33:06 ubuntu kernel: [  114.251507][ T8866]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> Oct 11 14:33:06 ubuntu kernel: [  114.251515][ T8866]  ? do_syscall_64+0x26/0x6a0
+> Oct 11 14:33:06 ubuntu kernel: [  114.251528][ T8866]  __x64_sys_bpf+0x73/0xb0
+> Oct 11 14:33:06 ubuntu kernel: [  114.251541][ T8866]  do_syscall_64+0xde/0x6a0
+> Oct 11 14:33:06 ubuntu kernel: [  114.251559][ T8866]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> (...snipped...)
+> Oct 11 14:33:10 ubuntu kernel: [  117.459637][ T9584] dev_hold: ffff888091fd2000 200
+> Oct 11 14:33:10 ubuntu kernel: [  117.459644][ T9584] CPU: 4 PID: 9584 Comm: a.out Not tainted 5.4.0-rc2+ #217
+> Oct 11 14:33:10 ubuntu kernel: [  117.459652][ T9584] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+> Oct 11 14:33:10 ubuntu kernel: [  117.459656][ T9584] Call Trace:
+> Oct 11 14:33:10 ubuntu kernel: [  117.459669][ T9584]  dump_stack+0x154/0x1c5
+> Oct 11 14:33:10 ubuntu kernel: [  117.459682][ T9584]  dev_hold+0x73/0x80
+> Oct 11 14:33:10 ubuntu kernel: [  117.459695][ T9584]  dev_get_by_index+0x1b3/0x2d0
+> Oct 11 14:33:10 ubuntu kernel: [  117.459706][ T9584]  __dev_map_alloc_node+0x1c7/0x360
+> Oct 11 14:33:10 ubuntu kernel: [  117.459720][ T9584]  dev_map_hash_update_elem+0x485/0x670
+> Oct 11 14:33:10 ubuntu kernel: [  117.459749][ T9584]  __do_sys_bpf+0x35d6/0x38c0
+> Oct 11 14:33:10 ubuntu kernel: [  117.459762][ T9584]  ? bpf_prog_load+0x1470/0x1470
+> Oct 11 14:33:10 ubuntu kernel: [  117.459769][ T9584]  ? do_wp_page+0x3c8/0x1310
+> Oct 11 14:33:10 ubuntu kernel: [  117.459778][ T9584]  ? finish_mkwrite_fault+0x300/0x300
+> Oct 11 14:33:10 ubuntu kernel: [  117.459787][ T9584]  ? find_held_lock+0x35/0x1e0
+> Oct 11 14:33:10 ubuntu kernel: [  117.459797][ T9584]  ? __do_page_fault+0x504/0xb60
+> Oct 11 14:33:10 ubuntu kernel: [  117.459807][ T9584]  ? lock_downgrade+0x900/0x900
+> Oct 11 14:33:10 ubuntu kernel: [  117.459814][ T9584]  ? __pmd_alloc+0x410/0x410
+> Oct 11 14:33:10 ubuntu kernel: [  117.459828][ T9584]  ? __kasan_check_write+0x14/0x20
+> Oct 11 14:33:10 ubuntu kernel: [  117.459835][ T9584]  ? up_read+0x1b6/0x7a0
+> Oct 11 14:33:10 ubuntu kernel: [  117.459846][ T9584]  ? down_read_nested+0x480/0x480
+> Oct 11 14:33:10 ubuntu kernel: [  117.459862][ T9584]  ? do_syscall_64+0x26/0x6a0
+> Oct 11 14:33:10 ubuntu kernel: [  117.459871][ T9584]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> Oct 11 14:33:10 ubuntu kernel: [  117.459878][ T9584]  ? do_syscall_64+0x26/0x6a0
+> Oct 11 14:33:10 ubuntu kernel: [  117.459891][ T9584]  __x64_sys_bpf+0x73/0xb0
+> Oct 11 14:33:10 ubuntu kernel: [  117.459901][ T9584]  do_syscall_64+0xde/0x6a0
+> Oct 11 14:33:10 ubuntu kernel: [  117.459911][ T9584]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> (...snipped...)
+> Oct 11 14:33:26 ubuntu kernel: [  134.146838][T13860] dev_hold: ffff888091fd2000 850
+> Oct 11 14:33:26 ubuntu kernel: [  134.146847][T13860] CPU: 4 PID: 13860 Comm: a.out Not tainted 5.4.0-rc2+ #217
+> Oct 11 14:33:26 ubuntu kernel: [  134.146853][T13860] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+> Oct 11 14:33:26 ubuntu kernel: [  134.146859][T13860] Call Trace:
+> Oct 11 14:33:26 ubuntu kernel: [  134.146872][T13860]  dump_stack+0x154/0x1c5
+> Oct 11 14:33:26 ubuntu kernel: [  134.146885][T13860]  dev_hold+0x73/0x80
+> Oct 11 14:33:26 ubuntu kernel: [  134.146893][T13860]  dev_get_by_index+0x1b3/0x2d0
+> Oct 11 14:33:26 ubuntu kernel: [  134.146903][T13860]  __dev_map_alloc_node+0x1c7/0x360
+> Oct 11 14:33:26 ubuntu kernel: [  134.146918][T13860]  dev_map_hash_update_elem+0x485/0x670
+> Oct 11 14:33:26 ubuntu kernel: [  134.146932][T13860]  __do_sys_bpf+0x35d6/0x38c0
+> Oct 11 14:33:26 ubuntu kernel: [  134.146944][T13860]  ? bpf_prog_load+0x1470/0x1470
+> Oct 11 14:33:26 ubuntu kernel: [  134.146953][T13860]  ? do_wp_page+0x3c8/0x1310
+> Oct 11 14:33:26 ubuntu kernel: [  134.146964][T13860]  ? finish_mkwrite_fault+0x300/0x300
+> Oct 11 14:33:26 ubuntu kernel: [  134.146975][T13860]  ? find_held_lock+0x35/0x1e0
+> Oct 11 14:33:26 ubuntu kernel: [  134.146985][T13860]  ? __do_page_fault+0x504/0xb60
+> Oct 11 14:33:26 ubuntu kernel: [  134.146994][T13860]  ? lock_downgrade+0x900/0x900
+> Oct 11 14:33:26 ubuntu kernel: [  134.147002][T13860]  ? __pmd_alloc+0x410/0x410
+> Oct 11 14:33:26 ubuntu kernel: [  134.147017][T13860]  ? __kasan_check_write+0x14/0x20
+> Oct 11 14:33:26 ubuntu kernel: [  134.147024][T13860]  ? up_read+0x1b6/0x7a0
+> Oct 11 14:33:26 ubuntu kernel: [  134.147033][T13860]  ? down_read_nested+0x480/0x480
+> Oct 11 14:33:26 ubuntu kernel: [  134.147048][T13860]  ? do_syscall_64+0x26/0x6a0
+> Oct 11 14:33:26 ubuntu kernel: [  134.147056][T13860]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> Oct 11 14:33:26 ubuntu kernel: [  134.147063][T13860]  ? do_syscall_64+0x26/0x6a0
+> Oct 11 14:33:26 ubuntu kernel: [  134.147074][T13860]  __x64_sys_bpf+0x73/0xb0
+> Oct 11 14:33:26 ubuntu kernel: [  134.147084][T13860]  do_syscall_64+0xde/0x6a0
+> Oct 11 14:33:26 ubuntu kernel: [  134.147095][T13860]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> (...snipped...)
+> Oct 11 14:33:41 ubuntu kernel: [  148.384539][ T4514] unregister_netdevice: waiting for bridge_slave_0 to become free. Usage count = 850 ffff888091fd2000
+> ----------------------------------------
+>
