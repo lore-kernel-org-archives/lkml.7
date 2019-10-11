@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE8AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6471EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4709321D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E807222BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="OOjW2/nc"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="FpZNBcf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbfJKBYO (ORCPT
+        id S1728199AbfJKBYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 21:24:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34296 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbfJKBYN (ORCPT
+        Thu, 10 Oct 2019 21:24:18 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34864 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728180AbfJKBYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:24:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j11so9979809wrp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:10 -0700 (PDT)
+        Thu, 10 Oct 2019 21:24:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y21so8523070wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kXHCe8suyXLAPPOgvlaGi669iqKxC1qw0xREw7xoOxU=;
-        b=OOjW2/nc6OKJ5HF5CJpoSYLbs7IXjCX2YdRkxHLuLncL8B8N6z3OQwgivoiTiQuQl8
-         +OL4pMOVrI1IWTlHcGB10VP9TUX6IsabTk5wHu2ABHv9Cusa7hu8939xznFCQakXltFN
-         Yt1zKFYEihQippfYy0Z8XO9CJjbRd7p8tLP1jd2XWqNwSxJPSbV8ac6fe1VfZ+7dSC/S
-         JkYNKMM3uzuVHISXwIZomAJrVda170W8yTBpCHn/uin2mhuNSZ5KK91e8jebxxghx0l0
-         /EmR0AHLih/NExS7PJA578sa73oAiM+9jh/LdutNbfR55OweLKYTGYfeuMCs+W5GEmOg
-         FthA==
+        bh=bxhZK5mLPkB4P+JsQjChjKuzP0+Y9hyNug6oCR0WhY8=;
+        b=FpZNBcf8/Ob2oRfgZL/inGiYXQ9iuqISsnqTrYCp+9nXnVgdkGhGla1oqYm8OaGxu9
+         Iu4+fH7/cksgoD877FqBfm9rwUJXXLBhweghYHAaVRFYYdBZ5jou/69h0VooUi8vImT4
+         9kU98ZPm/NpeKq0RCaXG6sIzTUel0pHL6bWdfDD1zstkca8bobN2j2z/kUP59ajtuJqQ
+         7KMJKnUxwtFwFpRkpezWfVS4zVX1hPf86RwztvZQ3UBbNmbFgsoJ8u2SrQbYfZw0oIM1
+         R7ovi9IFw8kY9BKvmRy3cjTR+a4NtqrXaqwSPNfQuQ5qEidvID8yN7Xpl2w+iqZ8Lqvy
+         cEYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kXHCe8suyXLAPPOgvlaGi669iqKxC1qw0xREw7xoOxU=;
-        b=N+FBoPzAKhECZdv3iMnZmqOuAJ1SIex7HEvMAWWDNQ9i6/0zWhnh6b2eP/CSHw4BAz
-         CNDrCsUmXCAne9Lt6sgU69jazqbzjEhoyh9D8MlTDLPXIPmiI1UGK+Fk2ib+l8n49fon
-         y2TJPDKZLCuJkjHpUyKnNWHo2VKMHnEX4oWKdKvg7Nx/jG8Euc1XiGvLwFDfV+QQXCax
-         /6pbeAa+AF6phe0sLULos/Vy2sXknNmuq5oWbjXb/7wQJxZWp8ucX9avHz3xLAft3lEj
-         vOj1L+nVKncAQFZoC/f5hnL7xfSyAiE8cJJ7X3OsAkkFfRHspf24OZ3n9a/mPvc+gE6r
-         H3Ng==
-X-Gm-Message-State: APjAAAW6c52/QYPnb2zZFljQx84Id2xELY/aMglv8uitAzqs+UchnKUw
-        lT8LImjTtT1129XWIqAfaA3g5VCSIT0=
-X-Google-Smtp-Source: APXvYqwYBiTGo4zV2uEXwIqXGs5okRcejNUE5yISYtbQFRToEkwxNNZbtod6ktVg5ib7lz9i3yxbIg==
-X-Received: by 2002:a5d:4287:: with SMTP id k7mr10339057wrq.283.1570757049526;
-        Thu, 10 Oct 2019 18:24:09 -0700 (PDT)
+        bh=bxhZK5mLPkB4P+JsQjChjKuzP0+Y9hyNug6oCR0WhY8=;
+        b=JqcgGz+gc1OwJ4D3TXmHyNz34uJV+Vig5tnU5T80jO6yPErSM35PfyWFTRCmCNqJmz
+         T/d49J8Dg17qE73bhJcWu8ueiRMzgpzfBrhZZyanqb3sCiw2q8BJex18MwvX7FE8pQ3R
+         kbNTOJ8gFLdmgohdui2jMSJ/0pD8EJtYMK2Nd51eklcccsKVH2ma1HION0f5KYmUCXWT
+         +yaKbUBVjWTCzJQ4bI8JHVZ+Lq/RdgEltMLJDCbIqpt/J5Pvq6Z1h/uImItISow1fk1h
+         W1Fa98plCDPK7CWkYkruasywEn5TjxDuYtBp6He4l33C2/ebl+ReEz8ybOIdmJnCZYSX
+         l3Kw==
+X-Gm-Message-State: APjAAAU0YO9cyR6VwK73lN25tRqF5sHaC9N/DO+uJdFueH+Ow2XJmxDU
+        +e7j0ZMgCRgWeylLWZKdofkUYF9SRHk=
+X-Google-Smtp-Source: APXvYqxNiRonDLEOULKhcOK3EYPRvmis4eE1923WsOwj26J6fyXxmwQqxKLDQJ7FdmIdOPhHoSNl3g==
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr1036257wmc.8.1570757052616;
+        Thu, 10 Oct 2019 18:24:12 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:ea2:c100:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.08
+        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 18:24:08 -0700 (PDT)
+        Thu, 10 Oct 2019 18:24:12 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
         Dmitry Safonov <dima@arista.com>,
         Adrian Reber <adrian@lisas.de>,
         Andrei Vagin <avagin@openvz.org>,
@@ -76,9 +77,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv7 16/33] fs/proc: Respect boottime inside time namespace for /proc/uptime
-Date:   Fri, 11 Oct 2019 02:23:24 +0100
-Message-Id: <20191011012341.846266-17-dima@arista.com>
+Subject: [PATCHv7 18/33] lib/vdso: Add unlikely() hint into vdso_read_begin()
+Date:   Fri, 11 Oct 2019 02:23:26 +0100
+Message-Id: <20191011012341.846266-19-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191011012341.846266-1-dima@arista.com>
 References: <20191011012341.846266-1-dima@arista.com>
@@ -89,34 +90,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Co-developed-by: Andrei Vagin <avagin@openvz.org>
-Signed-off-by: Andrei Vagin <avagin@openvz.org>
+From: Andrei Vagin <avagin@gmail.com>
+
+Place the branch with no concurrent write before contended case.
+
+Performance numbers for Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+(more clock_gettime() cycles - the better):
+        | before    | after
+-----------------------------------
+        | 150252214 | 153242367
+        | 150301112 | 153324800
+        | 150392773 | 153125401
+        | 150373957 | 153399355
+        | 150303157 | 153489417
+        | 150365237 | 153494270
+-----------------------------------
+avg     | 150331408 | 153345935
+diff %  | 2	    | 0
+-----------------------------------
+stdev % | 0.3	    | 0.1
+
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- fs/proc/uptime.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/vdso/helpers.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/proc/uptime.c b/fs/proc/uptime.c
-index a4c2791ab70b..5a1b228964fb 100644
---- a/fs/proc/uptime.c
-+++ b/fs/proc/uptime.c
-@@ -5,6 +5,7 @@
- #include <linux/sched.h>
- #include <linux/seq_file.h>
- #include <linux/time.h>
-+#include <linux/time_namespace.h>
- #include <linux/kernel_stat.h>
+diff --git a/include/vdso/helpers.h b/include/vdso/helpers.h
+index 01641dbb68ef..9a2af9fca45e 100644
+--- a/include/vdso/helpers.h
++++ b/include/vdso/helpers.h
+@@ -10,7 +10,7 @@ static __always_inline u32 vdso_read_begin(const struct vdso_data *vd)
+ {
+ 	u32 seq;
  
- static int uptime_proc_show(struct seq_file *m, void *v)
-@@ -20,6 +21,8 @@ static int uptime_proc_show(struct seq_file *m, void *v)
- 		nsec += (__force u64) kcpustat_cpu(i).cpustat[CPUTIME_IDLE];
+-	while ((seq = READ_ONCE(vd->seq)) & 1)
++	while (unlikely((seq = READ_ONCE(vd->seq)) & 1))
+ 		cpu_relax();
  
- 	ktime_get_boottime_ts64(&uptime);
-+	timens_add_boottime(&uptime);
-+
- 	idle.tv_sec = div_u64_rem(nsec, NSEC_PER_SEC, &rem);
- 	idle.tv_nsec = rem;
- 	seq_printf(m, "%lu.%02lu %lu.%02lu\n",
+ 	smp_rmb();
 -- 
 2.23.0
 
