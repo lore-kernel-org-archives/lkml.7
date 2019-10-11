@@ -2,179 +2,86 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55132ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DD4ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2675E206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7201A206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="omjJpoXB"
+	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="xojgy9x7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbfJKMzV (ORCPT
+        id S1728189AbfJKM4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:55:21 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:47890 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728033AbfJKMzU (ORCPT
+        Fri, 11 Oct 2019 08:56:32 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38308 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbfJKM4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:55:20 -0400
-Received: from pps.filterd (m0170392.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BCt9vU008412;
-        Fri, 11 Oct 2019 08:55:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=smtpout1;
- bh=k1tI6exljFfm3+StUh8XvsNFdSkCQrGl3UGrix+7rYc=;
- b=omjJpoXBv0h9tBUhbv8PJnkk6XtfYFMLONfojF2T1or5BUu2drUyesw3i9u6oOO9yVCA
- 0XOez+s2h2mDW1HembV9D46FuLvBtdUAHoFQIaC3AQQkVPdDYS+JNubvIdWPuWJXjVwV
- 32N0eN9+CfSQudqhaSfixaD+aT0oj1mboowiMM0cXbBrAPUQFz2s+N2yGlsXjHvFXBvz
- Cg72lDeh+2qWUFdBNiGyH25trKtheGuvzQGlIT6j5c4fjjsJ5xr8rlb8t9eT5LXWnQ0e
- fw1pDrhYSnpyX4TlVCZ4Kpgwp0J4PSsveMQzEufCne95wQOfjcSlQYa6iD6QgpicFdWs JQ== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 2vepbfpd38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 08:55:19 -0400
-Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BCrBdw024395;
-        Fri, 11 Oct 2019 08:55:18 -0400
-Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
-        by mx0b-00154901.pphosted.com with ESMTP id 2vjj02f0vq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Oct 2019 08:55:18 -0400
-X-LoopCount0: from 10.166.132.130
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
-   d="scan'208";a="1310933796"
-From:   <Narendra.K@dell.com>
-To:     <geert@linux-m68k.org>
-CC:     <ard.biesheuvel@linaro.org>, <linux-efi@vger.kernel.org>,
-        <Mario.Limonciello@dell.com>, <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, <james.morse@arm.com>,
-        <mingo@kernel.org>
-Subject: Re: [PATCH] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-Thread-Topic: [PATCH] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-Thread-Index: AQHVeVm8hd3/NfhPNEW1ErxPMn2a1adSB94AgAHOtgCAABHEgIAA+WUAgAAFC4CAADBvAA==
-Date:   Fri, 11 Oct 2019 12:55:12 +0000
-Message-ID: <20191011125446.GA2170@localhost.localdomain>
-References: <20191002194346.GA3792@localhost.localdomain>
- <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
- <20191010174710.GA2405@localhost.localdomain>
- <CAMuHMdVriPMVWdNOD4ytZQFPmad7CvD_4utbw1PxMJBua1TSfQ@mail.gmail.com>
- <20191011094322.GA3065@localhost.localdomain>
- <CAMuHMdUMkyyCZACyJ7dvd4SaicpN77g5pFd0aGEzQW_q7m3Q0g@mail.gmail.com>
-In-Reply-To: <CAMuHMdUMkyyCZACyJ7dvd4SaicpN77g5pFd0aGEzQW_q7m3Q0g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.10.1 (2018-07-13)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A2717FECB6566849A28C4AB7B68DDB68@dell.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 11 Oct 2019 08:56:31 -0400
+Received: by mail-io1-f68.google.com with SMTP id u8so21254571iom.5
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 05:56:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linbit-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+EUqmfGWDAdL05osSjASqHsDbqgdE65EEIXIm83sDD4=;
+        b=xojgy9x7vGpMMO1XVw+kggflG5vf16sNOXA9BOGMWJB9Nn9oVWLGyTyB3ES0iL+QOq
+         FRmH2C2vYADTVbuR7KudRp5AXZtblAtNWvktzJQgTxLRpGk08aBFh6KzgpObif8iLZbS
+         n50vWK737S5/rORFqdgs47B87xZWTpn8tzyxipV2nVykeqmQW/GpUyOk05pCLY+C1Jw8
+         R/jGy7+ZlxgUgcOctIAH4dU/o+nBTNfd5tYdA9E6LOo3VycET2Tp+vugD3gUMmeqxwaA
+         KG1ZKJsG+GUm+BbEGlWkyRNg+jIz0c+XuetfWz+zWbQMWxVWz4eGAnYbp9Mcceai0luz
+         9TTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+EUqmfGWDAdL05osSjASqHsDbqgdE65EEIXIm83sDD4=;
+        b=poK7yQmqfpSLuq/DNKNMkkWnKTMAkrZUd3pnSCMP6e8ruL4/lP2npH3iqi8Jchfcz6
+         TFIA8XtYc55uk9ATBrJygy7g3S3UpNLVIA8cuAli+Yity/6SBsC5IdAic6pJMX3eqr06
+         wzAXGkiZP+7WXXI8Tm1ovBLW3CaNqw0z3sUwlxeZpyLh2lRJDx7eycG8EOCwH7bktyyg
+         O3E0grz3LSKceG0K3ITqyhdotDqjoBIRPtKJi5roHRacQzqb3GNbZrui7w4B85W9ugcL
+         7asSPQ472inIah4Jp7n7GH21q9kFISUXhtFpI/mkc8gPfx07BfX0h4kt0oSJaVvgPW4y
+         xPYw==
+X-Gm-Message-State: APjAAAUJm8tEzajWNlyX00njJe2fwSEpa6Z2TRzgcx7ta56VohHg8OEo
+        aP/YQv2nBOC6jeqysP3EnWnwL2zF76tjFwD9+bVfkg==
+X-Google-Smtp-Source: APXvYqzTkS1nwUshVzno50wD21uyNcAdbgshnDiR/j4kcyVL8MNzKbbRJEgcBYbDdiTjk0yMweAOKgaGCZNl1o1ZSkk=
+X-Received: by 2002:a02:cc5b:: with SMTP id i27mr9531652jaq.63.1570798590649;
+ Fri, 11 Oct 2019 05:56:30 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-11_08:2019-10-10,2019-10-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxlogscore=999 impostorscore=0 bulkscore=0 clxscore=1015
- spamscore=0 mlxscore=0 priorityscore=1501 suspectscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910110122
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
- impostorscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 lowpriorityscore=0 mlxscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1910110123
+References: <VI1PR04MB70236211F170522DD456553AEE940@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <20191011122409.23868-1-joel.colledge@linbit.com> <c4ae19a8-54c0-98a6-16bd-48f7ce5689f9@siemens.com>
+In-Reply-To: <c4ae19a8-54c0-98a6-16bd-48f7ce5689f9@siemens.com>
+From:   Joel Colledge <joel.colledge@linbit.com>
+Date:   Fri, 11 Oct 2019 14:56:19 +0200
+Message-ID: <CAGNP_+U-5bUysiwLN9fL0+d__GKOc_5Ak9MDKi6EeeSzPCK-Lw@mail.gmail.com>
+Subject: Re: [PATCH v2] scripts/gdb: fix lx-dmesg when CONFIG_PRINTK_CALLER is set
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 12:01:25PM +0200, Geert Uytterhoeven wrote:
-> > > > > > -       bool "EFI Runtime Configuration Interface Table Version=
- 2 Support"
-> > > > > > +       bool
-> > > > > > +       prompt "EFI RCI Table Version 2 Support" if X86 || COMP=
-ILE_TEST
-> > >
-> > > Why the split of bool and prompt?
-> > > Why not simply add a single line "depends on X86 || COMPILE_TEST"?
-> >
-> > It is because of the findings shared in [1]. Please let me know your
-> > thoughts on the findings.
->=20
-> So you want to prevent the user from seeing a prompt for an option he may
-> or may not need to enable, when running "make oldconfig"?
+On Fri, Oct 11, 2019 at 2:38 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
+> Does bitpos really use a non-int type? Otherwise, plain '/' suffices.
 
-Geert,
+bitpos uses gdb.Field. When I use '/' I get an error:
+Error occurred in Python command: slice indices must be integers or
+None or have an __index__ method
 
-> The code in question is entirely architecture agnostic, and defaults
-> to 'n', so I am not convinced this is needed. (It came up in the
-> review as well)
+I'm guessing gdb.Field has some kind of override which causes it to be
+converted to float when using '/'; hence '//'.
 
->> "make oldconfig" still asks me the question on e.g. arm64, where it is
->> irrelevant, until arm64 variants of the hardware show up.
+> Overlong line.
+> ...
+> Here as well. Better use some temp vars to break up the expressions.
+> Helps with readability.
 
->> So IMHO it should have "depends on X86 || COMPILE_TEST".
-
-From the discussion in [1] and [2](pasted a part of it above), my understan=
-ding
-of the issue you reported is that 'make oldconfig' asks the user a question=
- for arm64
-though the EFI_RCI2_TABLE is not relevant for arm64. From the tests,
-it seemed like adding "depends on X86 || COMPILE_TEST" does not fix the
-issue, splitting bool into bool + prompt fixes it.
-
-Please let me know if I am missing any detail in the issue you reported. =20
-
-With the way EFI_RCI2_TABLE is currently defined, my understanding is
-that 'make oldconfig' does not set the EFI_RCI2_TABLE to 'y' by default
-on arm64, but it asks the user the question. User has to say 'y' if he
-wants it to be set to 'y', else by default 'n' is set. This behavior is
-as expected.=20
-
->=20
-> One common approach is to let the Kconfig symbol for the platform (not fo=
-r
-> all of X86!) select EFI_RCI2_TABLE.
-> That way it will be enabled automatically when needed.
-
-We did not intend to enable EFI_RCI2_TABLE option by default even on all
-X86 systems from the begining. As a result, we chose to set it to 'n' by
-default and added the guidance in 'help' section to say 'y' for Dell EMC
-PowerEdge systems.=20
-
->=20
-> Another approach is to not force the option on, but guide the user toward=
-s
-> enabling it, by adding "default y if <platform_symbol>".
-
-As mentioned above, we want to keep the default to n.
-
-> Without the "|| COMPILE_TEST", you cannot enable compile-testing of
-> the driver on non-x86 platforms with EFI.
-
-Ok. We could keep the check. Could we make it independent of platforms
-by adding 'defbool y if COMPILE_TEST' ?=20
-
-[1] Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sy=
-sfs
-https://lore.kernel.org/linux-efi/20190812150452.27983-5-ard.biesheuvel@lin=
-aro.org/T/#m0d73b4fa0dd7ece5038e4c9580dcc4e2ce5bd63c
-
-[2] Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sy=
-sfs
-https://lore.kernel.org/linux-efi/20190812150452.27983-5-ard.biesheuvel@lin=
-aro.org/T/#mf45a9bc1861c71f110c800a53c60f0be65c68ec7
---=20
-With regards,
-Narendra K=
+Will do.
