@@ -2,129 +2,83 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8B2C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D161C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5210A2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9922084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AUmbSlE2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NtE/nU2k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbfJKWIE (ORCPT
+        id S1729298AbfJKWLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 18:08:04 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39780 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729269AbfJKWID (ORCPT
+        Fri, 11 Oct 2019 18:11:36 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44821 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbfJKWLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 18:08:03 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e1so6546881pgj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 15:08:01 -0700 (PDT)
+        Fri, 11 Oct 2019 18:11:35 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w6so9251477oie.11
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 15:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=u657WMybRKGf4iTEdbvgPKUQHMvQCoMqXMiRc7mnyNw=;
-        b=AUmbSlE2jrKfmGq51Nnu0DTKILtSqFr/lgvJE3gHd/UhnFDMR4LvhUquwiYY4yI1UG
-         GQjwC95tlThgfHSDmX5isdgd8rfRVIVuXg8LM5+EKX3RU75Tm86erjWm8b7IPX1aL+fQ
-         PhW9UWXV+kPuuyJxGmEnU4tHZfDaLYbNp5Gws=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iYAYC3wS5kKgW3tJiDPUFQyWjg/Hppq/ySaf6EhAiPM=;
+        b=NtE/nU2k1zFWLS8Z4FDgsjYbX5WCZ1ArXUPUCPvpWV8kwc3Dh7NQ7req7s1attiFtP
+         b0qhInWtI3gB+KYBMIPR+WGpEqpCAYvqUduOs2NcQLIyG32CJ36fZXgDO3nv0OKQxhiF
+         D3iuM1mIQiITP0fwnHdSpg1rfXsR0RJmvmioSlsrfQ/oOz+T8y1y2pp/PAE4KpeNjLM7
+         wMAXjp+nPX3q2tJQ0GgWG/R/9ACmwDTDo3o6Bepti2xnthNrpeSksnTVn9MOWwC8b5NT
+         2FpmXC7KnJ+izV1W9YfFAFHWY1vRy7YTKsQHFuwpnrP8M9SNN4WPKSVFTOoE9VbCnvzR
+         sFgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u657WMybRKGf4iTEdbvgPKUQHMvQCoMqXMiRc7mnyNw=;
-        b=nlEYYOGAYbUZkc09YRgkEr6RJJsoHWzUhrzaQ/SHTbwB0D8UtYJh6CmHLR2Oh8RHjF
-         CgTzPt9HwlSvim+MXg/ZpJPhk4p+Z0FMfjCEZFM/1jHDcxQtf29bBPHvxYGf2+RQDNi0
-         MTH144jj4hRk6sAroLkRJuhoLHVe9/j22f6tVywzJ3QTxNOmZCRmHvFBa21VomRLGrFl
-         EYDvTc10XVtAGRQbHmsJDG6M5srQUxm7fizhYcu1GoBXnvB9YqRFP+WmrtOwwVMO2Mmn
-         WwOyav7g8V+N+dlgpfX63wDTJG4h7xdUTIL95BP3PfF+qQFnVDG6q3lsd+pwttysDWHo
-         gM2g==
-X-Gm-Message-State: APjAAAX0Kd3jPf7Zk5tpWEawwNrvnGTiYQC9uCbwALMgc0/HgFlK7i/H
-        Bv5R+Ok5CEP8j+Huf88t2O1taQ==
-X-Google-Smtp-Source: APXvYqwXd6PES+m6U0qYX3W5eqwpAP4ETGleW9x3CN4Ko02h7XpIW9CP+aqFM6d6plqqgwrB+0MgxQ==
-X-Received: by 2002:aa7:956a:: with SMTP id x10mr18500783pfq.220.1570831680868;
-        Fri, 11 Oct 2019 15:08:00 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p66sm10301368pfg.127.2019.10.11.15.07.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 15:07:59 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 15:07:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>, linux-sctp@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH 0/4] treewide: Add 'fallthrough' pseudo-keyword
-Message-ID: <201910111506.45AE850D5@keescook>
-References: <cover.1570292505.git.joe@perches.com>
- <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
- <CANiq72kDNT6iPxYYNzY_eb3ddWNUEzgg48pOenEBrJXynxsvoA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iYAYC3wS5kKgW3tJiDPUFQyWjg/Hppq/ySaf6EhAiPM=;
+        b=etB2MJ/jNEJzIaG02/E0w1hpbBPXcMeaDnRQECkM6AomDvOaw1U7JD3i5rb3DQnlvf
+         wxl6CmZDkuCMaTq4aQT5Vu3WNc3UF3Oi6aFceVKMNBrdULG15QJqBHhge1GFEiJhVEcV
+         G0jj8hWa/Ho6a4e7NCAv0Mpk9g0V4owTsowZPblLZVpJmzdFkUp0iegbh0nfkq03/aLJ
+         4zCHTCIOS8sUMK+QR5MSpXvlm2GRVRDg/+0O16YZKkWHVU6rkDLi5AH5msWLnb9C6a7e
+         KLUyzVEj6xrG/pvFQ+a06af23Xfbe+nO/2IvOw0GWy6hzUyHMDSDkshWMYtpQ7xWBcVU
+         IWVw==
+X-Gm-Message-State: APjAAAUyyomG4InNUQs/H2fVwSXtjNo1Q/je5jwYHesN38WS4lc0Lomf
+        4Ix1qczEm01P74pRbNjxd/xxJGRr/vzu8vyQ0USlmg==
+X-Google-Smtp-Source: APXvYqw57ERR6jnxHxAcPEFRpId1CnpeEXFS8Ct4nKyEDiRjVs5RN2xj9/cw9gxKlH7YLTtxPz9545qZlVs3A5XrOJw=
+X-Received: by 2002:aca:cd4d:: with SMTP id d74mr14539387oig.157.1570831894397;
+ Fri, 11 Oct 2019 15:11:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72kDNT6iPxYYNzY_eb3ddWNUEzgg48pOenEBrJXynxsvoA@mail.gmail.com>
+References: <20190715191804.112933-1-hridya@google.com> <CAG48ez0dSd4q06YXOnkzmM8BkfQGTtYE6j60_YRdC5fmrTm8jw@mail.gmail.com>
+In-Reply-To: <CAG48ez0dSd4q06YXOnkzmM8BkfQGTtYE6j60_YRdC5fmrTm8jw@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Sat, 12 Oct 2019 00:11:08 +0200
+Message-ID: <CAG48ez2ez1bb=3o3h1KSahPU6QcdXhbh=Z2aX4Mte24H4901_g@mail.gmail.com>
+Subject: Re: [PATCH] binder: prevent transactions to context manager from its
+ own process.
+To:     Hridya Valsaraju <hridya@google.com>, Todd Kjos <tkjos@android.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 08:01:42PM +0200, Miguel Ojeda wrote:
-> Hi Linus,
-> 
-> On Fri, Oct 11, 2019 at 6:30 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Sat, Oct 5, 2019 at 9:46 AM Joe Perches <joe@perches.com> wrote:
-> > >
-> > > Add 'fallthrough' pseudo-keyword to enable the removal of comments
-> > > like '/* fallthrough */'.
-> >
-> > I applied patches 1-3 to my tree just to make it easier for people to
-> > start doing this. Maybe some people want to do the conversion on their
-> > own subsystem rather than with a global script, but even if not, this
-> > looks better as a "prepare for the future" series and I feel that if
-> > we're doing the "fallthrough" thing eventually, the sooner we do the
-> > prepwork the better.
-> >
-> > I'm a tiny bit worried that the actual conversion is just going to
-> > cause lots of pain for the stable people, but I'll not worry about it
-> > _too_ much. If the stable people decide that it's too painful for them
-> > to deal with the comment vs keyword model, they may want to backport
-> > these three patches too.
-> 
-> I was waiting for a v2 series to pick it up given we had some pending changes...
+On Fri, Oct 11, 2019 at 11:59 PM Jann Horn <jannh@google.com> wrote:
+> (I think you could also let A receive a handle
+> to itself and then transact with itself, but I haven't tested that.)
 
-Hmpf, looks like it's in torvalds/master now. Miguel, most of the changes
-were related to the commit log, IIRC, so that ship has sailed. :( Can the
-stuff in Documentation/ be improved with a follow-up patch, perhaps?
-
--- 
-Kees Cook
+Ignore this sentence, that's obviously wrong because same-binder_proc
+nodes will always show up as a binder, not a handle.
