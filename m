@@ -2,112 +2,100 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844EBC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35A3ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D94B214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92E2214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:16:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="FJGDUtGW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IeAKD/zQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbfJKLQL (ORCPT
+        id S1727901AbfJKLQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:16:11 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39877 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfJKLQL (ORCPT
+        Fri, 11 Oct 2019 07:16:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51448 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfJKLQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:16:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y3so9432587ljj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 04:16:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:organization:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ooy01geSvoqL+GgWiguG5Arr/pkbSR9LEwm6vQ6trlA=;
-        b=FJGDUtGWD6dezMdpfiI3yfqw/RLXa3Cf5Y5p0xGMYaiScNsHdq6GDzLNWh5p1En1q0
-         eRQtdLRr1/D6U7+Q85XT3rS2ISqQiuliJAmkF/J0fC9tO1mut3EkSl4ckQrODTRDbJdU
-         SE36sc3svSCPDdHSMN0uQY3JTiTL9xr8ZTzeE4IQ0z4WYKvesc1H+lJWGNS1B3UvJgJx
-         arlORLWtfcvJ3hdtQRMkK1TK2MtcjnIxaexR8VaF/1B+qtq7HkJxYQivLhERG8DBNbBl
-         hQfb0LW2/xY1uof3a5oa/f9swp/JrzNMd0ITcgQudf+WS9jFD7yBHeENt5IvXwF77pU0
-         to2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Ooy01geSvoqL+GgWiguG5Arr/pkbSR9LEwm6vQ6trlA=;
-        b=pHPtJIWicz+H4xhTjn+ZIAdB1WaxrSTM1rwd6rKgNKMbYAZKcIx2PoXz2F3EKyOZkk
-         nfVZ05vL9rprPowFCEQy93hEsqB3Vj/Rtzkw2uzEiHvcWDLMiOP2B4cgVXY9JXtSYWji
-         IZWa/5VHDSgRmKluTkGl14+Ari1sohZlBlyLjjxeH9WgGiH0UccGPMHpOsTKuTOhIVqx
-         EirPuV+/of2FXvsdHzoKV4S1zqxs5oFkEu/mCIoVtDbIS9+77sWSoirjxwHuIoQ8JcVp
-         ovvl6i6hlx2pdU+UGJvVsf11FNBU76fqG60VXQqDOVA3vlgBHhquR2uZFx+rz9ns3I+q
-         6sVQ==
-X-Gm-Message-State: APjAAAW5aZtQjydkXPPR4bVbAssu0pG/Jna5qZSSrHAkenoS3xbeZlRs
-        +AlCiQTzJtnZnT15aA2j6Bz+kQ==
-X-Google-Smtp-Source: APXvYqz+u6eneONfnjvqqaE8Uh0If4lrYaqqjy+4UFFpkLHI7cc3rLwOyRGvWtm0ePCkEkvTKscC4w==
-X-Received: by 2002:a2e:569a:: with SMTP id k26mr9075699lje.256.1570792567730;
-        Fri, 11 Oct 2019 04:16:07 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:4430:5cc6:e6ed:2da1:4d7:1d29])
-        by smtp.gmail.com with ESMTPSA id q26sm1857253lfd.53.2019.10.11.04.16.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Oct 2019 04:16:06 -0700 (PDT)
-Subject: Re: [PATCH v5 bpf-next 09/15] samples/bpf: use own flags but not
- HOSTCFLAGS
-To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org
-References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
- <20191011002808.28206-10-ivan.khoronzhuk@linaro.org>
- <99f76e2f-ed76-77e0-a470-36ae07567111@cogentembedded.com>
- <20191011095715.GB3689@khorivan>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <3fb88a06-5253-1e48-9bea-2d31a443250b@cogentembedded.com>
-Date:   Fri, 11 Oct 2019 14:16:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Fri, 11 Oct 2019 07:16:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9RB6rkmSiOjXUMDAbYMVz16wPxZvcpZ/Dq4/WoJod1c=; b=IeAKD/zQ6b02r9EEPDnx+6VZ3
+        d6FVQZLjt99AqTm2MYf+gGHIW/+laa5nhQFsKjOeUro3Aho/g4a1qo4Yj8HuaJAHaq5XCfv1N1KgI
+        OImifMtiMWCI2u2oGjfESRY0aooZU19Aj5cvaRPUk6h9yLdnkxrmM3PmqQsWspaw6MgHkJ4CA0+4h
+        6seHBQqyco+2Pgg7Ltlv0K/VyiciyKTb4QX/Hok0aJ+89P4/FqWqmq3gytUZcvr/DCsfXXSwoqdEN
+        3eTaXcTYlgG8FB1d4Nlkl81MyFiJmF9d5l95a2ftQc/l8N9rAWBAQ5xkEy8RE5M/j15sEn3OuUKJ8
+        a5p2JwO0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iIstf-0004v9-Se; Fri, 11 Oct 2019 11:15:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EFA613013A4;
+        Fri, 11 Oct 2019 13:14:46 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8F13B20230372; Fri, 11 Oct 2019 13:15:39 +0200 (CEST)
+Date:   Fri, 11 Oct 2019 13:15:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
+        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+References: <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+ <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+ <20190924131939.GS23050@dhcp22.suse.cz>
+ <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
+ <20190925104108.GE4553@hirez.programming.kicks-ass.net>
+ <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
+ <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+ <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+ <20191010073212.GB18412@dhcp22.suse.cz>
+ <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191011095715.GB3689@khorivan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/11/2019 12:57 PM, Ivan Khoronzhuk wrote:
+On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
+> But I failed to see why the above is related to making node_to_cpumask_map()
+> NUMA_NO_NODE aware?
 
->>> While compiling natively, the host's cflags and ldflags are equal to
->>> ones used from HOSTCFLAGS and HOSTLDFLAGS. When cross compiling it
->>> should have own, used for target arch. While verification, for arm,
->>
->>   While verifying.
-> While verification stage.
+Your initial bug is for hns3, which is a PCI device, which really _MUST_
+have a node assigned.
 
-   While *in* verification stage, "while" doesn't combine with nouns w/o
-a preposition.
-
->>> arm64 and x86_64 the following flags were used always:
->>>
->>> -Wall -O2
->>> -fomit-frame-pointer
->>> -Wmissing-prototypes
->>> -Wstrict-prototypes
->>>
->>> So, add them as they were verified and used before adding
->>> Makefile.target and lets omit "-fomit-frame-pointer" as were proposed
->>> while review, as no sense in such optimization for samples.
->>>
->>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> [...]
-
-MBR, Sergei
+It not having one, is a straight up bug. We must not silently accept
+NO_NODE there, ever.
