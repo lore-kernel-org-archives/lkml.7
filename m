@@ -2,223 +2,87 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1E0ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE6EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6E2214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE7B214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 17:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QD3ftIDl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zs2H82o4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfJKRe5 (ORCPT
+        id S1728702AbfJKRfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 13:34:57 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:41710 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728449AbfJKRe4 (ORCPT
+        Fri, 11 Oct 2019 13:35:36 -0400
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:33239 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728461AbfJKRff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 13:34:56 -0400
-Received: by mail-yw1-f67.google.com with SMTP id 129so3754687ywb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 10:34:55 -0700 (PDT)
+        Fri, 11 Oct 2019 13:35:35 -0400
+Received: by mail-wr1-f44.google.com with SMTP id b9so12854614wrs.0;
+        Fri, 11 Oct 2019 10:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tb/zoyBhjfvsMFy/5nFubTA0DsJYfclfxTRm+tVkXXE=;
-        b=QD3ftIDle0YFdIx7D+/fztcFJgInz8Jx5oaiBiJJ65qZAgJ9s2Mqj4UbiGE7jS+rDy
-         FscCcB1sXENS3M9SSpfkx9qgX9fAxQr1zZOK9h5TI4tIRNR2+lKWZwI4E5eZ+RzCv3jS
-         00RcgNhqZn5zxN4qCEC62E8Jd4ow44bSzrCcHlK3ghNQpdbT6ZuCsVnXlkhy+oL/yNlU
-         Y4YbAny6eIUmnvqehPSCklNRQeLMue4jFggX6PF9lwRs/Qlq9ZbVdMkTzMqqtIkmcxBW
-         fDFsRVuQAznAxLB2XMDWXKevb04heCSmf/sIlmW2EfqSpQyfw0QHfeth6r0h/5QcyiAN
-         apBQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ldn1+y4i+TM+l/Cu4HtEy/jFbE45xXljUNQey12ghIg=;
+        b=Zs2H82o4DqF63IDhzoBFLmddb31FxW0PjesX4lLX87MmDlERw56C4+lJxly+SyMPAz
+         PGUsRU6sE6/aU4CzGCBRoSNFQajdav8CSNoZTVGx5AYrigEUBYkmOvyFmZZ3dZYWTuIi
+         m7sBJuLLlGhQ8krkYeGvATfvi96AbbAWdYtG0H6rMWVcnYlmCwCxYl3JsgOjtUB/7U9i
+         QM0LQzc5Mzc325Muz9LJpZU3uzc4gQj6MjF+aEOPpjRb2VNk4usKnLUHfXvv6KszKc/C
+         oWJffYE2VnWLeMrolSwwRUxqFPyTshE+RyhbjmishCoQOlSHVLYGstv2PA+cRy2oY9NF
+         mbOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tb/zoyBhjfvsMFy/5nFubTA0DsJYfclfxTRm+tVkXXE=;
-        b=l9/Zwi81r3MaKcwIpFdbjXkjEc7ZzwNWNlQ7zNApEm1bRhC+iTj+7/rrffKqnfymZC
-         tGuWgaNt6AJJ3InrPYMJ/Gxlo9gErzKAO0DmPS8EorDDKanTbd1/y0KM7afo6gtrO3Mo
-         FPB2wCo7iL+rKN5AhX8e8WMB33vlek16I07X7FQ+YGNaRjlAKQq98J3e2dSsE1mLWiOK
-         dAsVs0ccFrAhgZJ7uH/q3tFJtZ+bPWSM5GcGEH23DFtZI2GTMZ+CPxHz1gKsCAxsbrQh
-         yfwsZuXx8K8rebLgxoIjY0lyiuxWzY1FrXxNs0Z9YlNj4FDt51XMzYw57Dv4kooBqmIf
-         dLDw==
-X-Gm-Message-State: APjAAAU7EU83vVdnqOz0Ah99E3gQIbKh+moSTAsDomUPT92/mcj/WKwv
-        rTvfIPPVYbUMEqEl6cLbmLKrIDBY0AseMbWarQoRQg5vY1w=
-X-Google-Smtp-Source: APXvYqyNpyEMg1UQyESFmsh6fpKix15hX/VTfReWFWG77PQhEi3wHfARglLBB4AXORIb4CUdgMshwdyjFEjiwcJrSdo=
-X-Received: by 2002:a81:9907:: with SMTP id q7mr3172105ywg.296.1570815294663;
- Fri, 11 Oct 2019 10:34:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ldn1+y4i+TM+l/Cu4HtEy/jFbE45xXljUNQey12ghIg=;
+        b=Wo/iiFSYN88PIYRF9nowa/5N2Sx5EJzXYs0P5NFh4nDrx9aVUf3QFxKWIj5/4EdEnP
+         sEXx+Rkn9pW35pzp+TKJBbVGB4uykIeYU2OscIrVqFtS3dltl/UHwC7/Xun3FhHBLfYQ
+         wsy4rfTUArpVwtNrhTuiv/r6VwNwMqH1PPP3lOvQQ+l4ZJ74B5hK6ySE3eGsRmXW6eqZ
+         Xb5PnTynWrcop4pTu1tyR6QUZbG1aYTypCKUuUMQxbRfWZl3WIrTTRJfHR+TjPfO4sX6
+         qqNUC9rSEA39pqRk+xbuRg8rwqgSK4roAqNsirl0IV4GUgdcHydc0ssssFQgR9pQyOf4
+         TZ3Q==
+X-Gm-Message-State: APjAAAXUG6xh3wlyoTxeV5yYEUACCm1JE4NZ2MC3t+DlTw3+dfkMOnEs
+        7kUH426SExce2npH5xXA36c=
+X-Google-Smtp-Source: APXvYqxL1v1bOAqXNayHLgr3O+yDOlR9ISOlJHTaBPGqrem9ZzTj7AtxPsmXFyS+6Pqw62fzU6mQNA==
+X-Received: by 2002:a5d:43c2:: with SMTP id v2mr8911335wrr.153.1570815333323;
+        Fri, 11 Oct 2019 10:35:33 -0700 (PDT)
+Received: from wambui ([197.237.61.225])
+        by smtp.gmail.com with ESMTPSA id a18sm14506877wrs.27.2019.10.11.10.35.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 10:35:32 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 20:35:27 +0300
+From:   Wambui Karuga <wambui.karugax@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
+        isdn@linux-pingi.de, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] staging: isdn: remove assignment in if conditionals
+Message-ID: <20191011173527.GA22796@wambui>
+Reply-To: 20191011110019.GC4774@kadam
+References: <20191011072044.7022-1-wambui.karugax@gmail.com>
+ <20191011110019.GC4774@kadam>
 MIME-Version: 1.0
-References: <20191010160549.1584316-1-guro@fb.com>
-In-Reply-To: <20191010160549.1584316-1-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 11 Oct 2019 10:34:43 -0700
-Message-ID: <CALvZod4i0ZfJNZkPpe7DVucOTFsKpNXua2bK2kpV0XWk1LP8EA@mail.gmail.com>
-Subject: Re: [PATCH RESEND] mm: memcg/slab: fix panic in __free_slab() caused
- by premature memcg pointer release
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Linux MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        David Rientjes <rientjes@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011110019.GC4774@kadam>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 9:05 AM Roman Gushchin <guro@fb.com> wrote:
->
-> Karsten reported the following panic in __free_slab() happening on a s390=
-x
-> machine:
->
-> 349.361168=C2=A8 Unable to handle kernel pointer dereference in virtual k=
-ernel address space
-> 349.361210=C2=A8 Failing address: 0000000000000000 TEID: 0000000000000483
-> 349.361223=C2=A8 Fault in home space mode while using kernel ASCE.
-> 349.361240=C2=A8 AS:00000000017d4007 R3:000000007fbd0007 S:000000007fbff0=
-00 P:000000000000003d
-> 349.361340=C2=A8 Oops: 0004 ilc:3 =C3=9D#1=C2=A8 PREEMPT SMP
-> 349.361349=C2=A8 Modules linked in: tcp_diag inet_diag xt_tcpudp ip6t_rpf=
-ilter ip6t_REJECT \
-> nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_nat ip6tab=
-le_mangle \
-> ip6table_raw ip6table_security iptable_at nf_nat
-> 349.361436=C2=A8 CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-05872-g6=
-133e3e4bada-dirty #14
-> 349.361445=C2=A8 Hardware name: IBM 2964 NC9 702 (z/VM 6.4.0)
-> 349.361450=C2=A8 Krnl PSW : 0704d00180000000 00000000003cadb6 (__free_sla=
-b+0x686/0x6b0)
-> 349.361464=C2=A8            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:1=
- PM:0 RI:0 EA:3
-> 349.361470=C2=A8 Krnl GPRS: 00000000f3a32928 0000000000000000 000000007fb=
-f5d00 000000000117c4b8
-> 349.361475=C2=A8            0000000000000000 000000009e3291c1 00000000000=
-00000 0000000000000000
-> 349.361481=C2=A8            0000000000000003 0000000000000008 000000002b4=
-78b00 000003d080a97600
-> 349.361481=C2=A8            0000000000000003 0000000000000008 000000002b4=
-78b00 000003d080a97600
-> 349.361486=C2=A8            000000000117ba00 000003e000057db0 00000000003=
-cabcc 000003e000057c78
-> 349.361500=C2=A8 Krnl Code: 00000000003cada6: e310a1400004        lg     =
- %r1,320(%r10)
-> 349.361500=C2=A8            00000000003cadac: c0e50046c286        brasl  =
- %r14,ca32b8
-> 349.361500=C2=A8           #00000000003cadb2: a7f4fe36            brc    =
- 15,3caa1e
-> 349.361500=C2=A8           >00000000003cadb6: e32060800024        stg    =
- %r2,128(%r6)
-> 349.361500=C2=A8            00000000003cadbc: a7f4fd9e            brc    =
- 15,3ca8f8
-> 349.361500=C2=A8            00000000003cadc0: c0e50046790c        brasl  =
- %r14,c99fd8
-> 349.361500=C2=A8            00000000003cadc6: a7f4fe2c            brc    =
- 15,3caa
-> 349.361500=C2=A8            00000000003cadc6: a7f4fe2c            brc    =
- 15,3caa1e
-> 349.361500=C2=A8            00000000003cadca: ecb1ffff00d9        aghik  =
- %r11,%r1,-1
-> 349.361619=C2=A8 Call Trace:
-> 349.361627=C2=A8 (=C3=9D<00000000003cabcc>=C2=A8 __free_slab+0x49c/0x6b0)
-> 349.361634=C2=A8  =C3=9D<00000000001f5886>=C2=A8 rcu_core+0x5a6/0x7e0
-> 349.361643=C2=A8  =C3=9D<0000000000ca2dea>=C2=A8 __do_softirq+0xf2/0x5c0
-> 349.361652=C2=A8  =C3=9D<0000000000152644>=C2=A8 irq_exit+0x104/0x130
-> 349.361659=C2=A8  =C3=9D<000000000010d222>=C2=A8 do_IRQ+0x9a/0xf0
-> 349.361667=C2=A8  =C3=9D<0000000000ca2344>=C2=A8 ext_int_handler+0x130/0x=
-134
-> 349.361674=C2=A8  =C3=9D<0000000000103648>=C2=A8 enabled_wait+0x58/0x128
-> 349.361681=C2=A8 (=C3=9D<0000000000103634>=C2=A8 enabled_wait+0x44/0x128)
-> 349.361688=C2=A8  =C3=9D<0000000000103b00>=C2=A8 arch_cpu_idle+0x40/0x58
-> 349.361695=C2=A8  =C3=9D<0000000000ca0544>=C2=A8 default_idle_call+0x3c/0=
-x68
-> 349.361704=C2=A8  =C3=9D<000000000018eaa4>=C2=A8 do_idle+0xec/0x1c0
-> 349.361748=C2=A8  =C3=9D<000000000018ee0e>=C2=A8 cpu_startup_entry+0x36/0=
-x40
-> 349.361756=C2=A8  =C3=9D<000000000122df34>=C2=A8 arch_call_rest_init+0x5c=
-/0x88
-> 349.361761=C2=A8  =C3=9D<0000000000000000>=C2=A8 0x0
-> 349.361765=C2=A8 INFO: lockdep is turned off.
-> 349.361769=C2=A8 Last Breaking-Event-Address:
-> 349.361774=C2=A8  =C3=9D<00000000003ca8f4>=C2=A8 __free_slab+0x1c4/0x6b0
-> 349.361781=C2=A8 Kernel panic - not syncing: Fatal exception in interrupt
->
-> The kernel panics on an attempt to dereference the NULL memcg pointer.
-> When shutdown_cache() is called from the kmem_cache_destroy() context,
-> a memcg kmem_cache might have empty slab pages in a partial list,
-> which are still charged to the memory cgroup. These pages are released
-> by free_partial() at the beginning of shutdown_cache(): either
-> directly or by scheduling a RCU-delayed work (if the kmem_cache has
-> the SLAB_TYPESAFE_BY_RCU flag). The latter case is when the reported
-> panic can happen: memcg_unlink_cache() is called immediately after
-> shrinking partial lists, without waiting for scheduled RCU works.
-> It sets the kmem_cache->memcg_params.memcg pointer to NULL,
-> and the following attempt to dereference it by __free_slab()
-> from the RCU work context causes the panic.
->
-> To fix the issue, let's postpone the release of the memcg pointer
-> to destroy_memcg_params(). It's called from a separate work context
-> by slab_caches_to_rcu_destroy_workfn(), which contains a full RCU
-> barrier. This guarantees that all scheduled page release RCU works
-> will complete before the memcg pointer will be zeroed.
->
-> Big thanks for Karsten for the perfect report containing all necessary
-> information, his help with the analysis of the problem and testing
-> of the fix.
->
-> Fixes: fb2f2b0adb98 ("mm: memcg/slab: reparent memcg kmem_caches on cgrou=
-p removal")
-> Reported-by: Karsten Graul <kgraul@linux.ibm.com>
-> Tested-by: Karsten Graul <kgraul@linux.ibm.com>
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+On Fri, Oct 11, 2019 at 02:00:20PM +0300, Dan Carpenter wrote:
+> This ISDN stuff is going to be deleted soon.  Just leave it as is.
+> 
+> regards,
+> dan carpenter
+> 
+Noted, thanks
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-
-> Cc: Karsten Graul <kgraul@linux.ibm.com>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: stable@vger.kernel.org
-> ---
->  mm/slab_common.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 0b94a37da531..8afa188f6e20 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -178,10 +178,13 @@ static int init_memcg_params(struct kmem_cache *s,
->
->  static void destroy_memcg_params(struct kmem_cache *s)
->  {
-> -       if (is_root_cache(s))
-> +       if (is_root_cache(s)) {
->                 kvfree(rcu_access_pointer(s->memcg_params.memcg_caches));
-> -       else
-> +       } else {
-> +               mem_cgroup_put(s->memcg_params.memcg);
-> +               WRITE_ONCE(s->memcg_params.memcg, NULL);
->                 percpu_ref_exit(&s->memcg_params.refcnt);
-> +       }
->  }
->
->  static void free_memcg_params(struct rcu_head *rcu)
-> @@ -253,8 +256,6 @@ static void memcg_unlink_cache(struct kmem_cache *s)
->         } else {
->                 list_del(&s->memcg_params.children_node);
->                 list_del(&s->memcg_params.kmem_caches_node);
-> -               mem_cgroup_put(s->memcg_params.memcg);
-> -               WRITE_ONCE(s->memcg_params.memcg, NULL);
->         }
->  }
->  #else
-> --
-> 2.21.0
->
+wambui karuga
