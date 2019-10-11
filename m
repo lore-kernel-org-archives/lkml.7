@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD70C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F9FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6619214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB8E214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 01:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="kh+MDBuR"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="KRF0RDQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfJKBZS (ORCPT
+        id S1728420AbfJKBZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 21:25:18 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34962 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbfJKBYS (ORCPT
+        Thu, 10 Oct 2019 21:25:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37887 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728169AbfJKBYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:24:18 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v8so9964723wrt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:16 -0700 (PDT)
+        Thu, 10 Oct 2019 21:24:13 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f22so8514495wmc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 18:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=De+pNqwE3UZqGadaVX0hm3j7kjfrKO6HV/vQkFXaIGA=;
-        b=kh+MDBuR2cMEEXRCL7MtHQg0XwvwYvULoBh2CiV+BfEt1qHtE4R5PIpxV5qh50tHxI
-         s8OOlOtLXj0rl1qayiYvWCTwuKLD/zMztPRr319GGqt6ieaDk+5v//5EGrQSCWprnBEw
-         ry0rjX5HtK7w9AZ4hQy/LgMtAbg65ROB0r5XHnJMQNo1aYNFkPnTq9Z/GYncnCkQAbOb
-         qs3sCAH+OqBWN1DykGUDP/sOMiWFO55v97uQlY4J5McOzxXIKfLN6Q6WlvXkdYa0djMG
-         8oTlNGXZNxkce17+96jZs/U3ADtEkgzOJjMp8XO3gvlPiVWgLQNB6+kxvqvy7R/oUDGL
-         ZoGQ==
+        bh=NYMfxuYafYA15ogjer2QokPPquY/p6/+qp/AHoWSBKg=;
+        b=KRF0RDQW8fNf4SrQJ/BJe77i7hG/VBLhOnS1pS7U5xdnRZ127l5a7U8pa8wF/27xTt
+         V7m+VhiXUL8VvW3A89FP5ynREeyWGhn6DxVIO6OD7r22+3i7rtkUMNeGEvtZsldBXXQZ
+         UURRZDKzaodNRm7GDlSliJ1oJIoBe3p1Yq3z+83N+182BdZuRNFNfx5xgFMFJPOeFeaM
+         OrNmIPnWYZH/D9PAVEIfnPTBMAzqvsMs+8aim8fta2yioJMir3A7M2W1y+ZW/m3UZbps
+         Vf2g8szA/LZ4BkRxUOqmsQjIQfImg806W2wltGdeO+O6xTsj6YysJ9TzRXfTT84bCnlU
+         9q7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=De+pNqwE3UZqGadaVX0hm3j7kjfrKO6HV/vQkFXaIGA=;
-        b=tQAazoewnK0+YUKuCm/m5l6rySbThhy7qSLM7QWN6PMfVWinyjmczWnpr3nRYCXJi0
-         3zP+LN4Rb6SzXv3QJWy2DtzqMr50ix4kujuEof7AlZiFpeoOjgoUUhfDA3rmQdcyPN5j
-         lWhKJYXNC+IWiLc1qbEO5IOa8JngiKB/O3Pq1NeoF+PoXwmvw0sn06ETtEYEsgGOHk+5
-         jhIBtA5rimxN9ffEHsJInpxUPFFyfWB7RpKVZYUzAfnW5k75rSRKXfq+eX6ap5ZlswV9
-         SOhwKlAh4WV9nBM34Y1OVb4kOZ8l4BxoOd7tXfJgpeO83OrsJfdrTTQEteOcp2mxc4dj
-         Cdcw==
-X-Gm-Message-State: APjAAAWdlOLqxoLmbAnSsG3LTRKhaq7tyrjEFy1A8tYi/quR38OaY54k
-        sP+reA3pINW7ZuXyYPMOvFdBNRq01Qo=
-X-Google-Smtp-Source: APXvYqxlxEsNaMCSxRwB5Q6yar5uBDDb+T8Ish9/NlyPWlHuE70pidS2qCNn8dMtibacbxXdDKuXBw==
-X-Received: by 2002:adf:ec84:: with SMTP id z4mr10780854wrn.254.1570757055816;
-        Thu, 10 Oct 2019 18:24:15 -0700 (PDT)
+        bh=NYMfxuYafYA15ogjer2QokPPquY/p6/+qp/AHoWSBKg=;
+        b=DMpmHLThV4RlIHy0f0Kl77R3iGMNBrOEMHa+R+QvBohn57S2/6Qt0x26P/A+YmBtIq
+         oUnnk2cnJcGkzO2kNB80S/XAf8YLPCbuNxgs7++WLVMuZR4HvqPEXuFNVjFfa8ivREwS
+         XTPrflAqN6miELY2tRGw4nZhbsC4HU5q6fkQ1lB7EhfDutnNtvy5dOEwSgPEWpwdJ7W2
+         YaGi2ppGfyhCt2kXuqwlGD83ckjEj+jpObhpt+8JCqEfR11Ww6czCkJnR8VUxM2RapfI
+         nbbgLEnAhYdsx7XEijMfg7+80Uen6PNrA4XwfP0oHxE7vQ1+73M3tCR9YLwquxxPwzdG
+         lbjQ==
+X-Gm-Message-State: APjAAAVvZVhoCtlPTqe1nH2s+H6wpAHYWJR8riHQJR0MeFGWRwRaKRxm
+        F6PTwG8b+hS03rWETkNqcANdcr0lE28=
+X-Google-Smtp-Source: APXvYqzLSjse8Wf03RVf0lGrZ/pUjmmgECDppkbi+ynK/RnTDv4C5ECtxTzBn4dLKupFArlF53/QGw==
+X-Received: by 2002:a1c:f201:: with SMTP id s1mr895956wmc.59.1570757051151;
+        Thu, 10 Oct 2019 18:24:11 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:ea2:c100:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.14
+        by smtp.gmail.com with ESMTPSA id l13sm7699795wmj.25.2019.10.10.18.24.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 18:24:15 -0700 (PDT)
+        Thu, 10 Oct 2019 18:24:10 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -76,9 +76,9 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv7 20/33] x86/vdso: Provide vdso_data offset on vvar_page
-Date:   Fri, 11 Oct 2019 02:23:28 +0100
-Message-Id: <20191011012341.846266-21-dima@arista.com>
+Subject: [PATCHv7 17/33] x86/vdso: Restrict splitting VVAR VMA
+Date:   Fri, 11 Oct 2019 02:23:25 +0100
+Message-Id: <20191011012341.846266-18-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191011012341.846266-1-dima@arista.com>
 References: <20191011012341.846266-1-dima@arista.com>
@@ -89,111 +89,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VDSO support for Time namespace needs to set up a page with the same
-layout as VVAR. That timens page will be placed on position of VVAR page
-inside namespace. That page has vdso_data->seq set to 1 to enforce
-the slow path and vdso_data->clock_mode set to VCLOCK_TIMENS to enforce
-the time namespace handling path.
+Forbid splitting VVAR resulting in stricter ABI and reducing amount
+of corner-cases to consider while working further on VDSO.
 
-To prepare timens page kernel needs to know the vdso_data offset.
-Provide arch_get_vdso_data() helper for locating vdso_data on VVAR page.
+As offset from timens to VVAR page is computed compile-time,
+the pages in VVAR should stay together and not being partically
+mremap()'ed.
 
 Co-developed-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/entry/vdso/vdso-layout.lds.S |  2 --
- arch/x86/entry/vdso/vma.c             | 11 +++++++++++
- arch/x86/include/asm/vvar.h           |  8 ++++----
- arch/x86/kernel/vmlinux.lds.S         |  4 +---
- include/linux/time_namespace.h        |  1 +
- 5 files changed, 17 insertions(+), 9 deletions(-)
+ arch/x86/entry/vdso/vma.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
-index 93c6dc7812d0..2330daad67c3 100644
---- a/arch/x86/entry/vdso/vdso-layout.lds.S
-+++ b/arch/x86/entry/vdso/vdso-layout.lds.S
-@@ -21,9 +21,7 @@ SECTIONS
- 
- 	/* Place all vvars at the offsets in asm/vvar.h. */
- #define EMIT_VVAR(name, offset) vvar_ ## name = vvar_page + offset;
--#define __VVAR_KERNEL_LDS
- #include <asm/vvar.h>
--#undef __VVAR_KERNEL_LDS
- #undef EMIT_VVAR
- 
- 	pvclock_page = vvar_start + PAGE_SIZE;
 diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-index 000db8282cc8..5dab706aca2e 100644
+index f5937742b290..000db8282cc8 100644
 --- a/arch/x86/entry/vdso/vma.c
 +++ b/arch/x86/entry/vdso/vma.c
-@@ -24,6 +24,17 @@
- #include <asm/cpufeature.h>
- #include <clocksource/hyperv_timer.h>
+@@ -84,6 +84,18 @@ static int vdso_mremap(const struct vm_special_mapping *sm,
+ 	return 0;
+ }
  
-+#undef _ASM_X86_VVAR_H
-+#define EMIT_VVAR(name, offset)	\
-+	const size_t name ## _offset = offset;
-+#include <asm/vvar.h>
-+
-+struct vdso_data *arch_get_vdso_data(void *vvar_page)
++static int vvar_mremap(const struct vm_special_mapping *sm,
++		struct vm_area_struct *new_vma)
 +{
-+	return (struct vdso_data *)(vvar_page + _vdso_data_offset);
-+}
-+#undef EMIT_VVAR
++	unsigned long new_size = new_vma->vm_end - new_vma->vm_start;
++	const struct vdso_image *image = new_vma->vm_mm->context.vdso_image;
 +
- #if defined(CONFIG_X86_64)
- unsigned int __read_mostly vdso64_enabled = 1;
- #endif
-diff --git a/arch/x86/include/asm/vvar.h b/arch/x86/include/asm/vvar.h
-index 32f5d9a0b90e..ff2de3025388 100644
---- a/arch/x86/include/asm/vvar.h
-+++ b/arch/x86/include/asm/vvar.h
-@@ -19,10 +19,10 @@
- #ifndef _ASM_X86_VVAR_H
- #define _ASM_X86_VVAR_H
- 
--#if defined(__VVAR_KERNEL_LDS)
--
--/* The kernel linker script defines its own magic to put vvars in the
-- * right place.
-+#ifdef EMIT_VVAR
-+/*
-+ * EMIT_VVAR() is used by the kernel linker script to put vvars in the
-+ * right place. Also, it's used by kernel code to import offsets values.
-  */
- #define DECLARE_VVAR(offset, type, name) \
- 	EMIT_VVAR(name, offset)
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index e2feacf921a0..ca02d0d301cd 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -195,12 +195,10 @@ SECTIONS
- 		__vvar_beginning_hack = .;
- 
- 		/* Place all vvars at the offsets in asm/vvar.h. */
--#define EMIT_VVAR(name, offset) 			\
-+#define EMIT_VVAR(name, offset)				\
- 		. = __vvar_beginning_hack + offset;	\
- 		*(.vvar_ ## name)
--#define __VVAR_KERNEL_LDS
- #include <asm/vvar.h>
--#undef __VVAR_KERNEL_LDS
- #undef EMIT_VVAR
- 
- 		/*
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index 9a77d3854830..772911945944 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -37,6 +37,7 @@ extern struct time_namespace *copy_time_ns(unsigned long flags,
- 	struct user_namespace *user_ns, struct time_namespace *old_ns);
- extern void free_time_ns(struct kref *kref);
- extern int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk);
-+extern struct vdso_data *arch_get_vdso_data(void *vvar_page);
- 
- static inline void put_time_ns(struct time_namespace *ns)
++	if (new_size != -image->sym_vvar_start)
++		return -EINVAL;
++
++	return 0;
++}
++
+ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+ 		      struct vm_area_struct *vma, struct vm_fault *vmf)
  {
+@@ -136,6 +148,7 @@ static const struct vm_special_mapping vdso_mapping = {
+ static const struct vm_special_mapping vvar_mapping = {
+ 	.name = "[vvar]",
+ 	.fault = vvar_fault,
++	.mremap = vvar_mremap,
+ };
+ 
+ /*
 -- 
 2.23.0
 
