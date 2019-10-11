@@ -2,114 +2,89 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE90C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90364ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03ED0206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:56:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Orbrf0ev"
+	by mail.kernel.org (Postfix) with ESMTP id 5F163206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 12:58:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570798723;
+	bh=t8zfNEIofHvVu2Wei3y+UkR0jiiJAB6OS6pOU28U8nk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i6/9j2cPqGXrYs1gMerAkXOMnKJS3x6qrlE6P2bXzgQVkGGQF/fzMyjvB4iKHrr02
+	 SupoKtsaA68WJdCDHhyXrLwRy/bFKJkLqIie1HqnK0PZVYCP/Zc6UenF9gP2OBpPdU
+	 bWbPv+v4pJLzZjW9mYwRIQKOkeqWY21ZunMKZPPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfJKM44 (ORCPT
+        id S1728132AbfJKM6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 08:56:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40079 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfJKM4z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 08:56:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 7so9720199ljw.7
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 05:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=E/20N0oOaK1PRtwkpvzYq7XZer2TObH45wVnwVdQ6HQ=;
-        b=Orbrf0evJaoUxR6P1zA+qWvxnaTrmaKN8kPaxsH51BF0CuWtiU81HR95mLNlB+7sNf
-         1K3ZBZJpFsWWmVVWsxi81lEB+EFpHW9GZZtZJa85B9Rybr8F+TvNzWRscnFI/DJ/beig
-         daopA6DSBWUBqyLxZUcezSIV1339lxFnq7jhkEoMGcMg4TMQ9KUC70OClIPb7CPiA7wc
-         2fVFrsNV32zvUxUc+mEX63KQgutG7HJyZedZVrQ4Cr2p5GRMHSKukM/d+emDeOLXO+KF
-         BX1NI5xqrqCMV4Pbxl68Lp2yZxmkXWEikWJGsMZlLFyGucmF5q4aMiLCR2sqzPaS2NYh
-         dSMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=E/20N0oOaK1PRtwkpvzYq7XZer2TObH45wVnwVdQ6HQ=;
-        b=WHBDbapkiPz1oTbxhCworSYLcrPf0vXHYbiY7GBm6oMkDg6uYbVV9614peB8T1M4yc
-         VSFf3Dm169HT1ko9reTnOXh4+wYSyN/uUb+9GEBDKRlHK0KdbpQ1UeGozj8C55wm9rTp
-         HJMlCxODOldRxOkiXz0idatatU9im5jEtR8SGxwWGG76c8H7Toi4yHrdpz1yrnwIViBb
-         ShnJxVyV+8BaxI87Q0Cz2xVhJHiUlSmklsVE//68PhECgIcYDQeHuYU2IefFY8fms0d5
-         kEefcSt/mYXI7SeP7oUJPo2P4nMUyAnCFg7PfmijeRl7LSE6yHfsMThXDTMFdN9UKN8+
-         K6vA==
-X-Gm-Message-State: APjAAAXGFZshbL6rzJ+pzBwE7AtM93el2xBNVucoRd1brNu+yhw7hBB3
-        ggdhqhW6MB03RWl+Le8LhTTjDw==
-X-Google-Smtp-Source: APXvYqyIbS9Uz3soVljm82VN98x/dEB9BbBFJrjsGBWNNEQiPcY9SjJAJZ5NbYusdNCvYEMZWzN2hg==
-X-Received: by 2002:a2e:9bd2:: with SMTP id w18mr9291581ljj.140.1570798613448;
-        Fri, 11 Oct 2019 05:56:53 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id z128sm2004741lfa.1.2019.10.11.05.56.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 05:56:52 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 0043D102DC1; Fri, 11 Oct 2019 15:56:52 +0300 (+03)
-Date:   Fri, 11 Oct 2019 15:56:52 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        torvalds@linux-foundation.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>
-Subject: Re: [PATCH v5 2/8] mm: pagewalk: Take the pagetable lock in
- walk_pte_range()
-Message-ID: <20191011125652.2b7ptnyeeso4qwwj@box>
-References: <20191010124314.40067-1-thomas_os@shipmail.org>
- <20191010124314.40067-3-thomas_os@shipmail.org>
+        Fri, 11 Oct 2019 08:58:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727589AbfJKM6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 08:58:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 269D5206A1;
+        Fri, 11 Oct 2019 12:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570798721;
+        bh=t8zfNEIofHvVu2Wei3y+UkR0jiiJAB6OS6pOU28U8nk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ABi5DAe/Y/Zm2p+Az41NPnPFW40sWPwWL6y2DC5HHkt0MfQDMdM471JGaeTpAulXs
+         KvOQeEaxNV1d0OiyF8pQTqAHlRCTtRr8lH6r9rn+PpUyCgW3IZojC+Ed+0pPD0/CAQ
+         iHTMg43O0JHi/bsoqEiIUj7Es0UIHs7BrZ6i2Hh8=
+Date:   Fri, 11 Oct 2019 14:58:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 4.19 082/114] powerpc/book3s64/radix: Rename
+ CPU_FTR_P9_TLBIE_BUG feature flag
+Message-ID: <20191011125838.GA1147624@kroah.com>
+References: <20191010083544.711104709@linuxfoundation.org>
+ <20191010083612.352065837@linuxfoundation.org>
+ <20191011112106.GA28994@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191010124314.40067-3-thomas_os@shipmail.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191011112106.GA28994@amd>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 02:43:08PM +0200, Thomas Hellström (VMware) wrote:
-> From: Thomas Hellstrom <thellstrom@vmware.com>
+On Fri, Oct 11, 2019 at 01:21:06PM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> Without the lock, anybody modifying a pte from within this function might
-> have it concurrently modified by someone else.
+> > From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> > 
+> > Rename the #define to indicate this is related to store vs tlbie
+> > ordering issue. In the next patch, we will be adding another feature
+> > flag that is used to handles ERAT flush vs tlbie ordering issue.
+> > 
+> > Fixes: a5d4b5891c2f ("powerpc/mm: Fixup tlbie vs store ordering issue on POWER9")
+> > Cc: stable@vger.kernel.org # v4.16+
+> > Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> > Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> > Link:
+> > https://lore.kernel.org/r/20190924035254.24612-2-aneesh.kumar@linux.ibm.com
 > 
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Apparently this is upstream commit
+> 09ce98cacd51fcd0fa0af2f79d1e1d3192f4cbb0 , but the changelog does not
+> say so.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Yeah, somehow when Sasha backported this, he didn't add that :(
 
--- 
- Kirill A. Shutemov
+Nor did he add his signed-off-by :(
+
+I'll go fix it up and add mine, thanks for noticing it.
+
+greg k-h
