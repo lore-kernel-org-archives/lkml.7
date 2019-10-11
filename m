@@ -2,240 +2,120 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37785ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77488C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068A3206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dPoarHUs"
+	by mail.kernel.org (Postfix) with ESMTP id 5A83421D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfJKNMx (ORCPT
+        id S1728444AbfJKNM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:12:53 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7290 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727950AbfJKNMx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:12:53 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BD6kEj021870;
-        Fri, 11 Oct 2019 15:12:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=yHfi3HY0Dx0zI0TYh25CPOFtlp/IAVFsBZ0iGOQeTBA=;
- b=dPoarHUsPogZegM+gcEP3rgmifnOLuQNkLwQFyF0GhXD1EK/FUSr/9PNlxBp5WKXXC+l
- l+xu53QxA57RQ6JlFQo64U2K4stDLSy19zQuBB+ucDIj8/2fe/aoi0hWufpY/Rlh28Vs
- wzTbN8ANVUvwhWncH5yfIhkbuxIvhjk5gRiDFn5O1vuPm+kMRksA5bRcEAniz2MonyL/
- eZuglXWoKkMwTXLX4AL+3QisXR9UbciTQwKHkZh0lg2qESFRs2NMd6o5naehCtIdsK94
- CEkXQpfdFiVGufhPU5e8onN9kOFZVInpC9ZnkZCwO+BnJcBlB6eNDoHJPbBerwAF5+Sv pw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vegxw9xuf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 15:12:39 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 83D2610002A;
-        Fri, 11 Oct 2019 15:12:39 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 75D112BEC5F;
-        Fri, 11 Oct 2019 15:12:39 +0200 (CEST)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 11 Oct
- 2019 15:12:39 +0200
-Received: from localhost (10.201.20.122) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 11 Oct 2019 15:12:38
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <mchehab@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <hverkuil-cisco@xs4all.nl>,
-        <hugues.fruchet@st.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2] dt-bindings: media: Convert stm32 dcmi bindings to json-schema
-Date:   Fri, 11 Oct 2019 15:12:34 +0200
-Message-ID: <20191011131234.24290-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20191011131234.24290-1-benjamin.gaignard@st.com>
-References: <20191011131234.24290-1-benjamin.gaignard@st.com>
+        Fri, 11 Oct 2019 09:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728404AbfJKNM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 09:12:56 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A38B9206A1;
+        Fri, 11 Oct 2019 13:12:55 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 09:12:54 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC][PATCH] kprobes/x86: While list ftrace locations in kprobe
+ blacklist areas
+Message-ID: <20191011091254.3c4dd543@gandalf.local.home>
+In-Reply-To: <20191011173929.9462a1414ff3a94ec93d6e98@kernel.org>
+References: <20191010175216.4ceb3cf1@gandalf.local.home>
+        <20191011173929.9462a1414ff3a94ec93d6e98@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-11_08:2019-10-10,2019-10-11 signatures=0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 dcmi binding to DT schema format using json-schema
+On Fri, 11 Oct 2019 17:39:29 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-changes in v2:
-- use BSD-2-Clause license
-- remove useless dma descriptions
-- fix clock property
-- add additionalProperties: false
-- fix reset indentation
+> Hi Steve,
+> 
+> On Thu, 10 Oct 2019 17:52:16 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > 
+> > I noticed some of my old tests failing on kprobes, and realized that
+> > this was due to black listing irq_entry functions on x86 from being
+> > used by kprobes. IIRC, this was due to the cr2 being corrupted and
+> > such, and I believe other things were to cause. But black listing all
+> > irq_entry code is a big hammer to this.  
+> 
+> OK, I think if we can use ftrace for hooking, probing on "that address"
+> is good, but the function body still can not be probed.
+> 
+> > 
+> >  (See commit 0eae81dc9f026 "x86/kprobes: Prohibit probing on IRQ
+> >  handlers directly" for more details)
+> > 
+> > Anyway, if kprobes is using ftrace as a hook, there shouldn't be any
+> > problems here. If we white list ftrace locations in the range of
+> > kprobe_add_area_blacklist(), it should be safe.  
+> 
+> Agreed.
+> 
+> > 
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index d9770a5393c8..9d28a279282c 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -2124,6 +2124,11 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
+> >  	int ret = 0;
+> >  
+> >  	for (entry = start; entry < end; entry += ret) {
+> > +#ifdef CONFIG_KPROBES_ON_FTRACE
+> > +		/* We are safe if using ftrace */
+> > +		if (ftrace_location(entry))
+> > +			continue;
+> > +#endif  
+> 
+> Have you tested the patch? it doesn't measure the entry function's size.
+> (kprobe_add_ksym_blacklist(entry) returns the function size)
 
- .../devicetree/bindings/media/st,stm32-dcmi.txt    | 45 -----------
- .../devicetree/bindings/media/st,stm32-dcmi.yaml   | 86 ++++++++++++++++++++++
- 2 files changed, 86 insertions(+), 45 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
- create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+Yeah, I tested the patch, but it is obviously buggy. It fixed the issue
+I was having (was able to test against do_IRQ ;-)
 
-diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-deleted file mode 100644
-index 3122ded82eb4..000000000000
---- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--STMicroelectronics STM32 Digital Camera Memory Interface (DCMI)
--
--Required properties:
--- compatible: "st,stm32-dcmi"
--- reg: physical base address and length of the registers set for the device
--- interrupts: should contain IRQ line for the DCMI
--- resets: reference to a reset controller,
--          see Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
--- clocks: list of clock specifiers, corresponding to entries in
--          the clock-names property
--- clock-names: must contain "mclk", which is the DCMI peripherial clock
--- pinctrl: the pincontrol settings to configure muxing properly
--           for pins that connect to DCMI device.
--           See Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml.
--- dmas: phandle to DMA controller node,
--        see Documentation/devicetree/bindings/dma/stm32-dma.txt
--- dma-names: must contain "tx", which is the transmit channel from DCMI to DMA
--
--DCMI supports a single port node with parallel bus. It should contain one
--'port' child node with child 'endpoint' node. Please refer to the bindings
--defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Example:
--
--	dcmi: dcmi@50050000 {
--		compatible = "st,stm32-dcmi";
--		reg = <0x50050000 0x400>;
--		interrupts = <78>;
--		resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
--		clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
--		clock-names = "mclk";
--		pinctrl-names = "default";
--		pinctrl-0 = <&dcmi_pins>;
--		dmas = <&dma2 1 1 0x414 0x3>;
--		dma-names = "tx";
--		port {
--			dcmi_0: endpoint {
--				remote-endpoint = <...>;
--				bus-width = <8>;
--				hsync-active = <0>;
--				vsync-active = <0>;
--				pclk-sample = <1>;
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-new file mode 100644
-index 000000000000..272827342ee2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/st,stm32-dcmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 Digital Camera Memory Interface (DCMI) binding
-+
-+maintainers:
-+  - Hugues Fruchet <hugues.fruchet@st.com>
-+
-+properties:
-+  compatible:
-+    const: st,stm32-dcmi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: mclk
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+
-+  resets:
-+    maxItems: 1
-+
-+  port:
-+    type: object
-+    description:
-+      DCMI supports a single port node with parallel bus. It should contain
-+      one 'port' child node with child 'endpoint' node. Please refer to the
-+      bindings defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - resets
-+  - dmas
-+  - dma-names
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    dcmi: dcmi@4c006000 {
-+        compatible = "st,stm32-dcmi";
-+        reg = <0x4c006000 0x400>;
-+        interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+        resets = <&rcc CAMITF_R>;
-+        clocks = <&rcc DCMI>;
-+        clock-names = "mclk";
-+        dmas = <&dmamux1 75 0x400 0x0d>;
-+        dma-names = "tx";
-+
-+        port {
-+             dcmi_0: endpoint {
-+                   remote-endpoint = <&ov5640_0>;
-+                   bus-width = <8>;
-+                   hsync-active = <0>;
-+                   vsync-active = <0>;
-+                   pclk-sample = <1>;
-+             };
-+        };
-+    };
-+
-+...
--- 
-2.15.0
+> 
+> Could you do this in kprobe_add_ksym_blacklist()?
+> Instead of continue, increment ent->start_addr by MCOUNT size(?) will be OK.
+> (Note that since each blacklist symbol is managed independently, you can make
+>  a "gap" between them as a safe area)
+
+OK, I'll move it to kprobe_add_ksym_blacklist.
+
+-- Steve
+
+> 
+> Thank you,
+> 
+> >  		ret = kprobe_add_ksym_blacklist(entry);
+> >  		if (ret < 0)
+> >  			return ret;  
+> 
+> 
 
