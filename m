@@ -2,120 +2,156 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2DBC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651C7ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0DE20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34ED220679
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfJKJvt (ORCPT
+        id S1727695AbfJKJyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:51:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49410 "EHLO mx1.redhat.com"
+        Fri, 11 Oct 2019 05:54:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50948 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbfJKJvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:51:49 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1726585AbfJKJyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 05:54:03 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AF53A8980E9;
-        Fri, 11 Oct 2019 09:51:48 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5D19618C8902;
+        Fri, 11 Oct 2019 09:54:02 +0000 (UTC)
 Received: from [10.36.118.168] (unknown [10.36.118.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BE58600C4;
-        Fri, 11 Oct 2019 09:51:47 +0000 (UTC)
-Subject: Re: [PATCH v1] drivers/base/memory.c: Don't access uninitialized
- memmaps in soft_offline_page_store()
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 84D1A6092F;
+        Fri, 11 Oct 2019 09:53:58 +0000 (UTC)
+Subject: Re: [PATCH v1] mm: Fix access of uninitialized memmaps in
+ fs/proc/page.c
 To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>, Qian Cai <cai@lca.pw>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
         Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191010141200.8985-1-david@redhat.com>
- <20191011061335.GA30803@hori.linux.bs1.fc.nec.co.jp>
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <20191009091205.11753-1-david@redhat.com>
+ <20191009095721.GC20971@hori.linux.bs1.fc.nec.co.jp>
+ <f0fcdacc-814b-49d6-78da-beeb1fa6b67a@redhat.com>
+ <20191011001124.GA17127@hori.linux.bs1.fc.nec.co.jp>
+ <20191011005042.GB18881@hori.linux.bs1.fc.nec.co.jp>
 From:   David Hildenbrand <david@redhat.com>
 Organization: Red Hat GmbH
-Message-ID: <2937e23d-0f27-a99c-f661-b3fe326494ca@redhat.com>
-Date:   Fri, 11 Oct 2019 11:51:46 +0200
+Message-ID: <21d97a65-aa66-75ee-9c63-b5a3dad13b43@redhat.com>
+Date:   Fri, 11 Oct 2019 11:53:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <20191011061335.GA30803@hori.linux.bs1.fc.nec.co.jp>
+In-Reply-To: <20191011005042.GB18881@hori.linux.bs1.fc.nec.co.jp>
 Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 11 Oct 2019 09:51:48 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Fri, 11 Oct 2019 09:54:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.10.19 08:13, Naoya Horiguchi wrote:
-> On Thu, Oct 10, 2019 at 04:12:00PM +0200, David Hildenbrand wrote:
->> Uninitialized memmaps contain garbage and in the worst case trigger kernel
->> BUGs, especially with CONFIG_PAGE_POISONING. They should not get
->> touched.
+On 11.10.19 02:50, Naoya Horiguchi wrote:
+> On Fri, Oct 11, 2019 at 12:11:25AM +0000, Horiguchi Naoya(堀口 直也) wrote:
+>> On Thu, Oct 10, 2019 at 09:30:01AM +0200, David Hildenbrand wrote:
+>>> On 09.10.19 11:57, Naoya Horiguchi wrote:
+>>>> Hi David,
+>>>>
+>>>> On Wed, Oct 09, 2019 at 11:12:04AM +0200, David Hildenbrand wrote:
+>>>>> There are various places where we access uninitialized memmaps, namely:
+>>>>> - /proc/kpagecount
+>>>>> - /proc/kpageflags
+>>>>> - /proc/kpagecgroup
+>>>>> - memory_failure() - which reuses stable_page_flags() from fs/proc/page.c
+>>>>
+>>>> Ah right, memory_failure is another victim of this bug.
+>>>>
+>>>>>
+>>>>> We have initialized memmaps either when the section is online or when
+>>>>> the page was initialized to the ZONE_DEVICE. Uninitialized memmaps contain
+>>>>> garbage and in the worst case trigger kernel BUGs, especially with
+>>>>> CONFIG_PAGE_POISONING.
+>>>>>
+>>>>> For example, not onlining a DIMM during boot and calling /proc/kpagecount
+>>>>> with CONFIG_PAGE_POISONING:
+>>>>> :/# cat /proc/kpagecount > tmp.test
+>>>>> [   95.600592] BUG: unable to handle page fault for address: fffffffffffffffe
+>>>>> [   95.601238] #PF: supervisor read access in kernel mode
+>>>>> [   95.601675] #PF: error_code(0x0000) - not-present page
+>>>>> [   95.602116] PGD 114616067 P4D 114616067 PUD 114618067 PMD 0
+>>>>> [   95.602596] Oops: 0000 [#1] SMP NOPTI
+>>>>> [   95.602920] CPU: 0 PID: 469 Comm: cat Not tainted 5.4.0-rc1-next-20191004+ #11
+>>>>> [   95.603547] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
+>>>>> [   95.604521] RIP: 0010:kpagecount_read+0xce/0x1e0
+>>>>> [   95.604917] Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 e7 48 c1 e7 06 48 03 3d ab 51 01 01 74 1d 48 8b 57 08 480
+>>>>> [   95.606450] RSP: 0018:ffffa14e409b7e78 EFLAGS: 00010202
+>>>>> [   95.606904] RAX: fffffffffffffffe RBX: 0000000000020000 RCX: 0000000000000000
+>>>>> [   95.607519] RDX: 0000000000000001 RSI: 00007f76b5595000 RDI: fffff35645000000
+>>>>> [   95.608128] RBP: 00007f76b5595000 R08: 0000000000000001 R09: 0000000000000000
+>>>>> [   95.608731] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
+>>>>> [   95.609327] R13: 0000000000020000 R14: 00007f76b5595000 R15: ffffa14e409b7f08
+>>>>> [   95.609924] FS:  00007f76b577d580(0000) GS:ffff8f41bd400000(0000) knlGS:0000000000000000
+>>>>> [   95.610599] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>> [   95.611083] CR2: fffffffffffffffe CR3: 0000000078960000 CR4: 00000000000006f0
+>>>>> [   95.611686] Call Trace:
+>>>>> [   95.611906]  proc_reg_read+0x3c/0x60
+>>>>> [   95.612228]  vfs_read+0xc5/0x180
+>>>>> [   95.612505]  ksys_read+0x68/0xe0
+>>>>> [   95.612785]  do_syscall_64+0x5c/0xa0
+>>>>> [   95.613092]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>>>>
+>>>>> Note that there are still two possible races as far as I can see:
+>>>>> - pfn_to_online_page() succeeding but the memory getting offlined and
+>>>>>    removed. get_online_mems() could help once we run into this.
+>>>>> - pfn_zone_device() succeeding but the memmap not being fully
+>>>>>    initialized yet. As the memmap is initialized outside of the memory
+>>>>>    hoptlug lock, get_online_mems() can't help.
+>>>>>
+>>>>> Let's keep the existing interfaces working with ZONE_DEVICE memory. We
+>>>>> can later come back and fix these rare races and eventually speed-up the
+>>>>> ZONE_DEVICE detection.
+>>>>
+>>>> Actually, Toshiki is writing code to refactor and optimize the pfn walking
+>>>> part, where we find the pfn ranges covered by zone devices by running over
+>>>> xarray pgmap_array and use the range info to reduce pointer dereferences
+>>>> to speed up pfn walk. I hope he will share it soon.
+>>>
+>>> AFAIKT, Michal is not a friend of special-casing PFN walkers in that
+>>> way. We should have a mechanism to detect if a memmap was initialized
+>>> without having to go via pgmap, special-casing. See my other mail where
+>>> I draft one basic approach.
 >>
->> Right now, when trying to soft-offline a PFN that resides on a memory
->> block that was never onlined, one gets a misleading error with
->> CONFIG_PAGE_POISONING:
->>    :/# echo 5637144576 > /sys/devices/system/memory/soft_offline_page
->>    [   23.097167] soft offline: 0x150000 page already poisoned
->>
->> But the actual result depends on the garbage in the memmap.
->>
->> soft_offline_page() can only work with online pages, it returns -EIO in
->> case of ZONE_DEVICE. Make sure to only forward pages that are online
->> (iow, managed by the buddy) and, therefore, have an initialized memmap.
->>
->> Add a check against pfn_to_online_page() and similarly return -EIO.
->>
->> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>   drivers/base/memory.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->> index 6bea4f3f8040..55907c27075b 100644
->> --- a/drivers/base/memory.c
->> +++ b/drivers/base/memory.c
->> @@ -540,6 +540,9 @@ static ssize_t soft_offline_page_store(struct device *dev,
->>   	pfn >>= PAGE_SHIFT;
->>   	if (!pfn_valid(pfn))
->>   		return -ENXIO;
->> +	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
->> +	if (!pfn_to_online_page(pfn))
->> +		return -EIO;
+>> OK, so considering your v2 approach, we could have another pfn_to_page()
+>> variant like pfn_to_zone_device_page(), where we check that a given pfn
+>> belongs to the memory section backed by zone memory, then another check if
+>> the pfn has initialized memmap or not, and return NULL if memmap not
+>> initialied.  We'll try this approach then, but if you find problems/concerns,
+>> please let me know.
 > 
-> Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> 
-> I think this check could be placed in soft_offline_page(), but that requires
-> a few more unrelated lines of changes due to the mismatch on type of parameter
-> between memory_failure() and soft_offline_page(),  This is not your problem,
-> and I plan to do some cleanup on related interfaces, so this patch is fine.
+> Sorry, you already mentioned detail here,
+> https://lore.kernel.org/lkml/c6198acd-8ff7-c40c-cb4e-f0f12f841b38@redhat.com/
 > 
 
-Thanks,
-
-well I think when you come via madvise(), you are always guaranteed to  
-hold a reasonable page in your hands. Only when converting from  
-arbitrary pfns, we have to watch out. But yeah, feel free to cc me on  
-cleanups :)
-
-> - Naoya Horiguchi
-> 
-
+I'm planning on sending a proper writeup of the overall approach and  
+pitfalls maybe next week. Feel free to ping me in case I forget.
 
 -- 
 
