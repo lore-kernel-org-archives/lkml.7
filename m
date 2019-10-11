@@ -2,54 +2,55 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A77C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44754C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3E721D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F3521929
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WAsHYQaw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lj7QNKSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfJKANB (ORCPT
+        id S1727806AbfJKANF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:13:01 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36997 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727628AbfJKAM7 (ORCPT
+        Thu, 10 Oct 2019 20:13:05 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35527 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbfJKANC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:12:59 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so4959444pfo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:12:58 -0700 (PDT)
+        Thu, 10 Oct 2019 20:13:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p30so4707797pgl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:13:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BONbSwO3yUZE8RnSGxOUsa1O5SfUej1bEo+UUtcRz+8=;
-        b=WAsHYQawMi4SZmZgp8/tZRHbrTyjaN/efP/1ePAdIKhuzenhHAkQSemi72oSFyzy5T
-         BUP8VJmLQCYcSjbNgTQmhLF0rh39giv7Aj/ab5NbcDAnNRa5xqPwvle+ummM9Ru1MTnT
-         6FSY7l03L75U7xLgPLADUTO/JJnoTeuiDWO4o=
+        bh=CyoXOdP2RSQBzcYa2ar7sJXCOKRhNFJ5bhxtCWldzm0=;
+        b=Lj7QNKSFAWUpBfpzOt7+g6iG1nZwQWiy2Yx2COX4rHzLDwe7zAeBtuvEmbHCBjMdVS
+         f7OItuAMoBx4ANIxisnsIuIzLX/n/2wSchdTwd5gBy79nJpGqvgOWz8QIjj/yjSDeyUu
+         Nk/yU3k7rraRoC3ReBbUSn8UR29/tNR/sk7J8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=BONbSwO3yUZE8RnSGxOUsa1O5SfUej1bEo+UUtcRz+8=;
-        b=jFq0mZguAUpmm4tFkDE8XFgLJKWP9iEq6hvV95KYEzPK63ktZc6Yy9BEINKJHLpZov
-         VOtRn/oSBo5wQfIcCMDl+X/7jlYMwdLmVE6dZlDV1OCJaskx5pMKMOp1PQkBF6K87XSx
-         FCsbBun2t/Gx2TjlOVTVzGlts0mrMHm5zlYDtN+/XdEMXZgullTiVogvALoTq7MiYJBl
-         I/jg0C4cTO8TDGWhLQe6fZzvys8wZH28WgPXALkF/81QvedwEPKkP2LFd3XrnXh/D7xI
-         TIziNaSrzVZ4/QylddcYJLLdGdKrFEEOAkt6UH6tbw+1A3ipY8qtcEqBfZoLBoshd8av
-         trJg==
-X-Gm-Message-State: APjAAAURDMG4KLiLhW9h9SQeTNEk3pafMGasNbsTPiMgyqeEBrjZh4pE
-        KdMSeapn9xqYD2mN8ofx1oEL0w==
-X-Google-Smtp-Source: APXvYqxI99kv+xtRG2LlmRclYNJDw1iNLuQgHN4M3GLkprM+ZRb8jXZUnF9huFcBlH1wmB6a5xQwdw==
-X-Received: by 2002:a62:5284:: with SMTP id g126mr13294604pfb.95.1570752778224;
-        Thu, 10 Oct 2019 17:12:58 -0700 (PDT)
+        bh=CyoXOdP2RSQBzcYa2ar7sJXCOKRhNFJ5bhxtCWldzm0=;
+        b=ZoPCYawjfugPQ2NXcK+Ni8m4WpMFFvexZ5+VlelVR2Zrs+uh1DZ2fgVT5kIrpFCyik
+         aeDSmVZzMGsXXjdBwqXhYdVVWqu1QtJ3BmhnxYpcIOxFKWm2Zyc4Ld9jOzCz5z8cKAEY
+         gLTH63Q0rqA7WRj8/IFUzM7rMXSR2cCkIWVWM1pgWhq4E8IkcqitNmqFhC5X2z9TFYMD
+         xDKz9Hf/ef9SO96n9UkV+zRlEyvZe2c5zUihzotJM3++zrB8PrixkXasDbUuGrTFEbRb
+         CS6ZqPCaDFWknPvQY4S9zMcV6W4DHuxwCzn8CeFfmmjRUVzsDONypCsjDzDBYa93bgUy
+         f7Vg==
+X-Gm-Message-State: APjAAAWQNQkgYdRTqL+iBbjZzeqESiXkoAEhz7PLRvE0mmGs/aBQMtUd
+        C+1etEIMch2Ep9cZKHhvpiq+TkNVRb8=
+X-Google-Smtp-Source: APXvYqzvlppGYfKVE9ugq/bM5vvDAuSQD7dhWwgiw+2wssyvKHG8+r3B0+BR11AxbHRgVxFlF3OFFg==
+X-Received: by 2002:aa7:9907:: with SMTP id z7mr13951279pff.192.1570752781298;
+        Thu, 10 Oct 2019 17:13:01 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d5sm5379454pjw.31.2019.10.10.17.12.53
+        by smtp.gmail.com with ESMTPSA id t12sm5458788pjq.18.2019.10.10.17.12.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 10 Oct 2019 17:12:56 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -70,9 +71,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 21/29] ia64: Move EXCEPTION_TABLE to RO_DATA segment
-Date:   Thu, 10 Oct 2019 17:06:01 -0700
-Message-Id: <20191011000609.29728-22-keescook@chromium.org>
+Subject: [PATCH v2 27/29] x86/mm: Report which part of kernel image is freed
+Date:   Thu, 10 Oct 2019 17:06:07 -0700
+Message-Id: <20191011000609.29728-28-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191011000609.29728-1-keescook@chromium.org>
 References: <20191011000609.29728-1-keescook@chromium.org>
@@ -81,33 +82,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the EXCEPTION_TABLE is read-only, collapse it into RO_DATA.
+The memory freeing report wasn't very useful for figuring out which
+parts of the kernel image were being freed. Add the details for clearer
+reporting in dmesg.
+
+Before:
+
+[    2.150450] Freeing unused kernel image memory: 1348K
+[    2.154574] Write protecting the kernel read-only data: 20480k
+[    2.157641] Freeing unused kernel image memory: 2040K
+[    2.158827] Freeing unused kernel image memory: 172K
+
+After:
+
+[    2.329678] Freeing unused kernel image (initmem) memory: 1348K
+[    2.331953] Write protecting the kernel read-only data: 20480k
+[    2.335361] Freeing unused kernel image (text/rodata gap) memory: 2040K
+[    2.336927] Freeing unused kernel image (rodata/data gap) memory: 172K
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/ia64/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/processor.h | 2 +-
+ arch/x86/mm/init.c               | 8 ++++----
+ arch/x86/mm/init_64.c            | 6 ++++--
+ 3 files changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/arch/ia64/kernel/vmlinux.lds.S b/arch/ia64/kernel/vmlinux.lds.S
-index 11d5115bc44d..1ec6b703c5b4 100644
---- a/arch/ia64/kernel/vmlinux.lds.S
-+++ b/arch/ia64/kernel/vmlinux.lds.S
-@@ -6,6 +6,7 @@
- #include <asm/thread_info.h>
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 6e0a3b43d027..790f250d39a8 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -958,7 +958,7 @@ static inline uint32_t hypervisor_cpuid_base(const char *sig, uint32_t leaves)
  
- #define EMITS_PT_NOTE
-+#define RO_EXCEPTION_TABLE_ALIGN	16
+ extern unsigned long arch_align_stack(unsigned long sp);
+ void free_init_pages(const char *what, unsigned long begin, unsigned long end);
+-extern void free_kernel_image_pages(void *begin, void *end);
++extern void free_kernel_image_pages(const char *what, void *begin, void *end);
  
- #include <asm-generic/vmlinux.lds.h>
+ void default_idle(void);
+ #ifdef	CONFIG_XEN
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index fd10d91a6115..e7bb483557c9 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -829,14 +829,13 @@ void free_init_pages(const char *what, unsigned long begin, unsigned long end)
+  * used for the kernel image only.  free_init_pages() will do the
+  * right thing for either kind of address.
+  */
+-void free_kernel_image_pages(void *begin, void *end)
++void free_kernel_image_pages(const char *what, void *begin, void *end)
+ {
+ 	unsigned long begin_ul = (unsigned long)begin;
+ 	unsigned long end_ul = (unsigned long)end;
+ 	unsigned long len_pages = (end_ul - begin_ul) >> PAGE_SHIFT;
  
-@@ -70,7 +71,6 @@ SECTIONS {
+-
+-	free_init_pages("unused kernel image", begin_ul, end_ul);
++	free_init_pages(what, begin_ul, end_ul);
+ 
  	/*
- 	 * Read-only data
- 	 */
--	EXCEPTION_TABLE(16)
+ 	 * PTI maps some of the kernel into userspace.  For performance,
+@@ -865,7 +864,8 @@ void __ref free_initmem(void)
  
- 	/* MCA table */
- 	. = ALIGN(16);
+ 	mem_encrypt_free_decrypted_mem();
+ 
+-	free_kernel_image_pages(&__init_begin, &__init_end);
++	free_kernel_image_pages("unused kernel image (initmem)",
++				&__init_begin, &__init_end);
+ }
+ 
+ #ifdef CONFIG_BLK_DEV_INITRD
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index e67ddca8b7a8..dcb9bc961b39 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1334,8 +1334,10 @@ void mark_rodata_ro(void)
+ 	set_memory_ro(start, (end-start) >> PAGE_SHIFT);
+ #endif
+ 
+-	free_kernel_image_pages((void *)text_end, (void *)rodata_start);
+-	free_kernel_image_pages((void *)rodata_end, (void *)_sdata);
++	free_kernel_image_pages("unused kernel image (text/rodata gap)",
++				(void *)text_end, (void *)rodata_start);
++	free_kernel_image_pages("unused kernel image (rodata/data gap)",
++				(void *)rodata_end, (void *)_sdata);
+ 
+ 	debug_checkwx();
+ }
 -- 
 2.17.1
 
