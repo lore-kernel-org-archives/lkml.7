@@ -2,88 +2,134 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A9DC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A0CECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB58206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570803984;
-	bh=SHvMCO37/GiqJDDWH3KVyMHOaT3c4+xepf3IfRJhWAI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KmiVrSzmDWgIkhN9IudZjtQJd5jJjZ3RTXMYr8u4w0/5jso1HhIU9K+l9KeyLs/Hd
-	 htBF2ezEbpAHn0rzZvkt3082unkO952eeaa3X5GeG1D0MwVr/CVRFasZ8DEDMr9k8c
-	 hejqACAGkpmsNNid8KTweOvrv0IGN00JCgiO75sg=
+	by mail.kernel.org (Postfix) with ESMTP id 421D3206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfJKO0X (ORCPT
+        id S1728744AbfJKO0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:26:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42080 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbfJKO0X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:26:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c10so8106237otd.9;
-        Fri, 11 Oct 2019 07:26:22 -0700 (PDT)
+        Fri, 11 Oct 2019 10:26:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39892 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728084AbfJKO0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:26:41 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 552308E591
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 14:26:41 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id c8so9566733qtd.20
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 07:26:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0sXP7aU6qKZTyZKXCQXYeDcKFa2nychpYgtG2BtNMcE=;
-        b=f5FFESqzYTK8dFMwevcKKjdoiHYy2OuFCRSnXA/HIdv9XUtk179xuUeFxhQ/M6ikhr
-         VY/39XvZmibQAoXzmfrholvuKG4t95MRbISaDo+BxPGqj2mlF8RVrPM0TMUiQ/g5sB8t
-         TwnCR9hlUEI3PS0/6/sGEUGuRkUy5y/cbJmJlr3XnnRJQcJ4oTHFrufIauDFuxbikBsp
-         iYrRtlaJfCoD5RLuz7TqM2h6JeJr3LgxeHTZBxHwjwjoxQWXmWuy9UaPIWh03ohLTOWj
-         BtF46gDr65k5vBO+fb8zaMUIpMGg4/nG8w4nrtSZSdNxvrO3nVYHi3r0l/ea26rjmSEf
-         WTCQ==
-X-Gm-Message-State: APjAAAV0G4rbYtb7njsvFmStfEkK6PFDuePvATjfvT1VKqW8yDIFWfK6
-        9J8iLlUQYDh1L4WSy75G8Q==
-X-Google-Smtp-Source: APXvYqzgN/fv6O0f3DUaNGIVyCz4N6l22G8C1+jX2gKw2dQJ11I1w+uXFqvbkbZLVrJUjhEeDCwV5w==
-X-Received: by 2002:a05:6830:1619:: with SMTP id g25mr12671280otr.195.1570803982282;
-        Fri, 11 Oct 2019 07:26:22 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y18sm2621979oto.2.2019.10.11.07.26.21
+         :mime-version:content-disposition:in-reply-to;
+        bh=u9P7ZH+Y5VJTavkHr+ZiIN7ARusJlNnypFrPGuqGbsc=;
+        b=T/gsLv8m/9BVr6e0LA/BlJEeQB+d59iMihxqx0n0QDGnt071nGm7YikpKVTCwn22LI
+         onYovjnDXzlc+lDtjeCA6ytBrCxW0DD+XFeNWWIv2t0dOJFs4F3dLzMjaMLsQ1PLpS//
+         TH4cYBp+JZjHKFAq0W28xYnnE+7QzZBvRDWZu5/GSoiE34Soj7Xl2tnPAit5ai7fZwbU
+         OCVyHVgZxKwP+F4przdDcHQg1/5IDoNQ4Uu+ecT2GBVTW8IIhYllF9F2FEclh2qYglA2
+         TjfrJuDBvJk4QdijTIUwDifWNYrpg6E+1AOiptFgFbmkKyTz+JG01hSkSgSiJxdj66Cz
+         eo+Q==
+X-Gm-Message-State: APjAAAVMHp9Bb7UTECUM6/ReUFsfxwGZwXNT1ahCrfUzj7OLnN/UHMXm
+        0GgAuNnI9V7IBpYfF5jc5G/BK0xWWQJL9ItA4L3rd54Jj2l/2+MI83ApFPJgE0/w0qoIedJ89Bg
+        3HThhfaDg6gnxwqcXk6AMOOPL
+X-Received: by 2002:a37:6114:: with SMTP id v20mr16560721qkb.329.1570804000581;
+        Fri, 11 Oct 2019 07:26:40 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxRQu0tWlUWQUkl0Snv5crytJ8wM4hPrKuPA7AXRTavuKo53VLfKGDp3FcKv1ZsSQwyKNvQTQ==
+X-Received: by 2002:a37:6114:: with SMTP id v20mr16560681qkb.329.1570804000320;
+        Fri, 11 Oct 2019 07:26:40 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
+        by smtp.gmail.com with ESMTPSA id i30sm4661684qte.27.2019.10.11.07.26.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 07:26:21 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 09:26:20 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     catalin.marinas@arm.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
-        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org, will@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v3 03/11] dt-bindings: crypto: Add DT bindings
- documentation for sun8i-ce Crypto Engine
-Message-ID: <20191011142620.GA11285@bogus>
-References: <20191010182328.15826-1-clabbe.montjoie@gmail.com>
- <20191010182328.15826-4-clabbe.montjoie@gmail.com>
+        Fri, 11 Oct 2019 07:26:39 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 10:26:34 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        Jorgen Hansen <jhansen@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 2/2] vhost/vsock: don't allow half-closed socket in
+ the host
+Message-ID: <20191011102246-mutt-send-email-mst@kernel.org>
+References: <20191011130758.22134-1-sgarzare@redhat.com>
+ <20191011130758.22134-3-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010182328.15826-4-clabbe.montjoie@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011130758.22134-3-sgarzare@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 20:23:20 +0200, Corentin Labbe wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> Crypto Engine cryptographic accelerator driver.
+On Fri, Oct 11, 2019 at 03:07:58PM +0200, Stefano Garzarella wrote:
+> vmci_transport never allowed half-closed socket on the host side.
+> In order to provide the same behaviour, we changed the
+> vhost_transport_stream_has_data() to return 0 (no data available)
+> if the peer (guest) closed the connection.
 > 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> ---
->  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 92 +++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> 
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I don't think we should copy bugs like this.
+Applications don't actually depend on this VMCI limitation, in fact
+it looks like a working application can get broken by this.
+
+So this looks like a userspace visible ABI change
+which we can't really do.
+
+If it turns out some application cares, it can always
+fully close the connection. Or add an ioctl so the application
+can find out whether half close works.
+
+> ---
+>  drivers/vhost/vsock.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> index 9f57736fe15e..754120aa4478 100644
+> --- a/drivers/vhost/vsock.c
+> +++ b/drivers/vhost/vsock.c
+> @@ -58,6 +58,21 @@ static u32 vhost_transport_get_local_cid(void)
+>  	return VHOST_VSOCK_DEFAULT_HOST_CID;
+>  }
+>  
+> +static s64 vhost_transport_stream_has_data(struct vsock_sock *vsk)
+> +{
+> +	/* vmci_transport doesn't allow half-closed socket on the host side.
+> +	 * recv() on the host side returns EOF when the guest closes a
+> +	 * connection, also if some data is still in the receive queue.
+> +	 *
+> +	 * In order to provide the same behaviour, we always return 0
+> +	 * (no data available) if the peer (guest) closed the connection.
+> +	 */
+> +	if (vsk->peer_shutdown == SHUTDOWN_MASK)
+> +		return 0;
+> +
+> +	return virtio_transport_stream_has_data(vsk);
+> +}
+> +
+>  /* Callers that dereference the return value must hold vhost_vsock_mutex or the
+>   * RCU read lock.
+>   */
+> @@ -804,7 +819,7 @@ static struct virtio_transport vhost_transport = {
+>  
+>  		.stream_enqueue           = virtio_transport_stream_enqueue,
+>  		.stream_dequeue           = virtio_transport_stream_dequeue,
+> -		.stream_has_data          = virtio_transport_stream_has_data,
+> +		.stream_has_data          = vhost_transport_stream_has_data,
+>  		.stream_has_space         = virtio_transport_stream_has_space,
+>  		.stream_rcvhiwat          = virtio_transport_stream_rcvhiwat,
+>  		.stream_is_active         = virtio_transport_stream_is_active,
+> -- 
+> 2.21.0
