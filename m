@@ -2,103 +2,183 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCEFECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D948BC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35D02190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570791036;
-	bh=L5GA3IRvqoq9EldM3N4QA0bgmAK6vCdTcJviM2ntIeo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GQKRAacuSLQXPunKgFbLWl2wOiisoQRgvyiqSOvW3dU6YjcOvQ/zWXDOrFEHJ4H4V
-	 IVLb2JvpcL74oBsTLWryeDAp18SSCoztjMzoowb3MS+Hdn48nrVH8HWmut1A+R7yZY
-	 EAvfV6+kuYrSIuJPz22N6S/yWDgfHOh6QpazJ4a8=
+	by mail.kernel.org (Postfix) with ESMTP id BC19221D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfJKKuf (ORCPT
+        id S1727828AbfJKKuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:50:35 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37088 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfJKKuf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:50:35 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p14so11373611wro.4
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 03:50:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UvBObGs24ppq9+dm8IY3Q9jkyhFjMei+3Zo/di/pUQM=;
-        b=d//8cxIagooDlSGw8dT7yc3zbGRQhk/RehIU1YPibmqgc2c1n9tw+ovrtWmQeTUtqP
-         tXqw8+AwoaR58/KnHk9YAqG6EysLCF1XoWB4sW4PyXkFV0A5JiizLsRCSYMlVTsAse+T
-         m0x5qqVAAeN46YXc6BqMlVLco+LsVf4jPUIMO4wmSe4yXS8ETFE28jwv2DrpWUrBzFAx
-         DhcvFAsfNrB9P6bRIW26mGK5loYFmAodG3N/p7PURpbVkdFmOEODhPsO8rWhx8JE8IsR
-         5/MflwDFPB8o37GO763ATWTi/kD6ciryRaNicSh4FcBfgjR23nPiLSe3R9aJMzEP2o0+
-         OwQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UvBObGs24ppq9+dm8IY3Q9jkyhFjMei+3Zo/di/pUQM=;
-        b=KiG6fagpee+lmx9i9EwiQG6NnJ/uM/klmJ9e/bgvTiTnyIDhg68xjmR1HBfAn5bOtc
-         MlxhawHgX1utiNAhCPBoDaEDFY03AYN4r9Y3ilCg94bfY02XDaRoAXlXAZUTO44+vQd0
-         wJ5Ian2AWvfYVIgZRe6VX7VIbyqWZtad6z2jLy5w+JAMwtfDvVmZupe9e96g2XgeoiEX
-         3qCD78UnoQTDj1ZAbBfT63Wl1Qru325zzL4RxqEq3WtGSSiAp0ZFktuDa0a43XjSw1I5
-         PtUj0LlTCB6WyDQfgKA20DqsG5IxvNc78ajba4rZst+uHKuc2WPo4HVo9My9P5W5W+nZ
-         UfGg==
-X-Gm-Message-State: APjAAAXZ07VO5Zp8A6q/nbxsXJYzmXzI54MUDVMg/JRsrGiFaXT7F62+
-        Ku2RcJYjuXe3RqzTGhuSgjQ=
-X-Google-Smtp-Source: APXvYqzGbmV50U7hM6zfU1kYVjk15MREcXJcbJp8vnDpqX7AnjvbT9+lVoiF+ByKsF8iZLWpuLgpyA==
-X-Received: by 2002:a5d:6506:: with SMTP id x6mr12232167wru.366.1570791033119;
-        Fri, 11 Oct 2019 03:50:33 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id a3sm7975586wmj.35.2019.10.11.03.50.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 03:50:32 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 12:50:30 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH v2 0/5] x86: fix syscall function type mismatches
-Message-ID: <20191011105030.GA37952@gmail.com>
-References: <20190913210018.125266-1-samitolvanen@google.com>
- <20191008224049.115427-1-samitolvanen@google.com>
- <CALCETrUAQ0of6bViOCmSu6qyoswTL+ThPOo3++9v_f-ek4CtEw@mail.gmail.com>
+        Fri, 11 Oct 2019 06:50:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:56332 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726935AbfJKKuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:50:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E3FF28;
+        Fri, 11 Oct 2019 03:50:38 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 039E23F703;
+        Fri, 11 Oct 2019 03:50:36 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 11:50:11 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org,
+        catalin.marinas@arm.com, will@kernel.org, Dave.Martin@arm.com,
+        andrew.murray@arm.com, jeremy.linton@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, bjorn.andersson@linaro.org
+Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
+Message-ID: <20191011105010.GA29364@lakrids.cambridge.arm.com>
+References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrUAQ0of6bViOCmSu6qyoswTL+ThPOo3++9v_f-ek4CtEw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-* Andy Lutomirski <luto@kernel.org> wrote:
+On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:
+> On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
+> warnings are observed during bootup of big cpu cores.
 
-> On Tue, Oct 8, 2019 at 3:41 PM Sami Tolvanen <samitolvanen@google.com> wrote:
-> >
-> > This patch set changes x86 syscall wrappers and related functions to
-> > use function types that match sys_call_ptr_t. This fixes indirect call
-> > mismatches with Control-Flow Integrity (CFI) checking.
+For reference, which CPUs are in those SoCs?
+
+> SM8150:
 > 
-> tglx, I'm pretty happy with this series.  Do you need anything else
-> from me or do you want to just pick it up in -tip?
+> [    0.271177] CPU features: SANITY CHECK: Unexpected variation in
+> SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 0x00000011111112
 
-Thomas is on vacation - I've picked up the series, it looks good!
-I've added your Acked-by to the #3,#4,#5 patches as well.
+The differing fields are EL3, EL2, and EL1: the boot CPU supports
+AArch64 and AArch32 at those exception levels, while the secondary only
+supports AArch64.
+
+Do we handle this variation in KVM?
+
+> [    0.271184] CPU features: SANITY CHECK: Unexpected variation in
+> SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU4: 0x00000000010142
+
+The differing field is (AArch32) SMC: present on the boot CPU, but
+missing on the secondary CPU.
+
+This is mandated to be zero when AArch32 isn' implemented at EL1.
+
+> [    0.271189] CPU features: SANITY CHECK: Unexpected variation in
+> SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU4: 0x00000010010000
+
+The differing fields are (AArch32) Virtualization, Security, and
+ProgMod: all present on the boot CPU, but missing on the secondary
+CPU.
+
+All mandated to be zero when AArch32 isn' implemented at EL1.
+
+> SC7180:
+> 
+> [    0.812770] CPU features: SANITY CHECK: Unexpected variation in
+> SYS_CTR_EL0. Boot CPU: 0x00000084448004, CPU6: 0x0000009444c004
+
+The differing fields are:
+
+* IDC: present only on the secondary CPU. This is a worrying mismatch
+  because it could mean that required cache maintenance is missed in
+  some cases. Does the secondary CPU definitely broadcast PoU
+  maintenance to the boot CPU that requires it?
+
+* L1Ip: VIPT on the boot CPU, PIPT on the secondary CPU.
+
+> [    0.812838] CPU features: SANITY CHECK: Unexpected variation in
+> SYS_ID_AA64MMFR2_EL1. Boot CPU: 0x00000000001011, CPU6: 0x00000000000011
+
+The differing field is IESB: presend on the boot CPU, missing on the
+secondary CPU.
+
+> [    0.812876] CPU features: SANITY CHECK: Unexpected variation in
+> SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU6: 0x1100000011111112
+> [    0.812924] CPU features: SANITY CHECK: Unexpected variation in
+> SYS_ID_ISAR4_EL1. Boot CPU: 0x00000000011142, CPU6: 0x00000000010142
+> [    0.812950] CPU features: SANITY CHECK: Unexpected variation in
+> SYS_ID_PFR0_EL1. Boot CPU: 0x00000010000131, CPU6: 0x00000010010131
+> [    0.812977] CPU features: SANITY CHECK: Unexpected variation in
+> SYS_ID_PFR1_EL1. Boot CPU: 0x00000010011011, CPU6: 0x00000010010000
+
+These are the same story as for SM8150.
+
+> Can we relax some sanity checking for these by making it FTR_NONSTRICT or by
+> some other means? I just tried below roughly for SM8150 but I guess this is
+> not correct,
+> maybe for ftr_generic_32bits we should be checking bootcpu and nonboot cpu
+> partnum(to identify big.LITTLE) and then make it nonstrict?
+> These are all my wild assumptions, please correct me if I am wrong.
+
+Before we make any changes, we need to check whether we do actually
+handle this variation in a safe way, and we need to consider what this
+means w.r.t. late CPU hotplug.
+
+Even if we can handle variation at boot time, once we've determined the
+set of system-wide features we cannot allow those to regress, and I
+believe we'll need new code to enforce that. I don't think it's
+sufficient to mark these as NONSTRICT, though we might do that with
+other changes.
+
+We shouldn't look at the part number at all here. We care about
+variation across CPUs regardless of whether this is big.LITTLE or some
+variation in tie-offs, etc.
 
 Thanks,
+Mark.
 
-	Ingo
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index cabebf1a7976..207197692caa 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -164,8 +164,8 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
+>         S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE,
+> ID_AA64PFR0_FP_SHIFT, 4, ID_AA64PFR0_FP_NI),
+>         /* Linux doesn't care about the EL3 */
+>         ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,
+> ID_AA64PFR0_EL3_SHIFT, 4, 0),
+> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
+> ID_AA64PFR0_EL2_SHIFT, 4, 0),
+> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
+> ID_AA64PFR0_EL1_SHIFT, 4, ID_AA64PFR0_EL1_64BIT_ONLY),
+> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,
+> ID_AA64PFR0_EL2_SHIFT, 4, 0),
+> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,
+> ID_AA64PFR0_EL1_SHIFT, 4, ID_AA64PFR0_EL1_64BIT_ONLY),
+>         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
+> ID_AA64PFR0_EL0_SHIFT, 4, ID_AA64PFR0_EL0_64BIT_ONLY),
+>         ARM64_FTR_END,
+>  };
+> @@ -345,10 +345,10 @@ static const struct arm64_ftr_bits
+> ftr_generic_32bits[] = {
+>         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 24, 4, 0),
+>         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 20, 4, 0),
+>         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 16, 4, 0),
+> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),
+> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 12, 4, 0),
+>         ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),
+> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),
+> -       ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),
+> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 4, 4, 0),
+> +       ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, 0, 4, 0),
+>         ARM64_FTR_END,
+>  };
+> 
+> 
+> Thanks,
+> Sai
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
