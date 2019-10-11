@@ -2,96 +2,101 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B96AECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C66C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F42521D80
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E882084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfJKKVd (ORCPT
+        id S1727003AbfJKKZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:21:33 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3286 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbfJKKVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:21:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 03:21:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,283,1566889200"; 
-   d="scan'208";a="207400881"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 11 Oct 2019 03:21:19 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 11 Oct 2019 13:21:18 +0300
-Date:   Fri, 11 Oct 2019 13:21:18 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        You-Sheng Yang <vicamo.yang@canonical.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] HID: i2c-hid: Remove runtime power management
-Message-ID: <20191011102118.GD2819@lahna.fi.intel.com>
-References: <20191008153829.24766-1-kai.heng.feng@canonical.com>
- <d096582b-c96b-69a2-bcc5-cba2984705e7@redhat.com>
- <CAO-hwJJoy3=a_m9V6ZseisGgWp=jJpYr3ub85SaLiQFiioZ7ew@mail.gmail.com>
+        Fri, 11 Oct 2019 06:25:46 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46425 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfJKKZq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:25:46 -0400
+Received: by mail-qt1-f193.google.com with SMTP id u22so13059265qtq.13
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 03:25:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t/rs8Xp1pdPpdAkD8nGvsvdxNs69qOBQmbpI4r5piqI=;
+        b=SnsKyICNl0eCgp4yGtCfzH5pL1nuwlM1/FPVlqy2PhDPZ7pqun6kNv/IXnVIw5mF4u
+         I4IKStm7bodX/K2LqoQHErHCQdv10/a5xZbQJY8RoV6y9WVdvgxhbz0gVpMWZoKN4fLf
+         lY9j89IPWC2ZDSv/6WtKgfRI1gnb+lPcmTIr0uesRkAM1B0ivjaf+B3cgeV48N92QqQf
+         EOqmThXDywHX9hXOnkI0PzXLSeK7WX5uZuBH+1xAzHj8eZwb8Os54KziwJshX5cfsIBy
+         dl6xeo09iIG3ZNcpY0Bx5SU4ShV/VJiy68yOsWvjvxmpVwH//ZHLMpdVGvBDa5bnL7WY
+         5HOQ==
+X-Gm-Message-State: APjAAAVjp4OoO2mAvxfNmcl53zinBVajcnCoJWZalZku9O+joPHjyRYc
+        qzBwsUW19e7io51uJ5JP/slrcHQRQYdaB2mbuoY=
+X-Google-Smtp-Source: APXvYqwjulTSV7kS+w6qp4MRoCgoWGqaIzzGWNbblq62PsnCyHSrbBi44lgcajzslUmbSED4Th05TzD/0I+F9s+Wedk=
+X-Received: by 2002:a0c:fde8:: with SMTP id m8mr15279083qvu.4.1570789545038;
+ Fri, 11 Oct 2019 03:25:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAO-hwJJoy3=a_m9V6ZseisGgWp=jJpYr3ub85SaLiQFiioZ7ew@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190926193030.5843-1-anders.roxell@linaro.org>
+ <20190926193030.5843-5-anders.roxell@linaro.org> <bf5db3a5-96da-752c-49ea-d0de899882d5@huawei.com>
+ <CADYN=9LB9RHgRkQj=HcKDz1x9jqmT464Kseh2wZU5VvcLit+bQ@mail.gmail.com> <d978673e-cbd1-5ab5-b2a4-cdb407d0f98c@huawei.com>
+In-Reply-To: <d978673e-cbd1-5ab5-b2a4-cdb407d0f98c@huawei.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 11 Oct 2019 12:25:29 +0200
+Message-ID: <CAK8P3a0kBz1-i-3miCo1vMuoM39ivXa3oxOE9VnCqDO-nfNOxw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: configs: unset CPU_BIG_ENDIAN
+To:     John Garry <john.garry@huawei.com>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:27:10AM +0200, Benjamin Tissoires wrote:
-> Hi,
-> 
-> [Adding Mika, who introduced runpm in i2c-hid]
-> 
-> few questions, remarks:
-> 
-> On Tue, Oct 8, 2019 at 10:26 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Thu, Oct 3, 2019 at 1:15 PM John Garry <john.garry@huawei.com> wrote:
+> On 03/10/2019 08:40, Anders Roxell wrote:
+> > On Tue, 1 Oct 2019 at 16:04, John Garry <john.garry@huawei.com> wrote:
+> >> On 26/09/2019 20:30, Anders Roxell wrote:
+> >>> it doesn't get enabled when building allmodconfig kernels. When doing a
+> >>> 'make savedefconfig' CONFIG_CPU_BIG_ENDIAN will be dropped.
+> >>
+> >> So without having to pass KCONFIG_ALLCONFIG or do anything else, what
+> >> about a config for CONFIG_CPU_LITTLE_ENDIAN instead? I'm not sure if
+> >> that was omitted for a specific reason.
 > >
-> > Hi,
+> > Oh, I tried to elaborate on the idea in the cover letter, that using
+> > the defconfig
+> > as base and then configure the rest as modules is to get a bootable kernel
+> > that have as many features turned on as possible. That will make it possible
+> > to run as wide a range of testsuites as possible on a single kernel.
 > >
-> > On 08-10-2019 17:38, Kai-Heng Feng wrote:
-> > > Runtime power management in i2c-hid brings lots of issues, such as:
-> > > - When transitioning from display manager to desktop session, i2c-hid
-> > > was closed and opened, so the device was set to SLEEP and ON in a short
-> > > period. Vendors confirmed that their devices can't handle fast ON/SLEEP
-> > > command because Windows doesn't have this behavior.
-> > >
-> > > - When rebooting, i2c-hid was closed, and the driver core put the device
-> > > back to full power before shutdown. This behavior also triggers a quick
-> > > SLEEP and ON commands that some devices can't handle, renders an
-> > > unusable touchpad after reboot.
-> > >
-> > > - Runtime power management is only useful when i2c-hid isn't opened,
-> > > i.e. a laptop without desktop session, which isn't that common.
-> 
-> There is also one GPM-like driver that uses libinput (can't remember
-> from the top of my head), but you can have the i2c-hid device opened
-> on a vt too (with 2 finger gestures for scrolling and what not) :)
-> 
-> And there is also the use case of a 2-in-1 when the laptop is in
-> tablet mode. In some cases, the compositor will close the inputs to
-> ignore the touchpad events.
-> 
-> Anyway, Mika, is there any drawbacks of not having runpm on i2c-hid
-> devices? Maybe at the IRQ level?
+> > Does that make it clearer ?
+>
+> Hi Anders,
+>
+> Yeah, I got the idea.
+>
+> So when you say "'make savedefconfig' CONFIG_CPU_BIG_ENDIAN will be
+> dropped", I don't know what the rules are in terms of resyncing the
+> common defconfig (I was under the impression that it's done per release
+> cycle by the arm soc maintainers, but can't find evidence as such), but
+> your change may be easily lost in this way.
 
-Nothing comes to mind except that power consumption might increase if
-the device is not used but if that's not an issue then no objections
-from my side :)
+We don't do it every release, but occasionally someone sends a patch
+with a refresh, and this might easily get missed.
+
+We could force the allmodconfig kernel to be little-endian by default,
+using a choice statement to pick endianess like arch/mips and arch/sh
+do, the effect would be that an allmodconfig kernel gains a few more
+options that depend on !BIG_ENDIAN, but we would no longer catch
+a class of endianess bugs in drivers that we otherwise get warnings
+for. No idea what is better here.
+
+       Arnd
