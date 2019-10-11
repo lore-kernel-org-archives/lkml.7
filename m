@@ -5,55 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAC1ECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB1EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D700C2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49EE8206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="epA6GJyr"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QH0MLhbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfJKNHY (ORCPT
+        id S1728493AbfJKNIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 09:07:24 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36936 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728221AbfJKNHX (ORCPT
+        Fri, 11 Oct 2019 09:08:04 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41596 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728240AbfJKNHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:07:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9BD7KvY078492;
-        Fri, 11 Oct 2019 08:07:20 -0500
+        Fri, 11 Oct 2019 09:07:24 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9BD7LoQ033385;
+        Fri, 11 Oct 2019 08:07:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570799240;
-        bh=2mClMRVmQem6A4eXR7dKG+E8+5lp9Pdw27NqZQki0y8=;
+        s=ti-com-17Q1; t=1570799242;
+        bh=DWlAPkPyGPLMlgt95vLmSAWY5AQ+1wT9MtJDSpag9us=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=epA6GJyrQ0s+rnR9i+KfTupfga8n7MdGT8HG0TNtohjkrZRQrymgi6Sy7b0y4wGSy
-         eKcjfElWgpGkG8gPYkcK8ZvGzCYhOigcujtojKnL9RtI/jEC+mqaX2mcO/ejEjKBys
-         9PI+gmsmKqiemWCYvJTt4CL4r9q90EPoVcrg5ORA=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9BD7K6D094107;
-        Fri, 11 Oct 2019 08:07:20 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        b=QH0MLhbz4+0Mi7ppOSIPYNEHXBgj9dw1hZQAHTuRc2db4l6ZLgQtrwQfht1XFmGd8
+         Iqz1ebNj2nwn1ut1QQINl21A99pQ4XZnZVc2Y33zLdbH+WBsH1Y8gtZYY4xTKW3v13
+         9ERuCf/T+v1Nt4de1boSWzod2nCKg7iaPs3Ut88I=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9BD7L5B078723
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 11 Oct 2019 08:07:21 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 11
- Oct 2019 08:07:16 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 08:07:17 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 11 Oct 2019 08:07:20 -0500
+ Frontend Transport; Fri, 11 Oct 2019 08:07:17 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9BD7KnQ118544;
-        Fri, 11 Oct 2019 08:07:20 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9BD7Ldn118581;
+        Fri, 11 Oct 2019 08:07:21 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v12 07/16] dt: bindings: lp55xx: Be consistent in the document with LED acronym
-Date:   Fri, 11 Oct 2019 08:06:48 -0500
-Message-ID: <20191011130657.4713-8-dmurphy@ti.com>
+Subject: [PATCH v12 14/16] leds: lp5521: Add multicolor framework intensity support
+Date:   Fri, 11 Oct 2019 08:06:55 -0500
+Message-ID: <20191011130657.4713-15-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191011130657.4713-1-dmurphy@ti.com>
 References: <20191011130657.4713-1-dmurphy@ti.com>
@@ -66,35 +67,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the document to be consistent in case when using "LED".
-This acronym should be capital throughout the document.
+Add the intensity function call back to support the multicolor
+framework. This function allows setting a specific brightness on
+a specific channel.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- Documentation/devicetree/bindings/leds/leds-lp55xx.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/leds/leds-lp5521.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index 1b66a413fb9d..bfe2805c5534 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -1,4 +1,4 @@
--Binding for TI/National Semiconductor LP55xx Led Drivers
-+Binding for TI/National Semiconductor LP55xx LED Drivers
+diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
+index 6f0272249dc8..05731f405c9a 100644
+--- a/drivers/leds/leds-lp5521.c
++++ b/drivers/leds/leds-lp5521.c
+@@ -349,6 +349,25 @@ static int lp5521_run_selftest(struct lp55xx_chip *chip, char *buf)
+ 	return 0;
+ }
  
- Required properties:
- - compatible: one of
-@@ -12,8 +12,8 @@ Required properties:
- - clock-mode: Input clock mode, (0: automode, 1: internal, 2: external)
- 
- Each child has own specific current settings
--- led-cur: Current setting at each led channel (mA x10, 0 if led is not connected)
--- max-cur: Maximun current at each led channel.
-+- led-cur: Current setting at each LED channel (mA x10, 0 if LED is not connected)
-+- max-cur: Maximun current at each LED channel.
- 
- Optional properties:
- - enable-gpio: GPIO attached to the chip's enable pin
++static int lp5521_led_intensity(struct lp55xx_led *led)
++{
++	struct lp55xx_chip *chip = led->chip;
++	int ret;
++	int i;
++
++	mutex_lock(&chip->lock);
++	for (i = 0; i < led->mc_cdev.num_leds; i++) {
++		ret = lp55xx_write(chip,
++				   LP5521_REG_LED_PWM_BASE +
++				   led->color_component[i].output_num,
++				   led->color_component[i].brightness);
++		if (ret)
++			break;
++	}
++	mutex_unlock(&chip->lock);
++	return ret;
++}
++
+ static int lp5521_led_brightness(struct lp55xx_led *led)
+ {
+ 	struct lp55xx_chip *chip = led->chip;
+@@ -490,6 +509,7 @@ static struct lp55xx_device_config lp5521_cfg = {
+ 	.max_channel  = LP5521_MAX_LEDS,
+ 	.post_init_device   = lp5521_post_init_device,
+ 	.brightness_fn      = lp5521_led_brightness,
++	.color_intensity_fn = lp5521_led_intensity,
+ 	.set_led_current    = lp5521_set_led_current,
+ 	.firmware_cb        = lp5521_firmware_loaded,
+ 	.run_engine         = lp5521_run_engine,
 -- 
 2.22.0.214.g8dca754b1e
 
