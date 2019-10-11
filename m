@@ -2,87 +2,91 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFCDECE58E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025C3ECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5201D2196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07BF206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 22:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbfJKW1w (ORCPT
+        id S1727036AbfJKWc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 18:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726706AbfJKW1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 18:27:52 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BDA7218AC;
-        Fri, 11 Oct 2019 22:27:50 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 18:27:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] tracefs: Do not allocate and free proxy_ops for
- lockdown
-Message-ID: <20191011182748.23d6de31@gandalf.local.home>
-In-Reply-To: <87tv8f9cr7.fsf@mid.deneb.enyo.de>
-References: <20191011135458.7399da44@gandalf.local.home>
-        <CAHk-=wj7fGPKUspr579Cii-w_y60PtRaiDgKuxVtBAMK0VNNkA@mail.gmail.com>
-        <20191011143610.21bcd9c0@gandalf.local.home>
-        <87tv8f9cr7.fsf@mid.deneb.enyo.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 11 Oct 2019 18:32:27 -0400
+Received: from smtprelay0113.hostedemail.com ([216.40.44.113]:53640 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726255AbfJKWc1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 18:32:27 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id E131418016C6C;
+        Fri, 11 Oct 2019 22:32:25 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: owl40_14d93818d4721
+X-Filterd-Recvd-Size: 2752
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 11 Oct 2019 22:32:23 +0000 (UTC)
+Message-ID: <28ed468bc58c0d0e92f459b45d8e43cd3d1458b2.camel@perches.com>
+Subject: Re: [Outreachy kernel] [PATCH] staging: vc04_services: fix warnings
+ of lines should not end with open parenthesis
+From:   Joe Perches <joe@perches.com>
+To:     Julia Lawall <julia.lawall@lip6.fr>,
+        Jules Irenge <jbi.octave@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
+        eric@anholt.net, wahrenst@gmx.net, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, daniela.mormocea@gmail.com,
+        dave.stevenson@raspberrypi.org, hverkuil-cisco@xs4all.nl,
+        mchehab+samsung@kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        sbranden@broadcom.com, rjui@broadcom.com, f.fainelli@gmail.com
+Date:   Fri, 11 Oct 2019 15:32:22 -0700
+In-Reply-To: <alpine.DEB.2.21.1910112320550.3284@hadrien>
+References: <20191011211637.19311-1-jbi.octave@gmail.com>
+         <alpine.DEB.2.21.1910112320550.3284@hadrien>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 23:46:20 +0200
-Florian Weimer <fw@deneb.enyo.de> wrote:
-
-> * Steven Rostedt:
+On Fri, 2019-10-11 at 23:23 +0200, Julia Lawall wrote:
+> On Fri, 11 Oct 2019, Jules Irenge wrote:
+> > Fix warning of lines should not end with open parenthesis.
+> > Issue detected by checkpatch tool.
+[]
+> > diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+[]
+> > @@ -337,9 +337,8 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
+> >  			if (is_capturing(dev)) {
+> >  				v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
+> >  					 "Grab another frame");
+> > -				vchiq_mmal_port_parameter_set(
+> > -					instance,
+> > -					dev->capture.camera_port,
+> > +			vchiq_mmal_port_parameter_set(instance,
+> > +						      dev->capture.camera_port,
+> >  					MMAL_PARAMETER_CAPTURE,
+> >  					&dev->capture.frame_count,
+> >  					sizeof(dev->capture.frame_count));
 > 
-> > Once locked down is set, can it ever be undone without rebooting?  
+> You can't reduce the indentation on the function call.  It has to stay
+> clearly in the if branch.
 > 
-> I think this is the original intent with such patches, yes.  But then
-> reality interferes and people add some escape hatch, so that it's
-> possible again to load arbitrary kernel modules.  And for servers, you
-> can't have a meaningful physical presence check, so you end up with a
-> lot of complexity for something that offers absolutely zero gains in
-> security.
+> If you adjust the indentation of some of the arguments, you have to do so
+> to all of the arguments.
 > 
-> The other practical issue is that general-purpose Linux distributions
-> cannot prevent kernel downgrades, so even if there's a
-> cryptographically signed chain from the firmware to the kernel, you
-> can boot last year's kernel, use a root-to-ring-0 exploit to disable
-> its particular implementation of lockdown, and then kexec the real
-> kernel with lockdown disabled.
-> 
-> I'm sure that kernel lockdown has applications somewhere, but for
-> general-purpose distributions (who usually want to support third-party
-> kernel modules), it's an endless source of problems that wouldn't
-> exist without it.
+> Similar issues arise below.  There may be no way to make some of the calls
+> look nice without a more severe reorganization of the code.
 
-I just decided to keep the two separate. The tracing_disable is
-permanent (unless you actually do something that writes into kernel
-memory to change the variable). When set, there's nothing to clear it.
+My suggestion would be to shorten the vchiq_mmal_port_parameter_set
+function name (29 chars is just too long) and pass dev instead of
+dev->instance as the first argument to this function.
 
-Thus, I decided not to couple that with lockdown, and let the lockdown
-folks do whatever they damn well please ;-)
 
--- Steve
