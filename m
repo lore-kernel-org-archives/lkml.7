@@ -2,141 +2,126 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC92BECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0766C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56FC2196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4EF2196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:20:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qrLANnnP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHYydlo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfJKJUD (ORCPT
+        id S1727680AbfJKJUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:20:03 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:37179 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfJKJUD (ORCPT
+        Fri, 11 Oct 2019 05:20:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35818 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbfJKJUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:20:03 -0400
-Received: by mail-ua1-f68.google.com with SMTP id w7so2831283uag.4
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 02:20:02 -0700 (PDT)
+        Fri, 11 Oct 2019 05:20:07 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v8so11048991wrt.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 02:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TFXaZXUVnWUo7FUoeyK+pimFP0T4TRsHMwFzrX99AMw=;
-        b=qrLANnnPzdE4J92iqNq5PD6fjNxUOyVwpzFp6BQ5hiBx78tosvQ9MWO+uZ2mjESNV/
-         4guvp0g5b5GIxWNCETw0OzGJxu3nigYwbkoaHXJVkm8X8BQWsi1ETz5Hp4ab3h/Y1Pxv
-         8FqXstBi5Zgpfo4QSwhnhVFaj+/m9NuDX0vh8paTuTg5mmfRNlBSQmdIqeJlxrXv8Dcb
-         zi6cEQhXSnWvu/8W8298JU3aS5Qw5i5NmpINkMf0N5taz58b+IOhMSkrqcvZqGxulcJ7
-         xkZFN2+7ek3+shHZUc58s+5P2X66/b785Ifhaav6eOeZftbD/dYtOqT9oi1YiQArBQGB
-         mFgA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qTreiY0r3fTwoJUxRJnyLrebcRQRT7U9Xfdqs5o+giI=;
+        b=mHYydlo2SqywtwYM3g8rRTyOTaZ2DBvRJEpZhZPD1tC+iz0x4R6WeN6JaUYRAztMUG
+         gn2u58+m9hI4YnuqqyWMWrdrjhVE1t8obVZLZLJ0xA//K0dsZVu0ikMZdLAH7IouHwcG
+         HR7xJuoCu5fYsYytFqGykH4pl2m8vh6QoCfCoKZqz5oZMeZnMuZAsk83mbmZtzI1KWbt
+         mGDZMm/X3kDPWmPqyjO+n3mRwqVKNmDmfZcM6Yf9u8ecAATx3RHDpnr7HY7ok3hmys+q
+         ey0hxGyhjdsIZ0L+aD+db2hK+1U/lH/EqOF3Lbc6P6vhE1k0ygypHyF84DO/VYncpPLL
+         twTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TFXaZXUVnWUo7FUoeyK+pimFP0T4TRsHMwFzrX99AMw=;
-        b=ItO+y74YVC8hGYJKpg+WbkyoEh+fQKO8vYNA5qBOlCZH1S26KgHlRMYrw3NF9BXW2R
-         gpBHb8OdU9uy9k0ROuKJLEjh2sY0+4PRsADJTy8+JW9G/pacMlN8eKsyJPJh5N+pKEQi
-         4qJ4hl4CfX/DhYnyjjzIeo8ZMNScdjdgiYmatgTiFMYGdlp/9EQ5Jj24RdT+ag2E0uCj
-         aE938UudR+LOLyAA9aqRAKRNTdc1hWark+qmcn/1fE+dGCdxC/dtytXOvaOM5Ri7VI21
-         Ld96hd/X22yWJxuNiY6UEcc1fGVoMpaFtOQDsyLjxZ+vEEP7PJBH5UdBBPjz9llif2eN
-         30Cw==
-X-Gm-Message-State: APjAAAUzLy1nzbov9gogOZMjqg6BZHb9IrRKNxoKkCgxzfDW5c6OYcs0
-        Y6bxEzdhQTOk/YvJS0AkYVWeOq8eAUn5XIZxgX9sRHbzaFc=
-X-Google-Smtp-Source: APXvYqyQ3FT1Trdnl3pRYnMIjP5Zd82IeXfo65Gui+/IKtSdpKl6Aoqf1C1vdv4yLGqhhiPMy+wDoFtLD80uce34w6Y=
-X-Received: by 2002:ab0:d82:: with SMTP id i2mr6008603uak.34.1570785602088;
- Fri, 11 Oct 2019 02:20:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191010140615.26460-1-oshpigelman@habana.ai> <20191010140950.GA27176@infradead.org>
- <AM6PR0202MB338206146804E2E2BC18C67FB8940@AM6PR0202MB3382.eurprd02.prod.outlook.com>
- <20191011081055.GA9052@infradead.org>
-In-Reply-To: <20191011081055.GA9052@infradead.org>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Fri, 11 Oct 2019 12:19:36 +0300
-Message-ID: <CAFCwf11hYWYNeROT8zpW+fcALijcTUuGVk-NoWvxzCORvd+dew@mail.gmail.com>
-Subject: Re: [PATCH 1/2] habanalabs: support vmalloc memory mapping
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Omer Shpigelman <oshpigelman@habana.ai>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=qTreiY0r3fTwoJUxRJnyLrebcRQRT7U9Xfdqs5o+giI=;
+        b=ZIZCMrSmD6b2c7zREPql5fKZ4Nj31QFjkuUHY3B1DJXxsuPRPfK3ie9yudscl0TPEc
+         /2pBzDN5kkPR24vA2w+ndXCOm/Tvc3agxj+bgdLYjwfxpkXEt6cgy7KC9ulrWuywtJdH
+         dqPOfWKLuqgvPcbo4OJw8qf4WMeWkAYZZCdnjzhgLeMaBKlMkZfai/0dfAjzBmAlBRHe
+         HI3WKIfeN2tyq75MIypv776uF5O/uoOWCC17AEkx/rN5TImjOO/LhO6OswBKosAOz0Pn
+         dyGiRI6eeiIJpQxY7mkWmhezEmAEifuHq+IcydwAJTx9YPKyrT+9Mteg3GDOSbwWSF87
+         RD3w==
+X-Gm-Message-State: APjAAAXzl5vVqucQUrK38SroajiREyFxAH7OfAtYr2wfQlwOs8A4c3Tf
+        dyK3c7eaTOL9XQEdTFjx8kPuPA==
+X-Google-Smtp-Source: APXvYqzjVDPoOSUpWe+tgBg9Peazn8a4pRxoFsJ08U3LOhCp/ABBxPZg05ZafUWWf6lvLvlVJaQRvw==
+X-Received: by 2002:adf:ed52:: with SMTP id u18mr13058979wro.16.1570785604033;
+        Fri, 11 Oct 2019 02:20:04 -0700 (PDT)
+Received: from localhost.localdomain (li2042-79.members.linode.com. [172.105.81.79])
+        by smtp.gmail.com with ESMTPSA id u10sm8603492wmm.0.2019.10.11.02.20.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 02:20:03 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v1 2/2] perf test: Avoid infinite loop for task exit case
+Date:   Fri, 11 Oct 2019 17:19:42 +0800
+Message-Id: <20191011091942.29841-2-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191011091942.29841-1-leo.yan@linaro.org>
+References: <20191011091942.29841-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:10 AM Christoph Hellwig <hch@infradead.org> wrot=
-e:
->
-> On Thu, Oct 10, 2019 at 07:54:07PM +0000, Omer Shpigelman wrote:
-> > The is_vmalloc_addr checks are for user pointers and for memory which w=
-as allocated by the driver with vmalloc_user.
->
-> This does not make any sense whatsoever.  vmalloc_user returns a kernel
-> address, it just does a GFP_USER instead of GFP_KERNEL allocation, which
-> is just accounting differences.
->
-> > > > Mapping vmalloc memory is needed for Gaudi ASIC.
-> > >
-> > > How does that ASIC pass in the vmalloc memory?  I don't fully underst=
-and
-> > > the code, but it seems like the addresses are fed from ioctl, which m=
-eans
-> > > they only come from userspace.
-> >
-> > The user pointers are indeed fed from ioctl for DMA purpose, but as I w=
-rote above the vmalloc memory is allocated by the driver with vmalloc_user =
-which will be mmapped later on in order to create a shared buffer between t=
-he driver and the userspace process.
->
-> Again, you can't pass pointers obtained from vmalloc* to userspace.  You
-> can map the underlying pages into user pagetables, but is_vmalloc_addr
-> won't know that.  I think you guys need to read up on virtual memory 101
-> first and then come back and actually explain what you are trying to do.
+When execute task exit testing case, Perf tool stucks in this case and
+doesn't return back on Arm64 Juno board.
 
-Hi Christoph,
-I think the confusion here is because this is only a pre-requisite
-patch, which doesn't show the full code of how we use vmalloc_user.
-So I want to describe the full flow here and please tell me if and
-what we are doing wrong.
+After dig into this issue, since Juno board has Arm's big.LITTLE CPUs,
+thus the PMUs are not compatible between the big CPUs and little CPUs.
+This leads to PMU event cannot be enabled properly when the traced task
+is migrated from one variant's CPU to another variant.  Finally, the
+test case runs into infinite loop for cannot read out any event data
+after return from polling.
 
-We first allocate, using vmalloc_user, a certain memory block that
-will be used by the ASIC and the user (ASIC is producer, user is
-consumer).
-After we use vmalloc_user, we map the *kernel* pointer we got from the
-vmalloc_user() to the ASIC MMU. We reuse our driver's generic code
-path to map host memory to ASIC MMU and that's why we need the patch
-above. The user does NOT send us the pointer. He doesn't have this
-pointer. It is internal to the kernel driver. To do this reuse, we
-added a call to the is_vmalloc_addr(), so the function will know if it
-is called to work on user pointers, or on vmalloc *kernel* pointers.
+Eventually, we need to work out formal solution to allow PMU events can
+be freely migrated from one CPU variant to another, but this is a
+difficult task and a different topic.  This patch tries to fix the Perf
+test case to avoid infinite loop, when the testing detects 1000 times
+retrying for reading empty events, it will directly bail out and return
+failure.  This allows the Perf tool can continue its other test cases.
 
-What the user does get is an opaque handle. Later he calls mmap() with
-our FD and this handle. In the driver, we do remap_vmalloc_range() on
-the *kernel* pointer we retrieved using the opaque handle we got from
-the user, and return a valid user-space process address that points to
-this memory block, so the user can access it.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/tests/task-exit.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-AFAIK from my GPU days, this is totally valid. The user does NOT see
-kernel pointers. There is total separation between kernel and user
-pointers. User get pointers only by calling mmap(). We NEVER return a
-pointer to a user in an IOCTL. Only through mmap.
-Please tell me if you see a problem here. If you need more details,
-I'll happy to provide them.
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index ca0a6ca43b13..d85c9f608564 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -53,6 +53,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 	struct perf_cpu_map *cpus;
+ 	struct perf_thread_map *threads;
+ 	struct mmap *md;
++	int retry_count = 0;
+ 
+ 	signal(SIGCHLD, sig_handler);
+ 
+@@ -132,6 +133,13 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ out_init:
+ 	if (!exited || !nr_exit) {
+ 		evlist__poll(evlist, -1);
++
++		if (retry_count++ > 1000) {
++			pr_debug("Failed after retrying 1000 times\n");
++			err = -1;
++			goto out_free_maps;
++		}
++
+ 		goto retry;
+ 	}
+ 
+-- 
+2.17.1
 
-Side note:
-The reason the driver allocates the memory block and not the user
-itself (like we did so far in all our code), is because this block is
-mapped to our ASIC internal MMU using a priviliged ASID. I don't want
-to give the user a uapi that will enable him to request to map memory
-to the ASIC using a priviliged ASID. Therefore, the kernel driver does
-it internally.
-
-Thanks,
-Oded
