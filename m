@@ -2,173 +2,171 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6278ECE596
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F10C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F93D21A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:30:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570768239;
-	bh=ah1QHqRDMmfVWlvKmhrafxLbI4vaf9pTpDoMwJKs490=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tQ6PdvfjS314rWbH+dnL2+lHVkKolUZK20qjjnyVsgK/uHMv6DOOkTCdNCFXMkRet
-	 Rfj+IvxTGeJDva35j2qVP9Ad9lXX72IRAGIg/dukIuDLpxlugv3TZKhnEy5GNwUFGq
-	 oC54yvcMDvle5Jrr4CVAvrby1CFrRhPNqBC6qmvc=
+	by mail.kernel.org (Postfix) with ESMTP id 83A122084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 04:36:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gEQ+fgGO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfJKEai (ORCPT
+        id S1726536AbfJKEgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 00:30:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfJKEai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 00:30:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 446332089F;
-        Fri, 11 Oct 2019 04:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570768236;
-        bh=ah1QHqRDMmfVWlvKmhrafxLbI4vaf9pTpDoMwJKs490=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bJZWVqwDvpM+I457dc4b5l1A+kdyV976hXWd7OS0DX/5VJeMRJ17dPrPA8puioz1+
-         rzerdOae8CqrMtuioEVYi75HaqjD2wupp3HMdcFC4rg67G7RrhFyhFgAWCtvEeLrg+
-         LhPXocKFqnSG8j+/LKXYnTwUes4Xl+/RggYeKa78=
-Date:   Fri, 11 Oct 2019 06:30:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Yunqiang Su <ysu@wavecomp.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 4.14 17/61] MIPS: Treat Loongson Extensions as ASEs
-Message-ID: <20191011043034.GA941864@kroah.com>
-References: <20191010083449.500442342@linuxfoundation.org>
- <20191010083459.461605528@linuxfoundation.org>
+        Fri, 11 Oct 2019 00:36:06 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36665 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbfJKEgF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 00:36:05 -0400
+Received: by mail-ed1-f66.google.com with SMTP id h2so7460473edn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 21:36:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rEUfphYgsPDsPF9Rx6VcR3QfxEgWOStdjPum/wk4KcI=;
+        b=gEQ+fgGOIKBfW9V5FQ9sV5KdOdkGa1dsRLEj6pWenVSSurwPL6PVXti0w79F/LoGXE
+         fRX92sJQbU7d8ptA/uk2X9exHL0yLbDgsQxJCfbdpwVPjiiFkWDjcy9z/5R+TvJxxEUR
+         OJA158rP+mEzzpR+/dTLAb5wFtlh89OvWKG8Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rEUfphYgsPDsPF9Rx6VcR3QfxEgWOStdjPum/wk4KcI=;
+        b=L4OVLcDuEdaUfYpCWQ0UKFfEDw2i6uLyUFsmkZq3P8HOIiftJChN+KilR9YpzPjxGv
+         dZemqkPD7b9ZatNolmI4ViiKjkypwmwGrzRGtCdc6sXWEC0jiGT4BFQr5fV1+xX3v2+z
+         mCzWWInALVXSKGjshBvHs6HbfNxWlBsmKGvOlkwfWSRfQiHJYEE4KhYlBMeb0einBzbL
+         6elk0ZFa7itAj86JC7fDIwijwJxIr+cyxLi684VqjI5+F0EagT3GCxP1y2cSRTgLz+xC
+         B0WCTS2w2W36Evu+veyy71MHKagMZxH9+qJsoO1Q8defXegikWqaPSeYxtVbde6MSbGU
+         3G9w==
+X-Gm-Message-State: APjAAAUy0QNFQQgH9q8uRfIRTmEOo4svXWzNPHRlK0bDTDkFyTspxDl2
+        OByfejVgzrlFd0089c6sdYpvgPrl8b20gg==
+X-Google-Smtp-Source: APXvYqzgKd83u15wMRQbxyHYzKiaUN1NiCMXa9zBag73KeytEwN3cUev9djM7ZqV47icEYCIbF1UxQ==
+X-Received: by 2002:a17:906:2319:: with SMTP id l25mr11770036eja.309.1570768562937;
+        Thu, 10 Oct 2019 21:36:02 -0700 (PDT)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
+        by smtp.gmail.com with ESMTPSA id g15sm1250622edp.0.2019.10.10.21.36.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2019 21:36:01 -0700 (PDT)
+Received: by mail-wr1-f51.google.com with SMTP id r3so10259558wrj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 21:36:01 -0700 (PDT)
+X-Received: by 2002:adf:f3c9:: with SMTP id g9mr1230397wrp.7.1570768560872;
+ Thu, 10 Oct 2019 21:36:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010083459.461605528@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191010075004.192818-1-tfiga@chromium.org> <1570697118.32135.20.camel@mhfsdcap03>
+ <CAAFQd5AU53=BRUrK_i-0dRYueVoSd3Bg3AtvZUMHgFv3hLuNug@mail.gmail.com> <1570705147.22261.13.camel@mhfsdcap03>
+In-Reply-To: <1570705147.22261.13.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Fri, 11 Oct 2019 13:35:48 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5AszvSow2vgRq+CbtBzdNO7ysymXp=xerR6dtmi8OxMZw@mail.gmail.com>
+Message-ID: <CAAFQd5AszvSow2vgRq+CbtBzdNO7ysymXp=xerR6dtmi8OxMZw@mail.gmail.com>
+Subject: Re: [PATCH] usb: mtk-xhci: Set the XHCI_NO_64BIT_SUPPORT quirk
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Changqi Hu <Changqi.Hu@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Shik Chen <shik@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:36:42AM +0200, Greg Kroah-Hartman wrote:
-> From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> 
-> commit d2f965549006acb865c4638f1f030ebcefdc71f6 upstream.
-> 
-> Recently, binutils had split Loongson-3 Extensions into four ASEs:
-> MMI, CAM, EXT, EXT2. This patch do the samething in kernel and expose
-> them in cpuinfo so applications can probe supported ASEs at runtime.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Cc: Huacai Chen <chenhc@lemote.com>
-> Cc: Yunqiang Su <ysu@wavecomp.com>
-> Cc: stable@vger.kernel.org # v4.14+
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
-> Cc: linux-mips@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
->  arch/mips/include/asm/cpu-features.h |   16 ++++++++++++++++
->  arch/mips/include/asm/cpu.h          |    4 ++++
->  arch/mips/kernel/cpu-probe.c         |    6 ++++++
->  arch/mips/kernel/proc.c              |    4 ++++
->  4 files changed, 30 insertions(+)
-> 
-> --- a/arch/mips/include/asm/cpu-features.h
-> +++ b/arch/mips/include/asm/cpu-features.h
-> @@ -348,6 +348,22 @@
->  #define cpu_has_dsp3		(cpu_data[0].ases & MIPS_ASE_DSP3)
->  #endif
->  
-> +#ifndef cpu_has_loongson_mmi
-> +#define cpu_has_loongson_mmi		__ase(MIPS_ASE_LOONGSON_MMI)
-> +#endif
-> +
-> +#ifndef cpu_has_loongson_cam
-> +#define cpu_has_loongson_cam		__ase(MIPS_ASE_LOONGSON_CAM)
-> +#endif
-> +
-> +#ifndef cpu_has_loongson_ext
-> +#define cpu_has_loongson_ext		__ase(MIPS_ASE_LOONGSON_EXT)
-> +#endif
-> +
-> +#ifndef cpu_has_loongson_ext2
-> +#define cpu_has_loongson_ext2		__ase(MIPS_ASE_LOONGSON_EXT2)
-> +#endif
-> +
->  #ifndef cpu_has_mipsmt
->  #define cpu_has_mipsmt		(cpu_data[0].ases & MIPS_ASE_MIPSMT)
->  #endif
-> --- a/arch/mips/include/asm/cpu.h
-> +++ b/arch/mips/include/asm/cpu.h
-> @@ -433,5 +433,9 @@ enum cpu_type_enum {
->  #define MIPS_ASE_MSA		0x00000100 /* MIPS SIMD Architecture */
->  #define MIPS_ASE_DSP3		0x00000200 /* Signal Processing ASE Rev 3*/
->  #define MIPS_ASE_MIPS16E2	0x00000400 /* MIPS16e2 */
-> +#define MIPS_ASE_LOONGSON_MMI	0x00000800 /* Loongson MultiMedia extensions Instructions */
-> +#define MIPS_ASE_LOONGSON_CAM	0x00001000 /* Loongson CAM */
-> +#define MIPS_ASE_LOONGSON_EXT	0x00002000 /* Loongson EXTensions */
-> +#define MIPS_ASE_LOONGSON_EXT2	0x00004000 /* Loongson EXTensions R2 */
->  
->  #endif /* _ASM_CPU_H */
-> --- a/arch/mips/kernel/cpu-probe.c
-> +++ b/arch/mips/kernel/cpu-probe.c
-> @@ -1478,6 +1478,8 @@ static inline void cpu_probe_legacy(stru
->  			__cpu_name[cpu] = "ICT Loongson-3";
->  			set_elf_platform(cpu, "loongson3a");
->  			set_isa(c, MIPS_CPU_ISA_M64R1);
-> +			c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_CAM |
-> +				MIPS_ASE_LOONGSON_EXT);
->  			break;
->  		case PRID_REV_LOONGSON3B_R1:
->  		case PRID_REV_LOONGSON3B_R2:
-> @@ -1485,6 +1487,8 @@ static inline void cpu_probe_legacy(stru
->  			__cpu_name[cpu] = "ICT Loongson-3";
->  			set_elf_platform(cpu, "loongson3b");
->  			set_isa(c, MIPS_CPU_ISA_M64R1);
-> +			c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_CAM |
-> +				MIPS_ASE_LOONGSON_EXT);
->  			break;
->  		}
->  
-> @@ -1845,6 +1849,8 @@ static inline void cpu_probe_loongson(st
->  		decode_configs(c);
->  		c->options |= MIPS_CPU_FTLB | MIPS_CPU_TLBINV | MIPS_CPU_LDPTE;
->  		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
-> +		c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_CAM |
-> +			MIPS_ASE_LOONGSON_EXT | MIPS_ASE_LOONGSON_EXT2);
->  		break;
->  	default:
->  		panic("Unknown Loongson Processor ID!");
-> --- a/arch/mips/kernel/proc.c
-> +++ b/arch/mips/kernel/proc.c
-> @@ -124,6 +124,10 @@ static int show_cpuinfo(struct seq_file
->  	if (cpu_has_eva)	seq_printf(m, "%s", " eva");
->  	if (cpu_has_htw)	seq_printf(m, "%s", " htw");
->  	if (cpu_has_xpa)	seq_printf(m, "%s", " xpa");
-> +	if (cpu_has_loongson_mmi)	seq_printf(m, "%s", " loongson-mmi");
-> +	if (cpu_has_loongson_cam)	seq_printf(m, "%s", " loongson-cam");
-> +	if (cpu_has_loongson_ext)	seq_printf(m, "%s", " loongson-ext");
-> +	if (cpu_has_loongson_ext2)	seq_printf(m, "%s", " loongson-ext2");
->  	seq_printf(m, "\n");
->  
->  	if (cpu_has_mmips) {
-> 
-> 
+On Thu, Oct 10, 2019 at 7:59 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+>
+> On Thu, 2019-10-10 at 18:00 +0900, Tomasz Figa wrote:
+> > Hi Chunfeng,
+> >
+> > On Thu, Oct 10, 2019 at 5:45 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> > >
+> > > Hi, Tomasz,
+> > >
+> > > On Thu, 2019-10-10 at 16:50 +0900, Tomasz Figa wrote:
+> > > > MediaTek XHCI host controller does not support 64-bit addressing despite
+> > > > the AC64 bit of HCCPARAMS1 register being set. The platform-specific
+> > > > glue sets the DMA mask to 32 bits on its own, but it has no effect,
+> > > > because xhci_gen_setup() overrides it according to hardware
+> > > > capabilities.
+> Yes, this is what I want to do, maybe need remove DMA mask setting in
+> platform-specific.
+>
+> > > >
+> > > > Use the XHCI_NO_64BIT_SUPPORT quirk to tell the XHCI core to force
+> > > > 32-bit DMA mask instead.
+> > > >
+> > > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> > > > ---
+> > > >  drivers/usb/host/xhci-mtk.c | 10 +++++-----
+> > > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+> > > > index b18a6baef204a..4d101d52cc11b 100644
+> > > > --- a/drivers/usb/host/xhci-mtk.c
+> > > > +++ b/drivers/usb/host/xhci-mtk.c
+> > > > @@ -395,6 +395,11 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
+> > > >       xhci->quirks |= XHCI_SPURIOUS_SUCCESS;
+> > > >       if (mtk->lpm_support)
+> > > >               xhci->quirks |= XHCI_LPM_SUPPORT;
+> > > > +     /*
+> > > > +      * MTK host controller does not support 64-bit addressing, despite
+> > > > +      * having the AC64 bit of the HCCPARAMS1 register set.
+> > > > +      */
+> > > > +     xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+> > > Somes SoCs support 64bits in fact, so can't support this quirk, do you
+> > > encounter any issues without this quirk?
+> > >
+> >
+> > Thanks for taking a look at this patch.
+> >
+> > Yes, on MT8183 the DMA mask ended up being set to 64 bits, but
+> > according to the information I received from MediaTek, the controller
+> > on that SoC only supports 32 bits.
+> As I know, mt8183 doesn't support memory greater than 4G mode.
+>
 
-This patch is causing build errors in 4.14, so I am dropping it.  Please
-provide a working version if you all want to see it in here.
+We have 4GB of DRAM at 0x40000000-0x140000000 on our board with
+MT8183. What happens if you attempt to use the memory from
+0x100000000-0x140000000 with the XHCI controller on this SoC?
 
-thanks,
+> >
+> > If some SoCs support only 32 bits and some support 64 bits, we may
+> > either need to use different DT compatible string for them or add a DT
+> > property and set the quirk based on that. Right now in upstream we
+> > have:
+> >
+> > 1) "mediatek,mt8173-xhci", used by:
+> > MT8173
+> >
+> > 2)"mediatek,mtk-xhci", used by:
+> > MT2712
+> > MT7622
+> > MT8183 (not yet upstream, but I suppose it's on the mailing lists)
+> >
+> > Would you be able to check which of the SoCs above report 64 bits but
+> > support only 32? (and so would need this quirk)
+> I'm afraid I can't, almost all MTK SoCs supporting xHCI are using this
+> driver, AC64 should be set rightly according to addressing capability.
+>
 
-greg k-h
+Does it mean that only MT8183 may be the only SoC with a problem with
+this capability bit?
+
+Matthias, do you have access to MT2712 and MT7622 devices? I have
+MT8173 and MT8183, so I can check them, but would be good to check
+this on the other ones too.
+
+Best regards,
+Tomasz
