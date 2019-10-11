@@ -2,138 +2,332 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54263ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0790C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EBA2190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FD22190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="lUTiZl3d";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="FRKLGfPI"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="jPky9ywh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfJKLiU (ORCPT
+        id S1727768AbfJKLlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:38:20 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:20660 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727198AbfJKLiU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:38:20 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BBaqNk001792;
-        Fri, 11 Oct 2019 04:38:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=vjjwGzdWSmkhF/7MpqN3/pTLsXrfvwuVfvCR5zUwIF4=;
- b=lUTiZl3dor32qARB/Qy1kyoHk4NEShAKXBwN6nWg2ZcsNtdGOB0gyLUDpFThtLwrOWcE
- nX9Y6lHXylWq6W3wE7Gfcev09eYpc05J0DqkYqDLz4hR325xmjpUK4M9Cqvfs9Xgfzmw
- Khpe/EU5nq0p++a0efFoV/fMTy+pUZuG2Bxi+j2dJeSd5J7p2HR3RrIEBU6fgyt/XITm
- 7r++HAQtWwdGDgGKnkduENLYRQaAZomTmkKDrCJFE6R9iJ6B9uvdQF+rTFV2o8xLRpq8
- /EI/IzmLSl2thAMdL1PLRY/bbNmGXsvalVhcYvRA8R4klxk426Dp2Y9DnmJmZbcrzpG9 GA== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2vjj6v1e27-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 04:38:06 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Fri, 11 Oct
- 2019 04:38:05 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (104.47.38.57) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 11 Oct 2019 04:38:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EIJl8fS5L+AYHzBdqTPodEkUVlXPwL84zAnwzWj8VWV3XaBqBPrZSGvsVVz4l+LouG6yvNE5oab8SPhJa7FPs3dMIfk7GppDwXiwdws7VTEAGUoczH5djMXzVbYEXeDa4khbGsDarGdZR+aVhktG09330qftcg69Dndnd3lrZlGHwM0crhQTLRpy8FD/uVOttruvpJ6BsrjicM8441+XF0DmXELcNze6Mav9zIchQsfXQJ4x3jbvuYGFOIi3Vfozg7jirUpbHPpeI4sBhAmCFu3TX06NjOBQ+EgrzjLsFzOaLTmA+aNw83Pa7WwU51mbjpNtPW56LckE9976Pknj/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vjjwGzdWSmkhF/7MpqN3/pTLsXrfvwuVfvCR5zUwIF4=;
- b=alq5nM3f6dLSJ6fbo2MI9Q6i8HfuW9rgWYOW2F68V04YLZQEMKNiReSRuJGmkJ/+YbGTGop5WGdJQzh8kl5MCeBr0fP3Vh3wVAC63qVc/YGQ1y1cwFh/NSJtcE7Ps7BPPedq4XMQqF9GsZMQic4dSYZZjVrZgblvRfcN84kbV0+gRab6pJCzBf2nNt3gUrTc0I4dTC/HkpjMOpIJSC7C4lIxSw/ZHgdCRttm2uhC2FBH6JkXYZ5+iSpWhj6yPeOZVbziBjVWB/3VYuAdQpfLZTKWfI4D8R4Pl+PCT0G5ksRKYW4ZEiQZ6AfYCfn3EPcvCiBtecwtIrMHO7OSLtQrig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vjjwGzdWSmkhF/7MpqN3/pTLsXrfvwuVfvCR5zUwIF4=;
- b=FRKLGfPIBMezcJg9IkAuuodiFy5Ck7gcpTqeQ3Nbm+hs7JT9vOucD4y2E6zxtnYYxrny7tvj/gQf6tqtTnDfEkKx5v/LJUROdZIBucHUuryGj+3kY6rz1OZ2ql0iV+j8a/w+m3MW5prLMIFINyIghAbXvvQOrAk1Uwv86J2Sba0=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB3088.namprd18.prod.outlook.com (20.179.21.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.25; Fri, 11 Oct 2019 11:38:03 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763%3]) with mapi id 15.20.2347.021; Fri, 11 Oct 2019
- 11:38:03 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-CC:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        "Jason Baron" <jbaron@akamai.com>, Tero Kristo <t-kristo@ti.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        Fri, 11 Oct 2019 07:41:13 -0400
+Received: from mout.web.de ([217.72.192.78]:39681 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727243AbfJKLlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 07:41:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1570794049;
+        bh=iVzc43ug3QtfI1rmiytmMBv/IwRJnwRtTgk5FTKi8oI=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=jPky9ywhvFJTZVbHAfYbBWx5B+9jLDKpB1OafjHIRJa16H1vG2sOmmq2ee2xqWO1Z
+         mdBmsnYJQY7vSGiK2EqhcOY9HxSmQgyJRRc4W2eALRgV4h4xfayzNqSA1FvDglhiup
+         GH38OI5MRsUFkifUpx3jx/bl+t5hKGinyiC3HM5o=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.43.108] ([89.204.138.232]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MUnUe-1iZIcv0e7g-00Y6eI; Fri, 11
+ Oct 2019 13:40:49 +0200
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: fix RockPro64 sdmmc settings
+To:     Jonas Karlman <jonas@kwiboo.se>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH 01/19] EDAC: Replace EDAC_DIMM_PTR() macro with
- edac_get_dimm() function
-Thread-Topic: [PATCH 01/19] EDAC: Replace EDAC_DIMM_PTR() macro with
- edac_get_dimm() function
-Thread-Index: AQHVf6jNve/3IMiRJ0u/d/8Li7yNM6dVNayAgAAbp4A=
-Date:   Fri, 11 Oct 2019 11:38:03 +0000
-Message-ID: <20191011113755.atvr5bomixquo5eu@rric.localdomain>
-References: <20191010202418.25098-1-rrichter@marvell.com>
- <20191010202418.25098-2-rrichter@marvell.com>
- <20191011065857.00f287cf@coco.lan>
-In-Reply-To: <20191011065857.00f287cf@coco.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0401CA0069.eurprd04.prod.outlook.com
- (2603:10a6:3:19::37) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f58198d3-a3d2-499c-776e-08d74e3f7a0b
-x-ms-traffictypediagnostic: MN2PR18MB3088:
-x-microsoft-antispam-prvs: <MN2PR18MB30886B1291CA39D377DBED31D9970@MN2PR18MB3088.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0187F3EA14
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(189003)(199004)(52314003)(446003)(386003)(71190400001)(26005)(81166006)(53546011)(186003)(558084003)(5660300002)(52116002)(6916009)(81156014)(11346002)(478600001)(8676002)(6506007)(256004)(476003)(71200400001)(6246003)(1076003)(14454004)(25786009)(66476007)(486006)(64756008)(66556008)(66446008)(66946007)(102836004)(86362001)(76176011)(305945005)(6512007)(7736002)(9686003)(66066001)(229853002)(54906003)(4326008)(6436002)(3846002)(6116002)(99286004)(8936002)(2906002)(6486002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3088;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LU97s6tR1I7OJ1jhOJG9ypNYaK1NWaOmu2Gy99rP1WC6eIECvqUTAjId7N3y51GbviqwcDWvJIj5CUBxvuckk5vUZht2BkBIIIaey3IK6lhPH6izKeP/0ta8+AvZ6QTewYjgIXBJbVynjSr5UTphiVwDKPDbaUbFdrcS1PaXoLe+QovS4s+Cn5Ed2F8lqzx8T+TsgvOrkJuP1PxIErXO1eoVoF1ddXqE680tDilb2exY7ScV+YniprL3bjUzgngAUj9N2JODLY03eMtWW3vPfUEOkS+91ag0K1956oCIwqr1NSsKjtG5mbHsQw8sMT9NKZ70t/7z9hVkprC/6AfZf/zLSYQ8DfgMESsr5QrzQwAlBaj1VMt9y1Y0pxpQfX31IvTGWmyXIHc0+9WT4+NGRCGVzRZVoKlIPWJPCshSj9A=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B291FF1452F78A44963F2CA82C2D01B7@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191003215036.15023-1-smoch@web.de>
+ <20191003215036.15023-3-smoch@web.de>
+ <31181f3c-20ec-e717-1f7e-8b35cd54d96d@arm.com>
+ <a8b20c45-0426-ee42-4efc-52e56ea6bb20@web.de>
+ <120e2dbc-55eb-2205-b00f-7e50928ec706@rock-chips.com>
+ <1c452b8b-853f-8f58-5f3a-0bbecbe20557@web.de>
+ <fc7dce53-ad39-26e3-7c19-ab60ff4cc332@arm.com>
+ <0c6fdb65-be2a-68e3-a686-14ce9b0a00a4@rock-chips.com>
+ <e4aaddc2-441b-b835-380e-374a3d935474@web.de>
+ <HE1PR06MB40115FDF385886FDDE122CD6AC970@HE1PR06MB4011.eurprd06.prod.outlook.com>
+From:   Soeren Moch <smoch@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=smoch@web.de; prefer-encrypt=mutual; keydata=
+ mQMuBFF1CvoRCADuPSewZ3cFP42zIHDvyXJuBIqMfjbKsx27T97oRza/j12Cz1aJ9qIfjOt5
+ 9cHpi+NeCo5n5Pchlb11IGMjrd70NAByx87PwGL2MO5k/kMNucbYgN8Haas4Y3ECgrURFrZK
+ vvTMqFNQM/djQgjxUlEIej9wlnUO2xe7uF8rB+sQ+MqzMFwesCsoWgl+gRui7AhjxDJ2+nmy
+ Ec8ZtuTrWcTNJDsPMehLRBTf84RVg+4pkv4zH7ICzb4AWJxuTFDfQsSxfLuPmYtG0z7Jvjnt
+ iDaaa3p9+gmZYEWaIAn9W7XTLn0jEpgK35sMtW1qJ4XKuBXzDYyN6RSId/RfkPG5X6tXAQDH
+ KCd0I2P2dBVbSWfKP5nOaBH6Fph7nxFFayuFEUNcuQgAlO7L2bW8nRNKlBbBVozIekqpyCU7
+ mCdqdJBj29gm2oRcWTDB9/ARAT2z56q34BmHieY/luIGsWN54axeALlNgpNQEcKmTE4WuPaa
+ YztGF3z18/lKDmYBbokIha+jw5gdunzXXtj5JGiwD6+qxUxoptsBooD678XxqxxhBuNPVPZ0
+ rncSqYrumNYqcrMXo4F58T+bly2NUSqmDHBROn30BuW2CAcmfQtequGiESNHgyJLCaBWRs5R
+ bm/u6OlBST2KeAMPUfGvL6lWyvNzoJCWfUdVVxjgh56/s6Rp6gCHAO5q9ItsPJ5xvSWnX4hE
+ bAq8Bckrv2E8F0Bg/qJmbZ53FQf9GEytLQe0xhYCe/vEO8oRfsZRTMsGxFH1DMvfZ7f/MrPW
+ CTyPQ3KnwJxi9Mot2AtP1V1kfjiJ/jtuVTk021x45b6K9mw0/lX7lQ+dycrjTm6ccu98UiW1
+ OGw4rApMgHJR9pA59N7FAtI0bHsGVKlSzWVMdVNUCtF9R4VXUNxMZz84/ZcZ9hTK59KnrJb/
+ ft/IEAIEpdY7IOVI7mso060k3IFFV/HbWI/erjAGPaXR3Cccf0aH28nKIIVREfWd/7BU050G
+ P0RTccOxtYp9KHCF3W6bC9raJXlIoktbpYYJJgHUfIrPXrnnmKkWy6AgbkPh/Xi49c5oGolN
+ aNGeFuvYWbQaU29lcmVuIE1vY2ggPHNtb2NoQHdlYi5kZT6IegQTEQgAIgUCUXUK+gIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQANCJ0qFZnBAmcQEAkMwkC8NpkNTFQ+wc1j0C
+ D1zWXsI3BE+elCcGlzcK8d0A/04iWXt16ussH2x+LzceaJlUJUOs6c4khyCRzWWXKK1HuQIN
+ BFF1CvoQCADVUJEklP4MK6yoxlb+/fFsPw2YBNfpstx6TB8EC7TefHY1vIe/O4i4Vf4YfR+E
+ dbFRfEc1uStvd/NBOZmEZYOwXgKuckwKSEGKCDz5IBhiI84e0Je4ZkHP3poljJenZEtdfiSG
+ ZKtEjWJUv34EQGbkal7oJ2FLdlicquDmSq/WSjFenfVuGKx4Cx4jb3D0RP8A0lCGMHY6qhlq
+ fA4SgtjbFiSPXolTCCWGJr3L5CYnPaxg4r0G5FWt+4FZsUmvdUTWB1lZV7LGk1dBjdnPv6UT
+ X9VtL2dWl1GJHajKBJp9yz8OmkptxHLY1ZeqZRv9zEognqiE2VGiKTZe1Ajs55+HAAMFB/4g
+ FrF01xxygoi4x5zFzTB0VGmKIYK/rsnDxJFJoaR/S9iSycSZPTxECCy955fIFLy+GEF5J3Mb
+ G1ETO4ue2wjBMRMJZejEbD42oFgsT1qV+h8TZYWLZNoc/B/hArl5cUMa+tqz8Ih2+EUXr9wn
+ lYqqw/ita/7yP3ScDL9NGtZ+D4rp4h08FZKKKJq8lpy7pTmd/Nt5rnwPuWxagWM0C2nMnjtm
+ GL2tWQL0AmGIbapr0uMkvw6XsQ9NRYYyKyftP1YhgIvTiF2pAJRlmn/RZL6ZuCSJRZFMLT/v
+ 3wqJe3ZMlKtufQP8iemqsUSKhJJVIwAKloCX08K8RJ6JRjga/41HiGEEGBEIAAkFAlF1CvoC
+ GwwACgkQANCJ0qFZnBD/XQEAgRNZehpq0lRRtZkevVooDWftWF34jFgxigwqep7EtBwBAIlW
+ iHJPk0kAK21A1fmcp11cd6t8Jgfn1ciPuc0fqaRb
+Message-ID: <13064e01-9472-fc4d-2c7f-c186fa2a9a91@web.de>
+Date:   Fri, 11 Oct 2019 13:40:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f58198d3-a3d2-499c-776e-08d74e3f7a0b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2019 11:38:03.5391
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dm/zRnfrX7/KDATwwOoAr0X/Aeeio5eZpPN6hNnCH5DzpkeaT9srpJYHk+66raUWcErvo2Hp+s/rFSSi77c12Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3088
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-11_07:2019-10-10,2019-10-11 signatures=0
+In-Reply-To: <HE1PR06MB40115FDF385886FDDE122CD6AC970@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+X-Provags-ID: V03:K1:hJzX1PlNsFMkSJz3Dr52GZwbOW+LHfu5MY1JkQGRkbE7n/OyMsY
+ 0wbwN9O1nubnBmpq08+/CZB/kCjRtjiBOldTlor9ORdbEho/HVgVdfpsL++/rj6aAfpiaun
+ uSInhCxvObYd1Ji6kG9e1LJn2ig/ioXmzDra263FE7XcpwR97lUEQdHH6LCOfmRV5w90kHx
+ 4bth/roahu05h+oMOK6ig==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NqVqC8bpwjI=:xNgXjkkhEUQ6JVFu7WfBNG
+ 49GHmXXNsJtw/1oEj6zi2xyLmQDtZEGptTyAJkYImhmPALN5GBSmL4GY4e92N0Lf0dprKf1VA
+ HiNI0FlqCMt7Y+swdLYFsB/2yGOqwE1wSgmaopY80jnnA271fbvvoq9940gYm1/HxwPUVEAKx
+ 5n2/ElzKP6qIOPU9u0S62wxj7Zih2184fwJIEJzNXFUUL6lLc6SnHUR9ktGy8LvK3+dcPzwem
+ 22VB/bc62cODmsfDn7Hj42R5dxD0+rWTMvgNSsFZ0pVL7gEZ5WDD5L2mGDpbh78jCXogcY9VZ
+ K+jIsHupU71Cvzttp+jVPxEGnjrHVp55U6WqsNrz3qlx5KGf9DsLgCZyGKJ7IHiRClOlO20KT
+ +kC3gI7xD8fel9kLf7174H1YqrHfJfOmLLTXs9XCkXzOwvGoUjSIgGp+twNYTdw8yM87hTFKJ
+ 7QFWxIk51/G+6YGoeDwrmsBXhi301DUKXbTU6RddzTp/68qdBPjOxjc3UtqvGhRGNGxIYRaJ4
+ hnZ/Gc7834VmD+roKTFf2mbs9+3dd7j1Zd03N9TgDGgIfP7Y6dUQzGip+BD2YnURQo6O4Dof5
+ 2lh6+NL33qmhlTBRDDaK9enWdDJnJ8XSAlfNOud44q3TrlzZO7j8/rqOQhXjpedvK76wUtKWr
+ 5rXJssbXjRSa5It8dpv7X33RmfyUhz+hmi9lu7x/QDg3tV56NTTKjJtSko9IyvPp0tM5pzlMP
+ UeOv5VmXAQ+mNcy6Mu9dT/WrnQ3OuUBA9AnKbyVFRreQFDv8N8xj1aPyt+o4/P9kDeSaoqero
+ 408k5zT/hNexlg/OUTh2HhtBXs+0qn07dp8BlJ2sXYXqxWNUis+wdbKbPTGGWqRU8vZ5g6QWd
+ JqQjAQtKD/tYJCYAsHpZ9cNIhRXT6WwfUd/NzoRpd0TjhzBU6nsKtZCT0g728m2LH2daKYKA3
+ qq2RpoTpuZPQIS2RbJmoWSpXWKHQ9oNmum8kYGWfHKPQs+/oyybjavRvm6bko8ZFlBjElCcFd
+ Q5oWL03eT3RdAJoPZrfZgPT3v4Z+Ngmn8jE1pkhh9Tl8sOQtTAPPNDs5Fuv4+19dzsP8X4i9f
+ VOljQVDRswysJohrwdwyl41gaEzwamCphTTFCI80uYZDnSmPWfvaOyavCq3avn0ATit9Fa1Dh
+ Fqm/8UYRXGjylZhyauhm5GzcdncfA3r0UklFy8R5owuGzAVRnKq7ot04RehE6g5f3+uGzD6Dg
+ wSbNMBIA25lOrgNIAcj8aKYSGMO46nz8DHXkMeg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.10.19 06:58:57, Mauro Carvalho Chehab wrote:
-> Anyway, if you have a good reason to add this idx, please place
-> it on a separate patch, with a proper description about why
-> it is needed.
 
-Right, see next patch. Will change.
 
--Robert
+On 11.10.19 10:22, Jonas Karlman wrote:
+> On 2019-10-04 19:24, S=C3=B6ren Moch wrote:
+>> On 04.10.19 17:33, Shawn Lin wrote:
+>>> On 2019/10/4 22:20, Robin Murphy wrote:
+>>>> On 04/10/2019 04:39, Soeren Moch wrote:
+>>>>> On 04.10.19 04:13, Shawn Lin wrote:
+>>>>>> On 2019/10/4 8:53, Soeren Moch wrote:
+>>>>>>> On 04.10.19 02:01, Robin Murphy wrote:
+>>>>>>>> On 2019-10-03 10:50 pm, Soeren Moch wrote:
+>>>>>>>>> According to the RockPro64 schematic [1] the rk3399 sdmmc
+>>>>>>>>> controller is
+>>>>>>>>> connected to a microSD (TF card) slot, which cannot be switched=
+ to
+>>>>>>>>> 1.8V.
+>>>>>>>> Really? AFAICS the SDMMC0 wiring looks pretty much identical to =
+the
+>>>>>>>> NanoPC-T4 schematic (it's the same reference design, after all),=
+
+>>>>>>>> and I
+>>>>>>>> know that board can happily drive a UHS-I microSD card with 1.8v=
+
+>>>>>>>> I/Os,
+>>>>>>>> because mine's doing so right now.
+>>>>>>>>
+>>>>>>>> Robin.
+>>>>>>> OK, the RockPro64 does not allow a card reset (power cycle) since=
+
+>>>>>>> VCC3V0_SD is directly connected to VCC3V3_SYS (via R89555), the
+>>>>>>> SDMMC0_PWH_H signal is not connected. So the card fails to identi=
+fy
+>>>>>>> itself after suspend or reboot when switched to 1.8V operation.
+>>>> Ah, thanks for clarifying - I did overlook the subtlety that U12 and=
+
+>>>> friends have "NC" as alternative part numbers, even though they
+>>>> aren't actually marked as DNP. So it's still not so much "cannot be
+>>>> switched" as "switching can lead to other problems".
+>>>>
+>>>>>> I believe we addressed this issue long time ago, please check:
+>>>>>>
+>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=
+/commit/?id=3D6a11fc47f175c8d87018e89cb58e2d36c66534cb
+>>>>>>
+>>>>>>
+>>>>> Thanks for the pointer.
+>>>>> In this case I guess I should use following patch instead:
+>>>>>
+>>>>> --- rk3399-rockpro64.dts.bak =C2=A0=C2=A0 2019-10-03 22:14:00.06774=
+5799 +0200
+>>>>> +++ rk3399-rockpro64.dts=C2=A0=C2=A0=C2=A0 2019-10-04 00:02:50.0478=
+92366 +0200
+>>>>> @@ -619,6 +619,8 @@
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 max-frequency =3D <150000000>;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&sdmmc_clk &sdmmc_cmd=
+ &sdmmc_bus4>;
+>>>>> +=C2=A0=C2=A0=C2=A0 sd-uhs-sdr104;
+>>>>> +=C2=A0=C2=A0=C2=A0 vqmmc-supply =3D <&vcc_sdio>;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D "okay";
+>>>>> =C2=A0=C2=A0};
+>>>>> When I do so, the sd card is detected as SDR104, but a reboot hangs=
+:
+>>>>>
+>>>>> Boot1: 2018-06-26, version: 1.14
+>>>>> CPUId =3D 0x0
+>>>>> ChipType =3D 0x10, 286
+>>>>> Spi_ChipId =3D c84018
+>>>>> no find rkpartition
+>>>>> SpiBootInit:ffffffff
+>>>>> mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
+>>>>> mmc: ERROR: Card did not respond to voltage select!
+>>>>> emmc reinit
+>>>>> mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
+>>>>> mmc: ERROR: Card did not respond to voltage select!
+>>>>> emmc reinit
+>>>>> mmc: ERROR: SDHCI ERR:cmd:0x102,stat:0x18000
+>>>>> mmc: ERROR: Card did not respond to voltage select!
+>>>>> SdmmcInit=3D2 1
+>>>>> mmc0:cmd5,32
+>>>>> mmc0:cmd7,32
+>>>>> mmc0:cmd5,32
+>>>>> mmc0:cmd7,32
+>>>>> mmc0:cmd5,32
+>>>>> mmc0:cmd7,32
+>>>>> SdmmcInit=3D0 1
+>>>>>
+>>>>> So I guess I should use a different miniloader for this reboot to
+>>>>> work!?
+>>>>> Or what else could be wrong here?
+>>>> Hmm, I guess this is "the Tinkerboard problem" again - the patch
+>>>> above would be OK if we could get as far as the kernel, but can't
+>>>> help if the=20
+>>> I didn't realize that SD was used as boot medium for RockPro64, but I=
+
+>>> did patch the vendor tree to solve the issue for Tinkerboard, see
+>>> https://github.com/rockchip-linux/kernel/commit/a4ccde21f5a9f04f996fb=
+02479cb9f16d3dc8dc0
+>>>
+>>>
+>>> My initial plan was to patching upstream kernel by adding ->shutdown,=
+but
+>>> never finish it.
+>>>
+>>>> offending card is itself the boot medium. There was a proposal here:=
+
+>>>>
+>>>> https://patchwork.kernel.org/patch/10817217/
+>>> This RFC also looks good to me, but seems it needs volunteers
+>>> to push it again.
+>> Oh, I think this is a totally wrong way.
+>>
+>> While this might work for some cards, setting the controller's i/o
+>> voltage to 3.3V while leaving the card at 1.8V configuration is totall=
+y
+>> against the specification, can lead to all kinds of strange behaviour
+>> and even cause hardware damage. It also would actively defend the
+>> purpose of the above mentioned patch (6a11fc4) where the kernel guesse=
+s
+>> the i/o voltage from the card configuration and switches the controlle=
+r
+>> accordingly. We would end up with a 1.8V card and controller
+>> configuration and a regulator voltage of 3.3V. This would only work wi=
+th
+>> good luck. Even if the kernel driver would switch the regulator back t=
+o
+>> 1.8V in this case, the voltage mismatch remains in the bootloader when=
+
+>> this card contains the boot image.
+>>
+>> The only sane way I see to handle this is implementing the same
+>> workaround (mode guessing) also in the bootloader (rockchip miniloader=
+
+>> and u-boot SPL since both bootloader chains are supported for this boa=
+rd).
+>>
+>> Or maybe I miss something?
+> Thanks for your input, I have made a new series [1] with a similar appr=
+oach but is limited to dw_mmc-rockchip
+> and only changes the regulator at power_off after the regulator has bee=
+n disabled (the vqmmc regulator in affected devices is always-on).
+Thanks for your work on this. Unfortunately I still think that this is
+the wrong approach.
+I see several problems in your patch series:
+- You introduced GPIO0_PA1 as regulator enable for RockPro64.
+Unfortunately Pine64 decided to disable this regulator on Board Version
+2.1 (real product version), see above. I have no idea why they did this.
+- You changed the i/o voltage from 3.0V to 3.3V. This is not allowed on
+RK3399 I/O bank F.
+
+Changing the i/o voltage to 3.0V/3.3V while the sd card is configured
+for 1.8V is against the specification and dangerous. While experimenting
+with different images (ayufan, armbian) for my newly bought RockPro64 I
+killed a SD card (32GB Samsung UHS-I). I cannot reconstruct the exact
+circumstances, but I'm pretty sure this happened due to the voltage
+mismatch. Of course I'm not keen to experiment further with this and
+kill more sd cards. This is not just an theoretical issue.
+> To my knowledge the problem is not with the rockchip miniloader or u-bo=
+ot SPL, it is the initial boot rom that tries to load
+> the miniloader/SPL from a SD-card, so nothing that can be updated.
+What I observed on my RockPro64:
+The ROM bootloader always was able to load the next stage, maybe due to
+the low initial clock of 400kHz? Also the ROM bootloader cannot change
+voltage regulator settings. So if the i/o voltage still is at 1.8V and
+matching the sd card setting, there is no problem for the ROM bootloader.=
+
+So I think the normal reboot handling should be:
+If the sd card can be switched off (preferred solution), do so and reset
+the controller i/o voltage to 3.0V/3.3V.
+If the sd card can not be switched off, make sure to leave the
+controller i/o voltage at the current setting. Make sure in later boot
+stages to not change the controller i/o voltage to 3.0V/3.3V when the
+card is configured for 1.8V. According to the patch mentioned above this
+behaviour already is implemented in linux, we also need this for the
+bootloaders.
+
+Regards,
+Soeren
+>
+> I have observed this issue on the following devices, and the patches at=
+ [1] makes it possible to reboot from SD-card after UHS has been enabled.=
+
+> - Asus Tinker Board (RK3288)
+> - Rockchip Sapphire Board (RK3399)
+> - Radxa Rock Pi 4 (RK3399)
+> - Pine64 RockPro64 (RK3399)
+> All of the above seem to use the RK808 regulator for sd io voltage.
+>
+> The ROC-RK3328-CC did not have this issue and seem to automatically res=
+et to 3.3v.
+>
+> [1] https://github.com/Kwiboo/linux-rockchip/compare/next-20191011...ne=
+xt-20191011-mmc
+>
+> Regards,
+> Jonas
+>
+>> Soeren
+>>
+>>
+>>>> although I'm not sure what if any progress has been made since then.=
+
+>>>>
+>>>> Robin.
+>>>>
+
+
