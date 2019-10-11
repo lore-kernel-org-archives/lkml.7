@@ -2,88 +2,69 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E3EECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBC9C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 246E821929
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570763392;
-	bh=BEyFvVjEBJHdtTPqDeGAQzmKpVgOkTgYAGCdNNFAEd8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=xrW284n/xG7LpSKZMnAq2zeW4Nj3+IriL+Yheg3BqPCFV/Z8M7ZTKy19DU9VM6vSc
-	 T1NrsloWz2YRVe5zg8wCzUAxwFxSJ8yeLnTsXa9wxpzDfrDgNzQeWbIYR8xIv52XNo
-	 2anlyGD851FpJmO3L8S2dgHTaM+h+mSwJGhr/jm4=
+	by mail.kernel.org (Postfix) with ESMTP id 74C69206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 03:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfJKDJv (ORCPT
+        id S1726833AbfJKDLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 23:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42834 "EHLO mail.kernel.org"
+        Thu, 10 Oct 2019 23:11:33 -0400
+Received: from gate.crashing.org ([63.228.1.57]:55148 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfJKDJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 23:09:50 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 985BD206A1;
-        Fri, 11 Oct 2019 03:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570763390;
-        bh=BEyFvVjEBJHdtTPqDeGAQzmKpVgOkTgYAGCdNNFAEd8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=2H4gQvrU+QvhB042vbltWESXmF9eyRg0iOsdftX7Yro3gyAuwr2TRzpu0fBCGXJ+r
-         LW73/BonXRzgpdr7Pzd0H87+WKbU9vb7n30JRUKm0PrP3NX2/mW0qgt2siyXzp9rG+
-         KpFNu4sh55ZoFZIbyu9hf/FoY5N84sgNm8E5lbkA=
-Subject: Re: [PATCH 4.14 00/61] 4.14.149-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191010083449.500442342@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <44ecdca7-f30b-1ea5-93be-4d320ede8f58@kernel.org>
-Date:   Thu, 10 Oct 2019 21:09:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191010083449.500442342@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        id S1726096AbfJKDLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Oct 2019 23:11:32 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9B3AiNi016659;
+        Thu, 10 Oct 2019 22:10:45 -0500
+Message-ID: <158fa0872643089750b3797fd2f78ba18eaf488c.camel@kernel.crashing.org>
+Subject: Re: [PATCH] ftgmac100: Disable HW checksum generation on AST2500
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Vijay Khemka <vijaykhemka@fb.com>, Joel Stanley <joel@jms.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        YueHaibing <yuehaibing@huawei.com>, Andrew Lunn <andrew@lunn.ch>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Date:   Fri, 11 Oct 2019 14:10:44 +1100
+In-Reply-To: <AF7B985F-6E42-4CD4-B3D0-4B9EA42253C9@fb.com>
+References: <20190910213734.3112330-1-vijaykhemka@fb.com>
+         <bd5eab2e-6ba6-9e27-54d4-d9534da9d5f7@gmail.com>
+         <CACPK8XcS4iKfKigPbPg0BFbmjbT-kdyjiPDXjk1k5XaS5bCdAA@mail.gmail.com>
+         <95e215664612c0487808c02232852ef2188c95a5.camel@kernel.crashing.org>
+         <AF7B985F-6E42-4CD4-B3D0-4B9EA42253C9@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/19 2:36 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.149 release.
-> There are 61 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, 2019-10-10 at 19:15 +0000, Vijay Khemka wrote:
+>     Any news on this ? AST2400 has no HW checksum logic in HW, AST2500
+>     should work for IPV4 fine, we should only selectively disable it for
+>     IPV6.
 > 
-> Responses should be made by Sat 12 Oct 2019 08:29:51 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.149-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> Ben, I have already sent v2 for this with requested change which only disable 
+> for IPV6 in AST2500. I can send it again.
 
-Compiled and booted on my test system. No dmesg regressions.
+I didn't see it, did you CC me ? I maintain that driver...
 
-thanks,
--- Shuah
+Cheers,
+Ben.
+
 
