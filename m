@@ -2,119 +2,314 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FF4ECE596
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A76EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71FD021D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:06:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GvnBbSeR"
+	by mail.kernel.org (Postfix) with ESMTP id 588B12084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfJKHGL (ORCPT
+        id S1727540AbfJKHHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 03:06:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:40260 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbfJKHGK (ORCPT
+        Fri, 11 Oct 2019 03:07:38 -0400
+Received: from regular1.263xmail.com ([211.150.70.199]:55154 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfJKHHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 03:06:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=B7tSt4++AeNClEYMJ6vFiBHpS1WJihxuciejr2hX7bs=; b=GvnBbSeRL2D7Djol5QJK4MqT+
-        f5pua78F2o9VGO8YAmoQv16DV8cOvHSqAM9e+4JIHcuJk2nKDeKvCJgnjYK3SQmzdBKk/2cWLMjoP
-        pqAr/BidNI3as9nX/sJ7HaZqkEUiPCJGbFRFWV43iqClh+ek5Zjd5NrBpLm9I3OBWbx3fFeSgpjPZ
-        3HFr+5JoDrvRlwuZm1pms3rRyfSGcNJfzUjfRAw364CFb46QXZD81LBxKBMsyJSDD+zBjU7daKMVD
-        1mOylo3pTqay0R17ca4hZEsnO/6nJZdOUAJMyDqQ3vsoeecqLMGUu0QG3I3eSmhNIyAVAAMK79Ql9
-        tk4BJxQ0w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iIozh-0004C0-Du; Fri, 11 Oct 2019 07:05:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C6927301224;
-        Fri, 11 Oct 2019 09:04:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4FEF021492B15; Fri, 11 Oct 2019 09:05:43 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 09:05:43 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC] perf_event: Add support for LSM and SELinux checks
-Message-ID: <20191011070543.GV2328@hirez.programming.kicks-ass.net>
-References: <20191009203657.6070-1-joel@joelfernandes.org>
- <20191010081251.GP2311@hirez.programming.kicks-ass.net>
- <20191010151333.GE96813@google.com>
- <20191010170949.GR2328@hirez.programming.kicks-ass.net>
- <20191010183114.GF96813@google.com>
+        Fri, 11 Oct 2019 03:07:37 -0400
+Received: from localhost (unknown [192.168.167.154])
+        by regular1.263xmail.com (Postfix) with ESMTP id DD89D41F;
+        Fri, 11 Oct 2019 15:07:24 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.10.69] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P30556T139942227334912S1570777641787203_;
+        Fri, 11 Oct 2019 15:07:22 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <d41dfe53de0bfcb4acfccad53fadc479>
+X-RL-SENDER: hjc@rock-chips.com
+X-SENDER: hjc@rock-chips.com
+X-LOGIN-NAME: hjc@rock-chips.com
+X-FST-TO: nd@arm.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        nd <nd@arm.com>
+References: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
+ <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
+ <20190930104849.GA1208@intel.com>
+ <2c46d532-f810-392d-b9c0-3b9aaccae7f4@rock-chips.com>
+ <20191008113338.GP1208@intel.com>
+ <a5fa3d8e-9e8e-8aa8-8abb-f00e8357acb5@rock-chips.com>
+ <eafa5b37-e132-ad37-3876-384ac5ec9584@rock-chips.com>
+ <20191011064433.GA18503@jamwan02-TSP300>
+From:   "sandy.huang" <hjc@rock-chips.com>
+Message-ID: <5c932cb6-fdfb-88db-3757-4c1b602d4778@rock-chips.com>
+Date:   Fri, 11 Oct 2019 15:07:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010183114.GF96813@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011064433.GA18503@jamwan02-TSP300>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 02:31:14PM -0400, Joel Fernandes wrote:
-> On Thu, Oct 10, 2019 at 07:09:49PM +0200, Peter Zijlstra wrote:
 
-> > Yes, I did notice, I found it weird.
-> > 
-> > If you have CAP_IPC_LIMIT you should be able to bust mlock memory
-> > limits, so I don't see why we should further relate that to paranoid.
-> > 
-> > The way I wrote it, we also allow to bust the limit if we have disabled
-> > all paranoid checks. Which makes some sense I suppose.
-> > 
-> > The original commit is this:
-> > 
-> >   459ec28ab404 ("perf_counter: Allow mmap if paranoid checks are turned off")
-> 
-> I am thinking we can just a new function perf_is_paranoid() that has nothing
-> to do with the CAP_SYS_ADMIN check and doesn't have tracepoint wording:
-> 
-> static inline int perf_is_paranoid(void)
-> {
-> 	return sysctl_perf_event_paranoid > -1;
-> }
-> 
-> And then call that from the mmap() code:
-> if (locked > lock_limit && perf_is_paranoid() && !capable(CAP_IPC_LOCK)) {
-> 	return -EPERM;
-> }
-> 
-> I don't think we need to add selinux security checks here since we are
-> already adding security checks earlier in mmap(). This will make the code and
-> its intention more clear and in line with the commit 459ec28ab404 you
-> mentioned. Thoughts?
+在 2019/10/11 下午2:44, james qian wang (Arm Technology China) 写道:
+> On Fri, Oct 11, 2019 at 11:35:53AM +0800, sandy.huang wrote:
+>> Hi james.qian.wang,
+>>
+>>      Thank for you remind, fou some unknow reason, i miss the the mail from
+>> you:(, i get this message from https://patchwork.kernel.org/patch/11161937/
+>>
+>> sorry about that.
+>>
+>>      About the format block describe, I also found some unreasonable,  this
+>> format need 2 line aligned, so the block_h need to sed as 2, and the
+>> char_per_block need set as w * h * 10 for y plane, and w * h * 2 * 10 for uv
+>> plane, so the following describe maybe more correct, thanks.
+>>
+>>          { .format = DRM_FORMAT_NV12_10,        .depth = 0, .num_planes = 2,
+>>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>> = { 2, 2, 0 },
+>>            .hsub = 2, .vsub = 2, .is_yuv = true},
+> Hi Sandy:
+> I think for such NV12 YUV-422 (hsub = 2, vsub = 2) 2x2 subsampled format
+> the block size can be:
+>
+> the Y plane:  2x2;
+> The UV plane: 1x2; (H direction sample 1 Cb and 1Cr, V direction 2 lines got 2)
+>
+> Then:
+>
+> .char_per_block = {5, 5, 0} block_w = {2, 1, 0}. block_h = {2, 2, 0};
+>
+> Thanks
+> James
 
-Mostly that I'm confused by the current code ;-)
+Hi James,
 
-Like I said, CAP_IPC_LIMIT on its own should already allow busting the
-limit, I don't really see why we should make it conditional on paranoid.
+If the block_w is 2 pixel, one line size at block is 2*10 bit %8 != 0,  
+although we use block to describe this format, but actually the data is 
+still stored one line by one line, still need 4 pixel aligned. so i 
+think here need use 4pixel*2line for per block,
 
-But if you want to preserve behaviour (arguably a sane thing for your
-patch) then yes, feel free to do as you propose.
+Thanks,
+
+sandy.huang.
+
+>
+>>            .hsub = 2, .vsub = 2, .is_yuv = true},
+>>          { .format = DRM_FORMAT_NV21_10,        .depth = 0, .num_planes = 2,
+>>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>> = { 2, 2, 0 },
+>>            .hsub = 2, .vsub = 2, .is_yuv = true},
+>>          { .format = DRM_FORMAT_NV16_10,        .depth = 0, .num_planes = 2,
+>>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>> = { 2, 2, 0 },
+>>            .hsub = 2, .vsub = 1, .is_yuv = true},
+>>          { .format = DRM_FORMAT_NV61_10,        .depth = 0, .num_planes = 2,
+>>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>> = { 2, 2, 0 },
+>>            .hsub = 2, .vsub = 1, .is_yuv = true},
+>>          { .format = DRM_FORMAT_NV24_10,        .depth = 0, .num_planes = 2,
+>>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>> = { 2, 2, 0 },
+>>            .hsub = 1, .vsub = 1, .is_yuv = true},
+>>          { .format = DRM_FORMAT_NV42_10,        .depth = 0, .num_planes = 2,
+>>            .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+>> = { 2, 2, 0 },
+>>            .hsub = 1, .vsub = 1, .is_yuv = true},
+>>
+>>
+>>>>            { .format = DRM_FORMAT_P016,        .depth = 0,  .num_planes =
+>> 2,
+>>>>              .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 },
+>> .block_h = { 1, 0, 0 },
+>>>>              .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>> +        { .format = DRM_FORMAT_NV12_10,        .depth = 0,  .num_planes
+>> = 2,
+>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 },
+>> .block_h = { 4, 4, 0 },
+>>
+>>> Hi Sandy:
+>>> Their is a problem here for char_per_block size of plane[0]:
+>>> Since: 5 * 8 != 4 * 4 * 10;
+>>> Seems you mis-set the block_w/h, per your block size the block is 2x2, and
+>> it should be:
+>>>    .char_per_block = { 5, 10, 0 }, .block_w = { 2, 2, 0 }, .block_h = { 2,
+>> 2, 0 },
+>>
+>>> Best Regards:
+>>> James
+>>
+>>
+>>
+>>
+>>
+>> 在 2019/10/8 下午7:49, sandy.huang 写道:
+>>> 在 2019/10/8 下午7:33, Ville Syrjälä 写道:
+>>>> On Tue, Oct 08, 2019 at 10:40:20AM +0800, sandy.huang wrote:
+>>>>> Hi ville syrjala,
+>>>>>
+>>>>> 在 2019/9/30 下午6:48, Ville Syrjälä 写道:
+>>>>>> On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
+>>>>>>> These new format is supported by some rockchip socs:
+>>>>>>>
+>>>>>>> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
+>>>>>>> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
+>>>>>>> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+>>>>>>>
+>>>>>>> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+>>>>>>> ---
+>>>>>>>     drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
+>>>>>>>     include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
+>>>>>>>     2 files changed, 32 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/drivers/gpu/drm/drm_fourcc.c
+>>>>>>> b/drivers/gpu/drm/drm_fourcc.c
+>>>>>>> index c630064..ccd78a3 100644
+>>>>>>> --- a/drivers/gpu/drm/drm_fourcc.c
+>>>>>>> +++ b/drivers/gpu/drm/drm_fourcc.c
+>>>>>>> @@ -261,6 +261,24 @@ const struct drm_format_info
+>>>>>>> *__drm_format_info(u32 format)
+>>>>>>>             { .format = DRM_FORMAT_P016,        .depth =
+>>>>>>> 0,  .num_planes = 2,
+>>>>>>>               .char_per_block = { 2, 4, 0 }, .block_w = {
+>>>>>>> 1, 0, 0 }, .block_h = { 1, 0, 0 },
+>>>>>>>               .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>>>> +        { .format = DRM_FORMAT_NV12_10,        .depth =
+>>>>>>> 0,  .num_planes = 2,
+>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>> +          .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>>>> +        { .format = DRM_FORMAT_NV21_10,        .depth =
+>>>>>>> 0,  .num_planes = 2,
+>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>> +          .hsub = 2, .vsub = 2, .is_yuv = true},
+>>>>>>> +        { .format = DRM_FORMAT_NV16_10,        .depth =
+>>>>>>> 0,  .num_planes = 2,
+>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>> +          .hsub = 2, .vsub = 1, .is_yuv = true},
+>>>>>>> +        { .format = DRM_FORMAT_NV61_10,        .depth =
+>>>>>>> 0,  .num_planes = 2,
+>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>> +          .hsub = 2, .vsub = 1, .is_yuv = true},
+>>>>>>> +        { .format = DRM_FORMAT_NV24_10,        .depth =
+>>>>>>> 0,  .num_planes = 2,
+>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>> +          .hsub = 1, .vsub = 1, .is_yuv = true},
+>>>>>>> +        { .format = DRM_FORMAT_NV42_10,        .depth =
+>>>>>>> 0,  .num_planes = 2,
+>>>>>>> +          .char_per_block = { 5, 10, 0 }, .block_w = {
+>>>>>>> 4, 4, 0 }, .block_h = { 4, 4, 0 },
+>>>>>>> +          .hsub = 1, .vsub = 1, .is_yuv = true},
+>>>>>>>             { .format = DRM_FORMAT_P210,        .depth = 0,
+>>>>>>>               .num_planes = 2, .char_per_block = { 2, 4, 0 },
+>>>>>>>               .block_w = { 1, 0, 0 }, .block_h = { 1, 0,
+>>>>>>> 0 }, .hsub = 2,
+>>>>>>> diff --git a/include/uapi/drm/drm_fourcc.h
+>>>>>>> b/include/uapi/drm/drm_fourcc.h
+>>>>>>> index 3feeaa3..08e2221 100644
+>>>>>>> --- a/include/uapi/drm/drm_fourcc.h
+>>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
+>>>>>>> @@ -238,6 +238,20 @@ extern "C" {
+>>>>>>>     #define DRM_FORMAT_NV42        fourcc_code('N', 'V',
+>>>>>>> '4', '2') /* non-subsampled Cb:Cr plane */
+>>>>>>>        /*
+>>>>>>> + * 2 plane YCbCr
+>>>>>>> + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
+>>>>>>> + * index 1 = Cb:Cr plane,
+>>>>>>> Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
+>>>>>>> + * or
+>>>>>>> + * index 1 = Cr:Cb plane,
+>>>>>>> Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
+>>>>>> So now you're defining it as some kind of byte aligned block.
+>>>>>> With that specifying endianness would now make sense since
+>>>>>> otherwise this tells us absolutely nothing about the memory
+>>>>>> layout.
+>>>>>>
+>>>>>> So I'd either do that, or go back to not specifying anything and
+>>>>>> use some weasel words like "mamory layout is implementation defined"
+>>>>>> which of course means no one can use it for anything that involves
+>>>>>> any kind of cross vendor stuff.
+>>>>> /*
+>>>>>     * 2 plane YCbCr
+>>>>>     * index 0 = Y plane, [39: 0] Y3:Y2:Y1:Y0 10:10:10:10 little endian
+>>>>>     * index 1 = Cb:Cr plane, [79: 0] Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0
+>>>>> 10:10:10:10:10:10:10:10  little endian
+>>>>>     * or
+>>>>>     * index 1 = Cr:Cb plane, [79: 0] Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0
+>>>>> 10:10:10:10:10:10:10:10  little endian
+>>>>>     */
+>>>>>
+>>>>> Is this description ok?
+>>>> Seems OK to me, if it actually describes the format correctly.
+>>>>
+>>>> Though I'm not sure why the CbCr is defines as an 80bit block
+>>>> and Y has a 40bit block. 40bits should be enough for CbCr as well.
+>>>>
+>>> well, this is taken into account yuv444,  4 y point corresponding with 4
+>>> uv point.
+>>>
+>>> if only describes the layout memory, here can change to 40bit block.
+>>>
+>>> thanks.
+>>>
+>>>>>>> + */
+>>>>>>> +#define DRM_FORMAT_NV12_10    fourcc_code('N', 'A',
+>>>>>>> '1', '2') /* 2x2 subsampled Cr:Cb plane */
+>>>>>>> +#define DRM_FORMAT_NV21_10    fourcc_code('N', 'A',
+>>>>>>> '2', '1') /* 2x2 subsampled Cb:Cr plane */
+>>>>>>> +#define DRM_FORMAT_NV16_10    fourcc_code('N', 'A',
+>>>>>>> '1', '6') /* 2x1 subsampled Cr:Cb plane */
+>>>>>>> +#define DRM_FORMAT_NV61_10    fourcc_code('N', 'A',
+>>>>>>> '6', '1') /* 2x1 subsampled Cb:Cr plane */
+>>>>>>> +#define DRM_FORMAT_NV24_10    fourcc_code('N', 'A',
+>>>>>>> '2', '4') /* non-subsampled Cr:Cb plane */
+>>>>>>> +#define DRM_FORMAT_NV42_10    fourcc_code('N', 'A',
+>>>>>>> '4', '2') /* non-subsampled Cb:Cr plane */
+>>>>>>> +
+>>>>>>> +/*
+>>>>>>>      * 2 plane YCbCr MSB aligned
+>>>>>>>      * index 0 = Y plane, [15:0] Y:x [10:6] little endian
+>>>>>>>      * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x
+>>>>>>> [10:6:10:6] little endian
+>>>>>>> -- 
+>>>>>>> 2.7.4
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> _______________________________________________
+>>>>>>> dri-devel mailing list
+>>>>>>> dri-devel@lists.freedesktop.org
+>>>>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>>
+>>> _______________________________________________
+>>> dri-devel mailing list
+>>> dri-devel@lists.freedesktop.org
+>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
