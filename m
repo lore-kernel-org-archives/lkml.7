@@ -2,83 +2,133 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B20CC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30348ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B29C2196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1413921D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfJKKSg (ORCPT
+        id S1727542AbfJKKSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:18:36 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3120 "EHLO mga02.intel.com"
+        Fri, 11 Oct 2019 06:18:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33580 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbfJKKSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:18:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 03:18:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,283,1566889200"; 
-   d="scan'208";a="207400617"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 11 Oct 2019 03:18:31 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 11 Oct 2019 13:18:31 +0300
-Date:   Fri, 11 Oct 2019 13:18:31 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [GIT PULL] Thunderbolt fixes for v5.4
-Message-ID: <20191011101831.GC2819@lahna.fi.intel.com>
+        id S1726546AbfJKKSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 06:18:52 -0400
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9615085537
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 10:18:52 +0000 (UTC)
+Received: by mail-io1-f69.google.com with SMTP id q18so14015542ios.8
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 03:18:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ezldw/W3yEUUaRQBM2UsDlZ+1NBlrPJRQgRQBE4bfow=;
+        b=j5x7Q+FCDKi08INlgC3+VRGnG0UL78b3UGL/6kSDKwK/nBP/PKxaVa9yWzMioAMkrg
+         SsekjW+y499CoSf2mjmP3bbYkL+Ro7kInsMoPnKclwarwvBgMRLrtdJBUnNOHoLu7mnR
+         Gb+Ne2+Qk49WCy0GXm5riSqjRUWuO2fNwGvBSGISauGM1poRcHleG8P2EDfLcE8NDczb
+         n/bh4B1tHWdcfd4hRvCsQ3ieVD6j3ntO3chd7KuNupBGGqjkkPcvDwmesVUFjbZyHfj9
+         r+2XwgLw42R1Jck5CYydKgScqxLP/PHCA0MlSwjzYUb0ZkZuQSdJ3dDAodYwxpnvVYz1
+         g3Gw==
+X-Gm-Message-State: APjAAAU7nPtdV3Y050jXxSkLQoTRdtEDfdb9B3dOmGCjpHpNL1Sv59b7
+        sRjB6QTZkfLy+1brj2WwtqwwxmoVu9GnPUdFEFGqNupceuttPNZdgIdBlonD2RfT1RlA7FYn53u
+        0S+JvTE8QuPrn37/uZkFAozF5wQQmyor3c0cOyH5l
+X-Received: by 2002:a6b:ee1a:: with SMTP id i26mr1250930ioh.202.1570789131887;
+        Fri, 11 Oct 2019 03:18:51 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxMBTtYTtzqHW6IhTVWq3xS7QTn71g8GWmBZ0Svz/a1YAShKUhbb/aYerCE+8iT34WwAPUSfQvd49bQufhMra0=
+X-Received: by 2002:a6b:ee1a:: with SMTP id i26mr1250893ioh.202.1570789131530;
+ Fri, 11 Oct 2019 03:18:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190919160521.13820-1-kasong@redhat.com> <CAKv+Gu95NGPF7m9_K-0MDmti7XN++cfyYWRj6WEXqpYzDM9Btg@mail.gmail.com>
+ <CACPcB9c=DzGrqnm1WrEtr85v5f_F41NQ-di5NV-F2ukbbrpTTw@mail.gmail.com>
+In-Reply-To: <CACPcB9c=DzGrqnm1WrEtr85v5f_F41NQ-di5NV-F2ukbbrpTTw@mail.gmail.com>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Fri, 11 Oct 2019 18:18:40 +0800
+Message-ID: <CACPcB9cdKR-t+jNsYYzZBVqr3pGSkO7Yq7xTS6Oi-h7VX+pkFw@mail.gmail.com>
+Subject: Re: [PATCH v2] x86, efi: never relocate kernel below lowest
+ acceptable address
+To:     "the arch/x86 maintainers" <x86@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Thu, Sep 26, 2019 at 1:36 AM Kairui Song <kasong@redhat.com> wrote:
+>
+> On Wed, Sep 25, 2019 at 11:25 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> >
+> > On Thu, 19 Sep 2019 at 18:06, Kairui Song <kasong@redhat.com> wrote:
+> > >
+> > > Currently, kernel fails to boot on some HyperV VMs when using EFI.
+> > > And it's a potential issue on all platforms.
+> > >
+> > > It's caused a broken kernel relocation on EFI systems, when below three
+> > > conditions are met:
+> > >
+> > > 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
+> > >    by the loader.
+> > > 2. There isn't enough room to contain the kernel, starting from the
+> > >    default load address (eg. something else occupied part the region).
+> > > 3. In the memmap provided by EFI firmware, there is a memory region
+> > >    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
+> > >    kernel.
+> > >
+> > > Efi stub will perform a kernel relocation when condition 1 is met. But
+> > > due to condition 2, efi stub can't relocate kernel to the preferred
+> > > address, so it fallback to query and alloc from EFI firmware for lowest
+> > > usable memory region.
+> > >
+> > > It's incorrect to use the lowest memory address. In later stage, kernel
+> > > will assume LOAD_PHYSICAL_ADDR as the minimal acceptable relocate address,
+> > > but efi stub will end up relocating kernel below it.
+> > >
+> > > Then before the kernel decompressing. Kernel will do another relocation
+> > > to address not lower than LOAD_PHYSICAL_ADDR, this time the relocate will
+> > > over write the blockage at the default load address, which efi stub tried
+> > > to avoid, and lead to unexpected behavior. Beside, the memory region it
+> > > writes to is not allocated from EFI firmware, which is also wrong.
+> > >
+> > > To fix it, just don't let efi stub relocate the kernel to any address
+> > > lower than lowest acceptable address.
+> > >
+> > > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > >
+> >
+> > Hello Kairui,
+> >
+> > This patch looks correct to me, but it needs an ack from the x86
+> > maintainers, since the rules around LOAD_PHYSICAL_ADDR are specific to
+> > the x86 architecture.
+> >
+> >
+>
+> Thanks for the review, Ard.
+>
+> Can any x86 maintainer help provide some review?
+>
+> --
+> Best Regards,
+> Kairui Song
 
-The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+Ping? Any comments?
 
-  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git tags/thunderbolt-fixes-for-v5.4-1
-
-for you to fetch changes up to 747125db6dcd8bcc21f13d013f6e6a2acade21ee:
-
-  thunderbolt: Drop unnecessary read when writing LC command in Ice Lake (2019-10-08 12:08:21 +0300)
-
-----------------------------------------------------------------
-thunderbolt: Fixes for v5.4
-
-This includes three fixes for various issues people have reported:
-
-  - Fix DP tunneling on some Light Ridge controllers
-  - Fix for lockdep circular locking dependency warning
-  - Drop unnecessary read on ICL
-
-----------------------------------------------------------------
-Mika Westerberg (3):
-      thunderbolt: Read DP IN adapter first two dwords in one go
-      thunderbolt: Fix lockdep circular locking depedency warning
-      thunderbolt: Drop unnecessary read when writing LC command in Ice Lake
-
- drivers/thunderbolt/nhi_ops.c |  1 -
- drivers/thunderbolt/switch.c  | 28 +++++++++++-----------------
- 2 files changed, 11 insertions(+), 18 deletions(-)
+--
+Best Regards,
+Kairui Song
