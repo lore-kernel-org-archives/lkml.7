@@ -2,69 +2,107 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0546FECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FD7ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA24C214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBE020659
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 06:01:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="YuZLY3Ew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfJKGAL (ORCPT
+        id S1727322AbfJKGBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 02:00:11 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60935 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfJKGAL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 02:00:11 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iIny3-0000cA-Qq; Fri, 11 Oct 2019 07:59:59 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iInxv-0001em-6T; Fri, 11 Oct 2019 07:59:51 +0200
-Date:   Fri, 11 Oct 2019 07:59:51 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Candle Sun <candlesea@gmail.com>
-Cc:     will@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk,
-        Nianfu Bai <nianfu.bai@unisoc.com>,
-        Candle Sun <candle.sun@unisoc.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [RESEND PATCH] ARM/hw_breakpoint: add ARMv8.1/ARMv8.2 debug
- architecutre versions support in enable_monitor_mode()
-Message-ID: <20191011055951.wpngo7wyfssrczof@pengutronix.de>
-References: <1569483508-18768-1-git-send-email-candlesea@gmail.com>
+        Fri, 11 Oct 2019 02:01:10 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49499 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbfJKGBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 02:01:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46qHPp3F86z9sNx;
+        Fri, 11 Oct 2019 17:01:02 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1570773665;
+        bh=oTTi247DlGceNhM4MVDGIO6OtOx/XRmfaIEvdVAUqC8=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=YuZLY3Ew0BXM9XFrRRe1AZgVtROgn6ejFBEM7K0ehQpC93RuVYs/k+e5GJP4utQZH
+         jHueJ25x/6MWfxYFcvH3KdeC/Q1Ai2aULyAdAKYUrzTAum25QdLH6mELw/QOyL8vMo
+         z6tyN4sahqg/E1MMAQtxtjPEnjx21eDq54A/lX8w/OOhMRH7Z4lLdtVk3IKX7D71mq
+         2L6BhqGlK7Z4Nz9zIrWRRmyTX5MMpiDhJ7vag0SEbYToUTWiT+g4hcAJsWdV4w6woK
+         pv7UiCyfL7wNoDDE7p0rwC0w407xfguxq9940G0tWLyVoKfG/gESuz3YsJ3WgAUSvR
+         FkXOKyLxhVzsw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/29] powerpc: Rename "notes" PT_NOTE to "note"
+In-Reply-To: <20191011000609.29728-2-keescook@chromium.org>
+References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-2-keescook@chromium.org>
+Date:   Fri, 11 Oct 2019 17:00:59 +1100
+Message-ID: <87blunx1lw.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1569483508-18768-1-git-send-email-candlesea@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Kees Cook <keescook@chromium.org> writes:
+> The Program Header identifiers are internal to the linker scripts. In
+> preparation for moving the NOTES segment declaration into RO_DATA,
+> standardize the identifier for the PT_NOTE entry to "note" as used by
+> all other architectures that emit PT_NOTE.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/powerpc/kernel/vmlinux.lds.S | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-just noticed a typo in the subject line while going through my lakml
-mailbox:
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-	s/architecutre/architecture/
+cheers
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+> index 060a1acd7c6d..81e672654789 100644
+> --- a/arch/powerpc/kernel/vmlinux.lds.S
+> +++ b/arch/powerpc/kernel/vmlinux.lds.S
+> @@ -19,7 +19,7 @@ ENTRY(_stext)
+>  
+>  PHDRS {
+>  	kernel PT_LOAD FLAGS(7); /* RWX */
+> -	notes PT_NOTE FLAGS(0);
+> +	note PT_NOTE FLAGS(0);
+>  	dummy PT_NOTE FLAGS(0);
+>  
+>  	/* binutils < 2.18 has a bug that makes it misbehave when taking an
+> @@ -177,7 +177,7 @@ SECTIONS
+>  #endif
+>  	EXCEPTION_TABLE(0)
+>  
+> -	NOTES :kernel :notes
+> +	NOTES :kernel :note
+>  
+>  	/* The dummy segment contents for the bug workaround mentioned above
+>  	   near PHDRS.  */
+> -- 
+> 2.17.1
