@@ -2,160 +2,92 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88004ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3206C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9A52084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8877B2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 09:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570785076;
+	bh=0b+19Hn7UbHkSSxLN4MXTvyEt2kAc48uoFb/JWDbo/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k069CZnr7jbtkpnBlZluEBNCZuN5YmJps9cwnaK1QUrJU1eDkxUj86iAjtelCoBm+
+	 wPk+kXo48EwImCPVBlIsiGvsJ+qNrr+TLWs/5pISn0hAGPcWQSxBebYBlNyni3Iki5
+	 jSxZztmcOFekjgcNPMRsdtZPcVdQFYPEkKtNrSl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfJKJFT (ORCPT
+        id S1727324AbfJKJLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 05:05:19 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51448 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbfJKJFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 05:05:19 -0400
-Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 903db73bb3920c92; Fri, 11 Oct 2019 11:05:17 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Yin Fengwei <fengwei.yin@intel.com>
-Cc:     Len Brown <lenb@kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND] ACPI / processor_idle: use dead loop instead of io port access for wait
-Date:   Fri, 11 Oct 2019 11:05:16 +0200
-Message-ID: <12278756.3dKznOqol2@kreacher>
-In-Reply-To: <20190909073937.31554-1-fengwei.yin@intel.com>
-References: <20190909073937.31554-1-fengwei.yin@intel.com>
+        Fri, 11 Oct 2019 05:11:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726585AbfJKJLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 05:11:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE5B21D6C;
+        Fri, 11 Oct 2019 09:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570785073;
+        bh=0b+19Hn7UbHkSSxLN4MXTvyEt2kAc48uoFb/JWDbo/I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ocPh3/IRZQVb6NWWmgiy3Ewp0AlBTKWgVUlOD9k5lB1EdxY2kvluEZsmwGLFROwKo
+         MK4ylNgMuOO+WVtdy0wLIimkuRJYbSy/adKfmNBJ3iilOZ2IXKLLU9JltHeihqpe1z
+         QVufYp25TN4xae0NxTIaWAOUMesGXjxOu5+P9D94=
+Date:   Fri, 11 Oct 2019 11:11:10 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Chandra Annamaneni <chandra627@gmail.com>
+Cc:     devel@driverdev.osuosl.org, gneukum1@gmail.com,
+        michael.scheiderer@fau.de, fabian.krueger@fau.de,
+        linux-kernel@vger.kernel.org,
+        Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 2/5] KPC2000: kpc2000_spi.c: Fix style issues (missing
+ blank line)
+Message-ID: <20191011091110.GA1124173@kroah.com>
+References: <20191011055155.4985-1-chandra627@gmail.com>
+ <20191011055155.4985-2-chandra627@gmail.com>
+ <20191011063321.GB986093@kroah.com>
+ <CAEge-i7Va8NrVGYzssFqvuGEwV=xPu9VL5_ZewXn2985QbEmcw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEge-i7Va8NrVGYzssFqvuGEwV=xPu9VL5_ZewXn2985QbEmcw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the delay.
 
-On Monday, September 9, 2019 9:39:37 AM CEST Yin Fengwei wrote:
-> In function acpi_idle_do_entry(), we do an io port access to guarantee
-> hardware behavior. But it could trigger unnecessary vmexit for
-> virtualization environemnt.
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-Is this a theoretical problem, or do you actually see it?
+A: No.
+Q: Should I include quotations after my reply?
 
-If you see it, I'd like to have a pointer to a bug report regarding it
-or similar.
+http://daringfireball.net/2007/07/on_top
 
-> From the comments of this part of code, we could use busy wait instead
-> of io port access to guarantee hardware behavior and avoid unnecessary
-> vmexit.
-> 
-> Signed-off-by: Yin Fengwei <fengwei.yin@intel.com>
-> ---
->  drivers/acpi/processor_idle.c | 33 ++++++++++++++++++++++++++++++---
->  1 file changed, 30 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-> index ed56c6d20b08..676553228e8f 100644
-> --- a/drivers/acpi/processor_idle.c
-> +++ b/drivers/acpi/processor_idle.c
-> @@ -55,6 +55,8 @@ struct cpuidle_driver acpi_idle_driver = {
->  };
->  
->  #ifdef CONFIG_ACPI_PROCESSOR_CSTATE
-> +static struct timespec64 dummy_delta = {0L, 0L};
-> +
->  static
->  DEFINE_PER_CPU(struct acpi_processor_cx * [CPUIDLE_STATE_MAX], acpi_cstate);
->  
-> @@ -64,6 +66,18 @@ static int disabled_by_idle_boot_param(void)
->  		boot_option_idle_override == IDLE_HALT;
->  }
->  
-> +static void dummy_wait(void)
-> +{
-> +	struct timespec64 now, target;
-> +
-> +	ktime_get_real_ts64(&now);
-> +	target = timespec64_add(now, dummy_delta);
-> +
-> +	do {
-> +		ktime_get_real_ts64(&now);
-> +	} while (timespec64_compare(&now, &target) < 0);
-> +}
+On Fri, Oct 11, 2019 at 02:02:32AM -0700, Chandra Annamaneni wrote:
+> The first set of patches were in a single commit. I started from scratch
+> and built these patches from 5 different commits. Don't know if the first
+> set of patches are relevant anymore.
 
-Why not to use ndelay() instead of this? ->
+They are not relevant to being applied, but this patch series has
+changed based on the comments you received from the previous patch(s).
+So it is relevant to how you got to this set of patches.
 
-> +
->  /*
->   * IBM ThinkPad R40e crashes mysteriously when going into C2 or C3.
->   * For now disable this. Probably a bug somewhere else.
-> @@ -660,8 +674,12 @@ static void __cpuidle acpi_idle_do_entry(struct acpi_processor_cx *cx)
->  		inb(cx->address);
->  		/* Dummy wait op - must do something useless after P_LVL2 read
->  		   because chipsets cannot guarantee that STPCLK# signal
-> -		   gets asserted in time to freeze execution properly. */
-> -		inl(acpi_gbl_FADT.xpm_timer_block.address);
-> +		   gets asserted in time to freeze execution properly.
-> +
-> +		   Previously, we do io port access here which could trigger
-> +		   unnecessary trap to HV for virtualization env. We use dead
-> +		   loop here to avoid the impact to virtualization env. */
-> +		dummy_wait();
->  	}
->  }
->  
-> @@ -683,7 +701,7 @@ static int acpi_idle_play_dead(struct cpuidle_device *dev, int index)
->  		else if (cx->entry_method == ACPI_CSTATE_SYSTEMIO) {
->  			inb(cx->address);
->  			/* See comment in acpi_idle_do_entry() */
-> -			inl(acpi_gbl_FADT.xpm_timer_block.address);
-> +			dummy_wait();
->  		} else
->  			return -ENODEV;
->  	}
-> @@ -902,6 +920,7 @@ static inline void acpi_processor_cstate_first_run_checks(void)
->  {
->  	acpi_status status;
->  	static int first_run;
-> +	struct timespec64 ts0, ts1;
->  
->  	if (first_run)
->  		return;
-> @@ -912,6 +931,13 @@ static inline void acpi_processor_cstate_first_run_checks(void)
->  			  max_cstate);
->  	first_run++;
->  
-> +	/* profiling the time used for dummy wait op */
-> +	ktime_get_real_ts64(&ts0);
-> +	inl(acpi_gbl_FADT.xpm_timer_block.address);
-> +	ktime_get_real_ts64(&ts1);
+This makes it easier for reviewers to understand what changed and what
+they need to focus on, or ignore, in your new set of patches.  This
+isn't for you, it is for the people you are sending these patches to.
 
--> And simply measure the number of nsecs this takes?
+thanks,
 
-> +
-> +	dummy_delta = timespec64_sub(ts1, ts0);
-> +
->  	if (acpi_gbl_FADT.cst_control && !nocst) {
->  		status = acpi_os_write_port(acpi_gbl_FADT.smi_command,
->  					    acpi_gbl_FADT.cst_control, 8);
-> @@ -920,6 +946,7 @@ static inline void acpi_processor_cstate_first_run_checks(void)
->  					"Notifying BIOS of _CST ability failed"));
->  	}
->  }
-> +
->  #else
->  
->  static inline int disabled_by_idle_boot_param(void) { return 0; }
-> 
-
-
-
-
+greg k-h
