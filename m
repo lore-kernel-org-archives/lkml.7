@@ -2,112 +2,99 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33803ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1475ECE58E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13ED121A4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81F42084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 08:29:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="MTlbYaEz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XRmeJZ2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfJKI1U (ORCPT
+        id S1726771AbfJKI3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 04:27:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40800 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbfJKI1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 04:27:19 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 25DF7302C09B;
-        Fri, 11 Oct 2019 08:27:19 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 91C105D9DC;
-        Fri, 11 Oct 2019 08:27:15 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 09:27:14 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Stefan Hajnoczi <stefanha@gmail.com>, netdev@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 07/13] vsock: handle buffer_size sockopts in the core
-Message-ID: <20191011082714.GF12360@stefanha-x1.localdomain>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-8-sgarzare@redhat.com>
- <20191009123026.GH5747@stefanha-x1.localdomain>
- <20191010093254.aluys4hpsfcepb42@steredhat>
+        Fri, 11 Oct 2019 04:29:06 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:56467 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726174AbfJKI3G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 04:29:06 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 2B02821F92;
+        Fri, 11 Oct 2019 04:29:05 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Fri, 11 Oct 2019 04:29:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=Y8pe+0YO22vt+UEcbd4VzW5ba2F
+        qoFTRCcjW/cxHXw4=; b=MTlbYaEz226yiWsExJyiNTOvTyFPsySxfDYQbkFMKza
+        rgv1drzqFrabY2L8HJZfbtJ7uykGEWqGgBhZBqLexbbyc56cJ0PxZW2DVfw7u09B
+        IJHYl9JqxCHIWuPcE1UsHLs57OPKkqdzFwjPvVDpOV0dLYJwlSP6/JoX+8NSYaGQ
+        0117f78biPo9K9K88hDlCGuqMYPrGQ/eXn8uazjQo8q8JHk5K9AQM49v//KEbsjJ
+        pg3texJIwoLaE2v1fqNXOZEBaRfxaKSCo5yDTZZxa+TbAsm9kK9q/5mHLxynfKSy
+        bpGQYiJEsY5otjBGijDMT88M3DHbzx0fR4sK8oSJlJA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Y8pe+0
+        YO22vt+UEcbd4VzW5ba2FqoFTRCcjW/cxHXw4=; b=XRmeJZ2VrL6CktV76xjyWP
+        aHUnKMUUJAgdqoWcPXxPWsncfeQklP/EesFdPzACMacrD+O/ARkMwWbtw3pE4rdS
+        eytn5TCAWw/A0yd1cQXjAoz1PVJDCC2a881SZufdfHwlkQCwfW/rTGfRFjYLw7lP
+        YuZ1YSp2O/ILZJyFaVMBIOjsZn+FFKs5Bmqjj80pNij59mdB5s6r/F00AMiDI2Nc
+        ZnVOaJVZXTrQmOAVSQLxg6WEeUG15zrPffP4nddwEGlzL1SYI4Ac3LdbM0/zBapc
+        JKv0gqOzt6gFgsjcItb+swQl/WoM1YrvRKMNE0UyOzPxiHkB4FCos2aKxRrKyveA
+        ==
+X-ME-Sender: <xms:UD2gXTOY9EggB9EYomS-1RnuIwy5PA1fxrbUcFQib91oawWOayAQDQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrieehgddthecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:UD2gXRL9uXa-sHIcQkwiBYWAGnVQuHr8kVdQ6SGDj_y3GxyTwSkyDQ>
+    <xmx:UD2gXZECVAif2e6W973Wmk457kBHWu-LI9_2CCwGVWNIt-EfeXtbqA>
+    <xmx:UD2gXcx6UL9uVaniqohZiBpFRSdap8Oh-xwvLXGqOZaWwRjXBxDO5Q>
+    <xmx:UT2gXVewIaVaJs2WZaNa6TzQAcbU8HDxBAgjiIwz4bo3tfrMY8sl9g>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D177580065;
+        Fri, 11 Oct 2019 04:29:03 -0400 (EDT)
+Date:   Fri, 11 Oct 2019 10:29:02 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the staging.current tree
+Message-ID: <20191011082902.GA1074099@kroah.com>
+References: <20191011074242.3d78c336@canb.auug.org.au>
+ <53418B0A3A5CEF439F1108674285B0A903FE8CC8@lhreml523-mbs.china.huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Y/WcH0a6A93yCHGr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010093254.aluys4hpsfcepb42@steredhat>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 11 Oct 2019 08:27:19 +0000 (UTC)
+In-Reply-To: <53418B0A3A5CEF439F1108674285B0A903FE8CC8@lhreml523-mbs.china.huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 11, 2019 at 08:10:23AM +0000, Jonathan Cameron wrote:
+> Hi Stephen
+> 
+> Sorry, I've clearly let another one of these through.
+> 
+> Stupid question of the day.  Don't suppose you can share how you check these?
 
---Y/WcH0a6A93yCHGr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There's a script, that I posted to the workflows mailing list, that
+should check these, based on Stephen's script.
 
-On Thu, Oct 10, 2019 at 11:32:54AM +0200, Stefano Garzarella wrote:
-> On Wed, Oct 09, 2019 at 01:30:26PM +0100, Stefan Hajnoczi wrote:
-> > On Fri, Sep 27, 2019 at 01:26:57PM +0200, Stefano Garzarella wrote:
-> > Another issue is that this patch drops the VIRTIO_VSOCK_MAX_BUF_SIZE
-> > limit that used to be enforced by virtio_transport_set_buffer_size().
-> > Now the limit is only applied at socket init time.  If the buffer size
-> > is changed later then VIRTIO_VSOCK_MAX_BUF_SIZE can be exceeded.  If
-> > that doesn't matter, why even bother with VIRTIO_VSOCK_MAX_BUF_SIZE
-> > here?
-> >=20
->=20
-> The .notify_buffer_size() should avoid this issue, since it allows the
-> transport to limit the buffer size requested after the initialization.
->=20
-> But again the min set by the user can not be respected and in the
-> previous implementation we forced it to VIRTIO_VSOCK_MAX_BUF_SIZE.
->=20
-> Now we don't limit the min, but we guarantee only that vsk->buffer_size
-> is lower than VIRTIO_VSOCK_MAX_BUF_SIZE.
->=20
-> Can that be an acceptable compromise?
+But it didn't seem to catch this problem, which is odd, I must have
+messed something up...
 
-I think so.
-
-Setting buffer sizes was never tested or used much by userspace
-applications that I'm aware of.  We should probably include tests for
-changing buffer sizes in the test suite.
-
-Stefan
-
---Y/WcH0a6A93yCHGr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2gPOIACgkQnKSrs4Gr
-c8hnpAf/bZLlTd0r+EaHBLvVtn6u74O2zVoTaaQWQnOazMVH14CZaHHOu1c41TX7
-Q0re/sK84wgqeIYkL3oZytOaV0XcGl6gisahwdaj2B0vFbihvsFYpvh7RDO3HQ68
-w1qOfDkUS9sTi3UYClbO7gHJfF/29ekUBFgoscFN8DwmqhMZ0BmjlQbI5G7Bx/vb
-BsykLfJ1+i+pjEwaf7OnJWjg/D/XEcMgWuwt3TDu4weM4m7URnromXRaunFLetC5
-rq7dPRsobckPtCGqpZlg9p9YRqCfyVJKOd/by5XeJVT/0aC5fi0t/gHLBSwCpL3R
-6nAoSm1TARBDHhE/TRKT7m4aV/5H3Q==
-=76ga
------END PGP SIGNATURE-----
-
---Y/WcH0a6A93yCHGr--
+greg k-h
