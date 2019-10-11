@@ -2,162 +2,92 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E14C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F8EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64F820673
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71222190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 18:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570818908;
+	bh=VrIjCjeCJtSwwOFvAswWO8zYeoA6k350yygwzNFOqds=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XCYFDkMjuaCVLbnwsRJAuKX65P+dD34b3mJDkT1X1qDN1ZK7pEuk78V6um/OnAh+q
+	 RLaObLgdftXC6SedKplIxB0YvRX2Egg9XdL/LDiGvcTSuYEbQjeCHV9w8oMnalSPHJ
+	 B1x8j6yRoZvRbWaiF6qGrGxEHvyntNeQ2i/tBx2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbfJKSaM (ORCPT
+        id S1728790AbfJKSfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 14:30:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33610 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728470AbfJKSaM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 14:30:12 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iIzdj-0008R5-1u; Fri, 11 Oct 2019 20:27:47 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 682E31C0178;
-        Fri, 11 Oct 2019 20:27:46 +0200 (CEST)
-Date:   Fri, 11 Oct 2019 18:27:46 -0000
-From:   "tip-bot2 for Steve Wahl" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/boot/64: Round memory hole size up to next PMD page
-Cc:     Steve Wahl <steve.wahl@hpe.com>, Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        dimitri.sivanich@hpe.com, Feng Tang <feng.tang@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        Juergen Gross <jgross@suse.com>, mike.travis@hpe.com,
-        russ.anderson@hpe.com, Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <df4f49f05c0c27f108234eb93db5c613d09ea62e.1569358539.git.steve.wahl@hpe.com>
-References: <df4f49f05c0c27f108234eb93db5c613d09ea62e.1569358539.git.steve.wahl@hpe.com>
+        Fri, 11 Oct 2019 14:35:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728472AbfJKSfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 14:35:07 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC7E62190F;
+        Fri, 11 Oct 2019 18:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570818906;
+        bh=VrIjCjeCJtSwwOFvAswWO8zYeoA6k350yygwzNFOqds=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Uf+6ZDO1znTClCJfgItB3zWCf/PrHoKnUZNzgxU7bq9CV74H3xLyxry5prNwCD90E
+         cHV2PbrAT47N65ENH7+SeQzgduJrVnf8TYw0r1URPqCvvRBGijV2L/z0agwDzqlCmM
+         tK4yIyp6asvn0ngHMlsN083OpACx/m0LgG52TtvU=
+Received: by mail-qt1-f170.google.com with SMTP id l49so1258948qtc.4;
+        Fri, 11 Oct 2019 11:35:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAX1GWngo+eIkNEAQZIKlDsemAuYYO6vEVdJz7n5cQV32cJASQO8
+        EgdUHJ9DwijtTTlEpuFYSuoqCpDMoSeGl0ME8w==
+X-Google-Smtp-Source: APXvYqxXNZXqhjX1vv0yrBQ2zPizCbCr6wZ3R6Kbqa0L34qgtUc+z3yI5+jQD/V1ZY3gsinMlNgwXR23TqSfelUsfUs=
+X-Received: by 2002:ac8:293b:: with SMTP id y56mr18601675qty.224.1570818905926;
+ Fri, 11 Oct 2019 11:35:05 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <157081846631.9978.9049202899557176748.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20191011131018.24035-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191011131018.24035-1-benjamin.gaignard@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 11 Oct 2019 13:34:54 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKboUPGFcz5SPA46WDxTa7aYSF7FN8LHhi4SFOz1PvrfQ@mail.gmail.com>
+Message-ID: <CAL_JsqKboUPGFcz5SPA46WDxTa7aYSF7FN8LHhi4SFOz1PvrfQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: hwlock: Convert stm32 hwspinlock bindings
+ to json-schema
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Fri, Oct 11, 2019 at 8:10 AM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
+>
+> Convert the STM32 hwspinlock binding to DT schema format using json-schema
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+> change in v2:
+> - use BSD-2-Clause license
 
-Commit-ID:     1869dbe87cb94dc9a218ae1d9301dea3678bd4ff
-Gitweb:        https://git.kernel.org/tip/1869dbe87cb94dc9a218ae1d9301dea3678bd4ff
-Author:        Steve Wahl <steve.wahl@hpe.com>
-AuthorDate:    Tue, 24 Sep 2019 16:04:31 -05:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 11 Oct 2019 18:47:23 +02:00
+I asked for dual license: (GPL-2.0-only OR BSD-2-Clause)
 
-x86/boot/64: Round memory hole size up to next PMD page
-
-The kernel image map is created using PMD pages, which can include
-some extra space beyond what's actually needed.  Round the size of the
-memory hole we search for up to the next PMD boundary, to be certain
-all of the space to be mapped is usable RAM and includes no reserved
-areas.
-
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: dimitri.sivanich@hpe.com
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jordan Borgner <mail@jordan-borgner.de>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: mike.travis@hpe.com
-Cc: russ.anderson@hpe.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Link: https://lkml.kernel.org/r/df4f49f05c0c27f108234eb93db5c613d09ea62e.1569358539.git.steve.wahl@hpe.com
----
- arch/x86/boot/compressed/misc.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 53ac0cb..9652d5c 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -345,6 +345,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- {
- 	const unsigned long kernel_total_size = VO__end - VO__text;
- 	unsigned long virt_addr = LOAD_PHYSICAL_ADDR;
-+	unsigned long needed_size;
- 
- 	/* Retain x86 boot parameters pointer passed from startup_32/64. */
- 	boot_params = rmode;
-@@ -379,26 +380,38 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	free_mem_ptr     = heap;	/* Heap */
- 	free_mem_end_ptr = heap + BOOT_HEAP_SIZE;
- 
-+	/*
-+	 * The memory hole needed for the kernel is the larger of either
-+	 * the entire decompressed kernel plus relocation table, or the
-+	 * entire decompressed kernel plus .bss and .brk sections.
-+	 *
-+	 * On X86_64, the memory is mapped with PMD pages. Round the
-+	 * size up so that the full extent of PMD pages mapped is
-+	 * included in the check against the valid memory table
-+	 * entries. This ensures the full mapped area is usable RAM
-+	 * and doesn't include any reserved areas.
-+	 */
-+	needed_size = max(output_len, kernel_total_size);
-+#ifdef CONFIG_X86_64
-+	needed_size = ALIGN(needed_size, MIN_KERNEL_ALIGN);
-+#endif
-+
- 	/* Report initial kernel position details. */
- 	debug_putaddr(input_data);
- 	debug_putaddr(input_len);
- 	debug_putaddr(output);
- 	debug_putaddr(output_len);
- 	debug_putaddr(kernel_total_size);
-+	debug_putaddr(needed_size);
- 
- #ifdef CONFIG_X86_64
- 	/* Report address of 32-bit trampoline */
- 	debug_putaddr(trampoline_32bit);
- #endif
- 
--	/*
--	 * The memory hole needed for the kernel is the larger of either
--	 * the entire decompressed kernel plus relocation table, or the
--	 * entire decompressed kernel plus .bss and .brk sections.
--	 */
- 	choose_random_location((unsigned long)input_data, input_len,
- 				(unsigned long *)&output,
--				max(output_len, kernel_total_size),
-+				needed_size,
- 				&virt_addr);
- 
- 	/* Validate memory location choices. */
+> - use const for #hwlock-cells
+> - add additionalProperties: false
+>
+>  .../bindings/hwlock/st,stm32-hwspinlock.txt        | 23 ----------
+>  .../bindings/hwlock/st,stm32-hwspinlock.yaml       | 50 ++++++++++++++++++++++
+>  2 files changed, 50 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
+>  create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
