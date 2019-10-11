@@ -2,90 +2,101 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5069C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D8EC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986E9206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB75206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570808308;
+	bh=kZz9naMR6Of1E3vVkHNV4iAu0OHXMeSi56+A/43INNk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vmm/4m+DxNcaAkeoom1GgWFhO8BjdeuaJ+/o7bknTbEndQ7jxMLK75ol8D7/3Cktu
+	 lByZqe7QDTcCi8ILpREMMMObtA2mT792MI0SjQnw356y0gmPKH/UuaSxmTNTbjtKV+
+	 AKSXgTm/K/OLdO8eObID/BbmT87biC9zI9f+WTc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfJKPgl (ORCPT
+        id S1727928AbfJKPi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:36:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:34142 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbfJKPgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:36:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 08:36:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,284,1566889200"; 
-   d="scan'208";a="184797061"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 11 Oct 2019 08:36:38 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iIwy6-00012Z-2G; Fri, 11 Oct 2019 18:36:38 +0300
-Date:   Fri, 11 Oct 2019 18:36:38 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Corey Minyard <minyard@acm.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] ipmi: use %*ph to print small buffer
-Message-ID: <20191011153638.GF32742@smile.fi.intel.com>
-References: <20191011145213.65082-1-andriy.shevchenko@linux.intel.com>
- <4eaca9a1bcbf9d87c1fb3c9135876c3ecb72a91b.camel@perches.com>
- <20191011151220.GB32742@smile.fi.intel.com>
- <e0b24ff49eb69a216b11f97db1fc26c5d3b971b4.camel@perches.com>
+        Fri, 11 Oct 2019 11:38:27 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36453 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfJKPi0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:38:26 -0400
+Received: by mail-pl1-f196.google.com with SMTP id j11so4643069plk.3;
+        Fri, 11 Oct 2019 08:38:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=34jLy/imGQdWFtbRAmHbjncBF9hW7DDB6XsjLeKsQC4=;
+        b=g6UsK9AsQg79c3wUOCOTtRnhwBm+MOS+XTCuLjFsc321I1TnrW4PNC6DwbBJm7UTI0
+         D73zH6jJpSGPbyb7aS63BSUaw7+zcpZ6+04+aYX+aMgF8ep1HZX0pHAIbrhgZXpvW+NY
+         LhPAfFMlMxriA3iV/gZ4z/VzVrLe9IlqaFmZiEkqx4MKHNlEuG5jv2p84kaoNr+qzwXx
+         1hHWxcAsjSUnZBZssIq7eCTvGSFc2YB1NV1t9xa09O6y6rsybwI7MDYCMM1ChIIjGux6
+         k4+/jep+b/AS6fdidWpfiWZbd9u/M9GScAjnMYRh6liSeMfzVhfMLbJRvSArBRXaevP2
+         xiTw==
+X-Gm-Message-State: APjAAAWaFI0MVobtg6SgBaJVnNcTN2LMu8JiAnf2b2IP/z2rVCShjBWN
+        FsU1XOb2hsRPyeWWVZybb0A=
+X-Google-Smtp-Source: APXvYqyhY7ooL/PoXLde16E2h3vfL39WPv8HqS8wX4TbBSrp9W1L7IydKIxBl2py8K1m/cLRrZ4cKw==
+X-Received: by 2002:a17:902:7e4e:: with SMTP id a14mr15778620pln.68.1570808305879;
+        Fri, 11 Oct 2019 08:38:25 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id ev20sm8614400pjb.19.2019.10.11.08.38.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 08:38:24 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id A888D403EA; Fri, 11 Oct 2019 15:38:23 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 15:38:23 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
+ support
+Message-ID: <20191011153823.GS16384@42.do-not-panic.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191011141036.GK16384@42.do-not-panic.com>
+ <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e0b24ff49eb69a216b11f97db1fc26c5d3b971b4.camel@perches.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 08:18:41AM -0700, Joe Perches wrote:
-> On Fri, 2019-10-11 at 18:12 +0300, Andy Shevchenko wrote:
-> > On Fri, Oct 11, 2019 at 07:58:14AM -0700, Joe Perches wrote:
-> > > On Fri, 2019-10-11 at 17:52 +0300, Andy Shevchenko wrote:
-
-> > > >  static void ipmi_debug_msg(const char *title, unsigned char *data,
-...
-> > > > +	pr_debug("%s: %*ph\n", title, len, buf);
-...
-> > > >  #else
-> > > >  static void ipmi_debug_msg(const char *title, unsigned char *data,
-
-> > > Now you might as well remove the #ifdef DEBUG above this
-> > > and the empty function in the #else too.
-> > 
-> > It's up to maintainer.
+On Fri, Oct 11, 2019 at 04:31:26PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> That's like suggesting any function with a single pr_debug
-> should have another duplicative empty function without.
+> On 10/11/19 4:10 PM, Luis Chamberlain wrote:
+> > Hey Hans, thanks for staying on top of this and follow up! For some
+> > reason the universe conspired against your first and last patch ([1/8],
+> > [8/8]), and I never got them. Could you bounce these or resend in case
+> > others confirm they also didn't get it?
 > 
-> Using code like the below is not good form as it's prone
-> to defects when the arguments in one block is changed but
-> not the other.
-> 
-> Also the first form doesn't work with dynamic debug.
+> I have received feedback from others on the first patch, so at least
+> that one has reached others. I've bounced patches 1 and 8 to you.
 
-I'm surprised to see my name in To:. I guess you intended to explain this to
-Corey. I'm fine with either, since I have no idea what is in the IPMI going on.
+Thanks, can you also bounce the feedback received?
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+  Luis
