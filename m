@@ -3,192 +3,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D83C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429A7C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F9A20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB4E21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 00:28:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oC4Fp5S8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n7n7nGtk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfJKAVi (ORCPT
+        id S1727551AbfJKA20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Oct 2019 20:21:38 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37435 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfJKAVh (ORCPT
+        Thu, 10 Oct 2019 20:28:26 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33562 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbfJKA2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Oct 2019 20:21:37 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r4so7106895edy.4;
-        Thu, 10 Oct 2019 17:21:34 -0700 (PDT)
+        Thu, 10 Oct 2019 20:28:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a22so8065515ljd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Oct 2019 17:28:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TnvHggbNdZnxLx93jjXuWj1lKLV5ZUH/jWX6zccU648=;
-        b=oC4Fp5S8XZjQ/EHu2XVmd/wB456wr+Y51FM8HgElHSQFEPjS8mEKxHgCD4LDkPFo4+
-         3GASddiWQef8qUYA2hgELKn0G3WQAxTMCWfmTqUT/b39ksZV+WvrIFce152sR4T/qp4b
-         s+xtD9kyspjGotLgEOxG3kUpJAyh+47Rvn36aoTmT5eH/OFIcUpyQMooGH9R3a/hPHmE
-         h819hjMR1f+3bEwrUi4r6gbPGEe8wnb/oq9fIWmyoQr8ZA/RfkPlteh1w+X+5BOshEBI
-         NjxLSopm88N7+/nDBtpR0SWuMz9kXH4g5kNQRkawYbtre/gErwWhtYUg5jOdMmG/pb8L
-         ftjw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=rC9SMV92VCkp1Gr2RjsUAyri6h3CbwRZLjtMRm5Ly2A=;
+        b=n7n7nGtk8cu5ldPiMWOVomq4IEoWhI8D15Ro7zik+00sQm//xyM9I+QPGkMobvspt8
+         b8cREF9EORqoA5SWIjR3MntFr/B5gcO7egbGxamOkAZsyMLW4wsvjJ71ustx90ZW7Zox
+         a26jCnVWe4t7ZpxHs374/UViRLdmkrOhijdiHEaWbSc3bSI0mR+ncJHp35MXgsx7pfO4
+         ZnIc3WwmA8pNB5cdja5tXOTrUIhlLhz4H3SNnNzvfbDOUIliSpXiriwzPFCNIAgENdY+
+         U9oQzLwdKI3K9JqLDHwYPTKvh7MSy3zHuNPKEd/9yOT21UMav04Ui0pWdf2di+uvaxi+
+         7yuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TnvHggbNdZnxLx93jjXuWj1lKLV5ZUH/jWX6zccU648=;
-        b=FmE4xhCw9zlvVC+Cz+2vZPRIZH+/TahyXe7+clX8m70+yJyIhx1HRAFk0bYfCPLIZ4
-         c7KPkq2Co1zqEPdvd+b0wt+ih5OnL23FBDHJmb6HrV5/5cp8Zze0Wpayfo1eFiyCio0+
-         ULNaSB2QImnZZG9E67HM6gn6yFu7KXOqDpVe+u6Wmj+jhnUlPmI+HiVU5GfrLN1JJ5bz
-         xdZ+0EBcrwj9bB6EzBDHiROchw4ejmEFBNchVib11Oz0LaIVGs2gLjmJGVSBmhAkSoKK
-         iSwGg0s2WdvBCZ8FOVZSuUu0WMi9enO019rTaCEJLbvgWHAJF9qb1F2TQYk1lrH1SVlm
-         X+jQ==
-X-Gm-Message-State: APjAAAWU3NML+rjOAc5f3UUzt6ZlimpYq7CMaRvJ+djSq+twhyM4YcNZ
-        mS2EzOm2pYp+6YFVXre5yYY2e68Gcoc=
-X-Google-Smtp-Source: APXvYqx/5reMp+KKgPRIKqPQawTCneYc8u/1O8vhsGY9L9+jDzKJYaAKqPTkK+11x2lfw/oWLD2LeQ==
-X-Received: by 2002:a05:6402:7ca:: with SMTP id u10mr10850683edy.20.1570753293536;
-        Thu, 10 Oct 2019 17:21:33 -0700 (PDT)
-Received: from continental.suse.de ([191.35.238.90])
-        by smtp.gmail.com with ESMTPSA id 36sm1228582edz.92.2019.10.10.17.21.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=rC9SMV92VCkp1Gr2RjsUAyri6h3CbwRZLjtMRm5Ly2A=;
+        b=YbsA8cw/pVUx0Kt41leHw93M7+0CFil/y+pArDF8WQlPQAuS7s5XvfMufP7uusHbkc
+         XMR2+MXK7OLCtVQytekbWoiIYdq+0gNJINQ4Lau1dMtXj6e71yDxf1wPxgYBIAGouhfk
+         yv+vvR86InsX3kPMgkPabLeYvuNIQLMPcJ6tXFjv+ML95UAHgoU2WgvWSntc1Mz9l4tp
+         FQ6mYD31Pb59/hd1V4g0iOr4E9osL4oZo2aSETyvznEDT+I9EmSVUKsMbDiQDwutSr2e
+         WCHRUCXHr+yei8nQGsxbdszG9muW1CyM0T7Hov1C0kqmn5w+1J20Zu2IaYH9q7TbtYH/
+         MbKQ==
+X-Gm-Message-State: APjAAAXS/N35PmpqI+WfUJyV0piVex4jZ6XWbNHagdouIObE+hJ0mue4
+        ro4G4qN8NoQRxYi09vrXb2yQ9Q==
+X-Google-Smtp-Source: APXvYqyytP5TpAENwnvNWDOqQ8OY/86C14vttyD28WEXvjMyhSkJB+nvEVHm4UN+556Q0dYym2Ei3g==
+X-Received: by 2002:a2e:9a43:: with SMTP id k3mr7415360ljj.70.1570753702298;
+        Thu, 10 Oct 2019 17:28:22 -0700 (PDT)
+Received: from localhost.localdomain (88-201-94-178.pool.ukrtel.net. [178.94.201.88])
+        by smtp.gmail.com with ESMTPSA id 126sm2367010lfh.45.2019.10.10.17.28.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 17:21:32 -0700 (PDT)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     dsterba@suse.com, clm@fb.com
-Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Marcos Paulo de Souza <mpdesouza@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] btrfs: ioctl: Try to use btrfs_fs_info instead of *file
-Date:   Thu, 10 Oct 2019 21:23:11 -0300
-Message-Id: <20191011002311.12459-1-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 10 Oct 2019 17:28:21 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        ilias.apalodimas@linaro.org, sergei.shtylyov@cogentembedded.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v5 bpf-next 01/15] samples/bpf: fix HDR_PROBE "echo"
+Date:   Fri, 11 Oct 2019 03:27:54 +0300
+Message-Id: <20191011002808.28206-2-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
+References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some functions are doing some bikeshedding to reach the btrfs_fs_info
-struct. Change these functions to receive a btrfs_fs_info struct instead
-of a *file.
+echo should be replaced with echo -e to handle '\n' correctly, but
+instead, replace it with printf as some systems can't handle echo -e.
 
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- The kernel survived btrfs-progs tests with this patch applied.
+ samples/bpf/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- fs/btrfs/ioctl.c | 36 +++++++++++++++---------------------
- 1 file changed, 15 insertions(+), 21 deletions(-)
-
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index de730e56d3f5..870e5c48b362 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -479,10 +479,9 @@ static int btrfs_ioctl_getversion(struct file *file, int __user *arg)
- 	return put_user(inode->i_generation, arg);
- }
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index a11d7270583d..4f61725b1d86 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -201,7 +201,7 @@ endif
  
--static noinline int btrfs_ioctl_fitrim(struct file *file, void __user *arg)
-+static noinline int btrfs_ioctl_fitrim(struct btrfs_fs_info *fs_info,
-+					void __user *arg)
- {
--	struct inode *inode = file_inode(file);
--	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
- 	struct btrfs_device *device;
- 	struct request_queue *q;
- 	struct fstrim_range range;
-@@ -4960,10 +4959,9 @@ static long btrfs_ioctl_quota_rescan(struct file *file, void __user *arg)
- 	return ret;
- }
+ # Don't evaluate probes and warnings if we need to run make recursively
+ ifneq ($(src),)
+-HDR_PROBE := $(shell echo "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
++HDR_PROBE := $(shell printf "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
+ 	$(HOSTCC) $(KBUILD_HOSTCFLAGS) -x c - -o /dev/null 2>/dev/null && \
+ 	echo okay)
  
--static long btrfs_ioctl_quota_rescan_status(struct file *file, void __user *arg)
-+static long btrfs_ioctl_quota_rescan_status(struct btrfs_fs_info *fs_info,
-+						void __user *arg)
- {
--	struct inode *inode = file_inode(file);
--	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
- 	struct btrfs_ioctl_quota_rescan_args *qsa;
- 	int ret = 0;
- 
-@@ -4986,11 +4984,9 @@ static long btrfs_ioctl_quota_rescan_status(struct file *file, void __user *arg)
- 	return ret;
- }
- 
--static long btrfs_ioctl_quota_rescan_wait(struct file *file, void __user *arg)
-+static long btrfs_ioctl_quota_rescan_wait(struct btrfs_fs_info *fs_info,
-+						void __user *arg)
- {
--	struct inode *inode = file_inode(file);
--	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
--
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
-@@ -5162,10 +5158,9 @@ static long btrfs_ioctl_set_received_subvol(struct file *file,
- 	return ret;
- }
- 
--static int btrfs_ioctl_get_fslabel(struct file *file, void __user *arg)
-+static int btrfs_ioctl_get_fslabel(struct btrfs_fs_info *fs_info,
-+					void __user *arg)
- {
--	struct inode *inode = file_inode(file);
--	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
- 	size_t len;
- 	int ret;
- 	char label[BTRFS_LABEL_SIZE];
-@@ -5249,10 +5244,9 @@ int btrfs_ioctl_get_supported_features(void __user *arg)
- 	return 0;
- }
- 
--static int btrfs_ioctl_get_features(struct file *file, void __user *arg)
-+static int btrfs_ioctl_get_features(struct btrfs_fs_info *fs_info,
-+					void __user *arg)
- {
--	struct inode *inode = file_inode(file);
--	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
- 	struct btrfs_super_block *super_block = fs_info->super_copy;
- 	struct btrfs_ioctl_feature_flags features;
- 
-@@ -5453,11 +5447,11 @@ long btrfs_ioctl(struct file *file, unsigned int
- 	case FS_IOC_GETVERSION:
- 		return btrfs_ioctl_getversion(file, argp);
- 	case FS_IOC_GETFSLABEL:
--		return btrfs_ioctl_get_fslabel(file, argp);
-+		return btrfs_ioctl_get_fslabel(fs_info, argp);
- 	case FS_IOC_SETFSLABEL:
- 		return btrfs_ioctl_set_fslabel(file, argp);
- 	case FITRIM:
--		return btrfs_ioctl_fitrim(file, argp);
-+		return btrfs_ioctl_fitrim(fs_info, argp);
- 	case BTRFS_IOC_SNAP_CREATE:
- 		return btrfs_ioctl_snap_create(file, argp, 0);
- 	case BTRFS_IOC_SNAP_CREATE_V2:
-@@ -5562,15 +5556,15 @@ long btrfs_ioctl(struct file *file, unsigned int
- 	case BTRFS_IOC_QUOTA_RESCAN:
- 		return btrfs_ioctl_quota_rescan(file, argp);
- 	case BTRFS_IOC_QUOTA_RESCAN_STATUS:
--		return btrfs_ioctl_quota_rescan_status(file, argp);
-+		return btrfs_ioctl_quota_rescan_status(fs_info, argp);
- 	case BTRFS_IOC_QUOTA_RESCAN_WAIT:
--		return btrfs_ioctl_quota_rescan_wait(file, argp);
-+		return btrfs_ioctl_quota_rescan_wait(fs_info, argp);
- 	case BTRFS_IOC_DEV_REPLACE:
- 		return btrfs_ioctl_dev_replace(fs_info, argp);
- 	case BTRFS_IOC_GET_SUPPORTED_FEATURES:
- 		return btrfs_ioctl_get_supported_features(argp);
- 	case BTRFS_IOC_GET_FEATURES:
--		return btrfs_ioctl_get_features(file, argp);
-+		return btrfs_ioctl_get_features(fs_info, argp);
- 	case BTRFS_IOC_SET_FEATURES:
- 		return btrfs_ioctl_set_features(file, argp);
- 	case FS_IOC_FSGETXATTR:
 -- 
-2.23.0
+2.17.1
 
