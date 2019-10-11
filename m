@@ -6,166 +6,109 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0FEC47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2EAECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4EF206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF06206CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 11:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfJKLDX (ORCPT
+        id S1727749AbfJKLEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 07:03:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40978 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726935AbfJKLDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 07:03:23 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 063E5883856;
-        Fri, 11 Oct 2019 11:03:22 +0000 (UTC)
-Received: from [10.40.205.236] (unknown [10.40.205.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C7E35DAAE;
-        Fri, 11 Oct 2019 11:03:01 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        Pankaj Gupta <pagupta@redhat.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
-        john.starks@microsoft.com, Dave Hansen <dave.hansen@intel.com>,
-        Michal Hocko <mhocko@suse.com>, cohuck@redhat.com
-Subject: Re: [RFC][Patch v12 1/2] mm: page_reporting: core infrastructure
-References: <20190812131235.27244-1-nitesh@redhat.com>
- <20190812131235.27244-2-nitesh@redhat.com>
- <CAKgT0UeKxCYtg6+aCPyxJcAGrBgvCWziUpZM6Tmw-9PSChcGVA@mail.gmail.com>
-Organization: Red Hat Inc,
-Message-ID: <be33c1fe-ce15-aaef-3f15-617fc5b792f4@redhat.com>
-Date:   Fri, 11 Oct 2019 07:02:56 -0400
+        Fri, 11 Oct 2019 07:04:46 -0400
+Received: from os.inf.tu-dresden.de ([141.76.48.99]:38610 "EHLO
+        os.inf.tu-dresden.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727592AbfJKLEq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 07:04:46 -0400
+X-Greylist: delayed 1372 seconds by postgrey-1.27 at vger.kernel.org; Fri, 11 Oct 2019 07:04:45 EDT
+Received: from [141.76.29.166] (helo=[172.26.144.86])
+        by os.inf.tu-dresden.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (Exim 4.92.3)
+        id 1iIsMq-0005eE-L3; Fri, 11 Oct 2019 12:41:52 +0200
+Subject: Re: [PATCH 10/10] Replace tasklets with workqueues
+From:   Maksym Planeta <mplaneta@os.inf.tu-dresden.de>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Moni Shoua <monis@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190722151426.5266-1-mplaneta@os.inf.tu-dresden.de>
+ <20190722151426.5266-11-mplaneta@os.inf.tu-dresden.de>
+ <20190722153205.GG7607@ziepe.ca>
+ <21a4daf9-c77e-ec80-9da0-78ab512d248d@os.inf.tu-dresden.de>
+ <20190725185006.GD7467@ziepe.ca>
+ <385139f2-0d31-1148-95c0-a6e6768ab413@os.inf.tu-dresden.de>
+Message-ID: <995754de-5ec4-0a62-991e-2ea77a6bc622@os.inf.tu-dresden.de>
+Date:   Fri, 11 Oct 2019 12:41:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UeKxCYtg6+aCPyxJcAGrBgvCWziUpZM6Tmw-9PSChcGVA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <385139f2-0d31-1148-95c0-a6e6768ab413@os.inf.tu-dresden.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 11 Oct 2019 11:03:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/10/19 4:36 PM, Alexander Duyck wrote:
-> On Mon, Aug 12, 2019 at 6:13 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> <snip>
->
->> +static int process_free_page(struct page *page,
->> +                            struct page_reporting_config *phconf, int count)
->> +{
->> +       int mt, order, ret = 0;
->> +
->> +       mt = get_pageblock_migratetype(page);
->> +       order = page_private(page);
->> +       ret = __isolate_free_page(page, order);
->> +
->> +       if (ret) {
->> +               /*
->> +                * Preserving order and migratetype for reuse while
->> +                * releasing the pages back to the buddy.
->> +                */
->> +               set_pageblock_migratetype(page, mt);
->> +               set_page_private(page, order);
->> +
->> +               sg_set_page(&phconf->sg[count++], page,
->> +                           PAGE_SIZE << order, 0);
->> +       }
->> +
->> +       return count;
->> +}
->> +
->> +/**
->> + * scan_zone_bitmap - scans the bitmap for the requested zone.
->> + * @phconf: page reporting configuration object initialized by the backend.
->> + * @zone: zone for which page reporting is requested.
->> + *
->> + * For every page marked in the bitmap it checks if it is still free if so it
->> + * isolates and adds them to a scatterlist. As soon as the number of isolated
->> + * pages reach the threshold set by the backend, they are reported to the
->> + * hypervisor by the backend. Once the hypervisor responds after processing
->> + * they are returned back to the buddy for reuse.
->> + */
->> +static void scan_zone_bitmap(struct page_reporting_config *phconf,
->> +                            struct zone *zone)
->> +{
->> +       unsigned long setbit;
->> +       struct page *page;
->> +       int count = 0;
->> +
->> +       sg_init_table(phconf->sg, phconf->max_pages);
->> +
->> +       for_each_set_bit(setbit, zone->bitmap, zone->nbits) {
->> +               /* Process only if the page is still online */
->> +               page = pfn_to_online_page((setbit << PAGE_REPORTING_MIN_ORDER) +
->> +                                         zone->base_pfn);
->> +               if (!page)
->> +                       continue;
->> +
->> +               spin_lock(&zone->lock);
->> +
->> +               /* Ensure page is still free and can be processed */
->> +               if (PageBuddy(page) && page_private(page) >=
->> +                   PAGE_REPORTING_MIN_ORDER)
->> +                       count = process_free_page(page, phconf, count);
->> +
->> +               spin_unlock(&zone->lock);
->> +               /* Page has been processed, adjust its bit and zone counter */
->> +               clear_bit(setbit, zone->bitmap);
->> +               atomic_dec(&zone->free_pages);
->> +
->> +               if (count == phconf->max_pages) {
->> +                       /* Report isolated pages to the hypervisor */
->> +                       phconf->report(phconf, count);
->> +
->> +                       /* Return processed pages back to the buddy */
->> +                       return_isolated_page(zone, phconf);
->> +
->> +                       /* Reset for next reporting */
->> +                       sg_init_table(phconf->sg, phconf->max_pages);
->> +                       count = 0;
->> +               }
->> +       }
->> +       /*
->> +        * If the number of isolated pages does not meet the max_pages
->> +        * threshold, we would still prefer to report them as we have already
->> +        * isolated them.
->> +        */
->> +       if (count) {
->> +               sg_mark_end(&phconf->sg[count - 1]);
->> +               phconf->report(phconf, count);
->> +
->> +               return_isolated_page(zone, phconf);
->> +       }
->> +}
->> +
-> So one thing that occurred to me is that this code is missing checks
-> so that it doesn't try to hint isolated pages. With the bitmap
-> approach you need an additional check so that you aren't pulling
-> isolated pages out and reporting them.
+Hi,
 
-I think you mean that we should not report pages of type MIGRATE_ISOLATE.
+this is a kind reminder regarding the patchset. I added description of 
+races in the original email.
 
-The current code on which I am working, I have added the
-is_migrate_isolate_page() check
-to ensure that I am not processing these pages.
+On 30/07/2019 21:20, Maksym Planeta wrote:
+> 
+> 
+> On 25/07/2019 20:50, Jason Gunthorpe wrote:
+>> On Thu, Jul 25, 2019 at 04:36:20PM +0200, Maksym Planeta wrote:
+>>> Is this one better?
+>>>
+>>> Replace tasklets with workqueues in rxe driver. The reason for this
+>>> replacement is that tasklets are supposed to run atomically, although 
+>>> the
+>>> actual code may block.
+>>>
+>>> Modify the SKB destructor for outgoing SKB's to schedule QP tasks 
+>>> only if
+>>> the QP is not destroyed itself.
+>>>
+>>> Add a variable "pending_skb_down" to ensure that reference counting 
+>>> for a QP
+>>> is decremented only when QP access related to this skb is over.
+>>>
+>>> Separate part of pool element cleanup code to allow this code to be 
+>>> called
+>>> in the very end of cleanup, even if some of cleanup is scheduled for
+>>> asynchronous execution. Example, when it was happening is destructor 
+>>> for a
+>>> QP.
+>>>
+>>> Disallow calling of task functions "directly". This allows to 
+>>> simplify logic
+>>> inside rxe_task.c
+>>>
+>>> Schedule rxe_qp_do_cleanup onto high-priority system workqueue, 
+>>> because this
+>>> function can be scheduled from normal system workqueue.
+>>>
+>>> Before destroying a QP, wait until all references to this QP are gone.
+>>> Previously the problem was that outgoing SKBs could be freed after 
+>>> the QP
+>>> these SKBs refer to is destroyed.
+>>>
+>>> Add blocking rxe_run_task to replace __rxe_do_task that was calling task
+>>> function directly.
+>>
+>> Mostly but it would also be good to describe the use after free and
+>> races more specifically
+>>
+> 
+> These situations are described in the cover letter (PATCH 00/10). Do you 
+> need a more detailed description than that?
+> 
+>> Jason
+>>
+> 
 
 -- 
-Thanks
-Nitesh
+Regards,
+Maksym Planeta
