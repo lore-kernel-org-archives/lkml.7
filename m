@@ -2,124 +2,265 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0358C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944F0ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCAAF206CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6708B21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:44:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qr/JxQod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfJKPow (ORCPT
+        id S1728212AbfJKPo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:44:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:36292 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfJKPov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:44:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F8AE142F;
-        Fri, 11 Oct 2019 08:44:50 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3844B3F68E;
-        Fri, 11 Oct 2019 08:44:47 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 16:44:45 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Weimer <fweimer@redhat.com>,
-        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
-Subject: Re: [PATCH v2 05/12] arm64: Basic Branch Target Identification
- support
-Message-ID: <20191011154444.GN27757@arm.com>
-References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
- <1570733080-21015-6-git-send-email-Dave.Martin@arm.com>
- <20191011151028.GE33537@lakrids.cambridge.arm.com>
- <4e09ca54-f353-9448-64ed-4ba1e38c6ebc@linaro.org>
- <20191011153225.GL27757@arm.com>
- <20191011154043.GG33537@lakrids.cambridge.arm.com>
+        Fri, 11 Oct 2019 11:44:56 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33709 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbfJKPoy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:44:54 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r17so9693923wme.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 08:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=z0kO6qx1UAc/uP1SKgjN6XAyjR6GuCSBuxXXjXMIpxU=;
+        b=Qr/JxQod4/ps5uiH4tGGNZ9yzBI6hkztsB9/YGuAIzeCNNT1qB5a8AG1ZMxY8DWiNo
+         dtO3U5vZChtSfm0UqNuMHf8zdwPWMNn7ihD7tMA2WINLj/YLuR7Urwgdnhfj7dcFWKeg
+         2FuyCRUD+4ujUkiTXuHpg7b/OjboMqSvViZ2869mggBcejQTQWT6ATYZ/gnUY5yebONY
+         vl4m200xa8xbnMRpTqngyXBdTuQWgGl0367V+rBnaWp1SybLg1GrR0AATSxSVTveeO/E
+         yeWYZHgzsQfOzobDHu3AfCrpQWwe8fby13ubmTrqWg4lv/CSA77qx3ZFPYPfCE3GI8Ls
+         IGig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=z0kO6qx1UAc/uP1SKgjN6XAyjR6GuCSBuxXXjXMIpxU=;
+        b=mqTYPKfOGpvMijTCJ7Eh/BzpouhKx7L6njjuMzMi2BNlEhtYRov8d1soAuTcdLaI2s
+         0pBuDZ3bPtZt5WVQ0TQZEz5I1z4edUDgSZ9MO4wch1TGJkk1HiOslEXA2irA/6I3yHhY
+         tTmiZ0TEdcLKyEQ9QzQCo3mMDbziVUj6/HsE3wxYGVoY5lrLMgzwGH0rdgDfnfx5NYjP
+         8+WquXMYDoucHjZD836/4E93YOnGQG7TGOadVZxoGUiM8r/aH29LlijkNliV42dHQAwr
+         u/DcD1h/X4nGeE320t30MVowSdffyVGX9Zkuz4PmA6CR5IW/JClkc8xMQqC9xTdZi/I9
+         75Nw==
+X-Gm-Message-State: APjAAAW3ZPIj0SgFTMt3U5/BV/33Uqc3iE0HmyclN2AU+N3d1xd6KOHU
+        QwHT72JnEnHsxMisepF/4ZWJrg==
+X-Google-Smtp-Source: APXvYqy0n+Gi3ikSJSLc4ZiYjrrwPHwbYm/P33/o8JdcsJJo2NnsmzC7x1BlRatWcS4ttAhpUEQu0g==
+X-Received: by 2002:a05:600c:3cb:: with SMTP id z11mr3852023wmd.138.1570808691606;
+        Fri, 11 Oct 2019 08:44:51 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id y3sm3453044wro.36.2019.10.11.08.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 08:44:51 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     robh@kernel.org, vkoul@kernel.org
+Cc:     broonie@kernel.org, bgoswami@codeaurora.org,
+        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 1/2] dt-bindings: soundwire: add bindings for Qcom controller
+Date:   Fri, 11 Oct 2019 16:44:22 +0100
+Message-Id: <20191011154423.2506-2-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
+References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011154043.GG33537@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 04:40:43PM +0100, Mark Rutland wrote:
-> On Fri, Oct 11, 2019 at 04:32:26PM +0100, Dave Martin wrote:
-> > On Fri, Oct 11, 2019 at 11:25:33AM -0400, Richard Henderson wrote:
-> > > On 10/11/19 11:10 AM, Mark Rutland wrote:
-> > > > On Thu, Oct 10, 2019 at 07:44:33PM +0100, Dave Martin wrote:
-> > > >> @@ -730,6 +730,11 @@ static void setup_return
-> > > >>  	regs->regs[29] = (unsigned long)&user->next_frame->fp;
-> > > >>  	regs->pc = (unsigned long)ka->sa.sa_handler;
-> > > >>  
-> > > >> +	if (system_supports_bti()) {
-> > > >> +		regs->pstate &= ~PSR_BTYPE_MASK;
-> > > >> +		regs->pstate |= PSR_BTYPE_CALL;
-> > > >> +	}
-> > > >> +
-> > > > 
-> > > > I think we might need a comment as to what we're trying to ensure here.
-> > > > 
-> > > > I was under the (perhaps mistaken) impression that we'd generate a
-> > > > pristine pstate for a signal handler, and it's not clear to me that we
-> > > > must ensure the first instruction is a target instruction.
-> > > 
-> > > I think it makes sense to treat entry into a signal handler as a call.  Code
-> > > that has been compiled for BTI, and whose page has been marked with PROT_BTI,
-> > > will already have the pauth/bti markup at the beginning of the signal handler
-> > > function; we might as well verify that.
-> > > 
-> > > Otherwise sigaction becomes a hole by which an attacker can force execution to
-> > > start at any arbitrary address.
-> > 
-> > Ack, that's the intended rationale -- I also outlined this in the commit
-> > message.
-> 
-> Ah, sorry. I evidently did not read that thoroughly enough.
-> 
-> > Does this sound reasonable?
-> > 
-> > 
-> > Either way, I feel we should do this: any function in a PROT_BTI page
-> > should have a suitable landing pad.  There's no reason I can see why
-> > a protection given to any other callback function should be omitted
-> > for a signal handler.
-> > 
-> > Note, if the signal handler isn't in a PROT_BTI page then overriding
-> > BTYPE here will not trigger a Branch Target exception.
-> > 
-> > I'm happy to drop a brief comment into the code also, once we're
-> > agreed on what the code should be doing.
-> 
-> So long as there's a comment as to why, I have no strong feelings here.
-> :)
+This patch adds bindings for Qualcomm soundwire controller.
 
-OK, I think it's worth a brief comment in the code either way, so I'll
-add something.
+Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+either integrated as part of WCD audio codecs via slimbus or
+as part of SOC I/O.
 
-Cheers
----Dave
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ .../bindings/soundwire/qcom,sdw.txt           | 167 ++++++++++++++++++
+ 1 file changed, 167 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+
+diff --git a/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+new file mode 100644
+index 000000000000..436547f3b155
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+@@ -0,0 +1,167 @@
++Qualcomm SoundWire Controller Bindings
++
++
++This binding describes the Qualcomm SoundWire Controller along with its
++board specific bus parameters.
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>",
++		    Example:
++			"qcom,soundwire-v1.3.0"
++			"qcom,soundwire-v1.5.0"
++			"qcom,soundwire-v1.6.0"
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of SoundWire controller
++		    address space.
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the SoundWire Controller IRQ
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: should be "iface" for SoundWire Controller interface clock
++
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the SoundWire Controller interface clock
++
++- #sound-dai-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1 for digital audio interfaces on the controller.
++
++- qcom,dout-ports:
++	Usage: required
++	Value type: <u32>
++	Definition: must be count of data out ports
++
++- qcom,din-ports:
++	Usage: required
++	Value type: <u32>
++	Definition: must be count of data in ports
++
++- qcom,ports-offset1:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify payload transport window offset1 of each
++		    data port. Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-offset2:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify payload transport window offset2 of each
++		    data port. Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-sinterval-low:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should be sample interval low of each data port.
++		    Out ports followed by In ports. Used for Sample Interval
++		    calculation.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-word-length:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be size of payload channel sample.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-block-pack-mode:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be 0 or 1 to indicate the block packing mode.
++		    0 to indicate Blocks are per Channel
++		    1 to indicate Blocks are per Port.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-block-group-count:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be in range 1 to 4 to indicate how many sample
++		    intervals are combined into a payload.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-lane-control:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be in range 0 to 7 to identify which	data lane
++		    the data port uses.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-hstart:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be number identifying lowerst numbered coloum in
++		    SoundWire Frame, i.e. left edge of the Transport sub-frame
++		    for each port. Values between 0 and 15 are valid.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-hstop:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be number identifying highest numbered coloum in
++		    SoundWire Frame, i.e. the right edge of the Transport
++		    sub-frame for each port. Values between 0 and 15 are valid.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,dports-type:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be one of the following types
++		    0 for reduced port
++		    1 for simple ports
++		    2 for full port
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++Note:
++	More Information on detail of encoding of these fields can be
++found in MIPI Alliance SoundWire 1.0 Specifications.
++
++= SoundWire devices
++Each subnode of the bus represents SoundWire device attached to it.
++The properties of these nodes are defined by the individual bindings.
++
++= EXAMPLE
++The following example represents a SoundWire controller on DB845c board
++which has controller integrated inside WCD934x codec on SDM845 SoC.
++
++soundwire: soundwire@c85 {
++	compatible = "qcom,soundwire-v1.3.0";
++	reg = <0xc85 0x20>;
++	interrupts = <20 IRQ_TYPE_EDGE_RISING>;
++	clocks = <&wcc>;
++	clock-names = "iface";
++	#sound-dai-cells = <1>;
++	qcom,dports-type = <0>;
++	qcom,dout-ports	= <6>;
++	qcom,din-ports	= <2>;
++	qcom,ports-sinterval-low = /bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
++	qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
++	qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
++
++	/* Left Speaker */
++	left{
++		....
++	};
++
++	/* Right Speaker */
++	right{
++		....
++	};
++};
+-- 
+2.21.0
+
