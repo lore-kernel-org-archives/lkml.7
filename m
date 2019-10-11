@@ -2,125 +2,116 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A8DECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B3CECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479DE214E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6D8214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 10:02:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="odX5tTsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfJKKBi (ORCPT
+        id S1727696AbfJKKCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 06:01:38 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45291 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbfJKKBh (ORCPT
+        Fri, 11 Oct 2019 06:02:50 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51162 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfJKKCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 06:01:37 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o205so7481155oib.12;
-        Fri, 11 Oct 2019 03:01:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BmWoLaFLM5Nm2z3NOAq6yl+CBUxQRErLfBnt6nPINlk=;
-        b=MZVbbdj3MqbE+H/sv+nHpvVqMnra2LFnE2SGp52bUoHoKY3vuvHZz90jEssCUE/L8g
-         hDvQ7iq9YFXHgQLqHovlKp1anlYV7MJU8drhY1ijJx8bsxTP0cF8vbew9Bm+mdWgn+Nl
-         CGJWX4quO+i5lYDLVK0bKaRhJUUdJgwifjHnQjQ6du3flwJ0vEZmdYmvPqjKHhpoS3Pt
-         GDr1kZAXk0uZ/WLk9a4bKbM+fkX9THNlI57+gqU/qLa4Wg18Kh8Sp4Rgp7XSXe5Joitj
-         0bKwNsfys2rWnnlaVRHmh1cAl1bYoOUI+rS2eK1fxRNACjfZdd7wxA27KadxP3tEWhj9
-         pvpA==
-X-Gm-Message-State: APjAAAWtPw5z/QMih2t1ociLUywUvqDlmOfCW2iiMXJqYlQN9DuwmUzy
-        u9UrqubpnVjvn9vO+NStf3TeseL9Z/2RxjvMdcA=
-X-Google-Smtp-Source: APXvYqzbnNnLkhuI7imEuzHA7CQbXtjXT+AB10bROH1mQbBpZeFJJdWl6Bc30QfjDKu2Pfzs19d8lMhrFPzCKKhamJA=
-X-Received: by 2002:a54:4e89:: with SMTP id c9mr10839645oiy.148.1570788096407;
- Fri, 11 Oct 2019 03:01:36 -0700 (PDT)
+        Fri, 11 Oct 2019 06:02:50 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9B9scC2162644;
+        Fri, 11 Oct 2019 10:02:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=+GPs3yD7k8TANwLI8v1G3L+HkQq52VFBQSkyO/JfTyE=;
+ b=odX5tTsJa0N71+IkxfdmUXvmEusAA53/PDqRxAan/RFa/hmwkroe1IkemC7cVLrTpbgq
+ Ntc4hHrHkT494iiN4RvosRl592XT44LaXQq86Z/hU1mcciF1BwxQcL1L2AtTHowHwMTG
+ Db4GWZiJijm8y2pk2QJkucjCu86u/H53uUkZqRghIK+dnwfXNerMZPFS7j4fKDSE1MbJ
+ Murg+1L0S9gJBkgW5Ap9LT3gacnXJ6sr0PHqNmzyBE+lv80nPLwVtCmZsSbGzpI4bgca
+ 48oFMirO25Aon5imzxEqwMdoxyUmI7TPNHL5RyLXHnn4wozC5daoapKAKeUcIseIG5fF TA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2vek4r0hy0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 10:02:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9B9rWsx027913;
+        Fri, 11 Oct 2019 10:02:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2vhrxg5gm9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Oct 2019 10:02:29 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9BA2LJL020372;
+        Fri, 11 Oct 2019 10:02:21 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 11 Oct 2019 03:02:20 -0700
+Date:   Fri, 11 Oct 2019 13:02:14 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Matt Sickler <Matt.Sickler@daktronics.com>
+Cc:     Chandra Annamaneni <chandra627@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "gneukum1@gmail.com" <gneukum1@gmail.com>,
+        "fabian.krueger@fau.de" <fabian.krueger@fau.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "simon@nikanor.nu" <simon@nikanor.nu>
+Subject: Re: [PATCH] KPC2000: kpc2000_spi.c: Fix style issues (line length)
+Message-ID: <20191011100214.GO13286@kadam>
+References: <1570676937-3975-1-git-send-email-chandra627@gmail.com>
+ <SN6PR02MB40166D599A07440D26EBE7F1EE940@SN6PR02MB4016.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-References: <20191002194346.GA3792@localhost.localdomain> <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
- <20191010174710.GA2405@localhost.localdomain> <CAMuHMdVriPMVWdNOD4ytZQFPmad7CvD_4utbw1PxMJBua1TSfQ@mail.gmail.com>
- <20191011094322.GA3065@localhost.localdomain>
-In-Reply-To: <20191011094322.GA3065@localhost.localdomain>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 11 Oct 2019 12:01:25 +0200
-Message-ID: <CAMuHMdUMkyyCZACyJ7dvd4SaicpN77g5pFd0aGEzQW_q7m3Q0g@mail.gmail.com>
-Subject: Re: [PATCH] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-To:     Narendra K <Narendra.K@dell.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB40166D599A07440D26EBE7F1EE940@SN6PR02MB4016.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910110094
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9406 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910110094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Narendra,
-
-On Fri, Oct 11, 2019 at 11:43 AM <Narendra.K@dell.com> wrote:
-> On Thu, Oct 10, 2019 at 08:50:45PM +0200, Geert Uytterhoeven wrote:
-> [...]
-> > > > >  drivers/firmware/efi/Kconfig | 5 ++++-
-> > > > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> > > > > index 178ee8106828..6e4c46e8a954 100644
-> > > > > --- a/drivers/firmware/efi/Kconfig
-> > > > > +++ b/drivers/firmware/efi/Kconfig
-> > > > > @@ -181,7 +181,10 @@ config RESET_ATTACK_MITIGATION
-> > > > >           reboots.
-> > > > >
-> > > > >  config EFI_RCI2_TABLE
-> > > > > -       bool "EFI Runtime Configuration Interface Table Version 2 Support"
-> > > > > +       bool
-> > > > > +       prompt "EFI RCI Table Version 2 Support" if X86 || COMPILE_TEST
+On Thu, Oct 10, 2019 at 02:54:59PM +0000, Matt Sickler wrote:
+> > static struct mtd_partition p2kr0_spi1_parts[] = {
+> >-       { .name = "SLOT_4",     .size = 7798784,                .offset = 0,                },
+> >-       { .name = "SLOT_5",     .size = 7798784,                .offset = MTDPART_OFS_NXTBLK},
+> >-       { .name = "SLOT_6",     .size = 7798784,                .offset = MTDPART_OFS_NXTBLK},
+> >-       { .name = "SLOT_7",     .size = 7798784,                .offset = MTDPART_OFS_NXTBLK},
+> >-       { .name = "CS1_EXTRA",  .size = MTDPART_SIZ_FULL,       .offset = MTDPART_OFS_NXTBLK},
+> >+       { .name = "SLOT_4",  .size = 7798784,  .offset = 0,},
+> >+       { .name = "SLOT_5",  .size = 7798784,  .offset = MTDPART_OFS_NXTBLK},
+> >+       { .name = "SLOT_6",  .size = 7798784,  .offset = MTDPART_OFS_NXTBLK},
+> >+       { .name = "SLOT_7",  .size = 7798784,  .offset = MTDPART_OFS_NXTBLK},
+> >+       { .name = "CS1_EXTRA",  .size = MTDPART_SIZ_FULL, .offset = MTDPART_OFS_NXTBLK},
+> > };
 > >
-> > Why the split of bool and prompt?
-> > Why not simply add a single line "depends on X86 || COMPILE_TEST"?
->
-> It is because of the findings shared in [1]. Please let me know your
-> thoughts on the findings.
+> > static struct flash_platform_data p2kr0_spi0_pdata = {
+> 
+> Is the line length limit a hard rule or can exceptions be made?  I
+> really feel that these data tables are more easily read when they're
+> formatted like tables...
 
-So you want to prevent the user from seeing a prompt for an option he may
-or may not need to enable, when running "make oldconfig"?
+Exceptions can be made.  It's probably not worth it though because
+you have to be really aggressive about shooting down patches.  Ask
+yourself if there aren't more important battles to fight when human
+lifespans are so short?  I already rejected one change for you.  To me
+the new table looks okay, though.
 
-One common approach is to let the Kconfig symbol for the platform (not for
-all of X86!) select EFI_RCI2_TABLE.
-That way it will be enabled automatically when needed.
-
-Another approach is to not force the option on, but guide the user towards
-enabling it, by adding "default y if <platform_symbol>".
-
-> > > > You can drop the || COMPILE_TEST as well.
-> > >
-> > > I will drop this part of the change in the next version of the patch.
-> >
-> > Why drop that part? Isn't it good to have more compile test coverage?
->
-> It is per the suggestion in the previous review comment.
->
-> Ard, please share your thought here. I could add the || COMPILE_TEST.
-
-Without the "|| COMPILE_TEST", you cannot enable compile-testing of
-the driver on non-x86 platforms with EFI.
-
-> [1]  Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sysfs
-> https://lore.kernel.org/linux-efi/20190812150452.27983-1-ard.biesheuvel@linaro.org/T/#mebff9ba48499808f59b33b2daef2d94e006296d8
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+regards,
+dan carpenter
