@@ -2,84 +2,98 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE874C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12636ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA3E20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77ED2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 07:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfJKHsn (ORCPT
+        id S1726936AbfJKHtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 03:48:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:51255 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbfJKHsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 03:48:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 00:48:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,283,1566889200"; 
-   d="scan'208";a="224257084"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Oct 2019 00:48:40 -0700
-Date:   Fri, 11 Oct 2019 15:50:33 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        yu.c.zhang@intel.com, alazar@bitdefender.com
-Subject: Re: [PATCH v5 0/9] Enable Sub-page Write Protection Support
-Message-ID: <20191011075033.GA11817@local-michael-cet-test>
-References: <20190917085304.16987-1-weijiang.yang@intel.com>
- <CALMp9eSTz+XbmLtWZLqWvSNjjb4Ado4s+SfABtRuVNQBXUHStQ@mail.gmail.com>
+        Fri, 11 Oct 2019 03:49:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37328 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbfJKHtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 03:49:24 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k32so7200763otc.4;
+        Fri, 11 Oct 2019 00:49:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cXN+zRgmCQohqXmd61dtsclsBrxaUdjkWuLDpZ7x1eg=;
+        b=COmSH8lMqsRhwcQgjIf7DYyIQ79i5Yi+/aTG24ZMJbHeKBXN+3XJwwxEMVaXlb4xca
+         TkUjssp5ibE/4JMUg+zuGFj3fTAY6qCwFaiYRJfCuwX5lYXmFDu0BmKA5fMxGyYcPQww
+         1nuiRubEW9rZP/SPdhLZLH9CmK1ZSEwZBVrfr9YIZOUGvJiLgZwVxHvV8F3pqoA72klJ
+         45vLOKvfoIXCe6mGJ6FegixxHXmdvuz8lPQjq3voEpIlZqZA9IuMVp7ApTuYPaTtYiz1
+         3Q0sWEZKjPXralVQDmAtHTSbDTbEv6M5Ct1p+7pHG43P2Bw7PTJ/5dpZsmMdtbEwTf9Q
+         o6Hw==
+X-Gm-Message-State: APjAAAVEc/ykruojrpubaWu+vVplF2xXo2Kgt9pcoDFti2kTkhTrTWz4
+        X+Mpdipjy4awokU4qAn4qMeomw1qs9JERiF2XhY=
+X-Google-Smtp-Source: APXvYqwqVxfC2cNUYKhwcqXPFeJg2d1bFBSsmVLGAXW7oEd6d1E5TBDxF8h/vtJ2zwm35tbMgZpLEGXynIDHXf1hv80=
+X-Received: by 2002:a05:6830:1544:: with SMTP id l4mr3638195otp.297.1570780163122;
+ Fri, 11 Oct 2019 00:49:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eSTz+XbmLtWZLqWvSNjjb4Ado4s+SfABtRuVNQBXUHStQ@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-14-keescook@chromium.org>
+In-Reply-To: <20191011000609.29728-14-keescook@chromium.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 11 Oct 2019 09:49:12 +0200
+Message-ID: <CAMuHMdXiSboG2xum0ZgjpwBxEaP-owywvPpmUubr1nuqzDPJ4Q@mail.gmail.com>
+Subject: Re: [PATCH v2 13/29] vmlinux.lds.h: Replace RW_DATA_SECTION with RW_DATA
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 02:42:51PM -0700, Jim Mattson wrote:
-> On Tue, Sep 17, 2019 at 1:52 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
-> >
-> > EPT-Based Sub-Page write Protection(SPP)is a HW capability which allows
-> > Virtual Machine Monitor(VMM) to specify write-permission for guest
-> > physical memory at a sub-page(128 byte) granularity. When this
-> > capability is enabled, the CPU enforces write-access check for sub-pages
-> > within a 4KB page.
-> >
-> > The feature is targeted to provide fine-grained memory protection for
-> > usages such as device virtualization, memory check-point and VM
-> > introspection etc.
-> >
-> > SPP is active when the "sub-page write protection" (bit 23) is 1 in
-> > Secondary VM-Execution Controls. The feature is backed with a Sub-Page
-> > Permission Table(SPPT), SPPT is referenced via a 64-bit control field
-> > called Sub-Page Permission Table Pointer (SPPTP) which contains a
-> > 4K-aligned physical address.
-> >
-> > To enable SPP for certain physical page, the gfn should be first mapped
-> > to a 4KB entry, then set bit 61 of the corresponding EPT leaf entry.
-> > While HW walks EPT, if bit 61 is set, it traverses SPPT with the guset
-> > physical address to find out the sub-page permissions at the leaf entry.
-> > If the corresponding bit is set, write to sub-page is permitted,
-> > otherwise, SPP induced EPT violation is generated.
-> 
-> How do you handle sub-page permissions for instructions emulated by kvm?
-How about checking if the gpa is SPP protected, if it is, inject some
-exception to guest? 
+On Fri, Oct 11, 2019 at 2:07 AM Kees Cook <keescook@chromium.org> wrote:
+> Rename RW_DATA_SECTION to RW_DATA. (Calling this a "section" is a lie,
+> since it's multiple sections and section flags cannot be applied to
+> the macro.)
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+>  arch/m68k/kernel/vmlinux-nommu.lds   | 2 +-
+>  arch/m68k/kernel/vmlinux-std.lds     | 2 +-
+>  arch/m68k/kernel/vmlinux-sun3.lds    | 2 +-
+
+For m68k:
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
