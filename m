@@ -2,111 +2,235 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC102ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91250ECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5592206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:23:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkzDtjQy"
+	by mail.kernel.org (Postfix) with ESMTP id 64E38206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 14:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbfJKOXD (ORCPT
+        id S1728248AbfJKOX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 10:23:03 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32958 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbfJKOXC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 10:23:02 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b9so12189886wrs.0;
-        Fri, 11 Oct 2019 07:23:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oSsh302Pu+csZ7xgzPuhonQMY9+lrqOfCEFZW1KhfS8=;
-        b=YkzDtjQyegcxDIXVHrLOrRGodGbYbIvrGtfLqnmauHdKO56uN7us77KHHdU8aytgqJ
-         bNnoUbnDiVDjtal5GKhtjsUiE1p0DuWzZdCRAskMhBwUkKvV7K7L5mqKaAWGE9PlIncZ
-         pM12m4DMw88Xtjw5x8kjeK4fZ0OeIKm/tHRe9ALTTJ9Wmb7jxzdInWdHRJeKZwaSr0X8
-         EKFmb3HQXXo/IS9d6AWLmk4SA9XRKq1xfu8rn5KoPNmKIfZkhOluEPIRKvQOnWFifUU/
-         YaD5qNy/bBiyM+UTdsRO07Frao7G4LRCq5u1UKU7OynmKYBJXPjOvtQS6G8qls/iOM6A
-         PRAg==
+        Fri, 11 Oct 2019 10:23:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34800 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728229AbfJKOX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 10:23:56 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E8E422DD98
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 14:23:55 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id n3so4449768wrt.9
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 07:23:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oSsh302Pu+csZ7xgzPuhonQMY9+lrqOfCEFZW1KhfS8=;
-        b=CJQ8zd52nAGVHkrhK0kFc++YO4VVfgnYijr381PtcbSOXa+npKwoGWtcjaghBnMbnP
-         Nd8qceeKrfK/gKfT0bWKFdqkQjzdog61pC4+kgXA6OLEt4n83si2aZsxUb0n82BMi8wk
-         EH9gpJP7JSsk5GuLxH3et75Aiq03tCpURHHnJAJtO4KLLGl8c0chDUgNx5QlOlXad2YQ
-         Qxc6T1qz+STrEGOiT0CZ57DgMzi0tLHX1ZUyOTxDpc/C/us002THDMCd2a4C7HvHsJ3y
-         Nm8CHTTS6NuTEo/Kir9InobAa9PkYnFYcWCdlTO1hlF8qRlWfHNPVhQX+Hjhcrut/U4h
-         ly6g==
-X-Gm-Message-State: APjAAAV0c2upUspatvEunckH8+TwtWzSttBdvptRYw3QjZABi/PGfVMj
-        cRS0LkZR83J1fX8wZ/9+IJM=
-X-Google-Smtp-Source: APXvYqzREndxRjfCDIpm3bXCE+fwFCs9sYSCEmAAfn2l++e3nTkTRa/NBdV+JHK7Vrlaklqk2uYUfA==
-X-Received: by 2002:adf:f744:: with SMTP id z4mr13921632wrp.22.1570803780129;
-        Fri, 11 Oct 2019 07:23:00 -0700 (PDT)
-Received: from gmail.com (net-93-144-2-18.cust.dsl.teletu.it. [93.144.2.18])
-        by smtp.gmail.com with ESMTPSA id v5sm3661396wrb.64.2019.10.11.07.22.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 11 Oct 2019 07:22:59 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 16:22:59 +0200
-From:   Paolo Pisati <p.pisati@gmail.com>
-To:     Loic Poulain <loic.poulain@linaro.org>
-Cc:     Paolo Pisati <p.pisati@gmail.com>,
-        Brian Masney <masneyb@onstation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: msm8996: sdhci-msm: apq8096-db820c sdhci fails to init -
- "Timeout waiting for hardware interrupt."
-Message-ID: <20191011142259.GA1558@harukaze>
-References: <20191010143232.GA13560@harukaze>
- <20191011060130.GA12357@onstation.org>
- <20191011112245.GA10461@harukaze>
- <CAMZdPi9hTQQcFHMRkj2R9t-P9AiPh01hKGPP5_F8T+MUuckVHA@mail.gmail.com>
+        bh=Inh1bChgzLYIo/XyIlm6MOBwGzCkJw+z3PVtMeIbrcY=;
+        b=QfIpeX8MrrMD7cT3ZS8CGJJRQJ0r4/xydJTUr3yU11CFRkKwH+h4kWDR5CnJAatT1v
+         tpjdNOs1Itrt144imuKIZP15SFC5dlNPr80GIEZcLB5qphib5yNO327VacGwivHMe9aE
+         qfzZ4/Ps7tuD/mlKYHOw8/MbWHvRySyxUQUt0F4z2n9FJdns/EOr6LPFMw9yymKbqfgM
+         bIilu+sPjDkdfQy1++GuD0AgMJXTn92JJYsQYU4PLse+Yg5l6LCFwZVUafFN0ITkF4MG
+         5yWtzPB5/xTCEmiKPbBLk4gGyC8epPSqMEYPVeKnrxyhuJwmXYIZr2F/b8Z0Nbw3ZVvW
+         wD9g==
+X-Gm-Message-State: APjAAAXv3eyX8wie4Up2lyd7NcgZ/J5xcH/FS7Slo3TNQQbnh4WwNh7p
+        6xA3sid/4n6W/TZFfT/zj5tImp3LUNNwyLH69DczuUAWWiBmeSojEvTGfMCHQSctFF2p+yqAb7D
+        FLvbQZRKdrGo0uKQulOgTPMsr
+X-Received: by 2002:adf:fa12:: with SMTP id m18mr13713439wrr.248.1570803834510;
+        Fri, 11 Oct 2019 07:23:54 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyDo7c8BHo0Ja6il1g46hhlChmac1DdXued+IdQ+uNaFoXJkX+MUQVSkz+8b2REaIZTUO+o2g==
+X-Received: by 2002:adf:fa12:: with SMTP id m18mr13713406wrr.248.1570803834109;
+        Fri, 11 Oct 2019 07:23:54 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id w3sm13298302wru.5.2019.10.11.07.23.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 07:23:53 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 16:23:51 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm <kvm@vger.kernel.org>
+Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
+Message-ID: <20191011142351.voqjggakqtity7od@steredhat>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-2-sgarzare@redhat.com>
+ <20190729095956-mutt-send-email-mst@kernel.org>
+ <20190830094059.c7qo5cxrp2nkrncd@steredhat>
+ <20190901024525-mutt-send-email-mst@kernel.org>
+ <CAGxU2F7fA5UtkuMQbOHHy0noOGZUtpepBNKFg5afD81bynMVUQ@mail.gmail.com>
+ <20191011100826-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMZdPi9hTQQcFHMRkj2R9t-P9AiPh01hKGPP5_F8T+MUuckVHA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191011100826-mutt-send-email-mst@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 02:47:05PM +0200, Loic Poulain wrote:
-> > No dice, same exact problem.
-> >
-> > But the patch is present downstream[1]:
-> >
-> > commit c26727f853308dc4a6645dad09e9565429f8604f
-> > Author: Loic Poulain <loic.poulain@linaro.org>
-> > Date:   Wed Dec 12 17:51:48 2018 +0100
-> >
-> > arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
-> >
-> > In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
-> > VMMC, needs to be increased in order to prevent any voltage drop issues
-> > (due to limited current) happening with some SDCARDS or during specific
-> > operations (e.g. write).
-> >
-> > Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
-> > Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-> >
-> >
-> > so it's probably worth carrying it.
+On Fri, Oct 11, 2019 at 10:11:19AM -0400, Michael S. Tsirkin wrote:
+> On Fri, Oct 11, 2019 at 03:40:48PM +0200, Stefano Garzarella wrote:
+> > On Sun, Sep 1, 2019 at 8:56 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > On Fri, Aug 30, 2019 at 11:40:59AM +0200, Stefano Garzarella wrote:
+> > > > On Mon, Jul 29, 2019 at 10:04:29AM -0400, Michael S. Tsirkin wrote:
+> > > > > On Wed, Jul 17, 2019 at 01:30:26PM +0200, Stefano Garzarella wrote:
+> > > > > > Since virtio-vsock was introduced, the buffers filled by the host
+> > > > > > and pushed to the guest using the vring, are directly queued in
+> > > > > > a per-socket list. These buffers are preallocated by the guest
+> > > > > > with a fixed size (4 KB).
+> > > > > >
+> > > > > > The maximum amount of memory used by each socket should be
+> > > > > > controlled by the credit mechanism.
+> > > > > > The default credit available per-socket is 256 KB, but if we use
+> > > > > > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
+> > > > > > buffers, using up to 1 GB of memory per-socket. In addition, the
+> > > > > > guest will continue to fill the vring with new 4 KB free buffers
+> > > > > > to avoid starvation of other sockets.
+> > > > > >
+> > > > > > This patch mitigates this issue copying the payload of small
+> > > > > > packets (< 128 bytes) into the buffer of last packet queued, in
+> > > > > > order to avoid wasting memory.
+> > > > > >
+> > > > > > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > > > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > > > >
+> > > > > This is good enough for net-next, but for net I think we
+> > > > > should figure out how to address the issue completely.
+> > > > > Can we make the accounting precise? What happens to
+> > > > > performance if we do?
+> > > > >
+> > > >
+> > > > Since I'm back from holidays, I'm restarting this thread to figure out
+> > > > how to address the issue completely.
+> > > >
+> > > > I did a better analysis of the credit mechanism that we implemented in
+> > > > virtio-vsock to get a clearer view and I'd share it with you:
+> > > >
+> > > >     This issue affect only the "host->guest" path. In this case, when the
+> > > >     host wants to send a packet to the guest, it uses a "free" buffer
+> > > >     allocated by the guest (4KB).
+> > > >     The "free" buffers available for the host are shared between all
+> > > >     sockets, instead, the credit mechanism is per-socket, I think to
+> > > >     avoid the starvation of others sockets.
+> > > >     The guests re-fill the "free" queue when the available buffers are
+> > > >     less than half.
+> > > >
+> > > >     Each peer have these variables in the per-socket state:
+> > > >        /* local vars */
+> > > >        buf_alloc        /* max bytes usable by this socket
+> > > >                            [exposed to the other peer] */
+> > > >        fwd_cnt          /* increased when RX packet is consumed by the
+> > > >                            user space [exposed to the other peer] */
+> > > >        tx_cnt                 /* increased when TX packet is sent to the other peer */
+> > > >
+> > > >        /* remote vars  */
+> > > >        peer_buf_alloc   /* peer's buf_alloc */
+> > > >        peer_fwd_cnt     /* peer's fwd_cnt */
+> > > >
+> > > >     When a peer sends a packet, it increases the 'tx_cnt'; when the
+> > > >     receiver consumes the packet (copy it to the user-space buffer), it
+> > > >     increases the 'fwd_cnt'.
+> > > >     Note: increments are made considering the payload length and not the
+> > > >     buffer length.
+> > > >
+> > > >     The value of 'buf_alloc' and 'fwd_cnt' are sent to the other peer in
+> > > >     all packet headers or with an explicit CREDIT_UPDATE packet.
+> > > >
+> > > >     The local 'buf_alloc' value can be modified by the user space using
+> > > >     setsockopt() with optname=SO_VM_SOCKETS_BUFFER_SIZE.
+> > > >
+> > > >     Before to send a packet, the peer checks the space available:
+> > > >       credit_available = peer_buf_alloc - (tx_cnt - peer_fwd_cnt)
+> > > >     and it will send up to credit_available bytes to the other peer.
+> > > >
+> > > > Possible solutions considering Michael's advice:
+> > > > 1. Use the buffer length instead of the payload length when we increment
+> > > >    the counters:
+> > > >   - This approach will account precisely the memory used per socket.
+> > > >   - This requires changes in both guest and host.
+> > > >   - It is not compatible with old drivers, so a feature should be negotiated.
+> > > > 2. Decrease the advertised 'buf_alloc' taking count of bytes queued in
+> > > >    the socket queue but not used. (e.g. 256 byte used on 4K available in
+> > > >    the buffer)
+> > > >   - pkt->hdr.buf_alloc = buf_alloc - bytes_not_used.
+> > > >   - This should be compatible also with old drivers.
+> > > >
+> > > > Maybe the second is less invasive, but will it be too tricky?
+> > > > Any other advice or suggestions?
+> > > >
+> > > > Thanks in advance,
+> > > > Stefano
+> > >
+> > > OK let me try to clarify.  The idea is this:
+> > >
+> > > Let's say we queue a buffer of 4K, and we copy if len < 128 bytes.  This
+> > > means that in the worst case (128 byte packets), each byte of credit in
+> > > the socket uses up 4K/128 = 16 bytes of kernel memory. In fact we need
+> > > to also account for the virtio_vsock_pkt since I think it's kept around
+> > > until userspace consumes it.
+> > >
+> > > Thus given X buf alloc allowed in the socket, we should publish X/16
+> > > credits to the other side. This will ensure the other side does not send
+> > > more than X/16 bytes for a given socket and thus we won't need to
+> > > allocate more than X bytes to hold the data.
+> > >
+> > > We can play with the copy break value to tweak this.
+> > >
+> > 
+> > Hi Michael,
+> > sorry for the long silence, but I focused on multi-transport.
+> > 
+> > Before to implement your idea, I tried to do some calculations and
+> > looking better to our credit mechanism:
+> > 
+> >   buf_alloc = 256 KB (default, tunable through setsockopt)
+> >   sizeof(struct virtio_vsock_pkt) = 128
+> > 
+> >   - guest (we use preallocated 4 KB buffers to receive packets, copying
+> >     small packet - < 128 -)
+> >     worst_case = 129
+> >     buf_size = 4 KB
+> >     credit2mem = (buf_size + sizeof(struct virtio_vsock_pkt)) / worst_case = 32
 > 
-> I've sent it to LKML, but it has never landed (and I've never followed-up).
+> Making virtio_vsock_pkt smaller will help btw.
+> E.g. why keep a work struct per packet? do we need the header there? etc
+> etc.
+> 
 
-I see - btw, do you have a recent kernel where the mmc works on the db820c?
--- 
-bye,
-p.
+Yes, I had the same feeling, I'll try to make it smaller!
+
+
+> > 
+> >     credit_published = buf_alloc / credit2mem = ~8 KB
+> >     Space for just 2 full packet (4 KB)
+> > 
+> >   - host (we copy packets from the vring, allocating the space for the payload)
+> >     worst_case = 1
+> >     buf_size = 1
+> >     credit2mem = (buf_size + sizeof(struct virtio_vsock_pkt)) / worst_case = 129
+> > 
+> >     credit_published = buf_alloc / credit2mem = ~2 KB
+> >     Less than a full packet (guest now can send up to 64 KB with a single
+> >     packet, so it will be limited to 2 KB)
+> 
+> 1 byte in struct virtio_vsock_pkt is crazy. Can't we copy
+
+I know :-)
+
+> like we do in the guest? E.g. allocate at least 128 bytes,
+> and then we can add data to the tail of the last packet?
+
+Yes, I've been thinking about trying that out. (allocate at least 128 bytes
+and do as we do in the guest).
+
+
+Thanks,
+Stefano
