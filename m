@@ -2,125 +2,172 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E47EECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF9AC47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22AEC206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FB0206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 15:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfJKPYE (ORCPT
+        id S1727702AbfJKPY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 11:24:04 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:47335 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfJKPYD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 11:24:03 -0400
-Received: by mail-io1-f72.google.com with SMTP id k14so15131058iot.14
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 08:24:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=M2Zk83UHjuHOijfJsrKFxRFCeO8Fg9AWHxC+LcAN1hg=;
-        b=SDmP0rtvKXnOwQ8cCK2SsOLas38vzgUg7rtCFEaljrF9aQtejO09Iy9oZdyJ73Ux3F
-         4FFoJphkne7czpkHovxUgYh2WQuwZRLA6b3K5BUZb6PDNOhoKyl1+cLEz88Dn/uXEL70
-         p41hTR0Zh5FktQpJjTg0YLvYYnyRuTCLeL+N0hOYVsu7rLPx7AuGoSyjqT+Q5A6iWKCU
-         WQoaJAXW92YLZAox/QToQvJtNb8XWrS1FR5pAA0VyBfCyTQ3T/Vg4x8ZyPCSSuZKUHZ5
-         4o6WK68G3+3JW4XAhphKZv8k2myT9LeEyzs/nAMB1D/4Q7Ac7BDqEPp6LcqvlfuY9QD6
-         GS3Q==
-X-Gm-Message-State: APjAAAVkiPj04akU0MqA3uQIj8XE4t7pnzNoSdLtJ3zjopUCBtrP+lI7
-        Hzk01ODZ6h2Wd/H3gBgT8T7s931cbtv0Yx9PhxuxJH8RdQYE
-X-Google-Smtp-Source: APXvYqz0/5nrdneWztk4yyxy1ZRB0qhZLNu5lKN/fsvPO6z8kvVN0lvp11QFDQqDZRXw4eAdQRRk8iz0WFHYTeuKcKxBAY+p/mSz
+        Fri, 11 Oct 2019 11:24:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:35692 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726707AbfJKPY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 11:24:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98B3F142F;
+        Fri, 11 Oct 2019 08:24:58 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADE883F68E;
+        Fri, 11 Oct 2019 08:24:55 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 16:24:53 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Sudakshina Das <sudi.das@arm.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 09/12] arm64: traps: Fix inconsistent faulting
+ instruction skipping
+Message-ID: <20191011152453.GF33537@lakrids.cambridge.arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-10-git-send-email-Dave.Martin@arm.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8819:: with SMTP id l25mr24986ioj.18.1570807441129;
- Fri, 11 Oct 2019 08:24:01 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 08:24:01 -0700
-In-Reply-To: <b8b1e4fef9f3ece63909c38b3302621d76770caa.camel@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008a083f0594a41bf1@google.com>
-Subject: Re: KMSAN: uninit-value in alauda_check_media
-From:   syzbot <syzbot+e7d46eb426883fb97efd@syzkaller.appspotmail.com>
-To:     glider@google.com, gregkh@linuxfoundation.org,
-        jaskaransingh7654321@gmail.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com,
-        usb-storage@lists.one-eyed-alien.net
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570733080-21015-10-git-send-email-Dave.Martin@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Oct 10, 2019 at 07:44:37PM +0100, Dave Martin wrote:
+> Correct skipping of an instruction on AArch32 works a bit
+> differently from AArch64, mainly due to the different CPSR/PSTATE
+> semantics.
+> 
+> There have been various attempts to get this right.  Currenty
+> arm64_skip_faulting_instruction() mostly does the right thing, but
+> does not advance the IT state machine for the AArch32 case.
+> 
+> arm64_compat_skip_faulting_instruction() handles the IT state
+> machine but is local to traps.c, and porting other code to use it
+> will make a mess since there are some call sites that apply for
+> both the compat and native cases.
+> 
+> Since manual instruction skipping implies a trap, it's a relatively
+> slow path.
+> 
+> So, make arm64_skip_faulting_instruction() handle both compat and
+> native, and get rid of the arm64_compat_skip_faulting_instruction()
+> special case.
+> 
+> Fixes: 32a3e635fb0e ("arm64: compat: Add CNTFRQ trap handler")
+> Fixes: 1f1c014035a8 ("arm64: compat: Add condition code checks and IT advance")
+> Fixes: 6436beeee572 ("arm64: Fix single stepping in kernel traps")
+> Fixes: bd35a4adc413 ("arm64: Port SWP/SWPB emulation support from arm")
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> ---
+>  arch/arm64/kernel/traps.c | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-KMSAN: uninit-value in sd_revalidate_disk
+This looks good to me; it's certainly easier to reason about.
 
-=====================================================
-BUG: KMSAN: uninit-value in check_disk_change+0x423/0x4b0  
-fs/block_dev.c:1499
-CPU: 1 PID: 23508 Comm: scsi_id Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
-  media_not_present drivers/scsi/sd.c:1527 [inline]
-  sd_spinup_disk drivers/scsi/sd.c:2096 [inline]
-  sd_revalidate_disk+0x4d2/0xbef0 drivers/scsi/sd.c:3114
-  check_disk_change+0x423/0x4b0 fs/block_dev.c:1499
-  sd_open+0x471/0x8e0 drivers/scsi/sd.c:1356
-  __blkdev_get+0x4a8/0x2480 fs/block_dev.c:1569
-  blkdev_get+0x228/0x6d0 fs/block_dev.c:1707
-  blkdev_open+0x36b/0x490 fs/block_dev.c:1846
-  do_dentry_open+0xda7/0x1810 fs/open.c:797
-  vfs_open+0xaf/0xe0 fs/open.c:906
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x17f4/0x6bb0 fs/namei.c:3533
-  do_filp_open+0x2b8/0x710 fs/namei.c:3563
-  do_sys_open+0x642/0xa30 fs/open.c:1089
-  __do_sys_open fs/open.c:1107 [inline]
-  __se_sys_open+0xad/0xc0 fs/open.c:1102
-  __x64_sys_open+0x4a/0x70 fs/open.c:1102
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x7f7c9e529120
-Code: 48 8b 15 1b 4d 2b 00 f7 d8 64 89 02 83 c8 ff c3 90 90 90 90 90 90 90  
-90 90 90 83 3d d5 a4 2b 00 00 75 10 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 31 c3 48 83 ec 08 e8 5e 8c 01 00 48 89 04 24
-RSP: 002b:00007fff97dee0a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007fff97dee5c0 RCX: 00007f7c9e529120
-RDX: 00007fff97dee3c0 RSI: 0000000000000800 RDI: 00007fff97dee3c0
-RBP: 00000000017ac010 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fff97dee5c0
-R13: 00007fff97dee3c0 R14: 00000000017ac010 R15: 0000000000000000
+I couldn't spot a place where we do the wrong thing today, given AFAICT
+all the instances in arch/arm64/kernel/armv8_deprecated.c would be
+UNPREDICTABLE within an IT block.
 
-Local variable description: ----sshdr.i@sd_revalidate_disk
-Variable was created at:
-  sd_spinup_disk drivers/scsi/sd.c:3108 [inline]
-  sd_revalidate_disk+0x2d3/0xbef0 drivers/scsi/sd.c:3114
-  check_disk_change+0x423/0x4b0 fs/block_dev.c:1499
-=====================================================
+It might be worth calling out an example in the commit message to
+justify the fixes tags.
 
+Thanks,
+Mark.
 
-Tested on:
-
-commit:         1e76a3e5 kmsan: replace __GFP_NO_KMSAN_SHADOW with kmsan_i..
-git tree:       https://github.com/google/kmsan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=144fd0a0e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=e7d46eb426883fb97efd
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=110434ab600000
-
+> 
+> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> index 15e3c4f..44c91d4 100644
+> --- a/arch/arm64/kernel/traps.c
+> +++ b/arch/arm64/kernel/traps.c
+> @@ -268,6 +268,8 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
+>  	}
+>  }
+>  
+> +static void advance_itstate(struct pt_regs *regs);
+> +
+>  void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+>  {
+>  	regs->pc += size;
+> @@ -278,6 +280,9 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+>  	 */
+>  	if (user_mode(regs))
+>  		user_fastforward_single_step(current);
+> +
+> +	if (regs->pstate & PSR_MODE32_BIT)
+> +		advance_itstate(regs);
+>  }
+>  
+>  static LIST_HEAD(undef_hook);
+> @@ -629,19 +634,12 @@ static void advance_itstate(struct pt_regs *regs)
+>  	compat_set_it_state(regs, it);
+>  }
+>  
+> -static void arm64_compat_skip_faulting_instruction(struct pt_regs *regs,
+> -						   unsigned int sz)
+> -{
+> -	advance_itstate(regs);
+> -	arm64_skip_faulting_instruction(regs, sz);
+> -}
+> -
+>  static void compat_cntfrq_read_handler(unsigned int esr, struct pt_regs *regs)
+>  {
+>  	int reg = (esr & ESR_ELx_CP15_32_ISS_RT_MASK) >> ESR_ELx_CP15_32_ISS_RT_SHIFT;
+>  
+>  	pt_regs_write_reg(regs, reg, arch_timer_get_rate());
+> -	arm64_compat_skip_faulting_instruction(regs, 4);
+> +	arm64_skip_faulting_instruction(regs, 4);
+>  }
+>  
+>  static const struct sys64_hook cp15_32_hooks[] = {
+> @@ -661,7 +659,7 @@ static void compat_cntvct_read_handler(unsigned int esr, struct pt_regs *regs)
+>  
+>  	pt_regs_write_reg(regs, rt, lower_32_bits(val));
+>  	pt_regs_write_reg(regs, rt2, upper_32_bits(val));
+> -	arm64_compat_skip_faulting_instruction(regs, 4);
+> +	arm64_skip_faulting_instruction(regs, 4);
+>  }
+>  
+>  static const struct sys64_hook cp15_64_hooks[] = {
+> @@ -682,7 +680,7 @@ asmlinkage void __exception do_cp15instr(unsigned int esr, struct pt_regs *regs)
+>  		 * There is no T16 variant of a CP access, so we
+>  		 * always advance PC by 4 bytes.
+>  		 */
+> -		arm64_compat_skip_faulting_instruction(regs, 4);
+> +		arm64_skip_faulting_instruction(regs, 4);
+>  		return;
+>  	}
+>  
+> -- 
+> 2.1.4
+> 
