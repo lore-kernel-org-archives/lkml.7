@@ -2,177 +2,76 @@ Return-Path: <SRS0=Osat=YE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35846ECE58C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB51DECE58C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBFF2089F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:12:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ejGC399U"
+	by mail.kernel.org (Postfix) with ESMTP id C67FE206A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 13:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfJKNMt (ORCPT
+        id S1728326AbfJKNMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 11 Oct 2019 09:12:49 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46368 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727950AbfJKNMt (ORCPT
+Received: from mail-out.m-online.net ([212.18.0.10]:39447 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbfJKNMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 09:12:49 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9BD6HRY025650;
-        Fri, 11 Oct 2019 15:12:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=PWduPs3pmXgoDQ3rhQPq+MwH5Bty4MTM7xJsS5IAIeM=;
- b=ejGC399U6Tnz8nmHJ9yJotwtZtlPXZUDPGRyrPGLzyYfIRdlGjCTsGimeyuXs77gDxoJ
- xdtGKejSWEYJnO3R7v2aue1+oP5r2/jPkyI9kAg+PkQB1QnAYthQTYH5uyvfKGTFAtSl
- ypSuaQ/92dVytI8/bJ9EzDWPljmexR+Pg+9agla8XHPMZfKJ4rt8rj8cBAYpdujAyqTe
- pZ2FJH68iPBc1eIJiQ6WZQayre4WZuuyOz13zNHW1AR5lK9dEmd94eOzLmLKftoqtszi
- jySfOAh//e2UM5L+fvw07VqRHEem7jpswLb2zrhdXKA77uN2NnjoIEKU69ZYDGKGZOH9 3g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vej2ptd96-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Oct 2019 15:12:38 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EBDFF10002A;
-        Fri, 11 Oct 2019 15:12:37 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B8EF02BEC5E;
-        Fri, 11 Oct 2019 15:12:37 +0200 (CEST)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 11 Oct
- 2019 15:12:37 +0200
-Received: from localhost (10.201.20.122) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 11 Oct 2019 15:12:37
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <mchehab@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <hverkuil-cisco@xs4all.nl>,
-        <hugues.fruchet@st.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2] dt-bindings: media: Convert stm32 cec bindings to json-schema
-Date:   Fri, 11 Oct 2019 15:12:33 +0200
-Message-ID: <20191011131234.24290-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 11 Oct 2019 09:12:48 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46qSzx30QXz1rdjb;
+        Fri, 11 Oct 2019 15:12:45 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46qSzx0Xm2z1qqkW;
+        Fri, 11 Oct 2019 15:12:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 1iBTdqjoxA5y; Fri, 11 Oct 2019 15:12:44 +0200 (CEST)
+X-Auth-Info: P6pHhQefh826x5I3OGRMQajpdWG1pcG3yVxAquADxtTDkGfuDnxuuMluprMpWmf5
+Received: from igel.home (ppp-46-244-181-31.dynamic.mnet-online.de [46.244.181.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Fri, 11 Oct 2019 15:12:43 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id 4F2242C01FC; Fri, 11 Oct 2019 15:12:43 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <timur@kernel.org>, <nicoleotsuka@gmail.com>,
+        <Xiubo.Lee@gmail.com>, <festevam@gmail.com>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] ASoC: fsl_mqs: fix old-style function declaration
+References: <20191011105606.19428-1-yuehaibing@huawei.com>
+X-Yow:  I'll show you MY telex number if you show me YOURS...
+Date:   Fri, 11 Oct 2019 15:12:43 +0200
+In-Reply-To: <20191011105606.19428-1-yuehaibing@huawei.com>
+        (yuehaibing@huawei.com's message of "Fri, 11 Oct 2019 18:56:06 +0800")
+Message-ID: <87mue7ifxw.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-11_08:2019-10-10,2019-10-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 cec binding to DT schema format using json-schema
+On Okt 11 2019, YueHaibing <yuehaibing@huawei.com> wrote:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-changes in v2:
-- use BSD-2-Clause license
-- add additionalProperties: false
-- remove pinctrl-names and pinctrl-[0-9]
+> gcc warn about this:
+>
+> sound/soc/fsl/fsl_mqs.c:146:1: warning:
+>  static is not at beginning of declaration [-Wold-style-declaration]
 
- .../devicetree/bindings/media/st,stm32-cec.txt     | 19 --------
- .../devicetree/bindings/media/st,stm32-cec.yaml    | 54 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+), 19 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-cec.txt
- create mode 100644 Documentation/devicetree/bindings/media/st,stm32-cec.yaml
+It's not a function, though.
 
-diff --git a/Documentation/devicetree/bindings/media/st,stm32-cec.txt b/Documentation/devicetree/bindings/media/st,stm32-cec.txt
-deleted file mode 100644
-index 6be2381c180d..000000000000
---- a/Documentation/devicetree/bindings/media/st,stm32-cec.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--STMicroelectronics STM32 CEC driver
--
--Required properties:
-- - compatible : value should be "st,stm32-cec"
-- - reg : Physical base address of the IP registers and length of memory
--	 mapped region.
-- - clocks : from common clock binding: handle to CEC clocks
-- - clock-names : from common clock binding: must be "cec" and "hdmi-cec".
-- - interrupts : CEC interrupt number to the CPU.
--
--Example for stm32f746:
--
--cec: cec@40006c00 {
--	compatible = "st,stm32-cec";
--	reg = <0x40006C00 0x400>;
--	interrupts = <94>;
--	clocks = <&rcc 0 STM32F7_APB1_CLOCK(CEC)>, <&rcc 1 CLK_HDMI_CEC>;
--	clock-names = "cec", "hdmi-cec";
--};
-diff --git a/Documentation/devicetree/bindings/media/st,stm32-cec.yaml b/Documentation/devicetree/bindings/media/st,stm32-cec.yaml
-new file mode 100644
-index 000000000000..e3ff7b077ff6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/st,stm32-cec.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/st,stm32-cec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 CEC bindings
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+  - Yannick Fertre <yannick.fertre@st.com>
-+
-+properties:
-+  compatible:
-+    const: st,stm32-cec
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Module Clock
-+      - description: Bus Clock
-+
-+  clock-names:
-+    items:
-+      - const: cec
-+      - const: hdmi-cec
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    cec: cec@40006c00 {
-+        compatible = "st,stm32-cec";
-+        reg = <0x40006c00 0x400>;
-+        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&rcc CEC_K>, <&clk_lse>;
-+        clock-names = "cec", "hdmi-cec";
-+    };
-+
-+...
+Andreas.
+
 -- 
-2.15.0
-
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
