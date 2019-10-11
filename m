@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A0DECE58D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F7BECE58D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A092190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD8C214E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Oct 2019 19:15:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SjWuOTsG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KtQ7RuQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfJKTPf (ORCPT
+        id S1729001AbfJKTPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 15:15:35 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:44686 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728977AbfJKTPd (ORCPT
+        Fri, 11 Oct 2019 15:15:39 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:38695 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728865AbfJKTPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 15:15:33 -0400
-Received: by mail-pg1-f202.google.com with SMTP id z7so7624962pgk.11
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 12:15:33 -0700 (PDT)
+        Fri, 11 Oct 2019 15:15:38 -0400
+Received: by mail-vk1-f202.google.com with SMTP id k132so3814747vka.5
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 12:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=wwUIXG8zaTQahpGiWbKYxnh72iiHnCVZCniLVYgkymY=;
-        b=SjWuOTsGX96zO37k1lrS0YGrpMuH9atVN00vNP8ziHSqCn5t4dh1R8CJorCFIjPdkg
-         WEWKUOZPjx8vnNqtI6YQDXKsRyBAVvql3hBRri2FhH+wJ0084Fb4JXe0niwBFfhvnYmx
-         PRw9piDFj/NQVRK8uguTgpNyFy1hd0f2bGlygLYPWJqEI/bfEIsGC7vIwGn4XrC154Cf
-         CFNI4CQ1F5Bg649N5plNnllxLyf1xvpsBPAYffUiDd8QbDT+JZf0MTjcec0yP+Yh1ELW
-         n845mj7mpnjt67qWFGOA8qyslxjBTS35v/vcpCBs0h0+KtkSBPxWDP/L07tiwi84Xc/Z
-         2r0A==
+        bh=fuET3qNc4z015mh4xj4NLz17joYOgUCh9UCVZC00VJQ=;
+        b=KtQ7RuQAgEe2d9wcSmFDcLBsRoaaxGnpESOpf/q6dteBQqfkJ6FlI7FsfVyrTIxA5z
+         xwZTZVQZlDQ7S/gzwJjZus5nZx3GJjO6hkhrkgUqORg8jTVxIt+s0y88CkAOFOTUIpRI
+         0Pzt39RFgrUq2XIP4cHJaFu8U0+NpHeQM7pfJw6eTNiKtASKlEgUMTfTY9F2RVJtnEFn
+         QFT/ef3CgPcb9DsR5oYYhAAL8hYt4W/XFs81+D/zCGDiiNyfGHoL54m7RQCMwlIb7DXR
+         P/W0KYOmCkgg16488maeLjzDGxalw2QDxZWb880tI/rMhZWrR+NypPxIgCWcm2dDL2uj
+         qDPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=wwUIXG8zaTQahpGiWbKYxnh72iiHnCVZCniLVYgkymY=;
-        b=saF+mkHT0frBkwbC0ibeCuedPiLnbDuwt+zL8wFbFJC3PtrNoGt9shfc0l5CwAjhja
-         xiu7KpNB8KaVr5t2DswEjb3zaZujUlYbz0ziKZTw4x1SWtBKCE8FKspPB1BpdiVN883c
-         UqwgxcJaPVrT80JcwslDWxlcZSVIhXP5DoTjd/EXwiVEKBM1HS0Yy3+RB9U6Q/+0RjGn
-         PQgASrGHUqu2m+2SSBjEScQW0jqQWfL0uyarAfym1bhkSw/aIOVRBAu18AUyhH6ZCMlx
-         e1lNAy2q5ny2qXplXnDUfrlsWhNct4hMVq7n0rlDPjWgHG3LS1SIh5p4SQXipH3UJMoX
-         8Xcw==
-X-Gm-Message-State: APjAAAWdWTDiGZBCwmobLIsvogEQskl0yKjcPEuoOxJXzXu00ETe8cS9
-        32LAZ74lo5/HuAug0prG4RmiYgLMI7E5/z0=
-X-Google-Smtp-Source: APXvYqzaCgjn0N9hABwlUZ7A/oUwETCiJvUmLoZt+RlNeEME8ZHLP4663B/JrOTQqolBHH7K1mL5F5e9EcUtEu0=
-X-Received: by 2002:a63:6a46:: with SMTP id f67mr17738001pgc.87.1570821332209;
- Fri, 11 Oct 2019 12:15:32 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 12:15:20 -0700
+        bh=fuET3qNc4z015mh4xj4NLz17joYOgUCh9UCVZC00VJQ=;
+        b=XltsyHQrA9b1xHILuypABMDwWzJ3ukrkrZXvqLhABK8MVdQXNQFCecw+R656l/dLyt
+         vtCBbSwrgi3ZlGA4Ap0sn+UaG+25shZ4qlqvGgOB6M66wyHxWzLtzUt2wu/NLIwnqY62
+         1oT3Kfe6oO1HdfpNm7rw+3oywazYlLqhRQQnJr/8WOhW3cQzcTote2DXtEVzE6A2Rxay
+         q84AZK0ihun8cfYCnTkkhOm2QPRQUhcfux7oxqGV6mLrgTfi1zlHwJ6nrYSoGYxD48iA
+         kFkS5oNaLQghjzAvmZMt0YX0ZqvimzJaYY1u/AN7KqMgRQEhVwvjEJQcxQnDnK0a3tLt
+         VNdw==
+X-Gm-Message-State: APjAAAUf1r4CBNgyRPLuHSwTwylreHk6sS61lD8dMHCMpwIXQeRnhoYY
+        adQ0AlGkVb9y1KXfmgtsen7KcMAwO+OphX8=
+X-Google-Smtp-Source: APXvYqyKbyMInaL/TiLznxFZpaDnmd4A+1ivZ+irQgGm2Xkw+CFqTG49xHbf8Z1vqOMgRdvb2xnG1jQBb3eetEU=
+X-Received: by 2002:a1f:f445:: with SMTP id s66mr9324346vkh.62.1570821335385;
+ Fri, 11 Oct 2019 12:15:35 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 12:15:21 -0700
 In-Reply-To: <20191011191521.179614-1-saravanak@google.com>
-Message-Id: <20191011191521.179614-3-saravanak@google.com>
+Message-Id: <20191011191521.179614-4-saravanak@google.com>
 Mime-Version: 1.0
 References: <20191011191521.179614-1-saravanak@google.com>
 X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
-Subject: [PATCH v1 2/3] driver: core: Improve documentation for fwnode_operations.add_links()
+Subject: [PATCH v1 3/3] docs: driver-model: Add documentation for sync_state
 From:   Saravana Kannan <saravanak@google.com>
 To:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
@@ -75,49 +75,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The add_links() ops shouldn't return on the first failed device link
-add. It needs to continue trying to add device links to other suppliers
-that are available. The documentation didn't explain WHY this behavior
-is necessary. So, update the documentation with an example that explains
-why this is necessary.
+The sync_state() driver callback was added recently, but the
+documentation was missing.  Adding it now.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- include/linux/fwnode.h | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ .../driver-api/driver-model/driver.rst        | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index 6ae05b9ce359..97223e2410bd 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -71,8 +71,25 @@ struct fwnode_reference_args {
-  *		links to all the suppliers of the device that are available at
-  *		the time this function is called.  The function must NOT stop
-  *		at the first failed device link if other unlinked supplier
-- *		devices are present in the system.  If some suppliers are not
-- *		yet available, this function will be called again when other
-+ *		devices are present in the system.  This is necessary for the
-+ *		driver/bus sync_state() callbacks to work correctly.
-+ *
-+ *		For example, say Device-C depends on suppliers Device-S1 and
-+ *		Device-S2 and the dependency is listed in that order in the
-+ *		firmware.  Say, S1 gets populated from the firmware after
-+ *		late_initcall_sync().  Say S2 is populated and probed way
-+ *		before that in device_initcall(). When C is populated, if this
-+ *		add_links() function doesn't continue past a "failed linking to
-+ *		S1" and continue linking C to S2, then S2 will get a
-+ *		sync_state() callback before C is probed. This is because from
-+ *		the perspective of S2, C was never a consumer when its
-+ *		sync_state() evaluation is done. To avoid this, the add_links()
-+ *		function has to go through all available suppliers of the
-+ *		device (that corresponds to this fwnode) and link to them
-+ *		before returning.
-+ *
-+ *		If some suppliers are not yet available (indicated by an error
-+ *		return value), this function will be called again when other
-  *		devices are added to allow creating device links to any newly
-  *		available suppliers.
-  *
+diff --git a/Documentation/driver-api/driver-model/driver.rst b/Documentation/driver-api/driver-model/driver.rst
+index 11d281506a04..baa6a85c8287 100644
+--- a/Documentation/driver-api/driver-model/driver.rst
++++ b/Documentation/driver-api/driver-model/driver.rst
+@@ -169,6 +169,49 @@ A driver's probe() may return a negative errno value to indicate that
+ the driver did not bind to this device, in which case it should have
+ released all resources it allocated::
+ 
++	void (*sync_state)(struct device *dev);
++
++sync_state is called only once for a device. It's called when all the consumer
++devices of the device have successfully probed. The list of consumers of the
++device is obtained by looking at the device links connecting that device to its
++consumer devices.
++
++The first attempt to call sync_state() is made during late_initcall_sync() to
++give firmware and drivers time to link devices to each other. During the first
++attempt at calling sync_state(), if all the consumers of the device at that
++point in time have already probed successfully, sync_state() is called right
++away. If there are no consumers of the device during the first attempt, that
++too is considered as "all consumers of the device have probed" and sync_state()
++is called right away.
++
++If during the first attempt at calling sync_state() for a device, there are
++still consumers that haven't probed successfully, the sync_state() call is
++postponed and reattempted in the future only when one or more consumers of the
++device probe successfully. If during the reattempt, the driver core finds that
++there are one or more consumers of the device that haven't probed yet, then
++sync_state() call is postponed again.
++
++A typical use case for sync_state() is to have the kernel cleanly take over
++management of devices from the bootloader. For example, if a device is left on
++and at a particular hardware configuration by the bootloader, the device's
++driver might need to keep the device in the boot configuration until all the
++consumers of the device have probed. Once all the consumers of the device have
++probed, the device's driver can synchronize the hardware state of the device to
++match the aggregated software state requested by all the consumers. Hence the
++name sync_state().
++
++While obvious examples of resources that can benefit from sync_state() include
++resources such as regulator, sync_state() can also be useful for complex
++resources like IOMMUs. For example, IOMMUs with multiple consumers (devices
++whose addresses are remapped by the IOMMU) might need to keep their mappings
++fixed at (or additive to) the boot configuration until all its consumers have
++probed.
++
++While the typical use case for sync_state() is to have the kernel cleanly take
++over management of devices from the bootloader, the usage of sync_state() is
++not restricted to that. Use it whenever it makes sense to take an action after
++all the consumers of a device have probed.
++
+ 	int 	(*remove)	(struct device *dev);
+ 
+ remove is called to unbind a driver from a device. This may be
 -- 
 2.23.0.700.g56cf767bdb-goog
 
