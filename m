@@ -8,131 +8,167 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BC0C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3201CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185C420700
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A87320700
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:17:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="b6jV/Cq2"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="TrHzkcD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbfJLRMG (ORCPT
+        id S1729570AbfJLRRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 13:12:06 -0400
-Received: from mout.gmx.net ([212.227.17.22]:36039 "EHLO mout.gmx.net"
+        Sat, 12 Oct 2019 13:17:40 -0400
+Received: from mout.gmx.net ([212.227.17.20]:52487 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbfJLRMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 13:12:05 -0400
+        id S1727262AbfJLRRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 13:17:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570900311;
-        bh=Zp5EojyV8iA7Me1YyTg4L4oVopF5r4vzZiU3EOEBo8A=;
+        s=badeba3b8450; t=1570900304;
+        bh=e3clNQm4ZApZXbVyy9UxDQAm7LQllONhhohiXcd0Ths=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=b6jV/Cq2C2JNtNduHvcMqL5P1f6L6dfPuf7JI39x2NNbTRmwkX6ZwN8XNDL6emQv2
-         Xtfp1dVolu6ivIslXL6DhEJ5HAgGKDmpx842cE+0m5LpCp4CFwC9SIlaNX4sWa1gz9
-         94GYls+ZWmwGPv1FXNm4oNXrEq/zNIzkQCBDtwpE=
+        b=TrHzkcD4erXW1naB1U30dr/sFOjzk8wWtig3neo9mkrsPNi/aGxMNBRswoNj6j0j/
+         67bnrZ62bKAEKwhu/sqzrSJZXTJC8zXp1S6zxXdbL7rNMLypDAgroci6UVdUzsY5Bp
+         /zcdUUwSoVdNvHZ0VqOpj1eHED3EK6VT0pox/bt8=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([213.196.244.109]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M6ll8-1iQV8D0zHC-008KZv; Sat, 12
- Oct 2019 19:11:51 +0200
+Received: from longitude ([213.196.244.109]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MXGvG-1iZP5C1BQE-00Ylo3; Sat, 12
+ Oct 2019 19:11:44 +0200
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-doc@vger.kernel.org
 Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         Jonathan Corbet <corbet@lwn.net>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Stuart Hayes <stuart.w.hayes@gmail.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] docs: admin-guide: dell_rbu: Improve formatting and spelling
-Date:   Sat, 12 Oct 2019 19:11:12 +0200
-Message-Id: <20191012171114.6589-4-j.neuschaefer@gmx.net>
+        Logan Gunthorpe <logang@deltatee.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sinan Kaya <okaya@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Peng Hao <peng.hao2@zte.com.cn>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH 2/4] docs: admin-guide: Move Dell RBU document from driver-api
+Date:   Sat, 12 Oct 2019 19:11:10 +0200
+Message-Id: <20191012171114.6589-2-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191012171114.6589-1-j.neuschaefer@gmx.net>
 References: <20191012171114.6589-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QjuWJOX8YISUQdG76zE7qW+b+u0EOV+IIZpfy+y44NWXkBk4hiR
- C3pAkD3Njfy35mCy7n0SukqO+vWA3jLQbMdbX+HIxr1GqWOrTwVvonzx1ZC0wWOd6fwVvjZ
- ynqI40kgn96a5E/S7snFjydh+R3HLZVHt9yoBzhsmBb4XmZmlAm5UU2dSJ33+d4HD3Podpq
- WLtZRVH2nS25OU0mUC3Eg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k9yi6jqpTaE=:K5dRhzfAs6p5vbuN2Pn43v
- +Fmbg7XcxICEsoazNLOwn10eihLy9NkOEpU5Qyp+7jDG0ivtRQYHVesl1jdVI0iNKMPAag1Mo
- dXfxC9TlYyqgLktqcGtQrvwrN8js94zq5uRQSrWFTBCMK5e2GKYrpeqWf4HTi8rKjQuaGDzT/
- CnHCSLzhhp1+R7z2LbOq4vimUICLqc3QTVtyqMqi9yuE3rWxefFrMiEss5Mss0yvBCYl/kQXX
- tsfDxd8pzo/dIvdo4a71KmFdXj3Vo+jFNRCGLom7+S4MTeA91nk50l2ZidqIELASmp570y9bp
- cHuzp8JUWR+m3J8NSwy662++Az/WnYtzXuP57HsXGY7obAZkcw3Ol18IaWf6rQds1vm84cgbm
- AxUqGMUZ9YHObD1JTCOirfXC30Qn/sXUO+6EZyeFrz5Upufzyi84sm+HDBxsSARCuBsEcRx6G
- OtME0sW2tFgmy+Oe7p3v6uJ/W3ryhMUvfHqgPUzSfb8MHWmk0VRTNnaOszwl3rGmmhDmpXUUi
- h7y4XuOliVuT3ZsdM3AtSzg6KZ+jwuO5leq1Gl2GfSTZyNZZQNkEs5RnPE46rIY3E1H2NSWPL
- HYDigpgRs0mGHPb5kMthHl88/+PgT/PqPtLV9T4czd857Tp26F9jDVkICXCdil8DoONhBhFkS
- XobRr4YOWJTyqfc60mm4+D7MYFWkTARKQbFE5Ol71eqjRAQuDi7jtbgv45Un3kolo5pSmonOf
- 5zLFwWL5DzE0L6Y1HtC2X+wHAKxpxV/W9+r/pr1t9SUuPGLBHLDGL+7nQHNbu9dOlpzQ6y+mD
- tQFB+1WrSgJW0ub11toH9rOAwQNI4dhVgppzY9wFNFqzILkXzFOd0Db8aU8aZQiiKKAYLHIgX
- 7bSyq/CikBsoM4hBTQaFZid4koenrmkBKe9ieIP9MhbDk9LimXFiQl6UNYcbjrgtmS8BemgZS
- a7WVh+UlTyfRB6OYgU/tEcBFcfNDhqM8dkpZOYGmmdCL9Ym8ybHRDvSDx3W9AUavaMHatYPu9
- WnWK43hoKmhJArxMc21WQUK9Ju0/vcbzJgw9AU0EF9jbnZm75MelbpDWO0I64WAfDs0A5MhSt
- 04bxdowCeuOEpBE0r7LWI/y8lNie8MQY4ewXlOmkG9iUKLh9MTLRcGdxLKj/dImr4q5+/IY9K
- 0E13BOPJwpRVfAlBchFdu1CtFlA0t1X1ZuxhgrZXyYIh7PvTEm3See7BBMtD6+JiWJ8BqQ1G4
- Zm42TGkUdU1WnML4Fco5Wc6ym3/5YR9kXnYzNppOHYf2Nd5DlZZ46LGdMPZw=
+X-Provags-ID: V03:K1:fm39Z6FB7YORX6RwhW9apc74hTkQlLRNNeSCCmUs+5m61yB9A7R
+ PF2/4mDs8VpT4Q9zpngqHyWtfYnYQjOUh1njbVcQu+SQ7MKwVN2GjVySo44zjEFCZeRLXeV
+ L7F/l2QcymwnpkHhz/NYzMz9z1WDVADqA0qmyxir16CxzO81vx9JM73fVTktuGusxPGTkWS
+ jFw7XrE2Sh63MyZEkzNnA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NUvq5Dkwz0k=:8NbpyClq5gdZLaxOZiQbZ0
+ Pm7ksBZpbvZ/17ieQWQjytpMdWZ3ZR9ZwGvG3WfzdBpHzQnIM3uANB5J6NDD0YT30jJUMtub8
+ JWIn+SZkSllf49TfIcjNEOlglOAPTVvO0TzIEZNI3Ip7sad4+JCiJFROEg7KKpDIfPEnhOt/t
+ uP/YUfeJIcphUSDCUTGv7gEXnOkiCS0D4BRy6pPbwV+RQ0VYDPMbKHpyGAlSxtCgJSdLKvbFa
+ iMMc3b9+duARDXbPqmSij+C9xIeqoAYHoTCzAZZGd18pdx3gB8bhDkJAU9nx5cjyYT/bnN+oB
+ H+SvPWc9JljSRz60LTMLryNQm0vIcZZ5nRfqrXDaCppefEvSZ2Pf//AbMkZtGdY42oM7/FQ+B
+ KyiA5lQqzj3dHcs1ssRNVg90XQR7HJI6NKlLOZzi15Sb666cxQEokAT8o8pomOEtrwTGJYg5g
+ ioymUilSqY4wf1sYL8LvlHckcpRzfWbVjws9KafxkT2krrQDruEoXX6Upd/9S+ds5CscP9Wyt
+ BR3niPhb0qmmedvgjSSFaIG4IUl91gay3ORJNAAczpL046f+W+fN/LxsJNAytQ6uOFCR3IJKQ
+ yrgPRd5UYMZ/6foXWfgpMmaUyzMJBCoUKe0vrJmmTyWsbAULCvPfzS0r86PpB+e1b6b6afsaO
+ QuLhwPAS6v3IUqtMgrzOlGwEzgQBJlK/O/a/uXOxdCgGM0jVlDAdoaS55l9Dxxw5USEdKTBvS
+ RCAg8+ilNVP3FAIg+cjPN/oBR68Zwg/67Tow8E5FVyavjAtc/BvwpF18p7aoordsMBKQj55Q/
+ U67IUaLr3BQJDuASopq/qkno80dTN77mt6hcIqLW6wi0duQTIIps05KgWr9B+kWDqFhTFhnhO
+ VFouCbp3nKW/ndcsUExLgn8dQ4CYI3wIlGcTkONtDS9pyxcV8xweHhQHJZLAr1zM2HVS/UtwL
+ qXv6j6dTUwV433Tn/UGWLPKg0BkSs9HoXqw6sZTGEJd2nAc3KdDptZHfCYtved+xfVv6I+GpT
+ frBW3CwQ6imsLq50Cl4j60NqCVcR3MzanjQmZXdfIlo2GonP5L2l12rDtspP0HcyGh/IDE2Wu
+ ZOQlwjmoS8xHBvbqWz3WBgYe8+K6wNnb3LrQSUZcAsQmUhHAQ01IS8KkahdSLPrVKbnTlQpEP
+ EOIslqlBIejgGznXocDuE9xlWNeFlS7SHlEszKMnMYzSYG+//ir9KWnMpTHgDM8uOrjjdz3Dn
+ LJFSzj2Yn+awq6C/h26JfQQHr27G90Xa4ECjCiuH7Z2ILoChpoK5arO3jlTc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This improves readability a bit.
+This document describes how an admin can use the dell_rbu driver, rather
+than any in-kernel API details.
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
- Documentation/admin-guide/dell_rbu.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/{driver-api =3D> admin-guide}/dell_rbu.rst | 0
+ Documentation/admin-guide/index.rst                    | 1 +
+ Documentation/driver-api/index.rst                     | 1 -
+ drivers/platform/x86/Kconfig                           | 2 +-
+ drivers/platform/x86/dell_rbu.c                        | 2 +-
+ 5 files changed, 3 insertions(+), 3 deletions(-)
+ rename Documentation/{driver-api =3D> admin-guide}/dell_rbu.rst (100%)
 
-diff --git a/Documentation/admin-guide/dell_rbu.rst b/Documentation/admin-=
-guide/dell_rbu.rst
-index 10830db9e616..8d70e1fc9f9d 100644
-=2D-- a/Documentation/admin-guide/dell_rbu.rst
-+++ b/Documentation/admin-guide/dell_rbu.rst
-@@ -5,7 +5,7 @@ Dell Remote BIOS Update driver (dell_rbu)
- Purpose
- =3D=3D=3D=3D=3D=3D=3D
+diff --git a/Documentation/driver-api/dell_rbu.rst b/Documentation/admin-g=
+uide/dell_rbu.rst
+similarity index 100%
+rename from Documentation/driver-api/dell_rbu.rst
+rename to Documentation/admin-guide/dell_rbu.rst
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-gui=
+de/index.rst
+index 545ea26364b7..4405b7485312 100644
+=2D-- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -72,6 +72,7 @@ configure specific aspects of kernel behavior to your li=
+king.
+    clearing-warn-once
+    cpu-load
+    cputopology
++   dell_rbu
+    device-mapper/index
+    efi-stub
+    ext4
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api=
+/index.rst
+index 2b3b6949381e..6a3ac50f51f0 100644
+=2D-- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -72,7 +72,6 @@ available subsections can be seen below.
+    connector
+    console
+    dcdbas
+-   dell_rbu
+    edid
+    eisa
+    ipmb
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index ae21d08c65e8..a890f47fbeec 100644
+=2D-- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -259,7 +259,7 @@ config DELL_RBU
+ 	 DELL system. Note you need a Dell OpenManage or Dell Update package (DU=
+P)
+ 	 supporting application to communicate with the BIOS regarding the new
+ 	 image for the image update to take effect.
+-	 See <file:Documentation/driver-api/dell_rbu.rst> for more details on th=
+e driver.
++	 See <file:Documentation/admin-guide/dell_rbu.rst> for more details on t=
+he driver.
 
--Document demonstrating the use of the Dell Remote BIOS Update driver.
-+Document demonstrating the use of the Dell Remote BIOS Update driver
- for updating BIOS images on Dell servers and desktops.
 
- Scope
-@@ -37,7 +37,7 @@ maintains a link list of packets for reading them back.
-
- If the dell_rbu driver is unloaded all the allocated memory is freed.
-
--The rbu driver needs to have an application (as mentioned above)which wil=
-l
-+The rbu driver needs to have an application (as mentioned above) which wi=
-ll
- inform the BIOS to enable the update in the next system reboot.
-
- The user should not unload the rbu driver after downloading the BIOS imag=
-e
-@@ -71,7 +71,7 @@ be downloaded. It is done as below::
- 	echo XXXX > /sys/devices/platform/dell_rbu/packet_size
-
- In the packet update mechanism, the user needs to create a new file havin=
-g
--packets of data arranged back to back. It can be done as follows
-+packets of data arranged back to back. It can be done as follows:
- The user creates packets header, gets the chunk of the BIOS image and
- places it next to the packetheader; now, the packetheader + BIOS image ch=
-unk
- added together should match the specified packet_size. This makes one
-@@ -114,7 +114,7 @@ The entries can be recreated by doing the following::
-
- 	echo init > /sys/devices/platform/dell_rbu/image_type
-
--.. note:: echoing init in image_type does not change it original value.
-+.. note:: echoing init in image_type does not change its original value.
-
- Also the driver provides /sys/devices/platform/dell_rbu/data readonly fil=
-e to
- read back the image downloaded.
+ config FUJITSU_LAPTOP
+diff --git a/drivers/platform/x86/dell_rbu.c b/drivers/platform/x86/dell_r=
+bu.c
+index 3691391fea6b..7d5453326b43 100644
+=2D-- a/drivers/platform/x86/dell_rbu.c
++++ b/drivers/platform/x86/dell_rbu.c
+@@ -24,7 +24,7 @@
+  * on every time the packet data is written. This driver requires an
+  * application to break the BIOS image in to fixed sized packet chunks.
+  *
+- * See Documentation/driver-api/dell_rbu.rst for more info.
++ * See Documentation/admin-guide/dell_rbu.rst for more info.
+  */
+ #include <linux/init.h>
+ #include <linux/module.h>
 =2D-
 2.20.1
 
