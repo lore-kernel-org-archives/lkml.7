@@ -2,134 +2,290 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102EAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D3EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04FB2089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DE12089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570885323;
+	bh=ae/2xX2aSfPkSgSYodzfwhdK2PHsQqsEwdiDNecNyJY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=xdTq5F2B86kRQqADhYT2Wi64Gk9lyRe6Ei6iLyt+EfDUMufFUHK9LJ7wgk6LHewUG
+	 qBPvSy5Ml4/n16ECzxd7u+Bq3Ry4RByzqdrjCtS/tN+gsYwvi4WV/K1+eSo9yMlxLz
+	 9WZJ05x7ArTjxH8D5l2c3YUGTB/rW4jVYAv7Fmkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbfJLNBg (ORCPT
+        id S1729233AbfJLNBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 09:01:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55226 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbfJLNBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 09:01:36 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0B34AC05AA65;
-        Sat, 12 Oct 2019 13:01:36 +0000 (UTC)
-Received: from [10.72.12.16] (ovpn-12-16.pek2.redhat.com [10.72.12.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CD7911C945;
-        Sat, 12 Oct 2019 13:01:30 +0000 (UTC)
-Subject: Re: [PATCH RFC net-next 2/2] drivers: net: virtio_net: Add tx_timeout
- function
-To:     jcfaracco@gmail.com, netdev@vger.kernel.org
-Cc:     mst@redhat.com, davem@davemloft.net,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, dnmendes76@gmail.com
-References: <20191006184515.23048-1-jcfaracco@gmail.com>
- <20191006184515.23048-3-jcfaracco@gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6c7a48ee-b900-c77d-8d12-35fd242f2e6f@redhat.com>
-Date:   Sat, 12 Oct 2019 21:01:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 12 Oct 2019 09:01:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40385 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfJLNBq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 09:01:46 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h4so14702796wrv.7;
+        Sat, 12 Oct 2019 06:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=uLp6NajyklaXJuw7py6f5SAsRw2iuNXDZQAXk26f2mg=;
+        b=N9b/tMB9cdzSE1xgiE783A8yBC0yOO3wXxmIQBu7RcYAFu1ihsVb58pBiD6QzDyX2n
+         cN57K5Qsy7qy5KPrk0lFx/EiqIQ4xg84qDoLTfIxtSIV4uyVYV62J4+94dzpRHWmAzW6
+         TlP2XN7AmgFn+VT89quh/yjjmbMoWxYzQTe3Vi2EH2ScfdGNfi/jzfG4h3NE7EFdZxPX
+         Rsg94u7XfsElhk9hiJ9QZv3FAemocxaH3kzH1fSc4GaffD38kyIATpuRBx2UK2rnpdE8
+         YxbyrIB6YrrSga9RLCaW4Kyz6DPxrdT8SdCV6Qh7IUbvbDOkLfgSEYc++fP//RSjRANr
+         RuTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=uLp6NajyklaXJuw7py6f5SAsRw2iuNXDZQAXk26f2mg=;
+        b=FEFUkz2J3HDOimgh+H+QedFSIDVIvfjeddMSoHadNS/t+L2dh0M0SsDt3pDLudchyc
+         3IymH6boGN6FkBzCA/Li+gTQHC4HuK3iBpFXSVf5LXyEBUa+3Rmcl+rI4CmEQps08qtN
+         y88EAOYTW/99hTKw1UKuYWfPQzb9LjVGFuQ5LpTS8hBw12jROrQKKlItd1+esyEJMDJe
+         qxaObOLL5ZnOpjLh4BiZ1u7qpNeLW+zp+Ew2FAVd6SvFTUtM5VwHW5Q93LkrifnY+zCJ
+         bU7jyhxguSlIsQGC45FhRA7aZdUyAmoPIz7bp/WMHdWmQMmtVnO3HXrpcUTnHAv3sgq4
+         RtFQ==
+X-Gm-Message-State: APjAAAWpt/16s7uRz3g4bvVZyx5HdVPeQGfnFv+8SFOElCQEJ/SInjop
+        I7ihoR9pVGKr4O5xSUzuTKI=
+X-Google-Smtp-Source: APXvYqz/V/vzy7M81Wiyeyed8Ar0AMjd+EXgsTZPMzBOv6BXTN6q8QCClJTpdJvnjAB39GjzFVoILQ==
+X-Received: by 2002:adf:d848:: with SMTP id k8mr18968221wrl.189.1570885302863;
+        Sat, 12 Oct 2019 06:01:42 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id b15sm13107305wmb.28.2019.10.12.06.01.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Oct 2019 06:01:42 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 15:01:39 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-efi@vger.kernel.org
+Subject: [GIT PULL] EFI fixes
+Message-ID: <20191012130139.GA10386@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191006184515.23048-3-jcfaracco@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Sat, 12 Oct 2019 13:01:36 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
-On 2019/10/7 上午2:45, jcfaracco@gmail.com wrote:
-> From: Julio Faracco <jcfaracco@gmail.com>
->
-> To enable dev_watchdog, virtio_net should have a tx_timeout defined
-> (.ndo_tx_timeout). This is only a skeleton to throw a warn message. It
-> notifies the event in some specific queue of device. This function
-> still counts tx_timeout statistic and consider this event as an error
-> (one error per queue), reporting it.
->
-> Signed-off-by: Julio Faracco <jcfaracco@gmail.com>
-> Signed-off-by: Daiane Mendes <dnmendes76@gmail.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> ---
->   drivers/net/virtio_net.c | 27 +++++++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 27f9b212c9f5..4b703b4b9441 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -2585,6 +2585,29 @@ static int virtnet_set_features(struct net_device *dev,
->   	return 0;
->   }
->   
-> +static void virtnet_tx_timeout(struct net_device *dev)
-> +{
-> +	struct virtnet_info *vi = netdev_priv(dev);
-> +	u32 i;
-> +
-> +	/* find the stopped queue the same way dev_watchdog() does */
-> +	for (i = 0; i < vi->curr_queue_pairs; i++) {
-> +		struct send_queue *sq = &vi->sq[i];
-> +
-> +		if (!netif_xmit_stopped(netdev_get_tx_queue(dev, i)))
-> +			continue;
-> +
-> +		u64_stats_update_begin(&sq->stats.syncp);
-> +		sq->stats.tx_timeouts++;
-> +		u64_stats_update_end(&sq->stats.syncp);
-> +
-> +		netdev_warn(dev, "TX timeout on send queue: %d, sq: %s, vq: %d, name: %s\n",
-> +			    i, sq->name, sq->vq->index, sq->vq->name);
+Please pull the latest efi-urgent-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-for-linus
+
+   # HEAD: be59d57f98065af0b8472f66a0a969207b168680 efi/tpm: Fix sanity check of unsigned tbl_size being less than zero
+
+Misc EFI fixes all across the map: CPER error report fixes, fixes to TPM 
+event log parsing, fix for a kexec hang, a Sparse fix and other fixes.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Ard Biesheuvel (1):
+      efivar/ssdt: Don't iterate over EFI vars if no SSDT override was specified
+
+Ben Dooks (1):
+      efi: Make unexported efi_rci2_sysfs_init() static
+
+Colin Ian King (1):
+      efi/tpm: Fix sanity check of unsigned tbl_size being less than zero
+
+Dave Young (1):
+      efi/x86: Do not clean dummy variable in kexec path
+
+Jerry Snitselaar (1):
+      efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing
+
+Lukas Wunner (1):
+      efi/cper: Fix endianness of PCIe class code
+
+Peter Jones (2):
+      efi/tpm: Don't access event->count when it isn't mapped
+      efi/tpm: Don't traverse an event log with no events
 
 
-If this is just a warn for a specific queue, maybe it's better to do it 
-in the dev_watchdog()?
+ arch/x86/platform/efi/efi.c       |  3 ---
+ drivers/firmware/efi/cper.c       |  2 +-
+ drivers/firmware/efi/efi.c        |  3 +++
+ drivers/firmware/efi/rci2-table.c |  2 +-
+ drivers/firmware/efi/tpm.c        | 26 +++++++++++++++++++-------
+ include/linux/tpm_eventlog.h      | 16 ++++++++++++----
+ 6 files changed, 36 insertions(+), 16 deletions(-)
 
-Or we may want more information like avail,used idx etc.
-
-And usually there will be a reset, any reason for not doing this?
-
-Thanks
-
-
-> +
-> +		dev->stats.tx_errors++;
-> +	}
-> +}
-> +
->   static const struct net_device_ops virtnet_netdev = {
->   	.ndo_open            = virtnet_open,
->   	.ndo_stop   	     = virtnet_close,
-> @@ -2600,6 +2623,7 @@ static const struct net_device_ops virtnet_netdev = {
->   	.ndo_features_check	= passthru_features_check,
->   	.ndo_get_phys_port_name	= virtnet_get_phys_port_name,
->   	.ndo_set_features	= virtnet_set_features,
-> +	.ndo_tx_timeout		= virtnet_tx_timeout,
->   };
->   
->   static void virtnet_config_changed_work(struct work_struct *work)
-> @@ -3018,6 +3042,9 @@ static int virtnet_probe(struct virtio_device *vdev)
->   	dev->netdev_ops = &virtnet_netdev;
->   	dev->features = NETIF_F_HIGHDMA;
->   
-> +	/* Set up dev_watchdog cycle. */
-> +	dev->watchdog_timeo = 5 * HZ;
-> +
->   	dev->ethtool_ops = &virtnet_ethtool_ops;
->   	SET_NETDEV_DEV(dev, &vdev->dev);
->   
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index c202e1b07e29..425e025341db 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -917,9 +917,6 @@ static void __init kexec_enter_virtual_mode(void)
+ 
+ 	if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
+ 		runtime_code_page_mkexec();
+-
+-	/* clean DUMMY object */
+-	efi_delete_dummy_variable();
+ #endif
+ }
+ 
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index addf0749dd8b..b1af0de2e100 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -381,7 +381,7 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 		printk("%s""vendor_id: 0x%04x, device_id: 0x%04x\n", pfx,
+ 		       pcie->device_id.vendor_id, pcie->device_id.device_id);
+ 		p = pcie->device_id.class_code;
+-		printk("%s""class_code: %02x%02x%02x\n", pfx, p[0], p[1], p[2]);
++		printk("%s""class_code: %02x%02x%02x\n", pfx, p[2], p[1], p[0]);
+ 	}
+ 	if (pcie->validation_bits & CPER_PCIE_VALID_SERIAL_NUMBER)
+ 		printk("%s""serial number: 0x%04x, 0x%04x\n", pfx,
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 8d3e778e988b..69f00f7453a3 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -267,6 +267,9 @@ static __init int efivar_ssdt_load(void)
+ 	void *data;
+ 	int ret;
+ 
++	if (!efivar_ssdt[0])
++		return 0;
++
+ 	ret = efivar_init(efivar_ssdt_iter, &entries, true, &entries);
+ 
+ 	list_for_each_entry_safe(entry, aux, &entries, list) {
+diff --git a/drivers/firmware/efi/rci2-table.c b/drivers/firmware/efi/rci2-table.c
+index 3e290f96620a..76b0c354a027 100644
+--- a/drivers/firmware/efi/rci2-table.c
++++ b/drivers/firmware/efi/rci2-table.c
+@@ -76,7 +76,7 @@ static u16 checksum(void)
+ 	return chksum;
+ }
+ 
+-int __init efi_rci2_sysfs_init(void)
++static int __init efi_rci2_sysfs_init(void)
+ {
+ 	struct kobject *tables_kobj;
+ 	int ret = -ENOMEM;
+diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
+index 1d3f5ca3eaaf..ebd7977653a8 100644
+--- a/drivers/firmware/efi/tpm.c
++++ b/drivers/firmware/efi/tpm.c
+@@ -40,7 +40,7 @@ int __init efi_tpm_eventlog_init(void)
+ {
+ 	struct linux_efi_tpm_eventlog *log_tbl;
+ 	struct efi_tcg2_final_events_table *final_tbl;
+-	unsigned int tbl_size;
++	int tbl_size;
+ 	int ret = 0;
+ 
+ 	if (efi.tpm_log == EFI_INVALID_TABLE_ADDR) {
+@@ -75,16 +75,28 @@ int __init efi_tpm_eventlog_init(void)
+ 		goto out;
+ 	}
+ 
+-	tbl_size = tpm2_calc_event_log_size((void *)efi.tpm_final_log
+-					    + sizeof(final_tbl->version)
+-					    + sizeof(final_tbl->nr_events),
+-					    final_tbl->nr_events,
+-					    log_tbl->log);
++	tbl_size = 0;
++	if (final_tbl->nr_events != 0) {
++		void *events = (void *)efi.tpm_final_log
++				+ sizeof(final_tbl->version)
++				+ sizeof(final_tbl->nr_events);
++
++		tbl_size = tpm2_calc_event_log_size(events,
++						    final_tbl->nr_events,
++						    log_tbl->log);
++	}
++
++	if (tbl_size < 0) {
++		pr_err(FW_BUG "Failed to parse event in TPM Final Events Log\n");
++		goto out_calc;
++	}
++
+ 	memblock_reserve((unsigned long)final_tbl,
+ 			 tbl_size + sizeof(*final_tbl));
+-	early_memunmap(final_tbl, sizeof(*final_tbl));
+ 	efi_tpm_final_log_size = tbl_size;
+ 
++out_calc:
++	early_memunmap(final_tbl, sizeof(*final_tbl));
+ out:
+ 	early_memunmap(log_tbl, sizeof(*log_tbl));
+ 	return ret;
+diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+index 63238c84dc0b..131ea1bad458 100644
+--- a/include/linux/tpm_eventlog.h
++++ b/include/linux/tpm_eventlog.h
+@@ -152,7 +152,7 @@ struct tcg_algorithm_info {
+  * total. Once we've done this we know the offset of the data length field,
+  * and can calculate the total size of the event.
+  *
+- * Return: size of the event on success, <0 on failure
++ * Return: size of the event on success, 0 on failure
+  */
+ 
+ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+@@ -170,6 +170,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 	u16 halg;
+ 	int i;
+ 	int j;
++	u32 count, event_type;
+ 
+ 	marker = event;
+ 	marker_start = marker;
+@@ -190,16 +191,22 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 	}
+ 
+ 	event = (struct tcg_pcr_event2_head *)mapping;
++	/*
++	 * The loop below will unmap these fields if the log is larger than
++	 * one page, so save them here for reference:
++	 */
++	count = READ_ONCE(event->count);
++	event_type = READ_ONCE(event->event_type);
+ 
+ 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+ 
+ 	/* Check if event is malformed. */
+-	if (event->count > efispecid->num_algs) {
++	if (count > efispecid->num_algs) {
+ 		size = 0;
+ 		goto out;
+ 	}
+ 
+-	for (i = 0; i < event->count; i++) {
++	for (i = 0; i < count; i++) {
+ 		halg_size = sizeof(event->digests[i].alg_id);
+ 
+ 		/* Map the digest's algorithm identifier */
+@@ -256,8 +263,9 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 		+ event_field->event_size;
+ 	size = marker - marker_start;
+ 
+-	if ((event->event_type == 0) && (event_field->event_size == 0))
++	if (event_type == 0 && event_field->event_size == 0)
+ 		size = 0;
++
+ out:
+ 	if (do_mapping)
+ 		TPM_MEMUNMAP(mapping, mapping_size);
