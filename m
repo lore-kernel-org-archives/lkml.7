@@ -2,94 +2,242 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2140BC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 23:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0192C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 23:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED206206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 23:14:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYQvrGg9"
+	by mail.kernel.org (Postfix) with ESMTP id C98C62067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 23:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbfJLXOk (ORCPT
+        id S1727941AbfJLXWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 19:14:40 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38695 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfJLXOk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 19:14:40 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u28so9379646lfc.5;
-        Sat, 12 Oct 2019 16:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ia0hSBa10knYKGOnZiDVQmpAvNOJ+DPL78NAZDUpJtE=;
-        b=GYQvrGg9HhSMYphkXFdQhqgM0mquEQEJ69Ut03YgUNLIBLFb6/MHfUshd/BLWbO/uw
-         50PJm8HpjgPOJ0b9NRmxpPFm9uePxbePlKRoLhvpoGo18lzfQAklQ4f/YhVwa/UCWek0
-         qvk+4WBbGTZkce1rEof9NEi/az/yiiB1ODRpE9YVGZ8maBw+P9mfj3H0n6yegVPhDTtr
-         UaWnYxmUc9Ry3wkVN74BZiU0hVdsqEUCVAZ9/5GF/q4FGnWn+bkh5iQinTNiMdOlKS68
-         PQgzF5agqSG1fpfNFtaiMkQmxuKCNv5RfMThVvHLS8RWKVBL/v4RPXdcv6mI85cUssn7
-         rnuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ia0hSBa10knYKGOnZiDVQmpAvNOJ+DPL78NAZDUpJtE=;
-        b=aKRJgmKyvWHAfMYR4lN3ElmLRB4IaCwcWOagBINo15BS2ceqNR4U8ADuAXxsufw+Vw
-         BuaxoUaRY2dqJVWq+6Le0EKC5+SO9QJLXEM0LGjDsKTw2AmbuP3jlWTslJewgt1dNXHf
-         O+8ok+odFhMYFvxpRvf7BpIXA/S3cAfEhUhp9noQa/meZIFpeiugaC1fVCqnsS5KJUS/
-         dcH6ReRmEoqkc/+Ock5uWtCcUAKaHqA5r4i6RibWPnKxVAH5qpZlx7/WtdH8hoVAiJRO
-         T72WZRsuDpsjZvvAYf/InagLYsCnrEg5Rq2aCfVtVunKcZdGOoIn0e7GeMpI1JRFy4kv
-         8PIw==
-X-Gm-Message-State: APjAAAU4ETXVFyaaoPWnJ1GoV7OSQIUqPPgSp9ZHnVq/loO2PGj9WiTw
-        cqOmCGTTkhMcaMiCnLs4oo4XyAFj539RRHYWb80=
-X-Google-Smtp-Source: APXvYqyVfVqJ1AZWYOKfESjSkoEXUw13Idwn8M5D5bsFsu+4wES8sUW3KdZ7NfeuZraYgCs5UxP5xPtAAFsAFWNo+PA=
-X-Received: by 2002:a19:f707:: with SMTP id z7mr11974821lfe.162.1570922076534;
- Sat, 12 Oct 2019 16:14:36 -0700 (PDT)
+        Sat, 12 Oct 2019 19:22:06 -0400
+Received: from smtp.gentoo.org ([140.211.166.183]:45390 "EHLO smtp.gentoo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727189AbfJLXWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 19:22:06 -0400
+Received: from [192.168.1.13] (c-76-114-240-162.hsd1.md.comcast.net [76.114.240.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kumba)
+        by smtp.gentoo.org (Postfix) with ESMTPSA id D1EC034BCAC;
+        Sat, 12 Oct 2019 23:22:03 +0000 (UTC)
+Subject: Re: [PATCH 3/3] rtc: ds1685: add indirect access method and remove
+ plat_read/plat_write
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
+References: <20191011150546.9186-1-tbogendoerfer@suse.de>
+ <20191011150546.9186-3-tbogendoerfer@suse.de>
+From:   Joshua Kinard <kumba@gentoo.org>
+Openpgp: preference=signencrypt
+Message-ID: <0e160839-9038-6f74-fdb6-8128344fb4b8@gentoo.org>
+Date:   Sat, 12 Oct 2019 19:22:01 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org> <20191011120715.GA7944@apalos.home>
-In-Reply-To: <20191011120715.GA7944@apalos.home>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Sat, 12 Oct 2019 16:14:24 -0700
-Message-ID: <CAADnVQKhYohS_5KUHeFiiyXZWTNeDz3xBf5qBQgjvFiStO+TOQ@mail.gmail.com>
-Subject: Re: [PATCH v5 bpf-next 00/15] samples: bpf: improve/fix cross-compilation
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191011150546.9186-3-tbogendoerfer@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 5:07 AM Ilias Apalodimas
-<ilias.apalodimas@linaro.org> wrote:
->
-> On Fri, Oct 11, 2019 at 03:27:53AM +0300, Ivan Khoronzhuk wrote:
-> > This series contains mainly fixes/improvements for cross-compilation
-> > but not only, tested for arm, arm64, and intended for any arch.
-> > Also verified on native build (not cross compilation) for x86_64
-> > and arm, arm64.
-...
-> For native compilation on x86_64 and aarch64
->
-> Tested-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+On 10/11/2019 11:05, Thomas Bogendoerfer wrote:
+> Use of provided plat_read/plat_write introduces the problem of possible
+> different lifetime of rtc driver and plat_XXX function provider. As
+> this was only intended for SGI Octane (IP30) this patchset implements
+> a register indirect access method for IP30 and introduces an
+> access_type field in platform data to select how registers are
+> accessed. And since there are no resource allocating stunts needed
+> anymore it also gets rid of alloc_io_resources from platform data.
+> 
 
-Applied. Thanks
+Actually, I did it this way because IP32 was already in-tree, and IP30 was
+not.  So the default ds1685_{read,write} functions were geared for the
+in-tree machine, and IP30 brought along its own versions.  If IP30 support
+gets merged into the kernel, this isn't needed anymore, but I don't think
+this explanation accurately captures that.
+
+The chief difference between IP32 and IP30's manner of accessing the RTC
+is that IP32 has a 256-byte gap between each RTC register for unknown
+reasons (this is documented in the IP32 hardware data sheets I have), and
+access has to be MMIO'ed, since the RTC is hanging off of the MACE PCI
+structs, like every other device in IP32's code.  IP30 doesn't have this
+register gap to worry about, and it accesses the RTC registers via PIO.
+
+
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> ---
+>  arch/mips/sgi-ip32/ip32-platform.c |  2 +-
+>  drivers/rtc/rtc-ds1685.c           | 67 ++++++++++++++++++++++++--------------
+>  include/linux/rtc/ds1685.h         |  8 +++--
+>  3 files changed, 48 insertions(+), 29 deletions(-)
+> 
+> diff --git a/arch/mips/sgi-ip32/ip32-platform.c b/arch/mips/sgi-ip32/ip32-platform.c
+> index 5a2a82148d8d..c3909bd8dd1a 100644
+> --- a/arch/mips/sgi-ip32/ip32-platform.c
+> +++ b/arch/mips/sgi-ip32/ip32-platform.c
+> @@ -115,7 +115,7 @@ ip32_rtc_platform_data[] = {
+>  		.bcd_mode = true,
+>  		.no_irq = false,
+>  		.uie_unsupported = false,
+> -		.alloc_io_resources = true,
+> +		.access_type = ds1685_reg_direct,
+>  		.plat_prepare_poweroff = ip32_prepare_poweroff,
+>  	},
+>  };
+> diff --git a/drivers/rtc/rtc-ds1685.c b/drivers/rtc/rtc-ds1685.c
+> index 349a8d1caca1..9c5d064ebb6c 100644
+> --- a/drivers/rtc/rtc-ds1685.c
+> +++ b/drivers/rtc/rtc-ds1685.c
+> @@ -59,6 +59,32 @@ ds1685_write(struct ds1685_priv *rtc, int reg, u8 value)
+>  }
+>  /* ----------------------------------------------------------------------- */
+>  
+> +/* Indirect read/write functions */
+> +
+> +/**
+> + * ds1685_indir_read - read a value from an rtc register.
+> + * @rtc: pointer to the ds1685 rtc structure.
+> + * @reg: the register address to read.
+> + */
+> +static u8
+> +ds1685_indir_read(struct ds1685_priv *rtc, int reg)
+> +{
+> +	writeb(reg, rtc->regs);
+> +	return readb(rtc->data);
+> +}
+> +
+> +/**
+> + * ds1685_indir_write - write a value to an rtc register.
+> + * @rtc: pointer to the ds1685 rtc structure.
+> + * @reg: the register address to write.
+> + * @value: value to write to the register.
+> + */
+> +static void
+> +ds1685_indir_write(struct ds1685_priv *rtc, int reg, u8 value)
+> +{
+> +	writeb(reg, rtc->regs);
+> +	writeb(value, rtc->data);
+> +}
+
+IP30 applied a mask of 0x7f on the 'reg' parameter on both of its
+read/write functions, which was from Stan's original code.  Is this mask
+not needed any more with the other changes you made to the IP30 code?  I
+remember trying to do without this mask once long ago, and something broke,
+so I have left it in ever since.
+
+>  
+>  /* ----------------------------------------------------------------------- */
+>  /* Inlined functions */
+> @@ -1062,16 +1088,25 @@ ds1685_rtc_probe(struct platform_device *pdev)
+>  	if (!rtc)
+>  		return -ENOMEM;
+>  
+> -	/*
+> -	 * Allocate/setup any IORESOURCE_MEM resources, if required.  Not all
+> -	 * platforms put the RTC in an easy-access place.  Like the SGI Octane,
+> -	 * which attaches the RTC to a "ByteBus", hooked to a SuperIO chip
+> -	 * that sits behind the IOC3 PCI metadevice.
+> -	 */
+> -	if (pdata->alloc_io_resources) {
+> +	/* Setup resources and access functions */
+> +	switch (pdata->access_type) {
+> +	case ds1685_reg_direct:
+> +		rtc->regs = devm_platform_ioremap_resource(pdev, 0);
+> +		if (IS_ERR(rtc->regs))
+> +			return PTR_ERR(rtc->regs);
+> +		rtc->read = ds1685_read;
+> +		rtc->write = ds1685_write;
+> +		break;
+> +	case ds1685_reg_indirect:
+>  		rtc->regs = devm_platform_ioremap_resource(pdev, 0);
+>  		if (IS_ERR(rtc->regs))
+>  			return PTR_ERR(rtc->regs);
+> +		rtc->data = devm_platform_ioremap_resource(pdev, 1);
+> +		if (IS_ERR(rtc->data))
+> +			return PTR_ERR(rtc->data);
+> +		rtc->read = ds1685_indir_read;
+> +		rtc->write = ds1685_indir_write;
+> +		break;
+>  	}
+
+I believe there should be a default case in the switch statement to catch
+and return -ENXIO so that we don't wind up with rtc->{read,write} being
+NULL.
+
+I also think the "indir" name isn't really descriptive of why IP32 and
+IP30 effectively have different read/write mechanisms.  Might want to add
+some comments to explain that IP32 uses MMIO and can just directly
+read/write the registers, while IP30 uses PIO and has to go the route of
+writing to an 'addr' register, then reading the result from a 'data'
+register.
+
+
+>  
+>  	/* Get the register step size. */
+> @@ -1080,24 +1115,6 @@ ds1685_rtc_probe(struct platform_device *pdev)
+>  	else
+>  		rtc->regstep = 1;
+>  
+> -	/* Platform read function, else default if mmio setup */
+> -	if (pdata->plat_read)
+> -		rtc->read = pdata->plat_read;
+> -	else
+> -		if (pdata->alloc_io_resources)
+> -			rtc->read = ds1685_read;
+> -		else
+> -			return -ENXIO;
+> -
+> -	/* Platform write function, else default if mmio setup */
+> -	if (pdata->plat_write)
+> -		rtc->write = pdata->plat_write;
+> -	else
+> -		if (pdata->alloc_io_resources)
+> -			rtc->write = ds1685_write;
+> -		else
+> -			return -ENXIO;
+> -
+>  	/* Platform pre-shutdown function, if defined. */
+>  	if (pdata->plat_prepare_poweroff)
+>  		rtc->prepare_poweroff = pdata->plat_prepare_poweroff;
+> diff --git a/include/linux/rtc/ds1685.h b/include/linux/rtc/ds1685.h
+> index 101c7adc05a2..67ee9d20cc5a 100644
+> --- a/include/linux/rtc/ds1685.h
+> +++ b/include/linux/rtc/ds1685.h
+> @@ -42,6 +42,7 @@
+>  struct ds1685_priv {
+>  	struct rtc_device *dev;
+>  	void __iomem *regs;
+> +	void __iomem *data;
+>  	u32 regstep;
+>  	int irq_num;
+>  	bool bcd_mode;
+> @@ -70,12 +71,13 @@ struct ds1685_rtc_platform_data {
+>  	const bool bcd_mode;
+>  	const bool no_irq;
+>  	const bool uie_unsupported;
+> -	const bool alloc_io_resources;
+> -	u8 (*plat_read)(struct ds1685_priv *, int);
+> -	void (*plat_write)(struct ds1685_priv *, int, u8);
+>  	void (*plat_prepare_poweroff)(void);
+>  	void (*plat_wake_alarm)(void);
+>  	void (*plat_post_ram_clear)(void);
+> +	enum {
+> +		ds1685_reg_direct,
+> +		ds1685_reg_indirect
+> +	} access_type;
+>  };
+>  
+>  
+> -- 2.16.4
