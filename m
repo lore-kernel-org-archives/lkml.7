@@ -2,64 +2,111 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD60C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BCBECE58E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895B52067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C532067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nYyD0Kjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfJLEV0 (ORCPT
+        id S1728276AbfJLE0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 00:21:26 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:55442 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfJLEV0 (ORCPT
+        Sat, 12 Oct 2019 00:26:22 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:49627 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfJLE0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 00:21:26 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 456F815004EAC;
-        Fri, 11 Oct 2019 21:21:25 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 21:21:24 -0700 (PDT)
-Message-Id: <20191011.212124.1517786431494477849.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] rxrpc: Fix possible NULL pointer access in ICMP
- handling
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <157071915431.29197.5055122258964729288.stgit@warthog.procyon.org.uk>
-References: <157071915431.29197.5055122258964729288.stgit@warthog.procyon.org.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 11 Oct 2019 21:21:25 -0700 (PDT)
+        Sat, 12 Oct 2019 00:26:21 -0400
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x9C4QARl002225;
+        Sat, 12 Oct 2019 13:26:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x9C4QARl002225
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570854370;
+        bh=u9wmT/Hdot8DTpUJdxXrIyO9KPNJrJCevfN1MDnU3f8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nYyD0KjmUXXABcj9S78TlxMjTQmnh//Ytn2VsWmK2ZketQ1H6SVxWvy1QWX0tQNWg
+         hQkBvFNV+hMZbBR87NecBfH0KV2hPCqFleW4zF52rRfNPxULkb+HRbBbbrg7qcSNuc
+         6kR45j0wNBsSFV0bNVTfbuD4U+wtNnRWsVT7S/h4/lMW5v7ha0fUfkD5r/SFD6Bc4T
+         JoujFjUpPoajxAMe1CQakP/HS/dnANgvOBWb6sP79jx+5yuAwyHBZsXOi9n1x1AKI3
+         7+2C0vTVJf5uRgJwufpkUCc4zM8vRk8iFHwDmazS3pia4gCzjeF1O2xrSveJPglr4Y
+         wEkuxrum6Mu4w==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id v19so7575794vsv.3;
+        Fri, 11 Oct 2019 21:26:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAVkzPklTOOEf/N/4SE9p86OmFKdJT97rjMTAY97pOB1RAX2jay7
+        HoOk9Hsj8LuRd9i2OFgca76Fp8j1c6ZxAJ9siiA=
+X-Google-Smtp-Source: APXvYqyJCP1RZpKZxR61EaQLFEnhVwEqC60uotPeRKxZ2pZZOMM2TgalafsILrZufd2nJyMNHWQkyhs2H+F8UOY8ryM=
+X-Received: by 2002:a67:e354:: with SMTP id s20mr11212403vsm.54.1570854369388;
+ Fri, 11 Oct 2019 21:26:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191010151443.7399-1-maennich@google.com> <20191010151443.7399-5-maennich@google.com>
+ <20191011153127.GA1283883@kroah.com> <20191011154311.GA192647@google.com>
+In-Reply-To: <20191011154311.GA192647@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 12 Oct 2019 13:25:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASvQd8C4UE3Zm9tsSH48w3QKwskyTKn2P8tegBMrV0_ww@mail.gmail.com>
+Message-ID: <CAK7LNASvQd8C4UE3Zm9tsSH48w3QKwskyTKn2P8tegBMrV0_ww@mail.gmail.com>
+Subject: Re: [PATCH 4/4] export: avoid code duplication in include/linux/export.h
+To:     Matthias Maennich <maennich@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Martijn Coenen <maco@android.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Shaun Ruffell <sruffell@sruffell.net>,
+        Will Deacon <will@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-modules <linux-modules@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Thu, 10 Oct 2019 15:52:34 +0100
+On Sat, Oct 12, 2019 at 12:43 AM Matthias Maennich <maennich@google.com> wrote:
+>
+> On Fri, Oct 11, 2019 at 05:31:27PM +0200, Greg Kroah-Hartman wrote:
+> >On Thu, Oct 10, 2019 at 04:14:43PM +0100, Matthias Maennich wrote:
+> >> Now that the namespace value is not part of the __ksymtab entry name
+> >> anymore, we can simplify the implementation of EXPORT_SYMBOL*. By
+> >> allowing the empty string "" to represent 'no namespace', we can unify
+> >> the implementation and drop a lot redundant code.  That increases
+> >> readability and maintainability.
+> >>
+> >> As Masahiro pointed out earlier,
+> >> "The drawback of this change is, it grows the code size. When the symbol
+> >> has no namespace, sym->namespace was previously NULL, but it is now am
+> >> empty string "". So, it increases 1 byte for every no namespace
+> >> EXPORT_SYMBOL. A typical kernel configuration has 10K exported symbols,
+> >> so it increases 10KB in rough estimation."
+> >
+> >10Kb of non-swapable memory isn't good.  But if you care about that, you
+> >can get it back with the option to compile away any non-used symbols,
+> >and that shouldn't be affected by this change, right?
+>
+> Rasmus suggested to put the 'aMS' flags on the __ksymtab_strings section
+> to mitigate this:
+> https://lore.kernel.org/lkml/f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk/
+>
+> I was not yet able to properly test this, so I did not include it in
+> this series. As I said in the cover letter, this 4th patch might be
+> optional for 5.4. So, we could defer it to a later time when we have
+> addressed that properly.
 
-> If an ICMP packet comes in on the UDP socket backing an AF_RXRPC socket as
-> the UDP socket is being shut down, rxrpc_error_report() may get called to
-> deal with it after sk_user_data on the UDP socket has been cleared, leading
-> to a NULL pointer access when this local endpoint record gets accessed.
-> 
-> Fix this by just returning immediately if sk_user_data was NULL.
-> 
-> The oops looks like the following:
- ...
-> Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
-> Reported-by: syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com
-> Signed-off-by: David Howells <dhowells@redhat.com>
 
-Applied and queued up for -stable, thanks.
+This looks the same as my patch, though.
+
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+-- 
+Best Regards
+Masahiro Yamada
