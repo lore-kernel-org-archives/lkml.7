@@ -2,108 +2,88 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306D2C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22D3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1335C2089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E6721850
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbfJLHst (ORCPT
+        id S1728998AbfJLHwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 03:48:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48142 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfJLHst (ORCPT
+        Sat, 12 Oct 2019 03:52:50 -0400
+Received: from hera.iit.uni-miskolc.hu ([193.6.5.4]:44426 "EHLO
+        hera.iit.uni-miskolc.hu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbfJLHwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 03:48:49 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iJC8p-00051r-DP; Sat, 12 Oct 2019 07:48:43 +0000
-Date:   Sat, 12 Oct 2019 09:48:42 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] clone3: add CLONE3_CLEAR_SIGHAND
-Message-ID: <20191012074840.4to7lh4zbt4wup74@wittgenstein>
-References: <20191010133518.5420-1-christian.brauner@ubuntu.com>
- <CAHO5Pa3V7fDb_+U-v+LB+TeAU0vfJyUMs9mD4ZqUtbLpZcD4nA@mail.gmail.com>
- <20191011221208.5eglbazksfigliob@yavin.dot.cyphar.com>
- <CAKgNAkhgGhGi-hMJt3UxYYDuyOZLx7c-eucpD5V7js+hsyv2CQ@mail.gmail.com>
+        Sat, 12 Oct 2019 03:52:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by hera.iit.uni-miskolc.hu (Postfix) with ESMTP id C708F125;
+        Sat, 12 Oct 2019 09:52:46 +0200 (CEST)
+X-Virus-Scanned: Kamavis at iit.uni-miskolc.hu
+Received: from hera.iit.uni-miskolc.hu ([127.0.0.1])
+        by localhost (hera.iit.uni-miskolc.hu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HyhJANVzi8_U; Sat, 12 Oct 2019 09:52:38 +0200 (CEST)
+Received: from titan.hitronhub.home (unknown [IPv6:2a02:8109:a180:54c:226:9eff:fe30:2af8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: szucst@iit.uni-miskolc.hu)
+        by hera.iit.uni-miskolc.hu (Postfix) with ESMTPSA id 09F69129;
+        Sat, 12 Oct 2019 09:52:37 +0200 (CEST)
+From:   =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
+Subject: [PATCH 1/1] arm64: tegra: enable SDIO on Jetson Nano M.2 Key E
+Date:   Sat, 12 Oct 2019 09:52:13 +0200
+Message-Id: <20191012075213.4880-2-tszucs@protonmail.ch>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191012075213.4880-1-tszucs@protonmail.ch>
+References: <20191012075213.4880-1-tszucs@protonmail.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKgNAkhgGhGi-hMJt3UxYYDuyOZLx7c-eucpD5V7js+hsyv2CQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 08:53:34AM +0200, Michael Kerrisk (man-pages) wrote:
-> Hello Aleksa,
-> 
-> On Sat, 12 Oct 2019 at 00:12, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> >
-> > On 2019-10-11, Michael Kerrisk <mtk.manpages@gmail.com> wrote:
-> > > Why CLONE3_CLEAR_SIGHAND rather than just CLONE_CLEAR_SIGHAND?
+Enable SDMMC3 and set it up for SDIO devices.
 
-I don't care much how we name this apart from the "_CLEAR_SIGHAND"
-suffix. But see for a little rationale below.
+Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> >
-> > There are no more flag bits left for the classic clone()/clone2() (the
-> > last one was used up by CLONE_PIDFD) -- thus this flag is clone3()-only.
-> 
-> Yes, I understand that. But, I'm not sure that the "3" in the prefix
-> is necessary. "CLONE_" still seems better to me.
-> 
-> Consider this: sometime in the near future we will probably have time
-> namespaces. The new flag for those namespaces will only be usable with
-> clone3(). It should NOT be called CLONE3_NEWTIME, but rather
-> CLONE_NEWTIME (or similar), because that same flag will presumably
-> also be used in other APIs such as unshare() and setns(). (Hmm -- I
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+index 9d17ec707bce..66f913ba0b1c 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+@@ -515,6 +515,16 @@
+ 		vmmc-supply = <&vdd_3v3_sd>;
+ 	};
+ 
++	sdhci@700b0400 {
++		status = "okay";
++		bus-width = <4>;
++		cap-sdio-irq;
++		non-removable;
++
++		vqmmc-supply = <&vdd_1v8>;
++		vmmc-supply = <&vdd_3v3_sys>;
++	};
++
+ 	clocks {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+-- 
+2.20.1
 
-There are some noteable differences though. CLONE_NEWTIME takes the
-CSIGNAL bit which is in the range of a 32bit integer and thus useable by
-unshare() too. The same does not hold for CLONE{3}_CLEAR_SIGHAND. You
-can't pass it to unshare(). unshare() also just deals with
-namespace-relevant stuff so CLONE{3}_CLEAR_SIGHAND doesn't make much
-sense there.
-
-> wonder if we are going to need a new unshare2() or some such...)
-
-We still have one 32bit bit left (CLONE_DETACHED) which we can't reuse
-with clone()/clone2() but we can reuse with clone3(). We can simply
-earmark it for namespace-related stuff and thus still have one bit left
-for unshare() before we have to go for unshare2() (If we have to go
-there at all since I'm not sure how much more namespaces we can come up
-with.).
-
-Christian
