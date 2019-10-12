@@ -2,101 +2,171 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F7AC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5632CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3A9206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:33:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="lU/QjJsd"
+	by mail.kernel.org (Postfix) with ESMTP id 2FAE721850
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:33:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570898032;
+	bh=S93QUyUcRr826XaCBl9LlsX7JKBIewDHtJw2EOmyVb8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tVFhUbsticJyzvZwJw9d6WC93gd2riI0dEEQ8T7lNopq5tbhCqrqSUK2jASnOEQMh
+	 mDOn4bdI5uCy+loVHhs1ihTyN4OW1Pmj2JQSis4EULtajGqspwPFZShwCZEHIn8/+g
+	 IKOc+BmefxF5kLT2zf4vnnphuimcwtZvTw9WFg/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbfJLQdN (ORCPT
+        id S1729442AbfJLQdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 12:33:13 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36994 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727939AbfJLQdM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 12:33:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p14so15040802wro.4
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 09:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WK0aZtBfkjzF2vB8/5+pzziZzjABmbX2uXNAi/6qqVY=;
-        b=lU/QjJsd0iMUxgEz3IhsP8HaMvgoGdR4I/B6oB9obychkcm1NXhuKGhvEAUnEXPXQK
-         KVisFsqiRvr6/mNpVqZxlMkZJxxNPijRUFARXQlQIztCL7oEgpVVOPwW2GqsWaLRyLv7
-         Yq1wBpnSSsmQ5JVxw7sE0Ya5BbVBxmNT+f70ZVTq5kHPEb8ky+dwAPutUHbRNiKaleXu
-         2YpYP2Z7SfF9VABD19W/sDZQcSEceF7OPiZxAHrTkZbFc5DyzBzKIB8VNmv8d3DaSZIz
-         wmii5ceGd719vgr7vM3DawcdFYCbeLLkcNAieHPrxO6U1+8CSW+79ioVlh5QXEgVbm8k
-         Qpeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WK0aZtBfkjzF2vB8/5+pzziZzjABmbX2uXNAi/6qqVY=;
-        b=FGc6x3y+qZ6/2nXiO6eQUI8Bc6aEX7E99g57Cv84QAngE86p/2F2e+pkSyRHNd6Dv9
-         Uag2D0gP7VXrUKUpJUvw9Ay3kiA+35zjKE7cvekS8S51ZFEUwwp2KpFpJVxmW2G0QnaZ
-         ATEJYxtElLMXnqRD0Ai8zuxhiExRvpRuK2uJGnHGEF6gXrynseIl8AECi91v15VdAR4n
-         wH+ZkBon+kBCAvxmVSnhovXFFVu66ThIoStqM2QzNdx4Y9DJVaOm4kz0ytJRQ9nqlZzI
-         1IlN+Yijq3QuXnkSKyIEFCfb6dwIS96TOe6uwHJ5Cx8OIFBHi7Qj7nHkdRtWdzd6Op1+
-         88Lw==
-X-Gm-Message-State: APjAAAU3iXBaHAtYA+FmYS+YC+TSOKYODDEQRZpTumU1I6gH5abbT19C
-        xhRpoC0+KEqhVkmdlklTSD2tdg==
-X-Google-Smtp-Source: APXvYqx0gE9jjfI4wMYpx2TWxq6U428URJZdGf7D1iK2MfrVuLbFKwv4kZ5uQ3X6jHg3QLv4d4rKag==
-X-Received: by 2002:adf:f18a:: with SMTP id h10mr17622633wro.145.1570897990815;
-        Sat, 12 Oct 2019 09:33:10 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id l18sm14362413wrc.18.2019.10.12.09.33.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Oct 2019 09:33:10 -0700 (PDT)
-Date:   Sat, 12 Oct 2019 18:33:09 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 14/17] ethtool: set link settings with
- LINKINFO_SET request
-Message-ID: <20191012163309.GA2219@nanopsycho>
-References: <cover.1570654310.git.mkubecek@suse.cz>
- <aef31ba798d1cfa2ae92d333ad1547f4b528ffa8.1570654310.git.mkubecek@suse.cz>
+        Sat, 12 Oct 2019 12:33:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727939AbfJLQdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 12:33:50 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C8D0206CD;
+        Sat, 12 Oct 2019 16:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570898029;
+        bh=S93QUyUcRr826XaCBl9LlsX7JKBIewDHtJw2EOmyVb8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BtgFox0ZBbIdBrHtdVMyZcniNO6EHFWI9ch+OuURlnwlDEyOUOZvKrzmQLM9tVZGS
+         VxYtCas3OLR/PqjDsCP6DeXuILSaMP54a8etfuIefX0HIEuLZ56uWWay6sTjnut3i6
+         wqJIHRoHgMchjkS/COZBuT5r58JW52Ch0xUvPv9M=
+Date:   Sat, 12 Oct 2019 17:33:44 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
+Message-ID: <20191012173344.7d25fd02@archlinux>
+In-Reply-To: <20191012153556.GA15972@nessie>
+References: <20191012035420.13904-1-dan@dlrobertson.com>
+        <20191012035420.13904-3-dan@dlrobertson.com>
+        <20191012104033.006b33f9@archlinux>
+        <20191012153556.GA15972@nessie>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aef31ba798d1cfa2ae92d333ad1547f4b528ffa8.1570654310.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Oct 09, 2019 at 10:59:43PM CEST, mkubecek@suse.cz wrote:
+On Sat, 12 Oct 2019 15:35:56 +0000
+Dan Robertson <dan@dlrobertson.com> wrote:
 
-[...]
+> Thanks again everyone for the informative feedback!
+> 
+> On Sat, Oct 12, 2019 at 10:31:07AM +0100, Jonathan Cameron wrote:
+> > Apologies for not pointing this out in V1 but all new IIO bindings need
+> > to be in the yaml format rather than plain text.  
+> 
+> No problem. I'll use the yaml format in v3.
+> 
+> On Fri, Oct 11, 2019 at 11:11:31PM -0700, Randy Dunlap wrote:
+> > > +config BMA400
+> > > +	tristate "Bosch BMA400 3-Axis Accelerometer Driver"
+> > > +	depends on I2C
+> > > +	select REGMAP
+> > > +	select BMA400_I2C if (I2C)  
+> >
+> > Since this already has "depends on I2C", the "if (I2C)" above is not needed.
+> > Or maybe BMA400 alone does not depend on I2C?  
+> 
+> Good catch. I'll remove the I2C depends from BMA400_I2C.
+> 
+> On Sat, Oct 12, 2019 at 10:39:54AM +0300, Andy Shevchenko wrote:
+> > On Sat, Oct 12, 2019 at 10:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:  
+> > > On 10/11/19 8:54 PM, Dan Robertson wrote:  
+> >  
+> > > > +config BMA400_I2C
+> > > > +     tristate
+> > > > +     depends on BMA400
+> > > > +     depends on I2C
+> > > > +     select REGMAP_I2C
+> > > > +  
+> > >
+> > > The bma400_i2c driver seems to use some OF interfaces.
+> > > Should it also depend on OF?  
+> >
+> > Please, avoid unnecessary and strict dependencies when it's limiting
+> > the area of use the driver.
+> > The driver does not depend to OF. Why to stick with OF?
+> >
+> > The actual change has to be done is to switch from
+> >  
+> > > #include <linux/of.h>  
+> >
+> > to
+> >
+> > #include <linux/mod_devicetable.h>  
+> 
+> Ah! Did not know about mod_devicetable.h. I'll make this change in the next
+> version.
+> 
+> On Sat, Oct 12, 2019 at 10:40:33AM +0100, Jonathan Cameron wrote:
+> > > +static const struct attribute_group bma400_attrs_group = {
+> > > +	.attrs = bma400_attributes,  
+> >
+> > No need to supply any attrs at all if the core is doing everything
+> > for you, so get rid of these.  
+> 
+> Good catch.
+> 
+> > > +int bma400_probe(struct device *dev,
+> > > +		 struct regmap *regmap,
+> > > +		 const char *name)  
+> >
+> > Try to avoid unnecessary line breaks.  There are stilly only
+> > so many lines on a computer monitor :)  
+> 
+> Will do. I'll do a quick audit of the patchset for other short lines, but
+> please don't hesitate to point out others you may find.
+> 
+> > > +		/*
+> > > +		 * If the softreset failed, try to put the device in
+> > > +		 * sleep mode, but still report the error.
+> > > +		 */  
+> >
+> > Silly question.  Why is soft_reset preferred to sleep mode?  
+> 
+> Not a silly question. I actually debated this when initially implementing the
+> driver. The datasheet describes soft-reset behavior in section 4.9, the
+> following snippet from the datasheet is particularly relevant:
+> 
+> > The softreset performs a fundamental reset to the device which is largely
+> > equivalent to a power cycle. Following a delay, all user configuration
+> > settings are overwritten with their default state...  
+> 
+> Sleep mode is the default power-mode, so the only real difference would be that
+> the oversampling ratio, sampling frequency, and scale would all be reset to
+> their defaults with a soft-reset. If we just set the power-mode to sleep mode,
+> the user configuration registers would be preserved.
+> 
+> I can add a comment about the behavior of a softreset in bma400_remove.
+I'd just not do it.  That way there is only the putting it to sleep path.
+We normally assume that we don't know the state during startup and aren't
+as careful on remove to make sure things are in a default state.
 
->+static const struct nla_policy linkinfo_hdr_policy[ETHTOOL_A_HEADER_MAX + 1] = {
->+	[ETHTOOL_A_HEADER_UNSPEC]		= { .type = NLA_REJECT },
->+	[ETHTOOL_A_HEADER_DEV_INDEX]		= { .type = NLA_U32 },
->+	[ETHTOOL_A_HEADER_DEV_NAME]		= { .type = NLA_NUL_STRING,
->+						    .len = IFNAMSIZ - 1 },
+That way you only need a single path in the remove function. If sleep mode
+fails you are probably broken anyway.
 
-Please make ETHTOOL_A_HEADER_DEV_NAME accept alternative names as well.
-Just s/IFNAMSIZ/ALTIFNAMSIZ should be enough.
+Jonathan
 
->+	[ETHTOOL_A_HEADER_GFLAGS]		= { .type = NLA_U32 },
->+	[ETHTOOL_A_HEADER_RFLAGS]		= { .type = NLA_REJECT },
->+};
+> 
+> Cheers,
+> 
+>  - Dan
 
-[...]
