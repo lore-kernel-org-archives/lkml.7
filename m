@@ -2,281 +2,163 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89059C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50DEC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60ADD21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B068B206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEiTiwJM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DovncKaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfJLWTt (ORCPT
+        id S1727939AbfJLWWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 18:19:49 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38797 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfJLWTt (ORCPT
+        Sat, 12 Oct 2019 18:22:24 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51570 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfJLWWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 18:19:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w8so6176261plq.5
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 15:19:48 -0700 (PDT)
+        Sat, 12 Oct 2019 18:22:24 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so13570825wme.1
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 15:22:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cj3J1pEroaTR/ZsfEveu1P6fPFD8w3rJ9/qudwdU1EM=;
-        b=QEiTiwJMzTqhEDJXM11vucrej9zVDOr2z4w0FDZVcWjqiEY6eV7X5w+QIyjC5VwwTt
-         Bl3xx260mtlD2LEf5Mtq86A/e1Ni+KHB0FXrU5tbJKOxKcNVGleD23k1iehbSFTs+iVb
-         MOQrOddqFXCo/kyqJKK/fjIVIeZX0R1WaoaWYtuEHOZmDb5e30t/rLFHomWynGjwXDl0
-         m04eajvFJpP3aoj5XqiP181Uln2dWb49EOTpJbBCPp0ClWF7O+NhVnvuQJ0K8rLjmBln
-         JY8mINbyrG3Go8IzKJIYWaEm75ktxkqT4q6fEr7KcvacoFeyqrHPd1kCXej7aZe8ea56
-         sTQg==
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JFzKqMu/XOgZMy43SOwvpBuOXSOBfKqaUYBhEH3wBAI=;
+        b=DovncKaL/vLX3YEKzcWSlGdAVm31UdyIXs/xVZKeUBAQA4AmepkEkI395gfJs16TuU
+         XHtEkew2bPZwQeuD6OY91q9m9Ba87pWJeIASGs414H1t7a9vptQWiDgHrftvao28A4sc
+         WwQOZSmUoLOZxe00YxK4zNWRLBAO947An4AbCnpmjHsLuauhzUFFvdJAkMMnH01jLzOh
+         9OYZ7XLtMaK6BA1uZQfG0Ez68KnwHTziqN+c9+RRV9ZVPCIqPrUOjIWLb142kfsTogqD
+         F3Bvv3iniMFTA/NGjfiAYYiEiVbi8tjF1Kn489UUCRnE+UgI9AmUXdJJ7aZQi05PbqOC
+         oheA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cj3J1pEroaTR/ZsfEveu1P6fPFD8w3rJ9/qudwdU1EM=;
-        b=MiTLOTOcmLN00dceV9ZhCkYXeWqXdOOgQBFiWBg4//4+9PoufyLmPYG6pOBHStTC2J
-         2GKOXijVM6oN9Hh3VSz3WQSwbO0wF1sH8mMxCXN26PMe3ATqwVn3fBbK58JyYBCFovas
-         KWODeiqDgxjFWyVCYDkYSVXaIZaWj2Fmz3pTLUiw8DACl02Ky16DfIJdM0IZQKkMl+pu
-         iU6APA0rtZnBE2HSNfz7MqSTW5l+5V1fr24m7J9HkQ6tr02Vj4Xv6egWv31b03haEAcL
-         IHPn3nyU130F1aIVvUwEZltsuDKF5em+iUOVy3aSwBREzIX88HKgnPIt5vsFFQ66rynY
-         rSTg==
-X-Gm-Message-State: APjAAAVQ42+YMmNLHtVXAuW8LYWns7VQWNpbJCD2vOlbvLXn8fNgBSt4
-        9Z3kX6YrZukdpz+/l6Uzr64=
-X-Google-Smtp-Source: APXvYqw6XsllW6/XCmJCJV3s870HzmIyUcZI3ccnAxuLC0z96nuQ0p8xsiZ90WLgOlSM3eXZaHwJGA==
-X-Received: by 2002:a17:902:a985:: with SMTP id bh5mr21912231plb.184.1570918788530;
-        Sat, 12 Oct 2019 15:19:48 -0700 (PDT)
-Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id 30sm13839562pjk.25.2019.10.12.15.19.42
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JFzKqMu/XOgZMy43SOwvpBuOXSOBfKqaUYBhEH3wBAI=;
+        b=HOWfg5yfNOD//vDEXjUi5SBq1nZ7DgeV6cZlEc+bMiXr8oWJFSjneIA/10URtbCWk3
+         ofxNVh+CvSLNdVe7WWNdXp9Bb8oaiGvaUfM+Ob8LDrJWiJ8LKVDHJ544ld9KcLUk05Gy
+         Fsq4NwzMeZATZmGnrWnoYQ12L72ARbDd69PHMJVRn0goVB4EQb92urd8wKv8+YWHI63k
+         1afXqCKyBy3Zohb+9G7v6W2rpV0goTrRPCFa0lDtHdzyYbxMoMQirpQ+d9j6iZj7a8iE
+         iXVkfy5EeysPj4s2ffX+P/RnJXYAoUwBK2FdD8ndtRmbZZ9MoiWbr6n+1LZNK7lQR0m8
+         OaOw==
+X-Gm-Message-State: APjAAAXCi6jdXcJw1K1g/akiTlBtTCJ34AdpOOSIOKA8wUGn8c3SLcAH
+        f9Ev8yBKDdT9f8EOmmNVK4A=
+X-Google-Smtp-Source: APXvYqznaQ2I5zk2vZHv2CXimb9P7ATxRILO9G5M5Kk6EEMLuL4mDEulPc70Q1XGrPDkxaS/UFDKlQ==
+X-Received: by 2002:a7b:caa9:: with SMTP id r9mr8444358wml.58.1570918941499;
+        Sat, 12 Oct 2019 15:22:21 -0700 (PDT)
+Received: from wambui ([197.237.61.225])
+        by smtp.gmail.com with ESMTPSA id z189sm22874407wmc.25.2019.10.12.15.22.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Oct 2019 15:19:48 -0700 (PDT)
+        Sat, 12 Oct 2019 15:22:20 -0700 (PDT)
+Date:   Sun, 13 Oct 2019 01:22:15 +0300
 From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net,
-        florian.c.schilhabel@googlemail.com
-Subject: [PATCH 2/2] staging: rtl8712: clean up function headers
-Date:   Sun, 13 Oct 2019 01:19:16 +0300
-Message-Id: <c14b9e60b1e9bab635bc9527cbd2a2a07436ba44.1570918228.git.wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1570918228.git.wambui.karugax@gmail.com>
-References: <cover.1570918228.git.wambui.karugax@gmail.com>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [Outreachy kernel] [PATCH v2 3/5] staging: octeon: remove
+ typedef declaration for cvmx_fau_reg_32
+Message-ID: <20191012222215.GA30311@wambui>
+Reply-To: alpine.DEB.2.21.1910122035380.3049@hadrien
+References: <cover.1570821661.git.wambui.karugax@gmail.com>
+ <b7216f423d8e06b2ed7ac2df643a9215cd95be32.1570821661.git.wambui.karugax@gmail.com>
+ <alpine.DEB.2.21.1910122035380.3049@hadrien>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910122035380.3049@hadrien>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary line-breaks in function headers to
-improve readability of function headers.
+On Sat, Oct 12, 2019 at 08:37:18PM +0200, Julia Lawall wrote:
+> 
+> 
+> On Sat, 12 Oct 2019, Wambui Karuga wrote:
+> 
+> > Remove typedef declaration for enum cvmx_fau_reg_32.
+> > Also replace its previous uses with new declaration format.
+> > Issue found by checkpatch.pl
+> >
+> > Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> > ---
+> >  drivers/staging/octeon/octeon-stubs.h | 14 ++++++++------
+> >  1 file changed, 8 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
+> > index 0991be329139..40f0cfee0dff 100644
+> > --- a/drivers/staging/octeon/octeon-stubs.h
+> > +++ b/drivers/staging/octeon/octeon-stubs.h
+> > @@ -201,9 +201,9 @@ union cvmx_helper_link_info {
+> >  	} s;
+> >  };
+> >
+> > -typedef enum {
+> > +enum cvmx_fau_reg_32 {
+> >  	CVMX_FAU_REG_32_START	= 0,
+> > -} cvmx_fau_reg_32_t;
+> > +};
+> >
+> >  typedef enum {
+> >  	CVMX_FAU_OP_SIZE_8 = 0,
+> > @@ -1178,16 +1178,18 @@ union cvmx_gmxx_rxx_rx_inbnd {
+> >  	} s;
+> >  };
+> >
+> > -static inline int32_t cvmx_fau_fetch_and_add32(cvmx_fau_reg_32_t reg,
+> > +static inline int32_t cvmx_fau_fetch_and_add32(enum cvmx_fau_reg_32 reg,
+> >  					       int32_t value)
+> 
+> These int32_t's don't look very desirable either.  If there is only one
+> possible definition, you can just replace it by what it is defined to be.
+> 
+> julia
+> 
+Ok, I'll look into refactoring this.
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/staging/rtl8712/rtl871x_mp_ioctl.c | 57 ++++++++--------------
- 1 file changed, 19 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/staging/rtl8712/rtl871x_mp_ioctl.c b/drivers/staging/rtl8712/rtl871x_mp_ioctl.c
-index 8af7892809ca..29b85330815f 100644
---- a/drivers/staging/rtl8712/rtl871x_mp_ioctl.c
-+++ b/drivers/staging/rtl8712/rtl871x_mp_ioctl.c
-@@ -231,8 +231,7 @@ static int mp_stop_test(struct _adapter *padapter)
- 	return _SUCCESS;
- }
- 
--uint oid_rt_pro_set_data_rate_hdl(struct oid_par_priv
--					 *poid_par_priv)
-+uint oid_rt_pro_set_data_rate_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -291,8 +290,7 @@ uint oid_rt_pro_stop_test_hdl(struct oid_par_priv *poid_par_priv)
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_set_channel_direct_call_hdl(struct oid_par_priv
--						   *poid_par_priv)
-+uint oid_rt_pro_set_channel_direct_call_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -327,8 +325,7 @@ uint oid_rt_pro_set_antenna_bb_hdl(struct oid_par_priv *poid_par_priv)
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_set_tx_power_control_hdl(
--					struct oid_par_priv *poid_par_priv)
-+uint oid_rt_pro_set_tx_power_control_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -346,8 +343,7 @@ uint oid_rt_pro_set_tx_power_control_hdl(
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_query_tx_packet_sent_hdl(
--					struct oid_par_priv *poid_par_priv)
-+uint oid_rt_pro_query_tx_packet_sent_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -365,8 +361,7 @@ uint oid_rt_pro_query_tx_packet_sent_hdl(
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_query_rx_packet_received_hdl(
--					struct oid_par_priv *poid_par_priv)
-+uint oid_rt_pro_query_rx_packet_received_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -384,8 +379,7 @@ uint oid_rt_pro_query_rx_packet_received_hdl(
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_query_rx_packet_crc32_error_hdl(
--					struct oid_par_priv *poid_par_priv)
-+uint oid_rt_pro_query_rx_packet_crc32_error_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -403,8 +397,7 @@ uint oid_rt_pro_query_rx_packet_crc32_error_hdl(
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_reset_tx_packet_sent_hdl(struct oid_par_priv
--						*poid_par_priv)
-+uint oid_rt_pro_reset_tx_packet_sent_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -415,8 +408,7 @@ uint oid_rt_pro_reset_tx_packet_sent_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_reset_rx_packet_received_hdl(struct oid_par_priv
--						    *poid_par_priv)
-+uint oid_rt_pro_reset_rx_packet_received_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -432,8 +424,7 @@ uint oid_rt_pro_reset_rx_packet_received_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_reset_phy_rx_packet_count_hdl(struct oid_par_priv
--						 *poid_par_priv)
-+uint oid_rt_reset_phy_rx_packet_count_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -444,8 +435,7 @@ uint oid_rt_reset_phy_rx_packet_count_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_get_phy_rx_packet_received_hdl(struct oid_par_priv
--						  *poid_par_priv)
-+uint oid_rt_get_phy_rx_packet_received_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -460,8 +450,7 @@ uint oid_rt_get_phy_rx_packet_received_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_get_phy_rx_packet_crc32_error_hdl(struct oid_par_priv
--						     *poid_par_priv)
-+uint oid_rt_get_phy_rx_packet_crc32_error_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -476,8 +465,7 @@ uint oid_rt_get_phy_rx_packet_crc32_error_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_set_modulation_hdl(struct oid_par_priv
--					  *poid_par_priv)
-+uint oid_rt_pro_set_modulation_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -489,8 +477,7 @@ uint oid_rt_pro_set_modulation_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_set_continuous_tx_hdl(struct oid_par_priv
--					     *poid_par_priv)
-+uint oid_rt_pro_set_continuous_tx_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -503,8 +490,7 @@ uint oid_rt_pro_set_continuous_tx_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_set_single_carrier_tx_hdl(struct oid_par_priv
--						 *poid_par_priv)
-+uint oid_rt_pro_set_single_carrier_tx_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -517,8 +503,7 @@ uint oid_rt_pro_set_single_carrier_tx_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_set_carrier_suppression_tx_hdl(struct oid_par_priv
--						      *poid_par_priv)
-+uint oid_rt_pro_set_carrier_suppression_tx_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -531,8 +516,7 @@ uint oid_rt_pro_set_carrier_suppression_tx_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_set_single_tone_tx_hdl(struct oid_par_priv
--					      *poid_par_priv)
-+uint oid_rt_pro_set_single_tone_tx_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -545,8 +529,7 @@ uint oid_rt_pro_set_single_tone_tx_hdl(struct oid_par_priv
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_pro_read_register_hdl(struct oid_par_priv
--					 *poid_par_priv)
-+uint oid_rt_pro_read_register_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -727,8 +710,7 @@ uint oid_rt_pro_write_efuse_hdl(struct oid_par_priv *poid_par_priv)
- }
- /*----------------------------------------------------------------------*/
- 
--uint oid_rt_get_efuse_current_size_hdl(struct oid_par_priv
--					      *poid_par_priv)
-+uint oid_rt_get_efuse_current_size_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
-@@ -821,8 +803,7 @@ uint oid_rt_set_bandwidth_hdl(struct oid_par_priv *poid_par_priv)
- 	return RNDIS_STATUS_SUCCESS;
- }
- 
--uint oid_rt_set_rx_packet_type_hdl(struct oid_par_priv
--					   *poid_par_priv)
-+uint oid_rt_set_rx_packet_type_hdl(struct oid_par_priv *poid_par_priv)
- {
- 	struct _adapter *Adapter = (struct _adapter *)
- 				   (poid_par_priv->adapter_context);
--- 
-2.23.0
-
+wambui karuga
+> >  {
+> >  	return value;
+> >  }
+> >
+> > -static inline void cvmx_fau_atomic_add32(cvmx_fau_reg_32_t reg, int32_t value)
+> > +static inline void cvmx_fau_atomic_add32(enum cvmx_fau_reg_32 reg,
+> > +					 int32_t value)
+> >  { }
+> >
+> > -static inline void cvmx_fau_atomic_write32(cvmx_fau_reg_32_t reg, int32_t value)
+> > +static inline void cvmx_fau_atomic_write32(enum cvmx_fau_reg_32 reg,
+> > +					   int32_t value)
+> >  { }
+> >
+> >  static inline uint64_t cvmx_scratch_read64(uint64_t address)
+> > @@ -1364,7 +1366,7 @@ static inline int cvmx_spi_restart_interface(int interface,
+> >  }
+> >
+> >  static inline void cvmx_fau_async_fetch_and_add32(uint64_t scraddr,
+> > -						  cvmx_fau_reg_32_t reg,
+> > +						  enum cvmx_fau_reg_32 reg,
+> >  						  int32_t value)
+> >  { }
+> >
+> > --
+> > 2.23.0
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/b7216f423d8e06b2ed7ac2df643a9215cd95be32.1570821661.git.wambui.karugax%40gmail.com.
+> >
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/alpine.DEB.2.21.1910122035380.3049%40hadrien.
