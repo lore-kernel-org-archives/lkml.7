@@ -2,153 +2,68 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D03C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 03:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75C1C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 03:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9522B2067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 03:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A8E2067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 03:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfJLDiA (ORCPT
+        id S1728351AbfJLDiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 23:38:00 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33836 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726354AbfJLDiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 23:38:00 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BCF21FAD66123068F06F;
-        Sat, 12 Oct 2019 11:37:56 +0800 (CST)
-Received: from localhost (10.133.215.230) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Sat, 12 Oct 2019
- 11:37:49 +0800
-From:   Zhuang Yanying <ann.zhuangyanying@huawei.com>
-To:     <linfeng23@huawei.com>, <pbonzini@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
-CC:     <weiqi4@huawei.com>, <weidong.huang@huawei.com>,
-        Zhuang Yanying <ann.zhuangyanying@huawei.com>
-Subject: [PATCH v2] KVM: fix overflow of zero page refcount with ksm running
-Date:   Sat, 12 Oct 2019 11:37:31 +0800
-Message-ID: <1570851452-23364-1-git-send-email-ann.zhuangyanying@huawei.com>
-X-Mailer: git-send-email 1.9.5.msysgit.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.215.230]
-X-CFilter-Loop: Reflected
+        Fri, 11 Oct 2019 23:38:14 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55226 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfJLDiN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 23:38:13 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D377B14FD3304;
+        Fri, 11 Oct 2019 20:38:12 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 20:38:12 -0700 (PDT)
+Message-Id: <20191011.203812.1828730130029996774.davem@davemloft.net>
+To:     andrew@aj.id.au
+Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@jms.id.au, benh@kernel.crashing.org,
+        linux-aspeed@lists.ozlabs.org
+Subject: Re: [PATCH v2 0/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED
+ MACs
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191010020756.4198-1-andrew@aj.id.au>
+References: <20191010020756.4198-1-andrew@aj.id.au>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 11 Oct 2019 20:38:13 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are testing Virtual Machine with KSM on v5.4-rc2 kernel,
-and found the zero_page refcount overflow.
-The cause of refcount overflow is increased in try_async_pf
-(get_user_page) without being decreased in mmu_set_spte()
-while handling ept violation.
-In kvm_release_pfn_clean(), only unreserved page will call
-put_page. However, zero page is reserved.
-So, as well as creating and destroy vm, the refcount of
-zero page will continue to increase until it overflows.
+From: Andrew Jeffery <andrew@aj.id.au>
+Date: Thu, 10 Oct 2019 12:37:53 +1030
 
-step1:
-echo 10000 > /sys/kernel/pages_to_scan/pages_to_scan
-echo 1 > /sys/kernel/pages_to_scan/run
-echo 1 > /sys/kernel/pages_to_scan/use_zero_pages
+> This series slightly extends the devicetree binding and driver for the
+> FTGMAC100 to describe an optional RMII RCLK gate in the clocks property.
+> Currently it's necessary for the kernel to ungate RCLK on the AST2600 in NCSI
+> configurations as u-boot does not yet support NCSI (which uses the
+> R(educed)MII).
+> 
+> v2:
+> * Clear up Reduced vs Reversed MII in the cover letter
+> * Mitigate anxiety in the commit message for 1/3 
+> * Clarify that AST2500 is also affected in the clocks property description in
+>   2/3
+> * Rework the error paths and update some comments in 3/3
+> 
+> v1 can be found here: https://lore.kernel.org/netdev/20191008115143.14149-1-andrew@aj.id.au/
 
-step2:
-just create several normal qemu kvm vms.
-And destroy it after 10s.
-Repeat this action all the time.
-
-After a long period of time, all domains hang because
-of the refcount of zero page overflow.
-
-Qemu print error log as follow:
- …
- error: kvm run failed Bad address
- EAX=00006cdc EBX=00000008 ECX=80202001 EDX=078bfbfd
- ESI=ffffffff EDI=00000000 EBP=00000008 ESP=00006cc4
- EIP=000efd75 EFL=00010002 [-------] CPL=0 II=0 A20=1 SMM=0 HLT=0
- ES =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- CS =0008 00000000 ffffffff 00c09b00 DPL=0 CS32 [-RA]
- SS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- DS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- FS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- GS =0010 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
- LDT=0000 00000000 0000ffff 00008200 DPL=0 LDT
- TR =0000 00000000 0000ffff 00008b00 DPL=0 TSS32-busy
- GDT=     000f7070 00000037
- IDT=     000f70ae 00000000
- CR0=00000011 CR2=00000000 CR3=00000000 CR4=00000000
- DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 DR3=0000000000000000
- DR6=00000000ffff0ff0 DR7=0000000000000400
- EFER=0000000000000000
- Code=00 01 00 00 00 e9 e8 00 00 00 c7 05 4c 55 0f 00 01 00 00 00 <8b> 35 00 00 01 00 8b 3d 04 00 01 00 b8 d8 d3 00 00 c1 e0 08 0c ea a3 00 00 01 00 c7 05 04
- …
-
-Meanwhile, a kernel warning is departed.
-
- [40914.836375] WARNING: CPU: 3 PID: 82067 at ./include/linux/mm.h:987 try_get_page+0x1f/0x30
- [40914.836412] CPU: 3 PID: 82067 Comm: CPU 0/KVM Kdump: loaded Tainted: G           OE     5.2.0-rc2 #5
- [40914.836415] RIP: 0010:try_get_page+0x1f/0x30
- [40914.836417] Code: 40 00 c3 0f 1f 84 00 00 00 00 00 48 8b 47 08 a8 01 75 11 8b 47 34 85 c0 7e 10 f0 ff 47 34 b8 01 00 00 00 c3 48 8d 78 ff eb e9 <0f> 0b 31 c0 c3 66 90 66 2e 0f 1f 84 00 0
- 0 00 00 00 48 8b 47 08 a8
- [40914.836418] RSP: 0018:ffffb4144e523988 EFLAGS: 00010286
- [40914.836419] RAX: 0000000080000000 RBX: 0000000000000326 RCX: 0000000000000000
- [40914.836420] RDX: 0000000000000000 RSI: 00004ffdeba10000 RDI: ffffdf07093f6440
- [40914.836421] RBP: ffffdf07093f6440 R08: 800000424fd91225 R09: 0000000000000000
- [40914.836421] R10: ffff9eb41bfeebb8 R11: 0000000000000000 R12: ffffdf06bbd1e8a8
- [40914.836422] R13: 0000000000000080 R14: 800000424fd91225 R15: ffffdf07093f6440
- [40914.836423] FS:  00007fb60ffff700(0000) GS:ffff9eb4802c0000(0000) knlGS:0000000000000000
- [40914.836425] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- [40914.836426] CR2: 0000000000000000 CR3: 0000002f220e6002 CR4: 00000000003626e0
- [40914.836427] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- [40914.836427] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- [40914.836428] Call Trace:
- [40914.836433]  follow_page_pte+0x302/0x47b
- [40914.836437]  __get_user_pages+0xf1/0x7d0
- [40914.836441]  ? irq_work_queue+0x9/0x70
- [40914.836443]  get_user_pages_unlocked+0x13f/0x1e0
- [40914.836469]  __gfn_to_pfn_memslot+0x10e/0x400 [kvm]
- [40914.836486]  try_async_pf+0x87/0x240 [kvm]
- [40914.836503]  tdp_page_fault+0x139/0x270 [kvm]
- [40914.836523]  kvm_mmu_page_fault+0x76/0x5e0 [kvm]
- [40914.836588]  vcpu_enter_guest+0xb45/0x1570 [kvm]
- [40914.836632]  kvm_arch_vcpu_ioctl_run+0x35d/0x580 [kvm]
- [40914.836645]  kvm_vcpu_ioctl+0x26e/0x5d0 [kvm]
- [40914.836650]  do_vfs_ioctl+0xa9/0x620
- [40914.836653]  ksys_ioctl+0x60/0x90
- [40914.836654]  __x64_sys_ioctl+0x16/0x20
- [40914.836658]  do_syscall_64+0x5b/0x180
- [40914.836664]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- [40914.836666] RIP: 0033:0x7fb61cb6bfc7
-
-Signed-off-by: LinFeng <linfeng23@huawei.com>
-Signed-off-by: Zhuang Yanying <ann.zhuangyanying@huawei.com>
----
-v1 -> v2:  fix compile error
----
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index fd68fbe..a073442 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -152,7 +152,7 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
- bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
- {
- 	if (pfn_valid(pfn))
--		return PageReserved(pfn_to_page(pfn));
-+		return PageReserved(pfn_to_page(pfn)) && !is_zero_pfn(pfn);
- 
- 	return true;
- }
--- 
-1.8.3.1
-
-
+Series applied to net-next, thank you.
