@@ -2,178 +2,150 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BFFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 08:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7BBC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 08:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B955A2089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 08:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694B52089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 08:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aNDp1czR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j30w7pPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfJLIin (ORCPT
+        id S1729056AbfJLIoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 04:38:43 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59660 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbfJLIgn (ORCPT
+        Sat, 12 Oct 2019 04:44:12 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40120 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728812AbfJLImM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 04:36:43 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9C8Xvku036482;
-        Sat, 12 Oct 2019 08:35:52 GMT
+        Sat, 12 Oct 2019 04:42:12 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9C8d3I5005712;
+        Sat, 12 Oct 2019 08:40:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=qG0XA2QNSQPw/WQBaemuXkNN8ScZn5BFYAgIJV3+FNA=;
- b=aNDp1czRwwdReQq095SL210Z+nRMwpNdK34phCF2hb3xFrD6ScFc/5sYIVRCb2mVvni2
- x2UhbjxXZ1RydIIZf3Y//XPpHeoRPP/2o96ow32sF/2mSL66mb/lyeXaF+yruARXDWwV
- 7u0/giFk19fOY9iQkWNKOA4uXDaG+4CH0WljU1yHChv4ZAJUSCzRatXG06skIBUR48u9
- HMEVqjHeBwqqhb4k8x/OV0B71UrycUCpaNTynQ3HXC3fzWi0ucjStFYme8HT6J6AeRza
- YP5CXAh+ov0nxmMQh/Zh8iggBXzA0ivpwjWGlGVqQMY0RETYjVB03jP/nP2f1lWlanjp cw== 
+ bh=eTLCc8eWlTUmLnYiMct7cflsemw5ED6SJHMEBd984nY=;
+ b=j30w7pPALDgopJ4pGWnCJS1/9jQn6QG03r+u5ObslfJMqn7zIKaKQnQS5BAu23EUZP2g
+ mf2muP0iGYXuxmFp6bjU8pidcKg9pSU6ec93baDYNfaOdtS2xewSK7WcCLZTkzJ50Lxw
+ GqKTU0guXmfG1HFZUQXTGeXskTFdqX1/IyDaVNUhVnk5AMry4eSJFq/TIVDGZUrsEGFu
+ PNdpOpR9xlxMjyNutSmxh00Btm84uEtkp5Dl33vEqicctzE0Lq+eKvAO8AjwuPAItQ0b
+ Nhy49fJQyAvsFomXvv7Ew3UMO8tjWzwHYNlhx/mYoZzAPIqUCDsZP8MuGCe8JgXVuzXR 1A== 
 Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vk68u0rff-1
+        by aserp2120.oracle.com with ESMTP id 2vk6sq0pb3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 08:35:51 +0000
+        Sat, 12 Oct 2019 08:40:24 +0000
 Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9C8XgXJ147032;
-        Sat, 12 Oct 2019 08:35:51 GMT
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9C8cGL9154374;
+        Sat, 12 Oct 2019 08:40:23 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vk3xw8nw3-1
+        by userp3030.oracle.com with ESMTP id 2vk3xw8vhe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 08:35:51 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9C8ZlrL026844;
-        Sat, 12 Oct 2019 08:35:48 GMT
+        Sat, 12 Oct 2019 08:40:23 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9C8eIcl029967;
+        Sat, 12 Oct 2019 08:40:18 GMT
 Received: from [10.191.25.133] (/10.191.25.133)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 12 Oct 2019 08:35:47 +0000
-Subject: Re: [PATCH] acpi: Mute gcc warning
+        with ESMTP ; Sat, 12 Oct 2019 01:40:17 -0700
+Subject: Re: [PATCH v5 0/5] Add a unified parameter "nopvspin"
 To:     linux-kernel@vger.kernel.org
-Cc:     Josh Boyer <jwboyer@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>
-References: <1569719633-32164-1-git-send-email-zhenzhong.duan@oracle.com>
+Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, pbonzini@redhat.com,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, peterz@infradead.org
+References: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com>
 From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
 Organization: Oracle Corporation
-Message-ID: <de8c201d-8a73-2b3f-fe1f-19d40e2ca77d@oracle.com>
-Date:   Sat, 12 Oct 2019 16:35:43 +0800
+Message-ID: <d04aacc3-c816-94a6-052f-bf306ec23941@oracle.com>
+Date:   Sat, 12 Oct 2019 16:40:11 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1569719633-32164-1-git-send-email-zhenzhong.duan@oracle.com>
+In-Reply-To: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9407 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910120080
+ engine=8.0.1-1908290000 definitions=main-1910120081
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9407 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910120080
+ definitions=main-1910120081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's been a while on this patch，still see this warning in daily build.
-Will anybody be willing to review it? :)
+The last two patches are reviewed, will any KVM expert be willing to 
+review the first three patches?
 
-Thanks
+They are all KVM related changes. Thanks
+
 Zhenzhong
 
-On 2019/9/29 9:13, Zhenzhong Duan wrote:
-> When build with "EXTRA_CFLAGS=-Wall" gcc warns:
+On 2019/10/7 17:04, Zhenzhong Duan wrote:
+> There are cases folks want to disable spinlock optimization for
+> debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
+> and "hv_nopvspin" to support that, but kvm doesn't.
 >
-> arch/x86/boot/compressed/acpi.c:29:30: warning: get_cmdline_acpi_rsdp defined but not used [-Wunused-function]
+> The first patch adds that feature to KVM guest with "nopvspin".
 >
-> Fixes: 41fa1ee9c6d6 ("acpi: Ignore acpi_rsdp kernel param when the kernel has been locked down")
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Cc: Josh Boyer <jwboyer@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-> ---
->   arch/x86/boot/compressed/acpi.c | 48 ++++++++++++++++++++---------------------
->   1 file changed, 24 insertions(+), 24 deletions(-)
+> For compatibility reason original parameters "xen_nopvspin" and
+> "hv_nopvspin" are retained and marked obsolete.
 >
-> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-> index 149795c..25019d4 100644
-> --- a/arch/x86/boot/compressed/acpi.c
-> +++ b/arch/x86/boot/compressed/acpi.c
-> @@ -21,30 +21,6 @@
->   struct mem_vector immovable_mem[MAX_NUMNODES*2];
->   
->   /*
-> - * Max length of 64-bit hex address string is 19, prefix "0x" + 16 hex
-> - * digits, and '\0' for termination.
-> - */
-> -#define MAX_ADDR_LEN 19
-> -
-> -static acpi_physical_address get_cmdline_acpi_rsdp(void)
-> -{
-> -	acpi_physical_address addr = 0;
-> -
-> -#ifdef CONFIG_KEXEC
-> -	char val[MAX_ADDR_LEN] = { };
-> -	int ret;
-> -
-> -	ret = cmdline_find_option("acpi_rsdp", val, MAX_ADDR_LEN);
-> -	if (ret < 0)
-> -		return 0;
-> -
-> -	if (kstrtoull(val, 16, &addr))
-> -		return 0;
-> -#endif
-> -	return addr;
-> -}
-> -
-> -/*
->    * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
->    * ACPI_TABLE_GUID are found, take the former, which has more features.
->    */
-> @@ -298,6 +274,30 @@ acpi_physical_address get_rsdp_addr(void)
->   }
->   
->   #if defined(CONFIG_RANDOMIZE_BASE) && defined(CONFIG_MEMORY_HOTREMOVE)
-> +/*
-> + * Max length of 64-bit hex address string is 19, prefix "0x" + 16 hex
-> + * digits, and '\0' for termination.
-> + */
-> +#define MAX_ADDR_LEN 19
-> +
-> +static acpi_physical_address get_cmdline_acpi_rsdp(void)
-> +{
-> +	acpi_physical_address addr = 0;
-> +
-> +#ifdef CONFIG_KEXEC
-> +	char val[MAX_ADDR_LEN] = { };
-> +	int ret;
-> +
-> +	ret = cmdline_find_option("acpi_rsdp", val, MAX_ADDR_LEN);
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	if (kstrtoull(val, 16, &addr))
-> +		return 0;
-> +#endif
-> +	return addr;
-> +}
-> +
->   /* Compute SRAT address from RSDP. */
->   static unsigned long get_acpi_srat_table(void)
->   {
+> v5:
+> PATCH1: new patch to revert a currently unnecessory commit,
+>          code is simpler a bit after that change.         [Boris Ostrovsky]
+> PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
+>          reorder with PATCH2 to better reflect dependency
+> PATCH4: fold 'if' statement, add Reviewed-by             [Boris Ostrovsky]
+> PATCH5: add Reviewed-by                                  [Michael Kelley]
+>
+> v4:
+> PATCH1: use variable name nopvspin instead of pvspin and
+>          defined it as __initdata, changed print message,
+>          updated patch description                     [Sean Christopherson]
+> PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
+> PATCH3: make variable nopvsin and xen_pvspin coexist
+>          remove Reviewed-by due to code change         [Sean Christopherson]
+> PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
+>
+> v3:
+> PATCH2: Fix indentation
+>
+> v2:
+> PATCH1: pick the print code change into separate PATCH2,
+>          updated patch description             [Vitaly Kuznetsov]
+> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
+> PATCH3: add Reviewed-by                       [Juergen Gross]
+>
+> Zhenzhong Duan (5):
+>    Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
+>      get initialized"
+>    x86/kvm: Change print code to use pr_*() format
+>    x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+>    xen: Mark "xen_nopvspin" parameter obsolete
+>    x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+>
+>   Documentation/admin-guide/kernel-parameters.txt | 14 +++++-
+>   arch/x86/hyperv/hv_spinlock.c                   |  4 ++
+>   arch/x86/include/asm/qspinlock.h                |  1 +
+>   arch/x86/kernel/kvm.c                           | 63 ++++++++++++++-----------
+>   arch/x86/xen/spinlock.c                         |  4 +-
+>   kernel/locking/qspinlock.c                      |  7 +++
+>   6 files changed, 62 insertions(+), 31 deletions(-)
+>
