@@ -6,91 +6,68 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A717AC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06B8C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D5C2067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA7221850
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbfJLHb5 (ORCPT
+        id S1728857AbfJLHd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 03:31:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45098 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfJLHb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 03:31:57 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C683D36961;
-        Sat, 12 Oct 2019 07:31:56 +0000 (UTC)
-Received: from [10.72.12.150] (ovpn-12-150.pek2.redhat.com [10.72.12.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4361C600D1;
-        Sat, 12 Oct 2019 07:31:51 +0000 (UTC)
-Subject: Re: [PATCH RFC v1 0/2] vhost: ring format independence
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20191011134358.16912-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b24b3c9e-3a5d-fa5e-8218-ea7def0e5a39@redhat.com>
-Date:   Sat, 12 Oct 2019 15:31:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 12 Oct 2019 03:33:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3701 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727014AbfJLHd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 03:33:58 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id AEF6B6C2B173B91EFB2B;
+        Sat, 12 Oct 2019 15:33:54 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 12 Oct 2019
+ 15:33:42 +0800
+Subject: Re: [PATCH 3/3] arm64: configs: unset CPU_BIG_ENDIAN
+To:     Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+CC:     Anders Roxell <anders.roxell@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190926193030.5843-1-anders.roxell@linaro.org>
+ <20190926193030.5843-5-anders.roxell@linaro.org>
+ <bf5db3a5-96da-752c-49ea-d0de899882d5@huawei.com>
+ <CADYN=9LB9RHgRkQj=HcKDz1x9jqmT464Kseh2wZU5VvcLit+bQ@mail.gmail.com>
+ <d978673e-cbd1-5ab5-b2a4-cdb407d0f98c@huawei.com>
+ <CAK8P3a0kBz1-i-3miCo1vMuoM39ivXa3oxOE9VnCqDO-nfNOxw@mail.gmail.com>
+ <20191011102747.lpbaur2e4nqyf7sw@willie-the-truck>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <73701e9f-bee1-7ae8-2277-7a3576171cd4@huawei.com>
+Date:   Sat, 12 Oct 2019 15:33:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
 MIME-Version: 1.0
-In-Reply-To: <20191011134358.16912-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191011102747.lpbaur2e4nqyf7sw@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sat, 12 Oct 2019 07:31:56 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/10/11 18:27, Will Deacon wrote:
+[...]
+> 
+> Does anybody use BIG_ENDIAN? If we're not even building it then maybe we
+> should get rid of it altogether on arm64. I don't know of any supported
+> userspace that supports it or any CPUs that are unable to run little-endian
+> binaries.
 
-On 2019/10/11 下午9:45, Michael S. Tsirkin wrote:
-> So the idea is as follows: we convert descriptors to an
-> independent format first, and process that converting to
-> iov later.
->
-> The point is that we have a tight loop that fetches
-> descriptors, which is good for cache utilization.
-> This will also allow all kind of batching tricks -
-> e.g. it seems possible to keep SMAP disabled while
-> we are fetching multiple descriptors.
->
-> And perhaps more importantly, this is a very good fit for the packed
-> ring layout, where we get and put descriptors in order.
->
-> This patchset seems to already perform exactly the same as the original
-> code already based on a microbenchmark.  More testing would be very much
-> appreciated.
->
-> Biggest TODO before this first step is ready to go in is to
-> batch indirect descriptors as well.
->
-> Integrating into vhost-net is basically
-> s/vhost_get_vq_desc/vhost_get_vq_desc_batch/ -
-> or add a module parameter like I did in the test module.
-
-
-It would be better to convert vhost_net then I can do some benchmark on 
-that.
+FWIW, massive telecommunication products (based on ARM64) form Huawei are using
+BIG_ENDIAN, and will use BIG_ENDIAN in the near future as well.
 
 Thanks
+Hanjun
 
-
->
->
->
-> Michael S. Tsirkin (2):
->    vhost: option to fetch descriptors through an independent struct
->    vhost: batching fetches
->
->   drivers/vhost/test.c  |  19 ++-
->   drivers/vhost/vhost.c | 333 +++++++++++++++++++++++++++++++++++++++++-
->   drivers/vhost/vhost.h |  20 ++-
->   3 files changed, 365 insertions(+), 7 deletions(-)
->
