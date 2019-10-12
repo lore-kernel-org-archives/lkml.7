@@ -2,180 +2,96 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1323C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0195BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810ED206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC782067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbnf9Jsn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvLl6XRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbfJLUkx (ORCPT
+        id S1729589AbfJLUzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 16:40:53 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34144 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729432AbfJLUkx (ORCPT
+        Sat, 12 Oct 2019 16:55:55 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33805 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728506AbfJLUzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 16:40:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y135so11729732wmc.1;
-        Sat, 12 Oct 2019 13:40:50 -0700 (PDT)
+        Sat, 12 Oct 2019 16:55:55 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r22so9304067lfm.1
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 13:55:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SeI64FDcmM9A/b7hGBBOzFKTBBoxulaIfQXoCsfbHog=;
-        b=rbnf9JsnGsmY4rmXDlYLGOjCfO9Pe2IT4sreN6xUCIf2Ga4FfyrcizWZz2urLkgi43
-         BvqJHKKNJTyBiJvYQx9+OXrZfyaTvYQzjHya3AfFd0+ngkQXUHLsbvkplIcCfPGQtUTY
-         utLVH5FL0nVgbsoeqXhdq8Dd438dpLBkpBHXj+fO/fPvX60W7lTSDGWYYebMOvgblAry
-         jLtQXWmNSpAGlIwZ94wd/Oq/486S9kANQh0gKQ6yi/yAqDfo4HfxEF0EKyRsgr1tJ76T
-         qIv+F2ClteNzmoXehODS/1ylIli2puGztND0rwV8pQgGLvnKzd/MRN8raK0DUsRRzOi2
-         zL3g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PozVrf68QgImeH7sK38rIhWBtZm9HKA3PtIRQs99eCM=;
+        b=PvLl6XRrpKcqWyzznbvcOgTu7bmEN2AEJokhLIVnTMcZzISkcllFFNUi0Hdcdp985h
+         fyg1Z1DYVdSQUR3qlR8GbmGd2uuSsqBEvbN1Wl6eWBohenTsYpBhXCOxrj32i8tGsW3R
+         0yMCmvBuIU04vqizuM0MXW12LjHSAFtRLJVqpvgKxl8SpHnMeTOKhqhaMTZrK6n7+IYQ
+         kqbd8c8Cfxa3magfuvkked5lvIzn8BtvObewcXNHitrxUoCBdN4UfZ6+DyMfl+GNyb7U
+         Ociw/jrpsn/4ILGTprFm13NHT2Qn/2+7JzDEIZAcyV6SD9wX1HcRcMr2HS/qieOeODeq
+         V/gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SeI64FDcmM9A/b7hGBBOzFKTBBoxulaIfQXoCsfbHog=;
-        b=NGBZGLnO3++jzsDvnFdlLanyHJBjqBImZEZlkwyZj2r0/PlMMbvVidmosPOjJIiyZm
-         p6Ibs4B5VWaY6JWD2m+CkplG4/ScU8rSoInKIysK3NLa2MEHtLOeJYDJTNasSMUGd9PY
-         Df7okhSWQAQT0Rm2PFlPkgd8C03tIAIhK0dX6Aj5wLcIC+MB+Jw4vNzszGBXRTZzLMgO
-         I48eHK6VVWiFawcALEHFuqiZYdpC3wZMQRWekKKhXiawp/1BUTO54JH+vudze1sfpug2
-         gqLly2jLxsFhUwZiZtoPmPwdX+VlH3ndHip8ka5P4J6M19oiNurV+Y6DT35BVdHSBlHJ
-         zRug==
-X-Gm-Message-State: APjAAAUPEpIFlAvNyouX7GtSAVyvYJL4gF2ecWVaYbpAfRLuJDe9PKVK
-        YLFsd2/kSdBkaSVsyResryI=
-X-Google-Smtp-Source: APXvYqzGDiZC3ofdi4ofrXIwbUYNEDgeOKzZsztMjqgsCKscjihm4cvwYfulPBDetc80hqsTRUfvtg==
-X-Received: by 2002:a1c:f714:: with SMTP id v20mr8703107wmh.55.1570912849962;
-        Sat, 12 Oct 2019 13:40:49 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f26:6400:e99d:61ad:136:d387? (p200300EA8F266400E99D61AD0136D387.dip0.t-ipconnect.de. [2003:ea:8f26:6400:e99d:61ad:136:d387])
-        by smtp.googlemail.com with ESMTPSA id l20sm6160048wrf.19.2019.10.12.13.40.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 12 Oct 2019 13:40:49 -0700 (PDT)
-Subject: Re: [RFC PATCH net] net: phy: Fix "link partner" information
- disappear issue
-To:     Yonglong Liu <liuyonglong@huawei.com>, davem@davemloft.net,
-        andrew@lunn.ch, Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, salil.mehta@huawei.com,
-        yisen.zhuang@huawei.com, shiju.jose@huawei.com
-References: <1570699808-55313-1-git-send-email-liuyonglong@huawei.com>
- <ee969d27-debe-9bc4-92f2-fe5b04c36a39@gmail.com>
- <670bd6ac-54ee-ecfa-c108-fcf48a3a7dc8@huawei.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <091129e2-522c-6672-b6da-265bb0f8c656@gmail.com>
-Date:   Sat, 12 Oct 2019 22:40:39 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PozVrf68QgImeH7sK38rIhWBtZm9HKA3PtIRQs99eCM=;
+        b=kRwwnRCbFB8PsGVsKpNCEyzHwcK7GMyYNB4KOMwdcB5H0EF/FxR2giZkTEjPL6dc+M
+         IUhqRRXDPKHf0pK1MifGrbZrvUlQHg1pY1ixADD2gO/ok+og3LPmqFhwqPYyexdlRzMc
+         kcle4R7WuNm5nrJoRQb86uaSG0ItbfyAl2/5geJukqVtwxw9ky+U9M6V6doroNHn+ISV
+         gUmua84Dr+dE4bjpIZ0RE27Ru4jiCKcLFdj6+dVkegcIW79lQEQjChgJAcXNGSb2SSZc
+         D4OcsfDJEKHut8sQz9vEJlCJH7Ym3yPyy8oSrSiDV6bATfG9zyLWwafLdh/w3RpKTrVE
+         zMdw==
+X-Gm-Message-State: APjAAAU2VxDVnJ8/meL0jJ+fxM0sgT/+gD+sqPvIT1FG+lKGSlwJO6hN
+        SYVrT5EVarOTQocbaF7+l4VWXLPTZUa29pDmsLdDT7fP/w==
+X-Google-Smtp-Source: APXvYqwP7qTN+qak3JzgSQA3zrclJSMQRn99WTuRIYR8bh//95Y7p76Jth2NXJXzNWzJl+PP4QfUyT6NMkA4feSos+M=
+X-Received: by 2002:ac2:5542:: with SMTP id l2mr12035993lfk.119.1570913751542;
+ Sat, 12 Oct 2019 13:55:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <670bd6ac-54ee-ecfa-c108-fcf48a3a7dc8@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <48afc878-5424-7554-cd02-4175ec12eaea@googlemail.com>
+In-Reply-To: <48afc878-5424-7554-cd02-4175ec12eaea@googlemail.com>
+From:   Gabriel C <nix.or.die@gmail.com>
+Date:   Sat, 12 Oct 2019 22:55:19 +0200
+Message-ID: <CAEJqkgjAMkoiAQeitQ1gdEpmZWvdqQE+fAsQU4W7M7JGxHboyQ@mail.gmail.com>
+Subject: Re: Linux 5.3.6
+To:     Chris Clayton <chris2553@googlemail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.10.2019 07:55, Yonglong Liu wrote:
-> 
-> 
-> On 2019/10/11 3:17, Heiner Kallweit wrote:
->> On 10.10.2019 11:30, Yonglong Liu wrote:
->>> Some drivers just call phy_ethtool_ksettings_set() to set the
->>> links, for those phy drivers that use genphy_read_status(), if
->>> autoneg is on, and the link is up, than execute "ethtool -s
->>> ethx autoneg on" will cause "link partner" information disappear.
->>>
->>> The call trace is phy_ethtool_ksettings_set()->phy_start_aneg()
->>> ->linkmode_zero(phydev->lp_advertising)->genphy_read_status(),
->>> the link didn't change, so genphy_read_status() just return, and
->>> phydev->lp_advertising is zero now.
->>>
->> I think that clearing link partner advertising info in
->> phy_start_aneg() is questionable. If advertising doesn't change
->> then phy_config_aneg() basically is a no-op. Instead we may have
->> to clear the link partner advertising info in genphy_read_lpa()
->> if aneg is disabled or aneg isn't completed (basically the same
->> as in genphy_c45_read_lpa()). Something like:
->>
->> if (!phydev->autoneg_complete) { /* also covers case that aneg is disabled */
->> 	linkmode_zero(phydev->lp_advertising);
->> } else if (phydev->autoneg == AUTONEG_ENABLE) {
->> 	...
->> }
->>
-> 
-> If clear the link partner advertising info in genphy_read_lpa() and
-> genphy_c45_read_lpa(), for the drivers that use genphy_read_status()
-> is ok, but for those drivers that use there own read_status() may
-> have problem, like aqr_read_status(), it will update lp_advertising
-> first, and than call genphy_c45_read_status(), so will cause
-> lp_advertising lost.
-> 
-Right, in genphy_read_lpa() we shouldn't clear all lpa bits but only
-those ones the generic functions care about. Basically the same as
-in the c45 version. Then a vendor-specific part isn't affected.
+Am Sa., 12. Okt. 2019 um 21:16 Uhr schrieb Chris Clayton
+<chris2553@googlemail.com>:
+>
+>
+> > I'm announcing the release of the 5.3.6 kernel.
+>
+>
+> 5.3.6 build fails here with:
+>
+> arch/x86/entry/vdso/vdso64.so.dbg: undefined symbols found
+>   CC      arch/x86/kernel/cpu/mce/threshold.o
+> make[3]: *** [arch/x86/entry/vdso/Makefile:59: arch/x86/entry/vdso/vdso64.so.dbg] Error 1
+> make[3]: *** Deleting file 'arch/x86/entry/vdso/vdso64.so.dbg'
+> make[2]: *** [scripts/Makefile.build:497: arch/x86/entry/vdso] Error 2
+> make[1]: *** [scripts/Makefile.build:497: arch/x86/entry] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+>
 
-aqr_read_status() is a good example. It deals with 1Gbps mode that
-isn't covered by the generic c45 functions. Therefore the 1Gbps-related
-bits won't be overwritten by the generic functions.
+What is your default linker ?
 
-> Another question, please see genphy_c45_read_status(), if clear the
-> link partner advertising info in genphy_c45_read_lpa(), if autoneg is
-> off, phydev->lp_advertising will not clear.
-> 
+Also does make LD=ld.bfd fixes that for you ?
 
-If autoneg is off, lp_advertising should never be set, so there's
-nothing to clear. However we may have to look at the case that user
-switches to fixed speed mode via ethtool.
+See https://bugzilla.kernel.org/show_bug.cgi?id=204951
 
->>> This patch call genphy_read_lpa() before the link state judgement
->>> to fix this problem.
->>>
->>> Fixes: 88d6272acaaa ("net: phy: avoid unneeded MDIO reads in genphy_read_status")
->>> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
->>> ---
->>>  drivers/net/phy/phy_device.c | 8 ++++----
->>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
->>> index 9d2bbb1..ef3073c 100644
->>> --- a/drivers/net/phy/phy_device.c
->>> +++ b/drivers/net/phy/phy_device.c
->>> @@ -1839,6 +1839,10 @@ int genphy_read_status(struct phy_device *phydev)
->>>  	if (err)
->>>  		return err;
->>>  
->>> +	err = genphy_read_lpa(phydev);
->>> +	if (err < 0)
->>> +		return err;
->>> +
->>>  	/* why bother the PHY if nothing can have changed */
->>>  	if (phydev->autoneg == AUTONEG_ENABLE && old_link && phydev->link)
->>>  		return 0;
->>> @@ -1848,10 +1852,6 @@ int genphy_read_status(struct phy_device *phydev)
->>>  	phydev->pause = 0;
->>>  	phydev->asym_pause = 0;
->>>  
->>> -	err = genphy_read_lpa(phydev);
->>> -	if (err < 0)
->>> -		return err;
->>> -
->>>  	if (phydev->autoneg == AUTONEG_ENABLE && phydev->autoneg_complete) {
->>>  		phy_resolve_aneg_linkmode(phydev);
->>>  	} else if (phydev->autoneg == AUTONEG_DISABLE) {
->>>
->>
->>
->> .
->>
-> 
-> 
+BR,
 
+Gabriel C.
