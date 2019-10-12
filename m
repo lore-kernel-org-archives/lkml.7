@@ -2,144 +2,136 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3539C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF440C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE45E20700
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4F5206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rKgDqQp5"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="V+O9w7oC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbfJLR0z (ORCPT
+        id S1729533AbfJLRin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 13:26:55 -0400
-Received: from mout.web.de ([212.227.15.4]:60029 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbfJLR0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 13:26:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570901189;
-        bh=aTvoJhmGzJyzLDndjNa/ydXpVEmlvsXJjiOEAPQZ3vI=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=rKgDqQp5/RHTOZo0PQsXYux6r5z/YxAAuJtKPe7ZCf2i++vOS6nlb7hcJUl+46KAX
-         xQj3HHdviSAvjZocQewz4+s7fnZ39gnWvyOtHufE1ro8QkrTjF85qiWaT2iwLEZ/un
-         hr+GNBllg1jaSVr6hlqsmULEk8nnNXuXHqjb9OVY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.155.250]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lpw63-1hpWK345hv-00fiXk; Sat, 12
- Oct 2019 19:26:29 +0200
-To:     linux-wireless@vger.kernel.org, linuxwifi@intel.com,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Luca Coelho <luciano.coelho@intel.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: iwlwifi: Checking a kmemdup() call in iwl_req_fw_callback()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Message-ID: <71774617-79f9-1365-4267-a15a47422d10@web.de>
-Date:   Sat, 12 Oct 2019 19:26:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:81oefqlZYHs5UgQG93M+vVZYpkwPZp8iXevuslFnEfSmxedsr7c
- yr1EoG818OF+pZu0w8C2kmoYcwRsByTKZD9gDqCW7BLrTKTBxiXjzTY8QzG+GtLrtGZ2Fe1
- wSTthsBaSJ7/04s1/QDo7h7hYnBpJejC11B5oyJ1OQAXAUURR+bWqHQIJnSUMzlfiv+m9I9
- AgFLUEsvtq8cUwMtT6D9g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:157GF0vRHQs=:3a94LDlEJEwjrgCLz71wZ8
- 3qytvC6BgILZyKmLba5Iy94LnblfBMZsmgc1l7iKC8ZHUxa9DBJ9r6V5r2pG5igsrdgmc8dFR
- bf6KB0UEUzRRfJJ10dX8+QabKHQZg1YH7mdYAEO2RpIpDbS9SBYWKX7XPKRsl2qf7rKv2e7Dg
- yaUc65YsR25Q5LeeIZe1HumBHvX766058xz47TtQXahC7lOK9R2/FlLpFnAM1mYn6lLJuZuu6
- gogJOIGnsNyNowu+iO1GQPhvPaM+lV0/ZuZNF2w6LEFSAnplGR0/KyFlrGAyE0xoK5cuu77ZO
- LHX7b2sNFs5w9YlXLYvE7zGxERz8zh4an1dIhxbVKsQnzFZ8hGSz/xi/9+Oj6oklsyKpBBIE8
- 1QpoaoYo2t6oEhVl7vdl2SRhuPwTVoExkujO+BGzfgdokUx7D9GUlL2LogkKVJmd5D5+frkpD
- rzV2zwLvQiezl9/uVdOm0ur+dyXWYwIzHcRetB0ElPKWSYGDpfPrH65sGOSHMmNLFU/JoBCJw
- AeUoZhDwPRU9Pa9LeagiJp1XaZxhAbG6H0VytL78HAMaWBMoTbCgq1U+3jcLIxT5kwX8Fh6MF
- WY3wIgH/n791ozfGe1wijTJkoQ2OvMfZU0dKs/B9VYIEsuVSMkClRx3r36j+eMSQF2c7qJGa5
- VKvbb41fp6M/EA5hY+tax0Ev3Z5Vgt5WBxwzJ2WNiL+QqEqVxLmX1u7jhRepPkoZ7N/1TM4lD
- sqDmexITjDI4rK8uCo6rBMtyYP/aPVIND4dfjjkHcNe+nWhvfiaYlxI/5Ev9H2bgkg8o0GJef
- lvuIKhcuKw3tvbm4LnGLKgeP3EKzBO0u2mIHclOY4TzrcV71ExGndCfPxyveUXqSHM/M51aCB
- KSFALEKPKjq4GAX6A9opeB9hoC2e+8reqiZs5mrrUp4l0msNzToCghX/AP8tNf2DfHH4X1ZZU
- uphGtS8RXl31CDeffZ/caaE/8NKEObmWLciPYDq+709YczpCkVobgxDsAYdZ62dC5uNASEp0V
- VJvP4NkAjEVbn21EsPGf9+hlo4Z0lCo8wMNziJfbaQDxudwHn6EkBKKzl0VpL5zSdkmxrpSB7
- NO+77f/7F6DBL6DeKj7gPGv/OiPx6K/rhesQye2fP5HCSoAPMuG5K5JBowe8XBHC6X2w+pxGZ
- rLMpShwRzmlgEzIbVlEJHR+sk7eb6IDsIxU/ZuWxds9vj97kjzYenbrpOZ4gnxpDD5PXzI0UT
- fi41vjidYgTdZeGRfh13gVwl1EBeMudn0xthqzTQtQn+VGKx90ZPtOrF9QgI=
+        Sat, 12 Oct 2019 13:38:43 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41736 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728162AbfJLRin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 13:38:43 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q7so7944936pfh.8
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 10:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QGULoH50CkpFs9ZPMN0T6KllCcRA7SCxuzqckP0gnTU=;
+        b=V+O9w7oCvmWLh3i5Tt0HokYwr5aCEtbOMnxkQh93haiqG5tRmpJfBrSzTUhVOxw/qy
+         MflYyC4yaUd0QkBmtIwVAbVdHDMAh9G34f78PCPTVqZ3LTnl+A3Ck152ZhHolai0umvH
+         x+eRt/AO8CJaK5Uy4i5F/INQbp4XOqa3GnZ3QPaZL/70qM0JDady/u6cd+19cWwFjyNi
+         hdOO4BtOo0e2T2XegKd+48X4G3l8hYqAG58/idv+ZLFVj4jGsBewv8PDocnXa+NoFxs/
+         0zxEvBunmH7620m0WrKWFi2l8gPMC4sVs3MtCPF1lZTd7xcwvALMruFnhPQ8sHQ/DTSk
+         bQ9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=QGULoH50CkpFs9ZPMN0T6KllCcRA7SCxuzqckP0gnTU=;
+        b=Jt5D7i9+7fON5jfuLYKrfV093ceYT1ZB37ve317GHWJjpsFGAhMLAiptVoIGAcl4qq
+         PMV1NekyieZfn0espi4R2hpWFN7zJwjWcs/KZlQlMo7CIGB7KthPKpFVQsumT3oabDRn
+         jLcsnrNL7zbonExx9A90KhT37Q2x+XnD2c3rP4+2hTu4Ws3N/dcB9H72lboeniKNhfaD
+         wasfH/S47U7dmjh4qMddjw88zrr9FLxN543Y5QyoutNpRNfanhu26afaLRilubqzvgzW
+         cXq7gud1q72Mqhtlaav6nAAzO6HRBbzmI5AmhD7xFx5ZNNvhdXI2TxMlz8bkVn2pZUNf
+         Esvg==
+X-Gm-Message-State: APjAAAWRbWszj/LXsF69Su6571KFHagB+G+/q9IEqZV7SGjlD7LncA2q
+        WPJNqVRA13fFNGTrSv1ZYNM2oQ==
+X-Google-Smtp-Source: APXvYqzW1OO3P+m0WSPdYkvU5HibLfM3ibywisk4ThgutqOLNgBG8iO4E+dx0Lx0Ub7yrHG07c1Xnw==
+X-Received: by 2002:a17:90a:338c:: with SMTP id n12mr24412467pjb.24.1570901922575;
+        Sat, 12 Oct 2019 10:38:42 -0700 (PDT)
+Received: from localhost ([192.55.54.60])
+        by smtp.gmail.com with ESMTPSA id m12sm16808019pff.66.2019.10.12.10.38.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Oct 2019 10:38:41 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 10:38:41 -0700 (PDT)
+X-Google-Original-Date: Sat, 12 Oct 2019 10:38:01 PDT (-0700)
+Subject:     Re: [PATCH v2 2/2] RISC-V: defconfig: Enable Goldfish RTC driver
+In-Reply-To: <20190925063706.56175-3-anup.patel@wdc.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        Greg KH <gregkh@linuxfoundation.org>, rkir@google.com,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>, anup@brainfault.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup Patel <Anup.Patel@wdc.com>
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Message-ID: <mhng-edb410db-fdd1-46f6-84c3-ae3b843f7e3a@palmer-si-x1c4>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, 24 Sep 2019 23:38:08 PDT (-0700), Anup Patel wrote:
+> We have Goldfish RTC device available on QEMU RISC-V virt machine
+> hence enable required driver in RV32 and RV64 defconfigs.
+>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  arch/riscv/configs/defconfig      | 3 +++
+>  arch/riscv/configs/rv32_defconfig | 3 +++
+>  2 files changed, 6 insertions(+)
+>
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index 3efff552a261..57b4f67b0c0b 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -73,7 +73,10 @@ CONFIG_USB_STORAGE=y
+>  CONFIG_USB_UAS=y
+>  CONFIG_MMC=y
+>  CONFIG_MMC_SPI=y
+> +CONFIG_RTC_CLASS=y
+> +CONFIG_RTC_DRV_GOLDFISH=y
+>  CONFIG_VIRTIO_MMIO=y
+> +CONFIG_GOLDFISH=y
+>  CONFIG_EXT4_FS=y
+>  CONFIG_EXT4_FS_POSIX_ACL=y
+>  CONFIG_AUTOFS4_FS=y
+> diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
+> index 7da93e494445..50716c1395aa 100644
+> --- a/arch/riscv/configs/rv32_defconfig
+> +++ b/arch/riscv/configs/rv32_defconfig
+> @@ -69,7 +69,10 @@ CONFIG_USB_OHCI_HCD=y
+>  CONFIG_USB_OHCI_HCD_PLATFORM=y
+>  CONFIG_USB_STORAGE=y
+>  CONFIG_USB_UAS=y
+> +CONFIG_RTC_CLASS=y
+> +CONFIG_RTC_DRV_GOLDFISH=y
+>  CONFIG_VIRTIO_MMIO=y
+> +CONFIG_GOLDFISH=y
+>  CONFIG_SIFIVE_PLIC=y
+>  CONFIG_EXT4_FS=y
+>  CONFIG_EXT4_FS_POSIX_ACL=y
+> -- 
+> 2.17.1
 
-I tried another script for the semantic patch language out.
-This source code analysis approach points out that the implementation
-of the function =E2=80=9Ciwl_req_fw_callback=E2=80=9D contains still an un=
-checked call
-of the function =E2=80=9Ckmemdup=E2=80=9D.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/net/wireless/intel/iwlwifi/iwl-drv.c?id=3D1c0cc5f1ae5ee5a6913704c0d7=
-5a6e99604ee30a#n1454
-https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/net/wireless/inte=
-l/iwlwifi/iwl-drv.c#L1454
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
 
-Can it be that just an other data structure member should be used
-for the desired null pointer check at this place?
+IIRC there was supposed to be a follow-up to your QEMU patch set to rebase it 
+on top of a refactoring of their RTC code, but I don't see it in my inbox.  LMK 
+if I missed it, as QEMU's soft freeze is in a few weeks and I'd like to make 
+sure I get everything in.
 
-Regards,
-Markus
+Additionally: we should refactor our Kconfig to have some sort of 
+CONFIG_SOC_VIRT that selects this stuff, like we have the CONFIG_SOC_SIFIVE.  
+This will explicitly document why devices are in the defconfig, avoid 
+duplicating a bunch of stuff between defconfigs, and provide an example of how 
+we support multiple SOCs in a single image.
+
+I don't see why either of these should block merging the patch, though.
