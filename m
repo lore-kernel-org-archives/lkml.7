@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ABCC4360C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08A4C10F14
 	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CC1206A1
+	by mail.kernel.org (Postfix) with ESMTP id B940121850
 	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="BUejGE/Y"
+	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="DhDsHvNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfJLFuM (ORCPT
+        id S1728808AbfJLFuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 01:50:12 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36606 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbfJLFuM (ORCPT
+        Sat, 12 Oct 2019 01:50:15 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40676 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbfJLFuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 01:50:12 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m18so11985966wmc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 22:50:10 -0700 (PDT)
+        Sat, 12 Oct 2019 01:50:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h4so14018481wrv.7
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 22:50:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hCNAY2B4GBIEKWr43sCTvg0r8VIO3WoulIoqc6vcbII=;
-        b=BUejGE/YewtG8QRFa4GDkLjSw/OD4LH50xhdOaOYjdzPaj2XHySFdxP7PZANsQFkAF
-         5n2evKkK+65beOfaMT2hsDTt+iHliNx1sKU/7W/dk4dgoQwAolTotPaNW8mbmWLDy3Gz
-         BsJjfBOAulLe4nSiKkztTTSy8zb88yHgo07H3B07JE5r1xw1iPt6H8eed2h1my1lxD3D
-         86aZZOUqNuHJl5wqARnTSPI+2BB7Ox2C1ahFFpq+34Mn6b/PHcvof9xUDqkWKJVnPuTX
-         OcHaQ+IQIY8MECOsa7oOka3eJ0LlRblKJu4cS2vtRzx5nrMC8pGVEQCZhRM6Q/Vk0LyH
-         btLg==
+        bh=X+Dp2Msw+zGO1kDMu4jE580sA1PjlZN5XJYLh8U2Vi4=;
+        b=DhDsHvNRlbkaecGFtWzUBf5/wcJvtxTPGvuM0X7rmKUoiJ1h84srevrfOYz+/GFQDZ
+         tIH/+5IijAE0bf6FVqPqwaGzBWl2pW6xZSFvL7uWcXFAVmV+qjHOAX5a4LITWfo5sLj0
+         LT6Odm9H5kNqG+kbjc/10xyblTGsAdwdXceRqtNT7ou4LMYjUN6DHEOUXOUikAdK+NWA
+         GRj1Ul6SwamBnMwvLq1rx1QWl+gZxI2FzCVDAZPu/pPRCTEExxpImLh4DgEiA+Dodk7c
+         mET1It8SFVucxhUWmRF8qmDM6Ka+GCchQPLjHpLuEwJTypJGV+tiqOMocX81lbDSa5IQ
+         dIyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hCNAY2B4GBIEKWr43sCTvg0r8VIO3WoulIoqc6vcbII=;
-        b=d6MiQMwEjfDn42dfuQrmIPJhDHcbV6Fl7Ue+Hu1rI0x9VtArFGcj3FQQ9Iu71mOHUt
-         MjSb7AjSjWsz+DFMiyecRw4+3cRDsFUMGoHHCUVYiiewf7jX26x3hfaIxnHValx+xQnx
-         6owitlPmp8AlZLOHTLCsx9oXSxxN534L9segRQRhAUWR2CBZJAsaPGBaam8JsLa5kf4B
-         GDMMdRpTH59pOMttwUnlpE7QnKjXgQm36/yZGk66KLTKqlpffmm6f2XqRWutzEusWbw9
-         G6R96paBkLrAI023Zi5W5uP0+xm4WXDN23fTgAHbAF6XU8Fx+ADyUaerfleS16v4DnxB
-         MQ5A==
-X-Gm-Message-State: APjAAAUEv95gLLcVSmCsWftXY7JNlwZJ196+vnUI8Usp6HZB/hbJ6DWf
-        a60BmeYAKQYOjbOekoxCqUMS+9gBjcqB0Q==
-X-Google-Smtp-Source: APXvYqxi2Kynkb2oaXxpE++GQrXEfK6e+zY9ektEt4hRBhr/tQgG8ctUb38sakWNbkjyNdDFLgzBtA==
-X-Received: by 2002:a05:600c:2549:: with SMTP id e9mr5812884wma.64.1570859409766;
-        Fri, 11 Oct 2019 22:50:09 -0700 (PDT)
+        bh=X+Dp2Msw+zGO1kDMu4jE580sA1PjlZN5XJYLh8U2Vi4=;
+        b=N7VGEcJ0H6WSyK0YZk3V+jSxfkrhYt3yuDci+2AtPbRp2sorFOjlvQwUOJewveloii
+         mafFzuhw/vt2JBMKBKfv1RZcQOHMCqcmF1i7nJGeopsntPnuzSgf2DdUZYGRCu1Cbt40
+         Nyh+dCk2zqOBJ+lzzadDW88i+vGu0zze2IihlPDLH5Jt211eijj96eXkBZZ9PjPqxVZv
+         Lc5recx8BwnwpSoL2aVviluV2RGol8HtuwohbtaDLx7zfp/ankC4y1yCSUdcyiVuoQER
+         s6sxxGIiLew1wogDM2QPy3mn7q9HEESb6K6h4fuXzOBgzdFrNjc4Pe4tGy0EzmqrQZoQ
+         a3OA==
+X-Gm-Message-State: APjAAAVNGWvN/kecgxdzVQeoBvw/qqEaKUFIMiBLNjmAgkQy+kBZE6r8
+        wC2CPvOfoYhvoOsvf8BdTg37rm9nPRflCg==
+X-Google-Smtp-Source: APXvYqw57rXFQq2Mp3icaEU95K8brSQiVTWrSCkPrnaM6I+Nf+hN5Uz2a3ym1XrxkhlE58pxX6q0Iw==
+X-Received: by 2002:adf:9403:: with SMTP id 3mr17220276wrq.281.1570859411594;
+        Fri, 11 Oct 2019 22:50:11 -0700 (PDT)
 Received: from linux.fritz.box (p200300D9973AD600F159A589C745B52A.dip0.t-ipconnect.de. [2003:d9:973a:d600:f159:a589:c745:b52a])
-        by smtp.googlemail.com with ESMTPSA id z4sm9344955wrh.93.2019.10.11.22.50.08
+        by smtp.googlemail.com with ESMTPSA id z4sm9344955wrh.93.2019.10.11.22.50.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 22:50:09 -0700 (PDT)
+        Fri, 11 Oct 2019 22:50:11 -0700 (PDT)
 From:   Manfred Spraul <manfred@colorfullife.com>
 To:     LKML <linux-kernel@vger.kernel.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
@@ -64,9 +64,9 @@ Cc:     1vier1@web.de, Andrew Morton <akpm@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Manfred Spraul <manfred@colorfullife.com>
-Subject: [PATCH 1/6] wake_q: Cleanup + Documentation update.
-Date:   Sat, 12 Oct 2019 07:49:53 +0200
-Message-Id: <20191012054958.3624-2-manfred@colorfullife.com>
+Subject: [PATCH 3/6] ipc/mqueue.c: Update/document memory barriers
+Date:   Sat, 12 Oct 2019 07:49:55 +0200
+Message-Id: <20191012054958.3624-4-manfred@colorfullife.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191012054958.3624-1-manfred@colorfullife.com>
 References: <20191012054958.3624-1-manfred@colorfullife.com>
@@ -77,72 +77,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1) wake_q_add() contains a memory barrier, and callers such as
-ipc/mqueue.c rely on this barrier.
-Unfortunately, this is documented in ipc/mqueue.c, and not in the
-description of wake_q_add().
-Therefore: Update the documentation.
-Removing/updating ipc/mqueue.c will happen with the next patch in the
-series.
+Update and document memory barriers for mqueue.c:
+- ewp->state is read without any locks, thus READ_ONCE is required.
 
-2) wake_q_add() ends with get_task_struct(), which is an
-unordered refcount increase. Add a clear comment that the callers
-are responsible for a barrier: most likely spin_unlock() or
-smp_store_release().
+- add smp_aquire__after_ctrl_dep() after the READ_ONCE, we need
+  acquire semantics if the value is STATE_READY.
 
-3) wake_up_q() relies on the memory barrier in try_to_wake_up().
-Add a comment, to simplify searching.
+- add an explicit memory barrier to __pipelined_op(), the
+  refcount must have been increased before the updated state becomes
+  visible
 
-4) wake_q.next is accessed without synchroniyation by wake_q_add(),
-using cmpxchg_relaxed(), and by wake_up_q().
-Therefore: Use WRITE_ONCE in wake_up_q(), to ensure that the
-compiler doesn't perform any tricks.
+- document why __set_current_state() may be used:
+  Reading task->state cannot happen before the wake_q_add() call,
+  which happens while holding info->lock. Thus the spin_unlock()
+  is the RELEASE, and the spin_lock() is the ACQUIRE.
+
+For completeness: there is also a 3 CPU szenario, if the to be woken
+up task is already on another wake_q.
+Then:
+- CPU1: spin_unlock() of the task that goes to sleep is the RELEASE
+- CPU2: the spin_lock() of the waker is the ACQUIRE
+- CPU2: smp_mb__before_atomic inside wake_q_add() is the RELEASE
+- CPU3: smp_mb__after_spinlock() inside try_to_wake_up() is the ACQUIRE
 
 Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+Cc: Waiman Long <longman@redhat.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>
 ---
- kernel/sched/core.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ ipc/mqueue.c | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index dd05a378631a..60ae574317fd 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -440,8 +440,16 @@ static bool __wake_q_add(struct wake_q_head *head, struct task_struct *task)
-  * @task: the task to queue for 'later' wakeup
-  *
-  * Queue a task for later wakeup, most likely by the wake_up_q() call in the
-- * same context, _HOWEVER_ this is not guaranteed, the wakeup can come
-- * instantly.
-+ * same context, _HOWEVER_ this is not guaranteed. Especially, the wakeup
-+ * may happen before the function returns.
-+ *
-+ * What is guaranteed is that there is a memory barrier before the wakeup,
-+ * callers may rely on this barrier.
-+ *
-+ * On the other hand, the caller must guarantee that @task does not disappear
-+ * before wake_q_add() completed. wake_q_add() does not contain any memory
-+ * barrier to ensure ordering, thus the caller may need to use
-+ * smp_store_release().
-  *
-  * This function must be used as-if it were wake_up_process(); IOW the task
-  * must be ready to be woken at this location.
-@@ -486,11 +494,14 @@ void wake_up_q(struct wake_q_head *head)
- 		BUG_ON(!task);
- 		/* Task can safely be re-inserted now: */
- 		node = node->next;
--		task->wake_q.next = NULL;
-+
-+		WRITE_ONCE(task->wake_q.next, NULL);
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index be48c0ba92f7..b80574822f0a 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -646,18 +646,26 @@ static int wq_sleep(struct mqueue_inode_info *info, int sr,
+ 	wq_add(info, sr, ewp);
  
- 		/*
- 		 * wake_up_process() executes a full barrier, which pairs with
- 		 * the queueing in wake_q_add() so as not to miss wakeups.
-+		 * The barrier is the smp_mb__after_spinlock() in
-+		 * try_to_wake_up().
- 		 */
- 		wake_up_process(task);
- 		put_task_struct(task);
+ 	for (;;) {
++		/* memory barrier not required, we hold info->lock */
+ 		__set_current_state(TASK_INTERRUPTIBLE);
+ 
+ 		spin_unlock(&info->lock);
+ 		time = schedule_hrtimeout_range_clock(timeout, 0,
+ 			HRTIMER_MODE_ABS, CLOCK_REALTIME);
+ 
+-		if (ewp->state == STATE_READY) {
++		if (READ_ONCE(ewp->state) == STATE_READY) {
++			/*
++			 * Pairs, together with READ_ONCE(), with
++			 * the barrier in __pipelined_op().
++			 */
++			smp_acquire__after_ctrl_dep();
+ 			retval = 0;
+ 			goto out;
+ 		}
+ 		spin_lock(&info->lock);
+-		if (ewp->state == STATE_READY) {
++
++		/* we hold info->lock, so no memory barrier required */
++		if (READ_ONCE(ewp->state) == STATE_READY) {
+ 			retval = 0;
+ 			goto out_unlock;
+ 		}
+@@ -925,14 +933,12 @@ static inline void __pipelined_op(struct wake_q_head *wake_q,
+ 	list_del(&this->list);
+ 	wake_q_add(wake_q, this->task);
+ 	/*
+-	 * Rely on the implicit cmpxchg barrier from wake_q_add such
+-	 * that we can ensure that updating receiver->state is the last
+-	 * write operation: As once set, the receiver can continue,
+-	 * and if we don't have the reference count from the wake_q,
+-	 * yet, at that point we can later have a use-after-free
+-	 * condition and bogus wakeup.
++	 * The barrier is required to ensure that the refcount increase
++	 * inside wake_q_add() is completed before the state is updated.
++	 *
++	 * The barrier pairs with READ_ONCE()+smp_mb__after_ctrl_dep().
+ 	 */
+-        this->state = STATE_READY;
++        smp_store_release(&this->state, STATE_READY);
+ }
+ 
+ /* pipelined_send() - send a message directly to the task waiting in
+@@ -1049,7 +1055,9 @@ static int do_mq_timedsend(mqd_t mqdes, const char __user *u_msg_ptr,
+ 		} else {
+ 			wait.task = current;
+ 			wait.msg = (void *) msg_ptr;
+-			wait.state = STATE_NONE;
++
++			/* memory barrier not required, we hold info->lock */
++			WRITE_ONCE(wait.state, STATE_NONE);
+ 			ret = wq_sleep(info, SEND, timeout, &wait);
+ 			/*
+ 			 * wq_sleep must be called with info->lock held, and
+@@ -1152,7 +1160,9 @@ static int do_mq_timedreceive(mqd_t mqdes, char __user *u_msg_ptr,
+ 			ret = -EAGAIN;
+ 		} else {
+ 			wait.task = current;
+-			wait.state = STATE_NONE;
++
++			/* memory barrier not required, we hold info->lock */
++			WRITE_ONCE(wait.state, STATE_NONE);
+ 			ret = wq_sleep(info, RECV, timeout, &wait);
+ 			msg_ptr = wait.msg;
+ 		}
 -- 
 2.21.0
 
