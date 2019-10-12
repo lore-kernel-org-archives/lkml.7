@@ -2,171 +2,94 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5632CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89740C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAE721850
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570898032;
-	bh=S93QUyUcRr826XaCBl9LlsX7JKBIewDHtJw2EOmyVb8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tVFhUbsticJyzvZwJw9d6WC93gd2riI0dEEQ8T7lNopq5tbhCqrqSUK2jASnOEQMh
-	 mDOn4bdI5uCy+loVHhs1ihTyN4OW1Pmj2JQSis4EULtajGqspwPFZShwCZEHIn8/+g
-	 IKOc+BmefxF5kLT2zf4vnnphuimcwtZvTw9WFg/w=
+	by mail.kernel.org (Postfix) with ESMTP id 637362190F
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:38:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBNFCrii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbfJLQdv (ORCPT
+        id S1729422AbfJLQiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 12:33:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727939AbfJLQdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 12:33:50 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C8D0206CD;
-        Sat, 12 Oct 2019 16:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570898029;
-        bh=S93QUyUcRr826XaCBl9LlsX7JKBIewDHtJw2EOmyVb8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BtgFox0ZBbIdBrHtdVMyZcniNO6EHFWI9ch+OuURlnwlDEyOUOZvKrzmQLM9tVZGS
-         VxYtCas3OLR/PqjDsCP6DeXuILSaMP54a8etfuIefX0HIEuLZ56uWWay6sTjnut3i6
-         wqJIHRoHgMchjkS/COZBuT5r58JW52Ch0xUvPv9M=
-Date:   Sat, 12 Oct 2019 17:33:44 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
-Message-ID: <20191012173344.7d25fd02@archlinux>
-In-Reply-To: <20191012153556.GA15972@nessie>
-References: <20191012035420.13904-1-dan@dlrobertson.com>
-        <20191012035420.13904-3-dan@dlrobertson.com>
-        <20191012104033.006b33f9@archlinux>
-        <20191012153556.GA15972@nessie>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 12 Oct 2019 12:38:23 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38912 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727939AbfJLQiW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 12:38:22 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 4so11834012qki.6;
+        Sat, 12 Oct 2019 09:38:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Asvf+7RAspz/dNRNRh3zzivlzI76nj7xUdvXm0KQbhk=;
+        b=XBNFCriiZVsRqpp1Rz9jpimqWq2KJ8MPRKnu/0kp2MgT3pjUOoS6wqyhHq/azfu9tw
+         mkdvUtG6oNGjVDwDK6Shi8tdBEzU8u95kOjtDWA1T20pbcycPm7xdxd5erP/u3udI1/D
+         wDvQXLBE1udoElPfF+hc3pJoPvM4brcadJuX8dMtYiQBFfMwQXoAVKWyGYLzFpAZRuFv
+         d2sn5QWLQvi/VB/WnWth7HYFH+6LIJxrqqNAzzFshamgeFdZMlQp6sAtlywJRpZ8AKTH
+         ITdKz+N6XMyzSq76j9Qs3rG1kh/KXwHlKsqUUwHFVJvUwf0OdcPg0QgGqtgDfkI8A4jg
+         szDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Asvf+7RAspz/dNRNRh3zzivlzI76nj7xUdvXm0KQbhk=;
+        b=qjeWN1frlYjXEYJ17OmBvpo2vkXrEesAQDWU7P8ZsUJyIJQb4eqxb1iqScMIH48ULe
+         RSMWCsotaNiqnSu2gdFtiqUHg4JA8T4+qjF00EONvXpUbbgrOhMKbUTyGrQpkF48jfE+
+         +mp14joQMTx33KH8YPE4HcAeqpVwx+XoKm2WYH1MMYBesKhORZtxOxRc9inWmwE5nVSn
+         BzhKACNrK+VQvlCIJUYHwDZL8+4d8EvHz50E2lH8BTdR3F9N3pLCxl5U32s1Aj1JHv7z
+         1/5BCB8o/rgiGs4GR/K/kyErdFDRkO8xVqM/X9oCsdThc6PfSfzO7qVFwio2RUVj1prA
+         Rj8A==
+X-Gm-Message-State: APjAAAU1DbJhvw5ZkfwXSISFNLysSoHHsFSxe9s3sWQOXQKYg2vWNzYM
+        5gl8SQhAkhcIzMX0Eir8Mrlpsnc6EtwwF4bS9nI=
+X-Google-Smtp-Source: APXvYqz4UgPL57sKOTRBp1i4XHjeD9kz9YalrIgSn3zKwCGtiBrNst2Y70SVRh0PrbrRZNB9seFJ9+Xa1v7eTJl6B+g=
+X-Received: by 2002:a37:6d04:: with SMTP id i4mr22438253qkc.36.1570898301394;
+ Sat, 12 Oct 2019 09:38:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org> <20191011002808.28206-13-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20191011002808.28206-13-ivan.khoronzhuk@linaro.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sat, 12 Oct 2019 09:38:10 -0700
+Message-ID: <CAEf4BzZCLoYxvkUsPgZMuKHUSJhmTxGHGsyybBJNoGeoUVCUww@mail.gmail.com>
+Subject: Re: [PATCH v5 bpf-next 12/15] libbpf: add C/LDFLAGS to libbpf.so and
+ test_libpf targets
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org,
+        sergei.shtylyov@cogentembedded.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 12 Oct 2019 15:35:56 +0000
-Dan Robertson <dan@dlrobertson.com> wrote:
+On Thu, Oct 10, 2019 at 5:29 PM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> In case of C/LDFLAGS there is no way to pass them correctly to build
+> command, for instance when --sysroot is used or external libraries
+> are used, like -lelf, wich can be absent in toolchain. This can be
+> used for samples/bpf cross-compiling allowing to get elf lib from
+> sysroot.
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
 
-> Thanks again everyone for the informative feedback!
-> 
-> On Sat, Oct 12, 2019 at 10:31:07AM +0100, Jonathan Cameron wrote:
-> > Apologies for not pointing this out in V1 but all new IIO bindings need
-> > to be in the yaml format rather than plain text.  
-> 
-> No problem. I'll use the yaml format in v3.
-> 
-> On Fri, Oct 11, 2019 at 11:11:31PM -0700, Randy Dunlap wrote:
-> > > +config BMA400
-> > > +	tristate "Bosch BMA400 3-Axis Accelerometer Driver"
-> > > +	depends on I2C
-> > > +	select REGMAP
-> > > +	select BMA400_I2C if (I2C)  
-> >
-> > Since this already has "depends on I2C", the "if (I2C)" above is not needed.
-> > Or maybe BMA400 alone does not depend on I2C?  
-> 
-> Good catch. I'll remove the I2C depends from BMA400_I2C.
-> 
-> On Sat, Oct 12, 2019 at 10:39:54AM +0300, Andy Shevchenko wrote:
-> > On Sat, Oct 12, 2019 at 10:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:  
-> > > On 10/11/19 8:54 PM, Dan Robertson wrote:  
-> >  
-> > > > +config BMA400_I2C
-> > > > +     tristate
-> > > > +     depends on BMA400
-> > > > +     depends on I2C
-> > > > +     select REGMAP_I2C
-> > > > +  
-> > >
-> > > The bma400_i2c driver seems to use some OF interfaces.
-> > > Should it also depend on OF?  
-> >
-> > Please, avoid unnecessary and strict dependencies when it's limiting
-> > the area of use the driver.
-> > The driver does not depend to OF. Why to stick with OF?
-> >
-> > The actual change has to be done is to switch from
-> >  
-> > > #include <linux/of.h>  
-> >
-> > to
-> >
-> > #include <linux/mod_devicetable.h>  
-> 
-> Ah! Did not know about mod_devicetable.h. I'll make this change in the next
-> version.
-> 
-> On Sat, Oct 12, 2019 at 10:40:33AM +0100, Jonathan Cameron wrote:
-> > > +static const struct attribute_group bma400_attrs_group = {
-> > > +	.attrs = bma400_attributes,  
-> >
-> > No need to supply any attrs at all if the core is doing everything
-> > for you, so get rid of these.  
-> 
-> Good catch.
-> 
-> > > +int bma400_probe(struct device *dev,
-> > > +		 struct regmap *regmap,
-> > > +		 const char *name)  
-> >
-> > Try to avoid unnecessary line breaks.  There are stilly only
-> > so many lines on a computer monitor :)  
-> 
-> Will do. I'll do a quick audit of the patchset for other short lines, but
-> please don't hesitate to point out others you may find.
-> 
-> > > +		/*
-> > > +		 * If the softreset failed, try to put the device in
-> > > +		 * sleep mode, but still report the error.
-> > > +		 */  
-> >
-> > Silly question.  Why is soft_reset preferred to sleep mode?  
-> 
-> Not a silly question. I actually debated this when initially implementing the
-> driver. The datasheet describes soft-reset behavior in section 4.9, the
-> following snippet from the datasheet is particularly relevant:
-> 
-> > The softreset performs a fundamental reset to the device which is largely
-> > equivalent to a power cycle. Following a delay, all user configuration
-> > settings are overwritten with their default state...  
-> 
-> Sleep mode is the default power-mode, so the only real difference would be that
-> the oversampling ratio, sampling frequency, and scale would all be reset to
-> their defaults with a soft-reset. If we just set the power-mode to sleep mode,
-> the user configuration registers would be preserved.
-> 
-> I can add a comment about the behavior of a softreset in bma400_remove.
-I'd just not do it.  That way there is only the putting it to sleep path.
-We normally assume that we don't know the state during startup and aren't
-as careful on remove to make sure things are in a default state.
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-That way you only need a single path in the remove function. If sleep mode
-fails you are probably broken anyway.
-
-Jonathan
-
-> 
-> Cheers,
-> 
->  - Dan
-
+[...]
