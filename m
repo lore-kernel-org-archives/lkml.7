@@ -2,88 +2,149 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B676EC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AF2C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB8B206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uR2hqb86"
+	by mail.kernel.org (Postfix) with ESMTP id EF9D421850
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:28:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfJLHYU (ORCPT
+        id S1728920AbfJLH25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 03:24:20 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37061 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728536AbfJLHYU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 03:24:20 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f22so12094188wmc.2
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 00:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zAYSIpIU3hJKU2u4hHTRX9v4IZBeJlln5UqpWWtBOKQ=;
-        b=uR2hqb86vFeLoehGG9nQq+UzP1qbzEkHMu9gB1Z1mPmdY2pyRGj8GQIjU8AqIri6ic
-         4xkbqIkn/uCLwxUBwSA1V0vsLY5X6eq1GrrUGx8G4PVgTiTb9DsevH9tzUE7zWquRaC5
-         x7fmWKcwbdP/wcnaswp9we57PR6XnYoCouhhKJDfYkJUrovG3D3def0y/BDAexOKcaxz
-         62Yp5v8CEy3I51k3l71lgZgCM/qf7u8Uv3KV5l7hdn/FAXcY22/JshOjYA1aDmGOM7jR
-         9L/vdbgRF6SKyy1Fxx2CjN77fRn1CnJ8zP4YTQioHbc4EjiMWQEO7t6PNz8FUDSquVkf
-         02tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zAYSIpIU3hJKU2u4hHTRX9v4IZBeJlln5UqpWWtBOKQ=;
-        b=W6zDdMAhXUlERDHXtK/2jkWY0tNmt5j0OuReodfDKadtDHtIklFpzzxNfbgdnRe5Mv
-         dhazhwxVgJ27xk+MmSeBEgwrcWeNtPKj3BL97C/YzJn26avkiS8P/d4a+7teR+1QN6Xf
-         VFahfJoMoA2fQ98b0YINNYm/kPtdqWT3kH3Nz+D87D1UhlsjCLlDKASDq5UmTF/LHZxc
-         3Jx9nqPlZH6P7JYiFFT9HB2eieaVUNVFIxnSkEe8iLCXhPqXJfJQ5gnzk1jujREBQL7N
-         htOZLncgCzDbS4bE7SMv0aN3WWSa+3liMBku90zT+qBMeuS4QoHT1ow0lhktU2Jq27re
-         krcg==
-X-Gm-Message-State: APjAAAU34d4uOvotN0ZuZRXhkfztqHA8ZQOh3So1JpNJ3yjB/zV67ccp
-        eAx/ENY8Cp4BOqSocrI2pHp6neFc8fM8effzT5bLz4tN
-X-Google-Smtp-Source: APXvYqwEsXRXwFwnnik3tZHluRyeExDE+ZTPScWLzikmZiNBW7pzwWZWUUmNoV5MLCdU1uXQk853i8QEPl5oBJ6JSvM=
-X-Received: by 2002:a1c:a608:: with SMTP id p8mr6150105wme.25.1570865056487;
- Sat, 12 Oct 2019 00:24:16 -0700 (PDT)
+        Sat, 12 Oct 2019 03:28:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33154 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727014AbfJLH24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 03:28:56 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CC66F307D853;
+        Sat, 12 Oct 2019 07:28:55 +0000 (UTC)
+Received: from [10.72.12.150] (ovpn-12-150.pek2.redhat.com [10.72.12.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B516E10013D9;
+        Sat, 12 Oct 2019 07:28:51 +0000 (UTC)
+Subject: Re: [PATCH RFC v1 1/2] vhost: option to fetch descriptors through an
+ independent struct
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+References: <20191011134358.16912-1-mst@redhat.com>
+ <20191011134358.16912-2-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <3b2a6309-9d21-7172-a581-9f0f1d5c1427@redhat.com>
+Date:   Sat, 12 Oct 2019 15:28:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1564980742-19124-1-git-send-email-hongxing.zhu@nxp.com>
- <1564980742-19124-5-git-send-email-hongxing.zhu@nxp.com> <CAEnQRZBoLw5pfZ10STGMRfmR7=6hFjYNFOmXiMAnbM+-8Q4uLg@mail.gmail.com>
- <CAEnQRZCkoA-q=C6nU0L_i33W8iTPY2RC4Cvb-aWuExA8VEqM4g@mail.gmail.com>
- <AM0PR0402MB35709FCA367D132B3E1634118C950@AM0PR0402MB3570.eurprd04.prod.outlook.com>
- <AM0PR0402MB357085BEB3A0B7FD7D5649AA8C960@AM0PR0402MB3570.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR0402MB357085BEB3A0B7FD7D5649AA8C960@AM0PR0402MB3570.eurprd04.prod.outlook.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Sat, 12 Oct 2019 10:24:05 +0300
-Message-ID: <CAEnQRZApkTEyvgoTGo6So5NJAHARmEnxfzTcahDVXr_9ns+_Sw@mail.gmail.com>
-Subject: Re: [EXT] Re: [RESEND PATCH v5 4/4] mailbox: imx: add support for imx
- v1 mu
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191011134358.16912-2-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Sat, 12 Oct 2019 07:28:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 4:12 AM Richard Zhu <hongxing.zhu@nxp.com> wrote:
+
+On 2019/10/11 下午9:45, Michael S. Tsirkin wrote:
+> The idea is to support multiple ring formats by converting
+> to a format-independent array of descriptors.
 >
-> Hi Daniel:
-> New version patch-set had been sent out on Oct9.
-> https://patchwork.kernel.org/cover/11180683/
+> This costs extra cycles, but we gain in ability
+> to fetch a batch of descriptors in one go, which
+> is good for code cache locality.
+>
+> To simplify benchmarking, I kept the old code
+> around so one can switch back and forth by
+> writing into a module parameter.
+> This will go away in the final submission.
+>
+> This patch causes a minor performance degradation,
+> it's been kept as simple as possible for ease of review.
+> Next patch gets us back the performance by adding batching.
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>   drivers/vhost/test.c  |  17 ++-
+>   drivers/vhost/vhost.c | 299 +++++++++++++++++++++++++++++++++++++++++-
+>   drivers/vhost/vhost.h |  16 +++
+>   3 files changed, 327 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+> index 056308008288..39a018a7af2d 100644
+> --- a/drivers/vhost/test.c
+> +++ b/drivers/vhost/test.c
+> @@ -18,6 +18,9 @@
+>   #include "test.h"
+>   #include "vhost.h"
+>   
+> +static int newcode = 0;
+> +module_param(newcode, int, 0644);
+> +
+>   /* Max number of bytes transferred before requeueing the job.
+>    * Using this limit prevents one virtqueue from starving others. */
+>   #define VHOST_TEST_WEIGHT 0x80000
+> @@ -58,10 +61,16 @@ static void handle_vq(struct vhost_test *n)
+>   	vhost_disable_notify(&n->dev, vq);
+>   
+>   	for (;;) {
+> -		head = vhost_get_vq_desc(vq, vq->iov,
+> -					 ARRAY_SIZE(vq->iov),
+> -					 &out, &in,
+> -					 NULL, NULL);
+> +		if (newcode)
+> +			head = vhost_get_vq_desc_batch(vq, vq->iov,
+> +						       ARRAY_SIZE(vq->iov),
+> +						       &out, &in,
+> +						       NULL, NULL);
+> +		else
+> +			head = vhost_get_vq_desc(vq, vq->iov,
+> +						 ARRAY_SIZE(vq->iov),
+> +						 &out, &in,
+> +						 NULL, NULL);
+>   		/* On error, stop handling until the next kick. */
+>   		if (unlikely(head < 0))
+>   			break;
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 36ca2cf419bf..36661d6cb51f 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -301,6 +301,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+>   			   struct vhost_virtqueue *vq)
+>   {
+>   	vq->num = 1;
+> +	vq->ndescs = 0;
+>   	vq->desc = NULL;
+>   	vq->avail = NULL;
+>   	vq->used = NULL;
+> @@ -369,6 +370,9 @@ static int vhost_worker(void *data)
+>   
+>   static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+>   {
+> +	kfree(vq->descs);
+> +	vq->descs = NULL;
+> +	vq->max_descs = 0;
+>   	kfree(vq->indirect);
+>   	vq->indirect = NULL;
+>   	kfree(vq->log);
+> @@ -385,6 +389,10 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+>   
+>   	for (i = 0; i < dev->nvqs; ++i) {
+>   		vq = dev->vqs[i];
+> +		vq->max_descs = dev->iov_limit;
+> +		vq->descs = kmalloc_array(vq->max_descs,
+> +					  sizeof(*vq->descs),
+> +					  GFP_KERNEL);
 
-Thanks Richard. Jassi, care to have a look?
 
-Daniel
+Is iov_limit too much here? It can obviously increase the footprint. I 
+guess the batching can only be done for descriptor without indirect or 
+next set. Then we may batch 16 or 64.
+
+Thanks
