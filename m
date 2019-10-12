@@ -2,113 +2,97 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD985ECE58E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39154C47404
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C293E20663
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB3920663
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwdKcecD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfJLAds (ORCPT
+        id S1727820AbfJLAh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 20:33:48 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:59150 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfJLAds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 20:33:48 -0400
-Received: from [192.168.1.13] (c-76-114-240-162.hsd1.md.comcast.net [76.114.240.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kumba)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 3DB9F34BBE2;
-        Sat, 12 Oct 2019 00:33:46 +0000 (UTC)
-Subject: Re: [PATCH] MIPS: add support for SGI Octane (IP30)
-To:     Christoph Hellwig <hch@infradead.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191009155928.3047-1-tbogendoerfer@suse.de>
- <20191009184311.GA20261@infradead.org>
-From:   Joshua Kinard <kumba@gentoo.org>
-Openpgp: preference=signencrypt
-Message-ID: <5c6ab720-218a-14aa-9112-a12b88b63bc2@gentoo.org>
-Date:   Fri, 11 Oct 2019 20:33:43 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 11 Oct 2019 20:37:28 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46881 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfJLAh2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 20:37:28 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d1so11391386ljl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 17:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f4Ki0HjVKaflfmxJ2byTawmZD59wBPdISnRBsFf1+EE=;
+        b=GwdKcecDHoPtTKefPJDFPiTifnR2o2DiQsdu9eYxjZKHNGVh4M3eyOGTtSM4dIBG9w
+         2RD8MYbieejLw0IVF+lNSxv0IoF0Tg5WlyczNlhvVquO1YUWfqC+lsZsa+DTKHu9ThbS
+         t+PHqCQqQFlR0W2nZ4ZSIuYfyJmz7hREKLdbJEofiuaDJXYcxJNbydcD0h0c8WqVUJl9
+         493ZoqzSV/+idkqjGDTon1NwD63dr4FCuieLRUOIjNQXWGJjMIBC2EOAfdD4LJ2YPLKp
+         DXao1EjYBaRXqpKvw2MFhPr5LpYkb+twKkkUXKum9dBP/sPfT68zeszbwuqWLzIRsIQE
+         MQ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f4Ki0HjVKaflfmxJ2byTawmZD59wBPdISnRBsFf1+EE=;
+        b=cZrZqU9vePX6/OU+9bMsvtkFY5QRXZdsqFHgHc5uT5VXWUa9huzcwP5TJlMT6sAfq/
+         7igEovJXK9spZBNrsXivFgCtxQEWw6F4g4YolLqAy5iYGUinVqA4CHDloR0xeVh9jNuV
+         Uq9sW2aaUz2a0rcu/OqzslQgVY2/ufWco1j1mZl5mgvEHOlD6zriGXDg4l+zStp/xug7
+         oH9PnaWawXK57g4OWu0nIGCflPz9NPKpAnDsJkq8H94CwTvpWNQGiAy6vXmv+NLcahSq
+         NgNfz2lUmTO4qrrYePQf0OArQTzx+REhvbHMT6VmhGo6+8QSu+4KWm4GDnAAuouEadhL
+         r8Lg==
+X-Gm-Message-State: APjAAAURSMpatZvWOesYtm5DZ9iYwMTxPr7hHOkCUmpmRjwBFGH2ZvMe
+        UopsgWxHsyX4TIpW19sHoyg=
+X-Google-Smtp-Source: APXvYqytgLNEilHpnDPZTz37dMIPamPyEfsAHb42Fyj4zkTggkCK5P5YAx4Af6P5wT6BgrshuxohoQ==
+X-Received: by 2002:a2e:858d:: with SMTP id b13mr9538774lji.71.1570840646279;
+        Fri, 11 Oct 2019 17:37:26 -0700 (PDT)
+Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id f22sm2346620lfa.41.2019.10.11.17.37.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 17:37:25 -0700 (PDT)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     linux-xtensa@linux-xtensa.org, Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH v2 0/4] xtensa: fix {get,put}_user() for 64bit values
+Date:   Fri, 11 Oct 2019 17:37:04 -0700
+Message-Id: <20191012003708.22182-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191009184311.GA20261@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/9/2019 14:43, Christoph Hellwig wrote:
->> +++ b/arch/mips/sgi-ip30/ip30-pci.c
->> @@ -0,0 +1,19 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * ip30-pci.c: misc PCI related helper code for IP30 architecture
->> + */
->> +
->> +#include <asm/pci/bridge.h>
->> +
->> +dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
->> +{
->> +	struct pci_dev *pdev = to_pci_dev(dev);
->> +	struct bridge_controller *bc = BRIDGE_CONTROLLER(pdev->bus);
->> +
->> +	return bc->baddr + paddr;
->> +}
->> +
->> +phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dma_addr)
->> +{
->> +	return dma_addr & ~(0xffUL << 56);
->> +}
-> 
-> This file is duplicated from ip27.  I think we should aim to share
-> it given the common hardware even if it is mostly trivial.
-> 
+Hello,
 
-It's possible that we may need to add an IP30-specific WAR here eventually.
- OpenBSD code has this to say about BRIDGE on IP30 systems:
+this series fixes return value, out-of-bound stack access and value
+truncation in xtensa implementation of {get,put}_user() for 64bit
+values. It also cleans up naming of assembly parameters in
+__{get,put}_user_asm and __check_align_{1,2,4}.
 
-http://bxr.su/OpenBSD/sys/arch/sgi/sgi/ip30_machdep.c
+Changes v1->v2:
+- initialize result when access_ok check fails in __get_user_check
+- initialize result in __get_user_asm for unaligned access
 
-144    /*
-145     * Register DMA-reachable memory constraints.
-146     * The xbridge(4) is limited to a 31-bit region (its IOMMU features
-147     * are too restricted to be of use).
-148     */
-149    dma_constraint.ucr_low = 0;
-150    dma_constraint.ucr_high = (1UL << 31) - 1;
+Al Viro (1):
+  xtensa: fix {get,put}_user() for 64bit values
 
-I never figured out how in Linux one does something equivalent.  I knew it
-needed to be done in the older dma-coherence.h file, and now in the newer
-__phys_to_dma() function here.  This is, if memory recalls correctly,
-because >2GB RAM in Octane causes issues w/ BRIDGE DMA access.
+Max Filippov (3):
+  xtensa: clean up assembly arguments in uaccess macros
+  xtensa: fix type conversion in __get_user_[no]check
+  xtensa: initialize result in __get_user_asm for unaligned access
 
-OpenBSD applies this same limit to IP27, but I have a sneaking suspicion
-that it's strictly an IP30 hardware bug, because my Onyx2 has 8GB of RAM and
-it usually boots fine on its own.  Pop more than 2GB into an Octane, though,
-and, if it boots at all, disk or network I/O will usually bus error it at
-some point.
+ arch/xtensa/include/asm/uaccess.h | 105 +++++++++++++++++-------------
+ 1 file changed, 60 insertions(+), 45 deletions(-)
 
 -- 
-Joshua Kinard
-Gentoo/MIPS
-kumba@gentoo.org
-rsa6144/5C63F4E3F5C6C943 2015-04-27
-177C 1972 1FB8 F254 BAD0 3E72 5C63 F4E3 F5C6 C943
+2.20.1
 
-"The past tempts us, the present confuses us, the future frightens us.  And
-our lives slip away, moment by moment, lost in that vast, terrible in-between."
-
---Emperor Turhan, Centauri Republic
