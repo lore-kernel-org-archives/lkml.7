@@ -2,164 +2,139 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA93C47404
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA663C47404
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8938A214E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:20:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P11949Mu"
+	by mail.kernel.org (Postfix) with ESMTP id A88C520679
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfJLBUL (ORCPT
+        id S1728684AbfJLBZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 21:20:11 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44326 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbfJLBUL (ORCPT
+        Fri, 11 Oct 2019 21:25:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50654 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727345AbfJLBZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 21:20:11 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u22so10582300qkk.11;
-        Fri, 11 Oct 2019 18:20:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f59g/RciVZKoxqNX9kC3w6U69tnmtVV5CNkXdY+evAk=;
-        b=P11949MuCzHOh2ktsdskijdbH2ZXJyKxKKUW/6KRGBL6qDtFcdJHhF0jU5hzJmhAWW
-         CoAD6Xa7ht7fUA45ULBTLVL04HSQY7fUJSlj+u6OSBMko7xISTmXSj7yLNbBbUrFetMd
-         Vixjq+gleE4IfUjyh3X/eftr807SM87bd7p1hmxUTKZMcXMITjly2RM5KYJTKezf3IKD
-         bQXve2sj9+3Eb+1Gwsf2snBOWF742XpGGGjlR9+o5+JnZJL58wTAA0yTleClYOf0D6ta
-         7+IeKvw4jfjTi7HcyKZds7krit1/Hm3hCtIx6A1qmkwDIhPZCGHPkgUiS0ZG5zBfXxBv
-         kwFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f59g/RciVZKoxqNX9kC3w6U69tnmtVV5CNkXdY+evAk=;
-        b=gv7ckZ9DXbWFD4qhaCW07g/3bQJ/5AZ8eslQwuH/cm+TZVCZjb7jqAjS2zo9n9SLtY
-         j7k3y7TJd/BSP7JCDRmu8mX26gqtIhY8h5tDy8EimU5vU8r4W3WVeFMCniXUThA8yhXi
-         DEls93qNq+S79EtU9ndMil1g8luZpuNqSvNSjIUn67Kf7im6NuT6Cftj2ZQ/eZF4Fmz1
-         wHsV1RYb4ZJ293gaCSQUXVY0cT4ZEytf/t08Ns/GTdIRv4DCgubwRcAGe5+6oNExB7pC
-         W+8BYIk60bXBAego0yTDXyjQcc3tov7o7Mx0Ju8nnjAwFXBjGV8L3q+bSL3p3RqQidwu
-         m2Ug==
-X-Gm-Message-State: APjAAAVV2k1llQtJ/9Bq22NF+vq7YhtDGmMYpTVSai6gKlCVBZ9NhPL4
-        Ha7udNLxnuZwxPqTLcnxk+Staq3KfO0=
-X-Google-Smtp-Source: APXvYqyhRYp+eePH4KkaE8rNlbcmiPdJZXbACZ4JIREHfbvDJmMdzvUQuhbl/UICNaCvmBjt0hhVcQ==
-X-Received: by 2002:a37:9d10:: with SMTP id g16mr18836248qke.29.1570843209314;
-        Fri, 11 Oct 2019 18:20:09 -0700 (PDT)
-Received: from localhost.localdomain ([187.106.44.83])
-        by smtp.gmail.com with ESMTPSA id s17sm4618393qkg.79.2019.10.11.18.20.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 18:20:08 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, sudipm.mukherjee@gmail.com,
-        teddy.wang@siliconmotion.com, gregkh@linuxfoundation.org,
-        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        trivial@kernel.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH] staging: sm750fb: align arguments with open parenthesis
-Date:   Fri, 11 Oct 2019 22:19:56 -0300
-Message-Id: <20191012011956.9452-1-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 11 Oct 2019 21:25:56 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9C1N1Nd014838
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 21:25:55 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vk1hmng97-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 21:25:54 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Sat, 12 Oct 2019 02:25:52 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 12 Oct 2019 02:25:48 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9C1Plsf54657110
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 12 Oct 2019 01:25:47 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ADFAA52052;
+        Sat, 12 Oct 2019 01:25:47 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.85.130.213])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 56EB752050;
+        Sat, 12 Oct 2019 01:25:43 +0000 (GMT)
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org,
+        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
+        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
+        aik@linux.ibm.com, paul.burton@mips.com, robin.murphy@arm.com,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com, hch@lst.de,
+        jasowang@redhat.com, linuxram@us.ibm.com, andmike@us.ibm.com,
+        sukadev@linux.vnet.ibm.com
+Subject: [PATCH 0/2] virtio: Support encrypted memory on powerpc secure guests
+Date:   Fri, 11 Oct 2019 18:25:17 -0700
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19101201-0020-0000-0000-00000378559F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101201-0021-0000-0000-000021CE689F
+Message-Id: <1570843519-8696-1-git-send-email-linuxram@us.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-11_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=984 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910120005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleans up checks of "Alignment should match open parenthesis" in tree sm750fb
+ **We would like the patches to be merged through the virtio tree.  Please
+ review, and ack merging the DMA mapping change through that tree. Thanks!**
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
----
- drivers/staging/sm750fb/ddk750_display.c |  2 +-
- drivers/staging/sm750fb/sm750_accel.c    |  2 +-
- drivers/staging/sm750fb/sm750_accel.h    |  8 ++++----
- drivers/staging/sm750fb/sm750_cursor.h   | 10 +++++-----
- 4 files changed, 11 insertions(+), 11 deletions(-)
+ The memory of powerpc secure guests can't be accessed by the hypervisor /
+ virtio device except for a few memory regions designated as 'shared'.
+ 
+ At the moment, Linux uses bounce-buffering to communicate with the
+ hypervisor, with a bounce buffer marked as shared. This is how the DMA API
+ is implemented on this platform.
+ 
+ In particular, the most convenient way to use virtio on this platform is by
+ making virtio use the DMA API: in fact, this is exactly what happens if the
+ virtio device exposes the flag VIRTIO_F_ACCESS_PLATFORM.  However, bugs in the
+ hypervisor on the powerpc platform do not allow setting this flag, with some
+ hypervisors already in the field that don't set this flag. At the moment they
+ are forced to use emulated devices when guest is in secure mode; virtio is
+ only useful when guest is not secure.
+ 
+ Normally, both device and driver must support VIRTIO_F_ACCESS_PLATFORM:
+ if one of them doesn't, the other mustn't assume it for communication
+ to work.
+ 
+ However, a guest-side work-around is possible to enable virtio
+ for these hypervisors with guest in secure mode: it so happens that on
+ powerpc secure platform the DMA address is actually a physical address -
+ that of the bounce buffer. For these platforms we can make the virtio
+ driver go through the DMA API even though the device itself ignores
+ the DMA API.
+ 
+ These patches implement this work around for virtio: we detect that
+ - secure guest mode is enabled - so we know that since we don't share
+   most memory and Hypervisor has not enabled VIRTIO_F_ACCESS_PLATFORM,
+   regular virtio code won't work.
+ - DMA API is giving us addresses that are actually also physical
+   addresses.
+ - Hypervisor has not enabled VIRTIO_F_ACCESS_PLATFORM.
+ 
+ and if all conditions are true, we force all data through the bounce
+ buffer.
+ 
+ To put it another way, from hypervisor's point of view DMA API is
+ not required: hypervisor would be happy to get access to all of guest
+ memory. That's why it does not set VIRTIO_F_ACCESS_PLATFORM. However,
+ guest decides that it does not trust the hypervisor and wants to force
+ a bounce buffer for its own reasons.
 
-diff --git a/drivers/staging/sm750fb/ddk750_display.c b/drivers/staging/sm750fb/ddk750_display.c
-index 887ea8aef43f..8be98a1058d6 100644
---- a/drivers/staging/sm750fb/ddk750_display.c
-+++ b/drivers/staging/sm750fb/ddk750_display.c
-@@ -148,7 +148,7 @@ void ddk750_set_logical_disp_out(enum disp_output output)
- 	if (output & PNL_SEQ_USAGE) {
- 		/* set  panel sequence */
- 		sw_panel_power_sequence((output & PNL_SEQ_MASK) >> PNL_SEQ_OFFSET,
--		4);
-+					4);
- 	}
- 
- 	if (output & DAC_USAGE)
-diff --git a/drivers/staging/sm750fb/sm750_accel.c b/drivers/staging/sm750fb/sm750_accel.c
-index dbcbbd1055da..1a9555bb9edd 100644
---- a/drivers/staging/sm750fb/sm750_accel.c
-+++ b/drivers/staging/sm750fb/sm750_accel.c
-@@ -289,7 +289,7 @@ static unsigned int deGetTransparency(struct lynx_accel *accel)
- }
- 
- int sm750_hw_imageblit(struct lynx_accel *accel,
--		 const char *pSrcbuf, /* pointer to start of source buffer in system memory */
-+		       const char *pSrcbuf, /* pointer to start of source buffer in system memory */
- 		 u32 srcDelta,          /* Pitch value (in bytes) of the source buffer, +ive means top down and -ive mean button up */
- 		 u32 startBit, /* Mono data can start at any bit in a byte, this value should be 0 to 7 */
- 		 u32 dBase,    /* Address of destination: offset in frame buffer */
-diff --git a/drivers/staging/sm750fb/sm750_accel.h b/drivers/staging/sm750fb/sm750_accel.h
-index c4f42002a50f..8fb79b09fdd0 100644
---- a/drivers/staging/sm750fb/sm750_accel.h
-+++ b/drivers/staging/sm750fb/sm750_accel.h
-@@ -190,9 +190,9 @@ void sm750_hw_set2dformat(struct lynx_accel *accel, int fmt);
- void sm750_hw_de_init(struct lynx_accel *accel);
- 
- int sm750_hw_fillrect(struct lynx_accel *accel,
--				u32 base, u32 pitch, u32 Bpp,
--				u32 x, u32 y, u32 width, u32 height,
--				u32 color, u32 rop);
-+		      u32 base, u32 pitch, u32 Bpp,
-+		      u32 x, u32 y, u32 width, u32 height,
-+		      u32 color, u32 rop);
- 
- int sm750_hw_copyarea(
- struct lynx_accel *accel,
-@@ -210,7 +210,7 @@ unsigned int height, /* width and height of rectangle in pixel value */
- unsigned int rop2);
- 
- int sm750_hw_imageblit(struct lynx_accel *accel,
--		 const char *pSrcbuf, /* pointer to start of source buffer in system memory */
-+		       const char *pSrcbuf, /* pointer to start of source buffer in system memory */
- 		 u32 srcDelta,          /* Pitch value (in bytes) of the source buffer, +ive means top down and -ive mean button up */
- 		 u32 startBit, /* Mono data can start at any bit in a byte, this value should be 0 to 7 */
- 		 u32 dBase,    /* Address of destination: offset in frame buffer */
-diff --git a/drivers/staging/sm750fb/sm750_cursor.h b/drivers/staging/sm750fb/sm750_cursor.h
-index 16ac07eb58d6..039ebfdf0bd9 100644
---- a/drivers/staging/sm750fb/sm750_cursor.h
-+++ b/drivers/staging/sm750fb/sm750_cursor.h
-@@ -6,13 +6,13 @@
- void sm750_hw_cursor_enable(struct lynx_cursor *cursor);
- void sm750_hw_cursor_disable(struct lynx_cursor *cursor);
- void sm750_hw_cursor_setSize(struct lynx_cursor *cursor,
--						int w, int h);
-+			     int w, int h);
- void sm750_hw_cursor_setPos(struct lynx_cursor *cursor,
--						int x, int y);
-+			    int x, int y);
- void sm750_hw_cursor_setColor(struct lynx_cursor *cursor,
--						u32 fg, u32 bg);
-+			      u32 fg, u32 bg);
- void sm750_hw_cursor_setData(struct lynx_cursor *cursor,
--			u16 rop, const u8 *data, const u8 *mask);
-+			     u16 rop, const u8 *data, const u8 *mask);
- void sm750_hw_cursor_setData2(struct lynx_cursor *cursor,
--			u16 rop, const u8 *data, const u8 *mask);
-+			      u16 rop, const u8 *data, const u8 *mask);
- #endif
+
+Thiago Jung Bauermann (2):
+  dma-mapping: Add dma_addr_is_phys_addr()
+  virtio_ring: Use DMA API if memory is encrypted
+
+ arch/powerpc/include/asm/dma-mapping.h | 21 +++++++++++++++++++++
+ arch/powerpc/platforms/pseries/Kconfig |  1 +
+ drivers/virtio/virtio.c                | 18 ++++++++++++++++++
+ drivers/virtio/virtio_ring.c           |  8 ++++++++
+ include/linux/dma-mapping.h            | 20 ++++++++++++++++++++
+ include/linux/virtio_config.h          | 14 ++++++++++++++
+ kernel/dma/Kconfig                     |  3 +++
+ 7 files changed, 85 insertions(+)
+
 -- 
-2.20.1
+1.8.3.1
 
