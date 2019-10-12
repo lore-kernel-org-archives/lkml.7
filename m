@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64695C10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89059C4CECE
 	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B40206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60ADD21655
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IE4IDH7o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEiTiwJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfJLWTm (ORCPT
+        id S1727896AbfJLWTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 18:19:42 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36000 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfJLWTm (ORCPT
+        Sat, 12 Oct 2019 18:19:49 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38797 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfJLWTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 18:19:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y22so8182515pfr.3
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 15:19:41 -0700 (PDT)
+        Sat, 12 Oct 2019 18:19:49 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w8so6176261plq.5
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 15:19:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PzS89TZ3VQzwgK8P2bX5KvfvcY4VtRFHY42+gxItdKw=;
-        b=IE4IDH7oqoloAZw7fMo5e7uwMwSAX2CsWN+v2d4jjtnsFkjTR0MD99vCxWiW/dMN0y
-         X5a6wf8g1RczC2C/2NIoeNpGbfQEPzoa3QA03j5vcrv+XyBqdr80oAz0tt5XAwta/kKF
-         IcoAc1ehw+hqdCpuLfJ3LKKCKWQ6hqXrc8DVsTpw5JMcKSU0zlFzVvYnZgRsvQ58RRZr
-         o3YxgtElcW1xzU0em9LI8+O9rUctzgllhTKdOUhRHQz8RfVka30/WKfxe9dy0YT9NsKM
-         XGERtlG9VJzpoDr2mhNSx4fefe1MXzXkpsiHlMBZzv1ZGcPP9BfWB2owjvmtx0stG+j0
-         I4kw==
+        bh=cj3J1pEroaTR/ZsfEveu1P6fPFD8w3rJ9/qudwdU1EM=;
+        b=QEiTiwJMzTqhEDJXM11vucrej9zVDOr2z4w0FDZVcWjqiEY6eV7X5w+QIyjC5VwwTt
+         Bl3xx260mtlD2LEf5Mtq86A/e1Ni+KHB0FXrU5tbJKOxKcNVGleD23k1iehbSFTs+iVb
+         MOQrOddqFXCo/kyqJKK/fjIVIeZX0R1WaoaWYtuEHOZmDb5e30t/rLFHomWynGjwXDl0
+         m04eajvFJpP3aoj5XqiP181Uln2dWb49EOTpJbBCPp0ClWF7O+NhVnvuQJ0K8rLjmBln
+         JY8mINbyrG3Go8IzKJIYWaEm75ktxkqT4q6fEr7KcvacoFeyqrHPd1kCXej7aZe8ea56
+         sTQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PzS89TZ3VQzwgK8P2bX5KvfvcY4VtRFHY42+gxItdKw=;
-        b=kc/u7XL8f5rkXn6bNxy0cBkw29j7dAHEpFLUAkhIAJkToTWfaYaMMDZSdgDji2XnoO
-         MjfNvzsCZ79CIAh725J+z+MBzKsKSKlaRtEyhga3QlPueaQ1XgN9UxCpUtzgnicWQ8DT
-         UodXWfvExoIuVNEBxN993AYyE8DqC9DkPG6QJXZQMhr1TI13714R+ukBD9rpi1brj3GB
-         TxM2v4/DwTr5GN+mvyYG45WUVDA3IjucS16T2Yvp0SJL+B86u2LQBE7r5qQniaTSY/XI
-         PUeG5hnzp/C2XIPVZoJGCUozv4hqdnt/Hnx/AUc8l1D5kOSZxRrMeMmDXF9DpUl+f+W3
-         vXOQ==
-X-Gm-Message-State: APjAAAX666yRYQY0AhO3oKRum5U03u1sftn4AUU/ojDwiLyA4NxTK3Vv
-        XQwZyB3zQPgj4/QiajrSSs4=
-X-Google-Smtp-Source: APXvYqw0YGZ+ePLzQ8DYtYJ6wamf5q6IWdKIj+QmfD9NT7I1o0YWVkKonHP/yVuKqbwDtWCpUbQd1Q==
-X-Received: by 2002:a17:90a:c405:: with SMTP id i5mr27349084pjt.9.1570918781357;
-        Sat, 12 Oct 2019 15:19:41 -0700 (PDT)
+        bh=cj3J1pEroaTR/ZsfEveu1P6fPFD8w3rJ9/qudwdU1EM=;
+        b=MiTLOTOcmLN00dceV9ZhCkYXeWqXdOOgQBFiWBg4//4+9PoufyLmPYG6pOBHStTC2J
+         2GKOXijVM6oN9Hh3VSz3WQSwbO0wF1sH8mMxCXN26PMe3ATqwVn3fBbK58JyYBCFovas
+         KWODeiqDgxjFWyVCYDkYSVXaIZaWj2Fmz3pTLUiw8DACl02Ky16DfIJdM0IZQKkMl+pu
+         iU6APA0rtZnBE2HSNfz7MqSTW5l+5V1fr24m7J9HkQ6tr02Vj4Xv6egWv31b03haEAcL
+         IHPn3nyU130F1aIVvUwEZltsuDKF5em+iUOVy3aSwBREzIX88HKgnPIt5vsFFQ66rynY
+         rSTg==
+X-Gm-Message-State: APjAAAVQ42+YMmNLHtVXAuW8LYWns7VQWNpbJCD2vOlbvLXn8fNgBSt4
+        9Z3kX6YrZukdpz+/l6Uzr64=
+X-Google-Smtp-Source: APXvYqw6XsllW6/XCmJCJV3s870HzmIyUcZI3ccnAxuLC0z96nuQ0p8xsiZ90WLgOlSM3eXZaHwJGA==
+X-Received: by 2002:a17:902:a985:: with SMTP id bh5mr21912231plb.184.1570918788530;
+        Sat, 12 Oct 2019 15:19:48 -0700 (PDT)
 Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id 30sm13839562pjk.25.2019.10.12.15.19.34
+        by smtp.googlemail.com with ESMTPSA id 30sm13839562pjk.25.2019.10.12.15.19.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Oct 2019 15:19:41 -0700 (PDT)
+        Sat, 12 Oct 2019 15:19:48 -0700 (PDT)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     outreachy-kernel@googlegroups.com
 Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net,
         florian.c.schilhabel@googlemail.com
-Subject: [PATCH 1/2] staging: rtl8712: remove unnecessary return variables
-Date:   Sun, 13 Oct 2019 01:19:15 +0300
-Message-Id: <f61a0f036af24228c682c6b12c3a8e6cf6736185.1570918228.git.wambui.karugax@gmail.com>
+Subject: [PATCH 2/2] staging: rtl8712: clean up function headers
+Date:   Sun, 13 Oct 2019 01:19:16 +0300
+Message-Id: <c14b9e60b1e9bab635bc9527cbd2a2a07436ba44.1570918228.git.wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1570918228.git.wambui.karugax@gmail.com>
 References: <cover.1570918228.git.wambui.karugax@gmail.com>
@@ -75,145 +75,208 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove variables that are only used to hold and return constants and
-have the functions directly return the constants.
-
-Issue found by coccinelle:
-@@
-local idexpression ret;
-expression e;
-@@
-
--ret =
-+return
-     e;
--return ret;
+Remove unnecessary line-breaks in function headers to
+improve readability of function headers.
 
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/staging/rtl8712/rtl871x_mp_ioctl.c | 46 +++++++++-------------
- 1 file changed, 19 insertions(+), 27 deletions(-)
+ drivers/staging/rtl8712/rtl871x_mp_ioctl.c | 57 ++++++++--------------
+ 1 file changed, 19 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/staging/rtl8712/rtl871x_mp_ioctl.c b/drivers/staging/rtl8712/rtl871x_mp_ioctl.c
-index aa8f8500cbb2..8af7892809ca 100644
+index 8af7892809ca..29b85330815f 100644
 --- a/drivers/staging/rtl8712/rtl871x_mp_ioctl.c
 +++ b/drivers/staging/rtl8712/rtl871x_mp_ioctl.c
-@@ -283,13 +283,12 @@ uint oid_rt_pro_stop_test_hdl(struct oid_par_priv *poid_par_priv)
+@@ -231,8 +231,7 @@ static int mp_stop_test(struct _adapter *padapter)
+ 	return _SUCCESS;
+ }
+ 
+-uint oid_rt_pro_set_data_rate_hdl(struct oid_par_priv
+-					 *poid_par_priv)
++uint oid_rt_pro_set_data_rate_hdl(struct oid_par_priv *poid_par_priv)
  {
  	struct _adapter *Adapter = (struct _adapter *)
  				   (poid_par_priv->adapter_context);
--	uint status = RNDIS_STATUS_SUCCESS;
- 
- 	if (poid_par_priv->type_of_oid != SET_OID)
- 		return RNDIS_STATUS_NOT_ACCEPTED;
- 	if (mp_stop_test(Adapter) == _FAIL)
--		status = RNDIS_STATUS_NOT_ACCEPTED;
--	return status;
-+		return RNDIS_STATUS_NOT_ACCEPTED;
-+	return RNDIS_STATUS_SUCCESS;
+@@ -291,8 +290,7 @@ uint oid_rt_pro_stop_test_hdl(struct oid_par_priv *poid_par_priv)
+ 	return RNDIS_STATUS_SUCCESS;
  }
  
- uint oid_rt_pro_set_channel_direct_call_hdl(struct oid_par_priv
-@@ -350,64 +349,58 @@ uint oid_rt_pro_set_tx_power_control_hdl(
- uint oid_rt_pro_query_tx_packet_sent_hdl(
- 					struct oid_par_priv *poid_par_priv)
+-uint oid_rt_pro_set_channel_direct_call_hdl(struct oid_par_priv
+-						   *poid_par_priv)
++uint oid_rt_pro_set_channel_direct_call_hdl(struct oid_par_priv *poid_par_priv)
  {
--	uint status = RNDIS_STATUS_SUCCESS;
  	struct _adapter *Adapter = (struct _adapter *)
  				   (poid_par_priv->adapter_context);
- 
--	if (poid_par_priv->type_of_oid != QUERY_OID) {
--		status = RNDIS_STATUS_NOT_ACCEPTED;
--		return status;
--	}
-+	if (poid_par_priv->type_of_oid != QUERY_OID)
-+		return RNDIS_STATUS_NOT_ACCEPTED;
-+
- 	if (poid_par_priv->information_buf_len == sizeof(u32)) {
- 		*(u32 *)poid_par_priv->information_buf =
- 					Adapter->mppriv.tx_pktcount;
- 		*poid_par_priv->bytes_rw = poid_par_priv->information_buf_len;
- 	} else {
--		status = RNDIS_STATUS_INVALID_LENGTH;
-+		return RNDIS_STATUS_INVALID_LENGTH;
- 	}
--	return status;
-+	return RNDIS_STATUS_SUCCESS;
+@@ -327,8 +325,7 @@ uint oid_rt_pro_set_antenna_bb_hdl(struct oid_par_priv *poid_par_priv)
+ 	return RNDIS_STATUS_SUCCESS;
  }
  
- uint oid_rt_pro_query_rx_packet_received_hdl(
- 					struct oid_par_priv *poid_par_priv)
+-uint oid_rt_pro_set_tx_power_control_hdl(
+-					struct oid_par_priv *poid_par_priv)
++uint oid_rt_pro_set_tx_power_control_hdl(struct oid_par_priv *poid_par_priv)
  {
--	uint status = RNDIS_STATUS_SUCCESS;
  	struct _adapter *Adapter = (struct _adapter *)
  				   (poid_par_priv->adapter_context);
- 
--	if (poid_par_priv->type_of_oid != QUERY_OID) {
--		status = RNDIS_STATUS_NOT_ACCEPTED;
--		return status;
--	}
-+	if (poid_par_priv->type_of_oid != QUERY_OID)
-+		return RNDIS_STATUS_NOT_ACCEPTED;
-+
- 	if (poid_par_priv->information_buf_len == sizeof(u32)) {
- 		*(u32 *)poid_par_priv->information_buf =
- 					Adapter->mppriv.rx_pktcount;
- 		*poid_par_priv->bytes_rw = poid_par_priv->information_buf_len;
- 	} else {
--		status = RNDIS_STATUS_INVALID_LENGTH;
-+		return RNDIS_STATUS_INVALID_LENGTH;
- 	}
--	return status;
-+	return RNDIS_STATUS_SUCCESS;
+@@ -346,8 +343,7 @@ uint oid_rt_pro_set_tx_power_control_hdl(
+ 	return RNDIS_STATUS_SUCCESS;
  }
  
- uint oid_rt_pro_query_rx_packet_crc32_error_hdl(
- 					struct oid_par_priv *poid_par_priv)
+-uint oid_rt_pro_query_tx_packet_sent_hdl(
+-					struct oid_par_priv *poid_par_priv)
++uint oid_rt_pro_query_tx_packet_sent_hdl(struct oid_par_priv *poid_par_priv)
  {
--	uint status = RNDIS_STATUS_SUCCESS;
  	struct _adapter *Adapter = (struct _adapter *)
  				   (poid_par_priv->adapter_context);
- 
--	if (poid_par_priv->type_of_oid != QUERY_OID) {
--		status = RNDIS_STATUS_NOT_ACCEPTED;
--		return status;
--	}
-+	if (poid_par_priv->type_of_oid != QUERY_OID)
-+		return RNDIS_STATUS_NOT_ACCEPTED;
-+
- 	if (poid_par_priv->information_buf_len == sizeof(u32)) {
- 		*(u32 *)poid_par_priv->information_buf =
- 					Adapter->mppriv.rx_crcerrpktcount;
- 		*poid_par_priv->bytes_rw = poid_par_priv->information_buf_len;
- 	} else {
--		status = RNDIS_STATUS_INVALID_LENGTH;
-+		return RNDIS_STATUS_INVALID_LENGTH;
- 	}
--	return status;
-+	return RNDIS_STATUS_SUCCESS;
+@@ -365,8 +361,7 @@ uint oid_rt_pro_query_tx_packet_sent_hdl(
+ 	return RNDIS_STATUS_SUCCESS;
  }
  
- uint oid_rt_pro_reset_tx_packet_sent_hdl(struct oid_par_priv
-@@ -425,7 +418,6 @@ uint oid_rt_pro_reset_tx_packet_sent_hdl(struct oid_par_priv
- uint oid_rt_pro_reset_rx_packet_received_hdl(struct oid_par_priv
- 						    *poid_par_priv)
+-uint oid_rt_pro_query_rx_packet_received_hdl(
+-					struct oid_par_priv *poid_par_priv)
++uint oid_rt_pro_query_rx_packet_received_hdl(struct oid_par_priv *poid_par_priv)
  {
--	uint status = RNDIS_STATUS_SUCCESS;
  	struct _adapter *Adapter = (struct _adapter *)
  				   (poid_par_priv->adapter_context);
- 
-@@ -435,9 +427,9 @@ uint oid_rt_pro_reset_rx_packet_received_hdl(struct oid_par_priv
- 		Adapter->mppriv.rx_pktcount = 0;
- 		Adapter->mppriv.rx_crcerrpktcount = 0;
- 	} else {
--		status = RNDIS_STATUS_INVALID_LENGTH;
-+		return RNDIS_STATUS_INVALID_LENGTH;
- 	}
--	return status;
-+	return RNDIS_STATUS_SUCCESS;
+@@ -384,8 +379,7 @@ uint oid_rt_pro_query_rx_packet_received_hdl(
+ 	return RNDIS_STATUS_SUCCESS;
  }
  
- uint oid_rt_reset_phy_rx_packet_count_hdl(struct oid_par_priv
+-uint oid_rt_pro_query_rx_packet_crc32_error_hdl(
+-					struct oid_par_priv *poid_par_priv)
++uint oid_rt_pro_query_rx_packet_crc32_error_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -403,8 +397,7 @@ uint oid_rt_pro_query_rx_packet_crc32_error_hdl(
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_pro_reset_tx_packet_sent_hdl(struct oid_par_priv
+-						*poid_par_priv)
++uint oid_rt_pro_reset_tx_packet_sent_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -415,8 +408,7 @@ uint oid_rt_pro_reset_tx_packet_sent_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_pro_reset_rx_packet_received_hdl(struct oid_par_priv
+-						    *poid_par_priv)
++uint oid_rt_pro_reset_rx_packet_received_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -432,8 +424,7 @@ uint oid_rt_pro_reset_rx_packet_received_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_reset_phy_rx_packet_count_hdl(struct oid_par_priv
+-						 *poid_par_priv)
++uint oid_rt_reset_phy_rx_packet_count_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -444,8 +435,7 @@ uint oid_rt_reset_phy_rx_packet_count_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_get_phy_rx_packet_received_hdl(struct oid_par_priv
+-						  *poid_par_priv)
++uint oid_rt_get_phy_rx_packet_received_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -460,8 +450,7 @@ uint oid_rt_get_phy_rx_packet_received_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_get_phy_rx_packet_crc32_error_hdl(struct oid_par_priv
+-						     *poid_par_priv)
++uint oid_rt_get_phy_rx_packet_crc32_error_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -476,8 +465,7 @@ uint oid_rt_get_phy_rx_packet_crc32_error_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_pro_set_modulation_hdl(struct oid_par_priv
+-					  *poid_par_priv)
++uint oid_rt_pro_set_modulation_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -489,8 +477,7 @@ uint oid_rt_pro_set_modulation_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_pro_set_continuous_tx_hdl(struct oid_par_priv
+-					     *poid_par_priv)
++uint oid_rt_pro_set_continuous_tx_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -503,8 +490,7 @@ uint oid_rt_pro_set_continuous_tx_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_pro_set_single_carrier_tx_hdl(struct oid_par_priv
+-						 *poid_par_priv)
++uint oid_rt_pro_set_single_carrier_tx_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -517,8 +503,7 @@ uint oid_rt_pro_set_single_carrier_tx_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_pro_set_carrier_suppression_tx_hdl(struct oid_par_priv
+-						      *poid_par_priv)
++uint oid_rt_pro_set_carrier_suppression_tx_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -531,8 +516,7 @@ uint oid_rt_pro_set_carrier_suppression_tx_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_pro_set_single_tone_tx_hdl(struct oid_par_priv
+-					      *poid_par_priv)
++uint oid_rt_pro_set_single_tone_tx_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -545,8 +529,7 @@ uint oid_rt_pro_set_single_tone_tx_hdl(struct oid_par_priv
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_pro_read_register_hdl(struct oid_par_priv
+-					 *poid_par_priv)
++uint oid_rt_pro_read_register_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -727,8 +710,7 @@ uint oid_rt_pro_write_efuse_hdl(struct oid_par_priv *poid_par_priv)
+ }
+ /*----------------------------------------------------------------------*/
+ 
+-uint oid_rt_get_efuse_current_size_hdl(struct oid_par_priv
+-					      *poid_par_priv)
++uint oid_rt_get_efuse_current_size_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
+@@ -821,8 +803,7 @@ uint oid_rt_set_bandwidth_hdl(struct oid_par_priv *poid_par_priv)
+ 	return RNDIS_STATUS_SUCCESS;
+ }
+ 
+-uint oid_rt_set_rx_packet_type_hdl(struct oid_par_priv
+-					   *poid_par_priv)
++uint oid_rt_set_rx_packet_type_hdl(struct oid_par_priv *poid_par_priv)
+ {
+ 	struct _adapter *Adapter = (struct _adapter *)
+ 				   (poid_par_priv->adapter_context);
 -- 
 2.23.0
 
