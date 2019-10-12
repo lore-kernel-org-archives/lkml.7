@@ -2,165 +2,156 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56676ECE587
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC42C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212F32089F
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570877271;
-	bh=c1ahRCPb4Eo+9z/r2VokBGFXTe+DDzN1spGLnNmcLik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2IHV1Jx6ocaA2gpKjJPG5ptiPdaGxSqqcWwo2ueI4plMmfPU0uJvnoLOrfJbMQG1G
-	 uFZZk1wP19xNCPFWXAM6DhIN2gx/TqR4R5UCHVygEv2U0P5tDKypR5M748RnSK0yRu
-	 bfh6CcqnxBCh0WuLrdfIcQ5GKZQ8YuGftWhgUadY=
+	by mail.kernel.org (Postfix) with ESMTP id B24F92089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:49:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgOcuv9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbfJLKru (ORCPT
+        id S1729177AbfJLKtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 06:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbfJLKrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 06:47:49 -0400
-Received: from localhost (unknown [84.241.192.39])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2DBF2089C;
-        Sat, 12 Oct 2019 10:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570877267;
-        bh=c1ahRCPb4Eo+9z/r2VokBGFXTe+DDzN1spGLnNmcLik=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yCP0s70dm1a55ecw9eCB0kcOKHGZqhZ+WokkyJBArIGz+oL53TYWVDiYP6qr72P9d
-         DYVW5h/6uwq8dLk9/zG4G+s8x3b/mIqsk1QD69yidkRhK7xT9r3UGzGwwtGgPybQIy
-         8FjMPdh2pmPJ5NZFY0000d1ctzTP+vO6DUdIklX8=
-Date:   Sat, 12 Oct 2019 12:47:42 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
-        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        lenb@kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20191012104742.GA2053473@kroah.com>
-References: <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
- <20191010073212.GB18412@dhcp22.suse.cz>
- <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
- <20191011111539.GX2311@hirez.programming.kicks-ass.net>
- <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
- <20191012074014.GA2037204@kroah.com>
- <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
- <20191012104001.GA2052933@kroah.com>
+        Sat, 12 Oct 2019 06:49:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36585 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbfJLKtx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 06:49:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 23so7270377pgk.3;
+        Sat, 12 Oct 2019 03:49:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CKzoOCBU83sCPMzDHQyLdCwFveOeVbaB4oF2R1VkE+g=;
+        b=KgOcuv9jDFFNxf+p412p8nmsabm/ErZulfUN/6WDBFh1gOrzdsKrJV9QAG5QvvvMbD
+         y2/t7CpcC1Z919okSMP5RYZmCFjh9wjIzWhKT8CIp2lbNoFiPlxDRHn4icjOei7AI6AS
+         nb+hBd800PwNmNmEdjfh+msh5gvl2pGuXWMxQB6uz0dY2xclEEbl8s1PfydFBvbg3Kog
+         TpnQwUj8W6SAGGu6mYRbXa9pSWTlvFh/TdG3xyQSmThhah7S+wWgiVLWzhn0ejR4TSN8
+         JbJbDsgHd3xUIvt81kahtyvDznC8q53H8qN/gQoy6il6iTEtVDYKKv95X20eY9hKhR/8
+         15pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CKzoOCBU83sCPMzDHQyLdCwFveOeVbaB4oF2R1VkE+g=;
+        b=LZpf/txF/6ChRpJADAU2A77ipoqJBd6NhjAGBroZLVFb9PS0UuPc5VTa3joUWZgr1m
+         qNZ91zsFBhrJVR5aI5/4IncaahzO6aQIFbmlFl5HEMuHuaGx8E6+erbXqwG4Fa6zduGt
+         g1eRIZpH+dPfFCQuvzVnFiHUlS3K2iJ3mDXCLwYysrjsCfg8Wb6LsLoLfJ6sXFenQOac
+         eMIVE0kDR3Z757RT/ZOAwTL3/e4rxoYkb7lZU0w4+IKwu1AWWOz6PfiwkET+HBpdmyN+
+         aCqCmgQ+ZELPKwZfMm/Bh6GK0nuGrQj1/Hoh6x396ySXQ2WPcRb7Mhcx1GjC/bUZe3m8
+         5e9A==
+X-Gm-Message-State: APjAAAWHgDBSaipYMX6tg5sLDmTIsP+/LOs/Dl4QvWzZsajBV/VGkUoc
+        JpkGjhklzFkJVep+5X6JElNVomyh
+X-Google-Smtp-Source: APXvYqxILWzISNg6tqGfCZGkW4J7WabpBjmDAyQH1CFw01hJKKc9jt60XV+2zxOHQE3JdRAvN5HWpw==
+X-Received: by 2002:a17:90a:eac4:: with SMTP id ev4mr23392197pjb.97.1570877391979;
+        Sat, 12 Oct 2019 03:49:51 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
+        by smtp.gmail.com with ESMTPSA id g4sm10817681pfo.33.2019.10.12.03.49.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 12 Oct 2019 03:49:50 -0700 (PDT)
+Subject: Re: [PATCH net] rxrpc: Fix possible NULL pointer access in ICMP
+ handling
+To:     David Howells <dhowells@redhat.com>, netdev@vger.kernel.org
+Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <157071915431.29197.5055122258964729288.stgit@warthog.procyon.org.uk>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <bf358fc5-c0e1-070f-b073-1675e3d13fd8@gmail.com>
+Date:   Sat, 12 Oct 2019 03:49:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191012104001.GA2052933@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <157071915431.29197.5055122258964729288.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 12:40:01PM +0200, Greg KH wrote:
-> On Sat, Oct 12, 2019 at 05:47:56PM +0800, Yunsheng Lin wrote:
-> > On 2019/10/12 15:40, Greg KH wrote:
-> > > On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
-> > >> add pci and acpi maintainer
-> > >> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
-> > >>
-> > >> On 2019/10/11 19:15, Peter Zijlstra wrote:
-> > >>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
-> > >>>> But I failed to see why the above is related to making node_to_cpumask_map()
-> > >>>> NUMA_NO_NODE aware?
-> > >>>
-> > >>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
-> > >>> have a node assigned.
-> > >>>
-> > >>> It not having one, is a straight up bug. We must not silently accept
-> > >>> NO_NODE there, ever.
-> > >>>
-> > >>
-> > >> I suppose you mean reporting a lack of affinity when the node of a pcie
-> > >> device is not set by "not silently accept NO_NODE".
-> > > 
-> > > If the firmware of a pci device does not provide the node information,
-> > > then yes, warn about that.
-> > > 
-> > >> As Greg has asked about in [1]:
-> > >> what is a user to do when the user sees the kernel reporting that?
-> > >>
-> > >> We may tell user to contact their vendor for info or updates about
-> > >> that when they do not know about their system well enough, but their
-> > >> vendor may get away with this by quoting ACPI spec as the spec
-> > >> considering this optional. Should the user believe this is indeed a
-> > >> fw bug or a misreport from the kernel?
-> > > 
-> > > Say it is a firmware bug, if it is a firmware bug, that's simple.
-> > > 
-> > >> If this kind of reporting is common pratice and will not cause any
-> > >> misunderstanding, then maybe we can report that.
-> > > 
-> > > Yes, please do so, that's the only way those boxes are ever going to get
-> > > fixed.  And go add the test to the "firmware testing" tool that is based
-> > > on Linux that Intel has somewhere, to give vendors a chance to fix this
-> > > before they ship hardware.
-> > > 
-> > > This shouldn't be a big deal, we warn of other hardware bugs all the
-> > > time.
-> > 
-> > Ok, thanks for clarifying.
-> > 
-> > Will send a patch to catch the case when a pcie device without numa node
-> > being set and warn about it.
-> > 
-> > Maybe use dev->bus to verify if it is a pci device?
+
+
+On 10/10/19 7:52 AM, David Howells wrote:
+> If an ICMP packet comes in on the UDP socket backing an AF_RXRPC socket as
+> the UDP socket is being shut down, rxrpc_error_report() may get called to
+> deal with it after sk_user_data on the UDP socket has been cleared, leading
+> to a NULL pointer access when this local endpoint record gets accessed.
 > 
-> No, do that in the pci bus core code itself, when creating the devices
-> as that is when you know, or do not know, the numa node, right?
+> Fix this by just returning immediately if sk_user_data was NULL.
 > 
-> This can't be in the driver core only, as each bus type will have a
-> different way of determining what the node the device is on.  For some
-> reason, I thought the PCI core code already does this, right?
+> The oops looks like the following:
+> 
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> ...
+> RIP: 0010:rxrpc_error_report+0x1bd/0x6a9
+> ...
+> Call Trace:
+>  ? sock_queue_err_skb+0xbd/0xde
+>  ? __udp4_lib_err+0x313/0x34d
+>  __udp4_lib_err+0x313/0x34d
+>  icmp_unreach+0x1ee/0x207
+>  icmp_rcv+0x25b/0x28f
+>  ip_protocol_deliver_rcu+0x95/0x10e
+>  ip_local_deliver+0xe9/0x148
+>  __netif_receive_skb_one_core+0x52/0x6e
+>  process_backlog+0xdc/0x177
+>  net_rx_action+0xf9/0x270
+>  __do_softirq+0x1b6/0x39a
+>  ? smpboot_register_percpu_thread+0xce/0xce
+>  run_ksoftirqd+0x1d/0x42
+>  smpboot_thread_fn+0x19e/0x1b3
+>  kthread+0xf1/0xf6
+>  ? kthread_delayed_work_timer_fn+0x83/0x83
+>  ret_from_fork+0x24/0x30
+> 
+> Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
+> Reported-by: syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+> 
+>  net/rxrpc/peer_event.c |    3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
+> index c97ebdc043e4..61451281d74a 100644
+> --- a/net/rxrpc/peer_event.c
+> +++ b/net/rxrpc/peer_event.c
+> @@ -151,6 +151,9 @@ void rxrpc_error_report(struct sock *sk)
+>  	struct rxrpc_peer *peer;
+>  	struct sk_buff *skb;
+>  
+> +	if (unlikely(!local))
+> +		return;
+> +
+>  	_enter("%p{%d}", sk, local->debug_id);
+>  
+>  	/* Clear the outstanding error value on the socket so that it doesn't
+> 
 
-Yes, pci_irq_get_node(), which NO ONE CALLS!  I should go delete that
-thing...
+Okay, but we also need this.
 
-Anyway, it looks like the pci core code does call set_dev_node() based
-on the PCI bridge, so if that is set up properly, all should be fine.
+diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
+index c97ebdc043e44525eaecdd54bc447c1895bdca74..38db10e61f7a5cb50f9ee036b5e16ec284e723ac 100644
+--- a/net/rxrpc/peer_event.c
++++ b/net/rxrpc/peer_event.c
+@@ -145,9 +145,9 @@ static void rxrpc_adjust_mtu(struct rxrpc_peer *peer, struct sock_exterr_skb *se
+  */
+ void rxrpc_error_report(struct sock *sk)
+ {
++       struct rxrpc_local *local = rcu_dereference_sk_user_data(sk);
+        struct sock_exterr_skb *serr;
+        struct sockaddr_rxrpc srx;
+-       struct rxrpc_local *local = sk->sk_user_data;
+        struct rxrpc_peer *peer;
+        struct sk_buff *skb;
 
-If not, well, you have buggy firmware and you need to warn about that at
-the time you are creating the bridge.  Look at the call to
-pcibus_to_node() in pci_register_host_bridge().
-
-And yes, you need to do this all on a per-bus-type basis, as has been
-pointed out.  It's up to the bus to create the device and set this up
-properly.
-
-thanks,
-
-greg k-h
