@@ -2,213 +2,107 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45771C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CDDC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DD02067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF322067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:19:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r4RIe8BN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfJLEQP (ORCPT
+        id S1727199AbfJLETB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 00:16:15 -0400
-Received: from mx2a.mailbox.org ([80.241.60.219]:64707 "EHLO mx2a.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbfJLEQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 00:16:15 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2a.mailbox.org (Postfix) with ESMTPS id A095FA18A9;
-        Sat, 12 Oct 2019 06:16:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id XP4SfIU7eOyJ; Sat, 12 Oct 2019 06:16:03 +0200 (CEST)
-Date:   Sat, 12 Oct 2019 15:15:41 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v14 2/6] namei: LOOKUP_IN_ROOT: chroot-like path
- resolution
-Message-ID: <20191012041541.milbmfbjpj5bcl5a@yavin.dot.cyphar.com>
-References: <20191010054140.8483-1-cyphar@cyphar.com>
- <20191010054140.8483-3-cyphar@cyphar.com>
- <CAHk-=wh8L50f31vW8BwRUXhLiq3eoCQ3tg8ER4Yp2dzuU1w5rQ@mail.gmail.com>
- <20191012040815.gnc43cfmo5mnv67u@yavin.dot.cyphar.com>
+        Sat, 12 Oct 2019 00:19:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43632 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfJLETB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 00:19:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i32so6888860pgl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 21:19:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Biq3dW4bW0477lomZDFZTi490SFYFw1BtO4yj510/vM=;
+        b=r4RIe8BNwJ0mRu0383jbVNv+Pew63+jHslfI95XxABq09NjQfA2VbtjGuA/gXOLAQl
+         HZetYhW/n8CUHfMwH+Y/FRz0K1JSfvFnABT3Ywkd2sDXc97PjH/UNuAVYbf7TQ7Vw/+C
+         nDzAyJqC2ovtyVsY9x9bWkGB57LysASSXRfqls9P+Xs+CwKeCOCvAIkMhtdwb8dc2csx
+         RaQ/2BfeD5ZLEhTvJyyVcMc62wuRuAHNtxzSWPhLn3emvnNagm/59SAH8BfJGCsgei6h
+         KPjHK6QiSX2LhCf7rkvGvgxYHV6TDPoeFBIDb39q6g3YEv+9ZdsqQ474ZBj0zpWCjXo0
+         vI+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Biq3dW4bW0477lomZDFZTi490SFYFw1BtO4yj510/vM=;
+        b=mootJTwH9uscjKGKgeFznkGzFUC3kg0gOtDxokly7camIq+F0h4OoXzgqlH9eDrMK4
+         ooNnrUxcqeywTh9azeSQozidHrzErpYIX36dHJm3L5UiYb3GY8ufxuTfs96r6Uh7ouOc
+         S63yjEPmBCKdVV2d4n6JnuWDN8grd0Tjlmyuza4oudvnjyuw23Sz3jvkWMzNOkidH8Nr
+         IuIXBrjx26yPjfeBv6kufsEuTa+ITyLhFNfNtDqzwM3XRnjlYtt+ofzEcZaOgSnwbkxP
+         ADtxeuhH8tNnVHe4uFD2K1bgek8W7rWWR3Qpckg30ctUbdKBOYu0CsNg3B0Z1NpQz37Q
+         aY/A==
+X-Gm-Message-State: APjAAAW+LZrHPFDmU3ePqVwcyfiKVpYSuukiMMonLkTFSH9GiMIQNBw7
+        nktYSkyoArGQVBNbQrZMySNKjg==
+X-Google-Smtp-Source: APXvYqyVEDPBqKwv5CKlG8eF2KQdfnZBkXGmGTJfcvzir7jHGT9V5OIUDE2xY5S2OQRADy06KWyO9Q==
+X-Received: by 2002:a62:8305:: with SMTP id h5mr19838213pfe.190.1570853939670;
+        Fri, 11 Oct 2019 21:18:59 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id u9sm11142953pfl.138.2019.10.11.21.18.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 21:18:58 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] arm64: defconfig: Enable Qualcomm SPI and QSPI controller
+Date:   Fri, 11 Oct 2019 21:18:55 -0700
+Message-Id: <20191012041855.511313-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2tj3n7ljtot3r57d"
-Content-Disposition: inline
-In-Reply-To: <20191012040815.gnc43cfmo5mnv67u@yavin.dot.cyphar.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Enable the drivers for GENI SPI and QSPI controllers found on the
+Qualcomm SDM845 platform, among others.
 
---2tj3n7ljtot3r57d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On 2019-10-12, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2019-10-10, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > On Wed, Oct 9, 2019 at 10:42 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > >
-> > > --- a/fs/namei.c
-> > > +++ b/fs/namei.c
-> > > @@ -2277,6 +2277,11 @@ static const char *path_init(struct nameidata =
-*nd, unsigned flags)
-> > >
-> > >         nd->m_seq =3D read_seqbegin(&mount_lock);
-> > >
-> > > +       /* LOOKUP_IN_ROOT treats absolute paths as being relative-to-=
-dirfd. */
-> > > +       if (flags & LOOKUP_IN_ROOT)
-> > > +               while (*s =3D=3D '/')
-> > > +                       s++;
-> > > +
-> > >         /* Figure out the starting path and root (if needed). */
-> > >         if (*s =3D=3D '/') {
-> > >                 error =3D nd_jump_root(nd);
-> >=20
-> > Hmm. Wouldn't this make more sense all inside the if (*s =3D- '/') test?
-> > That way if would be where we check for "should we start at the root",
-> > which seems to make more sense conceptually.
->=20
-> I don't really agree (though I do think that both options are pretty
-> ugly). Doing it before the block makes it clear that absolute paths are
-> just treated relative-to-dirfd -- doing it inside the block makes it
-> look more like "/" is a special-case for nd_jump_root(). And while that
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 688c8f200034..dcada299ff4d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -391,7 +391,9 @@ CONFIG_SPI_MESON_SPIFC=m
+ CONFIG_SPI_ORION=y
+ CONFIG_SPI_PL022=y
+ CONFIG_SPI_ROCKCHIP=y
++CONFIG_SPI_QCOM_QSPI=m
+ CONFIG_SPI_QUP=y
++CONFIG_SPI_QCOM_GENI=m
+ CONFIG_SPI_S3C64XX=y
+ CONFIG_SPI_SPIDEV=m
+ CONFIG_SPI_SUN6I=y
+-- 
+2.23.0
 
-Sorry, I meant "special-case for LOOKUP_IN_ROOT".
-
-> is somewhat true, this is just a side-effect of making the code more
-> clean -- my earlier versions reworked the dirfd handling to always grab
-> nd->root first if LOOKUP_IS_SCOPED. I switched to this method based on
-> Al's review.
->=20
-> In fairness, I do agree that the lonely while loop looks ugly.
-
-And with the old way I did it (where we grabbed nd->root first) the
-semantics were slightly more clear -- stripping leading "/"s doesn't
-really look as "clearly obvious" as grabbing nd->root beforehand and
-treating "/"s normally. But the code was also needlessly more complex.
-
-> > That test for '/' currently has a "} else if (..)", but that's
-> > pointless since it ends with a "return" anyway. So the "else" logic is
-> > just noise.
->=20
-> This depends on the fact that LOOKUP_BENEATH always triggers -EXDEV for
-> nd_jump_root() -- if we ever add another "scoped lookup" flag then the
-> logic will have to be further reworked.
->=20
-> (It should be noted that the new version doesn't always end with a
-> "return", but you could change it to act that way given the above
-> assumption.)
->=20
-> > And if you get rid of the unnecessary else, moving the LOOKUP_IN_ROOT
-> > inside the if-statement works fine.
-> >=20
-> > So this could be something like
-> >=20
-> >     --- a/fs/namei.c
-> >     +++ b/fs/namei.c
-> >     @@ -2194,11 +2196,19 @@ static const char *path_init(struct
-> > nameidata *nd, unsigned flags)
-> >=20
-> >         nd->m_seq =3D read_seqbegin(&mount_lock);
-> >         if (*s =3D=3D '/') {
-> >     -           set_root(nd);
-> >     -           if (likely(!nd_jump_root(nd)))
-> >     -                   return s;
-> >     -           return ERR_PTR(-ECHILD);
-> >     -   } else if (nd->dfd =3D=3D AT_FDCWD) {
-> >     +           /* LOOKUP_IN_ROOT treats absolute paths as being
-> > relative-to-dirfd. */
-> >     +           if (!(flags & LOOKUP_IN_ROOT)) {
-> >     +                   set_root(nd);
-> >     +                   if (likely(!nd_jump_root(nd)))
-> >     +                           return s;
-> >     +                   return ERR_PTR(-ECHILD);
-> >     +           }
-> >     +
-> >     +           /* Skip initial '/' for LOOKUP_IN_ROOT */
-> >     +           do { s++; } while (*s =3D=3D '/');
-> >     +   }
-> >     +
-> >     +   if (nd->dfd =3D=3D AT_FDCWD) {
-> >                 if (flags & LOOKUP_RCU) {
-> >                         struct fs_struct *fs =3D current->fs;
-> >                         unsigned seq;
-> >=20
-> > instead. The patch ends up slightly bigger (due to the re-indentation)
-> > but now it handles all the "start at root" in the same place. Doesn't
-> > that make sense?
->=20
-> It is correct (though I'd need to clean it up a bit to handle
-> nd_jump_root() correctly), and if you really would like me to change it
-> I will -- but I just don't agree that it's cleaner.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---2tj3n7ljtot3r57d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXaFTZwAKCRCdlLljIbnQ
-EsoyAQDTzuZiYFf1pW7tBymiBU+fSwe8/adLefrS9DH9oll0LQD+M2OnaEH8wDH5
-iC8HumWtmk7eUf1CcqNfwVk4mwQXYwU=
-=dEoe
------END PGP SIGNATURE-----
-
---2tj3n7ljtot3r57d--
