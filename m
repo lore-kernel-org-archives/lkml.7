@@ -2,61 +2,57 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BAAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E669C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DF320673
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B2321850
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570872694;
-	bh=gxaRUVY8E1/KFigUY3uva7Oja1DegcG2ZBJ0mfjL7JI=;
+	s=default; t=1570872700;
+	bh=Y6OC/p/wgeNKTKvc8WYHh2ibSI9GqMt9Elyazz51CMk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AiWoPHDclKvaaLgZ9NKoXvAWuVWFUqeGcccoRbS9y+atcvv5HEqK1/DYGWEItsu99
-	 Xhd37939Yk6apEk71v1bMgs9HnuMm6vpvF2SYizcLmiSt417VUnojxnwr5bzhql/3u
-	 7AXbnoxYiJaSf2iRVt/2/Hxd7VlF7Pnik5aT84WY=
+	b=m6rMZq7gYFDl1Rv4Fq50v9TXV83zwEGR3jQbX/et6V8sjP95F4olvUALo8IogoFjH
+	 pFjU+tC9FvssjeNO3E1cqA6XmfsPC+A0pemgO4lHPgH7XMsJ8UF6AMXBRHZqfXRkcX
+	 K/Lb7X3u17B6BQPSnU5ZB6a7nyLCeaFALU+fccFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfJLJbY (ORCPT
+        id S1728995AbfJLJbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 05:31:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52506 "EHLO mail.kernel.org"
+        Sat, 12 Oct 2019 05:31:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbfJLJ3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 05:29:24 -0400
+        id S1727117AbfJLJbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 05:31:15 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A310206A1;
-        Sat, 12 Oct 2019 09:29:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954B320673;
+        Sat, 12 Oct 2019 09:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570872563;
-        bh=gxaRUVY8E1/KFigUY3uva7Oja1DegcG2ZBJ0mfjL7JI=;
+        s=default; t=1570872672;
+        bh=Y6OC/p/wgeNKTKvc8WYHh2ibSI9GqMt9Elyazz51CMk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=slJ4SI6YVMHjn95c8ZAJVo0qfYC8I6roX1VrsAMPeoNOJQhQn5co9n8WXQF4IMg7m
-         CBR/mg8+05q4j/HBP0QAe2nYgq1EEfwRVapOnC+d8c0QJEF8+WuNzCO0aui9uhp6/c
-         PA+e07/n285aMevlrXozpPI+jE6nXatljd04aNHs=
-Date:   Sat, 12 Oct 2019 10:29:17 +0100
+        b=MDi1XW6nhQmYtd4LuEb++Uvuni/TseH2j3yc0YPPrkmmAw58DmaD7wLZlDeuLfztp
+         MzSWxK0iwcD3dqBAxN4f3v3MvfMASxCkaUx4zDFYckcncDwJ+uUQFhfxyJtv6JA07k
+         v5ZghQzP6KpO3xjv2YBecS032ZXmeQLser+o9vvU=
+Date:   Sat, 12 Oct 2019 10:31:07 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Dan Robertson <dan@dlrobertson.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     linux-iio@vger.kernel.org,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
-Message-ID: <20191012102917.7e85275f@archlinux>
-In-Reply-To: <CAHp75VeBrR0Ln5XOw5zA+JSoXM9BdoYw7p9D5c7u+2=Lfht75w@mail.gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: accel: bma400: add bindings
+Message-ID: <20191012103107.61eeb350@archlinux>
+In-Reply-To: <20191012035420.13904-2-dan@dlrobertson.com>
 References: <20191012035420.13904-1-dan@dlrobertson.com>
-        <20191012035420.13904-3-dan@dlrobertson.com>
-        <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
-        <CAHp75VeBrR0Ln5XOw5zA+JSoXM9BdoYw7p9D5c7u+2=Lfht75w@mail.gmail.com>
+        <20191012035420.13904-2-dan@dlrobertson.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -66,45 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 12 Oct 2019 10:39:54 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Sat, 12 Oct 2019 03:54:19 +0000
+Dan Robertson <dan@dlrobertson.com> wrote:
 
-> On Sat, Oct 12, 2019 at 10:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> > On 10/11/19 8:54 PM, Dan Robertson wrote:  
+> Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
+> accelerometer sensor.
 > 
-> > > +config BMA400_I2C
-> > > +     tristate
-> > > +     depends on BMA400
-> > > +     depends on I2C
-> > > +     select REGMAP_I2C
-> > > +  
-> >
-> > The bma400_i2c driver seems to use some OF interfaces.
-> > Should it also depend on OF?  
-> 
-> Please, avoid unnecessary and strict dependencies when it's limiting
-> the area of use the driver.
-> The driver does not depend to OF. Why to stick with OF?
-> 
-> The actual change has to be done is to switch from
-> 
-> > #include <linux/of.h>  
-> 
-> to
-> 
-> #include <linux/mod_devicetable.h>
-> 
+> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+Hi Dan,
 
-Good point Andy.  There are numerous drivers in IIO that do the same
-over enthusiastic including of linux/of.h just to get of_device_id
-definition.  Would be good to clean those up to just include this
-instead.
+Apologies for not pointing this out in V1 but all new IIO bindings need
+to be in the yaml format rather than plain text.
 
-This is going to cause very little noise so if there are any new
-contributors reading this it would be a nice sensible cleanup to get
-started with!
-
-Thanks,
+Please convert this one over for v3.  Content wise it's fine btw!
 
 Jonathan
+
+
+> ---
+>  .../devicetree/bindings/iio/accel/bma400.txt     | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bma400.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bma400.txt b/Documentation/devicetree/bindings/iio/accel/bma400.txt
+> new file mode 100644
+> index 000000000000..abba4f104941
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/bma400.txt
+> @@ -0,0 +1,16 @@
+> +
+> +* Bosch BMA400 triaxial acceleration sensor
+> +
+> +https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMA400-DS000.pdf
+> +
+> +Required properties:
+> +
+> +  - compatible : should be "bosch,bma400"
+> +  - reg : the I2C address of the sensor
+> +
+> +Example:
+> +
+> +bma400@14 {
+> +	compatible = "bosch,bma400";
+> +	reg = <0x14>;
+> +};
+> 
+> 
 
