@@ -2,471 +2,106 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C4FC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EF1C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62B02089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570885931;
-	bh=vxQ6+Huqy7s8tkwv15FgAN1DovHArYHwFrN1EBWWBHM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a8n6v0Cmz9LmJn4yw3lezMzwNKGOIFRjPZMIruacPcM6ziuSfs1n9k6viKyxxHYhn
-	 MmsyYBT9CbTbvcfVL53Rq8pUloUjhb/Nburlzghl/A/eWWS4hhSBeLqUhOy9fMoEIX
-	 5eqkump2OuLgHlAp84vtLvP9LeLk7/8MEfflL3E8=
+	by mail.kernel.org (Postfix) with ESMTP id 658062089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:12:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIPN8/ET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbfJLNLv (ORCPT
+        id S1729262AbfJLNMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 09:11:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbfJLNLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 09:11:51 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E1672089F;
-        Sat, 12 Oct 2019 13:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570885909;
-        bh=vxQ6+Huqy7s8tkwv15FgAN1DovHArYHwFrN1EBWWBHM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UfX6az3c8nQT7u2yP1xjFwsqKhfDqG9HLxv2yGh2Fa0YqPh72YtPjSIEQ3AanAE8K
-         9DoAfoBYkTUjfOdUxVLbGOVkqsbNmZXwaSXYlvlYJyUR/UJMtzRni775BIR/mYHB/A
-         n4mPl7I/e81qcGoIOIHMEMK0V7M7QBk2TFFHc/6c=
-Date:   Sat, 12 Oct 2019 14:11:44 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH] iio: dac: stm32: add power management support
-Message-ID: <20191012141144.665f4a50@archlinux>
-In-Reply-To: <1570628918-23474-1-git-send-email-fabrice.gasnier@st.com>
-References: <1570628918-23474-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 12 Oct 2019 09:12:39 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40959 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbfJLNMj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 09:12:39 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d22so5779636pll.7;
+        Sat, 12 Oct 2019 06:12:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=fJ+PFaaP+B+Q/EtiVfrsJVrXqtyueeEIeoYLfvXIfuY=;
+        b=OIPN8/ETepz5A/lxGcqrB4I/RGEAp4A+21kyrIIoFaN8eS/Z+j8+37qf5lCTk6326X
+         IYLSgfctqTaj7XQM44Oe70qlZqIzP4Uh0OjeAMlT8iy99ucG34Mi7vDDatIJYGtplRhC
+         XxnLSFijbd9M+eW31uf47oPMWqVznWAU5yqVgMg/Q+liShHh5ZS7pJH3BB2nuDP9uz8M
+         63+M28ylynnvs+JsOaYghZ85MAupg9wcCuYXec1jvzIpRfsjFZDaBszCy4g8eizppAFm
+         +CQa0WHkQ3vJR2i7rAkUqS17clwPBtbngVVkvheTYeyLE1eiq77AbJfaXeeZpW7TAPRP
+         6kZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=fJ+PFaaP+B+Q/EtiVfrsJVrXqtyueeEIeoYLfvXIfuY=;
+        b=dC6l/c/HsqIfB0vGVSyABCnH/yf2k8gABWvKc6mWCo5S36OD3AIRzcymaUxGXMQtss
+         XhDxcyj6Q8Jz6ORtrweyvo04vdIejiZ1ESSHq4vhpeAlGzmiOmWbdvGrp2MavVaMqfSn
+         dK1NYOzHMxD/xYNSFA0LAyC7XrMrZXC7/KAyo0UEul3p1B+nA8VyeGKuKH40CL6dQ2mC
+         7KwlfO7BUtqOTML7KdMzgpI0y1JW/664kmb/IDGiq9SPP+eIm8ZvhXGJNzGKYslE2Q+n
+         YFl18TgppbZuqb/KqWG8LITDgUR+7qV9RYbaT8wjdQqBBG6eRpFEqikXPI9HA53OFX04
+         13aA==
+X-Gm-Message-State: APjAAAVjIBCIwqGYTApUDOu63LA0CKkrHjKuS9PPZEeA7xhBoglGNhzO
+        FY5az2MlXwmVdvrC5aQiuW4=
+X-Google-Smtp-Source: APXvYqwrIZfVGA0FwNgVrrMR2T9kxwqpnNUK9zJtuDZwG5bUI79nqD8Wfm+dhQ8V1uW09U5Lq+ehXQ==
+X-Received: by 2002:a17:902:a712:: with SMTP id w18mr20484206plq.304.1570885958151;
+        Sat, 12 Oct 2019 06:12:38 -0700 (PDT)
+Received: from nishad ([2406:7400:54:9230:b578:2290:e0c4:6e96])
+        by smtp.gmail.com with ESMTPSA id n66sm19392874pfn.90.2019.10.12.06.12.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 12 Oct 2019 06:12:37 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 18:42:28 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: cavium: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20191012131224.GA8087@nishad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Oct 2019 15:48:38 +0200
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+This patch corrects the SPDX License Identifier style
+in header files related to Cavium Ethernet drivers.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used)
 
-> Add support for runtime PM & sleep.
-> Provide pclk to regmap as registers access doesn't need full power
-> (e.g. regulator). Always restore HFSEL when resuming. It may get lost
-> depending on low power level that has been achieved.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-I'm far from an expert on this stuff, but seems correct to me.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to poke at it.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/net/ethernet/cavium/common/cavium_ptp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/dac/stm32-dac-core.c | 138 ++++++++++++++++++++++++++++++---------
->  drivers/iio/dac/stm32-dac.c      |  94 +++++++++++++++++++++++++-
->  2 files changed, 199 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/stm32-dac-core.c b/drivers/iio/dac/stm32-dac-core.c
-> index d0fb312..9e6b4cd 100644
-> --- a/drivers/iio/dac/stm32-dac-core.c
-> +++ b/drivers/iio/dac/stm32-dac-core.c
-> @@ -11,6 +11,7 @@
->  #include <linux/delay.h>
->  #include <linux/module.h>
->  #include <linux/of_platform.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/reset.h>
->  
-> @@ -50,6 +51,41 @@ static const struct regmap_config stm32_dac_regmap_cfg = {
->  	.max_register = 0x3fc,
->  };
->  
-> +static int stm32_dac_core_hw_start(struct device *dev)
-> +{
-> +	struct stm32_dac_common *common = dev_get_drvdata(dev);
-> +	struct stm32_dac_priv *priv = to_stm32_dac_priv(common);
-> +	int ret;
-> +
-> +	ret = regulator_enable(priv->vref);
-> +	if (ret < 0) {
-> +		dev_err(dev, "vref enable failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->pclk);
-> +	if (ret < 0) {
-> +		dev_err(dev, "pclk enable failed: %d\n", ret);
-> +		goto err_regulator_disable;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_regulator_disable:
-> +	regulator_disable(priv->vref);
-> +
-> +	return ret;
-> +}
-> +
-> +static void stm32_dac_core_hw_stop(struct device *dev)
-> +{
-> +	struct stm32_dac_common *common = dev_get_drvdata(dev);
-> +	struct stm32_dac_priv *priv = to_stm32_dac_priv(common);
-> +
-> +	clk_disable_unprepare(priv->pclk);
-> +	regulator_disable(priv->vref);
-> +}
-> +
->  static int stm32_dac_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -66,6 +102,8 @@ static int stm32_dac_probe(struct platform_device *pdev)
->  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
->  		return -ENOMEM;
-> +	platform_set_drvdata(pdev, &priv->common);
-> +
->  	cfg = (const struct stm32_dac_cfg *)
->  		of_match_device(dev->driver->of_match_table, dev)->data;
->  
-> @@ -74,11 +112,19 @@ static int stm32_dac_probe(struct platform_device *pdev)
->  	if (IS_ERR(mmio))
->  		return PTR_ERR(mmio);
->  
-> -	regmap = devm_regmap_init_mmio(dev, mmio, &stm32_dac_regmap_cfg);
-> +	regmap = devm_regmap_init_mmio_clk(dev, "pclk", mmio,
-> +					   &stm32_dac_regmap_cfg);
->  	if (IS_ERR(regmap))
->  		return PTR_ERR(regmap);
->  	priv->common.regmap = regmap;
->  
-> +	priv->pclk = devm_clk_get(dev, "pclk");
-> +	if (IS_ERR(priv->pclk)) {
-> +		ret = PTR_ERR(priv->pclk);
-> +		dev_err(dev, "pclk get failed\n");
-> +		return ret;
-> +	}
-> +
->  	priv->vref = devm_regulator_get(dev, "vref");
->  	if (IS_ERR(priv->vref)) {
->  		ret = PTR_ERR(priv->vref);
-> @@ -86,33 +132,22 @@ static int stm32_dac_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	ret = regulator_enable(priv->vref);
-> -	if (ret < 0) {
-> -		dev_err(dev, "vref enable failed\n");
-> -		return ret;
-> -	}
-> +	pm_runtime_get_noresume(dev);
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-> +
-> +	ret = stm32_dac_core_hw_start(dev);
-> +	if (ret)
-> +		goto err_pm_stop;
->  
->  	ret = regulator_get_voltage(priv->vref);
->  	if (ret < 0) {
->  		dev_err(dev, "vref get voltage failed, %d\n", ret);
-> -		goto err_vref;
-> +		goto err_hw_stop;
->  	}
->  	priv->common.vref_mv = ret / 1000;
->  	dev_dbg(dev, "vref+=%dmV\n", priv->common.vref_mv);
->  
-> -	priv->pclk = devm_clk_get(dev, "pclk");
-> -	if (IS_ERR(priv->pclk)) {
-> -		ret = PTR_ERR(priv->pclk);
-> -		dev_err(dev, "pclk get failed\n");
-> -		goto err_vref;
-> -	}
-> -
-> -	ret = clk_prepare_enable(priv->pclk);
-> -	if (ret < 0) {
-> -		dev_err(dev, "pclk enable failed\n");
-> -		goto err_vref;
-> -	}
-> -
->  	priv->rst = devm_reset_control_get_exclusive(dev, NULL);
->  	if (!IS_ERR(priv->rst)) {
->  		reset_control_assert(priv->rst);
-> @@ -128,39 +163,79 @@ static int stm32_dac_probe(struct platform_device *pdev)
->  					 priv->common.hfsel ?
->  					 STM32H7_DAC_CR_HFSEL : 0);
->  		if (ret)
-> -			goto err_pclk;
-> +			goto err_hw_stop;
->  	}
->  
-> -	platform_set_drvdata(pdev, &priv->common);
->  
->  	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, dev);
->  	if (ret < 0) {
->  		dev_err(dev, "failed to populate DT children\n");
-> -		goto err_pclk;
-> +		goto err_hw_stop;
->  	}
->  
-> +	pm_runtime_put(dev);
-> +
->  	return 0;
->  
-> -err_pclk:
-> -	clk_disable_unprepare(priv->pclk);
-> -err_vref:
-> -	regulator_disable(priv->vref);
-> +err_hw_stop:
-> +	stm32_dac_core_hw_stop(dev);
-> +err_pm_stop:
-> +	pm_runtime_disable(dev);
-> +	pm_runtime_set_suspended(dev);
-> +	pm_runtime_put_noidle(dev);
->  
->  	return ret;
->  }
->  
->  static int stm32_dac_remove(struct platform_device *pdev)
->  {
-> -	struct stm32_dac_common *common = platform_get_drvdata(pdev);
-> +	pm_runtime_get_sync(&pdev->dev);
-> +	of_platform_depopulate(&pdev->dev);
-> +	stm32_dac_core_hw_stop(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +	pm_runtime_set_suspended(&pdev->dev);
-> +	pm_runtime_put_noidle(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused stm32_dac_core_resume(struct device *dev)
-> +{
-> +	struct stm32_dac_common *common = dev_get_drvdata(dev);
->  	struct stm32_dac_priv *priv = to_stm32_dac_priv(common);
-> +	int ret;
->  
-> -	of_platform_depopulate(&pdev->dev);
-> -	clk_disable_unprepare(priv->pclk);
-> -	regulator_disable(priv->vref);
-> +	if (priv->common.hfsel) {
-> +		/* restore hfsel (maybe lost under low power state) */
-> +		ret = regmap_update_bits(priv->common.regmap, STM32_DAC_CR,
-> +					 STM32H7_DAC_CR_HFSEL,
-> +					 STM32H7_DAC_CR_HFSEL);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return pm_runtime_force_resume(dev);
-> +}
-> +
-> +static int __maybe_unused stm32_dac_core_runtime_suspend(struct device *dev)
-> +{
-> +	stm32_dac_core_hw_stop(dev);
->  
->  	return 0;
->  }
->  
-> +static int __maybe_unused stm32_dac_core_runtime_resume(struct device *dev)
-> +{
-> +	return stm32_dac_core_hw_start(dev);
-> +}
-> +
-> +static const struct dev_pm_ops stm32_dac_core_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, stm32_dac_core_resume)
-> +	SET_RUNTIME_PM_OPS(stm32_dac_core_runtime_suspend,
-> +			   stm32_dac_core_runtime_resume,
-> +			   NULL)
-> +};
-> +
->  static const struct stm32_dac_cfg stm32h7_dac_cfg = {
->  	.has_hfsel = true,
->  };
-> @@ -182,6 +257,7 @@ static struct platform_driver stm32_dac_driver = {
->  	.driver = {
->  		.name = "stm32-dac-core",
->  		.of_match_table = stm32_dac_of_match,
-> +		.pm = &stm32_dac_core_pm_ops,
->  	},
->  };
->  module_platform_driver(stm32_dac_driver);
-> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
-> index cce26a3..f22c1d9 100644
-> --- a/drivers/iio/dac/stm32-dac.c
-> +++ b/drivers/iio/dac/stm32-dac.c
-> @@ -13,6 +13,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include "stm32-dac-core.h"
->  
-> @@ -20,6 +21,8 @@
->  #define STM32_DAC_CHANNEL_2		2
->  #define STM32_DAC_IS_CHAN_1(ch)		((ch) & STM32_DAC_CHANNEL_1)
->  
-> +#define STM32_DAC_AUTO_SUSPEND_DELAY_MS	2000
-> +
->  /**
->   * struct stm32_dac - private data of DAC driver
->   * @common:		reference to DAC common data
-> @@ -49,15 +52,34 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
->  				      bool enable)
->  {
->  	struct stm32_dac *dac = iio_priv(indio_dev);
-> +	struct device *dev = indio_dev->dev.parent;
->  	u32 msk = STM32_DAC_IS_CHAN_1(ch) ? STM32_DAC_CR_EN1 : STM32_DAC_CR_EN2;
->  	u32 en = enable ? msk : 0;
->  	int ret;
->  
-> +	/* already enabled / disabled ? */
-> +	mutex_lock(&indio_dev->mlock);
-> +	ret = stm32_dac_is_enabled(indio_dev, ch);
-> +	if (ret < 0 || enable == !!ret) {
-> +		mutex_unlock(&indio_dev->mlock);
-> +		return ret < 0 ? ret : 0;
-> +	}
-> +
-> +	if (enable) {
-> +		ret = pm_runtime_get_sync(dev);
-> +		if (ret < 0) {
-> +			pm_runtime_put_noidle(dev);
-> +			mutex_unlock(&indio_dev->mlock);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, en);
-> +	mutex_unlock(&indio_dev->mlock);
->  	if (ret < 0) {
->  		dev_err(&indio_dev->dev, "%s failed\n", en ?
->  			"Enable" : "Disable");
-> -		return ret;
-> +		goto err_put_pm;
->  	}
->  
->  	/*
-> @@ -68,7 +90,20 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
->  	if (en && dac->common->hfsel)
->  		udelay(1);
->  
-> +	if (!enable) {
-> +		pm_runtime_mark_last_busy(dev);
-> +		pm_runtime_put_autosuspend(dev);
-> +	}
-> +
->  	return 0;
-> +
-> +err_put_pm:
-> +	if (enable) {
-> +		pm_runtime_mark_last_busy(dev);
-> +		pm_runtime_put_autosuspend(dev);
-> +	}
-> +
-> +	return ret;
->  }
->  
->  static int stm32_dac_get_value(struct stm32_dac *dac, int channel, int *val)
-> @@ -272,6 +307,7 @@ static int stm32_dac_chan_of_init(struct iio_dev *indio_dev)
->  static int stm32_dac_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np = pdev->dev.of_node;
-> +	struct device *dev = &pdev->dev;
->  	struct iio_dev *indio_dev;
->  	struct stm32_dac *dac;
->  	int ret;
-> @@ -296,9 +332,61 @@ static int stm32_dac_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		return ret;
->  
-> -	return devm_iio_device_register(&pdev->dev, indio_dev);
-> +	/* Get stm32-dac-core PM online */
-> +	pm_runtime_get_noresume(dev);
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_set_autosuspend_delay(dev, STM32_DAC_AUTO_SUSPEND_DELAY_MS);
-> +	pm_runtime_use_autosuspend(dev);
-> +	pm_runtime_enable(dev);
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret)
-> +		goto err_pm_put;
-> +
-> +	pm_runtime_mark_last_busy(dev);
-> +	pm_runtime_put_autosuspend(dev);
-> +
-> +	return 0;
-> +
-> +err_pm_put:
-> +	pm_runtime_disable(dev);
-> +	pm_runtime_set_suspended(dev);
-> +	pm_runtime_put_noidle(dev);
-> +
-> +	return ret;
->  }
->  
-> +static int stm32_dac_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +
-> +	pm_runtime_get_sync(&pdev->dev);
-> +	iio_device_unregister(indio_dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +	pm_runtime_set_suspended(&pdev->dev);
-> +	pm_runtime_put_noidle(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused stm32_dac_suspend(struct device *dev)
-> +{
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-> +	int channel = indio_dev->channels[0].channel;
-> +	int ret;
-> +
-> +	/* Ensure DAC is disabled before suspend */
-> +	ret = stm32_dac_is_enabled(indio_dev, channel);
-> +	if (ret)
-> +		return ret < 0 ? ret : -EBUSY;
-> +
-> +	return pm_runtime_force_suspend(dev);
-> +}
-> +
-> +static const struct dev_pm_ops stm32_dac_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(stm32_dac_suspend, pm_runtime_force_resume)
-> +};
-> +
->  static const struct of_device_id stm32_dac_of_match[] = {
->  	{ .compatible = "st,stm32-dac", },
->  	{},
-> @@ -307,9 +395,11 @@ MODULE_DEVICE_TABLE(of, stm32_dac_of_match);
->  
->  static struct platform_driver stm32_dac_driver = {
->  	.probe = stm32_dac_probe,
-> +	.remove = stm32_dac_remove,
->  	.driver = {
->  		.name = "stm32-dac",
->  		.of_match_table = stm32_dac_of_match,
-> +		.pm = &stm32_dac_pm_ops,
->  	},
->  };
->  module_platform_driver(stm32_dac_driver);
+diff --git a/drivers/net/ethernet/cavium/common/cavium_ptp.h b/drivers/net/ethernet/cavium/common/cavium_ptp.h
+index be2bafc7beeb..a04eccbc78e8 100644
+--- a/drivers/net/ethernet/cavium/common/cavium_ptp.h
++++ b/drivers/net/ethernet/cavium/common/cavium_ptp.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /* cavium_ptp.h - PTP 1588 clock on Cavium hardware
+  * Copyright (c) 2003-2015, 2017 Cavium, Inc.
+  */
+-- 
+2.17.1
 
