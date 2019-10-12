@@ -2,153 +2,110 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CE0C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EFDC10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED4320659
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 340EC21D56
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:10:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DwTTL9LZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbfJLRGN (ORCPT
+        id S1729514AbfJLRKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 13:06:13 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35669 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729503AbfJLRE1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 13:04:27 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x3so10608242oig.2;
-        Sat, 12 Oct 2019 10:04:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rP2t/LBVNBNs923tLQ/euikPJ6CdXKk3Hw0OLg9mnNc=;
-        b=OKmnsEQinsQaVlvcpJfxqprZkrDpAcxp7rWc5H2rgGI2Yqex6zznrW3UVJbnXo0XB+
-         vAQfCXbK+Zt6CGRaTy1ncqq1ZQY6vf/x6kB+MTAm38Z8KKbBEmnGaajLwmPOzjvADSAD
-         wejjJxxm/6Dv2dEc7JUrrYJUy280j3GaXEL3lMzlu6enYVE2PR+u66cT3ufTKG7zgReZ
-         iViEYeJLLdcMTJ/P+AItb5xLn4BC9wHsUT4cSYwiUAgqVXgXNk5peldRDR/bf85cGI3B
-         nu6tVMC/FZNgrN3CUHha0aA6//18Nh3i6K/BrkVClOBpQgeP9Gob6LPAg3c8+d5rK4Jk
-         Gf1Q==
-X-Gm-Message-State: APjAAAVzY66cwzHxlvD1DSJsqCt9L6cyOjC95RGcCh7TA/mtZIceGxPo
-        88HLZTXf6I8AGl5anTTgrqUNWkUmCB521VGKQi4=
-X-Google-Smtp-Source: APXvYqzHxrDb8yjxMxNoPRgVaBbW6eg+ZQ/JE5DaEurrjKygIWAkXQpZZxoKr2Wk2F9zyrQqyZV0rN3uLbvCLDKmPqM=
-X-Received: by 2002:aca:882:: with SMTP id 124mr17492705oii.54.1570899866442;
- Sat, 12 Oct 2019 10:04:26 -0700 (PDT)
+        Sat, 12 Oct 2019 13:10:55 -0400
+Received: from mout.gmx.net ([212.227.15.18]:36599 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729069AbfJLRKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 13:10:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570899908;
+        bh=WThmjchEV2vzAfou34wsoexJ0904q7Zea1RHmt1M0OE=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=DwTTL9LZ/P3ZtHGHGrPnmR3fUQTLV35vGi1ykO4JnzH+4YSoWwCwENM2WQX5FDRdI
+         M/K2VsaTpxQkH72xRvvoS+kEUHbG12FEnAmKhxwpe3E5VBNzwPoAtWd+k1YoOO8GEp
+         aFmq1tvoRqZCNXwb85mNaV8BI/arkoyKXEWptrqA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.112]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSKuA-1iURhc069Y-00Sbmb; Sat, 12
+ Oct 2019 19:05:08 +0200
+Subject: Re: [PATCH v1 3/3] ARM: dts: bcm2711: Enable GENET support for the
+ RPi4
+From:   Stefan Wahren <wahrenst@gmx.net>
+To:     matthias.bgg@kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Eric Anholt <eric@anholt.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191011184822.866-1-matthias.bgg@kernel.org>
+ <20191011184822.866-4-matthias.bgg@kernel.org>
+ <dfe9062b-1960-f67b-2a9e-864c0680f5d3@gmx.net>
+Message-ID: <bc741ef2-64aa-562c-69cc-f787b35c1058@gmx.net>
+Date:   Sat, 12 Oct 2019 19:05:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191002194346.GA3792@localhost.localdomain> <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
- <20191010174710.GA2405@localhost.localdomain> <CAMuHMdVriPMVWdNOD4ytZQFPmad7CvD_4utbw1PxMJBua1TSfQ@mail.gmail.com>
- <20191011094322.GA3065@localhost.localdomain> <CAMuHMdUMkyyCZACyJ7dvd4SaicpN77g5pFd0aGEzQW_q7m3Q0g@mail.gmail.com>
- <20191011125446.GA2170@localhost.localdomain>
-In-Reply-To: <20191011125446.GA2170@localhost.localdomain>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 12 Oct 2019 19:04:15 +0200
-Message-ID: <CAMuHMdWALc_hneRaiwQbMWUXe=LnVqU7dkkWibV0cqb8Gc5e0g@mail.gmail.com>
-Subject: Re: [PATCH] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-To:     Narendra K <Narendra.K@dell.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <dfe9062b-1960-f67b-2a9e-864c0680f5d3@gmx.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:TOY8axM0tJeh2ZJQi9bkb+Z/Lu9KtfC8Aq/2aZuGRApGXwwMKVT
+ DsmnYbDjr/1UDJ5oTeuAK8MgubkKE0RJNoIuEyqYT9L3NckFkQsWrgUzysDPWsLmkCSTuer
+ wGwsyt62YfRmKgYCA3bSLh6SM3vgSGfKWRX8E8sRaG/+5lAL+eonlZmJ/lVOXUmbTsC330H
+ vsbFJeUNXCi0+abkU+CPw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2MuRQWHyKLs=:IcfwFc4ZLH+uLpnNutppBy
+ iVDysOqZ8lvADJrDHiUQrak2+buixxUIYJp045C7Pc8Uq9gJVtq5ngEZc1shkKGHG8COkQ9Cd
+ fCQBrAjRd2uTXcravu0eM6c5ZnIxEYiFFFBQMHvGA5PwwkdH5PAOQzE9qB9XU5sYSg1aHxMZI
+ OcPFNIIYoAl4zjfTFs3ap8EhMSdaC9u58LFRTkDmEPOCYO/RFT2ce0SMgav3xI4cHRvID0UeW
+ vRxc5ierCN+cHPTiaecN9qRsMiRwhsj9TTvrluGa+lKvnOaZNxSC3puExNlktTtuxy8hf2gzR
+ A4QZ1DSXgfk6BrQ9dNWkYP46LiSQz8MT4zvho2hZyuTyqOyuAP4IOKl/8BEcznbxxFmwwTDyE
+ SiPoV/Q7VqQqVaPdL4el7hCtjbMegzzCYoOTKuEhhnn207dFSa+Wu9iTP5jOu2l7FmBbiClqC
+ PALbFAJ+1EjMKqlF2iflm/HTLXBWhTNmmQIiHtFjbRINBQ7eCu5QE6RE4NJ+6YJmkfxy0XxTq
+ tHabEciCXCVWcuyW33U9nu0F/5biV3DNmEoIKIwJGPtVqOQg0Hn6QBBtoPjA/Xi+TlCYEHy5J
+ zMScV4SdLyM+RIwzeBH1Aapb3MOmHkASGFWlexXYaWIuvZ8PLO3vtMb8zhLXHH6AB7hqBFdix
+ jebEUQYZ/qvHDDBbHSff4gL0Q1r5KquYbjtxRnz/Emut1FpdHlw4WFynb+cXklmbdpTuD7miy
+ bhN/gK/IpDOHP6lWikd1iFPE5sqFNQDRLLGNIYvSWciwdqUvo+xAcmFIvGLVlQw/gkk7T+Rba
+ 7s9Ih5b3QfOuAjCaz3Oqfd9ChesR3g6Pu+i71ygJLtp0oWyqHtqOhQYr2/cj9Z38fkQbbxKAc
+ pAM67Yl1ppvecGWIcOPPLj9WhV6G1WrMwlygtexgUF/ViEOX70J9qU6NrBLARBioRQ3xNIp83
+ iI2wYYm/E8UFdBOekrdkp2x9LYn/bSkWYZKLrNZBd8MhkoclBdOS8RFhvKx9PHkOinRYmSckc
+ 7MX/X4jAWmXNrnVp4djip/U2/Y2nEhbtC+pQzQxQ6jOb0gsUrFALjGmmraVFZU4Z+m+S5X9Be
+ epNbwCyXAzmSMwux/n3qs+rARBD2Mf5Wa0dT4BJ48VsXJ3VsqGLtJFVZzTx2P+SQ2IZ59/H7w
+ QLxwLPUYu+b5O56a/8SvKTHF0oCLVvLyyNyq1V+4Com7jUw5/pJm1K+orGOgMF8q6f60NonjV
+ w9Hyqu23kHQeAIHEjlZmQ2Opr2nC1lBV88TnxkLOMcxJowPZNUp+hmxtvrNc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Narendra,
-
-On Fri, Oct 11, 2019 at 2:55 PM <Narendra.K@dell.com> wrote:
-> On Fri, Oct 11, 2019 at 12:01:25PM +0200, Geert Uytterhoeven wrote:
-> > > > > > > -       bool "EFI Runtime Configuration Interface Table Version 2 Support"
-> > > > > > > +       bool
-> > > > > > > +       prompt "EFI RCI Table Version 2 Support" if X86 || COMPILE_TEST
-> > > >
-> > > > Why the split of bool and prompt?
-> > > > Why not simply add a single line "depends on X86 || COMPILE_TEST"?
-> > >
-> > > It is because of the findings shared in [1]. Please let me know your
-> > > thoughts on the findings.
-> >
-> > So you want to prevent the user from seeing a prompt for an option he may
-> > or may not need to enable, when running "make oldconfig"?
+Am 12.10.19 um 01:09 schrieb Stefan Wahren:
+> Am 11.10.19 um 20:48 schrieb matthias.bgg@kernel.org:
+>> From: Matthias Brugger <mbrugger@suse.com>
+>>
+>> Enable Gigabit Ethernet support on the Raspberry Pi 4
+>> Model B.
+> I asked some questions about genet to the RPi guys [1] which are
+> relevant to this patch (missing clocks and interrupt, MAC address
+> assignment) but i didn't get an answer yet.
 >
-> Geert,
+> During my tests with a similiar patch series i noticed that the driver
+> won't probe without a MAC address.
 >
-> > The code in question is entirely architecture agnostic, and defaults
-> > to 'n', so I am not convinced this is needed. (It came up in the
-> > review as well)
+> How does it get into DT (via U-Boot)?
+Okay, the bootloader uses the ethernet0 alias for the genet DT node. So
+this should also be added to the RPi 4 DTS. But i consider the MAC
+randomize patch still helpful.
 >
-> >> "make oldconfig" still asks me the question on e.g. arm64, where it is
-> >> irrelevant, until arm64 variants of the hardware show up.
+> [1] -
+> https://github.com/raspberrypi/linux/issues/3101#issuecomment-534665860
 >
-> >> So IMHO it should have "depends on X86 || COMPILE_TEST".
->
-> From the discussion in [1] and [2](pasted a part of it above), my understanding
-> of the issue you reported is that 'make oldconfig' asks the user a question for arm64
-> though the EFI_RCI2_TABLE is not relevant for arm64. From the tests,
-> it seemed like adding "depends on X86 || COMPILE_TEST" does not fix the
-> issue, splitting bool into bool + prompt fixes it.
->
-> Please let me know if I am missing any detail in the issue you reported.
-
-Adding a "depends on X86 || COMPILE_TEST" should fix the issue, as
-X86 is never set on arm64, nor on any other architecture than X86.
-If COMPILE_TEST=y, it's normal expected behavior to show the question.
-
-> With the way EFI_RCI2_TABLE is currently defined, my understanding is
-> that 'make oldconfig' does not set the EFI_RCI2_TABLE to 'y' by default
-> on arm64, but it asks the user the question. User has to say 'y' if he
-> wants it to be set to 'y', else by default 'n' is set. This behavior is
-> as expected.
-
-If the option doesn't make sense on arm64 (more broadly: on non-X86),
-it should depend on X86 || COMPILE_TEST, to avoid spamming the user
-with (zillions of) options that do not matter for his platform.
-
-> > One common approach is to let the Kconfig symbol for the platform (not for
-> > all of X86!) select EFI_RCI2_TABLE.
-> > That way it will be enabled automatically when needed.
->
-> We did not intend to enable EFI_RCI2_TABLE option by default even on all
-> X86 systems from the begining. As a result, we chose to set it to 'n' by
-> default and added the guidance in 'help' section to say 'y' for Dell EMC
-> PowerEdge systems.
-
-Good.
-
->> > Another approach is to not force the option on, but guide the user towards
-> > enabling it, by adding "default y if <platform_symbol>".
->
-> As mentioned above, we want to keep the default to n.
-
-OK.
-
-> > Without the "|| COMPILE_TEST", you cannot enable compile-testing of
-> > the driver on non-x86 platforms with EFI.
->
-> Ok. We could keep the check. Could we make it independent of platforms
-> by adding 'defbool y if COMPILE_TEST' ?
-
-Please don't do that, as it with always enable the driver if COMPILE_TEST=y,
-without providing a way to opt-out for the user.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
