@@ -2,182 +2,156 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5B8C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D0CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534172087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06807206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfJLK1t (ORCPT
+        id S1728933AbfJLKcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 06:27:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52632 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727262AbfJLKZs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 06:25:48 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9CAM02e131233
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 06:25:47 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vk7rsqepu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 06:25:47 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Sat, 12 Oct 2019 11:25:45 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 12 Oct 2019 11:25:42 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9CAPABQ28770794
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 10:25:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 369F3AE059;
-        Sat, 12 Oct 2019 10:25:41 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DAC94AE045;
-        Sat, 12 Oct 2019 10:25:40 +0000 (GMT)
-Received: from localhost (unknown [9.145.77.130])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat, 12 Oct 2019 10:25:40 +0000 (GMT)
-Date:   Sat, 12 Oct 2019 12:25:39 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] s390 updates for 5.4-rc3
+        Sat, 12 Oct 2019 06:32:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53830 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727262AbfJLKaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 06:30:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E3AE6B5BE;
+        Sat, 12 Oct 2019 10:30:49 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19101210-0016-0000-0000-000002B769DC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101210-0017-0000-0000-000033187E86
-Message-Id: <your-ad-here.call-01570875939-ext-1686@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910120098
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 12 Oct 2019 12:30:48 +0200
+From:   osalvador <osalvador@suse.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        owner-linux-mm@kvack.org
+Subject: Re: memory offline infinite loop after soft offline
+In-Reply-To: <1570829564.5937.36.camel@lca.pw>
+References: <1570829564.5937.36.camel@lca.pw>
+Message-ID: <55ff76d109062a87fb209ecddf167b71@suse.de>
+X-Sender: osalvador@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+On 2019-10-11 23:32, Qian Cai wrote:
+> # /opt/ltp/runtest/bin/move_pages12
+> move_pages12.c:263: INFO: Free RAM 258988928 kB
+> move_pages12.c:281: INFO: Increasing 2048kB hugepages pool on node 0 to 
+> 4
+> move_pages12.c:291: INFO: Increasing 2048kB hugepages pool on node 8 to 
+> 4
+> move_pages12.c:207: INFO: Allocating and freeing 4 hugepages on node 0
+> move_pages12.c:207: INFO: Allocating and freeing 4 hugepages on node 8
+> move_pages12.c:197: PASS: Bug not reproduced
+> move_pages12.c:197: PASS: Bug not reproduced
+> 
+> for mem in $(ls -d /sys/devices/system/memory/memory*); do
+>         echo offline > $mem/state
+>         echo online > $mem/state
+> done
+> 
+> That LTP move_pages12 test will first madvise(MADV_SOFT_OFFLINE) for a 
+> range.
+> Then, one of "echo offline" will trigger an infinite loop in 
+> __offline_pages()
+> here,
 
-please pull s390 changes for 5.4-rc3.
 
-Thank you,
-Vasily
+I did not deeply check whether this issue is really related 
+soft-offline.
 
-The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+As is, soft-offline has a few issues that can lead to tricky problems.
+Actually, lately I have received quite a few reports from customers 
+where testing soft-offline
+resulted in applications crashing all around.
 
-  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+I am working on a re-implementation to fix those issues [1].
+I yet have to fix a bug I found yesterday though, but it should be quite 
+trivial to fix it up, so I should be able to send a new re-spin next 
+week.
 
-are available in the Git repository at:
+[1] https://lore.kernel.org/patchwork/cover/1126173/
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-4
+Thanks
 
-for you to fetch changes up to 062795fcdcb2d22822fb42644b1d76a8ad8439b3:
-
-  s390/uaccess: avoid (false positive) compiler warnings (2019-10-11 12:27:25 +0200)
-
-----------------------------------------------------------------
-s390 updates for 5.4-rc3
-
-- Fix virtio-ccw DMA regression.
-
-- Fix compiler warnings in uaccess.
-
-----------------------------------------------------------------
-Christian Borntraeger (1):
-      s390/uaccess: avoid (false positive) compiler warnings
-
-Halil Pasic (1):
-      s390/cio: fix virtio-ccw DMA without PV
-
- arch/s390/include/asm/uaccess.h | 4 ++--
- drivers/s390/cio/cio.h          | 1 +
- drivers/s390/cio/css.c          | 7 ++++++-
- drivers/s390/cio/device.c       | 2 +-
- 4 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index bd2fd9a7821d..a470f1fa9f2a 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -83,7 +83,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
- 	__rc;							\
- })
- 
--static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
-+static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x010000UL;
- 	int rc;
-@@ -113,7 +113,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- 	return rc;
- }
- 
--static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
-+static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x01UL;
- 	int rc;
-diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-index ba7d2480613b..dcdaba689b20 100644
---- a/drivers/s390/cio/cio.h
-+++ b/drivers/s390/cio/cio.h
-@@ -113,6 +113,7 @@ struct subchannel {
- 	enum sch_todo todo;
- 	struct work_struct todo_work;
- 	struct schib_config config;
-+	u64 dma_mask;
- 	char *driver_override; /* Driver name to force a match */
- } __attribute__ ((aligned(8)));
- 
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index 1fbfb0a93f5f..831850435c23 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -232,7 +232,12 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
- 	 * belong to a subchannel need to fit 31 bit width (e.g. ccw).
- 	 */
- 	sch->dev.coherent_dma_mask = DMA_BIT_MASK(31);
--	sch->dev.dma_mask = &sch->dev.coherent_dma_mask;
-+	/*
-+	 * But we don't have such restrictions imposed on the stuff that
-+	 * is handled by the streaming API.
-+	 */
-+	sch->dma_mask = DMA_BIT_MASK(64);
-+	sch->dev.dma_mask = &sch->dma_mask;
- 	return sch;
- 
- err:
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 131430bd48d9..0c6245fc7706 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -710,7 +710,7 @@ static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
- 	if (!cdev->private)
- 		goto err_priv;
- 	cdev->dev.coherent_dma_mask = sch->dev.coherent_dma_mask;
--	cdev->dev.dma_mask = &cdev->dev.coherent_dma_mask;
-+	cdev->dev.dma_mask = sch->dev.dma_mask;
- 	dma_pool = cio_gp_dma_create(&cdev->dev, 1);
- 	if (!dma_pool)
- 		goto err_dma_pool;
+> 
+> 		/* check again */
+> 		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+> 					    NULL, check_pages_isolated_cb);
+> 	} while (ret);
+> 
+> because check_pages_isolated_cb() always return -EBUSY from
+> test_pages_isolated(),
+> 
+> 
+> 	pfn = __test_page_isolated_in_pageblock(start_pfn, end_pfn,
+> 						skip_hwpoisoned_pages);
+>         ...
+>         return pfn < end_pfn ? -EBUSY : 0;
+> 
+> The root cause is in __test_page_isolated_in_pageblock() where "pfn" is 
+> always
+> less than "end_pfn" because the associated page is not a PageBuddy.
+> 
+> 	while (pfn < end_pfn) {
+> 	...
+> 		else
+> 			break;
+> 
+> 	return pfn;
+> 
+> Adding a dump_page() for that pfn shows,
+> 
+> [  101.665160][ T8885] pfn = 77501, end_pfn = 78000
+> [  101.665245][ T8885] page:c00c000001dd4040 refcount:0 mapcount:0
+> mapping:0000000000000000 index:0x0
+> [  101.665329][ T8885] flags: 0x3fffc000000000()
+> [  101.665391][ T8885] raw: 003fffc000000000 0000000000000000 
+> ffffffff01dd0500
+> 0000000000000000
+> [  101.665498][ T8885] raw: 0000000000000000 0000000000000000 
+> 00000000ffffffff
+> 0000000000000000
+> [  101.665588][ T8885] page dumped because: soft_offline
+> [  101.665639][ T8885] page_owner tracks the page as freed
+> [  101.665697][ T8885] page last allocated via order 5, migratetype 
+> Movable,
+> gfp_mask
+> 0x346cca(GFP_HIGHUSER_MOVABLE|__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_COMP|__GFP_
+> THISNODE)
+> [  101.665924][ T8885]  prep_new_page+0x3c0/0x440
+> [  101.665962][ T8885]  get_page_from_freelist+0x2568/0x2bb0
+> [  101.666059][ T8885]  __alloc_pages_nodemask+0x1b4/0x670
+> [  101.666115][ T8885]  alloc_fresh_huge_page+0x244/0x6e0
+> [  101.666183][ T8885]  alloc_migrate_huge_page+0x30/0x70
+> [  101.666254][ T8885]  alloc_new_node_page+0xc4/0x380
+> [  101.666325][ T8885]  migrate_pages+0x3b4/0x19e0
+> [  101.666375][ T8885]  do_move_pages_to_node.isra.29.part.30+0x44/0xa0
+> [  101.666464][ T8885]  kernel_move_pages+0x498/0xfc0
+> [  101.666520][ T8885]  sys_move_pages+0x28/0x40
+> [  101.666643][ T8885]  system_call+0x5c/0x68
+> [  101.666665][ T8885] page last free stack trace:
+> [  101.666704][ T8885]  __free_pages_ok+0xa4c/0xd40
+> [  101.666773][ T8885]  update_and_free_page+0x2dc/0x5b0
+> [  101.666821][ T8885]  free_huge_page+0x2dc/0x740
+> [  101.666875][ T8885]  __put_compound_page+0x64/0xc0
+> [  101.666926][ T8885]  putback_active_hugepage+0x228/0x390
+> [  101.666990][ T8885]  migrate_pages+0xa78/0x19e0
+> [  101.667048][ T8885]  soft_offline_page+0x314/0x1050
+> [  101.667117][ T8885]  sys_madvise+0x1068/0x1080
+> [  101.667185][ T8885]  system_call+0x5c/0x68
 
