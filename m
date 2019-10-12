@@ -2,166 +2,281 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02F3C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D618C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7DE206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:34:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PmDfA3Yg"
+	by mail.kernel.org (Postfix) with ESMTP id 5E3762089F
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570887450;
+	bh=HNezrJTvANQlWtCUUOHdHEJyKqbKhpwfQ/1hZ51c9kM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=EPSXCk6MvG5YZo4zkSD1p8lbpUbBbF2fU6rKKWkNVE/08CLOOvo39Z2DDw3hMmm6s
+	 Tl2aeuulKHsGl+rYePNZ7861yaN9qZxJtx9K7wFpcGeZFY1dk65W0qAmjDep3CHXVr
+	 yeUszro1a4P3Q2Lbzs3J2TTeQmykmmK3s224aJiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbfJLNer (ORCPT
+        id S1729372AbfJLNh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 09:34:47 -0400
-Received: from mail-eopbgr710131.outbound.protection.outlook.com ([40.107.71.131]:6171
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726821AbfJLNer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 09:34:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZPF3LDQkkUXlrZI0jfUwiYSeAOh4iLH0ZfMjMs/hvidDNPX2pETLYjDdMVLp9Cp2434JGBS+QpazOudTtFas7UcY2amg6TRl5lsgWelVQvOzJPRKqPnNJu1jX/hgilSbnyKnQzrwWjeeukULhnlsuoT7L4equK3LL0CsCNDyJUjPwkiFaPyf7Kxuvcm6ZqMD9vrX6EhPLKWNKEffSvHn1nW6vm3wdkB8exKkHZPYPLi5gqvrf7laM+K96b21ep+1oBxjrhtxJC6o2I+LAWYkInDzUmXLBCUSVdaVIqr8NYmCslzU6H63QrERngtAf2478jdfrCSDfCVjimxYPX6SGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pH/w4b4CpBH5KUC7U7bWuVURBaWNVFfwXlx+WFT8E3E=;
- b=JoHH4IohYXH96zVZanoYx84Blj4JjSMcPV0b3dp+4Mu0qSdFSTQ2TbBQlFSNJ7Pzjpxqu9EmEZX63KJqKaL+1yRXrK51O1RTUqk9P8FOYa+t6atVNTNXSoDqRokmprfNNe9Tqk2RccElT/ag4ybMAZke3U+YLSsgSbYdyztOYSQngTGaEQxBPWLjvRZnW0noBDLH7VWMza80whyvBGq7qYD8vjcsHp2CdT5vVQBtyqONcIiGbwhjq6scBL1P6XHtCBHPpG9rVUNyEidQtSccMI6C0yK439em8urSOBsgEvCaGhpLYa7SOVKRB4JeQOE7GuVaLjBcfKznsVx7Mo40iQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pH/w4b4CpBH5KUC7U7bWuVURBaWNVFfwXlx+WFT8E3E=;
- b=PmDfA3YgssYog1QvRVdyzoPajyANKFAL1i6/Mmir+ecXUQCd9LzbeV40c2oAqy27b1zHb0H6lEeEyt4bEJ7zOCAkybDuxqk0umSZ51HfNqnHB1KFvRSNhwj2PBywsie1CmZx525dDdKOA6NpZ0o5DX/I9wjLQc3uS6ZjWTWECZw=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0153.namprd21.prod.outlook.com (10.173.173.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.5; Sat, 12 Oct 2019 13:34:43 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::a50f:aa3c:c7d6:f05e]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::a50f:aa3c:c7d6:f05e%11]) with mapi id 15.20.2347.021; Sat, 12 Oct
- 2019 13:34:43 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH v2 2/3] Drivers: hv: vmbus: Enable VMBus protocol versions
- 4.1, 5.1 and 5.2
-Thread-Topic: [PATCH v2 2/3] Drivers: hv: vmbus: Enable VMBus protocol
- versions 4.1, 5.1 and 5.2
-Thread-Index: AQHVf4HgvATy1vXyFUC0tQ1s264IN6dXAtzA
-Date:   Sat, 12 Oct 2019 13:34:43 +0000
-Message-ID: <DM5PR21MB0137ACE07DCD2A6BBEC83665D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20191010154600.23875-1-parri.andrea@gmail.com>
- <20191010154600.23875-3-parri.andrea@gmail.com>
-In-Reply-To: <20191010154600.23875-3-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-12T13:34:41.4247170Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=916a6818-2ace-450a-b146-ae9113aeebcd;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4356966d-e236-41bd-9340-08d74f18f0d9
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM5PR21MB0153:|DM5PR21MB0153:|DM5PR21MB0153:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR21MB01538962C01FEA4022A60064D7960@DM5PR21MB0153.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0188D66E61
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(396003)(346002)(376002)(189003)(199004)(476003)(4326008)(6246003)(7736002)(305945005)(446003)(11346002)(107886003)(66066001)(486006)(229853002)(99286004)(74316002)(81156014)(81166006)(8936002)(26005)(8676002)(102836004)(186003)(2501003)(7696005)(76176011)(6506007)(25786009)(3846002)(110136005)(52536014)(6116002)(33656002)(55016002)(9686003)(5660300002)(22452003)(10090500001)(64756008)(66556008)(6436002)(2906002)(316002)(66446008)(71200400001)(256004)(71190400001)(478600001)(66476007)(8990500004)(2201001)(66946007)(10290500003)(86362001)(14454004)(76116006)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0153;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0HF94iEKqA7zor03WTbAhQ/KA/neANmNAzaYuaaLGKEl5XdBhiXjYUyhm5Tli2gTaRNyO3NFl0kMSS0qllZ0ebBg+kHYOXVbRG6T7LoUlxJj13UnuPmX0B7rbcPGO/WFEH27tlh6d/2r03piiIzxEsPpiTnXXB5Dc8XFc5kDl4pwz4iFx4Ridrg5vVctpu6q5oqRmUgGmZkjhGbGZjO4pq7A4ejH/qRpAt9RXutLttX8eBoz1SwQWz0mIZ0Lx1ZKleC3vzfFPgAhnIN31XM/iVSvcpTJrdqYVKN5VoESNk8CkHgjzsvGLIaglISNOkszvUS///cqARktAUayYErpTiivcsdYjP4gKZYaBvkmmeYHjQF4hQ4vBDjzBaQrtyNaBrjMl6WAWlFkgbuS+xhzOBlhEhKwEWHx85JTgpmxKZY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 12 Oct 2019 09:37:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728636AbfJLNh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 09:37:29 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E86206CD;
+        Sat, 12 Oct 2019 13:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570887448;
+        bh=HNezrJTvANQlWtCUUOHdHEJyKqbKhpwfQ/1hZ51c9kM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sh89hOdO1yIdtQIEJznphsbOXkTS7MRC6F+ea4RHInrvbHdz7zFMosIlc7qQXhsjZ
+         mFlVth5YvEFZ2V1DypPBeAzYwD9Asyk5d3ZBEyhkTyHYnhIV/dt0oBZ20JihRm3qgM
+         2xEjTRN2i1+pC3gunRSKSe7Xmmf8k4/c5SE4k63I=
+Date:   Sat, 12 Oct 2019 14:37:22 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2] iio: pressure: bmp280: use devm action and remove
+ labels from probe
+Message-ID: <20191012143722.7cb7015d@archlinux>
+In-Reply-To: <20191007024131.22708-1-brgl@bgdev.pl>
+References: <20191007024131.22708-1-brgl@bgdev.pl>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4356966d-e236-41bd-9340-08d74f18f0d9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2019 13:34:43.4095
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1pKey32Y5jBBHmQgI7hmZjlpKZxPIUI4TN3U4HabIIpuW5Ft4uuK1sN84hn2kFL+YC/67ZAW0fA/kPfzRz0dfZ5ciI10S7LBi2CpIJbTlyY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0153
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com> Sent: Thursday, October 10, 201=
-9 8:46 AM
->=20
-> Hyper-V has added VMBus protocol versions 5.1 and 5.2 in recent release
-> versions.  Allow Linux guests to negotiate these new protocol versions
-> on versions of Hyper-V that support them.  While on this, also allow
-> guests to negotiate the VMBus protocol version 4.1 (which was missing).
->=20
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+On Mon,  7 Oct 2019 04:41:31 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> We can drop some duplicate code if we use devm_action for disabling
+> regulators and pm and the managed variant of iio_device_register().
+> 
+> This allows us to completely remove all remove() callbacks from both
+> i2c and spi code.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+This is on top of the bulk regulator patch which is awaiting precusors
+getting to my upstream.  I'll hold this one as well on that.
+
+If it looks like I've forgotten it then give me a poke.
+
+Thanks,
+
+Jonathan
+
 > ---
->  drivers/hv/connection.c          | 15 +++++++++------
->  drivers/net/hyperv/netvsc.c      |  6 +++---
->  include/linux/hyperv.h           |  8 +++++++-
->  net/vmw_vsock/hyperv_transport.c |  4 ++--
->  4 files changed, 21 insertions(+), 12 deletions(-)
->=20
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index c08b62dbd151f..a4f80e30b0207 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -182,15 +182,21 @@ static inline u32 hv_get_avail_to_write_percent(
->   * 2 . 4  (Windows 8)
->   * 3 . 0  (Windows 8 R2)
->   * 4 . 0  (Windows 10)
-> + * 4 . 1  (Windows 10 RS3)
->   * 5 . 0  (Newer Windows 10)
-> + * 5 . 1  (Windows 10 RS4)
-> + * 5 . 2  (Windows Server 2019, RS5)
->   */
->=20
->  #define VERSION_WS2008  ((0 << 16) | (13))
->  #define VERSION_WIN7    ((1 << 16) | (1))
->  #define VERSION_WIN8    ((2 << 16) | (4))
->  #define VERSION_WIN8_1    ((3 << 16) | (0))
-> -#define VERSION_WIN10	((4 << 16) | (0))
-> +#define VERSION_WIN10_V4 ((4 << 16) | (0))
+> v1 -> v2:
+> - squash the patches using devm_iio_device_register() and devm_action
+>   to keep the changes bisectable
+> 
+>  drivers/iio/pressure/bmp280-core.c | 62 +++++++++++++++---------------
+>  drivers/iio/pressure/bmp280-i2c.c  |  6 ---
+>  drivers/iio/pressure/bmp280-spi.c  |  6 ---
+>  drivers/iio/pressure/bmp280.h      |  1 -
+>  4 files changed, 30 insertions(+), 45 deletions(-)
+> 
+> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+> index c2988dbdb1a7..79254dd26dfd 100644
+> --- a/drivers/iio/pressure/bmp280-core.c
+> +++ b/drivers/iio/pressure/bmp280-core.c
+> @@ -984,6 +984,22 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +static void bmp280_pm_disable(void *data)
+> +{
+> +	struct device *dev = data;
+> +
+> +	pm_runtime_get_sync(dev);
+> +	pm_runtime_put_noidle(dev);
+> +	pm_runtime_disable(dev);
+> +}
+> +
+> +static void bmp280_regulators_disable(void *data)
+> +{
+> +	struct regulator_bulk_data *supplies = data;
+> +
+> +	regulator_bulk_disable(BMP280_NUM_SUPPLIES, supplies);
+> +}
+> +
+>  int bmp280_common_probe(struct device *dev,
+>  			struct regmap *regmap,
+>  			unsigned int chip,
+> @@ -1055,6 +1071,11 @@ int bmp280_common_probe(struct device *dev,
+>  		return ret;
+>  	}
+>  
+> +	ret = devm_add_action_or_reset(dev, bmp280_regulators_disable,
+> +				       data->supplies);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Wait to make sure we started up properly */
+>  	usleep_range(data->start_up_time, data->start_up_time + 100);
+>  
+> @@ -1069,17 +1090,16 @@ int bmp280_common_probe(struct device *dev,
+>  	data->regmap = regmap;
+>  	ret = regmap_read(regmap, BMP280_REG_ID, &chip_id);
+>  	if (ret < 0)
+> -		goto out_disable_regulators;
+> +		return ret;
+>  	if (chip_id != chip) {
+>  		dev_err(dev, "bad chip id: expected %x got %x\n",
+>  			chip, chip_id);
+> -		ret = -EINVAL;
+> -		goto out_disable_regulators;
+> +		return -EINVAL;
+>  	}
+>  
+>  	ret = data->chip_info->chip_config(data);
+>  	if (ret < 0)
+> -		goto out_disable_regulators;
+> +		return ret;
+>  
+>  	dev_set_drvdata(dev, indio_dev);
+>  
+> @@ -1093,14 +1113,14 @@ int bmp280_common_probe(struct device *dev,
+>  		if (ret < 0) {
+>  			dev_err(data->dev,
+>  				"failed to read calibration coefficients\n");
+> -			goto out_disable_regulators;
+> +			return ret;
+>  		}
+>  	} else if (chip_id == BMP280_CHIP_ID || chip_id == BME280_CHIP_ID) {
+>  		ret = bmp280_read_calib(data, &data->calib.bmp280, chip_id);
+>  		if (ret < 0) {
+>  			dev_err(data->dev,
+>  				"failed to read calibration coefficients\n");
+> -			goto out_disable_regulators;
+> +			return ret;
+>  		}
+>  	}
+>  
+> @@ -1112,7 +1132,7 @@ int bmp280_common_probe(struct device *dev,
+>  	if (irq > 0 || (chip_id  == BMP180_CHIP_ID)) {
+>  		ret = bmp085_fetch_eoc_irq(dev, name, irq, data);
+>  		if (ret)
+> -			goto out_disable_regulators;
+> +			return ret;
+>  	}
+>  
+>  	/* Enable runtime PM */
+> @@ -1127,36 +1147,14 @@ int bmp280_common_probe(struct device *dev,
+>  	pm_runtime_use_autosuspend(dev);
+>  	pm_runtime_put(dev);
+>  
+> -	ret = iio_device_register(indio_dev);
+> +	ret = devm_add_action_or_reset(dev, bmp280_pm_disable, dev);
+>  	if (ret)
+> -		goto out_runtime_pm_disable;
+> -
+> -	return 0;
+> +		return ret;
+>  
+> -out_runtime_pm_disable:
+> -	pm_runtime_get_sync(data->dev);
+> -	pm_runtime_put_noidle(data->dev);
+> -	pm_runtime_disable(data->dev);
+> -out_disable_regulators:
+> -	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+> -	return ret;
+> +	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  EXPORT_SYMBOL(bmp280_common_probe);
+>  
+> -int bmp280_common_remove(struct device *dev)
+> -{
+> -	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> -	struct bmp280_data *data = iio_priv(indio_dev);
+> -
+> -	iio_device_unregister(indio_dev);
+> -	pm_runtime_get_sync(data->dev);
+> -	pm_runtime_put_noidle(data->dev);
+> -	pm_runtime_disable(data->dev);
+> -	regulator_bulk_disable(BMP280_NUM_SUPPLIES, data->supplies);
+> -	return 0;
+> -}
+> -EXPORT_SYMBOL(bmp280_common_remove);
+> -
+>  #ifdef CONFIG_PM
+>  static int bmp280_runtime_suspend(struct device *dev)
+>  {
+> diff --git a/drivers/iio/pressure/bmp280-i2c.c b/drivers/iio/pressure/bmp280-i2c.c
+> index acd9a3784fb4..3109c8e2cc11 100644
+> --- a/drivers/iio/pressure/bmp280-i2c.c
+> +++ b/drivers/iio/pressure/bmp280-i2c.c
+> @@ -38,11 +38,6 @@ static int bmp280_i2c_probe(struct i2c_client *client,
+>  				   client->irq);
+>  }
+>  
+> -static int bmp280_i2c_remove(struct i2c_client *client)
+> -{
+> -	return bmp280_common_remove(&client->dev);
+> -}
+> -
+>  static const struct acpi_device_id bmp280_acpi_i2c_match[] = {
+>  	{"BMP0280", BMP280_CHIP_ID },
+>  	{"BMP0180", BMP180_CHIP_ID },
+> @@ -82,7 +77,6 @@ static struct i2c_driver bmp280_i2c_driver = {
+>  		.pm = &bmp280_dev_pm_ops,
+>  	},
+>  	.probe		= bmp280_i2c_probe,
+> -	.remove		= bmp280_i2c_remove,
+>  	.id_table	= bmp280_i2c_id,
+>  };
+>  module_i2c_driver(bmp280_i2c_driver);
+> diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/bmp280-spi.c
+> index 9d57b7a3b134..625b86878ad8 100644
+> --- a/drivers/iio/pressure/bmp280-spi.c
+> +++ b/drivers/iio/pressure/bmp280-spi.c
+> @@ -86,11 +86,6 @@ static int bmp280_spi_probe(struct spi_device *spi)
+>  				   spi->irq);
+>  }
+>  
+> -static int bmp280_spi_remove(struct spi_device *spi)
+> -{
+> -	return bmp280_common_remove(&spi->dev);
+> -}
+> -
+>  static const struct of_device_id bmp280_of_spi_match[] = {
+>  	{ .compatible = "bosch,bmp085", },
+>  	{ .compatible = "bosch,bmp180", },
+> @@ -118,7 +113,6 @@ static struct spi_driver bmp280_spi_driver = {
+>  	},
+>  	.id_table = bmp280_spi_id,
+>  	.probe = bmp280_spi_probe,
+> -	.remove = bmp280_spi_remove,
+>  };
+>  module_spi_driver(bmp280_spi_driver);
+>  
+> diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
+> index eda50ef65706..57ba0e85db91 100644
+> --- a/drivers/iio/pressure/bmp280.h
+> +++ b/drivers/iio/pressure/bmp280.h
+> @@ -112,7 +112,6 @@ int bmp280_common_probe(struct device *dev,
+>  			unsigned int chip,
+>  			const char *name,
+>  			int irq);
+> -int bmp280_common_remove(struct device *dev);
+>  
+>  /* PM ops */
+>  extern const struct dev_pm_ops bmp280_dev_pm_ops;
 
-I would recommend not changing the symbol name for version 4.0.
-The change makes it more consistent with the later VERSION_WIN10_*
-symbols, but it doesn't fundamentally add any clarity and I'm not sure
-it's worth the churn in the other files that have to be touched. It's a
-judgment call, and that's just my input.
-
-> +#define VERSION_WIN10_V4_1 ((4 << 16) | (1))
->  #define VERSION_WIN10_V5 ((5 << 16) | (0))
-> +#define VERSION_WIN10_V5_1 ((5 << 16) | (1))
-> +#define VERSION_WIN10_V5_2 ((5 << 16) | (2))
->=20
-
-Michael
