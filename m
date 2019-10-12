@@ -2,114 +2,127 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1158CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05953C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D200D20679
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:22:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctY1dTvK"
+	by mail.kernel.org (Postfix) with ESMTP id DCBB420679
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729515AbfJLTWa (ORCPT
+        id S1729694AbfJLTYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 15:22:30 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41217 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbfJLTWa (ORCPT
+        Sat, 12 Oct 2019 15:24:23 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:10410
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729384AbfJLTYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 15:22:30 -0400
-Received: by mail-io1-f65.google.com with SMTP id n26so28477051ioj.8;
-        Sat, 12 Oct 2019 12:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HQJU3/LoSPot9T+dJMRPqRv4aXw0MOIpjtfyaywm/aQ=;
-        b=ctY1dTvKbUjja1n+HmJ/0QdJo4l9dAMkFi10eQfrFjsqgOWit80kgCnq30q0OeiWfa
-         /aUwSbUbZJTKgMLaQRHrc735ma+8k8xg3+RuKcs08/Y27Bvp2HmB3VCXVh53JIpeepH1
-         Ex6BkyIFuWyhgQ4hj3IvriacAVaZFw7DIOvS0t56h7sEO7TnQ2FbSzJDxvuUFfVYZfpm
-         8i8ceDDgjqJO4QPLbUuA7rjn5ssg3y1AC1+0v+G8txow0cuyM+hhZA63VbZBlCaXGXA2
-         Cp4ZiJNXwdEapBQhk8X9d8hv+/l895BVSFvmchGs1gyzKBV8A4NRrRo6EFq1qAYA7zW9
-         Z1YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HQJU3/LoSPot9T+dJMRPqRv4aXw0MOIpjtfyaywm/aQ=;
-        b=R01HaeOXcg3Pxc2lmR/f+oHrAkffh7C4DJn1wqzNGbyF+NtjbRLhDXeD7X2k/Dq+W7
-         K9nq0twVv7Kcb6Jts+XEk1UiSZIj3yEZHc1F6ral/BNkhUcS8AZ8OX4UliOjV67XyDx0
-         HRGZ1qTr+F98Z5L9vK+TBrmlEai2Vyp87lDRr/G0rRUF4K9+F0B47CXF2UDcI72juOJg
-         rL+aKi6hPPH7HY9KsvnTBPAOQOSMKmtcGeuyxnOKz1FQynvFagB8eRZkJYT9V7AUNYAt
-         KnWLoGi07vbJxSLMFmtaQcG6AT2EBmga9xb3McStmMSZzUySvl1dgdiJsHRjTu9/4eXH
-         9CCA==
-X-Gm-Message-State: APjAAAXzLvV8R6psk3vmBdGN6X+iM/lzEce0KGGAYkgqJC2Le7Ybwj84
-        vqd8wqJDhmvcfUjtBItoajKKxhN7u70Y9mtEAkc=
-X-Google-Smtp-Source: APXvYqyJteMzDjNIWw8MOM6EkZMsiXv/drPcqPJn3dGo9FtbSnM6zKB7jm0eZ0l/nvmkFQFosHWse+jWfLyMEYAymH0=
-X-Received: by 2002:a02:7b0d:: with SMTP id q13mr25703029jac.114.1570908149253;
- Sat, 12 Oct 2019 12:22:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191004190938.15353-1-navid.emamdoost@gmail.com>
- <027fde47-86b3-35c8-85e6-ea7c191e772c@web.de> <f90d7b4a-c4af-eac1-f326-211e932dbd22@web.de>
-In-Reply-To: <f90d7b4a-c4af-eac1-f326-211e932dbd22@web.de>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Sat, 12 Oct 2019 14:22:18 -0500
-Message-ID: <CAEkB2EQUrHpfCXDQ9HV9_hw7Ke5DmX3SvKWJd+wSwXB1Uqaf5g@mail.gmail.com>
-Subject: Re: [PATCH] drm/imx: fix memory leak in imx_pd_bind
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     dri-devel@lists.freedesktop.org,
+        Sat, 12 Oct 2019 15:24:23 -0400
+X-IronPort-AV: E=Sophos;i="5.67,289,1566856800"; 
+   d="scan'208";a="322500714"
+Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Oct 2019 21:24:19 +0200
+Date:   Sat, 12 Oct 2019 21:24:19 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+cc:     Markus Elfring <Markus.Elfring@web.de>,
+        dri-devel@lists.freedesktop.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         linux-arm-kernel@lists.infradead.org,
         NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
         Daniel Vetter <daniel@ffwll.ch>,
         David Airlie <airlied@linux.ie>,
         Fabio Estevam <festevam@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Shawn Guo <shawnguo@kernel.org>,
+        Peter Senna Tschudin <peter.senna@collabora.com>,
+        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
         kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] drm/imx: Fix error handling for a kmemdup() call in
+ imx_pd_bind()
+In-Reply-To: <CAEkB2ERCGJ6abNXfPNX7nbwkwD7qYTPYjYsNGzZwynn5CbPCzg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1910122122370.3049@hadrien>
+References: <20191004190938.15353-1-navid.emamdoost@gmail.com> <540321eb-7699-1d51-59d5-dde5ffcb8fc4@web.de> <CAEkB2ETtVwtmkpup65D3wqyLn=84ZHt0QRo0dJK5GsV=-L=qVw@mail.gmail.com> <2abf545b-023b-853a-95ef-ce99e1896a5d@web.de> <3fd6aa8b-2529-7ff5-3e19-05267101b2a4@web.de>
+ <CAEkB2ERCGJ6abNXfPNX7nbwkwD7qYTPYjYsNGzZwynn5CbPCzg@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-2018450889-1570908260=:3049"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No, that is not correct! You should not try to free imxpd here as it
-is a resource-managed allocation via devm_kzalloc(). It means memory
-allocated with this function is automatically freed on driver detach.
-So, this patch introduces a double-free.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Sat, Oct 12, 2019 at 6:54 AM Markus Elfring <Markus.Elfring@web.de> wrot=
-e:
->
-> > +free_edid:
-> > +     kfree(imxpd->edid);
-> > +     return ret;
->
-> I have taken another look at this change idea.
-> Can the function call =E2=80=9Cdevm_kfree(dev, imxpd)=E2=80=9D become rel=
-evant
-> also at this place?
->
-> Would you like to combine it with the update suggestion
-> =E2=80=9CFix error handling for a kmemdup() call in imx_pd_bind()=E2=80=
-=9D?
-> https://lore.kernel.org/r/3fd6aa8b-2529-7ff5-3e19-05267101b2a4@web.de/
-> https://lore.kernel.org/patchwork/patch/1138912/
-> https://lkml.org/lkml/2019/10/12/87
->
-> Regards,
-> Markus
+--8323329-2018450889-1570908260=:3049
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
 
 
---=20
-Navid.
+On Sat, 12 Oct 2019, Navid Emamdoost wrote:
+
+> On Sat, Oct 12, 2019 at 4:07 AM Markus Elfring <Markus.Elfring@web.de> wrote:
+> >
+> > From: Markus Elfring <elfring@users.sourceforge.net>
+> > Date: Sat, 12 Oct 2019 10:30:21 +0200
+> >
+> > The return value from a call of the function “kmemdup” was not checked
+> > in this function implementation. Thus add the corresponding error handling.
+> >
+> > Fixes: 19022aaae677dfa171a719e9d1ff04823ce65a65 ("staging: drm/imx: Add parallel display support")
+> > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> > ---
+> >  drivers/gpu/drm/imx/parallel-display.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
+> > index 35518e5de356..39c4798f56b6 100644
+> > --- a/drivers/gpu/drm/imx/parallel-display.c
+> > +++ b/drivers/gpu/drm/imx/parallel-display.c
+> > @@ -210,8 +210,13 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
+> >                 return -ENOMEM;
+> >
+> >         edidp = of_get_property(np, "edid", &imxpd->edid_len);
+> > -       if (edidp)
+> > +       if (edidp) {
+> >                 imxpd->edid = kmemdup(edidp, imxpd->edid_len, GFP_KERNEL);
+> > +               if (!imxpd->edid) {
+> > +                       devm_kfree(dev, imxpd);
+>
+> You should not try to free imxpd here as it is a resource-managed
+> allocation via devm_kzalloc(). It means memory allocated with this
+> function is
+>  automatically freed on driver detach. So, this patch introduces a double-free.
+
+No, it's not double freed since the proposed code frees it with a devm
+function, removing it from the list of things to free later.  One can
+wonder why the free has to be made apparent, though.
+
+julia
+
+>
+> > +                       return -ENOMEM;
+> > +               }
+> > +       }
+> >
+> >         ret = of_property_read_string(np, "interface-pix-fmt", &fmt);
+> >         if (!ret) {
+> > --
+> > 2.23.0
+> >
+>
+>
+> --
+> Navid.
+>
+--8323329-2018450889-1570908260=:3049--
