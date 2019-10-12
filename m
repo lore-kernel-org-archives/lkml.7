@@ -2,135 +2,120 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ADAC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4144C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFFB62067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9AB52067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MfsX1wPM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PbU0a8ko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbfJLGxf (ORCPT
+        id S1729189AbfJLGxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 02:53:35 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33850 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728842AbfJLGxK (ORCPT
+        Sat, 12 Oct 2019 02:53:48 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35414 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728821AbfJLGxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 02:53:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y135so10776125wmc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 23:53:07 -0700 (PDT)
+        Sat, 12 Oct 2019 02:53:48 -0400
+Received: by mail-ed1-f67.google.com with SMTP id v8so10565719eds.2;
+        Fri, 11 Oct 2019 23:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=e5zHV1yxkD6dbvO/5O4DOC0P97SiQKMYMWVdcBqIV28=;
-        b=MfsX1wPMA6F6IS8Pcpw3SsuC+GiBazsQyIjCf6hugUalSLbHrI9BMSj60fA6l3sjka
-         9XWTPWpQa0K5GHkYDjp84oOK4Gq8ToUHdePTHvmbaWIjJ4W8X6J+PJy8BXe1S1GSSXUF
-         yZsxdZtVX51rWN8TiOLneS419TGoDPs5GQOQhqBzT6GqMIkKw6L78czFfUa7EQ7ujJlB
-         SsHIdobSBEUQq+813GlXAd5SXsPcfbJGzAegHV5LHWV1gTneSqWImasUwKzVr72AmLoR
-         uYHzLyZXA5j2+edcMmT3xVvN1fGxjhaHDOyDKPntpz4omwSIeEbSypJOvGojZWuJkHZL
-         rTtw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=BHDcnsQSrbWE+Pwo7S+n8GHA2q4eny0JAFUJGKe7xZ8=;
+        b=PbU0a8kowD3t6HBy71saesdP3fKlVa1vMs/phqLjOSTHNJKbukN3u4Tyw9JBYTjfGK
+         KmjzoK9sb6/xvZtwS8NTny6aibTAjo9w830m/FVcOSEmeFlewHjgCWFjLA+mAYpESwL2
+         dCI6N/Gk/gs51Hlh21r0vZZsjgEB0Xj3xfhVTiAE7Z3rTQzx0kpRLu4Ux+XjL/NMf940
+         VUgjoXAcZq/oplrXxk6tTvgQiYQpyrsxkI8Td0rRZh/q3On+yiAM62rjCwjOMjTAfn7y
+         4Xh6Dw1JvVN8hkEQh/TnEtedqvIlQc7gU9wdiJtJkm05Mjs+2zdTWXCclY3CwXFrxap+
+         xM6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=e5zHV1yxkD6dbvO/5O4DOC0P97SiQKMYMWVdcBqIV28=;
-        b=SV4cX/pFnVQY04mTvbvAq/Tngyvrfk6DQ2KRXfr+Uy/n8VOWpyiGKSG8bgZVpn5HMh
-         mFtS6DcW1kjsGnbhUALJFa73Kdhhve+JSvDPLEqZz6I9vaoL3RBq2tCLr69oQR5rVuMj
-         y0ge1r8x3b8Xjc3oNHUSsLogziJLJHswSeK9Wes8VNzFAdE9vpgchhyIdUHcLxMrgeQH
-         T3dY//1EHjr6sbQxYBHnqFQOHblx7xaRrtUyzewyoO65moSHge64K99vUjPyBiEPOslB
-         HgkCRVD3DevKxuChe45tKob9UFRNSM31+jXWtLDMLdaVftDXE5JXbo/6i+/qfkeCg2+h
-         YFhA==
-X-Gm-Message-State: APjAAAU/CmBdwnrmFP9PoadDet0YqU/YVOxalrYEnO6hqclvpzVZdUzR
-        uuGMs1rbEWiW9IZ03dtFvOpXbQ==
-X-Google-Smtp-Source: APXvYqwAmVof87d4Ec0oSQ3TUSiJj0A02O5HMzExy/fyCkfLvVFl+kwHvFJ7Zf7D0va6frBuKVmwOw==
-X-Received: by 2002:a7b:c7c1:: with SMTP id z1mr5690097wmk.61.1570863186531;
-        Fri, 11 Oct 2019 23:53:06 -0700 (PDT)
-Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:f437:29a8:ed69:7bab])
-        by smtp.gmail.com with ESMTPSA id z5sm17450497wrs.54.2019.10.11.23.53.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 23:53:05 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rui.zhang@intel.com, edubezval@gmail.com
-Cc:     daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
-        amit.kucheria@linaro.org
-Subject: [PATCH 04/11] thermal: Move trip point structure definition to private header
-Date:   Sat, 12 Oct 2019 08:52:48 +0200
-Message-Id: <20191012065255.23249-4-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191012065255.23249-1-daniel.lezcano@linaro.org>
-References: <20191012065255.23249-1-daniel.lezcano@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=BHDcnsQSrbWE+Pwo7S+n8GHA2q4eny0JAFUJGKe7xZ8=;
+        b=P86Q/i/6HQ0AhQAEuqsV1U12x+nQA6XvmfWvWsgIUWaxY0HqYwYTgql8x+mcqsMVGn
+         oZ48u9C/20AKMiJU3eUhFdjG5kva2IBa1OjAR3dN+jkux1HrNjoaRWh4w1AP3pfloaWP
+         um20eo6OieRHVp304VSQ/xzm9k54IDaDXWqplLQbqiWkujU8U/vSNDo0FFMXDZZyBBcC
+         VamOG6sYku0Aj9/X80AtDOJTLVozVAsAiSTYGU4ug7b/gPmyS+2HzB/2UVe3jmszwqAv
+         yFqVY1JXCUSegqvR4FZwnUGMMtJ0qwaH+gKf4nNlW9vhAsdmB2kUX8Y4Xr+e24ptrHQc
+         obEw==
+X-Gm-Message-State: APjAAAUtWAm3bCK2E8fP+doT6mrakWLDMNJlzxA5paeKI8B4l9JzF93O
+        +6WO74RvSk/LlVvT3fTJkqU8xKAyhr1rPb1kk5s=
+X-Google-Smtp-Source: APXvYqzh1JhXn6wt25rBXxwiyzDYbOv7kAXqapBl3dI3xpJuHLNnt136lJlkwVriE3147d0sP1DVJNPzWbR1pVBgw1k=
+X-Received: by 2002:a17:906:792:: with SMTP id l18mr17349024ejc.170.1570863226323;
+ Fri, 11 Oct 2019 23:53:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191010133518.5420-1-christian.brauner@ubuntu.com>
+ <CAHO5Pa3V7fDb_+U-v+LB+TeAU0vfJyUMs9mD4ZqUtbLpZcD4nA@mail.gmail.com> <20191011221208.5eglbazksfigliob@yavin.dot.cyphar.com>
+In-Reply-To: <20191011221208.5eglbazksfigliob@yavin.dot.cyphar.com>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Sat, 12 Oct 2019 08:53:34 +0200
+Message-ID: <CAKgNAkhgGhGi-hMJt3UxYYDuyOZLx7c-eucpD5V7js+hsyv2CQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] clone3: add CLONE3_CLEAR_SIGHAND
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The struct thermal_trip is only used by the thermal internals, it is
-pointless to export the definition in the global header.
+Hello Aleksa,
 
-Move the structure to the thermal_core.h internal header.
+On Sat, 12 Oct 2019 at 00:12, Aleksa Sarai <cyphar@cyphar.com> wrote:
+>
+> On 2019-10-11, Michael Kerrisk <mtk.manpages@gmail.com> wrote:
+> > Why CLONE3_CLEAR_SIGHAND rather than just CLONE_CLEAR_SIGHAND?
+>
+> There are no more flag bits left for the classic clone()/clone2() (the
+> last one was used up by CLONE_PIDFD) -- thus this flag is clone3()-only.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/thermal/thermal_core.h | 13 +++++++++++++
- include/linux/thermal.h        | 15 ---------------
- 2 files changed, 13 insertions(+), 15 deletions(-)
+Yes, I understand that. But, I'm not sure that the "3" in the prefix
+is necessary. "CLONE_" still seems better to me.
 
-diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index 5953bb527ec2..6f6e0dcba4f2 100644
---- a/drivers/thermal/thermal_core.h
-+++ b/drivers/thermal/thermal_core.h
-@@ -58,6 +58,19 @@ int power_actor_get_min_power(struct thermal_cooling_device *cdev,
- 			      struct thermal_zone_device *tz, u32 *min_power);
- int power_actor_set_power(struct thermal_cooling_device *cdev,
- 			  struct thermal_instance *ti, u32 power);
-+/**
-+ * struct thermal_trip - representation of a point in temperature domain
-+ * @np: pointer to struct device_node that this trip point was created from
-+ * @temperature: temperature value in miliCelsius
-+ * @hysteresis: relative hysteresis in miliCelsius
-+ * @type: trip point type
-+ */
-+struct thermal_trip {
-+	struct device_node *np;
-+	int temperature;
-+	int hysteresis;
-+	enum thermal_trip_type type;
-+};
- 
- /*
-  * This structure is used to describe the behavior of
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index fae9ff2b079a..88e1faa3d72c 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -343,21 +343,6 @@ struct thermal_zone_of_device_ops {
- 	int (*set_trip_temp)(void *, int, int);
- };
- 
--/**
-- * struct thermal_trip - representation of a point in temperature domain
-- * @np: pointer to struct device_node that this trip point was created from
-- * @temperature: temperature value in miliCelsius
-- * @hysteresis: relative hysteresis in miliCelsius
-- * @type: trip point type
-- */
--
--struct thermal_trip {
--	struct device_node *np;
--	int temperature;
--	int hysteresis;
--	enum thermal_trip_type type;
--};
--
- /* Function declarations */
- #ifdef CONFIG_THERMAL_OF
- struct thermal_zone_device *
+Consider this: sometime in the near future we will probably have time
+namespaces. The new flag for those namespaces will only be usable with
+clone3(). It should NOT be called CLONE3_NEWTIME, but rather
+CLONE_NEWTIME (or similar), because that same flag will presumably
+also be used in other APIs such as unshare() and setns(). (Hmm -- I
+wonder if we are going to need a new unshare2() or some such...)
+
+Thanks,
+
+Michael
+
+
 -- 
-2.17.1
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
