@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6C0C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7D1C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578032089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 298222089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570880086;
-	bh=MLIYy09xXiNKtFM7Du7Vsz4gtjB6l5q/YwnKYLL7yos=;
+	s=default; t=1570880090;
+	bh=BCxxTG4TWZSsQkLAgEQ+idXegdIsvgmu3X/imdZBric=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RLElU04T9qKmraHiG0iUVpZS/75oJYxLGef8zZN79jJSH/jqqV7ytstoc2Ts1Tdqf
-	 dwUFZS9ktznPU2P/wtQVTImImhyeBg+GdI0lqUBE65hJjUVmuFx4rI+UTmsCvuDTUS
-	 4ytJaX/CPDg76VL6hV3aWJU1AxWCp8iYe4rGFio4=
+	b=vFl5kA8dPCZL+hMnSC2Ejxr1I0CDggbXsiX0mlhVOfPGguKsQ/AVTwcTJefg9DFHD
+	 owlZDgIBMVq8C82nqJiGzxjzCt6PbSzEgIntZ+0B6cDr1dPt938IldzOZNggzeo7gi
+	 yRjCKogv3EU+LWoIBR6piDX6CqMLmM1q6npaiO4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbfJLLeo (ORCPT
+        id S1729305AbfJLLet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 07:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41720 "EHLO mail.kernel.org"
+        Sat, 12 Oct 2019 07:34:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbfJLLek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 07:34:40 -0400
+        id S1729279AbfJLLen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 07:34:43 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED0E921A4A;
-        Sat, 12 Oct 2019 11:34:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE2652089F;
+        Sat, 12 Oct 2019 11:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570880079;
-        bh=MLIYy09xXiNKtFM7Du7Vsz4gtjB6l5q/YwnKYLL7yos=;
+        s=default; t=1570880082;
+        bh=BCxxTG4TWZSsQkLAgEQ+idXegdIsvgmu3X/imdZBric=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=p+c/Bx1tqX0FY7ajIr4Ii8M9zXpqHJ3uJlgcbs6fwgJpPaBM5rQD6cy34uxGEBYt+
-         4SzIHTGXP5bXgSB8Ft1CMApHuVhKuJve7lIpHAVTh0SB+hYXWgBojUSi5HHAvQSSti
-         +ipCOy+aYy5U7BReFQUBkbU2QR9GkhMdbgtycu7w=
-Date:   Sat, 12 Oct 2019 12:29:12 +0100
+        b=PTWcoD6SUQ++iL/Ug8wSa9TUJi63y43ywd+tCJXhA1hXp8192HZbI5L9AkZPh4PnY
+         GRNNIp5MIWqHXD0yC+MHZKBdF552a3tydA09TpBIgKYvWq7SXxBFCs952CYOlCQ9xi
+         n60rvrRwCa86RyBJs7v2DfKiaBcmF+uSrrOkOuxs=
+Date:   Sat, 12 Oct 2019 12:31:55 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Hartmut Knaack <knaack.h@gmx.de>,
@@ -50,12 +50,12 @@ Cc:     Hartmut Knaack <knaack.h@gmx.de>,
         <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 4/8] iio: adc: max1027: Prepare the introduction of
- different resolutions
-Message-ID: <20191012122912.5882d2e7@archlinux>
-In-Reply-To: <20191011144347.19146-5-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 6/8] dt-bindings: iio: adc: max1027: Mark interrupts
+ as optional
+Message-ID: <20191012123155.1a0df894@archlinux>
+In-Reply-To: <20191011144347.19146-7-miquel.raynal@bootlin.com>
 References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
-        <20191011144347.19146-5-miquel.raynal@bootlin.com>
+        <20191011144347.19146-7-miquel.raynal@bootlin.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -65,139 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 16:43:43 +0200
+On Fri, 11 Oct 2019 16:43:45 +0200
 Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> Maxim's max1027/29/31 series returns the measured voltages with a
-> resolution of 10 bits. There is a very similar series, max1227/29/31
-> which works identically but uses a resolution of 12 bits. Prepare the
-> support for these chips by turning the 'depth' into a macro parameter
-> instead of hardcoding it everywhere. Also reorganize just a bit the
-> macros at the top to avoid repeating tens of lines when adding support
-> for a new chip.
+> The chips have a 'start conversion' and a 'end of conversion' pair of
+> pins. They can be used but this is absolutely not mandatory as regular
+> polling is supported by the chip depending on its internal clocking
+> setup.
+> 
+> There is no physical reason to force the use of interrupts so turn
+> them optional.
+> 
+> Also, once the interrupt turned optional, these devices fit perfectly
+> the "trivial devices" described in the generic (yaml) bindings file, so
+> instead of converting this text file to json schema, we can just add
+> the relevant compatibles in:
+> Documentation/devicetree/bindings/trivial-devices.yaml.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+I guess this keeps things consistent event if we are about to delete it ;)
+
 Applied.
 
-Thanks,
-
-Jonathan
-
 > ---
->  drivers/iio/adc/max1027.c | 74 +++++++++++++++++----------------------
->  1 file changed, 32 insertions(+), 42 deletions(-)
+>  Documentation/devicetree/bindings/iio/adc/max1027-adc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-> index f9b473ee6711..8b449044bef5 100644
-> --- a/drivers/iio/adc/max1027.c
-> +++ b/drivers/iio/adc/max1027.c
-> @@ -83,7 +83,7 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
->  MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
->  #endif
->  
-> -#define MAX1027_V_CHAN(index)						\
-> +#define MAX1027_V_CHAN(index, depth)					\
->  	{								\
->  		.type = IIO_VOLTAGE,					\
->  		.indexed = 1,						\
-> @@ -93,7 +93,7 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
->  		.scan_index = index + 1,				\
->  		.scan_type = {						\
->  			.sign = 'u',					\
-> -			.realbits = 10,					\
-> +			.realbits = depth,				\
->  			.storagebits = 16,				\
->  			.shift = 2,					\
->  			.endianness = IIO_BE,				\
-> @@ -115,52 +115,42 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
->  		},							\
->  	}
->  
-> +#define MAX1X27_CHANNELS(depth)			\
-> +	MAX1027_T_CHAN,				\
-> +	MAX1027_V_CHAN(0, depth),		\
-> +	MAX1027_V_CHAN(1, depth),		\
-> +	MAX1027_V_CHAN(2, depth),		\
-> +	MAX1027_V_CHAN(3, depth),		\
-> +	MAX1027_V_CHAN(4, depth),		\
-> +	MAX1027_V_CHAN(5, depth),		\
-> +	MAX1027_V_CHAN(6, depth),		\
-> +	MAX1027_V_CHAN(7, depth)
+> diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+> index e680c61dfb84..7b23d68f655c 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+> @@ -3,6 +3,8 @@
+>  Required properties:
+>    - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
+>    - reg: SPI chip select number for the device
 > +
-> +#define MAX1X29_CHANNELS(depth)			\
-> +	MAX1X27_CHANNELS(depth),		\
-> +	MAX1027_V_CHAN(8, depth),		\
-> +	MAX1027_V_CHAN(9, depth),		\
-> +	MAX1027_V_CHAN(10, depth),		\
-> +	MAX1027_V_CHAN(11, depth)
-> +
-> +#define MAX1X31_CHANNELS(depth)			\
-> +	MAX1X27_CHANNELS(depth),		\
-> +	MAX1X29_CHANNELS(depth),		\
-> +	MAX1027_V_CHAN(12, depth),		\
-> +	MAX1027_V_CHAN(13, depth),		\
-> +	MAX1027_V_CHAN(14, depth),		\
-> +	MAX1027_V_CHAN(15, depth)
-> +
->  static const struct iio_chan_spec max1027_channels[] = {
-> -	MAX1027_T_CHAN,
-> -	MAX1027_V_CHAN(0),
-> -	MAX1027_V_CHAN(1),
-> -	MAX1027_V_CHAN(2),
-> -	MAX1027_V_CHAN(3),
-> -	MAX1027_V_CHAN(4),
-> -	MAX1027_V_CHAN(5),
-> -	MAX1027_V_CHAN(6),
-> -	MAX1027_V_CHAN(7)
-> +	MAX1X27_CHANNELS(10),
->  };
+> +Optional properties:
+>    - interrupts: IRQ line for the ADC
+>    see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 >  
->  static const struct iio_chan_spec max1029_channels[] = {
-> -	MAX1027_T_CHAN,
-> -	MAX1027_V_CHAN(0),
-> -	MAX1027_V_CHAN(1),
-> -	MAX1027_V_CHAN(2),
-> -	MAX1027_V_CHAN(3),
-> -	MAX1027_V_CHAN(4),
-> -	MAX1027_V_CHAN(5),
-> -	MAX1027_V_CHAN(6),
-> -	MAX1027_V_CHAN(7),
-> -	MAX1027_V_CHAN(8),
-> -	MAX1027_V_CHAN(9),
-> -	MAX1027_V_CHAN(10),
-> -	MAX1027_V_CHAN(11)
-> +	MAX1X29_CHANNELS(10),
->  };
->  
->  static const struct iio_chan_spec max1031_channels[] = {
-> -	MAX1027_T_CHAN,
-> -	MAX1027_V_CHAN(0),
-> -	MAX1027_V_CHAN(1),
-> -	MAX1027_V_CHAN(2),
-> -	MAX1027_V_CHAN(3),
-> -	MAX1027_V_CHAN(4),
-> -	MAX1027_V_CHAN(5),
-> -	MAX1027_V_CHAN(6),
-> -	MAX1027_V_CHAN(7),
-> -	MAX1027_V_CHAN(8),
-> -	MAX1027_V_CHAN(9),
-> -	MAX1027_V_CHAN(10),
-> -	MAX1027_V_CHAN(11),
-> -	MAX1027_V_CHAN(12),
-> -	MAX1027_V_CHAN(13),
-> -	MAX1027_V_CHAN(14),
-> -	MAX1027_V_CHAN(15)
-> +	MAX1X31_CHANNELS(10),
->  };
->  
->  static const unsigned long max1027_available_scan_masks[] = {
-> @@ -284,7 +274,7 @@ static int max1027_read_raw(struct iio_dev *indio_dev,
->  			break;
->  		case IIO_VOLTAGE:
->  			*val = 2500;
-> -			*val2 = 10;
-> +			*val2 = chan->scan_type.realbits;
->  			ret = IIO_VAL_FRACTIONAL_LOG2;
->  			break;
->  		default:
 
