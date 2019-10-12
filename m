@@ -2,87 +2,263 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7A1C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79293C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A702520673
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:31:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D1FXbIS1"
+	by mail.kernel.org (Postfix) with ESMTP id 416DB206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbfJLUbV (ORCPT
+        id S1729703AbfJLUg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 16:31:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45814 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbfJLUbV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 16:31:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/sb7daPXmmrV80bJqu1buwZ0sTd9HCj7RCL2luEA9/I=; b=D1FXbIS1Wx7RobTe89idi89Tw
-        FuqxZ5NRUbmqLN7PldVQ8K6Hcd9nphCpbe6KepQKXR8jKy1l57Q0qXU5NllgeBRXmxxZ9yWYapEZ1
-        cwtImrh9K2dLCRPX9wa84Qyx76uZ+cG3w1Xaif6zx26/ZkvzorJi88RZaHFf//AZjUH5oHL4Q/wcT
-        dwRMfh4+HOKMu3kzRw4Q8vARxzELxVdFh2FqGZGU3kDt9j+hGEsTzsZW+FZcrRSsboObsnUM5YWYH
-        8ltPjVC9GFghoQ+CkiMdXjzSzlDKiHQ2OM3/EUulFBSDkF+rICB+AYIHVCn55D5XpdyvGXCgTjN5r
-        bv0OJiV0Q==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iJO2p-0005bN-US; Sat, 12 Oct 2019 20:31:20 +0000
-Subject: Re: [PATCH v3 2/2] iio: (bma400) add driver for the BMA400
-To:     Dan Robertson <dan@dlrobertson.com>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20191012192525.21040-1-dan@dlrobertson.com>
- <20191012192525.21040-3-dan@dlrobertson.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8e55c408-acd8-0e8c-38a8-e48406b8bce6@infradead.org>
-Date:   Sat, 12 Oct 2019 13:31:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sat, 12 Oct 2019 16:36:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44948 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729432AbfJLUgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 16:36:25 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 85A18C058CA4
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 20:36:24 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id w2so6345609wrn.4
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 13:36:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JnMY403XT0MnWLXycYAnv/BtOzDPUCWOTNJeZPw5WwM=;
+        b=epppww7TsyU69HW8YUCUhLD0MKEXDylq5SmtAvDfAjI2QtV60lQtNC1G2WFzfXyq/b
+         7SJD1/T7A1dhuKka7mdCyFlWNFx1StV01ySHhQp28TSGKvHODCLiOiBV+0MsfY4ggNIB
+         SMfA38WFw3cdjTrM3qpl/Lu14TbGcbehxqnEgoi8YVsggILbUzO3/P+b9qMTpF3NZMNd
+         FiZLmeSZvZzcXCm8UkSHqmkO73mVjujKAOVFDQrWvbuQLb52IvT4ZJGH0WcGaU1eOBD5
+         JB2ygtI9vpQJ3CwMeUk3k5yTvCxchXwom7rrklMUL4gQBf7+gNIoF0hugwZEUtUVPk70
+         sUoA==
+X-Gm-Message-State: APjAAAXqs8W99+5Iugy86kdCXmdpZ3GwNm8z6+3OKwvNg5XBJxZCtPhT
+        h4q843+t6aniYtEMuyqk3vCBHBif4ZSgVGoPfMy84qrwdVuCUDUwx8JbwOvGwixDZ1f9B/u3zfx
+        /PMANErsUGExEgemz1kA9euKx
+X-Received: by 2002:a7b:c44f:: with SMTP id l15mr8418732wmi.121.1570912583101;
+        Sat, 12 Oct 2019 13:36:23 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwpf5fgrdblCrCbh9YFdQVHjk4IkIywF94f5EqgMMvec1jqlKTbum6rFKr4dPV8/Jiydn/CCw==
+X-Received: by 2002:a7b:c44f:: with SMTP id l15mr8418726wmi.121.1570912582819;
+        Sat, 12 Oct 2019 13:36:22 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
+        by smtp.gmail.com with ESMTPSA id r13sm18778588wrn.0.2019.10.12.13.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Oct 2019 13:36:22 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 16:36:19 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH RFC v1 2/2] vhost: batching fetches
+Message-ID: <20191012162759-mutt-send-email-mst@kernel.org>
+References: <20191011134358.16912-1-mst@redhat.com>
+ <20191011134358.16912-3-mst@redhat.com>
+ <3be186d8-cde6-aa08-0446-1ec7fec0efe0@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191012192525.21040-3-dan@dlrobertson.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3be186d8-cde6-aa08-0446-1ec7fec0efe0@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/19 12:25 PM, Dan Robertson wrote:
-> Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
-> The driver supports reading from the acceleration and temperature
-> registers. The driver also supports reading and configuring the output data
-> rate, oversampling ratio, and scale.
+On Sat, Oct 12, 2019 at 03:30:52PM +0800, Jason Wang wrote:
 > 
-> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
-> ---
->  drivers/iio/accel/Kconfig       |  18 +
->  drivers/iio/accel/Makefile      |   2 +
->  drivers/iio/accel/bma400.h      |  80 ++++
->  drivers/iio/accel/bma400_core.c | 788 ++++++++++++++++++++++++++++++++
->  drivers/iio/accel/bma400_i2c.c  |  60 +++
->  5 files changed, 948 insertions(+)
->  create mode 100644 drivers/iio/accel/bma400.h
->  create mode 100644 drivers/iio/accel/bma400_core.c
->  create mode 100644 drivers/iio/accel/bma400_i2c.c
+> On 2019/10/11 下午9:46, Michael S. Tsirkin wrote:
+> > With this patch applied, new and old code perform identically.
+> > 
+> > Lots of extra optimizations are now possible, e.g.
+> > we can fetch multiple heads with copy_from/to_user now.
+> > We can get rid of maintaining the log array.  Etc etc.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> >   drivers/vhost/test.c  |  2 +-
+> >   drivers/vhost/vhost.c | 50 ++++++++++++++++++++++++++++++++++++-------
+> >   drivers/vhost/vhost.h |  4 +++-
+> >   3 files changed, 46 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+> > index 39a018a7af2d..e3a8e9db22cd 100644
+> > --- a/drivers/vhost/test.c
+> > +++ b/drivers/vhost/test.c
+> > @@ -128,7 +128,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
+> >   	dev = &n->dev;
+> >   	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
+> >   	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
+> > -	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
+> > +	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
+> >   		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
+> >   	f->private_data = n;
+> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > index 36661d6cb51f..aa383e847865 100644
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -302,6 +302,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+> >   {
+> >   	vq->num = 1;
+> >   	vq->ndescs = 0;
+> > +	vq->first_desc = 0;
+> >   	vq->desc = NULL;
+> >   	vq->avail = NULL;
+> >   	vq->used = NULL;
+> > @@ -390,6 +391,7 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+> >   	for (i = 0; i < dev->nvqs; ++i) {
+> >   		vq = dev->vqs[i];
+> >   		vq->max_descs = dev->iov_limit;
+> > +		vq->batch_descs = dev->iov_limit - UIO_MAXIOV;
+> >   		vq->descs = kmalloc_array(vq->max_descs,
+> >   					  sizeof(*vq->descs),
+> >   					  GFP_KERNEL);
+> > @@ -2366,6 +2368,8 @@ static void pop_split_desc(struct vhost_virtqueue *vq)
+> >   	--vq->ndescs;
+> >   }
+> > +#define VHOST_DESC_FLAGS (VRING_DESC_F_INDIRECT | VRING_DESC_F_WRITE | \
+> > +			  VRING_DESC_F_NEXT)
+> >   static int push_split_desc(struct vhost_virtqueue *vq, struct vring_desc *desc, u16 id)
+> >   {
+> >   	struct vhost_desc *h;
+> > @@ -2375,7 +2379,7 @@ static int push_split_desc(struct vhost_virtqueue *vq, struct vring_desc *desc,
+> >   	h = &vq->descs[vq->ndescs++];
+> >   	h->addr = vhost64_to_cpu(vq, desc->addr);
+> >   	h->len = vhost32_to_cpu(vq, desc->len);
+> > -	h->flags = vhost16_to_cpu(vq, desc->flags);
+> > +	h->flags = vhost16_to_cpu(vq, desc->flags) & VHOST_DESC_FLAGS;
+> >   	h->id = id;
+> >   	return 0;
+> > @@ -2450,7 +2454,7 @@ static int fetch_indirect_descs(struct vhost_virtqueue *vq,
+> >   	return 0;
+> >   }
+> > -static int fetch_descs(struct vhost_virtqueue *vq)
+> > +static int fetch_buf(struct vhost_virtqueue *vq)
+> >   {
+> >   	struct vring_desc desc;
+> >   	unsigned int i, head, found = 0;
+> > @@ -2462,7 +2466,11 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+> >   	/* Check it isn't doing very strange things with descriptor numbers. */
+> >   	last_avail_idx = vq->last_avail_idx;
+> > -	if (vq->avail_idx == vq->last_avail_idx) {
+> > +	if (unlikely(vq->avail_idx == vq->last_avail_idx)) {
+> > +		/* If we already have work to do, don't bother re-checking. */
+> > +		if (likely(vq->ndescs))
+> > +			return vq->num;
+> > +
+> >   		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
+> >   			vq_err(vq, "Failed to access avail idx at %p\n",
+> >   				&vq->avail->idx);
+> > @@ -2541,6 +2549,24 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+> >   	return 0;
+> >   }
+> > +static int fetch_descs(struct vhost_virtqueue *vq)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	if (unlikely(vq->first_desc >= vq->ndescs)) {
+> > +		vq->first_desc = 0;
+> > +		vq->ndescs = 0;
+> > +	}
+> > +
+> > +	if (vq->ndescs)
+> > +		return 0;
+> > +
+> > +	while (!ret && vq->ndescs <= vq->batch_descs)
+> > +		ret = fetch_buf(vq);
+> 
+> 
+> It looks to me descriptor chaining might be broken here.
 
-No comment other than thank you for ignoring my previous comments.  :(
+It should work because fetch_buf fetches a whole buf, following
+the chain. Seems to work in a small test ... what issues do you see?
 
--- 
-~Randy
+> 
+> > +
+> > +	return vq->ndescs ? 0 : ret;
+> > +}
+> > +
+> >   /* This looks in the virtqueue and for the first available buffer, and converts
+> >    * it to an iovec for convenient access.  Since descriptors consist of some
+> >    * number of output then some number of input descriptors, it's actually two
+> > @@ -2562,6 +2588,8 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
+> >   	if (ret)
+> >   		return ret;
+> > +	/* Note: indirect descriptors are not batched */
+> > +	/* TODO: batch up to a limit */
+> >   	last = peek_split_desc(vq);
+> >   	id = last->id;
+> > @@ -2584,12 +2612,12 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
+> >   	if (unlikely(log))
+> >   		*log_num = 0;
+> > -	for (i = 0; i < vq->ndescs; ++i) {
+> > +	for (i = vq->first_desc; i < vq->ndescs; ++i) {
+> >   		unsigned iov_count = *in_num + *out_num;
+> >   		struct vhost_desc *desc = &vq->descs[i];
+> >   		int access;
+> > -		if (desc->flags & ~(VRING_DESC_F_INDIRECT | VRING_DESC_F_WRITE)) {
+> > +		if (desc->flags & ~VHOST_DESC_FLAGS) {
+> >   			vq_err(vq, "Unexpected flags: 0x%x at descriptor id 0x%x\n",
+> >   			       desc->flags, desc->id);
+> >   			ret = -EINVAL;
+> > @@ -2628,15 +2656,21 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
+> >   			}
+> >   			*out_num += ret;
+> >   		}
+> > +
+> > +		ret = desc->id;
+> > +
+> > +		if (!(desc->flags & VRING_DESC_F_NEXT))
+> > +			break;
+> >   	}
+> 
+> 
+> What happens if we reach vq->ndescs but VRING_DESC_F_NEXT is still set?
+> 
+> Thanks
+
+This can't happen: descriptors are pushed by push_split_desc each time
+we go through a loop in fetch_buf. The only way to exit the loop
+with return code 0 is if next_desc return -1 that is when VRING_DESC_F_NEXT
+is clear.
+
+But it's a good idea to add a BUG_ON here, I'll do it in the next version.
+
+
+> 
+> > -	ret = id;
+> > -	vq->ndescs = 0;
+> > +	vq->first_desc = i + 1;
+> >   	return ret;
+> >   err:
+> > -	vhost_discard_vq_desc(vq, 1);
+> > +	for (i = vq->first_desc; i < vq->ndescs; ++i)
+> > +		if (!(desc->flags & VRING_DESC_F_NEXT))
+> > +			vhost_discard_vq_desc(vq, 1);
+> >   	vq->ndescs = 0;
+> >   	return ret;
+> > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> > index 1724f61b6c2d..8b88e0c903da 100644
+> > --- a/drivers/vhost/vhost.h
+> > +++ b/drivers/vhost/vhost.h
+> > @@ -100,7 +100,9 @@ struct vhost_virtqueue {
+> >   	struct vhost_desc *descs;
+> >   	int ndescs;
+> > +	int first_desc;
+> >   	int max_descs;
+> > +	int batch_descs;
+> >   	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
+> >   	struct file *kick;
+> > @@ -245,7 +247,7 @@ ssize_t vhost_chr_write_iter(struct vhost_dev *dev,
+> >   int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
+> >   #define vq_err(vq, fmt, ...) do {                                  \
+> > -		pr_debug(pr_fmt(fmt), ##__VA_ARGS__);       \
+> > +		pr_err(pr_fmt(fmt), ##__VA_ARGS__);       \
+> >   		if ((vq)->error_ctx)                               \
+> >   				eventfd_signal((vq)->error_ctx, 1);\
+> >   	} while (0)
