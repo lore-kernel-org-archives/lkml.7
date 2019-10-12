@@ -2,35 +2,34 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5914C47404
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAE7C47404
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA015214E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D8C2089F
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbfJLA71 (ORCPT
+        id S1728400AbfJLA7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 20:59:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57172 "EHLO mail.kernel.org"
+        Fri, 11 Oct 2019 20:59:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728221AbfJLA7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 20:59:24 -0400
+        id S1726903AbfJLA7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 20:59:22 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 576B221D7D;
-        Sat, 12 Oct 2019 00:59:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B462421835;
+        Sat, 12 Oct 2019 00:59:21 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iJ5kf-0004Fu-H6; Fri, 11 Oct 2019 20:59:21 -0400
-Message-Id: <20191012005921.411873502@goodmis.org>
+        id 1iJ5ke-0004Dy-T1; Fri, 11 Oct 2019 20:59:20 -0400
+Message-Id: <20191012005920.780394471@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 11 Oct 2019 20:57:53 -0400
+Date:   Fri, 11 Oct 2019 20:57:49 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -41,8 +40,8 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         LSM List <linux-security-module@vger.kernel.org>,
         Linux API <linux-api@vger.kernel.org>,
         Ben Hutchings <ben@decadent.org.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 6/7 v2] tracing: Add some more locked_down checks
+        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org
+Subject: [PATCH 2/7 v2] ftrace: Get a reference counter for the trace_array on filter files
 References: <20191012005747.210722465@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -53,404 +52,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Added various checks on open tracefs calls to see if tracefs is in lockdown
-mode, and if so, to return -EPERM.
+The ftrace set_ftrace_filter and set_ftrace_notrace files are specific for
+an instance now. They need to take a reference to the instance otherwise
+there could be a race between accessing the files and deleting the instance.
 
-Note, the event format files (which are basically standard on all machines)
-as well as the enabled_functions file (which shows what is currently being
-traced) are not lockde down. Perhaps they should be, but it seems counter
-intuitive to lockdown information to help you know if the system has been
-modified.
+It wasn't until the :mod: caching where these file operations stated
+referencing the trace_arry directly.
 
-Link: http://lkml.kernel.org/r/CAHk-=wj7fGPKUspr579Cii-w_y60PtRaiDgKuxVtBAMK0VNNkA@mail.gmail.com
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Fixes: 673feb9d76ab3 ("ftrace: Add :mod: caching infrastructure to trace_array")
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c               | 23 ++++++++++++++++++++++-
- kernel/trace/trace.c                |  8 ++++++++
- kernel/trace/trace_events.c         |  8 ++++++++
- kernel/trace/trace_events_hist.c    | 11 +++++++++++
- kernel/trace/trace_events_trigger.c |  8 +++++++-
- kernel/trace/trace_kprobe.c         | 12 +++++++++++-
- kernel/trace/trace_printk.c         |  7 +++++++
- kernel/trace/trace_stack.c          |  8 ++++++++
- kernel/trace/trace_stat.c           |  6 +++++-
- kernel/trace/trace_uprobe.c         | 11 +++++++++++
- 10 files changed, 98 insertions(+), 4 deletions(-)
+ kernel/trace/ftrace.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 8b765a55e01c..f296d89be757 100644
+index 62a50bf399d6..32c2eb167de0 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -18,6 +18,7 @@
- #include <linux/clocksource.h>
- #include <linux/sched/task.h>
- #include <linux/kallsyms.h>
-+#include <linux/security.h>
- #include <linux/seq_file.h>
- #include <linux/tracefs.h>
- #include <linux/hardirq.h>
-@@ -3486,6 +3487,11 @@ static int
- ftrace_avail_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_iterator *iter;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
+@@ -3540,21 +3540,22 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
+ 	struct ftrace_hash *hash;
+ 	struct list_head *mod_head;
+ 	struct trace_array *tr = ops->private;
+-	int ret = 0;
++	int ret = -ENOMEM;
+ 
+ 	ftrace_ops_init(ops);
  
  	if (unlikely(ftrace_disabled))
  		return -ENODEV;
-@@ -3505,6 +3511,15 @@ ftrace_enabled_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_iterator *iter;
  
-+	/*
-+	 * This shows us what functions are currently being
-+	 * traced and by what. Not sure if we want lockdown
-+	 * to hide such critical information for an admin.
-+	 * Although, perhaps it can show information we don't
-+	 * want people to see, but if something is tracing
-+	 * something, we probably want to know about it.
-+	 */
++	if (tr && trace_array_get(tr) < 0)
++		return -ENODEV;
 +
- 	iter = __seq_open_private(file, &show_ftrace_seq_ops, sizeof(*iter));
+ 	iter = kzalloc(sizeof(*iter), GFP_KERNEL);
  	if (!iter)
- 		return -ENOMEM;
-@@ -3625,6 +3640,7 @@ ftrace_filter_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_ops *ops = inode->i_private;
+-		return -ENOMEM;
++		goto out;
  
-+	/* Checks for tracefs lockdown */
- 	return ftrace_regex_open(ops,
- 			FTRACE_ITER_FILTER | FTRACE_ITER_DO_PROBES,
- 			inode, file);
-@@ -3635,6 +3651,7 @@ ftrace_notrace_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_ops *ops = inode->i_private;
+-	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX)) {
+-		kfree(iter);
+-		return -ENOMEM;
+-	}
++	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX))
++		goto out;
  
-+	/* Checks for tracefs lockdown */
- 	return ftrace_regex_open(ops, FTRACE_ITER_NOTRACE,
- 				 inode, file);
- }
-@@ -5203,9 +5220,13 @@ static int
- __ftrace_graph_open(struct inode *inode, struct file *file,
- 		    struct ftrace_graph_data *fgd)
- {
--	int ret = 0;
-+	int ret;
- 	struct ftrace_hash *new_hash = NULL;
+ 	iter->ops = ops;
+ 	iter->flags = flag;
+@@ -3584,13 +3585,13 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
  
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
+ 		if (!iter->hash) {
+ 			trace_parser_put(&iter->parser);
+-			kfree(iter);
+-			ret = -ENOMEM;
+ 			goto out_unlock;
+ 		}
+ 	} else
+ 		iter->hash = hash;
+ 
++	ret = 0;
 +
- 	if (file->f_mode & FMODE_WRITE) {
- 		const int size_bits = FTRACE_HASH_DEFAULT_BITS;
+ 	if (file->f_mode & FMODE_READ) {
+ 		iter->pg = ftrace_pages_start;
  
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 26ee280f852b..2b4eff383505 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -17,6 +17,7 @@
- #include <linux/stacktrace.h>
- #include <linux/writeback.h>
- #include <linux/kallsyms.h>
-+#include <linux/security.h>
- #include <linux/seq_file.h>
- #include <linux/notifier.h>
- #include <linux/irqflags.h>
-@@ -306,6 +307,12 @@ void trace_array_put(struct trace_array *this_tr)
+@@ -3602,7 +3603,6 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
+ 			/* Failed */
+ 			free_ftrace_hash(iter->hash);
+ 			trace_parser_put(&iter->parser);
+-			kfree(iter);
+ 		}
+ 	} else
+ 		file->private_data = iter;
+@@ -3610,6 +3610,13 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
+  out_unlock:
+ 	mutex_unlock(&ops->func_hash->regex_lock);
  
- int tracing_check_open_get_tr(struct trace_array *tr)
- {
-+	int ret;
++ out:
++	if (ret) {
++		kfree(iter);
++		if (tr)
++			trace_array_put(tr);
++	}
 +
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if (tracing_disabled)
- 		return -ENODEV;
- 
-@@ -6813,6 +6820,7 @@ static int snapshot_raw_open(struct inode *inode, struct file *filp)
- 	struct ftrace_buffer_info *info;
- 	int ret;
- 
-+	/* The following checks for tracefs lockdown */
- 	ret = tracing_buffers_open(inode, filp);
- 	if (ret < 0)
- 		return ret;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index ae35d6cb802a..994b7a408c5f 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -12,6 +12,7 @@
- #define pr_fmt(fmt) fmt
- 
- #include <linux/workqueue.h>
-+#include <linux/security.h>
- #include <linux/spinlock.h>
- #include <linux/kthread.h>
- #include <linux/tracefs.h>
-@@ -1294,6 +1295,8 @@ static int trace_format_open(struct inode *inode, struct file *file)
- 	struct seq_file *m;
- 	int ret;
- 
-+	/* Do we want to hide event format files on tracefs lockdown? */
-+
- 	ret = seq_open(file, &trace_format_seq_ops);
- 	if (ret < 0)
- 		return ret;
-@@ -1750,6 +1753,10 @@ ftrace_event_open(struct inode *inode, struct file *file,
- 	struct seq_file *m;
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	ret = seq_open(file, seq_ops);
- 	if (ret < 0)
- 		return ret;
-@@ -1774,6 +1781,7 @@ ftrace_event_avail_open(struct inode *inode, struct file *file)
- {
- 	const struct seq_operations *seq_ops = &show_event_seq_ops;
- 
-+	/* Checks for tracefs lockdown */
- 	return ftrace_event_open(inode, file, seq_ops);
+ 	return ret;
  }
  
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index dd18d76bf1bd..57648c5aa679 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -7,6 +7,7 @@
+@@ -5037,6 +5044,8 @@ int ftrace_regex_release(struct inode *inode, struct file *file)
  
- #include <linux/module.h>
- #include <linux/kallsyms.h>
-+#include <linux/security.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/stacktrace.h>
-@@ -1448,6 +1449,10 @@ static int synth_events_open(struct inode *inode, struct file *file)
- {
- 	int ret;
+ 	mutex_unlock(&iter->ops->func_hash->regex_lock);
+ 	free_ftrace_hash(iter->hash);
++	if (iter->tr)
++		trace_array_put(iter->tr);
+ 	kfree(iter);
  
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
- 		ret = dyn_events_release_all(&synth_event_ops);
- 		if (ret < 0)
-@@ -5515,6 +5520,12 @@ static int hist_show(struct seq_file *m, void *v)
- 
- static int event_hist_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return single_open(file, hist_show, file);
- }
- 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 2a2912cb4533..2cd53ca21b51 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2013 Tom Zanussi <tom.zanussi@linux.intel.com>
-  */
- 
-+#include <linux/security.h>
- #include <linux/module.h>
- #include <linux/ctype.h>
- #include <linux/mutex.h>
-@@ -173,7 +174,11 @@ static const struct seq_operations event_triggers_seq_ops = {
- 
- static int event_trigger_regex_open(struct inode *inode, struct file *file)
- {
--	int ret = 0;
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
- 
- 	mutex_lock(&event_mutex);
- 
-@@ -292,6 +297,7 @@ event_trigger_write(struct file *filp, const char __user *ubuf,
- static int
- event_trigger_open(struct inode *inode, struct file *filp)
- {
-+	/* Checks for tracefs lockdown */
- 	return event_trigger_regex_open(inode, filp);
- }
- 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 324ffbea3556..1552a95c743b 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -7,11 +7,11 @@
-  */
- #define pr_fmt(fmt)	"trace_kprobe: " fmt
- 
-+#include <linux/security.h>
- #include <linux/module.h>
- #include <linux/uaccess.h>
- #include <linux/rculist.h>
- #include <linux/error-injection.h>
--#include <linux/security.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- 
-@@ -936,6 +936,10 @@ static int probes_open(struct inode *inode, struct file *file)
- {
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
- 		ret = dyn_events_release_all(&trace_kprobe_ops);
- 		if (ret < 0)
-@@ -988,6 +992,12 @@ static const struct seq_operations profile_seq_op = {
- 
- static int profile_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return seq_open(file, &profile_seq_op);
- }
- 
-diff --git a/kernel/trace/trace_printk.c b/kernel/trace/trace_printk.c
-index c3fd849d4a8f..d4e31e969206 100644
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -6,6 +6,7 @@
-  *
-  */
- #include <linux/seq_file.h>
-+#include <linux/security.h>
- #include <linux/uaccess.h>
- #include <linux/kernel.h>
- #include <linux/ftrace.h>
-@@ -348,6 +349,12 @@ static const struct seq_operations show_format_seq_ops = {
- static int
- ftrace_formats_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return seq_open(file, &show_format_seq_ops);
- }
- 
-diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-index ec9a34a97129..4df9a209f7ca 100644
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -5,6 +5,7 @@
-  */
- #include <linux/sched/task_stack.h>
- #include <linux/stacktrace.h>
-+#include <linux/security.h>
- #include <linux/kallsyms.h>
- #include <linux/seq_file.h>
- #include <linux/spinlock.h>
-@@ -470,6 +471,12 @@ static const struct seq_operations stack_trace_seq_ops = {
- 
- static int stack_trace_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return seq_open(file, &stack_trace_seq_ops);
- }
- 
-@@ -487,6 +494,7 @@ stack_trace_filter_open(struct inode *inode, struct file *file)
- {
- 	struct ftrace_ops *ops = inode->i_private;
- 
-+	/* Checks for tracefs lockdown */
- 	return ftrace_regex_open(ops, FTRACE_ITER_FILTER,
- 				 inode, file);
- }
-diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
-index 75bf1bcb4a8a..9ab0a1a7ad5e 100644
---- a/kernel/trace/trace_stat.c
-+++ b/kernel/trace/trace_stat.c
-@@ -9,7 +9,7 @@
-  *
-  */
- 
--
-+#include <linux/security.h>
- #include <linux/list.h>
- #include <linux/slab.h>
- #include <linux/rbtree.h>
-@@ -238,6 +238,10 @@ static int tracing_stat_open(struct inode *inode, struct file *file)
- 	struct seq_file *m;
- 	struct stat_session *session = inode->i_private;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	ret = stat_seq_init(session);
- 	if (ret)
- 		return ret;
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index dd884341f5c5..352073d36585 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -7,6 +7,7 @@
-  */
- #define pr_fmt(fmt)	"trace_uprobe: " fmt
- 
-+#include <linux/security.h>
- #include <linux/ctype.h>
- #include <linux/module.h>
- #include <linux/uaccess.h>
-@@ -769,6 +770,10 @@ static int probes_open(struct inode *inode, struct file *file)
- {
- 	int ret;
- 
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
- 		ret = dyn_events_release_all(&trace_uprobe_ops);
- 		if (ret)
-@@ -818,6 +823,12 @@ static const struct seq_operations profile_seq_op = {
- 
- static int profile_open(struct inode *inode, struct file *file)
- {
-+	int ret;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
- 	return seq_open(file, &profile_seq_op);
- }
- 
+ 	return 0;
 -- 
 2.23.0
 
