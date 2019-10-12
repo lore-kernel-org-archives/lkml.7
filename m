@@ -2,88 +2,87 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31151C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7A1C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDAE20700
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A702520673
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D1FXbIS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387395AbfJLU3T (ORCPT
+        id S2387423AbfJLUbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 16:29:19 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:60774 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbfJLU3T (ORCPT
+        Sat, 12 Oct 2019 16:31:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45814 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbfJLUbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 16:29:19 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 682C4609D2F2;
-        Sat, 12 Oct 2019 22:29:17 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id DCpYQgfqV-ok; Sat, 12 Oct 2019 22:29:17 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 1E788609D2F1;
-        Sat, 12 Oct 2019 22:29:17 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 2rXCj63ki4Po; Sat, 12 Oct 2019 22:29:17 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id E0AAF609D2C6;
-        Sat, 12 Oct 2019 22:29:16 +0200 (CEST)
-Date:   Sat, 12 Oct 2019 22:29:16 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     torvalds <torvalds@linux-foundation.org>
-Cc:     linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        miquel.raynal@bootlin.com, vigneshr@ti.com,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>
-Message-ID: <1615396520.21318.1570912156820.JavaMail.zimbra@nod.at>
-Subject: [GIT PULL] mtd: Fixes for v5.4-rc3
+        Sat, 12 Oct 2019 16:31:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/sb7daPXmmrV80bJqu1buwZ0sTd9HCj7RCL2luEA9/I=; b=D1FXbIS1Wx7RobTe89idi89Tw
+        FuqxZ5NRUbmqLN7PldVQ8K6Hcd9nphCpbe6KepQKXR8jKy1l57Q0qXU5NllgeBRXmxxZ9yWYapEZ1
+        cwtImrh9K2dLCRPX9wa84Qyx76uZ+cG3w1Xaif6zx26/ZkvzorJi88RZaHFf//AZjUH5oHL4Q/wcT
+        dwRMfh4+HOKMu3kzRw4Q8vARxzELxVdFh2FqGZGU3kDt9j+hGEsTzsZW+FZcrRSsboObsnUM5YWYH
+        8ltPjVC9GFghoQ+CkiMdXjzSzlDKiHQ2OM3/EUulFBSDkF+rICB+AYIHVCn55D5XpdyvGXCgTjN5r
+        bv0OJiV0Q==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iJO2p-0005bN-US; Sat, 12 Oct 2019 20:31:20 +0000
+Subject: Re: [PATCH v3 2/2] iio: (bma400) add driver for the BMA400
+To:     Dan Robertson <dan@dlrobertson.com>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <20191012192525.21040-1-dan@dlrobertson.com>
+ <20191012192525.21040-3-dan@dlrobertson.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8e55c408-acd8-0e8c-38a8-e48406b8bce6@infradead.org>
+Date:   Sat, 12 Oct 2019 13:31:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191012192525.21040-3-dan@dlrobertson.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
-Thread-Index: smKon1qr3Q9KM5c1y0Y1Qg5DoWAx3A==
-Thread-Topic: Fixes for v5.4-rc3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 10/12/19 12:25 PM, Dan Robertson wrote:
+> Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
+> The driver supports reading from the acceleration and temperature
+> registers. The driver also supports reading and configuring the output data
+> rate, oversampling ratio, and scale.
+> 
+> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+> ---
+>  drivers/iio/accel/Kconfig       |  18 +
+>  drivers/iio/accel/Makefile      |   2 +
+>  drivers/iio/accel/bma400.h      |  80 ++++
+>  drivers/iio/accel/bma400_core.c | 788 ++++++++++++++++++++++++++++++++
+>  drivers/iio/accel/bma400_i2c.c  |  60 +++
+>  5 files changed, 948 insertions(+)
+>  create mode 100644 drivers/iio/accel/bma400.h
+>  create mode 100644 drivers/iio/accel/bma400_core.c
+>  create mode 100644 drivers/iio/accel/bma400_i2c.c
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+No comment other than thank you for ignoring my previous comments.  :(
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/fixes-for-5.4-rc3
-
-for you to fetch changes up to df8fed831cbcdce7b283b2d9c1aadadcf8940d05:
-
-  mtd: rawnand: au1550nd: Fix au_read_buf16() prototype (2019-10-07 09:56:36 +0200)
-
-----------------------------------------------------------------
-This pull request contains two fixes for MTD:
-
-- spi-nor: Fix for a regression in write_sr()
-- rawnand: Regression fix for the au1550nd driver
-
-----------------------------------------------------------------
-Paul Burton (1):
-      mtd: rawnand: au1550nd: Fix au_read_buf16() prototype
-
-Tudor Ambarus (1):
-      mtd: spi-nor: Fix direction of the write_sr() transfer
-
- drivers/mtd/nand/raw/au1550nd.c | 5 ++---
- drivers/mtd/spi-nor/spi-nor.c   | 2 +-
- 2 files changed, 3 insertions(+), 4 deletions(-)
+-- 
+~Randy
