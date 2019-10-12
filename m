@@ -2,136 +2,320 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0266C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D15C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7255E21850
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAE921929
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="f2/7j/pn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QFdntnSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbfJLF4t (ORCPT
+        id S1728247AbfJLGLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 01:56:49 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25499 "EHLO
-        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfJLF4s (ORCPT
+        Sat, 12 Oct 2019 02:11:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40992 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfJLGLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 01:56:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1570859698; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=fbrsZxm+7TKVtfBaI9CgHN2IBxrQUnWVjVt1g208sqHAQL2H8pESojcxSzJTs9AGL9n4cNYZ/UguOymBnEoWnSymKk38/tEh94q6jtCt+v+qPGuThT+IjV73jyvmkLA0yHCh/C4hLPifLizIA2S0c+v8Q5pkANWx72dCd1q5Mu4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1570859698; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=9AsoSpojO4C74zbA2M3vz9rPBC36KFYTB+2fQ9Vp4gI=; 
-        b=RCCLWEjvhiN06MZySYEkaXh3Ytov+nuI07mag5pBuWn5L9qPkre0VOLclXinMggGOkpO02uwZxI1+HCrsq1gNLnWV5Wx254qtJJD1YqF47tzBjfZefy/EWwFY0hSr8sL//EFE4pjOb6TEF1n0GIbwpRg0KF4yksyOCNlMWBjZ9k=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=mNl1coxyT/xrBFcEUlhANEY+31SZf5sG9wBRrdRm1JFVU4i/+SFhuXS65DKOkNokmR6b6nKn/haQ
-    3+OnysTj0tldCIkEgdXdkx5MFYqmSod0c3tdKrx0Y4h9th3AnH1I  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570859698;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=2326; bh=9AsoSpojO4C74zbA2M3vz9rPBC36KFYTB+2fQ9Vp4gI=;
-        b=f2/7j/pnXvy/3Ewx3yOsWePr6AFOZYJ5jo45oCm/jLU7s5Xy0TlH8NHuCGGJo7MD
-        d14zx0DgPbG+rHpbJvZ11PwUPBVjUPipnQ5FEp9c0UKqFftsD/JE9XMzMf3B5ucV+MS
-        I1fRPcc5blwWscfRVfl2EkZ5lCWzmOizODyni25c=
-Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
-        with SMTPS id 1570859696276279.0728945796534; Fri, 11 Oct 2019 22:54:56 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, jason@lakedaemon.net,
-        paul.burton@mips.com, allison@lohutok.net, syq@debian.org,
-        rfontana@redhat.com, tglx@linutronix.de, paul@crapouillou.net,
-        maz@kernel.org
-Subject: [PATCH 5/5 v6] irqchip: Ingenic: Add process for more than one irq at the same time.
-Date:   Sat, 12 Oct 2019 13:53:50 +0800
-Message-Id: <1570859630-50942-6-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1570859630-50942-1-git-send-email-zhouyanjie@zoho.com>
-References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
- <1570859630-50942-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Sat, 12 Oct 2019 02:11:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fGRKnn3IN3npGRb7YB6Q9S35GJBgvJwndLw6VDvTwDQ=; b=QFdntnSw6Bm6vBZ6z1ToJZnMf
+        xo13Pjw0mNJPREdlOXDVJDSNun/nZR6/SFHcTeWEwLEjngaIc8n3R7ps7UeF8X7yU/MHa9CQmpvLH
+        6ImhU6x9Ri4FzOkLwRE+uqpsn/+QZrH1D+q41G9MjUuuH1A7UOx5YNH+xUzYzaT8+ZkOEhKoJEbq1
+        xTvIdikoF7XiD40B7j3+jBqsTFlhqPagrQwpHTOaYPRb23C5jZcdKBwAflBEIkKx+x35FRFarnD3F
+        kJaBebGuvJvPhLYW1qcw5NbQsQnSesv2GtMD2hk4x1VL1t7UP40lw/8tNcb5P6Lq4E3j7trIelqRq
+        vY+dc6Qqg==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iJAcm-0001dT-P6; Sat, 12 Oct 2019 06:11:32 +0000
+Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
+To:     Dan Robertson <dan@dlrobertson.com>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <20191012035420.13904-1-dan@dlrobertson.com>
+ <20191012035420.13904-3-dan@dlrobertson.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
+Date:   Fri, 11 Oct 2019 23:11:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191012035420.13904-3-dan@dlrobertson.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add process for the situation that more than one irq is coming to
-a single chip at the same time. The original code will only respond
-to the lowest setted bit in JZ_REG_INTC_PENDING, and then exit the
-interrupt dispatch function. After exiting the interrupt dispatch
-function, since the second interrupt has not yet responded, the
-interrupt dispatch function is again entered to process the second
-interrupt. This creates additional unnecessary overhead, and the
-more interrupts that occur at the same time, the more overhead is
-added. The improved method in this patch is to check whether there
-are still unresponsive interrupts after processing the lowest
-setted bit interrupt. If there are any, the processing will be
-processed according to the bit in JZ_REG_INTC_PENDING, and the
-interrupt dispatch function will be exited until all processing
-is completed.
+On 10/11/19 8:54 PM, Dan Robertson wrote:
+> Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
+> The driver supports reading from the acceleration and temperature
+> registers. The driver also supports reading and configuring the output data
+> rate, oversampling ratio, and scale.
+> 
+> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+> ---
+>  drivers/iio/accel/Kconfig       |  19 +
+>  drivers/iio/accel/Makefile      |   2 +
+>  drivers/iio/accel/bma400.h      |  86 ++++
+>  drivers/iio/accel/bma400_core.c | 839 ++++++++++++++++++++++++++++++++
+>  drivers/iio/accel/bma400_i2c.c  |  58 +++
+>  5 files changed, 1004 insertions(+)
+>  create mode 100644 drivers/iio/accel/bma400.h
+>  create mode 100644 drivers/iio/accel/bma400_core.c
+>  create mode 100644 drivers/iio/accel/bma400_i2c.c
+> 
+> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> index 9b9656ce37e6..cca6727e037e 100644
+> --- a/drivers/iio/accel/Kconfig
+> +++ b/drivers/iio/accel/Kconfig
+> @@ -112,6 +112,25 @@ config BMA220
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called bma220_spi.
+>  
+> +config BMA400
+> +	tristate "Bosch BMA400 3-Axis Accelerometer Driver"
+> +	depends on I2C
+> +	select REGMAP
+> +	select BMA400_I2C if (I2C)
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/irqchip/irq-ingenic.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+Since this already has "depends on I2C", the "if (I2C)" above is not needed.
+Or maybe BMA400 alone does not depend on I2C?
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index 06ab3ad..01d18b3 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-  *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-- *  JZ4740 platform IRQ support
-+ *  Ingenic XBurst platform IRQ support
-  */
- 
- #include <linux/errno.h>
-@@ -37,18 +37,23 @@ static irqreturn_t intc_cascade(int irq, void *data)
- 	struct ingenic_intc_data *intc = irq_get_handler_data(irq);
- 	struct irq_domain *domain = intc->domain;
- 	struct irq_chip_generic *gc;
--	uint32_t irq_reg;
-+	uint32_t pending;
- 	unsigned i;
- 
- 	for (i = 0; i < intc->num_chips; i++) {
- 		gc = irq_get_domain_generic_chip(domain, i * 32);
- 
--		irq_reg = irq_reg_readl(gc, JZ_REG_INTC_PENDING);
--		if (!irq_reg)
-+		pending = irq_reg_readl(gc, JZ_REG_INTC_PENDING);
-+		if (!pending)
- 			continue;
- 
--		irq = irq_find_mapping(domain, __fls(irq_reg) + (i * 32));
--		generic_handle_irq(irq);
-+		while (pending) {
-+			int bit = __fls(pending);
-+
-+			irq = irq_find_mapping(domain, bit + (i * 32));
-+			generic_handle_irq(irq);
-+			pending &= ~BIT(bit);
-+		}
- 	}
- 
- 	return IRQ_HANDLED;
+> +	help
+> +	  Say Y here if you want to build a driver for the Bosch BMA400
+> +	  triaxial acceleration sensor.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called bma400_core and you will also get
+> +	  bma400_i2c for I2C
+
+	Add ending '.'.
+
+> +
+> +config BMA400_I2C
+> +	tristate
+> +	depends on BMA400
+> +	depends on I2C
+> +	select REGMAP_I2C
+> +
+
+The bma400_i2c driver seems to use some OF interfaces.
+Should it also depend on OF?
+
+>  config BMC150_ACCEL
+>  	tristate "Bosch BMC150 Accelerometer Driver"
+>  	select IIO_BUFFER
+> diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
+> index 56bd0215e0d4..3a051cf37f40 100644
+> --- a/drivers/iio/accel/Makefile
+> +++ b/drivers/iio/accel/Makefile
+> @@ -14,6 +14,8 @@ obj-$(CONFIG_ADXL372_I2C) += adxl372_i2c.o
+>  obj-$(CONFIG_ADXL372_SPI) += adxl372_spi.o
+>  obj-$(CONFIG_BMA180) += bma180.o
+>  obj-$(CONFIG_BMA220) += bma220_spi.o
+> +obj-$(CONFIG_BMA400) += bma400_core.o
+> +obj-$(CONFIG_BMA400_I2C) += bma400_i2c.o
+>  obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
+>  obj-$(CONFIG_BMC150_ACCEL_I2C) += bmc150-accel-i2c.o
+>  obj-$(CONFIG_BMC150_ACCEL_SPI) += bmc150-accel-spi.o
+
+
+> diff --git a/drivers/iio/accel/bma400_core.c b/drivers/iio/accel/bma400_core.c
+> new file mode 100644
+> index 000000000000..5b3cb8919c47
+> --- /dev/null
+> +++ b/drivers/iio/accel/bma400_core.c
+> @@ -0,0 +1,839 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * bma400_core.c - Core IIO driver for Bosch BMA400 triaxial acceleration
+> + *                 sensor. Used by bma400-i2c.
+> + *
+> + * Copyright 2019 Dan Robertson <dan@dlrobertson.com>
+> + *
+> + * TODO:
+> + *  - Support for power management
+> + *  - Support events and interrupts
+> + *  - Create channel the step count
+> + *  - Create channel for sensor time
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/bitops.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +#include "bma400.h"
+> +
+
+[snip]
+
+> +
+> +struct bma400_data {
+> +	struct device *dev;
+> +	struct mutex mutex; /* data register lock */
+
+#include <linux/mutex.h>
+
+> +	struct iio_mount_matrix orientation;
+> +	struct regmap *regmap;
+> +	enum bma400_power_mode power_mode;
+> +	const int *sample_freq;
+> +	int oversampling_ratio;
+> +	int scale;
+> +};
+
+[snip]
+
+> +
+> +static int bma400_get_accel_oversampling_ratio(struct bma400_data *data)
+> +{
+> +	unsigned int val;
+> +	unsigned int osr;
+> +	int ret;
+> +
+> +	/*
+> +	 * The oversampling ratio is stored in a different register
+> +	 * based on the power-mode. In normal mode the OSR is stored
+> +	 * in ACC_CONFIG1. In low-power mode it is stored in
+> +	 * ACC_CONFIG0.
+> +	 */
+> +	switch (data->power_mode) {
+> +	case POWER_MODE_LOW:
+> +		ret = regmap_read(data->regmap, BMA400_ACC_CONFIG0_REG, &val);
+> +		if (ret < 0) {
+> +			data->oversampling_ratio = -1;
+> +			return ret;
+> +		}
+> +
+> +		osr = (val & BMA400_LP_OSR_MASK) >> BMA400_LP_OSR_SHIFT;
+> +
+> +		data->oversampling_ratio = osr;
+> +		return 0;
+> +	case POWER_MODE_NORMAL:
+> +		ret = regmap_read(data->regmap, BMA400_ACC_CONFIG1_REG, &val);
+> +		if (ret < 0) {
+> +			data->oversampling_ratio = -1;
+> +			return ret;
+> +		}
+> +
+> +		osr = (val & BMA400_NP_OSR_MASK) >> BMA400_NP_OSR_SHIFT;
+> +
+> +		data->oversampling_ratio = osr;
+> +		return 0;
+> +	default:
+> +		data->oversampling_ratio = -1;
+> +		return 0;
+> +	}
+> +}
+> +
+> +static int bma400_set_accel_oversampling_ratio(struct bma400_data *data,
+> +					       int val)
+> +{
+> +	int ret;
+> +	unsigned int acc_config;
+> +
+> +	if (val & ~BMA400_TWO_BITS_MASK)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * The oversampling ratio is stored in a different register
+> +	 * based on the power-mode.
+> +	 */
+> +	switch (data->power_mode) {
+> +	case POWER_MODE_LOW:
+> +		ret = regmap_read(data->regmap, BMA400_ACC_CONFIG0_REG,
+> +				  &acc_config);
+> +		if (acc_config < 0)
+> +			return acc_config;
+> +
+> +		ret = regmap_write(data->regmap, BMA400_ACC_CONFIG0_REG,
+> +				   (acc_config & ~BMA400_LP_OSR_MASK) |
+> +				   (val << BMA400_LP_OSR_SHIFT));
+> +		if (ret < 0) {
+> +			dev_err(data->dev, "Failed to write out OSR");
+> +			return ret;
+> +		}
+> +
+> +		data->oversampling_ratio = val;
+> +		return 0;
+> +	case POWER_MODE_NORMAL:
+> +		ret = regmap_read(data->regmap, BMA400_ACC_CONFIG1_REG,
+> +				  &acc_config);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret = regmap_write(data->regmap, BMA400_ACC_CONFIG1_REG,
+> +				   (acc_config & ~BMA400_NP_OSR_MASK) |
+> +				   (val << BMA400_NP_OSR_SHIFT));
+> +		if (ret < 0) {
+> +			dev_err(data->dev, "Failed to write out OSR");
+> +			return ret;
+> +		}
+> +
+> +		data->oversampling_ratio = val;
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	return ret;
+> +}
+> +
+> +static int bma400_get_accel_scale(struct bma400_data *data)
+> +{
+> +	int idx;
+> +	int ret;
+> +	unsigned int val;
+> +
+> +	ret = regmap_read(data->regmap, BMA400_ACC_CONFIG1_REG, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	idx = (((val & BMA400_ACC_SCALE_MASK) >> BMA400_SCALE_SHIFT) * 2) + 1;
+> +	if (idx >= ARRAY_SIZE(bma400_scale_table))
+> +		return -EINVAL;
+> +
+> +	data->scale = bma400_scale_table[idx];
+> +
+> +	return 0;
+> +}
+> +
+> +static int bma400_get_accel_scale_idx(struct bma400_data *data, int val)
+> +{
+> +	int i;
+> +
+> +	for (i = 1; i < ARRAY_SIZE(bma400_scale_table); i += 2) {
+
+#include <linux/kernel.h>
+
+> +		if (bma400_scale_table[i] == val)
+> +			return i - 1;
+> +	}
+> +	return -EINVAL;
+> +}
+
+
+[snip]
+
+
 -- 
-2.7.4
-
-
+~Randy
