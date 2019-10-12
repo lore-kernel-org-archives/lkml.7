@@ -3,175 +3,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75322C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 18:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C52C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 18:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447B1206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 18:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9F3206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 18:20:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="s7dw+u4O"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ns4lRxyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbfJLSTM (ORCPT
+        id S1729537AbfJLSUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 14:19:12 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45986 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728636AbfJLSTM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 14:19:12 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r1so6461581pgj.12
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 11:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=BrHOsSRcDL7aWUfLwD9kPI6jS/4VpGhGV49UFuwLV8I=;
-        b=s7dw+u4OawZUh3UkaKX5efxRZ9p3Hx7gHqw16PNnnhYdCyiIiMjR/iM8y7fpffJ4Ku
-         fcCJgHLtcFB+DoN/rFr6Mnx4g0l2ggUPjHxWeYiPvrTX0SRgtVuVF1ikKC+oLtgivpEr
-         UAFSRAQRJsG9slS7W4v1SX/P1kbA+XLBNkpZ73ULSMzNbnmVMHp5GNBTFM/bDPiYsql+
-         gHN5rNAyg2qX8GBICCHj/fSyLcnYho+jTz/WywrcWIiXyO9tquF6kzJZ7kKfvVP/XOLH
-         QDCMCCoi7KYIrhzWF8Byd2J6xo4ULjrb3x/5UTLcTdRpPOSvGK6errQHaYJOQYnVXesW
-         TyQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=BrHOsSRcDL7aWUfLwD9kPI6jS/4VpGhGV49UFuwLV8I=;
-        b=kvrecGvyZ3d9T71TPn2M1REtaRyABJyH5PXgr6/9ne4DKJFWfkKsEnD2ao2V8KHwsX
-         HqVy2zg57lUb9Ljqah0hryrod9seNSq2NXKydYMlqtinY6ZJrEshBJ/0wv6ThTrX1G3/
-         hWUkaMl25H7CEpoX9yvTiK05bjFcc3V03lh7LDoLc90o7WwVB6WEQEUDx9FE983rDYYi
-         eFAdk4cGndAZoim+jP2OKoBqyxqetr112LyTvHgdWOeZC2gBPQn+dzWUs0z6LwyPlYrX
-         Wi96m4mfVz4+KRR18/9CZCdqjzngVkbiZwaNcf7MdSyndqEPwX2UvjB3I4XPSTWIUwNc
-         3CBA==
-X-Gm-Message-State: APjAAAXXwQUtVVks9FSGPMS0+4XqKkic0PJsnN6RZ4JaJE+ow9JOUwKk
-        PdCuyjOYwOr/uwzA+0Nq6EVTKA==
-X-Google-Smtp-Source: APXvYqwZyEL7Z/qE59P63rEjwl7wv196Mvbm2dQsDja4cYaYj9UxDPcxT0WHnoj6xx5lFpAMHiiNGw==
-X-Received: by 2002:a65:5345:: with SMTP id w5mr15242249pgr.213.1570904349926;
-        Sat, 12 Oct 2019 11:19:09 -0700 (PDT)
-Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
-        by smtp.gmail.com with ESMTPSA id h8sm13614914pfo.64.2019.10.12.11.19.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 12 Oct 2019 11:19:09 -0700 (PDT)
-Subject: Re: drivers/net/ethernet/pensando/ionic/ionic_lif.c:333:2: error:
- implicit declaration of function 'dynamic_hex_dump'; did you mean
- 'seq_hex_dump'?
-To:     kbuild test robot <lkp@intel.com>,
-        David Miller <davem@davemloft.net>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <201910130127.4lO6Z6uy%lkp@intel.com>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <f88f6b41-0bd2-e078-5286-855995381214@pensando.io>
-Date:   Sat, 12 Oct 2019 11:19:08 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Sat, 12 Oct 2019 14:20:30 -0400
+Received: from mout.web.de ([212.227.15.3]:59313 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729469AbfJLSUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 14:20:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1570904407;
+        bh=aaWZ/GEhFUyuau1WLazwaF/9LjLt3tQSmn3IW5rsK9k=;
+        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
+        b=ns4lRxydJaMhx7IMaqVl1woGwIegUwPnThzeQKkMqnCFlOVzZVtlPWB8WwvnnDDiR
+         nwS8v02AgU+QvXjRjNnWfh4bnHZJAjFL3oNYIo2mky3yF4q7QI1oGcQgGrtX69I1fu
+         vsj75aNJbJ+bgwe/7GMgYsBaIPCKaQawe70ce9c0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.155.250]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MNP6P-1iQCYJ3mYr-006u2b; Sat, 12
+ Oct 2019 20:20:07 +0200
+To:     linux-nfs@vger.kernel.org,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: SUNRPC: Checking a kmemdup() call in xdr_netobj_dup()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>
+Message-ID: <9b5a5e63-2a24-ad79-20e2-4c01331ee041@web.de>
+Date:   Sat, 12 Oct 2019 20:20:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <201910130127.4lO6Z6uy%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nKLKL3PDDdmuI9RcDSwwek58eQCcNUmIgwCtbOTx0ztaQxes30Q
+ l8bYrZHDYKw5tceIOxWS5JzGW+8FTN5RUk1XaLNSMyiwLP1JR1x72vBuc9MOpkJm1AtiD5T
+ 1lCRd8yHNfowLH5lR0vx9+Mx4PRBrrvGjqhjOQm7fdznf3GrPln+173YGQ3cLkxRaOioml+
+ tTu0cJhrn7CUdtplADi+A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:i4jvdSQpe0c=:lRFZtU5kAMdd9/Joye8SrC
+ DU3buPgh7Rk1TPkBv182lGVkXEYXZKbJ5AR86DoqxL1Ulj0TRg14eGCs0DfTJ7r5nsuLeLfyK
+ RW3ytmlE16u7Q/Xxcv1HBf8UKQSh7uAu0dHBgxQwvn5Ty6FBjQ5HnlSYpFcMPPzgihVr9+ZER
+ bEvac3/n2biZ69DUlRTgxtVXYhAYhX6ejU15brKEf5jMXYcoDjBB7KeCzBIsgLn+OoR0tXicJ
+ 6/xqwryrymcvr0m5TwicUtUKObLD8bxf/XFsITVlh7MvxZRmaMQKlmG7n36KCHLPNpjFJG0u9
+ MH8RxlDDpCcAm+PzNloWZ3dLhy5fL6F91fOvvbUJGIz38iq9w+sM3XVsYCojvNP/Sj8HIQSoR
+ uprZltcdG8sStbvRu/GCj9jL0E9qCzlghdLdHJqgCFV6ZL5oEVp5jn3vj+bI0/1u1u0uRRT67
+ Xn1eYhfT1MUYCy/4qoe4qALOua8m3ZVklXL64vy7RkBN3QO1nKLjK31k67OFu/Oly+uXPkyo3
+ S/kBLGteBIMOQBjicVauhf8iOdcxKqK2TmP8spod9GsfDK3B/itRi6pNL35ob5ZCJI+KQyKCk
+ pq8ukqovPDGsTLpyjZKWCsI/oIu4zezC3GSQgCVF+1PGml78/MUf99m9jVNcsH7n3x3twHIJj
+ zXnKuyAfumSvuKmCr8yai6qBBGgBUB1+SFGDbJ1aY/XYg951O8iM8mBtx7nluGlcUycdZT1ZL
+ P6Ih5vQjoiBApzpGF72L8PSdPoTWpuI94rvK72HKSh9z0nwP40b+RNa8CmW+GciG0boku1NeG
+ GVD4pYqxUZmMZE4LrF+b2dQsUfz9DD24Vs8CaTv5lFhx199DIlQpd+DZcAV3xCLV68gUgUGhv
+ i8U451KGQ/nJVJ8VTFS0OTJQK1eD/0NiU7pazgevzo1Sttd3JEwxii9naHiIbT1eSEc6vv14K
+ qd7L2qwMYPDlzyeFwFGej3TOyuBRFKHE74y+MlEdGBEa3hTqtHiKcWYUKSXcUyLqVPAN1AVjO
+ /xZv8RSm+YTv+o5GnPqi5C6d5E5X32hKv0R1Cj91puq+7drMXeIDoTGnC50USA6qP6fmrwTp7
+ 1r2TJblcG5JgZK7kWuayUDwZigrd6fifmOdqoiVv/t1s/Z4Ysq8xX6ZNjNkfvsC9aYMOvxtpU
+ Vu0a9r7JSXTsfZbSuLfBe0NS8JDyFSTDu98CDtFpzvACHuQ+A+6zA+FOXIDVYy0OCMQuvSPOp
+ egmFZCFCz3/lv0FYh/DLW+YnPyHEbbPuyda+cY4bBPftA4OjueoAyPhXFlzo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/19 10:45 AM, kbuild test robot wrote:
-> Hi Shannon,
->
-> FYI, the error/warning still remains.
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   1c0cc5f1ae5ee5a6913704c0d75a6e99604ee30a
-> commit: 77ceb68e29ccd25d923b6af59e74ecaf736cc4b7 ionic: Add notifyq support
-> date:   5 weeks ago
-> config: x86_64-randconfig-a002-201941 (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
-> reproduce:
->          git checkout 77ceb68e29ccd25d923b6af59e74ecaf736cc4b7
->          # save the attached .config to linux build tree
->          make ARCH=x86_64
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
+Hello,
 
-Hmmm, I thought Arnd Bergmann had already addressed these, and I Acked:
+I tried another script for the semantic patch language out.
+This source code analysis approach points out that the implementation
+of the function =E2=80=9Cxdr_netobj_dup=E2=80=9D contains still an uncheck=
+ed call
+of the function =E2=80=9Ckmemdup=E2=80=9D.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/in=
+clude/linux/sunrpc/xdr.h?id=3D1c0cc5f1ae5ee5a6913704c0d75a6e99604ee30a#n16=
+7
+https://elixir.bootlin.com/linux/v5.4-rc2/source/include/linux/sunrpc/xdr.=
+h#L167
 
-https://lore.kernel.org/netdev/91b69922-926a-9c27-3a08-e2db2d7ea66f@pensando.io/
+How do you think about to improve it?
 
-Dave, is there something more I need to do here?
-
-sln
-
-
->
-> All errors (new ones prefixed by >>):
->
->     drivers/net/ethernet/pensando/ionic/ionic_lif.c: In function 'ionic_notifyq_service':
->>> drivers/net/ethernet/pensando/ionic/ionic_lif.c:333:2: error: implicit declaration of function 'dynamic_hex_dump'; did you mean 'seq_hex_dump'? [-Werror=implicit-function-declaration]
->       dynamic_hex_dump("event ", DUMP_PREFIX_OFFSET, 16, 1,
->       ^~~~~~~~~~~~~~~~
->       seq_hex_dump
->     cc1: some warnings being treated as errors
->
-> vim +333 drivers/net/ethernet/pensando/ionic/ionic_lif.c
->
->     311	
->     312	static bool ionic_notifyq_service(struct ionic_cq *cq,
->     313					  struct ionic_cq_info *cq_info)
->     314	{
->     315		union ionic_notifyq_comp *comp = cq_info->cq_desc;
->     316		struct net_device *netdev;
->     317		struct ionic_queue *q;
->     318		struct ionic_lif *lif;
->     319		u64 eid;
->     320	
->     321		q = cq->bound_q;
->     322		lif = q->info[0].cb_arg;
->     323		netdev = lif->netdev;
->     324		eid = le64_to_cpu(comp->event.eid);
->     325	
->     326		/* Have we run out of new completions to process? */
->     327		if (eid <= lif->last_eid)
->     328			return false;
->     329	
->     330		lif->last_eid = eid;
->     331	
->     332		dev_dbg(lif->ionic->dev, "notifyq event:\n");
->   > 333		dynamic_hex_dump("event ", DUMP_PREFIX_OFFSET, 16, 1,
->     334				 comp, sizeof(*comp), true);
->     335	
->     336		switch (le16_to_cpu(comp->event.ecode)) {
->     337		case IONIC_EVENT_LINK_CHANGE:
->     338			netdev_info(netdev, "Notifyq IONIC_EVENT_LINK_CHANGE eid=%lld\n",
->     339				    eid);
->     340			netdev_info(netdev,
->     341				    "  link_status=%d link_speed=%d\n",
->     342				    le16_to_cpu(comp->link_change.link_status),
->     343				    le32_to_cpu(comp->link_change.link_speed));
->     344			break;
->     345		case IONIC_EVENT_RESET:
->     346			netdev_info(netdev, "Notifyq IONIC_EVENT_RESET eid=%lld\n",
->     347				    eid);
->     348			netdev_info(netdev, "  reset_code=%d state=%d\n",
->     349				    comp->reset.reset_code,
->     350				    comp->reset.state);
->     351			break;
->     352		default:
->     353			netdev_warn(netdev, "Notifyq unknown event ecode=%d eid=%lld\n",
->     354				    comp->event.ecode, eid);
->     355			break;
->     356		}
->     357	
->     358		return true;
->     359	}
->     360	
->
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
+Regards,
+Markus
