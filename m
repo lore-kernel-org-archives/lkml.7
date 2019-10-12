@@ -6,155 +6,157 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EBEC47404
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A154C47404
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FF2206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343F62084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbfJLBgk (ORCPT
+        id S1728381AbfJLBtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 21:36:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56670 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726903AbfJLBgk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 21:36:40 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9C1WXe9044422
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 21:36:39 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vk3j42hf2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 21:36:38 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Sat, 12 Oct 2019 02:36:36 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 12 Oct 2019 02:36:31 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9C1aUUm52691120
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 01:36:30 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40343A404D;
-        Sat, 12 Oct 2019 01:36:30 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A1B33A4040;
-        Sat, 12 Oct 2019 01:36:25 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.85.130.213])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat, 12 Oct 2019 01:36:25 +0000 (GMT)
-Date:   Fri, 11 Oct 2019 18:36:22 -0700
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     linux-kernel@vger.kernel.org, mst@redhat.com,
-        bauerman@linux.ibm.com
-Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org,
-        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
-        aik@linux.ibm.com, paul.burton@mips.com, robin.murphy@arm.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com, hch@lst.de,
-        jasowang@redhat.com, andmike@us.ibm.com, sukadev@linux.vnet.ibm.com
-Subject: Re: [PATCH 0/2] virtio: Support encrypted memory on powerpc secure
- guests
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <1570843519-8696-1-git-send-email-linuxram@us.ibm.com>
+        Fri, 11 Oct 2019 21:49:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:16315 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbfJLBtR (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 21:49:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Oct 2019 18:49:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,286,1566889200"; 
+   d="scan'208";a="224519160"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.61]) ([10.239.196.61])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Oct 2019 18:49:15 -0700
+Subject: Re: [PATCH v1 0/2] perf stat: Support --all-kernel and --all-user
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>, jolsa@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20190925020218.8288-1-yao.jin@linux.intel.com>
+ <20190929151022.GA16309@krava> <20190930182136.GD8560@tassilo.jf.intel.com>
+ <20190930192800.GA13904@kernel.org>
+ <20191001021755.GF8560@tassilo.jf.intel.com>
+ <8a1cbcf6-2de7-3036-1c86-f3af6af077e2@linux.intel.com>
+ <20191010080052.GB9616@krava>
+ <9df9e60f-4998-32f2-f743-ebb0fdea4c0a@linux.intel.com>
+ <20191010123309.GB19434@kernel.org>
+ <03b5fffb-fedf-19e6-5a23-bcf2bbf4ef98@linux.intel.com>
+ <20191011072154.GC6795@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <82c0909a-8841-6db4-0d9b-a5d0a91086cf@linux.intel.com>
+Date:   Sat, 12 Oct 2019 09:49:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570843519-8696-1-git-send-email-linuxram@us.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19101201-4275-0000-0000-0000037158C9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101201-4276-0000-0000-000038846517
-Message-Id: <20191012013622.GC17661@oc0525413822.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-11_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910120006
+In-Reply-To: <20191011072154.GC6795@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hmm.. git-send-email forgot to CC  Michael Tsirkin, and Thiago; the
-original author, who is on vacation.
 
-Adding them now.
-RP
 
-On Fri, Oct 11, 2019 at 06:25:17PM -0700, Ram Pai wrote:
->  **We would like the patches to be merged through the virtio tree.  Please
->  review, and ack merging the DMA mapping change through that tree. Thanks!**
+On 10/11/2019 3:21 PM, Jiri Olsa wrote:
+> On Fri, Oct 11, 2019 at 10:50:35AM +0800, Jin, Yao wrote:
+>>
+>>
+>> On 10/10/2019 8:33 PM, Arnaldo Carvalho de Melo wrote:
+>>> Em Thu, Oct 10, 2019 at 04:33:57PM +0800, Jin, Yao escreveu:
+>>>>
+>>>>
+>>>> On 10/10/2019 4:00 PM, Jiri Olsa wrote:
+>>>>> On Thu, Oct 10, 2019 at 02:46:36PM +0800, Jin, Yao wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 10/1/2019 10:17 AM, Andi Kleen wrote:
+>>>>>>>>> I think it's useful. Makes it easy to do kernel/user break downs.
+>>>>>>>>> perf record should support the same.
+>>>>>>>>
+>>>>>>>> Don't we have this already with:
+>>>>>>>>
+>>>>>>>> [root@quaco ~]# perf stat -e cycles:u,instructions:u,cycles:k,instructions:k -a -- sleep 1
+>>>>>>>
+>>>>>>> This only works for simple cases. Try it for --topdown or multiple -M metrics.
+>>>>>>>
+>>>>>>> -Andi
+>>>>>>>
+>>>>>>
+>>>>>> Hi Arnaldo, Jiri,
+>>>>>>
+>>>>>> We think it should be very useful if --all-user / --all-kernel can be
+>>>>>> specified together, so that we can get a break down between user and kernel
+>>>>>> easily.
+>>>>>>
+>>>>>> But yes, the patches for supporting this new semantics is much complicated
+>>>>>> than the patch which just follows original perf-record behavior. I fully
+>>>>>> understand this concern.
+>>>>>>
+>>>>>> So if this new semantics can be accepted, that would be very good. But if
+>>>>>> you think the new semantics is too complicated, I'm also fine for posting a
+>>>>>> new patch which just follows the perf-record behavior.
+>>>>>
+>>>>> I still need to think a bit more about this.. did you consider
+>>>>> other options like cloning of the perf_evlist/perf_evsel and
+>>>>> changing just the exclude* bits? might be event worse actualy ;-)
+>>>>>
+>>>>
+>>>> That should be another approach, but it might be a bit more complicated than
+>>>> just appending ":u"/":k" modifiers to the event name string.
+>>>>
+>>>>> or maybe if we add modifier we could add extra events/groups
+>>>>> within the parser.. like:
+>>>>>
+>>>>>      "{cycles,instructions}:A,{cache-misses,cache-references}:A,cycles:A"
+>>>>>
+>>>>> but that might be still more complicated then what you did
+>>>>>
+>>>>
+>>>> Yes agree.
+>>>>
+>>>>> also please add the perf record changes so we have same code
+>>>>> and logic for both if we are going to change it
+>>>> If this new semantics can be accepted, I'd like to add perf record
+>>>> supporting as well. :)
+>>>
+>>> Changes in semantics should be avoided, when we add an option already
+>>> present in some other tool, we should strive to keep the semantics, so
+>>> that people can reuse their knowledge and just switch tools to go from
+>>> sampling to counting, say.
+>>>
+>>
+>> Yes, that makes sense. We need to try our best to keep the original
+>> semantics. I will post a patch for perf-stat which just follows the
+>> semantics in perf-record.
+>>
+>>> So if at all possible, and without having really looked deep in this
+>>> specific case, I would prefer that new semantics come with a new syntax,
+>>> would that be possible?
+>>>
+>>
+>> Yes, that's possible. Maybe we can use a new option for automatically adding
+>> two copies of the events (one copy for user and the other copy for kernel).
+>> The option something like "--all-space"?
 > 
->  The memory of powerpc secure guests can't be accessed by the hypervisor /
->  virtio device except for a few memory regions designated as 'shared'.
+> some other ideas:
 > 
->  At the moment, Linux uses bounce-buffering to communicate with the
->  hypervisor, with a bounce buffer marked as shared. This is how the DMA API
->  is implemented on this platform.
+> 	--all
+> 	--uk
+> 	--both
+> 	--full
+> 	-e {cycles,cache-misses}:A,cycles,instructions:A
+> 	-e {cycles,cache-misses}:B,cycles,instructions:B
+> 	--duplicate-every-event-or-group-of-events-for-each-address-space ;-)
 > 
->  In particular, the most convenient way to use virtio on this platform is by
->  making virtio use the DMA API: in fact, this is exactly what happens if the
->  virtio device exposes the flag VIRTIO_F_ACCESS_PLATFORM.  However, bugs in the
->  hypervisor on the powerpc platform do not allow setting this flag, with some
->  hypervisors already in the field that don't set this flag. At the moment they
->  are forced to use emulated devices when guest is in secure mode; virtio is
->  only useful when guest is not secure.
+> jirka
 > 
->  Normally, both device and driver must support VIRTIO_F_ACCESS_PLATFORM:
->  if one of them doesn't, the other mustn't assume it for communication
->  to work.
-> 
->  However, a guest-side work-around is possible to enable virtio
->  for these hypervisors with guest in secure mode: it so happens that on
->  powerpc secure platform the DMA address is actually a physical address -
->  that of the bounce buffer. For these platforms we can make the virtio
->  driver go through the DMA API even though the device itself ignores
->  the DMA API.
-> 
->  These patches implement this work around for virtio: we detect that
->  - secure guest mode is enabled - so we know that since we don't share
->    most memory and Hypervisor has not enabled VIRTIO_F_ACCESS_PLATFORM,
->    regular virtio code won't work.
->  - DMA API is giving us addresses that are actually also physical
->    addresses.
->  - Hypervisor has not enabled VIRTIO_F_ACCESS_PLATFORM.
-> 
->  and if all conditions are true, we force all data through the bounce
->  buffer.
-> 
->  To put it another way, from hypervisor's point of view DMA API is
->  not required: hypervisor would be happy to get access to all of guest
->  memory. That's why it does not set VIRTIO_F_ACCESS_PLATFORM. However,
->  guest decides that it does not trust the hypervisor and wants to force
->  a bounce buffer for its own reasons.
-> 
-> 
-> Thiago Jung Bauermann (2):
->   dma-mapping: Add dma_addr_is_phys_addr()
->   virtio_ring: Use DMA API if memory is encrypted
-> 
->  arch/powerpc/include/asm/dma-mapping.h | 21 +++++++++++++++++++++
->  arch/powerpc/platforms/pseries/Kconfig |  1 +
->  drivers/virtio/virtio.c                | 18 ++++++++++++++++++
->  drivers/virtio/virtio_ring.c           |  8 ++++++++
->  include/linux/dma-mapping.h            | 20 ++++++++++++++++++++
->  include/linux/virtio_config.h          | 14 ++++++++++++++
->  kernel/dma/Kconfig                     |  3 +++
->  7 files changed, 85 insertions(+)
-> 
-> -- 
-> 1.8.3.1
 
--- 
-Ram Pai
+I like '--uk'. :)
 
+Thanks
+Jin Yao
