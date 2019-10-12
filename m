@@ -2,65 +2,78 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2829DECE58D
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E146C47404
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02C820679
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:27:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="VS+tlDds"
+	by mail.kernel.org (Postfix) with ESMTP id 6358B206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570844147;
+	bh=dFNjx7PcJneGZiSeuOMczlsngpZ3vh3S7SZ7awh2LAo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zbneSnvQfhzonQEDIjCNZtKSqXYHGyiQKbANkYH1xiuAQop5iAYOcgrW28FikmKZr
+	 KvuBBr8cm5dsdU9AVh+m/elO8g39erMpHFBK9WXwHTMX5tMi0z61PpKWlpiNHHGifD
+	 qksj4XMM575mu7KkMp9hjVscNR/UaKqAPdRd8x1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbfJLB15 (ORCPT
+        id S1728730AbfJLBfD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 21:27:57 -0400
-Received: from forward106p.mail.yandex.net ([77.88.28.109]:58893 "EHLO
-        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726903AbfJLB15 (ORCPT
+        Fri, 11 Oct 2019 21:35:03 -0400
+Received: from mail-qt1-f175.google.com ([209.85.160.175]:39016 "EHLO
+        mail-qt1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfJLBfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 21:27:57 -0400
-Received: from mxback3j.mail.yandex.net (mxback3j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10c])
-        by forward106p.mail.yandex.net (Yandex) with ESMTP id 025161C80908;
-        Sat, 12 Oct 2019 04:27:55 +0300 (MSK)
-Received: from sas1-e6a95a338f12.qloud-c.yandex.net (sas1-e6a95a338f12.qloud-c.yandex.net [2a02:6b8:c08:37a4:0:640:e6a9:5a33])
-        by mxback3j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id l5LHWxj6Po-Rs2CJcHC;
-        Sat, 12 Oct 2019 04:27:54 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1570843674;
-        bh=VjH7JDzhlEDfz8hnj0Z4e1eQqaeF/P7jvepG9WoRjJY=;
-        h=From:To:Subject:CC:Date:Message-ID;
-        b=VS+tlDdsPFV36/i+0WI1iVf3BA/qmkOn/rQ+41yCCp0n1jtLm6yYpLESYH3FjnZkK
-         5bwJxz34GYjQq2+r3eLip5qnpTszqXptODKeQRSpOym+1JHcYszNB/3kXoSt2bi++2
-         bg+P1/br5LRfHx5GirzzF+9xlrCY4cYKD79N6TGQ=
-Authentication-Results: mxback3j.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by sas1-e6a95a338f12.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id GQpQCkZJRX-Rrq4Ihwf;
-        Sat, 12 Oct 2019 04:27:53 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Date:   Sat, 12 Oct 2019 09:27:44 +0800
-User-Agent: K-9 Mail for Android
+        Fri, 11 Oct 2019 21:35:02 -0400
+Received: by mail-qt1-f175.google.com with SMTP id n7so16573794qtb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 18:35:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p6CkBjyXyubfrdK0PtyVtXiNsy98CJHwCPycTQri2gQ=;
+        b=jPKlWv2QYfhgWjC55ITC00EP7oo5mBIU4oKZ9+bqpkRe0wUd3axFVZ8dyLNe6YLhoa
+         eOdOHk1tNB6XyyEbAGqCA29vSDgHztfeYI2T6H0s8VPx0f4FjH5gz4fShwoDxrnGyK22
+         3dlY8eZ2Y9HNXF8gjHRl3wILWEYu9CgQWMYWMO7I+EdfBPtXOUXFwS/Byoqg6qtjrknv
+         QXlZYfjbPriDWEsxUMsI3tfH6s1wczoUFu30X7Wql2BK6hyStgdL6ueA56l0yv43gAuZ
+         Gt9EGru/Lh4EEpQnbPeW9Z1vTp01K1j7Ay1Mw07CS7IBJ5+P+FZPNOzmUqIeeUroAsV2
+         MvDA==
+X-Gm-Message-State: APjAAAVSBikhDgZdichAi9AqPBO1J4vAm3wLcpsnnMRtbFqses9xzPqn
+        SN27mZEDX/Fes8coZ+7ghC+QcyfBAwRdEcnn1SoS909R
+X-Google-Smtp-Source: APXvYqze61CDPjfI06KRRKGyWbEzD9XW9xPGC20GXfN0zTKReI/D3BO4vWpn8dKwu+8ib2T0ri4uQoaI++OfyEtlDgE=
+X-Received: by 2002:a05:6214:1226:: with SMTP id p6mr19198520qvv.167.1570844101667;
+ Fri, 11 Oct 2019 18:35:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Kernel.org SSL certification expired
-To:     mricon@kernel.org
-CC:     linux-kernel@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <79BF3B6A-6533-48C7-BD4D-8D64FC2B397A@flygoat.com>
+References: <79BF3B6A-6533-48C7-BD4D-8D64FC2B397A@flygoat.com>
+In-Reply-To: <79BF3B6A-6533-48C7-BD4D-8D64FC2B397A@flygoat.com>
+From:   Konstantin Ryabitsev <mricon@kernel.org>
+Date:   Fri, 11 Oct 2019 21:34:50 -0400
+Message-ID: <CAMwyc-TDssA+uFKWi+9VU8cpYvLf1AHZow7Dib+naYc2QnernQ@mail.gmail.com>
+Subject: Re: Kernel.org SSL certification expired
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Konstantin Ryabitsev <mricon@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi kernel=2Eorg sysadmin team,
+On Fri, 11 Oct 2019 at 21:33, Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> Hi kernel.org sysadmin team,
+>
+> It seems like SSL certification of kernel.org is expired today. With HSTS enable, we can't reach kernel.org now.
 
-It seems like SSL certification of kernel=2Eorg is expired today=2E With H=
-STS enable, we can't reach kernel=2Eorg now=2E
+The APAC frontends were still serving the old certificate because the
+cert renewal process failed to restart the daemon. It should be good
+now for everyone.
 
-
-Thanks
---=20
-Jiaxun Yang
+Regards,
+-- 
+Konstantin Ryabitsev
+Kernel.org Systems Administrator
+Montéal, Québec
