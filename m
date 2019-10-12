@@ -2,396 +2,135 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD29C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 14:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBEAC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 14:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5D6206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 14:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8162087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 14:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9MGv9kY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="aafBCt00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729351AbfJLO3V (ORCPT
+        id S1729210AbfJLOqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 10:29:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34841 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbfJLO3U (ORCPT
+        Sat, 12 Oct 2019 10:46:18 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:49620 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbfJLOqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 10:29:20 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p30so7469655pgl.2;
-        Sat, 12 Oct 2019 07:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wFyrE4sJHknnmugam0lljEG4OV3Sn7PQE66jy+Yciqg=;
-        b=E9MGv9kYieDKfFWbqE5FwUfJUM5++tBgIQvj3HKqKOgPv43YdfdXMth7sZeg7VBwvC
-         yk0jSZIxDigDYE3hrQY8ZPLGpC1C+WiE+7P2g3hRx9lZwBR7W0KrRL+ITA16ubR6adJF
-         rQoKDHD6YIbsb3pFG8d+F0B2/PEq37Isz3C6Oglg6hJELf5pTjQskYn9fSGxTbyncnR9
-         tM4xavzdY1/iaSDcNb462vgTajdbr6sqhxv8vQbBsRx/8YIBhuoayKl864djph3g2Nv2
-         u+Rt62saXcJzH4BwkjkIB63q9VRxUG4NZY1+26BCDb4KMt6eyK/EoI5iBA/mDUeCuTiw
-         hKNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wFyrE4sJHknnmugam0lljEG4OV3Sn7PQE66jy+Yciqg=;
-        b=ub5wqhgMIh7bQDrUV7WlGnQ1qs1Di5ylSR7ilsfTSQ01s67p+Nb9HF+PaaFhxa4Kqh
-         ot8EJaVSHJSXpT3SytdUSbxzQJ4xCDk96ORUFx0viC+kza+kCFLYFojpMr1ctJELoDPp
-         9dGyXYc1IpUhHWF3rtHq/W9JolUUNCh4d+ui8DELoCxIpXvkRK+s4tIB+GvaeyYcPZe2
-         yAwjB2lPvFtEKTlZ3UD3I8c2cUgJQeq8YwAnw6IKGcUnbGcv1fgH/OlEjmiDfY2CTqtX
-         mC2Ai0TZognFJevipihagDbB/iu0Cl7LJ8KOGc2DrbHuneeBBeRCMEA8nUa7ABB0RS3+
-         s/9g==
-X-Gm-Message-State: APjAAAUafV6r8dlpSMu8xX3BvUzxl4ap+2oEUM6VexRKKvAjuhOJpEJg
-        Zu4KW6H+L/xIhEwcG4nZJAZil1RH
-X-Google-Smtp-Source: APXvYqxPHup9PSwGxijToNsQGC3Z5sdQTsb9RH+Ajc7G6sO7cQwSJey0vCuxBByAKPHw6GFrGaa67Q==
-X-Received: by 2002:aa7:9525:: with SMTP id c5mr22152324pfp.22.1570890559108;
-        Sat, 12 Oct 2019 07:29:19 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u3sm12501348pfn.134.2019.10.12.07.29.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 12 Oct 2019 07:29:17 -0700 (PDT)
-Subject: Re: [PATCH 3/4] watchdog: add meson secure watchdog driver
-To:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>, linux-watchdog@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1570874721-36077-1-git-send-email-xingyu.chen@amlogic.com>
- <1570874721-36077-4-git-send-email-xingyu.chen@amlogic.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <07e8aef0-c991-f212-d500-c5ce77b3dea3@roeck-us.net>
-Date:   Sat, 12 Oct 2019 07:29:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 12 Oct 2019 10:46:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5KGWmmYHnCKl7o8+6yr6YzfTu0KvC6adovwOl9kif4s=; b=aafBCt00CsUTIkxLb7c2Apav3
+        L3uQYbJrdQH0MGbHKVilFEPZBonq1Empf3WlY3MVogccuBNqaDAIzYuwXdb2PExolamxyGzgZCmK/
+        qoaoMiujFUf5HCoNSgNsG+/mApe/T6ypW+pkthxu3UUBu+ZXzjHqggUgB8d7gb5eDUQnd3UyfRz4n
+        4l5xoXLNrceWAI1LKwmZyCcFphMoov5gMIs8+THAhe+mz4sLVWB8gipqZErs5uMg8NsFtN2Hjf88b
+        ORX6pRDkr30YV5CNgsPyLEqey4NU86mOBFGdnLKrvxl+jZMpTFuyC6jaVmkaJMHDzEPWmfBGRzPwG
+        bmSEv3MVw==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:50706)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iJIea-0003Fk-2Y; Sat, 12 Oct 2019 15:45:56 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iJIeU-0002DF-JS; Sat, 12 Oct 2019 15:45:50 +0100
+Date:   Sat, 12 Oct 2019 15:45:50 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+Message-ID: <20191012144550.GN25745@shell.armlinux.org.uk>
+References: <20191001170142.x66orounxuln7zs3@willie-the-truck>
+ <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk>
+ <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk>
+ <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+ <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+ <20191003163606.iqzcxvghaw7hdqb5@willie-the-truck>
+ <35643c7e-94e9-e410-543b-a7de17b59a32@gmx.net>
 MIME-Version: 1.0
-In-Reply-To: <1570874721-36077-4-git-send-email-xingyu.chen@amlogic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35643c7e-94e9-e410-543b-a7de17b59a32@gmx.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/19 3:05 AM, Xingyu Chen wrote:
-> The watchdog controller on the Meson-A/C series SoCs is moved to secure
-> world, watchdog operation needs to be done in secure EL3 mode via ATF,
-> Non-secure world can call SMC instruction to trap to AFT for watchdog
-> operation.
+On Sat, Oct 12, 2019 at 12:15:42PM +0200, Stefan Wahren wrote:
+> Hi,
 > 
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> ---
->   drivers/watchdog/Kconfig         |  16 +++
->   drivers/watchdog/Makefile        |   1 +
->   drivers/watchdog/meson_sec_wdt.c | 205 +++++++++++++++++++++++++++++++++++++++
->   3 files changed, 222 insertions(+)
->   create mode 100644 drivers/watchdog/meson_sec_wdt.c
+> Am 03.10.19 um 18:36 schrieb Will Deacon:
+> > On Wed, Oct 02, 2019 at 01:39:40PM -0700, Linus Torvalds wrote:
+> >> On Wed, Oct 2, 2019 at 5:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >>>> Then use the C preprocessor to force the inlining.  I'm sorry it's not
+> >>>> as pretty as static inline functions.
+> >>> Which makes us lose the baby^H^H^H^Htype checking performed
+> >>> on function parameters, requiring to add more ugly checks.
+> >> I'm 100% agreed on this.
+> >>
+> >> If the inline change is being pushed by people who say "you should
+> >> have used macros instead if you wanted inlining", then I will just
+> >> revert that stupid commit that is causing problems.
+> >>
+> >> No, the preprocessor is not the answer.
+> >>
+> >> That said, code that relies on inlining for _correctness_ should use
+> >> "__always_inline" and possibly even have a comment about why.
+> >>
+> >> But I am considering just undoing commit 9012d011660e ("compiler:
+> >> allow all arches to enable CONFIG_OPTIMIZE_INLINING") entirely. The
+> >> advantages are questionable, and when the advantages are balanced
+> >> against actual regressions and the arguments are "use macros", that
+> >> just shows how badly thought out this was.
+> > It's clear that opinions are divided on this issue, but you can add
+> > an enthusiastic:
+> >
+> > Acked-by: Will Deacon <will@kernel.org>
+> >
+> > if you go ahead with the revert. I'm all for allowing the compiler to
+> > make its own inlining decisions, but not when the potential for
+> > miscompilation isn't fully understood and the proposed alternatives turn
+> > the source into an unreadable mess. Perhaps we can do something different
+> > for 5.5 (arch opt-in? clang only? invert the logic? work to move functions
+> > over to __always_inline /before/ flipping the CONFIG option? ...?)
 > 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 58e7c10..e6b0707 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -826,6 +826,22 @@ config MESON_GXBB_WATCHDOG
->   	  To compile this driver as a module, choose M here: the
->   	  module will be called meson_gxbb_wdt.
->   
-> +config MESON_SEC_WATCHDOG
-> +	tristate "Amlogic Meson Secure watchdog support"
-> +	depends on ARCH_MESON || COMPILE_TEST
-
-Did you try COMPILE_TEST (eg allmodconfig) on, say x86_64 ?
-AFAICS the meson sm calls are only available if MESON_SM is
-enabled, and that depends on both ARCH_MESON and ARM64_4K_PAGES.
-This dependency is not expressed here, and neither is enabled
-with COMPILE_TEST.
-
-> +	select WATCHDOG_CORE
-> +	help
-> +	  The watchdog controller on the Meson-A/C series SoCs is moved to
-> +	  secure world, watchdog operation needs to be done in secure EL3
-> +	  mode via ATF, non-secure world can call SMC instruction to trap
-> +	  to ATF for the watchdog operation.
-> +
-> +	  Say Y here if watchdog controller on Meson SoCs is located in
-> +	  secure world.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called meson_sec_wdt.
-> +
->   config MESON_WATCHDOG
->   	tristate "Amlogic Meson SoCs watchdog support"
->   	depends on ARCH_MESON || COMPILE_TEST
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 2ee352b..5e6b73d 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -78,6 +78,7 @@ obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
->   obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
->   obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
->   obj-$(CONFIG_MESON_GXBB_WATCHDOG) += meson_gxbb_wdt.o
-> +obj-$(CONFIG_MESON_SEC_WATCHDOG) += meson_sec_wdt.o
->   obj-$(CONFIG_MESON_WATCHDOG) += meson_wdt.o
->   obj-$(CONFIG_MEDIATEK_WATCHDOG) += mtk_wdt.o
->   obj-$(CONFIG_DIGICOLOR_WATCHDOG) += digicolor_wdt.o
-> diff --git a/drivers/watchdog/meson_sec_wdt.c b/drivers/watchdog/meson_sec_wdt.c
-> new file mode 100644
-> index 00000000..2b5357c
-> --- /dev/null
-> +++ b/drivers/watchdog/meson_sec_wdt.c
-> @@ -0,0 +1,205 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
-> + *
-> + */
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/types.h>
-> +#include <linux/watchdog.h>
-> +#include <linux/firmware/meson/meson_sm.h>
-> +
-> +#define MESON_SIP_WDT_DISABLE		0x1
-> +#define MESON_SIP_WDT_ENABLE		0x2
-> +#define MESON_SIP_WDT_PING		0x3
-> +#define MESON_SIP_WDT_INIT		0x4
-> +#define MESON_SIP_WDT_RESETNOW		0x5
-> +#define MESON_SIP_WDT_SETTIMEOUT	0x6
-> +#define MESON_SIP_WDT_GETTIMELEFT	0x7
-> +
-> +#define DEFAULT_TIMEOUT			30 /* seconds */
-> +
-> +/*
-> + * Watchdog timer tick is set to 1ms in secfw side, and tick count is
-> + * stored in the bit[16-31] of WATCHDOG_CNT register, so the maximum
-> + * timeout value is 0xffff ms.
-> + */
-> +#define MAX_TIMEOUT_MS			0xFFFF
-> +
-> +struct meson_sec_wdt {
-> +	struct watchdog_device wdt_dev;
-> +	struct meson_sm_firmware *fw;
-> +};
-> +
-> +static int meson_sec_wdt_start(struct watchdog_device *wdt_dev)
-> +{
-> +	int ret;
-> +	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-> +
-> +	ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
-> +			    MESON_SIP_WDT_ENABLE, 0, 0, 0, 0); > +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-This is equivalent to
-	return ret;
-or even
-	return meson_sm_call(...);
-
-> +}
-> +
-> +static int meson_sec_wdt_stop(struct watchdog_device *wdt_dev)
-> +{
-> +	int ret;
-> +	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-> +
-> +	ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
-> +			    MESON_SIP_WDT_DISABLE, 0, 0, 0, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-Same as above.
-
-> +}
-> +
-> +static int meson_sec_wdt_ping(struct watchdog_device *wdt_dev)
-> +{
-> +	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-> +
-> +	meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
-> +		      MESON_SIP_WDT_PING, 0, 0, 0, 0);
-> +
-> +	return 0;
-
-Why ignore errors ?
-
-> +}
-> +
-> +static int meson_sec_wdt_set_timeout(struct watchdog_device *wdt_dev,
-> +				     unsigned int timeout)
-> +{
-> +	int ret;
-> +	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-> +
-> +	wdt_dev->timeout = timeout;
-> +	meson_sec_wdt_ping(wdt_dev);
-> +
-
-Unconditionally ? Also, the core does that after setting the timeout.
-
-> +	ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
-> +			    MESON_SIP_WDT_SETTIMEOUT,
-> +			    wdt_dev->timeout, 0, 0, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-same as above.
-
-> +}
-> +
-> +static unsigned int meson_sec_wdt_get_timeleft(struct watchdog_device *wdt_dev)
-> +{
-> +	int ret;
-> +	int timeleft;
-> +	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-> +
-> +	ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, &timeleft,
-> +			    MESON_SIP_WDT_GETTIMELEFT, 0, 0, 0, 0);
-> +
-> +	if (ret)
-> +		return 0;
-
-Really ? Why ? 0 is most definitely incorrect here.
-
-> +
-> +	return timeleft;
-> +}
-> +
-> +static const struct watchdog_ops meson_sec_wdt_ops = {
-> +	.start = meson_sec_wdt_start,
-> +	.stop = meson_sec_wdt_stop,
-> +	.ping = meson_sec_wdt_ping,
-> +	.set_timeout = meson_sec_wdt_set_timeout,
-> +	.get_timeleft = meson_sec_wdt_get_timeleft,
-> +};
-> +
-> +static const struct watchdog_info meson_sec_wdt_info = {
-> +	.identity = "Meson Secure Watchdog Timer",
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-> +};
-> +
-> +static int __maybe_unused meson_sec_wdt_resume(struct device *dev)
-> +{
-> +	struct meson_sec_wdt *data = dev_get_drvdata(dev);
-> +
-> +	if (watchdog_active(&data->wdt_dev))
-> +		meson_sec_wdt_start(&data->wdt_dev);
-
-No error return ?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused meson_sec_wdt_suspend(struct device *dev)
-> +{
-> +	struct meson_sec_wdt *data = dev_get_drvdata(dev);
-> +
-> +	if (watchdog_active(&data->wdt_dev))
-> +		meson_sec_wdt_stop(&data->wdt_dev);
-
-No error return ?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops meson_sec_wdt_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(meson_sec_wdt_suspend, meson_sec_wdt_resume)
-> +};
-> +
-> +static const struct of_device_id meson_sec_wdt_dt_ids[] = {
-> +	 { .compatible = "amlogic,meson-sec-wdt", },
-> +	 { /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, meson_sec_wdt_dt_ids);
-> +
-> +static int meson_sec_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct meson_sec_wdt *data;
-> +	struct device_node *sm_np;
-> +	int ret;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	sm_np = of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
-> +	if (!sm_np) {
-> +		dev_err(&pdev->dev, "no secure-monitor node\n");
-> +		return -ENODEV;
-
-ENODEV is wrong here.
-
-> +	}
-> +
-> +	data->fw = meson_sm_get(sm_np);
-> +	of_node_put(sm_np);
-> +	if (!data->fw)
-> +		return -EPROBE_DEFER;
-
-How do you know ?
-
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	data->wdt_dev.parent = dev;
-> +	data->wdt_dev.info = &meson_sec_wdt_info;
-> +	data->wdt_dev.ops = &meson_sec_wdt_ops;
-> +	data->wdt_dev.max_hw_heartbeat_ms = MAX_TIMEOUT_MS;
-> +	data->wdt_dev.min_timeout = 1;
-> +	data->wdt_dev.timeout = DEFAULT_TIMEOUT;
-> +	watchdog_set_drvdata(&data->wdt_dev, data);
-> +
-No watchdog_init_timeout() ? Any special reason for not supporting
-to set the timeout with a devicetree property ?
-
-> +	ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
-> +			    MESON_SIP_WDT_INIT,
-> +			    data->wdt_dev.timeout, 0, 0, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	watchdog_stop_on_reboot(&data->wdt_dev);
-> +
-> +	return devm_watchdog_register_device(dev, &data->wdt_dev);
-> +}
-> +
-> +static struct platform_driver meson_sec_wdt_driver = {
-> +	.probe	= meson_sec_wdt_probe,
-> +	.driver = {
-> +		.name = "meson-sec-wdt",
-> +		.pm = &meson_sec_wdt_pm_ops,
-> +		.of_match_table	= meson_sec_wdt_dt_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(meson_sec_wdt_driver);
-> +
-> +MODULE_AUTHOR("Xingyu Chen <xingyu.chen@amlogic.com>");
-> +MODULE_DESCRIPTION("Amlogic Secure Watchdog Timer Driver");
-> +MODULE_LICENSE("Dual BSD/GPL");
+> what's the status on this?
 > 
-BSD or MIT ? This should match the license identifier.
+> In need to prepare my pull requests for 5.5 and all recent kernelci
+> targets (including linux-next) with bcm2835_defconfig are still broken.
 
+I merged the patches late on Thursday, it may have been too late for
+linux-next to pick them up - and because of the time difference between
+UK and Australia, it means they won't be in linux-next until next week
+(basically, tomorrow).  linux-next is basically a Sunday to Thursday
+operation from my point of view.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
