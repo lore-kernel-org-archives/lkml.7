@@ -2,107 +2,175 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13608C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A583DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF4D205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:11:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DlKXNXRs"
+	by mail.kernel.org (Postfix) with ESMTP id 7F5B720700
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbfJLUKy (ORCPT
+        id S1729634AbfJLU1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 16:10:54 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35561 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbfJLUKy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 16:10:54 -0400
-Received: by mail-io1-f66.google.com with SMTP id q10so28786313iop.2
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 13:10:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=w4/POuTWUDiZtOhUix11luXG+xnY9Yx35d0vIUWcKFE=;
-        b=DlKXNXRs6QgShbGdEn/kZP9ek6vlfp+9Nkuj/VBQgO+gM4l1hR8CavApjGkyY44uat
-         pxuov27CpBZx6QF+yN89kE5WZsIvZF6HOJbrdBxJAEcWA8WlZ0JwgM2xyOGRmZ+f3yoO
-         muTjP6sSWHS2jRsxzt6f8KgsgXGPUQ6ZrDvfps5AEdo8EalcNhGVh8qvEA2/s7mlpZAL
-         KbK7RNuLPha9WCvf2WmcqGm5ipkFzRw3bydc4oyIMi4GSnEF6+ikVdTLWdFEYyjRJMFv
-         AAzEo8Xqt2cQrZhnC7eYQKX4WTdFL8onI+HDqc+SNdYJhqw7l5m1gz4j0W9oB3FhrrAq
-         aQ5A==
+        Sat, 12 Oct 2019 16:27:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37476 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729494AbfJLU1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 16:27:50 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0670FC010925
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 20:27:49 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id n3so5452806wmf.3
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 13:27:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=w4/POuTWUDiZtOhUix11luXG+xnY9Yx35d0vIUWcKFE=;
-        b=snMFl7MiJdb9xBZ2GTXfzSiJ5fMj+ctnjhWEO7cwUIg+NJNSjXl61+Kj6CVeifgxSC
-         oZNQRVHj7zij+C9oqVvynk/nzXDwYjsbyEoVo9I0Qg377MnygmVrqAI8xfcr6V1PV81o
-         GeuoN1safGvChQlG3Wm93kl60yt0sLj8vWbmLKz3Id06buGF9USZGluWzRXtXhrbvoxt
-         4L6fiJVb1dqkZBm9GxZErVpbgI/+tSs8HheqGkfT1dH2pIIWWMUU7YDPHNptGi3EDX50
-         QjjCy2HqDtxi44IBspfUALUALWI/wTpJDO/tfMhI8ay5auA4JnAUFOXiyu7NCke3eRbW
-         hZmQ==
-X-Gm-Message-State: APjAAAUXaamEXBp1VqHpCAgbbcvxFxcJt7uSIQ2EZ54L3nZaB0oT5073
-        B1Dy4HKd8HcHuFDXhU4XjLtZmmCDm7Y=
-X-Google-Smtp-Source: APXvYqzmy+Sa3CxJDUMcVmYUrwvMkOknIMN4j2mDR0wZZEvzVGV/iFzMbPM39F1SIqcWA3tPPVvPHw==
-X-Received: by 2002:a6b:7609:: with SMTP id g9mr4529225iom.130.1570911053230;
-        Sat, 12 Oct 2019 13:10:53 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id a14sm9138006ioo.85.2019.10.12.13.10.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=EqTOWjC4L/Kz6sFQs9jCsgXd8dSNgdgkSYjDXmXjolo=;
+        b=CyAAMNaLucvqhQxAg6GywlXTsPt/BtbFiweWtobtDUf/JXdyLPNFlu3BkpsbAzFe1a
+         AECmsjFAagczIoINMR0sec+rcsKJzOOEo7x0+J8Yf0/M729+Vsbp/EhwqVGmNwWjsBRG
+         0vkt5oCY45nQwc04fLbYAW+zCZZ0obsOCAeuD9RIGqkJJ6QF9BBQi6IunS8Fm7q1iW1Y
+         Rwjb0/D1hqPQHTnRuzexn9KNE35Jb5XpluPVSNnYzo3YjRBOSUU0IYWpZudK9K/NcrLj
+         fKkbYtyoof2ew7RivEIqD5qc67ICEdp2mbfihpgjD2+jNlme4IJdA608c1+OHAwyB2p0
+         VidA==
+X-Gm-Message-State: APjAAAVFrv+ckqYwPVnMGpjJIZEGWV4TfDBQ8hV+BPnxDZVNhhNihtRQ
+        wa4sCrw7ufIFDF5PaNusmaPfCnpTBK9O7cvq54/4ltNh/EnS0xM70lBuPIYYckjh+JAk/eVFgPK
+        fGRaCDulik1ASgvtz6TyJswXX
+X-Received: by 2002:a05:600c:21c8:: with SMTP id x8mr7778917wmj.123.1570912067637;
+        Sat, 12 Oct 2019 13:27:47 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwQzyMBrFDfWTdK5lUQ3sY5hHb4OoDfa1GaxOr1ruBpGf2toaNre0YJeRWwm2tOu4hgB0VNpQ==
+X-Received: by 2002:a05:600c:21c8:: with SMTP id x8mr7778905wmj.123.1570912067370;
+        Sat, 12 Oct 2019 13:27:47 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
+        by smtp.gmail.com with ESMTPSA id s9sm14550556wme.36.2019.10.12.13.27.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Oct 2019 13:10:52 -0700 (PDT)
-Date:   Sat, 12 Oct 2019 13:10:52 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RISC-V updates for v5.4-rc3
-Message-ID: <alpine.DEB.2.21.9999.1910121307270.18026@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Sat, 12 Oct 2019 13:27:46 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 16:27:43 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH RFC v1 1/2] vhost: option to fetch descriptors through an
+ independent struct
+Message-ID: <20191012162445-mutt-send-email-mst@kernel.org>
+References: <20191011134358.16912-1-mst@redhat.com>
+ <20191011134358.16912-2-mst@redhat.com>
+ <3b2a6309-9d21-7172-a581-9f0f1d5c1427@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3b2a6309-9d21-7172-a581-9f0f1d5c1427@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Sat, Oct 12, 2019 at 03:28:49PM +0800, Jason Wang wrote:
+> 
+> On 2019/10/11 下午9:45, Michael S. Tsirkin wrote:
+> > The idea is to support multiple ring formats by converting
+> > to a format-independent array of descriptors.
+> > 
+> > This costs extra cycles, but we gain in ability
+> > to fetch a batch of descriptors in one go, which
+> > is good for code cache locality.
+> > 
+> > To simplify benchmarking, I kept the old code
+> > around so one can switch back and forth by
+> > writing into a module parameter.
+> > This will go away in the final submission.
+> > 
+> > This patch causes a minor performance degradation,
+> > it's been kept as simple as possible for ease of review.
+> > Next patch gets us back the performance by adding batching.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> >   drivers/vhost/test.c  |  17 ++-
+> >   drivers/vhost/vhost.c | 299 +++++++++++++++++++++++++++++++++++++++++-
+> >   drivers/vhost/vhost.h |  16 +++
+> >   3 files changed, 327 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+> > index 056308008288..39a018a7af2d 100644
+> > --- a/drivers/vhost/test.c
+> > +++ b/drivers/vhost/test.c
+> > @@ -18,6 +18,9 @@
+> >   #include "test.h"
+> >   #include "vhost.h"
+> > +static int newcode = 0;
+> > +module_param(newcode, int, 0644);
+> > +
+> >   /* Max number of bytes transferred before requeueing the job.
+> >    * Using this limit prevents one virtqueue from starving others. */
+> >   #define VHOST_TEST_WEIGHT 0x80000
+> > @@ -58,10 +61,16 @@ static void handle_vq(struct vhost_test *n)
+> >   	vhost_disable_notify(&n->dev, vq);
+> >   	for (;;) {
+> > -		head = vhost_get_vq_desc(vq, vq->iov,
+> > -					 ARRAY_SIZE(vq->iov),
+> > -					 &out, &in,
+> > -					 NULL, NULL);
+> > +		if (newcode)
+> > +			head = vhost_get_vq_desc_batch(vq, vq->iov,
+> > +						       ARRAY_SIZE(vq->iov),
+> > +						       &out, &in,
+> > +						       NULL, NULL);
+> > +		else
+> > +			head = vhost_get_vq_desc(vq, vq->iov,
+> > +						 ARRAY_SIZE(vq->iov),
+> > +						 &out, &in,
+> > +						 NULL, NULL);
+> >   		/* On error, stop handling until the next kick. */
+> >   		if (unlikely(head < 0))
+> >   			break;
+> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > index 36ca2cf419bf..36661d6cb51f 100644
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -301,6 +301,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+> >   			   struct vhost_virtqueue *vq)
+> >   {
+> >   	vq->num = 1;
+> > +	vq->ndescs = 0;
+> >   	vq->desc = NULL;
+> >   	vq->avail = NULL;
+> >   	vq->used = NULL;
+> > @@ -369,6 +370,9 @@ static int vhost_worker(void *data)
+> >   static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+> >   {
+> > +	kfree(vq->descs);
+> > +	vq->descs = NULL;
+> > +	vq->max_descs = 0;
+> >   	kfree(vq->indirect);
+> >   	vq->indirect = NULL;
+> >   	kfree(vq->log);
+> > @@ -385,6 +389,10 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+> >   	for (i = 0; i < dev->nvqs; ++i) {
+> >   		vq = dev->vqs[i];
+> > +		vq->max_descs = dev->iov_limit;
+> > +		vq->descs = kmalloc_array(vq->max_descs,
+> > +					  sizeof(*vq->descs),
+> > +					  GFP_KERNEL);
+> 
+> 
+> Is iov_limit too much here? It can obviously increase the footprint. I guess
+> the batching can only be done for descriptor without indirect or next set.
+> Then we may batch 16 or 64.
+> 
+> Thanks
 
-The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+Yes, next patch only batches up to 64.  But we do need iov_limit because
+guest can pass a long chain of scatter/gather.
+We already have iovecs in a huge array so this does not look like
+a big deal. If we ever teach the code to avoid the huge
+iov arrays by handling huge s/g lists piece by piece,
+we can make the desc array smaller at the same point.
 
-  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc3
-
-for you to fetch changes up to cd9e72b80090a8cd7d84a47a30a06fa92ff277d1:
-
-  RISC-V: entry: Remove unneeded need_resched() loop (2019-10-09 16:48:27 -0700)
-
-----------------------------------------------------------------
-RISC-V updates for v5.4-rc3
-
-Some RISC-V fixes for v5.4-rc3:
-
-- Fix several bugs in the breakpoint trap handler
-
-- Drop an unnecessary loop around calls to preempt_schedule_irq()
-
-----------------------------------------------------------------
-Valentin Schneider (1):
-      RISC-V: entry: Remove unneeded need_resched() loop
-
-Vincent Chen (3):
-      riscv: avoid kernel hangs when trapped in BUG()
-      riscv: avoid sending a SIGTRAP to a user thread trapped in WARN()
-      riscv: Correct the handling of unexpected ebreak in do_trap_break()
-
- arch/riscv/kernel/entry.S |  3 +--
- arch/riscv/kernel/traps.c | 14 +++++++-------
- 2 files changed, 8 insertions(+), 9 deletions(-)
 
