@@ -2,96 +2,100 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0195BC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595AAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 21:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC782067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:56:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvLl6XRr"
+	by mail.kernel.org (Postfix) with ESMTP id 3BF352067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 21:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfJLUzz (ORCPT
+        id S1729732AbfJLVMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 16:55:55 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33805 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728506AbfJLUzz (ORCPT
+        Sat, 12 Oct 2019 17:12:48 -0400
+Received: from sender4-op-o14.zoho.com ([136.143.188.14]:17415 "EHLO
+        sender4-op-o14.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729169AbfJLVMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 16:55:55 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r22so9304067lfm.1
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 13:55:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PozVrf68QgImeH7sK38rIhWBtZm9HKA3PtIRQs99eCM=;
-        b=PvLl6XRrpKcqWyzznbvcOgTu7bmEN2AEJokhLIVnTMcZzISkcllFFNUi0Hdcdp985h
-         fyg1Z1DYVdSQUR3qlR8GbmGd2uuSsqBEvbN1Wl6eWBohenTsYpBhXCOxrj32i8tGsW3R
-         0yMCmvBuIU04vqizuM0MXW12LjHSAFtRLJVqpvgKxl8SpHnMeTOKhqhaMTZrK6n7+IYQ
-         kqbd8c8Cfxa3magfuvkked5lvIzn8BtvObewcXNHitrxUoCBdN4UfZ6+DyMfl+GNyb7U
-         Ociw/jrpsn/4ILGTprFm13NHT2Qn/2+7JzDEIZAcyV6SD9wX1HcRcMr2HS/qieOeODeq
-         V/gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PozVrf68QgImeH7sK38rIhWBtZm9HKA3PtIRQs99eCM=;
-        b=kRwwnRCbFB8PsGVsKpNCEyzHwcK7GMyYNB4KOMwdcB5H0EF/FxR2giZkTEjPL6dc+M
-         IUhqRRXDPKHf0pK1MifGrbZrvUlQHg1pY1ixADD2gO/ok+og3LPmqFhwqPYyexdlRzMc
-         kcle4R7WuNm5nrJoRQb86uaSG0ItbfyAl2/5geJukqVtwxw9ky+U9M6V6doroNHn+ISV
-         gUmua84Dr+dE4bjpIZ0RE27Ru4jiCKcLFdj6+dVkegcIW79lQEQjChgJAcXNGSb2SSZc
-         D4OcsfDJEKHut8sQz9vEJlCJH7Ym3yPyy8oSrSiDV6bATfG9zyLWwafLdh/w3RpKTrVE
-         zMdw==
-X-Gm-Message-State: APjAAAU2VxDVnJ8/meL0jJ+fxM0sgT/+gD+sqPvIT1FG+lKGSlwJO6hN
-        SYVrT5EVarOTQocbaF7+l4VWXLPTZUa29pDmsLdDT7fP/w==
-X-Google-Smtp-Source: APXvYqwP7qTN+qak3JzgSQA3zrclJSMQRn99WTuRIYR8bh//95Y7p76Jth2NXJXzNWzJl+PP4QfUyT6NMkA4feSos+M=
-X-Received: by 2002:ac2:5542:: with SMTP id l2mr12035993lfk.119.1570913751542;
- Sat, 12 Oct 2019 13:55:51 -0700 (PDT)
+        Sat, 12 Oct 2019 17:12:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1570914750; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=jSTxJ7kPuTh8aGmoy3IA/H01K5kTW/Kyfjo8Q0F4N2J2X+AAeN6y/w+xV5n3G5ShF4jojCFRiMCFhhoek5ZWFqVNx8C2Z7MHr4DzgJkCxmni52HRPHOFjQSUq8PdGsuklHlvhXmsbLrQgSLRAqGvqs2fBVd3TD02ZgkMwdYZdAk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1570914750; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=8/kaIE4NfI4XhvoyRoRN1pVv6GqkrxUXGjoHgdIXfKo=; 
+        b=FwyWNr/UGBYYORKVZoKVmCqway7gQaZPyvdjEBIPd97KRpXE0q+qRLzrTolr9vVvUDWGTFgsgMm3kSYXfWuhXCXFgI33Dafshae5IAFeJbeAY3cIaUW0LRdqH8e+YyAf7grY6P8T73wMqJ5Ir5Ofg1Np2dCedZioDRlr4SSOOrY=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie (pool-100-15-144-194.washdc.fios.verizon.net [100.15.144.194]) by mx.zohomail.com
+        with SMTPS id 1570914749773563.7230504150479; Sat, 12 Oct 2019 14:12:29 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 20:58:07 +0000
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] iio: (bma400) add driver for the BMA400
+Message-ID: <20191012205807.GA20156@nessie>
+References: <20191012192525.21040-1-dan@dlrobertson.com>
+ <20191012192525.21040-3-dan@dlrobertson.com>
+ <8e55c408-acd8-0e8c-38a8-e48406b8bce6@infradead.org>
 MIME-Version: 1.0
-References: <48afc878-5424-7554-cd02-4175ec12eaea@googlemail.com>
-In-Reply-To: <48afc878-5424-7554-cd02-4175ec12eaea@googlemail.com>
-From:   Gabriel C <nix.or.die@gmail.com>
-Date:   Sat, 12 Oct 2019 22:55:19 +0200
-Message-ID: <CAEJqkgjAMkoiAQeitQ1gdEpmZWvdqQE+fAsQU4W7M7JGxHboyQ@mail.gmail.com>
-Subject: Re: Linux 5.3.6
-To:     Chris Clayton <chris2553@googlemail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+Content-Disposition: inline
+In-Reply-To: <8e55c408-acd8-0e8c-38a8-e48406b8bce6@infradead.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Zoho-Virus-Status: 1
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sa., 12. Okt. 2019 um 21:16 Uhr schrieb Chris Clayton
-<chris2553@googlemail.com>:
+
+--5vNYLRcllDrimb99
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
 >
->
-> > I'm announcing the release of the 5.3.6 kernel.
->
->
-> 5.3.6 build fails here with:
->
-> arch/x86/entry/vdso/vdso64.so.dbg: undefined symbols found
->   CC      arch/x86/kernel/cpu/mce/threshold.o
-> make[3]: *** [arch/x86/entry/vdso/Makefile:59: arch/x86/entry/vdso/vdso64.so.dbg] Error 1
-> make[3]: *** Deleting file 'arch/x86/entry/vdso/vdso64.so.dbg'
-> make[2]: *** [scripts/Makefile.build:497: arch/x86/entry/vdso] Error 2
-> make[1]: *** [scripts/Makefile.build:497: arch/x86/entry] Error 2
-> make[1]: *** Waiting for unfinished jobs....
+> No comment other than thank you for ignoring my previous comments.  :(
 >
 
-What is your default linker ?
+Oh, no! Sorry, it looks like I missed you in the To and CC list in my reply :/
 
-Also does make LD=ld.bfd fixes that for you ?
+Cheers,
 
-See https://bugzilla.kernel.org/show_bug.cgi?id=204951
+ - Dan
 
-BR,
+--5vNYLRcllDrimb99
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Gabriel C.
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEF5dO2RaKc5C+SCJ9RcSmUsR+QqUFAl2iPl8ACgkQRcSmUsR+
+QqVqFg//a2/lcbkBGgRYzLWGjBu12JMaS4hLb3eEwFByZbaZ+rQyjRRoKw0IDIEF
+hKVO2ZpzUcwQW5A0LYdvgdKFSjI0GDm4lmjLUe20HB+7VeMiqcQZcs3bTnVCwDNn
+Uvat+Lr7yWwZZMFD+tbVH/IDQynjXaTZeMrnCMs+bVSyjwCs0z5457lvbzGEEROs
+RcRzWmDNVIg1bX+b/UAlVfw205q/s7JO6t5mwtCnyeHdO/BYegIgYTsXcx7ZFds7
+P8ol09daL8Llws1f6ldx+XNX+RNRDGuSA2vjRwkkvDJt3FcwEG5BDXJzBDB2DNaP
+Zn/bE+eqIoeeZY/2MXXuiZrokEbmxRPeqCkSjpjP0OIA65lcw3Ww0/GWdDSI45Ci
+rQEEouZ9l3ZZx8mT4cAvZwliPpuIpMd50k0ZX40pONwG0L8NBFE60pYFJS0YeB93
+jdGSIP66mwobMx3CRx1DjQQr33yaYCgSLtwC+HuVHuT4ZBy1wzCuUcS6vR69/wr4
+ahyjufhsy6cuGsBN4H2YtHg/msEGoaQTjGek86VKfE4fuS1vydx8QQ5F5B0gDucm
+MPqcEfKhVQaSvh5zVJ4hU0cmIJeFp6VKjLRKfqWfT9f+zaPb4+LwAGqp2MOYZScb
+d9Zd1wBu4oIOlvhjPQpWEw+a9VFfGi9p/etphoYcXM17W6iOY4k=
+=vj3G
+-----END PGP SIGNATURE-----
+
+--5vNYLRcllDrimb99--
+
