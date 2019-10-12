@@ -2,163 +2,88 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020E4C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 14:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1091C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 14:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D6221850
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 14:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570888820;
-	bh=Mz0BL3/C+OrOXXcjjKTuqtWi5Ny6ZYS0L4vIH8ltkfE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TjD28QgiowD8Dfw9eP2LfJgm2vQ0eFRZOGVjm93gQxNJevA68wy9R9krbIkqycPfY
-	 9Om/RTDZMBfdN1hrZ3esVnfHorehRV+OmyVBiPUvdt4DYTPbbZHJe8oT7LXFxeZ3mr
-	 w4L+qWLUk7YkNv8kYfzNTbaSrar2/8i9oLbbjLD4=
+	by mail.kernel.org (Postfix) with ESMTP id 84F762087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 14:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfJLOAT (ORCPT
+        id S1729247AbfJLOGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 10:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfJLOAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 10:00:19 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C42602089C;
-        Sat, 12 Oct 2019 14:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570888817;
-        bh=Mz0BL3/C+OrOXXcjjKTuqtWi5Ny6ZYS0L4vIH8ltkfE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bipuAx3KMl+7dalmmCW/eKNVAhz7kU3AXJhnZJBdnEjXNPfkwuz455QiBKVrPhfmd
-         PfIJViUdRtB9otkEn2Fzk7E4EhojB23oxtPUci/AhSdup6Tbzg7/FBu9jwLdiMeABm
-         ZedXiIlxroMXFMHZfbWTaPplcVGqZuxfUEmQ1JdI=
-Date:   Sat, 12 Oct 2019 15:00:12 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org,
-        david@lechnology.com
-Subject: Re: [PATCH v5 0/3] Simplify count_read/count_write/signal_read
-Message-ID: <20191012150012.5e3399f1@archlinux>
-In-Reply-To: <cover.1570391994.git.vilhelm.gray@gmail.com>
-References: <cover.1570391994.git.vilhelm.gray@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 12 Oct 2019 10:06:16 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38358 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbfJLOGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 10:06:16 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u28so8924360lfc.5
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 07:06:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=24ZirRRGg0v732pLKiSe7vKc4Up3RxG069bpntU0vog=;
+        b=lUnmS9osxdIVlpOb8Z/8YAVtfFRBBKBhsPMhu/2sGiiv2W7JDFRo7NrcetTZWZbBud
+         PIhzA6RGkgVlJ25lnEcJMUK4ACWFbevrZpJYqcBUGx+BIbUo8aMN7wxuzSXCOi7spZgm
+         DwNdG+y7jQ5oqCfCxxX9y2UxWEh+N6eExQ8KxFsM5TiTkxrCZl4l6/E3A7ctRuar+i4k
+         bBAHyxIh0+CZRQjtpquPrMQuxomlOad46Hxy0yKX8LTD2lbRC6Z42Heqv40Va3cF19/n
+         UQpgQ4g/N+ZW8qjJnz67ZSWM0SCk4hXgoyQbe/9sree9W5W54kF34v1ZqH5nDAZvLaPq
+         t6Pg==
+X-Gm-Message-State: APjAAAUPZLDoofSnlkRZWWoFkVW4so86+DCiAwUg6QzBpBYojQorm0hz
+        z3tVoduU74ehFSp2p94Kuh7F8HlbMh8Rmdnme5o=
+X-Google-Smtp-Source: APXvYqz/N44lTDZ3C6FqrxhAQd7CKTW7oprYc+Z10ugHoqrtiYGVXVVSW59S9Syz+o6xNYXpTYTOjsFJe1huv5MMCWw=
+X-Received: by 2002:a19:4b8f:: with SMTP id y137mr11923942lfa.19.1570889174048;
+ Sat, 12 Oct 2019 07:06:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190926193030.5843-1-anders.roxell@linaro.org>
+ <20190926193030.5843-5-anders.roxell@linaro.org> <bf5db3a5-96da-752c-49ea-d0de899882d5@huawei.com>
+ <CADYN=9LB9RHgRkQj=HcKDz1x9jqmT464Kseh2wZU5VvcLit+bQ@mail.gmail.com>
+ <d978673e-cbd1-5ab5-b2a4-cdb407d0f98c@huawei.com> <CAK8P3a0kBz1-i-3miCo1vMuoM39ivXa3oxOE9VnCqDO-nfNOxw@mail.gmail.com>
+ <20191011102747.lpbaur2e4nqyf7sw@willie-the-truck> <73701e9f-bee1-7ae8-2277-7a3576171cd4@huawei.com>
+In-Reply-To: <73701e9f-bee1-7ae8-2277-7a3576171cd4@huawei.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 12 Oct 2019 16:05:57 +0200
+Message-ID: <CAK8P3a1C8cFB6DS9eVXTEiTQu1kPzy65JvL=BxqEe5MTkds8sQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: configs: unset CPU_BIG_ENDIAN
+To:     Hanjun Guo <guohanjun@huawei.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi William
+On Sat, Oct 12, 2019 at 9:33 AM Hanjun Guo <guohanjun@huawei.com> wrote:
+>
+> On 2019/10/11 18:27, Will Deacon wrote:
+> [...]
+> >
+> > Does anybody use BIG_ENDIAN? If we're not even building it then maybe we
+> > should get rid of it altogether on arm64. I don't know of any supported
+> > userspace that supports it or any CPUs that are unable to run little-endian
+> > binaries.
+>
+> FWIW, massive telecommunication products (based on ARM64) form Huawei are using
+> BIG_ENDIAN, and will use BIG_ENDIAN in the near future as well.
 
-What's the status on these? If you are happy that reviews and
-testing is complete enough, do you want me to take them after
-I pick up the eqep driver (hopefully shortly dependent on
-the pull request Greg has from me being fine).
+Ok, thanks for the information -- that definitely makes it clear that
+it cannot go
+away anytime soon (though it doesn't stop us from change the
+allmodconfig default
+if we decide that's a good idea).
 
-Thanks,
+Do you know if there are currently any patches against mainline to
+make big-endian
+work in products, or is everything working out of the box?
 
-Jonathan
-
-On Sun,  6 Oct 2019 16:03:08 -0400
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
-
-> Changes in v5:
->  - Add changes and additions to generic-counter.rst to clarify theory
->    and use of the Generic Counter interface
->  - Fix typo in counter.h action_get description comment
-> 
-> The changes in this patchset will not affect the userspace interface.
-> Rather, these changes are intended to simplify the kernelspace Counter
-> callbacks for counter device driver authors.
-> 
-> The following main changes are proposed:
-> 
-> * Retire the opaque counter_count_read_value/counter_count_write_value
->   structures and simply represent count data as an unsigned integer.
-> 
-> * Retire the opaque counter_signal_read_value structure and represent
->   Signal data as a counter_signal_value enum.
-> 
-> These changes should reduce some complexity and code in the use and
-> implementation of the count_read, count_write, and signal_read
-> callbacks.
-> 
-> The opaque structures for Count data and Signal data were introduced
-> originally in anticipation of supporting various representations of
-> counter data (e.g. arbitrary-precision tallies, floating-point spherical
-> coordinate positions, etc). However, with the counter device drivers
-> that have appeared, it's become apparent that utilizing opaque
-> structures in kernelspace is not the best approach to take.
-> 
-> I believe it is best to let userspace applications decide how to
-> interpret the count data they receive. There are a couple of reasons why
-> it would be good to do so:
-> 
-> * Users use their devices in unexpected ways.
-> 
->   For example, a quadrature encoder counter device is typically used to
->   keep track of the position of a motor, but a user could set the device
->   in a pulse-direction mode and instead use it to count sporadic rising
->   edges from an arbitrary signal line unrelated to positioning. Users
->   should have the freedom to decide what their data represents.
-> 
-> * Most counter devices represent data as unsigned integers anyway.
-> 
->   For example, whether the device is a tally counter or position
->   counter, the count data is represented to the user as an unsigned
->   integer value. So specifying that one device is representing tallies
->   while the other specifies positions does not provide much utility from
->   an interface perspective.
-> 
-> For these reasons, the count_read and count_write callbacks have been
-> redefined to pass count data directly as unsigned long instead of passed
-> via opaque structures:
-> 
->         count_read(struct counter_device *counter,
->                    struct counter_count *count, unsigned long *val);
->         count_write(struct counter_device *counter,
->                     struct counter_count *count, unsigned long val);
-> 
-> Similarly, the signal_read is redefined to pass Signal data directly as
-> a counter_signal_value enum instead of via an opaque structure:
-> 
->         signal_read(struct counter_device *counter,
->                     struct counter_signal *signal,
->                     enum counter_signal_value *val);
-> 
-> The counter_signal_value enum is simply the counter_signal_level enum
-> redefined to remove the references to the Signal data "level" data type.
-> 
-> William Breathitt Gray (3):
->   counter: Simplify the count_read and count_write callbacks
->   docs: driver-api: generic-counter: Update Count and Signal data types
->   counter: Fix typo in action_get description
-> 
->  Documentation/driver-api/generic-counter.rst | 162 +++++++++++--------
->  drivers/counter/104-quad-8.c                 |  33 ++--
->  drivers/counter/counter.c                    | 101 ++----------
->  drivers/counter/ftm-quaddec.c                |  14 +-
->  drivers/counter/stm32-lptimer-cnt.c          |   5 +-
->  drivers/counter/stm32-timer-cnt.c            |  17 +-
->  drivers/counter/ti-eqep.c                    |  19 +--
->  include/linux/counter.h                      |  76 ++-------
->  8 files changed, 144 insertions(+), 283 deletions(-)
-> 
-> 
-> base-commit: 0c3aa63a842d84990bd02622f2fa50d2bd33c652
-> prerequisite-patch-id: ebe284609b3db8d4130ea2915f7f7b185c743a70
-> prerequisite-patch-id: cbe857759f10d875690df125d18bc04f585ac7c9
-> prerequisite-patch-id: 21f2660dc88627387ee4666d08044c63dd961dae
-
+     Arnd
