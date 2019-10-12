@@ -2,111 +2,155 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BCBECE58E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEF7C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C532067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:26:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nYyD0Kjm"
+	by mail.kernel.org (Postfix) with ESMTP id 67F2A21850
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570855475;
+	bh=MkqAlmdFP2Vhrv7Ya67GXlWLTIGAEz0C/tsVdTgZ+wY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ZFurmd/n0WUxq7D0KFy+ByCtUoQ77bDc3IyjAE22G/ialw9xPyaoG3uor9lgE8E0b
+	 Njc52CZBoMeg6m0LNt0rOs5IvdCQtm4QjrqHMCswbhRK7kH8CPD6hZY9ogEF6hXdDw
+	 7XERMPLff63alaos31RZXQ5lWwSwHwxvziplD0+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfJLE0W (ORCPT
+        id S1727908AbfJLEoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 00:26:22 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:49627 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfJLE0V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 00:26:21 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x9C4QARl002225;
-        Sat, 12 Oct 2019 13:26:10 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x9C4QARl002225
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570854370;
-        bh=u9wmT/Hdot8DTpUJdxXrIyO9KPNJrJCevfN1MDnU3f8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nYyD0KjmUXXABcj9S78TlxMjTQmnh//Ytn2VsWmK2ZketQ1H6SVxWvy1QWX0tQNWg
-         hQkBvFNV+hMZbBR87NecBfH0KV2hPCqFleW4zF52rRfNPxULkb+HRbBbbrg7qcSNuc
-         6kR45j0wNBsSFV0bNVTfbuD4U+wtNnRWsVT7S/h4/lMW5v7ha0fUfkD5r/SFD6Bc4T
-         JoujFjUpPoajxAMe1CQakP/HS/dnANgvOBWb6sP79jx+5yuAwyHBZsXOi9n1x1AKI3
-         7+2C0vTVJf5uRgJwufpkUCc4zM8vRk8iFHwDmazS3pia4gCzjeF1O2xrSveJPglr4Y
-         wEkuxrum6Mu4w==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id v19so7575794vsv.3;
-        Fri, 11 Oct 2019 21:26:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAVkzPklTOOEf/N/4SE9p86OmFKdJT97rjMTAY97pOB1RAX2jay7
-        HoOk9Hsj8LuRd9i2OFgca76Fp8j1c6ZxAJ9siiA=
-X-Google-Smtp-Source: APXvYqyJCP1RZpKZxR61EaQLFEnhVwEqC60uotPeRKxZ2pZZOMM2TgalafsILrZufd2nJyMNHWQkyhs2H+F8UOY8ryM=
-X-Received: by 2002:a67:e354:: with SMTP id s20mr11212403vsm.54.1570854369388;
- Fri, 11 Oct 2019 21:26:09 -0700 (PDT)
+        Sat, 12 Oct 2019 00:44:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbfJLEod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 00:44:33 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [216.9.110.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 785992087E;
+        Sat, 12 Oct 2019 04:44:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570855472;
+        bh=MkqAlmdFP2Vhrv7Ya67GXlWLTIGAEz0C/tsVdTgZ+wY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=0V/XMNKeTUHIVffrraUAfoYyzTUzZo9CiDygXamHmz4s6FNIixRb/4E1S5GXM/j7X
+         yJabQ2dfvc8kRHfJBN5habrOfkZ+6zQZkU+R52TKqMPo9+9ybUi8OWgE1Hy3Ey7Hs9
+         B/y+LP8n1ThGvfTzweGNQmYnWRFdGRh89hE3UMJ4=
+Date:   Fri, 11 Oct 2019 21:44:30 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu: add declarations of undeclared items
+Message-ID: <20191012044430.GG2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191011170824.30228-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-References: <20191010151443.7399-1-maennich@google.com> <20191010151443.7399-5-maennich@google.com>
- <20191011153127.GA1283883@kroah.com> <20191011154311.GA192647@google.com>
-In-Reply-To: <20191011154311.GA192647@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 12 Oct 2019 13:25:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASvQd8C4UE3Zm9tsSH48w3QKwskyTKn2P8tegBMrV0_ww@mail.gmail.com>
-Message-ID: <CAK7LNASvQd8C4UE3Zm9tsSH48w3QKwskyTKn2P8tegBMrV0_ww@mail.gmail.com>
-Subject: Re: [PATCH 4/4] export: avoid code duplication in include/linux/export.h
-To:     Matthias Maennich <maennich@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Martijn Coenen <maco@android.com>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Shaun Ruffell <sruffell@sruffell.net>,
-        Will Deacon <will@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-modules <linux-modules@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011170824.30228-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 12:43 AM Matthias Maennich <maennich@google.com> wrote:
->
-> On Fri, Oct 11, 2019 at 05:31:27PM +0200, Greg Kroah-Hartman wrote:
-> >On Thu, Oct 10, 2019 at 04:14:43PM +0100, Matthias Maennich wrote:
-> >> Now that the namespace value is not part of the __ksymtab entry name
-> >> anymore, we can simplify the implementation of EXPORT_SYMBOL*. By
-> >> allowing the empty string "" to represent 'no namespace', we can unify
-> >> the implementation and drop a lot redundant code.  That increases
-> >> readability and maintainability.
-> >>
-> >> As Masahiro pointed out earlier,
-> >> "The drawback of this change is, it grows the code size. When the symbol
-> >> has no namespace, sym->namespace was previously NULL, but it is now am
-> >> empty string "". So, it increases 1 byte for every no namespace
-> >> EXPORT_SYMBOL. A typical kernel configuration has 10K exported symbols,
-> >> so it increases 10KB in rough estimation."
-> >
-> >10Kb of non-swapable memory isn't good.  But if you care about that, you
-> >can get it back with the option to compile away any non-used symbols,
-> >and that shouldn't be affected by this change, right?
->
-> Rasmus suggested to put the 'aMS' flags on the __ksymtab_strings section
-> to mitigate this:
-> https://lore.kernel.org/lkml/f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk/
->
-> I was not yet able to properly test this, so I did not include it in
-> this series. As I said in the cover letter, this 4th patch might be
-> optional for 5.4. So, we could defer it to a later time when we have
-> addressed that properly.
+On Fri, Oct 11, 2019 at 06:08:24PM +0100, Ben Dooks wrote:
+> The rcu_state, rcu_rnp_online_cpus and rcu_dynticks_curr_cpu_in_eqs
+> do not have declarations in a header. Add these to remove the
+> following sparse warnings:
+> 
+> kernel/rcu/tree.c:87:18: warning: symbol 'rcu_state' was not declared. Should it be static?
+> kernel/rcu/tree.c:191:15: warning: symbol 'rcu_rnp_online_cpus' was not declared. Should it be static?
+> kernel/rcu/tree.c:297:6: warning: symbol 'rcu_dynticks_curr_cpu_in_eqs' was not declared. Should it be static?
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 
+Good catch!
 
-This looks the same as my patch, though.
+However, these guys (plus one more) are actually used only in the
+kernel/rcu/tree.o translation unit, so they can be marked static.
+I made this change as shown below with your Reported-by.
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Seem reasonable?
 
+							Thanx, Paul
 
--- 
-Best Regards
-Masahiro Yamada
+------------------------------------------------------------------------
+
+commit 02995691aa76f3e52599d4f9d9d1ab23c3574f32
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Fri Oct 11 21:40:09 2019 -0700
+
+    rcu: Mark non-global functions and variables as static
+    
+    Each of rcu_state, rcu_rnp_online_cpus(), rcu_dynticks_curr_cpu_in_eqs(),
+    and rcu_dynticks_snap() are used only in the kernel/rcu/tree.o translation
+    unit, and may thus be marked static.  This commit therefore makes this
+    change.
+    
+    Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index b18fa3d..278798e 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -85,7 +85,7 @@ static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
+ 	.dynticks_nmi_nesting = DYNTICK_IRQ_NONIDLE,
+ 	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
+ };
+-struct rcu_state rcu_state = {
++static struct rcu_state rcu_state = {
+ 	.level = { &rcu_state.node[0] },
+ 	.gp_state = RCU_GP_IDLE,
+ 	.gp_seq = (0UL - 300UL) << RCU_SEQ_CTR_SHIFT,
+@@ -189,7 +189,7 @@ EXPORT_SYMBOL_GPL(rcu_get_gp_kthreads_prio);
+  * held, but the bit corresponding to the current CPU will be stable
+  * in most contexts.
+  */
+-unsigned long rcu_rnp_online_cpus(struct rcu_node *rnp)
++static unsigned long rcu_rnp_online_cpus(struct rcu_node *rnp)
+ {
+ 	return READ_ONCE(rnp->qsmaskinitnext);
+ }
+@@ -295,7 +295,7 @@ static void rcu_dynticks_eqs_online(void)
+  *
+  * No ordering, as we are sampling CPU-local information.
+  */
+-bool rcu_dynticks_curr_cpu_in_eqs(void)
++static bool rcu_dynticks_curr_cpu_in_eqs(void)
+ {
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 
+@@ -306,7 +306,7 @@ bool rcu_dynticks_curr_cpu_in_eqs(void)
+  * Snapshot the ->dynticks counter with full ordering so as to allow
+  * stable comparison of this counter with past and future snapshots.
+  */
+-int rcu_dynticks_snap(struct rcu_data *rdp)
++static int rcu_dynticks_snap(struct rcu_data *rdp)
+ {
+ 	int snap = atomic_add_return(0, &rdp->dynticks);
+ 
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index 1540542..f8e6c70 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -402,8 +402,6 @@ static const char *tp_rcu_varname __used __tracepoint_string = rcu_name;
+ #define RCU_NAME rcu_name
+ #endif /* #else #ifdef CONFIG_TRACING */
+ 
+-int rcu_dynticks_snap(struct rcu_data *rdp);
+-
+ /* Forward declarations for tree_plugin.h */
+ static void rcu_bootup_announce(void);
+ static void rcu_qs(void);
