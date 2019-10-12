@@ -2,515 +2,117 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A17EECE58C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FA3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE0B20673
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1965C20673
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbfJLGQt (ORCPT
+        id S1728959AbfJLGR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 02:16:49 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:48224 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbfJLGQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 02:16:48 -0400
-Received: from localhost (unknown [192.168.167.179])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 54427682D2;
-        Sat, 12 Oct 2019 14:15:33 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P29138T140316474734336S1570860929974413_;
-        Sat, 12 Oct 2019 14:15:32 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <690c9d9e1972e1c899dc8ed5321a66c3>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: linus.walleij@linaro.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 2/2] pinctrl: rockchip: add rk3308 SoC support
-Date:   Sat, 12 Oct 2019 14:15:28 +0800
-Message-Id: <20191012061528.27821-3-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191012061528.27821-1-jay.xu@rock-chips.com>
-References: <20191012061528.27821-1-jay.xu@rock-chips.com>
+        Sat, 12 Oct 2019 02:17:58 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50222 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726947AbfJLGR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 02:17:57 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3323C80206F36887AE0D;
+        Sat, 12 Oct 2019 14:17:54 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 12 Oct 2019
+ 14:17:52 +0800
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <gregkh@linuxfoundation.org>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <linux-acpi@vger.kernel.org>
+References: <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+ <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+ <20190924131939.GS23050@dhcp22.suse.cz>
+ <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
+ <20190925104108.GE4553@hirez.programming.kicks-ass.net>
+ <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
+ <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+ <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+ <20191010073212.GB18412@dhcp22.suse.cz>
+ <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+ <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
+Date:   Sat, 12 Oct 2019 14:17:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
+MIME-Version: 1.0
+In-Reply-To: <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch do support pinctrl for RK3308 SoCs.
+add pci and acpi maintainer
+cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- drivers/pinctrl/pinctrl-rockchip.c | 377 +++++++++++++++++++++++++++++
- 1 file changed, 377 insertions(+)
+On 2019/10/11 19:15, Peter Zijlstra wrote:
+> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
+>> But I failed to see why the above is related to making node_to_cpumask_map()
+>> NUMA_NO_NODE aware?
+> 
+> Your initial bug is for hns3, which is a PCI device, which really _MUST_
+> have a node assigned.
+> 
+> It not having one, is a straight up bug. We must not silently accept
+> NO_NODE there, ever.
+> 
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index dc0bbf198cbc..9e19db402ee5 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -58,6 +58,7 @@ enum rockchip_pinctrl_type {
- 	RK3128,
- 	RK3188,
- 	RK3288,
-+	RK3308,
- 	RK3368,
- 	RK3399,
- };
-@@ -70,6 +71,7 @@ enum rockchip_pinctrl_type {
- #define IOMUX_SOURCE_PMU	BIT(2)
- #define IOMUX_UNROUTED		BIT(3)
- #define IOMUX_WIDTH_3BIT	BIT(4)
-+#define IOMUX_WIDTH_2BIT	BIT(5)
- 
- /**
-  * @type: iomux variant using IOMUX_* constants
-@@ -656,6 +658,100 @@ static  struct rockchip_mux_recalced_data rk3128_mux_recalced_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
-+	{
-+		.num = 1,
-+		.pin = 14,
-+		.reg = 0x28,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 15,
-+		.reg = 0x2c,
-+		.bit = 0,
-+		.mask = 0x3
-+	}, {
-+		.num = 1,
-+		.pin = 18,
-+		.reg = 0x30,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 19,
-+		.reg = 0x30,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 20,
-+		.reg = 0x30,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 21,
-+		.reg = 0x34,
-+		.bit = 0,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 22,
-+		.reg = 0x34,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 23,
-+		.reg = 0x34,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 12,
-+		.reg = 0x68,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 13,
-+		.reg = 0x68,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 2,
-+		.pin = 2,
-+		.reg = 0x608,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 3,
-+		.reg = 0x608,
-+		.bit = 4,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 16,
-+		.reg = 0x610,
-+		.bit = 8,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 10,
-+		.reg = 0x610,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 11,
-+		.reg = 0x610,
-+		.bit = 4,
-+		.mask = 0x7
-+	},
-+};
-+
- static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
- 	{
- 		.num = 2,
-@@ -982,6 +1078,192 @@ static struct rockchip_mux_route_data rk3288_mux_route_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_route_data rk3308_mux_route_data[] = {
-+	{
-+		/* rtc_clk */
-+		.bank_num = 0,
-+		.pin = 19,
-+		.func = 1,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 0) | BIT(0),
-+	}, {
-+		/* uart2_rxm0 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3),
-+	}, {
-+		/* uart2_rxm1 */
-+		.bank_num = 4,
-+		.pin = 26,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3) | BIT(2),
-+	}, {
-+		/* i2c3_sdam0 */
-+		.bank_num = 0,
-+		.pin = 15,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9),
-+	}, {
-+		/* i2c3_sdam1 */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(8),
-+	}, {
-+		/* i2c3_sdam2 */
-+		.bank_num = 2,
-+		.pin = 0,
-+		.func = 3,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* i2s-8ch-1-sclktxm0 */
-+		.bank_num = 1,
-+		.pin = 3,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclktxm1 */
-+		.bank_num = 1,
-+		.pin = 13,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* pdm-clkm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x308,
-+		.route_val =  BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* pdm-clkm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 4,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* pdm-clkm2 */
-+		.bank_num = 2,
-+		.pin = 6,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* pdm-clkm-m2 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x600,
-+		.route_val = BIT(16 + 2) | BIT(2),
-+	}, {
-+		/* spi1_miso */
-+		.bank_num = 3,
-+		.pin = 10,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9),
-+	}, {
-+		/* spi1_miso_m1 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* owire_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11),
-+	}, {
-+		/* owire_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 7,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(10),
-+	}, {
-+		/* owire_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(11),
-+	}, {
-+		/* can_rxd_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* can_rxd_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* can_rxd_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* mac_rxd0_m0 */
-+		.bank_num = 1,
-+		.pin = 20,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14),
-+	}, {
-+		/* mac_rxd0_m1 */
-+		.bank_num = 4,
-+		.pin = 2,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14) | BIT(14),
-+	}, {
-+		/* uart3_rx */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15),
-+	}, {
-+		/* uart3_rx_m1 */
-+		.bank_num = 0,
-+		.pin = 17,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15) | BIT(15),
-+	},
-+};
-+
- static struct rockchip_mux_route_data rk3328_mux_route_data[] = {
- 	{
- 		/* uart2dbg_rxm0 */
-@@ -1475,6 +1757,26 @@ static int rv1108_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
- 	return 0;
- }
- 
-+#define RK3308_SCHMITT_PINS_PER_REG		8
-+#define RK3308_SCHMITT_BANK_STRIDE		16
-+#define RK3308_SCHMITT_GRF_OFFSET		0x1a0
-+
-+static int rk3308_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_SCHMITT_GRF_OFFSET;
-+
-+	*reg += bank->bank_num * RK3308_SCHMITT_BANK_STRIDE;
-+	*reg += ((pin_num / RK3308_SCHMITT_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3308_SCHMITT_PINS_PER_REG;
-+
-+	return 0;
-+}
-+
- #define RK2928_PULL_OFFSET		0x118
- #define RK2928_PULL_PINS_PER_REG	16
- #define RK2928_PULL_BANK_STRIDE		8
-@@ -1646,6 +1948,40 @@ static void rk3228_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
- 	*bit *= RK3288_DRV_BITS_PER_PIN;
- }
- 
-+#define RK3308_PULL_OFFSET		0xa0
-+
-+static void rk3308_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_PULL_OFFSET;
-+	*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
-+	*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
-+	*bit *= RK3188_PULL_BITS_PER_PIN;
-+}
-+
-+#define RK3308_DRV_GRF_OFFSET		0x100
-+
-+static void rk3308_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_DRV_GRF_OFFSET;
-+	*reg += bank->bank_num * RK3288_DRV_BANK_STRIDE;
-+	*reg += ((pin_num / RK3288_DRV_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3288_DRV_PINS_PER_REG);
-+	*bit *= RK3288_DRV_BITS_PER_PIN;
-+}
-+
- #define RK3368_PULL_GRF_OFFSET		0x100
- #define RK3368_PULL_PMU_OFFSET		0x10
- 
-@@ -2293,6 +2629,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		return (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT);
-@@ -3709,6 +4046,44 @@ static struct rockchip_pin_ctrl rk3288_pin_ctrl = {
- 		.drv_calc_reg		= rk3288_calc_drv_reg_and_bit,
- };
- 
-+static struct rockchip_pin_bank rk3308_pin_banks[] = {
-+	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(4, 32, "gpio4", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+};
-+
-+static struct rockchip_pin_ctrl rk3308_pin_ctrl = {
-+		.pin_banks		= rk3308_pin_banks,
-+		.nr_banks		= ARRAY_SIZE(rk3308_pin_banks),
-+		.label			= "RK3308-GPIO",
-+		.type			= RK3308,
-+		.grf_mux_offset		= 0x0,
-+		.iomux_recalced		= rk3308_mux_recalced_data,
-+		.niomux_recalced	= ARRAY_SIZE(rk3308_mux_recalced_data),
-+		.iomux_routes		= rk3308_mux_route_data,
-+		.niomux_routes		= ARRAY_SIZE(rk3308_mux_route_data),
-+		.pull_calc_reg		= rk3308_calc_pull_reg_and_bit,
-+		.drv_calc_reg		= rk3308_calc_drv_reg_and_bit,
-+		.schmitt_calc_reg	= rk3308_calc_schmitt_reg_and_bit,
-+};
-+
- static struct rockchip_pin_bank rk3328_pin_banks[] = {
- 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
- 	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
-@@ -3849,6 +4224,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 		.data = &rk3228_pin_ctrl },
- 	{ .compatible = "rockchip,rk3288-pinctrl",
- 		.data = &rk3288_pin_ctrl },
-+	{ .compatible = "rockchip,rk3308-pinctrl",
-+		.data = &rk3308_pin_ctrl },
- 	{ .compatible = "rockchip,rk3328-pinctrl",
- 		.data = &rk3328_pin_ctrl },
- 	{ .compatible = "rockchip,rk3368-pinctrl",
--- 
-2.17.1
+I suppose you mean reporting a lack of affinity when the node of a pcie
+device is not set by "not silently accept NO_NODE".
 
+As Greg has asked about in [1]:
+what is a user to do when the user sees the kernel reporting that?
 
+We may tell user to contact their vendor for info or updates about
+that when they do not know about their system well enough, but their
+vendor may get away with this by quoting ACPI spec as the spec
+considering this optional. Should the user believe this is indeed a
+fw bug or a misreport from the kernel?
+
+If this kind of reporting is common pratice and will not cause any
+misunderstanding, then maybe we can report that.
+
+[1] https://lore.kernel.org/lkml/20190905055727.GB23826@kroah.com/
+
+> .
+> 
 
