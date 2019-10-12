@@ -2,200 +2,65 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07F6C47404
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2829DECE58D
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13DF2089F
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02C820679
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 01:27:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="VS+tlDds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbfJLB0J (ORCPT
+        id S1728823AbfJLB15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 21:26:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14554 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727068AbfJLB0I (ORCPT
+        Fri, 11 Oct 2019 21:27:57 -0400
+Received: from forward106p.mail.yandex.net ([77.88.28.109]:58893 "EHLO
+        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726903AbfJLB15 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 21:26:08 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9C1Mwc3057604
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 21:26:05 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vjxqutgpy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 21:26:05 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Sat, 12 Oct 2019 02:26:03 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 12 Oct 2019 02:25:58 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9C1PR4D13828398
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 01:25:27 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 95DD352050;
-        Sat, 12 Oct 2019 01:25:57 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.85.130.213])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D71705204F;
-        Sat, 12 Oct 2019 01:25:52 +0000 (GMT)
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org,
-        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
-        aik@linux.ibm.com, paul.burton@mips.com, robin.murphy@arm.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com, hch@lst.de,
-        jasowang@redhat.com, linuxram@us.ibm.com, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com
-Subject: [PATCH 2/2] virtio_ring: Use DMA API if memory is encrypted
-Date:   Fri, 11 Oct 2019 18:25:19 -0700
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1570843519-8696-2-git-send-email-linuxram@us.ibm.com>
-References: <1570843519-8696-1-git-send-email-linuxram@us.ibm.com>
- <1570843519-8696-2-git-send-email-linuxram@us.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19101201-0020-0000-0000-0000037855A2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101201-0021-0000-0000-000021CE68A1
-Message-Id: <1570843519-8696-3-git-send-email-linuxram@us.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-11_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910120005
+        Fri, 11 Oct 2019 21:27:57 -0400
+Received: from mxback3j.mail.yandex.net (mxback3j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10c])
+        by forward106p.mail.yandex.net (Yandex) with ESMTP id 025161C80908;
+        Sat, 12 Oct 2019 04:27:55 +0300 (MSK)
+Received: from sas1-e6a95a338f12.qloud-c.yandex.net (sas1-e6a95a338f12.qloud-c.yandex.net [2a02:6b8:c08:37a4:0:640:e6a9:5a33])
+        by mxback3j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id l5LHWxj6Po-Rs2CJcHC;
+        Sat, 12 Oct 2019 04:27:54 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1570843674;
+        bh=VjH7JDzhlEDfz8hnj0Z4e1eQqaeF/P7jvepG9WoRjJY=;
+        h=From:To:Subject:CC:Date:Message-ID;
+        b=VS+tlDdsPFV36/i+0WI1iVf3BA/qmkOn/rQ+41yCCp0n1jtLm6yYpLESYH3FjnZkK
+         5bwJxz34GYjQq2+r3eLip5qnpTszqXptODKeQRSpOym+1JHcYszNB/3kXoSt2bi++2
+         bg+P1/br5LRfHx5GirzzF+9xlrCY4cYKD79N6TGQ=
+Authentication-Results: mxback3j.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by sas1-e6a95a338f12.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id GQpQCkZJRX-Rrq4Ihwf;
+        Sat, 12 Oct 2019 04:27:53 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Date:   Sat, 12 Oct 2019 09:27:44 +0800
+User-Agent: K-9 Mail for Android
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Kernel.org SSL certification expired
+To:     mricon@kernel.org
+CC:     linux-kernel@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <79BF3B6A-6533-48C7-BD4D-8D64FC2B397A@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Hi kernel=2Eorg sysadmin team,
 
-Normally, virtio enables DMA API with VIRTIO_F_IOMMU_PLATFORM, which must
-be set by both device and guest driver. However, as a hack, when DMA API
-returns physical addresses, guest driver can use the DMA API; even though
-device does not set VIRTIO_F_IOMMU_PLATFORM and just uses physical
-addresses.
+It seems like SSL certification of kernel=2Eorg is expired today=2E With H=
+STS enable, we can't reach kernel=2Eorg now=2E
 
-Doing this works-around POWER secure guests for which only the bounce
-buffer is accessible to the device, but which don't set
-VIRTIO_F_IOMMU_PLATFORM due to a set of hypervisor and architectural bugs.
-To guard against platform changes, breaking any of these assumptions down
-the road, we check at probe time and fail if that's not the case.
 
-cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-cc: David Gibson <david@gibson.dropbear.id.au>
-cc: Michael Ellerman <mpe@ellerman.id.au>
-cc: Paul Mackerras <paulus@ozlabs.org>
-cc: Michael Roth <mdroth@linux.vnet.ibm.com>
-cc: Alexey Kardashevskiy <aik@linux.ibm.com>
-cc: Jason Wang <jasowang@redhat.com>
-cc: Christoph Hellwig <hch@lst.de>
-Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
----
- drivers/virtio/virtio.c       | 18 ++++++++++++++++++
- drivers/virtio/virtio_ring.c  |  8 ++++++++
- include/linux/virtio_config.h | 14 ++++++++++++++
- 3 files changed, 40 insertions(+)
-
-diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-index a977e32..77a3baf 100644
---- a/drivers/virtio/virtio.c
-+++ b/drivers/virtio/virtio.c
-@@ -4,6 +4,7 @@
- #include <linux/virtio_config.h>
- #include <linux/module.h>
- #include <linux/idr.h>
-+#include <linux/dma-mapping.h>
- #include <uapi/linux/virtio_ids.h>
- 
- /* Unique numbering for virtio devices. */
-@@ -245,6 +246,23 @@ static int virtio_dev_probe(struct device *_d)
- 	if (err)
- 		goto err;
- 
-+	/*
-+	 * If memory is encrypted, but VIRTIO_F_IOMMU_PLATFORM is not set, then
-+	 * the device is broken: DMA API is required for these platforms, but
-+	 * the only way using the DMA API is going to work at all is if the
-+	 * device is ready for it. So we need a flag on the virtio device,
-+	 * exposed by the hypervisor (or hardware for hw virtio devices) that
-+	 * says: hey, I'm real, don't take a shortcut.
-+	 *
-+	 * There's one exception where guest can make things work, and that is
-+	 * when DMA API is guaranteed to always return physical addresses.
-+	 */
-+	if (mem_encrypt_active() && !virtio_can_use_dma_api(dev)) {
-+		dev_err(_d, "virtio: device unable to access encrypted memory\n");
-+		err = -EINVAL;
-+		goto err;
-+	}
-+
- 	err = drv->probe(dev);
- 	if (err)
- 		goto err;
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index c8be1c4..9c56b61 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -255,6 +255,14 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
- 	if (xen_domain())
- 		return true;
- 
-+	/*
-+	 * Also, if guest memory is encrypted the host can't access it
-+	 * directly. We need to either use an IOMMU or do bounce buffering.
-+	 * Both are done via the DMA API.
-+	 */
-+	if (mem_encrypt_active() && virtio_can_use_dma_api(vdev))
-+		return true;
-+
- 	return false;
- }
- 
-diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-index bb4cc49..57bc25c 100644
---- a/include/linux/virtio_config.h
-+++ b/include/linux/virtio_config.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/err.h>
- #include <linux/bug.h>
-+#include <linux/dma-mapping.h>
- #include <linux/virtio.h>
- #include <linux/virtio_byteorder.h>
- #include <uapi/linux/virtio_config.h>
-@@ -174,6 +175,19 @@ static inline bool virtio_has_iommu_quirk(const struct virtio_device *vdev)
- 	return !virtio_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
- }
- 
-+/**
-+ * virtio_can_use_dma_api - determine whether the DMA API can be used
-+ * @vdev: the device
-+ *
-+ * The DMA API can be used either when the device doesn't have the IOMMU quirk,
-+ * or when the DMA API is guaranteed to always return physical addresses.
-+ */
-+static inline bool virtio_can_use_dma_api(const struct virtio_device *vdev)
-+{
-+	return !virtio_has_iommu_quirk(vdev) ||
-+	       dma_addr_is_phys_addr(vdev->dev.parent);
-+}
-+
- static inline
- struct virtqueue *virtio_find_single_vq(struct virtio_device *vdev,
- 					vq_callback_t *c, const char *n)
--- 
-1.8.3.1
-
+Thanks
+--=20
+Jiaxun Yang
