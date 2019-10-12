@@ -2,255 +2,114 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D196EC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1158CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF44F20673
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D200D20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:22:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctY1dTvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbfJLTTG (ORCPT
+        id S1729515AbfJLTWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 15:19:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37406 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729846AbfJLTTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 15:19:02 -0400
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 530FC88306
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 19:19:01 +0000 (UTC)
-Received: by mail-qt1-f198.google.com with SMTP id m6so13278557qtk.23
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 12:19:01 -0700 (PDT)
+        Sat, 12 Oct 2019 15:22:30 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41217 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbfJLTWa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 15:22:30 -0400
+Received: by mail-io1-f65.google.com with SMTP id n26so28477051ioj.8;
+        Sat, 12 Oct 2019 12:22:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HQJU3/LoSPot9T+dJMRPqRv4aXw0MOIpjtfyaywm/aQ=;
+        b=ctY1dTvKbUjja1n+HmJ/0QdJo4l9dAMkFi10eQfrFjsqgOWit80kgCnq30q0OeiWfa
+         /aUwSbUbZJTKgMLaQRHrc735ma+8k8xg3+RuKcs08/Y27Bvp2HmB3VCXVh53JIpeepH1
+         Ex6BkyIFuWyhgQ4hj3IvriacAVaZFw7DIOvS0t56h7sEO7TnQ2FbSzJDxvuUFfVYZfpm
+         8i8ceDDgjqJO4QPLbUuA7rjn5ssg3y1AC1+0v+G8txow0cuyM+hhZA63VbZBlCaXGXA2
+         Cp4ZiJNXwdEapBQhk8X9d8hv+/l895BVSFvmchGs1gyzKBV8A4NRrRo6EFq1qAYA7zW9
+         Z1YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vCNQPQgI1/xdn8js+zrvAn2xDKTZGQy7ntbyt+SNi5c=;
-        b=ScDWGX7iGJe5iZP2FvnHtO+Zi6ZDybZOxTTgwmOFCmtbScE5kwxjHQq2+hw8KO+REY
-         Zf/i4cl6UmBzKfgltuRli8lGtXV/cXCQYsuE8QTu2VYsQDCqjmY0UTNgroKfXXGVOqpc
-         ySx8BH+3oi9uLZR2BWhkNJqdyrqr6XaEHcweArU1PNX9k/bTcAI+axLtaczzByTQSYK4
-         NcUmxwWlbvT/TuAvW+tLyrcem6IqpSC9HGMRhFizl+HAiMeVH8GMzmzMYTJW9GkmyCZT
-         XwHykozsW+kxFuAy2ap6Xv1Yhtao0KsHBIVh2D6BgLStCIo2sfZ5RwRfeTNhGzIzt78B
-         JtUg==
-X-Gm-Message-State: APjAAAWZVRek3H3cZgrUecuYbWAMHPrFeoF/651Wd/hD7APdmEcXsO2G
-        yDXQpM2f6TcQ9NmBn8pG/EkeE0M+2Rgif7QxxvRq7XPjSFt8CoDw2o7BL3Bmj4JUOtYk/tlfi1Z
-        q9RnuyEt8l2koDrXpMksUUU8n
-X-Received: by 2002:a37:b345:: with SMTP id c66mr21342000qkf.425.1570907940271;
-        Sat, 12 Oct 2019 12:19:00 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxnrkVeRCXyBqmetVLMHeVc/t1vaPXh6ShkwpDHRE1ALKN004StNN69cQHnVPGNsHa/QH6iHQ==
-X-Received: by 2002:a37:b345:: with SMTP id c66mr21341974qkf.425.1570907939944;
-        Sat, 12 Oct 2019 12:18:59 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
-        by smtp.gmail.com with ESMTPSA id 29sm6204732qkp.86.2019.10.12.12.18.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Oct 2019 12:18:59 -0700 (PDT)
-Date:   Sat, 12 Oct 2019 15:18:55 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH RFC v2 2/2] vhost: batching fetches
-Message-ID: <20191012191820.8050-3-mst@redhat.com>
-References: <20191012191820.8050-1-mst@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HQJU3/LoSPot9T+dJMRPqRv4aXw0MOIpjtfyaywm/aQ=;
+        b=R01HaeOXcg3Pxc2lmR/f+oHrAkffh7C4DJn1wqzNGbyF+NtjbRLhDXeD7X2k/Dq+W7
+         K9nq0twVv7Kcb6Jts+XEk1UiSZIj3yEZHc1F6ral/BNkhUcS8AZ8OX4UliOjV67XyDx0
+         HRGZ1qTr+F98Z5L9vK+TBrmlEai2Vyp87lDRr/G0rRUF4K9+F0B47CXF2UDcI72juOJg
+         rL+aKi6hPPH7HY9KsvnTBPAOQOSMKmtcGeuyxnOKz1FQynvFagB8eRZkJYT9V7AUNYAt
+         KnWLoGi07vbJxSLMFmtaQcG6AT2EBmga9xb3McStmMSZzUySvl1dgdiJsHRjTu9/4eXH
+         9CCA==
+X-Gm-Message-State: APjAAAXzLvV8R6psk3vmBdGN6X+iM/lzEce0KGGAYkgqJC2Le7Ybwj84
+        vqd8wqJDhmvcfUjtBItoajKKxhN7u70Y9mtEAkc=
+X-Google-Smtp-Source: APXvYqyJteMzDjNIWw8MOM6EkZMsiXv/drPcqPJn3dGo9FtbSnM6zKB7jm0eZ0l/nvmkFQFosHWse+jWfLyMEYAymH0=
+X-Received: by 2002:a02:7b0d:: with SMTP id q13mr25703029jac.114.1570908149253;
+ Sat, 12 Oct 2019 12:22:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191012191820.8050-1-mst@redhat.com>
-X-Mailer: git-send-email 2.22.0.678.g13338e74b8
-X-Mutt-Fcc: =sent
+References: <20191004190938.15353-1-navid.emamdoost@gmail.com>
+ <027fde47-86b3-35c8-85e6-ea7c191e772c@web.de> <f90d7b4a-c4af-eac1-f326-211e932dbd22@web.de>
+In-Reply-To: <f90d7b4a-c4af-eac1-f326-211e932dbd22@web.de>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Sat, 12 Oct 2019 14:22:18 -0500
+Message-ID: <CAEkB2EQUrHpfCXDQ9HV9_hw7Ke5DmX3SvKWJd+wSwXB1Uqaf5g@mail.gmail.com>
+Subject: Re: [PATCH] drm/imx: fix memory leak in imx_pd_bind
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Fabio Estevam <festevam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With this patch applied, new and old code perform identically.
+No, that is not correct! You should not try to free imxpd here as it
+is a resource-managed allocation via devm_kzalloc(). It means memory
+allocated with this function is automatically freed on driver detach.
+So, this patch introduces a double-free.
 
-Lots of extra optimizations are now possible, e.g.
-we can fetch multiple heads with copy_from/to_user now.
-We can get rid of maintaining the log array.  Etc etc.
+On Sat, Oct 12, 2019 at 6:54 AM Markus Elfring <Markus.Elfring@web.de> wrot=
+e:
+>
+> > +free_edid:
+> > +     kfree(imxpd->edid);
+> > +     return ret;
+>
+> I have taken another look at this change idea.
+> Can the function call =E2=80=9Cdevm_kfree(dev, imxpd)=E2=80=9D become rel=
+evant
+> also at this place?
+>
+> Would you like to combine it with the update suggestion
+> =E2=80=9CFix error handling for a kmemdup() call in imx_pd_bind()=E2=80=
+=9D?
+> https://lore.kernel.org/r/3fd6aa8b-2529-7ff5-3e19-05267101b2a4@web.de/
+> https://lore.kernel.org/patchwork/patch/1138912/
+> https://lkml.org/lkml/2019/10/12/87
+>
+> Regards,
+> Markus
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/vhost/test.c  |  2 +-
- drivers/vhost/vhost.c | 50 ++++++++++++++++++++++++++++++++++++-------
- drivers/vhost/vhost.h |  4 +++-
- 3 files changed, 46 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
-index 39a018a7af2d..e3a8e9db22cd 100644
---- a/drivers/vhost/test.c
-+++ b/drivers/vhost/test.c
-@@ -128,7 +128,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
- 	dev = &n->dev;
- 	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
- 	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
--	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
-+	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
- 		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
- 
- 	f->private_data = n;
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 36661d6cb51f..50d4a148d60d 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -302,6 +302,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
- {
- 	vq->num = 1;
- 	vq->ndescs = 0;
-+	vq->first_desc = 0;
- 	vq->desc = NULL;
- 	vq->avail = NULL;
- 	vq->used = NULL;
-@@ -390,6 +391,7 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
- 	for (i = 0; i < dev->nvqs; ++i) {
- 		vq = dev->vqs[i];
- 		vq->max_descs = dev->iov_limit;
-+		vq->batch_descs = dev->iov_limit - UIO_MAXIOV;
- 		vq->descs = kmalloc_array(vq->max_descs,
- 					  sizeof(*vq->descs),
- 					  GFP_KERNEL);
-@@ -2366,6 +2368,8 @@ static void pop_split_desc(struct vhost_virtqueue *vq)
- 	--vq->ndescs;
- }
- 
-+#define VHOST_DESC_FLAGS (VRING_DESC_F_INDIRECT | VRING_DESC_F_WRITE | \
-+			  VRING_DESC_F_NEXT)
- static int push_split_desc(struct vhost_virtqueue *vq, struct vring_desc *desc, u16 id)
- {
- 	struct vhost_desc *h;
-@@ -2375,7 +2379,7 @@ static int push_split_desc(struct vhost_virtqueue *vq, struct vring_desc *desc,
- 	h = &vq->descs[vq->ndescs++];
- 	h->addr = vhost64_to_cpu(vq, desc->addr);
- 	h->len = vhost32_to_cpu(vq, desc->len);
--	h->flags = vhost16_to_cpu(vq, desc->flags);
-+	h->flags = vhost16_to_cpu(vq, desc->flags) & VHOST_DESC_FLAGS;
- 	h->id = id;
- 
- 	return 0;
-@@ -2450,7 +2454,7 @@ static int fetch_indirect_descs(struct vhost_virtqueue *vq,
- 	return 0;
- }
- 
--static int fetch_descs(struct vhost_virtqueue *vq)
-+static int fetch_buf(struct vhost_virtqueue *vq)
- {
- 	struct vring_desc desc;
- 	unsigned int i, head, found = 0;
-@@ -2462,7 +2466,11 @@ static int fetch_descs(struct vhost_virtqueue *vq)
- 	/* Check it isn't doing very strange things with descriptor numbers. */
- 	last_avail_idx = vq->last_avail_idx;
- 
--	if (vq->avail_idx == vq->last_avail_idx) {
-+	if (unlikely(vq->avail_idx == vq->last_avail_idx)) {
-+		/* If we already have work to do, don't bother re-checking. */
-+		if (likely(vq->ndescs))
-+			return vq->num;
-+
- 		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
- 			vq_err(vq, "Failed to access avail idx at %p\n",
- 				&vq->avail->idx);
-@@ -2541,6 +2549,24 @@ static int fetch_descs(struct vhost_virtqueue *vq)
- 	return 0;
- }
- 
-+static int fetch_descs(struct vhost_virtqueue *vq)
-+{
-+	int ret = 0;
-+
-+	if (unlikely(vq->first_desc >= vq->ndescs)) {
-+		vq->first_desc = 0;
-+		vq->ndescs = 0;
-+	}
-+
-+	if (vq->ndescs)
-+		return 0;
-+
-+	while (!ret && vq->ndescs <= vq->batch_descs)
-+		ret = fetch_buf(vq);
-+
-+	return vq->ndescs ? 0 : ret;
-+}
-+
- /* This looks in the virtqueue and for the first available buffer, and converts
-  * it to an iovec for convenient access.  Since descriptors consist of some
-  * number of output then some number of input descriptors, it's actually two
-@@ -2562,6 +2588,8 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
- 	if (ret)
- 		return ret;
- 
-+	/* Note: indirect descriptors are not batched */
-+	/* TODO: batch up to a limit */
- 	last = peek_split_desc(vq);
- 	id = last->id;
- 
-@@ -2584,12 +2612,12 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
- 	if (unlikely(log))
- 		*log_num = 0;
- 
--	for (i = 0; i < vq->ndescs; ++i) {
-+	for (i = vq->first_desc; i < vq->ndescs; ++i) {
- 		unsigned iov_count = *in_num + *out_num;
- 		struct vhost_desc *desc = &vq->descs[i];
- 		int access;
- 
--		if (desc->flags & ~(VRING_DESC_F_INDIRECT | VRING_DESC_F_WRITE)) {
-+		if (desc->flags & ~VHOST_DESC_FLAGS) {
- 			vq_err(vq, "Unexpected flags: 0x%x at descriptor id 0x%x\n",
- 			       desc->flags, desc->id);
- 			ret = -EINVAL;
-@@ -2628,15 +2656,21 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
- 			}
- 			*out_num += ret;
- 		}
-+
-+		ret = desc->id;
-+
-+		if (!(desc->flags & VRING_DESC_F_NEXT))
-+			break;
- 	}
- 
--	ret = id;
--	vq->ndescs = 0;
-+	vq->first_desc = i + 1;
- 
- 	return ret;
- 
- err:
--	vhost_discard_vq_desc(vq, 1);
-+	for (i = vq->first_desc; i < vq->ndescs; ++i)
-+		if (!(vq->descs[i].flags & VRING_DESC_F_NEXT))
-+			vhost_discard_vq_desc(vq, 1);
- 	vq->ndescs = 0;
- 
- 	return ret;
-diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-index 1724f61b6c2d..8b88e0c903da 100644
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -100,7 +100,9 @@ struct vhost_virtqueue {
- 
- 	struct vhost_desc *descs;
- 	int ndescs;
-+	int first_desc;
- 	int max_descs;
-+	int batch_descs;
- 
- 	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
- 	struct file *kick;
-@@ -245,7 +247,7 @@ ssize_t vhost_chr_write_iter(struct vhost_dev *dev,
- int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
- 
- #define vq_err(vq, fmt, ...) do {                                  \
--		pr_debug(pr_fmt(fmt), ##__VA_ARGS__);       \
-+		pr_err(pr_fmt(fmt), ##__VA_ARGS__);       \
- 		if ((vq)->error_ctx)                               \
- 				eventfd_signal((vq)->error_ctx, 1);\
- 	} while (0)
--- 
-MST
 
+--=20
+Navid.
