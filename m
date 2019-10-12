@@ -2,105 +2,134 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5DCC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8470FC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732902067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsKM1f3F"
+	by mail.kernel.org (Postfix) with ESMTP id 5CD902196E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570866041;
+	bh=ymNNDx8Fo6uelERv6sLz5FrpkUpLXJNH+cXIPy6IgQo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=euIti1FJQCaUUHX6gc8lra/srx6pZguJaclJRqKRiWSp8v9QKVzYHg1hT9mWvRGSw
+	 xJvdHuiLprwdQ4f67+bmQYbB2Z0eCqdpuyZ8uq0YGIJEaV0pBCXiUgfVxDIGDtR9s+
+	 gqjUsBcb1DbvzgnrS+afaF/oqo+fm7/7tCKuBk3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfJLHkI (ORCPT
+        id S1728964AbfJLHkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 03:40:08 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33201 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfJLHkH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 03:40:07 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i76so7098975pgc.0;
-        Sat, 12 Oct 2019 00:40:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G4TDuPQi287pEOKB5KDxBxduuED1DoZ5ekjPeswwjz8=;
-        b=LsKM1f3FbF6OHL1tNl/PxgPPPztiIcuum+4w1rji5Yk8tqvR3cQRcmFt/lBOzvkiok
-         wR8RTuoEuLBZs2R4QWBcCQlm+IABIX5BrEQKwMbZkmiL65Y9dBhFua9TqyxCCOhjPkw+
-         K0DzvrTIvi+buWy+H9Hi3MRGXUfq6hGlO6Jxu3LUJfVjw0A4XoTW6bzefZu8gKm/AVrZ
-         7VHZZo77uxQ8RAWkloEDgL3/zIa1FXuMeh2VSWsZG20L3TQsg49NbVsvhuSp1H5ExlqI
-         3pHMuJtd6JWUtrouisaTk1KU2C172bmFuNHjRCtrgucss5q/8pAkLPAHNoX0PMQXK5A/
-         OdeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G4TDuPQi287pEOKB5KDxBxduuED1DoZ5ekjPeswwjz8=;
-        b=fetXoQaEgALCAVjJUyQAYC2N2fJD35dSP/ym+cF6ghNqdbA0bi72vXU2iW5O67RAjD
-         ClQBP0ncK/FuK8KJN8e4HmupLC56oUb/bcFw5jHvNV+QVHHKsEFLLuo7hNtzFMeg/Vsc
-         74Km2zKV1wcFEQSUuUch+o9Z/FAmT9ydrQQ6B4YtS7P/AV3X2DLQdEFBKVzfOfmqTZJx
-         Vb2HNF+JoNY/ZWD7PTMp7GFqq1VOGGBzAmG0WdCW+fmJw6In136hf83M/gCSfAnVenHi
-         NOKNm30zjrOeAVQFip+rZDmUPOp3qVNg/TybreXG2qAsXyv4eO6nPRgdiWvgq3n3u47P
-         kpjA==
-X-Gm-Message-State: APjAAAWUNAJLDmhorgfL/hG+o9plAjHB0urrj4IWblvhuIdePkI0rtYw
-        fWg8yA3I+6CPz2OYfEh+fXHhaVs644Dv/pmNbhM=
-X-Google-Smtp-Source: APXvYqwfmCVkEWAsj6lmyugjeKaYtOhruRdv352/bSJ8pJfsVuQYh5jAatnO3LWV27Y7Y4E3MEhIGO1Mz7qXq1cxFME=
-X-Received: by 2002:a17:90a:b391:: with SMTP id e17mr23177858pjr.132.1570866006928;
- Sat, 12 Oct 2019 00:40:06 -0700 (PDT)
+        Sat, 12 Oct 2019 03:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727014AbfJLHkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 03:40:39 -0400
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B8F421850;
+        Sat, 12 Oct 2019 07:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570866037;
+        bh=ymNNDx8Fo6uelERv6sLz5FrpkUpLXJNH+cXIPy6IgQo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ot8f41TKzj8Uyk3uaJjDgmRmJCCUEX5IwsF6OZJejumM5mBiZmWoPWs0TNXw34Cvm
+         lc0PGWk6jgAwWW+ruUVJqAQEpuG/UBMsvUrDGYEz8PQHRKAzc1Z9YYyro/ls3L8ddT
+         9kwveJ9nnRcV63+0ftQ9noDCsvnzMi6Pp/krJ0jg=
+Date:   Sat, 12 Oct 2019 09:40:14 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
+        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        lenb@kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20191012074014.GA2037204@kroah.com>
+References: <20190924131939.GS23050@dhcp22.suse.cz>
+ <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
+ <20190925104108.GE4553@hirez.programming.kicks-ass.net>
+ <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
+ <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+ <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+ <20191010073212.GB18412@dhcp22.suse.cz>
+ <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+ <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+ <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
 MIME-Version: 1.0
-References: <20191012035420.13904-1-dan@dlrobertson.com> <20191012035420.13904-3-dan@dlrobertson.com>
- <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
-In-Reply-To: <d6f44aea-81b9-eb5f-71e2-637246c89491@infradead.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 12 Oct 2019 10:39:54 +0300
-Message-ID: <CAHp75VeBrR0Ln5XOw5zA+JSoXM9BdoYw7p9D5c7u+2=Lfht75w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Dan Robertson <dan@dlrobertson.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 10:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 10/11/19 8:54 PM, Dan Robertson wrote:
+On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
+> add pci and acpi maintainer
+> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
+> 
+> On 2019/10/11 19:15, Peter Zijlstra wrote:
+> > On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
+> >> But I failed to see why the above is related to making node_to_cpumask_map()
+> >> NUMA_NO_NODE aware?
+> > 
+> > Your initial bug is for hns3, which is a PCI device, which really _MUST_
+> > have a node assigned.
+> > 
+> > It not having one, is a straight up bug. We must not silently accept
+> > NO_NODE there, ever.
+> > 
+> 
+> I suppose you mean reporting a lack of affinity when the node of a pcie
+> device is not set by "not silently accept NO_NODE".
 
-> > +config BMA400_I2C
-> > +     tristate
-> > +     depends on BMA400
-> > +     depends on I2C
-> > +     select REGMAP_I2C
-> > +
->
-> The bma400_i2c driver seems to use some OF interfaces.
-> Should it also depend on OF?
+If the firmware of a pci device does not provide the node information,
+then yes, warn about that.
 
-Please, avoid unnecessary and strict dependencies when it's limiting
-the area of use the driver.
-The driver does not depend to OF. Why to stick with OF?
+> As Greg has asked about in [1]:
+> what is a user to do when the user sees the kernel reporting that?
+> 
+> We may tell user to contact their vendor for info or updates about
+> that when they do not know about their system well enough, but their
+> vendor may get away with this by quoting ACPI spec as the spec
+> considering this optional. Should the user believe this is indeed a
+> fw bug or a misreport from the kernel?
 
-The actual change has to be done is to switch from
+Say it is a firmware bug, if it is a firmware bug, that's simple.
 
-> #include <linux/of.h>
+> If this kind of reporting is common pratice and will not cause any
+> misunderstanding, then maybe we can report that.
 
-to
+Yes, please do so, that's the only way those boxes are ever going to get
+fixed.  And go add the test to the "firmware testing" tool that is based
+on Linux that Intel has somewhere, to give vendors a chance to fix this
+before they ship hardware.
 
-#include <linux/mod_devicetable.h>
+This shouldn't be a big deal, we warn of other hardware bugs all the
+time.
 
--- 
-With Best Regards,
-Andy Shevchenko
+thanks,
+
+greg k-h
