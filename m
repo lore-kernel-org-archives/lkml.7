@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295C6ECE58C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C0AC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0166B2067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB2C21929
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="middy/KX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rru5RL0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbfJLGxL (ORCPT
+        id S1729084AbfJLGxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 02:53:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33854 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbfJLGxL (ORCPT
+        Sat, 12 Oct 2019 02:53:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38401 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728878AbfJLGxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 02:53:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y135so10776174wmc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 23:53:09 -0700 (PDT)
+        Sat, 12 Oct 2019 02:53:12 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 3so12064724wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 23:53:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MOqGp6N62GYRWc7Fsvh/EkbvR/AOeQrVY/a8V3x3WKI=;
-        b=middy/KXn66SPa/ZVSSjJQb1uEc7zwjKuunyzcH+4pvfWYkDB+7mFIqXayXvFj6QEr
-         g9zzy4B7MvvEmifCJM1Zk8vMVy9jj2ML2RZnHMcW49IBikJCbilxBWJMUFh3mIMKLtFI
-         GGrhK1qHWMjrjHxAVOJFguHBgGtbobrmMPgQQz45U9lZ/Jb3Jk35kwMkb3LKMhA9J+/U
-         nJa5UMAOcWs/9U1v8iFWosAkk5eKmWd1UHwl+oGtaSwwVtbKTmpqsB4ua9DiBHEdiq5X
-         tiTSCoa8oiUMQPTqQ0KB2BUIeLK3ceuI9vh6agO+v7Al2FxLZQ9p7SmTfvYVn6XQGMxM
-         4x/A==
+        bh=oJUJQi9oxDEyvIdLCMbq2uvVsNGsqyuKnnHa3VxGyMs=;
+        b=rru5RL0fM2DXupCKMZjiKQnH7iBHl3J3DsZqG5oDOaFs798N28j7GMQLZw/EmiBao/
+         gt1F3O6LsGkIY+olovxz6Pssclf7fzyN9yGBi+Uvo7x2C4lw6TK82JQRoa6oRK/Elge6
+         b5sd+3y47Ae4NokPD2QFHEWJ3ttBXxgJLcuFiqyXpPkfXtr+PNuQoYRoEQYDkO1VJWG1
+         axj15r/FNybiPwx/ombb4umc0lERtlTh9etngpSc7VbvHmcPey6c7VpQp09fSS/V6D7Y
+         VoGmOS3xJjXiDJleeW6dsowLv09ME5fyLgh9/tX9GNXTb59vP9/e9jfcIOrIGEAbn8Uu
+         9ENg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MOqGp6N62GYRWc7Fsvh/EkbvR/AOeQrVY/a8V3x3WKI=;
-        b=HIJsFU12IUlmNqQc7047UgPoHJ97ySfvN6QQEnHb5cqR0qReoW4fPTZ4YPQsSv+B7U
-         lCrO2Gx2do/JWKk/r5p7nZ+i4EVGBWYcvuMbS4lBu+pFoobwQQVpauTcLwE64ddpTAxB
-         /2auqWszKowg4YLQ3v5NZzF3IWxexJsxnUIw2is8gGz/tDMV+AiQMWxIkD18Udh2RZ23
-         CZASdYqeL8kVIJFiV4Rw55CC3Rx/SBKVRAdERiSWdieGF4ylkGcBA/2DeMPwyjAZKUMp
-         BnfGpqaZ3hLezajxQ0+ujYy7J0ew2mNjmF7SualzqexW8yY+CNg0KL6ggW9LFz+X7hzr
-         96UQ==
-X-Gm-Message-State: APjAAAXfMP9GWcMNp1jdP7wJwPLcuAF1XqxEwe9KNOLam5fI3zCCCMwA
-        jiKDsJzbw7Ra+mqjzK7/HiTNRA==
-X-Google-Smtp-Source: APXvYqx6jtdvvFGmYfIrdErsFC0VLmpAU1ALugDQxnVp+LABDSDGC1SLJ68sxolh+TBJr2bQEoBEuQ==
-X-Received: by 2002:a1c:a697:: with SMTP id p145mr5714929wme.24.1570863188994;
-        Fri, 11 Oct 2019 23:53:08 -0700 (PDT)
+        bh=oJUJQi9oxDEyvIdLCMbq2uvVsNGsqyuKnnHa3VxGyMs=;
+        b=DCP7dIwp5ReOjNpfyi0Vgk04CL3GZ6TAireNesl/a4g2KaQA/a4XHmVg8LFyf6pF/w
+         v0waxVDEVx9i4tTqIJfQW42sdxKi7OD6lyTBei/Tole/RxP34kc9w9G/MVb3Sufg8ocv
+         USwA7j0U1t22plBh6RYJrGFxX7zoDZz9YNZGSTIdppbe84z845RkoHTvnxPzcr0HvWwJ
+         QMaQv8uZODWDQfCQmQgyCHU5CXhFck0+sin9mdrs8PD7C34TAmzq2Xf36UocZOon6VhS
+         oitTSQZ7wSTWu+ssn8eQ2QxZVV2DpGfuIjbveEYQZ6w9927ipfYS836FqC9nzyiqXR47
+         c61g==
+X-Gm-Message-State: APjAAAXgHSk8GWQEVk5ItuQ6zHoVkIsODscuxsqzR/3o6hE2pCeIMCvc
+        YUJ4Y52mPd67T+uuRmK3NwYDGPf9C2U=
+X-Google-Smtp-Source: APXvYqyq2W7Se2F+acWXTOOiNGux52eSB4Y7gp5fOWSI5VTdXtXUmnuCVRgrbmZGcwVwdf0sHflEgA==
+X-Received: by 2002:a1c:444:: with SMTP id 65mr6430067wme.84.1570863190047;
+        Fri, 11 Oct 2019 23:53:10 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:f437:29a8:ed69:7bab])
-        by smtp.gmail.com with ESMTPSA id z5sm17450497wrs.54.2019.10.11.23.53.06
+        by smtp.gmail.com with ESMTPSA id z5sm17450497wrs.54.2019.10.11.23.53.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 23:53:06 -0700 (PDT)
+        Fri, 11 Oct 2019 23:53:09 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     rui.zhang@intel.com, edubezval@gmail.com
 Cc:     daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
         amit.kucheria@linaro.org
-Subject: [PATCH 05/11] thermal: Move set_trips function to the internal header
-Date:   Sat, 12 Oct 2019 08:52:49 +0200
-Message-Id: <20191012065255.23249-5-daniel.lezcano@linaro.org>
+Subject: [PATCH 06/11] thermal: Move get_tz_trend to the internal header
+Date:   Sat, 12 Oct 2019 08:52:50 +0200
+Message-Id: <20191012065255.23249-6-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191012065255.23249-1-daniel.lezcano@linaro.org>
 References: <20191012065255.23249-1-daniel.lezcano@linaro.org>
@@ -77,46 +77,50 @@ there is no use of it.
 Move its the definition in the internal header and allow better
 self-encapsulation.
 
+Take the opportunity to add the parameter names to make checkpatch
+happy and remove the pointless stubs.
+
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
  drivers/thermal/thermal_core.h | 2 ++
- include/linux/thermal.h        | 3 ---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ include/linux/thermal.h        | 4 +---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index 6f6e0dcba4f2..301f5603def1 100644
+index 301f5603def1..c03a07164ca7 100644
 --- a/drivers/thermal/thermal_core.h
 +++ b/drivers/thermal/thermal_core.h
-@@ -72,6 +72,8 @@ struct thermal_trip {
- 	enum thermal_trip_type type;
- };
+@@ -74,6 +74,8 @@ struct thermal_trip {
  
-+void thermal_zone_set_trips(struct thermal_zone_device *tz);
+ void thermal_zone_set_trips(struct thermal_zone_device *tz);
+ 
++int get_tz_trend(struct thermal_zone_device *tz, int trip);
 +
  /*
   * This structure is used to describe the behavior of
   * a certain cooling device on a certain trip point
 diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 88e1faa3d72c..761d77571533 100644
+index 761d77571533..a87f551d114d 100644
 --- a/include/linux/thermal.h
 +++ b/include/linux/thermal.h
-@@ -398,7 +398,6 @@ int thermal_zone_unbind_cooling_device(struct thermal_zone_device *, int,
- 				       struct thermal_cooling_device *);
- void thermal_zone_device_update(struct thermal_zone_device *,
- 				enum thermal_notify_event);
--void thermal_zone_set_trips(struct thermal_zone_device *);
+@@ -415,7 +415,6 @@ int thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp);
+ int thermal_zone_get_slope(struct thermal_zone_device *tz);
+ int thermal_zone_get_offset(struct thermal_zone_device *tz);
  
- struct thermal_cooling_device *thermal_cooling_device_register(const char *,
- 		void *, const struct thermal_cooling_device_ops *);
-@@ -444,8 +443,6 @@ static inline int thermal_zone_unbind_cooling_device(
- static inline void thermal_zone_device_update(struct thermal_zone_device *tz,
- 					      enum thermal_notify_event event)
- { }
--static inline void thermal_zone_set_trips(struct thermal_zone_device *tz)
--{ }
- static inline struct thermal_cooling_device *
- thermal_cooling_device_register(char *type, void *devdata,
- 	const struct thermal_cooling_device_ops *ops)
+-int get_tz_trend(struct thermal_zone_device *, int);
+ struct thermal_instance *get_thermal_instance(struct thermal_zone_device *,
+ 		struct thermal_cooling_device *, int);
+ void thermal_cdev_update(struct thermal_cooling_device *);
+@@ -474,8 +473,7 @@ static inline int thermal_zone_get_slope(
+ static inline int thermal_zone_get_offset(
+ 		struct thermal_zone_device *tz)
+ { return -ENODEV; }
+-static inline int get_tz_trend(struct thermal_zone_device *tz, int trip)
+-{ return -ENODEV; }
++
+ static inline struct thermal_instance *
+ get_thermal_instance(struct thermal_zone_device *tz,
+ 	struct thermal_cooling_device *cdev, int trip)
 -- 
 2.17.1
 
