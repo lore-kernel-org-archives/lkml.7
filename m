@@ -2,107 +2,64 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CDDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD60C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF322067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:19:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r4RIe8BN"
+	by mail.kernel.org (Postfix) with ESMTP id 895B52067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 04:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfJLETB (ORCPT
+        id S1727919AbfJLEV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 00:19:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43632 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfJLETB (ORCPT
+        Sat, 12 Oct 2019 00:21:26 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55442 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfJLEV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 00:19:01 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i32so6888860pgl.10
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 21:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Biq3dW4bW0477lomZDFZTi490SFYFw1BtO4yj510/vM=;
-        b=r4RIe8BNwJ0mRu0383jbVNv+Pew63+jHslfI95XxABq09NjQfA2VbtjGuA/gXOLAQl
-         HZetYhW/n8CUHfMwH+Y/FRz0K1JSfvFnABT3Ywkd2sDXc97PjH/UNuAVYbf7TQ7Vw/+C
-         nDzAyJqC2ovtyVsY9x9bWkGB57LysASSXRfqls9P+Xs+CwKeCOCvAIkMhtdwb8dc2csx
-         RaQ/2BfeD5ZLEhTvJyyVcMc62wuRuAHNtxzSWPhLn3emvnNagm/59SAH8BfJGCsgei6h
-         KPjHK6QiSX2LhCf7rkvGvgxYHV6TDPoeFBIDb39q6g3YEv+9ZdsqQ474ZBj0zpWCjXo0
-         vI+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Biq3dW4bW0477lomZDFZTi490SFYFw1BtO4yj510/vM=;
-        b=mootJTwH9uscjKGKgeFznkGzFUC3kg0gOtDxokly7camIq+F0h4OoXzgqlH9eDrMK4
-         ooNnrUxcqeywTh9azeSQozidHrzErpYIX36dHJm3L5UiYb3GY8ufxuTfs96r6Uh7ouOc
-         S63yjEPmBCKdVV2d4n6JnuWDN8grd0Tjlmyuza4oudvnjyuw23Sz3jvkWMzNOkidH8Nr
-         IuIXBrjx26yPjfeBv6kufsEuTa+ITyLhFNfNtDqzwM3XRnjlYtt+ofzEcZaOgSnwbkxP
-         ADtxeuhH8tNnVHe4uFD2K1bgek8W7rWWR3Qpckg30ctUbdKBOYu0CsNg3B0Z1NpQz37Q
-         aY/A==
-X-Gm-Message-State: APjAAAW+LZrHPFDmU3ePqVwcyfiKVpYSuukiMMonLkTFSH9GiMIQNBw7
-        nktYSkyoArGQVBNbQrZMySNKjg==
-X-Google-Smtp-Source: APXvYqyVEDPBqKwv5CKlG8eF2KQdfnZBkXGmGTJfcvzir7jHGT9V5OIUDE2xY5S2OQRADy06KWyO9Q==
-X-Received: by 2002:a62:8305:: with SMTP id h5mr19838213pfe.190.1570853939670;
-        Fri, 11 Oct 2019 21:18:59 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u9sm11142953pfl.138.2019.10.11.21.18.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 21:18:58 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] arm64: defconfig: Enable Qualcomm SPI and QSPI controller
-Date:   Fri, 11 Oct 2019 21:18:55 -0700
-Message-Id: <20191012041855.511313-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 12 Oct 2019 00:21:26 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 456F815004EAC;
+        Fri, 11 Oct 2019 21:21:25 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 21:21:24 -0700 (PDT)
+Message-Id: <20191011.212124.1517786431494477849.davem@davemloft.net>
+To:     dhowells@redhat.com
+Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] rxrpc: Fix possible NULL pointer access in ICMP
+ handling
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <157071915431.29197.5055122258964729288.stgit@warthog.procyon.org.uk>
+References: <157071915431.29197.5055122258964729288.stgit@warthog.procyon.org.uk>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 11 Oct 2019 21:21:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the drivers for GENI SPI and QSPI controllers found on the
-Qualcomm SDM845 platform, among others.
+From: David Howells <dhowells@redhat.com>
+Date: Thu, 10 Oct 2019 15:52:34 +0100
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+> If an ICMP packet comes in on the UDP socket backing an AF_RXRPC socket as
+> the UDP socket is being shut down, rxrpc_error_report() may get called to
+> deal with it after sk_user_data on the UDP socket has been cleared, leading
+> to a NULL pointer access when this local endpoint record gets accessed.
+> 
+> Fix this by just returning immediately if sk_user_data was NULL.
+> 
+> The oops looks like the following:
+ ...
+> Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
+> Reported-by: syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com
+> Signed-off-by: David Howells <dhowells@redhat.com>
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 688c8f200034..dcada299ff4d 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -391,7 +391,9 @@ CONFIG_SPI_MESON_SPIFC=m
- CONFIG_SPI_ORION=y
- CONFIG_SPI_PL022=y
- CONFIG_SPI_ROCKCHIP=y
-+CONFIG_SPI_QCOM_QSPI=m
- CONFIG_SPI_QUP=y
-+CONFIG_SPI_QCOM_GENI=m
- CONFIG_SPI_S3C64XX=y
- CONFIG_SPI_SPIDEV=m
- CONFIG_SPI_SUN6I=y
--- 
-2.23.0
-
+Applied and queued up for -stable, thanks.
