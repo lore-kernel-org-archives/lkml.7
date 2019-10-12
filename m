@@ -2,176 +2,471 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B58C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C4FC10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27BA2089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:10:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ZuHOciRv"
+	by mail.kernel.org (Postfix) with ESMTP id B62B02089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570885931;
+	bh=vxQ6+Huqy7s8tkwv15FgAN1DovHArYHwFrN1EBWWBHM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=a8n6v0Cmz9LmJn4yw3lezMzwNKGOIFRjPZMIruacPcM6ziuSfs1n9k6viKyxxHYhn
+	 MmsyYBT9CbTbvcfVL53Rq8pUloUjhb/Nburlzghl/A/eWWS4hhSBeLqUhOy9fMoEIX
+	 5eqkump2OuLgHlAp84vtLvP9LeLk7/8MEfflL3E8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfJLNKF (ORCPT
+        id S1729225AbfJLNLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 09:10:05 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:33029 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbfJLNKF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 09:10:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1570885799;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ekWesNvGuUfOhCRo6r3UzBvldE9nFhLJRSAGOp9LAyM=;
-        b=ZuHOciRvUdJOByokEuqJZB4WY8eAgae/rolIwz5EpKGR5TrwtyhPL0VLldW77gANlv
-        5TOaW4ZvM5mCRbVQv70YSxZMbK74IWwgtFuTxi3p8i/ot4vWC6Q9lYD125xGmhw+d1fB
-        KPwmtb9BpSfLNW3eocSpZCy+6CwvZoWcJ9FCMdzpMSbkYo7Z6Zuz4lh+8m4I0JR9f47r
-        +gNwh4EM5RiThrd0/Yn6+w7CvTeXVdcwZEVuemI9AU0+QX2c5zxRCegLwiW3SkSHg+Ip
-        +ytra0BK0BRGrJPjOWqmfvADowLbDdjP5QHlpmQY3VYtvZioyY9lVvHLmCzkt4vdpzMc
-        Zl2g==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrtwDCoxB0="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.28.0 DYNA|AUTH)
-        with ESMTPSA id v00409v9CD9uDIO
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sat, 12 Oct 2019 15:09:56 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] Lay common foundation to make PVR/SGX work without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
-Date:   Sat, 12 Oct 2019 15:09:55 +0200
-Cc:     Merlijn Wajer <merlijn@wizzup.org>, Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        James Hilliard <james.hilliard1@gmail.com>,
-        maemo-leste@lists.dyne.org,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@pyra-handheld.com, Robert Nelson <robertcnelson@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <72851E17-9B56-4CA5-B164-667836A7C894@goldelico.com>
-References: <20180108214032.GW3872@atomide.com> <0b00ce0a-969f-e638-8247-c2da96cf7ce6@gmail.com> <20190213004143.GP5720@atomide.com> <480AB632-A544-41E7-95A4-DC354AEBB71A@goldelico.com> <CAKpie0SigGGsQxSU+X-Mz5boy-Xx=3wRNOcrf+F=ehFr3RBi7Q@mail.gmail.com> <092210C3-05DE-4AFB-986F-81BD8F990B67@goldelico.com> <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com> <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com> <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com> <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com> <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org> <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org> <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org> <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com> <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com> <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com> <ebb50954-b456-
-  4dab-0765-9dfa06c67075@wizzup.org> <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
-To:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
-X-Mailer: Apple Mail (2.3124)
+        Sat, 12 Oct 2019 09:11:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfJLNLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 09:11:51 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E1672089F;
+        Sat, 12 Oct 2019 13:11:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570885909;
+        bh=vxQ6+Huqy7s8tkwv15FgAN1DovHArYHwFrN1EBWWBHM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UfX6az3c8nQT7u2yP1xjFwsqKhfDqG9HLxv2yGh2Fa0YqPh72YtPjSIEQ3AanAE8K
+         9DoAfoBYkTUjfOdUxVLbGOVkqsbNmZXwaSXYlvlYJyUR/UJMtzRni775BIR/mYHB/A
+         n4mPl7I/e81qcGoIOIHMEMK0V7M7QBk2TFFHc/6c=
+Date:   Sat, 12 Oct 2019 14:11:44 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH] iio: dac: stm32: add power management support
+Message-ID: <20191012141144.665f4a50@archlinux>
+In-Reply-To: <1570628918-23474-1-git-send-email-fabrice.gasnier@st.com>
+References: <1570628918-23474-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 9 Oct 2019 15:48:38 +0200
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-> Am 05.10.2019 um 18:58 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> So I have several ideas what the reasons for the problems on the =
-non-omap5
-> devices could be:
-> * initial code may have some omap5 specific hack inside
-> * or has omap5 specific magic constants
-> * uKernel may "know" on which platform it runs and
->  we would need differently patched user-space code
->  for each one
-> * omap5 has a dual core sgx544 while the other
->  have single core
-> * the register address translation is not yet correct and
->  this inhibits communicating of the user-space libs
->  with the uKernel
->=20
-> Maybe, if someone can point me to a complete and working BeagleBone =
-source
-> tree (any kernel release) which makes use of 1.14.3699939 SDK, I could =
-compare
-> code and address setup to find what makes the difference.
+> Add support for runtime PM & sleep.
+> Provide pclk to regmap as registers access doesn't need full power
+> (e.g. regulator). Always restore HFSEL when resuming. It may get lost
+> depending on low power level that has been achieved.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+I'm far from an expert on this stuff, but seems correct to me.
 
-I have found the following description, followed all steps, and it =
-works:
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to poke at it.
 
-http://blog.0xpebbles.org/PowerVR-SGX-on-the-beaglebone-black-in-2019
+Thanks,
 
-So with this, I have got a working user-space setup for BeagleBone and =
-some working
-pvrsrvkm.ko module (kernel 4.4.155-ti-r155) for evaluation.
+Jonathan
 
-Symbols of the kernel module are not stripped, so that I can indirectly =
-compare
-some build/configure options.
-
-root@arm:~# uname -a
-Linux arm 4.4.155-ti-r155 #1 SMP Thu May 23 06:00:18 UTC 2019 armv7l =
-GNU/Linux
-root@arm:~# ls -l /lib/modules/4.4.155-ti-r155/extra/ti335x/pvrsrvkm.ko
--rw-r--r-- 1 root root 408084 May 23 06:46 =
-/lib/modules/4.4.155-ti-r155/extra/ti335x/pvrsrvkm.ko
-root@arm:~# dmesg|fgrep -i pvr
-[   24.589384] pvrsrvkm: loading out-of-tree module taints kernel.
-[   25.051602] [drm] Initialized pvr 1.14.3699939 20110701 on minor 1
-root@arm:~# sudo /usr/bin/pvrsrvctl --start --no-module
-root@arm:~# cat /proc/pvr/version
-Version SGX_DDK sgxddk MAIN@3699939 (release) omap_linux
-System Version String: SGX revision =3D 125
-root@arm:~#=20
-
-For comparison, I have:
-
-root@letux:~# uname -a
-Linux letux 5.4.0-rc2-letux+ #1161 SMP PREEMPT Wed Oct 9 19:05:21 CEST =
-2019 armv7l GNU/Linux
-root@letux:~# ls -l =
-/lib/modules/5.4.0-rc2-letux+/kernel/drivers/staging/pvr/1.14.3699939/eura=
-sia_km/pvrsrvkm_omap_am335x_sgx530_125.ko
--rw-r--r-- 1 1002 root 4751504 Oct  9 17:09 =
-/lib/modules/5.4.0-rc2-letux+/kernel/drivers/staging/pvr/1.14.3699939/eura=
-sia_km/pvrsrvkm_omap_am335x_sgx530_125.ko
-root@letux:~# dmesg|fgrep -i pvr
-[  119.376338] pvrsrvkm_omap_am335x_sgx530_125: module is from the =
-staging directory, the quality is unknown, you have been warned.
-[  119.478943] [drm] Initialized pvr 1.14.3699939 20110701 for =
-56000000.sgx on minor 1
-root@letux:~# /usr/bin/pvrsrvctl --start --no-module
-[  238.178801] PVR_K: UM DDK-(3699939) and KM DDK-(3699939) match. [ OK =
-]
-PVR:(Error): LoaduKernelProgram : SGX ukernel program Device Addr: =
-0xe400000 invalid alignment
-PVR:(Error): SetupuKernel : Failed to load uKernel program
-PVR:(Error): SrvInit: Initialisation for device of class 0, type 7, =
-index 0, failed (1) [0, ]
-[  238.667915] PVR_K:(Error): BridgedDispatchKM: Initialisation failed.  =
-Driver unusable.
-PVR:(Error): PVRSRVBridgeCall: Failed to access device.  Function =
-ID:3223086862 (strerror returns no value.). [0, ]
-/usr/bin/pvrsrvctl: SrvInit failed (already initialized?) =
-(err=3DPVRSRV_ERROR_OUT_OF_MEMORY - Unable to allocate required memory)
-root@letux:~#=20
-
-First observations:
-* pvrsrvkm.ko is a little smaller (may be a result of compiler and build =
-options)
-* both taint the kernel, as expected
-* they are exactly the same DDK release 1.14.3699939
-* my version is a little more verbose
-* but fails loading the uKernel
-
-What I don't have yet is the full source code or build recipe for the =
-specific
-4.4.155-ti-r155 pvrsrvkm.ko from TI.
-
-But even without having this yet, I can start experiments by replacing
-kernel and pvrsrvkm.ko with mine. This should allow to gain new =
-insights.
-
-BR,
-Nikolaus
+> ---
+>  drivers/iio/dac/stm32-dac-core.c | 138 ++++++++++++++++++++++++++++++---------
+>  drivers/iio/dac/stm32-dac.c      |  94 +++++++++++++++++++++++++-
+>  2 files changed, 199 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/iio/dac/stm32-dac-core.c b/drivers/iio/dac/stm32-dac-core.c
+> index d0fb312..9e6b4cd 100644
+> --- a/drivers/iio/dac/stm32-dac-core.c
+> +++ b/drivers/iio/dac/stm32-dac-core.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/reset.h>
+>  
+> @@ -50,6 +51,41 @@ static const struct regmap_config stm32_dac_regmap_cfg = {
+>  	.max_register = 0x3fc,
+>  };
+>  
+> +static int stm32_dac_core_hw_start(struct device *dev)
+> +{
+> +	struct stm32_dac_common *common = dev_get_drvdata(dev);
+> +	struct stm32_dac_priv *priv = to_stm32_dac_priv(common);
+> +	int ret;
+> +
+> +	ret = regulator_enable(priv->vref);
+> +	if (ret < 0) {
+> +		dev_err(dev, "vref enable failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(priv->pclk);
+> +	if (ret < 0) {
+> +		dev_err(dev, "pclk enable failed: %d\n", ret);
+> +		goto err_regulator_disable;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_regulator_disable:
+> +	regulator_disable(priv->vref);
+> +
+> +	return ret;
+> +}
+> +
+> +static void stm32_dac_core_hw_stop(struct device *dev)
+> +{
+> +	struct stm32_dac_common *common = dev_get_drvdata(dev);
+> +	struct stm32_dac_priv *priv = to_stm32_dac_priv(common);
+> +
+> +	clk_disable_unprepare(priv->pclk);
+> +	regulator_disable(priv->vref);
+> +}
+> +
+>  static int stm32_dac_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -66,6 +102,8 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+>  		return -ENOMEM;
+> +	platform_set_drvdata(pdev, &priv->common);
+> +
+>  	cfg = (const struct stm32_dac_cfg *)
+>  		of_match_device(dev->driver->of_match_table, dev)->data;
+>  
+> @@ -74,11 +112,19 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>  	if (IS_ERR(mmio))
+>  		return PTR_ERR(mmio);
+>  
+> -	regmap = devm_regmap_init_mmio(dev, mmio, &stm32_dac_regmap_cfg);
+> +	regmap = devm_regmap_init_mmio_clk(dev, "pclk", mmio,
+> +					   &stm32_dac_regmap_cfg);
+>  	if (IS_ERR(regmap))
+>  		return PTR_ERR(regmap);
+>  	priv->common.regmap = regmap;
+>  
+> +	priv->pclk = devm_clk_get(dev, "pclk");
+> +	if (IS_ERR(priv->pclk)) {
+> +		ret = PTR_ERR(priv->pclk);
+> +		dev_err(dev, "pclk get failed\n");
+> +		return ret;
+> +	}
+> +
+>  	priv->vref = devm_regulator_get(dev, "vref");
+>  	if (IS_ERR(priv->vref)) {
+>  		ret = PTR_ERR(priv->vref);
+> @@ -86,33 +132,22 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	ret = regulator_enable(priv->vref);
+> -	if (ret < 0) {
+> -		dev_err(dev, "vref enable failed\n");
+> -		return ret;
+> -	}
+> +	pm_runtime_get_noresume(dev);
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +
+> +	ret = stm32_dac_core_hw_start(dev);
+> +	if (ret)
+> +		goto err_pm_stop;
+>  
+>  	ret = regulator_get_voltage(priv->vref);
+>  	if (ret < 0) {
+>  		dev_err(dev, "vref get voltage failed, %d\n", ret);
+> -		goto err_vref;
+> +		goto err_hw_stop;
+>  	}
+>  	priv->common.vref_mv = ret / 1000;
+>  	dev_dbg(dev, "vref+=%dmV\n", priv->common.vref_mv);
+>  
+> -	priv->pclk = devm_clk_get(dev, "pclk");
+> -	if (IS_ERR(priv->pclk)) {
+> -		ret = PTR_ERR(priv->pclk);
+> -		dev_err(dev, "pclk get failed\n");
+> -		goto err_vref;
+> -	}
+> -
+> -	ret = clk_prepare_enable(priv->pclk);
+> -	if (ret < 0) {
+> -		dev_err(dev, "pclk enable failed\n");
+> -		goto err_vref;
+> -	}
+> -
+>  	priv->rst = devm_reset_control_get_exclusive(dev, NULL);
+>  	if (!IS_ERR(priv->rst)) {
+>  		reset_control_assert(priv->rst);
+> @@ -128,39 +163,79 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>  					 priv->common.hfsel ?
+>  					 STM32H7_DAC_CR_HFSEL : 0);
+>  		if (ret)
+> -			goto err_pclk;
+> +			goto err_hw_stop;
+>  	}
+>  
+> -	platform_set_drvdata(pdev, &priv->common);
+>  
+>  	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, dev);
+>  	if (ret < 0) {
+>  		dev_err(dev, "failed to populate DT children\n");
+> -		goto err_pclk;
+> +		goto err_hw_stop;
+>  	}
+>  
+> +	pm_runtime_put(dev);
+> +
+>  	return 0;
+>  
+> -err_pclk:
+> -	clk_disable_unprepare(priv->pclk);
+> -err_vref:
+> -	regulator_disable(priv->vref);
+> +err_hw_stop:
+> +	stm32_dac_core_hw_stop(dev);
+> +err_pm_stop:
+> +	pm_runtime_disable(dev);
+> +	pm_runtime_set_suspended(dev);
+> +	pm_runtime_put_noidle(dev);
+>  
+>  	return ret;
+>  }
+>  
+>  static int stm32_dac_remove(struct platform_device *pdev)
+>  {
+> -	struct stm32_dac_common *common = platform_get_drvdata(pdev);
+> +	pm_runtime_get_sync(&pdev->dev);
+> +	of_platform_depopulate(&pdev->dev);
+> +	stm32_dac_core_hw_stop(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +	pm_runtime_set_suspended(&pdev->dev);
+> +	pm_runtime_put_noidle(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused stm32_dac_core_resume(struct device *dev)
+> +{
+> +	struct stm32_dac_common *common = dev_get_drvdata(dev);
+>  	struct stm32_dac_priv *priv = to_stm32_dac_priv(common);
+> +	int ret;
+>  
+> -	of_platform_depopulate(&pdev->dev);
+> -	clk_disable_unprepare(priv->pclk);
+> -	regulator_disable(priv->vref);
+> +	if (priv->common.hfsel) {
+> +		/* restore hfsel (maybe lost under low power state) */
+> +		ret = regmap_update_bits(priv->common.regmap, STM32_DAC_CR,
+> +					 STM32H7_DAC_CR_HFSEL,
+> +					 STM32H7_DAC_CR_HFSEL);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return pm_runtime_force_resume(dev);
+> +}
+> +
+> +static int __maybe_unused stm32_dac_core_runtime_suspend(struct device *dev)
+> +{
+> +	stm32_dac_core_hw_stop(dev);
+>  
+>  	return 0;
+>  }
+>  
+> +static int __maybe_unused stm32_dac_core_runtime_resume(struct device *dev)
+> +{
+> +	return stm32_dac_core_hw_start(dev);
+> +}
+> +
+> +static const struct dev_pm_ops stm32_dac_core_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, stm32_dac_core_resume)
+> +	SET_RUNTIME_PM_OPS(stm32_dac_core_runtime_suspend,
+> +			   stm32_dac_core_runtime_resume,
+> +			   NULL)
+> +};
+> +
+>  static const struct stm32_dac_cfg stm32h7_dac_cfg = {
+>  	.has_hfsel = true,
+>  };
+> @@ -182,6 +257,7 @@ static struct platform_driver stm32_dac_driver = {
+>  	.driver = {
+>  		.name = "stm32-dac-core",
+>  		.of_match_table = stm32_dac_of_match,
+> +		.pm = &stm32_dac_core_pm_ops,
+>  	},
+>  };
+>  module_platform_driver(stm32_dac_driver);
+> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
+> index cce26a3..f22c1d9 100644
+> --- a/drivers/iio/dac/stm32-dac.c
+> +++ b/drivers/iio/dac/stm32-dac.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>  
+>  #include "stm32-dac-core.h"
+>  
+> @@ -20,6 +21,8 @@
+>  #define STM32_DAC_CHANNEL_2		2
+>  #define STM32_DAC_IS_CHAN_1(ch)		((ch) & STM32_DAC_CHANNEL_1)
+>  
+> +#define STM32_DAC_AUTO_SUSPEND_DELAY_MS	2000
+> +
+>  /**
+>   * struct stm32_dac - private data of DAC driver
+>   * @common:		reference to DAC common data
+> @@ -49,15 +52,34 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
+>  				      bool enable)
+>  {
+>  	struct stm32_dac *dac = iio_priv(indio_dev);
+> +	struct device *dev = indio_dev->dev.parent;
+>  	u32 msk = STM32_DAC_IS_CHAN_1(ch) ? STM32_DAC_CR_EN1 : STM32_DAC_CR_EN2;
+>  	u32 en = enable ? msk : 0;
+>  	int ret;
+>  
+> +	/* already enabled / disabled ? */
+> +	mutex_lock(&indio_dev->mlock);
+> +	ret = stm32_dac_is_enabled(indio_dev, ch);
+> +	if (ret < 0 || enable == !!ret) {
+> +		mutex_unlock(&indio_dev->mlock);
+> +		return ret < 0 ? ret : 0;
+> +	}
+> +
+> +	if (enable) {
+> +		ret = pm_runtime_get_sync(dev);
+> +		if (ret < 0) {
+> +			pm_runtime_put_noidle(dev);
+> +			mutex_unlock(&indio_dev->mlock);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, en);
+> +	mutex_unlock(&indio_dev->mlock);
+>  	if (ret < 0) {
+>  		dev_err(&indio_dev->dev, "%s failed\n", en ?
+>  			"Enable" : "Disable");
+> -		return ret;
+> +		goto err_put_pm;
+>  	}
+>  
+>  	/*
+> @@ -68,7 +90,20 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
+>  	if (en && dac->common->hfsel)
+>  		udelay(1);
+>  
+> +	if (!enable) {
+> +		pm_runtime_mark_last_busy(dev);
+> +		pm_runtime_put_autosuspend(dev);
+> +	}
+> +
+>  	return 0;
+> +
+> +err_put_pm:
+> +	if (enable) {
+> +		pm_runtime_mark_last_busy(dev);
+> +		pm_runtime_put_autosuspend(dev);
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+>  static int stm32_dac_get_value(struct stm32_dac *dac, int channel, int *val)
+> @@ -272,6 +307,7 @@ static int stm32_dac_chan_of_init(struct iio_dev *indio_dev)
+>  static int stm32_dac_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+> +	struct device *dev = &pdev->dev;
+>  	struct iio_dev *indio_dev;
+>  	struct stm32_dac *dac;
+>  	int ret;
+> @@ -296,9 +332,61 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return devm_iio_device_register(&pdev->dev, indio_dev);
+> +	/* Get stm32-dac-core PM online */
+> +	pm_runtime_get_noresume(dev);
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_set_autosuspend_delay(dev, STM32_DAC_AUTO_SUSPEND_DELAY_MS);
+> +	pm_runtime_use_autosuspend(dev);
+> +	pm_runtime_enable(dev);
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret)
+> +		goto err_pm_put;
+> +
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +
+> +	return 0;
+> +
+> +err_pm_put:
+> +	pm_runtime_disable(dev);
+> +	pm_runtime_set_suspended(dev);
+> +	pm_runtime_put_noidle(dev);
+> +
+> +	return ret;
+>  }
+>  
+> +static int stm32_dac_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +
+> +	pm_runtime_get_sync(&pdev->dev);
+> +	iio_device_unregister(indio_dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +	pm_runtime_set_suspended(&pdev->dev);
+> +	pm_runtime_put_noidle(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused stm32_dac_suspend(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> +	int channel = indio_dev->channels[0].channel;
+> +	int ret;
+> +
+> +	/* Ensure DAC is disabled before suspend */
+> +	ret = stm32_dac_is_enabled(indio_dev, channel);
+> +	if (ret)
+> +		return ret < 0 ? ret : -EBUSY;
+> +
+> +	return pm_runtime_force_suspend(dev);
+> +}
+> +
+> +static const struct dev_pm_ops stm32_dac_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(stm32_dac_suspend, pm_runtime_force_resume)
+> +};
+> +
+>  static const struct of_device_id stm32_dac_of_match[] = {
+>  	{ .compatible = "st,stm32-dac", },
+>  	{},
+> @@ -307,9 +395,11 @@ MODULE_DEVICE_TABLE(of, stm32_dac_of_match);
+>  
+>  static struct platform_driver stm32_dac_driver = {
+>  	.probe = stm32_dac_probe,
+> +	.remove = stm32_dac_remove,
+>  	.driver = {
+>  		.name = "stm32-dac",
+>  		.of_match_table = stm32_dac_of_match,
+> +		.pm = &stm32_dac_pm_ops,
+>  	},
+>  };
+>  module_platform_driver(stm32_dac_driver);
 
