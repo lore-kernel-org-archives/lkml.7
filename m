@@ -2,236 +2,134 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E396AC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712A3C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD84E206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570899079;
-	bh=qSEg9PvZkbVxQM23WcD3L4Jru73ZuIoTRpmb7PBGQxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DHSRL4LrI2NdsP2YcL266lIYp0JtO59COr7qSLcZpZT/3ZJsQOoApJm0EtfsYrNKB
-	 bVHQm+IcyPWrCCyAl0bNFXvfJNzY5T7Q57Q8tBN9HoNUVRkwR4cw8L54QzveNmHOo3
-	 gIXRwCy6SwJ+wUjymizGl5WsA4WvjATip+JkVxAo=
+	by mail.kernel.org (Postfix) with ESMTP id 517FE206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:55:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbfJLQvS (ORCPT
+        id S1729493AbfJLQzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 12:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbfJLQug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 12:50:36 -0400
-Received: from lore-desk-wlan.lan (unknown [151.66.37.226])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7737520679;
-        Sat, 12 Oct 2019 16:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570899035;
-        bh=qSEg9PvZkbVxQM23WcD3L4Jru73ZuIoTRpmb7PBGQxQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EHZFF54gumdqsWmUGFRJmszZTjIyCFrRlaBz+iSS8rE9i13x1qazGZ9vd4+UjHBy+
-         6FdI6HxhQ8g89WZ+j7ScrPRymDIdb8P5WOav5J4NCx/OIglmp1YvCY8Tw7gjVSCBVs
-         bhqM+bkilAPq0SRMq6hiiTZ3KAc7Cn/9w5DzHHDk=
-Date:   Sat, 12 Oct 2019 18:50:28 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc:     linux-mediatek@lists.infradead.org, Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: mt76x2e hardware restart
-Message-ID: <20191012165028.GA8739@lore-desk-wlan.lan>
-References: <deaafa7a3e9ea2111ebb5106430849c6@natalenko.name>
- <c6d621759c190f7810d898765115f3b4@natalenko.name>
- <9d581001e2e6cece418329842b2b0959@natalenko.name>
+        Sat, 12 Oct 2019 12:55:12 -0400
+Received: from sender4-op-o14.zoho.com ([136.143.188.14]:17421 "EHLO
+        sender4-op-o14.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbfJLQxM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 12:53:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1570899183; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=K+1e2/BFHXnRReb+f3XBc3FGfdWHDXmhlOtSs5lRq1CFVXB+4RA2tuFOL1yG6VSYp7CrRinIFMlqsvYSlPoptLpSmGz/J0/6JnoERQ3OH1M2klMHvYKJWLHs4VEbAIgnpk4xhWI5QiXysomDxyTnEVSDJGMjx+lNrt26mn3zsR4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1570899183; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=H490T33NOXsNv5uW2IbnnmW85uAQoogCvlGuJzkeYHg=; 
+        b=HQtCAaVnSdO0rh2dh99uiPOqQR4dskSaQCfd2LmK/0VtKLYycoKarAIS8YJo++5RKqHUrlW4gTZpFsFZbReaRdh4wU+9wntR7Oo0ev7xCYQuSLFtH18IduOwPtgVIgoj7nR26o6gOwCP/OfoX4IxrXlfsPf7pPiAGxhxBXSBjdA=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie (pool-100-15-144-194.washdc.fios.verizon.net [100.15.144.194]) by mx.zohomail.com
+        with SMTPS id 157089918141952.24960803847944; Sat, 12 Oct 2019 09:53:01 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 16:38:39 +0000
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
+Message-ID: <20191012163839.GB15972@nessie>
+References: <20191012035420.13904-1-dan@dlrobertson.com>
+ <20191012035420.13904-3-dan@dlrobertson.com>
+ <20191012104033.006b33f9@archlinux>
+ <20191012153556.GA15972@nessie>
+ <20191012173344.7d25fd02@archlinux>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
 Content-Disposition: inline
-In-Reply-To: <9d581001e2e6cece418329842b2b0959@natalenko.name>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191012173344.7d25fd02@archlinux>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Zoho-Virus-Status: 1
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ReaqsoxgOBHFXBhH
+--ZfOjI3PrQbgiZnxM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-> On 19.09.2019 23:22, Oleksandr Natalenko wrote:
-> > It checks for TX hang here:
+On Sat, Oct 12, 2019 at 05:33:44PM +0100, Jonathan Cameron wrote:
+> On Sat, 12 Oct 2019 15:35:56 +0000
+> Dan Robertson <dan@dlrobertson.com> wrote:
+> > On Sat, Oct 12, 2019 at 10:40:33AM +0100, Jonathan Cameron wrote:
+> > >
+> > > Silly question.  Why is soft_reset preferred to sleep mode? =20
 > >=20
-> > =3D=3D=3D mt76x02_mmio.c
-> > 557 void mt76x02_wdt_work(struct work_struct *work)
-> > 558 {
-> > ...
-> > 562     mt76x02_check_tx_hang(dev);
-> > =3D=3D=3D
+> > Not a silly question. I actually debated this when initially implementi=
+ng the
+> > driver. The datasheet describes soft-reset behavior in section 4.9, the
+> > following snippet from the datasheet is particularly relevant:
+> >=20
+> > > The softreset performs a fundamental reset to the device which is lar=
+gely
+> > > equivalent to a power cycle. Following a delay, all user configuration
+> > > settings are overwritten with their default state... =20
+> >=20
+> > Sleep mode is the default power-mode, so the only real difference would=
+ be that
+> > the oversampling ratio, sampling frequency, and scale would all be rese=
+t to
+> > their defaults with a soft-reset. If we just set the power-mode to slee=
+p mode,
+> > the user configuration registers would be preserved.
+> >=20
+> > I can add a comment about the behavior of a softreset in bma400_remove.
+> I'd just not do it.  That way there is only the putting it to sleep path.
+> We normally assume that we don't know the state during startup and aren't
+> as careful on remove to make sure things are in a default state.
 >=20
-> I've commented out the watchdog here ^^, and the card is not resetted any
-> more, but similarly it stops working shortly after the first client
-> connects. So, indeed, it must be some hang in the HW, and wdt seems to do=
- a
-> correct job.
->=20
-> Is it even debuggable/fixable from the driver?
+> That way you only need a single path in the remove function. If sleep mode
+> fails you are probably broken anyway.
 
-Hi Oleksandr,
+Sounds good. That does make remove much easier if the device is not ready f=
+or a
+command. I'll remove this in the next patchset version.
 
-sorry for the delay. Felix and me worked on this issue today. Could you ple=
-ase
-try if the following patch fixes your issue?
+Cheers,
 
-Regards,
-Lorenzo
+ - Dan
 
-=46rom cf3436c42a297967235a9c9778620c585100529e Mon Sep 17 00:00:00 2001
-Message-Id: <cf3436c42a297967235a9c9778620c585100529e.1570897574.git.lorenz=
-o@kernel.org>
-=46rom: Lorenzo Bianconi <lorenzo@kernel.org>
-Date: Sat, 12 Oct 2019 17:32:57 +0200
-Subject: [PATCH] mt76: mt76x2: disable pcie_aspm by default
-
-On same device (e.g. U7612E-H1) PCIE_ASPM causes continues mcu hangs and
-instability. This patch disable PCIE_ASPM by default. This patch has
-been successfully tested on U7612E-H1 mini-pice card
-
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/net/wireless/mediatek/mt76/mmio.c     | 48 +++++++++++++++++++
- drivers/net/wireless/mediatek/mt76/mt76.h     |  1 +
- .../net/wireless/mediatek/mt76/mt76x2/pci.c   |  2 +
- 3 files changed, 51 insertions(+)
-
-diff --git a/drivers/net/wireless/mediatek/mt76/mmio.c b/drivers/net/wirele=
-ss/mediatek/mt76/mmio.c
-index 1c974df1fe25..8e1dbc1903f3 100644
---- a/drivers/net/wireless/mediatek/mt76/mmio.c
-+++ b/drivers/net/wireless/mediatek/mt76/mmio.c
-@@ -3,6 +3,9 @@
-  * Copyright (C) 2016 Felix Fietkau <nbd@nbd.name>
-  */
-=20
-+#include <linux/pci.h>
-+#include <linux/pci-aspm.h>
-+
- #include "mt76.h"
- #include "trace.h"
-=20
-@@ -78,6 +81,51 @@ void mt76_set_irq_mask(struct mt76_dev *dev, u32 addr,
- }
- EXPORT_SYMBOL_GPL(mt76_set_irq_mask);
-=20
-+void mt76_mmio_disable_aspm(struct pci_dev *pdev)
-+{
-+	struct pci_dev *parent =3D pdev->bus->self;
-+	u16 aspm_conf, parent_aspm_conf =3D 0;
-+
-+	pcie_capability_read_word(pdev, PCI_EXP_LNKCTL, &aspm_conf);
-+	aspm_conf &=3D PCI_EXP_LNKCTL_ASPMC;
-+	if (parent) {
-+		pcie_capability_read_word(parent, PCI_EXP_LNKCTL,
-+					  &parent_aspm_conf);
-+		parent_aspm_conf &=3D PCI_EXP_LNKCTL_ASPMC;
-+	}
-+
-+	if (!aspm_conf && (!parent || !parent_aspm_conf)) {
-+		/* aspm already disabled */
-+		return;
-+	}
-+
-+	dev_info(&pdev->dev, "disabling ASPM %s %s\n",
-+		 (aspm_conf & PCI_EXP_LNKCTL_ASPM_L0S) ? "L0s" : "",
-+		 (aspm_conf & PCI_EXP_LNKCTL_ASPM_L1) ? "L1" : "");
-+
-+#ifdef CONFIG_PCIEASPM
-+	pci_disable_link_state(pdev, aspm_conf);
-+
-+	/* Double-check ASPM control.  If not disabled by the above, the
-+	 * BIOS is preventing that from happening (or CONFIG_PCIEASPM is
-+	 * not enabled); override by writing PCI config space directly.
-+	 */
-+	pcie_capability_read_word(pdev, PCI_EXP_LNKCTL, &aspm_conf);
-+	if (!(aspm_conf & PCI_EXP_LNKCTL_ASPMC))
-+		return;
-+#endif /* CONFIG_PCIEASPM */
-+
-+	/* Both device and parent should have the same ASPM setting.
-+	 * Disable ASPM in downstream component first and then upstream.
-+	 */
-+	pcie_capability_clear_word(pdev, PCI_EXP_LNKCTL, aspm_conf);
-+
-+	if (parent)
-+		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
-+					   aspm_conf);
-+}
-+EXPORT_SYMBOL_GPL(mt76_mmio_disable_aspm);
-+
- void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs)
- {
- 	static const struct mt76_bus_ops mt76_mmio_ops =3D {
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wirele=
-ss/mediatek/mt76/mt76.h
-index 8bcc7f21e83c..e95a5893f93b 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-@@ -596,6 +596,7 @@ bool __mt76_poll_msec(struct mt76_dev *dev, u32 offset,=
- u32 mask, u32 val,
- #define mt76_poll_msec(dev, ...) __mt76_poll_msec(&((dev)->mt76), __VA_ARG=
-S__)
-=20
- void mt76_mmio_init(struct mt76_dev *dev, void __iomem *regs);
-+void mt76_mmio_disable_aspm(struct pci_dev *pdev);
-=20
- static inline u16 mt76_chip(struct mt76_dev *dev)
- {
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c b/drivers/net/=
-wireless/mediatek/mt76/mt76x2/pci.c
-index 6253ec5fbd72..06fb80163c8e 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-@@ -83,6 +83,8 @@ mt76pci_probe(struct pci_dev *pdev, const struct pci_devi=
-ce_id *id)
- 	/* RG_SSUSB_CDR_BR_PE1D =3D 0x3 */
- 	mt76_rmw_field(dev, 0x15c58, 0x3 << 6, 0x3);
-=20
-+	mt76_mmio_disable_aspm(pdev);
-+
- 	return 0;
-=20
- error:
---=20
-2.21.0
-
->=20
-> --=20
->   Oleksandr Natalenko (post-factum)
-
---ReaqsoxgOBHFXBhH
+--ZfOjI3PrQbgiZnxM
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXaIEUQAKCRA6cBh0uS2t
-rMgMAP4gYBsBVaqrrJGeL59RvPIDCtDh9B4Cal6r0cZiF8/eawD9E3a71sAvXQRq
-77lBM018hpb2RI8zaAU2j9ddT2e6HwU=
-=jGHZ
+iQIzBAEBCAAdFiEEF5dO2RaKc5C+SCJ9RcSmUsR+QqUFAl2iAYYACgkQRcSmUsR+
+QqWfehAApr+GUxN8hPr6rvlGNCYOUAsH0xR5O1yDbOBeJ+KNTRu4yqOci19XXRvu
+oZh7eexWE+Jg3cqomkO4MBTqFbcE8fSMVsRS1g/dBSmIjP8t7elUXkyo0+u8BKhM
+BrPP/W9WnGQmj0m9crH9GYmAUh00KG1eG8JfPV/iO4Nj25FzyjidDgVdUb7+pieK
+EE85HRYLxc4EjbgiR5aFfHrHS7gFv0k/JZYGpTseL93VmHkRWEXYGemvEMJeu/GY
++ZdHTL5kSyrQDsWOsc12B3uWxDbaVT0t6afEiaS0wHC5FeWg/axvldCO/SXaMSVy
+FUUH9+kIbS1CofTosjTsEopz8gEvmfM+Gn2n4PoP3R8GPzQJYDB1JSanJBwJlUKX
+70+27TdX1HQq7iapt5QvjeQfarCGCrcWX7fQs3Z8uJxeGX2+WgElE1K58Cy1pe+c
+Z9DgLY1Baqb+njAWe5WAuLXaIBMsrbuJyu4jmanYdLD5OEkokbSdhht0Gcm2rRnp
+jErnlJHmQNZ9U9fv87nM6hAbHorj1ABasLvc2nyCAlQyGUaYnzXvYEXMLqBGAmie
+7Cjv2gd53aoLyfFq1F4Yy6ETWmo/0lzRPS9+Lv/jgPyr4z7Lch3tZEFAmQMRHz8P
+WEza1Op588Do/vFarcCzQgHlPNfY1HS7P3J6ae2oFIB33cil8hc=
+=0oSI
 -----END PGP SIGNATURE-----
 
---ReaqsoxgOBHFXBhH--
+--ZfOjI3PrQbgiZnxM--
+
