@@ -2,142 +2,286 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DA4C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7A2C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E7821850
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:05:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="sJDOD02w"
+	by mail.kernel.org (Postfix) with ESMTP id 786012087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 16:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570897086;
+	bh=AKDf+1/UBiLw9gcUSQZHvu5one1mVr8HRT8Ag1TdzI8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=qZ7GI44S6EoFEe6oCjWuNMVNrejew/41+vrQmBWBFTeEpekDQ+LX+AtDVkTPpArk6
+	 +oqIfyqFKTrHOgVbqXRQZPVztoz+gd10O14M8utobYHGIDFF8WwgmKwrXmaRilsGJ6
+	 B3fdFbs/aVfGk8mGCEKi9JFnGn1oaN2Y/a0yBq+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbfJLQFE (ORCPT
+        id S1729438AbfJLQSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 12:05:04 -0400
-Received: from mout.web.de ([212.227.15.4]:53007 "EHLO mout.web.de"
+        Sat, 12 Oct 2019 12:18:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbfJLQEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 12:04:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570896257;
-        bh=OLEXXVfve/Mn5qOXyqXGU5UQD25/gN2N9FJAnOdynQo=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=sJDOD02wHxRvR0HLbLlzPOhA2+i1S8gpYVHOfavP/cvrq2DXrOUJtOpKT+bQiMagl
-         ZGibU2BelHoZnWpXddGVQq5nNp62qpQlVBr3/soHYX8ReeccJN3rptaenvSxzlmSbG
-         V4K5E/DKnkvgEJ5pd2LTVAuWXCum/Ordqp9wdz4k=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.155.250]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MMZck-1iRY9X1pYU-008HQo; Sat, 12
- Oct 2019 18:04:17 +0200
-To:     nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: drm/nouveau: Checking a kmemdup() call in
- nouveau_connector_of_detect()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Message-ID: <5ff56ca3-0e20-2820-f981-d2d37dded133@web.de>
-Date:   Sat, 12 Oct 2019 18:04:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1727262AbfJLQQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 12:16:03 -0400
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57C1B2087E;
+        Sat, 12 Oct 2019 16:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570896961;
+        bh=AKDf+1/UBiLw9gcUSQZHvu5one1mVr8HRT8Ag1TdzI8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=U/O8afeR9HqAPTFrVQZMBrGXf3rLf2AMdNF3m/c4gCIAYK7TX5ilwSYwLJqP5duOo
+         Gn4jPFMLmGC+i9iR/lW+BJfhjq1RrFzhFVBhpihTkf1UX7mFF9sqskXucTE74mSGMP
+         kpXXRG9hTtpVD2LsmILAfqiCwGUcACcc5KugrwY0=
+Date:   Sat, 12 Oct 2019 18:15:53 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB fixes for 5.4-rc3
+Message-ID: <20191012161553.GA2191565@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eSnIYSIfwQ+qZ88AQSHhpkJEQSkiQV8bWwDZf3F/859qwwhUw2p
- yjCEEUP2esK1O7eoNBr+i2vPIvHTcJKyh/9qIA6rC7yig/ErwTU4gVgD1jwFG72yLowrxvC
- EZ+Xn1E6Br2aEk5op+xfHL+vpOsBkCiP0+GUvtvTyuGYlRhFgLuyj1O8rF2kL6XpwXVdhJ4
- SQOrJ1nQazQiiF3oBgnGA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TGctBN2vpf0=:Zm0dRMNMZuTyFvygAuu02A
- F9VWPbYChpxZwCmUIkNRdvOVLJQnxefkbpM1KuYofME+BWFRgBw1VlFC7ZVcweFcVGykeM8R1
- mSoX1mUYuLqn1dtHTLwhnwgX9NafAI7fzSDs9ZaIT3bBpJgVv735Gp2EQHbin3UGVBzJ7xdFF
- M42tRX+yXFznT6q0ptDrWWHhZ9o3URJ87SLN+EgmV3jmuCLYYlzam8p47i8aJPkWY7YE5M7dY
- nQpnNsssy1rQaG7g7zZx4jCpGf0Ctnkypl3A7xWvN9BrabtdnxxMs94UuToZoIN3r13FvSX8g
- Tc7yquinUVopfAWTBEntKYYXywTnIgNjG6L+0Hu2ZPNrB5TuemO7Z2qDltY8lLTc/C6anJZ4B
- KFlkew493gdqV5EdaGy0JeFIcaW/PJipetSMmvKyMCiIbJvVA6rrawH2O/VkBOnf2imlG+It6
- 5VptJTTjm2coejql5g9rioBYY/D+wv2Crl3KxPlbZ2qapeaCqL1Tmh/sp9yMYDaXdGS8UdVs2
- T/pmXrt+pKi9bvXG8/fXVABrA0vPJPcBsykNWyaG3cmB6ojvn7GcI4eVquhtULfPjFDkZkQm3
- 19KpklM7Jy38gJItXaBpSALijAA+2IQpAAAjaoOBWFiwjAGP+jQMXBDboc7JouNFJJt5AzA60
- TWC+OAa9dK7QMvmjGG3wRBYKnrUYw6TaySdNr3+NXkvxFr93sP5XiIy2o1x6xiW4JntYkBLeE
- cFhnzrzs3jMjSQAv+EqXRQgYW1fmY59xnSuk1n774vJx/SzjDlb5SCA754kL/cC+gMdTC7v5T
- LUzV4pGJuMEUD94ipy+Hz6SQJPe5Juu2Eq203B0azkWXKeG2Snotj/d0y6ZYd4dxz49I51l0I
- 4G413AJJ8eXTgA6BtJuDd3WYvIYb6CDRy6uKIpsYCoT8zKb8yvNfxCgMv/EnxiWpTKiWUiL0z
- OJi5Tyv+s/kgUErWiPRr5KmZX2Nk6wSUak079Ors5vsqr3gNjPQvONr4xZBPEvcr7UlEaqM8D
- hvxdMYtflQTBYTnIAQC/f6qu/cxE15+7meOntNU4bEMpyCmhhkCqEEs8udiBts+T20Fi54Y2H
- FHnF+R1G3M0Kt//M422ZtfAGVAhNF7wg4QnuAPjo3dMox+pPjw9eZ+Xcd9y0+PWp6LGRBhnZe
- c8+X1RcSTq/sINC/x7DwgivPeu3WMd4RaV6PhXwgXMlxVJutkOUXO0lMQNEBc/7xd70uOXOUr
- IlCc1dzWnvwBzkacPLuwDFHBNpQ162igkmIJdobG5vQVHOIfpn65FNtt+cs0=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-I tried another script for the semantic patch language out.
-This source code analysis approach points out that the implementation
-of the function =E2=80=9Cnouveau_connector_of_detect=E2=80=9D contains sti=
-ll
-an unchecked call of the function =E2=80=9Ckmemdup=E2=80=9D.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/gpu/drm/nouveau/nouveau_connector.c?id=3D1c0cc5f1ae5ee5a6913704c0d75=
-a6e99604ee30a#n476
-https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/gpu/drm/nouveau/n=
-ouveau_connector.c#L476
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-How do you think about to improve it?
+are available in the Git repository at:
 
-Regards,
-Markus
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.4-rc3
+
+for you to fetch changes up to aafb00a977cf7d81821f7c9d12e04c558c22dc3c:
+
+  USB: yurex: fix NULL-derefs on disconnect (2019-10-10 14:24:06 +0200)
+
+----------------------------------------------------------------
+USB fixes for 5.4-rc3
+
+Here are a lot of small USB driver fixes for 5.4-rc3.
+
+syzbot has stepped up its testing of the USB driver stack, now able to
+trigger fun race conditions between disconnect and probe functions.
+Because of that we have a lot of fixes in here from Johan and others
+fixing these reported issues that have been around since almost all
+time.
+
+We also are just deleting the rio500 driver, making all of the syzbot
+bugs found in it moot as it turns out no one has been using it for years
+as there is a userspace version that is being used instead.
+
+There are also a number of other small fixes in here, all resolving
+reported issues or regressions.
+
+All have been in linux-next without any reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Alan Stern (1):
+      USB: yurex: Don't retry on unexpected errors
+
+Arnd Bergmann (1):
+      udc: lpc32xx: fix 64-bit compiler warning
+
+Bastien Nocera (1):
+      USB: rio500: Remove Rio 500 kernel driver
+
+Beni Mahler (1):
+      USB: serial: ftdi_sio: add device IDs for Sienna and Echelon PL-20
+
+Bill Kuzeja (1):
+      xhci: Prevent deadlock when xhci adapter breaks during init
+
+Dan Carpenter (2):
+      usb: cdns3: Fix use after free in probe error handling
+      usb: typec: tcpm: usb: typec: tcpm: Fix a signedness bug in tcpm_fw_get_caps()
+
+Daniele Palmas (1):
+      USB: serial: option: add Telit FN980 compositions
+
+Greg Kroah-Hartman (1):
+      Merge tag 'usb-serial-5.4-rc2' of https://git.kernel.org/.../johan/usb-serial into usb-linus
+
+Hans de Goede (3):
+      driver core: platform: Add platform_get_irq_byname_optional()
+      usb: dwc3: Switch to platform_get_irq_byname_optional()
+      usb: dwc3: Remove dev_err() on platform_get_irq() failure
+
+Heikki Krogerus (2):
+      usb: typec: ucsi: ccg: Remove run_isr flag
+      usb: typec: ucsi: displayport: Fix for the mode entering routine
+
+Jacky.Cao@sony.com (1):
+      USB: dummy-hcd: fix power budget for SuperSpeed mode
+
+Jan Schmidt (1):
+      xhci: Check all endpoints for LPM timeout
+
+Johan Hovold (30):
+      USB: serial: keyspan: fix NULL-derefs on open() and write()
+      USB: microtek: fix info-leak at probe
+      USB: adutux: fix use-after-free on disconnect
+      USB: adutux: fix NULL-derefs on disconnect
+      USB: usblcd: fix I/O after disconnect
+      USB: usblcd: drop redundant disconnect mutex
+      USB: usblcd: drop redundant lcd mutex
+      USB: usblcd: use pr_err()
+      USB: legousbtower: fix slab info leak at probe
+      USB: legousbtower: fix deadlock on disconnect
+      USB: legousbtower: fix potential NULL-deref on disconnect
+      USB: legousbtower: fix open after failed reset request
+      USB: usb-skeleton: fix runtime PM after driver unbind
+      USB: usblp: fix runtime PM after driver unbind
+      USB: serial: fix runtime PM after driver unbind
+      media: stkwebcam: fix runtime PM after driver unbind
+      USB: usb-skeleton: fix NULL-deref on disconnect
+      USB: usb-skeleton: fix use-after-free after driver unbind
+      USB: usb-skeleton: drop redundant in-urb check
+      USB: legousbtower: fix use-after-free on release
+      USB: ldusb: fix NULL-derefs on driver unbind
+      USB: adutux: fix use-after-free on release
+      USB: chaoskey: fix use-after-free on release
+      USB: iowarrior: fix use-after-free on disconnect
+      USB: iowarrior: fix use-after-free on release
+      USB: iowarrior: fix use-after-free after driver unbind
+      USB: iowarrior: drop redundant disconnect mutex
+      USB: iowarrior: drop redundant iowarrior mutex
+      USB: iowarrior: use pr_err()
+      USB: yurex: fix NULL-derefs on disconnect
+
+Jonathan Neuschäfer (1):
+      dt-bindings: usb: Fix references to usb-hcd.yaml
+
+Kai-Heng Feng (1):
+      xhci: Increase STS_SAVE timeout in xhci_suspend()
+
+Mao Wenan (1):
+      usbip: vhci_hcd indicate failed message
+
+Mathias Nyman (4):
+      xhci: Fix false warning message about wrong bounce buffer write length
+      xhci: Prevent device initiated U1/U2 link pm if exit latency is too long
+      xhci: Fix USB 3.1 capability detection on early xHCI 1.1 spec based hosts
+      xhci: Fix NULL pointer dereference in xhci_clear_tt_buffer_complete()
+
+Mauro Carvalho Chehab (1):
+      bindings: rename links to mason USB2/USB3 DT files
+
+Maxime Ripard (2):
+      ARM: dts: sunxi: Revert phy-names removal for ECHI and OHCI
+      dt-bindings: usb: Bring back phy-names
+
+Pawel Laszczak (3):
+      usb: cdns3: Fix sheduling with locks held.
+      usb:cdns3: Fix for CV CH9 running with g_zero driver.
+      usb: cdns3: Fix for incorrect DMA mask.
+
+Reinhard Speyerer (1):
+      USB: serial: option: add support for Cinterion CLS8 devices
+
+Rick Tseng (1):
+      usb: xhci: wait for CNR controller not ready bit in xhci resume
+
+Roger Quadros (2):
+      usb: cdns3: gadget: Fix full-speed mode
+      usb: cdns3: fix cdns3_core_init_role()
+
+Wei Yongjun (1):
+      xhci-ext-caps.c: Add missing platform_device_put() on error in xhci_create_intel_xhci_sw_pdev()
+
+Yoshihiro Shimoda (2):
+      usb: renesas_usbhs: gadget: Do not discard queues in usb_ep_set_{halt,wedge}()
+      usb: renesas_usbhs: gadget: Fix usb_ep_set_{halt,wedge}() behavior
+
+ .../devicetree/bindings/usb/amlogic,dwc3.txt       |   4 +-
+ .../devicetree/bindings/usb/generic-ehci.yaml      |   7 +-
+ .../devicetree/bindings/usb/generic-ohci.yaml      |   7 +-
+ .../devicetree/bindings/usb/mediatek,mtk-xhci.txt  |   4 +-
+ .../devicetree/bindings/usb/mediatek,mtu3.txt      |   4 +-
+ Documentation/devicetree/bindings/usb/usb-hcd.yaml |   5 +
+ Documentation/devicetree/bindings/usb/usb-uhci.txt |   2 +-
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |   4 +-
+ Documentation/usb/rio.rst                          | 109 ----
+ MAINTAINERS                                        |   7 -
+ arch/arm/boot/dts/sun4i-a10.dtsi                   |   4 +
+ arch/arm/boot/dts/sun5i.dtsi                       |   2 +
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |   4 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   4 +
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi               |   2 +
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  |   3 +
+ arch/arm/boot/dts/sun8i-r40.dtsi                   |   4 +
+ arch/arm/boot/dts/sun9i-a80.dtsi                   |   5 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |   6 +
+ arch/arm/configs/badge4_defconfig                  |   1 -
+ arch/arm/configs/corgi_defconfig                   |   1 -
+ arch/arm/configs/pxa_defconfig                     |   1 -
+ arch/arm/configs/s3c2410_defconfig                 |   1 -
+ arch/arm/configs/spitz_defconfig                   |   1 -
+ .../boot/dts/allwinner/sun50i-a64-pinebook.dts     |   2 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |   2 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi       |   2 +
+ arch/mips/configs/mtx1_defconfig                   |   1 -
+ arch/mips/configs/rm200_defconfig                  |   1 -
+ drivers/base/platform.c                            |  46 +-
+ drivers/media/usb/stkwebcam/stk-webcam.c           |   3 +-
+ drivers/usb/cdns3/cdns3-pci-wrap.c                 |   3 +-
+ drivers/usb/cdns3/core.c                           |  20 +-
+ drivers/usb/cdns3/ep0.c                            |  12 +-
+ drivers/usb/cdns3/gadget.c                         |   8 +
+ drivers/usb/class/usblp.c                          |   8 +-
+ drivers/usb/dwc3/drd.c                             |   7 +-
+ drivers/usb/dwc3/gadget.c                          |   7 +-
+ drivers/usb/dwc3/host.c                            |   7 +-
+ drivers/usb/gadget/udc/Kconfig                     |   2 +-
+ drivers/usb/gadget/udc/dummy_hcd.c                 |   3 +-
+ drivers/usb/gadget/udc/lpc32xx_udc.c               |   4 +-
+ drivers/usb/host/xhci-ext-caps.c                   |   1 +
+ drivers/usb/host/xhci-ring.c                       |   4 +-
+ drivers/usb/host/xhci.c                            |  78 ++-
+ drivers/usb/image/microtek.c                       |   4 +
+ drivers/usb/misc/Kconfig                           |  10 -
+ drivers/usb/misc/Makefile                          |   1 -
+ drivers/usb/misc/adutux.c                          |  24 +-
+ drivers/usb/misc/chaoskey.c                        |   5 +-
+ drivers/usb/misc/iowarrior.c                       |  48 +-
+ drivers/usb/misc/ldusb.c                           |  24 +-
+ drivers/usb/misc/legousbtower.c                    |  58 +--
+ drivers/usb/misc/rio500.c                          | 554 ---------------------
+ drivers/usb/misc/rio500_usb.h                      |  20 -
+ drivers/usb/misc/usblcd.c                          |  60 ++-
+ drivers/usb/misc/yurex.c                           |  18 +-
+ drivers/usb/renesas_usbhs/common.h                 |   1 +
+ drivers/usb/renesas_usbhs/fifo.c                   |   2 +-
+ drivers/usb/renesas_usbhs/fifo.h                   |   1 +
+ drivers/usb/renesas_usbhs/mod_gadget.c             |  18 +-
+ drivers/usb/renesas_usbhs/pipe.c                   |  15 +
+ drivers/usb/renesas_usbhs/pipe.h                   |   1 +
+ drivers/usb/serial/ftdi_sio.c                      |   3 +
+ drivers/usb/serial/ftdi_sio_ids.h                  |   9 +
+ drivers/usb/serial/keyspan.c                       |   4 +-
+ drivers/usb/serial/option.c                        |  11 +
+ drivers/usb/serial/usb-serial.c                    |   5 +-
+ drivers/usb/typec/tcpm/tcpm.c                      |  14 +-
+ drivers/usb/typec/ucsi/displayport.c               |   2 +
+ drivers/usb/typec/ucsi/ucsi_ccg.c                  |  42 +-
+ drivers/usb/usb-skeleton.c                         |  19 +-
+ drivers/usb/usbip/vhci_hcd.c                       |   4 +-
+ include/linux/platform_device.h                    |   2 +
+ 74 files changed, 431 insertions(+), 961 deletions(-)
+ delete mode 100644 Documentation/usb/rio.rst
+ delete mode 100644 drivers/usb/misc/rio500.c
+ delete mode 100644 drivers/usb/misc/rio500_usb.h
