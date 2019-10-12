@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7D1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F1DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298222089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A70E21850
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570880090;
-	bh=BCxxTG4TWZSsQkLAgEQ+idXegdIsvgmu3X/imdZBric=;
+	s=default; t=1570880102;
+	bh=M8pIuI3N9q6O19inwH7iwVRpRXidMZc87RjRVHszNGA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vFl5kA8dPCZL+hMnSC2Ejxr1I0CDggbXsiX0mlhVOfPGguKsQ/AVTwcTJefg9DFHD
-	 owlZDgIBMVq8C82nqJiGzxjzCt6PbSzEgIntZ+0B6cDr1dPt938IldzOZNggzeo7gi
-	 yRjCKogv3EU+LWoIBR6piDX6CqMLmM1q6npaiO4U=
+	b=0+2FMpUYKYq0gzumeUhvSFlBqmAaZrGht91qHcD/mnHLzdQcMtDpyFbK9hHpSwePK
+	 agHq2OW3o9OnjdKu4/8Hhk3MUDJxkiduolOJh0MUwPpcgVZoVKZFvolQcCytNftEyw
+	 zxXJHKpDM0RYrfrK4YWAYKSmRmWrlCIeJHQlUN8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbfJLLet (ORCPT
+        id S1729320AbfJLLfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 07:34:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41822 "EHLO mail.kernel.org"
+        Sat, 12 Oct 2019 07:35:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729279AbfJLLen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 07:34:43 -0400
+        id S1728636AbfJLLfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 07:35:00 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE2652089F;
-        Sat, 12 Oct 2019 11:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 299462089C;
+        Sat, 12 Oct 2019 11:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570880082;
-        bh=BCxxTG4TWZSsQkLAgEQ+idXegdIsvgmu3X/imdZBric=;
+        s=default; t=1570880100;
+        bh=M8pIuI3N9q6O19inwH7iwVRpRXidMZc87RjRVHszNGA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PTWcoD6SUQ++iL/Ug8wSa9TUJi63y43ywd+tCJXhA1hXp8192HZbI5L9AkZPh4PnY
-         GRNNIp5MIWqHXD0yC+MHZKBdF552a3tydA09TpBIgKYvWq7SXxBFCs952CYOlCQ9xi
-         n60rvrRwCa86RyBJs7v2DfKiaBcmF+uSrrOkOuxs=
-Date:   Sat, 12 Oct 2019 12:31:55 +0100
+        b=Agu+IATAylmCBlT5b/EgQcCruhFS4xRBrIagE47BvVsQdvK2+f01Klj3luzu7i7H5
+         vfdtPY3aTojd4PoJSU/pvuDiXL8MigMgKGIpVYpO5mykAJhjZzBXNKoygiqR6hH/XK
+         WTbaksUlStkjqZqm5ILC1KCZx4DZ+lI0zfL65Sbc=
+Date:   Sat, 12 Oct 2019 12:34:55 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Hartmut Knaack <knaack.h@gmx.de>,
@@ -50,12 +50,12 @@ Cc:     Hartmut Knaack <knaack.h@gmx.de>,
         <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 6/8] dt-bindings: iio: adc: max1027: Mark interrupts
- as optional
-Message-ID: <20191012123155.1a0df894@archlinux>
-In-Reply-To: <20191011144347.19146-7-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 2/8] iio: adc: max1027: Make it optional to use
+ interrupts
+Message-ID: <20191012123455.7317c298@archlinux>
+In-Reply-To: <20191011144347.19146-3-miquel.raynal@bootlin.com>
 References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
-        <20191011144347.19146-7-miquel.raynal@bootlin.com>
+        <20191011144347.19146-3-miquel.raynal@bootlin.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -65,43 +65,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 16:43:45 +0200
+On Fri, 11 Oct 2019 16:43:41 +0200
 Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> The chips have a 'start conversion' and a 'end of conversion' pair of
+> The chip has a 'start conversion' and a 'end of conversion' pair of
 > pins. They can be used but this is absolutely not mandatory as regular
-> polling is supported by the chip depending on its internal clocking
-> setup.
-> 
-> There is no physical reason to force the use of interrupts so turn
-> them optional.
-> 
-> Also, once the interrupt turned optional, these devices fit perfectly
-> the "trivial devices" described in the generic (yaml) bindings file, so
-> instead of converting this text file to json schema, we can just add
-> the relevant compatibles in:
-> Documentation/devicetree/bindings/trivial-devices.yaml.
+> polling of the value is totally fine with the current internal
+> clocking setup. Turn the interrupts optional and do not error out if
+> they are not inquired in the device tree. This has the effect to
+> prevent triggered buffers use though.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-I guess this keeps things consistent event if we are about to delete it ;)
-
 Applied.
 
+Thanks,
+
 > ---
->  Documentation/devicetree/bindings/iio/adc/max1027-adc.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/iio/adc/max1027.c | 57 +++++++++++++++++++++------------------
+>  1 file changed, 31 insertions(+), 26 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-> index e680c61dfb84..7b23d68f655c 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-> @@ -3,6 +3,8 @@
->  Required properties:
->    - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
->    - reg: SPI chip select number for the device
-> +
-> +Optional properties:
->    - interrupts: IRQ line for the ADC
->    see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+> index 6cdfe9ef73fc..823223b77a70 100644
+> --- a/drivers/iio/adc/max1027.c
+> +++ b/drivers/iio/adc/max1027.c
+> @@ -430,35 +430,40 @@ static int max1027_probe(struct spi_device *spi)
+>  		return -ENOMEM;
+>  	}
 >  
+> -	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+> -					&iio_pollfunc_store_time,
+> -					&max1027_trigger_handler, NULL);
+> -	if (ret < 0) {
+> -		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+> -		return ret;
+> -	}
+> +	if (spi->irq) {
+> +		ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+> +						      &iio_pollfunc_store_time,
+> +						      &max1027_trigger_handler,
+> +						      NULL);
+> +		if (ret < 0) {
+> +			dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+> +			return ret;
+> +		}
+>  
+> -	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
+> -							indio_dev->name);
+> -	if (st->trig == NULL) {
+> -		ret = -ENOMEM;
+> -		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
+> -		return ret;
+> -	}
+> +		st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
+> +						  indio_dev->name);
+> +		if (st->trig == NULL) {
+> +			ret = -ENOMEM;
+> +			dev_err(&indio_dev->dev,
+> +				"Failed to allocate iio trigger\n");
+> +			return ret;
+> +		}
+>  
+> -	st->trig->ops = &max1027_trigger_ops;
+> -	st->trig->dev.parent = &spi->dev;
+> -	iio_trigger_set_drvdata(st->trig, indio_dev);
+> -	iio_trigger_register(st->trig);
+> +		st->trig->ops = &max1027_trigger_ops;
+> +		st->trig->dev.parent = &spi->dev;
+> +		iio_trigger_set_drvdata(st->trig, indio_dev);
+> +		iio_trigger_register(st->trig);
+>  
+> -	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
+> -					iio_trigger_generic_data_rdy_poll,
+> -					NULL,
+> -					IRQF_TRIGGER_FALLING,
+> -					spi->dev.driver->name, st->trig);
+> -	if (ret < 0) {
+> -		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+> -		return ret;
+> +		ret = devm_request_threaded_irq(&spi->dev, spi->irq,
+> +						iio_trigger_generic_data_rdy_poll,
+> +						NULL,
+> +						IRQF_TRIGGER_FALLING,
+> +						spi->dev.driver->name,
+> +						st->trig);
+> +		if (ret < 0) {
+> +			dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	/* Disable averaging */
 
