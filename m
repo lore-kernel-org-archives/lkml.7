@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB9DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571EAC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34AB21D56
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E06521D71
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570880078;
-	bh=W4NC8632bGz/c1s9iiMhYVGkCQw4mSPBogNjkzVISYo=;
+	s=default; t=1570880085;
+	bh=jKeraCEEgKwTtqXbkpB0/jAraSbIKG4qed7oTsYia6g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Qgy/7WP3qVao7/PE5Pe2PJuqJgxTW+3KYretnV5h61+j+u12rsb5W5XSVm0nScbX1
-	 Npve7+JEoyUv/1CuslV0P/Tk7qsXGDD9DfY5lp2iN7qC5b7/5qGYnTMMI13YO1QGbB
-	 4LcfYajfjFLj4AgZuwYljxGH8/Pymy8WgeuElugw=
+	b=pZjUM7+EDYPZN1BwKMn2P0DQoyZjRln7RZ/1hyNsacmAkCgmSQ9uF/zXeW7v0zKeA
+	 TrzDZkswBtl3hT0xqavn7rbxP3EcwsGvzXhSYv/m3D35Cw90MWGcAyNxVn8pQqJl29
+	 0epJNO+UDHzGbM5ycieh8srHO72X8yNucft7itZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfJLLef (ORCPT
+        id S1729258AbfJLLej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 07:34:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
+        Sat, 12 Oct 2019 07:34:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727068AbfJLLee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 07:34:34 -0400
+        id S1727068AbfJLLeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 07:34:37 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 175BF21850;
-        Sat, 12 Oct 2019 11:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C62C2190F;
+        Sat, 12 Oct 2019 11:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570880074;
-        bh=W4NC8632bGz/c1s9iiMhYVGkCQw4mSPBogNjkzVISYo=;
+        s=default; t=1570880077;
+        bh=jKeraCEEgKwTtqXbkpB0/jAraSbIKG4qed7oTsYia6g=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VztAou9dJZ/QG8h9Xhxo/g9avXs5IPbCYRZNnYOWmJO0paq0EUYD4MqHPqLtudTGz
-         g3iE6VnqJ2xGTUCQz6gJT1TQkRfrgtGD7QP2sVQ4QkHCM88Jtlt8/BXQTI0qSmvmEx
-         wgZ/Cm2lp1+1PvqOn2lrErXL0qis85LutGMIWvOk=
-Date:   Sat, 12 Oct 2019 12:32:58 +0100
+        b=ALkHJdnlmseuM140ifzp+/OMaSFljHh3GxcGv6yxHVsyFGhviAITnhbOIfHlUOPVg
+         2MqK4RtOrjTmWiJOl8zzzHXER5khzknN8u3vKiaKLGUYoKfnLldGitQj9QuaxHiiRL
+         xq6bhMghuZ9PMUDjjuVdDdEM6WZDFJI/CG6goAqA=
+Date:   Sat, 12 Oct 2019 12:25:25 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Hartmut Knaack <knaack.h@gmx.de>,
@@ -50,12 +50,12 @@ Cc:     Hartmut Knaack <knaack.h@gmx.de>,
         <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 8/8] dt-bindings: Add max12xx SPI ADC series as
- trivial devices
-Message-ID: <20191012123258.67734ca7@archlinux>
-In-Reply-To: <20191011144347.19146-9-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v4 1/8] iio: adc: max1027: Add debugfs register read
+ support
+Message-ID: <20191012122525.181fe29f@archlinux>
+In-Reply-To: <20191011144347.19146-2-miquel.raynal@bootlin.com>
 References: <20191011144347.19146-1-miquel.raynal@bootlin.com>
-        <20191011144347.19146-9-miquel.raynal@bootlin.com>
+        <20191011144347.19146-2-miquel.raynal@bootlin.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -65,38 +65,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 16:43:47 +0200
+On Fri, 11 Oct 2019 16:43:40 +0200
 Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> Update the compatible list with three Maxim ADCs compatibles.
+> Until now, only write operations were supported. Force two bytes read
+> operation when reading, which should fit most of the development
+> purposes. Of course, extended operations like buffered reads on
+> multiple channels or even temperature + voltage reads will not be read
+> entirely. Usually, just starting a new operation will work but in any
+> case a software reset (done through the debufs interface too) will
+> return the device in a usable state.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to poke at it.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-Thanks,
+thanks,
 
 Jonathan
 
 > ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/iio/adc/max1027.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> index e0095ecb472f..765fd1c170df 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -120,6 +120,12 @@ properties:
->            - maxim,max1029
->              # 10-bit 16 channels 300ks/s SPI ADC with temperature sensor
->            - maxim,max1031
-> +            # 12-bit 8 channels 300ks/s SPI ADC with temperature sensor
-> +          - maxim,max1227
-> +            # 12-bit 12 channels 300ks/s SPI ADC with temperature sensor
-> +          - maxim,max1229
-> +            # 12-bit 16 channels 300ks/s SPI ADC with temperature sensor
-> +          - maxim,max1231
->              # Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
->            - maxim,max1237
->              # PECI-to-I2C translator for PECI-to-SMBus/I2C protocol conversion
+> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+> index 214883458582..6cdfe9ef73fc 100644
+> --- a/drivers/iio/adc/max1027.c
+> +++ b/drivers/iio/adc/max1027.c
+> @@ -309,8 +309,11 @@ static int max1027_debugfs_reg_access(struct iio_dev *indio_dev,
+>  	struct max1027_state *st = iio_priv(indio_dev);
+>  	u8 *val = (u8 *)st->buffer;
+>  
+> -	if (readval != NULL)
+> -		return -EINVAL;
+> +	if (readval) {
+> +		int ret = spi_read(st->spi, val, 2);
+> +		*readval = be16_to_cpu(st->buffer[0]);
+> +		return ret;
+> +	}
+>  
+>  	*val = (u8)writeval;
+>  	return spi_write(st->spi, val, 1);
 
