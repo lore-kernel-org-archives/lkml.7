@@ -2,150 +2,138 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7BBC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 08:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CB5C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 08:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 694B52089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 08:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C552089F
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 08:59:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j30w7pPA"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="kaskJOs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbfJLIoM (ORCPT
+        id S1729075AbfJLIxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 04:44:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40120 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbfJLImM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 04:42:12 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9C8d3I5005712;
-        Sat, 12 Oct 2019 08:40:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=eTLCc8eWlTUmLnYiMct7cflsemw5ED6SJHMEBd984nY=;
- b=j30w7pPALDgopJ4pGWnCJS1/9jQn6QG03r+u5ObslfJMqn7zIKaKQnQS5BAu23EUZP2g
- mf2muP0iGYXuxmFp6bjU8pidcKg9pSU6ec93baDYNfaOdtS2xewSK7WcCLZTkzJ50Lxw
- GqKTU0guXmfG1HFZUQXTGeXskTFdqX1/IyDaVNUhVnk5AMry4eSJFq/TIVDGZUrsEGFu
- PNdpOpR9xlxMjyNutSmxh00Btm84uEtkp5Dl33vEqicctzE0Lq+eKvAO8AjwuPAItQ0b
- Nhy49fJQyAvsFomXvv7Ew3UMO8tjWzwHYNlhx/mYoZzAPIqUCDsZP8MuGCe8JgXVuzXR 1A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vk6sq0pb3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 08:40:24 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9C8cGL9154374;
-        Sat, 12 Oct 2019 08:40:23 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vk3xw8vhe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 08:40:23 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9C8eIcl029967;
-        Sat, 12 Oct 2019 08:40:18 GMT
-Received: from [10.191.25.133] (/10.191.25.133)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 12 Oct 2019 01:40:17 -0700
-Subject: Re: [PATCH v5 0/5] Add a unified parameter "nopvspin"
-To:     linux-kernel@vger.kernel.org
-Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, peterz@infradead.org
-References: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <d04aacc3-c816-94a6-052f-bf306ec23941@oracle.com>
-Date:   Sat, 12 Oct 2019 16:40:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Sat, 12 Oct 2019 04:53:36 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:9755 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727654AbfJLIvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 04:51:36 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46qz8544J8z9v1HD;
+        Sat, 12 Oct 2019 10:51:33 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=kaskJOs6; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id B0OR5hSp-zT2; Sat, 12 Oct 2019 10:51:33 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46qz8530SLz9v1HC;
+        Sat, 12 Oct 2019 10:51:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1570870293; bh=T37HV7ylGEfqox/Ndhtqj4kx82M+0XG0UqFJoDFdeOs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kaskJOs6P8/hdZk+A3A9SQGwS19Qp7FUZcf4xw+OK49TrrNqPavsQvmqT8pL7GyBV
+         p79MIP4ShRcg7odcZIi1OlbKzwQBDup+YQxchlqmUTV62jiuwZ0do/KVgVNQAUqKvm
+         Ce44rJ/bXvvAh0nrikLBb0bcgcKIcTl+C7WweG4w=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FB888B790;
+        Sat, 12 Oct 2019 10:51:34 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id VDCM2eOBBYtA; Sat, 12 Oct 2019 10:51:34 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E2B908B752;
+        Sat, 12 Oct 2019 10:51:33 +0200 (CEST)
+Subject: Re: [PATCH v4 0/5] Powerpc/Watchpoint: Few important fixes
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, npiggin@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org,
+        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20190925040630.6948-1-ravi.bangoria@linux.ibm.com>
+ <19b222ce-3013-7de5-1c04-48c6fd00fe81@linux.ibm.com>
+ <0d98e256-44ee-f920-cb2f-f79545584769@c-s.fr>
+ <3e31e5f7-f948-512a-054c-9ad10103ccc0@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <de06dac0-3103-64ed-0e97-c2b6972c59c2@c-s.fr>
+Date:   Sat, 12 Oct 2019 10:51:33 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com>
+In-Reply-To: <3e31e5f7-f948-512a-054c-9ad10103ccc0@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9407 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910120081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9407 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910120081
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The last two patches are reviewed, will any KVM expert be willing to 
-review the first three patches?
 
-They are all KVM related changes. Thanks
 
-Zhenzhong
+Le 10/10/2019 à 06:44, Ravi Bangoria a écrit :
+> 
+>>> @Christophe, Is patch5 works for you on 8xx?
+>>>
+>>
+>> Getting the following :
+>>
+>> root@vgoip:~# ./ptrace-hwbreak
+>> test: ptrace-hwbreak
+>> tags: git_version:v5.4-rc2-710-gf0082e173fe4-dirty
+>> PTRACE_SET_DEBUGREG, WO, len: 1: Ok
+>> PTRACE_SET_DEBUGREG, WO, len: 2: Ok
+>> PTRACE_SET_DEBUGREG, WO, len: 4: Ok
+>> PTRACE_SET_DEBUGREG, WO, len: 8: Ok
+>> PTRACE_SET_DEBUGREG, RO, len: 1: Ok
+>> PTRACE_SET_DEBUGREG, RO, len: 2: Ok
+>> PTRACE_SET_DEBUGREG, RO, len: 4: Ok
+>> PTRACE_SET_DEBUGREG, RO, len: 8: Ok
+>> PTRACE_SET_DEBUGREG, RW, len: 1: Ok
+>> PTRACE_SET_DEBUGREG, RW, len: 2: Ok
+>> PTRACE_SET_DEBUGREG, RW, len: 4: Ok
+>> PTRACE_SET_DEBUGREG, RW, len: 8: Ok
+>> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
+>> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
+>> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
+>> PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO, len: 6: Ok
+>> PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RO, len: 6: Fail
+>> failure: ptrace-hwbreak
+>>
+> 
 
-On 2019/10/7 17:04, Zhenzhong Duan wrote:
-> There are cases folks want to disable spinlock optimization for
-> debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
-> and "hv_nopvspin" to support that, but kvm doesn't.
->
-> The first patch adds that feature to KVM guest with "nopvspin".
->
-> For compatibility reason original parameters "xen_nopvspin" and
-> "hv_nopvspin" are retained and marked obsolete.
->
-> v5:
-> PATCH1: new patch to revert a currently unnecessory commit,
->          code is simpler a bit after that change.         [Boris Ostrovsky]
-> PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
->          reorder with PATCH2 to better reflect dependency
-> PATCH4: fold 'if' statement, add Reviewed-by             [Boris Ostrovsky]
-> PATCH5: add Reviewed-by                                  [Michael Kelley]
->
-> v4:
-> PATCH1: use variable name nopvspin instead of pvspin and
->          defined it as __initdata, changed print message,
->          updated patch description                     [Sean Christopherson]
-> PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
-> PATCH3: make variable nopvsin and xen_pvspin coexist
->          remove Reviewed-by due to code change         [Sean Christopherson]
-> PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
->
-> v3:
-> PATCH2: Fix indentation
->
-> v2:
-> PATCH1: pick the print code change into separate PATCH2,
->          updated patch description             [Vitaly Kuznetsov]
-> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
-> PATCH3: add Reviewed-by                       [Juergen Gross]
->
-> Zhenzhong Duan (5):
->    Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
->      get initialized"
->    x86/kvm: Change print code to use pr_*() format
->    x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
->    xen: Mark "xen_nopvspin" parameter obsolete
->    x86/hyperv: Mark "hv_nopvspin" parameter obsolete
->
->   Documentation/admin-guide/kernel-parameters.txt | 14 +++++-
->   arch/x86/hyperv/hv_spinlock.c                   |  4 ++
->   arch/x86/include/asm/qspinlock.h                |  1 +
->   arch/x86/kernel/kvm.c                           | 63 ++++++++++++++-----------
->   arch/x86/xen/spinlock.c                         |  4 +-
->   kernel/locking/qspinlock.c                      |  7 +++
->   6 files changed, 62 insertions(+), 31 deletions(-)
->
+I also tried on a 83xx (book3s/32). This one has a regular DABR :
+
+root@vgoippro:~# ./ptrace-hwbreak
+test: ptrace-hwbreak
+tags: git_version:v5.4-rc2-710-gf0082e173fe4-dirty
+PTRACE_SET_DEBUGREG, WO, len: 1: Ok
+PTRACE_SET_DEBUGREG, WO, len: 2: Ok
+PTRACE_SET_DEBUGREG, WO, len: 4: Ok
+PTRACE_SET_DEBUGREG, WO, len: 8: Ok
+PTRACE_SET_DEBUGREG, RO, len: 1: Ok
+PTRACE_SET_DEBUGREG, RO, len: 2: Ok
+PTRACE_SET_DEBUGREG, RO, len: 4: Ok
+PTRACE_SET_DEBUGREG, RO, len: 8: Ok
+PTRACE_SET_DEBUGREG, RW, len: 1: Ok
+PTRACE_SET_DEBUGREG, RW, len: 2: Ok
+PTRACE_SET_DEBUGREG, RW, len: 4: Ok
+PTRACE_SET_DEBUGREG, RW, len: 8: Ok
+PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
+PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
+PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
+PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO, len: 6: Ok
+PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RO, len: 6: Ok
+PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RW, len: 6: Ok
+PPC_PTRACE_SETHWDEBUG failed: Invalid argument
+failure: ptrace-hwbreak
+
+Christophe
