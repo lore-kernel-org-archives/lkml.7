@@ -2,141 +2,153 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F026BC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CE0C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B0D2087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:05:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="fTEi706H"
+	by mail.kernel.org (Postfix) with ESMTP id 9ED4320659
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbfJLRFu (ORCPT
+        id S1729532AbfJLRGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 13:05:50 -0400
-Received: from mout.web.de ([212.227.15.3]:42905 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728888AbfJLRDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 13:03:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570899794;
-        bh=bKu9xBv+qGl3khzhaq/Ts8mRANG4hVVTTgO3XdiSrJ8=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=fTEi706HNanK1tphqEfINp64DWLl5ItNjoXukH2IDwM3wLFdF+ER/GjTtJ6MMEPbl
-         78dgBz7lmaPZ0uCxNL7bHYb7MR9MSBPEUtw3HnWBLkASuo1STQeIXU/ZoRyIuKM3+8
-         olqVE0BJtLymiXsAxZ/pfnLgG4r6qK86eN/Kcd/I=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.155.250]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0ME0v1-1iI0p31sUh-00HO7t; Sat, 12
- Oct 2019 19:03:14 +0200
-To:     netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Yang Wei <yang.wei9@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: net: tulip: de2104x: Checking a kmemdup() call in
- de21041_get_srom_info()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Message-ID: <eb1f904a-a2e4-fe9b-c50e-b8087d7e57c4@web.de>
-Date:   Sat, 12 Oct 2019 19:03:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sat, 12 Oct 2019 13:06:13 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35669 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729503AbfJLRE1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 13:04:27 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x3so10608242oig.2;
+        Sat, 12 Oct 2019 10:04:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rP2t/LBVNBNs923tLQ/euikPJ6CdXKk3Hw0OLg9mnNc=;
+        b=OKmnsEQinsQaVlvcpJfxqprZkrDpAcxp7rWc5H2rgGI2Yqex6zznrW3UVJbnXo0XB+
+         vAQfCXbK+Zt6CGRaTy1ncqq1ZQY6vf/x6kB+MTAm38Z8KKbBEmnGaajLwmPOzjvADSAD
+         wejjJxxm/6Dv2dEc7JUrrYJUy280j3GaXEL3lMzlu6enYVE2PR+u66cT3ufTKG7zgReZ
+         iViEYeJLLdcMTJ/P+AItb5xLn4BC9wHsUT4cSYwiUAgqVXgXNk5peldRDR/bf85cGI3B
+         nu6tVMC/FZNgrN3CUHha0aA6//18Nh3i6K/BrkVClOBpQgeP9Gob6LPAg3c8+d5rK4Jk
+         Gf1Q==
+X-Gm-Message-State: APjAAAVzY66cwzHxlvD1DSJsqCt9L6cyOjC95RGcCh7TA/mtZIceGxPo
+        88HLZTXf6I8AGl5anTTgrqUNWkUmCB521VGKQi4=
+X-Google-Smtp-Source: APXvYqzHxrDb8yjxMxNoPRgVaBbW6eg+ZQ/JE5DaEurrjKygIWAkXQpZZxoKr2Wk2F9zyrQqyZV0rN3uLbvCLDKmPqM=
+X-Received: by 2002:aca:882:: with SMTP id 124mr17492705oii.54.1570899866442;
+ Sat, 12 Oct 2019 10:04:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Qq6FxykufyXcsAvMTgIVyf0wdsfAHXA/t/zL+yoRsFUacLvITvX
- qu/2WDQoOEYQQag7m68NdoL2bQ5geqQjpBhazionC03XDQnUTzIZNMA4HdD+nG0KUwYqSkl
- 1f74lxFLs4b6QzwlkirBhzuSeEGzzM2N0CBzGbAVk/gSwKKn3ns2EcjKKRf1XRbOO6Lxe80
- dFEcypbQV1LEsKqausOkA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PnpVUt1TrGU=:rZkyNgDRoGFDxP0e4Ltukk
- iPUPR3dQG7RDCE4UMKzaEELagRdltYgzc1GY6q7gAKMQaFzwSh+FJB45iLFVwc39QJqzb+KQg
- SV+6jtmYQg40leSzsZ+5dP3MkLwt9dxPapEAjNwdjexx6VeGiVvxKCfIYu1rXHLJ0hMVY4ru1
- bKMRghAv02jkXTMD02iXjFcUs8qxySRQFfCV+FtFIak0eB90FVXJDvnlXds46AOl/nnKSt+tL
- c86oM11p5Dn90lGM35v4qyCRoOnaJSIvUVDyOd6Qy2ZMeshW5uTD2rfHZw5GyIk4H+xk61oG/
- VSCj9X5MipTF+OexosVnZtbSIFUQ025ujaqhm/+hu0ngShAmLHls2xyAuIqy8XAMyNAW7jCuo
- tRTq7VjOf+6EXzmOiayQryUyqvfpaZA2h1Evt1ktMkvjB3y9y1s/WpX9qapZHRwxYZt8fYkDX
- XU6yJ9cIx5xp4fF1DY8Ntf3Kv6EWsBbic9PVPyJVOfS2LFO1Hja32FTUN7Kg4jsStItTmoVeY
- SYNfzJOOErU6q2ReOWpwlNhBFGOJxCoYshZOYE2MMFEiAbuXxUASYEMrT8HMmnYwiLyhxe2uD
- Kn7c75xaLdXCszVfXewYMQ7MPhgRGEVXLjC9EiKd4j9WXFiBdLuO/O+4UX+5gBIQ3aI2DijR7
- NmvwobSTS+pcfYpJvNHRmNwkYxRzap492jEZrgdIv9UzgkCtNCrDUdmgFBQzlNjOB/Qw0rbeB
- rnLmTT1Wl5uZh/haJ0QvWdmSuaKYjtrYDe4DxIThaMUyY4i9xZkIIQP5zWGqfM6yCUaWB66kr
- 8vU6wYqS2QCppUZDI0dlFwextEUpS7vrVtqlkAehw6lTzMcCPtlS6nefrUK8e+6JHFPDZa5u+
- yn4DeZStQpTG9QTju5+UCwfv7NetsxxO1UfbAvWMymfyLQwPwU3P/IcOPhAvGHtWKE5rdeY0T
- Z37pixw67FNUEJtu+BRp2lhqVfkVWXbWi8PG/K5sgE2lV4jop3EaTh1x4aAYOrg862WSdo6lg
- QkpCTmYWceIJNRE+9lLULsqHYwHoh5zlNJXb6so2QBok31nRPYPwbvqAUC7A0jpsNTo0sVYY5
- 4bS1Q40g5L1C33cKYhHZCMhuzRhBlqzZ3XW8qJECFnFENmoPZ08WF1QvJFWhATHR0ZwLJuVch
- rd3o7WTdrmvYPMvYswprxY4joRmK5A8n35DuK5hIWNH4DuZwiGbw/ckYueJTg7VjG0n09XHD4
- +7tEWIEUhIKpFc2hmaAsLUN6OYqp0QIjC2lpZEe8uaOQwE85Qp2nvzSBG9KI=
+References: <20191002194346.GA3792@localhost.localdomain> <CAKv+Gu9_xX3RgDNGB=T83vhg_snMKe0F2YPKp1S2o2toNHHZZQ@mail.gmail.com>
+ <20191010174710.GA2405@localhost.localdomain> <CAMuHMdVriPMVWdNOD4ytZQFPmad7CvD_4utbw1PxMJBua1TSfQ@mail.gmail.com>
+ <20191011094322.GA3065@localhost.localdomain> <CAMuHMdUMkyyCZACyJ7dvd4SaicpN77g5pFd0aGEzQW_q7m3Q0g@mail.gmail.com>
+ <20191011125446.GA2170@localhost.localdomain>
+In-Reply-To: <20191011125446.GA2170@localhost.localdomain>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 12 Oct 2019 19:04:15 +0200
+Message-ID: <CAMuHMdWALc_hneRaiwQbMWUXe=LnVqU7dkkWibV0cqb8Gc5e0g@mail.gmail.com>
+Subject: Re: [PATCH] Ask user input only when CONFIG_X86 or
+ CONFIG_COMPILE_TEST is set to y
+To:     Narendra K <Narendra.K@dell.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Narendra,
 
-I tried another script for the semantic patch language out.
-This source code analysis approach points out that the implementation
-of the function =E2=80=9Cde21041_get_srom_info=E2=80=9D contains still an =
-unchecked call
-of the function =E2=80=9Ckmemdup=E2=80=9D.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/net/ethernet/dec/tulip/de2104x.c?id=3D1c0cc5f1ae5ee5a6913704c0d75a6e=
-99604ee30a#n1940
-https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/net/ethernet/dec/=
-tulip/de2104x.c#L1940
+On Fri, Oct 11, 2019 at 2:55 PM <Narendra.K@dell.com> wrote:
+> On Fri, Oct 11, 2019 at 12:01:25PM +0200, Geert Uytterhoeven wrote:
+> > > > > > > -       bool "EFI Runtime Configuration Interface Table Version 2 Support"
+> > > > > > > +       bool
+> > > > > > > +       prompt "EFI RCI Table Version 2 Support" if X86 || COMPILE_TEST
+> > > >
+> > > > Why the split of bool and prompt?
+> > > > Why not simply add a single line "depends on X86 || COMPILE_TEST"?
+> > >
+> > > It is because of the findings shared in [1]. Please let me know your
+> > > thoughts on the findings.
+> >
+> > So you want to prevent the user from seeing a prompt for an option he may
+> > or may not need to enable, when running "make oldconfig"?
+>
+> Geert,
+>
+> > The code in question is entirely architecture agnostic, and defaults
+> > to 'n', so I am not convinced this is needed. (It came up in the
+> > review as well)
+>
+> >> "make oldconfig" still asks me the question on e.g. arm64, where it is
+> >> irrelevant, until arm64 variants of the hardware show up.
+>
+> >> So IMHO it should have "depends on X86 || COMPILE_TEST".
+>
+> From the discussion in [1] and [2](pasted a part of it above), my understanding
+> of the issue you reported is that 'make oldconfig' asks the user a question for arm64
+> though the EFI_RCI2_TABLE is not relevant for arm64. From the tests,
+> it seemed like adding "depends on X86 || COMPILE_TEST" does not fix the
+> issue, splitting bool into bool + prompt fixes it.
+>
+> Please let me know if I am missing any detail in the issue you reported.
 
-How do you think about to improve it?
+Adding a "depends on X86 || COMPILE_TEST" should fix the issue, as
+X86 is never set on arm64, nor on any other architecture than X86.
+If COMPILE_TEST=y, it's normal expected behavior to show the question.
 
-Regards,
-Markus
+> With the way EFI_RCI2_TABLE is currently defined, my understanding is
+> that 'make oldconfig' does not set the EFI_RCI2_TABLE to 'y' by default
+> on arm64, but it asks the user the question. User has to say 'y' if he
+> wants it to be set to 'y', else by default 'n' is set. This behavior is
+> as expected.
+
+If the option doesn't make sense on arm64 (more broadly: on non-X86),
+it should depend on X86 || COMPILE_TEST, to avoid spamming the user
+with (zillions of) options that do not matter for his platform.
+
+> > One common approach is to let the Kconfig symbol for the platform (not for
+> > all of X86!) select EFI_RCI2_TABLE.
+> > That way it will be enabled automatically when needed.
+>
+> We did not intend to enable EFI_RCI2_TABLE option by default even on all
+> X86 systems from the begining. As a result, we chose to set it to 'n' by
+> default and added the guidance in 'help' section to say 'y' for Dell EMC
+> PowerEdge systems.
+
+Good.
+
+>> > Another approach is to not force the option on, but guide the user towards
+> > enabling it, by adding "default y if <platform_symbol>".
+>
+> As mentioned above, we want to keep the default to n.
+
+OK.
+
+> > Without the "|| COMPILE_TEST", you cannot enable compile-testing of
+> > the driver on non-x86 platforms with EFI.
+>
+> Ok. We could keep the check. Could we make it independent of platforms
+> by adding 'defbool y if COMPILE_TEST' ?
+
+Please don't do that, as it with always enable the driver if COMPILE_TEST=y,
+without providing a way to opt-out for the user.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
