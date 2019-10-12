@@ -2,377 +2,154 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A31EC47404
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99858C47404
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6653D214E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67982214AF
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570847283;
+	bh=seaszAaAddmvc00sV2sX3tVDfOb0Du0i+L79O1U8l44=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NVdBzGAmjNoykMguoQh+KhFmV5F6/ksepkWseTEIbW3k5YdximyCa0YHrAnp+AJPd
+	 mf0PETcEuik+D+kjPomxkGfnpbsY2W731SSqkVMylswGXfhZFH/nOOUmKXkcwIgVoR
+	 zkbHYQWGQ5pLEExtt0Kb4XdoPL2kK0ZgM7/z1n4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbfJLCWo (ORCPT
+        id S1728431AbfJLC1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 22:22:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40432 "EHLO mx1.redhat.com"
+        Fri, 11 Oct 2019 22:27:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727606AbfJLCWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 22:22:44 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726757AbfJLC1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 22:27:40 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E3DD53086228;
-        Sat, 12 Oct 2019 02:22:43 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-50.pek2.redhat.com [10.72.12.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A79F61001956;
-        Sat, 12 Oct 2019 02:22:30 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, bhe@redhat.com, dyoung@redhat.com, jgross@suse.com,
-        dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org
-Subject: [PATCH 3/3 v3] x86/kdump: clean up all the code related to the backup region
-Date:   Sat, 12 Oct 2019 10:21:40 +0800
-Message-Id: <20191012022140.19003-4-lijiang@redhat.com>
-In-Reply-To: <20191012022140.19003-1-lijiang@redhat.com>
-References: <20191012022140.19003-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sat, 12 Oct 2019 02:22:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D924D2084C;
+        Sat, 12 Oct 2019 02:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570847258;
+        bh=seaszAaAddmvc00sV2sX3tVDfOb0Du0i+L79O1U8l44=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RwCaHgKckq+rkFDWeriV0y6xirRR4PSoBpP2M5sL8Hqbg0lmQVapG/zwQ2SJyU9pH
+         K+9QjbKZrJkHRkvIkIc4CHfx2FMLQUvRKagQ9hE2SVPlg0NQGa4ChyTaRZ0C+5RCaJ
+         jCqfq8TcVduKfvf94T062qWslRFTgXoWhHOLfEvw=
+Date:   Fri, 11 Oct 2019 19:27:37 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     bp@alien8.de, joe@perches.com, johannes@sipsolutions.net,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, tglx@linutronix.de,
+        yamada.masahiro@socionext.com,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Haren Myneni <haren@us.ibm.com>
+Subject: Re: [Patch v4 2/2] linux/bits.h: Add compile time sanity check of
+ GENMASK inputs
+Message-Id: <20191011192737.c0e69db9ca49cd7622efdae5@linux-foundation.org>
+In-Reply-To: <20191009214502.637875-3-rikard.falkeborn@gmail.com>
+References: <20190811184938.1796-1-rikard.falkeborn@gmail.com>
+        <20191009214502.637875-1-rikard.falkeborn@gmail.com>
+        <20191009214502.637875-3-rikard.falkeborn@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the crashkernel kernel command line option is specified, the
-low 1MiB memory will always be reserved, which makes that the memory
-allocated later won't fall into the low 1MiB area, thereby, it's not
-necessary to create a backup region and also no need to copy the first
-640k content to a backup region.
+On Wed,  9 Oct 2019 23:45:02 +0200 Rikard Falkeborn <rikard.falkeborn@gmail.com> wrote:
 
-Currently, the code related to the backup region can be safely removed,
-so lets clean up.
+> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+> as the first argument and the low bit as the second argument. Mixing
+> them will return a mask with zero bits set.
+> 
+> Recent commits show getting this wrong is not uncommon, see e.g.
+> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+> macro").
+> 
+> To prevent such mistakes from appearing again, add compile time sanity
+> checking to the arguments of GENMASK() and GENMASK_ULL(). If both
+> arguments are known at compile time, and the low bit is higher than the
+> high bit, break the build to detect the mistake immediately.
+> 
+> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
+> used instead of BUILD_BUG_ON().
+> 
+> __builtin_constant_p does not evaluate is argument, it only checks if it
+> is a constant or not at compile time, and __builtin_choose_expr does not
+> evaluate the expression that is not chosen. Therefore, GENMASK(x++, 0)
+> does only evaluate x++ once.
+> 
+> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+> available in assembly") made the macros in linux/bits.h available in
+> assembly. Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
+> checks if the file is included in an asm file.
+> 
+> Due to bugs in GCC versions before 4.9 [0], disable the check if
+> building with a too old GCC compiler.
+> 
+> [0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
 
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/include/asm/kexec.h       | 10 ----
- arch/x86/include/asm/purgatory.h   | 10 ----
- arch/x86/kernel/crash.c            | 91 ++++++------------------------
- arch/x86/kernel/machine_kexec_64.c | 47 ---------------
- arch/x86/purgatory/purgatory.c     | 19 -------
- 5 files changed, 16 insertions(+), 161 deletions(-)
+I'm seeing some breakage in code which is newly added in linux-next:
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 5e7d6b46de97..6802c59e8252 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -66,10 +66,6 @@ struct kimage;
- # define KEXEC_ARCH KEXEC_ARCH_X86_64
- #endif
- 
--/* Memory to backup during crash kdump */
--#define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
--
- /*
-  * This function is responsible for capturing register states if coming
-  * via panic otherwise just fix up the ss and sp if coming via kernel
-@@ -154,12 +150,6 @@ struct kimage_arch {
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
--	/* Details of backup region */
--	unsigned long backup_src_start;
--	unsigned long backup_src_sz;
--
--	/* Physical address of backup segment */
--	unsigned long backup_load_addr;
- 
- 	/* Core ELF header buffer */
- 	void *elf_headers;
-diff --git a/arch/x86/include/asm/purgatory.h b/arch/x86/include/asm/purgatory.h
-index 92c34e517da1..5528e9325049 100644
---- a/arch/x86/include/asm/purgatory.h
-+++ b/arch/x86/include/asm/purgatory.h
-@@ -6,16 +6,6 @@
- #include <linux/purgatory.h>
- 
- extern void purgatory(void);
--/*
-- * These forward declarations serve two purposes:
-- *
-- * 1) Make sparse happy when checking arch/purgatory
-- * 2) Document that these are required to be global so the symbol
-- *    lookup in kexec works
-- */
--extern unsigned long purgatory_backup_dest;
--extern unsigned long purgatory_backup_src;
--extern unsigned long purgatory_backup_sz;
- #endif	/* __ASSEMBLY__ */
- 
- #endif /* _ASM_PURGATORY_H */
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index eb651fbde92a..cc5774fc84c0 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -173,8 +173,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 
- #ifdef CONFIG_KEXEC_FILE
- 
--static unsigned long crash_zero_bytes;
--
- static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
- {
- 	unsigned int *nr_ranges = arg;
-@@ -234,9 +232,15 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
- {
- 	struct crash_mem *cmem = arg;
- 
--	cmem->ranges[cmem->nr_ranges].start = res->start;
--	cmem->ranges[cmem->nr_ranges].end = res->end;
--	cmem->nr_ranges++;
-+	if (res->start >= SZ_1M) {
-+		cmem->ranges[cmem->nr_ranges].start = res->start;
-+		cmem->ranges[cmem->nr_ranges].end = res->end;
-+		cmem->nr_ranges++;
-+	} else if (res->end > SZ_1M) {
-+		cmem->ranges[cmem->nr_ranges].start = SZ_1M;
-+		cmem->ranges[cmem->nr_ranges].end = res->end;
-+		cmem->nr_ranges++;
-+	}
- 
- 	return 0;
- }
-@@ -246,9 +250,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 					unsigned long *sz)
- {
- 	struct crash_mem *cmem;
--	Elf64_Ehdr *ehdr;
--	Elf64_Phdr *phdr;
--	int ret, i;
-+	int ret;
- 
- 	cmem = fill_up_crash_elf_data();
- 	if (!cmem)
-@@ -270,19 +272,6 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 	if (ret)
- 		goto out;
- 
--	/*
--	 * If a range matches backup region, adjust offset to backup
--	 * segment.
--	 */
--	ehdr = (Elf64_Ehdr *)*addr;
--	phdr = (Elf64_Phdr *)(ehdr + 1);
--	for (i = 0; i < ehdr->e_phnum; phdr++, i++)
--		if (phdr->p_type == PT_LOAD &&
--				phdr->p_paddr == image->arch.backup_src_start &&
--				phdr->p_memsz == image->arch.backup_src_sz) {
--			phdr->p_offset = image->arch.backup_load_addr;
--			break;
--		}
- out:
- 	vfree(cmem);
- 	return ret;
-@@ -321,19 +310,11 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
- 				 unsigned long long mend)
- {
- 	unsigned long start, end;
--	int ret = 0;
- 
- 	cmem->ranges[0].start = mstart;
- 	cmem->ranges[0].end = mend;
- 	cmem->nr_ranges = 1;
- 
--	/* Exclude Backup region */
--	start = image->arch.backup_load_addr;
--	end = start + image->arch.backup_src_sz - 1;
--	ret = crash_exclude_mem_range(cmem, start, end);
--	if (ret)
--		return ret;
--
- 	/* Exclude elf header region */
- 	start = image->arch.elf_load_addr;
- 	end = start + image->arch.elf_headers_sz - 1;
-@@ -356,9 +337,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	memset(&cmd, 0, sizeof(struct crash_memmap_data));
- 	cmd.params = params;
- 
--	/* Add first 640K segment */
--	ei.addr = image->arch.backup_src_start;
--	ei.size = image->arch.backup_src_sz;
-+	/*
-+	 * Add the low memory range[0x1000, SZ_1M], skip
-+	 * the first zero page.
-+	 */
-+	ei.addr = PAGE_SIZE;
-+	ei.size = SZ_1M - PAGE_SIZE;
- 	ei.type = E820_TYPE_RAM;
- 	add_e820_entry(params, &ei);
- 
-@@ -409,55 +393,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	return ret;
- }
- 
--static int determine_backup_region(struct resource *res, void *arg)
--{
--	struct kimage *image = arg;
--
--	image->arch.backup_src_start = res->start;
--	image->arch.backup_src_sz = resource_size(res);
--
--	/* Expecting only one range for backup region */
--	return 1;
--}
--
- int crash_load_segments(struct kimage *image)
- {
- 	int ret;
- 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
- 				  .buf_max = ULONG_MAX, .top_down = false };
- 
--	/*
--	 * Determine and load a segment for backup area. First 640K RAM
--	 * region is backup source
--	 */
--
--	ret = walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
--				image, determine_backup_region);
--
--	/* Zero or postive return values are ok */
--	if (ret < 0)
--		return ret;
--
--	/* Add backup segment. */
--	if (image->arch.backup_src_sz) {
--		kbuf.buffer = &crash_zero_bytes;
--		kbuf.bufsz = sizeof(crash_zero_bytes);
--		kbuf.memsz = image->arch.backup_src_sz;
--		kbuf.buf_align = PAGE_SIZE;
--		/*
--		 * Ideally there is no source for backup segment. This is
--		 * copied in purgatory after crash. Just add a zero filled
--		 * segment for now to make sure checksum logic works fine.
--		 */
--		ret = kexec_add_buffer(&kbuf);
--		if (ret)
--			return ret;
--		image->arch.backup_load_addr = kbuf.mem;
--		pr_debug("Loaded backup region at 0x%lx backup_start=0x%lx memsz=0x%lx\n",
--			 image->arch.backup_load_addr,
--			 image->arch.backup_src_start, kbuf.memsz);
--	}
--
- 	/* Prepare elf headers and add a segment */
- 	ret = prepare_elf_headers(image, &kbuf.buffer, &kbuf.bufsz);
- 	if (ret)
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 5dcd438ad8f2..16e125a50b33 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -298,48 +298,6 @@ static void load_segments(void)
- 		);
- }
- 
--#ifdef CONFIG_KEXEC_FILE
--/* Update purgatory as needed after various image segments have been prepared */
--static int arch_update_purgatory(struct kimage *image)
--{
--	int ret = 0;
--
--	if (!image->file_mode)
--		return 0;
--
--	/* Setup copying of backup region */
--	if (image->type == KEXEC_TYPE_CRASH) {
--		ret = kexec_purgatory_get_set_symbol(image,
--				"purgatory_backup_dest",
--				&image->arch.backup_load_addr,
--				sizeof(image->arch.backup_load_addr), 0);
--		if (ret)
--			return ret;
--
--		ret = kexec_purgatory_get_set_symbol(image,
--				"purgatory_backup_src",
--				&image->arch.backup_src_start,
--				sizeof(image->arch.backup_src_start), 0);
--		if (ret)
--			return ret;
--
--		ret = kexec_purgatory_get_set_symbol(image,
--				"purgatory_backup_sz",
--				&image->arch.backup_src_sz,
--				sizeof(image->arch.backup_src_sz), 0);
--		if (ret)
--			return ret;
--	}
--
--	return ret;
--}
--#else /* !CONFIG_KEXEC_FILE */
--static inline int arch_update_purgatory(struct kimage *image)
--{
--	return 0;
--}
--#endif /* CONFIG_KEXEC_FILE */
--
- int machine_kexec_prepare(struct kimage *image)
- {
- 	unsigned long start_pgtable;
-@@ -353,11 +311,6 @@ int machine_kexec_prepare(struct kimage *image)
- 	if (result)
- 		return result;
- 
--	/* update purgatory as needed */
--	result = arch_update_purgatory(image);
--	if (result)
--		return result;
--
- 	return 0;
- }
- 
-diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.c
-index 3b95410ff0f8..2961234d0795 100644
---- a/arch/x86/purgatory/purgatory.c
-+++ b/arch/x86/purgatory/purgatory.c
-@@ -14,28 +14,10 @@
- 
- #include "../boot/string.h"
- 
--unsigned long purgatory_backup_dest __section(.kexec-purgatory);
--unsigned long purgatory_backup_src __section(.kexec-purgatory);
--unsigned long purgatory_backup_sz __section(.kexec-purgatory);
--
- u8 purgatory_sha256_digest[SHA256_DIGEST_SIZE] __section(.kexec-purgatory);
- 
- struct kexec_sha_region purgatory_sha_regions[KEXEC_SEGMENT_MAX] __section(.kexec-purgatory);
- 
--/*
-- * On x86, second kernel requries first 640K of memory to boot. Copy
-- * first 640K to a backup region in reserved memory range so that second
-- * kernel can use first 640K.
-- */
--static int copy_backup_region(void)
--{
--	if (purgatory_backup_dest) {
--		memcpy((void *)purgatory_backup_dest,
--		       (void *)purgatory_backup_src, purgatory_backup_sz);
--	}
--	return 0;
--}
--
- static int verify_sha256_digest(void)
- {
- 	struct kexec_sha_region *ptr, *end;
-@@ -66,7 +48,6 @@ void purgatory(void)
- 		for (;;)
- 			;
- 	}
--	copy_backup_region();
- }
- 
- /*
--- 
-2.17.1
+sound/soc/codecs/tas2562.c: In function tas2562_set_dai_tdm_slot:
+./include/linux/build_bug.h:16:51: error: negative width in bit-field <anonymous>
+ #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+                                                   ^
+./include/linux/bits.h:25:3: note: in expansion of macro BUILD_BUG_ON_ZERO
+  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+   ^~~~~~~~~~~~~~~~~
+./include/linux/bits.h:39:3: note: in expansion of macro GENMASK_INPUT_CHECK
+  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+   ^~~~~~~~~~~~~~~~~~~
+sound/soc/codecs/tas2562.h:65:37: note: in expansion of macro GENMASK
+ #define TAS2562_TDM_CFG2_RXLEN_MASK GENMASK(0, 1)
+                                     ^~~~~~~
+sound/soc/codecs/tas2562.c:160:11: note: in expansion of macro TAS2562_TDM_CFG2_RXLEN_MASK
+           TAS2562_TDM_CFG2_RXLEN_MASK,
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:16:51: error: negative width in bit-field <anonymous>
+ #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+                                                   ^
+./include/linux/bits.h:25:3: note: in expansion of macro BUILD_BUG_ON_ZERO
+  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+
+
+and
+
+In file included from ./include/linux/bits.h:23:0,
+                 from ./include/linux/ioport.h:15,
+                 from ./include/linux/acpi.h:12,
+                 from drivers/crypto/hisilicon/hpre/hpre_main.c:3:
+./include/linux/build_bug.h:16:51: error: negative width in bit-field ‘<anonymous>’
+ #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+                                                   ^
+./include/linux/bits.h:25:3: note: in expansion of macro ‘BUILD_BUG_ON_ZERO’
+  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+   ^~~~~~~~~~~~~~~~~
+./include/linux/bits.h:39:3: note: in expansion of macro ‘GENMASK_INPUT_CHECK’
+  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+   ^~~~~~~~~~~~~~~~~~~
+drivers/crypto/hisilicon/hpre/hpre_main.c:119:15: note: in expansion of macro ‘GENMASK’
+  { .int_msk = GENMASK(10, 15), .msg = "hpre_ooo_rdrsp_err" },
+               ^~~~~~~
+./include/linux/build_bug.h:16:51: error: negative width in bit-field ‘<anonymous>’
+ #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+                                                   ^
+./include/linux/bits.h:25:3: note: in expansion of macro ‘BUILD_BUG_ON_ZERO’
+  (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+   ^~~~~~~~~~~~~~~~~
+./include/linux/bits.h:39:3: note: in expansion of macro ‘GENMASK_INPUT_CHECK’
+  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+   ^~~~~~~~~~~~~~~~~~~
+drivers/crypto/hisilicon/hpre/hpre_main.c:120:15: note: in expansion of macro ‘GENMASK’
+  { .int_msk = GENMASK(16, 21), .msg = "hpre_ooo_wrrsp_err" },
+               ^~~~~~~
 
