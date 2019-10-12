@@ -2,150 +2,85 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFC7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0A7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C519F206A1
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570876932;
-	bh=Ct3kT+xNZzomUoOHSl3j9vFEqmUcJVCQgXZFn+esWOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SufQ5TeWYYkYrWLJO+zNc0ozD0G2Z0fnj0NdVW+XR15R9GsxsvIWgO9yiFTPua1Lg
-	 IDHK3iad03MADbA6NqJDFL5sGsm7ZtUewdSGZhuoFqwNqa5AyY1FkcnkcATgFCGNWf
-	 eUJmDfqtCUPgqy7E4H0dMebwyvtD+LlgkVy9iRNY=
+	by mail.kernel.org (Postfix) with ESMTP id 6CE87206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbfJLKmK (ORCPT
+        id S1729139AbfJLKol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 06:42:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727527AbfJLKkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 06:40:10 -0400
-Received: from localhost (unknown [84.241.192.39])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21836206A1;
-        Sat, 12 Oct 2019 10:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570876807;
-        bh=Ct3kT+xNZzomUoOHSl3j9vFEqmUcJVCQgXZFn+esWOA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uhK6p65dsNjpWKMlH5Z/S77VSw/OawTEefkJ5bFoty44O22zb9+HsdWkKCgOrZlvg
-         z+O6ugk9vrUWQCU5tMgVYN0Ch1ZoRdmp5yrZdc06g1GsEaSH5pLBh4ruPiYQniHtaz
-         zvh7nzRLwKHoWOCyO7ub91SuvQZ0wyayC1/4J9Uo=
-Date:   Sat, 12 Oct 2019 12:40:01 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
-        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        lenb@kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20191012104001.GA2052933@kroah.com>
-References: <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
- <20191010073212.GB18412@dhcp22.suse.cz>
- <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
- <20191011111539.GX2311@hirez.programming.kicks-ass.net>
- <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
- <20191012074014.GA2037204@kroah.com>
- <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
+        Sat, 12 Oct 2019 06:44:41 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3703 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727507AbfJLKml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 06:42:41 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 65E7B40191098360B728;
+        Sat, 12 Oct 2019 18:42:38 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sat, 12 Oct 2019
+ 18:42:26 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <johannes.berg@intel.com>, <emmanuel.grumbach@intel.com>,
+        <luciano.coelho@intel.com>, <linuxwifi@intel.com>,
+        <kvalo@codeaurora.org>, <davem@davemloft.net>,
+        <sara.sharon@intel.com>, <shahar.s.matityahu@intel.com>,
+        <ilan.peer@intel.com>, <liad.kaufman@intel.com>
+CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] iwlwifi: mvm: Move static keyword to the front of declarations
+Date:   Sat, 12 Oct 2019 18:41:14 +0800
+Message-ID: <20191012104114.21356-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 05:47:56PM +0800, Yunsheng Lin wrote:
-> On 2019/10/12 15:40, Greg KH wrote:
-> > On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
-> >> add pci and acpi maintainer
-> >> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
-> >>
-> >> On 2019/10/11 19:15, Peter Zijlstra wrote:
-> >>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
-> >>>> But I failed to see why the above is related to making node_to_cpumask_map()
-> >>>> NUMA_NO_NODE aware?
-> >>>
-> >>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
-> >>> have a node assigned.
-> >>>
-> >>> It not having one, is a straight up bug. We must not silently accept
-> >>> NO_NODE there, ever.
-> >>>
-> >>
-> >> I suppose you mean reporting a lack of affinity when the node of a pcie
-> >> device is not set by "not silently accept NO_NODE".
-> > 
-> > If the firmware of a pci device does not provide the node information,
-> > then yes, warn about that.
-> > 
-> >> As Greg has asked about in [1]:
-> >> what is a user to do when the user sees the kernel reporting that?
-> >>
-> >> We may tell user to contact their vendor for info or updates about
-> >> that when they do not know about their system well enough, but their
-> >> vendor may get away with this by quoting ACPI spec as the spec
-> >> considering this optional. Should the user believe this is indeed a
-> >> fw bug or a misreport from the kernel?
-> > 
-> > Say it is a firmware bug, if it is a firmware bug, that's simple.
-> > 
-> >> If this kind of reporting is common pratice and will not cause any
-> >> misunderstanding, then maybe we can report that.
-> > 
-> > Yes, please do so, that's the only way those boxes are ever going to get
-> > fixed.  And go add the test to the "firmware testing" tool that is based
-> > on Linux that Intel has somewhere, to give vendors a chance to fix this
-> > before they ship hardware.
-> > 
-> > This shouldn't be a big deal, we warn of other hardware bugs all the
-> > time.
-> 
-> Ok, thanks for clarifying.
-> 
-> Will send a patch to catch the case when a pcie device without numa node
-> being set and warn about it.
-> 
-> Maybe use dev->bus to verify if it is a pci device?
+gcc warn about this:
 
-No, do that in the pci bus core code itself, when creating the devices
-as that is when you know, or do not know, the numa node, right?
+drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:342:1:
+ warning: static is not at beginning of declaration [-Wold-style-declaration]
+drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:349:1:
+ warning: static is not at beginning of declaration [-Wold-style-declaration]
 
-This can't be in the driver core only, as each bus type will have a
-different way of determining what the node the device is on.  For some
-reason, I thought the PCI core code already does this, right?
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-thanks,
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index d31f96c..0358c67 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -339,14 +339,14 @@ int iwl_mvm_init_fw_regd(struct iwl_mvm *mvm)
+ 	return ret;
+ }
+ 
+-const static u8 he_if_types_ext_capa_sta[] = {
++static const u8 he_if_types_ext_capa_sta[] = {
+ 	 [0] = WLAN_EXT_CAPA1_EXT_CHANNEL_SWITCHING,
+ 	 [2] = WLAN_EXT_CAPA3_MULTI_BSSID_SUPPORT,
+ 	 [7] = WLAN_EXT_CAPA8_OPMODE_NOTIF,
+ 	 [9] = WLAN_EXT_CAPA10_TWT_REQUESTER_SUPPORT,
+ };
+ 
+-const static struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
++static const struct wiphy_iftype_ext_capab he_iftypes_ext_capa[] = {
+ 	{
+ 		.iftype = NL80211_IFTYPE_STATION,
+ 		.extended_capabilities = he_if_types_ext_capa_sta,
+-- 
+2.7.4
 
-greg k-h
+
