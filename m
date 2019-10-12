@@ -2,140 +2,95 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CC1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A717AC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A45721850
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:31:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OpoUpGRI"
+	by mail.kernel.org (Postfix) with ESMTP id 84D5C2067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 07:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbfJLHbo (ORCPT
+        id S1729016AbfJLHb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 03:31:44 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:26829 "EHLO pegase1.c-s.fr"
+        Sat, 12 Oct 2019 03:31:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45098 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfJLHbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 03:31:44 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46qxMx55lqz9v1Dp;
-        Sat, 12 Oct 2019 09:31:41 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=OpoUpGRI; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id O_PEinIXgLoa; Sat, 12 Oct 2019 09:31:41 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46qxMx42Dtz9v1Dl;
-        Sat, 12 Oct 2019 09:31:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1570865501; bh=VsMk4k5KWSekIMCZq0ixP3GE+1fnGp+O8WXTjCgDDoQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OpoUpGRIwAKeP5d6Infu9JC4zPojTWf1n4o7MdGtarj4xsz/Z391llxNFGiw4soMe
-         2tMxpZ5Z/HZ/fYAzYU6nCS1DjPfS+j786EBliHIfoc1jj4tBBX4W/IIadvCa3xzpX6
-         9P7aFQo5U/RjK2Tn80IRNKpO2FHFTfLi5voerO8g=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8F0A08B790;
-        Sat, 12 Oct 2019 09:31:42 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id CzilGxpF1BE8; Sat, 12 Oct 2019 09:31:42 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E1CEC8B752;
-        Sat, 12 Oct 2019 09:31:41 +0200 (CEST)
-Subject: Re: [PATCH v4 0/5] Powerpc/Watchpoint: Few important fixes
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, npiggin@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org,
-        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20190925040630.6948-1-ravi.bangoria@linux.ibm.com>
- <19b222ce-3013-7de5-1c04-48c6fd00fe81@linux.ibm.com>
- <0d98e256-44ee-f920-cb2f-f79545584769@c-s.fr>
- <3e31e5f7-f948-512a-054c-9ad10103ccc0@linux.ibm.com>
- <8d0ad57b-72ad-b77c-d558-86b46982ddeb@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <b1defb08-6983-b909-9011-71753905fa02@c-s.fr>
-Date:   Sat, 12 Oct 2019 09:31:41 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726821AbfJLHb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 03:31:57 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C683D36961;
+        Sat, 12 Oct 2019 07:31:56 +0000 (UTC)
+Received: from [10.72.12.150] (ovpn-12-150.pek2.redhat.com [10.72.12.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4361C600D1;
+        Sat, 12 Oct 2019 07:31:51 +0000 (UTC)
+Subject: Re: [PATCH RFC v1 0/2] vhost: ring format independence
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20191011134358.16912-1-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b24b3c9e-3a5d-fa5e-8218-ea7def0e5a39@redhat.com>
+Date:   Sat, 12 Oct 2019 15:31:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <8d0ad57b-72ad-b77c-d558-86b46982ddeb@linux.ibm.com>
+In-Reply-To: <20191011134358.16912-1-mst@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sat, 12 Oct 2019 07:31:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2019/10/11 下午9:45, Michael S. Tsirkin wrote:
+> So the idea is as follows: we convert descriptors to an
+> independent format first, and process that converting to
+> iov later.
+>
+> The point is that we have a tight loop that fetches
+> descriptors, which is good for cache utilization.
+> This will also allow all kind of batching tricks -
+> e.g. it seems possible to keep SMAP disabled while
+> we are fetching multiple descriptors.
+>
+> And perhaps more importantly, this is a very good fit for the packed
+> ring layout, where we get and put descriptors in order.
+>
+> This patchset seems to already perform exactly the same as the original
+> code already based on a microbenchmark.  More testing would be very much
+> appreciated.
+>
+> Biggest TODO before this first step is ready to go in is to
+> batch indirect descriptors as well.
+>
+> Integrating into vhost-net is basically
+> s/vhost_get_vq_desc/vhost_get_vq_desc_batch/ -
+> or add a module parameter like I did in the test module.
 
-Le 10/10/2019 à 08:25, Ravi Bangoria a écrit :
-> 
-> 
-> On 10/10/19 10:14 AM, Ravi Bangoria wrote:
->>
->>>> @Christophe, Is patch5 works for you on 8xx?
->>>>
->>>
->>> Getting the following :
->>>
->>> root@vgoip:~# ./ptrace-hwbreak
->>> test: ptrace-hwbreak
->>> tags: git_version:v5.4-rc2-710-gf0082e173fe4-dirty
->>> PTRACE_SET_DEBUGREG, WO, len: 1: Ok
->>> PTRACE_SET_DEBUGREG, WO, len: 2: Ok
->>> PTRACE_SET_DEBUGREG, WO, len: 4: Ok
->>> PTRACE_SET_DEBUGREG, WO, len: 8: Ok
->>> PTRACE_SET_DEBUGREG, RO, len: 1: Ok
->>> PTRACE_SET_DEBUGREG, RO, len: 2: Ok
->>> PTRACE_SET_DEBUGREG, RO, len: 4: Ok
->>> PTRACE_SET_DEBUGREG, RO, len: 8: Ok
->>> PTRACE_SET_DEBUGREG, RW, len: 1: Ok
->>> PTRACE_SET_DEBUGREG, RW, len: 2: Ok
->>> PTRACE_SET_DEBUGREG, RW, len: 4: Ok
->>> PTRACE_SET_DEBUGREG, RW, len: 8: Ok
->>> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
->>> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
->>> PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
->>> PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO, len: 6: Ok
->>> PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RO, len: 6: Fail
->>> failure: ptrace-hwbreak
->>>
->>
->> Thanks Christophe. I don't have any 8xx box. I checked qemu and it seems
->> qemu emulation for 8xx is not yet supported. So I can't debug this. Can
->> you please check why it's failing?
-> 
-> PPC_PTRACE_SETHWDEBUG internally uses DAWR register and probably 8xx does
-> not emulate DAWR logic, it only uses DABR to emulate double-word 
-> watchpoint.
-> In that case, all testcases that uses PPC_PTRACE_SETHWDEBUG should be
-> disabled for 8xx. I'll change [PATCH 5] accordingly and resend.
 
-I think the MODE_EXACT ones are OK with the 8xx at the time being.
+It would be better to convert vhost_net then I can do some benchmark on 
+that.
 
-> 
-> Also, do you think I should fix hw_breakpoint_validate_len() from [PARCH 1]
-> for 8xx? I re-checked you recent patch* to allow any address range size for
-> 8xx. With that patch, hw_breakpoint_validate_len() won't get called at all
-> for 8xx.
+Thanks
 
-At the time being, the 8xx emulates DABR so it has the same limitations 
-as BOOK3S.
-My patch needs to be rebased on top of your series and I think it needs 
-some modifications, as it seems it doesn't properly handle size 1 and 
-size 2 breakpoints at least.
-So I think that you should leave your Patch1 as is, and I'll modify the 
-validate_len() logic while rebasing my patch.
 
-Christophe
+>
+>
+>
+> Michael S. Tsirkin (2):
+>    vhost: option to fetch descriptors through an independent struct
+>    vhost: batching fetches
+>
+>   drivers/vhost/test.c  |  19 ++-
+>   drivers/vhost/vhost.c | 333 +++++++++++++++++++++++++++++++++++++++++-
+>   drivers/vhost/vhost.h |  20 ++-
+>   3 files changed, 365 insertions(+), 7 deletions(-)
+>
