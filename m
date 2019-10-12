@@ -8,195 +8,90 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3E1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02551C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B2820659
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6BB21850
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="R/fz1Dxn"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="M2F1gZ0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbfJLRLo (ORCPT
+        id S1729546AbfJLRMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 13:11:44 -0400
-Received: from mout.gmx.net ([212.227.15.15]:54471 "EHLO mout.gmx.net"
+        Sat, 12 Oct 2019 13:12:02 -0400
+Received: from mout.gmx.net ([212.227.15.18]:37783 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729069AbfJLRLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 13:11:43 -0400
+        id S1727262AbfJLRMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 13:12:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570900286;
-        bh=Uz2pP5hTF599V0iyIbkgS2qh4IzWWNUk/fRR8WwX2H4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=R/fz1DxnVZV0/WJDRE1tCfl2+PKDAFB48F4EAN/imrZ0EU6gAhPu3egDQ9Pf3Evm1
-         B9H1y0euYzFTkQFdtuEFOIKk5OTdXeOUGX2WjYHETw+Gwhb+gzRswx/B6vPhxYjKil
-         rikj3ef99sRnnZvJw0zMqv3h2DefVF29+LYYGtVU=
+        s=badeba3b8450; t=1570900308;
+        bh=zaIHlElwJeVfh0jWDyK+4rZg0MDOriNjT4iHsnl6zlw=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=M2F1gZ0b0f7/tXChV2SYF/DZvKIFg42d13WuLgtXoY5k4MPc5O5U0PDCrRz1LlaqD
+         tBcNtyCk9dpbIRVJ1FOK1a6r3hLtnStAHh0eA3RZ855dtGYbzKv45SBbDpXxc9A9Gw
+         sPzr9rISRZHVXP0YagSr+XB1ycBS/XVfFHEBfquo=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([213.196.244.109]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mplc7-1hjUvI3Tkz-00qDFZ; Sat, 12
- Oct 2019 19:11:25 +0200
+Received: from longitude ([213.196.244.109]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MbivM-1hn1aP3Xbi-00dEkd; Sat, 12
+ Oct 2019 19:11:47 +0200
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-doc@vger.kernel.org
 Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         Jonathan Corbet <corbet@lwn.net>,
+        Cornelia Huck <cohuck@redhat.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Shobhit Kukreti <shobhitkukreti@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 1/4] docs: admin-guide: Sort the "unordered guides" to avoid merge conflicts
-Date:   Sat, 12 Oct 2019 19:11:09 +0200
-Message-Id: <20191012171114.6589-1-j.neuschaefer@gmx.net>
+Subject: [PATCH 3/4] docs: admin-guide: dell_rbu: Rework the title
+Date:   Sat, 12 Oct 2019 19:11:11 +0200
+Message-Id: <20191012171114.6589-3-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191012171114.6589-1-j.neuschaefer@gmx.net>
+References: <20191012171114.6589-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5B34xg+6308ya7WPHDCaXqtJ8xGXo98JxaTSCcGd78rRDNlfA2S
- b3B2/5ic+4m87a83vVcTwUedCy33Y4I6iQPXbrhNigLS3IWxQyxGvHN6XUtPGfq7cr8xwDo
- 0sFDDLYZv8cJ5EqvHChiY3bFpiM33AGpRHqnSbgH67+lLHojaE4XQLMH6BnDx1/RTv8n2Ek
- RDBNYIIWTMJj99n46ru8g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5HByb3ZDp1E=:k08/BnDMmpK0zJYQ62e57h
- VEBseg4VmzEUiwvnrAYX08k9zI64wn8UhkKmt1nza7lsAvhghCLxV7QiP7RtP6HvzwfRkyvru
- NqhUEvVk+MJbGIfJJtFTubecx0AtG8QN+SiwRdBD7T+fZ1TAHbnnTEZTA0aQL86Oc6BxqlAy0
- 3Ti3smwOYtmh12yLTolutBuFyMdbJZ7SGD5aayRLbVprxSgng3UIZcBDvZF2KIK9OhVrz5Uix
- MZNP8Nd7hRhwcimIjh+ri5Qt6+gC5mUjQJmgeynj4zQ1oh1o/WvJA019gaUdmmRVDHAzlQhtX
- 5QdQ3XtbsqCJVhmpPLiShCLXxCOcgM6yWrT9LRuenGqQoGd2FTrKhG0o0A8GHo+BAEF+TO0vO
- 30Z9F4Dy6w3O8MCvSi6tEFXg1pdeK53HcKC4/UtUJlaj/0QIVWu9rc7lO6h4IVE0WrLIO+NoF
- ZrkwVDPOos0NAmSOeQ3z44PtbYcTm5W/cZXCx8kC5vKmw1gK9FLPqNkKK8F+KHvpNAJIPCXAW
- Jgm1c3rHSWfuY9FSy3lxFYXbD8iS4CzvzQs/q8ZYGnNNU0RuhbHZnI3LHDiFP6Dah3QvT58PY
- /mpf8rAA/xvq677a9Q1M3CfaEYX/U8i48h7CtnTgoz7VW04chbAtYxcNwMrkxpyhzZAoH6nWJ
- vbeQNArTn6FQWB1PuMy0nJk8DEyHOwE7oL7ty+1ju4HyHyJU9dDHIjyKWmevR12PIRRpw5CGe
- 1rG9+0BSsSwlHii6e13gyDlSr94abjz8O9t2OJEIvy7TFdtwpSa7siJgwXfBb7+dZq0LAlMeU
- lZVqFUWTJmkwS+YPx6q7p0tFgjiR64Y0yNqe0W3IlHovKYCWkIuhNxmpW892sA8r9dHLEm7xO
- vFpnS/zDweEiVv4gul67VZKAqssouTsaHj8NV8NiMCLYnxVnYLJhAPsD+zhYj5m56P4WpgNEp
- gdSmbWI+HMxASjc5D7SOpBrBI9BccJbUnUw/tTcjLpu+J6qUBeDzIZNBAQHYX7LMw8Ey2sAml
- VuBZApRtNcZDQq18TD3yTwk+6xHoTD3KNamfvKmcnzhL0OuVVpSP4clyPmMGGuSGzJ2pAuzGu
- Bm6y12E6XSoNYhzAQ2ijcrxWAVrhUM4GaFUwu+vJ3kFYWQocx1dKnXdDgC2hEsW7PqlOlMBc0
- jDe32vlcfHjwuyRmq58FZZ9cnRQZW13876sOIz8zg1m9h4OefRW/gAPBq2baiarsycoqbdL1o
- EkOiz19+NDOJNJkLUoukd1iNNhwr5bKRhaGbhNM1LRyhiHSrRFlb0Fx3AvWI=
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:HtUxZRlpo1IMjjHQOB6u4NDcWDuukfE+RC64LJn27TbX04MaEuV
+ ohEmxOY4Bk7KIqXd9OhKm8V4t/gf62wJNRASTMSjFJ6d+wvUw+eON2A8+DBSc13znnXTutm
+ 78w3ialLBEAPENSICGCu5GrWbeu3BCOOhenZAMI5Tbg0msHk+PBAb2iytaxT3lW5maLsnxW
+ ljGgg4Tgb6shChfSWcVuw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rPnMe25S1eA=:ijMZ14W69PXe6CAAn0L656
+ LSqwEmisP1963ZSoWuoL8Ce5b/nm/5tGch8pULCtNFMEqJq1YpFbiiC/XU7FxpxUy2/l5RgNk
+ P8/kPBhrx81khJFCq12+sl5WbycoZyEt0oa0ousuKXKH7B7YPMD8MVZFSQvdH08ViuchTcvpq
+ 3B3/Ea/sFj8HvD7jcosXNBMNifi4OFaKAXdH6ozZ7NI6CRKhsDNpbEBwEPS7L9ADkb9qJkbP4
+ XPEX7elK8WKIHQncq01o1g8/O144EWITQXPo5tv16B0AhJ0NRVSAb/mW8hKwbi5OOQzpzzc63
+ ijdsapiRSD1uFbvBLvbK5rZkT5g/9Be60Wr3FS4K3UlhYfZGj/oRekpPpnAJb/of4pxdyxooK
+ 3r26/evEtwFan2j87lGz+q8DF2fP8u0l5cLspGErNFC3pa5XntSpKlZfMHaC7dXQe2qcMWfe4
+ DDYdAzUS9Hruvr3SVxSS1ASeqEj9p+z+pJ8wR+6QUbgUEqT4OExtYNmkhZz/kmqYMV91wZOUY
+ lY7h48GuCfXZ8doKy1pPuenOFiCBNkepJklYGmB3zeqWnVr+H5SjF8/3tiGlVn1zc62uLM0uw
+ rwYlvj+qCW7zV6mOTMmJUwHZTCo80mr4k11Y8pYux1iSjaFogHz3SiXWJl8N/uhbZ4qDLuSuV
+ RZ3Mmp5BFijNWzTn483GX/OIAMe0G4hONQCJNWL2KRKOPozpyhvKIkcjpNw/o8Dvf+crWIDau
+ sZaAxcKAnvq+Eg1u/i6HhOFA17WWHTWefFs71vhFwZShNFT5boYLn2X3vx2m9e9NVOZh9pAs6
+ taie05vsNR51s15AM71owhS2LVTQ49InNeFRG3KGwQERzyhX9ccofkbwpAHYp3JQ+pnFojGq1
+ tczBqnrea4ofEOWLaRs3oeCuPYaSHNUz1LO7wdL5myA4s1R+mswwO66J9oCe2omyAVe/w/Hhq
+ 8R7kEFAaamgT9M6tjsMcwTLiPHYCvAtRdOsh02tieuK96LJTVHmB8LlBA7f71mzzDS/0IAw16
+ bNSLx7y1oCegJ6eiaWbWIfDTw4xd4mzcJ336qvU2Vl9JPBQ4n2sux9z+L4cCS18MbWZD691W0
+ K43DSANzQlzOKktFqXdqDTrPscsWrdG1tqj7nEKinpjfQAPJksuhXhbd0LBGGXIP+P+lkPTqX
+ TEOQTDoL6RrBxur0u9rrw4uZj0Uq/LzrH0vuC5NWo1KaLScxNev15NzZYgB3whWyz10QTzMvd
+ jPkV23rYwN+hIsF0FG1wpWLKg9HKG3PM1p+CeWNIoojSfAL5SoY7s1iB6L8c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the "unordered guides" linked in admin-guide/index.rst are not
-supposed to be in any particular order, let's sort them alphabetically
-to avoid the risk of merge conflicts by spreading newly added lines more
-evenly.
-
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
-
-Upon a second look, I noticed that the list wasn't completely unordered:
-binfmt-misc is grouped with java and mono, the filesystems are grouped
-together.
-
-For the filesystems, I think they should be moved to the filesystems/
-directory, and the binfmt documents could perhaps be explicitly grouped
-too. But perhaps the loss of this grouping-by-position is reason enough
-to drop this patch for now.
-=2D--
- Documentation/admin-guide/index.rst | 64 ++++++++++++++---------------
- 1 file changed, 32 insertions(+), 32 deletions(-)
-
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-gui=
-de/index.rst
-index 34cc20ee7f3a..545ea26364b7 100644
-=2D-- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -57,60 +57,60 @@ configure specific aspects of kernel behavior to your =
-liking.
- .. toctree::
-    :maxdepth: 1
-
--   initrd
--   cgroup-v2
--   cgroup-v1/index
--   serial-console
--   braille-console
--   parport
--   md
--   module-signing
--   rapidio
--   sysrq
--   unicode
--   vga-softcursor
--   binfmt-misc
--   mono
--   java
--   ras
--   bcache
--   blockdev/index
--   ext4
--   binderfs
--   cifs/index
--   xfs
--   jfs
--   ufs
--   pm/index
--   thunderbolt
--   LSM/index
--   mm/index
--   namespaces/index
--   perf-security
-    acpi/index
-    aoe/index
-+   auxdisplay/index
-+   bcache
-+   binderfs
-+   binfmt-misc
-+   blockdev/index
-+   braille-console
-    btmrvl
-+   cgroup-v1/index
-+   cgroup-v2
-+   cifs/index
-    clearing-warn-once
-    cpu-load
-    cputopology
-    device-mapper/index
-    efi-stub
-+   ext4
-    gpio/index
-    highuid
-    hw_random
-+   initrd
-    iostats
-+   java
-+   jfs
-    kernel-per-CPU-kthreads
-    laptops/index
--   auxdisplay/index
-    lcd-panel-cgram
-    ldm
-    lockup-watchdogs
-+   LSM/index
-+   md
-+   mm/index
-+   module-signing
-+   mono
-+   namespaces/index
-    numastat
-+   parport
-+   perf-security
-+   pm/index
-    pnp
-+   rapidio
-+   ras
-    rtc
-+   serial-console
-    svga
--   wimax/index
-+   sysrq
-+   thunderbolt
-+   ufs
-+   unicode
-+   vga-softcursor
-    video-output
-+   wimax/index
-+   xfs
-
- .. only::  subproject and html
-
-=2D-
-2.20.1
-
+LSBNZW50aW9uIHRoZSBkcml2ZXIgbmFtZSwgd2hpY2ggaXMgYWxzbyB1c2VkIGluIHN5c2ZzIChk
+ZWxsX3JidSkNCi0gUmV3cml0ZSB0aGUgdGl0bGUgdG8gYmUgbW9yZSBjb25jaXNlDQoNClNpZ25l
+ZC1vZmYtYnk6IEpvbmF0aGFuIE5ldXNjaMOkZmVyIDxqLm5ldXNjaGFlZmVyQGdteC5uZXQ+DQot
+LS0NCiBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2RlbGxfcmJ1LnJzdCB8IDYgKysrLS0tDQog
+MSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUvZGVsbF9yYnUucnN0IGIvRG9jdW1lbnRh
+dGlvbi9hZG1pbi1ndWlkZS9kZWxsX3JidS5yc3QNCmluZGV4IDVkMWNlN2JjZDA0ZC4uMTA4MzBk
+YjllNjE2IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9kZWxsX3JidS5y
+c3QNCisrKyBiL0RvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUvZGVsbF9yYnUucnN0DQpAQCAtMSw2
+ICsxLDYgQEANCi09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09DQotVXNhZ2Ugb2YgdGhlIG5ldyBvcGVuIHNvdXJjZWQgcmJ1IChSZW1v
+dGUgQklPUyBVcGRhdGUpIGRyaXZlcg0KLT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCis9PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PQ0KK0RlbGwgUmVtb3RlIEJJT1MgVXBkYXRlIGRyaXZlciAoZGVsbF9y
+YnUpDQorPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCiANCiBQdXJw
+b3NlDQogPT09PT09PQ0KLS0gDQoyLjIwLjENCg0K
