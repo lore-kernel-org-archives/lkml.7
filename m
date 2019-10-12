@@ -2,127 +2,139 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05953C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A178AC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBB420679
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8812B20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfJLTYX (ORCPT
+        id S1729741AbfJLT0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 15:24:23 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:10410
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729384AbfJLTYX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 15:24:23 -0400
-X-IronPort-AV: E=Sophos;i="5.67,289,1566856800"; 
-   d="scan'208";a="322500714"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Oct 2019 21:24:19 +0200
-Date:   Sat, 12 Oct 2019 21:24:19 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-cc:     Markus Elfring <Markus.Elfring@web.de>,
-        dri-devel@lists.freedesktop.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Fabio Estevam <festevam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Peter Senna Tschudin <peter.senna@collabora.com>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm/imx: Fix error handling for a kmemdup() call in
- imx_pd_bind()
-In-Reply-To: <CAEkB2ERCGJ6abNXfPNX7nbwkwD7qYTPYjYsNGzZwynn5CbPCzg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1910122122370.3049@hadrien>
-References: <20191004190938.15353-1-navid.emamdoost@gmail.com> <540321eb-7699-1d51-59d5-dde5ffcb8fc4@web.de> <CAEkB2ETtVwtmkpup65D3wqyLn=84ZHt0QRo0dJK5GsV=-L=qVw@mail.gmail.com> <2abf545b-023b-853a-95ef-ce99e1896a5d@web.de> <3fd6aa8b-2529-7ff5-3e19-05267101b2a4@web.de>
- <CAEkB2ERCGJ6abNXfPNX7nbwkwD7qYTPYjYsNGzZwynn5CbPCzg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 12 Oct 2019 15:26:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52578 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728579AbfJLT0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 15:26:16 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F0AA9126E
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 19:26:15 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id j7so6265405wrx.14
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 12:26:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=NER+WYNjIiTuYyELfX6XGxRMHyIeb8bjpkbmjz8T8Lw=;
+        b=h9NgEd56x6Gp1WbMEzmxYygSRFT549Airh3Amus0vi8jTqRF0zOSCVqzPA2+kzm3fI
+         YaTXd7dsPnjwzizPsS2cvmKEWyM+9QYD4OZ02mjgFNNY7bC8+EZKnZuPUYnEaKrGWs1F
+         McXYjYfxNlKkLRFM/+/Qrxq3EYevY7O5bQ9ieJj5YWfonIk19DSM0apkZnhTgoQfjM8X
+         BZKI5ktQgttrXMV7OU+AJstUavV4IFAUHr+Lm4jEPi5yBdGKYqshnrQqdjextH5r4PrQ
+         04z/9eSDThNrclfDBZBbb4IB9BH1Hh0Dckw4n+KHp3bVtR4YcOz77BXtWcdakIVT49j4
+         1Rvg==
+X-Gm-Message-State: APjAAAXQkWnGfuxnN/dcRf5nBePkoEdkC0Ouv4Szg0pkPwLeCAEnKpgw
+        //SLtUzagty8i1oxBzZuk1Ofw5XcbLw3KCVn/6+fXbfi/f6XFaI50AG9tuOTeipXLDO2P5Uq7aa
+        FF7ytX/hvGBXIwrszCrdBHhxb
+X-Received: by 2002:adf:e90d:: with SMTP id f13mr18704545wrm.104.1570908374717;
+        Sat, 12 Oct 2019 12:26:14 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwzVc4L36wZsuw/yIheWC3DcZ/4dWluqHH2rLuU6KbnjXtc/R53950cBJ1bTedee2IPkXIj5Q==
+X-Received: by 2002:adf:e90d:: with SMTP id f13mr18704533wrm.104.1570908374478;
+        Sat, 12 Oct 2019 12:26:14 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
+        by smtp.gmail.com with ESMTPSA id r6sm14770346wmh.38.2019.10.12.12.26.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Oct 2019 12:26:13 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 15:26:11 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH RFC v1 0/2] vhost: ring format independence
+Message-ID: <20191012152332-mutt-send-email-mst@kernel.org>
+References: <20191011134358.16912-1-mst@redhat.com>
+ <f650ac1a-6e2a-9215-6e4f-a1095f4a89cd@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-2018450889-1570908260=:3049"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f650ac1a-6e2a-9215-6e4f-a1095f4a89cd@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sat, Oct 12, 2019 at 04:15:42PM +0800, Jason Wang wrote:
+> 
+> On 2019/10/11 下午9:45, Michael S. Tsirkin wrote:
+> > So the idea is as follows: we convert descriptors to an
+> > independent format first, and process that converting to
+> > iov later.
+> > 
+> > The point is that we have a tight loop that fetches
+> > descriptors, which is good for cache utilization.
+> > This will also allow all kind of batching tricks -
+> > e.g. it seems possible to keep SMAP disabled while
+> > we are fetching multiple descriptors.
+> 
+> 
+> I wonder this may help for performance:
 
---8323329-2018450889-1570908260=:3049
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Could you try it out and report please?
+Would be very much appreciated.
 
+> - another indirection layer, increased footprint
 
+Seems to be offset off by improved batching.
+For sure will be even better if we can move stac/clac out,
+or replace some get/put user with bigger copy to/from.
 
-On Sat, 12 Oct 2019, Navid Emamdoost wrote:
+> - won't help or even degrade when there's no batch
 
-> On Sat, Oct 12, 2019 at 4:07 AM Markus Elfring <Markus.Elfring@web.de> wrote:
-> >
-> > From: Markus Elfring <elfring@users.sourceforge.net>
-> > Date: Sat, 12 Oct 2019 10:30:21 +0200
-> >
-> > The return value from a call of the function “kmemdup” was not checked
-> > in this function implementation. Thus add the corresponding error handling.
-> >
-> > Fixes: 19022aaae677dfa171a719e9d1ff04823ce65a65 ("staging: drm/imx: Add parallel display support")
-> > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> > ---
-> >  drivers/gpu/drm/imx/parallel-display.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
-> > index 35518e5de356..39c4798f56b6 100644
-> > --- a/drivers/gpu/drm/imx/parallel-display.c
-> > +++ b/drivers/gpu/drm/imx/parallel-display.c
-> > @@ -210,8 +210,13 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
-> >                 return -ENOMEM;
-> >
-> >         edidp = of_get_property(np, "edid", &imxpd->edid_len);
-> > -       if (edidp)
-> > +       if (edidp) {
-> >                 imxpd->edid = kmemdup(edidp, imxpd->edid_len, GFP_KERNEL);
-> > +               if (!imxpd->edid) {
-> > +                       devm_kfree(dev, imxpd);
->
-> You should not try to free imxpd here as it is a resource-managed
-> allocation via devm_kzalloc(). It means memory allocated with this
-> function is
->  automatically freed on driver detach. So, this patch introduces a double-free.
+I couldn't measure a difference. I'm guessing
 
-No, it's not double freed since the proposed code frees it with a devm
-function, removing it from the list of things to free later.  One can
-wonder why the free has to be made apparent, though.
+> - an extra overhead in the case of in order where we should already had
+> tight loop
 
-julia
+it's not so tight with translation in there.
+this exactly makes the loop tight.
 
->
-> > +                       return -ENOMEM;
-> > +               }
-> > +       }
-> >
-> >         ret = of_property_read_string(np, "interface-pix-fmt", &fmt);
-> >         if (!ret) {
-> > --
-> > 2.23.0
-> >
->
->
-> --
-> Navid.
->
---8323329-2018450889-1570908260=:3049--
+> - need carefully deal with indirect and chain or make it only work for
+> packet sit just in a single descriptor
+> 
+> Thanks
+
+I don't understand this last comment.
+
+> 
+> > 
+> > And perhaps more importantly, this is a very good fit for the packed
+> > ring layout, where we get and put descriptors in order.
+> > 
+> > This patchset seems to already perform exactly the same as the original
+> > code already based on a microbenchmark.  More testing would be very much
+> > appreciated.
+> > 
+> > Biggest TODO before this first step is ready to go in is to
+> > batch indirect descriptors as well.
+> > 
+> > Integrating into vhost-net is basically
+> > s/vhost_get_vq_desc/vhost_get_vq_desc_batch/ -
+> > or add a module parameter like I did in the test module.
+> > 
+> > 
+> > 
+> > Michael S. Tsirkin (2):
+> >    vhost: option to fetch descriptors through an independent struct
+> >    vhost: batching fetches
+> > 
+> >   drivers/vhost/test.c  |  19 ++-
+> >   drivers/vhost/vhost.c | 333 +++++++++++++++++++++++++++++++++++++++++-
+> >   drivers/vhost/vhost.h |  20 ++-
+> >   3 files changed, 365 insertions(+), 7 deletions(-)
+> > 
