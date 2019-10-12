@@ -3,89 +3,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A92C47404
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3B1C47404
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7158F2067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80334214E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfJLCOm (ORCPT
+        id S1728242AbfJLCV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 22:14:42 -0400
-Received: from smtprelay0195.hostedemail.com ([216.40.44.195]:38721 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728602AbfJLCOl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 22:14:41 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C5D5C837F24C;
-        Sat, 12 Oct 2019 02:14:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: toad72_4533592a26929
-X-Filterd-Recvd-Size: 2596
-Received: from XPS-9350 (cpe-23-242-70-174.socal.res.rr.com [23.242.70.174])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 12 Oct 2019 02:14:35 +0000 (UTC)
-Message-ID: <01e7fa29d34f210348355c4a507a714e086e7a30.camel@perches.com>
-Subject: Re: [PATCH 0/4] treewide: Add 'fallthrough' pseudo-keyword
-From:   Joe Perches <joe@perches.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-sctp@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Date:   Fri, 11 Oct 2019 19:14:33 -0700
-In-Reply-To: <CAHk-=wi1T1m-su8zK5LeESoz_Pgf1-4hnjr516NiDLNyb4USug@mail.gmail.com>
-References: <cover.1570292505.git.joe@perches.com>
-         <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
-         <9fe980f7e28242c2835ffae34914c5f68e8268a7.camel@perches.com>
-         <CAHk-=wi1T1m-su8zK5LeESoz_Pgf1-4hnjr516NiDLNyb4USug@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 11 Oct 2019 22:21:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35176 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726757AbfJLCV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 22:21:56 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4CBF110C0930;
+        Sat, 12 Oct 2019 02:21:56 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-50.pek2.redhat.com [10.72.12.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8115710018F8;
+        Sat, 12 Oct 2019 02:21:45 +0000 (UTC)
+From:   Lianbo Jiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, bhe@redhat.com, dyoung@redhat.com, jgross@suse.com,
+        dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org
+Subject: [PATCH 0/3 v3] x86/kdump: Fix 'kmem -s' reported an invalid freepointer when SME was active
+Date:   Sat, 12 Oct 2019 10:21:37 +0800
+Message-Id: <20191012022140.19003-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Sat, 12 Oct 2019 02:21:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-11 at 10:46 -0700, Linus Torvalds wrote:
-> On Fri, Oct 11, 2019 at 10:43 AM Joe Perches <joe@perches.com> wrote:
-> > Shouldn't a conversion script be public somewhere?
-> 
-> I feel the ones that might want to do the conversion on their own are
-> the ones that don't necessarily trust the script.
-> 
-> But I don't even know if anybody does want to, I just feel it's an option.
+In purgatory(), the main things are as below:
 
-What's the harm in keeping the script in the
-tree until it's no longer needed?
+[1] verify sha256 hashes for various segments.
+    Lets keep these codes, and do not touch the logic.
 
+[2] copy the first 640k content to a backup region.
+    Lets safely remove it and clean all code related to backup region.
+
+This patch series will remove the backup region, because the current
+handling of copying the first 640k runs into problems when SME is
+active.
+
+The low 1MiB region will always be reserved when the crashkernel kernel
+command line option is specified. And this way makes it unnecessary to
+do anything with the low 1MiB region, because the memory allocated later
+won't fall into the low 1MiB area.
+
+This series includes three patches:
+[1] Fix 'kmem -s' reported an invalid freepointer when SME was active
+    The low 1MiB region will always be reserved when the crashkernel
+    kernel command line option is specified, which ensures that the
+    memory allocated later won't fall into the low 1MiB area.
+    
+[2] x86/kdump cleanup: remove the unused crash_copy_backup_region()
+    The crash_copy_backup_region() has never been used, so clean
+    up the redundant code.
+
+[3] x86/kdump: clean up all the code related to the backup region
+    Remove the backup region and clean up.
+
+Changes since v1:
+[1] Add extra checking condition: when the crashkernel option is
+    specified, reserve the low 640k area.
+
+Changes since v2:
+[1] Reserve the low 1MiB region when the crashkernel option is only
+    specified.(Suggested by Eric)
+
+[2] Remove the unused crash_copy_backup_region()
+
+[3] Remove the backup region and clean up
+
+[4] Split them into three patches
+
+Lianbo Jiang (3):
+  x86/kdump: Fix 'kmem -s' reported an invalid freepointer when SME was
+    active
+  x86/kdump cleanup: remove the unused crash_copy_backup_region()
+  x86/kdump: clean up all the code related to the backup region
+
+ arch/x86/include/asm/crash.h       |  1 -
+ arch/x86/include/asm/kexec.h       | 10 ----
+ arch/x86/include/asm/purgatory.h   | 10 ----
+ arch/x86/kernel/crash.c            | 91 ++++++------------------------
+ arch/x86/kernel/machine_kexec_64.c | 47 ---------------
+ arch/x86/purgatory/purgatory.c     | 19 -------
+ arch/x86/realmode/init.c           | 11 ++++
+ 7 files changed, 27 insertions(+), 162 deletions(-)
+
+-- 
+2.17.1
 
