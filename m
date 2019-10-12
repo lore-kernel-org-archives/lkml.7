@@ -2,209 +2,86 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2DAC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29D3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79C22087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824D32087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 10:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbfJLKVh (ORCPT
+        id S1728878AbfJLK0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 06:21:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49726 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfJLKVg (ORCPT
+        Sat, 12 Oct 2019 06:26:00 -0400
+Received: from mx140-tc.baidu.com ([61.135.168.140]:51115 "EHLO
+        tc-sys-mailedm02.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727527AbfJLKX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 06:21:36 -0400
-Received: from [185.81.136.17] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iJEWZ-0006w3-Ut; Sat, 12 Oct 2019 10:21:24 +0000
-Date:   Sat, 12 Oct 2019 12:21:20 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     jannh@google.com
-Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@kellner.me, ckellner@redhat.com, cyphar@cyphar.com,
-        elena.reshetova@intel.com, guro@fb.com, ldv@altlinux.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] pidfd: add NSpid entries to fdinfo
-Message-ID: <20191012102119.qq2adlnxjxrkslca@wittgenstein>
-References: <CAG48ez1hk9d-qAPcRy9QOgNuO8u3Y_hu_3=GZoFYLY+oMdo8xg@mail.gmail.com>
- <20191012101922.24168-1-christian.brauner@ubuntu.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191012101922.24168-1-christian.brauner@ubuntu.com>
-User-Agent: NeoMutt/20180716
+        Sat, 12 Oct 2019 06:23:59 -0400
+Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
+        by tc-sys-mailedm02.tc.baidu.com (Postfix) with ESMTP id BCB3111C004B;
+        Sat, 12 Oct 2019 18:23:46 +0800 (CST)
+From:   Li RongQing <lirongqing@baidu.com>
+To:     akpm@linux-foundation.org, sergey.senozhatsky.work@gmail.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: [PATCH] watchdog/hardlockup: reassign last_timestamp when enable nmi event
+Date:   Sat, 12 Oct 2019 18:23:46 +0800
+Message-Id: <1570875826-30491-1-git-send-email-lirongqing@baidu.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 12:19:22PM +0200, Christian Brauner wrote:
-> Currently, the fdinfo file of contains the field Pid:
-> It contains the pid a given pidfd refers to in the pid namespace of the
-> opener's procfs instance.
-> If the pid namespace of the process is not a descendant of the pid
-> namespace of the procfs instance 0 will be shown as its pid. This is
-> similar to calling getppid() on a process who's parent is out of it's
-> pid namespace (e.g. when moving a process into a sibling pid namespace
-> via setns()).
-> 
-> Add an NSpid field for easy retrieval of the pid in all descendant pid
-> namespaces:
-> If pid namespaces are supported this field will contain the pid a given
-> pidfd refers to for all descendant pid namespaces starting from the
-> current pid namespace of the opener's procfs instance, i.e. the first
-> pid entry for Pid and NSpid will be identical.
-> If the pid namespace of the process is not a descendant of the pid
-> namespace of the procfs instance 0 will be shown as its first NSpid and
-> no other NSpid entries will be shown.
-> Note that this differs from the Pid and NSpid fields in
-> /proc/<pid>/status where Pid and NSpid are always shown relative to the
-> pid namespace of the opener's procfs instace. The difference becomes
-> obvious when sending around a pidfd between pid namespaces from
-> different trees, i.e. where no ancestoral relation is present between
-> the pid namespaces:
-> 1. sending around pidfd:
-> - create two new pid namespaces ns1 and ns2 in the initial pid namespace
->   (Also take care to create new mount namespaces in the new pid
->   namespace and mount procfs.)
-> - create a process with a pidfd in ns1
-> - send pidfd from ns1 to ns2
-> - read /proc/self/fdinfo/<pidfd> and observe that Pid and NSpid entry
->   are 0
-> - create a process with a pidfd in
-> - open a pidfd for a process in the initial pid namespace
-> 2. sending around /proc/<pid>/status fd:
-> - create two new pid namespaces ns1 and ns2 in the initial pid namespace
->   (Also take care to create new mount namespaces in the new pid
->   namespace and mount procfs.)
-> - create a process in ns1
-> - open /proc/<pid>/status in the initial pid namespace for the process
->   you created in ns1
-> - send statusfd from initial pid namespace to ns2
-> - read statusfd and observe:
->   - that Pid will contain the pid of the process as seen from the init
->   - that NSpid will contain the pids of the process for all descendant
->     pid namespaces starting from the initial pid namespace
-> 
-> Cc: Jann Horn <jannh@google.com>
-> Cc: linux-api@vger.kernel.org
-> Co-Developed-by: Christian Kellner <christian@kellner.me>
-> Signed-off-by: Christian Kellner <christian@kellner.me>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+last_timestamp is not initialized and is zero after boot, or stop
+to forward when nmi watchdog is disabled; and false positives still
+is possible when restart NMI timer after stopping 120 seconds
 
-I think this might be more what we want.
-I tried to think of cases where the first entry of Pid is not identical
-to the first entry of NSpid but I came up with none. Maybe you do, Jann?
+so reassign last_timestamp always when enable nmi event
 
-Christian, this is just a quick stab I took. Feel free to pick this up
-as a template.
+Fixes: 7edaeb6841df ("kernel/watchdog: Prevent false positives with turbo modes")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+---
+ kernel/watchdog_hld.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Thanks!
-Christian
+diff --git a/kernel/watchdog_hld.c b/kernel/watchdog_hld.c
+index 247bf0b1582c..fc3a5c7ccd82 100644
+--- a/kernel/watchdog_hld.c
++++ b/kernel/watchdog_hld.c
+@@ -189,6 +189,8 @@ static int hardlockup_detector_event_create(void)
+  */
+ void hardlockup_detector_perf_enable(void)
+ {
++	ktime_t now = ktime_get_mono_fast_ns();
++
+ 	if (hardlockup_detector_event_create())
+ 		return;
+ 
+@@ -196,6 +198,7 @@ void hardlockup_detector_perf_enable(void)
+ 	if (!atomic_fetch_inc(&watchdog_cpus))
+ 		pr_info("Enabled. Permanently consumes one hw-PMU counter.\n");
+ 
++	this_cpu_write(last_timestamp, now);
+ 	perf_event_enable(this_cpu_read(watchdog_ev));
+ }
+ 
+@@ -274,8 +277,12 @@ void __init hardlockup_detector_perf_restart(void)
+ 	for_each_online_cpu(cpu) {
+ 		struct perf_event *event = per_cpu(watchdog_ev, cpu);
+ 
+-		if (event)
++		if (event) {
++			ktime_t now = ktime_get_mono_fast_ns();
++
++			per_cpu(last_timestamp, cpu) = now;
+ 			perf_event_enable(event);
++		}
+ 	}
+ }
+ 
+-- 
+2.16.2
 
-> ---
->  kernel/fork.c | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 72 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 1f6c45f6a734..b155bad92d9c 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1695,12 +1695,83 @@ static int pidfd_release(struct inode *inode, struct file *file)
->  }
->  
->  #ifdef CONFIG_PROC_FS
-> +/**
-> + * pidfd_show_fdinfo - print information about a pidfd
-> + * @m: proc fdinfo file
-> + * @f: file referencing a pidfd
-> + *
-> + * Pid:
-> + * This function will print the pid a given pidfd refers to in the pid
-> + * namespace of the opener's procfs instance.
-> + * If the pid namespace of the process is not a descendant of the pid
-> + * namespace of the procfs instance 0 will be shown as its pid. This is
-> + * similar to calling getppid() on a process who's parent is out of it's
-> + * pid namespace (e.g. when moving a process into a sibling pid namespace
-> + * via setns()).
-> + *
-> + * NSpid:
-> + * If pid namespaces are supported then this function will also print the
-> + * pid a given pidfd refers to for all descendant pid namespaces starting
-> + * from the current pid namespace of the opener's procfs instance, i.e. the
-> + * first pid entry for Pid and NSpid will be identical.
-> + * If the pid namespace of the process is not a descendant of the pid
-> + * namespace of the procfs instance 0 will be shown as its first NSpid and
-> + * no other NSpid entries will be shown.
-> + * Note that this differs from the Pid and NSpid fields in
-> + * /proc/<pid>/status where Pid and NSpid are always shown relative to the
-> + * pid namespace of the opener's procfs instace. The difference becomes
-> + * obvious when sending around a pidfd between pid namespaces from
-> + * different trees, i.e. where no ancestoral relation is present between
-> + * the pid namespaces:
-> + * 1. sending around pidfd:
-> + * - create two new pid namespaces ns1 and ns2 in the initial pid namespace
-> + *   (Also take care to create new mount namespaces in the new pid
-> + *   namespace and mount procfs.)
-> + * - create a process with a pidfd in ns1
-> + * - send pidfd from ns1 to ns2
-> + * - read /proc/self/fdinfo/<pidfd> and observe that Pid and NSpid entry
-> + *   are 0
-> + * - create a process with a pidfd in
-> + * - open a pidfd for a process in the initial pid namespace
-> + * 2. sending around /proc/<pid>/status fd:
-> + * - create two new pid namespaces ns1 and ns2 in the initial pid namespace
-> + *   (Also take care to create new mount namespaces in the new pid
-> + *   namespace and mount procfs.)
-> + * - create a process in ns1
-> + * - open /proc/<pid>/status in the initial pid namespace for the process
-> + *   you created in ns1
-> + * - send statusfd from initial pid namespace to ns2
-> + * - read statusfd and observe:
-> + *   - that Pid will contain the pid of the process as seen from the init
-> + *   - that NSpid will contain the pids of the process for all descendant
-> + *     pid namespaces starting from the initial pid namespace
-> + */
->  static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
->  {
->  	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
->  	struct pid *pid = f->private_data;
-> +	pid_t nr = pid_nr_ns(pid, ns);
-> +
-> +	seq_put_decimal_ull(m, "Pid:\t", nr);
-> +
-> +#ifdef CONFIG_PID_NS
-> +	seq_puts(m, "\nNSpid:");
-> +	if (nr == 0) {
-> +		/*
-> +		 * If nr is zero the pid namespace of the procfs and the
-> +		 * pid namespace of the pidfd are neither the same pid
-> +		 * namespace nor are they ancestors. Since NSpid and Pid
-> +		 * are always identical in their first entry shortcut it
-> +		 * and simply print 0.
-> +		 */
-> +		seq_put_decimal_ull(m, "\t", nr);
-> +	} else {
-> +		int i;
-> +		for (i = ns->level; i <= pid->level; i++)
-> +			seq_put_decimal_ull(m, "\t", pid_nr_ns(pid, pid->numbers[i].ns));
-> +	}
-> +#endif
->  
-> -	seq_put_decimal_ull(m, "Pid:\t", pid_nr_ns(pid, ns));
->  	seq_putc(m, '\n');
->  }
->  #endif
-> -- 
-> 2.23.0
-> 
