@@ -2,247 +2,165 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8586C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE314C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F57D206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRGMfUUy"
+	by mail.kernel.org (Postfix) with ESMTP id C71BC2089F
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570887154;
+	bh=KrnFmrvtYhyt1v49VDm4ZQ2HGzBUGbXfOORutkJTC+g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jNoW7juMHfn6dH4xx1dXWbdcAwld037y+FwFFVPzbqjvcqnDi/dForKQvI3Mg6s+C
+	 oEBc+T8btrw/vs+Xmkx0P4yMOAe4MMaTD+ReF0fR8beendoHPCQ1KneLJLfGL8QkXg
+	 XawhJmtlpBxtIqzK3HxaMMX1agTxriKh86rdiqBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbfJLNc2 (ORCPT
+        id S1729342AbfJLNce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 09:32:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45110 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbfJLNc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 09:32:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r5so14692234wrm.12;
-        Sat, 12 Oct 2019 06:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zDSzBmf5z3TxLRD0iah6O9fMN8pwfB2WeJ77hCxYLAA=;
-        b=PRGMfUUy9yHTmb4dbycfWLu/CSwPF3k6zkEic8Dc+B1F+ZNpn/7j1Fu1xae6YQddZV
-         6VOQdt2qT8LHmBWFfmpkaeySFLzK0QiCT6u2bmc3zIfWJOfAjNujuMeDcFOgL/qIq6DZ
-         6ZZtaUgSAw6JmXNgJTHepwZlWpxOURYnmTg2iijfNOdZq2ZXpIeMACrJijNFNd27smth
-         KL7eEFsqaR8kk/84NalYUJuyb1eG/rgl8qlEigchGhEPUlxz1RftnJD9TTN69pzQVsaK
-         H8ibzx7FLWOfVTCJ1+fYhCFc/WiS3+sOzLLltg9y6ejQl8cntvVX2Ts/T+BDxvVW5UKy
-         lB3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zDSzBmf5z3TxLRD0iah6O9fMN8pwfB2WeJ77hCxYLAA=;
-        b=GLpIJ3YVP5jyqYpxbLp4D3kpbsAtvTVwLDsdb0vgoH+691xcycDPzDSOqmyRl5OFfP
-         wK+fnYzLoV+d2U17jx/bYtXVdZuxi120MtN6ulKiaVfbC58RgO39NaFKy8WJf2JP4BSl
-         oadTTb3V4dyMck7jO9KZWk72fxdKPmRaWcyLMn0qFPUQhzJR9zcnMDfaxtPYbbacj0kw
-         wlMW8kKaUMjeokUBu1NEnmL1D36EWXyFCiIOlzmyDQKowX5f3TfsJp2LTIkee+Q8aBD6
-         IeGTk2MMPrJo7jCdWkWt8wXiwbBnbY5aaGmehGo3in1aYeNE7i6gcGrwF8bHysK2b7M8
-         40BA==
-X-Gm-Message-State: APjAAAVDIX53wqn9Zf7WnCXZhvSsjxwaNkF9fW/F1urqujie+60GzgB9
-        RBl/raMx3aDV67Ds3/Y5rYI=
-X-Google-Smtp-Source: APXvYqzPrIDkW8twwEdQDQlXMMHtHuUEvtAnRKBzSDkhLsQnTl72ZBNyW4sIvKZ+5V6poimihZDTsg==
-X-Received: by 2002:adf:fd46:: with SMTP id h6mr16892209wrs.243.1570887143176;
-        Sat, 12 Oct 2019 06:32:23 -0700 (PDT)
-Received: from [192.168.1.19] (cjl71.neoplus.adsl.tpnet.pl. [83.31.61.71])
-        by smtp.gmail.com with ESMTPSA id e6sm17378270wre.29.2019.10.12.06.32.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 12 Oct 2019 06:32:22 -0700 (PDT)
-Subject: Re: [PATCH v12 08/16] dt: bindings: lp55xx: Update binding for
- Multicolor Framework
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-References: <20191011130657.4713-1-dmurphy@ti.com>
- <20191011130657.4713-9-dmurphy@ti.com>
- <42fb3f20-be4c-8e9e-8035-e4eafbc1e687@gmail.com>
- <0ab2250d-36ff-390a-04e2-48883a930a9a@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <3cecddfd-f4d4-0faa-2975-61517e402bd6@gmail.com>
-Date:   Sat, 12 Oct 2019 15:32:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 12 Oct 2019 09:32:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727423AbfJLNcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 09:32:33 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D08EE206CD;
+        Sat, 12 Oct 2019 13:32:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570887152;
+        bh=KrnFmrvtYhyt1v49VDm4ZQ2HGzBUGbXfOORutkJTC+g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=abrBeT+kvdFAgs6XlmEiPlaOlKKU0Cqa4t8bYBA6aS7Qtaw0nH5b0v/ExMvsXBrZD
+         DE4g6d4TSSEqleNkWZCv7V9+98Ko/9YRsW2n719K8ACOgfFX0Ps5EbkSmE9HhK5Z4M
+         a5xvQRDM+9r/CoDeijWakmvFxWgjxjrthsnYeDOw=
+Date:   Sat, 12 Oct 2019 14:32:26 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        zbynek.kocur@fel.cvut.cz, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: srf04: fix wrong limitation in distance
+ measuring
+Message-ID: <20191012143226.4d4349ba@archlinux>
+In-Reply-To: <20191006142952.hgfg2agypwpf2v55@arbad>
+References: <20191006142952.hgfg2agypwpf2v55@arbad>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <0ab2250d-36ff-390a-04e2-48883a930a9a@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+On Sun, 6 Oct 2019 16:29:56 +0200
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-On 10/12/19 2:54 AM, Dan Murphy wrote:
-> Jacek
-> 
-> On 10/11/19 3:15 PM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 10/11/19 3:06 PM, Dan Murphy wrote:
->>> Update the DT binding to include the properties to use the
->>> multicolor framework for the devices that use the LP55xx
->>> framework.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> CC: Tony Lindgren <tony@atomide.com>
->>> CC: "Benoît Cousson" <bcousson@baylibre.com>
->>> CC: Linus Walleij <linus.walleij@linaro.org>
->>> CC: Shawn Guo <shawnguo@kernel.org>
->>> CC: Sascha Hauer <s.hauer@pengutronix.de>
->>> CC: Pengutronix Kernel Team <kernel@pengutronix.de>
->>> CC: Fabio Estevam <festevam@gmail.com>
->>> CC: NXP Linux Team <linux-imx@nxp.com>
->>> ---
->>>   .../devicetree/bindings/leds/leds-lp55xx.txt  | 149 +++++++++++++++---
->>>   1 file changed, 124 insertions(+), 25 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->>> b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->>> index bfe2805c5534..736a2e1538be 100644
->>> --- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->>> +++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->>> @@ -1,6 +1,8 @@
->>>   Binding for TI/National Semiconductor LP55xx LED Drivers
->>>     Required properties:
->>> +- #address-cells: 1
->>> +- #size-cells: 0
->>>   - compatible: one of
->>>       national,lp5521
->>>       national,lp5523
->>> @@ -14,6 +16,18 @@ Required properties:
->>>   Each child has own specific current settings
->>>   - led-cur: Current setting at each LED channel (mA x10, 0 if LED is
->>> not connected)
->>>   - max-cur: Maximun current at each LED channel.
->>> +- reg: Output channel for the LED.  This is zero based channel
->>> identifier and
->>> +    the data sheet is a one based channel identifier.
->>> +    reg value to output to LED output number
->>> +    D1 = reg value is 0
->>> +    D2 = reg value is 1
->>> +    D3 = reg value is 2
->>> +    D4 = reg value is 3
->>> +    D5 = reg value is 4
->>> +    D6 = reg value is 5
->>> +    D7 = reg value is 6
->>> +    D8 = reg value is 7
->>> +    D9 = reg value is 8
->>>     Optional properties:
->>>   - enable-gpio: GPIO attached to the chip's enable pin
->>> @@ -35,23 +49,28 @@ example 1) LP5521
->>>   on channel 0.
->>>     lp5521@32 {
->> While at it let's fix node prefix to led-controller.
->> It will not break anyone and yet it will adapt the node naming
->> to what is now recommended.
-> 
-> I would love to do that but honestly I prefer to fix that in a different
-> patch series and not add more changes to this patch review.
+> The measured time value in the driver is limited to the maximum distance
+> which can be read by the sensor. This limitation was wrong and is fixed
+> by this patch.
+>=20
+> It also takes into account that we are supporting a variety of sensors
+> today and that the recently added sensors have a higher maximum
+> distance range.
+>=20
+> Changes in v2:
+> - Added a Tested-by
+>=20
+> Suggested-by: Zbyn=C4=9Bk Kocur <zbynek.kocur@fel.cvut.cz>
+> Tested-by: Zbyn=C4=9Bk Kocur <zbynek.kocur@fel.cvut.cz>
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Applied to the fixes-togreg branch of iio.git and marked for stable.
 
-ack
+Thanks,
 
->>> +    #address-cells = <1>;
->>> +    #size-cells = <0>;
->>>       compatible = "national,lp5521";
->>>       reg = <0x32>;
->>>       label = "lp5521_pri";
->>>       clock-mode = /bits/ 8 <2>;
->>>   -    chan0 {
->>> +    chan@0 {
->> Similarly in case of every child node:
->>
+Jonathan
 
->>> +Multicolor LED example:
->>> +lp5523: lp5523@32 {
->> Do you really need "lp5523:" node label ?
->>
->> Besides:
->>
->> s/lp5523@32/led-controller@32/
-> 
-> This change I will make since I added this.
+> ---
+>  drivers/iio/proximity/srf04.c | 29 +++++++++++++++--------------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
+> index 8b50d56b0a03..01eb8cc63076 100644
+> --- a/drivers/iio/proximity/srf04.c
+> +++ b/drivers/iio/proximity/srf04.c
+> @@ -110,7 +110,7 @@ static int srf04_read(struct srf04_data *data)
+>  	udelay(data->cfg->trigger_pulse_us);
+>  	gpiod_set_value(data->gpiod_trig, 0);
+> =20
+> -	/* it cannot take more than 20 ms */
+> +	/* it should not take more than 20 ms until echo is rising */
+>  	ret =3D wait_for_completion_killable_timeout(&data->rising, HZ/50);
+>  	if (ret < 0) {
+>  		mutex_unlock(&data->lock);
+> @@ -120,7 +120,8 @@ static int srf04_read(struct srf04_data *data)
+>  		return -ETIMEDOUT;
+>  	}
+> =20
+> -	ret =3D wait_for_completion_killable_timeout(&data->falling, HZ/50);
+> +	/* it cannot take more than 50 ms until echo is falling */
+> +	ret =3D wait_for_completion_killable_timeout(&data->falling, HZ/20);
+>  	if (ret < 0) {
+>  		mutex_unlock(&data->lock);
+>  		return ret;
+> @@ -135,19 +136,19 @@ static int srf04_read(struct srf04_data *data)
+> =20
+>  	dt_ns =3D ktime_to_ns(ktime_dt);
+>  	/*
+> -	 * measuring more than 3 meters is beyond the capabilities of
+> -	 * the sensor
+> +	 * measuring more than 6,45 meters is beyond the capabilities of
+> +	 * the supported sensors
+>  	 * =3D=3D> filter out invalid results for not measuring echos of
+>  	 *     another us sensor
+>  	 *
+>  	 * formula:
+> -	 *         distance       3 m
+> -	 * time =3D ---------- =3D --------- =3D 9404389 ns
+> -	 *          speed       319 m/s
+> +	 *         distance     6,45 * 2 m
+> +	 * time =3D ---------- =3D ------------ =3D 40438871 ns
+> +	 *          speed         319 m/s
+>  	 *
+>  	 * using a minimum speed at -20 =C2=B0C of 319 m/s
+>  	 */
+> -	if (dt_ns > 9404389)
+> +	if (dt_ns > 40438871)
+>  		return -EIO;
+> =20
+>  	time_ns =3D dt_ns;
+> @@ -159,20 +160,20 @@ static int srf04_read(struct srf04_data *data)
+>  	 *   with Temp in =C2=B0C
+>  	 *   and speed in m/s
+>  	 *
+> -	 * use 343 m/s as ultrasonic speed at 20 =C2=B0C here in absence of the
+> +	 * use 343,5 m/s as ultrasonic speed at 20 =C2=B0C here in absence of t=
+he
+>  	 * temperature
+>  	 *
+>  	 * therefore:
+> -	 *             time     343
+> -	 * distance =3D ------ * -----
+> -	 *             10^6       2
+> +	 *             time     343,5     time * 106
+> +	 * distance =3D ------ * ------- =3D ------------
+> +	 *             10^6         2         617176
+>  	 *   with time in ns
+>  	 *   and distance in mm (one way)
+>  	 *
+> -	 * because we limit to 3 meters the multiplication with 343 just
+> +	 * because we limit to 6,45 meters the multiplication with 106 just
+>  	 * fits into 32 bit
+>  	 */
+> -	distance_mm =3D time_ns * 343 / 2000000;
+> +	distance_mm =3D time_ns * 106 / 617176;
+> =20
+>  	return distance_mm;
+>  }
 
-Good, it was the first thing that struck me - if we're
-adding new bindings they should conform to the current
-standards.
-
--- 
-Best regards,
-Jacek Anaszewski
