@@ -2,449 +2,182 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A060C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7C4C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE3D206CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570887642;
-	bh=zCunFHBnL5o8xUWAhY0obAxBdvIe1q5x8OaNg+9U1iY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Z9FsHqBtKAPtTqUdHTtAA0uGphrxeZsMgPZLOjzRCrSiieD44cGYOC6CCc/ilTFgC
-	 KKILJnWgYOKaoTzp726giM1CsPWO23q4mT4K0eN4uGUrY/ybvcGLwqM3bYtge0kQPb
-	 GIImUv+C7T2y5/PWAlZ3LxxI18M2wjxUx5p642Ak=
+	by mail.kernel.org (Postfix) with ESMTP id 63F952089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="b+gv+pVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbfJLNkl (ORCPT
+        id S1729319AbfJLNru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 09:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbfJLNkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 09:40:40 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F304206CD;
-        Sat, 12 Oct 2019 13:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570887639;
-        bh=zCunFHBnL5o8xUWAhY0obAxBdvIe1q5x8OaNg+9U1iY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MymwNkVRsX8m/4gQPItzUMUNjDB+sL2INkPiBiH6tfHW95lknbfFHxzWDeXLTFLfJ
-         Uzsvx7nK6q2p4BJdsL9NhvhKO4pIVSNKl8pJ/pthONsv8SKGXcnYUEcEXZm/P40QjF
-         yPWml66JrFv2aTS9NEJ4uweGqzxWpCbz2YYeb04I=
-Date:   Sat, 12 Oct 2019 14:40:34 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 02/10] iio: imu: adis: add unlocked read/write function
- versions
-Message-ID: <20191012144034.60e731f6@archlinux>
-In-Reply-To: <ffb2ae65df5f44e7542b40e43d5ed2d8596cc415.camel@analog.com>
-References: <20190926111812.15957-1-alexandru.ardelean@analog.com>
-        <20190926111812.15957-3-alexandru.ardelean@analog.com>
-        <20191006101201.051f9249@archlinux>
-        <20191007221649.4fb1ee25@archlinux>
-        <944b74b85c2ff7853651b5df1b4557154fafa99b.camel@analog.com>
-        <e61409aba34810d66906cece5dff0bb78c5e9385.camel@analog.com>
-        <ffb2ae65df5f44e7542b40e43d5ed2d8596cc415.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Sat, 12 Oct 2019 09:47:50 -0400
+Received: from mail-eopbgr690134.outbound.protection.outlook.com ([40.107.69.134]:51360
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727115AbfJLNrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 09:47:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bcaVPgZid9f49/jJJ0vri7FJuH1H2XPkh2BDLOrjZur8c2BNoCbA9a+OAqa8qvE2XN1I0zHoftSUgQ3Jj+bXyWCz4K2JQhHzcLG4TpjWJei+puzDFv1yr1iPjV6SlxPuPJ2CO4UHnnQfPMPLDfP4xixXYpPrGtkQp/zlVYT9a3Q3NWUeZ5hXNzBPHt/w5xUd8MT1Ui9xxTfTz5OvqHBWdXnX3z6GhE1mjwtKDrPfyku43hGXQoSPdlHaW9KFP7DNBRIVe5J30hGXUBbtbvRdWROgUKZW40XI1FMsSYBxyMTWW0hYgOFtE7sHPCaF0MxOqZBRCfqoD0loqbXD68fbpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=klEGAeZOuCgnZ26joLgkBsAeo/3i/DL8hZ8sl5DK58w=;
+ b=TakQuJtZBp+3XOi6CD/wOWYvNgeDPZCPQppyURmTjxpBBitcp7m4qQoXHFNTgdcdxLuuzlinHXfD08WHZN8uuyKomfUf3w7DpQ0eCdZvJKUEw/Mx1THuBXYAW6L0+AWVdBJoeze604XNXteh9EwwSPra4eh1ZnJ5IIBv8LcqOi1XKtov1eWPKsdA+hpBWogL4oVC2bd/xhXUNAxZOLuxc0vEBC3SGG4r6FV0MR88QxhlL9SeC7Twkv1x6a2k0Tre84vOPlu6mE4vs4oSfTs6IZ6MLjg/UI5Ur6B0MF81VTZVPN/BzpqDn4V3J1HJr+AsYb747sAYri0rEGCwdvSuig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=klEGAeZOuCgnZ26joLgkBsAeo/3i/DL8hZ8sl5DK58w=;
+ b=b+gv+pVNCX6WigCKI4E/BqiJd1pnSlGl6pzIl9rO+sjc1hIFH98KwHMcEXtCTZcm291s4n+qiENHlDPj18d3ILqTM0q71FNJJTYJuezlre8vf4bbCW8YBnCtQLfXm3/cPQlC+IQrOw7WWrnihtksSeH/C70/KHstawa8t3OC9x8=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0170.namprd21.prod.outlook.com (10.173.173.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.2; Sat, 12 Oct 2019 13:47:45 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::a50f:aa3c:c7d6:f05e]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::a50f:aa3c:c7d6:f05e%11]) with mapi id 15.20.2347.021; Sat, 12 Oct
+ 2019 13:47:45 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Andrea Parri <parri.andrea@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH v2 1/3] Drivers: hv: vmbus: Introduce table of VMBus
+ protocol versions
+Thread-Topic: [PATCH v2 1/3] Drivers: hv: vmbus: Introduce table of VMBus
+ protocol versions
+Thread-Index: AQHVf4Hg40bNBUJlOE6Y2bup7gaANadXBJtA
+Date:   Sat, 12 Oct 2019 13:47:45 +0000
+Message-ID: <DM5PR21MB013798776480FFA5DCD22442D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20191010154600.23875-1-parri.andrea@gmail.com>
+ <20191010154600.23875-2-parri.andrea@gmail.com>
+In-Reply-To: <20191010154600.23875-2-parri.andrea@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-12T13:47:42.9929354Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7b229e38-2479-4489-aa72-6716b77a7d61;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cf855a0b-116d-4271-33db-08d74f1ac2df
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM5PR21MB0170:|DM5PR21MB0170:|DM5PR21MB0170:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR21MB017025AF787F82D8F40F26E3D7960@DM5PR21MB0170.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0188D66E61
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(136003)(396003)(346002)(39860400002)(189003)(199004)(26005)(99286004)(8936002)(256004)(2501003)(4326008)(9686003)(52536014)(14444005)(22452003)(14454004)(33656002)(55016002)(316002)(10290500003)(486006)(71200400001)(71190400001)(478600001)(186003)(446003)(11346002)(76116006)(66446008)(64756008)(66556008)(66476007)(66946007)(476003)(81166006)(81156014)(7696005)(6246003)(76176011)(6506007)(8676002)(107886003)(5660300002)(2906002)(305945005)(102836004)(66066001)(2201001)(3846002)(10090500001)(8990500004)(229853002)(6116002)(74316002)(6436002)(54906003)(7736002)(110136005)(25786009)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0170;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aXqj7ad1qJ/KFlb8pSHvbbX7CKhD/NVq2lrM4Y4hhWaUjOOsbTFn2ug/Wq+7cBdXB2XlIWoXGpce++YUFx5DrNb+UsH+Y+olFG1C/zZT+J7o1Id3gG3SSS/g5mlpFSCxcysdhmvaht/vHFYlVG/P0X9jwWDeyls3xjmLCjvy9KJCY72eXOdpo+evhEFMxPwAj3URcQhH6bAoNQenBYtodiqK+aNfpvpex9HvBmq9fYGJy3a2KidXRvrVKZ23MOeboIJmPgkFxU04cutckz0SAgMaEmKBw5OW8KPyY9tehfRb63Np9b4ugLk6gnArKPn/GcO6U7p6vSaMKy+aryv/0U1Fbc1GpcyUZpfqtdbxsnHROVNI/VXgLy3aCvqLEpE6Oha1J7R9GekMC8aynNGHtmCPy4EAMp7fMzr2trjM08k=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf855a0b-116d-4271-33db-08d74f1ac2df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2019 13:47:45.2526
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9D1jlBvfV3zqXufaum9Rocd15HQJGotiOqsWxdWlxo0rVD0wZUg3OmuAnelAyYiJf2gkAhhaBl0FFHinWsyukMR05J/6Jq3fWr8E+7n97dY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Oct 2019 08:58:44 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-
-> On Tue, 2019-10-08 at 08:47 +0000, Ardelean, Alexandru wrote:
-> > [External]
-> >=20
-> > On Tue, 2019-10-08 at 06:54 +0000, Ardelean, Alexandru wrote: =20
-> > > [External]
-> > >=20
-> > > On Mon, 2019-10-07 at 22:16 +0100, Jonathan Cameron wrote: =20
-> > > > On Sun, 6 Oct 2019 10:12:01 +0100
-> > > > Jonathan Cameron <jic23@kernel.org> wrote:
-> > > >  =20
-> > > > > On Thu, 26 Sep 2019 14:18:04 +0300
-> > > > > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> > > > >  =20
-> > > > > > This will allow more flexible control to group reads & writes
-> > > > > > into
-> > > > > > a
-> > > > > > single
-> > > > > > lock (particularly the state_lock).
-> > > > > >=20
-> > > > > > The end-goal is to remove the indio_dev->mlock usage, and the
-> > > > > > simplest fix
-> > > > > > would have been to just add another lock, which would not be a
-> > > > > > good
-> > > > > > idea on
-> > > > > > the long-run.
-> > > > > >=20
-> > > > > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.co=
-m>
-> > > > > >    =20
-> > > > > Applied to the togreg branch of iio.git and pushed out as testing
-> > > > > etc.
-> > > > >=20
-> > > > > Jonathan
-> > > > >  =20
-> > > > 0-day found a potential issue (kind of) in the read functions.
-> > > >  =20
-> > > > > > ---
-> > > > > >  drivers/iio/imu/adis.c       |  34 +++++------
-> > > > > >  include/linux/iio/imu/adis.h | 114
-> > > > > > ++++++++++++++++++++++++++++++++++-
-> > > > > >  2 files changed, 128 insertions(+), 20 deletions(-)
-> > > > > >=20
-> > > > > > diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> > > > > > index 3c2d896e3a96..4f3be011c898 100644
-> > > > > > --- a/drivers/iio/imu/adis.c
-> > > > > > +++ b/drivers/iio/imu/adis.c
-> > > > > > @@ -26,7 +26,14 @@
-> > > > > >  #define ADIS_MSC_CTRL_DATA_RDY_DIO2	BIT(0)
-> > > > > >  #define ADIS_GLOB_CMD_SW_RESET		BIT(7)
-> > > > > > =20
-> > > > > > -int adis_write_reg(struct adis *adis, unsigned int reg,
-> > > > > > +/**
-> > > > > > + * __adis_write_reg() - write N bytes to register (unlocked
-> > > > > > version)
-> > > > > > + * @adis: The adis device
-> > > > > > + * @reg: The address of the lower of the two registers
-> > > > > > + * @value: The value to write to device (up to 4 bytes)
-> > > > > > + * @size: The size of the @value (in bytes)
-> > > > > > + */
-> > > > > > +int __adis_write_reg(struct adis *adis, unsigned int reg,
-> > > > > >  	unsigned int value, unsigned int size)
-> > > > > >  {
-> > > > > >  	unsigned int page =3D reg / ADIS_PAGE_SIZE;
-> > > > > > @@ -70,8 +77,6 @@ int adis_write_reg(struct adis *adis, unsigned
-> > > > > > int
-> > > > > > reg,
-> > > > > >  		},
-> > > > > >  	};
-> > > > > > =20
-> > > > > > -	mutex_lock(&adis->state_lock);
-> > > > > > -
-> > > > > >  	spi_message_init(&msg);
-> > > > > > =20
-> > > > > >  	if (adis->current_page !=3D page) {
-> > > > > > @@ -96,8 +101,7 @@ int adis_write_reg(struct adis *adis, unsign=
-ed
-> > > > > > int
-> > > > > > reg,
-> > > > > >  		adis->tx[3] =3D value & 0xff;
-> > > > > >  		break;
-> > > > > >  	default:
-> > > > > > -		ret =3D -EINVAL;
-> > > > > > -		goto out_unlock;
-> > > > > > +		return -EINVAL;
-> > > > > >  	}
-> > > > > > =20
-> > > > > >  	xfers[size].cs_change =3D 0;
-> > > > > > @@ -113,20 +117,18 @@ int adis_write_reg(struct adis *adis,
-> > > > > > unsigned
-> > > > > > int reg,
-> > > > > >  		adis->current_page =3D page;
-> > > > > >  	}
-> > > > > > =20
-> > > > > > -out_unlock:
-> > > > > > -	mutex_unlock(&adis->state_lock);
-> > > > > > -
-> > > > > >  	return ret;
-> > > > > >  }
-> > > > > > -EXPORT_SYMBOL_GPL(adis_write_reg);
-> > > > > > +EXPORT_SYMBOL_GPL(__adis_write_reg);
-> > > > > > =20
-> > > > > >  /**
-> > > > > > - * adis_read_reg() - read 2 bytes from a 16-bit register
-> > > > > > + * __adis_read_reg() - read N bytes from register (unlocked
-> > > > > > version)
-> > > > > >   * @adis: The adis device
-> > > > > >   * @reg: The address of the lower of the two registers
-> > > > > >   * @val: The value read back from the device
-> > > > > > + * @size: The size of the @val buffer
-> > > > > >   */
-> > > > > > -int adis_read_reg(struct adis *adis, unsigned int reg,
-> > > > > > +int __adis_read_reg(struct adis *adis, unsigned int reg,
-> > > > > >  	unsigned int *val, unsigned int size)
-> > > > > >  {
-> > > > > >  	unsigned int page =3D reg / ADIS_PAGE_SIZE;
-> > > > > > @@ -188,15 +190,14 @@ int adis_read_reg(struct adis *adis,
-> > > > > > unsigned
-> > > > > > int reg,
-> > > > > >  		spi_message_add_tail(&xfers[3], &msg);
-> > > > > >  		break;
-> > > > > >  	default:
-> > > > > > -		ret =3D -EINVAL;
-> > > > > > -		goto out_unlock;
-> > > > > > +		return -EINVAL;
-> > > > > >  	}
-> > > > > > =20
-> > > > > >  	ret =3D spi_sync(adis->spi, &msg);
-> > > > > >  	if (ret) {
-> > > > > >  		dev_err(&adis->spi->dev, "Failed to read register
-> > > > > > 0x%02X:
-> > > > > > %d\n",
-> > > > > >  				reg, ret);
-> > > > > > -		goto out_unlock;
-> > > > > > +		return ret;
-> > > > > >  	} else {
-> > > > > >  		adis->current_page =3D page;
-> > > > > >  	}
-> > > > > > @@ -210,12 +211,9 @@ int adis_read_reg(struct adis *adis,
-> > > > > > unsigned
-> > > > > > int reg,
-> > > > > >  		break;
-> > > > > >  	}
-> > > > > > =20
-> > > > > > -out_unlock:
-> > > > > > -	mutex_unlock(&adis->state_lock);
-> > > > > > -
-> > > > > >  	return ret;
-> > > > > >  }
-> > > > > > -EXPORT_SYMBOL_GPL(adis_read_reg);
-> > > > > > +EXPORT_SYMBOL_GPL(__adis_read_reg);
-> > > > > > =20
-> > > > > >  #ifdef CONFIG_DEBUG_FS
-> > > > > > =20
-> > > > > > diff --git a/include/linux/iio/imu/adis.h
-> > > > > > b/include/linux/iio/imu/adis.h
-> > > > > > index 3ed5eceaac2d..3a028c40e04e 100644
-> > > > > > --- a/include/linux/iio/imu/adis.h
-> > > > > > +++ b/include/linux/iio/imu/adis.h
-> > > > > > @@ -75,11 +75,121 @@ int adis_init(struct adis *adis, struct
-> > > > > > iio_dev
-> > > > > > *indio_dev,
-> > > > > >  	struct spi_device *spi, const struct adis_data *data);
-> > > > > >  int adis_reset(struct adis *adis);
-> > > > > > =20
-> > > > > > -int adis_write_reg(struct adis *adis, unsigned int reg,
-> > > > > > +int __adis_write_reg(struct adis *adis, unsigned int reg,
-> > > > > >  	unsigned int val, unsigned int size);
-> > > > > > -int adis_read_reg(struct adis *adis, unsigned int reg,
-> > > > > > +int __adis_read_reg(struct adis *adis, unsigned int reg,
-> > > > > >  	unsigned int *val, unsigned int size);
-> > > > > > =20
-> > > > > > +/**
-> > > > > > + * __adis_write_reg_8() - Write single byte to a register
-> > > > > > (unlocked
-> > > > > > version)
-> > > > > > + * @adis: The adis device
-> > > > > > + * @reg: The address of the register to be written
-> > > > > > + * @value: The value to write
-> > > > > > + */
-> > > > > > +static inline int __adis_write_reg_8(struct adis *adis, unsign=
-ed
-> > > > > > int
-> > > > > > reg,
-> > > > > > +	uint8_t val)
-> > > > > > +{
-> > > > > > +	return __adis_write_reg(adis, reg, val, 1);
-> > > > > > +}
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * __adis_write_reg_16() - Write 2 bytes to a pair of registers
-> > > > > > (unlocked version)
-> > > > > > + * @adis: The adis device
-> > > > > > + * @reg: The address of the lower of the two registers
-> > > > > > + * @value: Value to be written
-> > > > > > + */
-> > > > > > +static inline int __adis_write_reg_16(struct adis *adis,
-> > > > > > unsigned
-> > > > > > int reg,
-> > > > > > +	uint16_t val)
-> > > > > > +{
-> > > > > > +	return __adis_write_reg(adis, reg, val, 2);
-> > > > > > +}
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * __adis_write_reg_32() - write 4 bytes to four registers
-> > > > > > (unlocked
-> > > > > > version)
-> > > > > > + * @adis: The adis device
-> > > > > > + * @reg: The address of the lower of the four register
-> > > > > > + * @value: Value to be written
-> > > > > > + */
-> > > > > > +static inline int __adis_write_reg_32(struct adis *adis,
-> > > > > > unsigned
-> > > > > > int reg,
-> > > > > > +	uint32_t val)
-> > > > > > +{
-> > > > > > +	return __adis_write_reg(adis, reg, val, 4);
-> > > > > > +}
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * __adis_read_reg_16() - read 2 bytes from a 16-bit register
-> > > > > > (unlocked version)
-> > > > > > + * @adis: The adis device
-> > > > > > + * @reg: The address of the lower of the two registers
-> > > > > > + * @val: The value read back from the device
-> > > > > > + */
-> > > > > > +static inline int __adis_read_reg_16(struct adis *adis, unsign=
-ed
-> > > > > > int
-> > > > > > reg,
-> > > > > > +	uint16_t *val)
-> > > > > > +{
-> > > > > > +	unsigned int tmp;
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	ret =3D __adis_read_reg(adis, reg, &tmp, 2); =20
-> > > > Zero day isn't happy that this can use tmp without it actually being
-> > > > set
-> > > > in the
-> > > > __adis_read_reg.
-> > > >=20
-> > > > I've added
-> > > > 	if (ret)
-> > > > 		return ret; =20
-> > > > > > +	*val =3D tmp;
-> > > > > > +
-> > > > > > +	return ret; =20
-> > > > and changed this to return 0;
-> > > >=20
-> > > > Same in the 32bit case below.
-> > > >=20
-> > > > Hmm. There are quite a few sparse warnings in the adis16400 if anyo=
-ne
-> > > > fancies
-> > > > cleaning them up ;) =20
-> > >=20
-> > > Well, I've been planning to setup sparse as part of our CI.
-> > > I guess this is another nudge in that direction. =20
-> >=20
-> > I did find some warnings.
-> > But they seem to be reported by GCC 8.
-> > Not sure if GCC 7 reported them.
-> > I re-installed my laptop [changed to another one], so maybe my default =
-is
-> > now 8; or maybe I did not notice this initially when I built it and
-> > picked
-> > it up from our master branch.
-> >=20
-> > Sparse reports nothing for the IMU drivers.
-> > Should I try something newer?
-Nah. I just misread which thing was producing them whilst doing a
-build with sparse and gcc.
-
-Oops.
-
-Thanks,
-
-Jonathan
-
-> >=20
-> > sparse --version
-> > 0.6.0 (Ubuntu: 0.6.0-3)
-> >=20
-> > -----------------------------------------------------------------
-> > ARCH=3Darm CROSS_COMPILE=3D~/work/linux/gcc-linaro-5.5.0-2017.10-x86_64=
-_arm-
-> > linux-gnueabi/bin/arm-linux-gnueabi- make C=3D2 drivers/iio/imu/ =20
+From: Andrea Parri <parri.andrea@gmail.com> Sent: Thursday, October 10, 201=
+9 8:46 AM
 >=20
-> Wait.
-> That looks like GCC 5.5
-> So, maybe I was an idiot.
+> The technique used to get the next VMBus version seems increasisly
+> clumsy as the number of VMBus versions increases.  Performance is
+> not a concern since this is only done once during system boot; it's
+> just that we'll end up with more lines of code than is really needed.
 >=20
-> Oh well  =C2=AF\_(=E3=83=84)_/=C2=AF
-> The faults of multi-tasking
+> As an alternative, introduce a table with the version numbers listed
+> in order (from the most recent to the oldest).  vmbus_connect() loops
+> through the versions listed in the table until it gets an accepted
+> connection or gets to the end of the table (invalid version).
 >=20
-> >   CHECK   scripts/mod/empty.c
-> >   CALL    scripts/checksyscalls.sh
-> >   CALL    scripts/atomic/check-atomics.sh
-> >   CHECK   drivers/iio/imu/adis16400.c
-> >   CHECK   drivers/iio/imu/adis16460.c
-> >   CHECK   drivers/iio/imu/adis16480.c
-> >   CHECK   drivers/iio/imu/adis.c
-> >   CHECK   drivers/iio/imu/adis_trigger.c
-> >   CHECK   drivers/iio/imu/adis_buffer.c
-> > -----------------------------------------------------------------
-> >  =20
-> > > Thanks
-> > > Alex
-> > >  =20
-> > > > Thanks,
-> > > >=20
-> > > > Jonathan
-> > > >  =20
-> > > > > > +}
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * __adis_read_reg_32() - read 4 bytes from a 32-bit register
-> > > > > > (unlocked version)
-> > > > > > + * @adis: The adis device
-> > > > > > + * @reg: The address of the lower of the two registers
-> > > > > > + * @val: The value read back from the device
-> > > > > > + */
-> > > > > > +static inline int __adis_read_reg_32(struct adis *adis, unsign=
-ed
-> > > > > > int
-> > > > > > reg,
-> > > > > > +	uint32_t *val)
-> > > > > > +{
-> > > > > > +	unsigned int tmp;
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	ret =3D __adis_read_reg(adis, reg, &tmp, 4);
-> > > > > > +	*val =3D tmp;
-> > > > > > +
-> > > > > > +	return ret;
-> > > > > > +}
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * adis_write_reg() - write N bytes to register
-> > > > > > + * @adis: The adis device
-> > > > > > + * @reg: The address of the lower of the two registers
-> > > > > > + * @value: The value to write to device (up to 4 bytes)
-> > > > > > + * @size: The size of the @value (in bytes)
-> > > > > > + */
-> > > > > > +static inline int adis_write_reg(struct adis *adis, unsigned i=
-nt
-> > > > > > reg,
-> > > > > > +	unsigned int val, unsigned int size)
-> > > > > > +{
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	mutex_lock(&adis->state_lock);
-> > > > > > +	ret =3D __adis_write_reg(adis, reg, val, size);
-> > > > > > +	mutex_unlock(&adis->state_lock);
-> > > > > > +
-> > > > > > +	return ret;
-> > > > > > +}
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * adis_read_reg() - read N bytes from register
-> > > > > > + * @adis: The adis device
-> > > > > > + * @reg: The address of the lower of the two registers
-> > > > > > + * @val: The value read back from the device
-> > > > > > + * @size: The size of the @val buffer
-> > > > > > + */
-> > > > > > +static int adis_read_reg(struct adis *adis, unsigned int reg,
-> > > > > > +	unsigned int *val, unsigned int size)
-> > > > > > +{
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	mutex_lock(&adis->state_lock);
-> > > > > > +	ret =3D __adis_read_reg(adis, reg, val, size);
-> > > > > > +	mutex_unlock(&adis->state_lock);
-> > > > > > +
-> > > > > > +	return ret;
-> > > > > > +}
-> > > > > > +
-> > > > > >  /**
-> > > > > >   * adis_write_reg_8() - Write single byte to a register
-> > > > > >   * @adis: The adis device   =20
+> Suggested-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+> ---
+>  drivers/hv/connection.c | 46 ++++++++++++++---------------------------
+>  drivers/hv/vmbus_drv.c  |  3 +--
+>  include/linux/hyperv.h  |  4 ----
+>  3 files changed, 17 insertions(+), 36 deletions(-)
+>=20
+> @@ -244,20 +232,18 @@ int vmbus_connect(void)
+>  	 * version.
+>  	 */
+>=20
+> -	version =3D VERSION_CURRENT;
+> +	for (i =3D 0; i < ARRAY_SIZE(vmbus_versions); i++) {
+> +		version =3D vmbus_versions[i];
+>=20
+> -	do {
+>  		ret =3D vmbus_negotiate_version(msginfo, version);
+>  		if (ret =3D=3D -ETIMEDOUT)
+>  			goto cleanup;
+>=20
+>  		if (vmbus_connection.conn_state =3D=3D CONNECTED)
+>  			break;
+> +	}
+>=20
+> -		version =3D vmbus_get_next_version(version);
+> -	} while (version !=3D VERSION_INVAL);
+> -
+> -	if (version =3D=3D VERSION_INVAL)
+> +	if (vmbus_connection.conn_state !=3D CONNECTED)
+>  		goto cleanup;
+>=20
 
+This is a nit, but the loop exit path bugs me.  When a connection
+is established, the loop is exited by the "break", and then
+conn_state has to be tested again to decide whether the loop
+exited due to getting a connection vs. hitting the end of the list.
+Slightly cleaner in my mind would be:
+
+	for (i=3D0; ; i++) {
+		if (i =3D=3D ARRAY_SIZE(vmbus_versions))
+			goto cleanup;
+
+		version  =3D vmbus_versions[i];
+		ret =3D vmbus_negotiate_version(msginfo, version);
+		if (ret =3D=3D -ETIMEDOUT)
+			goto cleanup;
+
+		if (vmbus_connection.conn_state =3D=3D CONNECTED)
+			break;
+	}
+
+Michael
