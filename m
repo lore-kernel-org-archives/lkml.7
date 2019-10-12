@@ -7,121 +7,122 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AC6C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6FAC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F782067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475D02067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jU5Rkt5C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VDORRgs7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfJLGxF (ORCPT
+        id S1729014AbfJLGxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 02:53:05 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42624 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfJLGxE (ORCPT
+        Sat, 12 Oct 2019 02:53:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33298 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728842AbfJLGxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 02:53:04 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n14so14052098wrw.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 23:53:03 -0700 (PDT)
+        Sat, 12 Oct 2019 02:53:06 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b9so14118812wrs.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 23:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=fQ6eXPgRmlE7QGLNLnLPlmdGjpBQkjzBBl5+6F7Plow=;
-        b=jU5Rkt5CwB2Du/Izd0rvUMrNTYl9HEaywmBiUBUFvNDZQsYZ/Cndo7r4wzeHZeIDLD
-         oqwHjIA5jt/MArvAd9DQ4RRs8BQoswRY8SZdq/LloTX46frlz4BHmM2fXhqhkgQ+Py87
-         gqQ1ZwJjNg0igFl/2fYpefAMB+v/1rG6x9gSxSlRjVOmqzKQ6grihz/vAgqApwBjkZJE
-         a4l9E5EMIPdnZDOch1UDcDA42xBfHYQiBdhEdY/YYncYhRTfzRq3/KXlmyRr5wJ17hBV
-         HrPfjfBOt8X3dFvItCzme5S2m+rJ6gCGkLG+iPTvsCqJe31onu/m4L++r/AG98qiPToc
-         Fv8g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Qqj/nrtgrj7T526mRixYvVR9P1e7BOzGZBrRGmLHoMg=;
+        b=VDORRgs7HVWsN7gF9w1rwI9oadtUhPDEXK5jDTa6w26m94qeaobDZVn3JcRsxxXacV
+         goVv2ihF8bSRKgTOIg4XudDbWMyyFFngulBpWD7SO0ldxIV/9ACtiuBWJqYRZX4cjg82
+         u3ad4jjLCVohlMz4KnAEATIZWI0spGkZcuWV6ZDLWThEkmgV/DOxP4okzE1ZfO+xvXyu
+         q4VFSfR2WkodxKFoQjeUmVUpW2SoXCVqMWzXCzo64JNKjIPgwBGXReXkNCfpTyTy1GI9
+         d4m31zDs/G36G6uWGG+biaFkM0VuiVdHlT1ehNfaJ0oJPKa2W7OT8BCHkYt4oIR/M/ZO
+         HXbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fQ6eXPgRmlE7QGLNLnLPlmdGjpBQkjzBBl5+6F7Plow=;
-        b=kq66XDMS1osCow6WMsLSJW19srN6RZOk2ooepcriZ+hi5kL+0jx2t2sQmeAiGP/HT5
-         aBOcc8ZteMyQysGwRUU0Dmobs6Lc0SaU6jR7oeW2uNhGmpwr5W5X6jnrGMtiFgmWYe14
-         na5zJW5ADzonUOV0OfcCvtJsvmi+nADm8alwFsN9si0ZKSQE6nq3+qms6rYN6tlrRH5j
-         4KMeczpOXdiEfxh/sDbb/U7YBNNutOJe0xIP+47pSwxewI5HcggMBDahPxSAg5fDoCSr
-         5q6TQ/Dx7RZcHYWvzPYBJQiUr0zDyymVyFf9Qc2SZpGFYEiZcPMY8xZG9IyARejHv73O
-         aLOw==
-X-Gm-Message-State: APjAAAU+QZeTMgrajBjBdiPHXw6SKQphvLoof8rBf7rYkmZZeo8w9/3P
-        1NpEi+o8Ok3ttZFySvxLvpeM2A==
-X-Google-Smtp-Source: APXvYqzaOIyDjy7+Z2K/tCHPciYbgcwG4Xp1G7o1F4bQvEUm/3grxzCzaQ02XbFr4tCjAXNBddAOiQ==
-X-Received: by 2002:a5d:6b03:: with SMTP id v3mr16898131wrw.182.1570863182430;
-        Fri, 11 Oct 2019 23:53:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Qqj/nrtgrj7T526mRixYvVR9P1e7BOzGZBrRGmLHoMg=;
+        b=pqns2Qa+iIKXA8qigCkainX+xXjYp3yLWOFvFNPvgXL+nyvTw7oOEe6ZY7pAABJuRE
+         sEdxRrc8kVqpxPjbQNvG63/J/4QYm1Viu5CNb4S3Z32iAPAqQ08bdoPicuxijBRGFx5V
+         N/zCn3pcyoAHF5sWm18i9YkMrTfnCc30zW/0qNxCcyeJNSP1pZ4nMC+vOMdb1YhfgPjB
+         cDDf2GlHsfAQGyWzncDs67LLyUasS0uKjR65kA/g70wmpxQ1fNe77lVX3mo9xp5cBiMi
+         ZMJ+XywryS2dS8CiolJFsFgAt0YE1/C4Yhh4LSwE/FUxXl+i/zIBteUi5Iy52VEZicUp
+         5WwQ==
+X-Gm-Message-State: APjAAAXdf9+xGXhTf382Nxi2EtueyxaEc8K0k2itkey9l4giF20hdvNH
+        YjtSyDQnShrJEDkebbfofocTfw==
+X-Google-Smtp-Source: APXvYqzahIdVjnlDiEQq5qLbIAzOkm6ved1lrxBkittuTnLSlR3NgNF+pe39yXJR6ZGQZcRUTBZE5Q==
+X-Received: by 2002:adf:f192:: with SMTP id h18mr15691694wro.252.1570863183415;
+        Fri, 11 Oct 2019 23:53:03 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:f437:29a8:ed69:7bab])
-        by smtp.gmail.com with ESMTPSA id z5sm17450497wrs.54.2019.10.11.23.53.01
+        by smtp.gmail.com with ESMTPSA id z5sm17450497wrs.54.2019.10.11.23.53.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 23:53:01 -0700 (PDT)
+        Fri, 11 Oct 2019 23:53:02 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     rui.zhang@intel.com, edubezval@gmail.com
 Cc:     daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
         amit.kucheria@linaro.org
-Subject: [PATCH 01/11] thermal: Move default governor config option to the internal header
-Date:   Sat, 12 Oct 2019 08:52:45 +0200
-Message-Id: <20191012065255.23249-1-daniel.lezcano@linaro.org>
+Subject: [PATCH 02/11] thermal: Move struct thermal_attr to the private header
+Date:   Sat, 12 Oct 2019 08:52:46 +0200
+Message-Id: <20191012065255.23249-2-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191012065255.23249-1-daniel.lezcano@linaro.org>
+References: <20191012065255.23249-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default governor set at compilation time is a thermal internal
-business, no need to export to the global thermal header.
+The structure belongs to the thermal core internals but it is exported
+in the include/linux/thermal.h
 
-Move the config options to the internal header.
+For better self-encapsulation and less impact for the compilation if a
+change is made on it. Move the structure in the thermal core internal
+header file.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/thermal/thermal_core.h | 11 +++++++++++
- include/linux/thermal.h        | 11 -----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/thermal/thermal_core.h | 5 +++++
+ include/linux/thermal.h        | 6 +-----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index 207b0cda70da..f1206d67047f 100644
+index f1206d67047f..0e964240524d 100644
 --- a/drivers/thermal/thermal_core.h
 +++ b/drivers/thermal/thermal_core.h
-@@ -12,6 +12,17 @@
- #include <linux/device.h>
- #include <linux/thermal.h>
+@@ -41,6 +41,11 @@ extern struct thermal_governor *__governor_thermal_table_end[];
+ 	     __governor < __governor_thermal_table_end;	\
+ 	     __governor++)
  
-+/* Default Thermal Governor */
-+#if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
-+#define DEFAULT_THERMAL_GOVERNOR       "step_wise"
-+#elif defined(CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE)
-+#define DEFAULT_THERMAL_GOVERNOR       "fair_share"
-+#elif defined(CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE)
-+#define DEFAULT_THERMAL_GOVERNOR       "user_space"
-+#elif defined(CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR)
-+#define DEFAULT_THERMAL_GOVERNOR       "power_allocator"
-+#endif
++struct thermal_attr {
++	struct device_attribute attr;
++	char name[THERMAL_NAME_LENGTH];
++};
 +
- /* Initial state of a cooling device during binding */
- #define THERMAL_NO_TARGET -1UL
- 
+ /*
+  * This structure is used to describe the behavior of
+  * a certain cooling device on a certain trip point
 diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index e45659c75920..a389d4621814 100644
+index a389d4621814..603766a4068c 100644
 --- a/include/linux/thermal.h
 +++ b/include/linux/thermal.h
-@@ -43,17 +43,6 @@
- #define MILLICELSIUS_TO_DECI_KELVIN_WITH_OFFSET(t, off) (((t) / 100) + (off))
- #define MILLICELSIUS_TO_DECI_KELVIN(t) MILLICELSIUS_TO_DECI_KELVIN_WITH_OFFSET(t, 2732)
- 
--/* Default Thermal Governor */
--#if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
--#define DEFAULT_THERMAL_GOVERNOR       "step_wise"
--#elif defined(CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE)
--#define DEFAULT_THERMAL_GOVERNOR       "fair_share"
--#elif defined(CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE)
--#define DEFAULT_THERMAL_GOVERNOR       "user_space"
--#elif defined(CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR)
--#define DEFAULT_THERMAL_GOVERNOR       "power_allocator"
--#endif
--
+@@ -46,6 +46,7 @@
  struct thermal_zone_device;
  struct thermal_cooling_device;
  struct thermal_instance;
++struct thermal_attr;
+ 
+ enum thermal_device_mode {
+ 	THERMAL_DEVICE_DISABLED = 0,
+@@ -130,11 +131,6 @@ struct thermal_cooling_device {
+ 	struct list_head node;
+ };
+ 
+-struct thermal_attr {
+-	struct device_attribute attr;
+-	char name[THERMAL_NAME_LENGTH];
+-};
+-
+ /**
+  * struct thermal_zone_device - structure for a thermal zone
+  * @id:		unique id number for each thermal zone
 -- 
 2.17.1
 
