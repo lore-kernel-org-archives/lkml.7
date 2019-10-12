@@ -2,132 +2,82 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BDBECE58D
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87AAECE58D
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE73320663
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:37:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPOussVD"
+	by mail.kernel.org (Postfix) with ESMTP id B3C86214E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfJLAhk (ORCPT
+        id S1727956AbfJLAll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 20:37:40 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40489 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfJLAhj (ORCPT
+        Fri, 11 Oct 2019 20:41:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39318 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfJLAll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 20:37:39 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 7so11436131ljw.7
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 17:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=54LRcAZD00eVKPK3FNvqhw23ruw7tf3kBIi8BnJjoS0=;
-        b=uPOussVDx72S+iDIooeNqsmbtrl7it6MbxgKtymlvx2TNLPMvf8vvRvlMzTvEba84v
-         wvzMXMASiBtbhasQZVqhQCC4QC8X657wNp3wxbRSIFZ5SjONATAoHk4ATDB/AuzrGR85
-         8lLOdZtC0Bd0A9tMSlM/QRPVzPZ+QQ/YX+ESPA6zDMHUajQtOUxVvfqb2nvMkM1nt9Yx
-         eS1wDxICqSE0Z/FVMlkJ1sqBHx35V294Uoz8sAk0UEDd4iTFl+vN4shsomAoTcYOfpj4
-         p9fXKnxoFeotcFLADwxbNWoezyWiTYmkOQDXlfQlsVLQRLEIvJMV4fS7uFRPwSbk4MlN
-         MR5g==
+        Fri, 11 Oct 2019 20:41:41 -0400
+Received: from mail-wm1-f70.google.com ([209.85.128.70])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <guilherme.piccoli@canonical.com>)
+        id 1iJ5TX-00054h-Bu
+        for linux-kernel@vger.kernel.org; Sat, 12 Oct 2019 00:41:39 +0000
+Received: by mail-wm1-f70.google.com with SMTP id z205so4862461wmb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 17:41:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=54LRcAZD00eVKPK3FNvqhw23ruw7tf3kBIi8BnJjoS0=;
-        b=FRBQai4aWjIUn1Bg+8JEfMtSYNWDASgxIN/W7gWR5x36DSX16O5Eg3oxOe5ynOHoL0
-         9H6Mr3V9QVUFY6RM5qXkaG+ogKzFjEOMsdkeMIrDfMWD1hmDxJg/tdhDMLM3WFEEer2V
-         oBbfV+7iu8139aTU9EafARjke7eAvbwq16ofr5AhpZ2mD//Whzrv32KFWio/JmpfZTUY
-         EoxJbUrjkWAuuoDj9bFwCuT8lrmwWVXRIbvY+2jqDANs5d5Ef8Bjp3lqsKeRBNIDUsaE
-         hcCH4CDmCpQ0eoXvNmdJqWRjHWehIuEXSaAYwrWpS4MjdcTMJVq6qqNVc6Qdb/UDUlRV
-         9Rwg==
-X-Gm-Message-State: APjAAAWCbGGqA6NOTNlMzXQOam30bH594hvDIUOkshWk8UN3ZShToVE6
-        cXDuOjRWIKOcC7cpCqaAhNc=
-X-Google-Smtp-Source: APXvYqxzdqPlMilQU3nmxFk9zBN8wXeKdCdXWAgxhYCM5tHpBierUSArhoJz2E33Mv9AH+DcQUXXeQ==
-X-Received: by 2002:a2e:3c05:: with SMTP id j5mr11098180lja.24.1570840657244;
-        Fri, 11 Oct 2019 17:37:37 -0700 (PDT)
-Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
-        by smtp.gmail.com with ESMTPSA id f22sm2346620lfa.41.2019.10.11.17.37.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 17:37:36 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-xtensa@linux-xtensa.org, Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
-        Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH v2 4/4] xtensa: initialize result in __get_user_asm for unaligned access
-Date:   Fri, 11 Oct 2019 17:37:08 -0700
-Message-Id: <20191012003708.22182-5-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191012003708.22182-1-jcmvbkbc@gmail.com>
-References: <20191012003708.22182-1-jcmvbkbc@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8x9ApgVGO5FiGuEQV6JpJWfviTCfcCHIRUjK55oq8uE=;
+        b=mjqiZjhMitm4eT1v+gdFkbXPdlIn2Oonk132iYcNNXvtSjOUHXTnj0E9oLmE46aAsQ
+         O2F95XmTPsDhsV/46JwA6EqJgQQT1zgji5kFESeJvPy+KzPpMpJk4W7Caz86BRyl/+Qs
+         BO5Ux7SEbDH3nlWQcYTNUZtNmdTt++uD2jDLibZhzE0f8qebq0ywy+tCad6BtsaGPx1C
+         IfgZ1fWbsBFyr3n6akDqZQn+iyaicgbqHmaaYNJ4mCjsPI2u0WY2HTDr0NVvtkFIiYXB
+         Mvf4CyZp3vyuhPI0R0anoha8be5XqCJS6BsGIhjD3w/X3o1JYJUxpzMrcjT0DZsg2rWT
+         ibiA==
+X-Gm-Message-State: APjAAAWDJhJwcaebUIBlyfNzBNVl9gknJ0Ld9/IydTfK1Y5HzCJlY+oD
+        51/1MybHt3+xYbpz2ClwuXWkvaHTLkohr5GBDLS0DXTDbSqqdu4tGKBgSyZaaEt8kVWU3bdkQWv
+        uPGHISDPB7bmyEGv4hvoi0ByyfrnisQC6CGi7dIfDnoivhy8fvDnxiXJqiQ==
+X-Received: by 2002:adf:e688:: with SMTP id r8mr16508759wrm.342.1570840899148;
+        Fri, 11 Oct 2019 17:41:39 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzC31d60/9oma6TIhR2sWZv5COX10hbmuTg4ttzGp7rzLnRd6iGntQOOBa9WPbJxgh3JgAHTuzTgw7mpoIsSP4=
+X-Received: by 2002:adf:e688:: with SMTP id r8mr16508748wrm.342.1570840898964;
+ Fri, 11 Oct 2019 17:41:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHD1Q_ynd6f2Jc54k1D9JjmtD6tGhkDcAHRzd5nZt5LUdQTvaw@mail.gmail.com>
+ <4641B95A-6DD8-4E8A-AD53-06E7B72D956C@lca.pw>
+In-Reply-To: <4641B95A-6DD8-4E8A-AD53-06E7B72D956C@lca.pw>
+From:   Guilherme Piccoli <gpiccoli@canonical.com>
+Date:   Fri, 11 Oct 2019 21:41:01 -0300
+Message-ID: <CAHD1Q_x+m0ZT_xfLV3j6ma3Cc88fk9KnoS4yytS=PHBvJN7nnQ@mail.gmail.com>
+Subject: Re: [PATCH] hugetlb: Add nohugepages parameter to prevent hugepages creation
+To:     Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com,
+        linux-kernel@vger.kernel.org,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__get_user_asm macro leaves result register uninitialized when alignment
-check fails. Add 'insn' parameter to __check_align_{1,2,4} and pass an
-instruction that initializes result register from __get_user_asm.
+On Fri, Oct 11, 2019 at 8:52 PM Qian Cai <cai@lca.pw> wrote:
+>
+>
+> It simply error-prone to reuse the sysctl.conf from the first kernel, as it could contains lots of things that will kill kdump kernel.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
----
- arch/xtensa/include/asm/uaccess.h | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Makes sense, I agree with you. But still, there's no
+formal/right/single way to do kdump, so I don't think we should rely
+on "rootfs kdump is wrong" to refuse this patch's idea. If so, we
+should then formalize the right way of kdumping.
+Of course, this is only my opinion, let's see what people think about it!
 
-diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
-index 43e923678dfb..d8cff972f3cf 100644
---- a/arch/xtensa/include/asm/uaccess.h
-+++ b/arch/xtensa/include/asm/uaccess.h
-@@ -129,17 +129,19 @@ do {									\
-  * sync.
-  */
- 
--#define __check_align_1  ""
-+#define __check_align_1(insn)  ""
- 
--#define __check_align_2				\
-+#define __check_align_2(insn)			\
- 	"   _bbci.l %[addr], 0, 1f	\n"	\
- 	"   movi    %[err], %[efault]	\n"	\
-+	"   "insn"			\n"	\
- 	"   _j      2f			\n"
- 
--#define __check_align_4				\
-+#define __check_align_4(insn)			\
- 	"   _bbsi.l %[addr], 0, 0f	\n"	\
- 	"   _bbci.l %[addr], 1, 1f	\n"	\
- 	"0: movi    %[err], %[efault]	\n"	\
-+	"   "insn"			\n"	\
- 	"   _j      2f			\n"
- 
- 
-@@ -153,7 +155,7 @@ do {									\
-  */
- #define __put_user_asm(x_, addr_, err_, align, insn, cb)\
- __asm__ __volatile__(					\
--	__check_align_##align				\
-+	__check_align_##align("")			\
- 	"1: "insn"  %[x], %[addr], 0	\n"		\
- 	"2:				\n"		\
- 	"   .section  .fixup,\"ax\"	\n"		\
-@@ -221,7 +223,7 @@ do {									\
- do {							\
- 	u32 __x;					\
- 	__asm__ __volatile__(				\
--		__check_align_##align			\
-+		__check_align_##align("movi %[x], 0")	\
- 		"1: "insn"  %[x], %[addr], 0	\n"	\
- 		"2:				\n"	\
- 		"   .section  .fixup,\"ax\"	\n"	\
--- 
-2.20.1
+Thanks,
 
+
+Guilherme
