@@ -2,165 +2,147 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B554FC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF1CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FF62089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47B92087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:53:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2m3mIyC"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="R1cXAHL0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbfJLLtA (ORCPT
+        id S1729155AbfJLLx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 07:49:00 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33552 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbfJLLrA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 07:47:00 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b9so14593413wrs.0;
-        Sat, 12 Oct 2019 04:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A/YnKXpYyhVf2YL33PpcSTPezIXHMHn0TBKKKjDVPF8=;
-        b=d2m3mIyCVTLTM58mhxK3dg0SJXvqHkVwJvmtRfH0GERKL3yADP5Lq/agDo8gHwW4DN
-         gLPJo8mOkNB3ZQUiojx1GFw2DBQekFDOznABzlvCos8eLlcTaqch7dP9e+mqZkx+ppaX
-         IWvpFMU1NghVgPfZAPJMPjoTv/Lmf39Zn1sBBBCkY2wuy+jeYUVArucc5Y5zcdYlKHM8
-         dGT1xQDHODo4ifW3XXAl/rgAIEIv6hUR6gDZfg/hMiOpkiYbGL65D9XdvGOeUIctBcje
-         Zo11hEbiKsuAHRd0DrdT4AF5j9aqu635OC65QVGMQ+InIxvBaQNvw7VVFPZAeFsc+0Zv
-         j2Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A/YnKXpYyhVf2YL33PpcSTPezIXHMHn0TBKKKjDVPF8=;
-        b=fLIHUoc2HiYOWY7rs/nKr8sIrLYeLRIuhJidKrLiutKV+ZLxdTgbE0uRxNwQYfLydY
-         IuJaH+tjAI3ijJfAudu18g2Eiv8QxRkWVXaUTZNKqzZRbZTM4KPhzx1ndRswOtfIUT0U
-         K15JXcT/jkoNGeL+u/AwfhpNvncjHzoq3rb8irOgC/Vk/hEqGe6WPKHjlCeRsbz+mA49
-         LXXou0nRUOif1n6dqcKQS89hqwZhrlHlZk4RtckBOrDpwa0z0pG1A0K5Vjck8emsJt5o
-         T+q3j9Ph5IXdr3GdNmHe7qAbHC+xVpArS46P8rkCVoZbb81hGcNGNw/J4gMLRSyZEvTr
-         mnWQ==
-X-Gm-Message-State: APjAAAVUaAcNgBKLLbAqtkj6llTV96z+EQV6u7GDIPvUcbcn5K07T4jf
-        uKRKQigPXOeJj4gm/A60b8UMTrBiSlU=
-X-Google-Smtp-Source: APXvYqwJ/ZAgFehC5H5Wa0NK2NgsCKoOYOgV/uwldX3PLUAZ05PzvgIxfR8lzjOs20x6RcHfHSr5Pw==
-X-Received: by 2002:adf:9b89:: with SMTP id d9mr16784734wrc.275.1570880816692;
-        Sat, 12 Oct 2019 04:46:56 -0700 (PDT)
-Received: from ?IPv6:2001:a61:3a5c:9a01:fb47:94a9:abbd:4835? ([2001:a61:3a5c:9a01:fb47:94a9:abbd:4835])
-        by smtp.gmail.com with ESMTPSA id r10sm14318505wml.46.2019.10.12.04.46.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Oct 2019 04:46:55 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, Aleksa Sarai <cyphar@cyphar.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] clone3: add CLONE3_CLEAR_SIGHAND
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-References: <20191010133518.5420-1-christian.brauner@ubuntu.com>
- <CAHO5Pa3V7fDb_+U-v+LB+TeAU0vfJyUMs9mD4ZqUtbLpZcD4nA@mail.gmail.com>
- <20191011221208.5eglbazksfigliob@yavin.dot.cyphar.com>
- <CAKgNAkhgGhGi-hMJt3UxYYDuyOZLx7c-eucpD5V7js+hsyv2CQ@mail.gmail.com>
- <20191012074840.4to7lh4zbt4wup74@wittgenstein>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <b3fce4a4-10a8-befe-a438-f16dfa0cdb6b@gmail.com>
-Date:   Sat, 12 Oct 2019 13:46:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 12 Oct 2019 07:53:56 -0400
+Received: from fd.dlink.ru ([178.170.168.18]:46642 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727231AbfJLLv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 07:51:56 -0400
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 944891B20983; Sat, 12 Oct 2019 14:51:52 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 944891B20983
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1570881112; bh=GVdyMAkJoaCzEF7enJYVSyxNIEivWNJHyH4jL2SwDe8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=R1cXAHL0FigCYkYf211zc5POTUXLGBUKygLqCdjJb0OCLYxcHzAAIjkjk1ywkK+g1
+         T3iDsNnAVd8/6r/UT04PVGfoXRm/p9P6NslcMsy3mZ9VzalPDyZPU4h6uopD78ewsk
+         N70f9jDbkBTYjPlnG1fjMPkUNIv+qF8Bg/d9hWSI=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id 388411B202D2;
+        Sat, 12 Oct 2019 14:51:49 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 388411B202D2
+Received: by mail.rzn.dlink.ru (Postfix, from userid 5000)
+        id 232351B21890; Sat, 12 Oct 2019 14:51:49 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA id 7A6C71B2120F;
+        Sat, 12 Oct 2019 14:51:41 +0300 (MSK)
 MIME-Version: 1.0
-In-Reply-To: <20191012074840.4to7lh4zbt4wup74@wittgenstein>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 12 Oct 2019 14:51:41 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Edward Cree <ecree@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/2] net: core: increase the default size of
+ GRO_NORMAL skb lists to flush
+In-Reply-To: <CANn89iLrVU2OVTj1yk4Sjd=SVxHYN-WpXeGhMEWx0DsVLz7giQ@mail.gmail.com>
+References: <20191010144226.4115-1-alobakin@dlink.ru>
+ <20191010144226.4115-3-alobakin@dlink.ru>
+ <c2450dc3-8ee0-f7cd-4f8a-61a061989eb7@solarflare.com>
+ <1eaac2e1f1d65194a4a39232d7e45870@dlink.ru>
+ <3c459c84df86f79b593632d3f08d5f4c@dlink.ru>
+ <CANn89iLrVU2OVTj1yk4Sjd=SVxHYN-WpXeGhMEWx0DsVLz7giQ@mail.gmail.com>
+Message-ID: <c0e2778ed47c5934bb83a77c77de8dfa@dlink.ru>
+X-Sender: alobakin@dlink.ru
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/19 9:48 AM, Christian Brauner wrote:
-> On Sat, Oct 12, 2019 at 08:53:34AM +0200, Michael Kerrisk (man-pages) wrote:
->> Hello Aleksa,
->>
->> On Sat, 12 Oct 2019 at 00:12, Aleksa Sarai <cyphar@cyphar.com> wrote:
->>>
->>> On 2019-10-11, Michael Kerrisk <mtk.manpages@gmail.com> wrote:
->>>> Why CLONE3_CLEAR_SIGHAND rather than just CLONE_CLEAR_SIGHAND?
+Hi Eric,
+
+Eric Dumazet wrote 12.10.2019 14:18:
+> On Sat, Oct 12, 2019 at 2:22 AM Alexander Lobakin <alobakin@dlink.ru> 
+> wrote:
 > 
-> I don't care much how we name this apart from the "_CLEAR_SIGHAND"
-> suffix. But see for a little rationale below.
+>> 
+>> I've generated an another solution. Considering that gro_normal_batch
+>> is very individual for every single case, maybe it would be better to
+>> make it per-NAPI (or per-netdevice) variable rather than a global
+>> across the kernel?
+>> I think most of all network-capable configurations and systems has 
+>> more
+>> than one network device nowadays, and they might need different values
+>> for achieving their bests.
+>> 
+>> One possible variant is:
+>> 
+>> #define THIS_DRIVER_GRO_NORMAL_BATCH    16
+>> 
+>> /* ... */
+>> 
+>> netif_napi_add(dev, napi, this_driver_rx_poll, NAPI_POLL_WEIGHT); /*
+>> napi->gro_normal_batch will be set to the systcl value during NAPI
+>> context initialization */
+>> napi_set_gro_normal_batch(napi, THIS_DRIVER_GRO_NORMAL_BATCH); /* new
+>> static inline helper, napi->gro_normal_batch will be set to the
+>> driver-speficic value of 16 */
+>> 
+>> The second possible variant is to make gro_normal_batch sysctl
+>> per-netdevice to tune it from userspace.
+>> Or we can combine them into one to make it available for tweaking from
+>> both driver and userspace, just like it's now with XPS CPUs setting.
+>> 
+>> If you'll find any of this reasonable and worth implementing, I'll 
+>> come
+>> with it in v2 after a proper testing.
 > 
->>>
->>> There are no more flag bits left for the classic clone()/clone2() (the
->>> last one was used up by CLONE_PIDFD) -- thus this flag is clone3()-only.
->>
->> Yes, I understand that. But, I'm not sure that the "3" in the prefix
->> is necessary. "CLONE_" still seems better to me.
->>
->> Consider this: sometime in the near future we will probably have time
->> namespaces. The new flag for those namespaces will only be usable with
->> clone3(). It should NOT be called CLONE3_NEWTIME, but rather
->> CLONE_NEWTIME (or similar), because that same flag will presumably
->> also be used in other APIs such as unshare() and setns(). (Hmm -- I
+> Most likely the optimal tuning is also a function of the host cpu 
+> caches.
 > 
-> There are some noteable differences though. CLONE_NEWTIME takes the
-> CSIGNAL bit which is in the range of a 32bit integer and thus useable by
-> unshare() too. The same does not hold for CLONE{3}_CLEAR_SIGHAND. You
-> can't pass it to unshare(). unshare() also just deals with
-> namespace-relevant stuff so CLONE{3}_CLEAR_SIGHAND doesn't make much
-> sense there.
-
-Sure, but going forward there's very likely to be more CLONE flags
-for whatever reason, and some will be usable just in clone3()
-while others will be more widely used (in other APIs such as
-unshare() and setns()). Using two different prefixes for these
-flags (CLONE_/CLONE3_) would be just confusing. AFAICS, the CLONE3_
-prefix really provides no advantage, but does have the potential to
-cause confusion down the track for the aforementioned reasons.
-(Furthermore... Shudder! What if there's a clone4() one day. I
-know you might say: "won't happen, we got things right this time",
-but API history suggests that "right" now not infrequently becomes
-"oops" later.) I do recommend CLONE_ for all the flags...
-
->> wonder if we are going to need a new unshare2() or some such...)
+> Building a too big list can also lead to premature cache evictions.
 > 
-> We still have one 32bit bit left (CLONE_DETACHED) which we can't reuse
-> with clone()/clone2() but we can reuse with clone3(). We can simply
-> earmark it for namespace-related stuff and thus still have one bit left
-> for unshare() before we have to go for unshare2() (If we have to go
-> there at all since I'm not sure how much more namespaces we can come up
-> with.).
+> Tuning the value on your test machines does not mean the value will be 
+> good
+> for other systems.
 
-I'm sure there'll be more namespaces...
+Oh, I missed that it might be a lot more machine-dependent than
+netdevice-dependent. Thank you for explanation. The best I can do in
+that case is to leave batch control in its current.
+I'll publish v2 containing only the acked first part of the series on
+Monday if nothing serious will happen. Addition of listified Rx to
+napi_gro_receive() was the main goal anyway.
 
-Cheers,
+> 
+> Adding yet another per device value should only be done if you 
+> demonstrate
+> a significant performance increase compared to the conservative value
+> Edward chose.
+> 
+> Also the behavior can be quite different depending on the protocols,
+> make sure you test handling of TCP pure ACK packets.
+> 
+> Accumulating 64 (in case the device uses standard NAPI_POLL_WEIGHT)
+> of them before entering upper stacks seems not a good choice, since 64 
+> skbs
+> will need to be kept in the GRO system, compared to only 8 with Edward 
+> value.
 
-Michael
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
