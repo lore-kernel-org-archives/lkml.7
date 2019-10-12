@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51F0C47404
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BDBECE58D
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B0C20663
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE73320663
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 00:37:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLyoSZs9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPOussVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfJLAhh (ORCPT
+        id S1728334AbfJLAhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 20:37:37 -0400
-Received: from mail-lj1-f182.google.com ([209.85.208.182]:41413 "EHLO
-        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfJLAhg (ORCPT
+        Fri, 11 Oct 2019 20:37:40 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40489 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfJLAhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 20:37:36 -0400
-Received: by mail-lj1-f182.google.com with SMTP id f5so11441973ljg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 17:37:35 -0700 (PDT)
+        Fri, 11 Oct 2019 20:37:39 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 7so11436131ljw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 17:37:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3VhNl1tLqxf423XM745kkSFjB6bV87mUwX23qYKwwNg=;
-        b=kLyoSZs9NskajqWUwo3zYIbRCP7M526pfDX1G4GomRrhFxGy0tTVO3ycewOGAq1lzm
-         p3y+Rr+wEkzbA0QoPHeXEr5V3L66+6SBa/U1HM7TaBLxwVY9WJoCc0cOUz6aU3K8Qc+i
-         pL9Mhotdi4eZtpL6NH5Y6nhO9hleV4Ylgjvp69d4amAe9Lo94tWioMxFcdrdE9+TACS/
-         vb8aW6QroeoJdCTaYREv9n77c1VHj+eP1KuH495lvlbHsCfDfLtOzPno8BNgalBma+wK
-         B3fQg77ifhm2Uvsa8vc9cdkvtyxstCR/6Ht6v4axQwmm3W0rMY3hUrvh7X/M+ptCbIpU
-         ZTGw==
+        bh=54LRcAZD00eVKPK3FNvqhw23ruw7tf3kBIi8BnJjoS0=;
+        b=uPOussVDx72S+iDIooeNqsmbtrl7it6MbxgKtymlvx2TNLPMvf8vvRvlMzTvEba84v
+         wvzMXMASiBtbhasQZVqhQCC4QC8X657wNp3wxbRSIFZ5SjONATAoHk4ATDB/AuzrGR85
+         8lLOdZtC0Bd0A9tMSlM/QRPVzPZ+QQ/YX+ESPA6zDMHUajQtOUxVvfqb2nvMkM1nt9Yx
+         eS1wDxICqSE0Z/FVMlkJ1sqBHx35V294Uoz8sAk0UEDd4iTFl+vN4shsomAoTcYOfpj4
+         p9fXKnxoFeotcFLADwxbNWoezyWiTYmkOQDXlfQlsVLQRLEIvJMV4fS7uFRPwSbk4MlN
+         MR5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3VhNl1tLqxf423XM745kkSFjB6bV87mUwX23qYKwwNg=;
-        b=OtEwYy0T4sxZ+aJqGatUHmtCTtC5vKbo9SgH3FQ1eRQh0WX3mg0Hndg00oNMHzdW0m
-         zEOEj2BDr/vECr5MAUkIAfKtb8fkxTxKgSlL8YcFKn9ajjOEsTfgdQBWZGCt+gxPjhf0
-         uGdsfS5q21C124otY/gjPiosPfYKn7gXtD5jNF5vwkz3eVXK99kP9Q16pc0np3L7dvdw
-         GSRN+iC7ykhMSIV/GsoKh85S04pLJJc0EdiUeGsD6A6GhHaOhLYdG811fD1Hl2T+YF3p
-         saB282p323s+AbfbBdfO9LA6rw/pWwZs+dU3VD11SNnAWI0JpF+TepDkbucFwRGtIeIL
-         qqUA==
-X-Gm-Message-State: APjAAAUUOrgBFyfmenHa8i+mqwKika7iY58ynKVEd/o0Vl/NzCm12w6j
-        IsRSLh5Nx0zexPg3kku6vWs=
-X-Google-Smtp-Source: APXvYqwYByWgzdtg+M7FX4ZPeGlTUAqpmhSTLah5cmuhj0NYdtuPfoYRGybaXvnnHEJ6Rk+1KD577Q==
-X-Received: by 2002:a2e:2c0f:: with SMTP id s15mr10985859ljs.63.1570840654255;
-        Fri, 11 Oct 2019 17:37:34 -0700 (PDT)
+        bh=54LRcAZD00eVKPK3FNvqhw23ruw7tf3kBIi8BnJjoS0=;
+        b=FRBQai4aWjIUn1Bg+8JEfMtSYNWDASgxIN/W7gWR5x36DSX16O5Eg3oxOe5ynOHoL0
+         9H6Mr3V9QVUFY6RM5qXkaG+ogKzFjEOMsdkeMIrDfMWD1hmDxJg/tdhDMLM3WFEEer2V
+         oBbfV+7iu8139aTU9EafARjke7eAvbwq16ofr5AhpZ2mD//Whzrv32KFWio/JmpfZTUY
+         EoxJbUrjkWAuuoDj9bFwCuT8lrmwWVXRIbvY+2jqDANs5d5Ef8Bjp3lqsKeRBNIDUsaE
+         hcCH4CDmCpQ0eoXvNmdJqWRjHWehIuEXSaAYwrWpS4MjdcTMJVq6qqNVc6Qdb/UDUlRV
+         9Rwg==
+X-Gm-Message-State: APjAAAWCbGGqA6NOTNlMzXQOam30bH594hvDIUOkshWk8UN3ZShToVE6
+        cXDuOjRWIKOcC7cpCqaAhNc=
+X-Google-Smtp-Source: APXvYqxzdqPlMilQU3nmxFk9zBN8wXeKdCdXWAgxhYCM5tHpBierUSArhoJz2E33Mv9AH+DcQUXXeQ==
+X-Received: by 2002:a2e:3c05:: with SMTP id j5mr11098180lja.24.1570840657244;
+        Fri, 11 Oct 2019 17:37:37 -0700 (PDT)
 Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
-        by smtp.gmail.com with ESMTPSA id f22sm2346620lfa.41.2019.10.11.17.37.31
+        by smtp.gmail.com with ESMTPSA id f22sm2346620lfa.41.2019.10.11.17.37.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 17:37:33 -0700 (PDT)
+        Fri, 11 Oct 2019 17:37:36 -0700 (PDT)
 From:   Max Filippov <jcmvbkbc@gmail.com>
 To:     linux-xtensa@linux-xtensa.org, Al Viro <viro@zeniv.linux.org.uk>
 Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
         Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH v2 3/4] xtensa: fix type conversion in __get_user_[no]check
-Date:   Fri, 11 Oct 2019 17:37:07 -0700
-Message-Id: <20191012003708.22182-4-jcmvbkbc@gmail.com>
+Subject: [PATCH v2 4/4] xtensa: initialize result in __get_user_asm for unaligned access
+Date:   Fri, 11 Oct 2019 17:37:08 -0700
+Message-Id: <20191012003708.22182-5-jcmvbkbc@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191012003708.22182-1-jcmvbkbc@gmail.com>
 References: <20191012003708.22182-1-jcmvbkbc@gmail.com>
@@ -74,109 +74,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__get_user_[no]check uses temporary buffer of type long to store result
-of __get_user_size and do sign extension on it when necessary. This
-doesn't work correctly for 64-bit data. Fix it by moving temporary
-buffer/sign extension logic to __get_user_asm.
-Don't do assignment of __get_user_bad result to (x) as it may not always
-be integer-compatible now and issue warning even when it's going to be
-optimized. Instead do (x) = 0; and call __get_user_bad separately.
+__get_user_asm macro leaves result register uninitialized when alignment
+check fails. Add 'insn' parameter to __check_align_{1,2,4} and pass an
+instruction that initializes result register from __get_user_asm.
 
 Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 ---
-Changes v1->v2:
-- initialize result when access_ok check fails in __get_user_check
-
- arch/xtensa/include/asm/uaccess.h | 56 +++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 26 deletions(-)
+ arch/xtensa/include/asm/uaccess.h | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
-index aca510707189..43e923678dfb 100644
+index 43e923678dfb..d8cff972f3cf 100644
 --- a/arch/xtensa/include/asm/uaccess.h
 +++ b/arch/xtensa/include/asm/uaccess.h
-@@ -172,19 +172,19 @@ __asm__ __volatile__(					\
- 
- #define __get_user_nocheck(x, ptr, size)			\
- ({								\
--	long __gu_err, __gu_val;				\
--	__get_user_size(__gu_val, (ptr), (size), __gu_err);	\
--	(x) = (__force __typeof__(*(ptr)))__gu_val;		\
-+	long __gu_err;						\
-+	__get_user_size((x), (ptr), (size), __gu_err);		\
- 	__gu_err;						\
- })
- 
- #define __get_user_check(x, ptr, size)					\
- ({									\
--	long __gu_err = -EFAULT, __gu_val = 0;				\
-+	long __gu_err = -EFAULT;					\
- 	const __typeof__(*(ptr)) *__gu_addr = (ptr);			\
--	if (access_ok(__gu_addr, size))			\
--		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
--	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
-+	if (access_ok(__gu_addr, size))					\
-+		__get_user_size((x), __gu_addr, (size), __gu_err);	\
-+	else								\
-+		(x) = 0;						\
- 	__gu_err;							\
- })
- 
-@@ -208,7 +208,7 @@ do {									\
- 		}							\
- 		break;							\
- 	}								\
--	default: (x) = __get_user_bad();				\
-+	default: (x) = 0; __get_user_bad();				\
- 	}								\
- } while (0)
- 
-@@ -218,24 +218,28 @@ do {									\
-  * __check_align_* macros still work.
+@@ -129,17 +129,19 @@ do {									\
+  * sync.
   */
- #define __get_user_asm(x_, addr_, err_, align, insn, cb) \
--__asm__ __volatile__(				\
--	__check_align_##align			\
--	"1: "insn"  %[x], %[addr], 0	\n"	\
--	"2:				\n"	\
--	"   .section  .fixup,\"ax\"	\n"	\
--	"   .align 4			\n"	\
--	"   .literal_position		\n"	\
--	"5:				\n"	\
--	"   movi   %[tmp], 2b		\n"	\
--	"   movi   %[x], 0		\n"	\
--	"   movi   %[err], %[efault]	\n"	\
--	"   jx     %[tmp]		\n"	\
--	"   .previous			\n"	\
--	"   .section  __ex_table,\"a\"	\n"	\
--	"   .long	1b, 5b		\n"	\
--	"   .previous"				\
--	:[err] "=r"(err_), [tmp] "=r"(cb), [x] "=r"(x_)\
--	:[addr] "r"(addr_), [efault] "i"(-EFAULT))
-+do {							\
-+	u32 __x;					\
-+	__asm__ __volatile__(				\
-+		__check_align_##align			\
-+		"1: "insn"  %[x], %[addr], 0	\n"	\
-+		"2:				\n"	\
-+		"   .section  .fixup,\"ax\"	\n"	\
-+		"   .align 4			\n"	\
-+		"   .literal_position		\n"	\
-+		"5:				\n"	\
-+		"   movi   %[tmp], 2b		\n"	\
-+		"   movi   %[x], 0		\n"	\
-+		"   movi   %[err], %[efault]	\n"	\
-+		"   jx     %[tmp]		\n"	\
-+		"   .previous			\n"	\
-+		"   .section  __ex_table,\"a\"	\n"	\
-+		"   .long	1b, 5b		\n"	\
-+		"   .previous"				\
-+		:[err] "=r"(err_), [tmp] "=r"(cb), [x] "=r"(__x) \
-+		:[addr] "r"(addr_), [efault] "i"(-EFAULT)); \
-+	(x_) = (__force __typeof__(*(addr_)))__x;	\
-+} while (0)
+ 
+-#define __check_align_1  ""
++#define __check_align_1(insn)  ""
+ 
+-#define __check_align_2				\
++#define __check_align_2(insn)			\
+ 	"   _bbci.l %[addr], 0, 1f	\n"	\
+ 	"   movi    %[err], %[efault]	\n"	\
++	"   "insn"			\n"	\
+ 	"   _j      2f			\n"
+ 
+-#define __check_align_4				\
++#define __check_align_4(insn)			\
+ 	"   _bbsi.l %[addr], 0, 0f	\n"	\
+ 	"   _bbci.l %[addr], 1, 1f	\n"	\
+ 	"0: movi    %[err], %[efault]	\n"	\
++	"   "insn"			\n"	\
+ 	"   _j      2f			\n"
  
  
- /*
+@@ -153,7 +155,7 @@ do {									\
+  */
+ #define __put_user_asm(x_, addr_, err_, align, insn, cb)\
+ __asm__ __volatile__(					\
+-	__check_align_##align				\
++	__check_align_##align("")			\
+ 	"1: "insn"  %[x], %[addr], 0	\n"		\
+ 	"2:				\n"		\
+ 	"   .section  .fixup,\"ax\"	\n"		\
+@@ -221,7 +223,7 @@ do {									\
+ do {							\
+ 	u32 __x;					\
+ 	__asm__ __volatile__(				\
+-		__check_align_##align			\
++		__check_align_##align("movi %[x], 0")	\
+ 		"1: "insn"  %[x], %[addr], 0	\n"	\
+ 		"2:				\n"	\
+ 		"   .section  .fixup,\"ax\"	\n"	\
 -- 
 2.20.1
 
