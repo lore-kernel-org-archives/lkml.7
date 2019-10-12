@@ -2,117 +2,111 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FA3C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BF0C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1965C20673
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B8820673
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbfJLGR6 (ORCPT
+        id S1728572AbfJLGX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 02:17:58 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50222 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726947AbfJLGR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 02:17:57 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3323C80206F36887AE0D;
-        Sat, 12 Oct 2019 14:17:54 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 12 Oct 2019
- 14:17:52 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        Sat, 12 Oct 2019 02:23:58 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:42583 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726821AbfJLGX6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 02:23:58 -0400
+X-UUID: b0f39b91104846af8790ca0483b51fe1-20191012
+X-UUID: b0f39b91104846af8790ca0483b51fe1-20191012
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1320974668; Sat, 12 Oct 2019 14:23:48 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N1.mediatek.inc
+ (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 12 Oct
+ 2019 14:23:46 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 12 Oct 2019 14:23:45 +0800
+Message-ID: <1570861427.19130.65.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 3/4] iommu/mediatek: Use writel for TLB range
+ invalidation
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Will Deacon <will@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tomasz Figa <tfiga@google.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <gregkh@linuxfoundation.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>
-References: <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
- <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
- <20191010073212.GB18412@dhcp22.suse.cz>
- <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
- <20191011111539.GX2311@hirez.programming.kicks-ass.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
-Date:   Sat, 12 Oct 2019 14:17:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        <iommu@lists.linux-foundation.org>, <youlin.pei@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
+        <chao.hao@mediatek.com>
+Date:   Sat, 12 Oct 2019 14:23:47 +0800
+In-Reply-To: <20191011162950.yg4o77mlaicacne5@willie-the-truck>
+References: <1570627143-29441-1-git-send-email-yong.wu@mediatek.com>
+         <1570627143-29441-3-git-send-email-yong.wu@mediatek.com>
+         <20191011162950.yg4o77mlaicacne5@willie-the-truck>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20191011111539.GX2311@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-TM-SNTS-SMTP: 0A33034A89B0C9BB9E3E78D19D549891FCC7ABDAE5C14ED4B95401F2380F2F052000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add pci and acpi maintainer
-cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
-
-On 2019/10/11 19:15, Peter Zijlstra wrote:
-> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
->> But I failed to see why the above is related to making node_to_cpumask_map()
->> NUMA_NO_NODE aware?
+On Fri, 2019-10-11 at 17:29 +0100, Will Deacon wrote:
+> On Wed, Oct 09, 2019 at 09:19:02PM +0800, Yong Wu wrote:
+> > Use writel for the register F_MMU_INV_RANGE which is for triggering the
+> > HW work. We expect all the setting(iova_start/iova_end...) have already
+> > been finished before F_MMU_INV_RANGE.
+> > 
+> > Signed-off-by: Anan.Sun <anan.sun@mediatek.com>
+> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > ---
+> > This is a improvement rather than fixing a issue.
+> > ---
+> >  drivers/iommu/mtk_iommu.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> > index 24a13a6..607f92c 100644
+> > --- a/drivers/iommu/mtk_iommu.c
+> > +++ b/drivers/iommu/mtk_iommu.c
+> > @@ -187,8 +187,7 @@ static void mtk_iommu_tlb_add_flush(unsigned long iova, size_t size,
+> >  		writel_relaxed(iova, data->base + REG_MMU_INVLD_START_A);
+> >  		writel_relaxed(iova + size - 1,
+> >  			       data->base + REG_MMU_INVLD_END_A);
+> > -		writel_relaxed(F_MMU_INV_RANGE,
+> > -			       data->base + REG_MMU_INVALIDATE);
+> > +		writel(F_MMU_INV_RANGE, data->base + REG_MMU_INVALIDATE);
 > 
-> Your initial bug is for hns3, which is a PCI device, which really _MUST_
-> have a node assigned.
+> I don't understand this change.
 > 
-> It not having one, is a straight up bug. We must not silently accept
-> NO_NODE there, ever.
+> Why is it an "improvement" and which accesses are you ordering with the
+> writel?
+
+The register(F_MMU_INV_RANGE) will trigger HW to begin flush range. HW
+expect the other register iova_start/end/flush_type always is ready
+before trigger. thus I'd like use writel to guarantee the previous
+register has been finished.
+
+I didn't see the writel_relaxed cause some error in practice, we only
+think writel is necessary here in theory. so call it "improvement".
+
 > 
+> Will
 
-I suppose you mean reporting a lack of affinity when the node of a pcie
-device is not set by "not silently accept NO_NODE".
-
-As Greg has asked about in [1]:
-what is a user to do when the user sees the kernel reporting that?
-
-We may tell user to contact their vendor for info or updates about
-that when they do not know about their system well enough, but their
-vendor may get away with this by quoting ACPI spec as the spec
-considering this optional. Should the user believe this is indeed a
-fw bug or a misreport from the kernel?
-
-If this kind of reporting is common pratice and will not cause any
-misunderstanding, then maybe we can report that.
-
-[1] https://lore.kernel.org/lkml/20190905055727.GB23826@kroah.com/
-
-> .
-> 
 
