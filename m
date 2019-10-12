@@ -2,130 +2,162 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C13ECE58E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FCBC10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518CB2190F
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="ZPkcFFI2"
+	by mail.kernel.org (Postfix) with ESMTP id 2FF362089C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbfJLFTf (ORCPT
+        id S1727537AbfJLFll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 01:19:35 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25464 "EHLO
-        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbfJLFTf (ORCPT
+        Sat, 12 Oct 2019 01:41:41 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:43267 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726671AbfJLFll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 01:19:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1570857550; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=SZoeCaq43vnqx636xq+d47jFuUOHkcg3B3mFBDdKoXePF+YYEipoFtgftohELNivwKQSwpZJeKHbXgTpahcZ5NEWYl5FFcB8qbksAgVy9UIC0naGAzhbVjsKw3WtVc5wdW6HzujreC5Ho3BlsPEyTmNlZ17KsM6b7wj5uUcIwmM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1570857550; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=kNG3xydqXngTUammBkGfvZpeHfz2ntKv8HXBufYT2PU=; 
-        b=oHGZd7rKEg2V+9sz360ucoNevX8ReblPtCkUFRrMkFHKZVDeFi5A69oHBI0Xv6fGXVRSBKx+xUaxaUE5ilM6JwyzQfs7dSdy2B4ONCY0xZtB11mXjUwnquxcn4RsatbTNKnWi6RrCPOjlvuZRSTn3p/ZdbUlTr058XemhnvyIZI=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=W4EYP2ghWrGTzbWrXYfkSVRYDM2+j9JrS6EYzDpUKqReNndFaNr9vp1Lw9CdhpQWlpikPBb4ikUd
-    G6gEwG1rmtGrFmqGgUiHUeokH0Sqpi7Jg3MdQTZxN+2NZ1b2hDuf  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1570857550;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=1745; bh=kNG3xydqXngTUammBkGfvZpeHfz2ntKv8HXBufYT2PU=;
-        b=ZPkcFFI2knRCYCAk3/tUuE3fLp/aaG1cAQTX+jBhb9VoHdO2nZHvsda1DlmA0sqQ
-        5rFp3iaZ3U230t8A1yJD04q+kPLpcqRuYYr/xMoghCeOVyuywO8ExyhP7f1g2SPimYH
-        vuo8/F2r+XLTpYqyz50LG+iHCHLYigb/X89o2tC4=
-Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
-        with SMTPS id 1570857550559909.507456529966; Fri, 11 Oct 2019 22:19:10 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, mark.rutland@arm.com, syq@debian.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        armijn@tjaldur.nl, tglx@linutronix.de, yuehaibing@huawei.com,
-        malat@debian.org, ezequiel@collabora.com, paul@crapouillou.net
-Subject: [PATCH 6/6 v2] MMC: JZ4740: Add support for LPM.
-Date:   Sat, 12 Oct 2019 13:13:20 +0800
-Message-Id: <1570857203-49192-7-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1570857203-49192-1-git-send-email-zhouyanjie@zoho.com>
-References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
- <1570857203-49192-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Sat, 12 Oct 2019 01:41:41 -0400
+X-IronPort-AV: E=Sophos;i="5.67,286,1566856800"; 
+   d="scan'208";a="405849016"
+Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Oct 2019 07:41:38 +0200
+Date:   Sat, 12 Oct 2019 07:41:37 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+cc:     outreachy-kernel@googlegroups.com, sudipm.mukherjee@gmail.com,
+        teddy.wang@siliconmotion.com, gregkh@linuxfoundation.org,
+        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        trivial@kernel.org
+Subject: Re: [Outreachy kernel] [PATCH] staging: sm750fb: align arguments
+ with open parenthesis
+In-Reply-To: <20191012011956.9452-1-gabrielabittencourt00@gmail.com>
+Message-ID: <alpine.DEB.2.21.1910120738540.2637@hadrien>
+References: <20191012011956.9452-1-gabrielabittencourt00@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add support for low power mode of Ingenic's MMC/SD Controller.
-
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- drivers/mmc/host/jz4740_mmc.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-index 44a04fe..4cbe7fb 100644
---- a/drivers/mmc/host/jz4740_mmc.c
-+++ b/drivers/mmc/host/jz4740_mmc.c
-@@ -43,6 +43,7 @@
- #define JZ_REG_MMC_RESP_FIFO	0x34
- #define JZ_REG_MMC_RXFIFO	0x38
- #define JZ_REG_MMC_TXFIFO	0x3C
-+#define JZ_REG_MMC_LPM		0x40
- #define JZ_REG_MMC_DMAC		0x44
- 
- #define JZ_MMC_STRPCL_EXIT_MULTIPLE BIT(7)
-@@ -102,6 +103,12 @@
- #define JZ_MMC_DMAC_DMA_SEL BIT(1)
- #define JZ_MMC_DMAC_DMA_EN BIT(0)
- 
-+#define	JZ_MMC_LPM_DRV_RISING BIT(31)
-+#define	JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY BIT(31)
-+#define	JZ_MMC_LPM_DRV_RISING_1NS_DLY BIT(30)
-+#define	JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY BIT(29)
-+#define	JZ_MMC_LPM_LOW_POWER_MODE_EN BIT(0)
-+
- #define JZ_MMC_CLK_RATE 24000000
- 
- enum jz4740_mmc_version {
-@@ -860,6 +867,22 @@ static int jz4740_mmc_set_clock_rate(struct jz4740_mmc_host *host, int rate)
- 	}
- 
- 	writew(div, host->base + JZ_REG_MMC_CLKRT);
-+
-+	if (real_rate > 25000000) {
-+		if (host->version >= JZ_MMC_X1000) {
-+			writel(JZ_MMC_LPM_DRV_RISING_QTR_PHASE_DLY |
-+				   JZ_MMC_LPM_SMP_RISING_QTR_OR_HALF_PHASE_DLY |
-+				   JZ_MMC_LPM_LOW_POWER_MODE_EN,
-+				   host->base + JZ_REG_MMC_LPM);
-+		} else if (host->version >= JZ_MMC_JZ4760) {
-+			writel(JZ_MMC_LPM_DRV_RISING |
-+				   JZ_MMC_LPM_LOW_POWER_MODE_EN,
-+				   host->base + JZ_REG_MMC_LPM);
-+		} else if (host->version >= JZ_MMC_JZ4725B)
-+			writel(JZ_MMC_LPM_LOW_POWER_MODE_EN,
-+				   host->base + JZ_REG_MMC_LPM);
-+	}
-+
- 	return real_rate;
- }
- 
--- 
-2.7.4
 
 
+On Fri, 11 Oct 2019, Gabriela Bittencourt wrote:
+
+> Cleans up checks of "Alignment should match open parenthesis" in tree sm750fb
+>
+> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+> ---
+>  drivers/staging/sm750fb/ddk750_display.c |  2 +-
+>  drivers/staging/sm750fb/sm750_accel.c    |  2 +-
+>  drivers/staging/sm750fb/sm750_accel.h    |  8 ++++----
+>  drivers/staging/sm750fb/sm750_cursor.h   | 10 +++++-----
+>  4 files changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/staging/sm750fb/ddk750_display.c b/drivers/staging/sm750fb/ddk750_display.c
+> index 887ea8aef43f..8be98a1058d6 100644
+> --- a/drivers/staging/sm750fb/ddk750_display.c
+> +++ b/drivers/staging/sm750fb/ddk750_display.c
+> @@ -148,7 +148,7 @@ void ddk750_set_logical_disp_out(enum disp_output output)
+>  	if (output & PNL_SEQ_USAGE) {
+>  		/* set  panel sequence */
+>  		sw_panel_power_sequence((output & PNL_SEQ_MASK) >> PNL_SEQ_OFFSET,
+> -		4);
+> +					4);
+>  	}
+>
+>  	if (output & DAC_USAGE)
+> diff --git a/drivers/staging/sm750fb/sm750_accel.c b/drivers/staging/sm750fb/sm750_accel.c
+> index dbcbbd1055da..1a9555bb9edd 100644
+> --- a/drivers/staging/sm750fb/sm750_accel.c
+> +++ b/drivers/staging/sm750fb/sm750_accel.c
+> @@ -289,7 +289,7 @@ static unsigned int deGetTransparency(struct lynx_accel *accel)
+>  }
+>
+>  int sm750_hw_imageblit(struct lynx_accel *accel,
+> -		 const char *pSrcbuf, /* pointer to start of source buffer in system memory */
+> +		       const char *pSrcbuf, /* pointer to start of source buffer in system memory */
+>  		 u32 srcDelta,          /* Pitch value (in bytes) of the source buffer, +ive means top down and -ive mean button up */
+>  		 u32 startBit, /* Mono data can start at any bit in a byte, this value should be 0 to 7 */
+>  		 u32 dBase,    /* Address of destination: offset in frame buffer */
+
+It is strange that the change is only does for the firsr parameter, and
+not for all of them.
+
+The kernel also uses a doc format for describing function patameters in a
+single comment before the function.  Look around in other files to see the
+format.  That would look much nicer than these comments going over 80
+columns.
+
+
+> diff --git a/drivers/staging/sm750fb/sm750_accel.h b/drivers/staging/sm750fb/sm750_accel.h
+> index c4f42002a50f..8fb79b09fdd0 100644
+> --- a/drivers/staging/sm750fb/sm750_accel.h
+> +++ b/drivers/staging/sm750fb/sm750_accel.h
+> @@ -190,9 +190,9 @@ void sm750_hw_set2dformat(struct lynx_accel *accel, int fmt);
+>  void sm750_hw_de_init(struct lynx_accel *accel);
+>
+>  int sm750_hw_fillrect(struct lynx_accel *accel,
+> -				u32 base, u32 pitch, u32 Bpp,
+> -				u32 x, u32 y, u32 width, u32 height,
+> -				u32 color, u32 rop);
+> +		      u32 base, u32 pitch, u32 Bpp,
+> +		      u32 x, u32 y, u32 width, u32 height,
+> +		      u32 color, u32 rop);
+>
+>  int sm750_hw_copyarea(
+>  struct lynx_accel *accel,
+> @@ -210,7 +210,7 @@ unsigned int height, /* width and height of rectangle in pixel value */
+>  unsigned int rop2);
+>
+>  int sm750_hw_imageblit(struct lynx_accel *accel,
+> -		 const char *pSrcbuf, /* pointer to start of source buffer in system memory */
+> +		       const char *pSrcbuf, /* pointer to start of source buffer in system memory */
+>  		 u32 srcDelta,          /* Pitch value (in bytes) of the source buffer, +ive means top down and -ive mean button up */
+>  		 u32 startBit, /* Mono data can start at any bit in a byte, this value should be 0 to 7 */
+>  		 u32 dBase,    /* Address of destination: offset in frame buffer */
+
+Same here.
+
+> diff --git a/drivers/staging/sm750fb/sm750_cursor.h b/drivers/staging/sm750fb/sm750_cursor.h
+> index 16ac07eb58d6..039ebfdf0bd9 100644
+> --- a/drivers/staging/sm750fb/sm750_cursor.h
+> +++ b/drivers/staging/sm750fb/sm750_cursor.h
+> @@ -6,13 +6,13 @@
+>  void sm750_hw_cursor_enable(struct lynx_cursor *cursor);
+>  void sm750_hw_cursor_disable(struct lynx_cursor *cursor);
+>  void sm750_hw_cursor_setSize(struct lynx_cursor *cursor,
+> -						int w, int h);
+> +			     int w, int h);
+>  void sm750_hw_cursor_setPos(struct lynx_cursor *cursor,
+> -						int x, int y);
+> +			    int x, int y);
+
+Perhaps these could just be all on one line?
+
+julia
+
+>  void sm750_hw_cursor_setColor(struct lynx_cursor *cursor,
+> -						u32 fg, u32 bg);
+> +			      u32 fg, u32 bg);
+>  void sm750_hw_cursor_setData(struct lynx_cursor *cursor,
+> -			u16 rop, const u8 *data, const u8 *mask);
+> +			     u16 rop, const u8 *data, const u8 *mask);
+>  void sm750_hw_cursor_setData2(struct lynx_cursor *cursor,
+> -			u16 rop, const u8 *data, const u8 *mask);
+> +			      u16 rop, const u8 *data, const u8 *mask);
+>  #endif
+> --
+> 2.20.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191012011956.9452-1-gabrielabittencourt00%40gmail.com.
+>
