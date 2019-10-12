@@ -2,71 +2,123 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F01C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E263C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615BB2089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570919719;
-	bh=JITtSxP/HxZrZ61I5BLCsBW89FTmfjLXREWHkpwpUN0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=bM4WHqdlvHVOnbOQ4EQbAs108KVaAOL7Efy1kk3SYJewVn8F7zMmXxVJFW8pSwAj9
-	 +TqHXKRPPC0ryRZXnVD5e59jQxRbTSGZJcp0nE1fc276wK+PUawTF5/voozbXU6+lE
-	 AywHFCNxBXbY1GtQsFKwnI/ccBe1dyDFt7NJBVhg=
+	by mail.kernel.org (Postfix) with ESMTP id 6C28F2067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 22:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbfJLWfS (ORCPT
+        id S1727964AbfJLWiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 18:35:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45524 "EHLO mail.kernel.org"
+        Sat, 12 Oct 2019 18:38:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47790 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727499AbfJLWfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 18:35:05 -0400
-Subject: Re: [GIT PULL] x86 fixes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570919705;
-        bh=JITtSxP/HxZrZ61I5BLCsBW89FTmfjLXREWHkpwpUN0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=t8fX/DIYv6kkQdNiJ5elkyP6YUMQ3LHCjMCzLvIQ8Bv3xcEvuXgTv5iWaX5QKQeKJ
-         N4x8dLRp4cRr9C3RAMSbSAXCEfaEuqSmZvSqN+rLnEnJheoB6SjQszsVSGx0xgOndl
-         Y8fXi7gAdXGe5Dji9JWQPhA3AiBRpTMlwnbMKT/A=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191012131916.GA26964@gmail.com>
-References: <20191012131916.GA26964@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191012131916.GA26964@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- x86-urgent-for-linus
-X-PR-Tracked-Commit-Id: 8d7c6ac3b2371eb1cbc9925a88f4d10efff374de
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7a275fd7b9519b5cc63270a8964055aadb04de26
-Message-Id: <157091970545.17047.897131269847053808.pr-tracker-bot@kernel.org>
-Date:   Sat, 12 Oct 2019 22:35:05 +0000
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
+        id S1727109AbfJLWiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 18:38:54 -0400
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8624EC049E10
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 22:38:54 +0000 (UTC)
+Received: by mail-qk1-f199.google.com with SMTP id z128so12959159qke.8
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 15:38:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=S0RIwai/cYE64lyIc+A9F/PqKRzGBKYVkHbCBiipZNM=;
+        b=iQRdWhCBOHX67K/i39O5TR24ljxoM7jx9X/zSjjjKU/ig4CSGvTC8Knb774W+73lbZ
+         q3lDqSz9MwRtaTGJTHh+9sByGUiqht1xn9gzGU/Xa5glWi10WgzdiTeoGZNND/o1n7+e
+         89nPfChzY0oZvT2sagYMzf7dM7Mtg4s5RE6WmC2da7Us/bCxhdPIhBn8xBEX0geVxcz3
+         h+latuBf3mXeI+p2mAFKZUfqBXTPDBacxF29SH75bDbvyi4f76agnxKipCLLi+6yr7Le
+         T8y4JXfvZdDx/KI+22aYJeka0Cv3v6PgycQYXy0mEMr5MydLZv0q0m8+HPU8zLF2dEj/
+         cWhQ==
+X-Gm-Message-State: APjAAAX3la6vLVADvbI/fxGIuHUxemVn7bs+XhnwEVX0vzJZ1G7ouM7o
+        FKKYLBlVoPiVGbQzJC2VUM3mRypdF1kdyB6r6mbmFUwBPkoHdoj8y55sQgWs66dWobTtwFqC36v
+        4UQk8QEu+givFMuN5Ie5uEWay
+X-Received: by 2002:aed:25af:: with SMTP id x44mr24961936qtc.64.1570919933842;
+        Sat, 12 Oct 2019 15:38:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz0MjmCeNSh32vVCuUQMNhBZu1KOBCgrBIVtG1Hs9yeNlxecSX6iaR51H1qP+Z4lvase2/DGg==
+X-Received: by 2002:aed:25af:: with SMTP id x44mr24961905qtc.64.1570919933558;
+        Sat, 12 Oct 2019 15:38:53 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
+        by smtp.gmail.com with ESMTPSA id 56sm11130495qty.15.2019.10.12.15.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Oct 2019 15:38:52 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 18:38:46 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        Jorgen Hansen <jhansen@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 0/2] vsock: don't allow half-closed socket in the
+ host transports
+Message-ID: <20191012183838-mutt-send-email-mst@kernel.org>
+References: <20191011130758.22134-1-sgarzare@redhat.com>
+ <20191011101408-mutt-send-email-mst@kernel.org>
+ <20191011143457.4ujt3gg7oxco6gld@steredhat>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011143457.4ujt3gg7oxco6gld@steredhat>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 12 Oct 2019 15:19:16 +0200:
+On Fri, Oct 11, 2019 at 04:34:57PM +0200, Stefano Garzarella wrote:
+> On Fri, Oct 11, 2019 at 10:19:13AM -0400, Michael S. Tsirkin wrote:
+> > On Fri, Oct 11, 2019 at 03:07:56PM +0200, Stefano Garzarella wrote:
+> > > We are implementing a test suite for the VSOCK sockets and we discovered
+> > > that vmci_transport never allowed half-closed socket on the host side.
+> > > 
+> > > As Jorgen explained [1] this is due to the implementation of VMCI.
+> > > 
+> > > Since we want to have the same behaviour across all transports, this
+> > > series adds a section in the "Implementation notes" to exaplain this
+> > > behaviour, and changes the vhost_transport to behave the same way.
+> > > 
+> > > [1] https://patchwork.ozlabs.org/cover/847998/#1831400
+> > 
+> > Half closed sockets are very useful, and lots of
+> > applications use tricks to swap a vsock for a tcp socket,
+> > which might as a result break.
+> 
+> Got it!
+> 
+> > 
+> > If VMCI really cares it can implement an ioctl to
+> > allow applications to detect that half closed sockets aren't supported.
+> > 
+> > It does not look like VMCI wants to bother (users do not read
+> > kernel implementation notes) so it does not really care.
+> > So why do we want to cripple other transports intentionally?
+> 
+> The main reason is that we are developing the test suite and we noticed
+> the miss match. Since we want to make sure that applications behave in
+> the same way on different transports, we thought we would solve it that
+> way.
+> 
+> But what you are saying (also in the reply of the patches) is actually
+> quite right. Not being publicized, applications do not expect this behavior,
+> so please discard this series.
+> 
+> My problem during the tests, was trying to figure out if half-closed
+> sockets were supported or not, so as you say adding an IOCTL or maybe
+> better a getsockopt() could solve the problem.
+> 
+> What do you think?
+> 
+> Thanks,
+> Stefano
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+Sure, why not.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7a275fd7b9519b5cc63270a8964055aadb04de26
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
