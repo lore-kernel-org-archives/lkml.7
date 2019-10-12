@@ -2,99 +2,96 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAEDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5460BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0726A21D71
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AC32190F
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 13:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570886606;
+	bh=LeXnAiJm88QvFHwnWGZQ1G2GMcsvJcbDbZ03laAOCEs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Pv5WGU04sxK8C8d5BeaFH1XHaynLHprKx4mmc1FPSU8kOHQm72Dinm6cdDM7V1Ajr
+	 VbFMSfDl+LUWqOjeHC42lfD7w+/sX69x+uDqBlJrleOH8It4tvvoIT3nOWadoxNnuD
+	 zjKKNQT3xVJbOjpfRdrjJT45lneSUXKNV5geL7xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbfJLNTb (ORCPT
+        id S1729230AbfJLNXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 09:19:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34800 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728399AbfJLNTb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 09:19:31 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iJHIm-0000aT-FF; Sat, 12 Oct 2019 15:19:20 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E9C531C03A8;
-        Sat, 12 Oct 2019 15:19:18 +0200 (CEST)
-Date:   Sat, 12 Oct 2019 13:19:18 -0000
-From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/intel: Add Comet Lake CPU support
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <1570549810-25049-3-git-send-email-kan.liang@linux.intel.com>
-References: <1570549810-25049-3-git-send-email-kan.liang@linux.intel.com>
+        Sat, 12 Oct 2019 09:23:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbfJLNXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 09:23:24 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9C612087E;
+        Sat, 12 Oct 2019 13:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570886604;
+        bh=LeXnAiJm88QvFHwnWGZQ1G2GMcsvJcbDbZ03laAOCEs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TIuCHLxUyUt/h3TR3okqYiUXPUZ1w8rwzuZkZiW58u1i7ENA4ij3zvL3pvGC7NtPH
+         mgZgY4piIeDlNdHsWJP134XEHfoZW/J4NEH+IGxwcI2yTgATmYRijUFElqW01OTOiW
+         flJtKY+yk1kEWHkIzzQqY/jiRpAwso2C35g+CcSo=
+Date:   Sat, 12 Oct 2019 14:23:18 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andreas Klinger <ak@it-klinger.de>, robh+dt@kernel.org,
+        mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: iio: maxbotix,mb1232.yaml: transform to
+ yaml
+Message-ID: <20191012142318.03057c61@archlinux>
+In-Reply-To: <20191010205328.GA19956@bogus>
+References: <20191007170219.xfipsry5nk4raiem@arbad>
+        <20191010205328.GA19956@bogus>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Message-ID: <157088635890.9978.9084936550156181462.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Thu, 10 Oct 2019 15:53:28 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-Commit-ID:     9066288b2aab1804dc1eebec6ff88474363b89cb
-Gitweb:        https://git.kernel.org/tip/9066288b2aab1804dc1eebec6ff88474363b89cb
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Tue, 08 Oct 2019 08:50:03 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 12 Oct 2019 15:13:08 +02:00
+> On Mon, 7 Oct 2019 19:02:20 +0200, Andreas Klinger wrote:
+> > transform existing documentation of maxbotix,mb1232 ultrasonic ranger
+> > from text documentation format into yaml.
+> > 
+> > Changes in v3:
+> > - add a i2c node around device node to set up #address-cells and
+> >   #size-cells for omitting error during make dt_binding_check
+> > 
+> > Changes in v2:
+> > - removed description of reg property
+> > - added a line:
+> >   additionalProperties: false
+> > 
+> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> > ---
+> >  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
+> >  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 60 ++++++++++++++++++++++
+> >  2 files changed, 60 insertions(+), 29 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+> >   
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for the 
+autobuilders to play with it.
 
-perf/x86/intel: Add Comet Lake CPU support
+Thanks,
 
-Comet Lake is the new 10th Gen Intel processor. From the perspective
-of Intel PMU, there is nothing changed compared with Sky Lake.
-Share the perf code with Sky Lake.
+Jonathan
 
-The patch has been tested on real hardware.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1570549810-25049-3-git-send-email-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/events/intel/core.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 27ee47a..9d91a47 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4983,6 +4983,8 @@ __init int intel_pmu_init(void)
- 	case INTEL_FAM6_SKYLAKE:
- 	case INTEL_FAM6_KABYLAKE_L:
- 	case INTEL_FAM6_KABYLAKE:
-+	case INTEL_FAM6_COMETLAKE_L:
-+	case INTEL_FAM6_COMETLAKE:
- 		x86_add_quirk(intel_pebs_isolation_quirk);
- 		x86_pmu.late_ack = true;
- 		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
