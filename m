@@ -2,297 +2,143 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4980DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C61C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C0F21D71
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570873582;
-	bh=7nesmRVdeqXmrUrcZBzK7PXJwI/0y8O+/4B+PM1WZGs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MTivZ49yBU1+8xv5FyD/RGmYHfmL2Cs86SsR3L5WdvdlGZJwO1iV6xUzmBKvBRGLL
-	 tz3MFTWeRmzhA7Ws/sFa5S3EB+HTBS4yILkzAo6tHxqLAoEVajdTleAbbIOmmWDWLB
-	 rNCVy5GXexax3SMTojAOqICIEJtyxij/jRet2jR4=
+	by mail.kernel.org (Postfix) with ESMTP id 47EF72089F
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbfJLJqS (ORCPT
+        id S1729074AbfJLJsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 05:46:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728399AbfJLJoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 05:44:44 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18FA7206A1;
-        Sat, 12 Oct 2019 09:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570873483;
-        bh=7nesmRVdeqXmrUrcZBzK7PXJwI/0y8O+/4B+PM1WZGs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N93qvl1a2ohoyXNYwAMogPlc7bikfh0lBr0MxyohBL1ne8acAsgbb5CVLSCiWhCXw
-         /IxbVcMsHmgNMLUgB8hEotjfVUK/csvbE2SJ+KziIv6b7anjeViRUiiBUfYu10dr6G
-         alR0o23uLGhe8gmJ2FLY5LlbOxQmE+S50Xz73Yao=
-Date:   Sat, 12 Oct 2019 10:44:37 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-iio@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Clean-up regulator '-supply' schemas
-Message-ID: <20191012104437.460694f9@archlinux>
-In-Reply-To: <20191011190231.9779-1-robh@kernel.org>
-References: <20191011190231.9779-1-robh@kernel.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 12 Oct 2019 05:48:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45680 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727507AbfJLJs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 05:48:29 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C55FA89947D5590388D6;
+        Sat, 12 Oct 2019 17:48:25 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sat, 12 Oct 2019
+ 17:48:24 +0800
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <linux-acpi@vger.kernel.org>
+References: <20190924131939.GS23050@dhcp22.suse.cz>
+ <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
+ <20190925104108.GE4553@hirez.programming.kicks-ass.net>
+ <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
+ <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+ <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+ <20191010073212.GB18412@dhcp22.suse.cz>
+ <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+ <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+ <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
+ <20191012074014.GA2037204@kroah.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
+Date:   Sat, 12 Oct 2019 17:47:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191012074014.GA2037204@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 14:02:31 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> Regulator '*-supply' properties are always a single phandle, so
-> 'maxItems: 1' or a $ref is not necessary. All that's needed is either
-> 'true' or an optional 'description'. Following this clean-up, the
-> meta-schema will enforce this pattern.
+On 2019/10/12 15:40, Greg KH wrote:
+> On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
+>> add pci and acpi maintainer
+>> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
+>>
+>> On 2019/10/11 19:15, Peter Zijlstra wrote:
+>>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
+>>>> But I failed to see why the above is related to making node_to_cpumask_map()
+>>>> NUMA_NO_NODE aware?
+>>>
+>>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
+>>> have a node assigned.
+>>>
+>>> It not having one, is a straight up bug. We must not silently accept
+>>> NO_NODE there, ever.
+>>>
+>>
+>> I suppose you mean reporting a lack of affinity when the node of a pcie
+>> device is not set by "not silently accept NO_NODE".
 > 
-> There's one case in tree with 'innolux,n156bge-l21' having 2 phandles.
-> This appears to be a mistake or abuse of simple-panel as it's 2 different
-> voltage rails connected to 'power-supply'.
+> If the firmware of a pci device does not provide the node information,
+> then yes, warn about that.
+> 
+>> As Greg has asked about in [1]:
+>> what is a user to do when the user sees the kernel reporting that?
+>>
+>> We may tell user to contact their vendor for info or updates about
+>> that when they do not know about their system well enough, but their
+>> vendor may get away with this by quoting ACPI spec as the spec
+>> considering this optional. Should the user believe this is indeed a
+>> fw bug or a misreport from the kernel?
+> 
+> Say it is a firmware bug, if it is a firmware bug, that's simple.
+> 
+>> If this kind of reporting is common pratice and will not cause any
+>> misunderstanding, then maybe we can report that.
+> 
+> Yes, please do so, that's the only way those boxes are ever going to get
+> fixed.  And go add the test to the "firmware testing" tool that is based
+> on Linux that Intel has somewhere, to give vendors a chance to fix this
+> before they ship hardware.
+> 
+> This shouldn't be a big deal, we warn of other hardware bugs all the
+> time.
 
-Nice to centralise bits of schema like this, though perhaps it does
-make everything feel a bit unpredictable as not obvious to someone writing
-a binding that a particular corner has been centralized but others haven't.
+Ok, thanks for clarifying.
 
-Oh well, I guess they should look at the relevant docs for each bit.
+Will send a patch to catch the case when a pcie device without numa node
+being set and warn about it.
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # for iio
-
-Thanks,
-
-Jonathan
+Maybe use dev->bus to verify if it is a pci device?
 
 > 
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-iio@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml   | 2 --
->  Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml  | 3 +--
->  Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml  | 3 +--
->  Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml   | 3 +--
->  Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml    | 3 ---
->  Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml    | 5 +----
->  Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml    | 1 -
->  Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml    | 1 -
->  .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml      | 4 +---
->  .../devicetree/bindings/iio/chemical/plantower,pms7003.yaml  | 1 -
->  Documentation/devicetree/bindings/iio/pressure/bmp085.yaml   | 2 --
->  .../devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml | 1 -
->  .../devicetree/bindings/regulator/fixed-regulator.yaml       | 1 -
->  13 files changed, 5 insertions(+), 25 deletions(-)
+> thanks,
 > 
-> diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
-> index fb747682006d..0da42ab8fd3a 100644
-> --- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
-> +++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
-> @@ -79,8 +79,6 @@ properties:
->  
->    hdmi-supply:
->      description: phandle to an external 5V regulator to power the HDMI logic
-> -    allOf:
-> -      - $ref: /schemas/types.yaml#/definitions/phandle
->  
->    port@0:
->      type: object
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> index 5f1fd6d7ee0f..e50a0cc78fff 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> @@ -37,8 +37,7 @@ properties:
->    clocks:
->      maxItems: 1
->  
-> -  mali-supply:
-> -    maxItems: 1
-> +  mali-supply: true
->  
->    operating-points-v2: true
->  
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> index 47bc1ac36426..5c576e5019c6 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> @@ -69,8 +69,7 @@ properties:
->        - const: core
->        - const: bus
->  
-> -  mali-supply:
-> -    maxItems: 1
-> +  mali-supply: true
->  
->    resets:
->      minItems: 1
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-> index c5d93c5839d3..afde81be3c29 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-> @@ -97,8 +97,7 @@ properties:
->  
->    memory-region: true
->  
-> -  mali-supply:
-> -    maxItems: 1
-> +  mali-supply: true
->  
->    power-domains:
->      maxItems: 1
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> index 9692b7f719f5..e932d5aed02f 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> @@ -45,15 +45,12 @@ properties:
->  
->    refin1-supply:
->      description: refin1 supply can be used as reference for conversion.
-> -    maxItems: 1
->  
->    refin2-supply:
->      description: refin2 supply can be used as reference for conversion.
-> -    maxItems: 1
->  
->    avdd-supply:
->      description: avdd supply can be used as reference for conversion.
-> -    maxItems: 1
->  
->  required:
->    - compatible
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> index cc544fdc38be..6eb33207a167 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> @@ -31,10 +31,7 @@ properties:
->  
->    spi-cpha: true
->  
-> -  avcc-supply:
-> -    description:
-> -      Phandle to the Avcc power supply
-> -    maxItems: 1
-> +  avcc-supply: true
->  
->    interrupts:
->      maxItems: 1
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> index d1109416963c..9acde6d2e2d9 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> @@ -39,7 +39,6 @@ properties:
->    avdd-supply:
->      description:
->        The regulator supply for the ADC reference voltage.
-> -    maxItems: 1
->  
->    powerdown-gpios:
->      description:
-> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-> index d76ece97c76c..91ab9c842273 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-> @@ -41,7 +41,6 @@ properties:
->    avdd-supply:
->      description:
->        Definition of the regulator used as analog supply
-> -    maxItems: 1
->  
->    clock-frequency:
->      minimum: 20000
-> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> index b4c6c26681d9..9218b2efa62f 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> @@ -46,9 +46,7 @@ properties:
->    "#io-channel-cells":
->      const: 1
->  
-> -  vdd-supply:
-> -    description: VDD input supply
-> -    maxItems: 1
-> +  vdd-supply: true
->  
->    samsung,syscon-phandle:
->      $ref: '/schemas/types.yaml#/definitions/phandle'
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
-> index a551d3101f93..19e53930ebf6 100644
-> --- a/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
-> +++ b/Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
-> @@ -25,7 +25,6 @@ properties:
->  
->    vcc-supply:
->      description: regulator that provides power to the sensor
-> -    maxItems: 1
->  
->    plantower,set-gpios:
->      description: GPIO connected to the SET line
-> diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
-> index c6721a7e8938..519137e5c170 100644
-> --- a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
-> +++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
-> @@ -28,12 +28,10 @@ properties:
->    vddd-supply:
->      description:
->        digital voltage regulator (see regulator/regulator.txt)
-> -    maxItems: 1
->  
->    vdda-supply:
->      description:
->        analog voltage regulator (see regulator/regulator.txt)
-> -    maxItems: 1
->  
->    reset-gpios:
->      description:
-> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
-> index 51254b4e65dd..57d8603076bd 100644
-> --- a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
-> @@ -36,7 +36,6 @@ properties:
->      const: 0
->  
->    phy-supply:
-> -     maxItems: 1
->       description:
->         Phandle to a regulator that provides power to the PHY. This
->         regulator will be managed during the PHY power on/off sequence.
-> diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> index a78150c47aa2..e56d97b233f4 100644
-> --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> @@ -64,7 +64,6 @@ properties:
->  
->    vin-supply:
->      description: Input supply phandle.
-> -    $ref: /schemas/types.yaml#/definitions/phandle
->  
->  required:
->    - compatible
+> greg k-h
+> 
+> .
+> 
 
