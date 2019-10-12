@@ -8,34 +8,34 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C90C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E45C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E762196E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1E802190F
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="FnFKrp2/"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QYvL9JBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfJLJID (ORCPT
+        id S1729134AbfJLJKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 05:08:03 -0400
-Received: from mout.web.de ([212.227.15.4]:48609 "EHLO mout.web.de"
+        Sat, 12 Oct 2019 05:10:32 -0400
+Received: from mout.web.de ([212.227.15.4]:50679 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727654AbfJLJIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 05:08:02 -0400
+        id S1727507AbfJLJKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 05:10:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1570871265;
-        bh=AjczjtWa014d2oNkGkskMjgMbvAv8DZY578FD5Vwzro=;
+        s=dbaedf251592; t=1570871410;
+        bh=M5FM0f63IJo3NuLHIeAHlhcS0j5WNHrVgPGk3XVFb3Y=;
         h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=FnFKrp2/XWEM8dOlFdZfqLelmhS/Ef+L70H6f1OB4kqmaR5PVi1L9G8BZechN+eRX
-         cSS5t7bU4wnzXA5C1JVm1yz/CkMQMUNQhQEH9E9tzszzbMsPK6GxaeqGOar2TfAT3x
-         Ji1bQ8scK5pozNpQvRnhMHEyt+j3Awwp/Uk4ODFI=
+        b=QYvL9JBcmq4Y7W7ZCAf9OAkEEoIP2SDY5O8iN/lGycmB9JtPDnIQB3IyBnlMiIgVs
+         5znPrSa+v72kik/TCsIzwEPQuihhnFSnq2cB+6Yi2VMqSMEkVYPrc2+16UlnziB/rf
+         0nEpoMoSaXhDpx4vTEBpG89Xq69ICncHZpO+8o5A=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.155.250]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lv7eE-1htKSI3OEs-010OUV; Sat, 12
- Oct 2019 11:07:45 +0200
-Subject: [PATCH 1/2] drm/imx: Fix error handling for a kmemdup() call in
- imx_pd_bind()
+Received: from [192.168.1.2] ([93.132.155.250]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LmLac-1hkQtP34le-00ZulL; Sat, 12
+ Oct 2019 11:10:09 +0200
+Subject: [PATCH 2/2] drm/imx: Fix error handling for a kmemdup() call in
+ imx_ldb_panel_ddc()
 From:   Markus Elfring <Markus.Elfring@web.de>
 To:     dri-devel@lists.freedesktop.org, kernel@pengutronix.de,
         linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
@@ -100,8 +100,8 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <3fd6aa8b-2529-7ff5-3e19-05267101b2a4@web.de>
-Date:   Sat, 12 Oct 2019 11:07:43 +0200
+Message-ID: <d35e4483-e310-c5b8-467e-a6a51f49dfef@web.de>
+Date:   Sat, 12 Oct 2019 11:10:07 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
@@ -109,70 +109,64 @@ In-Reply-To: <2abf545b-023b-853a-95ef-ce99e1896a5d@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:W3Z0O1POMaaQIJ32IhrHrxFn2Y1KIKAiwjwlF8eRe4dGsAUf5tZ
- kPREuBKVCE1UElNcRmccWO6u+Pg6Cfl6+JDbCLzTlaSVqDnMsWMdpAN1Dx1xTLZzZZ9hkba
- PV0qOTC7vKI7tgwZI62Ee1Q3eoCmHzWNE+9ewrmFdwFjJvc3P8hv50eZDSxElt+0cZYgw6W
- wlQgsdfT1F7ofcdoJbtaQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oumwdnv/zE0=:3Iy6j1/x5cfqhd5YgzsPAQ
- GRw8wn8MLKMc1n7oovMS7iBTuLZtCMtfCa2aBX7tg9JlzdnYNx0ivcTgc1KAXMyuTssbgUSM4
- PfKlGp44/oxedaw1MM1A2p1O+AE2X2NcC0uwEX/I+wlCNzGiMY/M/OVLWcjt5jtoVB1MmeafT
- jep7Fg3gL2XmJCq99/L6Z1qgB8lfvDENs1mMwkbS879wvP5ucJziIdk62X24XkKWbqgpBpuVQ
- Ks40KuQvvpqDdbfQny5cnn2A3YUVhrAD2JLcRN3HNnqlK0RymL7KCirIArMP9a4ncao0zxHqT
- rlszRfFSm5sLKhK7X7OsYyVVouxF+270kLP5vj86xWNwk4IibhlyoyOYupajdRD08D+sJuKHC
- ydot2lyO4/2ZxJXLBrsz8ZQae2CaQBfOl2bDpBE5/mjGv+RKiecDXQZAdqvjACS0FYhO1k55S
- LxO2Q4ngVytMseTBfOna96yu2Mzv7KGlq8t77HLEvT6vFAlR5PMVPhCnnxajJ0Q0pFnztBR3f
- x6ODMqXyvK9Yf2wwW8ms9Xr/iuIoud2+EFIc9O8vTSjZnXgPIvS1+FpkmWA/Van2llceb5lbj
- UnZctnhzR6AMAaey3ESkLVsF6uq9lnxAR0AO7QCOaJR6JNizUkjzLg47nfA1rZ6ilirsYaZIJ
- KKeRT6H8hXEslNq75JQenRgfpUKHhLtzW5xstrMNbeTOELnAeQ6e8dBoNNfZPoPpp0hyGwXWL
- rxIVVhcIDP6wF2a13ElHbNv+witeXpZNv55UDWnxnPzWeye4mciX2vXlBjh0sLk1F9jFm8r9S
- fdPQTJm+I1d8EsPTeL+9qsOrmjJ38KIkd1+YEYXgeHcgtsSL/ln+9IHznyGHzKSxv/Jgr+oKU
- ne1zrzM7TpmiQjWskR1u9avXMC5EFVHuZoLRVUl2xkgPP6QUzkVahRwpsCDoYKZqb44VBn2Qi
- GkCNnMbNBA2UQPOW6n3mZQY3LU1ywTbHKAK6RsHlsaAxmOd10MsdLFtBtr511zYfczb7XZWFN
- 72z7R7aC7cxDlml8zEFHN2XSghx6Cl/uLUuMLR4sIAcle8y3ZMLP6QD8IO0bBn0ixjkUKgbD6
- hxRxgVKWbPmoVvlrwA3IiOGjDjdDQuGjx5+PbqnYKs0FIBuJpslUohOy92hhRCT3hZoTww4GS
- pVkHv5MLP5vCWLLDIywUNDYUOxw/xQ7Hej5MXqmTAGPRAr0RinNHDxCScvqlPAdEby9rNsjXD
- rIz+m/SRaMSBFaIbvmD9KaC+c16VddxGKfCaoyN/k6k2ir04a2qIsfjIfny0=
+X-Provags-ID: V03:K1:gGpFAHArYSlK95NnhPUT1yPh1BNAB5JeqT5lvvhGTGSuyV5zH2I
+ sdx9BqVDf55FU4s0a2Cm5njWxw+t7cls6U+epxcVScFoBPkG6ro5FaEYcjWdVs8iiXsRNJz
+ Ir1ii7xDM+EeNXS+FPMJmnKl04inQyH2ETcZch9USRk718nPTs6/sHQix9z6EirvZx4UTQS
+ /4us6+FXgIvM701oHk1ig==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5/nCnSwZ9tg=:Pz7hYiKFMER0YQ1nuGXVTk
+ 0qLcpA0GPD+SF8hHYWyxLv8GuY7/pYy4Qd+ChUgPr1GiPSDJKNi0+Y5Wk+AxyrxsDNSFRYDzI
+ VUNWDz8xb7luxw4yMuFG/2aHCMhqdcctgeIlMs+s0PkWWPTahlTYOitYHP0iybDdDwZLhHPhL
+ mPM9VnjJvk26Wn78pVP99BnKeHUQ5aKcRXHyO8jDTyAqgi7ywzMbLoeudujyp70OiFpXczG0N
+ V0+gEjAwyu/IMbkqWju6wGVOsnFtzBKUroobPy9g6B/jiyHAsu1SX8x43LqfB/Spz5XmE6RHi
+ g/iHkpY5mUTuwOh/B88UIPJstmTQwq7MdoUpz0lIHDen66dyQp8HKF+FhjdYT0DCtVgu754JO
+ IEeFrFur/KLHfXtZG24sDy63ZMkGCltC7twI0qLpzdDn4h/01zHXXwuDABnEfSjVtWiFg5YMB
+ w8VTuYqCptBruESxOwVtICvUISHaDhHg0kLNc4r+xGh4WHeTrJhmV0eczeF5FbS2Of82mrtKR
+ Li50JJ7F3i2OoGDB+7yvGukKl9Hrgf3Nz8Mq5/iRM0pf+N0KktuVdstFM5jy3nABaE+Y8ohLo
+ 0r52fkz/l0ESnPDqYZwXzV0BzPIWD3RiNB1Q+CljwcCoG9ApHOlwXMJaWJfdnOPc0nOiC2Aok
+ 3M+KNAdhjrB3AP5tMILrcCxNaRD2eJ/+sCXr/pAgBnkfy2dfQq14SDeF1v3xwix/oTHpD6Ypn
+ CahYImR//ezb11Cu7Vpish4gfMKppVzyPbX7lApbd5a7VyvSrlCu3XMSqm9cGVQBpTkglTbr9
+ UweNZsunxTxuMBN4wC9hjW4iKb2rs2a7JEJ5tJpYYlQm7591AugbHFTrTgvRpZF0HIYOCQkqz
+ gJPla36BVOSvRVgK6Y7DULT0r903ku08VWgwNVE+GYwcy8rxtM9XiuIt7zCxsPV3ziKv8nRPv
+ xQCQ+72/i3DYoc+qVIKke+THo9CpOf1O87k5UOjB0tKrt0aj42vidjHPL3Z5m+XGiJkSasCSY
+ ElzKLYLvETN+z3M2NgPD4Fl3XWhONPNPw+BWVINHyRoiej2J8F+ioP0h+NKyuhzBYLNZE4yo2
+ Bq11r1IxumnT+QO3aTv8P9UBLMwLH2chzjWyAmkB+1UyunBkh6x06PeezDijqNiDjqWdaisAt
+ A9UsC+vWOL0UbEYhjMEEH7mW4dlW7Vy9JJWTizKPz1S634mAWz5LP4Z5WZoCbVmUHxSDl313F
+ VujI2nYe/zQgsjWWDhzovNDN3BBhq1iNtL54E1UC6fqvy1Q/MltWmqbd2TX8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 12 Oct 2019 10:30:21 +0200
+Date: Sat, 12 Oct 2019 10:33:47 +0200
 
 The return value from a call of the function =E2=80=9Ckmemdup=E2=80=9D was=
  not checked
 in this function implementation. Thus add the corresponding error handling=
 .
 
-Fixes: 19022aaae677dfa171a719e9d1ff04823ce65a65 ("staging: drm/imx: Add pa=
-rallel display support")
+This issue was detected by using the Coccinelle software.
+
+Fixes: dc80d7038883feca2abd08975165bc0d83c84762 ("drm/imx-ldb: Add support=
+ to drm-bridge")
 Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 =2D--
- drivers/gpu/drm/imx/parallel-display.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/imx/imx-ldb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/=
-parallel-display.c
-index 35518e5de356..39c4798f56b6 100644
-=2D-- a/drivers/gpu/drm/imx/parallel-display.c
-+++ b/drivers/gpu/drm/imx/parallel-display.c
-@@ -210,8 +210,13 @@ static int imx_pd_bind(struct device *dev, struct dev=
-ice *master, void *data)
- 		return -ENOMEM;
-
- 	edidp =3D of_get_property(np, "edid", &imxpd->edid_len);
--	if (edidp)
-+	if (edidp) {
- 		imxpd->edid =3D kmemdup(edidp, imxpd->edid_len, GFP_KERNEL);
-+		if (!imxpd->edid) {
-+			devm_kfree(dev, imxpd);
-+			return -ENOMEM;
-+		}
-+	}
-
- 	ret =3D of_property_read_string(np, "interface-pix-fmt", &fmt);
- 	if (!ret) {
+diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
+index 208069faf183..801a2265dd11 100644
+=2D-- a/drivers/gpu/drm/imx/imx-ldb.c
++++ b/drivers/gpu/drm/imx/imx-ldb.c
+@@ -569,6 +569,8 @@ static int imx_ldb_panel_ddc(struct device *dev,
+ 			channel->edid =3D kmemdup(edidp,
+ 						channel->edid_len,
+ 						GFP_KERNEL);
++			if (!channel->edid)
++				return -ENOMEM;
+ 		} else if (!channel->panel) {
+ 			/* fallback to display-timings node */
+ 			ret =3D of_get_drm_display_mode(child,
 =2D-
 2.23.0
 
