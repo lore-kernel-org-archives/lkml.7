@@ -2,112 +2,126 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6915ECE598
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AC6C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0A22067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F782067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 06:53:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jU5Rkt5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbfJLGwW (ORCPT
+        id S1728799AbfJLGxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 02:52:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54390 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbfJLGwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 02:52:21 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3A81C6908D;
-        Sat, 12 Oct 2019 06:52:21 +0000 (UTC)
-Received: from t460p.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 64D8160A97;
-        Sat, 12 Oct 2019 06:52:20 +0000 (UTC)
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Scott Wood <swood@redhat.com>
-Subject: [PATCH RT v2 1/3] sched: migrate_enable: Use select_fallback_rq()
-Date:   Sat, 12 Oct 2019 01:52:12 -0500
-Message-Id: <20191012065214.28109-2-swood@redhat.com>
-In-Reply-To: <20191012065214.28109-1-swood@redhat.com>
-References: <20191012065214.28109-1-swood@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Sat, 12 Oct 2019 06:52:21 +0000 (UTC)
+        Sat, 12 Oct 2019 02:53:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42624 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbfJLGxE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 02:53:04 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n14so14052098wrw.9
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Oct 2019 23:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=fQ6eXPgRmlE7QGLNLnLPlmdGjpBQkjzBBl5+6F7Plow=;
+        b=jU5Rkt5CwB2Du/Izd0rvUMrNTYl9HEaywmBiUBUFvNDZQsYZ/Cndo7r4wzeHZeIDLD
+         oqwHjIA5jt/MArvAd9DQ4RRs8BQoswRY8SZdq/LloTX46frlz4BHmM2fXhqhkgQ+Py87
+         gqQ1ZwJjNg0igFl/2fYpefAMB+v/1rG6x9gSxSlRjVOmqzKQ6grihz/vAgqApwBjkZJE
+         a4l9E5EMIPdnZDOch1UDcDA42xBfHYQiBdhEdY/YYncYhRTfzRq3/KXlmyRr5wJ17hBV
+         HrPfjfBOt8X3dFvItCzme5S2m+rJ6gCGkLG+iPTvsCqJe31onu/m4L++r/AG98qiPToc
+         Fv8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fQ6eXPgRmlE7QGLNLnLPlmdGjpBQkjzBBl5+6F7Plow=;
+        b=kq66XDMS1osCow6WMsLSJW19srN6RZOk2ooepcriZ+hi5kL+0jx2t2sQmeAiGP/HT5
+         aBOcc8ZteMyQysGwRUU0Dmobs6Lc0SaU6jR7oeW2uNhGmpwr5W5X6jnrGMtiFgmWYe14
+         na5zJW5ADzonUOV0OfcCvtJsvmi+nADm8alwFsN9si0ZKSQE6nq3+qms6rYN6tlrRH5j
+         4KMeczpOXdiEfxh/sDbb/U7YBNNutOJe0xIP+47pSwxewI5HcggMBDahPxSAg5fDoCSr
+         5q6TQ/Dx7RZcHYWvzPYBJQiUr0zDyymVyFf9Qc2SZpGFYEiZcPMY8xZG9IyARejHv73O
+         aLOw==
+X-Gm-Message-State: APjAAAU+QZeTMgrajBjBdiPHXw6SKQphvLoof8rBf7rYkmZZeo8w9/3P
+        1NpEi+o8Ok3ttZFySvxLvpeM2A==
+X-Google-Smtp-Source: APXvYqzaOIyDjy7+Z2K/tCHPciYbgcwG4Xp1G7o1F4bQvEUm/3grxzCzaQ02XbFr4tCjAXNBddAOiQ==
+X-Received: by 2002:a5d:6b03:: with SMTP id v3mr16898131wrw.182.1570863182430;
+        Fri, 11 Oct 2019 23:53:02 -0700 (PDT)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:f437:29a8:ed69:7bab])
+        by smtp.gmail.com with ESMTPSA id z5sm17450497wrs.54.2019.10.11.23.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Oct 2019 23:53:01 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rui.zhang@intel.com, edubezval@gmail.com
+Cc:     daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
+        amit.kucheria@linaro.org
+Subject: [PATCH 01/11] thermal: Move default governor config option to the internal header
+Date:   Sat, 12 Oct 2019 08:52:45 +0200
+Message-Id: <20191012065255.23249-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-migrate_enable() currently open-codes a variant of select_fallback_rq().
-However, it does not have the "No more Mr. Nice Guy" fallback and thus
-it will pass an invalid CPU to the migration thread if cpus_mask only
-contains a CPU that is !active.
+The default governor set at compilation time is a thermal internal
+business, no need to export to the global thermal header.
 
-Signed-off-by: Scott Wood <swood@redhat.com>
----
-This scenario will be more likely after the next patch, since
-the migrate_disable_update check goes away.  However, it could happen
-anyway if cpus_mask was updated to a CPU other than the one we were
-pinned to, and that CPU subsequently became inactive.
----
- kernel/sched/core.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+Move the config options to the internal header.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 93b4ae1ecaff..bfd160e90797 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7405,6 +7405,7 @@ void migrate_enable(void)
- 	if (p->migrate_disable_update) {
- 		struct rq *rq;
- 		struct rq_flags rf;
-+		int cpu = task_cpu(p);
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/thermal/thermal_core.h | 11 +++++++++++
+ include/linux/thermal.h        | 11 -----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+index 207b0cda70da..f1206d67047f 100644
+--- a/drivers/thermal/thermal_core.h
++++ b/drivers/thermal/thermal_core.h
+@@ -12,6 +12,17 @@
+ #include <linux/device.h>
+ #include <linux/thermal.h>
  
- 		rq = task_rq_lock(p, &rf);
- 		update_rq_clock(rq);
-@@ -7414,21 +7415,15 @@ void migrate_enable(void)
- 
- 		p->migrate_disable_update = 0;
- 
--		WARN_ON(smp_processor_id() != task_cpu(p));
--		if (!cpumask_test_cpu(task_cpu(p), &p->cpus_mask)) {
--			const struct cpumask *cpu_valid_mask = cpu_active_mask;
--			struct migration_arg arg;
--			unsigned int dest_cpu;
--
--			if (p->flags & PF_KTHREAD) {
--				/*
--				 * Kernel threads are allowed on online && !active CPUs
--				 */
--				cpu_valid_mask = cpu_online_mask;
--			}
--			dest_cpu = cpumask_any_and(cpu_valid_mask, &p->cpus_mask);
--			arg.task = p;
--			arg.dest_cpu = dest_cpu;
-+		WARN_ON(smp_processor_id() != cpu);
-+		if (!cpumask_test_cpu(cpu, &p->cpus_mask)) {
-+			struct migration_arg arg = { p };
-+			struct rq_flags rf;
++/* Default Thermal Governor */
++#if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
++#define DEFAULT_THERMAL_GOVERNOR       "step_wise"
++#elif defined(CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE)
++#define DEFAULT_THERMAL_GOVERNOR       "fair_share"
++#elif defined(CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE)
++#define DEFAULT_THERMAL_GOVERNOR       "user_space"
++#elif defined(CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR)
++#define DEFAULT_THERMAL_GOVERNOR       "power_allocator"
++#endif
 +
-+			rq = task_rq_lock(p, &rf);
-+			update_rq_clock(rq);
-+			arg.dest_cpu = select_fallback_rq(cpu, p);
-+			task_rq_unlock(rq, p, &rf);
+ /* Initial state of a cooling device during binding */
+ #define THERMAL_NO_TARGET -1UL
  
- 			unpin_current_cpu();
- 			preempt_lazy_enable();
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index e45659c75920..a389d4621814 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -43,17 +43,6 @@
+ #define MILLICELSIUS_TO_DECI_KELVIN_WITH_OFFSET(t, off) (((t) / 100) + (off))
+ #define MILLICELSIUS_TO_DECI_KELVIN(t) MILLICELSIUS_TO_DECI_KELVIN_WITH_OFFSET(t, 2732)
+ 
+-/* Default Thermal Governor */
+-#if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
+-#define DEFAULT_THERMAL_GOVERNOR       "step_wise"
+-#elif defined(CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE)
+-#define DEFAULT_THERMAL_GOVERNOR       "fair_share"
+-#elif defined(CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE)
+-#define DEFAULT_THERMAL_GOVERNOR       "user_space"
+-#elif defined(CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR)
+-#define DEFAULT_THERMAL_GOVERNOR       "power_allocator"
+-#endif
+-
+ struct thermal_zone_device;
+ struct thermal_cooling_device;
+ struct thermal_instance;
 -- 
-1.8.3.1
+2.17.1
 
