@@ -2,143 +2,129 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C61C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37B7C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47EF72089F
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BD5206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:51:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="J6CKZ22z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbfJLJsa (ORCPT
+        id S1729167AbfJLJvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 05:48:30 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45680 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727507AbfJLJs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 05:48:29 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C55FA89947D5590388D6;
-        Sat, 12 Oct 2019 17:48:25 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sat, 12 Oct 2019
- 17:48:24 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>
-References: <20190924131939.GS23050@dhcp22.suse.cz>
- <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
- <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
- <20191010073212.GB18412@dhcp22.suse.cz>
- <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
- <20191011111539.GX2311@hirez.programming.kicks-ass.net>
- <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
- <20191012074014.GA2037204@kroah.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
-Date:   Sat, 12 Oct 2019 17:47:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Sat, 12 Oct 2019 05:51:03 -0400
+Received: from mout.gmx.net ([212.227.15.19]:59821 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727115AbfJLJvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 05:51:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1570873814;
+        bh=8pjS8qqP1wCmF9jdsKwpdm/zvDW8dZCWsbuGTUYmHnw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=J6CKZ22z3cpZ+/zpyRdj0H0uRJ/h7sj9IgGBbkjmN6qL2X2ARZIdDqpJzufjDVaR1
+         uGmCRhNhLGwwLdQCLythOpnfYpv8PEvyP/qgm1AFgnAATznFGOLmT/lqRCPATFTE0B
+         4v750SP85bljN9qKjtWA813iPaD71LWPNRVf6yNg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.20.60] ([92.116.179.223]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MCsPy-1iAOLl3LOK-008rpL; Sat, 12
+ Oct 2019 11:50:13 +0200
+Subject: Re: [PATCH v2 23/29] parisc: Move EXCEPTION_TABLE to RO_DATA segment
+To:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>
+Cc:     Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <20191011000609.29728-1-keescook@chromium.org>
+ <20191011000609.29728-24-keescook@chromium.org>
+From:   Helge Deller <deller@gmx.de>
+Message-ID: <8b3c27ec-9880-5957-a802-ca740d9ad6c5@gmx.de>
+Date:   Sat, 12 Oct 2019 11:50:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <20191012074014.GA2037204@kroah.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191011000609.29728-24-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:OW210CNt72Zupg9+ou7uinpWv/FzSz2oE2Zp/PdnIFvmfis7zNJ
+ P3Rp9iclPc+rsBMguDEUPJQm8Yn1SvGGtGHcdrp+KJhkV5wbrDyLG2gmCL/OgLYlrwnF1m9
+ LNy0UJ3GCHEE7hTl/1RD6xsBIN/bKRXCoTcyxTI5LmvAywZVxlNm8MA7F9Ig8LsAryEJ8IL
+ JZhR1dSDqg/a+ayH7Komw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pZ5nxAfIR7w=:h5OstQK89PxInzAY8LE9ch
+ H7OkoHcI9jbhXK+JS9guTm/NHtR62occBkO2mpsMXM8CRvDkBO5bcVH80Rezb+BmCmqBwYfVr
+ V9LY8lwOb62BQ5FbznS9gCvsa4J5A3qTQWXVAw4wSBb5Hd9B3JGDEXDr5Y3XMCtYLQMgkW4qt
+ UWFawktUY/KQKoKp+wdPI1/x/iM5UslaPQ4IQyERqet9S71/be4PGuAnJO/DM7FdX+L5dpZgy
+ yw2mqZ6hWfdIBGL5Uli0aQsNW1nVOakK5BMZh/snQdA7K/AKGcofWf2CoWFg+U+WlIYsMk/7T
+ Pzt5/15B64o3xwlr8EB4l3C6YfTL15GeKpFCRSVGlmMZL5lUOjPbfWrdr0add2D4nluYZNmWF
+ YaxZQqp3IqfSOo/jJ8ej3lvbXrz4BqLpF+4wdwuC3JClJytzQE1Y+Fu1QQMCbtKHmONRtduG+
+ Tix1xFhpsARj+Hd2pI71XlP6WhLK2+A5euQ73Xbw3/tDBssMvJFvMc0ezsel0B1PPxrxP7Bug
+ OcudSoOVhia9L7wKmfSCpQrhRPtOa5tL5L/zOXxshqukOAg31BZ1xu9MwYGbuEmWjVRQq3/4r
+ TWrK0Eb5R0YnUO1S6wcz2zID6JB78b3jejElNf0Ale1zAFgn5koeth7M3dmWS7foWtFTRuL7d
+ hggTfyvRmEpLI9pfmFwF5jWvX69HM6DjvKPNRE9Pkg+UEX2eXnp2ARrw9L7VQr/BtrgihZ/ij
+ QZkJHTz+MgGUWmwhriw0JccXhLLWPMS+bx3//Vjhvw0611mJyt26SPB72B95yXJPhY9g0Ln/Q
+ aE5s0mL/GSWLKI8M2K9L1HJL/gQOzXAY+KfriiZSMaYuUY1797t7U1bxucplHHjUR7TXa8mcE
+ zrwtR+BN+Qwc4hPsHs15Gx+20e/RdwD7K+sTSjBn1nny76pXAKhWTNAboDLi3aaQYTbkngsys
+ MFOXSHRSCJCMyaVreP2DCY8T/bxMAvUQceQIzuBE+/PUhZ8LQNSPpuKgqwLHuNLKngTD6xwpV
+ XJuQCX2nL7gOekbu2d+u2r/C4DtxPB3BQowgPWG0MJpFwel/FxWvZ47PMkHn3Qtv4tBf68QNz
+ N17bNoir8utOLCgGgm/z/gnQ2uVeWeKTFrRTR76F6mWi+nUkajc+Mee+U3ePQ0uyZAzVympCm
+ aC0lcaNBAZ6cO/enINP3xeoyXFBf3SzdmzJbOAWaZnFa1gyem2qJbi/FPSUkuM5gc13cDiQeR
+ YJ4EyjmC/J5gPlCSwJyuiuu/+yaa/hcDpx1jhRQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/12 15:40, Greg KH wrote:
-> On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
->> add pci and acpi maintainer
->> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
->>
->> On 2019/10/11 19:15, Peter Zijlstra wrote:
->>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
->>>> But I failed to see why the above is related to making node_to_cpumask_map()
->>>> NUMA_NO_NODE aware?
->>>
->>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
->>> have a node assigned.
->>>
->>> It not having one, is a straight up bug. We must not silently accept
->>> NO_NODE there, ever.
->>>
->>
->> I suppose you mean reporting a lack of affinity when the node of a pcie
->> device is not set by "not silently accept NO_NODE".
-> 
-> If the firmware of a pci device does not provide the node information,
-> then yes, warn about that.
-> 
->> As Greg has asked about in [1]:
->> what is a user to do when the user sees the kernel reporting that?
->>
->> We may tell user to contact their vendor for info or updates about
->> that when they do not know about their system well enough, but their
->> vendor may get away with this by quoting ACPI spec as the spec
->> considering this optional. Should the user believe this is indeed a
->> fw bug or a misreport from the kernel?
-> 
-> Say it is a firmware bug, if it is a firmware bug, that's simple.
-> 
->> If this kind of reporting is common pratice and will not cause any
->> misunderstanding, then maybe we can report that.
-> 
-> Yes, please do so, that's the only way those boxes are ever going to get
-> fixed.  And go add the test to the "firmware testing" tool that is based
-> on Linux that Intel has somewhere, to give vendors a chance to fix this
-> before they ship hardware.
-> 
-> This shouldn't be a big deal, we warn of other hardware bugs all the
-> time.
+On 11.10.19 02:06, Kees Cook wrote:
+> Since the EXCEPTION_TABLE is read-only, collapse it into RO_DATA.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   arch/parisc/kernel/vmlinux.lds.S | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
 
-Ok, thanks for clarifying.
 
-Will send a patch to catch the case when a pcie device without numa node
-being set and warn about it.
+Acked-by: Helge Deller <deller@gmx.de>  # parisc
 
-Maybe use dev->bus to verify if it is a pci device?
+Helge
 
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> .
-> 
+>
+> diff --git a/arch/parisc/kernel/vmlinux.lds.S b/arch/parisc/kernel/vmlin=
+ux.lds.S
+> index 12b3d7d5e9e4..53e29d88f99c 100644
+> --- a/arch/parisc/kernel/vmlinux.lds.S
+> +++ b/arch/parisc/kernel/vmlinux.lds.S
+> @@ -19,6 +19,7 @@
+>   				*(.data..vm0.pte)
+>
+>   #define CC_USING_PATCHABLE_FUNCTION_ENTRY
+> +#define RO_EXCEPTION_TABLE_ALIGN	8
+>
+>   #include <asm-generic/vmlinux.lds.h>
+>
+> @@ -129,9 +130,6 @@ SECTIONS
+>
+>   	RO_DATA(8)
+>
+> -	/* RO because of BUILDTIME_EXTABLE_SORT */
+> -	EXCEPTION_TABLE(8)
+> -
+>   	/* unwind info */
+>   	.PARISC.unwind : {
+>   		__start___unwind =3D .;
+>
 
