@@ -2,133 +2,107 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE94C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13608C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB1020679
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF4D205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 20:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="W/W+rJpI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wk991iMX"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DlKXNXRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbfJLUFa (ORCPT
+        id S1729713AbfJLUKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 16:05:30 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:52799 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728338AbfJLUF3 (ORCPT
+        Sat, 12 Oct 2019 16:10:54 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35561 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728338AbfJLUKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 16:05:29 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 79C2F21385;
-        Sat, 12 Oct 2019 16:05:28 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Sat, 12 Oct 2019 16:05:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-         h=from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=OvzfG8zhdZT1F4AotrdKLjvY01
-        WSIUt9Ce8DLglbjK4=; b=W/W+rJpIPleM+iUaW+8YgGmLkreSetZBcVOUYfU1cP
-        H4yfVXNosTPzMqMy8ZzkxKk3j/PwwH1YNAOu5J0cg9PFOgagZ227c89i1AmkvpeW
-        /y/ENoZET1MgkYjkU1saxNVi+dISHvw9ua7hQo30xSMRz0p1o869FIqBy0oqqfkH
-        IAYEDz9dE0TSILNSc/qOh5HALhC++gEXVErc4NUJcgxxUjv1FwJIp6B0D/RCApdx
-        WABeOSc3bHCF/3LcInTnIdkpKOIYNYVN0FrmoeaKtYdDCUPipa+OGlKhzIlt3JpP
-        Nf7W13FzYG7I7YExQifOy/9FS7SUYgmKqVPTEmZwdx1Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=OvzfG8zhdZT1F4Aot
-        rdKLjvY01WSIUt9Ce8DLglbjK4=; b=Wk991iMXPO+a9X/pYazh57Nh8BDyAt14g
-        +qiM+GBf6iYK1O1DRkg4YLMsVMnXPd9k+OzzNkgp0KnOX9Qo9LYy7rHqraWlRhea
-        8x1y8BPRXor6A9I6Nu7t+8Mw8FIopU1f1GKXlJSlHY8hbxr0XahaN+B2I/r4EX+t
-        j6QPjXTSvHyGtlQc49uM9euRj90IXz8DDBu0XZ1Sw4BRrxrhG8Pt2qX/Hm5qbiD0
-        KE2v6Vjs2MPjUrsdCdzRBw0clrw2GoRp/vtMZKH3gUM0vxAZ9SW2UbJPJcpxyYl2
-        CAKk95rmDHQUupLcZXbYjc1MxilnnAdxOv2Ejzlha39jQrONXxUAA==
-X-ME-Sender: <xms:BzKiXa1iVBxZ4sp6o8UocD1dKwGBMGdRCAZ9lxwKQe6haAcTr1zbzg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrieejgddugeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomheptehlihhsthgrihhrucfhrhgrnhgtihhsuceorghlihhsthgrihhr
-    segrlhhishhtrghirhdvfedrmhgvqeenucfkphepjeefrdelfedrkeegrddvtdeknecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhm
-    vgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:BzKiXZZevJ8A3IXvN_MXan054Rz1MwhbpZtEoNkqiFi_gymdHXyIlw>
-    <xmx:BzKiXVoTdpXooHgfEcRyQDgBmfE9cWhmoPyB8t05eekBuFnB_F0XOg>
-    <xmx:BzKiXdq4NHQ6_kTTW49-0b1aL7ZhMUEFALbd2TF7wePG5NQ6Gmry4g>
-    <xmx:CDKiXclACE5AvIwWq51pgAS_gg_yalbrOgY_mAPbB0fvbqOVA4HbUw>
-Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C901CD6005D;
-        Sat, 12 Oct 2019 16:05:26 -0400 (EDT)
-From:   Alistair Francis <alistair@alistair23.me>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     wens@csie.org, mripard@kernel.org, alistair23@gmail.com,
-        Alistair Francis <alistair@alistair23.me>
-Subject: [PATCH] arm64: dts: sun50i: sopine-baseboard: Expose serial1, serial2 and serial3
-Date:   Sat, 12 Oct 2019 13:05:24 -0700
-Message-Id: <20191012200524.23512-1-alistair@alistair23.me>
-X-Mailer: git-send-email 2.23.0
+        Sat, 12 Oct 2019 16:10:54 -0400
+Received: by mail-io1-f66.google.com with SMTP id q10so28786313iop.2
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 13:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=w4/POuTWUDiZtOhUix11luXG+xnY9Yx35d0vIUWcKFE=;
+        b=DlKXNXRs6QgShbGdEn/kZP9ek6vlfp+9Nkuj/VBQgO+gM4l1hR8CavApjGkyY44uat
+         pxuov27CpBZx6QF+yN89kE5WZsIvZF6HOJbrdBxJAEcWA8WlZ0JwgM2xyOGRmZ+f3yoO
+         muTjP6sSWHS2jRsxzt6f8KgsgXGPUQ6ZrDvfps5AEdo8EalcNhGVh8qvEA2/s7mlpZAL
+         KbK7RNuLPha9WCvf2WmcqGm5ipkFzRw3bydc4oyIMi4GSnEF6+ikVdTLWdFEYyjRJMFv
+         AAzEo8Xqt2cQrZhnC7eYQKX4WTdFL8onI+HDqc+SNdYJhqw7l5m1gz4j0W9oB3FhrrAq
+         aQ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=w4/POuTWUDiZtOhUix11luXG+xnY9Yx35d0vIUWcKFE=;
+        b=snMFl7MiJdb9xBZ2GTXfzSiJ5fMj+ctnjhWEO7cwUIg+NJNSjXl61+Kj6CVeifgxSC
+         oZNQRVHj7zij+C9oqVvynk/nzXDwYjsbyEoVo9I0Qg377MnygmVrqAI8xfcr6V1PV81o
+         GeuoN1safGvChQlG3Wm93kl60yt0sLj8vWbmLKz3Id06buGF9USZGluWzRXtXhrbvoxt
+         4L6fiJVb1dqkZBm9GxZErVpbgI/+tSs8HheqGkfT1dH2pIIWWMUU7YDPHNptGi3EDX50
+         QjjCy2HqDtxi44IBspfUALUALWI/wTpJDO/tfMhI8ay5auA4JnAUFOXiyu7NCke3eRbW
+         hZmQ==
+X-Gm-Message-State: APjAAAUXaamEXBp1VqHpCAgbbcvxFxcJt7uSIQ2EZ54L3nZaB0oT5073
+        B1Dy4HKd8HcHuFDXhU4XjLtZmmCDm7Y=
+X-Google-Smtp-Source: APXvYqzmy+Sa3CxJDUMcVmYUrwvMkOknIMN4j2mDR0wZZEvzVGV/iFzMbPM39F1SIqcWA3tPPVvPHw==
+X-Received: by 2002:a6b:7609:: with SMTP id g9mr4529225iom.130.1570911053230;
+        Sat, 12 Oct 2019 13:10:53 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id a14sm9138006ioo.85.2019.10.12.13.10.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Oct 2019 13:10:52 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 13:10:52 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     torvalds@linux-foundation.org
+cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RISC-V updates for v5.4-rc3
+Message-ID: <alpine.DEB.2.21.9999.1910121307270.18026@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Follow what the sun50i-a64-pine64.dts does and expose all 5 serial
-connections.
+Linus,
 
-Signed-off-by: Alistair Francis <alistair@alistair23.me>
----
- .../allwinner/sun50i-a64-sopine-baseboard.dts | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 124b0b030b28..49c37b21ab36 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -56,6 +56,10 @@
- 	aliases {
- 		ethernet0 = &emac;
- 		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		serial4 = &uart4;
- 	};
- 
- 	chosen {
-@@ -280,6 +284,27 @@
- 	};
- };
- 
-+/* On Pi-2 connector */
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+	status = "disabled";
-+};
-+
-+/* On Euler connector */
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+	status = "disabled";
-+};
-+
-+/* On Euler connector, RTS/CTS optional */
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_pins>;
-+	status = "disabled";
-+};
-+
- &usb_otg {
- 	dr_mode = "host";
- 	status = "okay";
--- 
-2.23.0
+  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc3
+
+for you to fetch changes up to cd9e72b80090a8cd7d84a47a30a06fa92ff277d1:
+
+  RISC-V: entry: Remove unneeded need_resched() loop (2019-10-09 16:48:27 -0700)
+
+----------------------------------------------------------------
+RISC-V updates for v5.4-rc3
+
+Some RISC-V fixes for v5.4-rc3:
+
+- Fix several bugs in the breakpoint trap handler
+
+- Drop an unnecessary loop around calls to preempt_schedule_irq()
+
+----------------------------------------------------------------
+Valentin Schneider (1):
+      RISC-V: entry: Remove unneeded need_resched() loop
+
+Vincent Chen (3):
+      riscv: avoid kernel hangs when trapped in BUG()
+      riscv: avoid sending a SIGTRAP to a user thread trapped in WARN()
+      riscv: Correct the handling of unexpected ebreak in do_trap_break()
+
+ arch/riscv/kernel/entry.S |  3 +--
+ arch/riscv/kernel/traps.c | 14 +++++++-------
+ 2 files changed, 8 insertions(+), 9 deletions(-)
 
