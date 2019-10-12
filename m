@@ -2,110 +2,201 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EFDC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3E1C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 340EC21D56
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B2820659
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 17:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DwTTL9LZ"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="R/fz1Dxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfJLRKz (ORCPT
+        id S1729538AbfJLRLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 13:10:55 -0400
-Received: from mout.gmx.net ([212.227.15.18]:36599 "EHLO mout.gmx.net"
+        Sat, 12 Oct 2019 13:11:44 -0400
+Received: from mout.gmx.net ([212.227.15.15]:54471 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729069AbfJLRKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 13:10:55 -0400
+        id S1729069AbfJLRLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 13:11:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1570899908;
-        bh=WThmjchEV2vzAfou34wsoexJ0904q7Zea1RHmt1M0OE=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=DwTTL9LZ/P3ZtHGHGrPnmR3fUQTLV35vGi1ykO4JnzH+4YSoWwCwENM2WQX5FDRdI
-         M/K2VsaTpxQkH72xRvvoS+kEUHbG12FEnAmKhxwpe3E5VBNzwPoAtWd+k1YoOO8GEp
-         aFmq1tvoRqZCNXwb85mNaV8BI/arkoyKXEWptrqA=
+        s=badeba3b8450; t=1570900286;
+        bh=Uz2pP5hTF599V0iyIbkgS2qh4IzWWNUk/fRR8WwX2H4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=R/fz1DxnVZV0/WJDRE1tCfl2+PKDAFB48F4EAN/imrZ0EU6gAhPu3egDQ9Pf3Evm1
+         B9H1y0euYzFTkQFdtuEFOIKk5OTdXeOUGX2WjYHETw+Gwhb+gzRswx/B6vPhxYjKil
+         rikj3ef99sRnnZvJw0zMqv3h2DefVF29+LYYGtVU=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.112]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSKuA-1iURhc069Y-00Sbmb; Sat, 12
- Oct 2019 19:05:08 +0200
-Subject: Re: [PATCH v1 3/3] ARM: dts: bcm2711: Enable GENET support for the
- RPi4
-From:   Stefan Wahren <wahrenst@gmx.net>
-To:     matthias.bgg@kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Eric Anholt <eric@anholt.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+Received: from longitude ([213.196.244.109]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mplc7-1hjUvI3Tkz-00qDFZ; Sat, 12
+ Oct 2019 19:11:25 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel@vger.kernel.org
-References: <20191011184822.866-1-matthias.bgg@kernel.org>
- <20191011184822.866-4-matthias.bgg@kernel.org>
- <dfe9062b-1960-f67b-2a9e-864c0680f5d3@gmx.net>
-Message-ID: <bc741ef2-64aa-562c-69cc-f787b35c1058@gmx.net>
-Date:   Sat, 12 Oct 2019 19:05:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Subject: [PATCH RFC 1/4] docs: admin-guide: Sort the "unordered guides" to avoid merge conflicts
+Date:   Sat, 12 Oct 2019 19:11:09 +0200
+Message-Id: <20191012171114.6589-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <dfe9062b-1960-f67b-2a9e-864c0680f5d3@gmx.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:TOY8axM0tJeh2ZJQi9bkb+Z/Lu9KtfC8Aq/2aZuGRApGXwwMKVT
- DsmnYbDjr/1UDJ5oTeuAK8MgubkKE0RJNoIuEyqYT9L3NckFkQsWrgUzysDPWsLmkCSTuer
- wGwsyt62YfRmKgYCA3bSLh6SM3vgSGfKWRX8E8sRaG/+5lAL+eonlZmJ/lVOXUmbTsC330H
- vsbFJeUNXCi0+abkU+CPw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2MuRQWHyKLs=:IcfwFc4ZLH+uLpnNutppBy
- iVDysOqZ8lvADJrDHiUQrak2+buixxUIYJp045C7Pc8Uq9gJVtq5ngEZc1shkKGHG8COkQ9Cd
- fCQBrAjRd2uTXcravu0eM6c5ZnIxEYiFFFBQMHvGA5PwwkdH5PAOQzE9qB9XU5sYSg1aHxMZI
- OcPFNIIYoAl4zjfTFs3ap8EhMSdaC9u58LFRTkDmEPOCYO/RFT2ce0SMgav3xI4cHRvID0UeW
- vRxc5ierCN+cHPTiaecN9qRsMiRwhsj9TTvrluGa+lKvnOaZNxSC3puExNlktTtuxy8hf2gzR
- A4QZ1DSXgfk6BrQ9dNWkYP46LiSQz8MT4zvho2hZyuTyqOyuAP4IOKl/8BEcznbxxFmwwTDyE
- SiPoV/Q7VqQqVaPdL4el7hCtjbMegzzCYoOTKuEhhnn207dFSa+Wu9iTP5jOu2l7FmBbiClqC
- PALbFAJ+1EjMKqlF2iflm/HTLXBWhTNmmQIiHtFjbRINBQ7eCu5QE6RE4NJ+6YJmkfxy0XxTq
- tHabEciCXCVWcuyW33U9nu0F/5biV3DNmEoIKIwJGPtVqOQg0Hn6QBBtoPjA/Xi+TlCYEHy5J
- zMScV4SdLyM+RIwzeBH1Aapb3MOmHkASGFWlexXYaWIuvZ8PLO3vtMb8zhLXHH6AB7hqBFdix
- jebEUQYZ/qvHDDBbHSff4gL0Q1r5KquYbjtxRnz/Emut1FpdHlw4WFynb+cXklmbdpTuD7miy
- bhN/gK/IpDOHP6lWikd1iFPE5sqFNQDRLLGNIYvSWciwdqUvo+xAcmFIvGLVlQw/gkk7T+Rba
- 7s9Ih5b3QfOuAjCaz3Oqfd9ChesR3g6Pu+i71ygJLtp0oWyqHtqOhQYr2/cj9Z38fkQbbxKAc
- pAM67Yl1ppvecGWIcOPPLj9WhV6G1WrMwlygtexgUF/ViEOX70J9qU6NrBLARBioRQ3xNIp83
- iI2wYYm/E8UFdBOekrdkp2x9LYn/bSkWYZKLrNZBd8MhkoclBdOS8RFhvKx9PHkOinRYmSckc
- 7MX/X4jAWmXNrnVp4djip/U2/Y2nEhbtC+pQzQxQ6jOb0gsUrFALjGmmraVFZU4Z+m+S5X9Be
- epNbwCyXAzmSMwux/n3qs+rARBD2Mf5Wa0dT4BJ48VsXJ3VsqGLtJFVZzTx2P+SQ2IZ59/H7w
- QLxwLPUYu+b5O56a/8SvKTHF0oCLVvLyyNyq1V+4Com7jUw5/pJm1K+orGOgMF8q6f60NonjV
- w9Hyqu23kHQeAIHEjlZmQ2Opr2nC1lBV88TnxkLOMcxJowPZNUp+hmxtvrNc=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5B34xg+6308ya7WPHDCaXqtJ8xGXo98JxaTSCcGd78rRDNlfA2S
+ b3B2/5ic+4m87a83vVcTwUedCy33Y4I6iQPXbrhNigLS3IWxQyxGvHN6XUtPGfq7cr8xwDo
+ 0sFDDLYZv8cJ5EqvHChiY3bFpiM33AGpRHqnSbgH67+lLHojaE4XQLMH6BnDx1/RTv8n2Ek
+ RDBNYIIWTMJj99n46ru8g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5HByb3ZDp1E=:k08/BnDMmpK0zJYQ62e57h
+ VEBseg4VmzEUiwvnrAYX08k9zI64wn8UhkKmt1nza7lsAvhghCLxV7QiP7RtP6HvzwfRkyvru
+ NqhUEvVk+MJbGIfJJtFTubecx0AtG8QN+SiwRdBD7T+fZ1TAHbnnTEZTA0aQL86Oc6BxqlAy0
+ 3Ti3smwOYtmh12yLTolutBuFyMdbJZ7SGD5aayRLbVprxSgng3UIZcBDvZF2KIK9OhVrz5Uix
+ MZNP8Nd7hRhwcimIjh+ri5Qt6+gC5mUjQJmgeynj4zQ1oh1o/WvJA019gaUdmmRVDHAzlQhtX
+ 5QdQ3XtbsqCJVhmpPLiShCLXxCOcgM6yWrT9LRuenGqQoGd2FTrKhG0o0A8GHo+BAEF+TO0vO
+ 30Z9F4Dy6w3O8MCvSi6tEFXg1pdeK53HcKC4/UtUJlaj/0QIVWu9rc7lO6h4IVE0WrLIO+NoF
+ ZrkwVDPOos0NAmSOeQ3z44PtbYcTm5W/cZXCx8kC5vKmw1gK9FLPqNkKK8F+KHvpNAJIPCXAW
+ Jgm1c3rHSWfuY9FSy3lxFYXbD8iS4CzvzQs/q8ZYGnNNU0RuhbHZnI3LHDiFP6Dah3QvT58PY
+ /mpf8rAA/xvq677a9Q1M3CfaEYX/U8i48h7CtnTgoz7VW04chbAtYxcNwMrkxpyhzZAoH6nWJ
+ vbeQNArTn6FQWB1PuMy0nJk8DEyHOwE7oL7ty+1ju4HyHyJU9dDHIjyKWmevR12PIRRpw5CGe
+ 1rG9+0BSsSwlHii6e13gyDlSr94abjz8O9t2OJEIvy7TFdtwpSa7siJgwXfBb7+dZq0LAlMeU
+ lZVqFUWTJmkwS+YPx6q7p0tFgjiR64Y0yNqe0W3IlHovKYCWkIuhNxmpW892sA8r9dHLEm7xO
+ vFpnS/zDweEiVv4gul67VZKAqssouTsaHj8NV8NiMCLYnxVnYLJhAPsD+zhYj5m56P4WpgNEp
+ gdSmbWI+HMxASjc5D7SOpBrBI9BccJbUnUw/tTcjLpu+J6qUBeDzIZNBAQHYX7LMw8Ey2sAml
+ VuBZApRtNcZDQq18TD3yTwk+6xHoTD3KNamfvKmcnzhL0OuVVpSP4clyPmMGGuSGzJ2pAuzGu
+ Bm6y12E6XSoNYhzAQ2ijcrxWAVrhUM4GaFUwu+vJ3kFYWQocx1dKnXdDgC2hEsW7PqlOlMBc0
+ jDe32vlcfHjwuyRmq58FZZ9cnRQZW13876sOIz8zg1m9h4OefRW/gAPBq2baiarsycoqbdL1o
+ EkOiz19+NDOJNJkLUoukd1iNNhwr5bKRhaGbhNM1LRyhiHSrRFlb0Fx3AvWI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 12.10.19 um 01:09 schrieb Stefan Wahren:
-> Am 11.10.19 um 20:48 schrieb matthias.bgg@kernel.org:
->> From: Matthias Brugger <mbrugger@suse.com>
->>
->> Enable Gigabit Ethernet support on the Raspberry Pi 4
->> Model B.
-> I asked some questions about genet to the RPi guys [1] which are
-> relevant to this patch (missing clocks and interrupt, MAC address
-> assignment) but i didn't get an answer yet.
->
-> During my tests with a similiar patch series i noticed that the driver
-> won't probe without a MAC address.
->
-> How does it get into DT (via U-Boot)?
-Okay, the bootloader uses the ethernet0 alias for the genet DT node. So
-this should also be added to the RPi 4 DTS. But i consider the MAC
-randomize patch still helpful.
->
-> [1] -
-> https://github.com/raspberrypi/linux/issues/3101#issuecomment-534665860
->
+Since the "unordered guides" linked in admin-guide/index.rst are not
+supposed to be in any particular order, let's sort them alphabetically
+to avoid the risk of merge conflicts by spreading newly added lines more
+evenly.
+
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+
+Upon a second look, I noticed that the list wasn't completely unordered:
+binfmt-misc is grouped with java and mono, the filesystems are grouped
+together.
+
+For the filesystems, I think they should be moved to the filesystems/
+directory, and the binfmt documents could perhaps be explicitly grouped
+too. But perhaps the loss of this grouping-by-position is reason enough
+to drop this patch for now.
+=2D--
+ Documentation/admin-guide/index.rst | 64 ++++++++++++++---------------
+ 1 file changed, 32 insertions(+), 32 deletions(-)
+
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-gui=
+de/index.rst
+index 34cc20ee7f3a..545ea26364b7 100644
+=2D-- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -57,60 +57,60 @@ configure specific aspects of kernel behavior to your =
+liking.
+ .. toctree::
+    :maxdepth: 1
+
+-   initrd
+-   cgroup-v2
+-   cgroup-v1/index
+-   serial-console
+-   braille-console
+-   parport
+-   md
+-   module-signing
+-   rapidio
+-   sysrq
+-   unicode
+-   vga-softcursor
+-   binfmt-misc
+-   mono
+-   java
+-   ras
+-   bcache
+-   blockdev/index
+-   ext4
+-   binderfs
+-   cifs/index
+-   xfs
+-   jfs
+-   ufs
+-   pm/index
+-   thunderbolt
+-   LSM/index
+-   mm/index
+-   namespaces/index
+-   perf-security
+    acpi/index
+    aoe/index
++   auxdisplay/index
++   bcache
++   binderfs
++   binfmt-misc
++   blockdev/index
++   braille-console
+    btmrvl
++   cgroup-v1/index
++   cgroup-v2
++   cifs/index
+    clearing-warn-once
+    cpu-load
+    cputopology
+    device-mapper/index
+    efi-stub
++   ext4
+    gpio/index
+    highuid
+    hw_random
++   initrd
+    iostats
++   java
++   jfs
+    kernel-per-CPU-kthreads
+    laptops/index
+-   auxdisplay/index
+    lcd-panel-cgram
+    ldm
+    lockup-watchdogs
++   LSM/index
++   md
++   mm/index
++   module-signing
++   mono
++   namespaces/index
+    numastat
++   parport
++   perf-security
++   pm/index
+    pnp
++   rapidio
++   ras
+    rtc
++   serial-console
+    svga
+-   wimax/index
++   sysrq
++   thunderbolt
++   ufs
++   unicode
++   vga-softcursor
+    video-output
++   wimax/index
++   xfs
+
+ .. only::  subproject and html
+
+=2D-
+2.20.1
+
