@@ -2,179 +2,90 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF24FC47404
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A92C47404
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BF7214AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7158F2067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 02:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbfJLCJo convert rfc822-to-8bit (ORCPT
+        id S1728829AbfJLCOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 22:09:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbfJLCJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 22:09:44 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7982220679;
-        Sat, 12 Oct 2019 02:09:41 +0000 (UTC)
-Date:   Fri, 11 Oct 2019 22:09:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Fri, 11 Oct 2019 22:14:42 -0400
+Received: from smtprelay0195.hostedemail.com ([216.40.44.195]:38721 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728602AbfJLCOl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Oct 2019 22:14:41 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C5D5C837F24C;
+        Sat, 12 Oct 2019 02:14:39 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: toad72_4533592a26929
+X-Filterd-Recvd-Size: 2596
+Received: from XPS-9350 (cpe-23-242-70-174.socal.res.rr.com [23.242.70.174])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 12 Oct 2019 02:14:35 +0000 (UTC)
+Message-ID: <01e7fa29d34f210348355c4a507a714e086e7a30.camel@perches.com>
+Subject: Re: [PATCH 0/4] treewide: Add 'fallthrough' pseudo-keyword
+From:   Joe Perches <joe@perches.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-sctp@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 4/7 v2] tracing: Have trace events system open call
- tracing_open_generic_tr()
-Message-ID: <20191011220940.3aeee7a5@oasis.local.home>
-In-Reply-To: <20191012005921.091872328@goodmis.org>
-References: <20191012005747.210722465@goodmis.org>
-        <20191012005921.091872328@goodmis.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        David Miller <davem@davemloft.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Date:   Fri, 11 Oct 2019 19:14:33 -0700
+In-Reply-To: <CAHk-=wi1T1m-su8zK5LeESoz_Pgf1-4hnjr516NiDLNyb4USug@mail.gmail.com>
+References: <cover.1570292505.git.joe@perches.com>
+         <CAHk-=whOF8heTGz5tfzYUBp_UQQzSWNJ_50M7-ECXkfFRDQWFA@mail.gmail.com>
+         <9fe980f7e28242c2835ffae34914c5f68e8268a7.camel@perches.com>
+         <CAHk-=wi1T1m-su8zK5LeESoz_Pgf1-4hnjr516NiDLNyb4USug@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 20:57:51 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 2019-10-11 at 10:46 -0700, Linus Torvalds wrote:
+> On Fri, Oct 11, 2019 at 10:43 AM Joe Perches <joe@perches.com> wrote:
+> > Shouldn't a conversion script be public somewhere?
+> 
+> I feel the ones that might want to do the conversion on their own are
+> the ones that don't necessarily trust the script.
+> 
+> But I don't even know if anybody does want to, I just feel it's an option.
 
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -1391,9 +1391,6 @@ static int subsystem_open(struct inode *inode, struct file *filp)
->  	struct trace_array *tr;
->  	int ret;
->  
-> -	if (tracing_is_disabled())
-> -		return -ENODEV;
-> -
->  	/* Make sure the system still exists */
->  	mutex_lock(&event_mutex);
->  	mutex_lock(&trace_types_lock);
-> @@ -1420,16 +1417,9 @@ static int subsystem_open(struct inode *inode, struct file *filp)
->  	WARN_ON(!dir);
->  
->  	/* Still need to increment the ref count of the system */
-> -	if (trace_array_get(tr) < 0) {
-> -		put_system(dir);
-> -		return -ENODEV;
-> -	}
-> -
-> -	ret = tracing_open_generic(inode, filp);
-> -	if (ret < 0) {
-> -		trace_array_put(tr);
-> +	ret = tracing_open_generic_tr(inode, filp);
-> +	if (ret < 0)
->  		put_system(dir);
-> -	}
->  
->  	return ret;
->  }
+What's the harm in keeping the script in the
+tree until it's no longer needed?
 
-I got a bit too aggressive on this patch. The subsystem_open() gets the
-tr from a search, not from the inode. Thus it can't use the
-tracing_open_generic_tr() call. It needs to do the trace_array_get()
-directly.
-
-V2 of this patch:
-
--- Steve
-
-From b69083301044f587afefd5a4ac754a8c43ba0f0d Mon Sep 17 00:00:00 2001
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Date: Fri, 11 Oct 2019 19:12:21 -0400
-Subject: [PATCH] tracing: Have trace events system open call
- tracing_open_generic_tr()
-
-Instead of having the trace events system open calls open code the taking of
-the trace_array descriptor (with trace_array_get()) and then calling
-trace_open_generic(), have it use the tracing_open_generic_tr() that does
-the combination of the two. This requires making tracing_open_generic_tr()
-global.
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/trace.c        |  2 +-
- kernel/trace/trace.h        |  1 +
- kernel/trace/trace_events.c | 17 +++--------------
- 3 files changed, 5 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index fa7d813b04c6..94f1b9124939 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4156,7 +4156,7 @@ bool tracing_is_disabled(void)
-  * Open and update trace_array ref count.
-  * Must have the current trace_array passed to it.
-  */
--static int tracing_open_generic_tr(struct inode *inode, struct file *filp)
-+int tracing_open_generic_tr(struct inode *inode, struct file *filp)
- {
- 	struct trace_array *tr = inode->i_private;
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index f801d154ff6a..854dbf4050f8 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -681,6 +681,7 @@ void tracing_reset_online_cpus(struct trace_buffer *buf);
- void tracing_reset_current(int cpu);
- void tracing_reset_all_online_cpus(void);
- int tracing_open_generic(struct inode *inode, struct file *filp);
-+int tracing_open_generic_tr(struct inode *inode, struct file *filp);
- bool tracing_is_disabled(void);
- bool tracer_tracing_is_on(struct trace_array *tr);
- void tracer_tracing_on(struct trace_array *tr);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index b89cdfe20bc1..9613a757c902 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1440,28 +1440,17 @@ static int system_tr_open(struct inode *inode, struct file *filp)
- 	struct trace_array *tr = inode->i_private;
- 	int ret;
- 
--	if (tracing_is_disabled())
--		return -ENODEV;
--
--	if (trace_array_get(tr) < 0)
--		return -ENODEV;
--
- 	/* Make a temporary dir that has no system but points to tr */
- 	dir = kzalloc(sizeof(*dir), GFP_KERNEL);
--	if (!dir) {
--		trace_array_put(tr);
-+	if (!dir)
- 		return -ENOMEM;
--	}
--
--	dir->tr = tr;
- 
--	ret = tracing_open_generic(inode, filp);
-+	ret = tracing_open_generic_tr(inode, filp);
- 	if (ret < 0) {
--		trace_array_put(tr);
- 		kfree(dir);
- 		return ret;
- 	}
--
-+	dir->tr = tr;
- 	filp->private_data = dir;
- 
- 	return 0;
--- 
-2.20.1
 
