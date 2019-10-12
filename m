@@ -2,144 +2,184 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF10C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 12:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFF2C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED2F420673
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 12:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570881690;
-	bh=9exQG7nr3/lBFBoQlVSUc3OlNg8VsRMGFm1wTu5IZlA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qmkn2DS2EJMDS1LLeLgVxwtejJhi6JHf3ZFu3A+0HP/67AJ1MwV88yJvt2kjVorbd
-	 T1Nw3VGoY2cPSqvSkhP+IttY++H8qpA1SCknaMhhED3JRa8OP5kQ47G+W9RFFV3lH9
-	 VaeR1opOjkqtNdePmbxI61NmuCMDW6d+6ZA8rrDY=
+	by mail.kernel.org (Postfix) with ESMTP id 57BA62196E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 12:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbfJLMB2 (ORCPT
+        id S1729215AbfJLMIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 08:01:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727265AbfJLL72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 07:59:28 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C043420673;
-        Sat, 12 Oct 2019 11:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570881566;
-        bh=9exQG7nr3/lBFBoQlVSUc3OlNg8VsRMGFm1wTu5IZlA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MB1IHdrhZiJ1u2/UEUf/EsywsbLh1XeaHjt/hDbdw9ic3Ndz11qNvzyV9nzfaI2YW
-         vHBptnfNuIrlEtqM2OnaorTbnBj0KHlwmwGqLtZL3SdjdZqG1PUgqqPiYTWCaM3nNH
-         gchu3XELBmGNWy3KZrpzjapsm8QFzbuiyXFrvsSc=
-Date:   Sat, 12 Oct 2019 12:59:21 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] iio: light: Add support for ADUX1020 sensor
-Message-ID: <20191012125921.4cf04474@archlinux>
-In-Reply-To: <391446566afd59da7d94e8af5c7ecd13b57e1540.camel@analog.com>
-References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org>
-        <20191007101027.8383-3-manivannan.sadhasivam@linaro.org>
-        <30c4a0f9aff5a40879d6839ad8a5ce40565f0923.camel@analog.com>
-        <20191009094524.GA17962@Mani-XPS-13-9360>
-        <391446566afd59da7d94e8af5c7ecd13b57e1540.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 12 Oct 2019 08:08:24 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36742 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727083AbfJLMIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 08:08:23 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6C1728DF2CFD1CBF9027;
+        Sat, 12 Oct 2019 20:08:20 +0800 (CST)
+Received: from huawei.com (10.175.127.16) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sat, 12 Oct 2019
+ 20:08:11 +0800
+From:   z00417012 <zhangpan26@huawei.com>
+To:     <akpm@linux-foundation.org>, <vbabka@suse.cz>,
+        <rientjes@google.com>, <mhocko@suse.com>, <jgg@ziepe.ca>,
+        <aarcange@redhat.com>, <yang.shi@linux.alibaba.com>,
+        <zhongjiang@huawei.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm: mempolicy: fix the absence of the last bit of nodemask
+Date:   Sat, 12 Oct 2019 20:08:52 +0800
+Message-ID: <1570882132-40388-1-git-send-email-zhangpan26@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.127.16]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Oct 2019 10:21:27 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+    When I want to use set_mempolicy to get the memory from each node on the numa machine,
+    and the MPOL_INTERLEAVE flag seems to achieve this goal.
+    However, during the test, it was found that the use result of node was unbalanced.
+    The memory was allocated evenly from the nodes except the last node,
+    which obviously did not match the expectations.
 
-> On Wed, 2019-10-09 at 15:15 +0530, Manivannan Sadhasivam wrote:
-> > [External]
-> > 
-> > Hi Ardelean,
+    You can test as follows:
+1.  Create a file that needs to be mmap ped:
+    dd if=/dev/zero of=./test count=1024 bs=1M
 
-For some reason, my email client decided not to filter this thread
-correctly so I didn't realise so much discussion had gone on when
-I applied the newer version earlier today.  Oops.  Hopefully
-there was nothing major outstanding.  Let me know if there was
-as it's not yet in a non rebasing tree...
+2.  Use `numactl -H` to see that your test machine has several nodes,
+    and then change the macro NUM_NODES to the corresponding number of nodes
+    in the test program.
 
-I've cropped to just where my name got mentioned ;)
+3.  Compile the following program:
+    gcc numa_alloc_test.c -lnuma
 
-..
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <stdint.h>
+    #include <numaif.h>
+    #include <unistd.h>
+    #include <numaif.h>
+    #include <sys/mman.h>
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #include <fcntl.h>
 
-> >   
-> > > - Just curios here: there is gesture mode as well; will that be
-> > > implemented
-> > > later? Or will there be other modes implemented?  
-> > 
-> > Currently only proximity mode is implemented. There are gesture and
-> > sample
-> > modes and I left those as a TODO. But I'm not sure whether IIO is
-> > supporting
-> > gesture mode properly or not.  
-> 
-> I don't have any input on this at the moment [about gesture support & IIO].
-> I'd have to investigate.
-> Maybe Jonathan has some thoughts.
+    // rewrite these macro as `numactl -H` showed
+    // The number of nodes on which machine the program runs
+    #define NUM_NODES 2
 
-Properly is a hard term for gesture support.  The issue has always
-been that every device does it slightly differently.  There are
-way too many types of gesture that a device 'might' use.
+    // memory we want to alloc from multinode averagely
+    #define ALLOC_MEM_SIZE (1 << 30)
+    void print_node_memusage()
+    {
+        for (int i=0; i < NUM_NODES; i++) {
+            FILE *fp;
+            char buf[1024];
 
-We do have some drivers (IIRC) doing some gesture sensing, but you may
-well find places where things need to expand!
+            snprintf(buf, sizeof(buf),
+                "cat /sys/devices/system/node/node%lu/meminfo | grep MemUsed", i);
 
-...
-> > > > +static int adux1020_read_raw(struct iio_dev *indio_dev,
-> > > > +			     struct iio_chan_spec const *chan,
-> > > > +			     int *val, int *val2, long mask)
-> > > > +{
-> > > > +	struct adux1020_data *data = iio_priv(indio_dev);
-> > > > +	u16 buf[3];  
-> > > 
-> > > This buffer looks a bit weird. [8]
-> > > It's 3 elements-wide and passed without any information about size.
-> > > And only the first element is used.
-> > > So, maybe just convert u16 buf[3] -> u16 buf?
-> > >   
-> > 
-> > The buffer declaration is based on the hardware buffer available. It
-> > is 3 elements wide since the remaining 2 elements will be used by other
-> > modes. The idea here is to reuse the adux1020_measure() API for all 3
-> > modes (which has varying buffer sizes).  
-> 
-> The only thought I have left about this buffer [and forgot to mention it
-> earlier], is whether this should be cacheline aligned [or not].
-> If it has to be, then maybe it shouldn't be stored on the stack and moved
-> to a malloc-ed buffer [on "struct adux1020_data"].
-> Cacheline aligned stuff typically deals with potential DMA issues. The DMA
-> issues [in this case] could be coming from i2c controllers that can do DMA.
-> 
-> Jonathan may have more input here.
-> 
-The i2c subsystem in general doesn't assume that buffers are dma safe
-though it would like to ;)
+            if ((fp = popen(buf, "r")) == NULL) {
+                perror("popen");
+                exit(-1);
+            }
 
-Wolfram did a good presentation on his efforts to sort that out at
-ELCE 2018
+            while(fgets(buf, sizeof(buf), fp) != NULL) {
+                printf("%s", buf);
+            }
 
-https://www.youtube.com/watch?v=JDwaMClvV-s
+            if(pclose(fp))  {
+                perror("pclose");
+                exit(-1);
+            }
+        }
+    }
+
+    int main()
+    {
+        unsigned long num_nodes = NUM_NODES;
+        unsigned long nodes_mask = (1 << NUM_NODES) - 1;
+        // use MPOL_INTERLEAVE flag in order to balanced memory allocation
+        set_mempolicy(MPOL_INTERLEAVE, &nodes_mask, num_nodes);
+
+        // print info of nodes' memused before memory allocation
+        print_node_memusage();
+
+        int fd = open("./test", O_RDWR);
+        unsigned long *addr = mmap(NULL, ALLOC_MEM_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+
+        // trigger page fault and page alloc
+        for (unsigned long i=0; i < ALLOC_MEM_SIZE/sizeof(unsigned long); i++) {
+            addr[i] = i;
+        }
+
+        // print info of nodes' memused before memory allocation
+        print_node_memusage();
+        munmap(addr, ALLOC_MEM_SIZE);
+        return 0;
+    }
+
+4.  execution procedures:
+    ./a.out
+5.  observe the output:
+    On my `2 nodes` arm64 test environment, the test result is as follows:
+    # ./a.out
+    Node 0 MemUsed:         1313952 kB
+    Node 1 MemUsed:          267620 kB
+    Node 0 MemUsed:         2365500 kB (use 1GB)
+    Node 1 MemUsed:          267832 kB (do not used)
+
+    Besides, I found the same problem at https://bugzilla.kernel.org/show_bug.cgi?id=201433,
+    so I feel it is necessary to track and fix this issue.
+
+    I tracked the impact of set_mempolicy and memory allocation strategy on the alloc_pages
+    process (MPOL_INTERLEAVE node pages allocation is implemented in `alloc_page_interleave`),
+    and found that the memory allocation is based on nodemask (`interleave_nodes` -> `next_node_in`),
+    so the problem may be in the nodemask setting: evetually, i found the nodemask is set
+    in the `get_nodes` function.
+
+    mm/mempolicy.c: `get_nodes` function
+    --maxnode causes nodemask to ignore the last node. I think this needs to be changed,
+    except that it also handles the case where the maxnode that the user passed in is 1.
+
+    After the modification, the test result is normal.
+    # ./a.out
+    Node 0 MemUsed:          508044 kB
+    Node 1 MemUsed:         1239276 kB
+    Node 0 MemUsed:         1034196 kB (use 513MB)
+    Node 1 MemUsed:         1768492 kB (use 516MB)
+
+Signed-off-by: z00417012 <zhangpan26@huawei.com>
+---
+ mm/mempolicy.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 4ae967b..a23509f 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -1328,9 +1328,11 @@ static int get_nodes(nodemask_t *nodes, const unsigned long __user *nmask,
+ 	unsigned long nlongs;
+ 	unsigned long endmask;
+ 
+-	--maxnode;
+ 	nodes_clear(*nodes);
+-	if (maxnode == 0 || !nmask)
++	/*
++	 * If the user specified only one node, no need to set nodemask
++	 */
++	if (maxnode - 1 == 0 || !nmask)
+ 		return 0;
+ 	if (maxnode > PAGE_SIZE*BITS_PER_BYTE)
+ 		return -EINVAL;
+-- 
+2.7.4
 
