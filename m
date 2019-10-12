@@ -2,141 +2,131 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354AAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAE7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B172087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D5A21850
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wUiDd5ik"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D7mHgPzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbfJLLNg (ORCPT
+        id S1729131AbfJLLTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 07:13:36 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:53079 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfJLLNg (ORCPT
+        Sat, 12 Oct 2019 07:19:10 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:39805 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727423AbfJLLTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 07:13:36 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x9CBDFgi027307;
-        Sat, 12 Oct 2019 20:13:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x9CBDFgi027307
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1570878796;
-        bh=QIQWbVFMywEGzrVFv7ncajs828mx8ZAypZawE3JRNnA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wUiDd5ikCr1JT2Yxc8XHCJxQQ7iwviMZJG/IOTrYxVuuQgdsur+sx2xBB1eYo4rtM
-         eCGR7bnd6kLscEH67zamCqWXt+fz9Je68JdOf2+hENU7TUExvoT0MAUDOVPtrURzy1
-         XPV3jPwpXdocP6ipUYDc1c03IGGsTzouSN2ST4Hzn1QcZ1srv9uRu2rK3OrNvuJb0v
-         03yTUSstvsDe/N0H/7l8aVQHpF+eJwbweZRrBVDQW7PlhC+d1zIr7vMJ+g+xixUHXr
-         PnE+gRyY0wrQUOnIXmcaaBvjC7VNmt/D8wUq054V4+zVxB/lY2JVdHM2GV6epkxRHO
-         OA47ecmgP6HIQ==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id z14so7882474vsz.13;
-        Sat, 12 Oct 2019 04:13:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAVEEZkfFUK/zsOLqK1PTDOkFKykKnadpV6/fHcCQo1QGZgdocPI
-        hzWDpi2iTZDrnqqPpIaKC9A7heKaPrIFbqqFeWg=
-X-Google-Smtp-Source: APXvYqyHih4e2WFxheL/lFIrBr+Hi15Wq9iIMdigECIIy1lpDBTMCXi9oA2x4W/bhPi3v/iXQqldXfzc3OYYnDPyYQM=
-X-Received: by 2002:a67:ff86:: with SMTP id v6mr11732128vsq.181.1570878794590;
- Sat, 12 Oct 2019 04:13:14 -0700 (PDT)
+        Sat, 12 Oct 2019 07:19:08 -0400
+Received: by mail-yw1-f68.google.com with SMTP id n11so4437266ywn.6
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 04:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hABoQwLdO0uMm4YXkBCFk8W+eev136YlKUX9aXvX8MQ=;
+        b=D7mHgPzHHTjdRL5OoclG/V+NKJIlPgeUibKjAWXcA7kIdPCd1XFPkfIyBuFuGwE2P+
+         MrEzs8F+PLYTxDH7ouh8EEEy/e6BEoGBjYbDgQTWpvl1t6uv5b1purG/AhX+7F5S/XHr
+         MNSbgSGnJaoqe4a9mxi+0NmcCJmKRSvg6o6KyHN4EoY2PckPjdpYR87r82qzkJm4Z96/
+         ZAipfmQiNMA0Cnt9YBnNvNO7quDOmC2t+0DHM2qaYIasyDERsY8dzwGmDvE10fGVmuxs
+         bkjJbp4M1R1rManGnfz7uhb+pds7C8qEl7FJqoQ8kyOTrRWsTxMjvoM0WbNsQuMp18D1
+         IAEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hABoQwLdO0uMm4YXkBCFk8W+eev136YlKUX9aXvX8MQ=;
+        b=ccM85NTBdDdp7XZHd8Vww8FGa1EG+psR27/zRXFulqE+9IzjIomQywtX9Zv8NN6u72
+         i48AEt0tJuueYGDl2HHAk1z9jKLmth9RwOftMdFBpke8v6kVGh3pq0HgwdVOq97rUiwr
+         TanuBEEtLYAaCqvgwPjlQESXKdPFOZ74C2yeXrmVK25VQozNlVyhP9ywWxc0lr9zRMue
+         0nf14a0G2kvt/9HawW1tPUXIno7kS6Fx9W+W+wEeYcujgGCJMomVYTisr38dn6TtZb3q
+         aKAMhuUFBQj9LvyJEznXmxGW/liwSXVBt+rUtG/mLxPd9yrmfZsrCRU0wV4rcQMc1Hr/
+         3s4A==
+X-Gm-Message-State: APjAAAXukRt1/RE7sddslFY0/LwQ9/mrDWat9tWaDXL1lKdXJy3T/opk
+        K4hR0BVdLf0o98+sJGSkxSpdsx1wXdKE9eaZrjsC3w==
+X-Google-Smtp-Source: APXvYqwZOaCkSDRcIvwoJHVK/AzkGRNEIC28N93f863MsT7N1isrICFjEYjK81ioPs6sBTYpIDJGcldt+P9QBxA23xg=
+X-Received: by 2002:a0d:fd03:: with SMTP id n3mr5796321ywf.170.1570879146864;
+ Sat, 12 Oct 2019 04:19:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
- <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
- <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
- <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
- <20191003163606.iqzcxvghaw7hdqb5@willie-the-truck> <35643c7e-94e9-e410-543b-a7de17b59a32@gmx.net>
-In-Reply-To: <35643c7e-94e9-e410-543b-a7de17b59a32@gmx.net>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 12 Oct 2019 20:12:38 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASgwA_Z-FeqrnB4Uyk3XShGVpgRHVL2FBbzJoU7ytJBxA@mail.gmail.com>
-Message-ID: <CAK7LNASgwA_Z-FeqrnB4Uyk3XShGVpgRHVL2FBbzJoU7ytJBxA@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Stefan Wahren <wahrenst@gmx.net>
-Cc:     Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20191010144226.4115-1-alobakin@dlink.ru> <20191010144226.4115-3-alobakin@dlink.ru>
+ <c2450dc3-8ee0-f7cd-4f8a-61a061989eb7@solarflare.com> <1eaac2e1f1d65194a4a39232d7e45870@dlink.ru>
+ <3c459c84df86f79b593632d3f08d5f4c@dlink.ru>
+In-Reply-To: <3c459c84df86f79b593632d3f08d5f4c@dlink.ru>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Sat, 12 Oct 2019 04:18:55 -0700
+Message-ID: <CANn89iLrVU2OVTj1yk4Sjd=SVxHYN-WpXeGhMEWx0DsVLz7giQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 2/2] net: core: increase the default size of
+ GRO_NORMAL skb lists to flush
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     Edward Cree <ecree@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 7:21 PM Stefan Wahren <wahrenst@gmx.net> wrote:
+On Sat, Oct 12, 2019 at 2:22 AM Alexander Lobakin <alobakin@dlink.ru> wrote:
+
 >
-> Hi,
+> I've generated an another solution. Considering that gro_normal_batch
+> is very individual for every single case, maybe it would be better to
+> make it per-NAPI (or per-netdevice) variable rather than a global
+> across the kernel?
+> I think most of all network-capable configurations and systems has more
+> than one network device nowadays, and they might need different values
+> for achieving their bests.
 >
-> Am 03.10.19 um 18:36 schrieb Will Deacon:
-> > On Wed, Oct 02, 2019 at 01:39:40PM -0700, Linus Torvalds wrote:
-> >> On Wed, Oct 2, 2019 at 5:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >>>> Then use the C preprocessor to force the inlining.  I'm sorry it's not
-> >>>> as pretty as static inline functions.
-> >>> Which makes us lose the baby^H^H^H^Htype checking performed
-> >>> on function parameters, requiring to add more ugly checks.
-> >> I'm 100% agreed on this.
-> >>
-> >> If the inline change is being pushed by people who say "you should
-> >> have used macros instead if you wanted inlining", then I will just
-> >> revert that stupid commit that is causing problems.
-> >>
-> >> No, the preprocessor is not the answer.
-> >>
-> >> That said, code that relies on inlining for _correctness_ should use
-> >> "__always_inline" and possibly even have a comment about why.
-> >>
-> >> But I am considering just undoing commit 9012d011660e ("compiler:
-> >> allow all arches to enable CONFIG_OPTIMIZE_INLINING") entirely. The
-> >> advantages are questionable, and when the advantages are balanced
-> >> against actual regressions and the arguments are "use macros", that
-> >> just shows how badly thought out this was.
-> > It's clear that opinions are divided on this issue, but you can add
-> > an enthusiastic:
-> >
-> > Acked-by: Will Deacon <will@kernel.org>
-> >
-> > if you go ahead with the revert. I'm all for allowing the compiler to
-> > make its own inlining decisions, but not when the potential for
-> > miscompilation isn't fully understood and the proposed alternatives turn
-> > the source into an unreadable mess. Perhaps we can do something different
-> > for 5.5 (arch opt-in? clang only? invert the logic? work to move functions
-> > over to __always_inline /before/ flipping the CONFIG option? ...?)
+> One possible variant is:
 >
-> what's the status on this?
+> #define THIS_DRIVER_GRO_NORMAL_BATCH    16
 >
-> In need to prepare my pull requests for 5.5 and all recent kernelci
-> targets (including linux-next) with bcm2835_defconfig are still broken.
+> /* ... */
 >
-> Stefan
+> netif_napi_add(dev, napi, this_driver_rx_poll, NAPI_POLL_WEIGHT); /*
+> napi->gro_normal_batch will be set to the systcl value during NAPI
+> context initialization */
+> napi_set_gro_normal_batch(napi, THIS_DRIVER_GRO_NORMAL_BATCH); /* new
+> static inline helper, napi->gro_normal_batch will be set to the
+> driver-speficic value of 16 */
+>
+> The second possible variant is to make gro_normal_batch sysctl
+> per-netdevice to tune it from userspace.
+> Or we can combine them into one to make it available for tweaking from
+> both driver and userspace, just like it's now with XPS CPUs setting.
+>
+> If you'll find any of this reasonable and worth implementing, I'll come
+> with it in v2 after a proper testing.
 
+Most likely the optimal tuning is also a function of the host cpu caches.
 
-Russell King already applied the fix-up patch.
+Building a too big list can also lead to premature cache evictions.
 
-https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8908/1
+Tuning the value on your test machines does not mean the value will be good
+for other systems.
 
-So, (I hope) the breakage of bcm2835 will be solved in mainline soon.
+Adding yet another per device value should only be done if you demonstrate
+a significant performance increase compared to the conservative value
+Edward chose.
 
+Also the behavior can be quite different depending on the protocols,
+make sure you test handling of TCP pure ACK packets.
 
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Accumulating 64 (in case the device uses standard NAPI_POLL_WEIGHT)
+of them before entering upper stacks seems not a good choice, since 64 skbs
+will need to be kept in the GRO system, compared to only 8 with Edward value.
