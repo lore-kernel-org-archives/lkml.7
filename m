@@ -2,170 +2,279 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F40CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5CEC10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED7A21850
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:24:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="ivUyIbhe"
+	by mail.kernel.org (Postfix) with ESMTP id 9A9FA206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 09:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbfJLJYh (ORCPT
+        id S1729150AbfJLJ0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 05:24:37 -0400
-Received: from mail.dlink.ru ([178.170.168.18]:35580 "EHLO fd.dlink.ru"
+        Sat, 12 Oct 2019 05:26:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37490 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728882AbfJLJWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 05:22:37 -0400
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 0F48C1B219EC; Sat, 12 Oct 2019 12:22:33 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 0F48C1B219EC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1570872153; bh=iz4isrGMNy+Zh++q05GgOWAhVnORimqaqiBMYJJA23U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=ivUyIbhesze5o1wD3jzYFlxtjVYvzkDVd4U1+a9LTj+Fr+gP6uEY4yCeAyRvdimp6
-         4weqrXnketwoBCtBTtJW3Vvob4qsotF1ow1xzhjP6XtVp+T1L7cRmA6yk109iPGQv7
-         dmWA+AqKAcccPdZ8tIbZ+YASYsjE7kH4GibWOzlA=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id AE7FA1B20B0D;
-        Sat, 12 Oct 2019 12:22:29 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru AE7FA1B20B0D
-Received: by mail.rzn.dlink.ru (Postfix, from userid 5000)
-        id 91B0F1B21890; Sat, 12 Oct 2019 12:22:29 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA id 4DE361B2023E;
-        Sat, 12 Oct 2019 12:22:20 +0300 (MSK)
+        id S1728446AbfJLJYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 05:24:45 -0400
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1CD61796EE
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 09:24:45 +0000 (UTC)
+Received: by mail-pf1-f199.google.com with SMTP id u21so6493188pfm.22
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 02:24:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hWcbBHf19jxlqiVNxkcFZpfyhMvDvY5g4o+W8hzWUhI=;
+        b=WZ2MuEhgS5MnXND1d5rL0h8lECbMjmVhKTBFOCTOoV+v4b1G34kf1wyiigowMzXcep
+         E3+fqKR2ULQeYwODkS2pFjcGqNYyoqcea//v1kU4e7lmPO6x8jV3twnNmD0iAtOD7KzO
+         HM3g7r6z16qz199AKdx9Dd3TIrJfDmy8j5BXIIMHo/mvU8aH2Kjn0colo5SoAtA4LGFK
+         gQ4ELeF4lldVgXTq4eCyWfysF2NDPa0ROvC91slGU621xOl5nyEiOCCbm67bojlLR4FV
+         6Ht96vc2hGCgVv8yPJnpgcdco872bVhLqJdZfGFP4a4WfsNuUDEcjUysZSs+JbcUoBbo
+         6/0A==
+X-Gm-Message-State: APjAAAW+vtsA6suq+gIa0DsnzqV6Bfq+k5FgQUZdXvL/7ZAxZ81Xnu9q
+        GkyQIxmp8s15exJQiNTd8ywg5R4T5AKNniVSlx4HspivJZv2/v3Ccy9hnEOEK2pv70gfrRuHcLo
+        lWIPzOSjEEroFsTwAWShZx81N
+X-Received: by 2002:a63:5ec6:: with SMTP id s189mr21233248pgb.185.1570872284377;
+        Sat, 12 Oct 2019 02:24:44 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzoe8OqVqux7YSZOPy5RZvCH1uxYywzcapN4VKk60TF7wNaf/v/YjKnFPqIPYqjrYYH6n3yRw==
+X-Received: by 2002:a63:5ec6:: with SMTP id s189mr21233216pgb.185.1570872283766;
+        Sat, 12 Oct 2019 02:24:43 -0700 (PDT)
+Received: from localhost.localdomain ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id s97sm15944686pjc.4.2019.10.12.02.24.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 12 Oct 2019 02:24:43 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] x86/kdump: Reserve extra memory when SME or SEV is
+ active
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+References: <20190910151341.14986-1-kasong@redhat.com>
+ <20190910151341.14986-3-kasong@redhat.com>
+ <20190911055618.GA104115@gmail.com>
+ <CACPcB9eZUZ1fCsc1GZs9MJnoqLK9Ld5KEx0_emx8J44Mjcy3WA@mail.gmail.com>
+ <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
+From:   Kairui Song <kasong@redhat.com>
+Message-ID: <3e1f65de-4539-736e-a7b4-3c726a001f4b@redhat.com>
+Date:   Sat, 12 Oct 2019 17:24:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sat, 12 Oct 2019 12:22:20 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Edward Cree <ecree@solarflare.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/2] net: core: increase the default size of
- GRO_NORMAL skb lists to flush
-In-Reply-To: <1eaac2e1f1d65194a4a39232d7e45870@dlink.ru>
-References: <20191010144226.4115-1-alobakin@dlink.ru>
- <20191010144226.4115-3-alobakin@dlink.ru>
- <c2450dc3-8ee0-f7cd-4f8a-61a061989eb7@solarflare.com>
- <1eaac2e1f1d65194a4a39232d7e45870@dlink.ru>
-Message-ID: <3c459c84df86f79b593632d3f08d5f4c@dlink.ru>
-X-Sender: alobakin@dlink.ru
-User-Agent: Roundcube Webmail/1.3.6
+In-Reply-To: <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander Lobakin wrote 11.10.2019 10:23:
-> Hi Edward,
+On 9/27/19 1:42 PM, Dave Young wrote:
+> On 09/25/19 at 06:36pm, Kairui Song wrote:
+>> On Wed, Sep 11, 2019 at 1:56 PM Ingo Molnar <mingo@kernel.org> wrote:
+>>> * Kairui Song <kasong@redhat.com> wrote:
+>>>
+>>>> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+>>>> SWIOTLB will be enabled even if there is less than 4G of memory when SME
+>>>> is active, to support DMA of devices that not support address with the
+>>>> encrypt bit.
+>>>>
+>>>> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+>>>> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+>>>>
+>>>> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+>>>> encryption") will always force SWIOTLB to be enabled when SEV is active
+>>>> in all cases.
+>>>>
+>>>> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+>>>> and this is also true for kdump kernel. As a result kdump kernel will
+>>>> run out of already scarce pre-reserved memory easily.
+>>>>
+>>>> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+>>>> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+>>>> is specified or any offset is used. As for the high reservation case, an
+>>>> extra low memory region will always be reserved and that is enough for
+>>>> SWIOTLB. Else if the offset format is used, user should be fully aware
+>>>> of any possible kdump kernel memory requirement and have to organize the
+>>>> memory usage carefully.
+>>>>
+>>>> Signed-off-by: Kairui Song <kasong@redhat.com>
+>>>> ---
+>>>>   arch/x86/kernel/setup.c | 20 +++++++++++++++++---
+>>>>   1 file changed, 17 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+>>>> index 71f20bb18cb0..ee6a2f1e2226 100644
+>>>> --- a/arch/x86/kernel/setup.c
+>>>> +++ b/arch/x86/kernel/setup.c
+>>>> @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+>>>>                                          unsigned long long *crash_size,
+>>>>                                          bool high)
+>>>>   {
+>>>> -     unsigned long long base, size;
+>>>> +     unsigned long long base, size, mem_enc_req = 0;
+>>>>
+>>>>        base = *crash_base;
+>>>>        size = *crash_size;
+>>>> @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+>>>>        if (high)
+>>>>                goto high_reserve;
+>>>>
+>>>> +     /*
+>>>> +      * When SME/SEV is active and not using high reserve,
+>>>> +      * it will always required an extra SWIOTLB region.
+>>>> +      */
+>>>> +     if (mem_encrypt_active())
+>>>> +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+>>>> +
+>>>>        base = memblock_find_in_range(CRASH_ALIGN,
+>>>> -                                   CRASH_ADDR_LOW_MAX, size,
+>>>> +                                   CRASH_ADDR_LOW_MAX,
+>>>> +                                   size + mem_enc_req,
+>>>>                                      CRASH_ALIGN);
+>>>
+>>
+>> Hi Ingo,
+>>
+>> I re-read my previous reply, it's long and tedious, let me try to make
+>> a more effective reply:
+>>
+>>> What sizes are we talking about here?
+>>
+>> The size here is how much memory will be reserved for kdump kernel, to
+>> ensure kdump kernel and userspace can run without OOM.
+>>
+>>>
+>>> - What is the possible size range of swiotlb_size_or_default()
+>>
+>> swiotlb_size_or_default() returns the swiotlb size, it's specified by
+>> user using swiotlb=<size>, or default size (64MB)
+>>
+>>>
+>>> - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
+>>
+>> It's 4G.
+>>
+>>>
+>>> - Why do we replace one fixed limit with another fixed limit instead of
+>>>    accurately sizing the area, with each required feature adding its own
+>>>    requirement to the reservation size?
+>>
+>> It's quite hard to "accurately sizing the area".
+>>
+>> No way to tell the exact amount of memory kdump needs, we can only estimate.
+>> Kdump kernel use different cmdline, drivers and components will have
+>> special handling for kdump, and userspace is totally different.
 > 
-> Edward Cree wrote 10.10.2019 21:16:
->> On 10/10/2019 15:42, Alexander Lobakin wrote:
->>> Commit 323ebb61e32b ("net: use listified RX for handling GRO_NORMAL
->>> skbs") have introduced a sysctl variable gro_normal_batch for 
->>> defining
->>> a limit for listified Rx of GRO_NORMAL skbs. The initial value of 8 
->>> is
->>> purely arbitrary and has been chosen, I believe, as a minimal safe
->>> default.
->> 8 was chosen by performance tests on my setup with v1 of that patch;
->>  see https://www.spinics.net/lists/netdev/msg585001.html .
->> Sorry for not including that info in the final version of the patch.
->> While I didn't re-do tests on varying gro_normal_batch on the final
->>  version, I think changing it needs more evidence than just "we tested
->>  it; it's better".  In particular, increasing the batch size should be
->>  accompanied by demonstration that latency isn't increased in e.g. a
->>  multi-stream ping-pong test.
->> 
->>> However, several tests show that it's rather suboptimal and doesn't
->>> allow to take a full advantage of listified processing. The best and
->>> the most balanced results have been achieved with a batches of 16 
->>> skbs
->>> per flush.
->>> So double the default value to give a yet another boost for Rx path.
->> 
->>> It remains configurable via sysctl anyway, so may be fine-tuned for
->>> each hardware.
->> I see this as a reason to leave the default as it is; the combination
->>  of your tests and mine have established that the optimal size does
->>  vary (I found 16 to be 2% slower than 8 with my setup), so any
->>  tweaking of the default is likely only worthwhile if we have data
->>  over lots of different hardware combinations.
+> Agreed about your above, but specific this the problem in this patch
+> There should be other ways.
 > 
-> Agree, if you've got slower results on 16, we must leave the default
-> value, as it seems to be VERY hardware- and driver- dependent.
-> So, patch 2/2 is not actual any more (I supposed that it would likely
-> go away before sending this series).
-
-I've generated an another solution. Considering that gro_normal_batch
-is very individual for every single case, maybe it would be better to
-make it per-NAPI (or per-netdevice) variable rather than a global
-across the kernel?
-I think most of all network-capable configurations and systems has more
-than one network device nowadays, and they might need different values
-for achieving their bests.
-
-One possible variant is:
-
-#define THIS_DRIVER_GRO_NORMAL_BATCH	16
-
-/* ... */
-
-netif_napi_add(dev, napi, this_driver_rx_poll, NAPI_POLL_WEIGHT); /*
-napi->gro_normal_batch will be set to the systcl value during NAPI
-context initialization */
-napi_set_gro_normal_batch(napi, THIS_DRIVER_GRO_NORMAL_BATCH); /* new
-static inline helper, napi->gro_normal_batch will be set to the
-driver-speficic value of 16 */
-
-The second possible variant is to make gro_normal_batch sysctl
-per-netdevice to tune it from userspace.
-Or we can combine them into one to make it available for tweaking from
-both driver and userspace, just like it's now with XPS CPUs setting.
-
-If you'll find any of this reasonable and worth implementing, I'll come
-with it in v2 after a proper testing.
-
+> First thought about doing generic handling in swiotlb part, and do
+> something like kdump_memory_reserve(size) Ingo suggested,  but according
+> to you swiotlb init is late, so it can not increase the size, OTOH if
+> reserve another region for kdump in swiotlb will cause other issues.
 > 
->>> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
->>> ---
->>>  net/core/dev.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>> 
->>> diff --git a/net/core/dev.c b/net/core/dev.c
->>> index a33f56b439ce..4f60444bb766 100644
->>> --- a/net/core/dev.c
->>> +++ b/net/core/dev.c
->>> @@ -4189,7 +4189,7 @@ int dev_weight_tx_bias __read_mostly = 1;  /* 
->>> bias for output_queue quota */
->>>  int dev_rx_weight __read_mostly = 64;
->>>  int dev_tx_weight __read_mostly = 64;
->>>  /* Maximum number of GRO_NORMAL skbs to batch up for list-RX */
->>> -int gro_normal_batch __read_mostly = 8;
->>> +int gro_normal_batch __read_mostly = 16;
->>> 
->>>  /* Called with irq disabled */
->>>  static inline void ____napi_schedule(struct softnet_data *sd,
+> So let's think about other improvement, for example to see if you can
+> call kdump_memory_reserve(size) in AMD SME init path, for example in
+> mem_encrypt_init(), is it before crashkernel reservation?
 > 
-> Regards,
-> ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+> If doable it will be at least cleaner than the code in this patch.
+> 
+> Thanks
+> Dave
+> 
 
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+How about something simple as following code? The logic and new function is as simple as
+possible, just always reserve extra low memory when SME/SEV is active, ignore the high/low
+reservation case. It will waste some memory with SME and high reservation though.
+
+Was hesitating a lot about this series, one thing I'm thinking is that what is the point
+of "crashkernel=" argument, if the crashkernel value could be adjusted according, the value
+specified will seems more meanless or confusing...
+
+And currently there isn't anything like crashkernel=auto or anything similiar to let kernel
+calculate the value automatically, maybe the admin should be aware of the value or be informed
+about the suitable crashkernel value after all?
+
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index ed8ec011a9fd..7263a237f689 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -44,6 +44,7 @@ void early_platform_quirks(void);
+  
+  extern unsigned long saved_video_mode;
+  
++extern void kdump_need_extra_low_memory(unsigned long size);
+  extern void reserve_standard_io_resources(void);
+  extern void i386_reserve_resources(void);
+  extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 77ea96b794bd..e5888fb8e4bc 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -473,6 +473,13 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+  # define CRASH_ADDR_HIGH_MAX	SZ_64T
+  #endif
+  
++static __initdata unsigned long long crash_low_extra;
++
++void __init kdump_need_extra_low_memory(unsigned long size)
++{
++	crash_low_extra += size;
++}
++
+  static int __init reserve_crashkernel_low(void)
+  {
+  #ifdef CONFIG_X86_64
+@@ -501,6 +508,7 @@ static int __init reserve_crashkernel_low(void)
+  			return 0;
+  	}
+  
++	low_size += crash_low_extra;
+  	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+  	if (!low_base) {
+  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+@@ -563,8 +571,17 @@ static void __init reserve_crashkernel(void)
+  		if (!high)
+  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+  						CRASH_ADDR_LOW_MAX,
+-						crash_size, CRASH_ALIGN);
+-		if (!crash_base)
++						crash_size + crash_low_extra,
++						CRASH_ALIGN);
++		/*
++		 * If reserving the crashkernel memory in low region, then also
++		 * include the extra low memory requirement declared by other
++		 * components. If falled back to high reservation the dedicated
++		 * low crash memory will take care of that.
++		 */
++		if (crash_base)
++			crash_size += crash_low_extra;
++		else
+  			crash_base = memblock_find_in_range(CRASH_ALIGN,
+  						CRASH_ADDR_HIGH_MAX,
+  						crash_size, CRASH_ALIGN);
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index 9268c12458c8..b4556d2dcb8e 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -415,6 +415,8 @@ void __init mem_encrypt_init(void)
+  	if (sev_active())
+  		static_branch_enable(&sev_enable_key);
+  
++	kdump_need_extra_low_memory(swiotlb_size_or_default());
++
+  	pr_info("AMD %s active\n",
+  		sev_active() ? "Secure Encrypted Virtualization (SEV)"
+  			     : "Secure Memory Encryption (SME)");
