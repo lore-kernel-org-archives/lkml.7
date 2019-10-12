@@ -2,147 +2,134 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF1CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCF2C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47B92087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:53:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="R1cXAHL0"
+	by mail.kernel.org (Postfix) with ESMTP id E5A802087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:55:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570881304;
+	bh=xxpAOi9C3eTGWEPUnK+oNwhjKefKjF1yiXJF0pPe7R8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=DHlP8mDE0R+jSxHgp+u9DASxXAOqgyhPmAiq8XLDIf6JC/f8YsCLt/3bxXxzuBo1U
+	 9URutyfXZleUMDRT0iuCnM79BMLBFTGX1W/GVq7+xWdfOHDsuMjwBsn4m0+btCIqbY
+	 cRaB6h6CHFFNzohF4lSjiIxdPi0oa1czYiEtJvuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbfJLLx4 (ORCPT
+        id S1729206AbfJLLzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 07:53:56 -0400
-Received: from fd.dlink.ru ([178.170.168.18]:46642 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727231AbfJLLv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 07:51:56 -0400
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 944891B20983; Sat, 12 Oct 2019 14:51:52 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 944891B20983
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1570881112; bh=GVdyMAkJoaCzEF7enJYVSyxNIEivWNJHyH4jL2SwDe8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=R1cXAHL0FigCYkYf211zc5POTUXLGBUKygLqCdjJb0OCLYxcHzAAIjkjk1ywkK+g1
-         T3iDsNnAVd8/6r/UT04PVGfoXRm/p9P6NslcMsy3mZ9VzalPDyZPU4h6uopD78ewsk
-         N70f9jDbkBTYjPlnG1fjMPkUNIv+qF8Bg/d9hWSI=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 388411B202D2;
-        Sat, 12 Oct 2019 14:51:49 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 388411B202D2
-Received: by mail.rzn.dlink.ru (Postfix, from userid 5000)
-        id 232351B21890; Sat, 12 Oct 2019 14:51:49 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA id 7A6C71B2120F;
-        Sat, 12 Oct 2019 14:51:41 +0300 (MSK)
+        Sat, 12 Oct 2019 07:55:02 -0400
+Received: from mail-wr1-f50.google.com ([209.85.221.50]:47045 "EHLO
+        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbfJLLxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 07:53:02 -0400
+Received: by mail-wr1-f50.google.com with SMTP id o18so14522059wrv.13
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 04:53:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=eQEhmCt1FY27ZzjbJxnMMBw+p7F/n24+TN6e19f7dtw=;
+        b=pLcnk7zh1WRMLfrnzi+Z69Ctaz8959kmZ2oyJowZJpjxg59yfCZA2e4E0X/NdmISQD
+         X+sp2fAlXt0p4ZeWs+kH0+t1hTIERp+vvJ0IimtVawTEZWpPYKToCRtXGQ9zG9SlrPCD
+         cutcFTWkp6pMupkNy0c/VdwBZim3lT32fK9z4OQiOsEDONTrTWrOllxbfOfV3xRmMxJJ
+         2HB1qYkmlWaTzBJxbVD72Fb3My49/Xh2n1FWy3vnpzdpXNPl5JPEw+wjaxNHOIANUMv+
+         V4Lyxfnl4gxcHOEHn79QT2mfwFYKNpfLYt9GGLzRkvEqjrtp3NiyeNxXLJWjeYWf3bWE
+         VYNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=eQEhmCt1FY27ZzjbJxnMMBw+p7F/n24+TN6e19f7dtw=;
+        b=NMih3W3P1RJy8UuyQvMB5QsOQTPoQiO9FtGP+g74AcKFSvQjMg+jHfuOZJ4btyDlHC
+         gi/PFCOlizikZ17wHqBUMn+FZ9olkK4AZ4JIC887ageSpyghd6O4wcCD1Jt6En31c735
+         L2C03onCiWbv4Zyq6UyrGmOyOoHj268/FMTWDG9ahR3h1aik1AorxsJ05f2uW7xERVAd
+         1iMK3B0xpf/fFKWfqqN2mmslp4bd+B0KGLUNkHkij5hWAVf6yZ6wXBJm6PAPuQetuA00
+         dXoLye3yOr0uD637TaZvC3+wFcWtM+t9hzkULSOkcsdL7b3vfuQInxOm4QWGuMDDZKjj
+         jAXA==
+X-Gm-Message-State: APjAAAUY9lu+MEL7I55ex3xeQN2FTgu66YqMCLJruQa/bag1F2wJ6XHf
+        /pB982WEHJnDHAwXWpSk5+/5BGnr
+X-Google-Smtp-Source: APXvYqw1MmXkmipNxhcz8nzW4U9S+OQjYs9r/6CEcmxdNhP1IZMvhgNAMOY2AyutbjeNiXuA5yotbw==
+X-Received: by 2002:a5d:6192:: with SMTP id j18mr7543014wru.63.1570881180111;
+        Sat, 12 Oct 2019 04:53:00 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id f143sm17746327wme.40.2019.10.12.04.52.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Oct 2019 04:52:59 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 13:52:57 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86 license updates
+Message-ID: <20191012115257.GA95775@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sat, 12 Oct 2019 14:51:41 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Edward Cree <ecree@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 2/2] net: core: increase the default size of
- GRO_NORMAL skb lists to flush
-In-Reply-To: <CANn89iLrVU2OVTj1yk4Sjd=SVxHYN-WpXeGhMEWx0DsVLz7giQ@mail.gmail.com>
-References: <20191010144226.4115-1-alobakin@dlink.ru>
- <20191010144226.4115-3-alobakin@dlink.ru>
- <c2450dc3-8ee0-f7cd-4f8a-61a061989eb7@solarflare.com>
- <1eaac2e1f1d65194a4a39232d7e45870@dlink.ru>
- <3c459c84df86f79b593632d3f08d5f4c@dlink.ru>
- <CANn89iLrVU2OVTj1yk4Sjd=SVxHYN-WpXeGhMEWx0DsVLz7giQ@mail.gmail.com>
-Message-ID: <c0e2778ed47c5934bb83a77c77de8dfa@dlink.ru>
-X-Sender: alobakin@dlink.ru
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+Linus,
 
-Eric Dumazet wrote 12.10.2019 14:18:
-> On Sat, Oct 12, 2019 at 2:22 AM Alexander Lobakin <alobakin@dlink.ru> 
-> wrote:
-> 
->> 
->> I've generated an another solution. Considering that gro_normal_batch
->> is very individual for every single case, maybe it would be better to
->> make it per-NAPI (or per-netdevice) variable rather than a global
->> across the kernel?
->> I think most of all network-capable configurations and systems has 
->> more
->> than one network device nowadays, and they might need different values
->> for achieving their bests.
->> 
->> One possible variant is:
->> 
->> #define THIS_DRIVER_GRO_NORMAL_BATCH    16
->> 
->> /* ... */
->> 
->> netif_napi_add(dev, napi, this_driver_rx_poll, NAPI_POLL_WEIGHT); /*
->> napi->gro_normal_batch will be set to the systcl value during NAPI
->> context initialization */
->> napi_set_gro_normal_batch(napi, THIS_DRIVER_GRO_NORMAL_BATCH); /* new
->> static inline helper, napi->gro_normal_batch will be set to the
->> driver-speficic value of 16 */
->> 
->> The second possible variant is to make gro_normal_batch sysctl
->> per-netdevice to tune it from userspace.
->> Or we can combine them into one to make it available for tweaking from
->> both driver and userspace, just like it's now with XPS CPUs setting.
->> 
->> If you'll find any of this reasonable and worth implementing, I'll 
->> come
->> with it in v2 after a proper testing.
-> 
-> Most likely the optimal tuning is also a function of the host cpu 
-> caches.
-> 
-> Building a too big list can also lead to premature cache evictions.
-> 
-> Tuning the value on your test machines does not mean the value will be 
-> good
-> for other systems.
+Please pull the latest core-urgent-for-linus git tree from:
 
-Oh, I missed that it might be a lot more machine-dependent than
-netdevice-dependent. Thank you for explanation. The best I can do in
-that case is to leave batch control in its current.
-I'll publish v2 containing only the acked first part of the series on
-Monday if nothing serious will happen. Addition of listified Rx to
-napi_gro_receive() was the main goal anyway.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-for-linus
 
-> 
-> Adding yet another per device value should only be done if you 
-> demonstrate
-> a significant performance increase compared to the conservative value
-> Edward chose.
-> 
-> Also the behavior can be quite different depending on the protocols,
-> make sure you test handling of TCP pure ACK packets.
-> 
-> Accumulating 64 (in case the device uses standard NAPI_POLL_WEIGHT)
-> of them before entering upper stacks seems not a good choice, since 64 
-> skbs
-> will need to be kept in the GRO system, compared to only 8 with Edward 
-> value.
+   # HEAD: 6184488a19be96d89cb6c36fb4bc277198309484 x86: Use the correct SPDX License Identifier in headers
 
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+Fix a couple of SPDX tags in x86 headers to follow the canonical pattern.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Nishad Kamdar (1):
+      x86: Use the correct SPDX License Identifier in headers
+
+
+ arch/x86/include/asm/cpu_entry_area.h | 2 +-
+ arch/x86/include/asm/pti.h            | 2 +-
+ arch/x86/kernel/process.h             | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
+index cff3f3f3bfe0..8348f7d69fd5 100644
+--- a/arch/x86/include/asm/cpu_entry_area.h
++++ b/arch/x86/include/asm/cpu_entry_area.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ 
+ #ifndef _ASM_X86_CPU_ENTRY_AREA_H
+ #define _ASM_X86_CPU_ENTRY_AREA_H
+diff --git a/arch/x86/include/asm/pti.h b/arch/x86/include/asm/pti.h
+index 5df09a0b80b8..07375b476c4f 100644
+--- a/arch/x86/include/asm/pti.h
++++ b/arch/x86/include/asm/pti.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef _ASM_X86_PTI_H
+ #define _ASM_X86_PTI_H
+ #ifndef __ASSEMBLY__
+diff --git a/arch/x86/kernel/process.h b/arch/x86/kernel/process.h
+index 320ab978fb1f..1d0797b2338a 100644
+--- a/arch/x86/kernel/process.h
++++ b/arch/x86/kernel/process.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ //
+ // Code shared between 32 and 64 bit
+ 
