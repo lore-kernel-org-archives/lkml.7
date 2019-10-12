@@ -2,59 +2,63 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C815EC4360C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD7DC10F14
 	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF7E20673
+	by mail.kernel.org (Postfix) with ESMTP id C44762087E
 	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:16:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hY5Ioaet"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QVaCwJI/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfJLTQM (ORCPT
+        id S1729657AbfJLTQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 15:16:12 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:45131 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729601AbfJLTQM (ORCPT
+        Sat, 12 Oct 2019 15:16:14 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:51103 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729601AbfJLTQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 15:16:12 -0400
-Received: by mail-vs1-f74.google.com with SMTP id v23so1476333vsc.12
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 12:16:11 -0700 (PDT)
+        Sat, 12 Oct 2019 15:16:14 -0400
+Received: by mail-pl1-f202.google.com with SMTP id y13so7985875plr.17
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 12:16:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cgGZvwJnEGZisI4Gx+FEE0RSIkczOwq/CnutrrsIPDg=;
-        b=hY5IoaetYla5K4CZDUJpZfqMB6tRT69RksToZe2ITHKt/cs8UmADkqTQoSBtcjeu1X
-         YjZa4cdGK7/lcQMgB+dwIHcDpii68wltQCkm1GHVA+l7koQ0HEnCkeQJDP5IiKUzqh4q
-         gF68dv50l1radXHZ1RYp/XJ59VBdure8blXWxxCico6NvisHkGupjXsp3mL9f+xUhSiz
-         Cg+lNORj8vEhDRJ1EdztXASNmJCL79Y5bDd0uNpi3gMm3mYuy2vFdkEpXGDed+W5YoVI
-         p3wTX1AMC6r9lPoKLPZC4dqM1LWspSSf+43Ec/LnWiJeC9xfFHNkxpVkYghRtGqiIS0G
-         uu1w==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=/UHvjgRQlFr+QTHINyaWDXzgiWPrMOtH1xWtvxTh1Pk=;
+        b=QVaCwJI/Dy+4bGAEPxHQzjVMbjAytCXRo0MmNrV48LlYVf3yDoZPPRzxqjXSnM5Mmp
+         fHlXBhfXUIxldxUCrkPPcUACkv0ggT8jetsndX2bQaHSVSVCBaiYFNID4GMHl4VIGjrX
+         Vw/baW+5BXaY0HP+0bCqzPYcGlPGoDvAl9Oym00VsAmffcDJ4YZU6V4lEtKZbqI9V5ge
+         EDDuWX2MWPeIx1dhLdRILCrYoGC+qCveyidVQBIJ2wibYjLRcv+P/XOORpO+d1YS9KIs
+         X+BEX6xBFtaZFft+FtZGFrvzeezygTi/2ai2D4QFKdXF0zHkz/dK1K0jhmAeJNGcY6AK
+         y51w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cgGZvwJnEGZisI4Gx+FEE0RSIkczOwq/CnutrrsIPDg=;
-        b=tgzThkiFSZNKrZKDSYrSM2eViiPH5uvNB8AJ8bDqLbIEt3J8aeU8ad/PSPC7uUnWiZ
-         AD3Eu2XxsLObYcKEwRFs7LAwMhKj5uhMFajtHmdzheF0SpSrCV+caZwD5zKWg6IHir1k
-         PsITKTWz2sj7ljz5Uh4HkNeDU8mga74mBwsa1GbH25XmNwUZJT+fZk+rtevhjU6DsH27
-         c4VQ/dXFuT7KADDI+3s8WNczMcbnau3ZBLeD8n6tCo5Sz9lYnaZ3D5NiH99KXCuqpxV8
-         izuSdwutUC93U3pRabVaQwdPAddyib1ax1J1PepDmsBT0oRi3vLIQHlPFMjT6GCU6SPL
-         ubfA==
-X-Gm-Message-State: APjAAAXwvCg3NUj2lrdtjBNN5s29Yle8FMdWWVh6ybfMeefSQq7rUEMp
-        TmKznUAseFOsgizQmSHVscUnkLyUkEM=
-X-Google-Smtp-Source: APXvYqwaUeRJ6x02z8elU1C3NDl027logw1VDhmfR9ix2GcHCirPapDVMNBMBWC+M+dd6v9o18pHv5gMNXM=
-X-Received: by 2002:a67:ad0c:: with SMTP id t12mr12732593vsl.82.1570907771122;
- Sat, 12 Oct 2019 12:16:11 -0700 (PDT)
-Date:   Sat, 12 Oct 2019 12:15:55 -0700
-Message-Id: <20191012191602.45649-1-dancol@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=/UHvjgRQlFr+QTHINyaWDXzgiWPrMOtH1xWtvxTh1Pk=;
+        b=X6z6Xt7GS9y6Y/ELUT8S3qi5LrKMalhDFx1cUx1CpsvstSvRN0OfRXike7T+aSxonB
+         o/haTjlyhHB7tLxkaU6GMPH3dOkmXG1f1QYj3L2R4a4r58avao345OVTgWNwDHb5D5BW
+         CxOT5S6JW6fPGTCb46vg+9WixIK0RnEUmdCRgNPpyTieFzeLGAwsEABin4pS7Ii/7JHH
+         UmQ1WNdy9UfEofJ+r+px9uY1a1OEpdvxSm23TyEXNu0CMwTgtlaZlBaWnFWtE+pE4MqL
+         P8yKTsNDH66P0tMPbKQWQf+ROWEg7D+fMHIrC83TaDndpQFm2ifLP9Oh3oqb5rDmKz28
+         olwQ==
+X-Gm-Message-State: APjAAAUI4o5AKv6WFB37FjfDjgXLKAcZmQiQMqfCQWicDN0YbkCCntsY
+        S9bDReHeRlTfjy7VtapUjGZGVg/ey1w=
+X-Google-Smtp-Source: APXvYqzZzST+dwz9qdPhpAdj1SPmX1Nudrfqa/IQzTNLYSwju7u82ReYlDZoSMKW3qfqlE/4Q11i6MDAmoY=
+X-Received: by 2002:a63:f850:: with SMTP id v16mr24430933pgj.257.1570907772984;
+ Sat, 12 Oct 2019 12:16:12 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 12:15:56 -0700
+In-Reply-To: <20191012191602.45649-1-dancol@google.com>
+Message-Id: <20191012191602.45649-2-dancol@google.com>
 Mime-Version: 1.0
+References: <20191012191602.45649-1-dancol@google.com>
 X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
-Subject: [PATCH 0/7] Harden userfaultfd
+Subject: [PATCH 1/7] Add a new flags-accepting interface for anonymous inodes
 From:   Daniel Colascione <dancol@google.com>
 To:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
         lokeshgidra@google.com, dancol@google.com, nnk@google.com
@@ -65,45 +69,179 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userfaultfd in unprivileged contexts could be potentially very
-useful. We'd like to harden userfaultfd to make such unprivileged use
-less risky. This patch series allows SELinux to manage userfaultfd
-file descriptors (via a new flag, for compatibility with existing
-code) and allows administrators to limit userfaultfd to servicing
-user-mode faults, increasing the difficulty of using userfaultfd in
-exploit chains invoking delaying kernel faults.
+Add functions forwarding from the old names to the new ones so we
+don't need to change any callers.
 
-A new anon_inodes interface allows callers to opt into SELinux
-management of anonymous file objects. In this mode, anon_inodes
-creates new ephemeral inodes for anonymous file objects instead of
-reusing a singleton dummy inode. A new LSM hook gives security modules
-an opportunity to configure and veto these ephemeral inodes.
+Signed-off-by: Daniel Colascione <dancol@google.com>
+---
+ fs/anon_inodes.c            | 62 ++++++++++++++++++++++---------------
+ include/linux/anon_inodes.h | 27 +++++++++++++---
+ 2 files changed, 59 insertions(+), 30 deletions(-)
 
-Existing anon_inodes users must opt into the new functionality.
-
-Daniel Colascione (7):
-  Add a new flags-accepting interface for anonymous inodes
-  Add a concept of a "secure" anonymous file
-  Add a UFFD_SECURE flag to the userfaultfd API.
-  Teach SELinux about a new userfaultfd class
-  Let userfaultfd opt out of handling kernel-mode faults
-  Allow users to require UFFD_SECURE
-  Add a new sysctl for limiting userfaultfd to user mode faults
-
- Documentation/admin-guide/sysctl/vm.rst | 19 +++++-
- fs/anon_inodes.c                        | 89 +++++++++++++++++--------
- fs/userfaultfd.c                        | 47 +++++++++++--
- include/linux/anon_inodes.h             | 27 ++++++--
- include/linux/lsm_hooks.h               |  8 +++
- include/linux/security.h                |  2 +
- include/linux/userfaultfd_k.h           |  3 +
- include/uapi/linux/userfaultfd.h        | 14 ++++
- kernel/sysctl.c                         |  9 +++
- security/security.c                     |  8 +++
- security/selinux/hooks.c                | 68 +++++++++++++++++++
- security/selinux/include/classmap.h     |  2 +
- 12 files changed, 256 insertions(+), 40 deletions(-)
-
+diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+index 89714308c25b..caa36019afca 100644
+--- a/fs/anon_inodes.c
++++ b/fs/anon_inodes.c
+@@ -56,60 +56,71 @@ static struct file_system_type anon_inode_fs_type = {
+ };
+ 
+ /**
+- * anon_inode_getfile - creates a new file instance by hooking it up to an
+- *                      anonymous inode, and a dentry that describe the "class"
+- *                      of the file
++ * anon_inode_getfile2 - creates a new file instance by hooking it up to
++ *                       an anonymous inode, and a dentry that describe
++ *                       the "class" of the file
+  *
+  * @name:    [in]    name of the "class" of the new file
+  * @fops:    [in]    file operations for the new file
+  * @priv:    [in]    private data for the new file (will be file's private_data)
+- * @flags:   [in]    flags
++ * @flags:   [in]    flags for the file
++ * @anon_inode_flags: [in] flags for anon_inode*
+  *
+- * Creates a new file by hooking it on a single inode. This is useful for files
++ * Creates a new file by hooking it on an unspecified inode. This is useful for files
+  * that do not need to have a full-fledged inode in order to operate correctly.
+  * All the files created with anon_inode_getfile() will share a single inode,
+  * hence saving memory and avoiding code duplication for the file/inode/dentry
+  * setup.  Returns the newly created file* or an error pointer.
++ *
++ * anon_inode_flags must be zero.
+  */
+-struct file *anon_inode_getfile(const char *name,
+-				const struct file_operations *fops,
+-				void *priv, int flags)
++struct file *anon_inode_getfile2(const char *name,
++				 const struct file_operations *fops,
++				 void *priv, int flags, int anon_inode_flags)
+ {
++	struct inode *inode;
+ 	struct file *file;
+ 
+-	if (IS_ERR(anon_inode_inode))
+-		return ERR_PTR(-ENODEV);
+-
+-	if (fops->owner && !try_module_get(fops->owner))
+-		return ERR_PTR(-ENOENT);
++	if (anon_inode_flags)
++		return ERR_PTR(-EINVAL);
+ 
++	inode =	anon_inode_inode;
++	if (IS_ERR(inode))
++		return ERR_PTR(-ENODEV);
+ 	/*
+-	 * We know the anon_inode inode count is always greater than zero,
+-	 * so ihold() is safe.
++	 * We know the anon_inode inode count is always
++	 * greater than zero, so ihold() is safe.
+ 	 */
+-	ihold(anon_inode_inode);
+-	file = alloc_file_pseudo(anon_inode_inode, anon_inode_mnt, name,
++	ihold(inode);
++
++	if (fops->owner && !try_module_get(fops->owner)) {
++		file = ERR_PTR(-ENOENT);
++		goto err;
++	}
++
++	file = alloc_file_pseudo(inode, anon_inode_mnt, name,
+ 				 flags & (O_ACCMODE | O_NONBLOCK), fops);
+ 	if (IS_ERR(file))
+ 		goto err;
+ 
+-	file->f_mapping = anon_inode_inode->i_mapping;
++	file->f_mapping = inode->i_mapping;
+ 
+ 	file->private_data = priv;
+ 
+ 	return file;
+ 
+ err:
+-	iput(anon_inode_inode);
++	iput(inode);
+ 	module_put(fops->owner);
+ 	return file;
+ }
+ EXPORT_SYMBOL_GPL(anon_inode_getfile);
++EXPORT_SYMBOL_GPL(anon_inode_getfile2);
+ 
+ /**
+- * anon_inode_getfd - creates a new file instance by hooking it up to an
+- *                    anonymous inode, and a dentry that describe the "class"
+- *                    of the file
++ * anon_inode_getfd2 - creates a new file instance by hooking it up to an
++ *                     anonymous inode, and a dentry that describe the "class"
++ *                     of the file
+  *
+  * @name:    [in]    name of the "class" of the new file
+  * @fops:    [in]    file operations for the new file
+@@ -122,8 +133,8 @@ EXPORT_SYMBOL_GPL(anon_inode_getfile);
+  * hence saving memory and avoiding code duplication for the file/inode/dentry
+  * setup.  Returns new descriptor or an error code.
+  */
+-int anon_inode_getfd(const char *name, const struct file_operations *fops,
+-		     void *priv, int flags)
++int anon_inode_getfd2(const char *name, const struct file_operations *fops,
++		      void *priv, int flags, int anon_inode_flags)
+ {
+ 	int error, fd;
+ 	struct file *file;
+@@ -133,7 +144,7 @@ int anon_inode_getfd(const char *name, const struct file_operations *fops,
+ 		return error;
+ 	fd = error;
+ 
+-	file = anon_inode_getfile(name, fops, priv, flags);
++	file = anon_inode_getfile2(name, fops, priv, flags, anon_inode_flags);
+ 	if (IS_ERR(file)) {
+ 		error = PTR_ERR(file);
+ 		goto err_put_unused_fd;
+@@ -147,6 +158,7 @@ int anon_inode_getfd(const char *name, const struct file_operations *fops,
+ 	return error;
+ }
+ EXPORT_SYMBOL_GPL(anon_inode_getfd);
++EXPORT_SYMBOL_GPL(anon_inode_getfd2);
+ 
+ static int __init anon_inode_init(void)
+ {
+diff --git a/include/linux/anon_inodes.h b/include/linux/anon_inodes.h
+index d0d7d96261ad..10699462dcb1 100644
+--- a/include/linux/anon_inodes.h
++++ b/include/linux/anon_inodes.h
+@@ -11,11 +11,28 @@
+ 
+ struct file_operations;
+ 
+-struct file *anon_inode_getfile(const char *name,
+-				const struct file_operations *fops,
+-				void *priv, int flags);
+-int anon_inode_getfd(const char *name, const struct file_operations *fops,
+-		     void *priv, int flags);
++#define ANON_INODE_SECURE 1
++
++struct file *anon_inode_getfile2(const char *name,
++				 const struct file_operations *fops,
++				 void *priv, int flags, int anon_inode_flags);
++int anon_inode_getfd2(const char *name, const struct file_operations *fops,
++		      void *priv, int flags, int anon_inode_flags);
++
++static inline int anon_inode_getfd(const char *name,
++				   const struct file_operations *fops,
++				   void *priv, int flags)
++{
++	return anon_inode_getfd2(name, fops, priv, flags, 0);
++}
++
++static inline struct file *anon_inode_getfile(const char *name,
++					      const struct file_operations *fops,
++					      void *priv, int flags)
++{
++	return anon_inode_getfile2(name, fops, priv, flags, 0);
++}
++
+ 
+ #endif /* _LINUX_ANON_INODES_H */
+ 
 -- 
 2.23.0.700.g56cf767bdb-goog
 
