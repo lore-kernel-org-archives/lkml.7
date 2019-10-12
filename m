@@ -2,114 +2,168 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A06C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 18:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDCFC10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E822087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 18:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8FE206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 19:04:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UJ8N1Yny"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="WeO588V/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfJLStm (ORCPT
+        id S1729545AbfJLTET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 14:49:42 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43563 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729324AbfJLStE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 14:49:04 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j18so15231416wrq.10;
-        Sat, 12 Oct 2019 11:49:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GJDCD24q8FHHhxNDtUAkpzQYbJaDZYgAmYeaRlxpr/w=;
-        b=UJ8N1YnyS5qFw+3hQ3wHH5qfKH2llANndMmxVbmKPRFZFunXLbuK+yD9tw96qzf0PE
-         A/m0wISDjend/x20vATRDUG1JCXyrOYIj03D13PuaTDKLFnUuCPlSUhnsiC5zsNBsmjf
-         mo2GoPkv27PlCPvWHWteG887VCHCMoLUOwiBggLgZFTPbeSwNRSUOnd0MbXcZ0wLvT65
-         GJbc3aIp9DPxRCjJkTaweu1iaxBYYOjxlTAdT0ZMRdJ+c5eZZE0+4QsnFdMWvIcfgsWh
-         atTuxyBXM2Ox6d7wdji6LRj0u0GszAubZBddCT7m4iFvlEmU+ZxQZ7qilVuyQL+8t505
-         1wtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GJDCD24q8FHHhxNDtUAkpzQYbJaDZYgAmYeaRlxpr/w=;
-        b=HK0rHGRtyEd+azZfApJSonON1sjzKUIYvOT6L4pg/sy0ZZdud/Gy0CGMy0tsLLE+qO
-         7u87V9opR58Rf/CCN0CiaIB0v12sDjGzopL2RziwuzT5HpbROSYRVyd51swb6nxMx/ek
-         f8rLD+MTENd4y8mskIFOIf1SNiIWF4gLdBw7IKFFy8QZyLcbyd4UQAJG+/hIRC0EwxyY
-         TOHdB/jWhSUazB4N8cDlKdK1yCAl+9cX7OhMWfF705A68n7fcOB1UilvDDPlK5Yu5Cry
-         xVho/XCtrhWR5sYMIuFMf11ulx0QKQ+Hqp8PAeTNSagxpHEoCtq1sJRu1A7wCF8BscIX
-         i/aQ==
-X-Gm-Message-State: APjAAAVYuh+7gd3VYUrWdYD5bAMaewr7wgVaPtiOz2+99CDwrx6VjGKo
-        pb15F0I/hpe5aal1GkElhcIBXLM0
-X-Google-Smtp-Source: APXvYqxnME26nF6TxFl78Rm1SskYXik1n78MVRjhh7ocTVWwXQmDS1/gxLMcjqW5qc6QHhau4k39EQ==
-X-Received: by 2002:a5d:6581:: with SMTP id q1mr17970758wru.393.1570906142613;
-        Sat, 12 Oct 2019 11:49:02 -0700 (PDT)
-Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id a13sm33670580wrf.73.2019.10.12.11.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Oct 2019 11:49:02 -0700 (PDT)
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     catalin.marinas@arm.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
-        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org, will@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v4 04/11] ARM: dts: sun8i: R40: add crypto engine node
-Date:   Sat, 12 Oct 2019 20:48:45 +0200
-Message-Id: <20191012184852.28329-5-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
-References: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
+        Sat, 12 Oct 2019 15:04:19 -0400
+Received: from mail-eopbgr740108.outbound.protection.outlook.com ([40.107.74.108]:36118
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729324AbfJLTET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 15:04:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mI2P1+aFLkYbLDkQsYHdpGgy/IM2kkr19gUDg9ZHzFYnWVhsj9IfqjF4SyXtQyZjwrH+il1+pg2ISyjfLwwHE2YzSdVkCY8zcS1bHt1d6Tued5jAa6DCb9cFcdzCR42YwI1dhKkK2z1g+TLcFeWjkmLwAhHC3CjdBK1qQifJYW4wr7lr40YFuwZRBvrOXvjjZ5iGbSOqoX0Yac9ci+esXI+lIebRuNAKsnSCKexSFHfYxQYP01MR3sXLuBiSl3gk6bEZSrCClXJ/9JcQ4ItTCmS5837uRu7/+9IvguFfcuYn0OzfvlEVLhD71vGPxXZp6TeINn55tMln/+uf1JIwAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gyIvOC8tynPUXZDoRFQG5yc95e8stlSjMGNKAQdaZz4=;
+ b=dHx52hbln6OQdF0CW+cHVgRAWaTnEXrxIAFsIxjt/aO9tphaKGElMwfu8X4J/cBEG4a3ifEL8mp41XhbUiRMkuSh6R+kLCDxUUdwheKndxTStP6+6QjgQTQ1Tr1oLJ+UsRAxYQXDqD2xVDtl1jxC6hi8qONBLXcOPlU1cXmRegYt848QZpIB14mkEHZKeFS7xx/3zYnN/uGeXJM+ZZ6db7Beo9UM1dOXRlm22aezWdql2LRMd+smH2OAM2R6CRXfw6Ej6pjA39ZgMeOTjitSMEwUBoT1fm96HcLJRl7wUxUdSx+hZRU03uDrwPtC9PAvWPW0JfysDfeWkoqgvc7GPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gyIvOC8tynPUXZDoRFQG5yc95e8stlSjMGNKAQdaZz4=;
+ b=WeO588V/FhC2iazrcOvHSdtb6HasEkrduPpIgbxXMq37M58kfbChKdDFnqoV9GbdIp3pzkfjuATfREWRPjWsppSwk+mPRaMGapnx+a1a5jhXb+9W1uGFtrRiH99pUeNgO2TsNkEcgicLLqkFsVTS7XtZJ51PUjtBVaewaEHaWCI=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1725.namprd22.prod.outlook.com (10.164.206.155) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.17; Sat, 12 Oct 2019 19:04:14 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::c1dc:dba3:230c:e7f0]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::c1dc:dba3:230c:e7f0%8]) with mapi id 15.20.2347.021; Sat, 12 Oct 2019
+ 19:04:14 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] MIPS fixes
+Thread-Topic: [GIT PULL] MIPS fixes
+Thread-Index: AQHVgS/WLh8bRoU0Ik2icH8kD9VxjQ==
+Date:   Sat, 12 Oct 2019 19:04:14 +0000
+Message-ID: <20191012190412.vaazxi325tjnab2d@pburton-laptop>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR13CA0009.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::22) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2601:646:8a00:9810:9d6:9cca:ff8c:efe0]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0aba8659-d7be-4280-dc48-08d74f46f8f8
+x-ms-traffictypediagnostic: MWHPR2201MB1725:
+x-microsoft-antispam-prvs: <MWHPR2201MB1725A83276148D80EEDF8882C1960@MWHPR2201MB1725.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0188D66E61
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(346002)(366004)(396003)(39840400004)(376002)(189003)(199004)(8676002)(2906002)(6486002)(305945005)(7736002)(6116002)(99286004)(9686003)(14454004)(478600001)(99936001)(316002)(6512007)(58126008)(6436002)(33716001)(66946007)(66446008)(64756008)(66556008)(66476007)(66616009)(81156014)(81166006)(6916009)(71190400001)(71200400001)(386003)(6506007)(256004)(42882007)(8936002)(54906003)(14444005)(5660300002)(4001150100001)(1076003)(186003)(25786009)(44832011)(476003)(102836004)(486006)(52116002)(4326008)(46003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1725;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UhI2DkWusF22FSqYR1WtPB3wNYAaQ3mzEzQtoAcmZU4+qTbpYlDcKXzTIAg6eFQTxoxvSDALubrlEnTmQpyncnZL688yq0eMuh7aAOG5zLrLWHRkouCsEnPSgvnQV4oCTJ4phPn1SoWs9GDhHBrGc4bi7z4tlgf28dvLS+7Ye9qd+0l3ypvED+NV+qxLYB2rCALb86VH6LS3AZ14O39gmL5Wy5yk0OrP+SCdZlp4FIYsyfmcYfm8oKP7zt7ZmcdKlZ0HyC5RphByI6Fl0O5eF9ZaJsOhhI4VZoyJ/NQo0Jqy7FjLkg1K5pB1Wtxs5AWEb9ZiXIA3pw7F5nTZQKzYagWprYebki7Vt4M4qW1isv2z3RBt+BotFPm279o1YmmnPuJBOArlZ1KQX9vJBxq+m/BFGD6Jh9Akjofhoe/f/UE=
+x-ms-exchange-transport-forked: True
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="swr3tlnyelo3xej2"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0aba8659-d7be-4280-dc48-08d74f46f8f8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2019 19:04:14.4736
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pJwS6wdh82YktCuOPh5ShKS2jeHYZRjfz0e+pfarzOd0qbbBxJucIBxMAbKunfoLMLfzH39WHz/uniLI6sb2/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1725
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Crypto Engine is a hardware cryptographic offloader that supports
-many algorithms.
-It could be found on most Allwinner SoCs.
+--swr3tlnyelo3xej2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This patch enables the Crypto Engine on the Allwinner R40 SoC Device-tree.
+Hi Linus,
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- arch/arm/boot/dts/sun8i-r40.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Here are a few MIPS fixes for 5.4; please pull.
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index c9c2688db66d..421dfbbfd7ee 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -266,6 +266,15 @@
- 			#phy-cells = <1>;
- 		};
- 
-+		crypto: crypto@1c15000 {
-+			compatible = "allwinner,sun8i-r40-crypto";
-+			reg = <0x01c15000 0x1000>;
-+			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
-+			clock-names = "bus", "mod";
-+			resets = <&ccu RST_BUS_CE>;
-+		};
-+
- 		ehci1: usb@1c19000 {
- 			compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
- 			reg = <0x01c19000 0x100>;
--- 
-2.21.0
+Thanks,
+    Paul
 
+
+The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+
+  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.4_2
+
+for you to fetch changes up to 2f2b4fd674cadd8c6b40eb629e140a14db4068fd:
+
+  MIPS: Disable Loongson MMI instructions for kernel build (2019-10-10 11:58:52 -0700)
+
+----------------------------------------------------------------
+A few MIPS fixes for 5.4:
+
+- Build fixes for CONFIG_OPTIMIZE_INLINING=y builds in which the
+  compiler may choose not to inline __xchg() & __cmpxchg().
+
+- A build fix for Loongson configurations with GCC 9.x.
+
+- Expose some extra HWCAP bits to indicate support for various
+  instruction set extensions to userland.
+
+- Fix bad stack access in firmware handling code for old SNI
+  RM200/300/400 machines.
+
+----------------------------------------------------------------
+Jiaxun Yang (1):
+      MIPS: elf_hwcap: Export userspace ASEs
+
+Paul Burton (1):
+      MIPS: Disable Loongson MMI instructions for kernel build
+
+Thomas Bogendoerfer (3):
+      MIPS: include: Mark __cmpxchg as __always_inline
+      MIPS: include: Mark __xchg as __always_inline
+      MIPS: fw: sni: Fix out of bounds init of o32 stack
+
+ arch/mips/fw/sni/sniprom.c         |  2 +-
+ arch/mips/include/asm/cmpxchg.h    |  9 +++++----
+ arch/mips/include/uapi/asm/hwcap.h | 11 +++++++++++
+ arch/mips/kernel/cpu-probe.c       | 33 +++++++++++++++++++++++++++++++++
+ arch/mips/loongson64/Platform      |  4 ++++
+ arch/mips/vdso/Makefile            |  1 +
+ 6 files changed, 55 insertions(+), 5 deletions(-)
+
+--swr3tlnyelo3xej2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXaIjrAAKCRA+p5+stXUA
+3VD7AQCzxLBDf/iduWPD6efDg6TS5+eAk7MgVNu2FIagzjXP5wD7BA1efontwijE
+CR813los+SEUy8MpWF8bRG7OjHh/yw0=
+=OGIZ
+-----END PGP SIGNATURE-----
+
+--swr3tlnyelo3xej2--
