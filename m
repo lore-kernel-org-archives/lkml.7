@@ -2,68 +2,59 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75C1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 03:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00F8C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 03:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A8E2067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 03:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFA12067B
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 03:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbfJLDiO (ORCPT
+        id S1728442AbfJLDk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Oct 2019 23:38:14 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:55226 "EHLO
+        Fri, 11 Oct 2019 23:40:57 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55264 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfJLDiN (ORCPT
+        with ESMTP id S1726391AbfJLDk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Oct 2019 23:38:13 -0400
+        Fri, 11 Oct 2019 23:40:57 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D377B14FD3304;
-        Fri, 11 Oct 2019 20:38:12 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 20:38:12 -0700 (PDT)
-Message-Id: <20191011.203812.1828730130029996774.davem@davemloft.net>
-To:     andrew@aj.id.au
-Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@jms.id.au, benh@kernel.crashing.org,
-        linux-aspeed@lists.ozlabs.org
-Subject: Re: [PATCH v2 0/3] net: ftgmac100: Ungate RCLK for RMII on ASPEED
- MACs
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CE81C15003084;
+        Fri, 11 Oct 2019 20:40:56 -0700 (PDT)
+Date:   Fri, 11 Oct 2019 20:40:56 -0700 (PDT)
+Message-Id: <20191011.204056.74629495407810105.davem@davemloft.net>
+To:     vcaputo@pengaru.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] af_unix: __unix_find_socket_byname() cleanup
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191010020756.4198-1-andrew@aj.id.au>
-References: <20191010020756.4198-1-andrew@aj.id.au>
+In-Reply-To: <20191010034347.ohjmoivd7f426znd@shells.gnugeneration.com>
+References: <20191010034347.ohjmoivd7f426znd@shells.gnugeneration.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 11 Oct 2019 20:38:13 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 11 Oct 2019 20:40:56 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
-Date: Thu, 10 Oct 2019 12:37:53 +1030
+From: Vito Caputo <vcaputo@pengaru.com>
+Date: Wed, 9 Oct 2019 20:43:47 -0700
 
-> This series slightly extends the devicetree binding and driver for the
-> FTGMAC100 to describe an optional RMII RCLK gate in the clocks property.
-> Currently it's necessary for the kernel to ungate RCLK on the AST2600 in NCSI
-> configurations as u-boot does not yet support NCSI (which uses the
-> R(educed)MII).
+> Remove pointless return variable dance.
 > 
-> v2:
-> * Clear up Reduced vs Reversed MII in the cover letter
-> * Mitigate anxiety in the commit message for 1/3 
-> * Clarify that AST2500 is also affected in the clocks property description in
->   2/3
-> * Rework the error paths and update some comments in 3/3
+> Appears vestigial from when the function did locking as seen in
+> unix_find_socket_byinode(), but locking is handled in
+> unix_find_socket_byname() for __unix_find_socket_byname().
 > 
-> v1 can be found here: https://lore.kernel.org/netdev/20191008115143.14149-1-andrew@aj.id.au/
+> Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
 
-Series applied to net-next, thank you.
+I agree with your analysis. :-)
+
+Applied to net-next.
