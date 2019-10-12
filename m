@@ -2,176 +2,144 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F062C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF10C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 12:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521BF20673
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2F420673
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 12:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570881690;
+	bh=9exQG7nr3/lBFBoQlVSUc3OlNg8VsRMGFm1wTu5IZlA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qmkn2DS2EJMDS1LLeLgVxwtejJhi6JHf3ZFu3A+0HP/67AJ1MwV88yJvt2kjVorbd
+	 T1Nw3VGoY2cPSqvSkhP+IttY++H8qpA1SCknaMhhED3JRa8OP5kQ47G+W9RFFV3lH9
+	 VaeR1opOjkqtNdePmbxI61NmuCMDW6d+6ZA8rrDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfJLL5K (ORCPT
+        id S1729270AbfJLMB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 07:57:10 -0400
-Received: from shells.gnugeneration.com ([66.240.222.126]:35814 "EHLO
-        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbfJLLzJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 07:55:09 -0400
-Received: by shells.gnugeneration.com (Postfix, from userid 1000)
-        id 85B511A40556; Sat, 12 Oct 2019 04:55:09 -0700 (PDT)
-Date:   Sat, 12 Oct 2019 04:55:09 -0700
-From:   Vito Caputo <vcaputo@pengaru.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: core: datagram: tidy up copy functions a bit
-Message-ID: <20191012115509.jrqe43yozs7kknv5@shells.gnugeneration.com>
+        Sat, 12 Oct 2019 08:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727265AbfJLL72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 07:59:28 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C043420673;
+        Sat, 12 Oct 2019 11:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570881566;
+        bh=9exQG7nr3/lBFBoQlVSUc3OlNg8VsRMGFm1wTu5IZlA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MB1IHdrhZiJ1u2/UEUf/EsywsbLh1XeaHjt/hDbdw9ic3Ndz11qNvzyV9nzfaI2YW
+         vHBptnfNuIrlEtqM2OnaorTbnBj0KHlwmwGqLtZL3SdjdZqG1PUgqqPiYTWCaM3nNH
+         gchu3XELBmGNWy3KZrpzjapsm8QFzbuiyXFrvsSc=
+Date:   Sat, 12 Oct 2019 12:59:21 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] iio: light: Add support for ADUX1020 sensor
+Message-ID: <20191012125921.4cf04474@archlinux>
+In-Reply-To: <391446566afd59da7d94e8af5c7ecd13b57e1540.camel@analog.com>
+References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org>
+        <20191007101027.8383-3-manivannan.sadhasivam@linaro.org>
+        <30c4a0f9aff5a40879d6839ad8a5ce40565f0923.camel@analog.com>
+        <20191009094524.GA17962@Mani-XPS-13-9360>
+        <391446566afd59da7d94e8af5c7ecd13b57e1540.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eliminate some verbosity by using min() macro and consolidating some
-things, also fix inconsistent zero tests (! vs. == 0).
+On Wed, 9 Oct 2019 10:21:27 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
----
- net/core/datagram.c | 44 ++++++++++++++------------------------------
- 1 file changed, 14 insertions(+), 30 deletions(-)
+> On Wed, 2019-10-09 at 15:15 +0530, Manivannan Sadhasivam wrote:
+> > [External]
+> > 
+> > Hi Ardelean,
 
-diff --git a/net/core/datagram.c b/net/core/datagram.c
-index 4cc8dc5db2b7..08d403f93952 100644
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -413,13 +413,11 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
- 					    struct iov_iter *), void *data)
- {
- 	int start = skb_headlen(skb);
--	int i, copy = start - offset, start_off = offset, n;
-+	int i, copy, start_off = offset, n;
- 	struct sk_buff *frag_iter;
- 
- 	/* Copy header. */
--	if (copy > 0) {
--		if (copy > len)
--			copy = len;
-+	if ((copy = min(start - offset, len)) > 0) {
- 		n = cb(skb->data + offset, copy, data, to);
- 		offset += n;
- 		if (n != copy)
-@@ -430,39 +428,33 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
- 
- 	/* Copy paged appendix. Hmm... why does this look so complicated? */
- 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
--		int end;
- 		const skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
-+		int end = start + skb_frag_size(frag);
- 
- 		WARN_ON(start > offset + len);
- 
--		end = start + skb_frag_size(frag);
--		if ((copy = end - offset) > 0) {
-+		if ((copy = min(end - offset, len)) > 0) {
- 			struct page *page = skb_frag_page(frag);
- 			u8 *vaddr = kmap(page);
- 
--			if (copy > len)
--				copy = len;
- 			n = cb(vaddr + skb_frag_off(frag) + offset - start,
- 			       copy, data, to);
- 			kunmap(page);
- 			offset += n;
- 			if (n != copy)
- 				goto short_copy;
--			if (!(len -= copy))
-+			if ((len -= copy) == 0)
- 				return 0;
- 		}
- 		start = end;
- 	}
- 
- 	skb_walk_frags(skb, frag_iter) {
--		int end;
-+		int end = start + frag_iter->len;
- 
- 		WARN_ON(start > offset + len);
- 
--		end = start + frag_iter->len;
--		if ((copy = end - offset) > 0) {
--			if (copy > len)
--				copy = len;
-+		if ((copy = min(end - offset, len)) > 0) {
- 			if (__skb_datagram_iter(frag_iter, offset - start,
- 						to, copy, fault_short, cb, data))
- 				goto fault;
-@@ -545,13 +537,11 @@ int skb_copy_datagram_from_iter(struct sk_buff *skb, int offset,
- 				 int len)
- {
- 	int start = skb_headlen(skb);
--	int i, copy = start - offset;
- 	struct sk_buff *frag_iter;
-+	int i, copy;
- 
- 	/* Copy header. */
--	if (copy > 0) {
--		if (copy > len)
--			copy = len;
-+	if ((copy = min(start - offset, len)) > 0) {
- 		if (copy_from_iter(skb->data + offset, copy, from) != copy)
- 			goto fault;
- 		if ((len -= copy) == 0)
-@@ -561,24 +551,21 @@ int skb_copy_datagram_from_iter(struct sk_buff *skb, int offset,
- 
- 	/* Copy paged appendix. Hmm... why does this look so complicated? */
- 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
--		int end;
- 		const skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
-+		int end = start + skb_frag_size(frag);
- 
- 		WARN_ON(start > offset + len);
- 
--		end = start + skb_frag_size(frag);
--		if ((copy = end - offset) > 0) {
-+		if ((copy = min(end - offset, len)) > 0) {
- 			size_t copied;
- 
--			if (copy > len)
--				copy = len;
- 			copied = copy_page_from_iter(skb_frag_page(frag),
- 					  skb_frag_off(frag) + offset - start,
- 					  copy, from);
- 			if (copied != copy)
- 				goto fault;
- 
--			if (!(len -= copy))
-+			if ((len -= copy) == 0)
- 				return 0;
- 			offset += copy;
- 		}
-@@ -586,14 +573,11 @@ int skb_copy_datagram_from_iter(struct sk_buff *skb, int offset,
- 	}
- 
- 	skb_walk_frags(skb, frag_iter) {
--		int end;
-+		int end = start + frag_iter->len;
- 
- 		WARN_ON(start > offset + len);
- 
--		end = start + frag_iter->len;
--		if ((copy = end - offset) > 0) {
--			if (copy > len)
--				copy = len;
-+		if ((copy = min(end - offset, len)) > 0) {
- 			if (skb_copy_datagram_from_iter(frag_iter,
- 							offset - start,
- 							from, copy))
--- 
-2.11.0
+For some reason, my email client decided not to filter this thread
+correctly so I didn't realise so much discussion had gone on when
+I applied the newer version earlier today.  Oops.  Hopefully
+there was nothing major outstanding.  Let me know if there was
+as it's not yet in a non rebasing tree...
+
+I've cropped to just where my name got mentioned ;)
+
+..
+
+> >   
+> > > - Just curios here: there is gesture mode as well; will that be
+> > > implemented
+> > > later? Or will there be other modes implemented?  
+> > 
+> > Currently only proximity mode is implemented. There are gesture and
+> > sample
+> > modes and I left those as a TODO. But I'm not sure whether IIO is
+> > supporting
+> > gesture mode properly or not.  
+> 
+> I don't have any input on this at the moment [about gesture support & IIO].
+> I'd have to investigate.
+> Maybe Jonathan has some thoughts.
+
+Properly is a hard term for gesture support.  The issue has always
+been that every device does it slightly differently.  There are
+way too many types of gesture that a device 'might' use.
+
+We do have some drivers (IIRC) doing some gesture sensing, but you may
+well find places where things need to expand!
+
+...
+> > > > +static int adux1020_read_raw(struct iio_dev *indio_dev,
+> > > > +			     struct iio_chan_spec const *chan,
+> > > > +			     int *val, int *val2, long mask)
+> > > > +{
+> > > > +	struct adux1020_data *data = iio_priv(indio_dev);
+> > > > +	u16 buf[3];  
+> > > 
+> > > This buffer looks a bit weird. [8]
+> > > It's 3 elements-wide and passed without any information about size.
+> > > And only the first element is used.
+> > > So, maybe just convert u16 buf[3] -> u16 buf?
+> > >   
+> > 
+> > The buffer declaration is based on the hardware buffer available. It
+> > is 3 elements wide since the remaining 2 elements will be used by other
+> > modes. The idea here is to reuse the adux1020_measure() API for all 3
+> > modes (which has varying buffer sizes).  
+> 
+> The only thought I have left about this buffer [and forgot to mention it
+> earlier], is whether this should be cacheline aligned [or not].
+> If it has to be, then maybe it shouldn't be stored on the stack and moved
+> to a malloc-ed buffer [on "struct adux1020_data"].
+> Cacheline aligned stuff typically deals with potential DMA issues. The DMA
+> issues [in this case] could be coming from i2c controllers that can do DMA.
+> 
+> Jonathan may have more input here.
+> 
+The i2c subsystem in general doesn't assume that buffers are dma safe
+though it would like to ;)
+
+Wolfram did a good presentation on his efforts to sort that out at
+ELCE 2018
+
+https://www.youtube.com/watch?v=JDwaMClvV-s
 
