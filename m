@@ -2,162 +2,117 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FCBC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A98FC10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF362089C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714E3206A1
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 05:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfJLFll (ORCPT
+        id S1728059AbfJLFtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 01:41:41 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:43267 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726671AbfJLFll (ORCPT
+        Sat, 12 Oct 2019 01:49:18 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:32948 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfJLFtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 01:41:41 -0400
-X-IronPort-AV: E=Sophos;i="5.67,286,1566856800"; 
-   d="scan'208";a="405849016"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Oct 2019 07:41:38 +0200
-Date:   Sat, 12 Oct 2019 07:41:37 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-cc:     outreachy-kernel@googlegroups.com, sudipm.mukherjee@gmail.com,
-        teddy.wang@siliconmotion.com, gregkh@linuxfoundation.org,
-        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        trivial@kernel.org
-Subject: Re: [Outreachy kernel] [PATCH] staging: sm750fb: align arguments
- with open parenthesis
-In-Reply-To: <20191012011956.9452-1-gabrielabittencourt00@gmail.com>
-Message-ID: <alpine.DEB.2.21.1910120738540.2637@hadrien>
-References: <20191012011956.9452-1-gabrielabittencourt00@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 12 Oct 2019 01:49:17 -0400
+Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 13C9A25B7C7;
+        Sat, 12 Oct 2019 16:49:15 +1100 (AEDT)
+Received: by penelope.horms.nl (Postfix, from userid 7100)
+        id 9C68CE20369; Sat, 12 Oct 2019 07:49:11 +0200 (CEST)
+Date:   Sat, 12 Oct 2019 07:49:11 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Remove Simon as Renesas SoC Co-Maintainer
+Message-ID: <20191012054907.nxqmuuwzgpydkk2o@verge.net.au>
+References: <20191010123046.15291-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010123046.15291-1-geert+renesas@glider.be>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 10, 2019 at 02:30:46PM +0200, Geert Uytterhoeven wrote:
+> At the end of the v5.3 upstream kernel development cycle, Simon stepped
+> down from his role as Renesas SoC maintainer.
+> 
+> Remove his maintainership, git repository, and branch from the
+> MAINTAINERS file, and add an entry to the CREDITS file to honor his
+> work.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Acked-by: Simon Horman <horms@verge.net.au>
 
-On Fri, 11 Oct 2019, Gabriela Bittencourt wrote:
-
-> Cleans up checks of "Alignment should match open parenthesis" in tree sm750fb
->
-> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
 > ---
->  drivers/staging/sm750fb/ddk750_display.c |  2 +-
->  drivers/staging/sm750fb/sm750_accel.c    |  2 +-
->  drivers/staging/sm750fb/sm750_accel.h    |  8 ++++----
->  drivers/staging/sm750fb/sm750_cursor.h   | 10 +++++-----
->  4 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/staging/sm750fb/ddk750_display.c b/drivers/staging/sm750fb/ddk750_display.c
-> index 887ea8aef43f..8be98a1058d6 100644
-> --- a/drivers/staging/sm750fb/ddk750_display.c
-> +++ b/drivers/staging/sm750fb/ddk750_display.c
-> @@ -148,7 +148,7 @@ void ddk750_set_logical_disp_out(enum disp_output output)
->  	if (output & PNL_SEQ_USAGE) {
->  		/* set  panel sequence */
->  		sw_panel_power_sequence((output & PNL_SEQ_MASK) >> PNL_SEQ_OFFSET,
-> -		4);
-> +					4);
->  	}
->
->  	if (output & DAC_USAGE)
-> diff --git a/drivers/staging/sm750fb/sm750_accel.c b/drivers/staging/sm750fb/sm750_accel.c
-> index dbcbbd1055da..1a9555bb9edd 100644
-> --- a/drivers/staging/sm750fb/sm750_accel.c
-> +++ b/drivers/staging/sm750fb/sm750_accel.c
-> @@ -289,7 +289,7 @@ static unsigned int deGetTransparency(struct lynx_accel *accel)
->  }
->
->  int sm750_hw_imageblit(struct lynx_accel *accel,
-> -		 const char *pSrcbuf, /* pointer to start of source buffer in system memory */
-> +		       const char *pSrcbuf, /* pointer to start of source buffer in system memory */
->  		 u32 srcDelta,          /* Pitch value (in bytes) of the source buffer, +ive means top down and -ive mean button up */
->  		 u32 startBit, /* Mono data can start at any bit in a byte, this value should be 0 to 7 */
->  		 u32 dBase,    /* Address of destination: offset in frame buffer */
-
-It is strange that the change is only does for the firsr parameter, and
-not for all of them.
-
-The kernel also uses a doc format for describing function patameters in a
-single comment before the function.  Look around in other files to see the
-format.  That would look much nicer than these comments going over 80
-columns.
-
-
-> diff --git a/drivers/staging/sm750fb/sm750_accel.h b/drivers/staging/sm750fb/sm750_accel.h
-> index c4f42002a50f..8fb79b09fdd0 100644
-> --- a/drivers/staging/sm750fb/sm750_accel.h
-> +++ b/drivers/staging/sm750fb/sm750_accel.h
-> @@ -190,9 +190,9 @@ void sm750_hw_set2dformat(struct lynx_accel *accel, int fmt);
->  void sm750_hw_de_init(struct lynx_accel *accel);
->
->  int sm750_hw_fillrect(struct lynx_accel *accel,
-> -				u32 base, u32 pitch, u32 Bpp,
-> -				u32 x, u32 y, u32 width, u32 height,
-> -				u32 color, u32 rop);
-> +		      u32 base, u32 pitch, u32 Bpp,
-> +		      u32 x, u32 y, u32 width, u32 height,
-> +		      u32 color, u32 rop);
->
->  int sm750_hw_copyarea(
->  struct lynx_accel *accel,
-> @@ -210,7 +210,7 @@ unsigned int height, /* width and height of rectangle in pixel value */
->  unsigned int rop2);
->
->  int sm750_hw_imageblit(struct lynx_accel *accel,
-> -		 const char *pSrcbuf, /* pointer to start of source buffer in system memory */
-> +		       const char *pSrcbuf, /* pointer to start of source buffer in system memory */
->  		 u32 srcDelta,          /* Pitch value (in bytes) of the source buffer, +ive means top down and -ive mean button up */
->  		 u32 startBit, /* Mono data can start at any bit in a byte, this value should be 0 to 7 */
->  		 u32 dBase,    /* Address of destination: offset in frame buffer */
-
-Same here.
-
-> diff --git a/drivers/staging/sm750fb/sm750_cursor.h b/drivers/staging/sm750fb/sm750_cursor.h
-> index 16ac07eb58d6..039ebfdf0bd9 100644
-> --- a/drivers/staging/sm750fb/sm750_cursor.h
-> +++ b/drivers/staging/sm750fb/sm750_cursor.h
-> @@ -6,13 +6,13 @@
->  void sm750_hw_cursor_enable(struct lynx_cursor *cursor);
->  void sm750_hw_cursor_disable(struct lynx_cursor *cursor);
->  void sm750_hw_cursor_setSize(struct lynx_cursor *cursor,
-> -						int w, int h);
-> +			     int w, int h);
->  void sm750_hw_cursor_setPos(struct lynx_cursor *cursor,
-> -						int x, int y);
-> +			    int x, int y);
-
-Perhaps these could just be all on one line?
-
-julia
-
->  void sm750_hw_cursor_setColor(struct lynx_cursor *cursor,
-> -						u32 fg, u32 bg);
-> +			      u32 fg, u32 bg);
->  void sm750_hw_cursor_setData(struct lynx_cursor *cursor,
-> -			u16 rop, const u8 *data, const u8 *mask);
-> +			     u16 rop, const u8 *data, const u8 *mask);
->  void sm750_hw_cursor_setData2(struct lynx_cursor *cursor,
-> -			u16 rop, const u8 *data, const u8 *mask);
-> +			      u16 rop, const u8 *data, const u8 *mask);
->  #endif
-> --
-> 2.20.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191012011956.9452-1-gabrielabittencourt00%40gmail.com.
->
+>  CREDITS     | 4 ++++
+>  MAINTAINERS | 4 ----
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/CREDITS b/CREDITS
+> index 8b67a85844b55d88..031605d46b4d5cc1 100644
+> --- a/CREDITS
+> +++ b/CREDITS
+> @@ -1637,6 +1637,10 @@ S: Panoramastrasse 18
+>  S: D-69126 Heidelberg
+>  S: Germany
+>  
+> +N: Simon Horman
+> +M: horms@verge.net.au
+> +D: Renesas ARM/ARM64 SoC maintainer
+> +
+>  N: Christopher Horn
+>  E: chorn@warwick.net
+>  D: Miscellaneous sysctl hacks
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 94ce075907a0b9aa..d44d6732510df746 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2165,12 +2165,10 @@ F:	arch/arm64/boot/dts/realtek/
+>  F:	Documentation/devicetree/bindings/arm/realtek.yaml
+>  
+>  ARM/RENESAS ARM64 ARCHITECTURE
+> -M:	Simon Horman <horms@verge.net.au>
+>  M:	Geert Uytterhoeven <geert+renesas@glider.be>
+>  M:	Magnus Damm <magnus.damm@gmail.com>
+>  L:	linux-renesas-soc@vger.kernel.org
+>  Q:	http://patchwork.kernel.org/project/linux-renesas-soc/list/
+> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git next
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
+>  S:	Supported
+>  F:	arch/arm64/boot/dts/renesas/
+> @@ -2282,12 +2280,10 @@ S:	Maintained
+>  F:	drivers/media/platform/s5p-mfc/
+>  
+>  ARM/SHMOBILE ARM ARCHITECTURE
+> -M:	Simon Horman <horms@verge.net.au>
+>  M:	Geert Uytterhoeven <geert+renesas@glider.be>
+>  M:	Magnus Damm <magnus.damm@gmail.com>
+>  L:	linux-renesas-soc@vger.kernel.org
+>  Q:	http://patchwork.kernel.org/project/linux-renesas-soc/list/
+> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git next
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
+>  S:	Supported
+>  F:	arch/arm/boot/dts/emev2*
+> -- 
+> 2.17.1
+> 
