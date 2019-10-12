@@ -2,105 +2,141 @@ Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B6CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354AAC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDF42087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B172087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 11:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mnot09YN"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wUiDd5ik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbfJLLGM (ORCPT
+        id S1728927AbfJLLNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 07:06:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44452 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfJLLGM (ORCPT
+        Sat, 12 Oct 2019 07:13:36 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:53079 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfJLLNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 07:06:12 -0400
-Received: by mail-pl1-f195.google.com with SMTP id q15so5675945pll.11;
-        Sat, 12 Oct 2019 04:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b35Ed/9iBBnm16JltqLPFC1hR6kvSZ6NR0s4StD621s=;
-        b=Mnot09YNCMIrjLeZoj3eHMWwG/oNPnDYe36oOvVR4bLt1an75r1pejQVnwosgYcdDC
-         D81RHP8k1w/WoBA6/MjQ14Rt9zGrdZCrh157sbbxCDxvWNyISBkz42sxiCtmsFhLgtGF
-         /9IBPERa08PnBBfUPpf+x8STt3/nZwYQL6wF0QII/DQQFqiwAfxtwVtvtujH9WIkEehG
-         rkHOZq4jE9UpYmQKOjoL8QTKCB9VVBEBkkEt7jmlNeF0r2pvLsc+XTZ9yEliX6Nnb2jz
-         pWEt0Xekr+k24nRtBcSvnWHuPgmwOsxohZ/qFzdC402sRNCU8wDpGvEJiWuia/Ysn0hi
-         SwXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b35Ed/9iBBnm16JltqLPFC1hR6kvSZ6NR0s4StD621s=;
-        b=KgsG3d3Ps6059E4rq3TJ6qLR86QeuEsJSVo945Y7tOmU84xFvVMov/07z2QupSlawP
-         rpy9iSYo2l3kKuZgzC7qnQ0PpqIKN5FdCHPljZJIJ1akZY/fFOGYOWM1hhu6YvsZoru/
-         IHq+sIXrACtVHlGL2s0gw1abqQuEyCDSZC1luLNweYLb9QCTmidJp12qaOaJ49UYLNoB
-         Hh/JahPQptAKYu1O92TG5zAtTst5ml65CMIZVjVusfWlTQWpL9anDijvSoDgVOZ0WoU7
-         UoHp311WrVNPjnH/RwbPzsWkaqwgcw9CNqnvUDcF6WS/0qwpNjvjqOumK+jg16ZYNrra
-         0Dpw==
-X-Gm-Message-State: APjAAAV61KJNoCtqi7wF97WTaw1jJdO4tTc8zKuo61QaNvmaQFl3IgYi
-        z0IN9n6QkSkSRK79f7fcOkkwb/bC
-X-Google-Smtp-Source: APXvYqzI/Dkq4rDjnCb+lKTdis8BUFpR5tyFOSG4JhvYrFH8f/bBFAllmFQax2jVlE1IWOdwNIPm5Q==
-X-Received: by 2002:a17:902:a584:: with SMTP id az4mr19186745plb.74.1570878370004;
-        Sat, 12 Oct 2019 04:06:10 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id l21sm11721302pgm.55.2019.10.12.04.06.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Oct 2019 04:06:09 -0700 (PDT)
-Subject: Re: [PATCH net] rxrpc: Fix possible NULL pointer access in ICMP
- handling
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        David Howells <dhowells@redhat.com>, netdev@vger.kernel.org
-Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <157071915431.29197.5055122258964729288.stgit@warthog.procyon.org.uk>
- <bf358fc5-c0e1-070f-b073-1675e3d13fd8@gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <bbf115d1-8197-426c-cbe8-bd1f5cff2041@gmail.com>
-Date:   Sat, 12 Oct 2019 04:06:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 12 Oct 2019 07:13:36 -0400
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x9CBDFgi027307;
+        Sat, 12 Oct 2019 20:13:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x9CBDFgi027307
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570878796;
+        bh=QIQWbVFMywEGzrVFv7ncajs828mx8ZAypZawE3JRNnA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wUiDd5ikCr1JT2Yxc8XHCJxQQ7iwviMZJG/IOTrYxVuuQgdsur+sx2xBB1eYo4rtM
+         eCGR7bnd6kLscEH67zamCqWXt+fz9Je68JdOf2+hENU7TUExvoT0MAUDOVPtrURzy1
+         XPV3jPwpXdocP6ipUYDc1c03IGGsTzouSN2ST4Hzn1QcZ1srv9uRu2rK3OrNvuJb0v
+         03yTUSstvsDe/N0H/7l8aVQHpF+eJwbweZRrBVDQW7PlhC+d1zIr7vMJ+g+xixUHXr
+         PnE+gRyY0wrQUOnIXmcaaBvjC7VNmt/D8wUq054V4+zVxB/lY2JVdHM2GV6epkxRHO
+         OA47ecmgP6HIQ==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id z14so7882474vsz.13;
+        Sat, 12 Oct 2019 04:13:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAVEEZkfFUK/zsOLqK1PTDOkFKykKnadpV6/fHcCQo1QGZgdocPI
+        hzWDpi2iTZDrnqqPpIaKC9A7heKaPrIFbqqFeWg=
+X-Google-Smtp-Source: APXvYqyHih4e2WFxheL/lFIrBr+Hi15Wq9iIMdigECIIy1lpDBTMCXi9oA2x4W/bhPi3v/iXQqldXfzc3OYYnDPyYQM=
+X-Received: by 2002:a67:ff86:: with SMTP id v6mr11732128vsq.181.1570878794590;
+ Sat, 12 Oct 2019 04:13:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bf358fc5-c0e1-070f-b073-1675e3d13fd8@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
+ <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+ <CAMuHMdWPhE1nNkmL1nj3vpQhB7fP3uDs2i_ZVi0Gf9qij4W2CA@mail.gmail.com>
+ <CAHk-=wgFODvdFBHzgVf3JjoBz0z6LZhOm8xvMntsvOr66ASmZQ@mail.gmail.com>
+ <20191003163606.iqzcxvghaw7hdqb5@willie-the-truck> <35643c7e-94e9-e410-543b-a7de17b59a32@gmx.net>
+In-Reply-To: <35643c7e-94e9-e410-543b-a7de17b59a32@gmx.net>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 12 Oct 2019 20:12:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASgwA_Z-FeqrnB4Uyk3XShGVpgRHVL2FBbzJoU7ytJBxA@mail.gmail.com>
+Message-ID: <CAK7LNASgwA_Z-FeqrnB4Uyk3XShGVpgRHVL2FBbzJoU7ytJBxA@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Oct 12, 2019 at 7:21 PM Stefan Wahren <wahrenst@gmx.net> wrote:
+>
+> Hi,
+>
+> Am 03.10.19 um 18:36 schrieb Will Deacon:
+> > On Wed, Oct 02, 2019 at 01:39:40PM -0700, Linus Torvalds wrote:
+> >> On Wed, Oct 2, 2019 at 5:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >>>> Then use the C preprocessor to force the inlining.  I'm sorry it's not
+> >>>> as pretty as static inline functions.
+> >>> Which makes us lose the baby^H^H^H^Htype checking performed
+> >>> on function parameters, requiring to add more ugly checks.
+> >> I'm 100% agreed on this.
+> >>
+> >> If the inline change is being pushed by people who say "you should
+> >> have used macros instead if you wanted inlining", then I will just
+> >> revert that stupid commit that is causing problems.
+> >>
+> >> No, the preprocessor is not the answer.
+> >>
+> >> That said, code that relies on inlining for _correctness_ should use
+> >> "__always_inline" and possibly even have a comment about why.
+> >>
+> >> But I am considering just undoing commit 9012d011660e ("compiler:
+> >> allow all arches to enable CONFIG_OPTIMIZE_INLINING") entirely. The
+> >> advantages are questionable, and when the advantages are balanced
+> >> against actual regressions and the arguments are "use macros", that
+> >> just shows how badly thought out this was.
+> > It's clear that opinions are divided on this issue, but you can add
+> > an enthusiastic:
+> >
+> > Acked-by: Will Deacon <will@kernel.org>
+> >
+> > if you go ahead with the revert. I'm all for allowing the compiler to
+> > make its own inlining decisions, but not when the potential for
+> > miscompilation isn't fully understood and the proposed alternatives turn
+> > the source into an unreadable mess. Perhaps we can do something different
+> > for 5.5 (arch opt-in? clang only? invert the logic? work to move functions
+> > over to __always_inline /before/ flipping the CONFIG option? ...?)
+>
+> what's the status on this?
+>
+> In need to prepare my pull requests for 5.5 and all recent kernelci
+> targets (including linux-next) with bcm2835_defconfig are still broken.
+>
+> Stefan
 
 
-On 10/12/19 3:49 AM, Eric Dumazet wrote:
+Russell King already applied the fix-up patch.
 
-> 
-> Okay, but we also need this.
-> 
-> diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
-> index c97ebdc043e44525eaecdd54bc447c1895bdca74..38db10e61f7a5cb50f9ee036b5e16ec284e723ac 100644
-> --- a/net/rxrpc/peer_event.c
-> +++ b/net/rxrpc/peer_event.c
-> @@ -145,9 +145,9 @@ static void rxrpc_adjust_mtu(struct rxrpc_peer *peer, struct sock_exterr_skb *se
->   */
->  void rxrpc_error_report(struct sock *sk)
->  {
-> +       struct rxrpc_local *local = rcu_dereference_sk_user_data(sk);
->         struct sock_exterr_skb *serr;
->         struct sockaddr_rxrpc srx;
-> -       struct rxrpc_local *local = sk->sk_user_data;
->         struct rxrpc_peer *peer;
->         struct sk_buff *skb;
-> 
+https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8908/1
 
-I will psubmit the patch later once David pushes his net tree, since I do not know yet
-the sha1 of your patch (to provide a proper Fixes: tag)
+So, (I hope) the breakage of bcm2835 will be solved in mainline soon.
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
