@@ -2,38 +2,39 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8D0C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 15:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B999C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 15:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54F72082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 15:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E632082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 15:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570979673;
-	bh=4FLZngGoGcxKYoQ13u6n79/7cNvaPl2GPD8UaNoaRH8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jfGSpvzpYW7Rh9CP1+vurYdErB/Kz8DBtaE+1Pl3yP0os2QLalriyueNfX3/C2Qz/
-	 YUr7tRKAMNgQnqjqS6Ciy4V/UGLUQimdVSW+gSC6qW1B6UEZ/WyX/b1ZQhru529LWY
-	 UlDa88DqUEqW3TuC/5ZgyjhByW5BwkEY3uMcJGqs=
+	s=default; t=1570979675;
+	bh=59Bgv8ErsS8oBdOo2wVu0GauRXUBeQce0EuIHuFbsUw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KH3U7T+wCkQqDntyc15JnWmZTFi2x15OWogekwGwsF3FqiQPp1FC04ISZagGJzbVA
+	 zjPlaiD3m5urP9rFcr5/vxcqN4rPePjIQIxtkvbigAOT3dWxiJ0S4GH38qDezfwxMn
+	 uf8aSX5c+A1Kmfs1TGF+rkofYvSXaYtGBe0yoR14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfJMPOc (ORCPT
+        id S1728508AbfJMPOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 11:14:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40000 "EHLO mx1.redhat.com"
+        Sun, 13 Oct 2019 11:14:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40194 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbfJMPOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 11:14:32 -0400
+        id S1726085AbfJMPOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 11:14:34 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 16B843082E03;
-        Sun, 13 Oct 2019 15:14:31 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id CBDAD10C0929;
+        Sun, 13 Oct 2019 15:14:33 +0000 (UTC)
 Received: from krava.redhat.com (ovpn-204-28.brq.redhat.com [10.40.204.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 97BEC600C6;
-        Sun, 13 Oct 2019 15:14:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C355600C6;
+        Sun, 13 Oct 2019 15:14:31 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -43,38 +44,29 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Michael Petlan <mpetlan@redhat.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 0/3] perf tools: Share struct map after clone
-Date:   Sun, 13 Oct 2019 17:14:24 +0200
-Message-Id: <20191013151427.11941-1-jolsa@kernel.org>
+Subject: [PATCH 1/3] perf tools: Allow to build with -ltcmalloc
+Date:   Sun, 13 Oct 2019 17:14:25 +0200
+Message-Id: <20191013151427.11941-2-jolsa@kernel.org>
+In-Reply-To: <20191013151427.11941-1-jolsa@kernel.org>
+References: <20191013151427.11941-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sun, 13 Oct 2019 15:14:31 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Sun, 13 Oct 2019 15:14:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi,
-Andi reported that maps cloning is eating lot of memory and
-it's probably unnecessary, because they keep the same data.
-
-This 'maps sharing' seems to save lot of heap for reports with
-many forks/cloned mmaps (over 60% in example below).
-
-Profile kernel build:
-
-  $ perf record make -j 40
+By using "make TCMALLOC=1" you can enable perf to be build
+for usage with libtcmalloc.so (gperftools).
 
 Get heap profile (tools/perf directory):
 
   $ <install gperftools>
-  $ make TCMALLOC=1
-  $ HEAPPROFILE=/tmp/heapprof ./perf report -i perf.data --stdio > out
+  $ make TCMALLOC=1 DEBUG=1
+  $ HEAPPROFILE=/tmp/heapprof ./perf ...
   $ pprof ./perf /tmp/heapprof.000*
-
-Before:
-
   (pprof) top
   Total: 2335.5 MB
     1735.1  74.3%  74.3%   1735.1  74.3% memdup
@@ -88,91 +80,46 @@ Before:
        0.1   0.0% 100.0%      0.1   0.0% do_read_string
        0.0   0.0% 100.0%      0.0   0.0% __GI__IO_file_doallocate
 
-After:
+See callstack:
+  $ pprof --pdf ./perf /tmp/heapprof.00* > callstack.pdf
+  $ pprof --web ./perf /tmp/heapprof.00*
 
-  (pprof) top
-  Total: 784.5 MB
-     385.8  49.2%  49.2%    385.8  49.2% memdup
-     285.8  36.4%  85.6%    285.8  36.4% zalloc
-      80.4  10.3%  95.9%     83.7  10.7% map__new
-      19.1   2.4%  98.3%     19.1   2.4% symbol__new
-       6.2   0.8%  99.1%      6.2   0.8% alloc_event
-       3.6   0.5%  99.6%      3.6   0.5% nsinfo__new
-       3.2   0.4% 100.0%      3.2   0.4% nsinfo__copy
-       0.2   0.0% 100.0%      0.2   0.0% dso__new
-       0.0   0.0% 100.0%      0.0   0.0% do_read_string
-       0.0   0.0% 100.0%      0.0   0.0% elf_fill
-
-Also available in here:
-  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
-  perf/map_shared
-
-thanks,
-jirka
-
-
+Link: http://lkml.kernel.org/n/tip-qyo3c7z69dysk10sr3pf5k05@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
-Jiri Olsa (3):
-      perf tools: Allow to build with -ltcmalloc
-      perf tools: Separate shareable part of 'struct map' into 'struct map_shared'
-      perf tools: Make 'struct map_shared' truly shared
+ tools/perf/Makefile.config | 5 +++++
+ tools/perf/Makefile.perf   | 2 ++
+ 2 files changed, 7 insertions(+)
 
- tools/perf/Makefile.config                             |   5 +++
- tools/perf/Makefile.perf                               |   2 +
- tools/perf/arch/arm/tests/dwarf-unwind.c               |   2 +-
- tools/perf/arch/arm64/tests/dwarf-unwind.c             |   2 +-
- tools/perf/arch/powerpc/tests/dwarf-unwind.c           |   2 +-
- tools/perf/arch/powerpc/util/skip-callchain-idx.c      |   4 +-
- tools/perf/arch/powerpc/util/sym-handling.c            |   4 +-
- tools/perf/arch/s390/annotate/instructions.c           |   2 +-
- tools/perf/arch/x86/tests/dwarf-unwind.c               |   2 +-
- tools/perf/arch/x86/util/event.c                       |   6 +--
- tools/perf/builtin-annotate.c                          |   8 ++--
- tools/perf/builtin-inject.c                            |  10 +++--
- tools/perf/builtin-kallsyms.c                          |   7 ++-
- tools/perf/builtin-kmem.c                              |   2 +-
- tools/perf/builtin-mem.c                               |   6 +--
- tools/perf/builtin-report.c                            |  19 ++++----
- tools/perf/builtin-script.c                            |  16 +++----
- tools/perf/builtin-top.c                               |  15 ++++---
- tools/perf/builtin-trace.c                             |   2 +-
- tools/perf/tests/code-reading.c                        |  34 ++++++++-------
- tools/perf/tests/hists_common.c                        |   4 +-
- tools/perf/tests/hists_cumulate.c                      |   4 +-
- tools/perf/tests/hists_filter.c                        |   4 +-
- tools/perf/tests/hists_output.c                        |   2 +-
- tools/perf/tests/map_groups.c                          |  22 +++++-----
- tools/perf/tests/mmap-thread-lookup.c                  |   2 +-
- tools/perf/tests/vmlinux-kallsyms.c                    |  36 ++++++++--------
- tools/perf/ui/browsers/annotate.c                      |   4 +-
- tools/perf/ui/browsers/hists.c                         |  10 ++---
- tools/perf/ui/browsers/map.c                           |   4 +-
- tools/perf/ui/gtk/annotate.c                           |   2 +-
- tools/perf/util/annotate.c                             |  34 +++++++--------
- tools/perf/util/auxtrace.c                             |   2 +-
- tools/perf/util/bpf-event.c                            |   8 ++--
- tools/perf/util/build-id.c                             |   2 +-
- tools/perf/util/callchain.c                            |   6 +--
- tools/perf/util/db-export.c                            |   4 +-
- tools/perf/util/dso.c                                  |   2 +-
- tools/perf/util/event.c                                |   6 +--
- tools/perf/util/evsel_fprintf.c                        |   2 +-
- tools/perf/util/hist.c                                 |  10 ++---
- tools/perf/util/intel-pt.c                             |  42 ++++++++++--------
- tools/perf/util/machine.c                              |  76 ++++++++++++++++----------------
- tools/perf/util/map.c                                  | 226 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------------------
- tools/perf/util/map.h                                  |  32 ++++++++------
- tools/perf/util/probe-event.c                          |  32 +++++++-------
- tools/perf/util/scripting-engines/trace-event-perl.c   |   8 ++--
- tools/perf/util/scripting-engines/trace-event-python.c |  12 +++---
- tools/perf/util/sort.c                                 |  58 +++++++++++++------------
- tools/perf/util/symbol-elf.c                           |  28 ++++++------
- tools/perf/util/symbol.c                               |  80 +++++++++++++++++-----------------
- tools/perf/util/symbol_fprintf.c                       |   2 +-
- tools/perf/util/synthetic-events.c                     |  14 +++---
- tools/perf/util/thread.c                               |  14 +++---
- tools/perf/util/unwind-libdw.c                         |  16 ++++---
- tools/perf/util/unwind-libunwind-local.c               |  37 ++++++++--------
- tools/perf/util/unwind-libunwind.c                     |   4 +-
- tools/perf/util/vdso.c                                 |   2 +-
- 58 files changed, 547 insertions(+), 456 deletions(-)
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 063202c53b64..1783427da9b0 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -265,6 +265,11 @@ LDFLAGS += -Wl,-z,noexecstack
+ 
+ EXTLIBS = -lpthread -lrt -lm -ldl
+ 
++ifneq ($(TCMALLOC),)
++  CFLAGS += -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free
++  EXTLIBS += -ltcmalloc
++endif
++
+ ifeq ($(FEATURES_DUMP),)
+ include $(srctree)/tools/build/Makefile.feature
+ else
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index a099a8a89447..8f1ba986d3bf 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -114,6 +114,8 @@ include ../scripts/utilities.mak
+ # Define NO_LIBZSTD if you do not want support of Zstandard based runtime
+ # trace compression in record mode.
+ #
++# Define TCMALLOC to enable tcmalloc heap profiling.
++#
+ 
+ # As per kernel Makefile, avoid funny character set dependencies
+ unexport LC_ALL
+-- 
+2.21.0
+
