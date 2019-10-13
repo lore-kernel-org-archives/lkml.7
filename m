@@ -2,97 +2,101 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3DFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 13:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEC8C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 13:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49976206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 13:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B2B2067B
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 13:18:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwiZ/6Ig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbfJMNFB (ORCPT
+        id S1729050AbfJMNNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 09:05:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:46834 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbfJMNFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 09:05:00 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Oct 2019 06:05:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,292,1566889200"; 
-   d="scan'208";a="185243091"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 13 Oct 2019 06:04:55 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iJdYN-000Aof-A8; Sun, 13 Oct 2019 21:04:55 +0800
-Date:   Sun, 13 Oct 2019 21:04:47 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Green Wan <green.wan@sifive.com>
-Cc:     kbuild-all@lists.01.org, linux-hackers@sifive.com,
-        Green Wan <green.wan@sifive.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] dmaengine: sf-pdma: sf_pdma_disclaim_chan() can be static
-Message-ID: <20191013130447.2t2hbjcaatguytm3@332d0cec05f4>
-References: <20191003090945.29210-4-green.wan@sifive.com>
+        Sun, 13 Oct 2019 09:13:08 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43042 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728478AbfJMNNH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 09:13:07 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r9so12472412edl.10
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 06:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jSePMrNOPVfUktsu+z0HK6zACURlJM3IWN/zSmsSyQ=;
+        b=jwiZ/6IgOGV/zKKtpKYw5tL4i/alBZHyx+XyUyLn13u+I2YtSB5xp13Odo+3f5zRya
+         Rdps56gkm0JpAA4r6fV6SV6OBk6qCVM4YnnwrgrGTAeWlDhvGc9+x1dJhtJFhsrhz/re
+         F3n4g3B2uTdFWATBQbyA+i077azBTu2BoJsGs7UGW4hl8kfl1ipyPggCulcq6eWpOLvZ
+         hqbdrLG34pkFWmMYZXToje7SJVZfujQZExKDYYLtxTksfq4qYGBfcNez5KxdbTA27CCl
+         7e5kZ16OF2VsRO1HvtfahYXBN3QDP0GXQ+MLals5jvYOOz+rlbWNC6fXGCUkf8ygVGPU
+         03jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jSePMrNOPVfUktsu+z0HK6zACURlJM3IWN/zSmsSyQ=;
+        b=tSMeCKIj4M7QTfbhPwG1YpElRbLy6ZYpZc82RsoYsDNZO1/wYwdlmvsL9ZK7wgMrQG
+         r1DWOBnWknxERjscYKqxjDTuXMTNmj8SCoiuLOVZtLdIKgl+kjAO/sRMyzj9v/ortl/l
+         k3XLIsEalToZhHL5PKkXdlW5CzUwlEYyN+RBYU07LKUj7IdJDoyheLdNUqHLntDLX7e+
+         xaajoiK6nRqKw91V5qGWMs1X2l+wzl5N02W5jdyiOVLtL9tkiZy+tyJ+DggNA0iNBulZ
+         E7yyRQU5fqAiTNt2ezVRczKCmxFvk3Xu+bLdJPE1jw3f8ZK/L4SRIArrqm+epV+K2a5G
+         9New==
+X-Gm-Message-State: APjAAAWt+1xiBSoAfD69jkRruEPXYbrqt0pCflE22VI+MJDbkr6yeVs2
+        E25gvQrLigu44Vxv96UGXfw=
+X-Google-Smtp-Source: APXvYqxWWqA5UWry8XyE0fcHakoGUWdBcpzyDV86cVZOdeo/x5sdE213x1k5SRcM89eNuzKC6ylDNw==
+X-Received: by 2002:a50:a781:: with SMTP id i1mr23527070edc.17.1570972385970;
+        Sun, 13 Oct 2019 06:13:05 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
+        by smtp.gmail.com with ESMTPSA id u30sm2580520edd.18.2019.10.13.06.13.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2019 06:13:05 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 1/2] staging: rtl8188eu: remove braces from single statement if block
+Date:   Sun, 13 Oct 2019 15:12:48 +0200
+Message-Id: <20191013131249.34422-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191003090945.29210-4-green.wan@sifive.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove braces from single statement if block to comply with kernel
+coding style. Reported by checkpatch.
 
-Fixes: 31c3b98b5a01 ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
-Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- sf-pdma.c |    4 ++--
+ drivers/staging/rtl8188eu/core/rtw_mlme.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index 70197ad95c1a6..973ed9d8cfa44 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -97,14 +97,14 @@ static void sf_pdma_fill_desc(struct sf_pdma_chan *chan,
- 	writeq(src, regs->src_addr);
- }
+diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+index 1ec3b237212e..e764436e120f 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
++++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+@@ -2045,9 +2045,9 @@ void _rtw_roaming(struct adapter *padapter, struct wlan_network *tgt_network)
  
--void sf_pdma_disclaim_chan(struct sf_pdma_chan *chan)
-+static void sf_pdma_disclaim_chan(struct sf_pdma_chan *chan)
- {
- 	struct pdma_regs *regs = &chan->regs;
+ 		while (1) {
+ 			do_join_r = rtw_do_join(padapter);
+-			if (do_join_r == _SUCCESS) {
++			if (do_join_r == _SUCCESS)
+ 				break;
+-			}
++
+ 			DBG_88E("roaming do_join return %d\n", do_join_r);
+ 			pmlmepriv->to_roaming--;
  
- 	writel(PDMA_CLEAR_CTRL, regs->ctrl);
- }
- 
--struct dma_async_tx_descriptor *
-+static struct dma_async_tx_descriptor *
- 	sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
- 				dma_addr_t dest,
- 				dma_addr_t src,
+-- 
+2.23.0
+
