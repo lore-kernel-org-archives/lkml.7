@@ -2,63 +2,189 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7AAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED8AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAC8206A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0713F20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbLagcUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfJMUDH convert rfc822-to-8bit (ORCPT
+        id S1729318AbfJMURW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 16:03:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727492AbfJMUDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 16:03:07 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4899020673;
-        Sun, 13 Oct 2019 20:03:06 +0000 (UTC)
-Date:   Sun, 13 Oct 2019 16:03:04 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [for-linus][PATCH 08/11] recordmcount: Fix nop_mcount()
- function
-Message-ID: <20191013160304.200622a4@gandalf.local.home>
-In-Reply-To: <20191013155337.6b87c16a@gandalf.local.home>
-References: <20191013174342.381019558@goodmis.org>
-        <20191013174419.228868312@goodmis.org>
-        <20191013145743.6fdef005@gandalf.local.home>
-        <20191013191407.vg7wnfvlhae5dugq@pengutronix.de>
-        <20191013155337.6b87c16a@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 13 Oct 2019 16:17:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38049 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbfJMURV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 16:17:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w3so1917404pgt.5;
+        Sun, 13 Oct 2019 13:17:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=s90sNIFFQ7PmHxc2cwoGubvccMDisjiP9XcP/kL6H3U=;
+        b=kbLagcUvUthkSmMZrG4t2XQFxKvdJYKm68dbcxa0Fv9QBw7WxBPkrSAMJHaWvvRrQf
+         bQE+N1tQnyuX0iSc9UA4z8wsL8ijNyZ0lQcaETGYn5v1krHwVyw9khT5HlK3M+xWKtX4
+         5Q3Mj+AJK0y55nx1sHRMmHv1VwiNRBrENGdp2hKBNSXJjktp36+4Vt4349KUxoJM8Phu
+         WvRd4GdNPp8Atpd3KwO2kTof1/AJHrNKfKdrujx9is81mqnERmAVf2rq6bqrAc8rouPi
+         AHq6aeTjsi6PpaWm+QSK4awJTmIzEyyQ31WEeUvTq6EcnaTTh4Dp9R6gdx+om8hBAfUb
+         /pMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=s90sNIFFQ7PmHxc2cwoGubvccMDisjiP9XcP/kL6H3U=;
+        b=bJK9uFAkJ1Ncg1cKLEvv3NauxR/kzRCuN9SQKlsPbUw1TiQv2LeAn8AOzhPeR9I7rC
+         Duy/ZhKvbEiVIpMdGXJimpCmqc5roqujF/cIuMTQGPCfg7hPNR5mxA2xvZB2MFS7GRzl
+         D23lWnvsHZf1M9lSckPA9GcEhnP+uACgIE1LbmTpdOdXstPeJdgxPHE6fx0dkOuSK6sL
+         3FDuQGwpJ7JqGEqBSZaPW4VJPXrTlaCYD/3OMvP9zLY6+1KErXd5zNTF4Bvtf59RESBC
+         4kw575ZJoVNChmTv8kSbqiHCB2uOL2YV1AYAsZdAUWIXJLyMNHwrWdYR68gVPYIf9P+9
+         1Uag==
+X-Gm-Message-State: APjAAAXR2G7XvzMnDLnOTST5z03iEpkzhh1qMMggiwrwflL3IEku30gm
+        MDwys0tWx7gbwoz5I2pYwikcPPJO
+X-Google-Smtp-Source: APXvYqxlxH71wYXBZ/doH/v7+W7VTQYsxuFemZ1vZLBM4/U3hlPzEn71t9/cV2Bg6CzY0Xewp8lkMg==
+X-Received: by 2002:a17:90a:8d06:: with SMTP id c6mr30531780pjo.141.1570997840317;
+        Sun, 13 Oct 2019 13:17:20 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
+        by smtp.gmail.com with ESMTPSA id 6sm13693774pgl.40.2019.10.13.13.17.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Oct 2019 13:17:19 -0700 (PDT)
+Subject: Re: [PATCH] net: core: datagram: tidy up copy functions a bit
+To:     Vito Caputo <vcaputo@pengaru.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191012115509.jrqe43yozs7kknv5@shells.gnugeneration.com>
+ <8fab6f9c-70a6-02fd-5b2d-66a013c10a4f@gmail.com>
+ <20191013200158.mhvwkdnsjk7ecuqu@shells.gnugeneration.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <6864f888-1b62-36c5-6ac5-d5db01c5fcfb@gmail.com>
+Date:   Sun, 13 Oct 2019 13:17:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191013200158.mhvwkdnsjk7ecuqu@shells.gnugeneration.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 13 Oct 2019 15:53:37 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
+
+On 10/13/19 1:01 PM, Vito Caputo wrote:
+> On Sun, Oct 13, 2019 at 12:30:41PM -0700, Eric Dumazet wrote:
+>>
+>>
+>> On 10/12/19 4:55 AM, Vito Caputo wrote:
+>>> Eliminate some verbosity by using min() macro and consolidating some
+>>> things, also fix inconsistent zero tests (! vs. == 0).
+>>>
+>>> Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
+>>> ---
+>>>  net/core/datagram.c | 44 ++++++++++++++------------------------------
+>>>  1 file changed, 14 insertions(+), 30 deletions(-)
+>>>
+>>> diff --git a/net/core/datagram.c b/net/core/datagram.c
+>>> index 4cc8dc5db2b7..08d403f93952 100644
+>>> --- a/net/core/datagram.c
+>>> +++ b/net/core/datagram.c
+>>> @@ -413,13 +413,11 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
+>>>  					    struct iov_iter *), void *data)
+>>>  {
+>>>  	int start = skb_headlen(skb);
+>>> -	int i, copy = start - offset, start_off = offset, n;
+>>> +	int i, copy, start_off = offset, n;
+>>>  	struct sk_buff *frag_iter;
+>>>  
+>>>  	/* Copy header. */
+>>> -	if (copy > 0) {
+>>> -		if (copy > len)
+>>> -			copy = len;
+>>> +	if ((copy = min(start - offset, len)) > 0) {
+>>
+>> No, we prefer not having this kind of construct anymore.
+>>
+>> This refactoring looks unnecessary code churn, making our future backports not
+>> clean cherry-picks.
+>>
+>> Simply making sure this patch does not bring a regression is very time consuming.
 > 
-> The original looked like this:
+> Should I not bother submitting patches for such cleanups?
 > 
-> Reported-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
-> Tested-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+> I submitted another, more trivial patch, is it also considered unnecessary churn:
+> 
+> ---
+> 
+> Author: Vito Caputo <vcaputo@pengaru.com>
+> Date:   Sat Oct 12 17:10:41 2019 -0700
+> 
+>     net: core: skbuff: skb_checksum_setup() drop err
+>     
+>     Return directly from all switch cases, no point in storing in err.
+>     
+>     Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
+> 
+> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> index f5f904f46893..c59b68a413b5 100644
+> --- a/net/core/skbuff.c
+> +++ b/net/core/skbuff.c
+> @@ -4888,23 +4888,14 @@ static int skb_checksum_setup_ipv6(struct sk_buff *skb, bool recalculate)
+>   */
+>  int skb_checksum_setup(struct sk_buff *skb, bool recalculate)
+>  {
+> -       int err;
+> -
+>         switch (skb->protocol) {
+>         case htons(ETH_P_IP):
+> -               err = skb_checksum_setup_ipv4(skb, recalculate);
+> -               break;
+> -
+> +               return skb_checksum_setup_ipv4(skb, recalculate);
+>         case htons(ETH_P_IPV6):
+> -               err = skb_checksum_setup_ipv6(skb, recalculate);
+> -               break;
+> -
+> +               return skb_checksum_setup_ipv6(skb, recalculate);
+>         default:
+> -               err = -EPROTO;
+> -               break;
+> +               return -EPROTO;
+>         }
+> -
+> -       return err;
+>  }
+>  EXPORT_SYMBOL(skb_checksum_setup);
+> 
+> ---
+> 
+> Asking to calibrate my thresholds to yours, since I was planning to volunteer
+> some time each evening to reading kernel code and submitting any obvious
+> cleanups.
+> 
 
-And if you are wondering what the git history has, you can see it here:
+This is not a cleanup.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git/commit/?h=trace-v5.4-rc2&id=7f8557b88d6aa5bf31f25f6013d81355a1b1d48d
+You prefer seeing the code written the way you did, but that is really a matter of taste.
 
--- Steve
+Think about backports of real bug fixes to stable kernels.
+
+Having these re-writes of code make things less easy for us really.
+So in general we tend to leave the existing code style.
+
+I already replied to the other patch submission, please read
+
+https://marc.info/?l=linux-netdev&m=157099669227635&w=2
+
+
