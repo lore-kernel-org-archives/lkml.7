@@ -2,146 +2,128 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B992C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F163C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECB02053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7982F2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbfJMMLE (ORCPT
+        id S1729004AbfJMMUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 08:11:04 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:41990 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729143AbfJMMLD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 08:11:03 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 144198025D; Sun, 13 Oct 2019 14:10:44 +0200 (CEST)
-Date:   Sun, 13 Oct 2019 14:10:55 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Riku Voipio <riku.voipio@iki.fi>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
-Subject: Re: [PATCH 01/10] leds: pca953x: Use of_device_get_match_data()
-Message-ID: <20191013121055.GO5653@amd>
-References: <20191004214334.149976-1-swboyd@chromium.org>
- <20191004214334.149976-2-swboyd@chromium.org>
+        Sun, 13 Oct 2019 08:20:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50462 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728620AbfJMMUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 08:20:54 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4CA84C0495A1
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 12:20:53 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id m20so14924495qtq.16
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 05:20:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sGSWm+VQXM5N7LkmMBoNiFJID9rxkV4UgGbQSywZ0lY=;
+        b=BqWCIHL2a9KtHH7ST9MSnv+qFEcnryiaTTdcAgCzFQNLvtbDmlEx2LysmFvbHN3TDz
+         YNYD2KGhegWz9CAbBsUuHGheVG2envpSQ+eF4EpbD769IkOalGMql+BUtJe9XZ39p/Nv
+         uh0xlIUkNfeSXQ+jAhVBI84TFqLHgp44wHsMqNAE/KwEZz3r3UBwGE+pItrpushbMZVx
+         npFxZXhOW1jo7riigfu6JWXrIFfQSAOz4RYQtheGo2Mkqc1TRbxNPVZ3T2vOLL+y4VpP
+         KUVwynu1hhrH/gvm2VZGs51Rpio6rG/L6LJfwHHVRrYsomYCcumbSBPkH0DIYxyuA7M+
+         c4LQ==
+X-Gm-Message-State: APjAAAV3BHy06DxZLmdLBzMgtRd+maqGREtAIjsaqGTdErJahOD3R20D
+        u7fEk4jnvmK/B8Q3BSS4XW1DqL4+zu3rBbFUwd+Gmc8xJuBAxlm1NTTvoIYQGyIBrztUMvbcIa1
+        Lc5VvLsTgNmVNca/N+Rfhkhjf
+X-Received: by 2002:ac8:610e:: with SMTP id a14mr27955174qtm.189.1570969252116;
+        Sun, 13 Oct 2019 05:20:52 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyh+vun7Xp3yoPFQiELIdRCqqNlbWf3RdBCpLjK1jdAhUPgwQp14PoZIlUScyHDNFQhMA16jw==
+X-Received: by 2002:ac8:610e:: with SMTP id a14mr27955160qtm.189.1570969251921;
+        Sun, 13 Oct 2019 05:20:51 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
+        by smtp.gmail.com with ESMTPSA id m14sm6458463qki.27.2019.10.13.05.20.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2019 05:20:51 -0700 (PDT)
+Date:   Sun, 13 Oct 2019 08:20:46 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jan Kiszka <jan.kiszka@web.de>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tools/virtio: Fix build
+Message-ID: <20191013081541-mutt-send-email-mst@kernel.org>
+References: <4b686914-075b-a0a9-c97b-9def82ee0336@web.de>
+ <20191013075107-mutt-send-email-mst@kernel.org>
+ <08c1e081-765b-7c3a-ed31-2059dc521fd0@web.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Ck22u5fw4m2k6hx2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004214334.149976-2-swboyd@chromium.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <08c1e081-765b-7c3a-ed31-2059dc521fd0@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Oct 13, 2019 at 02:01:03PM +0200, Jan Kiszka wrote:
+> On 13.10.19 13:52, Michael S. Tsirkin wrote:
+> > On Sun, Oct 13, 2019 at 11:03:30AM +0200, Jan Kiszka wrote:
+> >> From: Jan Kiszka <jan.kiszka@siemens.com>
+> >>
+> >> Various changes in the recent kernel versions broke the build due to
+> >> missing function and header stubs.
+> >>
+> >> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> >
+> > Thanks!
+> > I think it's already fixes in the vhost tree.
+> > That tree also includes a bugfix for the test.
+> > Can you pls give it a spin and report?
+> 
+> Mostly fixed: the xen_domain stup is missing.
+> 
+> Jan
 
---Ck22u5fw4m2k6hx2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's in xen/xen.h. Do you still see any build errors?
 
-On Fri 2019-10-04 14:43:25, Stephen Boyd wrote:
-> This driver can use the of_device_get_match_data() API to simplify the
-> code. Replace calls to of_match_device() with this newer API under the
-> assumption that where it is called will be when we know the device is
-> backed by a DT node. This nicely avoids referencing the match table when
-> it is undefined with configurations where CONFIG_OF=3Dn.
-
-Thanks, applied.
-
-								Pavel
-
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Riku Voipio <riku.voipio@iki.fi>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: <linux-leds@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->=20
-> Please ack or pick for immediate merge so the last patch can be merged.
->=20
->  drivers/leds/leds-pca9532.c | 14 ++------------
->  1 file changed, 2 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-> index c7c7199e8ebd..7d515d5e57bd 100644
-> --- a/drivers/leds/leds-pca9532.c
-> +++ b/drivers/leds/leds-pca9532.c
-> @@ -467,16 +467,11 @@ pca9532_of_populate_pdata(struct device *dev, struc=
-t device_node *np)
->  {
->  	struct pca9532_platform_data *pdata;
->  	struct device_node *child;
-> -	const struct of_device_id *match;
->  	int devid, maxleds;
->  	int i =3D 0;
->  	const char *state;
-> =20
-> -	match =3D of_match_device(of_pca9532_leds_match, dev);
-> -	if (!match)
-> -		return ERR_PTR(-ENODEV);
-> -
-> -	devid =3D (int)(uintptr_t)match->data;
-> +	devid =3D (int)(uintptr_t)of_device_get_match_data(dev);
->  	maxleds =3D pca9532_chip_info_tbl[devid].num_leds;
-> =20
->  	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> @@ -509,7 +504,6 @@ static int pca9532_probe(struct i2c_client *client,
->  	const struct i2c_device_id *id)
->  {
->  	int devid;
-> -	const struct of_device_id *of_id;
->  	struct pca9532_data *data =3D i2c_get_clientdata(client);
->  	struct pca9532_platform_data *pca9532_pdata =3D
->  			dev_get_platdata(&client->dev);
-> @@ -525,11 +519,7 @@ static int pca9532_probe(struct i2c_client *client,
->  			dev_err(&client->dev, "no platform data\n");
->  			return -EINVAL;
->  		}
-> -		of_id =3D of_match_device(of_pca9532_leds_match,
-> -				&client->dev);
-> -		if (unlikely(!of_id))
-> -			return -EINVAL;
-> -		devid =3D (int)(uintptr_t) of_id->data;
-> +		devid =3D (int)(uintptr_t)of_device_get_match_data(&client->dev);
->  	} else {
->  		devid =3D id->driver_data;
->  	}
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Ck22u5fw4m2k6hx2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2jFE8ACgkQMOfwapXb+vIMRgCfUGz2BiRVoRY4urcPw8LTSyxq
-E+UAnjXZMxG56LJLaiqiK6kWf9dWNBaI
-=Q5tE
------END PGP SIGNATURE-----
-
---Ck22u5fw4m2k6hx2--
+> > Thanks!
+> >
+> >> ---
+> >>  tools/virtio/crypto/hash.h       | 0
+> >>  tools/virtio/linux/dma-mapping.h | 2 ++
+> >>  tools/virtio/linux/kernel.h      | 2 ++
+> >>  3 files changed, 4 insertions(+)
+> >>  create mode 100644 tools/virtio/crypto/hash.h
+> >>
+> >> diff --git a/tools/virtio/crypto/hash.h b/tools/virtio/crypto/hash.h
+> >> new file mode 100644
+> >> index 000000000000..e69de29bb2d1
+> >> diff --git a/tools/virtio/linux/dma-mapping.h b/tools/virtio/linux/dma-mapping.h
+> >> index f91aeb5fe571..db96cb4bf877 100644
+> >> --- a/tools/virtio/linux/dma-mapping.h
+> >> +++ b/tools/virtio/linux/dma-mapping.h
+> >> @@ -29,4 +29,6 @@ enum dma_data_direction {
+> >>  #define dma_unmap_single(...) do { } while (0)
+> >>  #define dma_unmap_page(...) do { } while (0)
+> >>
+> >> +#define dma_max_mapping_size(d)	0
+> >> +
+> >>  #endif
+> >> diff --git a/tools/virtio/linux/kernel.h b/tools/virtio/linux/kernel.h
+> >> index 6683b4a70b05..ccf321173210 100644
+> >> --- a/tools/virtio/linux/kernel.h
+> >> +++ b/tools/virtio/linux/kernel.h
+> >> @@ -141,4 +141,6 @@ static inline void free_page(unsigned long addr)
+> >>  #define list_for_each_entry(a, b, c) while (0)
+> >>  /* end of stubs */
+> >>
+> >> +#define xen_domain() 0
+> >> +
+> >>  #endif /* KERNEL_H */
+> >> --
+> >> 2.16.4
