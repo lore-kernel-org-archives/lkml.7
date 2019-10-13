@@ -2,123 +2,66 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D653DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7778BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A154920663
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:45:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gui7vv2/"
+	by mail.kernel.org (Postfix) with ESMTP id 4BF11206A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbfJMTp5 (ORCPT
+        id S1729376AbfJMTxk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 15:45:57 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40435 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbfJMTp5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 15:45:57 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e13so598046pga.7;
-        Sun, 13 Oct 2019 12:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7hkgkxn5tX5Lu7EANqMWuMtKmOX/46/hM75I7oWJwRk=;
-        b=Gui7vv2/nvyKokgY5fxhfY/iBSiMluSYqbm1HMiVKDDYNHZT0etzdlFtzyR4nnyt21
-         bAaAjrGhZUNr7WQ7IyyeF3X5/3hkrMeaMZW0ncmMKYNwJT0+/wb/9T4jX8cwuMJVoCIU
-         m68IXhMditLwDuQzR0fLoVK23KNUYrI27VCeFcTABa+TucEXt5OYvrVf7vuTq/Wroi2B
-         NWhJ5Y4RsXX+DVX0BHKhvIed71GFMmeJedlfbs3G1EbFQR1GaqNyM72g1rYWKpQIB5m6
-         QME/TYC8nGZxgPBmVJihnTD6moUGBGxsQRXXHrb32SAy2i6Np6PkgONPnWx4U1bIxhBZ
-         4ybA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7hkgkxn5tX5Lu7EANqMWuMtKmOX/46/hM75I7oWJwRk=;
-        b=Wu8+4/JxKVmynAlGP/b/mc6Mh+iLGd3yW4CaY54kaFLINkqc2hc0KgadH1oaazm8ll
-         DapKIDSbHWo0TCRDBvCwn5DnlZmLU1niTURpZuNtjfm491W392hYZ1uE/7zE2dHtvpD9
-         TXOdIvbxk1DovI9jsQpVh4iU78cpfUh7FadHRDeeftch4dnRHIDj/Ypkup2FjOsOfDjO
-         d2HppO7V6dY2paaJ7OHZ4BXCXWf1q5RckDlLmHPqBa42qnK1LRdJ/nuIWEpCwjlbwwgX
-         ww0iuQGr3ia38bZiA7Z/DRdDKwgGnCpZpK0ExIZXvYUgVmfpLzJ3J9X8FB+J9y/QCc2j
-         2FTA==
-X-Gm-Message-State: APjAAAWj2sGW7MpquRZXHkCSvM5PKZhJShp9jeIF5YTfzz70uXyMTKtO
-        6TklTg7nls8E+jf2nBAyg/Y=
-X-Google-Smtp-Source: APXvYqwItPee5hydRQfqLUl1ahdjZNyK0GLueTxXFcAuqgwUqW6nDSxU1XEPnIlLxg3eR3m/wVoN9A==
-X-Received: by 2002:a17:90a:80c2:: with SMTP id k2mr32284786pjw.92.1570995956570;
-        Sun, 13 Oct 2019 12:45:56 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id h70sm14384029pgc.48.2019.10.13.12.45.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Oct 2019 12:45:55 -0700 (PDT)
-Subject: Re: tcp: Checking a kmemdup() call in tcp_time_wait()
-To:     Markus Elfring <Markus.Elfring@web.de>, netdev@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Hideaki Yoshifuji <yoshfuji@linux-ipv6.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-References: <a219235e-bad5-8a9d-0f3e-c05d5cb11df1@web.de>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <124b41aa-7ba5-f00c-ab73-cb8e6a2ae75f@gmail.com>
-Date:   Sun, 13 Oct 2019 12:45:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 13 Oct 2019 15:53:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728198AbfJMTxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 15:53:39 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BF9E20663;
+        Sun, 13 Oct 2019 19:53:38 +0000 (UTC)
+Date:   Sun, 13 Oct 2019 15:53:37 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [for-linus][PATCH 08/11] recordmcount: Fix nop_mcount()
+ function
+Message-ID: <20191013155337.6b87c16a@gandalf.local.home>
+In-Reply-To: <20191013191407.vg7wnfvlhae5dugq@pengutronix.de>
+References: <20191013174342.381019558@goodmis.org>
+        <20191013174419.228868312@goodmis.org>
+        <20191013145743.6fdef005@gandalf.local.home>
+        <20191013191407.vg7wnfvlhae5dugq@pengutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <a219235e-bad5-8a9d-0f3e-c05d5cb11df1@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 13 Oct 2019 21:14:07 +0200
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
 
-
-On 10/12/19 7:51 AM, Markus Elfring wrote:
-> Hello,
+> > Reported-by: Uwe Kleine-önig <u.kleine-koenig@pengutronix.de>
+> > Tested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>  
 > 
-> I tried another script for the semantic patch language out.
-> This source code analysis approach points out that the implementation
-> of the function “tcp_time_wait” contains also a call of the function “kmemdup”.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/net/ipv4/tcp_minisocks.c?id=1c0cc5f1ae5ee5a6913704c0d75a6e99604ee30a#n306
-> https://elixir.bootlin.com/linux/v5.4-rc2/source/net/ipv4/tcp_minisocks.c#L306
-> 
-> * Do you find the usage of the macro call “BUG_ON” still appropriate at this place?
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/checkpatch.pl?id=1c0cc5f1ae5ee5a6913704c0d75a6e99604ee30a#n4080
-> 
-> * Is there a need to adjust the error handling here?
+> And now it seems to have problems with plain ASCII-K, but only once out
+> of two :-|
 
-Presumably the BUG would trigger if a really disturbing bug happened.
+That was me manually fixing the email.
 
-There is no chance a timewait socket could be created with a MD5 key, 
-if the established socket that is the 'parent' of the timewait
-has not a MD5 context itself.
+The original looked like this:
 
-The parent socket only could have MD5 context if tcp_md5sig_pool_populated
-could have been set to true.
+Reported-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+Tested-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
 
-Once tcp_md5sig_pool_populated is true it can never go back to false.
-
-So the bug here would be that a socket  had a successful MD5 context,
-and following tcp_alloc_md5sig_pool() would return false.
-
-We can discuss of all BUG() in general, some people simply disable
-all of them (cf CONFIG_BUG), but this particular one does not seem
-specially bad to me, compared to others.
+-- Steve
 
