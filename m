@@ -1,123 +1,100 @@
-Return-Path: <SRS0=7jSw=YF=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B108CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 23:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4C8ECE58E
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 00:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B2E2067B
-	for <linux-kernel@archiver.kernel.org>; Sat, 12 Oct 2019 23:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4575921655
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 00:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SaWqjjZL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rpQ9RwrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbfJLXYo (ORCPT
+        id S1728111AbfJMAMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 19:24:44 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39982 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727184AbfJLXYn (ORCPT
+        Sat, 12 Oct 2019 20:12:17 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:38559 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfJMAMR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 19:24:43 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d26so7887229pgl.7;
-        Sat, 12 Oct 2019 16:24:42 -0700 (PDT)
+        Sat, 12 Oct 2019 20:12:17 -0400
+Received: by mail-vs1-f66.google.com with SMTP id b123so8626830vsb.5
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 17:12:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yUu4uX/YGXLWPr9O636FpYe8iD69UkUp54Dx79SWpig=;
-        b=SaWqjjZL/bXZB8w6cTvUNnTMefN1s/RaCw+lhmkrvUbQtL63Fu7XzMxZKEF6Bm/F0L
-         tfHFb0nQzNKsBQsAZMmIPO6DicqmWQXhwQGRNLU5HBfCo3qCDIyn5dkJ9hj/+aB9MQgi
-         qkLcS3apTo1lKC99qkJgsTtalWsO4J53+78CzoMVnKUNKe6RdtUKwirUmc8eG+2370yf
-         ql6yDT7VeJu1+gYu8c+AP1pdbCIPqaQsmVaqB5PwyLwXWkbx8ta30Tn2ftWd2MHlvYrE
-         +QJs/NFWExRZB1cqv4S+867HexZlIua/vo7So8/315UkGugTKF0kBKXgfZ5iJJrkUzgv
-         AZ+g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XEI0RfuwpmYZ28QC0mx//1lBf0qrUdX1GPcBJkQZa9U=;
+        b=rpQ9RwrNqsQGBr1oAkL/gitja6UMt6gVklBif64wqVq6Tgon/KznC+ZgL6HK3q8QX3
+         C5rIWw3jGcpmWJiH7tmNg6HVbxIpaTuTDMFQyG49BEqqu7TsMehEeFFy7QEhCVmrk1eu
+         yv7fTAAISHN9cePomO4qg+l1yIKdebEmQSqT3sabeudcw6FlJok25HOFFDhudW/DRsTW
+         Ycmrjd/NNLbIo4Yx7FCFBzN5/E+A70AJMna05Lh3GlMj9sBTbGx9gg+epSY2/S6t9ifo
+         pjCe5FLiRv5/ZCC1POwOAbnKC/3bAoNmBWoEJvzPfHzp7JxnG0jD/SpNptQe45Jb8aCw
+         GEJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yUu4uX/YGXLWPr9O636FpYe8iD69UkUp54Dx79SWpig=;
-        b=XMZ9RV/HxPqzAtB9Bkq0xudJPPvV2vWsi1X7bIf9YNeBVPWkc7qXpwgKDdj+kMNLgd
-         iFOPke1FNzXlA5UYwSZBtdWyvid52mWtl6deHzMTl2MxqKAQI1R1ig4eT4lnlAkGRdyQ
-         u1XD1XNfenyMpr3eyURxRzux++qiY/LTvkuztjEZsFOHQ7d3lO05tan0yh2zVOq2q3Fr
-         iF0/HxNnVgGGiPDIgM3f5h2H59h/UR0VZEnsjBiBS+62edDyCT1Hc2tavTTVgqPGgbbs
-         MDZ8l3n3Bn/nKSoUu5LOlECvphbGkE6gtEo6rF7cVfY+HHUBleFk2AfNq1DFt0nylrAz
-         P6PQ==
-X-Gm-Message-State: APjAAAXG+VU+D53645Ka479JFDjS76pW9KIqfrMmyy8MNvfbqx9HrUfQ
-        fwmKTZgcMooF/4qyjv41wYw=
-X-Google-Smtp-Source: APXvYqw3b0MPezsl/abUZC4G2lePpAZNsResq/IOE7r+aE9896QxDbgmmTwZn56M+V+dSPsLD9LEWQ==
-X-Received: by 2002:a63:f908:: with SMTP id h8mr24050277pgi.244.1570922681812;
-        Sat, 12 Oct 2019 16:24:41 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::8e83])
-        by smtp.gmail.com with ESMTPSA id o15sm12005203pjs.14.2019.10.12.16.24.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 12 Oct 2019 16:24:41 -0700 (PDT)
-Date:   Sat, 12 Oct 2019 16:24:39 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Ilya Maximets <i.maximets@ovn.org>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: Re: [PATCH bpf v2] libbpf: fix passing uninitialized bytes to
- setsockopt
-Message-ID: <20191012232437.2xpi5mmmv7mxz3yy@ast-mbp.dhcp.thefacebook.com>
-References: <5da24d48.1c69fb81.a3069.c817SMTPIN_ADDED_BROKEN@mx.google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XEI0RfuwpmYZ28QC0mx//1lBf0qrUdX1GPcBJkQZa9U=;
+        b=fBtbgNjATIUIo46gf0WqVkcX5hOH1G6HCTBfgmemgI4hl+KvcYTB7BlxZ7Dtx9o2GT
+         yf8fN6+8uNN0SYuyAR7fn02mlifIzntQgFj0T9eLpxz/Ca6DSCO4dxTuXz/PBCcBOMn/
+         JkROJ0jDCKh4dA4Q9Yf02iupI+tR5cRx0fry3GGnPLKjrBJHC3LJuv9+Ogq9LA+ytYOo
+         UfsnTWAMeQe6kIRvkxb2oICtJowNrP8lqsi8ve0yZFazYGjepXbOgkePYm8Pf/Kg72Ql
+         1mMbUHfA0KhMCGr5PihZxIjcOaZP5b/mYR+imwyM151J19yx9qcEf/g7yOY7r2oCuCGF
+         YT3w==
+X-Gm-Message-State: APjAAAWogEEGanjiqicCiSS0mxz/HpGETCOmOu2ZPfYmWb/KF395JZE4
+        ZnHQeVvqB9PwZJaM28KSK6TQYnyk4IeQmSzyoQiCiw==
+X-Google-Smtp-Source: APXvYqxj5NmmNy49o6iB7yqJhqzkcQYhEtu5i1Mv03KaNdvvSxlYaJl2qsOIZ5v4l7hTNSnU1Q4nTOVljy2cDmWu+/M=
+X-Received: by 2002:a67:db16:: with SMTP id z22mr13135311vsj.171.1570925536096;
+ Sat, 12 Oct 2019 17:12:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5da24d48.1c69fb81.a3069.c817SMTPIN_ADDED_BROKEN@mx.google.com>
-User-Agent: NeoMutt/20180223
+References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-5-dancol@google.com>
+ <CALCETrVmYQ9xikif--RSAWhboY1yj=piEAEuPzisf+b+qEX4uA@mail.gmail.com>
+In-Reply-To: <CALCETrVmYQ9xikif--RSAWhboY1yj=piEAEuPzisf+b+qEX4uA@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Sat, 12 Oct 2019 17:11:40 -0700
+Message-ID: <CAKOZuevQD-xsy_PrvT7F3Pqaoo5apZFukj2ZKLLQKup1cwgZ-A@mail.gmail.com>
+Subject: Re: [PATCH 4/7] Teach SELinux about a new userfaultfd class
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Tim Murray <timmurray@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 06:49:29PM +0200, Ilya Maximets wrote:
-> 'struct xdp_umem_reg' has 4 bytes of padding at the end that makes
-> valgrind complain about passing uninitialized stack memory to the
-> syscall:
-> 
->   Syscall param socketcall.setsockopt() points to uninitialised byte(s)
->     at 0x4E7AB7E: setsockopt (in /usr/lib64/libc-2.29.so)
->     by 0x4BDE035: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:172)
->   Uninitialised value was created by a stack allocation
->     at 0x4BDDEBA: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:140)
-> 
-> Padding bytes appeared after introducing of a new 'flags' field.
-> memset() is required to clear them.
-> 
-> Fixes: 10d30e301732 ("libbpf: add flags to umem config")
-> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
-> ---
-> 
-> Version 2:
->   * Struct initializer replaced with explicit memset(). [Andrii]
-> 
->  tools/lib/bpf/xsk.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-> index a902838f9fcc..9d5348086203 100644
-> --- a/tools/lib/bpf/xsk.c
-> +++ b/tools/lib/bpf/xsk.c
-> @@ -163,6 +163,7 @@ int xsk_umem__create_v0_0_4(struct xsk_umem **umem_ptr, void *umem_area,
->  	umem->umem_area = umem_area;
->  	xsk_set_umem_config(&umem->config, usr_config);
->  
-> +	memset(&mr, 0, sizeof(mr));
->  	mr.addr = (uintptr_t)umem_area;
->  	mr.len = size;
->  	mr.chunk_size = umem->config.frame_size;
+On Sat, Oct 12, 2019 at 4:09 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Sat, Oct 12, 2019 at 12:16 PM Daniel Colascione <dancol@google.com> wrote:
+> >
+> > Use the secure anonymous inode LSM hook we just added to let SELinux
+> > policy place restrictions on userfaultfd use. The create operation
+> > applies to processes creating new instances of these file objects;
+> > transfer between processes is covered by restrictions on read, write,
+> > and ioctl access already checked inside selinux_file_receive.
+>
+> This is great, and I suspect we'll want it for things like SGX, too.
+> But the current design seems like it will make it essentially
+> impossible for SELinux to reference an anon_inode class whose
+> file_operations are in a module, and moving file_operations out of a
+> module would be nasty.
+>
+> Could this instead be keyed off a new struct anon_inode_class, an
+> enum, or even just a string?
 
-This was already applied. Why did you resend?
-
+The new LSM hook already receives the string that callers pass to the
+anon_inode APIs; modules can look at that instead of the fops if they
+want. The reason to pass both the name and the fops through the hook
+is to allow LSMs to match using fops comparison (which seems less
+prone to breakage) when possible and rely on string matching when it
+isn't.
