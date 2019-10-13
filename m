@@ -2,95 +2,117 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D336ECE587
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 11:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F89AC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 11:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F803207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 11:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 340D62084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 11:52:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbfJMLpY (ORCPT
+        id S1728985AbfJMLwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 07:45:24 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:41457 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728973AbfJMLpX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 07:45:23 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 7D4B980249; Sun, 13 Oct 2019 13:45:06 +0200 (CEST)
-Date:   Sun, 13 Oct 2019 13:45:08 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Jean-Jacques Hiblot <jjhiblot@ti.com>, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] leds: tlc591xx: update the maximum brightness
-Message-ID: <20191013114508.GI5653@amd>
-References: <20190923100250.22326-1-jjhiblot@ti.com>
- <91864098-a6e8-e275-4b07-e4bb15469f78@gmail.com>
+        Sun, 13 Oct 2019 07:52:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33882 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728620AbfJMLwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 07:52:34 -0400
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C4B805AFF8
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 11:52:33 +0000 (UTC)
+Received: by mail-qk1-f197.google.com with SMTP id w198so14134956qka.0
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 04:52:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jwWOYBcdL+FwVmThH20DZa26zpPO65kQYvR5F6FTbNE=;
+        b=NjBX+/++SODgXc6i15Y+svy77ulRNxnJe93xk0gxC93FzPfaYYQ3fHIXi3wZ6p73jE
+         7w4aUY0RP2Ie2JzQNhLcgjhX7r8glVhyMMNQte8zivvEarFTpgx/o30Jnramve1G/lxw
+         eMKt8Y81A5yMOLFM3DKS6hgAwCBzyE9m0mS7KuSK6on4tCzywc2As6WiCLcZ5vTRf6j0
+         frSX7Hl5YYyHe4trZOKZxM9vXEGGx5duBMXSGJGwqKZDgfPmJ7FR8h1qJXSr0P8tIAL4
+         sY/DxIcCq8LSvMPoOjJFsXFSjc+3+FwCT6oPsfRZwq4egBbJlwAwWXp2obuKtY2K91xT
+         lAvg==
+X-Gm-Message-State: APjAAAVUDyL5ftuPKqzSDzhzXftSrjMM7fL5FG+2XzZfrYMdx61v+8Ds
+        dRSgBRwhsi84ri0cVTzn+QprSY0CbW+9GQksEW81WxgPAOPxdKYlGyFcFDEeBy2V4Zd4JEDLohv
+        hVdpSDYeGB6CReoRxuNOhWSKy
+X-Received: by 2002:ac8:145:: with SMTP id f5mr27764094qtg.44.1570967552663;
+        Sun, 13 Oct 2019 04:52:32 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxN/2XdDR7sYa6uOVIhJGXLQk/ZKI4RjasPsuZJqmI3iyCmuePxmDioaM2ULCIpeXuq/AD/vQ==
+X-Received: by 2002:ac8:145:: with SMTP id f5mr27764084qtg.44.1570967552501;
+        Sun, 13 Oct 2019 04:52:32 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
+        by smtp.gmail.com with ESMTPSA id c14sm7871766qta.80.2019.10.13.04.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2019 04:52:31 -0700 (PDT)
+Date:   Sun, 13 Oct 2019 07:52:27 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jan Kiszka <jan.kiszka@web.de>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tools/virtio: Fix build
+Message-ID: <20191013075107-mutt-send-email-mst@kernel.org>
+References: <4b686914-075b-a0a9-c97b-9def82ee0336@web.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="81JctsDUVPekGcy+"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <91864098-a6e8-e275-4b07-e4bb15469f78@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <4b686914-075b-a0a9-c97b-9def82ee0336@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Oct 13, 2019 at 11:03:30AM +0200, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> Various changes in the recent kernel versions broke the build due to
+> missing function and header stubs.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 
---81JctsDUVPekGcy+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks!
+I think it's already fixes in the vhost tree.
+That tree also includes a bugfix for the test.
+Can you pls give it a spin and report?
+Thanks!
 
-Hi!
-
-> > @@ -112,11 +113,11 @@ tlc591xx_brightness_set(struct led_classdev *led_=
-cdev,
-> >  	struct tlc591xx_priv *priv =3D led->priv;
-> >  	int err;
-> > =20
-> > -	switch (brightness) {
-> > +	switch ((int)brightness) {
-> >  	case 0:
-
-Can we get a rid of the cast here? Do we need to move away from the
-enum for the brightness?
-
-> Added tag:
->=20
-> Fixes: e370d010a5fe ("leds: tlc591xx: Driver for the TI 8/16 Channel i2c
-> LED driver")
->=20
-> and applied to the for-5.5 branch.
-
-Actually, careful with the Fixes tag. -stable people will want to
-apply it, and it may not be a good idea in this case. Maximum
-brightness of 256 is pretty unusual, so I'd call this "a bit risky".
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---81JctsDUVPekGcy+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2jDkQACgkQMOfwapXb+vJBCQCgvqf2j9gKfJomgk6Yn1BeZYjo
-XoYAoJFLFe+eYjrzhrdnCMOo+P0rglOz
-=j3TJ
------END PGP SIGNATURE-----
-
---81JctsDUVPekGcy+--
+> ---
+>  tools/virtio/crypto/hash.h       | 0
+>  tools/virtio/linux/dma-mapping.h | 2 ++
+>  tools/virtio/linux/kernel.h      | 2 ++
+>  3 files changed, 4 insertions(+)
+>  create mode 100644 tools/virtio/crypto/hash.h
+> 
+> diff --git a/tools/virtio/crypto/hash.h b/tools/virtio/crypto/hash.h
+> new file mode 100644
+> index 000000000000..e69de29bb2d1
+> diff --git a/tools/virtio/linux/dma-mapping.h b/tools/virtio/linux/dma-mapping.h
+> index f91aeb5fe571..db96cb4bf877 100644
+> --- a/tools/virtio/linux/dma-mapping.h
+> +++ b/tools/virtio/linux/dma-mapping.h
+> @@ -29,4 +29,6 @@ enum dma_data_direction {
+>  #define dma_unmap_single(...) do { } while (0)
+>  #define dma_unmap_page(...) do { } while (0)
+> 
+> +#define dma_max_mapping_size(d)	0
+> +
+>  #endif
+> diff --git a/tools/virtio/linux/kernel.h b/tools/virtio/linux/kernel.h
+> index 6683b4a70b05..ccf321173210 100644
+> --- a/tools/virtio/linux/kernel.h
+> +++ b/tools/virtio/linux/kernel.h
+> @@ -141,4 +141,6 @@ static inline void free_page(unsigned long addr)
+>  #define list_for_each_entry(a, b, c) while (0)
+>  /* end of stubs */
+> 
+> +#define xen_domain() 0
+> +
+>  #endif /* KERNEL_H */
+> --
+> 2.16.4
