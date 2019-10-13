@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F14EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 17:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD8BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 17:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E742168B
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 17:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816022168B
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 17:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbfJMRoU (ORCPT
+        id S1728907AbfJMRoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 13:44:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36748 "EHLO mail.kernel.org"
+        Sun, 13 Oct 2019 13:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727141AbfJMRoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 13:44:19 -0400
+        id S1727909AbfJMRoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 13:44:20 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47A912082F;
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D9820869;
         Sun, 13 Oct 2019 17:44:19 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92.2)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iJhuk-0001yz-Em; Sun, 13 Oct 2019 13:44:18 -0400
-Message-Id: <20191013174418.343480563@goodmis.org>
+        id 1iJhuk-00020W-ON; Sun, 13 Oct 2019 13:44:18 -0400
+Message-Id: <20191013174418.637633186@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sun, 13 Oct 2019 13:43:44 -0400
+Date:   Sun, 13 Oct 2019 13:43:46 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org
-Subject: [for-linus][PATCH 02/11] ftrace: Get a reference counter for the trace_array on filter files
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-linus][PATCH 04/11] tracing: Have trace events system open call tracing_open_generic_tr()
 References: <20191013174342.381019558@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,98 +45,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-The ftrace set_ftrace_filter and set_ftrace_notrace files are specific for
-an instance now. They need to take a reference to the instance otherwise
-there could be a race between accessing the files and deleting the instance.
+Instead of having the trace events system open call open code the taking of
+the trace_array descriptor (with trace_array_get()) and then calling
+trace_open_generic(), have it use the tracing_open_generic_tr() that does
+the combination of the two. This requires making tracing_open_generic_tr()
+global.
 
-It wasn't until the :mod: caching where these file operations started
-referencing the trace_array directly.
-
-Cc: stable@vger.kernel.org
-Fixes: 673feb9d76ab3 ("ftrace: Add :mod: caching infrastructure to trace_array")
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ kernel/trace/trace.c        |  2 +-
+ kernel/trace/trace.h        |  1 +
+ kernel/trace/trace_events.c | 17 +++--------------
+ 3 files changed, 5 insertions(+), 15 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 62a50bf399d6..32c2eb167de0 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3540,21 +3540,22 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
- 	struct ftrace_hash *hash;
- 	struct list_head *mod_head;
- 	struct trace_array *tr = ops->private;
--	int ret = 0;
-+	int ret = -ENOMEM;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index fa7d813b04c6..94f1b9124939 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4156,7 +4156,7 @@ bool tracing_is_disabled(void)
+  * Open and update trace_array ref count.
+  * Must have the current trace_array passed to it.
+  */
+-static int tracing_open_generic_tr(struct inode *inode, struct file *filp)
++int tracing_open_generic_tr(struct inode *inode, struct file *filp)
+ {
+ 	struct trace_array *tr = inode->i_private;
  
- 	ftrace_ops_init(ops);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index f801d154ff6a..854dbf4050f8 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -681,6 +681,7 @@ void tracing_reset_online_cpus(struct trace_buffer *buf);
+ void tracing_reset_current(int cpu);
+ void tracing_reset_all_online_cpus(void);
+ int tracing_open_generic(struct inode *inode, struct file *filp);
++int tracing_open_generic_tr(struct inode *inode, struct file *filp);
+ bool tracing_is_disabled(void);
+ bool tracer_tracing_is_on(struct trace_array *tr);
+ void tracer_tracing_on(struct trace_array *tr);
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index b89cdfe20bc1..9613a757c902 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1440,28 +1440,17 @@ static int system_tr_open(struct inode *inode, struct file *filp)
+ 	struct trace_array *tr = inode->i_private;
+ 	int ret;
  
- 	if (unlikely(ftrace_disabled))
- 		return -ENODEV;
- 
-+	if (tr && trace_array_get(tr) < 0)
-+		return -ENODEV;
-+
- 	iter = kzalloc(sizeof(*iter), GFP_KERNEL);
- 	if (!iter)
--		return -ENOMEM;
-+		goto out;
- 
--	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX)) {
--		kfree(iter);
--		return -ENOMEM;
+-	if (tracing_is_disabled())
+-		return -ENODEV;
+-
+-	if (trace_array_get(tr) < 0)
+-		return -ENODEV;
+-
+ 	/* Make a temporary dir that has no system but points to tr */
+ 	dir = kzalloc(sizeof(*dir), GFP_KERNEL);
+-	if (!dir) {
+-		trace_array_put(tr);
++	if (!dir)
+ 		return -ENOMEM;
 -	}
-+	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX))
-+		goto out;
+-
+-	dir->tr = tr;
  
- 	iter->ops = ops;
- 	iter->flags = flag;
-@@ -3584,13 +3585,13 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
- 
- 		if (!iter->hash) {
- 			trace_parser_put(&iter->parser);
--			kfree(iter);
--			ret = -ENOMEM;
- 			goto out_unlock;
- 		}
- 	} else
- 		iter->hash = hash;
- 
-+	ret = 0;
-+
- 	if (file->f_mode & FMODE_READ) {
- 		iter->pg = ftrace_pages_start;
- 
-@@ -3602,7 +3603,6 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
- 			/* Failed */
- 			free_ftrace_hash(iter->hash);
- 			trace_parser_put(&iter->parser);
--			kfree(iter);
- 		}
- 	} else
- 		file->private_data = iter;
-@@ -3610,6 +3610,13 @@ ftrace_regex_open(struct ftrace_ops *ops, int flag,
-  out_unlock:
- 	mutex_unlock(&ops->func_hash->regex_lock);
- 
-+ out:
-+	if (ret) {
-+		kfree(iter);
-+		if (tr)
-+			trace_array_put(tr);
-+	}
-+
- 	return ret;
- }
- 
-@@ -5037,6 +5044,8 @@ int ftrace_regex_release(struct inode *inode, struct file *file)
- 
- 	mutex_unlock(&iter->ops->func_hash->regex_lock);
- 	free_ftrace_hash(iter->hash);
-+	if (iter->tr)
-+		trace_array_put(iter->tr);
- 	kfree(iter);
+-	ret = tracing_open_generic(inode, filp);
++	ret = tracing_open_generic_tr(inode, filp);
+ 	if (ret < 0) {
+-		trace_array_put(tr);
+ 		kfree(dir);
+ 		return ret;
+ 	}
+-
++	dir->tr = tr;
+ 	filp->private_data = dir;
  
  	return 0;
 -- 
