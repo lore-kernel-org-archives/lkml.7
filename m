@@ -2,167 +2,82 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50218C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC981C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 10:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29FAF20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C318920659
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 10:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfJMJgq (ORCPT
+        id S1728818AbfJMKBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 05:36:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39798 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728662AbfJMJgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 05:36:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BA2B537E80;
-        Sun, 13 Oct 2019 09:36:45 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-16.pek2.redhat.com [10.72.12.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A30BB5D6A3;
-        Sun, 13 Oct 2019 09:36:34 +0000 (UTC)
-Subject: Re: [PATCH 3/3 v3] x86/kdump: clean up all the code related to the
- backup region
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, bhe@redhat.com,
-        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        vgoyal@redhat.com, kexec@lists.infradead.org
-References: <20191012022140.19003-1-lijiang@redhat.com>
- <20191012022140.19003-4-lijiang@redhat.com>
- <87d0f22oi5.fsf@x220.int.ebiederm.org>
- <20191012121625.GA11587@dhcp-128-65.nay.redhat.com>
- <87zhi51ers.fsf@x220.int.ebiederm.org>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <72edff0b-9778-2e83-224b-7fe70dfb8d73@redhat.com>
-Date:   Sun, 13 Oct 2019 17:36:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 13 Oct 2019 06:01:20 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:56143 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728528AbfJMKBU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 06:01:20 -0400
+X-Originating-IP: 90.177.210.238
+Received: from [192.168.1.110] (238.210.broadband10.iol.cz [90.177.210.238])
+        (Authenticated sender: i.maximets@ovn.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 0E1731BF209;
+        Sun, 13 Oct 2019 10:01:15 +0000 (UTC)
+Subject: Re: [PATCH bpf] libbpf: fix passing uninitialized bytes to setsockopt
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Ilya Maximets <i.maximets@ovn.org>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>
+References: <5da2ad7f.1c69fb81.2ed87.f547SMTPIN_ADDED_BROKEN@mx.google.com>
+ <CAADnVQLczRWyWa44+ogr1UkcOObA40zurwxMY=0hO9_1Y1yeDA@mail.gmail.com>
+From:   Ilya Maximets <i.maximets@ovn.org>
+Message-ID: <50f76b97-2be6-6976-36ec-bfb88afc6009@ovn.org>
+Date:   Sun, 13 Oct 2019 12:01:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <87zhi51ers.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAADnVQLczRWyWa44+ogr1UkcOObA40zurwxMY=0hO9_1Y1yeDA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Sun, 13 Oct 2019 09:36:45 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019年10月13日 11:54, Eric W. Biederman 写道:
-> Dave Young <dyoung@redhat.com> writes:
+On 13.10.2019 6:59, Alexei Starovoitov wrote:
+> On Sat, Oct 12, 2019 at 9:52 PM Ilya Maximets <i.maximets@ovn.org> wrote:
+>>
+>> 'struct xdp_umem_reg' has 4 bytes of padding at the end that makes
+>> valgrind complain about passing uninitialized stack memory to the
+>> syscall:
+>>
+>>    Syscall param socketcall.setsockopt() points to uninitialised byte(s)
+>>      at 0x4E7AB7E: setsockopt (in /usr/lib64/libc-2.29.so)
+>>      by 0x4BDE035: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:172)
+>>    Uninitialised value was created by a stack allocation
+>>      at 0x4BDDEBA: xsk_umem__create@@LIBBPF_0.0.4 (xsk.c:140)
+>>
+>> Padding bytes appeared after introducing of a new 'flags' field.
+>>
+>> Fixes: 10d30e301732 ("libbpf: add flags to umem config")
+>> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
 > 
->> Hi Eric,
->>
->> On 10/12/19 at 06:26am, Eric W. Biederman wrote:
->>> Lianbo Jiang <lijiang@redhat.com> writes:
->>>
->>>> When the crashkernel kernel command line option is specified, the
->>>> low 1MiB memory will always be reserved, which makes that the memory
->>>> allocated later won't fall into the low 1MiB area, thereby, it's not
->>>> necessary to create a backup region and also no need to copy the first
->>>> 640k content to a backup region.
->>>>
->>>> Currently, the code related to the backup region can be safely removed,
->>>> so lets clean up.
->>>>
->>>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
->>>> ---
->>>
->>>> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->>>> index eb651fbde92a..cc5774fc84c0 100644
->>>> --- a/arch/x86/kernel/crash.c
->>>> +++ b/arch/x86/kernel/crash.c
->>>> @@ -173,8 +173,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
->>>>  
->>>>  #ifdef CONFIG_KEXEC_FILE
->>>>  
->>>> -static unsigned long crash_zero_bytes;
->>>> -
->>>>  static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
->>>>  {
->>>>  	unsigned int *nr_ranges = arg;
->>>> @@ -234,9 +232,15 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
->>>>  {
->>>>  	struct crash_mem *cmem = arg;
->>>>  
->>>> -	cmem->ranges[cmem->nr_ranges].start = res->start;
->>>> -	cmem->ranges[cmem->nr_ranges].end = res->end;
->>>> -	cmem->nr_ranges++;
->>>> +	if (res->start >= SZ_1M) {
->>>> +		cmem->ranges[cmem->nr_ranges].start = res->start;
->>>> +		cmem->ranges[cmem->nr_ranges].end = res->end;
->>>> +		cmem->nr_ranges++;
->>>> +	} else if (res->end > SZ_1M) {
->>>> +		cmem->ranges[cmem->nr_ranges].start = SZ_1M;
->>>> +		cmem->ranges[cmem->nr_ranges].end = res->end;
->>>> +		cmem->nr_ranges++;
->>>> +	}
->>>
->>> What is going on with this chunk?  I can guess but this needs a clear
->>> comment.
->>
->> Indeed it needs some code comment, this is based on some offline
->> discussion.  cat /proc/vmcore will give a warning because ioremap is
->> mapping the system ram.
->>
->> We pass the first 1M to kdump kernel in e820 as system ram so that 2nd
->> kernel can use the low 1M memory because for example the trampoline
->> code.
->>
->>>
->>>>  
->>>>  	return 0;
->>>>  }
->>>
->>>> @@ -356,9 +337,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
->>>>  	memset(&cmd, 0, sizeof(struct crash_memmap_data));
->>>>  	cmd.params = params;
->>>>  
->>>> -	/* Add first 640K segment */
->>>> -	ei.addr = image->arch.backup_src_start;
->>>> -	ei.size = image->arch.backup_src_sz;
->>>> +	/*
->>>> +	 * Add the low memory range[0x1000, SZ_1M], skip
->>>> +	 * the first zero page.
->>>> +	 */
->>>> +	ei.addr = PAGE_SIZE;
->>>> +	ei.size = SZ_1M - PAGE_SIZE;
->>>>  	ei.type = E820_TYPE_RAM;
->>>>  	add_e820_entry(params, &ei);
->>>
->>> Likewise here.  Why do we need a special case?
->>> Why the magic with PAGE_SIZE?
->>
->> Good catch, the zero page part is useless, I think no other special
->> reason, just assumed zero page is not usable, but it should be ok to
->> remove the special handling, just pass 0 - 1M is good enough.
+> Something is not right with (e|g)mail.
+> This is 3rd email I got with the same patch.
+> First one (the one that was applied) was 3 days ago.
 > 
-> But if we have stopped special casing the low 1M.  Why do we need a
-> special case here at all?
-> 
-Here, need to pass the low memory range to kdump kernel, which will guarantee
-the availability of low memory in kdump kernel, otherwise, kdump kernel won't
-use the low memory region.
 
-> If you need the special case it is almost certainly wrong to say you
-> have ram above 640KiB and below 1MiB.  That is the legacy ROM and video
-> MMIO area.
-> 
-> There is a reason the original code said 640KiB.
-> 
-Do you mean that the 640k region is good enough here instead of 1MiB?
+I'm sorry.  I don't know why the mail server started re-sending
+these e-mails.  I'm receiving them too.
 
-Thanks.
-Lianbo
+That is strange.
 
-> Eric
-> 
+Best regards, Ilya Maximets.
