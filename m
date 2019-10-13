@@ -2,265 +2,190 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2C4C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256E2C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623CA206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:08:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="U3vIMeOY"
+	by mail.kernel.org (Postfix) with ESMTP id E6A5A206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfJMWIP (ORCPT
+        id S1729638AbfJMWKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 18:08:15 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:41869 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727632AbfJMWIO (ORCPT
+        Sun, 13 Oct 2019 18:10:16 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59016 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727632AbfJMWKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 18:08:14 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 48CF2891A9;
-        Mon, 14 Oct 2019 11:08:11 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1571004491;
-        bh=ZiwZMJ1kog+luCdZE9iO2rK7RG0tvwIOK0Jnl3NwuK8=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=U3vIMeOYVUYBwAjqtvQGPDwcc3l8jC5B2fijA9rP1l2Ih7HPceCHMJ0Q68RXdmOiV
-         4idxBq5MgS6C6aUjej5CtOGHQZLzfS1J1m9Kd0FX1ClLhbIUNujoaN9ztAUO9esucQ
-         5wo91chIBvQLRNXbw5QV4g0YvPcr8YOlpYUSTW/nWw92PYo3SkR/X8n3+gGVGQhYYY
-         +u+i8J5AJDayPdeD2XliRJQDWWppYQnRG/d1LaBk3UPaVPgMPMsecOZrK7sWc8rSL7
-         lLuRcmP8i945XelgiCHKs7z5kdGF88waWG1mZ32hMSCD5eetisOZKlD5nSuLatwWcD
-         hCbtm6imDyitQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5da3a04a0001>; Mon, 14 Oct 2019 11:08:10 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Mon, 14 Oct 2019 11:08:10 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Mon, 14 Oct 2019 11:08:10 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Richard Laing <Richard.Laing@alliedtelesis.co.nz>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/2] gpio: Add xgs-iproc driver
-Thread-Topic: [PATCH 2/2] gpio: Add xgs-iproc driver
-Thread-Index: AQHVelKfqTMwtSZC+US1bwD5O3MSY6dUQJAAgAQWQgA=
-Date:   Sun, 13 Oct 2019 22:08:10 +0000
-Message-ID: <628c495994a0648d956bc663ea8fdcfa6f439802.camel@alliedtelesis.co.nz>
-References: <20191004012525.26647-1-chris.packham@alliedtelesis.co.nz>
-         <20191004012525.26647-3-chris.packham@alliedtelesis.co.nz>
-         <CACRpkdYWLTjiSQo_VTeReL1CfEO3h_8ONbdCk=PD1x+oc2ggCg@mail.gmail.com>
-In-Reply-To: <CACRpkdYWLTjiSQo_VTeReL1CfEO3h_8ONbdCk=PD1x+oc2ggCg@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:94ca:f8ed:f039:abe3]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C238D1579C45FD4AA892222FA25F7AA2@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 13 Oct 2019 18:10:16 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: nicolas)
+        with ESMTPSA id 8213226CDB7
+Message-ID: <0d40f89059cd5aba96adcdd24340636df3315592.camel@collabora.com>
+Subject: Re: [PATCH v2 for 5.4 2/4] media: hantro: Fix H264 max frmsize
+ supported on RK3288
+From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To:     Tomasz Figa <tfiga@chromium.org>, Jonas Karlman <jonas@kwiboo.se>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Date:   Sun, 13 Oct 2019 18:10:09 -0400
+In-Reply-To: <CAAFQd5DEhHF+_oO_0ZKS1mi26hJ-JueFxXfdpyQ3ATzMW5Czaw@mail.gmail.com>
+References: <20191007174505.10681-1-ezequiel@collabora.com>
+         <20191007174505.10681-3-ezequiel@collabora.com>
+         <CAAFQd5BNu2ea3ei_imHmEwmdna0+iiSbQSv_SBsdHfP4Uh1h4Q@mail.gmail.com>
+         <HE1PR06MB4011EC9E93ECBB6773252247AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <CAAFQd5CWoAP1psrEW6bVMkRmhFeTvFKtDSLjT7nefc2YiFovqQ@mail.gmail.com>
+         <CAAFQd5AYCiKcA9pGc44L3gGHLPx6iMSb7KywkO8OqVv4gS8KvQ@mail.gmail.com>
+         <CAAFQd5AQXGX_2gmKLfymH5mLG-uVh-v+XXtGXzbfzYzVVV42mA@mail.gmail.com>
+         <HE1PR06MB4011B897EA5497659A19BCC6AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <CAAFQd5DEhHF+_oO_0ZKS1mi26hJ-JueFxXfdpyQ3ATzMW5Czaw@mail.gmail.com>
+Organization: Collabora
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-aUI3xDCIDb8TpAefVVVl"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTEwLTExIGF0IDA5OjQzICswMjAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
-PiBIaSBDaHJpcyENCj4gDQo+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4gDQo+IE9uIEZyaSwg
-T2N0IDQsIDIwMTkgYXQgMzoyNSBBTSBDaHJpcyBQYWNraGFtDQo+IDxjaHJpcy5wYWNraGFtQGFs
-bGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPiANCj4gPiBUaGlzIGRyaXZlciBzdXBwb3J0cyB0
-aGUgQ2hpcCBDb21tb24gQSBHUElPIGNvbnRyb2xsZXIgcHJlc2VudCBvbiBhDQo+ID4gbnVtYmVy
-IG9mIEJyb2FkY29tIHN3aXRjaCBBU0lDcyB3aXRoIGludGVncmF0ZWQgU29Dcy4gVGhlIGNvbnRy
-b2xsZXIgaXMNCj4gPiBzaW1pbGFyIHRvIHRoZSBwaW5jdHJsLW5zcC1ncGlvIGFuZCBwaW5jdHJs
-LWlwcm9jLWdwaW8gYmxvY2tzIGJ1dA0KPiA+IGRpZmZlcmVudCBlbm91Z2ggdGhhdCBhIHNlcGFy
-YXRlIGRyaXZlciBpcyByZXF1aXJlZC4NCj4gPiANCj4gPiBUaGlzIGhhcyBiZWVuIHBvcnRlZCBm
-cm9tIEJyb2FkY29tJ3MgWExESyA1LjAuMyByZXRhaW5pbmcgb25seSB0aGUgQ0NBDQo+ID4gc3Vw
-cG9ydCAocGluY3RybC1pcHJvYy1ncGlvIGNvdmVycyBDQ0IpLg0KPiA+IA0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IENocmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNpcy5jby5uej4N
-Cj4gDQo+ICguLi4pDQo+IA0KPiA+ICtjb25maWcgR1BJT19YR1NfSVBST0MNCj4gPiArICAgICAg
-IHRyaXN0YXRlICJCUkNNIFhHUyBpUHJvYyBHUElPIHN1cHBvcnQiDQo+ID4gKyAgICAgICBkZXBl
-bmRzIG9uIE9GX0dQSU8gJiYgKEFSQ0hfQkNNX0lQUk9DIHx8IENPTVBJTEVfVEVTVCkNCj4gPiAr
-ICAgICAgIHNlbGVjdCBHUElPX0dFTkVSSUMNCj4gPiArICAgICAgIHNlbGVjdCBHUElPTElCX0lS
-UUNISVANCj4gDQo+IE5pY2UgcmV1c2Ugb2YgYWJzdHJhY3Rpb25zLg0KPiANCj4gPiArc3RhdGlj
-IHUzMiBpcHJvY19ncGlvX3JlYWRsKHN0cnVjdCBpcHJvY19ncGlvX2NoaXAgKmNoaXAsIGludCBy
-ZWcpDQo+ID4gK3sNCj4gPiArICAgICAgIHJldHVybiByZWFkbChjaGlwLT5iYXNlICsgcmVnKTsN
-Cj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgaXByb2NfZ3Bpb193cml0ZWwoc3RydWN0
-IGlwcm9jX2dwaW9fY2hpcCAqY2hpcCwgdTMyIHZhbCwgaW50IHJlZykNCj4gPiArew0KPiA+ICsg
-ICAgICAgd3JpdGVsKHZhbCwgY2hpcC0+YmFzZSArIHJlZyk7DQo+ID4gK30NCj4gDQo+IFRoZXNl
-IHdyYXBwZXJzIGRvbid0IHJlYWxseSBhZGQgYW55dGhpbmcgZG8gdGhleT8gSnVzdCBpbmxpbmUg
-dGhlDQo+IGRpcmVjdCByZWFkbCgpL3dyaXRlbCgpIHRvIGJhc2UgKyByZWcgZXZlcnl3aGVyZSBp
-bnN0ZWFkLg0KPiANCg0KV2lsbCBkby4NCg0KPiA+ICsvKiByZXR1cm5zIHRoZSBjb3JyZXNwb25k
-aW5nIGdwaW8gcmVnaXN0ZXIgYml0ICovDQo+ID4gK3N0YXRpYyBpbnQgaXByb2NfaXJxX3RvX2dw
-aW8oc3RydWN0IGlwcm9jX2dwaW9fY2hpcCAqY2hpcCwgdTMyIGlycSkNCj4gPiArew0KPiA+ICsg
-ICAgICAgc3RydWN0IGlycV9kYXRhICpkYXRhID0gaXJxX2RvbWFpbl9nZXRfaXJxX2RhdGEoY2hp
-cC0+aXJxX2RvbWFpbiwgaXJxKTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gZGF0YS0+aHdp
-cnE7DQo+ID4gK30NCj4gDQo+IEkgd291bGQgbmFtZSBpdCBzb21ldGhpbmcgY2xlYXJlciBzaW5j
-ZSAiZ3BpbyIgaXMgcHJldHR5IGFtYmlnb3VzLg0KPiANCj4gTGlrZSBpcHJvY19pcnFfdG9fZ3Bp
-b19vZmZzZXQoKQ0KPiANCj4gTWF5YmUgdGhpcyBpcyBhbHNvIGEgYml0IG9mIHVubmVjZXNzYXJ5
-IHdyYXBwZXI/DQo+IA0KDQpJJ2xsIGxvb2sgaW50byBpdC4gV2UgbWlnaHQgYWxyZWFkeSBoYXZl
-IHRoZSBpcnFfZGF0YSB3ZSBuZWVkIHNvIHRoZQ0KY2FsbGVycyBjb3VsZCB1c2UgInBpbiA9IGQt
-Pmh3aXJxOyIuDQoNCj4gPiArc3RhdGljIGlycXJldHVybl90IGlwcm9jX2dwaW9faXJxX2hhbmRs
-ZXIoaW50IGlycSwgdm9pZCAqZGF0YSkNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0IGlwcm9j
-X2dwaW9fY2hpcCAqY2hpcCA9IChzdHJ1Y3QgaXByb2NfZ3Bpb19jaGlwICopZGF0YTsNCj4gPiAr
-ICAgICAgIHN0cnVjdCBncGlvX2NoaXAgZ2MgPSBjaGlwLT5nYzsNCj4gPiArICAgICAgIGludCBi
-aXQ7DQo+ID4gKyAgICAgICB1bnNpZ25lZCBsb25nIGludF9iaXRzID0gMDsNCj4gPiArICAgICAg
-IHUzMiBpbnRfc3RhdHVzOw0KPiA+ICsNCj4gPiArICAgICAgIC8qIGdvIHRocm91Z2ggdGhlIGVu
-dGlyZSBHUElPcyBhbmQgaGFuZGxlIGFsbCBpbnRlcnJ1cHRzICovDQo+ID4gKyAgICAgICBpbnRf
-c3RhdHVzID0gcmVhZGwoY2hpcC0+aW50ciArIENDQV9JTlRfU1RTKTsNCj4gPiArICAgICAgIGlm
-IChpbnRfc3RhdHVzICYgQ0NBX0lOVF9GX0dQSU9JTlQpIHsNCj4gPiArICAgICAgICAgICAgICAg
-dTMyIGV2ZW50LCBsZXZlbDsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIC8qIEdldCBsZXZl
-bCBhbmQgZWRnZSBpbnRlcnJ1cHRzICovDQo+ID4gKyAgICAgICAgICAgICAgIGV2ZW50ID0gcmVh
-ZGwoY2hpcC0+YmFzZSArIEdQSU9fQ0NBX0lOVF9FVkVOVF9NQVNLKTsNCj4gPiArICAgICAgICAg
-ICAgICAgZXZlbnQgJj0gcmVhZGwoY2hpcC0+YmFzZSArIEdQSU9fQ0NBX0lOVF9FVkVOVCk7DQo+
-ID4gKyAgICAgICAgICAgICAgIGxldmVsID0gcmVhZGwoY2hpcC0+YmFzZSArIEdQSU9fQ0NBX0RJ
-Tik7DQo+ID4gKyAgICAgICAgICAgICAgIGxldmVsIF49IHJlYWRsKGNoaXAtPmJhc2UgKyBHUElP
-X0NDQV9JTlRfTEVWRUwpOw0KPiA+ICsgICAgICAgICAgICAgICBsZXZlbCAmPSByZWFkbChjaGlw
-LT5iYXNlICsgR1BJT19DQ0FfSU5UX0xFVkVMX01BU0spOw0KPiA+ICsgICAgICAgICAgICAgICBp
-bnRfYml0cyA9IGxldmVsIHwgZXZlbnQ7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBmb3Jf
-ZWFjaF9zZXRfYml0KGJpdCwgJmludF9iaXRzLCBnYy5uZ3BpbykNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICBnZW5lcmljX2hhbmRsZV9pcnEoDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBpcnFfbGluZWFyX3Jldm1hcChjaGlwLT5pcnFfZG9tYWluLCBiaXQpKTsNCj4g
-PiArICAgICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gIGludF9iaXRzID8gSVJRX0hB
-TkRMRUQgOiBJUlFfTk9ORTsNCj4gPiArfQ0KPiANCj4gSSB0aGluayB0aGlzIHNob3VsZCBiZSBh
-IGNoYWluZWQgaW50ZXJydXB0IGhhbmRsZXIgKHNlZSBiZWxvdyBob3cgdG8NCj4gcmVnaXN0ZXIg
-aXQpLg0KPiANCj4gU2VlIGUuZy4gZHJpdmVycy9ncGlvL2dwaW8tZnRncGlvMDEwLmMgZm9yIGFu
-IGV4YW1wbGU6DQo+IGNoYW5nZSBmdW5jdGlvbiBwcm90b3R5cGUsIG5vIHJldHVybiB2YWx1ZSwg
-dXNlDQo+IGNoYWluZWRfaXJxX2VudGVyL2V4aXQoaXJxY2hpcCwgZGVzYyk7IGV0Yy4NCj4gDQoN
-CkkgZG9uJ3QgdGhpbmsgYSBjaGFpbmVkIGludGVycnVwdCBoYW5kbGVyIGNhbiB3b3JrLiBUaGUg
-cHJvYmxlbSBpcyB0aGF0DQp0aGUgcGFyZW50IGlycSBvbiB0aGUgU29DIGlzIHNoYXJlZCBiZXR3
-ZWVuIHRoZSBncGlvIGFuZCB1YXJ0MCAod2h5DQppdCdzIHRoaXMgd2F5IHdpdGggdHdvIElQIGJs
-b2NrcyBpbiB0aGUgc2FtZSBTb0MgSSdsbCBuZXZlciBrbm93KS4gV2hlbg0KYSBjaGFpbmVkIGlu
-dGVycnVwdCBoYW5kbGVyIGlzIHJlZ2lzdGVyZWQgSSBsb3NlIHRoZSBzZXJpYWwgaW50ZXJydXB0
-cy4NClBsZWFzZSBjb3JyZWN0IG1lIGlmIHRoZXJlIGlzIHNvbWUgd2F5IHRvIG1ha2UgdGhlIGNo
-YWluZWQgaGFuZGxlcnMNCmRlYWwgd2l0aCBzaGFyaW5nIGludGVycnVwdHMuDQoNCj4gPiArc3Rh
-dGljIGludCBpcHJvY19ncGlvbGliX2lucHV0KHN0cnVjdCBncGlvX2NoaXAgKmdjLCB1MzIgZ3Bp
-bykNCj4gPiArc3RhdGljIGludCBpcHJvY19ncGlvbGliX291dHB1dChzdHJ1Y3QgZ3Bpb19jaGlw
-ICpnYywgdTMyIGdwaW8sIGludCB2YWx1ZSkNCj4gPiArc3RhdGljIHZvaWQgaXByb2NfZ3Bpb2xp
-Yl9zZXQoc3RydWN0IGdwaW9fY2hpcCAqZ2MsIHUzMiBncGlvLCBpbnQgdmFsdWUpDQo+ID4gK3N0
-YXRpYyBpbnQgaXByb2NfZ3Bpb2xpYl9nZXQoc3RydWN0IGdwaW9fY2hpcCAqZ2MsIHUzMiBncGlv
-KQ0KPiANCj4gVGhlc2UgY2FsbGJhY2tzIHNlZW1zIHRvIHJlaW1wbGVtZW50IHBhcnRzIG9mIEdQ
-SU9fR0VORVJJQw0KPiB0aGF0IHlvdSBzaG91bGQgYWxyZWFkeSBiZSB1c2luZy4NCj4gDQo+IEFn
-YWluIGxvb2sgYXQgZHJpdmVycy9ncGlvL2dwaW8tZnRncGlvMDEwLmMoKSB1c2UgYmdwaW9faW5p
-dCgpDQo+IHRvIHNldCB1cCB0aGUgbGlicmFyeSBjYWxsYmFja3MsIGxvb2sgaW4NCj4gZHJpdmVy
-cy9ncGlvL2dwaW8tbW1pby5jIGZvciBrZXJuZWxkb2Mgb24gdGhlIGZ1bmN0aW9uLg0KPiANCg0K
-V2lsbCBsb29rIGludG8gaXQuDQoNCj4gPiArc3RhdGljIGludCBpcHJvY19ncGlvbGliX3RvX2ly
-cShzdHJ1Y3QgZ3Bpb19jaGlwICpnYywgdTMyIG9mZnNldCkNCj4gPiArew0KPiA+ICsgICAgICAg
-c3RydWN0IGlwcm9jX2dwaW9fY2hpcCAqY2hpcCA9IGdwaW9jaGlwX2dldF9kYXRhKGdjKTsNCj4g
-PiArDQo+ID4gKyAgICAgICByZXR1cm4gaXJxX2xpbmVhcl9yZXZtYXAoY2hpcC0+aXJxX2RvbWFp
-biwgb2Zmc2V0KTsNCj4gPiArfQ0KPiANCj4gR1BJT0xJQl9JUlFDSElQIHByb3ZpZGVzIGEgLnRv
-X2lycSgpIGltcGxlbWVudGF0aW9uDQo+IHNvIGRyb3AgdGhpcyBhbmQgbGV0IHRoZSBsaWJyYXJ5
-IGhhbmRsZSB0aGlzLg0KPiANCg0KV2lsbCB0aGF0IHdvcmsgaWYgSSd2ZSBzcXVpcnJlbGVkIHRo
-ZSBpcnFfZG9tYWluIGF3YXkgaW4gc3RydWN0DQppcHJvY19ncGlvX2NoaXA/IFNlZSBhYm92ZSBh
-cyB0byB3aHkgSSdtIG5vdCB1c2luZyB0aGUgZW1iZWRkZWQNCmdwaW9faXJxX2NoaXAuDQoNCj4g
-PiArc3RhdGljIGludCBpcHJvY19ncGlvX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYpDQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7
-DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKmRuID0gcGRldi0+ZGV2Lm9mX25vZGU7
-DQo+ID4gKyAgICAgICBzdHJ1Y3QgaXByb2NfZ3Bpb19jaGlwICpjaGlwOw0KPiA+ICsgICAgICAg
-dTMyIG51bV9ncGlvczsNCj4gPiArICAgICAgIGludCBpcnEsIHJldDsNCj4gPiArDQo+ID4gKyAg
-ICAgICBjaGlwID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpjaGlwKSwgR0ZQX0tFUk5FTCk7
-DQo+ID4gKyAgICAgICBpZiAoIWNoaXApDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5P
-TUVNOw0KPiA+ICsNCj4gPiArICAgICAgIGNoaXAtPmRldiA9IGRldjsNCj4gPiArICAgICAgIHBs
-YXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIGNoaXApOw0KPiA+ICsNCj4gPiArICAgICAgIGNoaXAt
-PmdjLmxhYmVsID0gZGV2X25hbWUoZGV2KTsNCj4gPiArDQo+ID4gKyAgICAgICBjaGlwLT5iYXNl
-ID0gZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKHBkZXYsIDApOw0KPiA+ICsgICAgICAg
-aWYgKElTX0VSUihjaGlwLT5iYXNlKSkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIFBUUl9F
-UlIoY2hpcC0+YmFzZSk7DQo+ID4gKw0KPiA+ICsgICAgICAgLyogR2V0IG51bWJlciBvZiBHUElP
-IHBpbiAqLw0KPiA+ICsgICAgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRuLCAibmdwaW9z
-IiwgJm51bV9ncGlvcykpIHsNCj4gPiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJtaXNz
-aW5nIG5ncGlvcyBEVCBwcm9wZXJ0eVxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAt
-RUlOVkFMOw0KPiA+ICsgICAgICAgfQ0KPiANCj4gTWF5YmUgcHJvdmlkZSBhIHNlbnNpYmxlIGRl
-ZmF1bHQ/DQo+IA0KDQpJIGRvbid0IGtub3cgdGhhdCB0aGVyZSBpcyBvbmUuIE9uIHRoZSBwYXJ0
-aWN1bGFyIFNvQyBJIGhhdmUgdGhlIG51bWJlcg0KaXMgMTIgYnV0IHRoZSBkYXRhc2hlZXRzIEkg
-aGF2ZSBhY2Nlc3MgdG8gYXJlIHJlYWxseSBoYXJkIHRvIGZvbGxvdw0KKHRoZSBTb0MgcGFydCBp
-cyB0YWNrZWQgb24gdG8gdGhlIGVuZCBvZiB0aGUgZGF0YXNoZWV0IGZvciB0aGUgc3dpdGNoDQpB
-U0lDKS4gMzIgd291bGQgYmUgdmFndWVseSBzYW5lIHNpbmNlIHRoZXkncmUgYWxsIDMyLWJpdCB3
-aWRlDQpyZWdpc3RlcnMuDQoNCj4gPiArICAgICAgIGNoaXAtPmdjLm5ncGlvID0gbnVtX2dwaW9z
-Ow0KPiA+ICsgICAgICAgY2hpcC0+Z2MucGFyZW50ID0gZGV2Ow0KPiA+ICsgICAgICAgY2hpcC0+
-Z2Mub2Zfbm9kZSA9IGRuOw0KPiA+ICsgICAgICAgY2hpcC0+Z2MuZGlyZWN0aW9uX2lucHV0ID0g
-aXByb2NfZ3Bpb2xpYl9pbnB1dDsNCj4gPiArICAgICAgIGNoaXAtPmdjLmRpcmVjdGlvbl9vdXRw
-dXQgPSBpcHJvY19ncGlvbGliX291dHB1dDsNCj4gPiArICAgICAgIGNoaXAtPmdjLnNldCA9IGlw
-cm9jX2dwaW9saWJfc2V0Ow0KPiA+ICsgICAgICAgY2hpcC0+Z2MuZ2V0ID0gaXByb2NfZ3Bpb2xp
-Yl9nZXQ7DQo+IA0KPiBEcm9wIHRoaXMgYW5kIGNhbGwgYmdwaW9faW5pdCgpIHRvIHNldCB1cCB0
-aGUgY2FsbGJhY2tzDQo+IGluc3RlYWQuIEhvd2V2ZXIsIHNldCB1cCAubmdwaW8gKmFmdGVyKiBj
-YWxsaW5nDQo+IGJncGlvX2luaXQoKSBzbyB1c2VycyBjYW4ndCBhY2Nlc3MgdGhlIG5vbmV4aXN0
-aW5nDQo+IGdwaW9zLg0KPiANCj4gPiArICAgICAgIGNoaXAtPmdjLnRvX2lycSA9IGlwcm9jX2dw
-aW9saWJfdG9faXJxOw0KPiANCj4gRHJvcCB0aGlzIGFuZCB1c2UgdGhlIEdQSU9MSUJfSVJRQ0hJ
-UC4NCj4gDQo+ID4gKyAgICAgICByZXQgPSBncGlvY2hpcF9hZGRfZGF0YSgmY2hpcC0+Z2MsIGNo
-aXApOw0KPiA+ICsgICAgICAgaWYgKHJldCkgew0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJy
-KGRldiwgInVuYWJsZSB0byBhZGQgR1BJTyBjaGlwXG4iKTsNCj4gPiArICAgICAgICAgICAgICAg
-cmV0dXJuIHJldDsNCj4gPiArICAgICAgIH0NCj4gDQo+IFdoeSBub3QgdXNlIGRldm1fZ3Bpb2No
-aXBfYWRkX2RhdGEoKT8NCj4gDQo+ID4gKyAgICAgICBpcnEgPSBwbGF0Zm9ybV9nZXRfaXJxKHBk
-ZXYsIDApOw0KPiA+ICsgICAgICAgaWYgKGlycSA+IDApIHsNCj4gPiArICAgICAgICAgICAgICAg
-dTMyIHZhbCwgY291bnQ7DQo+ID4gKyAgICAgICAgICAgICAgIHN0cnVjdCBpcnFfY2hpcCAqaXJx
-YzsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIGlycWMgPSAmY2hpcC0+aXJxY2hpcDsNCj4g
-PiArICAgICAgICAgICAgICAgaXJxYy0+bmFtZSA9IGRldl9uYW1lKGRldik7DQo+ID4gKyAgICAg
-ICAgICAgICAgIGlycWMtPmlycV9hY2sgPSBpcHJvY19ncGlvX2lycV9hY2s7DQo+ID4gKyAgICAg
-ICAgICAgICAgIGlycWMtPmlycV9tYXNrID0gaXByb2NfZ3Bpb19pcnFfbWFzazsNCj4gPiArICAg
-ICAgICAgICAgICAgaXJxYy0+aXJxX3VubWFzayA9IGlwcm9jX2dwaW9faXJxX3VubWFzazsNCj4g
-PiArICAgICAgICAgICAgICAgaXJxYy0+aXJxX3NldF90eXBlID0gaXByb2NfZ3Bpb19pcnFfc2V0
-X3R5cGU7DQo+ID4gKyAgICAgICAgICAgICAgIGlycWMtPmlycV9lbmFibGUgPSBpcHJvY19ncGlv
-X2lycV91bm1hc2s7DQo+ID4gKyAgICAgICAgICAgICAgIGlycWMtPmlycV9kaXNhYmxlID0gaXBy
-b2NfZ3Bpb19pcnFfbWFzazsNCj4gPiArICAgICAgICAgICAgICAgY2hpcC0+aW50ciA9IGRldm1f
-cGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZShwZGV2LCAxKTsNCj4gPiArICAgICAgICAgICAgICAg
-aWYgKElTX0VSUihjaGlwLT5pbnRyKSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1
-cm4gUFRSX0VSUihjaGlwLT5pbnRyKTsNCj4gDQo+IE1vdmUgYWxsIHRoaXMgYWJvdmUgdGhlIFtk
-ZXZtX11ncGlvY2hpcF9hZGRfZGF0YSgpDQo+IGNhbGwgYW5kIGFkZDoNCj4gDQo+IHN0cnVjdCBn
-cGlvX2lycV9jaGlwICpnaXJxOw0KPiANCj4gZ2lycSA9ICZjaGlwLT5nYy5pcnE7DQo+IGdpcnEt
-PmNoaXAgPSBpcnFjOw0KPiANCj4gZXRjIGZvbGxvdyB0aGUgcGF0dGVybiBmcm9tIG90aGVyIGRy
-aXZlcnMgbGlrZSB0aGUNCj4gbWVudGlvbmVkIGZ0Z3BpbzAxMC5jLg0KPiANCj4gPiArICAgICAg
-ICAgICAgICAgLyogQ3JlYXRlIGlycSBkb21haW4gKi8NCj4gPiArICAgICAgICAgICAgICAgY2hp
-cC0+aXJxX2RvbWFpbiA9IGlycV9kb21haW5fYWRkX2xpbmVhcihkbiwgbnVtX2dwaW9zLA0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJmlycV9kb21haW5fc2ltcGxlX29wcywg
-Y2hpcCk7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBpZiAoIWNoaXAtPmlycV9kb21haW4p
-IHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgIkNvdWxkbid0IGFs
-bG9jYXRlIElSUSBkb21haW5cbiIpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldCA9
-IC1FTk9ERVY7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ290byBlcnJfaXJxX2RvbWFp
-bjsNCj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgLyog
-TWFwIGVhY2ggZ3BpbyBwaW4gdG8gYW4gSVJRIGFuZCBzZXQgdGhlIGhhbmRsZXIgKi8NCj4gPiAr
-ICAgICAgICAgICAgICAgZm9yIChjb3VudCA9IDA7IGNvdW50IDwgbnVtX2dwaW9zOyBjb3VudCsr
-KSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW50IGlycTsNCj4gPiArDQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgaXJxID0gaXJxX2NyZWF0ZV9tYXBwaW5nKGNoaXAtPmlycV9k
-b21haW4sIGNvdW50KTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpcnFfc2V0X2NoaXBf
-YW5kX2hhbmRsZXIoaXJxLCBpcnFjLCBoYW5kbGVfc2ltcGxlX2lycSk7DQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgaXJxX3NldF9jaGlwX2RhdGEoaXJxLCBjaGlwKTsNCj4gPiArICAgICAg
-ICAgICAgICAgfQ0KPiANCj4gRHJvcCB0aGlzIGFuZCBsZXQgdGhlIGdlbmVyaWMgR1BJTyBpcnFj
-aGlwIGhhbmRsZQ0KPiB0aGUgZG9tYWluLg0KPiANCj4gPiArICAgICAgICAgICAgICAgLyogRW5h
-YmxlIEdQSU8gaW50ZXJydXB0cyBmb3IgQ0NBIEdQSU8gKi8NCj4gPiArICAgICAgICAgICAgICAg
-dmFsID0gcmVhZGwoY2hpcC0+aW50ciArIENDQV9JTlRfTUFTSyk7DQo+ID4gKyAgICAgICAgICAg
-ICAgIHZhbCB8PSBDQ0FfSU5UX0ZfR1BJT0lOVDsNCj4gPiArICAgICAgICAgICAgICAgd3JpdGVs
-KHZhbCwgY2hpcC0+aW50ciArIENDQV9JTlRfTUFTSyk7DQo+IA0KPiBNb3ZlIHRoaXMgYmVmb3Jl
-IHJlZ2lzdGVyaW5nIHRoZSBjaGlwLg0KPiANCj4gPiArICAgICAgICAgICAgICAgLyogSW5zdGFs
-bCBJU1IgZm9yIHRoaXMgR1BJTyBjb250cm9sbGVyICovDQo+ID4gKyAgICAgICAgICAgICAgIHJl
-dCA9IGRldm1fcmVxdWVzdF9pcnEoZGV2LCBpcnEsIGlwcm9jX2dwaW9faXJxX2hhbmRsZXIsDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSVJRRl9TSEFSRUQsIGNo
-aXAtPmdjLmxhYmVsLCBjaGlwKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHJldCkgew0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiRmFpbCB0byByZXF1ZXN0IElS
-USVkOiAlZFxuIiwgaXJxLCByZXQpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGdvdG8g
-ZXJyX2lycV9yZXF1ZXN0Ow0KPiA+ICsgICAgICAgICAgICAgICB9DQo+IA0KPiBEcm9wIHRoaXMg
-YW5kIHVzZSB0aGUgZ3Bpb2xpYiBpcnFjaGlwIGxpYnJhcnkuDQoNCkFzIEkndmUgc2FpZCBhYm92
-ZSBJJ20gbm90IHN1cmUgSSBjYW4gZHVlIHRvIHNoYXJpbmcgaW50ZXJydXB0cyB3aXRoDQp1YXJ0
-MC4gSSdkIGJlIGhhcHB5IHRvIGJlIHByb3ZlbiB3cm9uZyBhcyB0aGUgZ2VuZXJpYyBpcnEgY29k
-ZSByZW1vdmVzDQphIGdyZWF0IGRlYWwgb2YgYm9pbGVyIHBsYXRlIGZvciBtZS4NCg0K
+
+--=-aUI3xDCIDb8TpAefVVVl
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Le jeudi 10 octobre 2019 =C3=A0 16:23 +0900, Tomasz Figa a =C3=A9crit :
+> On Tue, Oct 8, 2019 at 11:12 PM Jonas Karlman <jonas@kwiboo.se> wrote:
+> > On 2019-10-08 15:53, Tomasz Figa wrote:
+> > > On Tue, Oct 8, 2019 at 10:35 PM Tomasz Figa <tfiga@chromium.org> wrot=
+e:
+> > > > On Tue, Oct 8, 2019 at 7:42 PM Tomasz Figa <tfiga@chromium.org> wro=
+te:
+> > > > > On Tue, Oct 8, 2019 at 3:31 PM Jonas Karlman <jonas@kwiboo.se> wr=
+ote:
+> > > > > > On 2019-10-08 07:27, Tomasz Figa wrote:
+> > > > > > > Hi Ezequiel, Jonas,
+> > > > > > >=20
+> > > > > > > On Tue, Oct 8, 2019 at 2:46 AM Ezequiel Garcia <ezequiel@coll=
+abora.com> wrote:
+> > > > > > > > From: Jonas Karlman <jonas@kwiboo.se>
+> > > > > > > >=20
+> > > > > > > > TRM specify supported image size 48x48 to 4096x2304 at step=
+ size 16 pixels,
+> > > > > > > > change frmsize max_width/max_height to match TRM.
+> > > > > > > >=20
+> > > > > > > > Fixes: 760327930e10 ("media: hantro: Enable H264 decoding o=
+n rk3288")
+> > > > > > > > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> > > > > > > > ---
+> > > > > > > > v2:
+> > > > > > > > * No changes.
+> > > > > > > >=20
+> > > > > > > >  drivers/staging/media/hantro/rk3288_vpu_hw.c | 4 ++--
+> > > > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > > > > >=20
+> > > > > > > > diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b=
+/drivers/staging/media/hantro/rk3288_vpu_hw.c
+> > > > > > > > index 6bfcc47d1e58..ebb017b8a334 100644
+> > > > > > > > --- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
+> > > > > > > > +++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
+> > > > > > > > @@ -67,10 +67,10 @@ static const struct hantro_fmt rk3288_v=
+pu_dec_fmts[] =3D {
+> > > > > > > >                 .max_depth =3D 2,
+> > > > > > > >                 .frmsize =3D {
+> > > > > > > >                         .min_width =3D 48,
+> > > > > > > > -                       .max_width =3D 3840,
+> > > > > > > > +                       .max_width =3D 4096,
+> > > > > > > >                         .step_width =3D H264_MB_DIM,
+> > > > > > > >                         .min_height =3D 48,
+> > > > > > > > -                       .max_height =3D 2160,
+> > > > > > > > +                       .max_height =3D 2304,
+> > > > > > > This doesn't match the datasheet I have, which is RK3288 Data=
+sheet Rev
+> > > > > > > 1.4 and which has the values as in current code. What's the o=
+ne you
+> > > > > > > got the values from?
+> > > > > > The RK3288 TRM vcodec chapter from [1], unknown revision and da=
+te, lists 48x48 to 4096x2304 step size 16 pixels under 25.5.1 H.264 decoder=
+.
+> > > > > >=20
+> > > > > > I can also confirm that one of my test samples (PUPPIES BATH IN=
+ 4K) is 4096x2304 and can be decoded after this patch.
+> > > > > > However the decoding speed is not optimal at 400Mhz, if I recal=
+l correctly you need to set the VPU1 clock to 600Mhz for 4K decoding on RK3=
+288.
+> > > > > >=20
+> > > > > > I am not sure if I should include a v2 of this patch in my v2 s=
+eries, as-is this patch do not apply on master (H264_MB_DIM has changed to =
+MB_DIM in master).
+> > > > > >=20
+> > > > > > [1] http://www.t-firefly.com/download/firefly-rk3288/docs/TRM/r=
+k3288-chapter-25-video-encoder-decoder-unit-(vcodec).pdf
+> > > > > I checked the RK3288 TRM V1.1 too and it refers to 3840x2160@24fp=
+s as
+> > > > > the maximum.
+> > > > >=20
+> > > > > As for performance, we've actually been getting around 33 fps at =
+400
+> > > > > MHz with 3840x2160 on our devices (the old RK3288 Asus Chromebook
+> > > > > Flip).
+> > > > >=20
+> > > > > I guess we might want to check that with Hantro.
+> > > > Could you check the value of bits 10:0 in register at 0x0c8? That
+> > > > should be the maximum supported stream width in the units of 16
+> > > > pixels.
+> > > Correction: The unit is 1 pixel and there are additional 2 most
+> > > significant bits at 0x0d8, 15:14.
+> >=20
+> > I will check this later tonight when I have access to my devices.
+> > The PUPPIES BATH IN 4K (4096x2304) sample decoded without issue using r=
+ockchip 4.4 BSP kernel and mpp last time I tested.
+> >=20
+> > The vcodec driver in 4.4 BSP kernel use 300/400 Mhz as default clock ra=
+te and will change to 600 Mhz when width is over 2560, see [1]:
+> >   raise frequency for resolution larger than 1440p avc
+> >=20
+> > [1] https://github.com/rockchip-linux/kernel/blob/develop-4.4/drivers/v=
+ideo/rockchip/vcodec/vcodec_service.c#L2551-L2570
+>=20
+> How comes it works for us well at 400 MHz? Better DRAM? Differences in
+> how Vcodec BSP handles the hardware that somehow make the decoding
+> slower?
+
+FWIW, here on the mainline driver, on RK3288, playing a 4K30 sample
+(probably the max for this one) get stuck at 20fps with 400MHz. So
+600MHz would in theory be perfect to reach 30fps. That being said,
+different stream yield different performance with H264 and other
+CODECs, so doing a completely objective evaluation is hard.
+
+>=20
+> Best regards,
+> Tomasz
+
+--=-aUI3xDCIDb8TpAefVVVl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXaOgwQAKCRBxUwItrAao
+HAQ6AKDOBNbKhIm8UP7JoDVLpGqHjnQ8OQCgrkRiP/+Ii99dH1c26VQtoefYlTk=
+=fZQf
+-----END PGP SIGNATURE-----
+
+--=-aUI3xDCIDb8TpAefVVVl--
+
