@@ -2,137 +2,149 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062DDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84BAC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2F3206A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A976B2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:46:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="SBN5REzk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6OvTDVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbfJMMor (ORCPT
+        id S1729037AbfJMMqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 08:44:47 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38789 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbfJMMoq (ORCPT
+        Sun, 13 Oct 2019 08:46:16 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36284 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbfJMMqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 08:44:46 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m16so11657053oic.5
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 05:44:44 -0700 (PDT)
+        Sun, 13 Oct 2019 08:46:15 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 23so8487192pgk.3;
+        Sun, 13 Oct 2019 05:46:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h3US1YpCNnCbUgNT1GPpUvzikfVR1h1FRwVNOVDSOqE=;
-        b=SBN5REzkBXcLX9aBB3cOWFxG8TFRqF94/v5HDsN2Jc6svbAljItH5wBkpBGF6p0sUA
-         aihBnsfukVp8zN4L5SUQb0CSqyOspBrzLCLCNaDSeIBP9mvFeICK4C9Y1jrOjpWr48fH
-         87VW0dkx/zo48Y5721wltuECedzkKawxW+HZs=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gtVkxFWDnOERz9QtHd7FY1jWNQ++tjo/QQsXGSYHj5s=;
+        b=D6OvTDVJz3Yr9ZOgYmbXjSqCUMfb5UovwJ2/QHOKxAJPRZWath3+puIjvDNqs+7m0P
+         rq3cOz+QApMO2OGuSHfN7hpciP8NoJGIk23GY//x+b4GGTCE/eneSKBA6WkZ+3EvkWt7
+         Zs+CN8uMLuRHh9xQNmu2/juq6zZfidK20pc80uM8IMK6Q1X8mDiuUquq8qL+ikhNWOF/
+         Ufmcuki+516XFERthX+Hkj9iKxRwupw0UQeJfZiUfO9rxXyblT8I+endywfMF/OB2ixb
+         HQfi68RqDfz5+7Fz0CzJaxfV507IjQbWlG9pNdpobASTPiV2WmRpizhBzuTC+yB2gZ0n
+         u5PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h3US1YpCNnCbUgNT1GPpUvzikfVR1h1FRwVNOVDSOqE=;
-        b=f5MhPqev7r676CTYJR1SDFtNeAM81P+gtwIHz0UlYu7BCU/ejCyRVjcfwY8KDmhAvF
-         sCROcKPmd/U5HNu4MxuMvE3nq365ZYCQRIQWwQoABj7t76cFK6hVQPVErdQDX1Z4mzaq
-         Ch2KSR1oGSlHG5Nh5+JMvuC17PLcqACxHRaOv9qNDJGZ/7u6OJJyksrAfaJO5NRC0zHc
-         zj0Nh9lEFjuGZ7d6461HxQ3On9ImwUpDRj6VHgySNEwFan7GRn4CJLW7AnrSVmaoFqBp
-         T2ejH5GOYgc2gaeoTNEIpTXHY4edVQavSEYtXvsqSDz24uy6/UoN5LDe2cjdI51ykrhV
-         JAXw==
-X-Gm-Message-State: APjAAAUCpEY+b1cqdyTtpQ+OYlpQiFIlIK53sQD9Bs2/F9ET4kew65Z2
-        Bk7vjfqL37jlA3T5Lzze2MchOgkykZyDgP9dOqWlVg==
-X-Google-Smtp-Source: APXvYqya3OtEXasVVETftjDyEQYGKCPbuj2gbeKb4qt4ILEj/4iBe7c71rkU0QsY2zwlLl4diUiM2oIEoXITNVS2ong=
-X-Received: by 2002:aca:a9ca:: with SMTP id s193mr5974772oie.85.1570970683812;
- Sun, 13 Oct 2019 05:44:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gtVkxFWDnOERz9QtHd7FY1jWNQ++tjo/QQsXGSYHj5s=;
+        b=FoZENk3Ri1/Mem4e0k+UDNKoUR6QfHZreXT/nHEvfQHGEXpNuJT/jgsE4elZvGh5bJ
+         YM7ZSRQoK7JefAbc9wnMP61gw2v/O3oyB0E76UHIL2dCuEPdQ0dMRPU82r1vb3RTXj4t
+         X93Ki8mrBF/mcHzXrh7HM5zO9vFbJMMeqT4uWxvkg6z453/pNIZxG+a7mzuSxwWZOfnz
+         deTJjl7G9tKQbO+JhH9UCm/x7kzwMFFpbQkhbvRnk/2Ht7k2XmdTkIi2Mn0u9juvyvsV
+         8Cmor7QyxRIeyOAtLIvV/ilTQT0QlNQCpU7C6IMQF7pryDfBw5KUr7mqS8+IvEB1RXwc
+         NJ9Q==
+X-Gm-Message-State: APjAAAU4XfkV0/VQ65jWJvVuQwjf1veWwVGLBjiKeigARulRKxPSCWOw
+        1MHmW4Gk3Ar/hPT9cCHIf7M=
+X-Google-Smtp-Source: APXvYqw1AhGMPQkp8lsOGSfEyvQgVWSbN/O4lW5bxEQxnQFRB70xWClf6MNf2LGBQVFkDN5elL9+LQ==
+X-Received: by 2002:a63:1242:: with SMTP id 2mr4970213pgs.288.1570970774706;
+        Sun, 13 Oct 2019 05:46:14 -0700 (PDT)
+Received: from localhost ([178.128.102.47])
+        by smtp.gmail.com with ESMTPSA id q15sm14050398pgl.12.2019.10.13.05.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2019 05:46:13 -0700 (PDT)
+Date:   Sun, 13 Oct 2019 20:46:07 +0800
+From:   Eryu Guan <guaneryu@gmail.com>
+To:     Zhihao Cheng <chengzhihao1@huawei.com>
+Cc:     darrick.wong@oracle.com, ebiggers@google.com, yi.zhang@huawei.com,
+        fstests@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH xfstests] generic/192: Move 'cd /' to the place where the
+ program exits
+Message-ID: <20191013124607.GH2622@desktop>
+References: <1570609677-49586-1-git-send-email-chengzhihao1@huawei.com>
 MIME-Version: 1.0
-References: <CANaguZCH-jjHrWwycU3vz6RfNkW9xN+DoRkHnL3n8-DneNV3FQ@mail.gmail.com>
- <20190912123532.GB16200@aaronlu> <CANaguZBTiLQiRQU9MJR2Qys8S2S=-PTe66_ZPi5DVzpPbJ93zw@mail.gmail.com>
- <CANaguZDOb+rVcDPMS+SR1DKc73fnctkBK0EbfBrf90dztr8t=Q@mail.gmail.com>
- <20191010135436.GA67897@aaronlu> <CANaguZDCtmXpm_rpTkjsfPPBscHCwz4u1OHwUt3XztzgLJa_jA@mail.gmail.com>
- <20191011073338.GA125778@aaronlu> <CANaguZCkKQTmgye+9nQhzQqYBrsnCmcjA46TPmLwN60vvMQ_7w@mail.gmail.com>
- <20191011114851.GA8750@aaronlu> <CANaguZBgv5N2Spv-Ldio5Umn6qU7dC0Px66sL9s11W7SK3f4Hg@mail.gmail.com>
- <20191012035503.GA113034@aaronlu>
-In-Reply-To: <20191012035503.GA113034@aaronlu>
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Date:   Sun, 13 Oct 2019 08:44:32 -0400
-Message-ID: <CANaguZBevMsQ_Zy1ozKn2Z5Uj6WBviC6UU+zpTQOVdDDLK6r2w@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Aaron Lu <aaron.lu@linux.alibaba.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570609677-49586-1-git-send-email-chengzhihao1@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:55 PM Aaron Lu <aaron.lu@linux.alibaba.com> wrote:
+On Wed, Oct 09, 2019 at 04:27:57PM +0800, Zhihao Cheng wrote:
+> Running generic/192 with overlayfs(Let ubifs as base fs) yields the
+> following output:
+> 
+>   generic/192 - output mismatch
+>      QA output created by 192
+>      sleep for 5 seconds
+>      test
+>     +./common/rc: line 316: src/t_dir_type: No such file or directory
+>      delta1 is in range
+>      delta2 is in range
+>     ...
+> 
+> When the use case fails, the call stack in generic/192 is:
+> 
+>   local unknowns=$(src/t_dir_type $dir u | wc -l)	common/rc:316
+>   _supports_filetype					common/rc:299
+>   _overlay_mount					common/overlay:52
+>   _overlay_test_mount					common/overlay:93
+>   _test_mount						common/rc:407
+>   _test_cycle_mount					generic/192:50
+> 
+> Before _test_cycle_mount() being invoked, generic/192 executed 'cd /'
+> to change work dir from 'xfstests-dev' to '/', so src/t_dir_type was not
+> found.
+> 
+> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 
->
-> I don't think we need do the normalization afterwrads and it appears
-> we are on the same page regarding core wide vruntime.
->
-> The intent of my patch is to treat all the root level sched entities of
-> the two siblings as if they are in a single cfs_rq of the core. With a
-> core wide min_vruntime, the core scheduler can decide which sched entity
-> to run next. And the individual sched entity's vruntime shouldn't be
-> changed based on the change of core wide min_vruntime, or faireness can
-> hurt(if we add or reduce vruntime of a sched entity, its credit will
-> change).
->
-Ok, I think I get it now. I see that your first patch actually wraps
-all the places
-where min_vruntime is accessed. So yes, the tree vruntime updation is needed
-only one time. From then on, since we use the wrapper cfs_rq_min_vruntime(),
-both the runqueues would self adjust from then on based on the code wide
-min_vruntime. Also by the virtue that min_vruntime stays min from there on, the
-tree updation logic will not be called more than once. So I think the
-changes are safe.
-I will do some profiling to make sure that it is actually called once only.
+Thanks for the debug! But I think the right fix is to call t_dir_type
+via "$here", i.e.
 
-> The weird thing about my patch is, the min_vruntime is often increased,
-> it doesn't point to the smallest value as in a traditional cfs_rq. This
-> probabaly can be changed to follow the tradition, I don't quite remember
-> why I did this, will need to check this some time later.
+	local unknowns=$($here/src/t_dir_type $dir u | wc -l)
 
-Yeah, I noticed this. In my patch, I had already accounted for this and changed
-to min() instead of max() which is more logical that min_vruntime should be the
-minimum of both the run queue.
-
-> All those sub cfs_rq's sched entities are not interesting. Because once
-> we decided which sched entity in the root level cfs_rq should run next,
-> we can then pick the final next task from there(using the usual way). In
-> other words, to make scheduler choose the correct candidate for the core,
-> we only need worry about sched entities on both CPU's root level cfs_rqs.
->
-Understood. The only reason I did the normalize is to get both the runqueues
-under one min_vruntime always. And as long as we use the cfs_rq_min_vruntime
-from then on, we wouldn't be calling the balancing logic any more.
-
-> Does this make sense?
-
-Sure, thanks for the clarification.
+'here', which points to the top level dir of xfstests source code, is
+defined in every test in test setup, and is guaranteed not to be empty.
 
 Thanks,
-Vineeth
+Eryu
+
+> ---
+>  tests/generic/192 | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tests/generic/192 b/tests/generic/192
+> index 50b3d6fd..5550f39e 100755
+> --- a/tests/generic/192
+> +++ b/tests/generic/192
+> @@ -15,7 +15,12 @@ echo "QA output created by $seq"
+>  here=`pwd`
+>  tmp=/tmp/$$
+>  status=1	# failure is the default!
+> -trap "exit \$status" 0 1 2 3 15
+> +trap "_cleanup; exit \$status" 0 1 2 3 15
+> +
+> +_cleanup()
+> +{
+> +	cd /
+> +}
+>  
+>  _access_time()
+>  {
+> @@ -46,7 +51,6 @@ sleep $delay # sleep to allow time to move on for access
+>  cat $testfile
+>  time2=`_access_time $testfile | tee -a $seqres.full`
+>  
+> -cd /
+>  _test_cycle_mount
+>  time3=`_access_time $testfile | tee -a $seqres.full`
+>  
+> -- 
+> 2.13.6
+> 
