@@ -2,70 +2,99 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1041CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E44FECE587
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC5720659
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19C1206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570958595;
-	bh=WbyZGAhucOOfrVVsBUwNKEpbTNgy62toVvp3TcErWoU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gNjOk4EjYLAWKHwMI4Y6NCd1ZqLlSvtlpcnN1TFz+AzET6y0H57SOA/dzdARm+Cxi
-	 GaAa+H51XbKeQXZZiRUSAq5SXlZ5DVj7anu10um+3qpd/kROyN5XgoZnEGhojstvrm
-	 UASZi/IlTFw8OceG1/wYbt4RljaWQvc47L24Ly2g=
+	s=default; t=1570959145;
+	bh=vv0x3V4u3Fs9k+8MDwLKn2jmOM3f5l4VL12Gif3ewN8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TD9edj+S7iJC2S7Wm9OeScNcE97qt7k2qnxigIlBW1e+JXHLJcj7kzIM0YHK807w/
+	 Nlw9xpc+XEqiSa1PmAm/ZrStgFm4A6lPSe2jEC7pjvCgQ4PEI5T7lWRa/kAWqnkIFw
+	 nFk4AI1BjQpLkJmJoJzuYfebpg4vh3XHbDNiVGnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfJMJXD (ORCPT
+        id S1728736AbfJMJcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 05:23:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46032 "EHLO mail.kernel.org"
+        Sun, 13 Oct 2019 05:32:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbfJMJXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 05:23:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728080AbfJMJcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 05:32:24 -0400
+Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D4920659;
-        Sun, 13 Oct 2019 09:23:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69EB420679;
+        Sun, 13 Oct 2019 09:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570958582;
-        bh=WbyZGAhucOOfrVVsBUwNKEpbTNgy62toVvp3TcErWoU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HicUqv4NJPgLGZHWne8a7PKGoteNbg2vRjF2gAo3GRxVZEJ2eD7zWCNPhbllSdPME
-         ULQ0+wwn/hDf/+bDKa9gXc1TTdpNvwsbR3Z7h+6Ky25z0LRg8RywThuk8ePcgGURFM
-         d1i70qcEfGuuCM/imqSXsKfE5knOEc7mnFIK9y2w=
-Date:   Sun, 13 Oct 2019 11:22:59 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     linux-usb@vger.kernel.org, rogerq@ti.com,
-        linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com,
-        nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com,
-        kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
-Subject: Re: [PATCH v2] usb: cdns3: Fix dequeue implementation.
-Message-ID: <20191013092259.GA2412199@kroah.com>
-References: <e611a60b-08e1-4077-8789-976c19e1ac93@maileu3.global.cadence.com>
+        s=default; t=1570959143;
+        bh=vv0x3V4u3Fs9k+8MDwLKn2jmOM3f5l4VL12Gif3ewN8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YkQEcJsBAKIdXzqvLn7D8KCQEBYA+mbKYNfTYeOfQiTBw/o7DhjFp+biKWQq0pgwz
+         Fu/hIww+rwhTCz4GwpHm4MtsmXL5AH8Ids5l5cwFnH9ewlMlYeqhupD2Lahq0W/p0M
+         D60f4d1OECvI4mV7vlMCAnbgEY/12Se1ZKJUEOoo=
+From:   jic23@kernel.org
+To:     linux-iio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH] mfd: twl: endian fixups in i2c write and read wrappers.
+Date:   Sun, 13 Oct 2019 10:30:15 +0100
+Message-Id: <20191013093015.1395332-1-jic23@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e611a60b-08e1-4077-8789-976c19e1ac93@maileu3.global.cadence.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 13, 2019 at 10:09:20AM +0100,  wrote:
-> From: Pawel Laszczak <pawell@cadence.com>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-<snip>
+Use a local variable to ensure correct endian types for
+intermediate results.
 
-Please look at your email client, your email had a _very_ odd "From:"
-line.  Please fix that up.
+Identified by sparse when building the IIO driver.
 
-thanks,
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+---
+ include/linux/mfd/twl.h | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-greg k-h
+diff --git a/include/linux/mfd/twl.h b/include/linux/mfd/twl.h
+index 44aff52a5002..089e8942223a 100644
+--- a/include/linux/mfd/twl.h
++++ b/include/linux/mfd/twl.h
+@@ -181,14 +181,18 @@ static inline int twl_i2c_read_u8(u8 mod_no, u8 *val, u8 reg) {
+ }
+ 
+ static inline int twl_i2c_write_u16(u8 mod_no, u16 val, u8 reg) {
+-	val = cpu_to_le16(val);
+-	return twl_i2c_write(mod_no, (u8*) &val, reg, 2);
++	__le16 value;
++
++	value = cpu_to_le16(val);
++	return twl_i2c_write(mod_no, (u8 *) &value, reg, 2);
+ }
+ 
+ static inline int twl_i2c_read_u16(u8 mod_no, u16 *val, u8 reg) {
+ 	int ret;
+-	ret = twl_i2c_read(mod_no, (u8*) val, reg, 2);
+-	*val = le16_to_cpu(*val);
++	__le16 value;
++
++	ret = twl_i2c_read(mod_no, (u8 *) &value, reg, 2);
++	*val = le16_to_cpu(value);
+ 	return ret;
+ }
+ 
+-- 
+2.23.0
+
