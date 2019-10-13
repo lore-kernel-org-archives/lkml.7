@@ -2,246 +2,103 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC616C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE05C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82835207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F736207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:43:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D25DMKKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbfJNAkD (ORCPT
+        id S1729633AbfJNAnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 20:40:03 -0400
-Received: from mga14.intel.com ([192.55.52.115]:10776 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbfJNAkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 20:40:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Oct 2019 17:40:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,294,1566889200"; 
-   d="gz'50?scan'50,208,50";a="201336583"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Oct 2019 17:39:58 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iJoOz-000Ibp-ID; Mon, 14 Oct 2019 08:39:57 +0800
-Date:   Mon, 14 Oct 2019 08:36:20 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv7 06/33] alarmtimer: Provide get_timespec() callback
-Message-ID: <201910140815.JxHBzda9%lkp@intel.com>
-References: <20191011012341.846266-7-dima@arista.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="i5eyv2ux6zqcclxv"
-Content-Disposition: inline
-In-Reply-To: <20191011012341.846266-7-dima@arista.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sun, 13 Oct 2019 20:43:47 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43834 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729180AbfJNAnq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 20:43:46 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9E0f906136448;
+        Mon, 14 Oct 2019 00:43:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=77664crqggBs6vqUBErJUe+tfNhGlZupqkwqa4ZPD94=;
+ b=D25DMKKkY6e9st02pwZm5u2GptW5e3vzLJDJuZuQEEkcoX6pJKoHJzFfGafZZyb3cFLS
+ YTcoNlit9wgUdb0eH4nhDRxQroACznJkNaVr0OPwj2AxPqPtAhYI8HpFGlWQpYPLW6E7
+ mZ+n8tM/OPvmdLSUfpeg2yRMED7kYB9hwOW6sodcItkWg6CEynb0n1OpJ8b5tonG7Fg+
+ hb72pv0gFCBuIpIhhAcm7z3+nG94FGKPIQBKw+j3yo7yWScCzEixYRN5gDionbrtY1G9
+ E9ccD3evlZatnMlSGClwirBSUaLi/zJB1HJC9971A4BFso3LfVdbuKeLikJZwgzwfE6D zg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2vk7fqw6us-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 00:43:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9E0djRW124185;
+        Mon, 14 Oct 2019 00:41:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vkrbhr5cu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 00:41:36 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9E0fYrd030219;
+        Mon, 14 Oct 2019 00:41:34 GMT
+Received: from z2.cn.oracle.com (/10.182.71.205)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 14 Oct 2019 00:41:34 +0000
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org,
+        linux-pm@vger.kernel.org, mtosatti@redhat.com,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH] cpuidle: not unset the driver if it already exist
+Date:   Sun, 13 Oct 2019 08:46:26 +0800
+Message-Id: <1570927586-12023-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9409 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=799
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910140003
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9409 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=885 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910140003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+__cpuidle_set_driver() check if there is an already exist driver and
+unset it before return with -EBUSY. The next call will succeed as it's
+just unset. This is strange as we should either keep old driver and
+return -EBUSY or unset and set new driver and return 0.
 
---i5eyv2ux6zqcclxv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Dmitry,
-
-Thank you for the patch! Yet something to improve:
-
-[auto build test ERROR on linus/master]
-[cannot apply to v5.4-rc2 next-20191011]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Dmitry-Safonov/kernel-Introduce-Time-Namespace/20191014-075119
-config: i386-tinyconfig (attached as .config)
-compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
-reproduce:
-        # save the attached .config to linux build tree
-        make ARCH=i386 
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   ld: kernel/time/alarmtimer.o: in function `alarmtimer_init':
->> alarmtimer.c:(.init.text+0x26): undefined reference to `posix_get_realtime_timespec'
->> ld: alarmtimer.c:(.init.text+0x44): undefined reference to `posix_get_boottime_timespec'
-
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ drivers/cpuidle/driver.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---i5eyv2ux6zqcclxv
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+diff --git a/drivers/cpuidle/driver.c b/drivers/cpuidle/driver.c
+index 80c1a83..a200304 100644
+--- a/drivers/cpuidle/driver.c
++++ b/drivers/cpuidle/driver.c
+@@ -74,7 +74,6 @@ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
+ 	for_each_cpu(cpu, drv->cpumask) {
+ 
+ 		if (__cpuidle_get_cpu_driver(cpu)) {
+-			__cpuidle_unset_driver(drv);
+ 			return -EBUSY;
+ 		}
+ 
+-- 
+1.8.3.1
 
-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
-5mgEVbkzdIRqp8fWCQ4UfgDhSF/VDWgAAA==
-
---i5eyv2ux6zqcclxv--
