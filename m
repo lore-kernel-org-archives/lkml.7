@@ -2,203 +2,443 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4B8C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 00:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCB6C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 00:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A2020679
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 00:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B3C21655
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 00:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="atBv3aWK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hB2RBKC4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbfJMAaZ (ORCPT
+        id S1728396AbfJMAab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 20:30:25 -0400
-Received: from mail-eopbgr790120.outbound.protection.outlook.com ([40.107.79.120]:28971
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727909AbfJMAaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 20:30:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bJ6Br5WaM9OuTWFe3PWfxz08gDuaDcZUjc/rAt7vW+iAvXmPfBXW4tqrl+Y2ESLpqSjZavV/oxgHTVIXSC+OASoSSdpVNXIu30g8K6YbIpoFIOl577MgUZbgOGO9l0MuM03FULfq9m0D/O352x13Vi56rJXBnQp4oK2MIn04KVgBQH/OsbBn6Bg8YY2g5/9UK8vp9DvsIcPCepa94TolLceJdj266wcVDk6vEwPAbpN6F0CeWp5z6dLJpsr3dN3LyRPLJDXX6Tj6KnoJtcXO0b3WEoLzPSLNAuF+xh/4nOjhz88m2jglxZko8clg1GcJqM985oExLgW22L4L1Jlhxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EG5G7qimE+xE/nYI+QR78uOrIjHq0uVn+zkQGG+GXl8=;
- b=Gy7PnMjwpK84e2xmbR4rnkeUhTnGdEncvIjtn97Mi7f1CU9gck94OdCFTlnUlZSNIsizWjGnA3bQrzxattZBo0XFBFSKFWGPPTerPS58kjNDaShPZnjHlsJ6FD+I0Qj3wHThVPP0HFnKamuUOXL5HvE2rd1xJ2k4SubNJofEzWE6ARkbkoQul6trur/jxso/iXj7ONEnEYA4oRghzaOKc/DmqYO/2nuar8kRuazd3bRfzbWNG3HVr2FulmKdo1sBaQooaZOSoFDbtgWXGamNV3QpGeCOxB6e3XUnQemfDW/ZEKPVBanD/Q0p4zA5DLilZd03O1aBCKSn7lntvhiz6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EG5G7qimE+xE/nYI+QR78uOrIjHq0uVn+zkQGG+GXl8=;
- b=atBv3aWKBStKRqdtc86HeM/9jgil2ZMYV20sgaWlShGTHRmXaIl3CvOR4GfBsYEOE+yKlm1hdSQ7+y9Tiwp3+MmeHyWMLCVcdHJymWyADS92SCDxSgVwuTVfssqFlNQRrcqMbPsEuQoqwq45OEyaMIyx8esazMkwd0S0NWQUbSU=
-Received: from SN6PR2101MB1135.namprd21.prod.outlook.com (52.132.114.24) by
- SN6PR2101MB0941.namprd21.prod.outlook.com (52.132.114.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.4; Sun, 13 Oct 2019 00:30:21 +0000
-Received: from SN6PR2101MB1135.namprd21.prod.outlook.com
- ([fe80::1cc6:7b31:4489:4fbb]) by SN6PR2101MB1135.namprd21.prod.outlook.com
- ([fe80::1cc6:7b31:4489:4fbb%6]) with mapi id 15.20.2367.012; Sun, 13 Oct 2019
- 00:30:21 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "himadrispandya@gmail.com" <himadrispandya@gmail.com>
-Subject: [PATCH net-next v2] hv_sock: use HV_HYP_PAGE_SIZE for Hyper-V
- communication
-Thread-Topic: [PATCH net-next v2] hv_sock: use HV_HYP_PAGE_SIZE for Hyper-V
- communication
-Thread-Index: AQHVgV1l4vYfBVWVdUyd4ivx4Qf29w==
-Date:   Sun, 13 Oct 2019 00:30:21 +0000
-Message-ID: <1570926595-8877-1-git-send-email-mikelley@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR22CA0048.namprd22.prod.outlook.com
- (2603:10b6:300:69::34) To SN6PR2101MB1135.namprd21.prod.outlook.com
- (2603:10b6:805:4::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [131.107.159.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 965f8288-97b2-4d75-ec74-08d74f74881b
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: SN6PR2101MB0941:|SN6PR2101MB0941:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR2101MB094170C8C752C5E01A089B9CD7910@SN6PR2101MB0941.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 01894AD3B8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(376002)(136003)(396003)(39860400002)(189003)(199004)(26005)(14454004)(81166006)(102836004)(50226002)(8936002)(71190400001)(478600001)(71200400001)(86362001)(2201001)(110136005)(4720700003)(10290500003)(386003)(6506007)(52116002)(4326008)(186003)(99286004)(81156014)(256004)(305945005)(7736002)(2501003)(8676002)(476003)(486006)(1511001)(6436002)(5660300002)(2616005)(2906002)(66066001)(316002)(6116002)(3846002)(36756003)(64756008)(66556008)(66446008)(66476007)(66946007)(25786009)(22452003)(10090500001)(6486002)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0941;H:SN6PR2101MB1135.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kv4mqjfvFdszKLFEZpn4M8SzkiRl8K1Vd5FDJo+qwcYiXKbdeUPO8R5ln/Hf5uSkUT0JL59ShpK7j8evSoFK3rr7GGQ/FQ4g8IgT8MHHWUyGe1KYKyalMNoFHclUJtxNkb1fsISocM6L4FDLcEMMdeoDyXzyBYCPBMfVy7u4Ay6f1wvUGdUTlHcyGUzBh0KZd4jSkaoaYWACFHT3qPi9XF6MlATI4bjvwn1k2omvrFIwPdjwqMDP0keP+u0R2p23xjrM6NvzI/CM/97adv3IDK2txDAL7l+bqAdUNLkBPM2L/zTACJ1JrLLV517M/aHrXu6YWPS8uRJ1rCsz+7dg1bJuAsHSIYPXvsInhHxh8G/OKuK7FxsVg17f9OT/EWieZ8N0uDYQ3unMJd9J/sp5tqb2/e1pQAXy3N1LSOVE+nU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 965f8288-97b2-4d75-ec74-08d74f74881b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Oct 2019 00:30:21.6415
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0Vqvz5Z5c+zxQGd33iXL4uZC8uc7CfC9eoWSoTjki+q2PmIANFXHabyqCLyP0Yh+S5mH4cd7ZIYOlOUWVlS8cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0941
+        Sat, 12 Oct 2019 20:30:31 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:39794 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728285AbfJMAaa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 20:30:30 -0400
+Received: by mail-pl1-f202.google.com with SMTP id w11so8185687ply.6
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 17:30:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=EopVkWKYWV3u5jB7sSoC9RjSodCCxqS+Mci7sV9VxPY=;
+        b=hB2RBKC4tmA2pETKfBInZNzPFP/IbYhsVcQIrjFIiOakJ+v+2kExP0/S5mBY3wmz+c
+         IeQTPgfaT+/7KvPexhO6RXR/IaTPDsq9PqHl8bMR9fqKNb7+XteOsPERKl447uKDoDoF
+         AxssDGQIuGZFe9gczY9xP0Y9q1yPUDkPUAvoShoVjF0IlsqDulUnxV7vg3iEIKUZgHGl
+         1fZr33mvjsDQxkrixKFWCHOdKu7dZrnveqqoe7lOnjg3MMcGr0z3OHjbZ+wim9FU/25U
+         MiPngACOPZOA5f0DE61gTrF5GomMD2NbveTne+j6EWaq+bcI1Us3muiCABNLLaCSZP8h
+         9uWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=EopVkWKYWV3u5jB7sSoC9RjSodCCxqS+Mci7sV9VxPY=;
+        b=dJe8uH4NC8JwsUHh9G1iwbd+HcciTQKp+rWvVzjzdN6pI1Oa+3G1Cz1EvEY+ykH8Dg
+         ahBR+p63z7IFgvu6yx6gYqi/4xDxrz493leyJXnb++q85/qZ4HxM9VeNktIoK2R/Homg
+         gQd1Kr9JbW9Zg4cpYO2QyZm0LXdrfaskYziKBbl//VB2sF0mpcxmXKITY8o54FjIDolJ
+         qQYnJYsYOD2ce2NQrRDB96ULC7Z9YVqusF4c8XnDE17TULldKWY27U0nbd2Z7ALDyJU/
+         PMuDgtuP9zFlTE2smBBpnn6076KFIo16+g/azpW1+03ZQ5D/bqqbMBez64uyymVM8uTZ
+         bnMA==
+X-Gm-Message-State: APjAAAVTh1guL1GAavFprPnnyN3JVt+vGc7yXJubKuWBFuNDvdB8bxbB
+        zaKe7EZIXjUZiZpfGzY7HGfhcxH1Kla10JHRbA==
+X-Google-Smtp-Source: APXvYqxZ884rRhx2+SOp4Nn0XYcIPLL5V05SWv3kr04QLfHmTNd+KEvJk3uGH632D73P9rHnKVruD0tulCqNF0+7Bw==
+X-Received: by 2002:a63:3104:: with SMTP id x4mr22466310pgx.88.1570926629548;
+ Sat, 12 Oct 2019 17:30:29 -0700 (PDT)
+Date:   Sat, 12 Oct 2019 17:30:16 -0700
+Message-Id: <20191013003024.215429-1-almasrymina@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
+Subject: [PATCH v6 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
+From:   Mina Almasry <almasrymina@google.com>
+To:     mike.kravetz@oracle.com
+Cc:     shuah@kernel.org, almasrymina@google.com, rientjes@google.com,
+        shakeelb@google.com, gthelen@google.com, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org, aneesh.kumar@linux.vnet.ibm.com,
+        mkoutny@suse.com, Hillf Danton <hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himadri Pandya <himadrispandya@gmail.com>
+These counters will track hugetlb reservations rather than hugetlb
+memory faulted in. This patch only adds the counter, following patches
+add the charging and uncharging of the counter.
 
-Current code assumes PAGE_SIZE (the guest page size) is equal
-to the page size used to communicate with Hyper-V (which is
-always 4K). While this assumption is true on x86, it may not
-be true for Hyper-V on other architectures. For example,
-Linux on ARM64 may have PAGE_SIZE of 16K or 64K. A new symbol,
-HV_HYP_PAGE_SIZE, has been previously introduced to use when
-the Hyper-V page size is intended instead of the guest page size.
+Problem:
+Currently tasks attempting to allocate more hugetlb memory than is available get
+a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
+However, if a task attempts to allocate hugetlb memory only more than its
+hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
+but will SIGBUS the task when it attempts to fault the memory in.
 
-Make this code work on non-x86 architectures by using the new
-HV_HYP_PAGE_SIZE symbol instead of PAGE_SIZE, where appropriate.
-Also replace the now redundant PAGE_SIZE_4K with HV_HYP_PAGE_SIZE.
-The change has no effect on x86, but lays the groundwork to run
-on ARM64 and others.
+We have developers interested in using hugetlb_cgroups, and they have expressed
+dissatisfaction regarding this behavior. We'd like to improve this
+behavior such that tasks violating the hugetlb_cgroup limits get an error on
+mmap/shmget time, rather than getting SIGBUS'd when they try to fault
+the excess memory in.
 
-Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+The underlying problem is that today's hugetlb_cgroup accounting happens
+at hugetlb memory *fault* time, rather than at *reservation* time.
+Thus, enforcing the hugetlb_cgroup limit only happens at fault time, and
+the offending task gets SIGBUS'd.
+
+Proposed Solution:
+A new page counter named hugetlb.xMB.reservation_[limit|usage]_in_bytes. This
+counter has slightly different semantics than
+hugetlb.xMB.[limit|usage]_in_bytes:
+
+- While usage_in_bytes tracks all *faulted* hugetlb memory,
+reservation_usage_in_bytes tracks all *reserved* hugetlb memory and
+hugetlb memory faulted in without a prior reservation.
+
+- If a task attempts to reserve more memory than limit_in_bytes allows,
+the kernel will allow it to do so. But if a task attempts to reserve
+more memory than reservation_limit_in_bytes, the kernel will fail this
+reservation.
+
+This proposal is implemented in this patch series, with tests to verify
+functionality and show the usage. We also added cgroup-v2 support to
+hugetlb_cgroup so that the new use cases can be extended to v2.
+
+Alternatives considered:
+1. A new cgroup, instead of only a new page_counter attached to
+   the existing hugetlb_cgroup. Adding a new cgroup seemed like a lot of code
+   duplication with hugetlb_cgroup. Keeping hugetlb related page counters under
+   hugetlb_cgroup seemed cleaner as well.
+
+2. Instead of adding a new counter, we considered adding a sysctl that modifies
+   the behavior of hugetlb.xMB.[limit|usage]_in_bytes, to do accounting at
+   reservation time rather than fault time. Adding a new page_counter seems
+   better as userspace could, if it wants, choose to enforce different cgroups
+   differently: one via limit_in_bytes, and another via
+   reservation_limit_in_bytes. This could be very useful if you're
+   transitioning how hugetlb memory is partitioned on your system one
+   cgroup at a time, for example. Also, someone may find usage for both
+   limit_in_bytes and reservation_limit_in_bytes concurrently, and this
+   approach gives them the option to do so.
+
+Testing:
+- Added tests passing.
+- libhugetlbfs tests mostly passing, but some tests have trouble with and
+  without this patch series. Seems environment issue rather than code:
+  - Overall results:
+    ********** TEST SUMMARY
+    *                      2M
+    *                      32-bit 64-bit
+    *     Total testcases:    84      0
+    *             Skipped:     0      0
+    *                PASS:    66      0
+    *                FAIL:    14      0
+    *    Killed by signal:     0      0
+    *   Bad configuration:     4      0
+    *       Expected FAIL:     0      0
+    *     Unexpected PASS:     0      0
+    *    Test not present:     0      0
+    * Strange test result:     0      0
+    **********
+  - Failing tests:
+    - elflink_rw_and_share_test("linkhuge_rw") segfaults with and without this
+      patch series.
+    - LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes malloc (2M: 32):
+      FAIL    Address is not hugepage
+    - LD_PRELOAD=libhugetlbfs.so HUGETLB_RESTRICT_EXE=unknown:malloc
+      HUGETLB_MORECORE=yes malloc (2M: 32):
+      FAIL    Address is not hugepage
+    - LD_PRELOAD=libhugetlbfs.so HUGETLB_MORECORE=yes malloc_manysmall (2M: 32):
+      FAIL    Address is not hugepage
+    - GLIBC_TUNABLES=glibc.malloc.tcache_count=0 LD_PRELOAD=libhugetlbfs.so
+      HUGETLB_MORECORE=yes heapshrink (2M: 32):
+      FAIL    Heap not on hugepages
+    - GLIBC_TUNABLES=glibc.malloc.tcache_count=0 LD_PRELOAD=libhugetlbfs.so
+      libheapshrink.so HUGETLB_MORECORE=yes heapshrink (2M: 32):
+      FAIL    Heap not on hugepages
+    - HUGETLB_ELFMAP=RW linkhuge_rw (2M: 32): FAIL    small_data is not hugepage
+    - HUGETLB_ELFMAP=RW HUGETLB_MINIMAL_COPY=no linkhuge_rw (2M: 32):
+      FAIL    small_data is not hugepage
+    - alloc-instantiate-race shared (2M: 32):
+      Bad configuration: sched_setaffinity(cpu1): Invalid argument -
+      FAIL    Child 1 killed by signal Killed
+    - shmoverride_linked (2M: 32):
+      FAIL    shmget failed size 2097152 from line 176: Invalid argument
+    - HUGETLB_SHM=yes shmoverride_linked (2M: 32):
+      FAIL    shmget failed size 2097152 from line 176: Invalid argument
+    - shmoverride_linked_static (2M: 32):
+      FAIL shmget failed size 2097152 from line 176: Invalid argument
+    - HUGETLB_SHM=yes shmoverride_linked_static (2M: 32):
+      FAIL shmget failed size 2097152 from line 176: Invalid argument
+    - LD_PRELOAD=libhugetlbfs.so shmoverride_unlinked (2M: 32):
+      FAIL shmget failed size 2097152 from line 176: Invalid argument
+    - LD_PRELOAD=libhugetlbfs.so HUGETLB_SHM=yes shmoverride_unlinked (2M: 32):
+      FAIL    shmget failed size 2097152 from line 176: Invalid argument
+
+[1]: https://www.kernel.org/doc/html/latest/vm/hugetlbfs_reserv.html
+
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+Acked-by: Hillf Danton <hdanton@sina.com>
+
 ---
+ include/linux/hugetlb.h |  23 ++++++++-
+ mm/hugetlb_cgroup.c     | 111 ++++++++++++++++++++++++++++++----------
+ 2 files changed, 107 insertions(+), 27 deletions(-)
 
-Changes in v2:
-* Revised commit message and subject [Jakub Kicinski]
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 53fc34f930d08..9c49a0ba894d3 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -320,6 +320,27 @@ unsigned long hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
 
----
- net/vmw_vsock/hyperv_transport.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ #ifdef CONFIG_HUGETLB_PAGE
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
-ort.c
-index 261521d..d2929ea 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -13,15 +13,16 @@
- #include <linux/hyperv.h>
- #include <net/sock.h>
- #include <net/af_vsock.h>
-+#include <asm/hyperv-tlfs.h>
-=20
- /* Older (VMBUS version 'VERSION_WIN10' or before) Windows hosts have some
-- * stricter requirements on the hv_sock ring buffer size of six 4K pages. =
-Newer
-- * hosts don't have this limitation; but, keep the defaults the same for c=
-ompat.
-+ * stricter requirements on the hv_sock ring buffer size of six 4K pages.
-+ * hyperv-tlfs defines HV_HYP_PAGE_SIZE as 4K. Newer hosts don't have this
-+ * limitation; but, keep the defaults the same for compat.
-  */
--#define PAGE_SIZE_4K		4096
--#define RINGBUFFER_HVS_RCV_SIZE (PAGE_SIZE_4K * 6)
--#define RINGBUFFER_HVS_SND_SIZE (PAGE_SIZE_4K * 6)
--#define RINGBUFFER_HVS_MAX_SIZE (PAGE_SIZE_4K * 64)
-+#define RINGBUFFER_HVS_RCV_SIZE (HV_HYP_PAGE_SIZE * 6)
-+#define RINGBUFFER_HVS_SND_SIZE (HV_HYP_PAGE_SIZE * 6)
-+#define RINGBUFFER_HVS_MAX_SIZE (HV_HYP_PAGE_SIZE * 64)
-=20
- /* The MTU is 16KB per the host side's design */
- #define HVS_MTU_SIZE		(1024 * 16)
-@@ -54,7 +55,8 @@ struct hvs_recv_buf {
-  * ringbuffer APIs that allow us to directly copy data from userspace buff=
-er
-  * to VMBus ringbuffer.
-  */
--#define HVS_SEND_BUF_SIZE (PAGE_SIZE_4K - sizeof(struct vmpipe_proto_heade=
-r))
-+#define HVS_SEND_BUF_SIZE \
-+		(HV_HYP_PAGE_SIZE - sizeof(struct vmpipe_proto_header))
-=20
- struct hvs_send_buf {
- 	/* The header before the payload data */
-@@ -393,10 +395,10 @@ static void hvs_open_connection(struct vmbus_channel =
-*chan)
- 	} else {
- 		sndbuf =3D max_t(int, sk->sk_sndbuf, RINGBUFFER_HVS_SND_SIZE);
- 		sndbuf =3D min_t(int, sndbuf, RINGBUFFER_HVS_MAX_SIZE);
--		sndbuf =3D ALIGN(sndbuf, PAGE_SIZE);
-+		sndbuf =3D ALIGN(sndbuf, HV_HYP_PAGE_SIZE);
- 		rcvbuf =3D max_t(int, sk->sk_rcvbuf, RINGBUFFER_HVS_RCV_SIZE);
- 		rcvbuf =3D min_t(int, rcvbuf, RINGBUFFER_HVS_MAX_SIZE);
--		rcvbuf =3D ALIGN(rcvbuf, PAGE_SIZE);
-+		rcvbuf =3D ALIGN(rcvbuf, HV_HYP_PAGE_SIZE);
++enum {
++	/* Tracks hugetlb memory faulted in. */
++	HUGETLB_RES_USAGE,
++	/* Tracks hugetlb memory reserved. */
++	HUGETLB_RES_RESERVATION_USAGE,
++	/* Limit for hugetlb memory faulted in. */
++	HUGETLB_RES_LIMIT,
++	/* Limit for hugetlb memory reserved. */
++	HUGETLB_RES_RESERVATION_LIMIT,
++	/* Max usage for hugetlb memory faulted in. */
++	HUGETLB_RES_MAX_USAGE,
++	/* Max usage for hugetlb memory reserved. */
++	HUGETLB_RES_RESERVATION_MAX_USAGE,
++	/* Faulted memory accounting fail count. */
++	HUGETLB_RES_FAILCNT,
++	/* Reserved memory accounting fail count. */
++	HUGETLB_RES_RESERVATION_FAILCNT,
++	HUGETLB_RES_NULL,
++	HUGETLB_RES_MAX,
++};
++
+ #define HSTATE_NAME_LEN 32
+ /* Defines one hugetlb page size */
+ struct hstate {
+@@ -340,7 +361,7 @@ struct hstate {
+ 	unsigned int surplus_huge_pages_node[MAX_NUMNODES];
+ #ifdef CONFIG_CGROUP_HUGETLB
+ 	/* cgroup control files */
+-	struct cftype cgroup_files[5];
++	struct cftype cgroup_files[HUGETLB_RES_MAX];
+ #endif
+ 	char name[HSTATE_NAME_LEN];
+ };
+diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+index f1930fa0b445d..1ed4448ca41d3 100644
+--- a/mm/hugetlb_cgroup.c
++++ b/mm/hugetlb_cgroup.c
+@@ -25,6 +25,10 @@ struct hugetlb_cgroup {
+ 	 * the counter to account for hugepages from hugetlb.
+ 	 */
+ 	struct page_counter hugepage[HUGE_MAX_HSTATE];
++	/*
++	 * the counter to account for hugepage reservations from hugetlb.
++	 */
++	struct page_counter reserved_hugepage[HUGE_MAX_HSTATE];
+ };
+
+ #define MEMFILE_PRIVATE(x, val)	(((x) << 16) | (val))
+@@ -33,6 +37,14 @@ struct hugetlb_cgroup {
+
+ static struct hugetlb_cgroup *root_h_cgroup __read_mostly;
+
++static inline struct page_counter *
++hugetlb_cgroup_get_counter(struct hugetlb_cgroup *h_cg, int idx, bool reserved)
++{
++	if (reserved)
++		return &h_cg->reserved_hugepage[idx];
++	return &h_cg->hugepage[idx];
++}
++
+ static inline
+ struct hugetlb_cgroup *hugetlb_cgroup_from_css(struct cgroup_subsys_state *s)
+ {
+@@ -254,30 +266,33 @@ void hugetlb_cgroup_uncharge_cgroup(int idx, unsigned long nr_pages,
+ 	return;
+ }
+
+-enum {
+-	RES_USAGE,
+-	RES_LIMIT,
+-	RES_MAX_USAGE,
+-	RES_FAILCNT,
+-};
+-
+ static u64 hugetlb_cgroup_read_u64(struct cgroup_subsys_state *css,
+ 				   struct cftype *cft)
+ {
+ 	struct page_counter *counter;
++	struct page_counter *reserved_counter;
+ 	struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(css);
+
+ 	counter = &h_cg->hugepage[MEMFILE_IDX(cft->private)];
++	reserved_counter = &h_cg->reserved_hugepage[MEMFILE_IDX(cft->private)];
+
+ 	switch (MEMFILE_ATTR(cft->private)) {
+-	case RES_USAGE:
++	case HUGETLB_RES_USAGE:
+ 		return (u64)page_counter_read(counter) * PAGE_SIZE;
+-	case RES_LIMIT:
++	case HUGETLB_RES_RESERVATION_USAGE:
++		return (u64)page_counter_read(reserved_counter) * PAGE_SIZE;
++	case HUGETLB_RES_LIMIT:
+ 		return (u64)counter->max * PAGE_SIZE;
+-	case RES_MAX_USAGE:
++	case HUGETLB_RES_RESERVATION_LIMIT:
++		return (u64)reserved_counter->max * PAGE_SIZE;
++	case HUGETLB_RES_MAX_USAGE:
+ 		return (u64)counter->watermark * PAGE_SIZE;
+-	case RES_FAILCNT:
++	case HUGETLB_RES_RESERVATION_MAX_USAGE:
++		return (u64)reserved_counter->watermark * PAGE_SIZE;
++	case HUGETLB_RES_FAILCNT:
+ 		return counter->failcnt;
++	case HUGETLB_RES_RESERVATION_FAILCNT:
++		return reserved_counter->failcnt;
+ 	default:
+ 		BUG();
  	}
-=20
- 	ret =3D vmbus_open(chan, sndbuf, rcvbuf, NULL, 0, hvs_channel_cb,
-@@ -670,7 +672,7 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *vs=
-k, struct msghdr *msg,
- 	ssize_t ret =3D 0;
- 	ssize_t bytes_written =3D 0;
-=20
--	BUILD_BUG_ON(sizeof(*send_buf) !=3D PAGE_SIZE_4K);
-+	BUILD_BUG_ON(sizeof(*send_buf) !=3D HV_HYP_PAGE_SIZE);
-=20
- 	send_buf =3D kmalloc(sizeof(*send_buf), GFP_KERNEL);
- 	if (!send_buf)
---=20
-1.8.3.1
+@@ -291,6 +306,7 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
+ 	int ret, idx;
+ 	unsigned long nr_pages;
+ 	struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
++	bool reserved = false;
 
+ 	if (hugetlb_cgroup_is_root(h_cg)) /* Can't set limit on root */
+ 		return -EINVAL;
+@@ -304,9 +320,14 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
+ 	nr_pages = round_down(nr_pages, 1 << huge_page_order(&hstates[idx]));
+
+ 	switch (MEMFILE_ATTR(of_cft(of)->private)) {
+-	case RES_LIMIT:
++	case HUGETLB_RES_RESERVATION_LIMIT:
++		reserved = true;
++		/* Fall through. */
++	case HUGETLB_RES_LIMIT:
+ 		mutex_lock(&hugetlb_limit_mutex);
+-		ret = page_counter_set_max(&h_cg->hugepage[idx], nr_pages);
++		ret = page_counter_set_max(hugetlb_cgroup_get_counter(h_cg, idx,
++								      reserved),
++					   nr_pages);
+ 		mutex_unlock(&hugetlb_limit_mutex);
+ 		break;
+ 	default:
+@@ -320,18 +341,26 @@ static ssize_t hugetlb_cgroup_reset(struct kernfs_open_file *of,
+ 				    char *buf, size_t nbytes, loff_t off)
+ {
+ 	int ret = 0;
+-	struct page_counter *counter;
++	struct page_counter *counter, *reserved_counter;
+ 	struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
+
+ 	counter = &h_cg->hugepage[MEMFILE_IDX(of_cft(of)->private)];
++	reserved_counter =
++		&h_cg->reserved_hugepage[MEMFILE_IDX(of_cft(of)->private)];
+
+ 	switch (MEMFILE_ATTR(of_cft(of)->private)) {
+-	case RES_MAX_USAGE:
++	case HUGETLB_RES_MAX_USAGE:
+ 		page_counter_reset_watermark(counter);
+ 		break;
+-	case RES_FAILCNT:
++	case HUGETLB_RES_RESERVATION_MAX_USAGE:
++		page_counter_reset_watermark(reserved_counter);
++		break;
++	case HUGETLB_RES_FAILCNT:
+ 		counter->failcnt = 0;
+ 		break;
++	case HUGETLB_RES_RESERVATION_FAILCNT:
++		reserved_counter->failcnt = 0;
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
+@@ -357,37 +386,67 @@ static void __init __hugetlb_cgroup_file_init(int idx)
+ 	struct hstate *h = &hstates[idx];
+
+ 	/* format the size */
+-	mem_fmt(buf, 32, huge_page_size(h));
++	mem_fmt(buf, sizeof(buf), huge_page_size(h));
+
+ 	/* Add the limit file */
+-	cft = &h->cgroup_files[0];
++	cft = &h->cgroup_files[HUGETLB_RES_LIMIT];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.limit_in_bytes", buf);
+-	cft->private = MEMFILE_PRIVATE(idx, RES_LIMIT);
++	cft->private = MEMFILE_PRIVATE(idx, HUGETLB_RES_LIMIT);
++	cft->read_u64 = hugetlb_cgroup_read_u64;
++	cft->write = hugetlb_cgroup_write;
++
++	/* Add the reservation limit file */
++	cft = &h->cgroup_files[HUGETLB_RES_RESERVATION_LIMIT];
++	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_limit_in_bytes",
++		 buf);
++	cft->private = MEMFILE_PRIVATE(idx, HUGETLB_RES_RESERVATION_LIMIT);
+ 	cft->read_u64 = hugetlb_cgroup_read_u64;
+ 	cft->write = hugetlb_cgroup_write;
+
+ 	/* Add the usage file */
+-	cft = &h->cgroup_files[1];
++	cft = &h->cgroup_files[HUGETLB_RES_USAGE];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.usage_in_bytes", buf);
+-	cft->private = MEMFILE_PRIVATE(idx, RES_USAGE);
++	cft->private = MEMFILE_PRIVATE(idx, HUGETLB_RES_USAGE);
++	cft->read_u64 = hugetlb_cgroup_read_u64;
++
++	/* Add the reservation usage file */
++	cft = &h->cgroup_files[HUGETLB_RES_RESERVATION_USAGE];
++	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_usage_in_bytes",
++		 buf);
++	cft->private = MEMFILE_PRIVATE(idx, HUGETLB_RES_RESERVATION_USAGE);
+ 	cft->read_u64 = hugetlb_cgroup_read_u64;
+
+ 	/* Add the MAX usage file */
+-	cft = &h->cgroup_files[2];
++	cft = &h->cgroup_files[HUGETLB_RES_MAX_USAGE];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.max_usage_in_bytes", buf);
+-	cft->private = MEMFILE_PRIVATE(idx, RES_MAX_USAGE);
++	cft->private = MEMFILE_PRIVATE(idx, HUGETLB_RES_MAX_USAGE);
++	cft->write = hugetlb_cgroup_reset;
++	cft->read_u64 = hugetlb_cgroup_read_u64;
++
++	/* Add the MAX reservation usage file */
++	cft = &h->cgroup_files[HUGETLB_RES_RESERVATION_MAX_USAGE];
++	snprintf(cft->name, MAX_CFTYPE_NAME,
++		 "%s.reservation_max_usage_in_bytes", buf);
++	cft->private = MEMFILE_PRIVATE(idx, HUGETLB_RES_RESERVATION_MAX_USAGE);
+ 	cft->write = hugetlb_cgroup_reset;
+ 	cft->read_u64 = hugetlb_cgroup_read_u64;
+
+ 	/* Add the failcntfile */
+-	cft = &h->cgroup_files[3];
++	cft = &h->cgroup_files[HUGETLB_RES_FAILCNT];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.failcnt", buf);
+-	cft->private  = MEMFILE_PRIVATE(idx, RES_FAILCNT);
++	cft->private = MEMFILE_PRIVATE(idx, HUGETLB_RES_FAILCNT);
++	cft->write = hugetlb_cgroup_reset;
++	cft->read_u64 = hugetlb_cgroup_read_u64;
++
++	/* Add the reservation failcntfile */
++	cft = &h->cgroup_files[HUGETLB_RES_RESERVATION_FAILCNT];
++	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_failcnt", buf);
++	cft->private = MEMFILE_PRIVATE(idx, HUGETLB_RES_RESERVATION_FAILCNT);
+ 	cft->write = hugetlb_cgroup_reset;
+ 	cft->read_u64 = hugetlb_cgroup_read_u64;
+
+ 	/* NULL terminate the last cft */
+-	cft = &h->cgroup_files[4];
++	cft = &h->cgroup_files[HUGETLB_RES_NULL];
+ 	memset(cft, 0, sizeof(*cft));
+
+ 	WARN_ON(cgroup_add_legacy_cftypes(&hugetlb_cgrp_subsys,
+--
+2.23.0.700.g56cf767bdb-goog
