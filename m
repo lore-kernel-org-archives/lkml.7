@@ -2,94 +2,56 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31339C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11839C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA602064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB283206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbfJMWAV (ORCPT
+        id S1729581AbfJMWDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 18:00:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46956 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbfJMWAV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 18:00:21 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iJluT-0001eV-2g; Sun, 13 Oct 2019 22:00:17 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Michael Moese <mmoese@suse.de>,
-        linux-serial@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] 8250-men-mcb: fix error checking when get_num_ports returns -ENODEV
-Date:   Sun, 13 Oct 2019 23:00:16 +0100
-Message-Id: <20191013220016.9369-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 13 Oct 2019 18:03:38 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:50674 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727632AbfJMWDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 18:03:38 -0400
+Received: from i59f7e0c5.versanet.de ([89.247.224.197] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iJlxg-0004wp-SA; Mon, 14 Oct 2019 00:03:37 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Nickey Yang <nickey.yang@rock-chips.com>
+Cc:     hjc@rock-chips.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, seanpaul@chromium.org,
+        laurent.pinchart@ideasonboard.com
+Subject: Re: [PATCH 1/1] drm/rockchip: vop: add the definition of dclk_pol
+Date:   Mon, 14 Oct 2019 00:03:31 +0200
+Message-ID: <1778208.Lq4l6xoKsQ@phil>
+In-Reply-To: <20191010034452.20260-2-nickey.yang@rock-chips.com>
+References: <20191010034452.20260-1-nickey.yang@rock-chips.com> <20191010034452.20260-2-nickey.yang@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Am Donnerstag, 10. Oktober 2019, 05:44:52 CEST schrieb Nickey Yang:
+> Some VOP's (such as px30) dclk_pol bit is at the last.
+> So it is necessary to distinguish dclk_pol and pin_pol.
+> 
+> Signed-off-by: Nickey Yang <nickey.yang@rock-chips.com>
 
-The current checking for failure on the number of ports fails when
--ENODEV is returned from the call to get_num_ports. Fix this by making
-num_ports and loop counter i signed rather than unsigned ints. Also
-add check for num_ports being less than zero to check for -ve error
-returns.
+applied to drm-misc-next with Sandy's Reviewed-by
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: e2fea54e4592 ("8250-men-mcb: add support for 16z025 and 16z057")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/tty/serial/8250/8250_men_mcb.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks
+Heiko
 
-diff --git a/drivers/tty/serial/8250/8250_men_mcb.c b/drivers/tty/serial/8250/8250_men_mcb.c
-index 02c5aff58a74..8df89e9cd254 100644
---- a/drivers/tty/serial/8250/8250_men_mcb.c
-+++ b/drivers/tty/serial/8250/8250_men_mcb.c
-@@ -72,8 +72,8 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
- {
- 	struct serial_8250_men_mcb_data *data;
- 	struct resource *mem;
--	unsigned int num_ports;
--	unsigned int i;
-+	int num_ports;
-+	int i;
- 	void __iomem *membase;
- 
- 	mem = mcb_get_resource(mdev, IORESOURCE_MEM);
-@@ -88,7 +88,7 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
- 	dev_dbg(&mdev->dev, "found a 16z%03u with %u ports\n",
- 		mdev->id, num_ports);
- 
--	if (num_ports == 0 || num_ports > 4) {
-+	if (num_ports <= 0 || num_ports > 4) {
- 		dev_err(&mdev->dev, "unexpected number of ports: %u\n",
- 			num_ports);
- 		return -ENODEV;
-@@ -133,7 +133,7 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
- 
- static void serial_8250_men_mcb_remove(struct mcb_device *mdev)
- {
--	unsigned int num_ports, i;
-+	int num_ports, i;
- 	struct serial_8250_men_mcb_data *data = mcb_get_drvdata(mdev);
- 
- 	if (!data)
--- 
-2.20.1
 
