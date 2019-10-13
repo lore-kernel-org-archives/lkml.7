@@ -2,89 +2,62 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7E1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768C5C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F19206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C00206A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbfJMS5r convert rfc822-to-8bit (ORCPT
+        id S1729432AbfJMTAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 14:57:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44276 "EHLO mail.kernel.org"
+        Sun, 13 Oct 2019 15:00:18 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39228 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728786AbfJMS5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 14:57:47 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25CC4206A3;
-        Sun, 13 Oct 2019 18:57:46 +0000 (UTC)
-Date:   Sun, 13 Oct 2019 14:57:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDg8K2bmln?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [for-linus][PATCH 08/11] recordmcount: Fix nop_mcount()
- function
-Message-ID: <20191013145743.6fdef005@gandalf.local.home>
-In-Reply-To: <20191013174419.228868312@goodmis.org>
-References: <20191013174342.381019558@goodmis.org>
-        <20191013174419.228868312@goodmis.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        id S1728481AbfJMTAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 15:00:18 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2682F20031D;
+        Sun, 13 Oct 2019 21:00:16 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 23BF120014F;
+        Sun, 13 Oct 2019 21:00:16 +0200 (CEST)
+Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 761BC20624;
+        Sun, 13 Oct 2019 21:00:15 +0200 (CEST)
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     perex@perex.cz, tiwai@suse.com, broonie@kernel.org,
+        kuninori.morimoto.gx@renesas.com
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [RFC PATCH 0/2] Introduce for-dpcm DT property
+Date:   Sun, 13 Oct 2019 22:00:12 +0300
+Message-Id: <20191013190014.32138-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One problem with quilt, is that it doesn't like non-ASCII characters
-(I'm looking at you Kleine-König!)
+We need to be able to create DPCM links even if we have a single CPU DAI
+or just a dummy CPU DAI.
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Daniel Baluta (2):
+  ASoC: simple-card: Introduce force-dpcm DT property
+  ASoC: simple-card: Add documentation for force-dpcm property
 
-The removal of the longjmp code in recordmcount.c mistakenly made the
-return of make_nop() being negative an exit of nop_mcount(). It should
-not exit the routine, but instead just not process that part of the
-code. By exiting with an error code, it would cause the update of
-recordmcount to fail some files which would fail the build if ftrace
-function tracing was enabled.
+ .../devicetree/bindings/sound/simple-card.txt |  1 +
+ include/sound/simple_card_utils.h             |  4 +++
+ sound/soc/generic/simple-card-utils.c         | 17 +++++++++++++
+ sound/soc/generic/simple-card.c               | 25 +++++++++++++++++--
+ 4 files changed, 45 insertions(+), 2 deletions(-)
 
-Link: http://lkml.kernel.org/r/20191009110538.5909fec6@gandalf.local.home
-
-Reported-by: Uwe Kleine-önig <u.kleine-koenig@pengutronix.de>
-Tested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Fixes: 3f1df12019f3 ("recordmcount: Rewrite error/success handling")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- scripts/recordmcount.h | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index 8f0a278ce0af..74eab03e31d4 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -389,11 +389,8 @@ static int nop_mcount(Elf_Shdr const *const relhdr,
- 			mcountsym = get_mcountsym(sym0, relp, str0);
- 
- 		if (mcountsym == Elf_r_sym(relp) && !is_fake_mcount(relp)) {
--			if (make_nop) {
-+			if (make_nop)
- 				ret = make_nop((void *)ehdr, _w(shdr->sh_offset) + _w(relp->r_offset));
--				if (ret < 0)
--					return -1;
--			}
- 			if (warn_on_notrace_sect && !once) {
- 				printf("Section %s has mcount callers being ignored\n",
- 				       txtname);
 -- 
-2.23.0
+2.17.1
 
