@@ -2,214 +2,103 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99FAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 10:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E377C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 11:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7080F20673
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 10:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1570962937;
-	bh=3ZjaBTaYXUcPUDxAy0BfXUYvrjYnsjBcR+Ge1nGVxew=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FQcPg+hwyKX5pD3EJGPEJEQLWxv+TzFsYp70MoF/HowI6S3z2KeF31R4FXHdlFrZh
-	 g8ZJRnRB8pUz528c1oL2lJPZ6Y7YjeACto6W1jpGFDlXxzYfIB3OAG62tLkH0VYbKI
-	 a4xDksvruNvAbNzjhbctfRxvEj879i0kIDc3foPk=
+	by mail.kernel.org (Postfix) with ESMTP id 6472E207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 11:40:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uhxJhoaS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfJMKeV (ORCPT
+        id S1728991AbfJMLkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 06:34:21 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:47227 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728620AbfJMKeV (ORCPT
+        Sun, 13 Oct 2019 07:40:52 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39275 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbfJMLkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 06:34:21 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iJbCa-0000M3-CM; Sun, 13 Oct 2019 12:34:16 +0200
-Date:   Sun, 13 Oct 2019 11:34:15 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Remi Pommarel <repk@triplefau.lt>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link
- training flag
-Message-ID: <20191013113415.3c653526@why>
-In-Reply-To: <20191001080546.GI42880@e119886-lin.cambridge.arm.com>
-References: <20190522213351.21366-3-repk@triplefau.lt>
-        <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
-        <20190930165230.GA12568@voidbox>
-        <20191001080546.GI42880@e119886-lin.cambridge.arm.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: andrew.murray@arm.com, repk@triplefau.lt, ellierevves@gmail.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Sun, 13 Oct 2019 07:40:52 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v4so8768123pff.6
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 04:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=JJesClvZPI57LiKAGH+mfL4LvGX/K6XZEsgwxovyzfw=;
+        b=uhxJhoaSSS5T1/0ebEMzWzw7K6b7OXDjdOgSIcbOIkJTJ0I81TmRPxdNTiOG0AQe7o
+         lyjnfkJkE4PAOv5uaLWlBGxOZpdnxbKuRWc1Yw/LNOHo5P6zYTue7Lmu60CvUG0Ihzwf
+         Aol58rW3yf+M7+tDeNidJ5FFuGM3hQ1iV7C+lziFhbIUs3iTzjmGegkZnOVt9d6tlY/b
+         k+3eJAroNZ3EPIbDVHt05eCeNLhSJ75acTNxMLeBhMa5/KqctdGSZkYzyPCPy+DD6A0s
+         xn1cBT/dZ9lEl9j46KsBLRBZXoaQbbFrXQ12/0IX+asRKYpzRI/Eac3F0Ug3g8DBKPtN
+         m3Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JJesClvZPI57LiKAGH+mfL4LvGX/K6XZEsgwxovyzfw=;
+        b=PTwcI4aJKpVHH7bM38I1uNpvnV2tceoKdluqGjt4dIF4sbalhwn2J5d6Gm9jhcm7w/
+         FwsS0zOgEEc0HO61OtktiOZgrbPHJPmdHxbKuWSc9m49A3WVBlYRy65Ztp8bq3dT2tdy
+         2dejhFAcBxJzwVcC7xw2raZldDFsImq3hiIT6g1q8LQWqnKqdr5WxkS8RxEXdAhQb96F
+         fZquYE6ZYqJRxoIKQWu3VNsEx1bltDKDCED0p7XDarxm8r+8q5p1qy85lSQs/zY9k0r7
+         MAsWYWz1PILX5UOj6RZGJu93q1kd1jkjD/DA/3BP4Tgq0EaDWt17roISLNZqSKFt4KER
+         SpMQ==
+X-Gm-Message-State: APjAAAV7U+jYB7UeEw/f/srPhm1XlwpYD/TeCRpRPQO4YEGU6fIuprrD
+        JT/hmijo+y0T0LfznFD7IJ/Z
+X-Google-Smtp-Source: APXvYqxIeS2C0iQ5M1sifVwuU36Fj7ZdRpllo3pk4Sj4fF4++WdHr5Vc/z9REKwAGjsy3h12qGMzNA==
+X-Received: by 2002:a63:d246:: with SMTP id t6mr27729211pgi.5.1570966849575;
+        Sun, 13 Oct 2019 04:40:49 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:8e:4f53:b957:652b:7622:f311])
+        by smtp.gmail.com with ESMTPSA id g12sm23165736pfb.97.2019.10.13.04.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2019 04:40:48 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, orsonzhai@gmail.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/4] Add GPIO support for RDA8810PL SoC
+Date:   Sun, 13 Oct 2019 17:10:33 +0530
+Message-Id: <20191013114037.9845-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Oct 2019 09:05:46 +0100
-Andrew Murray <andrew.murray@arm.com> wrote:
+Hello,
 
-Hi Lorenzo,
+This patchset adds GPIO controller support for RDA Micro RDA8810PL
+SoC. This SoC has 4 GPIO controllers and each handles 32 GPIOs. Except
+GPIOC, all controllers are capable of generating edge/level interrupts
+from first 8 GPIO lines. The pinctrl part for this SoC will be added
+later.
 
-> On Mon, Sep 30, 2019 at 06:52:30PM +0200, Remi Pommarel wrote:
-> > On Mon, Sep 30, 2019 at 04:40:18PM +0100, Andrew Murray wrote:  
-> > > On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:  
-> > > > Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
-> > > > implemented and does not reflect the actual link training state (the
-> > > > flag is always set to 0). In order to support link re-training feature
-> > > > this flag has to be emulated. The Link Training and Status State
-> > > > Machine (LTSSM) flag in Aardvark LMI config register could be used as
-> > > > a link training indicator. Indeed if the LTSSM is in L0 or upper state
-> > > > then link training has completed (see [1]).
-> > > > 
-> > > > Unfortunately because after asking a link retraining it takes a while
-> > > > for the LTSSM state to become less than 0x10 (due to L0s to recovery
-> > > > state transition delays), LTSSM can still be in L0 while link training
-> > > > has not finished yet. So this waits for link to be in recovery or lesser
-> > > > state before returning after asking for a link retrain.
-> > > > 
-> > > > [1] "PCI Express Base Specification", REV. 4.0
-> > > >     PCI Express, February 19 2014, Table 4-14
-> > > > 
-> > > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > > > ---
-> > > > Changes since v1:
-> > > >   - Rename retraining flag field
-> > > >   - Fix DEVCTL register writing
-> > > > 
-> > > > Changes since v2:
-> > > >   - Rewrite patch logic so it is more legible
-> > > > 
-> > > > Please note that I will unlikely be able to answer any comments from May
-> > > > 24th to June 10th.
-> > > > ---
-> > > >  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
-> > > >  1 file changed, 28 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > index 134e0306ff00..8803083b2174 100644
-> > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > @@ -180,6 +180,8 @@
-> > > >  #define LINK_WAIT_MAX_RETRIES		10
-> > > >  #define LINK_WAIT_USLEEP_MIN		90000
-> > > >  #define LINK_WAIT_USLEEP_MAX		100000
-> > > > +#define RETRAIN_WAIT_MAX_RETRIES	10
-> > > > +#define RETRAIN_WAIT_USLEEP_US		2000
-> > > >  
-> > > >  #define MSI_IRQ_NUM			32
-> > > >  
-> > > > @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
-> > > >  	return -ETIMEDOUT;
-> > > >  }
-> > > >  
-> > > > +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
-> > > > +{
-> > > > +	size_t retries;
-> > > > +
-> > > > +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
-> > > > +		if (!advk_pcie_link_up(pcie))
-> > > > +			break;
-> > > > +		udelay(RETRAIN_WAIT_USLEEP_US);
-> > > > +	}
-> > > > +}
-> > > > +
-> > > >  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-> > > >  {
-> > > >  	u32 reg;
-> > > > @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
-> > > >  		return PCI_BRIDGE_EMUL_HANDLED;
-> > > >  	}
-> > > >  
-> > > > +	case PCI_EXP_LNKCTL: {
-> > > > +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
-> > > > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
-> > > > +			~(PCI_EXP_LNKSTA_LT << 16);  
-> > > 
-> > > The commit message says "the flag is always set to 0" - therefore I guess
-> > > you don't *need* to mask out the LT bit here? I assume this is just
-> > > belt-and-braces but thought I'd check incase I've misunderstood or if your
-> > > commit message is inaccurate.
-> > > 
-> > > In any case masking out the bit (or adding a comment) makes this code more
-> > > readable as the reader doesn't need to know what the hardware does with this
-> > > bit.  
-> > 
-> > Actually vendor eventually responded that the bit was reserved, but
-> > during my tests it remains to 0.
-> > 
-> > So yes I am masking this out mainly for belt-and-braces and legibility.  
-> 
-> Thanks for the clarification.
-> 
-> >   
-> > > > +		if (!advk_pcie_link_up(pcie))
-> > > > +			val |= (PCI_EXP_LNKSTA_LT << 16);
-> > > > +		*value = val;
-> > > > +		return PCI_BRIDGE_EMUL_HANDLED;
-> > > > +	}
-> > > > +
-> > > >  	case PCI_CAP_LIST_ID:
-> > > >  	case PCI_EXP_DEVCAP:
-> > > >  	case PCI_EXP_DEVCTL:
-> > > >  	case PCI_EXP_LNKCAP:
-> > > > -	case PCI_EXP_LNKCTL:
-> > > >  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
-> > > >  		return PCI_BRIDGE_EMUL_HANDLED;
-> > > >  	default:
-> > > > @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
-> > > >  
-> > > >  	switch (reg) {
-> > > >  	case PCI_EXP_DEVCTL:
-> > > > +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> > > > +		break;  
-> > > 
-> > > Why is this here?
-> > >   
-> > 
-> > Before PCI_EXP_DEVCTL and PCI_EXP_LNKCTL were doing the same thing, but
-> > as now PCI_EXP_LNKCTL does extra things (i.e. wait for link to
-> > successfully retrain), they do have different behaviours.
-> > 
-> > So this is here so PCI_EXP_DEVCTL keeps its old behaviour and do not
-> > wait for link retrain in case an unrelated (PCI_EXP_LNKCTL_RL) bit is
-> > set.  
-> 
-> Oh yes, of course!
-> 
-> Thanks and:
-> 
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+This driver has been validated on 96Boards OrangePi i96 board from
+Shenzhen Xunlong Software Co.,Limited with libgpiod.
 
-Is there any hope for this workaround to make it into 5.4?
+Thanks,
+Mani
 
-My EspressoBin (which is blessed with this joke of a PCIe controller)
-is pretty much a doorstop without it and dies with a SError early at
-boot.
+Manivannan Sadhasivam (4):
+  dt-bindings: gpio: Add devicetree binding for RDA Micro GPIO
+    controller
+  gpio: Add RDA Micro GPIO controller support
+  ARM: dts: Add RDA8810PL GPIO controllers
+  MAINTAINERS: Add entry for RDA Micro GPIO driver and binding
 
-FWIW:
+ .../devicetree/bindings/gpio/gpio-rda.yaml    |  50 +++
+ MAINTAINERS                                   |   2 +
+ arch/arm/boot/dts/rda8810pl.dtsi              |  48 +++
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-rda.c                       | 334 ++++++++++++++++++
+ 6 files changed, 443 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+ create mode 100644 drivers/gpio/gpio-rda.c
 
-Tested-by: Marc Zyngier <maz@kernel.org>
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
