@@ -2,212 +2,120 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA55C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A394C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 056732064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C772064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 09:04:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QvbD271P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfJMJCs (ORCPT
+        id S1728812AbfJMJDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 05:02:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37542 "EHLO mx1.redhat.com"
+        Sun, 13 Oct 2019 05:03:36 -0400
+Received: from mout.web.de ([212.227.15.3]:44311 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbfJMJCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 05:02:48 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AA60537E80
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 09:02:47 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id w2so7054889wrn.4
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 02:02:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=8Io2fFp+LSlEu5IIHdAyNIkb3kMUT1TQFKgMauDHggc=;
-        b=W7peEoJPMetbLUvN57zVaAq0CUEYZ/NkFtvmE73SYsbdcTgiLD7ugNwo5d8VOHi8fQ
-         fAfjKlFMQJEkTN5Whcb9g7rX+BbJTzS/P4mQBPVGE80TOtcZIO6nc4hJ95LJq8TQlaA1
-         tI9Etn3fZ0iyDYfDvwU/pt1fcOAPnVGkdLI4zrJLr2nGOzNDPhLwefY0gTlHQhrJPTuX
-         VOTdFUlJy0clEE1VkcjYXJvvqhPo7wYsrbMXTVRjJwPTwsILanNLm4qE14TONxps3c8m
-         2tfhjWpKwRL8d1MxR/PxJ6Elc94nSr/GJ6oPfS4+Y1tPIvvScQYe623uKrrnyxImLaVJ
-         CFEQ==
-X-Gm-Message-State: APjAAAUxOm9QHl+4+uP+eu+xdfW7QIBcVBfgH7qdYVKXGRsyoS8+7ydD
-        fercVJyOFVK3a3dn4zQ2OP4Tj0gWJJClQgZCPb9qFBT64mHp0GQZJTgpEacb5mUN34L9pW9Nhgw
-        vHZ4kaBd261TBQR7UYJN3a+HH
-X-Received: by 2002:adf:f68f:: with SMTP id v15mr20391561wrp.234.1570957366320;
-        Sun, 13 Oct 2019 02:02:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwKAheZffHkSCPWMhS6Cg1JEcvChcdw7s3Ft8V5LOHraZQFHzUpf5Zi6v2gCGKg53hSBohZcg==
-X-Received: by 2002:adf:f68f:: with SMTP id v15mr20391527wrp.234.1570957366037;
-        Sun, 13 Oct 2019 02:02:46 -0700 (PDT)
-Received: from vitty.brq.redhat.com ([95.82.135.110])
-        by smtp.gmail.com with ESMTPSA id f18sm11958383wmh.43.2019.10.13.02.02.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Oct 2019 02:02:45 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 3/5] x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
-In-Reply-To: <1570439071-9814-4-git-send-email-zhenzhong.duan@oracle.com>
-References: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com> <1570439071-9814-4-git-send-email-zhenzhong.duan@oracle.com>
-Date:   Sun, 13 Oct 2019 11:02:44 +0200
-Message-ID: <87o8yl587f.fsf@vitty.brq.redhat.com>
+        id S1728564AbfJMJDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 05:03:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1570957412;
+        bh=/JJFbFxFpJrgt1MfB1+HlUCk144HJzeGsZ82FMM6IMw=;
+        h=X-UI-Sender-Class:From:Subject:To:Cc:Date;
+        b=QvbD271PhVgYqWNLqHU0fg6xi+XVo+jTS/b+UHmTQn+3xBLOShASoEVhKgg8CQCMZ
+         JrA0end3XYxHStzGBd+xSCWSf4LeggpnnnWKDX50dFhCFkL9pq4FfexwdisEY6tS5s
+         ylE5yKrta/vQnqwZ3tb0PcdVCA0Ky/CgXsmg5a0c=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.10] ([95.157.55.156]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MWuiC-1iXnFP3geq-00W1Yx; Sun, 13
+ Oct 2019 11:03:31 +0200
+From:   Jan Kiszka <jan.kiszka@web.de>
+Subject: [PATCH] tools/virtio: Fix build
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <4b686914-075b-a0a9-c97b-9def82ee0336@web.de>
+Date:   Sun, 13 Oct 2019 11:03:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ZUTxknunf3G6Pgr3vAD78vi2eR7WdAXKm8qBbLV5J2t/U4o/4EZ
+ TZ6oSJMqVZN1Rm1Xnf4Vwx/O9ojkaI8y5NJmLT1fwtdJtkwS9txiGev7dCd8/2y4ECRTtwQ
+ z04XbSrZje/K+9Z0z31XxJub0b6k32mvx6LiSpteJ4IWLEianalNbu8aN5qmPaLh4PvrzZa
+ ig6WmprlS1YhpLl3QcjHQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7nlS2ZaQecY=:08CSwSG22S349Q6b6tO8u6
+ rdaiZ7Q4U9RWlP1P4AdTDwfQVBpkZISmu3BOb+eUDH/TaKaNewNeXTsbuaBJ33t555KTe2Yd5
+ veocItfCWbO3siPsFa3C6QBbeuGz7sbaR+IsogHABwlrRswYGlYWHiJTvskJOfkY6Q8BPaNnA
+ KfIvgw08/iTnVHXCnBX5wF7+Q6mxb2eJPObAdKLvGyCmizrwYirjJc3SItHJEjehGAOgz8zo2
+ OR4sA4gVcW8gWYDy0M/yM/h+3RmgPws0gGF+dq6QkTKrMx/CLWdGXTv2tRLsvBTzCvar1TLtS
+ ZgY8Fa03EG1hJXWKZarAiYnPdxMsfzmo/aYVBlukvhwneADSi1pNXsWf4LpMedeMcRx9a+fSi
+ f3e/tVcTXwmH5SBvKihON99ZTP9w5E+4wPdz1jqdNkkWFC8bXsLIt14VjcEZS0MiMifqeeDOm
+ 0m0lS3gMJd7zXfUjAZ1Tl9bloTvv7YaqJdHyA3Qh+8CxnEeinioCxcv9ZhlYHkKvOWnL9ubq7
+ wrKXpfFP+p+HJfx4jsSu52Sz9S3sxa9w6ZeB3GBIbcdHuxSJncSsJDHED6MwptZKJTsgNQ//N
+ NNBTIXO55iyvd18IYqkiw3Q0skVvqfiFAUCqI9VLnSamjBx+iwIrlopxUNrf8gs4QJmiK5fv4
+ yQjre/RtXOqszthoWG84RdhyQm0zQfRbP+t0UqsJv7Aa6bWya9rEMhaySSrqp2UiEHq6g+2fY
+ ioWkZZkQv7KcAzaRy42E3MZRMt59ucL4z3PGzqGtNSvdw6aaY6PBwaByo3I00ALQDFTISx+9i
+ sFvRksKk5B5XCt3KjcRoSjLlyviJkkiEYZypOXq4OUnOEXwHgu1uvB4b7racTk5PMxVwIb5hq
+ TQbicqdvS+5zw0EYw+UGjZUIZjmJX+4zhcAdapmdrfwS9YFbrXG+RBK1aJjl8F1bGqcjl5QfS
+ 30qtKq3InUyZlAyZdEL/WFN7geUmORPuIuUkEOSr73Sv8p4z1ZEoucHWc2fNQFPILPNxgTCJ+
+ 3xV3vpYeyqMj3fWuT9S8vgJp/69JbuM1WZ5LW/sN5Yhvvf7GYVRBSgFq++PYxzswIdtCqCWZq
+ jt1PDcHmB1g1eLcHD0/Vv5cyqCVUwbkK7pSJVj4/rki3JRi7Ru7U6LHb5zmntyT9Eg7X9nJ/3
+ lWNk1Saag3CPODdOf7dMKyuW/UhbNvTuVe49WL8hjEPxPAlDFedtGsme2kNVtkX7sFuA24Txx
+ Vzb04B4990YG4zitAZnvFLJFl6NtY7M99aZiC5xYWa8VoDGwLdZsMqNvXA+k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhenzhong Duan <zhenzhong.duan@oracle.com> writes:
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-> There are cases where a guest tries to switch spinlocks to bare metal
-> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
-> "hv_nopvspin" on HYPER_V).
->
-> That feature is missed on KVM, add a new parameter "nopvspin" to disable
-> PV spinlocks for KVM guest.
->
-> The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
-> parameters in future patches.
->
-> Define variable nopvsin as global because it will be used in future
-> patches as above.
->
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krcmar <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Wanpeng Li <wanpengli@tencent.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will@kernel.org>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |  5 +++++
->  arch/x86/include/asm/qspinlock.h                |  1 +
->  arch/x86/kernel/kvm.c                           | 21 +++++++++++++++++----
->  kernel/locking/qspinlock.c                      |  7 +++++++
->  4 files changed, 30 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c7ac2f3..89d77ea 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5330,6 +5330,11 @@
->  			as generic guest with no PV drivers. Currently support
->  			XEN HVM, KVM, HYPER_V and VMWARE guest.
->  
-> +	nopvspin	[X86,KVM]
-> +			Disables the qspinlock slow path using PV optimizations
-> +			which allow the hypervisor to 'idle' the guest on lock
-> +			contention.
-> +
->  	xirc2ps_cs=	[NET,PCMCIA]
->  			Format:
->  			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
-> diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
-> index 444d6fd..d86ab94 100644
-> --- a/arch/x86/include/asm/qspinlock.h
-> +++ b/arch/x86/include/asm/qspinlock.h
-> @@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
->  extern void __pv_init_lock_hash(void);
->  extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
->  extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
-> +extern bool nopvspin;
->  
->  #define	queued_spin_unlock queued_spin_unlock
->  /**
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index ef836d6..6e14bd4 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -825,18 +825,31 @@ __visible bool __kvm_vcpu_is_preempted(long cpu)
->   */
->  void __init kvm_spinlock_init(void)
->  {
-> -	/* Does host kernel support KVM_FEATURE_PV_UNHALT? */
-> -	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
-> +	/*
-> +	 * Disable PV qspinlocks if host kernel doesn't support
-> +	 * KVM_FEATURE_PV_UNHALT feature or there is only 1 vCPU.
-> +	 * virt_spin_lock_key is enabled to avoid lock holder
-> +	 * preemption issue.
-> +	 */
-> +	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT) ||
-> +	    num_possible_cpus() == 1) {
-> +		pr_info("PV spinlocks disabled\n");
+Various changes in the recent kernel versions broke the build due to
+missing function and header stubs.
 
-Why don't we need static_branch_disable(&virt_spin_lock_key) here?
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+=2D--
+ tools/virtio/crypto/hash.h       | 0
+ tools/virtio/linux/dma-mapping.h | 2 ++
+ tools/virtio/linux/kernel.h      | 2 ++
+ 3 files changed, 4 insertions(+)
+ create mode 100644 tools/virtio/crypto/hash.h
 
-Also, as you're printing the exact reason for PV spinlocks disablement
-in other cases, I'd suggest separating "no host support" and "single
-CPU" cases.
+diff --git a/tools/virtio/crypto/hash.h b/tools/virtio/crypto/hash.h
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/tools/virtio/linux/dma-mapping.h b/tools/virtio/linux/dma-map=
+ping.h
+index f91aeb5fe571..db96cb4bf877 100644
+=2D-- a/tools/virtio/linux/dma-mapping.h
++++ b/tools/virtio/linux/dma-mapping.h
+@@ -29,4 +29,6 @@ enum dma_data_direction {
+ #define dma_unmap_single(...) do { } while (0)
+ #define dma_unmap_page(...) do { } while (0)
 
->  		return;
-> +	}
->  
->  	if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
-> +		pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME hints.\n");
->  		static_branch_disable(&virt_spin_lock_key);
->  		return;
->  	}
->  
-> -	/* Don't use the pvqspinlock code if there is only 1 vCPU. */
-> -	if (num_possible_cpus() == 1)
-> +	if (nopvspin) {
-> +		pr_info("PV spinlocks disabled forced by \"nopvspin\" parameter.\n");
++#define dma_max_mapping_size(d)	0
++
+ #endif
+diff --git a/tools/virtio/linux/kernel.h b/tools/virtio/linux/kernel.h
+index 6683b4a70b05..ccf321173210 100644
+=2D-- a/tools/virtio/linux/kernel.h
++++ b/tools/virtio/linux/kernel.h
+@@ -141,4 +141,6 @@ static inline void free_page(unsigned long addr)
+ #define list_for_each_entry(a, b, c) while (0)
+ /* end of stubs */
 
-Nit: to make it sound better a comma is missing between 'disabled' and
-'forced', or
++#define xen_domain() 0
++
+ #endif /* KERNEL_H */
+=2D-
+2.16.4
 
-"PV spinlocks forcefully disabled by ..." if you prefer.
-
-> +		static_branch_disable(&virt_spin_lock_key);
->  		return;
-> +	}
-> +
-> +	pr_info("PV spinlocks enabled\n");
->  
->  	__pv_init_lock_hash();
->  	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
-> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-> index 2473f10..75193d6 100644
-> --- a/kernel/locking/qspinlock.c
-> +++ b/kernel/locking/qspinlock.c
-> @@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
->  #include "qspinlock_paravirt.h"
->  #include "qspinlock.c"
->  
-> +bool nopvspin __initdata;
-> +static __init int parse_nopvspin(char *arg)
-> +{
-> +	nopvspin = true;
-> +	return 0;
-> +}
-> +early_param("nopvspin", parse_nopvspin);
->  #endif
-
--- 
-Vitaly
