@@ -2,109 +2,126 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9194AC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 17:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09FBECE587
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 17:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE06206A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 17:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2B7206A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 17:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="aaz/dotn"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="MArB/yKU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbfJMRCc (ORCPT
+        id S1729346AbfJMRG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 13:02:32 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45910 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfJMRCc (ORCPT
+        Sun, 13 Oct 2019 13:06:29 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42173 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728590AbfJMRG2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 13:02:32 -0400
-Received: by mail-io1-f66.google.com with SMTP id c25so32306539iot.12
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 10:02:31 -0700 (PDT)
+        Sun, 13 Oct 2019 13:06:28 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c195so10161770lfg.9
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 10:06:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y5EXXBAwwQtPJ53xui2dWiC39EIVV1N/CWUXrjlPr7o=;
-        b=aaz/dotn+umYNxbMf0N27lTns2rUEnRXr3ncyAS8unjQPXipinDv30U1G3pR/NaY5x
-         5TQlgYYDRtl50mIFY6g/ZFU/rETQ0X9RMjm6VgXusBevN254jSYYkPM2GM7E7BGBDJCc
-         RmwkhOVMrLkI1mZ4BKvd/MXUBhijYnSSgj1vc=
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=xLbu07FbZMOUGLOKpbGSEAHgMuRzWgnJgVeR/okx9Mc=;
+        b=MArB/yKUcZ+UCarFvdsudTlFvo77FpDS6Dg/7V4q6QeKuqqTXC5dH4r6KEcvmp8QZ0
+         wNfnzEhhuC4ERBu5zrS0csbx0oCaoXKYWnkluTtT+ZgGLeyjLKxXM3aL30cCHrWgkK46
+         AVTbNP0ummZUfg8olJaNY28IZzs1oDEwDbbNFcFS6Qt4+vmlmfFXOEiiB45TqinlYihF
+         1sgo/X8It1OREo9KD000bkEOZkD6FemblnyUwEf+NSaFPwpAy8pblpIH77NpEp6qfNti
+         2r41cODj75jSq3SdtrHf4PpxSBTm8qY+dflhsUzIYl70+wFyKF5QARDp+1BhR/4SBiap
+         ULqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y5EXXBAwwQtPJ53xui2dWiC39EIVV1N/CWUXrjlPr7o=;
-        b=qLGRe8gwkXlQymRGYtAFbcjacsKWMAcgRtAjX5JOCylk+T2s5V7O96QTDPEANVmOEM
-         73v6zEMktmYna6Z6jQWjqsuItDsh+6MmpRxhl1ZhzT7Qe2Qz1NKNkeV6005NGTmcoL0i
-         4pOdQl12YFhrLBC9V0FK69HARmZKK4EUXcgOdG2T83xIRLi6KYHKrjvsx238aUtQwGNx
-         ouARlQoDUnQSSS9LjKtEdwnUpWIpLNHVcRFgR3N7L8dIItO6pIYQTD2dHrXMMEmVjE2r
-         V+IA5UDqz26dbTNNpPQLPH+2AiO25FxaDkxtOWgdVrxB2uAnN9kLbv1XqagkEOwJkJPD
-         W++Q==
-X-Gm-Message-State: APjAAAWjscn0p1y+hdS4t/Q7WKpjnSy4HfyhNPlr3PYum2ELKHUARGHO
-        lo2kzF0BW8Xd5tgMINEZPieaioDZEQrjVhmmSDz47w==
-X-Google-Smtp-Source: APXvYqxe8O/zqzfE+BE/bWBaXmZwc8ddmkzF2zTRQsw5hvZGzCCUSKkZI14FxXesaHp6rT1xlHYB8wKYoOJ+CQ4U80w=
-X-Received: by 2002:a6b:5c0f:: with SMTP id z15mr23291130ioh.173.1570986150676;
- Sun, 13 Oct 2019 10:02:30 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xLbu07FbZMOUGLOKpbGSEAHgMuRzWgnJgVeR/okx9Mc=;
+        b=Mp6L+FfWRxxJE0d8Su6FTnbH1uW7eUhV8QuMuguUmlNRUA+bpXxHpKEUNMEvVhFbMl
+         hEpnMXzGsjhu99xvsjbV+yljwd2QJSAumYYjZMZRXtCmb0DU2oYSFJjwJitciLbv96k1
+         oRxjeY+1o0CY9e/uUFSdhq7ag/rtl4kx4Tm8HksUs7h2f8I1YJhhbUi12sXdddqwU2dg
+         b8lPQ844Gd9MCg57pxW7lYIG12zAy8FFUn5rk3be3/XoMF4Aop4MH4pJK/Sqs5LlnO35
+         00+Am+wYFo6c4ipbu3IJ4Cq8d26ejNLe5UtXk4dVmQSbY053JIHzSHLkUCRLzasDMRPA
+         9Tkw==
+X-Gm-Message-State: APjAAAUeOzZVXeAqrLrKole3h2MTk1m6B0Kb6gAVPizgAYk9LVS+z4zA
+        DffU05g+z+fbmPcd/TOGoHb+LQ==
+X-Google-Smtp-Source: APXvYqyj/4oJ7UHf4MCXDb1qZZMhTQN5/EWewkQNrQNZz5L8TBa+u084ciFzmOKD4pyXqAJgL1nLOw==
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr15044950lfp.37.1570986386652;
+        Sun, 13 Oct 2019 10:06:26 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:4851:f638:84a8:96d0:2933:dfbf? ([2a00:1fa0:4851:f638:84a8:96d0:2933:dfbf])
+        by smtp.gmail.com with ESMTPSA id k23sm3568595ljc.13.2019.10.13.10.06.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 13 Oct 2019 10:06:25 -0700 (PDT)
+Subject: Re: [PATCH v5 bpf-next 09/15] samples/bpf: use own flags but not
+ HOSTCFLAGS
+To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org
+References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
+ <20191011002808.28206-10-ivan.khoronzhuk@linaro.org>
+ <99f76e2f-ed76-77e0-a470-36ae07567111@cogentembedded.com>
+ <20191011095715.GB3689@khorivan>
+ <3fb88a06-5253-1e48-9bea-2d31a443250b@cogentembedded.com>
+ <20191012212643.GC3689@khorivan>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <03db016e-5337-0207-3d17-0b3bbe79fa5c@cogentembedded.com>
+Date:   Sun, 13 Oct 2019 20:06:24 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191005141913.22020-1-jagan@amarulasolutions.com>
- <20191005141913.22020-2-jagan@amarulasolutions.com> <20191007093122.ixrpzvy6ynh6vuir@gilmour>
-In-Reply-To: <20191007093122.ixrpzvy6ynh6vuir@gilmour>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Sun, 13 Oct 2019 22:32:18 +0530
-Message-ID: <CAMty3ZA1azP3kkJPw6oZudcSQksF6i+STeW=oOh65cfHsj0QrQ@mail.gmail.com>
-Subject: Re: [PATCH v10 1/6] dt-bindings: sun6i-dsi: Add A64 MIPI-DSI compatible
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191012212643.GC3689@khorivan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 3:01 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Sat, Oct 05, 2019 at 07:49:08PM +0530, Jagan Teki wrote:
-> > The MIPI DSI controller in Allwinner A64 is similar to A33.
-> >
-> > But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
-> > to with separate compatible for A64 on the same driver.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml        | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> > index dafc0980c4fa..cfcc84d38084 100644
-> > --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> > +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> > @@ -15,7 +15,9 @@ properties:
-> >    "#size-cells": true
-> >
-> >    compatible:
-> > -    const: allwinner,sun6i-a31-mipi-dsi
-> > +    enum:
-> > +      - const: allwinner,sun6i-a31-mipi-dsi
-> > +      - const: allwinner,sun50i-a64-mipi-dsi
->
-> How did you test this? It will report an error when running the
-> validation
+On 13.10.2019 0:26, Ivan Khoronzhuk wrote:
 
-I did follow the v9 comments [1] and forgot to do dt-doc-validate.
-will send the v11 for this patch alone, will that be okay?
+>>>>> While compiling natively, the host's cflags and ldflags are equal to
+>>>>> ones used from HOSTCFLAGS and HOSTLDFLAGS. When cross compiling it
+>>>>> should have own, used for target arch. While verification, for arm,
+>>>>
+>>>>   While verifying.
+>>> While verification stage.
+>>
+>>   While *in* verification stage, "while" doesn't combine with nouns w/o
+>> a preposition.
+> 
+> 
+> Sergei, better add me in cc list when msg is to me I can miss it.
 
-[1] https://patchwork.freedesktop.org/patch/307499/
+    Hm, the earlier mails were addressed to you but no the last one --
+not sure what happened there, sorry.
+
+> Regarding the language lesson, thanks, I will keep it in mind next
+> time, but the issue is not rude, if it's an issue at all, so I better
+> leave it as is, as not reasons to correct it w/o code changes and
+> everyone is able to understand it.
+
+    Up to you. and the maintainer(s)...
+
+>>>>> arm64 and x86_64 the following flags were used always:
+>>>>>
+>>>>> -Wall -O2
+>>>>> -fomit-frame-pointer
+>>>>> -Wmissing-prototypes
+>>>>> -Wstrict-prototypes
+>>>>>
+>>>>> So, add them as they were verified and used before adding
+>>>>> Makefile.target and lets omit "-fomit-frame-pointer" as were proposed
+>>>>> while review, as no sense in such optimization for samples.
+>>>>>
+>>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>>>> [...]
+
+MBR, Sergei
