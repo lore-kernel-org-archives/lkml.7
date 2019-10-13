@@ -2,159 +2,100 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1B5C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 03:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39481ECE587
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 04:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E4421848
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 03:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C002089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 04:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/dseJBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfJMDzd (ORCPT
+        id S1727953AbfJMEIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 23:55:33 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:33688 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727751AbfJMDzd (ORCPT
+        Sun, 13 Oct 2019 00:08:43 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42492 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfJMEIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 23:55:33 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iJUyZ-0001sG-FD; Sat, 12 Oct 2019 21:55:23 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iJUyY-00065i-FF; Sat, 12 Oct 2019 21:55:23 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Lianbo Jiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, bhe@redhat.com, jgross@suse.com,
-        dhowells@redhat.com, Thomas.Lendacky@amd.com, vgoyal@redhat.com,
-        kexec@lists.infradead.org
-References: <20191012022140.19003-1-lijiang@redhat.com>
-        <20191012022140.19003-4-lijiang@redhat.com>
-        <87d0f22oi5.fsf@x220.int.ebiederm.org>
-        <20191012121625.GA11587@dhcp-128-65.nay.redhat.com>
-Date:   Sat, 12 Oct 2019 22:54:31 -0500
-In-Reply-To: <20191012121625.GA11587@dhcp-128-65.nay.redhat.com> (Dave Young's
-        message of "Sat, 12 Oct 2019 20:16:25 +0800")
-Message-ID: <87zhi51ers.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 13 Oct 2019 00:08:42 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f14so2982067pgi.9;
+        Sat, 12 Oct 2019 21:08:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H9mpX1bbT835ApgtlCBm7T1WS7+wbTgLPpZogSEQonE=;
+        b=Q/dseJBnDi82NZ63Ja0ehvJCMufSWASfHKc1Uj/uZsCwEO9iJIu9wV40kSdNHWKih4
+         6Bqr+WY4GPEOHlTPifvI61e/tYjzRuqfCGil3hAi6suweb9/sJF7pdEymm9ujwWYGBEi
+         3Pja4TIRlN0XOGExJQCYTgQn+g72jGTco5b+XaW9QczLVh2JBM6HkPuH412NyNLKyP7Y
+         JYO5UK9b17mW8MFeT13VHahOixfsAM8Dz+Dqr7iMwQ/HoVw+oswhDzNYgB64y+rXAj9S
+         i8YEr5Y0xaW84L/woULLHxObjuJUlyDN1eJWGIa+S9ukEUx2qHFJgS9svzkB3Urf2qOa
+         xleA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H9mpX1bbT835ApgtlCBm7T1WS7+wbTgLPpZogSEQonE=;
+        b=aveVvE76KDM1nfZKg4/NQeGEvokEE3YzwT2rnF2W+BGb7lPyUJBB2khFBy9nafbAVY
+         VZsnR+qh1EP8psd42gpIChkOr0/oH3oNItMxw46OO6FX2Jg78HI8GfV+LSbj5n+JZnZm
+         6BbiX9oXMFZKNofy1jr4puuZp4//NdaBZXxWVNfwWb0GtJnXsSicf6KB+xdFjBMZEPCA
+         LoYyhTC8s/XxXLKySH2/55mApZSzxycmiue1X2XWE/tF0FUhYVUo1TvJYKuSnJpHZ7QV
+         L5/Q3IUR7wQGLwK1PutsLAg7khn/A7EywjQC1iaD40O4Gt5/xYgVKlBXQUiyq/3Gfgf0
+         HuwA==
+X-Gm-Message-State: APjAAAWLdefe3/4xNm3oRn0/iMTjrFwBgD/1m9ur7nn0bD/IYsJ6yOB2
+        IzLccM2uSZHJdXozSP5MiXs=
+X-Google-Smtp-Source: APXvYqw36P3qXY4OCM2EqbsWH5VMrC9lRJWvs1Trc72yVwpEpOBRiqQocYUx2xB6KObg7n8x/MiVPQ==
+X-Received: by 2002:a63:5605:: with SMTP id k5mr3773333pgb.14.1570939722132;
+        Sat, 12 Oct 2019 21:08:42 -0700 (PDT)
+Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
+        by smtp.gmail.com with ESMTPSA id m102sm11320831pje.5.2019.10.12.21.08.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 12 Oct 2019 21:08:41 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id D0074201218; Sun, 13 Oct 2019 13:08:38 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tj@kernel.org, axboe@kernel.dk
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] writeback: Fix a warning while "make xmldocs"
+Date:   Sun, 13 Oct 2019 13:08:37 +0900
+Message-Id: <20191013040837.14766-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.23.0.526.g70bf0b755af4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1iJUyY-00065i-FF;;;mid=<87zhi51ers.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+s5R6SpUB0IGSO3ZKNcUhuOM1lCEV5wWg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 3/3 v3] x86/kdump: clean up all the code related to the backup region
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Young <dyoung@redhat.com> writes:
+This patch fix following warning.
+./fs/fs-writeback.c:918: warning: Excess function parameter
+'nr_pages' description in 'cgroup_writeback_by_id'
 
-> Hi Eric,
->
-> On 10/12/19 at 06:26am, Eric W. Biederman wrote:
->> Lianbo Jiang <lijiang@redhat.com> writes:
->> 
->> > When the crashkernel kernel command line option is specified, the
->> > low 1MiB memory will always be reserved, which makes that the memory
->> > allocated later won't fall into the low 1MiB area, thereby, it's not
->> > necessary to create a backup region and also no need to copy the first
->> > 640k content to a backup region.
->> >
->> > Currently, the code related to the backup region can be safely removed,
->> > so lets clean up.
->> >
->> > Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
->> > ---
->> 
->> > diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->> > index eb651fbde92a..cc5774fc84c0 100644
->> > --- a/arch/x86/kernel/crash.c
->> > +++ b/arch/x86/kernel/crash.c
->> > @@ -173,8 +173,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
->> >  
->> >  #ifdef CONFIG_KEXEC_FILE
->> >  
->> > -static unsigned long crash_zero_bytes;
->> > -
->> >  static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
->> >  {
->> >  	unsigned int *nr_ranges = arg;
->> > @@ -234,9 +232,15 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
->> >  {
->> >  	struct crash_mem *cmem = arg;
->> >  
->> > -	cmem->ranges[cmem->nr_ranges].start = res->start;
->> > -	cmem->ranges[cmem->nr_ranges].end = res->end;
->> > -	cmem->nr_ranges++;
->> > +	if (res->start >= SZ_1M) {
->> > +		cmem->ranges[cmem->nr_ranges].start = res->start;
->> > +		cmem->ranges[cmem->nr_ranges].end = res->end;
->> > +		cmem->nr_ranges++;
->> > +	} else if (res->end > SZ_1M) {
->> > +		cmem->ranges[cmem->nr_ranges].start = SZ_1M;
->> > +		cmem->ranges[cmem->nr_ranges].end = res->end;
->> > +		cmem->nr_ranges++;
->> > +	}
->> 
->> What is going on with this chunk?  I can guess but this needs a clear
->> comment.
->
-> Indeed it needs some code comment, this is based on some offline
-> discussion.  cat /proc/vmcore will give a warning because ioremap is
-> mapping the system ram.
->
-> We pass the first 1M to kdump kernel in e820 as system ram so that 2nd
-> kernel can use the low 1M memory because for example the trampoline
-> code.
->
->> 
->> >  
->> >  	return 0;
->> >  }
->> 
->> > @@ -356,9 +337,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
->> >  	memset(&cmd, 0, sizeof(struct crash_memmap_data));
->> >  	cmd.params = params;
->> >  
->> > -	/* Add first 640K segment */
->> > -	ei.addr = image->arch.backup_src_start;
->> > -	ei.size = image->arch.backup_src_sz;
->> > +	/*
->> > +	 * Add the low memory range[0x1000, SZ_1M], skip
->> > +	 * the first zero page.
->> > +	 */
->> > +	ei.addr = PAGE_SIZE;
->> > +	ei.size = SZ_1M - PAGE_SIZE;
->> >  	ei.type = E820_TYPE_RAM;
->> >  	add_e820_entry(params, &ei);
->> 
->> Likewise here.  Why do we need a special case?
->> Why the magic with PAGE_SIZE?
->
-> Good catch, the zero page part is useless, I think no other special
-> reason, just assumed zero page is not usable, but it should be ok to
-> remove the special handling, just pass 0 - 1M is good enough.
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+---
+ fs/fs-writeback.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But if we have stopped special casing the low 1M.  Why do we need a
-special case here at all?
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index e88421d9a48d..8461a6322039 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -905,7 +905,7 @@ static void bdi_split_work_to_wbs(struct backing_dev_info *bdi,
+  * cgroup_writeback_by_id - initiate cgroup writeback from bdi and memcg IDs
+  * @bdi_id: target bdi id
+  * @memcg_id: target memcg css id
+- * @nr_pages: number of pages to write, 0 for best-effort dirty flushing
++ * @nr: number of pages to write, 0 for best-effort dirty flushing
+  * @reason: reason why some writeback work initiated
+  * @done: target wb_completion
+  *
+-- 
+2.23.0.526.g70bf0b755af4
 
-If you need the special case it is almost certainly wrong to say you
-have ram above 640KiB and below 1MiB.  That is the legacy ROM and video
-MMIO area.
-
-There is a reason the original code said 640KiB.
-
-Eric
