@@ -2,46 +2,87 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACD2C4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D653DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8598A207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A154920663
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:45:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gui7vv2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfJMTbQ (ORCPT
+        id S1729413AbfJMTp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 15:31:16 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:32123 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728945AbfJMTbQ (ORCPT
+        Sun, 13 Oct 2019 15:45:57 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40435 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfJMTp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 15:31:16 -0400
-X-IronPort-AV: E=Sophos;i="5.67,293,1566856800"; 
-   d="scan'208";a="405952555"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Oct 2019 21:31:14 +0200
-Date:   Sun, 13 Oct 2019 21:31:13 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        eric@anholt.net, wahrenst@gmx.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [Outreachy kernel] [PATCH v2] staging: rtl8723bs: use DIV_ROUND_UP
- helper macro
-In-Reply-To: <20191013191027.6470-1-wambui.karugax@gmail.com>
-Message-ID: <alpine.DEB.2.21.1910132126290.2565@hadrien>
-References: <20191013191027.6470-1-wambui.karugax@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 13 Oct 2019 15:45:57 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e13so598046pga.7;
+        Sun, 13 Oct 2019 12:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7hkgkxn5tX5Lu7EANqMWuMtKmOX/46/hM75I7oWJwRk=;
+        b=Gui7vv2/nvyKokgY5fxhfY/iBSiMluSYqbm1HMiVKDDYNHZT0etzdlFtzyR4nnyt21
+         bAaAjrGhZUNr7WQ7IyyeF3X5/3hkrMeaMZW0ncmMKYNwJT0+/wb/9T4jX8cwuMJVoCIU
+         m68IXhMditLwDuQzR0fLoVK23KNUYrI27VCeFcTABa+TucEXt5OYvrVf7vuTq/Wroi2B
+         NWhJ5Y4RsXX+DVX0BHKhvIed71GFMmeJedlfbs3G1EbFQR1GaqNyM72g1rYWKpQIB5m6
+         QME/TYC8nGZxgPBmVJihnTD6moUGBGxsQRXXHrb32SAy2i6Np6PkgONPnWx4U1bIxhBZ
+         4ybA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7hkgkxn5tX5Lu7EANqMWuMtKmOX/46/hM75I7oWJwRk=;
+        b=Wu8+4/JxKVmynAlGP/b/mc6Mh+iLGd3yW4CaY54kaFLINkqc2hc0KgadH1oaazm8ll
+         DapKIDSbHWo0TCRDBvCwn5DnlZmLU1niTURpZuNtjfm491W392hYZ1uE/7zE2dHtvpD9
+         TXOdIvbxk1DovI9jsQpVh4iU78cpfUh7FadHRDeeftch4dnRHIDj/Ypkup2FjOsOfDjO
+         d2HppO7V6dY2paaJ7OHZ4BXCXWf1q5RckDlLmHPqBa42qnK1LRdJ/nuIWEpCwjlbwwgX
+         ww0iuQGr3ia38bZiA7Z/DRdDKwgGnCpZpK0ExIZXvYUgVmfpLzJ3J9X8FB+J9y/QCc2j
+         2FTA==
+X-Gm-Message-State: APjAAAWj2sGW7MpquRZXHkCSvM5PKZhJShp9jeIF5YTfzz70uXyMTKtO
+        6TklTg7nls8E+jf2nBAyg/Y=
+X-Google-Smtp-Source: APXvYqwItPee5hydRQfqLUl1ahdjZNyK0GLueTxXFcAuqgwUqW6nDSxU1XEPnIlLxg3eR3m/wVoN9A==
+X-Received: by 2002:a17:90a:80c2:: with SMTP id k2mr32284786pjw.92.1570995956570;
+        Sun, 13 Oct 2019 12:45:56 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
+        by smtp.gmail.com with ESMTPSA id h70sm14384029pgc.48.2019.10.13.12.45.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Oct 2019 12:45:55 -0700 (PDT)
+Subject: Re: tcp: Checking a kmemdup() call in tcp_time_wait()
+To:     Markus Elfring <Markus.Elfring@web.de>, netdev@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Hideaki Yoshifuji <yoshfuji@linux-ipv6.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>
+References: <a219235e-bad5-8a9d-0f3e-c05d5cb11df1@web.de>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <124b41aa-7ba5-f00c-ab73-cb8e6a2ae75f@gmail.com>
+Date:   Sun, 13 Oct 2019 12:45:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <a219235e-bad5-8a9d-0f3e-c05d5cb11df1@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -49,63 +90,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On Sun, 13 Oct 2019, Wambui Karuga wrote:
+On 10/12/19 7:51 AM, Markus Elfring wrote:
+> Hello,
+> 
+> I tried another script for the semantic patch language out.
+> This source code analysis approach points out that the implementation
+> of the function “tcp_time_wait” contains also a call of the function “kmemdup”.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/net/ipv4/tcp_minisocks.c?id=1c0cc5f1ae5ee5a6913704c0d75a6e99604ee30a#n306
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/net/ipv4/tcp_minisocks.c#L306
+> 
+> * Do you find the usage of the macro call “BUG_ON” still appropriate at this place?
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/checkpatch.pl?id=1c0cc5f1ae5ee5a6913704c0d75a6e99604ee30a#n4080
+> 
+> * Is there a need to adjust the error handling here?
 
-> Use the DIV_ROUND_UP macro to replace open-coded divisor calculation
-> to improve readability.
-> Issue found using coccinelle:
-> @@
-> expression n,d;
-> @@
-> (
-> - ((n + d - 1) / d)
-> + DIV_ROUND_UP(n,d)
-> |
-> - ((n + (d - 1)) / d)
-> + DIV_ROUND_UP(n,d)
-> )
->
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+Presumably the BUG would trigger if a really disturbing bug happened.
 
-Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+There is no chance a timewait socket could be created with a MD5 key, 
+if the established socket that is the 'parent' of the timewait
+has not a MD5 context itself.
 
-> ---
-> Changes in v2:
->   - Remove comment that explained previously used calculation.
+The parent socket only could have MD5 context if tcp_md5sig_pool_populated
+could have been set to true.
 
-Maybe it is not very important for a comment, but remember that what is
-below the --- will disappear in the history.  So when actual code changes,
-it may be necessary to integrate the extended change in the commit log as
-well as putting it in the v2 changes.
+Once tcp_md5sig_pool_populated is true it can never go back to false.
 
-julia
+So the bug here would be that a socket  had a successful MD5 context,
+and following tcp_alloc_md5sig_pool() would return false.
 
+We can discuss of all BUG() in general, some people simply disable
+all of them (cf CONFIG_BUG), but this particular one does not seem
+specially bad to me, compared to others.
 
-> ---
->  drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> index 87535a4c2e14..22931ab3a5fc 100644
-> --- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> +++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> @@ -4156,9 +4156,8 @@ void SetHwReg8723B(struct adapter *padapter, u8 variable, u8 *val)
->  				break;
->  			}
->
-> -			/*  The value of ((usNavUpper + HAL_NAV_UPPER_UNIT_8723B - 1) / HAL_NAV_UPPER_UNIT_8723B) */
-> -			/*  is getting the upper integer. */
-> -			usNavUpper = (usNavUpper + HAL_NAV_UPPER_UNIT_8723B - 1) / HAL_NAV_UPPER_UNIT_8723B;
-> +			usNavUpper = DIV_ROUND_UP(usNavUpper,
-> +						  HAL_NAV_UPPER_UNIT_8723B);
->  			rtw_write8(padapter, REG_NAV_UPPER, (u8)usNavUpper);
->  		}
->  		break;
-> --
-> 2.23.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191013191027.6470-1-wambui.karugax%40gmail.com.
->
