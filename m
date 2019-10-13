@@ -2,118 +2,94 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D691ECE58C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 08:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999D6C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 08:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7008120869
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 08:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6401420869
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 08:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="RaTOnR2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbfJMIIN (ORCPT
+        id S1729142AbfJMIIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 04:08:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33208 "EHLO mx1.redhat.com"
+        Sun, 13 Oct 2019 04:08:44 -0400
+Received: from onstation.org ([52.200.56.107]:42528 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728782AbfJMIIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 04:08:09 -0400
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728884AbfJMIIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 04:08:13 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 271C0C049E12
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 08:08:09 +0000 (UTC)
-Received: by mail-qk1-f198.google.com with SMTP id h4so13707466qkd.18
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 01:08:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ls+7nvLzVD/C5D5VX4czbgip7cBCYdFDThqPFhQtYcU=;
-        b=Y5irzChlZ6fBfKqqpcp3STjxWz5fV10EjVU5BoaT5Y4G1e4G/6t0RXvb990FcGfJih
-         bHK/lOiNwYPXEeNQKkzSus9/v4SzK49oPXyun63ACFfVGLnaFcdRIjRQQBd1JJxOFYm5
-         JlQ3nt2++Pq0SfDSlt6G8eVgP64KuaLdVhVBvvO+BdlQj9B5iK/Rx5w/oQbQ5JO4SNf0
-         TR17wXheZ7yiAziUiZm4iakN64gawjsFPPK4bjrPVHYHtqMfwAEOHGSsie9545Xdh/de
-         VP5CHsRbDU166rsM8gv3vqeu0kzl3UolgW9GCcndxMHxrzAiMPyDj27esGEPoiCH9AQm
-         T+kA==
-X-Gm-Message-State: APjAAAU+FJo6nsEWQ+tXJp6dZch0Bo3dUMQz5CMGpvFRftyDLRMUZ6DZ
-        7s5TNhiJYDHYEjsQo4mrgKRFoimM+09tdaKs641Lqw22q2ObuR9Cl2qV5PgiGMEP+bfqGz7zTTB
-        vBae1xWzLcb+bvIkkYKvTUPFs
-X-Received: by 2002:ad4:4348:: with SMTP id q8mr26169259qvs.68.1570954087940;
-        Sun, 13 Oct 2019 01:08:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxsr5QXq4HoazPqviMkfj/BV1d9U/KoJJ+NnnKghPE5Y5QO+yEsK30TYEPK1VGYKMaPGZafcA==
-X-Received: by 2002:ad4:4348:: with SMTP id q8mr26169244qvs.68.1570954087695;
-        Sun, 13 Oct 2019 01:08:07 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
-        by smtp.gmail.com with ESMTPSA id r1sm7176245qti.4.2019.10.13.01.08.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Oct 2019 01:08:07 -0700 (PDT)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 747043F240;
+        Sun, 13 Oct 2019 08:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1570954092;
+        bh=fCQk30Py/+ejOB6T/yjmxeEYet6RNMz5CEDRqHL14uA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RaTOnR2MHLKR4hz0Hx233RsKRmnj3c0LgYy396DYdXYd3lQ0C5UqzRZL57sNF8kGd
+         bi5sVXsJSybb7PGAXe67D2r77PSoEbOx93IanjQtt2Pkjigc45puQKbXAE1izFfNDO
+         5O67WD0Gm1giWRsYyy+La7ldTMGl84v+Y2GX+2gU=
+From:   Brian Masney <masneyb@onstation.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 4/5] ARM: dts: qcom: msm8974: add ocmem node
 Date:   Sun, 13 Oct 2019 04:08:03 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH RFC v3 2/4] vhost/test: add an option to test new code
-Message-ID: <20191013080742.16211-3-mst@redhat.com>
-References: <20191013080742.16211-1-mst@redhat.com>
+Message-Id: <20191013080804.10231-5-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191013080804.10231-1-masneyb@onstation.org>
+References: <20191013080804.10231-1-masneyb@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191013080742.16211-1-mst@redhat.com>
-X-Mailer: git-send-email 2.22.0.678.g13338e74b8
-X-Mutt-Fcc: =sent
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a writeable module parameter that tests
-the new code. Note: no effort was made to ensure
-things work correctly if the parameter is changed
-while the device is open. Make sure to
-close the device before changing its value.
+Add ocmem node that is needed in order to support the GPU upstream.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- drivers/vhost/test.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
-index 056308008288..39a018a7af2d 100644
---- a/drivers/vhost/test.c
-+++ b/drivers/vhost/test.c
-@@ -18,6 +18,9 @@
- #include "test.h"
- #include "vhost.h"
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 39a3a1d63889..bdbde5125a56 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -1087,6 +1087,25 @@
+ 			};
+ 		};
  
-+static int newcode = 0;
-+module_param(newcode, int, 0644);
++		ocmem@fdd00000 {
++			compatible = "qcom,msm8974-ocmem";
++			reg = <0xfdd00000 0x2000>,
++			      <0xfec00000 0x180000>;
++			reg-names = "ctrl",
++			            "mem";
++			clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
++			         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
++			clock-names = "core",
++			              "iface";
 +
- /* Max number of bytes transferred before requeueing the job.
-  * Using this limit prevents one virtqueue from starving others. */
- #define VHOST_TEST_WEIGHT 0x80000
-@@ -58,10 +61,16 @@ static void handle_vq(struct vhost_test *n)
- 	vhost_disable_notify(&n->dev, vq);
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			gmu_sram: gmu-sram@0 {
++				reg = <0x0 0x100000>;
++			};
++		};
++
+ 		mdss: mdss@fd900000 {
+ 			status = "disabled";
  
- 	for (;;) {
--		head = vhost_get_vq_desc(vq, vq->iov,
--					 ARRAY_SIZE(vq->iov),
--					 &out, &in,
--					 NULL, NULL);
-+		if (newcode)
-+			head = vhost_get_vq_desc_batch(vq, vq->iov,
-+						       ARRAY_SIZE(vq->iov),
-+						       &out, &in,
-+						       NULL, NULL);
-+		else
-+			head = vhost_get_vq_desc(vq, vq->iov,
-+						 ARRAY_SIZE(vq->iov),
-+						 &out, &in,
-+						 NULL, NULL);
- 		/* On error, stop handling until the next kick. */
- 		if (unlikely(head < 0))
- 			break;
 -- 
-MST
+2.21.0
 
