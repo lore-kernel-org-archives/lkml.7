@@ -2,149 +2,92 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84BAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75720C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A976B2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4065B206A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6OvTDVJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k84dxHEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbfJMMqQ (ORCPT
+        id S1729078AbfJMMvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 08:46:16 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36284 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbfJMMqP (ORCPT
+        Sun, 13 Oct 2019 08:51:46 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42055 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbfJMMvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 08:46:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 23so8487192pgk.3;
-        Sun, 13 Oct 2019 05:46:15 -0700 (PDT)
+        Sun, 13 Oct 2019 08:51:46 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c195so9943166lfg.9;
+        Sun, 13 Oct 2019 05:51:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gtVkxFWDnOERz9QtHd7FY1jWNQ++tjo/QQsXGSYHj5s=;
-        b=D6OvTDVJz3Yr9ZOgYmbXjSqCUMfb5UovwJ2/QHOKxAJPRZWath3+puIjvDNqs+7m0P
-         rq3cOz+QApMO2OGuSHfN7hpciP8NoJGIk23GY//x+b4GGTCE/eneSKBA6WkZ+3EvkWt7
-         Zs+CN8uMLuRHh9xQNmu2/juq6zZfidK20pc80uM8IMK6Q1X8mDiuUquq8qL+ikhNWOF/
-         Ufmcuki+516XFERthX+Hkj9iKxRwupw0UQeJfZiUfO9rxXyblT8I+endywfMF/OB2ixb
-         HQfi68RqDfz5+7Fz0CzJaxfV507IjQbWlG9pNdpobASTPiV2WmRpizhBzuTC+yB2gZ0n
-         u5PA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DnEZZKLdchfPxZwyFhft+IvnfeeQym77vAh1RxoR6RE=;
+        b=k84dxHEgTstDIIhGbELE2rRpmTdmcGZq1x4hqbvoWAYF1T78BxrJQjgrnbbUhUM1cg
+         STob0XM6CKPLb5DM1J4BVW8s+9fYp8jwIKByatisIytbDL+fTAAqIvXShK4HsqdQuAHu
+         AaSMWXCEy/dzopVjMd21JlyXWrKibjWY2E/SbaIUYcMCQhi5CQMDoK0ZMJA0tud9TZ7Y
+         LBgTx29zlBojCbgPEa+LtrE+EiRimVr4+6YlABkMPQT71BSU/SiJTqSQo4hTfdg8nugp
+         TLUQC4zV0quMkjhksL4lHFs616vkoWiwSHcdx/CDMmWmPLOuLhTC5U35yb2BO/bWdj1T
+         TcEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gtVkxFWDnOERz9QtHd7FY1jWNQ++tjo/QQsXGSYHj5s=;
-        b=FoZENk3Ri1/Mem4e0k+UDNKoUR6QfHZreXT/nHEvfQHGEXpNuJT/jgsE4elZvGh5bJ
-         YM7ZSRQoK7JefAbc9wnMP61gw2v/O3oyB0E76UHIL2dCuEPdQ0dMRPU82r1vb3RTXj4t
-         X93Ki8mrBF/mcHzXrh7HM5zO9vFbJMMeqT4uWxvkg6z453/pNIZxG+a7mzuSxwWZOfnz
-         deTJjl7G9tKQbO+JhH9UCm/x7kzwMFFpbQkhbvRnk/2Ht7k2XmdTkIi2Mn0u9juvyvsV
-         8Cmor7QyxRIeyOAtLIvV/ilTQT0QlNQCpU7C6IMQF7pryDfBw5KUr7mqS8+IvEB1RXwc
-         NJ9Q==
-X-Gm-Message-State: APjAAAU4XfkV0/VQ65jWJvVuQwjf1veWwVGLBjiKeigARulRKxPSCWOw
-        1MHmW4Gk3Ar/hPT9cCHIf7M=
-X-Google-Smtp-Source: APXvYqw1AhGMPQkp8lsOGSfEyvQgVWSbN/O4lW5bxEQxnQFRB70xWClf6MNf2LGBQVFkDN5elL9+LQ==
-X-Received: by 2002:a63:1242:: with SMTP id 2mr4970213pgs.288.1570970774706;
-        Sun, 13 Oct 2019 05:46:14 -0700 (PDT)
-Received: from localhost ([178.128.102.47])
-        by smtp.gmail.com with ESMTPSA id q15sm14050398pgl.12.2019.10.13.05.46.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Oct 2019 05:46:13 -0700 (PDT)
-Date:   Sun, 13 Oct 2019 20:46:07 +0800
-From:   Eryu Guan <guaneryu@gmail.com>
-To:     Zhihao Cheng <chengzhihao1@huawei.com>
-Cc:     darrick.wong@oracle.com, ebiggers@google.com, yi.zhang@huawei.com,
-        fstests@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH xfstests] generic/192: Move 'cd /' to the place where the
- program exits
-Message-ID: <20191013124607.GH2622@desktop>
-References: <1570609677-49586-1-git-send-email-chengzhihao1@huawei.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DnEZZKLdchfPxZwyFhft+IvnfeeQym77vAh1RxoR6RE=;
+        b=Vyl8OUVen4O/QtBfEdXraXGR2xZs5Aagg4t7HcgJCYEdX+LOUSimTOJfPFh9S/E0w2
+         UwjNYA0Hcd5PagdQzktNxYMeTIm8AVCY4geKRCcflRF8brvbg30TSI2YUUgadKVLqEuS
+         9BKTS3OBDNLZD2QJ8fRWTtdK3bDlCNm1s/O+NUJAxee818q8bE4f0q5jp34V3Mh3cUp6
+         irU5Is3SXkv3aiwYRcOmWJ7nl160cvRDfeTNPboySwHIqFmGMWQPDcqS81qC2cFvvb/p
+         drMwM0Ko1Ob8tg0TGVSMB+PdbEjW99sK7RkBLpV++OKZfhcHM5XkzW7unjjbSqWZKRgD
+         /MpA==
+X-Gm-Message-State: APjAAAXPbSbtzHcvWektuOzIcnBb1giznjQUbWpZocg64GyvsQBXSuus
+        aZgXZp7Aib2JMZrPZ5Y3CzI/ljLH
+X-Google-Smtp-Source: APXvYqzVf+ufiLIlLhdEtE0L4wWh31dT4i9CCLbtF90hgrXDLwILfxeg+n4DMT3Uuk6aYmZPd6MmYQ==
+X-Received: by 2002:a19:ad0a:: with SMTP id t10mr14524567lfc.113.1570971104091;
+        Sun, 13 Oct 2019 05:51:44 -0700 (PDT)
+Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id m18sm3327243lfb.73.2019.10.13.05.51.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 13 Oct 2019 05:51:43 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH 0/6] media: ov6650: Master and pixel clock handling fixes
+Date:   Sun, 13 Oct 2019 14:50:44 +0200
+Message-Id: <20191013125050.4153-1-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570609677-49586-1-git-send-email-chengzhihao1@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 04:27:57PM +0800, Zhihao Cheng wrote:
-> Running generic/192 with overlayfs(Let ubifs as base fs) yields the
-> following output:
-> 
->   generic/192 - output mismatch
->      QA output created by 192
->      sleep for 5 seconds
->      test
->     +./common/rc: line 316: src/t_dir_type: No such file or directory
->      delta1 is in range
->      delta2 is in range
->     ...
-> 
-> When the use case fails, the call stack in generic/192 is:
-> 
->   local unknowns=$(src/t_dir_type $dir u | wc -l)	common/rc:316
->   _supports_filetype					common/rc:299
->   _overlay_mount					common/overlay:52
->   _overlay_test_mount					common/overlay:93
->   _test_mount						common/rc:407
->   _test_cycle_mount					generic/192:50
-> 
-> Before _test_cycle_mount() being invoked, generic/192 executed 'cd /'
-> to change work dir from 'xfstests-dev' to '/', so src/t_dir_type was not
-> found.
-> 
-> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Fix issues with handling of master and pixel clock, mostly those
+introduced as temporary workarounds when the driver was converted form
+soc_camera sensor to a standalone V4L2 subdevice driver.
 
-Thanks for the debug! But I think the right fix is to call t_dir_type
-via "$here", i.e.
+Janusz Krzysztofik (6):
+  media: ov6650: Fix stored frame interval not in sync with hardware
+  media: ov6650: Drop obsolete .pclk_limit attribute
+  media: ov6650: Simplify clock divisor calculation
+  media: ov6650: Don't reapply pixel clock divisor on format change
+  media: ov6650: Drop unused .pclk_max field
+  media: ov6650: Fix arbitrary selection of master clock rate
 
-	local unknowns=$($here/src/t_dir_type $dir u | wc -l)
+ drivers/media/i2c/ov6650.c | 129 +++++++++++++++++++++----------------
+ 1 file changed, 72 insertions(+), 57 deletions(-)
 
-'here', which points to the top level dir of xfstests source code, is
-defined in every test in test setup, and is guaranteed not to be empty.
+-- 
+2.21.0
 
-Thanks,
-Eryu
-
-> ---
->  tests/generic/192 | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tests/generic/192 b/tests/generic/192
-> index 50b3d6fd..5550f39e 100755
-> --- a/tests/generic/192
-> +++ b/tests/generic/192
-> @@ -15,7 +15,12 @@ echo "QA output created by $seq"
->  here=`pwd`
->  tmp=/tmp/$$
->  status=1	# failure is the default!
-> -trap "exit \$status" 0 1 2 3 15
-> +trap "_cleanup; exit \$status" 0 1 2 3 15
-> +
-> +_cleanup()
-> +{
-> +	cd /
-> +}
->  
->  _access_time()
->  {
-> @@ -46,7 +51,6 @@ sleep $delay # sleep to allow time to move on for access
->  cat $testfile
->  time2=`_access_time $testfile | tee -a $seqres.full`
->  
-> -cd /
->  _test_cycle_mount
->  time3=`_access_time $testfile | tee -a $seqres.full`
->  
-> -- 
-> 2.13.6
-> 
