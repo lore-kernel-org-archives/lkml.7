@@ -2,125 +2,89 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1003DECE58C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7E1C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBAB1206A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:57:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="jd1oLeG6"
+	by mail.kernel.org (Postfix) with ESMTP id 69F19206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbfJMS5M (ORCPT
+        id S1729418AbfJMS5r convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 14:57:12 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:53762 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728786AbfJMS5M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 14:57:12 -0400
-Received: from pps.filterd (m0170389.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9D9hblI000581;
-        Sun, 13 Oct 2019 14:57:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : content-type : content-id :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=5/QVgGKjIHBI0qEyVpdJ7Um4CsG8ZXjt3A4AM5XuhKo=;
- b=jd1oLeG6j83hNGhxZlqgt3I5fit4g5QWbnzp+kyZhkBpt+mxrySRED13mXlcCwufYPDO
- Sy7Ixcdo0MLvtikSxngdgDPfMO6qFg8dHZYuaNL63yXbe4AOF//J6DEXzGnmWcDa5ZQk
- NQNtk4FhjkiCQZ0xdICOU2sEIb/Zc4NIs1/jHbi2UsAwbztvrdXtmJh6HOPyAG0DARFM
- jwp7ov2tyg1E8M2gD5nrwU0u5wk9Nj9AgfxqYGzjwHv23cOEmvMuFQXkbhPFCD5KOwJ2
- +j2ShY9edGw5y3nGA8Zr7phSZgEJSBMqfovi/DUF6jRi0eQUR/VytC0hJqeE5gsVkK47 mw== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 2vkauf4g3v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 13 Oct 2019 14:57:11 -0400
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9DIrFPN138914;
-        Sun, 13 Oct 2019 14:57:10 -0400
-Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
-        by mx0a-00154901.pphosted.com with ESMTP id 2vm5k7hx7a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 13 Oct 2019 14:57:10 -0400
-X-LoopCount0: from 10.166.132.195
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="869461726"
-From:   <Narendra.K@dell.com>
-To:     <linux-efi@vger.kernel.org>
-CC:     <ard.biesheuvel@linaro.org>, <Mario.Limonciello@dell.com>,
-        <geert@linux-m68k.org>, <mingo@kernel.org>, <tglx@linutronix.de>,
-        <james.morse@arm.com>, <linux-kernel@vger.kernel.org>,
-        <Narendra.K@dell.com>
-Subject: [PATCH v1] Ask user input only when CONFIG_X86 or CONFIG_COMPILE_TEST
- is set to y
-Thread-Topic: [PATCH v1] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-Thread-Index: AQHVgfgBvGXu4mhWM0KINjBW7iNITA==
-Date:   Sun, 13 Oct 2019 18:57:05 +0000
-Message-ID: <20191013185643.GA2583@localhost.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.10.1 (2018-07-13)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <78906FD792F54249A61BFC9D5047C4D7@dell.com>
-Content-Transfer-Encoding: quoted-printable
+        Sun, 13 Oct 2019 14:57:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728786AbfJMS5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 14:57:47 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25CC4206A3;
+        Sun, 13 Oct 2019 18:57:46 +0000 (UTC)
+Date:   Sun, 13 Oct 2019 14:57:43 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDg8K2bmln?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [for-linus][PATCH 08/11] recordmcount: Fix nop_mcount()
+ function
+Message-ID: <20191013145743.6fdef005@gandalf.local.home>
+In-Reply-To: <20191013174419.228868312@goodmis.org>
+References: <20191013174342.381019558@goodmis.org>
+        <20191013174419.228868312@goodmis.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-13_09:2019-10-10,2019-10-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 mlxscore=0 malwarescore=0
- adultscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910130189
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 clxscore=1015 impostorscore=0
- mlxlogscore=999 adultscore=0 spamscore=0 bulkscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910120072
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Narendra K <Narendra.K@dell.com>
+One problem with quilt, is that it doesn't like non-ASCII characters
+(I'm looking at you Kleine-König!)
 
-For the EFI_RCI2_TABLE kconfig option, 'make oldconfig' asks the user
-for input on platforms where the option may not be applicable. This patch
-modifies the kconfig option to ask the user for input only when CONFIG_X86
-or CONFIG_COMPILE_TEST is set to y.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Fix-suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Narendra K <Narendra.K@dell.com>
+The removal of the longjmp code in recordmcount.c mistakenly made the
+return of make_nop() being negative an exit of nop_mcount(). It should
+not exit the routine, but instead just not process that part of the
+code. By exiting with an error code, it would cause the update of
+recordmcount to fail some files which would fail the build if ftrace
+function tracing was enabled.
+
+Link: http://lkml.kernel.org/r/20191009110538.5909fec6@gandalf.local.home
+
+Reported-by: Uwe Kleine-önig <u.kleine-koenig@pengutronix.de>
+Tested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Fixes: 3f1df12019f3 ("recordmcount: Rewrite error/success handling")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- drivers/firmware/efi/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/recordmcount.h | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index 178ee8106828..b248870a9806 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -182,6 +182,7 @@ config RESET_ATTACK_MITIGATION
-=20
- config EFI_RCI2_TABLE
- 	bool "EFI Runtime Configuration Interface Table Version 2 Support"
-+	depends on X86 || COMPILE_TEST
- 	help
- 	  Displays the content of the Runtime Configuration Interface
- 	  Table version 2 on Dell EMC PowerEdge systems as a binary
---=20
-2.18.1
+diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
+index 8f0a278ce0af..74eab03e31d4 100644
+--- a/scripts/recordmcount.h
++++ b/scripts/recordmcount.h
+@@ -389,11 +389,8 @@ static int nop_mcount(Elf_Shdr const *const relhdr,
+ 			mcountsym = get_mcountsym(sym0, relp, str0);
+ 
+ 		if (mcountsym == Elf_r_sym(relp) && !is_fake_mcount(relp)) {
+-			if (make_nop) {
++			if (make_nop)
+ 				ret = make_nop((void *)ehdr, _w(shdr->sh_offset) + _w(relp->r_offset));
+-				if (ret < 0)
+-					return -1;
+-			}
+ 			if (warn_on_notrace_sect && !once) {
+ 				printf("Section %s has mcount callers being ignored\n",
+ 				       txtname);
+-- 
+2.23.0
 
---=20
-With regards,
-Narendra K=
