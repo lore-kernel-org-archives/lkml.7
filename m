@@ -2,116 +2,70 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7298C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 21:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCC9C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 21:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF6020673
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 21:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C196420659
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 21:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571003407;
+	bh=ToE1DorUZudj4mlr1MAqQhh2vDBJFdV6NGG4/OdiB1o=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=YUtSnMmkjsOTHDh7mxbk3lYRaNkZ33v/RhhN87aWQvGrhsaWzjzfsE5wgRf/wrV9U
+	 rKT+xxae7alnhTZlsoFQ2KLLMO3kJBYS4U1lckIRq8zogVz+k96nGIx4bW9/pHDslw
+	 QBUImnAKaS0lMAkTM8q9UA0X54bNaRVp5GKVKvGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbfJMVoo (ORCPT
+        id S1729547AbfJMVuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 17:44:44 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53461 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbfJMVoo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 17:44:44 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B6E3E80220; Sun, 13 Oct 2019 23:44:26 +0200 (CEST)
-Date:   Sun, 13 Oct 2019 23:44:41 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andrew Macks <andypoo@gmail.com>, stable@kernel.org,
-        Greg KH <greg@kroah.com>,
-        kernel list <linux-kernel@vger.kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: Re: Regression in longterm 4.19: f2fs: use generic
- EFSBADCRC/EFSCORRUPTED
-Message-ID: <20191013214440.GA20196@amd>
-References: <CAFeYvHWC=RZJr2ZSAvRy=r1kAJU8YW-hxkZ3uBAd2OQEerKmag@mail.gmail.com>
- <CAFeYvHXQQPfu+r0kLpTXWRZJr8SFF1QyUWzOkjJYFE2_UVSrUA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
-Content-Disposition: inline
-In-Reply-To: <CAFeYvHXQQPfu+r0kLpTXWRZJr8SFF1QyUWzOkjJYFE2_UVSrUA@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sun, 13 Oct 2019 17:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728982AbfJMVuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 17:50:06 -0400
+Subject: Re: [GIT PULL] tracing: Fixes for v5.4-rc2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571003405;
+        bh=ToE1DorUZudj4mlr1MAqQhh2vDBJFdV6NGG4/OdiB1o=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=skXcaO9Jfr4VTjmVOAo2CTDPQkPTSDSIzMaLMA9RJvMmLw5JERdjGtgcAEaH7+Zy6
+         YLElS2g35jGGcB2AI/X3k+EWYe81cpOOmGZ3Bi/4A0m4chCr/OuTNC0Rkv+QMVk1qT
+         pCEwGKqvpUVJYxHWJrDQF6JMqHKGZsxX+t/iloNc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191013150702.183320d9@gandalf.local.home>
+References: <20191013150702.183320d9@gandalf.local.home>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191013150702.183320d9@gandalf.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+ trace-v5.4-rc2
+X-PR-Tracked-Commit-Id: d303de1fcf344ff7c15ed64c3f48a991c9958775
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d4615e5a46800d2193bf8ae98cb470206f5f635b
+Message-Id: <157100340551.26744.12622905342925812343.pr-tracker-bot@kernel.org>
+Date:   Sun, 13 Oct 2019 21:50:05 +0000
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Sun, 13 Oct 2019 15:07:02 -0400:
 
---8t9RHnE3ZwKMSgU+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-v5.4-rc2
 
-On Sat 2019-10-12 21:55:24, Andrew Macks wrote:
-> Sorry for version typo in the previous message.
->=20
-> In addition to 4.19, the issue was also backported to 4.14 and 5.2.
->=20
-> 4.14, 4.19 and 5.2 are all missing the EINVAL fix from 5.3.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d4615e5a46800d2193bf8ae98cb470206f5f635b
 
-Ouch.
+Thank you!
 
-Well, when I seen the patch, I thought "looks like the bug is not
-serious enough for -stable". I guess I should have spoken up.
-
-Anyway, I guess we need to either revert  59a5cea41dd0a or backport
-38fb6d0ea34299d97b too....
-
-So I guess Greg and lists need to be cc-ed... and=20
-
-Thanks for the report and sorry for the trouble....
-
-								Pavel
-
-
-> Andrew.
->=20
-> On Sat, 12 Oct 2019 at 21:39, Andrew Macks <andypoo@gmail.com> wrote:
->=20
-> > Hi - there is a nasty regression which was recently introduced into
-> > longterm 4.19.76.
-> >
-> > 59a5cea41dd0ae706ab83f8ecd64199aadefb493 was committed to 4.19, however=
- it
-> > introduces a regression that filesystems no longer mount if do_mounts
-> > iterates through them after F2FS.  This surfaced on one of my servers as
-> > F2FS superblock check happens before btrfs mount is attempted.
-> >
-> > With this code, my server panicked after kernel upgrade as btrfs mount
-> > wasn't attempted.
-> >
-> > This issue has already been fixed in 5.3 with this patch in July, but it
-> > was missed from the 4.19 backport.
-> >
-> > 38fb6d0ea34299d97b031ed64fe994158b6f8eb3
-> > f2fs: use EINVAL for superblock with invalid magic
-> >
-> > Andypoo.
-> >
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---8t9RHnE3ZwKMSgU+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2jmsgACgkQMOfwapXb+vL2NwCeNwJGQVue06R4Q3nOP1MkrMaU
-sH4AnihqqfajtmJ6pQ+zd3t/bRJfqAEf
-=eLSo
------END PGP SIGNATURE-----
-
---8t9RHnE3ZwKMSgU+--
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
