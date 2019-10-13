@@ -2,114 +2,88 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A67C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789C7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CEA920815
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="q4BdHyVM"
+	by mail.kernel.org (Postfix) with ESMTP id 5307C20673
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 22:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbfJMWME (ORCPT
+        id S1729601AbfJMWYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 18:12:04 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19219 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728848AbfJMWL6 (ORCPT
+        Sun, 13 Oct 2019 18:24:25 -0400
+Received: from 7.mo2.mail-out.ovh.net ([188.165.48.182]:57292 "EHLO
+        7.mo2.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfJMWYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 18:11:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da3a1370000>; Sun, 13 Oct 2019 15:12:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 13 Oct 2019 15:11:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 13 Oct 2019 15:11:57 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 13 Oct
- 2019 22:11:57 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 13 Oct 2019 22:11:56 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5da3a12c0004>; Sun, 13 Oct 2019 15:11:56 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-Subject: [PATCH 1/2] mm/gup_benchmark: add a missing "w" to getopt string
-Date:   Sun, 13 Oct 2019 15:11:54 -0700
-Message-ID: <20191013221155.382378-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191013221155.382378-1-jhubbard@nvidia.com>
-References: <20191013221155.382378-1-jhubbard@nvidia.com>
+        Sun, 13 Oct 2019 18:24:25 -0400
+X-Greylist: delayed 4757 seconds by postgrey-1.27 at vger.kernel.org; Sun, 13 Oct 2019 18:24:25 EDT
+Received: from player692.ha.ovh.net (unknown [10.108.42.176])
+        by mo2.mail-out.ovh.net (Postfix) with ESMTP id 27A461AD0FA
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 23:05:07 +0200 (CEST)
+Received: from etezian.org (81-175-223-118.bb.dnainternet.fi [81.175.223.118])
+        (Authenticated sender: andi@etezian.org)
+        by player692.ha.ovh.net (Postfix) with ESMTPSA id D37F7AC93ED3;
+        Sun, 13 Oct 2019 21:04:56 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 00:04:55 +0300
+From:   Andi Shyti <andi@etezian.org>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andi Shyti <andi@etezian.org>,
+        Simon Shields <simon@lineageos.org>,
+        linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
+Message-ID: <20191013210455.GA16344@jack.zhora.eu>
+References: <20191007203343.101466-1-stephan@gerhold.net>
+ <20191007205021.104402-1-stephan@gerhold.net>
+ <20191008220014.GI22365@dtor-ws>
+ <20191009104740.GA107000@gerhold.net>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571004728; bh=8nrl7wpYPJmrVL9Qp/C48yDRPovixPIIHdvNCxdMXYA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=q4BdHyVMJBMat7n/GAFTYWE70JkRsjVwa6QoM6CwTNJENUHIw8yCS9ImzAtOkXV83
-         CJuiAMTICsIN3KEE+YlX5gnwVhoSP9tS/2QvXaQ2GbZJHUg4NEDFkDjV049FJFhsM7
-         MouYg1gyFhcu2anlFjjwZQla1Yvn3vLjh90nsjjg0i/3E3OqWhz9iRwVDoK5sPFT9/
-         UASG+qWRPlY0tpd5qSsCdppUlkPpUxa/e9o7400wuY9YYMFYEDEXzNE6xEBjCN2FGT
-         6zgAi+rPKmD5dBwVF4bygwNGmbeJaByJEYX1M9ZUg4Jxvri4ngImlMHqYgur3uI+6o
-         a6lT02rcZnbvw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009104740.GA107000@gerhold.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Ovh-Tracer-Id: 10484942885523210989
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrieelgdduheeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even though gup_benchmark.c has code to handle the -w
-command-line option, the "w" is not part of the getopt
-string. It looks as if it has been missing the whole time.
+Hi Stephan,
 
-On my machine, this leads naturally to the following
-predictable result:
+> > > There was a related patch [2] that removes I2C_M_NOSTART for all models,
+> > > but it seems abandoned and I do not have any other model for testing.
+> > > Therefore, this patch implements the least instrusive solution
+> > > and only removes I2C_M_NOSTART for MMS345L.
+> > 
+> > Hmm,  at this point I am inclined to pick up Andi's patch since it seems
+> > to work for you and him and it looks like Android drivers are not using
+> > I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
+> > it was originally developed.
+> > 
+> > Any objections?
+> 
+> I cannot really speak for any of the other models, but no objections for
+> removing I2C_M_NOSTART from my side. I'm actually rather confused by it
+> since it is used on the first partial message.
+> 
+> The documentation [1] says:
+>   If you set the I2C_M_NOSTART variable for the first partial message,
+>   we do not generate Addr, but we do generate the startbit S.
+>   ** This will probably confuse all other clients on your bus,
+>   so don't try this. **
+> 
+> Yet, someone felt like trying this here. ;)
 
-$ sudo ./gup_benchmark -w
-./gup_benchmark: invalid option -- 'w'
+still it should be specified in the i2c protocol of the device,
+if it's not, then most probably it's not needed, I guess.
 
-...which is fixed, with this commit.
-
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- tools/testing/selftests/vm/gup_benchmark.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/sel=
-ftests/vm/gup_benchmark.c
-index c0534e298b51..cb3fc09645c4 100644
---- a/tools/testing/selftests/vm/gup_benchmark.c
-+++ b/tools/testing/selftests/vm/gup_benchmark.c
-@@ -37,7 +37,7 @@ int main(int argc, char **argv)
- 	char *file =3D "/dev/zero";
- 	char *p;
-=20
--	while ((opt =3D getopt(argc, argv, "m:r:n:f:tTLUSH")) !=3D -1) {
-+	while ((opt =3D getopt(argc, argv, "m:r:n:f:tTLUwSH")) !=3D -1) {
- 		switch (opt) {
- 		case 'm':
- 			size =3D atoi(optarg) * MB;
---=20
-2.23.0
-
+Andi
