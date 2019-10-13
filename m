@@ -2,147 +2,75 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BD6ECE596
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 08:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED2EECE598
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 08:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02EC22084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 08:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E0E206A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 08:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="ZaGF8T4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfJMIIZ (ORCPT
+        id S1728965AbfJMIIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 04:08:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45436 "EHLO mx1.redhat.com"
+        Sun, 13 Oct 2019 04:08:14 -0400
+Received: from onstation.org ([52.200.56.107]:42484 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728984AbfJMIIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 04:08:19 -0400
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728789AbfJMIIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 04:08:12 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 22BDFC0568FD
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 08:08:19 +0000 (UTC)
-Received: by mail-qk1-f198.google.com with SMTP id b67so13794113qkc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 01:08:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3CYitd93iDHtPl2boSl3Eyofj0PvtzXYhyw7uXbmPmo=;
-        b=OZBN9alIHs8/HWXKKwWmMtBWOJ61ejcMypG505I6c1FJAGp0KbLHkDQOUBBvpo6M0U
-         rJHaVD2dqc6qFlETnP3R1fkr89sHpteHLcUb+jsYVVhvu75wSpbNBkzJe7yP+xHfYlYx
-         arOC0GII2FcOe9MPu8Ex+a42kFPOmgyYqXRv/4bGT5JzOP6XXqhlk9dKKcFwIrIwJB9t
-         K15bYFxu5D1L5LYnUG0m0uuRe7unZjzXeWHZQhY7pxF61kHqBrF7WroPl0X3b2JdGEBM
-         TJuOsaQZsgqRymoLP2gczchVO56TW1IV31WQ9tADRSyrPaZiEkuK9VqQ9u0DJJHmEkYe
-         Hscw==
-X-Gm-Message-State: APjAAAVPNyC3z5KFOjNoXx7QFACbytNfv4clqX5G10ZtSeYHBVMTPWxU
-        parT8T1kRNFMVELqavCYiM7C+isDV6WOYw0WHw1Cg0Ur3KYHBPwc+ittcQgQhfSdlL+Abzq5VSq
-        pznBV3SFI7oehwsgNHoqOTAac
-X-Received: by 2002:a37:9d10:: with SMTP id g16mr24681937qke.29.1570954098118;
-        Sun, 13 Oct 2019 01:08:18 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyaJ+QpLI1pMBCIJvuv7x0tuYvQpGl6FL4TAAJwm3gJXchv9/ST+/UasjDNh9TYNk8GtdJuXQ==
-X-Received: by 2002:a37:9d10:: with SMTP id g16mr24681925qke.29.1570954097874;
-        Sun, 13 Oct 2019 01:08:17 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-10-77.red.bezeqint.net. [79.176.10.77])
-        by smtp.gmail.com with ESMTPSA id f10sm6455018qtj.3.2019.10.13.01.08.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Oct 2019 01:08:17 -0700 (PDT)
-Date:   Sun, 13 Oct 2019 04:08:13 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH RFC v3 4/4] vhost/net: add an option to test new code
-Message-ID: <20191013080742.16211-5-mst@redhat.com>
-References: <20191013080742.16211-1-mst@redhat.com>
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id EF29B3E993;
+        Sun, 13 Oct 2019 08:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1570954091;
+        bh=Q1QTREatWmcWuGTDA0ElcXg0wWej7VbC08GBo5YXAHQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZaGF8T4vpKrrGUrNyeA8jhpMrE8Jac/Mznd1mgq/5iu9E93q4+or9qbCUNg56fQTH
+         LRsBjEtggJ8LKP6wF9jx/lcfICTAs2vtlxecgO/pEC+YJhv7uqqWKraVITbUxduWVU
+         1aG3MQBpcKIWHJlxMLOAgoXlcTDN4L1v71+Pn24s=
+From:   Brian Masney <masneyb@onstation.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/5] ARM: qcom: add defconfig items and dts nodes
+Date:   Sun, 13 Oct 2019 04:07:59 -0400
+Message-Id: <20191013080804.10231-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191013080742.16211-1-mst@redhat.com>
-X-Mailer: git-send-email 2.22.0.678.g13338e74b8
-X-Mutt-Fcc: =sent
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a writeable module parameter that tests
-the new code. Note: no effort was made to ensure
-things work correctly if the parameter is changed
-while the device is open. Make sure to
-close the device before changing its value.
+Here's a small patch series that adds support for the On Chip MEMory
+(OCMEM) and msm8974 interconnect support to qcom_defconfig and to
+qcom-msm8974.dtsi. The OCMEM driver is already in linux-next and it
+looks like the interconnect support should be merged soon:
+https://lore.kernel.org/lkml/20191005114605.5279-1-masneyb@onstation.org/
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/vhost/net.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+I have some work in progress patches for the HDMI bridge that's found
+on the Nexus 5 and this series adds the necessary driver to
+qcom_defconfig.
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 1a2dd53caade..122b666ec1f2 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -35,6 +35,9 @@
- 
- #include "vhost.h"
- 
-+static int newcode = 0;
-+module_param(newcode, int, 0644);
-+
- static int experimental_zcopytx = 0;
- module_param(experimental_zcopytx, int, 0444);
- MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
-@@ -565,8 +568,14 @@ static int vhost_net_tx_get_vq_desc(struct vhost_net *net,
- 	struct vhost_virtqueue *rvq = &rnvq->vq;
- 	struct vhost_virtqueue *tvq = &tnvq->vq;
- 
--	int r = vhost_get_vq_desc(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
--				  out_num, in_num, NULL, NULL);
-+	int r;
-+
-+	if (newcode)
-+		r = vhost_get_vq_desc_batch(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
-+					    out_num, in_num, NULL, NULL);
-+	else
-+		r = vhost_get_vq_desc(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
-+				      out_num, in_num, NULL, NULL);
- 
- 	if (r == tvq->num && tvq->busyloop_timeout) {
- 		/* Flush batched packets first */
-@@ -575,8 +584,12 @@ static int vhost_net_tx_get_vq_desc(struct vhost_net *net,
- 
- 		vhost_net_busy_poll(net, rvq, tvq, busyloop_intr, false);
- 
--		r = vhost_get_vq_desc(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
--				      out_num, in_num, NULL, NULL);
-+		if (newcode)
-+			r = vhost_get_vq_desc_batch(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
-+						    out_num, in_num, NULL, NULL);
-+		else
-+			r = vhost_get_vq_desc(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
-+					      out_num, in_num, NULL, NULL);
- 	}
- 
- 	return r;
-@@ -1046,9 +1059,14 @@ static int get_rx_bufs(struct vhost_virtqueue *vq,
- 			r = -ENOBUFS;
- 			goto err;
- 		}
--		r = vhost_get_vq_desc(vq, vq->iov + seg,
--				      ARRAY_SIZE(vq->iov) - seg, &out,
--				      &in, log, log_num);
-+		if (newcode)
-+			r = vhost_get_vq_desc_batch(vq, vq->iov + seg,
-+						    ARRAY_SIZE(vq->iov) - seg, &out,
-+						    &in, log, log_num);
-+		else
-+			r = vhost_get_vq_desc(vq, vq->iov + seg,
-+					      ARRAY_SIZE(vq->iov) - seg, &out,
-+					      &in, log, log_num);
- 		if (unlikely(r < 0))
- 			goto err;
- 
+Brian Masney (5):
+  ARM: qcom_defconfig: add ocmem support
+  ARM: qcom_defconfig: add msm8974 interconnect support
+  ARM: qcom_defconfig: add anx78xx HDMI bridge support
+  ARM: dts: qcom: msm8974: add ocmem node
+  ARM: dts: qcom: msm8974: add interconnect nodes
+
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 79 +++++++++++++++++++++++++++++
+ arch/arm/configs/qcom_defconfig     |  5 ++
+ 2 files changed, 84 insertions(+)
+
 -- 
-MST
+2.21.0
 
