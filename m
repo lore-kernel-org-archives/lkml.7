@@ -2,111 +2,133 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FDAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDEEC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8412053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1843220673
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:02:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfJMT7w (ORCPT
+        id S1729555AbfJMUB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 15:59:52 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35148 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbfJMT7w (ORCPT
+        Sun, 13 Oct 2019 16:01:59 -0400
+Received: from shells.gnugeneration.com ([66.240.222.126]:41716 "EHLO
+        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbfJMUB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 15:59:52 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iJk1t-0000Qd-LD; Sun, 13 Oct 2019 19:59:49 +0000
-Date:   Sun, 13 Oct 2019 20:59:49 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191013195949.GM26530@ZenIV.linux.org.uk>
-References: <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
- <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
- <20191010195504.GI26530@ZenIV.linux.org.uk>
- <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
- <20191011001104.GJ26530@ZenIV.linux.org.uk>
- <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
- <20191013181333.GK26530@ZenIV.linux.org.uk>
- <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
- <20191013191050.GL26530@ZenIV.linux.org.uk>
- <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
+        Sun, 13 Oct 2019 16:01:58 -0400
+Received: by shells.gnugeneration.com (Postfix, from userid 1000)
+        id 5A0FB1A40559; Sun, 13 Oct 2019 13:01:58 -0700 (PDT)
+Date:   Sun, 13 Oct 2019 13:01:58 -0700
+From:   Vito Caputo <vcaputo@pengaru.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: core: datagram: tidy up copy functions a bit
+Message-ID: <20191013200158.mhvwkdnsjk7ecuqu@shells.gnugeneration.com>
+References: <20191012115509.jrqe43yozs7kknv5@shells.gnugeneration.com>
+ <8fab6f9c-70a6-02fd-5b2d-66a013c10a4f@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <8fab6f9c-70a6-02fd-5b2d-66a013c10a4f@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 13, 2019 at 12:22:38PM -0700, Linus Torvalds wrote:
-> On Sun, Oct 13, 2019 at 12:10 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > No arguments re put_user_ex side of things...  Below is a completely
-> > untested patch for get_user_ex elimination (it seems to build, but that's
-> > it); in any case, I would really like to see comments from x86 folks
-> > before it goes anywhere.
+On Sun, Oct 13, 2019 at 12:30:41PM -0700, Eric Dumazet wrote:
 > 
-> Please don't do this:
 > 
-> > +       if (unlikely(__copy_from_user(&sc, usc, sizeof(sc))))
-> > +               goto Efault;
+> On 10/12/19 4:55 AM, Vito Caputo wrote:
+> > Eliminate some verbosity by using min() macro and consolidating some
+> > things, also fix inconsistent zero tests (! vs. == 0).
+> > 
+> > Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
+> > ---
+> >  net/core/datagram.c | 44 ++++++++++++++------------------------------
+> >  1 file changed, 14 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/net/core/datagram.c b/net/core/datagram.c
+> > index 4cc8dc5db2b7..08d403f93952 100644
+> > --- a/net/core/datagram.c
+> > +++ b/net/core/datagram.c
+> > @@ -413,13 +413,11 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
+> >  					    struct iov_iter *), void *data)
+> >  {
+> >  	int start = skb_headlen(skb);
+> > -	int i, copy = start - offset, start_off = offset, n;
+> > +	int i, copy, start_off = offset, n;
+> >  	struct sk_buff *frag_iter;
+> >  
+> >  	/* Copy header. */
+> > -	if (copy > 0) {
+> > -		if (copy > len)
+> > -			copy = len;
+> > +	if ((copy = min(start - offset, len)) > 0) {
 > 
-> Why would you use __copy_from_user()? Just don't.
+> No, we prefer not having this kind of construct anymore.
 > 
-> > +       if (unlikely(__copy_from_user(&v, user_vm86,
-> > +                       offsetof(struct vm86_struct, int_revectored))))
+> This refactoring looks unnecessary code churn, making our future backports not
+> clean cherry-picks.
 > 
-> Same here.
-> 
-> There's no excuse for __copy_from_user().
+> Simply making sure this patch does not bring a regression is very time consuming.
 
-Probably...  Said that, vm86 one is preceded by
-        if (!access_ok(user_vm86, plus ?
-                       sizeof(struct vm86_struct) :
-                       sizeof(struct vm86plus_struct)))
-                return -EFAULT;
-so I didn't want to bother.  We'll need to eliminate most of
-access_ok() anyway, and I figured that conversion to plain copy_from_user()
-would go there as well.
+Should I not bother submitting patches for such cleanups?
 
-Again, this is not a patch submission - just an illustration of what I meant
-re getting rid of get_user_ex().  IOW, the whole thing is still in the
-plotting stage.
+I submitted another, more trivial patch, is it also considered unnecessary churn:
 
-Re plotting: how strongly would you object against passing the range to
-user_access_end()?  Powerpc folks have a very close analogue of stac/clac,
-currently buried inside their __get_user()/__put_user()/etc. - the same
-places where x86 does, including futex.h and friends.
+---
 
-And there it's even costlier than on x86.  It would obviously be nice
-to lift it at least out of unsafe_get_user()/unsafe_put_user() and
-move into user_access_begin()/user_access_end(); unfortunately, in
-one subarchitecture they really want it the range on the user_access_end()
-side as well.  That's obviously not fatal (they can bloody well save those
-into thread_info at user_access_begin()), but right now we have relatively
-few user_access_end() callers, so the interface changes are still possible.
+Author: Vito Caputo <vcaputo@pengaru.com>
+Date:   Sat Oct 12 17:10:41 2019 -0700
 
-Other architectures with similar stuff are riscv (no arguments, same
-as for stac/clac), arm (uaccess_save_and_enable() on the way in,
-return value passed to uaccess_restore() on the way out) and s390
-(similar to arm, but there it's needed only to deal with nesting,
-and I'm not sure it actually can happen).
+    net: core: skbuff: skb_checksum_setup() drop err
+    
+    Return directly from all switch cases, no point in storing in err.
+    
+    Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
 
-It would be nice to settle the API while there are not too many users
-outside of arch/x86; changing it later will be a PITA and we definitely
-have architectures that do potentially costly things around the userland
-memory access; user_access_begin()/user_access_end() is in the right
-place to try and see if they fit there...
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index f5f904f46893..c59b68a413b5 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -4888,23 +4888,14 @@ static int skb_checksum_setup_ipv6(struct sk_buff *skb, bool recalculate)
+  */
+ int skb_checksum_setup(struct sk_buff *skb, bool recalculate)
+ {
+-       int err;
+-
+        switch (skb->protocol) {
+        case htons(ETH_P_IP):
+-               err = skb_checksum_setup_ipv4(skb, recalculate);
+-               break;
+-
++               return skb_checksum_setup_ipv4(skb, recalculate);
+        case htons(ETH_P_IPV6):
+-               err = skb_checksum_setup_ipv6(skb, recalculate);
+-               break;
+-
++               return skb_checksum_setup_ipv6(skb, recalculate);
+        default:
+-               err = -EPROTO;
+-               break;
++               return -EPROTO;
+        }
+-
+-       return err;
+ }
+ EXPORT_SYMBOL(skb_checksum_setup);
+
+---
+
+Asking to calibrate my thresholds to yours, since I was planning to volunteer
+some time each evening to reading kernel code and submitting any obvious
+cleanups.
+
+Thanks,
+Vito Caputo
