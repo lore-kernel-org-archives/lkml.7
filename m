@@ -2,147 +2,102 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5E2C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 21:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4A9C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 21:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0139C206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 21:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A4F20659
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 21:14:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QCY1k3xn"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="CMC15BMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfJMVCj (ORCPT
+        id S1729529AbfJMVOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 17:02:39 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:41749 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbfJMVCj (ORCPT
+        Sun, 13 Oct 2019 17:14:38 -0400
+Received: from mail-40136.protonmail.ch ([185.70.40.136]:45768 "EHLO
+        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbfJMVOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 17:02:39 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F0458886BF;
-        Mon, 14 Oct 2019 10:02:35 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1571000555;
-        bh=aTyDQx9xSa+g9n9I5ovNf7kTdG/X4cEbtfakvmWPRvI=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=QCY1k3xnbMrq6iEXOGpaStm2wCIvQqooEyXNcbgzawxjRzR/+nZWoW1EVug6Sak81
-         +p/IH3cOJa3lDdAbSo+ZIvDMYC2ZAQIcWHmmXyKmGkjFsEJQEEGpRCZArVKsyisa9k
-         SoxiEfspKPsK0r6/uYIINh1fsoVNYl+55wxzGfYUdoJdJYAW5b8Z13AvQF+vmyzF/8
-         FYCHkcTrWt2tTP6C2RdafXAZyq3vjuoZqcHYvnQ8gXFg8T9gxQ8Sdx8X2i/lE6Ot6p
-         1YpLWs0gw+wHCnaQKDrstc4YY3Mu2vqUDDDdkHHQrGEaTlcvTxyXjjnn6vYP5VhPNZ
-         pALbp6svuulAw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5da390eb0001>; Mon, 14 Oct 2019 10:02:35 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Mon, 14 Oct 2019 10:02:35 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Mon, 14 Oct 2019 10:02:35 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "maz@kernel.org" <maz@kernel.org>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "rayagonda.kokatanur@broadcom.com" <rayagonda.kokatanur@broadcom.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "li.jin@broadcom.com" <li.jin@broadcom.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: iproc: use unique name for irq chip
-Thread-Topic: [PATCH v2 2/2] pinctrl: iproc: use unique name for irq chip
-Thread-Index: AQHVeX3zc8UV+9y5lE6TCaRj1KlYYqdN9V8AgAAMPQCAAJXSAIAJrrkA
-Date:   Sun, 13 Oct 2019 21:02:34 +0000
-Message-ID: <1f29cade7a0405c33b8e76ea6a21939f6116371a.camel@alliedtelesis.co.nz>
-References: <20191003000310.17099-1-chris.packham@alliedtelesis.co.nz>
-         <20191003000310.17099-3-chris.packham@alliedtelesis.co.nz>
-         <CAMuHMdV7syxxtnHEcgFBrf5DLo-M_71tZFWHHQ6kTO=2A1eVhg@mail.gmail.com>
-         <86blutdlap.wl-maz@kernel.org>
-         <44510e8c-4e9b-603f-2c26-19db9121d68c@broadcom.com>
-In-Reply-To: <44510e8c-4e9b-603f-2c26-19db9121d68c@broadcom.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:94ca:f8ed:f039:abe3]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <51B1B091E91BEC42B9FC58CC7D24ED0E@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 13 Oct 2019 17:14:38 -0400
+Date:   Sun, 13 Oct 2019 21:14:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1571001275;
+        bh=Bq8+SmWVQIP0VXoK/Y+It+en9HYaIb6/vjActXdqOyM=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=CMC15BMkJl/p5LWOELBjY3OFVNTPsA+OE2lk5n1X88ORmYbkJKpu0OsrRfGGfPiTc
+         beNMMb/2aHWu3uBAHd8NBIdirqFdtZjGHS4B/pbg/l0QikvCfNEn/WHllpaFBCLJHx
+         gnlPHEiznCAYnbyD1n+BgUdRkCgylrLJj12U+4b0=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Subject: Re: (was Fair Trade O.S.) 0S! Varanger Sys
+Message-ID: <5GZ1oyatLLahQ-CVAajBoH49OJjPL2Jc4x1n7prU33R9xs4VtBY_aX7NPpVZ11bjFRZFgNtT0r2Jx2JcHo6RYS9vKUznADojuapxctFDot4=@protonmail.com>
+Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXNXLCBTY290dCwgR2VlcnQsIE1hcmNaLA0KDQpPbiBNb24sIDIwMTktMTAtMDcgYXQg
-MTA6MTAgLTA3MDAsIFNjb3R0IEJyYW5kZW4gd3JvdGU6DQo+IA0KPiBPbiAyMDE5LTEwLTA3IDE6
-MTQgYS5tLiwgTWFyYyBaeW5naWVyIHdyb3RlOg0KPiA+IE9uIE1vbiwgMDcgT2N0IDIwMTkgMDg6
-MzA6NTAgKzAxMDAsDQo+ID4gR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9y
-Zz4gd3JvdGU6DQo+ID4gPiBIaSBDaHJpcywNCj4gPiA+IA0KPiA+ID4gQ0MgTWFyY1oNCj4gPiA+
-IA0KPiA+ID4gT24gVGh1LCBPY3QgMywgMjAxOSBhdCAyOjAzIEFNIENocmlzIFBhY2toYW0NCj4g
-PiA+IDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPiA+ID4gPiBV
-c2UgdGhlIGRldl9uYW1lKGRldikgZm9yIHRoZSBpcnFjLT5uYW1lIHNvIHRoYXQgd2UgZ2V0IHVu
-aXF1ZSBuYW1lcw0KPiA+ID4gPiB3aGVuIHdlIGhhdmUgbXVsdGlwbGUgaW5zdGFuY2VzIG9mIHRo
-aXMgZHJpdmVyLg0KPiA+ID4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFja2hh
-bSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPiA+ID4gDQo+ID4gPiBBIHdo
-aWxlIGFnbywgTWFyYyBaeW5naWVyIHBvaW50ZWQgb3V0IHRoYXQgdGhlIGlycV9jaGlwIC5uYW1l
-IGZpZWxkDQo+ID4gPiBzaG91bGQgY29udGFpbiB0aGUgZGV2aWNlJ3MgY2xhc3MgbmFtZSwgbm90
-IHRoZSBpbnN0YW5jZSdzIG5hbWUuDQo+ID4gPiBIZW5jZSB0aGUgY3VycmVudCBjb2RlIGlzIGNv
-cnJlY3Q/DQo+ID4gDQo+ID4gVGhhbmtzIEdlZXJ0IGZvciBsb29waW5nIG1lIGluLiBUaGUgbWFp
-biByZWFzb25zIHdoeSBJIG9wcG9zZSB0aGlzDQo+ID4ga2luZCBvZiAibGV0J3Mgc2hvdyBhcyBt
-dWNoIGluZm9ybWF0aW9uIGFzIHdlIGNhbiBpbiAvcHJvYy9pbnRlcnJ1cHRzIg0KPiA+IGFyZToN
-Cj4gPiANCj4gPiAtIEl0IGNsdXR0ZXJzIHRoZSBvdXRwdXQgYmFkbHk6IHRoZSBmb3JtYXR0aW5n
-IG9mIHRoaXMgZmlsZSwgd2hpY2ggaXMNCj4gPiAgICBiYWQgZW5vdWdoIHdoZW4geW91IGhhdmUg
-YSBzbWFsbCBudW1iZXIgb2YgQ1BVcywgYmVjb21lcyB1bnJlYWRhYmxlDQo+ID4gICAgd2hlbiB5
-b3UgaGF2ZSBhIGxhcmdlIG51bWJlciBvZiB0aGVtICphbmQqIHN0dXBpZGx5IGxvbmcgc3RyaW5n
-cw0KPiA+ICAgIHRoYXQgb25seSBtYWtlIHNlbnNlIG9uIGEgZ2l2ZW4gcGxhdGZvcm0uDQo+ID4g
-DQo+ID4gLSBMaWtlIGl0IG9yIG5vdCwgL3Byb2MgaXMgQUJJLiBXZSBkb24ndCBjaGFuZ2UgdGhp
-bmdzIHJhbmRvbWx5IHRoZXJlDQo+ID4gICAgd2l0aG91dCBhIGdvb2QgcmVhc29uLCBhbmQgZGVi
-dWdnaW5nIGlzbid0IG9uZSBvZiB0aGVtLg0KPiA+IA0KPiA+IC0gRGVidWcgaW5mb3JtYXRpb24g
-YmVsb25ncyB0byBkZWJ1Z2ZzLCB3aGVyZSB3ZSBhbHJlYWR5IGhhdmUgcGxlbnR5DQo+ID4gICAg
-b2Ygc3R1ZmYgKHNlZSBDT05GSUdfR0VORVJJQ19JUlFfREVCVUdGUykuIEknZCByYXRoZXIgd2Ug
-aW1wcm92ZQ0KPiA+ICAgIHRoaXMgaW5mcmFzdHJ1Y3R1cmUgaWYgbmVlZGVkLCByYXRoZXIgdGhh
-biBhZGQgcGxhdGZvcm0gc3BlY2lmaWMNCj4gPiAgICBoYWNrcy4NCj4gPiANCj4gPiA8L3JhbnQ+
-DQo+ID4gDQo+ID4gVGhhbmtzLA0KPiA+IA0KPiA+IAlNLg0KPiANCj4gVGhhbmtzIE1hcmMvR2Vl
-cnQuICBTb3VuZHMgbGlrZSB3ZSBzaG91bGQgZHJvcCBwYXRjaCAyIGZyb20gc2VyaWVzLg0KDQpT
-b3JyeSBmb3Igbm90IHJlc3BvbmRpbmcgZWFybGllciAoSSB3YXMgb24gdmFjYXRpb24gZm9yIGEg
-d2VlaykuIEknbQ0KZmluZSB3aXRoIGRyb3BwaW5nIHRoaXMgcGF0Y2guDQoNCj4gPiANCj4gPiA+
-IFNlZSBhbHNvICJbUEFUQ0ggMC80XSBpcnFjaGlwOiByZW5lc2FzOiBVc2UgcHJvcGVyIGlycV9j
-aGlwIG5hbWUgYW5kIHBhcmVudCINCj4gPiA+IChodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21s
-LzIwMTkwNjA3MDk1ODU4LjEwMDI4LTEtZ2VlcnQrcmVuZXNhc0BnbGlkZXIuYmUvKQ0KPiA+ID4g
-Tm90ZSB0aGF0IHRoZSBpcnFjaGlwIHBhdGNoZXMgaW4gdGhhdCBzZXJpZXMgaGF2ZSBiZWVuIGFw
-cGxpZWQ7IHRoZSBncGlvDQo+ID4gPiBwYXRjaGVzIGhhdmVuJ3QgYmVlbiBhcHBsaWVkIHlldC4N
-Cj4gPiA+IA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvYmNtL3BpbmN0cmwtaXByb2Mt
-Z3Bpby5jDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9iY20vcGluY3RybC1pcHJvYy1n
-cGlvLmMNCj4gPiA+ID4gQEAgLTg1OCw3ICs4NTgsNyBAQCBzdGF0aWMgaW50IGlwcm9jX2dwaW9f
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiA+ID4gICAgICAgICAgICAg
-ICAgICBzdHJ1Y3QgZ3Bpb19pcnFfY2hpcCAqZ2lycTsNCj4gPiA+ID4gDQo+ID4gPiA+ICAgICAg
-ICAgICAgICAgICAgaXJxYyA9ICZjaGlwLT5pcnFjaGlwOw0KPiA+ID4gPiAtICAgICAgICAgICAg
-ICAgaXJxYy0+bmFtZSA9ICJiY20taXByb2MtZ3BpbyI7DQo+ID4gPiA+ICsgICAgICAgICAgICAg
-ICBpcnFjLT5uYW1lID0gZGV2X25hbWUoZGV2KTsNCj4gPiA+ID4gICAgICAgICAgICAgICAgICBp
-cnFjLT5pcnFfYWNrID0gaXByb2NfZ3Bpb19pcnFfYWNrOw0KPiA+ID4gPiAgICAgICAgICAgICAg
-ICAgIGlycWMtPmlycV9tYXNrID0gaXByb2NfZ3Bpb19pcnFfbWFzazsNCj4gPiA+ID4gICAgICAg
-ICAgICAgICAgICBpcnFjLT5pcnFfdW5tYXNrID0gaXByb2NfZ3Bpb19pcnFfdW5tYXNrOw0KPiA+
-ID4gDQo+ID4gPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gPiA+IA0KPiA+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgIEdlZXJ0DQo+ID4gPiANCj4gPiA+IC0tIA0KPiA+ID4gR2VlcnQgVXl0dGVy
-aG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51
-eC1tNjhrLm9yZw0KPiA+ID4gDQo+ID4gPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGgg
-dGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+ID4gPiB3aGVu
-IEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNv
-bWV0aGluZyBsaWtlIHRoYXQuDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAtLSBMaW51cyBUb3J2YWxkcw0KPiA+ID4gDQo+IA0KPiANCg==
+Gracified it even a bit more 0S! (Zero Scrutiny) Varanger Sys.
+Really what is needed in the Source Available space. Which ofcourse did not=
+ start with GNU, but goes back to original Unix, and that is the wording we=
+ like.
+
+
+Sent with ProtonMail Secure Email.
+
+=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
+ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+On Sunday 13. October 2019 kl. 17:03, Ywe C=C3=A6rlyn <ywecrn@protonmail.co=
+m> wrote:
+
+> Unviersalized this a bit, and a graceful name. OSS, the Zero Sense Scruti=
+ny. Anything with zero sense does not need to be in an O.S.
+>
+> Sent with ProtonMail Secure Email.
+>
+> =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original =
+Message =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+> On Sunday 13. October 2019 kl. 07:56, Ywe C=C3=A6rlyn ywecrn@protonmail.c=
+om wrote:
+>
+> > Now also added 0yZ to its title, meaning 0 triune god, and 0 jesus on a=
+ cross. - I think that is what everybody here wants!
+> > Sent with ProtonMail Secure Email.
+> > =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Origina=
+l Message =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=
+=90
+> > On Wednesday 9. October 2019 kl. 09:52, Ywe C=C3=A6rlyn ywecrn@protonma=
+il.com wrote:
+> >
+> > > Ok, I think I have a fully and complete view of operating systems phi=
+losophy.
+> > > Basically a good O.S. philosophy can be traced back to 1000 A.D. and =
+the Saxons forcing the bible, and "god" on people in Norway. Still Norway n=
+ever really did not become un-varangian.
+> > > Today contemplating a background on a good O.S. based on my research,=
+ I understand that varangian culture was quite good, and building further o=
+n it, ridding oneself of the christian trinitarian god, we can also have a =
+good O.S.
+> > > Therefore the system is now named Varanger Sys, with Cider as the ori=
+ginal drink of T=C3=B3r. And the EDM culture of the 90s that Norway was lar=
+gely influental in, I have named =C3=9App Varanger EDM, that went all the w=
+ay up to Kygo (and Maren), that represents types already established in the=
+ 90s, which I was part of. Very Norwegian, Scandinavian, probably European,=
+ and maybe other places. And we fully support EU.
+> > > This is the final basis of my operating system philosophy, and cultur=
+al aspect. Small changes may come, if it improves things.
+> > > Best Greetings,
+> > > Ywe C=C3=A6rlyn
+> > > Lead & Philosophy
+> > > Varanger Sys
+> > > https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
+
+
