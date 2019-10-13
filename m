@@ -2,76 +2,46 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02631C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACD2C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2F3207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alPvi028"
+	by mail.kernel.org (Postfix) with ESMTP id 8598A207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 19:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbfJMTaq (ORCPT
+        id S1729622AbfJMTbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 15:30:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46401 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729374AbfJMTaq (ORCPT
+        Sun, 13 Oct 2019 15:31:16 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:32123 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728945AbfJMTbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 15:30:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id q24so7003362plr.13;
-        Sun, 13 Oct 2019 12:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uyjdEwimTjVOCGshMlFmT1B3OesvQtAg++QzCdP/Y+8=;
-        b=alPvi028vLTX4CIZW9AH89t+YAL9PIvpj9zKUmOR9HfiTIpC0Cj3HEkG0JIZcloqQ+
-         hgM4x/lmrBPtS+RX4MePUuncXFTKCj3JDKj7c/SMNmL5i+z7JNJtbhNzJZJIUKhkuvK5
-         ZkkrDop46L6UV9+FIlOZNBeWikV4Ihu9Xy1hgZmVDktImNi857fN1PMU5+Epk8UzeNiq
-         7TJwvnfBlPlFdjBV/RNLkphrYOoEBStvlrocbdA1VoXrbezl0Dx8XAJpdjIfPeMAHbTk
-         QGTRcoNGszfxe5XR4aJUU80ZjjQI58HY4fi6TrHvEWv1pxnDpgA56R9LqDyMUcVN/OeO
-         Ldfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uyjdEwimTjVOCGshMlFmT1B3OesvQtAg++QzCdP/Y+8=;
-        b=pZQ7cL+u2jNqhiQlIAB3la7Zd3dRL6HuuP5oumM4EF9U80I6dmeyu1xwlHT7uOKve7
-         X73nmEiO4ityMfkYBKQKOGsDmOoHDQZYdPhFbB4LcU6brX8iqhmAw0fkbxeMWbqvI3Qp
-         DkDuYZbN8WtV/9cQ7e8pMgYoZrtYX3uCC38MfhSSRjb51790azY2fDCtfVlaMSEqVN6/
-         jqkYP73OJhFtD9Tt9E14U6Pq/ywJgS1wVkoKyFY4d8Bm7a7xK//jL7v7pcNFUHKJZ+cQ
-         CRUU7OSl9vteszJfm8Pa89KHHVttcTWh5+1CXj8+C/q7agnnSNUwUO5CVuOYNSLGaaVy
-         6vKw==
-X-Gm-Message-State: APjAAAWnjto2OEzCGdacYd5T7vPk48AdRnuSFV4kNIIumNYFsbqQ9DDA
-        y+YDbBbEg1NZAcnBHAoSVnlMWhXf
-X-Google-Smtp-Source: APXvYqxTqzK55ewzRMAlIg0czwHzQO+WyAXHg57a9mwSE65cYaNa6WOyG8bx2/wNskSxp0SYTwkOLQ==
-X-Received: by 2002:a17:902:fe91:: with SMTP id x17mr25780521plm.114.1570995044960;
-        Sun, 13 Oct 2019 12:30:44 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id q6sm18145350pgn.44.2019.10.13.12.30.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Oct 2019 12:30:42 -0700 (PDT)
-Subject: Re: [PATCH] net: core: datagram: tidy up copy functions a bit
-To:     Vito Caputo <vcaputo@pengaru.com>, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191012115509.jrqe43yozs7kknv5@shells.gnugeneration.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <8fab6f9c-70a6-02fd-5b2d-66a013c10a4f@gmail.com>
-Date:   Sun, 13 Oct 2019 12:30:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 13 Oct 2019 15:31:16 -0400
+X-IronPort-AV: E=Sophos;i="5.67,293,1566856800"; 
+   d="scan'208";a="405952555"
+Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Oct 2019 21:31:14 +0200
+Date:   Sun, 13 Oct 2019 21:31:13 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        eric@anholt.net, wahrenst@gmx.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [Outreachy kernel] [PATCH v2] staging: rtl8723bs: use DIV_ROUND_UP
+ helper macro
+In-Reply-To: <20191013191027.6470-1-wambui.karugax@gmail.com>
+Message-ID: <alpine.DEB.2.21.1910132126290.2565@hadrien>
+References: <20191013191027.6470-1-wambui.karugax@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20191012115509.jrqe43yozs7kknv5@shells.gnugeneration.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -79,36 +49,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 10/12/19 4:55 AM, Vito Caputo wrote:
-> Eliminate some verbosity by using min() macro and consolidating some
-> things, also fix inconsistent zero tests (! vs. == 0).
-> 
-> Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
+On Sun, 13 Oct 2019, Wambui Karuga wrote:
+
+> Use the DIV_ROUND_UP macro to replace open-coded divisor calculation
+> to improve readability.
+> Issue found using coccinelle:
+> @@
+> expression n,d;
+> @@
+> (
+> - ((n + d - 1) / d)
+> + DIV_ROUND_UP(n,d)
+> |
+> - ((n + (d - 1)) / d)
+> + DIV_ROUND_UP(n,d)
+> )
+>
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+
+Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+
 > ---
->  net/core/datagram.c | 44 ++++++++++++++------------------------------
->  1 file changed, 14 insertions(+), 30 deletions(-)
-> 
-> diff --git a/net/core/datagram.c b/net/core/datagram.c
-> index 4cc8dc5db2b7..08d403f93952 100644
-> --- a/net/core/datagram.c
-> +++ b/net/core/datagram.c
-> @@ -413,13 +413,11 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
->  					    struct iov_iter *), void *data)
->  {
->  	int start = skb_headlen(skb);
-> -	int i, copy = start - offset, start_off = offset, n;
-> +	int i, copy, start_off = offset, n;
->  	struct sk_buff *frag_iter;
->  
->  	/* Copy header. */
-> -	if (copy > 0) {
-> -		if (copy > len)
-> -			copy = len;
-> +	if ((copy = min(start - offset, len)) > 0) {
+> Changes in v2:
+>   - Remove comment that explained previously used calculation.
 
-No, we prefer not having this kind of construct anymore.
+Maybe it is not very important for a comment, but remember that what is
+below the --- will disappear in the history.  So when actual code changes,
+it may be necessary to integrate the extended change in the commit log as
+well as putting it in the v2 changes.
 
-This refactoring looks unnecessary code churn, making our future backports not
-clean cherry-picks.
+julia
 
-Simply making sure this patch does not bring a regression is very time consuming.
+
+> ---
+>  drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> index 87535a4c2e14..22931ab3a5fc 100644
+> --- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> +++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> @@ -4156,9 +4156,8 @@ void SetHwReg8723B(struct adapter *padapter, u8 variable, u8 *val)
+>  				break;
+>  			}
+>
+> -			/*  The value of ((usNavUpper + HAL_NAV_UPPER_UNIT_8723B - 1) / HAL_NAV_UPPER_UNIT_8723B) */
+> -			/*  is getting the upper integer. */
+> -			usNavUpper = (usNavUpper + HAL_NAV_UPPER_UNIT_8723B - 1) / HAL_NAV_UPPER_UNIT_8723B;
+> +			usNavUpper = DIV_ROUND_UP(usNavUpper,
+> +						  HAL_NAV_UPPER_UNIT_8723B);
+>  			rtw_write8(padapter, REG_NAV_UPPER, (u8)usNavUpper);
+>  		}
+>  		break;
+> --
+> 2.23.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191013191027.6470-1-wambui.karugax%40gmail.com.
+>
