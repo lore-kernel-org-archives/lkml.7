@@ -2,163 +2,90 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD66ECE58C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9F4C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987E2206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4B220673
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfJMSLh (ORCPT
+        id S1729026AbfJMSNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 14:11:37 -0400
-Received: from vsmx012.vodafonemail.xion.oxcs.net ([153.92.174.90]:21364 "EHLO
-        vsmx012.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727141AbfJMSLh (ORCPT
+        Sun, 13 Oct 2019 14:13:38 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:34088 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbfJMSNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 14:11:37 -0400
-Received: from vsmx004.vodafonemail.xion.oxcs.net (unknown [192.168.75.198])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTP id 60551F34EB2;
-        Sun, 13 Oct 2019 18:11:33 +0000 (UTC)
-Received: from lazy.lzy (unknown [93.212.126.195])
-        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTPA id A68DE19AD8B;
-        Sun, 13 Oct 2019 18:11:18 +0000 (UTC)
-Received: from lazy.lzy (localhost [127.0.0.1])
-        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id x9DIBGb8003897
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 13 Oct 2019 20:11:16 +0200
-Received: (from red@localhost)
-        by lazy.lzy (8.15.2/8.15.2/Submit) id x9DIBG8h003896;
-        Sun, 13 Oct 2019 20:11:16 +0200
-Date:   Sun, 13 Oct 2019 20:11:16 +0200
-From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-block@vger.kernel.org,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
-Message-ID: <20191013181116.GA3858@lazy.lzy>
-References: <20190929201332.GA3099@lazy.lzy>
- <Pine.LNX.4.44L0.1909292056230.5908-100000@netrider.rowland.org>
- <20190930182501.GA4043@lazy.lzy>
+        Sun, 13 Oct 2019 14:13:38 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iJiN3-0006Hg-Cd; Sun, 13 Oct 2019 18:13:33 +0000
+Date:   Sun, 13 Oct 2019 19:13:33 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+Message-ID: <20191013181333.GK26530@ZenIV.linux.org.uk>
+References: <20191007025046.GL26530@ZenIV.linux.org.uk>
+ <CAHk-=whraNSys_Lj=Ut1EA=CJEfw2Uothh+5-WL+7nDJBegWcQ@mail.gmail.com>
+ <CAHk-=witTXMGsc9ZAK4hnKnd_O7u8b1eiou-6cfjt4aOcWvruQ@mail.gmail.com>
+ <20191008032912.GQ26530@ZenIV.linux.org.uk>
+ <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
+ <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
+ <20191010195504.GI26530@ZenIV.linux.org.uk>
+ <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
+ <20191011001104.GJ26530@ZenIV.linux.org.uk>
+ <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190930182501.GA4043@lazy.lzy>
+In-Reply-To: <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-VADE-STATUS: LEGIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 08:25:01PM +0200, Piergiorgio Sartor wrote:
-> On Sun, Sep 29, 2019 at 09:01:48PM -0400, Alan Stern wrote:
-> > On Sun, 29 Sep 2019, Piergiorgio Sartor wrote:
-> > 
-> > > On Wed, Sep 25, 2019 at 02:31:58PM -0400, Alan Stern wrote:
-> > > > On Wed, 25 Sep 2019, Piergiorgio Sartor wrote:
-> > > > 
-> > > > > On Mon, Aug 26, 2019 at 07:38:33PM +0200, Piergiorgio Sartor wrote:
-> > > > > > On Tue, Aug 20, 2019 at 06:37:22PM +0200, Piergiorgio Sartor wrote:
-> > > > > > > On Tue, Aug 20, 2019 at 09:23:26AM +0200, Christoph Hellwig wrote:
-> > > > > > > > On Mon, Aug 19, 2019 at 10:14:25AM -0400, Alan Stern wrote:
-> > > > > > > > > Let's bring this to the attention of some more people.
-> > > > > > > > > 
-> > > > > > > > > It looks like the bug that was supposed to be fixed by commit
-> > > > > > > > > d74ffae8b8dd ("usb-storage: Add a limitation for
-> > > > > > > > > blk_queue_max_hw_sectors()"), which is part of 5.2.5, but apparently
-> > > > > > > > > the bug still occurs.
-> > > > > > > > 
-> > > > > > > > Piergiorgio,
-> > > > > > > > 
-> > > > > > > > can you dump the content of max_hw_sectors_kb file for your USB storage
-> > > > > > > > device and send that to this thread?
-> > > > > > > 
-> > > > > > > Hi all,
-> > > > > > > 
-> > > > > > > for both kernels, 5.1.20 (working) and 5.2.8 (not working),
-> > > > > > > the content of /sys/dev/x:y/queue/max_hw_sectors_kb is 512
-> > > > > > > for USB storage devices (2.0 and 3.0).
-> > > > > > > 
-> > > > > > > This is for the PC showing the issue.
-> > > > > > > 
-> > > > > > > In an other PC, which does not show the issus at the moment,
-> > > > > > > the values are 120, for USB2.0, and 256, for USB3.0.
-> > 
-> > > > One thing you can try is git bisect from 5.1.20 (or maybe just 5.1.0)  
-> > > > to 5.2.8.  If you can identify a particular commit which caused the
-> > > > problem to start, that would help.
-> > > 
-> > > OK, I tried a bisect (2 days compilations...).
-> > > Assuming I've done everything correctly (how to
-> > > test this? How to remove the guilty patch?), this
-> > > was the result:
-> > > 
-> > > 09324d32d2a0843e66652a087da6f77924358e62 is the first bad commit
-> > > commit 09324d32d2a0843e66652a087da6f77924358e62
-> > > Author: Christoph Hellwig <hch@lst.de>
-> > > Date:   Tue May 21 09:01:41 2019 +0200
-> > > 
-> > >     block: force an unlimited segment size on queues with a virt boundary
-> > > 
-> > >     We currently fail to update the front/back segment size in the bio when
-> > >     deciding to allow an otherwise gappy segement to a device with a
-> > >     virt boundary.  The reason why this did not cause problems is that
-> > >     devices with a virt boundary fundamentally don't use segments as we
-> > >     know it and thus don't care.  Make that assumption formal by forcing
-> > >     an unlimited segement size in this case.
-> > > 
-> > >     Fixes: f6970f83ef79 ("block: don't check if adjacent bvecs in one bio can be mergeable")
-> > >     Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > >     Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> > >     Reviewed-by: Hannes Reinecke <hare@suse.com>
-> > >     Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> > > 
-> > > :040000 040000 57ba04a02f948022c0f6ba24bfa36f3b565b2440 8c925f71ce75042529c001bf244b30565d19ebf3 M      block
-> > > 
-> > > What to do now?
-> > 
-> > Here's how to verify that the bisection got a correct result.  First, 
-> > do a git checkout of commit 09324d32d2a0, build the kernel, and make 
-> > sure that it exhibits the problem.
-> > 
-> > Next, have git write out the contents of that commit in the form of a
-> > patch (git show commit-id >patchfile), and revert it (git apply -R
-> > patchfile).  Build the kernel from that tree, and make sure that it
-> > does not exhibit the problem.  If it doesn't, you have definitely shown
-> > that this commit is the cause (or at least, is _one_ of the causes).
+On Thu, Oct 10, 2019 at 05:31:13PM -0700, Linus Torvalds wrote:
+
+> So the code actually needs to properly return the error early, or
+> initialize the segments that didn't get loaded to 0, or something.
 > 
-> I tried as suggested, i.e. jumping to commit
-> 09324d32d2a0843e66652a087da6f77924358e62, testing,
-> removing the patch, testing.
-> The result was as expected.
-> I was able to reproduce the issue with the commit,
-> I was not able to reproduce it without.
-> It seems this patch / commit is causing the problem.
-> Directly or indirectly.
+> And when I posted that, Luto said "just get rid of the get_user_ex()
+> entirely, instead of changing semantics of the existing ones to be
+> sane.
 > 
-> What are the next steps?
+> Which is probably right. There aren't that many.
+> 
+> I *thought* there were also cases of us doing some questionably things
+> inside the get_user_try sections, but those seem to have gotten fixed
+> already independently, so it's really just the "make try/catch really
+> try/catch" change that needs some editing of our current broken stuff
+> that depends on it not actually *catching* exceptions, but on just
+> continuing on to the next one.
 
-Hi all,
+Umm...  TBH, I wonder if we would be better off if restore_sigcontext()
+(i.e. sigreturn()/rt_sigreturn()) would flat-out copy_from_user() the
+entire[*] struct sigcontext into a local variable and then copied fields
+to pt_regs...  The thing is small enough for not blowing the stack (256
+bytes max. and it's on a shallow stack) and big enough to make "fancy
+memcpy + let the compiler think how to combine in-kernel copies"
+potentially better than hardwired sequence of 64bit loads/stores...
 
-I tested kernel 5.3.5 (Fedora kernel-5.3.5-200.fc30.x86_64),
-with same problematic results.
+[*] OK, sans ->reserved part in the very end on 64bit.  192 bytes to
+copy.
 
-Again, what should be done now?
-Could you please revert the patch?
+Same for do_sys_vm86(), perhaps - we want regs/flags/cpu_type and
+screen_bitmap there, i.e. the beginning of struct vm86plus_struct
+and of struct vm86_struct...  24*32bit.  IOW, 96-byte memcpy +
+gcc-visible field-by-field copying vs. hardwired sequence of
+32bit loads (with some 16bit ones thrown in, for extra fun) and
+compiler told not to reorder anything.
 
-Or is there something else to check?
-
-Thanks,
-
-bye,
-
--- 
-
-piergiorgio
+And these (32bit and 64bit restore_sigcontext() and do_sys_vm86())
+are the only get_user_ex() users anywhere...
