@@ -2,280 +2,162 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACB5C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 01:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB00C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 01:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69DD92089F
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 01:08:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="fpT712Tj"
+	by mail.kernel.org (Postfix) with ESMTP id 772B72089C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 01:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570929279;
+	bh=3xDRpdl064Rv8+CvOD+mJcU6GdSI4NTD1UERO31D1Ak=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rBRJ12BKF8BOvl/MWJFL5XkJfvEf8xXfUUdKFT/kxAQk/L9SInyOdr1o8G9R+7G3D
+	 CaYCeHAaReHiNU9j4KvEcDyx1cDoqLo8RYsdsEsjhY/8n2LteUgIuIb+eo8S+H0JyX
+	 j6oUAWxnaAX98JXYeB7Lc3x41FupkFnw/7CSVqqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfJMBIf (ORCPT
+        id S1727970AbfJMBOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 12 Oct 2019 21:08:35 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40717 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfJMBIe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 12 Oct 2019 21:08:34 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m61so19761625qte.7
-        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 18:08:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=RiiTwpQS0mYXMCffosrGRNKPibt05f52ictxLJwzvMU=;
-        b=fpT712Tjpp9uPzY85eDF0u+LnkZ1H6ejeS1YrHZD9pKSCvqNQrio4Zr+6YsMZZOMIO
-         kOZ+hnsfdXLEHLe/cycvv7n8ROM5xDNotmBPVC+U8w/9k3CpuX6UU1ojQGIaH+d286Ck
-         oRWxh3t3PSylyyysnTSRUEGuGmXmNn232Eey3AeSzxBvZPG+FKQfbRb35RJHB5qekQ08
-         66zpa3f5445bql3MNKROPZ29uqWYvyrA+k7LKE2r6e+6pYlxfOKLRWir4I3LPONDQY9X
-         txW/oNKUYGeGoU395gE9hqKvnnucgGNH3GbgxrOoxupTwBjfECjhOHS4XugtFyjaCbH4
-         b5dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=RiiTwpQS0mYXMCffosrGRNKPibt05f52ictxLJwzvMU=;
-        b=CmzV2zYYFt4kQ+RfQnnfDUlQ/vdcdsvzMXqDpshvR3PPHXDDBgL0e5CygX6B8i7nPh
-         T6glns/z+buJYCo0+YuqSPGoeJfA2M/znXeXndaPiabOrXyAXtoUN0aTKmg6q2BhKjzt
-         cy1zZ0xVECIopMrPNv4xhhNddexL8HFTBIGzLZCHQEMoUV+bVkEpKNOZN6vvVhncStHE
-         isqNhKFkRFUsLv89VVuAj7HG5L5rFFxRaKzyivQpnF8GrJhJiS0Lw8P6zm7Lva9FUezZ
-         m6n+O22Z679kFbxNvWbHrDDJbfY6sZ5TQ/BMkT0j1O3f4WyEvJkyiXVw7hW6ZfXSdNi8
-         N1bQ==
-X-Gm-Message-State: APjAAAVh4OqpBoLvqb6q5U1SzzaApmg0tiJgia8vNtLuvC2Cz+cN9CiM
-        bSBsQ4qoEfjtwrEk1y0HL77FJA==
-X-Google-Smtp-Source: APXvYqw5Qlzus9NC2+DxGhuvgV3/CCP1I0biun6Wwc03PRi5rg3PVvDhH04cGhtGm00ois8o47RN9A==
-X-Received: by 2002:ac8:708f:: with SMTP id y15mr25342761qto.247.1570928913106;
-        Sat, 12 Oct 2019 18:08:33 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id u39sm6944344qtj.34.2019.10.12.18.08.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Oct 2019 18:08:31 -0700 (PDT)
-Message-ID: <bf072b400ce7d5a9f52cf7ca7ac0b36b22fff24f.camel@ndufresne.ca>
-Subject: Re: [PATCH 0/2] media: meson: vdec: Add compliant H264 support
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Maxime Jourdan <mjourdan@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Date:   Sat, 12 Oct 2019 21:08:29 -0400
-In-Reply-To: <20191007145909.29979-1-mjourdan@baylibre.com>
-References: <20191007145909.29979-1-mjourdan@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Sat, 12 Oct 2019 21:14:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727560AbfJMBOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 12 Oct 2019 21:14:38 -0400
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD6CF21D7D
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 01:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570929277;
+        bh=3xDRpdl064Rv8+CvOD+mJcU6GdSI4NTD1UERO31D1Ak=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QtCMdkpvxygrRyMv8M+mDlo166M+x7UrRSx4A/0VrHWFd6c9l2DKhRQbG2tE1UBRN
+         LZe4bo7o88hpiwZpcg3IR55rufL14M2f/Hb4s9yf5mHPvTKeSfPluiSxP9OsCo9dLC
+         /156Nfqx8HDV5no2dXiSho0Xn9fwnVrHU6e1NN40=
+Received: by mail-wm1-f49.google.com with SMTP id v17so13393451wml.4
+        for <linux-kernel@vger.kernel.org>; Sat, 12 Oct 2019 18:14:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAWjMnitr7VTlo0fudbrr6vU7U0f+OH5thQvY+/mXzoybEv1t336
+        9VApmCFCzMIVSQQk07AoHar5sprumO3+IYNyw0riyg==
+X-Google-Smtp-Source: APXvYqzB8K9RUyJEZ3nofhGwLYruOYHYt4KjQE7yT2PNJ6aVpDZNbTYQcrCyzwZoUiIlxpbJUTfTSvaJAyWY3DEZK1U=
+X-Received: by 2002:a1c:a556:: with SMTP id o83mr9747603wme.0.1570929275028;
+ Sat, 12 Oct 2019 18:14:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-4-dancol@google.com>
+ <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com> <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
+In-Reply-To: <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 12 Oct 2019 18:14:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
+Message-ID: <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
+Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
+To:     Daniel Colascione <dancol@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Pavel Emelyanov <xemul@parallels.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Tim Murray <timmurray@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lundi 07 octobre 2019 à 16:59 +0200, Maxime Jourdan a écrit :
-> Hello,
-> 
-> This patch series aims to bring H.264 support as well as compliance update
-> to the amlogic stateful video decoder driver.
-> 
-> There is 1 issue that remains currently:
-> 
->  - The following codepath had to be commented out from v4l2-compliance as
-> it led to stalling:
-> 
-> if (node->codec_mask & STATEFUL_DECODER) {
-> 	struct v4l2_decoder_cmd cmd;
-> 	buffer buf_cap(m2m_q);
-> 
-> 	memset(&cmd, 0, sizeof(cmd));
-> 	cmd.cmd = V4L2_DEC_CMD_STOP;
-> 
-> 	/* No buffers are queued, call STREAMON, then STOP */
-> 	fail_on_test(node->streamon(q.g_type()));
-> 	fail_on_test(node->streamon(m2m_q.g_type()));
-> 	fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
-> 
-> 	fail_on_test(buf_cap.querybuf(node, 0));
-> 	fail_on_test(buf_cap.qbuf(node));
-> 	fail_on_test(buf_cap.dqbuf(node));
-> 	fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
-> 	for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
-> 		fail_on_test(buf_cap.g_bytesused(p));
-> 	fail_on_test(node->streamoff(q.g_type()));
-> 	fail_on_test(node->streamoff(m2m_q.g_type()));
-> 
-> 	/* Call STREAMON, queue one CAPTURE buffer, then STOP */
-> 	fail_on_test(node->streamon(q.g_type()));
-> 	fail_on_test(node->streamon(m2m_q.g_type()));
-> 	fail_on_test(buf_cap.querybuf(node, 0));
-> 	fail_on_test(buf_cap.qbuf(node));
-> 	fail_on_test(doioctl(node, VIDIOC_DECODER_CMD, &cmd));
-> 
-> 	fail_on_test(buf_cap.dqbuf(node));
-> 	fail_on_test(!(buf_cap.g_flags() & V4L2_BUF_FLAG_LAST));
-> 	for (unsigned p = 0; p < buf_cap.g_num_planes(); p++)
-> 		fail_on_test(buf_cap.g_bytesused(p));
-> 	fail_on_test(node->streamoff(q.g_type()));
-> 	fail_on_test(node->streamoff(m2m_q.g_type()));
-> }
-> 
-> The reason for this is because the driver has a limitation where all
-> capturebuffers must be queued to the driver before STREAMON is effective.
-> The firmware needs to know in advance what all the buffers are before
-> starting to decode.
-> This limitation is enforced via q->min_buffers_needed.
-> As such, in this compliance codepath, STREAMON is never actually called
-> driver-side and there is a stall on fail_on_test(buf_cap.dqbuf(node));
-> 
-> 
-> One last detail: V4L2_FMT_FLAG_DYN_RESOLUTION is currently not recognized
-> by v4l2-compliance, so it was left out for the test. However, it is
-> present in the patch series.
-> 
-> The second patch has 3 "Alignment should match open parenthesis" lines
-> where I preferred to keep them that way.
-> 
-> Thanks Stanimir for sharing your HDR file creation tools, this was very
-> helpful :).
+[adding more people because this is going to be an ABI break, sigh]
 
-I tried to test this with a pending branch of GStreamer supporting
-dynamic resolution changes. The even driver mechanism does not seem to
-work with this driver. I've grepped the code, and don't see any places
-were the event would be emitted.
+On Sat, Oct 12, 2019 at 5:52 PM Daniel Colascione <dancol@google.com> wrote:
+>
+> On Sat, Oct 12, 2019 at 4:10 PM Andy Lutomirski <luto@kernel.org> wrote:
+> >
+> > On Sat, Oct 12, 2019 at 12:16 PM Daniel Colascione <dancol@google.com> wrote:
+> > >
+> > > The new secure flag makes userfaultfd use a new "secure" anonymous
+> > > file object instead of the default one, letting security modules
+> > > supervise userfaultfd use.
+> > >
+> > > Requiring that users pass a new flag lets us avoid changing the
+> > > semantics for existing callers.
+> >
+> > Is there any good reason not to make this be the default?
+> >
+> >
+> > The only downside I can see is that it would increase the memory usage
+> > of userfaultfd(), but that doesn't seem like such a big deal.  A
+> > lighter-weight alternative would be to have a single inode shared by
+> > all userfaultfd instances, which would require a somewhat different
+> > internal anon_inode API.
+>
+> I'd also prefer to just make SELinux use mandatory, but there's a
+> nasty interaction with UFFD_EVENT_FORK. Adding a new UFFD_SECURE mode
+> which blocks UFFD_EVENT_FORK sidesteps this problem. Maybe you know a
+> better way to deal with it.
 
-Then I grepped, and it seems the driver accept source_change
-subscription but does not set V4L2_FMT_FLAG_DYN_RESOLUTION. I believe
-these two things are bit redundant and confusing, I'll fix the proposed
-patch never the less, and see if that makes it work.
+...
 
-> 
-> Maxime
-> 
-> # v4l2-compliance --stream-from-hdr test-25fps.h264.hdr -s250
-> v4l2-compliance SHA: a162244d47d4bb01d0692da879dce5a070f118e7, 64 bits
-> 
-> Compliance test for meson-vdec device /dev/video0:
-> 
-> Driver Info:
-> 	Driver name      : meson-vdec
-> 	Card type        : Amlogic Video Decoder
-> 	Bus info         : platform:meson-vdec
-> 	Driver version   : 5.4.0
-> 	Capabilities     : 0x84204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps      : 0x04204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 	Detected Stateful Decoder
-> 
-> Required ioctls:
-> 	test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
-> 	test second /dev/video0 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
-> 
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-> 	test VIDIOC_QUERYCTRL: OK
-> 	test VIDIOC_G/S_CTRL: OK
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 2 Private Controls: 0
-> 
-> Format ioctls:
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 	test VIDIOC_G/S_PARM: OK (Not Supported)
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK
-> 	test VIDIOC_TRY_FMT: OK
-> 	test VIDIOC_S_FMT: OK
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 	test Cropping: OK (Not Supported)
-> 	test Composing: OK (Not Supported)
-> 	test Scaling: OK
-> 
-> Codec ioctls:
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK
-> 
-> Buffer ioctls:
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 	test VIDIOC_EXPBUF: OK
-> 	test Requests: OK (Not Supported)
-> 
-> Test input 0:
-> 
-> Streaming ioctls:
-> 	test read/write: OK (Not Supported)
-> 	test blocking wait: OK
-> 	Video Capture Multiplanar: Captured 250 buffers   
-> 	test MMAP (select): OK
-> 	Video Capture Multiplanar: Captured 250 buffers   
-> 	test MMAP (epoll): OK
-> 	test USERPTR (select): OK (Not Supported)
-> 	test DMABUF: Cannot test, specify --expbuf-device
-> 
-> Total for meson-vdec device /dev/video0: 49, Succeeded: 49, Failed: 0, Warnings: 0
-> 
-> Maxime Jourdan (2):
->   media: meson: vdec: bring up to compliance
->   media: meson: vdec: add H.264 decoding support
-> 
->  drivers/staging/media/meson/vdec/Makefile     |   2 +-
->  drivers/staging/media/meson/vdec/codec_h264.c | 482 ++++++++++++++++++
->  drivers/staging/media/meson/vdec/codec_h264.h |  14 +
->  drivers/staging/media/meson/vdec/esparser.c   |  34 +-
->  drivers/staging/media/meson/vdec/vdec.c       |  70 ++-
->  drivers/staging/media/meson/vdec/vdec.h       |  14 +-
->  .../staging/media/meson/vdec/vdec_helpers.c   |  85 ++-
->  .../staging/media/meson/vdec/vdec_helpers.h   |   6 +-
->  .../staging/media/meson/vdec/vdec_platform.c  |  43 ++
->  9 files changed, 654 insertions(+), 96 deletions(-)
->  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.c
->  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.h
-> 
+> But maybe we can go further: let's separate authentication and
+> authorization, as we do in other LSM hooks. Let's split my
+> inode_init_security_anon into two hooks, inode_init_security_anon and
+> inode_create_anon. We'd define the former to just initialize the file
+> object's security information --- in the SELinux case, figuring out
+> its class and SID --- and define the latter to answer the yes/no
+> question of whether a particular anonymous inode creation should be
+> allowed. Normally, anon_inode_getfile2() would just call both hooks.
+> We'd add another anon_inode_getfd flag, ANON_INODE_SKIP_AUTHORIZATION
+> or something, that would tell anon_inode_getfile2() to skip calling
+> the authorization hook, effectively making the creation always
+> succeed. We can then make the UFFD code pass
+> ANON_INODE_SKIP_AUTHORIZATION when it's creating a file object in the
+> fork child while creating UFFD_EVENT_FORK messages.
 
+That sounds like an improvement.  Or maybe just teach SELinux that
+this particular fd creation is actually making an anon_inode that is a
+child of an existing anon inode and that the context should be copied
+or whatever SELinux wants to do.  Like this, maybe:
+
+static int resolve_userfault_fork(struct userfaultfd_ctx *ctx,
+                                  struct userfaultfd_ctx *new,
+                                  struct uffd_msg *msg)
+{
+        int fd;
+
+Change this:
+
+        fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, new,
+                              O_RDWR | (new->flags & UFFD_SHARED_FCNTL_FLAGS));
+
+to something like:
+
+      fd = anon_inode_make_child_fd(..., ctx->inode, ...);
+
+where ctx->inode is the one context's inode.
+
+*** HOWEVER *** !!!
+
+Now that you've pointed this mechanism out, it is utterly and
+completely broken and should be removed from the kernel outright or at
+least severely restricted.  A .read implementation MUST NOT ACT ON THE
+CALLING TASK.  Ever.  Just imagine the effect of passing a userfaultfd
+as stdin to a setuid program.
+
+So I think the right solution might be to attempt to *remove*
+UFFD_EVENT_FORK.  Maybe the solution is to say that, unless the
+creator of a userfaultfd() has global CAP_SYS_ADMIN, then it cannot
+use UFFD_FEATURE_EVENT_FORK) and print a warning (once) when
+UFFD_FEATURE_EVENT_FORK is allowed.  And, after some suitable
+deprecation period, just remove it.  If it's genuinely useful, it
+needs an entirely new API based on ioctl() or a syscall.  Or even
+recvmsg() :)
+
+And UFFD_SECURE should just become automatic, since you don't have a
+problem any more. :-p
+
+--Andy
