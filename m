@@ -2,189 +2,111 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED8AC4CECE
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422F6C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0713F20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:17:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbLagcUv"
+	by mail.kernel.org (Postfix) with ESMTP id 151C620663
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 20:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1570998066;
+	bh=rz8lfW8M0nAm7u1LgOB2YxZBb0h1KOcI/wcFrZYldvk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fDBYmKT5/qAlE6On5hi/WNub7pmCNfbwbN2AiErD8HcscMktSbUCoom/bXtNamyEi
+	 5ZQRnC7mw3Se50VLJv/vWm62kWkCA1W8qpk69h4C/oRFGNPTPWa2kexvUAjdqe5DbI
+	 TBwIa7zN6U9djqbTGb/VTJEVHyN0STU5eahfnnNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbfJMURW (ORCPT
+        id S1729445AbfJMUU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 16:17:22 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38049 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbfJMURV (ORCPT
+        Sun, 13 Oct 2019 16:20:58 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39954 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbfJMUU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 16:17:21 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w3so1917404pgt.5;
-        Sun, 13 Oct 2019 13:17:21 -0700 (PDT)
+        Sun, 13 Oct 2019 16:20:57 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 7so14561479ljw.7
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 13:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s90sNIFFQ7PmHxc2cwoGubvccMDisjiP9XcP/kL6H3U=;
-        b=kbLagcUvUthkSmMZrG4t2XQFxKvdJYKm68dbcxa0Fv9QBw7WxBPkrSAMJHaWvvRrQf
-         bQE+N1tQnyuX0iSc9UA4z8wsL8ijNyZ0lQcaETGYn5v1krHwVyw9khT5HlK3M+xWKtX4
-         5Q3Mj+AJK0y55nx1sHRMmHv1VwiNRBrENGdp2hKBNSXJjktp36+4Vt4349KUxoJM8Phu
-         WvRd4GdNPp8Atpd3KwO2kTof1/AJHrNKfKdrujx9is81mqnERmAVf2rq6bqrAc8rouPi
-         AHq6aeTjsi6PpaWm+QSK4awJTmIzEyyQ31WEeUvTq6EcnaTTh4Dp9R6gdx+om8hBAfUb
-         /pMg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eJmSPxWD5/TkHbFJUcVPXh6iFR/S6K/PI1RETNfV6+Q=;
+        b=F06ZA8X2/ZCMYGLX0R+bf2JXirE2mkKo7IKs4CYOx5tLbue+pdhZGlAlH+MMsJTsSI
+         JJhOLZ3SHIGQ5/J8Vp7sV6c23/uIAr/0wnjI+wmnPX+pGWhBIOqPiagnxJJBrXOmjf7F
+         atW5/J+N+Y2hPd11tAYDnE+8xGz6Q+ljHks94=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s90sNIFFQ7PmHxc2cwoGubvccMDisjiP9XcP/kL6H3U=;
-        b=bJK9uFAkJ1Ncg1cKLEvv3NauxR/kzRCuN9SQKlsPbUw1TiQv2LeAn8AOzhPeR9I7rC
-         Duy/ZhKvbEiVIpMdGXJimpCmqc5roqujF/cIuMTQGPCfg7hPNR5mxA2xvZB2MFS7GRzl
-         D23lWnvsHZf1M9lSckPA9GcEhnP+uACgIE1LbmTpdOdXstPeJdgxPHE6fx0dkOuSK6sL
-         3FDuQGwpJ7JqGEqBSZaPW4VJPXrTlaCYD/3OMvP9zLY6+1KErXd5zNTF4Bvtf59RESBC
-         4kw575ZJoVNChmTv8kSbqiHCB2uOL2YV1AYAsZdAUWIXJLyMNHwrWdYR68gVPYIf9P+9
-         1Uag==
-X-Gm-Message-State: APjAAAXR2G7XvzMnDLnOTST5z03iEpkzhh1qMMggiwrwflL3IEku30gm
-        MDwys0tWx7gbwoz5I2pYwikcPPJO
-X-Google-Smtp-Source: APXvYqxlxH71wYXBZ/doH/v7+W7VTQYsxuFemZ1vZLBM4/U3hlPzEn71t9/cV2Bg6CzY0Xewp8lkMg==
-X-Received: by 2002:a17:90a:8d06:: with SMTP id c6mr30531780pjo.141.1570997840317;
-        Sun, 13 Oct 2019 13:17:20 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id 6sm13693774pgl.40.2019.10.13.13.17.18
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eJmSPxWD5/TkHbFJUcVPXh6iFR/S6K/PI1RETNfV6+Q=;
+        b=DxCHxqWnqZPTpAOM6mkmli1RP4dW1oebJiGyjJPZZwH8E840OqU7n7rxeWIUM1lefB
+         KHlpY+OdsGtWS4w+vmZzTGnhuy8T9E1t9UWODU4Za9lp0NYdUmPdPLS3z/rkmydHmO5H
+         1GwNKNz1znG2nvOThCPgQXlewN3MQqxKwltHa6j0PyTz3Ze7Zf1ND18w5b8bRsb4HjwR
+         eoV1bEkbeXwSwW4jTpBoKL7zTIoEn+WTwvSPCkkKoZI8ZmnfbSTCz05Mnm03S1RC6WX+
+         24Gf7913KbMqq7KPi26rIZPTTQlppyO0J05gFeVUAlyuq/RZaRNaaQeUu0QbFGbiGq+8
+         69xg==
+X-Gm-Message-State: APjAAAVsfcfEFyDS8DiUCX1D+EdXlwMdWKGLv/oJo5eFXVIhv9CVlOjO
+        XqvDf4uTcQunDiLMGkFz3WAYZHD0A0w=
+X-Google-Smtp-Source: APXvYqw7FcGLDF/8m+8VJym1NaGc26T0sqpHKpLqMiR9UhS8tA51J9+Ya3Oxpy1m3l6fDPOfMV/rjg==
+X-Received: by 2002:a2e:9b8a:: with SMTP id z10mr16272664lji.66.1570998055408;
+        Sun, 13 Oct 2019 13:20:55 -0700 (PDT)
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com. [2a00:1450:4864:20::135])
+        by smtp.gmail.com with ESMTPSA id j7sm3677932lfc.16.2019.10.13.13.20.55
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Oct 2019 13:17:19 -0700 (PDT)
-Subject: Re: [PATCH] net: core: datagram: tidy up copy functions a bit
-To:     Vito Caputo <vcaputo@pengaru.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191012115509.jrqe43yozs7kknv5@shells.gnugeneration.com>
- <8fab6f9c-70a6-02fd-5b2d-66a013c10a4f@gmail.com>
- <20191013200158.mhvwkdnsjk7ecuqu@shells.gnugeneration.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <6864f888-1b62-36c5-6ac5-d5db01c5fcfb@gmail.com>
-Date:   Sun, 13 Oct 2019 13:17:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 13 Oct 2019 13:20:55 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id r2so10322911lfn.8
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 13:20:55 -0700 (PDT)
+X-Received: by 2002:a05:6512:219:: with SMTP id a25mr15490954lfo.61.1570998050112;
+ Sun, 13 Oct 2019 13:20:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191013200158.mhvwkdnsjk7ecuqu@shells.gnugeneration.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
+ <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
+ <20191010195504.GI26530@ZenIV.linux.org.uk> <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
+ <20191011001104.GJ26530@ZenIV.linux.org.uk> <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
+ <20191013181333.GK26530@ZenIV.linux.org.uk> <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
+ <20191013191050.GL26530@ZenIV.linux.org.uk> <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
+ <20191013195949.GM26530@ZenIV.linux.org.uk>
+In-Reply-To: <20191013195949.GM26530@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 13 Oct 2019 13:20:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgO1EW5qVuy7=sc9Kua98-afMx75gaeX4FHKf3+wPLmkw@mail.gmail.com>
+Message-ID: <CAHk-=wgO1EW5qVuy7=sc9Kua98-afMx75gaeX4FHKf3+wPLmkw@mail.gmail.com>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Oct 13, 2019 at 12:59 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> Re plotting: how strongly would you object against passing the range to
+> user_access_end()?  Powerpc folks have a very close analogue of stac/clac,
+> currently buried inside their __get_user()/__put_user()/etc. - the same
+> places where x86 does, including futex.h and friends.
+>
+> And there it's even costlier than on x86.  It would obviously be nice
+> to lift it at least out of unsafe_get_user()/unsafe_put_user() and
+> move into user_access_begin()/user_access_end(); unfortunately, in
+> one subarchitecture they really want it the range on the user_access_end()
+> side as well.
 
+Hmm. I'm ok with that.
 
-On 10/13/19 1:01 PM, Vito Caputo wrote:
-> On Sun, Oct 13, 2019 at 12:30:41PM -0700, Eric Dumazet wrote:
->>
->>
->> On 10/12/19 4:55 AM, Vito Caputo wrote:
->>> Eliminate some verbosity by using min() macro and consolidating some
->>> things, also fix inconsistent zero tests (! vs. == 0).
->>>
->>> Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
->>> ---
->>>  net/core/datagram.c | 44 ++++++++++++++------------------------------
->>>  1 file changed, 14 insertions(+), 30 deletions(-)
->>>
->>> diff --git a/net/core/datagram.c b/net/core/datagram.c
->>> index 4cc8dc5db2b7..08d403f93952 100644
->>> --- a/net/core/datagram.c
->>> +++ b/net/core/datagram.c
->>> @@ -413,13 +413,11 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
->>>  					    struct iov_iter *), void *data)
->>>  {
->>>  	int start = skb_headlen(skb);
->>> -	int i, copy = start - offset, start_off = offset, n;
->>> +	int i, copy, start_off = offset, n;
->>>  	struct sk_buff *frag_iter;
->>>  
->>>  	/* Copy header. */
->>> -	if (copy > 0) {
->>> -		if (copy > len)
->>> -			copy = len;
->>> +	if ((copy = min(start - offset, len)) > 0) {
->>
->> No, we prefer not having this kind of construct anymore.
->>
->> This refactoring looks unnecessary code churn, making our future backports not
->> clean cherry-picks.
->>
->> Simply making sure this patch does not bring a regression is very time consuming.
-> 
-> Should I not bother submitting patches for such cleanups?
-> 
-> I submitted another, more trivial patch, is it also considered unnecessary churn:
-> 
-> ---
-> 
-> Author: Vito Caputo <vcaputo@pengaru.com>
-> Date:   Sat Oct 12 17:10:41 2019 -0700
-> 
->     net: core: skbuff: skb_checksum_setup() drop err
->     
->     Return directly from all switch cases, no point in storing in err.
->     
->     Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
-> 
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index f5f904f46893..c59b68a413b5 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -4888,23 +4888,14 @@ static int skb_checksum_setup_ipv6(struct sk_buff *skb, bool recalculate)
->   */
->  int skb_checksum_setup(struct sk_buff *skb, bool recalculate)
->  {
-> -       int err;
-> -
->         switch (skb->protocol) {
->         case htons(ETH_P_IP):
-> -               err = skb_checksum_setup_ipv4(skb, recalculate);
-> -               break;
-> -
-> +               return skb_checksum_setup_ipv4(skb, recalculate);
->         case htons(ETH_P_IPV6):
-> -               err = skb_checksum_setup_ipv6(skb, recalculate);
-> -               break;
-> -
-> +               return skb_checksum_setup_ipv6(skb, recalculate);
->         default:
-> -               err = -EPROTO;
-> -               break;
-> +               return -EPROTO;
->         }
-> -
-> -       return err;
->  }
->  EXPORT_SYMBOL(skb_checksum_setup);
-> 
-> ---
-> 
-> Asking to calibrate my thresholds to yours, since I was planning to volunteer
-> some time each evening to reading kernel code and submitting any obvious
-> cleanups.
-> 
+Do they want the actual range, or would it prefer some kind of opaque
+cookie that user_access_begin() returns (where 0 would mean "failure"
+of course)?
 
-This is not a cleanup.
+I'm thinking like a local_irq_save/restore thing, which might be the
+case on yet other architectures.
 
-You prefer seeing the code written the way you did, but that is really a matter of taste.
-
-Think about backports of real bug fixes to stable kernels.
-
-Having these re-writes of code make things less easy for us really.
-So in general we tend to leave the existing code style.
-
-I already replied to the other patch submission, please read
-
-https://marc.info/?l=linux-netdev&m=157099669227635&w=2
-
-
+         Linus
