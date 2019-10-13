@@ -2,95 +2,163 @@ Return-Path: <SRS0=daYT=YG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E66FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD66ECE58C
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172A6206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987E2206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 18:11:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbfJMSGR (ORCPT
+        id S1728918AbfJMSLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 14:06:17 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:34246
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727141AbfJMSGR (ORCPT
+        Sun, 13 Oct 2019 14:11:37 -0400
+Received: from vsmx012.vodafonemail.xion.oxcs.net ([153.92.174.90]:21364 "EHLO
+        vsmx012.vodafonemail.xion.oxcs.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727141AbfJMSLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 14:06:17 -0400
-X-IronPort-AV: E=Sophos;i="5.67,292,1566856800"; 
-   d="scan'208";a="322545345"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Oct 2019 20:06:14 +0200
-Date:   Sun, 13 Oct 2019 20:06:14 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Outreachy kernel] [PATCH] staging: rtl8723bs: use DIV_ROUND_UP
- helper macro
-In-Reply-To: <20191013180033.31882-1-wambui.karugax@gmail.com>
-Message-ID: <alpine.DEB.2.21.1910132005330.2565@hadrien>
-References: <20191013180033.31882-1-wambui.karugax@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 13 Oct 2019 14:11:37 -0400
+Received: from vsmx004.vodafonemail.xion.oxcs.net (unknown [192.168.75.198])
+        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTP id 60551F34EB2;
+        Sun, 13 Oct 2019 18:11:33 +0000 (UTC)
+Received: from lazy.lzy (unknown [93.212.126.195])
+        by mta-8-out.mta.xion.oxcs.net (Postfix) with ESMTPA id A68DE19AD8B;
+        Sun, 13 Oct 2019 18:11:18 +0000 (UTC)
+Received: from lazy.lzy (localhost [127.0.0.1])
+        by lazy.lzy (8.15.2/8.14.5) with ESMTPS id x9DIBGb8003897
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 13 Oct 2019 20:11:16 +0200
+Received: (from red@localhost)
+        by lazy.lzy (8.15.2/8.15.2/Submit) id x9DIBG8h003896;
+        Sun, 13 Oct 2019 20:11:16 +0200
+Date:   Sun, 13 Oct 2019 20:11:16 +0200
+From:   Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-block@vger.kernel.org,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
+Message-ID: <20191013181116.GA3858@lazy.lzy>
+References: <20190929201332.GA3099@lazy.lzy>
+ <Pine.LNX.4.44L0.1909292056230.5908-100000@netrider.rowland.org>
+ <20190930182501.GA4043@lazy.lzy>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930182501.GA4043@lazy.lzy>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-VADE-STATUS: LEGIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 30, 2019 at 08:25:01PM +0200, Piergiorgio Sartor wrote:
+> On Sun, Sep 29, 2019 at 09:01:48PM -0400, Alan Stern wrote:
+> > On Sun, 29 Sep 2019, Piergiorgio Sartor wrote:
+> > 
+> > > On Wed, Sep 25, 2019 at 02:31:58PM -0400, Alan Stern wrote:
+> > > > On Wed, 25 Sep 2019, Piergiorgio Sartor wrote:
+> > > > 
+> > > > > On Mon, Aug 26, 2019 at 07:38:33PM +0200, Piergiorgio Sartor wrote:
+> > > > > > On Tue, Aug 20, 2019 at 06:37:22PM +0200, Piergiorgio Sartor wrote:
+> > > > > > > On Tue, Aug 20, 2019 at 09:23:26AM +0200, Christoph Hellwig wrote:
+> > > > > > > > On Mon, Aug 19, 2019 at 10:14:25AM -0400, Alan Stern wrote:
+> > > > > > > > > Let's bring this to the attention of some more people.
+> > > > > > > > > 
+> > > > > > > > > It looks like the bug that was supposed to be fixed by commit
+> > > > > > > > > d74ffae8b8dd ("usb-storage: Add a limitation for
+> > > > > > > > > blk_queue_max_hw_sectors()"), which is part of 5.2.5, but apparently
+> > > > > > > > > the bug still occurs.
+> > > > > > > > 
+> > > > > > > > Piergiorgio,
+> > > > > > > > 
+> > > > > > > > can you dump the content of max_hw_sectors_kb file for your USB storage
+> > > > > > > > device and send that to this thread?
+> > > > > > > 
+> > > > > > > Hi all,
+> > > > > > > 
+> > > > > > > for both kernels, 5.1.20 (working) and 5.2.8 (not working),
+> > > > > > > the content of /sys/dev/x:y/queue/max_hw_sectors_kb is 512
+> > > > > > > for USB storage devices (2.0 and 3.0).
+> > > > > > > 
+> > > > > > > This is for the PC showing the issue.
+> > > > > > > 
+> > > > > > > In an other PC, which does not show the issus at the moment,
+> > > > > > > the values are 120, for USB2.0, and 256, for USB3.0.
+> > 
+> > > > One thing you can try is git bisect from 5.1.20 (or maybe just 5.1.0)  
+> > > > to 5.2.8.  If you can identify a particular commit which caused the
+> > > > problem to start, that would help.
+> > > 
+> > > OK, I tried a bisect (2 days compilations...).
+> > > Assuming I've done everything correctly (how to
+> > > test this? How to remove the guilty patch?), this
+> > > was the result:
+> > > 
+> > > 09324d32d2a0843e66652a087da6f77924358e62 is the first bad commit
+> > > commit 09324d32d2a0843e66652a087da6f77924358e62
+> > > Author: Christoph Hellwig <hch@lst.de>
+> > > Date:   Tue May 21 09:01:41 2019 +0200
+> > > 
+> > >     block: force an unlimited segment size on queues with a virt boundary
+> > > 
+> > >     We currently fail to update the front/back segment size in the bio when
+> > >     deciding to allow an otherwise gappy segement to a device with a
+> > >     virt boundary.  The reason why this did not cause problems is that
+> > >     devices with a virt boundary fundamentally don't use segments as we
+> > >     know it and thus don't care.  Make that assumption formal by forcing
+> > >     an unlimited segement size in this case.
+> > > 
+> > >     Fixes: f6970f83ef79 ("block: don't check if adjacent bvecs in one bio can be mergeable")
+> > >     Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > >     Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> > >     Reviewed-by: Hannes Reinecke <hare@suse.com>
+> > >     Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> > > 
+> > > :040000 040000 57ba04a02f948022c0f6ba24bfa36f3b565b2440 8c925f71ce75042529c001bf244b30565d19ebf3 M      block
+> > > 
+> > > What to do now?
+> > 
+> > Here's how to verify that the bisection got a correct result.  First, 
+> > do a git checkout of commit 09324d32d2a0, build the kernel, and make 
+> > sure that it exhibits the problem.
+> > 
+> > Next, have git write out the contents of that commit in the form of a
+> > patch (git show commit-id >patchfile), and revert it (git apply -R
+> > patchfile).  Build the kernel from that tree, and make sure that it
+> > does not exhibit the problem.  If it doesn't, you have definitely shown
+> > that this commit is the cause (or at least, is _one_ of the causes).
+> 
+> I tried as suggested, i.e. jumping to commit
+> 09324d32d2a0843e66652a087da6f77924358e62, testing,
+> removing the patch, testing.
+> The result was as expected.
+> I was able to reproduce the issue with the commit,
+> I was not able to reproduce it without.
+> It seems this patch / commit is causing the problem.
+> Directly or indirectly.
+> 
+> What are the next steps?
 
+Hi all,
 
-On Sun, 13 Oct 2019, Wambui Karuga wrote:
+I tested kernel 5.3.5 (Fedora kernel-5.3.5-200.fc30.x86_64),
+with same problematic results.
 
-> Use the DIV_ROUND_UP macro to replace open-coded divisor calculation
-> to improve readability.
-> Issue found using coccinelle:
-> @@
-> expression n,d;
-> @@
-> (
-> - ((n + d - 1) / d)
-> + DIV_ROUND_UP(n,d)
-> |
-> - ((n + (d - 1)) / d)
-> + DIV_ROUND_UP(n,d)
-> )
->
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> index 87535a4c2e14..74312e8bb32e 100644
-> --- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> +++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> @@ -4158,7 +4158,8 @@ void SetHwReg8723B(struct adapter *padapter, u8 variable, u8 *val)
->
->  			/*  The value of ((usNavUpper + HAL_NAV_UPPER_UNIT_8723B - 1) / HAL_NAV_UPPER_UNIT_8723B) */
->  			/*  is getting the upper integer. */
+Again, what should be done now?
+Could you please revert the patch?
 
-It's a nice change.  Maybe the above comment could also be dropped, since
-the code is more understandable now.
+Or is there something else to check?
 
-julia
+Thanks,
 
-> -			usNavUpper = (usNavUpper + HAL_NAV_UPPER_UNIT_8723B - 1) / HAL_NAV_UPPER_UNIT_8723B;
-> +			usNavUpper = DIV_ROUND_UP(usNavUpper,
-> +						  HAL_NAV_UPPER_UNIT_8723B);
->  			rtw_write8(padapter, REG_NAV_UPPER, (u8)usNavUpper);
->  		}
->  		break;
-> --
-> 2.23.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191013180033.31882-1-wambui.karugax%40gmail.com.
->
+bye,
+
+-- 
+
+piergiorgio
