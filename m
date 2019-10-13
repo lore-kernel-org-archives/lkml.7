@@ -6,66 +6,66 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A549C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FFAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E26F20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC82206A3
+	for <linux-kernel@archiver.kernel.org>; Sun, 13 Oct 2019 12:51:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MCEH99lM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oswxuqjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbfJMMvy (ORCPT
+        id S1729259AbfJMMv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 08:51:54 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37463 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728349AbfJMMvu (ORCPT
+        Sun, 13 Oct 2019 08:51:57 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46763 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729188AbfJMMvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 08:51:50 -0400
-Received: by mail-lf1-f66.google.com with SMTP id w67so9959056lff.4;
-        Sun, 13 Oct 2019 05:51:48 -0700 (PDT)
+        Sun, 13 Oct 2019 08:51:53 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t8so9918764lfc.13;
+        Sun, 13 Oct 2019 05:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jqZhIjSnGaQkCto65LI2ltagzMepKonmREX9kN29OzI=;
-        b=MCEH99lMhnFs50GY5tA5FlYHtFeRCvWmbyyz8e8MusYGDwyijf4jpLoH2zKXE/RZlB
-         myQPdSDfg82aOhlsyHiPBbuFSOyAm8f5hL0P5oK+r2cNnw90t1xANBt5e6XqUzRjX5FY
-         fm7oO8VT17rsiLtHamC1LfFV+MSKh6nPGlOewZLdmBQVLMMoJ0/7hCpabCqdm7AiPYCO
-         xj7R6mx7GqjGQhkGX7sMz6tsddvgeUVhOYR2W20NZ4fgGUksu9KKzRpNDuo/DBh0cdcg
-         3jP6K48q/ZqESAkFzvDBRE6Z5jfNphoLNtg2/9cWwfExB9ZAgOgkLcEWX+h4f1SSlb/W
-         K/dA==
+        bh=7xCq5J+OfyTULb+8V1WcTAauQxnh+VYppr0SjYzFpH8=;
+        b=oswxuqjBzvBckACKPIK1IwNha2bWQzHzGSDOY3Z29T+jHXdjLuN0nWeaAHPh1VO6TL
+         P7lOkvMo4Ci1kb57FogbNNsrXXYEsUgWoZXxuJqVDL4iFr22zEApS5isYaTNgJAaBjAU
+         bkMy2gUwtAcbkUnn04Zb8k6y2LPwAqTxIoa4ZPjevty6ait+ZmzAOClX0J5dmOvEhl0L
+         gBRwn+U7RYQt1voGewYQG/zP14zxYO2qFVOBRwnbcs90HbmpMAGOileth0Qpygnhl5QL
+         VDVOdVnoVPQnPXdXrpPYHIBSyaAv/CDZP0tT4LgRg2tEg1/ySDTr5ruwXETox752RGTS
+         kQTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jqZhIjSnGaQkCto65LI2ltagzMepKonmREX9kN29OzI=;
-        b=toLEpWnbVNHln7HfAMUmaMAHIEz4SxYAzv91rT28xX+C/5n8HX6fuiozuZSGFkH1vF
-         YjSaqthZG88Ros1pLx010p2dyfmCfJR43UnF8xooGchD4JD7serdgmnYIfhqO6Ginabz
-         MkRv05AdIDxqu4DHCVopYvq3LMiAxVnLrWNVYBV+UyGnNpE0uhAyDcHK/NKYJ/lsRg4G
-         R9XqctywWCrqEIkXqPTn0tof9cwu0JpTqYWpDQvZGlNNN4alk3jtkDpBZs2MbS1Wyzea
-         3BQ/J7qVd6xVYn2UZTb9sG4DzQhatg7vtX+3Hvbw2rydG8zrofU0Rx1JZzVqr3NL4f9j
-         rqaA==
-X-Gm-Message-State: APjAAAWDWKzSUWPikNEiAH3/e/dA4vnwkdL3KA19QqZSrZuRIlrn9Vhr
-        IOlloB4tgi0ChcRCOGb+vx8=
-X-Google-Smtp-Source: APXvYqyxwDLf3f0ZqrDsWwDPE6BLC8VpoJvSBbJ1n3RMjNQ8rcK8iCDnxU1Sz/yqn1JVoxx2POf1ZA==
-X-Received: by 2002:ac2:5629:: with SMTP id b9mr15393804lff.32.1570971107842;
-        Sun, 13 Oct 2019 05:51:47 -0700 (PDT)
+        bh=7xCq5J+OfyTULb+8V1WcTAauQxnh+VYppr0SjYzFpH8=;
+        b=U9zykbAeirtD2Xvrn+hnc2NmRAtN26MKf47mjBYCk4P7glXNcxxYwiiNhgKohU0bl+
+         c9ACoqSsNtxmpAfV0X+vHMaN9Xr1Ivi1wjfx4AZJKUETVwpguEf3B/hnCgawqZxhS2nG
+         k5kc8W0s1PT33iTTIbX9p7UH49ylTLUH9RRX2XtCjM172gSLLQPCYIXDzS0O4W1lrDcf
+         9XHRtUe/VM/uwyiRWNDgyTgV0D1jNpq26bAcfRZS+stK6ZqI/H9YccVJ7f131Hm07YQK
+         NIw6TVRdUgOCc+l0ngKLmNFcsdBaDk2d/qX6zw9tOP15xPiN69lYQZ3Rc/VQMq3w1rqE
+         8iSA==
+X-Gm-Message-State: APjAAAVtPcZoFKx/x8GtBroUAU8HM0f9afZcaALuFWutPFwhZWvRf/VP
+        rkIMpQtJ/Y8N74za4DXqUcw=
+X-Google-Smtp-Source: APXvYqyl4sKhCoSBzphYXAukd2baCSImv4MOnEM7J5VEaqwqvUSGrU6E5atg3VoIY0m6ERDptQqbmA==
+X-Received: by 2002:ac2:528f:: with SMTP id q15mr8769271lfm.25.1570971111538;
+        Sun, 13 Oct 2019 05:51:51 -0700 (PDT)
 Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id m18sm3327243lfb.73.2019.10.13.05.51.46
+        by smtp.gmail.com with ESMTPSA id m18sm3327243lfb.73.2019.10.13.05.51.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 13 Oct 2019 05:51:47 -0700 (PDT)
+        Sun, 13 Oct 2019 05:51:50 -0700 (PDT)
 From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
 To:     Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH 3/6] media: ov6650: Simplify clock divisor calculation
-Date:   Sun, 13 Oct 2019 14:50:47 +0200
-Message-Id: <20191013125050.4153-4-jmkrzyszt@gmail.com>
+Subject: [PATCH 6/6] media: ov6650: Fix arbitrary selection of master clock rate
+Date:   Sun, 13 Oct 2019 14:50:50 +0200
+Message-Id: <20191013125050.4153-7-jmkrzyszt@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191013125050.4153-1-jmkrzyszt@gmail.com>
 References: <20191013125050.4153-1-jmkrzyszt@gmail.com>
@@ -76,96 +76,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As appears from an analysis of to_clkrc() helper code after its
-pclk_limit argument has been dropped, its result no longer depends on
-another argument - pclk_max.  Moreover, assuming that a constant value
-of FRAME_RATE_MAX is always used as a denominator of the only
-significant argument left - a struct v4l2_fract, the result in fact
-depends only on the numerator value of that argument.  As a further
-consequence, it no longer makes sense to recalculate frame intervals by
-converting them forth and back with a GET_CLKRC_DIV(to_clkrc(tpf))
-construct.
+A hardcoded 12 MHz master clock frequency has been assumed since
+conversion of the driver from soc_camera sensor to a standalone V4L2
+subdevice by commit 23a52386fabe ("media: ov6650: convert to standalone
+v4l2 subdevice").  Fix it.
 
-Drop use of GET_CLKRC_DIV() on results of to_clkrc() where possible -
-use the frame interval value directly.  Furthermore, replace the
-to_clkrc() helper function with a simple macro and update its users to
-always use FRAME_RATE_MAX as frame interval denominator and pass only
-its numerator as an argument.
+Define a static table of supported master clock rates (fix misnamed
+symbol while being at it), then use v4l2_clk_get/set_rate() to obtain
+a clock rate matching one of those supported.  On success, apply
+respective master clock hardware divisor provided by the matching
+element of the table.
 
 Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 ---
- drivers/media/i2c/ov6650.c | 29 +++++------------------------
- 1 file changed, 5 insertions(+), 24 deletions(-)
+ drivers/media/i2c/ov6650.c | 64 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 58 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index a50244401491..61ddd4ea4c26 100644
+index f4723c0b5c70..13fd7c4699b2 100644
 --- a/drivers/media/i2c/ov6650.c
 +++ b/drivers/media/i2c/ov6650.c
-@@ -545,18 +545,7 @@ static bool is_unscaled_ok(int width, int height, struct v4l2_rect *rect)
- 	return width > rect->width >> 1 || height > rect->height >> 1;
+@@ -124,7 +124,7 @@
+ 
+ #define DEF_AECH		0x4D
+ 
+-#define CLKRC_6MHz		0x00
++#define CLKRC_8MHz		0x00
+ #define CLKRC_12MHz		0x40
+ #define CLKRC_16MHz		0x80
+ #define CLKRC_24MHz		0xc0
+@@ -201,6 +201,29 @@ struct ov6650 {
+ 	u32 code;
+ };
+ 
++struct ov6650_xclk {
++	unsigned long	rate;
++	u8		clkrc;
++};
++
++static const struct ov6650_xclk ov6650_xclk[] = {
++{
++	.rate	= 8000000,
++	.clkrc	= CLKRC_8MHz,
++},
++{
++	.rate	= 12000000,
++	.clkrc	= CLKRC_12MHz,
++},
++{
++	.rate	= 16000000,
++	.clkrc	= CLKRC_16MHz,
++},
++{
++	.rate	= 24000000,
++	.clkrc	= CLKRC_24MHz,
++},
++};
+ 
+ static u32 ov6650_codes[] = {
+ 	MEDIA_BUS_FMT_YUYV8_2X8,
+@@ -774,7 +797,7 @@ static int ov6650_reset(struct i2c_client *client)
  }
  
--static u8 to_clkrc(struct v4l2_fract *timeperframe, unsigned long pclk_max)
--{
--	unsigned long pclk;
--
--	if (timeperframe->numerator && timeperframe->denominator)
--		pclk = pclk_max * timeperframe->denominator /
--				(FRAME_RATE_MAX * timeperframe->numerator);
--	else
--		pclk = pclk_max;
--
--	return (pclk_max - 1) / pclk;
--}
-+#define to_clkrc(div)	((div) - 1)
+ /* program default register values */
+-static int ov6650_prog_dflt(struct i2c_client *client)
++static int ov6650_prog_dflt(struct i2c_client *client, u8 clkrc)
+ {
+ 	int ret;
  
- /* set the format we will capture in */
- static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
-@@ -650,7 +639,7 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 	mclk = 12000000;
- 	dev_dbg(&client->dev, "using 12MHz input clock\n");
+@@ -782,7 +805,7 @@ static int ov6650_prog_dflt(struct i2c_client *client)
  
--	clkrc |= to_clkrc(&priv->tpf, priv->pclk_max);
-+	clkrc |= to_clkrc(priv->tpf.numerator);
+ 	ret = ov6650_reg_write(client, REG_COMA, 0);	/* ~COMA_RESET */
+ 	if (!ret)
+-		ret = ov6650_reg_write(client, REG_CLKRC, CLKRC_12MHz);
++		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
+ 	if (!ret)
+ 		ret = ov6650_reg_rmw(client, REG_COMB, 0, COMB_BAND_FILTER);
  
- 	pclk = priv->pclk_max / GET_CLKRC_DIV(clkrc);
- 	dev_dbg(&client->dev, "pixel clock divider: %ld.%ld\n",
-@@ -749,9 +738,7 @@ static int ov6650_g_frame_interval(struct v4l2_subdev *sd,
+@@ -793,8 +816,10 @@ static int ov6650_video_probe(struct v4l2_subdev *sd)
+ {
  	struct i2c_client *client = v4l2_get_subdevdata(sd);
  	struct ov6650 *priv = to_ov6650(client);
+-	u8		pidh, pidl, midh, midl;
+-	int		ret;
++	const struct ov6650_xclk *xclk;
++	unsigned long rate;
++	u8 pidh, pidl, midh, midl;
++	int i, ret;
  
--	ival->interval.numerator = GET_CLKRC_DIV(to_clkrc(&priv->tpf,
--							  priv->pclk_max));
--	ival->interval.denominator = FRAME_RATE_MAX;
-+	ival->interval = priv->tpf;
+ 	priv->clk = v4l2_clk_get(&client->dev, NULL);
+ 	if (IS_ERR(priv->clk)) {
+@@ -803,6 +828,33 @@ static int ov6650_video_probe(struct v4l2_subdev *sd)
+ 		return ret;
+ 	}
  
- 	dev_dbg(&client->dev, "Frame interval: %u/%u s\n",
- 		ival->interval.numerator, ival->interval.denominator);
-@@ -766,7 +753,6 @@ static int ov6650_s_frame_interval(struct v4l2_subdev *sd,
- 	struct ov6650 *priv = to_ov6650(client);
- 	struct v4l2_fract *tpf = &ival->interval;
- 	int div, ret;
--	u8 clkrc;
++	rate = v4l2_clk_get_rate(priv->clk);
++	for (i = 0; rate && i < ARRAY_SIZE(ov6650_xclk); i++) {
++		if (rate != ov6650_xclk[i].rate)
++			continue;
++
++		xclk = &ov6650_xclk[i];
++		dev_info(&client->dev, "using host default clock rate %lukHz\n",
++			 rate / 1000);
++		break;
++	}
++	for (i = 0; !xclk && i < ARRAY_SIZE(ov6650_xclk); i++) {
++		ret = v4l2_clk_set_rate(priv->clk, ov6650_xclk[i].rate);
++		if (ret || v4l2_clk_get_rate(priv->clk) != ov6650_xclk[i].rate)
++			continue;
++
++		xclk = &ov6650_xclk[i];
++		dev_info(&client->dev, "using negotiated clock rate %lukHz\n",
++			 xclk->rate / 1000);
++		break;
++	}
++	if (!xclk) {
++		dev_err(&client->dev, "unable to get supported clock rate\n");
++		if (!ret)
++			ret = -EINVAL;
++		goto eclkput;
++	}
++
+ 	ret = ov6650_s_power(sd, 1);
+ 	if (ret < 0)
+ 		goto eclkput;
+@@ -836,7 +888,7 @@ static int ov6650_video_probe(struct v4l2_subdev *sd)
  
- 	if (tpf->numerator == 0 || tpf->denominator == 0)
- 		div = 1;  /* Reset to full rate */
-@@ -778,14 +764,9 @@ static int ov6650_s_frame_interval(struct v4l2_subdev *sd,
- 	else if (div > GET_CLKRC_DIV(CLKRC_DIV_MASK))
- 		div = GET_CLKRC_DIV(CLKRC_DIV_MASK);
- 
--	tpf->numerator = div;
--	tpf->denominator = FRAME_RATE_MAX;
--
--	clkrc = to_clkrc(tpf, priv->pclk_max);
--
--	ret = ov6650_reg_rmw(client, REG_CLKRC, clkrc, CLKRC_DIV_MASK);
-+	ret = ov6650_reg_rmw(client, REG_CLKRC, to_clkrc(div), CLKRC_DIV_MASK);
+ 	ret = ov6650_reset(client);
+ 	if (!ret)
+-		ret = ov6650_prog_dflt(client);
++		ret = ov6650_prog_dflt(client, xclk->clkrc);
  	if (!ret) {
--		priv->tpf.numerator = GET_CLKRC_DIV(clkrc);
-+		priv->tpf.numerator = div;
- 		priv->tpf.denominator = FRAME_RATE_MAX;
+ 		struct v4l2_mbus_framefmt mf = ov6650_def_fmt;
  
- 		*tpf = priv->tpf;
 -- 
 2.21.0
 
