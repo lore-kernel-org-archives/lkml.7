@@ -2,87 +2,104 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274C5C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C01C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC3C20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6601620854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:03:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FJRy+r/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387890AbfJNQDa (ORCPT
+        id S2387896AbfJNQDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:03:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:47854 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731121AbfJNQDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:03:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9862A28;
-        Mon, 14 Oct 2019 09:03:29 -0700 (PDT)
-Received: from [10.1.194.37] (unknown [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D0CA3F718;
-        Mon, 14 Oct 2019 09:03:28 -0700 (PDT)
-Subject: Re: [PATCH] sched/topology: Disable sched_asym_cpucapacity on domain
- destruction
-To:     Quentin Perret <qperret@google.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <qperret@qperret.net>,
-        "# v4 . 16+" <stable@vger.kernel.org>
-References: <20191014114710.22142-1-valentin.schneider@arm.com>
- <20191014121648.GA53234@google.com>
- <CAKfTPtDoBrE=npY_Ay1pucdXsW1yQr1UiaCGq1DXKa2VmNqcUg@mail.gmail.com>
- <fe5977ab-0a70-e705-fcca-246c7dc3d23f@arm.com>
- <20191014135256.GA85340@google.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <2b058430-1951-3d58-ebf4-8195a28ff233@arm.com>
-Date:   Mon, 14 Oct 2019 17:03:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 14 Oct 2019 12:03:42 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45805 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731121AbfJNQDl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:03:41 -0400
+Received: by mail-pg1-f193.google.com with SMTP id r1so9175709pgj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PrIaBUAl4Zs70Rvgh9Rg9A2Po5PtzGSRs+KQTItvpaE=;
+        b=FJRy+r/zmSx0gTnh8nKk1MPaEhd9110EYn+G/+d4CpMIFscpk01MlyLHoHm5nqZ8ue
+         CuEul5WqlGE6j/Va+TR2Yui1YW7GVr2UUJY+9m2nC1JwH5BH8lcHf9U9XardiDiGlOoi
+         LaSSoXJLXvlrU+VQVXnO4lV/hae2O2+UoHmjSciqevrjzzXyJTp2d2+Y56+KcxRdCA6F
+         7jmUcI5EAM3RTKj4p1Vaa6PDjBLCH1AKMAuK0N4y1tOSRYdnDC35vB3Mw9OlU6bctebd
+         2KNziMABLbLEYIGJg85nQqt/hgKI9d4QgqspA9b11El3xetBfiuEmVrbjpRyRnhgYpcf
+         TsJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PrIaBUAl4Zs70Rvgh9Rg9A2Po5PtzGSRs+KQTItvpaE=;
+        b=rSGPp79YRycIr7t6SL6roTOLUXgzk1M0akmm+PZ2Qn9G7fzQ6d26NbGaDqH4e0rlgF
+         eMZZgcIx+l64P3imE2X47RQK8rt2+8a2fwVVKle5TFpStAaaNyJDTaMsuB9eQpOuKZ2+
+         UeYXb/Jl0uQATlWxHzsljsZ5XaOGKj/3lEWk+oL3ikiWdZ8RDuO9bDHiB5D4u2Ja10vA
+         jz0tckXMePhxwXQ7kbDGbgxUnl+7kpCQTwBZQBNCF2cjiyOIT2MsajUyKJAu9oU1kxRS
+         DAuq0DwzzWnq+wsACYlNqV/1EtWVbnDyt6F+IlQ+p7og2OKtEPOi+73/PuNYZQ1REJLy
+         hGmg==
+X-Gm-Message-State: APjAAAUpcSC/JDR4didHE8G9tQzBPn4Bo4Mg3igXUmufL0+ptCPHAAuW
+        9rgCRPM5on0hgnAPbwc2c044Q99NBvMJ8r3k3qApUOMY
+X-Google-Smtp-Source: APXvYqzU0iN+S7UXYs1uP8WMChehRjsMrIbH3W7hJo7ZotpsfsIfMcdj3QGiw3CN0MtVD1Q6FSaHcabb11NtrnpteRQ=
+X-Received: by 2002:a65:464b:: with SMTP id k11mr15727142pgr.263.1571069020713;
+ Mon, 14 Oct 2019 09:03:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191014135256.GA85340@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190911182049.77853-1-natechancellor@gmail.com> <20191014025101.18567-1-natechancellor@gmail.com>
+In-Reply-To: <20191014025101.18567-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 14 Oct 2019 09:03:29 -0700
+Message-ID: <CAKwvOdm+xxo=Qm7N8CznSExFNL=GxoJ0Da4Td2D0zUYH4mOLvg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] LLVM/Clang fixes for pseries_defconfig
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/10/2019 14:52, Quentin Perret wrote:
-> Right, but that's not possible by definition -- static keys aren't
-> variables. The static keys for asym CPUs and for EAS are just to
-> optimize the case when they're disabled, but when they _are_ enabled,
-> you have no choice but do another per-rd check.
-> 
+On Sun, Oct 13, 2019 at 7:51 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Hi all,
+>
+> This series includes a set of fixes for LLVM/Clang when building
+> pseries_defconfig. These have been floating around as standalone
+> patches so I decided to gather them up as a series so it was easier
+> to review/apply them.
+>
+> This has been broken for a bit now, it would be nice to get these
+> reviewed and applied. Please let me know if I need to do anything
+> to move these along.
 
-Bleh, right, realized my nonsense after sending the email.
++1, we've been carrying these out of tree for some time now, with this
+series merged, we can get back to 0 out of tree patches.
 
-> And to clarify what I tried to say before, it might be possible to
-> 'count' the number of RDs that have SD_ASYM_CPUCAPACITY set using
-> static_branch_inc()/dec(), like we do for the SMT static key. I remember
-> trying to do something like that for EAS, but that was easier said than
-> done ... :)
-> 
+>
+> Previous versions:
+>
+> https://lore.kernel.org/lkml/20190911182049.77853-1-natechancellor@gmail.com/
+>
+> Cheers,
+> Nathan
+>
+>
 
-Gotcha, the reason I didn't go with this is that I wanted to maintain
-the relationship between the key and the flag (you either have both or none).
-It feels icky to have the key set and to have a NULL sd_asym_cpucapacity
-pointer.
 
-An alternative might be to have a separate counter for asymmetric rd's,
-always disable the key on domain destruction and use that counter to figure
-out if we need to restore it. If we don't care about having a NULL SD
-pointer while the key is set, we could use the included counter as you're
-suggesting. 
-
-> Thanks,
-> Quentin
-> 
+-- 
+Thanks,
+~Nick Desaulniers
