@@ -2,111 +2,108 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE76C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6406AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26FB52084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571050681;
-	bh=M/q4WcNPrO/M2s3hdWU+TCGsA3virwS9Z2V34PZ8m3s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sPVOMNt7b3Q2RQsSn4y/U0HpuRE8FUwUYzB6KxDDyFXBEaC4mDkDl0dRPaNmAmmGw
-	 TFfBm1Xguv+HXqKQYVrBr5HLGKK+FyB9ftiZ6O32l9rnLzgeIvvXpow6BofwPpL8yi
-	 efTgI8Y0daPuQgs2D7WFsxosWSY3+n5bc1lhstNc=
+	by mail.kernel.org (Postfix) with ESMTP id 39FAF207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P4RITGS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731791AbfJNK6A (ORCPT
+        id S1731807AbfJNK6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:58:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731305AbfJNK57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:57:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAE3D207FF;
-        Mon, 14 Oct 2019 10:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571050677;
-        bh=M/q4WcNPrO/M2s3hdWU+TCGsA3virwS9Z2V34PZ8m3s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oINYM8IPV1QLRqgf7V4NEt9mVkstEH6S0YH7BlbqZyblv0XXcz3fi9xDINcKxuUfZ
-         u6+FJf2ySAEMueB7ULrjbKMhvuhgzw2t1LQhmn1Qomt0Qqg6T3FS/9BHUT4kAP3xhS
-         2YBsZHn5KTc8k9jxaoxYfH6CaJHlplnBNiRkn4ls=
-Date:   Mon, 14 Oct 2019 12:57:54 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
- support
-Message-ID: <20191014105754.GA34057@kroah.com>
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191011141036.GK16384@42.do-not-panic.com>
- <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
- <20191011153823.GS16384@42.do-not-panic.com>
- <20191011163819.GA1295750@kroah.com>
- <20191014092216.GA16384@42.do-not-panic.com>
- <20191014092929.GA3050866@kroah.com>
- <20191014103150.GB16384@42.do-not-panic.com>
+        Mon, 14 Oct 2019 06:58:35 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35748 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731733AbfJNK6e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:58:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EAsdlB049219;
+        Mon, 14 Oct 2019 10:58:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=JxNFKJQ1/TwQHwpYDoccS955n/1smajXveBFvYBY/vw=;
+ b=P4RITGS+ZeZG4xTWChbqpoa27cvsqfcCtMiMAxd6XEZvSWrXomL1tlJgad458jnITTa7
+ LQcm1T4mVWtbk5Dd7r6u7Avs2N6T9zkCyurErBEWN5MVSz1xvxvRC/mrK2pzFGOuz8Am
+ 9u+xqY0G9jFRP+G5uSKreboIG8RWOP7AU+Q4MFd2I/iAZvPVadrtfx1Ch/h4gJQvQfnY
+ NPB9CjNJfydgBD2+UaiyiPSEYQCgdk2IBkRPK4BuhtQ+lUaboVtAQtlc6k5OAzLs0coS
+ GPc8VczDz4o7ocgnm/V2bReHcd4BZTF+5TG+pLqw6N+INOPKsjhincNuLk38lPLq8F8H eQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2vk68u83mm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 10:58:13 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EAvhr6185611;
+        Mon, 14 Oct 2019 10:58:12 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2vks06j1xj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 10:58:12 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9EAw9WQ011035;
+        Mon, 14 Oct 2019 10:58:09 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 14 Oct 2019 10:58:08 +0000
+Date:   Mon, 14 Oct 2019 13:58:01 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Mattias Jacobsson <2pi@mok.nu>, Takashi Iwai <tiwai@suse.de>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] platform/x86: huawei-wmi: Fix a precision vs width printf bug
+Message-ID: <20191014105801.GA31759@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191014103150.GB16384@42.do-not-panic.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9409 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910140107
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9409 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910140106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 10:31:50AM +0000, Luis Chamberlain wrote:
-> On Mon, Oct 14, 2019 at 11:29:29AM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Oct 14, 2019 at 09:22:16AM +0000, Luis Chamberlain wrote:
-> > > On Fri, Oct 11, 2019 at 06:38:19PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Fri, Oct 11, 2019 at 03:38:23PM +0000, Luis Chamberlain wrote:
-> > > > > On Fri, Oct 11, 2019 at 04:31:26PM +0200, Hans de Goede wrote:
-> > > > > > Hi,
-> > > > > > 
-> > > > > > On 10/11/19 4:10 PM, Luis Chamberlain wrote:
-> > > > > > > Hey Hans, thanks for staying on top of this and follow up! For some
-> > > > > > > reason the universe conspired against your first and last patch ([1/8],
-> > > > > > > [8/8]), and I never got them. Could you bounce these or resend in case
-> > > > > > > others confirm they also didn't get it?
-> > > > > > 
-> > > > > > I have received feedback from others on the first patch, so at least
-> > > > > > that one has reached others. I've bounced patches 1 and 8 to you.
-> > > > > 
-> > > > > Thanks, can you also bounce the feedback received?
-> > > > 
-> > > > That is what lore.kernel.org is for...
-> > > 
-> > > If I have feedback on an email which I did not get I cannot easily reply to it.
-> > 
-> > I meant, use lore.kernel.org to download the mbox of the thread and then
-> > use your email client to respond to whatever you need there.  This all
-> > is public, no need to ask anyone else to bounce emails to you.
-> 
-> Last I looked it didn't allow you to downlaod an mbox of a thread...
+This was supposed to be precision "%.*s" instead of width "%*s".  It's
+possible that this results in printing beyond the end of the string.
 
-It can, from the front page of "all" threads, or on the thread itself,
-at the bottom of the page.  Search for "download" on the page.
+Fixes: a970b95345ab ("platform/x86: huawei-wmi: Add debugfs support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/platform/x86/huawei-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 6720f78c60c2..69a7be8dafcd 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -612,7 +612,7 @@ static void huawei_wmi_debugfs_call_dump(struct seq_file *m, void *data,
+ 		seq_printf(m, "0x%llx", obj->integer.value);
+ 		break;
+ 	case ACPI_TYPE_STRING:
+-		seq_printf(m, "\"%*s\"", obj->string.length, obj->string.pointer);
++		seq_printf(m, "\"%.*s\"", obj->string.length, obj->string.pointer);
+ 		break;
+ 	case ACPI_TYPE_BUFFER:
+ 		seq_puts(m, "{");
+-- 
+2.20.1
+
