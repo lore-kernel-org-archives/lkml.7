@@ -2,111 +2,83 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5B8ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0CAECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855AE2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0CNjKkz"
+	by mail.kernel.org (Postfix) with ESMTP id 5E411207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbfJNCJ5 (ORCPT
+        id S1729788AbfJNCT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 22:09:57 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35835 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729494AbfJNCJ4 (ORCPT
+        Sun, 13 Oct 2019 22:19:57 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:22609 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729474AbfJNCT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 22:09:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p30so9154304pgl.2;
-        Sun, 13 Oct 2019 19:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JkHBk/oYXM6517BAgEL0tKLuS2H0cul0uF9oC7gkoSI=;
-        b=g0CNjKkzhyTA61CsKBL3iHOy8nLVAGAa3cJ5rCVNL1BN+SBG/vzrLhjUGkRWjlW/W0
-         JYqfPxA6SiW5JscfbYjjGHVZCvtO2L2VsjMdTxS4Dsl4DjKC8ayzmiJQWoTbhBT7D8WE
-         1nvvRVtDYtCHKCeL8BGlrTZLFtoh3u5sueL5Vl/vNPFo/McUdpIRVF4gCoIpllmVEvJU
-         HRaocmIeVyO8KOnVOBLQcUxlioZMDUmElvLXCmb9oPSEQxijkgkLsFfvDZ9jazraowWd
-         3/+Y2aSR5tO2k5Gk4bDv5iiQwuCl8swt9p+GtEtxsxJ+oiySHwRe6POlJwI6CIiyuq9X
-         nAMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JkHBk/oYXM6517BAgEL0tKLuS2H0cul0uF9oC7gkoSI=;
-        b=V/Eom9+6u4QGz881xwyAkKkyDHb9r9lTqrjjONf7SVjRAzMMrPeCQsv0wOUb2Ra1rg
-         UVGLygOgDY635Kmw8gnSy7IbQvXRD6pxwbkfIHZT4cIcDns8WogQDqjwYEYOadztS6iP
-         nPwudrp3tkM9S5LCbgt62WNJtpGCbz8rBYlBuSnV7PeTcuPQAfghU0ayIwcfh8nU1Kx1
-         O0jvAf8bjEPSBbkcOsi8ec5FnFYU35YqoUkRGs72WKP+baC6hR/tIWMlqIL0iW/lUXCs
-         Su48sb5Y55dhyVpu8xHbInPfAsod9yzPClaA4+JPOxiIWHU215Lt3V3d2HaHxQ+MV4RT
-         0n5w==
-X-Gm-Message-State: APjAAAX+132Csx/k5AvVa4ZWGjgtKNBBTFuPy3Q9lRWbgNKH2R1cq9TL
-        Y2kfUVdnbGWPO78nsXgQFgM=
-X-Google-Smtp-Source: APXvYqyHAW0ZGrxC+x3fqBgDGqyUuLIvlW9MkiUlzXZSZrs3uS94Jw7zBKKzmWK2wSSKmIEzfOXIOw==
-X-Received: by 2002:a17:90a:be09:: with SMTP id a9mr8687157pjs.5.1571018996018;
-        Sun, 13 Oct 2019 19:09:56 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id q128sm16589880pga.24.2019.10.13.19.09.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Oct 2019 19:09:55 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Rui Miguel Silva <rmfrfs@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] media: imx7-mipi-csis: Add a check for devm_regulator_get
-Date:   Mon, 14 Oct 2019 10:08:48 +0800
-Message-Id: <20191014020847.9203-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 13 Oct 2019 22:19:56 -0400
+X-UUID: fcb45f13d48f4e009d0c4926b41054a7-20191014
+X-UUID: fcb45f13d48f4e009d0c4926b41054a7-20191014
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 800004060; Mon, 14 Oct 2019 10:19:43 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 14 Oct 2019 10:19:40 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 14 Oct 2019 10:19:41 +0800
+Message-ID: <1571019582.26230.8.camel@mtksdccf07>
+Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
+ with CONFIG_KASAN_GENERIC=y
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Qian Cai <cai@lca.pw>, Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Mon, 14 Oct 2019 10:19:42 +0800
+In-Reply-To: <CACT4Y+Zbx-2yR-mN5GioaKUgGH1TpTE2D-OgLbR2Dy09ezyGGQ@mail.gmail.com>
+References: <1570532528.4686.102.camel@mtksdccf07>
+         <D2B6D82F-AE5F-4A45-AC0C-BE5DA601FDC3@lca.pw>
+         <CACT4Y+Zbx-2yR-mN5GioaKUgGH1TpTE2D-OgLbR2Dy09ezyGGQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_regulator_get may return an error but mipi_csis_phy_init misses
-a check for it.
-This may lead to problems when regulator_set_voltage uses the unchecked
-pointer.
-This patch adds a check for devm_regulator_get to avoid potential risk.
+On Tue, 2019-10-08 at 14:11 +0200, Dmitry Vyukov wrote:
+> On Tue, Oct 8, 2019 at 1:42 PM Qian Cai <cai@lca.pw> wrote:
+> > > On Oct 8, 2019, at 7:02 AM, Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > I don't know very well in UBSAN, but I try to build ubsan kernel and
+> > > test a negative number in memset and kmalloc_memmove_invalid_size(), it
+> > > look like no check.
+> >
+> > It sounds like more important to figure out why the UBSAN is not working in this case rather than duplicating functionality elsewhere.
+> 
+> Detecting out-of-bounds accesses is the direct KASAN responsibility.
+> Even more direct than for KUBSAN. We are not even adding
+> functionality, it's just a plain bug in KASAN code, it tricks itself
+> into thinking that access size is 0.
+> Maybe it's already detected by KUBSAN too?
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/staging/media/imx/imx7-mipi-csis.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-index 73d8354e618c..9a07b54c4ab1 100644
---- a/drivers/staging/media/imx/imx7-mipi-csis.c
-+++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-@@ -350,6 +350,8 @@ static void mipi_csis_sw_reset(struct csi_state *state)
- static int mipi_csis_phy_init(struct csi_state *state)
- {
- 	state->mipi_phy_regulator = devm_regulator_get(state->dev, "phy");
-+	if (IS_ERR(state->mipi_phy_regulator))
-+		return PTR_ERR(state->mipi_phy_regulator);
- 
- 	return regulator_set_voltage(state->mipi_phy_regulator, 1000000,
- 				     1000000);
--- 
-2.20.1
+Thanks for your response.
+I survey the KUBSAN, it don't check size is negative in
+memset/memcpy/memmove, we try to verify our uni testing too, it don't
+report the bug in KUBSAN, so it needs to report this bug by KASAN. The
+reason is like what you said. so we still send the patch.
 
