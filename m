@@ -2,190 +2,141 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81C4C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C24BECE58F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C08B520650
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:25:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="scqM8yUc"
+	by mail.kernel.org (Postfix) with ESMTP id F154321835
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571088409;
+	bh=cClK9PHRvWEw2NnVf5d1dnRD7hL2dOCyNw4YrCukU5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KTO4Ffl4NMB7Tq6VYdD4vx5ZOExiQEJxUIE2IEYmijBRs9vQ0HZotLJTQdXzd835l
+	 0hfzkthy4aHAR3+scxUoalJUP4Yyfn8EjfLm06aZgwRvpHIQtGBkf5X5hD1Pjmt5Jl
+	 tqrNxO4ObXq14ivZp0BEy4SaZxa3cn4Af8fSR8EE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732417AbfJNVZs (ORCPT
+        id S2387601AbfJNV0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 17:25:48 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33596 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731991AbfJNVZr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 17:25:47 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a22so18064489ljd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 14:25:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=X+lnbWcSkcDwPIsFytYHP4Lin40lipRFRetqvAeDiCM=;
-        b=scqM8yUc9u0hD5FGyP5x5ZQyMVArfUYBT1caCY/s8upxKS+OADZendXPcbkjtgDwRX
-         fBFDle84CvSkmCmqz15j5h0ZqbWYwMaPeIwxyszbynwibdmhrGPkdSgWErQQ4/9uycRh
-         g3iGC1AVqaoZ858izFhwlF3rLg9NLYZSQcg7s2BpXH8QlGXUFwMfx1iJIZVYKe9ouONH
-         PIh9UCVG8MFqKHJFE+QIiBR7LdCC38n5zBoNrPq2CGVxFZ/Remz1ddPUDyfp0aRsB7dD
-         uETEqRTsC6MpSm33eY7rHVMdCKs4xnOsW3J9bx77uV/bUA+MYXW9x6WO99WJCHwEzefc
-         a5qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X+lnbWcSkcDwPIsFytYHP4Lin40lipRFRetqvAeDiCM=;
-        b=lnWf57efTl6CLjqgHzv+nHHfpfz+3HJASQ4TuPf4/W7k1soYsc51k8y9V9S92pFdAP
-         xrKPHwDUGreQqoa3YLI4QbeDdVcuAiyI2mrw15DRKipuV9rsOm8b7QgbCkcHXyLK4wKW
-         8WoP8cHmPFibqA9Vt7x40n1nvt6h6+Vr0LVZHkoMFvV+tl9RyX0VvuKagsftjeLDLUMY
-         U7CsExZXANw9AzNX2rSkTFFcrHoNnjoyxlxN8xoMDvxfLaR9ObWWI3DhxzRW7qPXX7AW
-         j0683vtRGRh2MjYfnLbzxm96upt4EkEy0GolyIIprHqu4j52BX8DHVpPiM8+lShdUrV4
-         8Lzw==
-X-Gm-Message-State: APjAAAWIZNl7XtAuJpQy1B8I5hU4XN+rPcA3IW9JDfi2OZf/DEvc/Vya
-        ga+7vZpjsBJkHrmLIcqs6BE=
-X-Google-Smtp-Source: APXvYqyrzFu8ETl5LAaaK0h64UqKgnHlFkkwLUVOG5U6g1GetDVSV9F+30JsVszl8VEwx7hu2cZS/A==
-X-Received: by 2002:a05:651c:8b:: with SMTP id 11mr20114009ljq.100.1571088344747;
-        Mon, 14 Oct 2019 14:25:44 -0700 (PDT)
-Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
-        by smtp.gmail.com with ESMTPSA id m15sm4429434ljh.50.2019.10.14.14.25.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 14:25:44 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-xtensa@linux-xtensa.org, Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
-        Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH v3 3/3] xtensa: fix type conversion in __get_user_[no]check
-Date:   Mon, 14 Oct 2019 14:25:13 -0700
-Message-Id: <20191014212513.17661-4-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191014212513.17661-1-jcmvbkbc@gmail.com>
-References: <20191014212513.17661-1-jcmvbkbc@gmail.com>
+        Mon, 14 Oct 2019 17:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732162AbfJNV0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 17:26:47 -0400
+Received: from earth.universe (eth-west-pareq2-46-193-2-41.wb.wifirst.net [46.193.2.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD39221882;
+        Mon, 14 Oct 2019 21:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571088406;
+        bh=cClK9PHRvWEw2NnVf5d1dnRD7hL2dOCyNw4YrCukU5o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tZuAWbu/9a5PfOaBOSQrzHQd82Vi90vTr4xLvxZKvwwpTqsyh8UxPFN4lVqAaDYFx
+         ic04FfU1JUbUbXB8yGTgMBbjfcHwDylifYQbAaNLV2Wl9VLb9px40Lo5QvCTPxypMa
+         uW8mFSK669v8CVPdJRZLia6mX+Vq1oqOaoHqAx3k=
+Received: by earth.universe (Postfix, from userid 1000)
+        id DEAE03C0CA1; Mon, 14 Oct 2019 06:22:20 +0200 (CEST)
+Date:   Mon, 14 Oct 2019 06:22:20 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/2] power: supply: axp20x_usb_power: enable USB BC
+ detection on AXP813
+Message-ID: <20191014042220.ic6gt7koyr23iq26@earth.universe>
+References: <20191002112545.58481-1-icenowy@aosc.io>
+ <20191002112545.58481-2-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pglfpajxaav525ss"
+Content-Disposition: inline
+In-Reply-To: <20191002112545.58481-2-icenowy@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__get_user_[no]check uses temporary buffer of type long to store result
-of __get_user_size and do sign extension on it when necessary. This
-doesn't work correctly for 64-bit data. Fix it by moving temporary
-buffer/sign extension logic to __get_user_asm.
 
-Don't do assignment of __get_user_bad result to (x) as it may not always
-be integer-compatible now and issue warning even when it's going to be
-optimized. Instead do (x) = 0; and call __get_user_bad separately.
+--pglfpajxaav525ss
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Zero initialize __x in __get_user_asm and use '+' constraint for its
-assembly argument, so that its value is preserved in error cases. This
-may add at most 1 cycle to the fast path, but saves an instruction and
-two padding bytes in the fixup section for each use of this macro and
-works for both misaligned store and store exception.
+Hi,
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
----
-Changes v2->v3:
-- rearrange result zero-initialization for error paths in __get_user_asm
+On Wed, Oct 02, 2019 at 07:25:44PM +0800, Icenowy Zheng wrote:
+> The AXP813 PMIC has support for detection of USB Battery Charging
+> specification, and it will limit the current to 500mA by default when
+> the detection is not enabled or the detection result is SDP.
+>=20
+> Enable the BC detection to allow correctly selection of the current.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
 
-Changes v1->v2:
-- initialize result when access_ok check fails in __get_user_check
+Thanks, queued to power-supply-next.
 
- arch/xtensa/include/asm/uaccess.h | 55 ++++++++++++++++---------------
- 1 file changed, 29 insertions(+), 26 deletions(-)
+-- Sebastian
 
-diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
-index da4d35445063..3f80386f1883 100644
---- a/arch/xtensa/include/asm/uaccess.h
-+++ b/arch/xtensa/include/asm/uaccess.h
-@@ -172,19 +172,19 @@ __asm__ __volatile__(					\
- 
- #define __get_user_nocheck(x, ptr, size)			\
- ({								\
--	long __gu_err, __gu_val;				\
--	__get_user_size(__gu_val, (ptr), (size), __gu_err);	\
--	(x) = (__force __typeof__(*(ptr)))__gu_val;		\
-+	long __gu_err;						\
-+	__get_user_size((x), (ptr), (size), __gu_err);		\
- 	__gu_err;						\
- })
- 
- #define __get_user_check(x, ptr, size)					\
- ({									\
--	long __gu_err = -EFAULT, __gu_val = 0;				\
-+	long __gu_err = -EFAULT;					\
- 	const __typeof__(*(ptr)) *__gu_addr = (ptr);			\
--	if (access_ok(__gu_addr, size))			\
--		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
--	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
-+	if (access_ok(__gu_addr, size))					\
-+		__get_user_size((x), __gu_addr, (size), __gu_err);	\
-+	else								\
-+		(x) = 0;						\
- 	__gu_err;							\
- })
- 
-@@ -208,7 +208,7 @@ do {									\
- 		}							\
- 		break;							\
- 	}								\
--	default: (x) = __get_user_bad();				\
-+	default: (x) = 0; __get_user_bad();				\
- 	}								\
- } while (0)
- 
-@@ -218,24 +218,27 @@ do {									\
-  * __check_align_* macros still work.
-  */
- #define __get_user_asm(x_, addr_, err_, align, insn, cb) \
--__asm__ __volatile__(				\
--	__check_align_##align			\
--	"1: "insn"  %[x], %[addr], 0	\n"	\
--	"2:				\n"	\
--	"   .section  .fixup,\"ax\"	\n"	\
--	"   .align 4			\n"	\
--	"   .literal_position		\n"	\
--	"5:				\n"	\
--	"   movi   %[tmp], 2b		\n"	\
--	"   movi   %[x], 0		\n"	\
--	"   movi   %[err], %[efault]	\n"	\
--	"   jx     %[tmp]		\n"	\
--	"   .previous			\n"	\
--	"   .section  __ex_table,\"a\"	\n"	\
--	"   .long	1b, 5b		\n"	\
--	"   .previous"				\
--	:[err] "+r"(err_), [tmp] "=r"(cb), [x] "=r"(x_)\
--	:[addr] "r"(addr_), [efault] "i"(-EFAULT))
-+do {							\
-+	u32 __x = 0;					\
-+	__asm__ __volatile__(				\
-+		__check_align_##align			\
-+		"1: "insn"  %[x], %[addr], 0	\n"	\
-+		"2:				\n"	\
-+		"   .section  .fixup,\"ax\"	\n"	\
-+		"   .align 4			\n"	\
-+		"   .literal_position		\n"	\
-+		"5:				\n"	\
-+		"   movi   %[tmp], 2b		\n"	\
-+		"   movi   %[err], %[efault]	\n"	\
-+		"   jx     %[tmp]		\n"	\
-+		"   .previous			\n"	\
-+		"   .section  __ex_table,\"a\"	\n"	\
-+		"   .long	1b, 5b		\n"	\
-+		"   .previous"				\
-+		:[err] "+r"(err_), [tmp] "=r"(cb), [x] "+r"(__x) \
-+		:[addr] "r"(addr_), [efault] "i"(-EFAULT)); \
-+	(x_) = (__force __typeof__(*(addr_)))__x;	\
-+} while (0)
- 
- 
- /*
--- 
-2.20.1
+>  drivers/power/supply/axp20x_usb_power.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supp=
+ly/axp20x_usb_power.c
+> index dc4c316eff81..5f0a5722b19e 100644
+> --- a/drivers/power/supply/axp20x_usb_power.c
+> +++ b/drivers/power/supply/axp20x_usb_power.c
+> @@ -48,6 +48,8 @@
+> =20
+>  #define AXP20X_VBUS_MON_VBUS_VALID	BIT(3)
+> =20
+> +#define AXP813_BC_EN		BIT(0)
+> +
+>  /*
+>   * Note do not raise the debounce time, we must report Vusb high within
+>   * 100ms otherwise we get Vbus errors in musb.
+> @@ -495,6 +497,12 @@ static int axp20x_usb_power_probe(struct platform_de=
+vice *pdev)
+>  		return -EINVAL;
+>  	}
+> =20
+> +	if (power->axp20x_id =3D=3D AXP813_ID) {
+> +		/* Enable USB Battery Charging specification detection */
+> +		regmap_update_bits(axp20x->regmap, AXP288_BC_GLOBAL,
+> +				   AXP813_BC_EN, AXP813_BC_EN);
+> +	}
+> +
+>  	psy_cfg.of_node =3D pdev->dev.of_node;
+>  	psy_cfg.drv_data =3D power;
+> =20
+> --=20
+> 2.21.0
+>=20
 
+--pglfpajxaav525ss
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2j9/kACgkQ2O7X88g7
++ppnbA/9HJLSlyVCAOVgH1vjxftYlXar5opquvDiYU3g7jIrQ0Ql3STydP7e5fKk
+ZrYBeS2lVmvsvUQzdcv/7SMds0XdO5EbMV5IctPgcwQ7+CQ7ywIKgxMLhcUSxQVc
+HhIKTOqCeuQxwKcMyginSjagatc5hlG9bOKA5UzScAjuAsvBMCSS+Q55Mr/mnXI5
+QEPFLGoAW63p3ZeW1bZj1kLBSUkTUtVtJF5JuGHAOTjnbbnQkFDnW7/lTifQFQ04
+S1IXiYj8eNSHjrUI/NQvg5wEsAzgp/Xuk166ipB/LM6SCsPSMdb79YYV47dy6UVi
+nW4yflK5s16Db0e8YjWogLrkZHrgdZsrmwhkn9oTDRDnsnlmjcIKdVUPvlkbVaXO
+LAAsfrlMpuC3zcz/MVbSqob4JgHoQG+mc29DtBfLddhQ8TbY6kTPna5NSMnimNja
+/eT0/DQTnGtmGarh3vq1fLUZkkEhg2AkLA1U+7nv+PUAzM9vQkGHbtaEbRvzzW5h
+FrAXkvEp1gaF5CPY6VdJkCBJvCDtFPpKvWKaty2WGA+fsstbPfm45xLh47TJLGT9
+DTfsRPN7xpUplveKk+CabYJz0F/H/3W5ne8TYXQc5cZlEdj9Fqowxmw8cdqgVrhl
+soSVCZoV6bmUEMJWUO0Q+t5IKRYhNGkUOD67pR/CsA7MSziB5iA=
+=hHc+
+-----END PGP SIGNATURE-----
+
+--pglfpajxaav525ss--
