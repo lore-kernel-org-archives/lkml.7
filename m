@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DBDECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A3FECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E18A2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A53582064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="djTw1yvq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QAeR6xlI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbfJNH1a (ORCPT
+        id S1730161AbfJNH1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 03:27:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38180 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728883AbfJNH13 (ORCPT
+        Mon, 14 Oct 2019 03:27:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37344 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728941AbfJNH1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 03:27:29 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y18so8898024wrn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:27:28 -0700 (PDT)
+        Mon, 14 Oct 2019 03:27:39 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p14so18361040wro.4
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:27:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=TWp5GZfXAuJiSjhN3OBoDFjXnsSknmpXMaB8oSLy2/g=;
-        b=djTw1yvqaE4roQjMnJd2pe7/Kqo55OxZfnKi7PrNRYJCR3cP8VIuQ+Ac9RIOVFyZFp
-         y8DgO8aeG3E0jLWMJirbmkXHnp+22ZU5W1/4Sle4LVjo00mv6/tkZp48vg8MI5G9bIk0
-         TCoQCvmiECFLPfeKKhGJp28J0iY48QU45qXb4pB/QNZPE6U9DnhZfKU6CxHO6JjKO3rl
-         JU/dDVqgr4+2HcxH+cdizMhUCpJDhKygiK7bLOk4voo6GA//n/Ao9fvlWyra5pv/itdG
-         zhv6DyuGCQs0uuzCLvO64pnitnLClO7bcHr2MJBC6baxfXkXaLZ0LOS2hBpoz1e103jy
-         EHZQ==
+        bh=Lsu4fhje736plADrPfFak7Hyuvi8ToLdp9rnCK4hwgE=;
+        b=QAeR6xlIwruriMfHuFp2cv0YcQ7dfUCPQKWO3lSStColxpeElXzjO1pIuQnkS1TUZN
+         cty42z8g8KK99VaGUqB/ZKPZqONUVjGeeKHaO7U/ZeaPF/37YP+WnTh+wZVEllLcTG7w
+         JQWbBUZoVWjxcHApwBnUGZGGLTX9yOvDPZDrs9WfgOL76QsRx9nGg4GgBGDJNp7H0VNL
+         ndbPJ0Tv48BYDmb3RoNgWP2uo3DBciF1dy4MU724NcdBreSG4GtL9V6VplxrcEZdM5bi
+         d5sPeIPQDBqskiN+LDOq4H1eHwwsSO34kxUg/hgSYldiDuEN2bNCl0bBPIeHsn8M84kI
+         c+ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=TWp5GZfXAuJiSjhN3OBoDFjXnsSknmpXMaB8oSLy2/g=;
-        b=Wo7rSWrqj2g4/IfBWAJnIFgB82Qmbt+X/G6llMi8qlUCqoNlo8X/NlkDiFcVlkbDnD
-         XQd26dq0QCWhu6YdRJMzSTs/83DJAyvo+Ftj95YOadPKTyNcDOiKDoC/xICNYKNA8Ujs
-         6bDnhl3aWLr6K5p+j70a4WP7fLSd/211VmaQdzYTtAtgUn6f4XqmD++E3HP7qj+iKiPQ
-         Y3mEs7M14ItdovEDUnnolpyZQSsL/swy0AjXK9eNzYgESwEO7SLM2SQGH6WFAADh3vC/
-         lnUS4SwFlzcWNhQTzStZ0hEFIamgyX6GuQIhCK3pRDjo2IfdEPoBz+jR50SaNuotRKRk
-         7V5A==
-X-Gm-Message-State: APjAAAVTbJ95f9vMQQSbeSrFVZrAx+TDnSqZ8rNlZ9E+6hc01WP5SMgk
-        +Rtxjc/ITsTvjUtPY5a5L2lNsw==
-X-Google-Smtp-Source: APXvYqySNhmt9GNRmDIkVlWJrnjisv4DE3+x++TMdbO6SLMmNeMmkEEhShnSGMTeiIYd/7/Hcsc+JA==
-X-Received: by 2002:adf:dbd2:: with SMTP id e18mr11305190wrj.268.1571038047490;
-        Mon, 14 Oct 2019 00:27:27 -0700 (PDT)
+        bh=Lsu4fhje736plADrPfFak7Hyuvi8ToLdp9rnCK4hwgE=;
+        b=Iu7fl9HOrH6Qpff7CrL/GRekyVPOsasiGtWzoteJ2c3wHIiANVv9glxKv/5gEFjiZ0
+         3G69LCwakF+SCCoTDjVFYCxbeV/SqjGgXHvN+Z9vEcsZwRS2UiJOJfyu3P92bKHOBe/g
+         XT88P6byJQP+UjO7TDB+h+LEOa+Z6A4qfIpG2qFXvAvmvEulcyjxqWHphVS0UVqxKo94
+         WR50UQCicCWM03s+mv0DO4p97YPYNv2oddkq0Q4Kfny8gPM38krXui+c96U43Hr13a9s
+         W0iMBcAmmXDfLM4BOShHkxflJl5ApRpXnlPIxnKObHuWZhRHwaiB5f9P/XUbq+7Fv8+1
+         VIRA==
+X-Gm-Message-State: APjAAAUq71ziR7mnJyTbEw+qe+RstWi87L5UY90zb+ItBNWDUfStMoes
+        uhACJveTOUgUlh5fDnDoj3QJyZ5ncWk=
+X-Google-Smtp-Source: APXvYqzw9fkcyJEo4AQK7M4LJ3HxW6G4IjmVLs+xsK03nZjv0Pw9xmGK1kAVONlnHG2VAyBzoqVlSg==
+X-Received: by 2002:adf:e705:: with SMTP id c5mr23614156wrm.375.1571038056779;
+        Mon, 14 Oct 2019 00:27:36 -0700 (PDT)
 Received: from dell ([2.27.167.11])
-        by smtp.gmail.com with ESMTPSA id e3sm16653686wme.39.2019.10.14.00.27.26
+        by smtp.gmail.com with ESMTPSA id f20sm14187442wmb.6.2019.10.14.00.27.36
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 14 Oct 2019 00:27:26 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 08:27:25 +0100
+        Mon, 14 Oct 2019 00:27:36 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 08:27:34 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -69,15 +69,15 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] backlight: pwm_bl: eliminate a 64/32 division
-Message-ID: <20191014072725.GF4545@dell>
+Subject: Re: [PATCH v2 3/4] backlight: pwm_bl: drop use of int_pow()
+Message-ID: <20191014072734.GG4545@dell>
 References: <20191008120327.24208-1-linux@rasmusvillemoes.dk>
- <20191008120327.24208-3-linux@rasmusvillemoes.dk>
+ <20191008120327.24208-4-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191008120327.24208-3-linux@rasmusvillemoes.dk>
+In-Reply-To: <20191008120327.24208-4-linux@rasmusvillemoes.dk>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,15 +86,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, 08 Oct 2019, Rasmus Villemoes wrote:
 
-> lightness*1000 is nowhere near overflowing 32 bits, so we can just use
-> an ordinary 32/32 division, which is much cheaper than the 64/32 done
-> via do_div().
+> For a fixed small exponent of 3, it is more efficient to simply use
+> two explicit multiplications rather than calling the int_pow() library
+> function: Aside from the function call overhead, its implementation
+> using repeated squaring means it ends up doing four 64x64
+> multiplications.
 > 
 > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 > Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 > ---
->  drivers/video/backlight/pwm_bl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/video/backlight/pwm_bl.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
 Applied, thanks.
 
