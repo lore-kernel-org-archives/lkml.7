@@ -2,133 +2,91 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8AAECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B18BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C7F207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:02:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aIa2stPu"
+	by mail.kernel.org (Postfix) with ESMTP id 6C1132083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732431AbfJNOCw (ORCPT
+        id S1732466AbfJNOEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:02:52 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35280 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732349AbfJNOCw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 10:02:52 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EDwYKK056094;
-        Mon, 14 Oct 2019 14:02:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=U4Ap3qX4222IhzvGvT6XRHvbQ/1R+kRuwOXgwxPQee8=;
- b=aIa2stPu5UKaHj7gDAL/swT8Be11gfKezLOGWiK9NTguJgt1dSOxTPu7vkDEuGlf7QoY
- kZVS9J6pYtirh5oioVPyCsb/UkZVXQ5ihKML9PMA9jzvKiH6eiBX3iLoomVhoGbIp37Y
- cxQpBnrIMTdVO3AZEv0sXIzVqsi7Wu/iyBr+7NoLwuEXYjfChKepna292qjbX/os1+VU
- BQd2qaHImWJaYIFjpVP7Y/GrUcQBk6xSzEIp9Vid4aiQtcezQS/tNMESlY6d34yDguiV
- ljPXtTt/KMAK3JXzEZ76iAs78AGIAJLAp17IJFhtEnLhg8rM4q/Zy946jzp4AUgW8KRb tA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2vk68u94uh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 14:02:23 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EDhIje038365;
-        Mon, 14 Oct 2019 14:02:22 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2vks06u8vm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 14:02:22 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9EE2FAF013833;
-        Mon, 14 Oct 2019 14:02:17 GMT
-Received: from dhcp-10-175-191-179.vpn.oracle.com (/10.175.191.179)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 14 Oct 2019 14:02:15 +0000
-Date:   Mon, 14 Oct 2019 15:02:03 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-191-179.vpn.oracle.com
-To:     Luis Chamberlain <mcgrof@kernel.org>
-cc:     Alan Maguire <alan.maguire@oracle.com>,
-        linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
-        skhan@linuxfoundation.org, keescook@chromium.org,
-        yzaikin@google.com, akpm@linux-foundation.org,
-        yamada.masahiro@socionext.com, catalin.marinas@arm.com,
-        joe.lawrence@redhat.com, penguin-kernel@i-love.sakura.ne.jp,
-        schowdary@nvidia.com, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com, changbin.du@intel.com,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 linux-kselftest-test 0/3] kunit: support building
- core/tests as modules
-In-Reply-To: <20191014092051.GZ16384@42.do-not-panic.com>
-Message-ID: <alpine.LRH.2.20.1910141452470.6620@dhcp-10-175-191-179.vpn.oracle.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com> <20191014092051.GZ16384@42.do-not-panic.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Mon, 14 Oct 2019 10:04:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:44988 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732121AbfJNOEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 10:04:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83EDF337;
+        Mon, 14 Oct 2019 07:04:46 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22A513F68E;
+        Mon, 14 Oct 2019 07:04:43 -0700 (PDT)
+Subject: Re: [PATCH v3 6/7] iommu/mediatek: Use writel for TLB range
+ invalidation
+To:     Yong Wu <yong.wu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
+        cui.zhang@mediatek.com, chao.hao@mediatek.com,
+        edison.hsieh@mediatek.com
+References: <1571035101-4213-1-git-send-email-yong.wu@mediatek.com>
+ <1571035101-4213-7-git-send-email-yong.wu@mediatek.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <c87e2a9c-5ed3-e44c-3b17-067db173eae9@arm.com>
+Date:   Mon, 14 Oct 2019 15:04:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9409 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910140132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9409 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910140133
+In-Reply-To: <1571035101-4213-7-git-send-email-yong.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 14/10/2019 07:38, Yong Wu wrote:
+> Use writel for the register F_MMU_INV_RANGE which is for triggering the
+> HW work. We expect all the setting(iova_start/iova_end...) have already
+> been finished before F_MMU_INV_RANGE.
 
+For Arm CPUs, these registers should be mapped as Device memory, 
+therefore the same-peripheral rule should implicitly enforce that the 
+accesses are made in program order, hence you're unlikely to have seen a 
+problem in reality. However, the logical reasoning for the change seems 
+valid in general, so I'd argue that it's still worth making if only for 
+the sake of good practice:
 
-On Mon, 14 Oct 2019, Luis Chamberlain wrote:
+Acked-by: Robin Murphy <robin.murphy@arm.com>
 
-> On Tue, Oct 08, 2019 at 03:55:43PM +0100, Alan Maguire wrote:
-> > The current kunit execution model is to provide base kunit functionality
-> > and tests built-in to the kernel.  The aim of this series is to allow
-> > building kunit itself and tests as modules.  This in turn allows a
-> > simple form of selective execution; load the module you wish to test.
-> > In doing so, kunit itself (if also built as a module) will be loaded as
-> > an implicit dependency.
-> > 
-> > Because this requires a core API modification - if a module delivers
-> > multiple suites, they must be declared with the kunit_test_suites()
-> > macro - we're proposing this patch as a candidate to be applied to the
-> > test tree before too many kunit consumers appear.  We attempt to deal
-> > with existing consumers in patch 1.
+> Signed-off-by: Anan.Sun <anan.sun@mediatek.com>
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> ---
+>   drivers/iommu/mtk_iommu.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> This is neat and makes sense to me.
-
-Thanks for taking a look!
-
-> However the ordering of the patches
-> seems odd. If modules depend on kunit module, then shouldn't that go
-> first? Ie, we want this to be bisectable in proper order.
-> 
-
-The reasoning here is it seemed a more likely scenario that users mught  
-build kunit built-in (CONFIG_KUNIT=y) along with test suites built as 
-modules (CONFIG_KUNIT_TEST=m). So the intermediate state after patch 2 - 
-tests buildable as modules while kunit is still built-in-only - made more 
-sense to me as something users might do in practice so that's why I 
-ordered things that way.  I'm working on a new revision of the patchset
-though, so if you feel strongly about this shout and I'll try and accommodate
-the alternative ordering.
-
-Thanks!
-
-Alan  
-
->   Luis
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index dbbacc3..d285457 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -187,8 +187,7 @@ static void mtk_iommu_tlb_flush_range_sync(unsigned long iova, size_t size,
+>   		writel_relaxed(iova, data->base + REG_MMU_INVLD_START_A);
+>   		writel_relaxed(iova + size - 1,
+>   			       data->base + REG_MMU_INVLD_END_A);
+> -		writel_relaxed(F_MMU_INV_RANGE,
+> -			       data->base + REG_MMU_INVALIDATE);
+> +		writel(F_MMU_INV_RANGE, data->base + REG_MMU_INVALIDATE);
+>   
+>   		/* tlb sync */
+>   		ret = readl_poll_timeout_atomic(data->base + REG_MMU_CPE_DONE,
 > 
