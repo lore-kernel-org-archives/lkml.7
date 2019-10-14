@@ -2,324 +2,254 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99E9C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF21C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8702067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:53:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="kFInHfcT"
+	by mail.kernel.org (Postfix) with ESMTP id 4BBA12083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbfJNCxj (ORCPT
+        id S1729824AbfJNDCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 22:53:39 -0400
-Received: from mail-eopbgr740130.outbound.protection.outlook.com ([40.107.74.130]:23472
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729494AbfJNCxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 22:53:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dUCJlufzAi5V7pv6bammKlOiI04/7V93LFIcao462VVxotDgeTdNQetSBh5E4lioS4LA13FHC42T14Brgc2mvKQsZAnoTklyEIzOUDcVneGvsfwf01szu7aInsd/Tvtdh5Iwmmuedc1Jytb5njuIkQkDDcqMs0GrYqNm5fMgNs7gROkz89DW3j+3dDcGI5yO8mA+o5Xv8Nv9xo47PRLDvHJM0ou+XtGmLgqvAUysbONkRR79XWCDqhvJAvxH6w3T2hyulF4+nCDOIjO0IATvmkN2CAMhSO/9ZyD2C/ugoL7SwOhbWm32bsb6o4cYkTSfwJmKxrUmja51D0oa7nyH8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hpP7ocOwyme+KvszB4vYQpewzyYmu7E4aS6LnB6QbcE=;
- b=QbiZbPpVL/KU+m6EbpQ2SYUHp2wtmdQR5+DH27EyteU3t+ooQo6fyBYuDUPPV4ZjlaTXRV5pL+IJXmkrWRf5I6q/AzHAGvWZpZc4qwkQt7ld3F9cjvImT91l/lSEx+FU51L/edDXmzKjPec8AzfigOm8gz9aMLfK/36Z1sd92Vdp3aDjJmXciuVtBruD6JIsngpbBdhUFrl83v3UPx18REmgSX0h2y5BqV0lphCJrPmT7YNLumoNwD75L/AXYCHkDUtjF79B37z8fexmBK2fqyMIvDNkJPM6lcKCJEmPQPcyg5/ZUhz8pQaLDMzztA+8vSkO7Bhvf1rQD4+/a69s0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hpP7ocOwyme+KvszB4vYQpewzyYmu7E4aS6LnB6QbcE=;
- b=kFInHfcThUNiX652RZ8ryLFURIAteqRAX076A6ZnOqH7p2+SGkp8vNOcQ8tGRGsciKsEbxKcIibc4iMRUzHOSjmuepcG5CpMtXqwZd/QV4n0acTwabp4q3I91uDvgyDZEOG5soEx/uzA4/jqISOuk08jFpJv+dosDm3d79FUMOk=
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com (52.135.120.29) by
- SN6PR04MB3791.namprd04.prod.outlook.com (52.135.81.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Mon, 14 Oct 2019 02:53:33 +0000
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::c55e:6c70:adbb:cf87]) by SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::c55e:6c70:adbb:cf87%5]) with mapi id 15.20.2347.021; Mon, 14 Oct 2019
- 02:53:33 +0000
-From:   Xin Ji <xji@analogixsemi.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Thread-Topic: [PATCH v2 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter binding
-Thread-Index: AQHVf9qi2ZQPn8IAhkqsNtop++SEM6dVTGmAgAQo94A=
-Date:   Mon, 14 Oct 2019 02:53:33 +0000
-Message-ID: <20191014025322.GA2390@xin-VirtualBox>
-References: <cover.1570760115.git.xji@analogixsemi.com>
- <CGME20191011022154epcas3p1a719423a23f8bf193b6136e853e66b04@epcas3p1.samsung.com>
- <75bb8a47d2c3c1f979c6d62158c21988b846e79b.1570760115.git.xji@analogixsemi.com>
- <3c6067de-9f3c-b93c-f263-fa5dd09c3270@samsung.com>
-In-Reply-To: <3c6067de-9f3c-b93c-f263-fa5dd09c3270@samsung.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK0P153CA0024.APCP153.PROD.OUTLOOK.COM
- (2603:1096:203:18::36) To SN6PR04MB4543.namprd04.prod.outlook.com
- (2603:10b6:805:a8::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [114.247.245.252]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 536e5202-1e21-4dbe-78ec-08d75051b33e
-x-ms-traffictypediagnostic: SN6PR04MB3791:
-x-ms-exchange-purlcount: 3
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR04MB3791AF83122ACDA5C238C202C7900@SN6PR04MB3791.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01901B3451
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(39840400004)(376002)(396003)(346002)(366004)(189003)(199004)(6512007)(9686003)(6306002)(54906003)(186003)(99286004)(26005)(7736002)(33656002)(8936002)(52116002)(25786009)(6486002)(53546011)(2906002)(229853002)(76176011)(6506007)(386003)(6436002)(1076003)(102836004)(107886003)(6916009)(4326008)(11346002)(256004)(8676002)(71190400001)(71200400001)(81166006)(478600001)(81156014)(446003)(7416002)(86362001)(33716001)(66556008)(64756008)(66446008)(966005)(66066001)(316002)(66946007)(66476007)(6116002)(14454004)(5660300002)(476003)(486006)(3846002)(305945005)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB3791;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xsomvpfWCxbKmmVoa69tYSEK/MwbI0srJR/+DAlcbkkIqlmE9xfsnaA+h+FnOmXI/XcVjVMCM936thWXWZh+jUVYuCcQvwAAQyyCOs7Bcbkwz2rTKr08auw0V+/wTHjEp+TSNdb4kE+fgnY0s8TC25WlubrdLHpMM6D25Z0t5AM9Yom1WKToymHMEpxe32AZ0JDaAmG/+XHk2EzZD6UoDSiMdS5YZq/NoFMQsHWB25EbazBu+rqIaN9UybBBE2y4X+Xtuf4gW8DV5fNm8syVII+zw7RpJ6oYhG1w9nxgTAWwCP1IKAagJ7UrjxgBnAUu+TJNHVfyp4B9R1dpiQPBEe8fRllpgVnVkyq/4eRDMwXpGVvKY46OO4hCOxQyVphgepF2VRwj4XqbsT1fKVZslj69osuj+rVA9QYiLoCuXCDK25IJZf2mMJXGoCD1FRpktywkz4hxBmQzbqVUaiAPUg==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7D2EC0DAA8B81945BC9C60B8717ED260@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Sun, 13 Oct 2019 23:02:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:23152 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729358AbfJNDCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 23:02:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Oct 2019 20:02:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,294,1566889200"; 
+   d="gz'50?scan'50,208,50";a="346622211"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 13 Oct 2019 20:02:00 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iJqcR-0007sB-QF; Mon, 14 Oct 2019 11:01:59 +0800
+Date:   Mon, 14 Oct 2019 11:01:16 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     kbuild-all@lists.01.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lokeshgidra@google.com,
+        dancol@google.com, nnk@google.com, nosh@google.com,
+        timmurray@google.com
+Subject: Re: [PATCH 2/7] Add a concept of a "secure" anonymous file
+Message-ID: <201910141039.AslO9qH7%lkp@intel.com>
+References: <20191012191602.45649-3-dancol@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 536e5202-1e21-4dbe-78ec-08d75051b33e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2019 02:53:33.3629
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O95mewymmSIHyYBWGfqtRqRyaF/SovpzxFGYeU5tbthdRGUiRXKJqea9U8Vd8BwsQzNHqyH19AmSIs+Lb+i0dg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3791
+Content-Type: multipart/mixed; boundary="vufndrh3s4orbld5"
+Content-Disposition: inline
+In-Reply-To: <20191012191602.45649-3-dancol@google.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrzej Hajda, please check my comment below.
 
-Thanks,
-Xin
+--vufndrh3s4orbld5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, Oct 11, 2019 at 01:21:43PM +0200, Andrzej Hajda wrote:
-> On 11.10.2019 04:21, Xin Ji wrote:
-> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
-> > for portable device. It converts MIPI to DisplayPort 1.3 4K.
-> >
-> > You can add support to your board with binding.
-> >
-> > Example:
-> > 	anx7625_bridge: encoder@58 {
-> > 		compatible =3D "analogix,anx7625";
-> > 		reg =3D <0x58>;
-> > 		status =3D "okay";
-> > 		panel-flags =3D <1>;
-> > 		enable-gpios =3D <&pio 45 GPIO_ACTIVE_HIGH>;
-> > 		reset-gpios =3D <&pio 73 GPIO_ACTIVE_HIGH>;
-> > 		#address-cells =3D <1>;
-> > 		#size-cells =3D <0>;
-> >
-> > 		port@0 {
-> > 		  reg =3D <0>;
-> > 		  anx_1_in: endpoint {
-> > 		    remote-endpoint =3D <&mipi_dsi>;
-> > 		  };
-> > 		};
-> >
-> > 		port@3 {
-> > 		  reg =3D <3>;
-> > 		  anx_1_out: endpoint {
-> > 		    remote-endpoint =3D <&panel_in>;
-> > 		  };
-> > 		};
-> > 	};
-> >
-> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
-> > ---
-> >  .../bindings/display/bridge/anx7625.yaml           | 96 ++++++++++++++=
-++++++++
-> >  1 file changed, 96 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/an=
-x7625.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.y=
-aml b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-> > new file mode 100644
-> > index 0000000..fc84683
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
-> > @@ -0,0 +1,96 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright 2019 Analogix Semiconductor, Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
-> > +
-> > +maintainers:
-> > +  - Xin Ji <xji@analogixsemi.com>
-> > +
-> > +description: |
-> > +  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
-> > +  designed for portable devices.
-> > +
-> > +properties:
-> > +  "#address-cells": true
-> > +  "#size-cells": true
-> > +
-> > +  compatible:
-> > +    items:
-> > +      - const: analogix,anx7625
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  panel-flags:
-> > +    description: indicate the panel is internal or external
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  enable-gpios:
-> > +    description: used for power on chip control, POWER_EN pin D2.
-> > +    maxItems: 1
-> > +
-> > +  reset-gpios:
-> > +    description: used for reset chip control, RESET_N pin B7.
-> > +    maxItems: 1
-> > +
-> > +  port@0:
-> > +    type: object
-> > +    description:
-> > +      A port node pointing to MIPI DSI host port node.
-> > +
-> > +  port@1:
-> > +    type: object
-> > +    description:
-> > +      A port node pointing to MIPI DPI host port node.
-> > +
-> > +  port@2:
-> > +    type: object
-> > +    description:
-> > +      A port node pointing to external connector port node.
-> > +
-> > +  port@3:
-> > +    type: object
-> > +    description:
-> > +      A port node pointing to eDP port node.
->=20
->=20
-> Decrypting available product brief[1], there are following physical lines=
-:
->=20
-> Input:
->=20
-> - MIPI DSI/DPI - video data, are DSI and DPI lines shared?
->=20
-> - I2S - audio data,
->=20
-> - I2C - control line,
->=20
-> - ALERT/INTP - interrupt,
->=20
-> - USB 3.1 SSRc/Tx - for USB forwarding,
->=20
-> Output:
->=20
-> - SS1, SS2,
->=20
-> - SBU/AUX,
->=20
-> - CC1/2.
-At this application, we didn't use CC1/2 line, we only use the video
-format convert(MIPI to DP) feature on anx7625.
->=20
->=20
-> Having this information I try to understand ports defined by you:
->=20
-> - port@2 you have defined as pointing to external port, but here the
-> port should be rather subnode of ANX7625 - the chip has CC lines, see
-> beginning of [2].
-The port@2 is for Chromium book external port low power mode control,
-the driver according this port to register external connector
-notify interface to receive "connect/disconnect" event to do low power
-control.
->=20
-> - port@3 describes SS1, SS2 and SBU/AUX lines together, am I right? In
-> USB-C binding SBU and SS lines are represented by different ports,
-> different approach, but maybe better in this case.
->=20
->=20
-> Maybe it would be good to add 2nd example with USB-C port.
-No need to add 2nd example with USB-C port, as I said, we didn't use the
-USB Type-C PD feature at anx7625.
->=20
->=20
-> [1]:
-> https://www.analogix.com/system/files/AA-002291-PB-6-ANX7625_ProductBrief=
-.pdf
->=20
-> [2]: Documentation/devicetree/bindings/connector/usb-connector.txt
->=20
->=20
-> Regards
->=20
-> Andrzej
->=20
->=20
-> > +
-> > +required:
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - compatible
-> > +  - reg
-> > +  - port@0
-> > +  - port@3
-> > +
-> > +example:
-> > +  - |
-> > +    anx7625_bridge: encoder@58 {
-> > +        compatible =3D "analogix,anx7625";
-> > +        reg =3D <0x58>;
-> > +        status =3D "okay";
-> > +        panel-flags =3D <1>;
-> > +        enable-gpios =3D <&pio 45 GPIO_ACTIVE_HIGH>;
-> > +        reset-gpios =3D <&pio 73 GPIO_ACTIVE_HIGH>;
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        port@0 {
-> > +          reg =3D <0>;
-> > +          anx_1_in: endpoint {
-> > +            remote-endpoint =3D <&mipi_dsi>;
-> > +          };
-> > +        };
-> > +
-> > +        port@3 {
-> > +          reg =3D <3>;
-> > +          anx_1_out: endpoint {
-> > +            remote-endpoint =3D <&panel_in>;
-> > +          };
-> > +        };
-> > +    };
->=20
+Hi Daniel,
+
+Thank you for the patch! Yet something to improve:
+
+[auto build test ERROR on linus/master]
+[cannot apply to v5.4-rc2 next-20191011]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Daniel-Colascione/Harden-userfaultfd/20191014-102741
+config: i386-tinyconfig (attached as .config)
+compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=i386 
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   fs/anon_inodes.c: In function 'anon_inode_make_secure_inode':
+>> fs/anon_inodes.c:67:10: error: implicit declaration of function 'security_inode_init_security_anon'; did you mean 'security_inode_init_security'? [-Werror=implicit-function-declaration]
+     error = security_inode_init_security_anon(inode, name, fops);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+             security_inode_init_security
+   cc1: some warnings being treated as errors
+
+vim +67 fs/anon_inodes.c
+
+    57	
+    58	struct inode *anon_inode_make_secure_inode(const char *name,
+    59						   const struct file_operations *fops)
+    60	{
+    61		struct inode *inode;
+    62		int error;
+    63		inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
+    64		if (IS_ERR(inode))
+    65			return ERR_PTR(PTR_ERR(inode));
+    66		inode->i_flags &= ~S_PRIVATE;
+  > 67		error =	security_inode_init_security_anon(inode, name, fops);
+    68		if (error) {
+    69			iput(inode);
+    70			return ERR_PTR(error);
+    71		}
+    72		return inode;
+    73	}
+    74	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+--vufndrh3s4orbld5
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+5mgEVbkzdIRqp8fWCQ4UfgDhSF/VDWgAAA==
+
+--vufndrh3s4orbld5--
