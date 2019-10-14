@@ -2,162 +2,126 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89E5ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B092C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B0020659
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XvAnoRVK"
+	by mail.kernel.org (Postfix) with ESMTP id 67E0720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbfJNJg1 (ORCPT
+        id S1730959AbfJNJiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:36:27 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55190 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730667AbfJNJg0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:36:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LsMYLS/Y8cXFlMO0GSn0Yr3BGu1XV5VAX95XcUxBpz0=; b=XvAnoRVKvYRsEt/t8d+FAEQPl
-        B2q8swT9UjlU8sRDS9hAToqyHzJLXEvw6tO47ML5EE88nfG6Cs+/lglrJiXTvJsdGiwk7Gn3B+fOg
-        d/KVk71GetGtHjFPkZmmNP9hpm3XNZPvZKHXKJtyG7MXCIxjQO+9ogr3UoyhzPcBvUkXJ/2FGwzjo
-        MT6aDZxByHv6N7QmSF865+Q8m+FdLf45V1GFwZm+UvbwvUKCoYXYwRB7Z7buZsr8Uk/Y1Vjd9nu88
-        SBtwYHS6X1OCWrTuYhgDYfYKmmcGs4/l3uPYqMJ7urLlxx9FG5EHeWRdIq4jHkLNqjUvIcQ2btmcQ
-        ytw851Dow==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iJwlY-0005EW-2w; Mon, 14 Oct 2019 09:35:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 717FC300F3F;
-        Mon, 14 Oct 2019 11:34:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 555A926530285; Mon, 14 Oct 2019 11:35:44 +0200 (CEST)
-Date:   Mon, 14 Oct 2019 11:35:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH] perf_event: Add support for LSM and SELinux checks
-Message-ID: <20191014093544.GB2328@hirez.programming.kicks-ass.net>
-References: <20191011160330.199604-1-joel@joelfernandes.org>
+        Mon, 14 Oct 2019 05:38:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54862 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725989AbfJNJiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 05:38:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1A59EBD2B;
+        Mon, 14 Oct 2019 09:38:14 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 11:38:29 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 1/4] firmware: dmi: Remember the memory type
+Message-ID: <20191014113829.7e8f5df1@endymion>
+In-Reply-To: <20191014113636.57b5ce89@endymion>
+References: <20191014113636.57b5ce89@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011160330.199604-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 12:03:30PM -0400, Joel Fernandes (Google) wrote:
+Store the memory type while walking the memory slots, and provide a
+way to retrieve it later.
 
-> @@ -4761,6 +4762,7 @@ int perf_event_release_kernel(struct perf_event *event)
->  	}
->  
->  no_ctx:
-> +	security_perf_event_free(event);
->  	put_event(event); /* Must be the 'last' reference */
->  	return 0;
->  }
-
-> @@ -10553,11 +10568,16 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->  		}
->  	}
->  
-> +	err = security_perf_event_alloc(event);
-> +	if (err)
-> +		goto err_security;
-> +
->  	/* symmetric to unaccount_event() in _free_event() */
->  	account_event(event);
->  
->  	return event;
->  
-> +err_security:
->  err_addr_filters:
->  	kfree(event->addr_filter_ranges);
->  
-
-There's a bunch of problems here I think:
-
- - err_security is named wrong; the naming scheme is to name the label
-   after the last thing that succeeded / first thing that needs to be
-   undone.
-
- - per that, you're forgetting to undo 'get_callchain_buffers()'
-
- - perf_event_release_kernel() is not a full match to
-   perf_event_alloc(), inherited events get created by
-   perf_event_alloc() but never pass through
-   perf_event_release_kernel().
-
-
-I'm thinking the below patch on top should ammend these issues; please
-verify.
-
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
 ---
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4540,6 +4540,8 @@ static void _free_event(struct perf_even
+ drivers/firmware/dmi_scan.c |   25 ++++++++++++++++++++++++-
+ include/linux/dmi.h         |    2 ++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+
+--- linux-5.3.orig/drivers/firmware/dmi_scan.c	2019-10-08 14:27:23.783640227 +0200
++++ linux-5.3/drivers/firmware/dmi_scan.c	2019-10-08 16:35:35.442803880 +0200
+@@ -35,6 +35,7 @@ static struct dmi_memdev_info {
+ 	const char *bank;
+ 	u64 size;		/* bytes */
+ 	u16 handle;
++	u8 type;		/* DDR2, DDR3, DDR4 etc */
+ } *dmi_memdev;
+ static int dmi_memdev_nr;
  
- 	unaccount_event(event);
+@@ -391,7 +392,7 @@ static void __init save_mem_devices(cons
+ 	u64 bytes;
+ 	u16 size;
  
-+	security_perf_event_free(event);
-+
- 	if (event->rb) {
- 		/*
- 		 * Can happen when we close an event with re-directed output.
-@@ -4774,7 +4776,6 @@ int perf_event_release_kernel(struct per
- 	}
+-	if (dm->type != DMI_ENTRY_MEM_DEVICE || dm->length < 0x12)
++	if (dm->type != DMI_ENTRY_MEM_DEVICE || dm->length < 0x13)
+ 		return;
+ 	if (nr >= dmi_memdev_nr) {
+ 		pr_warn(FW_BUG "Too many DIMM entries in SMBIOS table\n");
+@@ -400,6 +401,7 @@ static void __init save_mem_devices(cons
+ 	dmi_memdev[nr].handle = get_unaligned(&dm->handle);
+ 	dmi_memdev[nr].device = dmi_string(dm, d[0x10]);
+ 	dmi_memdev[nr].bank = dmi_string(dm, d[0x11]);
++	dmi_memdev[nr].type = d[0x12];
  
- no_ctx:
--	security_perf_event_free(event);
- 	put_event(event); /* Must be the 'last' reference */
- 	return 0;
+ 	size = get_unaligned((u16 *)&d[0xC]);
+ 	if (size == 0)
+@@ -1128,3 +1130,24 @@ u64 dmi_memdev_size(u16 handle)
+ 	return ~0ull;
  }
-@@ -10595,14 +10596,18 @@ perf_event_alloc(struct perf_event_attr
- 
- 	err = security_perf_event_alloc(event);
- 	if (err)
--		goto err_security;
-+		goto err_callchain_buffer;
- 
- 	/* symmetric to unaccount_event() in _free_event() */
- 	account_event(event);
- 
- 	return event;
- 
--err_security:
-+err_callchain_buffer:
-+	if (!event->parent) {
-+		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
-+			put_callchain_buffers();
+ EXPORT_SYMBOL_GPL(dmi_memdev_size);
++
++/**
++ * dmi_memdev_type - get the memory type
++ * @handle: DMI structure handle
++ *
++ * Return the DMI memory type of the module in the slot associated with the
++ * given DMI handle, or 0x0 if no such DMI handle exists.
++ */
++u8 dmi_memdev_type(u16 handle)
++{
++	int n;
++
++	if (dmi_memdev) {
++		for (n = 0; n < dmi_memdev_nr; n++) {
++			if (handle == dmi_memdev[n].handle)
++				return dmi_memdev[n].type;
++		}
 +	}
- err_addr_filters:
- 	kfree(event->addr_filter_ranges);
++	return 0x0;	/* Not a valid value */
++}
++EXPORT_SYMBOL_GPL(dmi_memdev_type);
+--- linux-5.3.orig/include/linux/dmi.h	2019-10-04 16:14:24.575714482 +0200
++++ linux-5.3/include/linux/dmi.h	2019-10-08 17:42:19.726907967 +0200
+@@ -113,6 +113,7 @@ extern int dmi_walk(void (*decode)(const
+ extern bool dmi_match(enum dmi_field f, const char *str);
+ extern void dmi_memdev_name(u16 handle, const char **bank, const char **device);
+ extern u64 dmi_memdev_size(u16 handle);
++extern u8 dmi_memdev_type(u16 handle);
  
+ #else
+ 
+@@ -142,6 +143,7 @@ static inline bool dmi_match(enum dmi_fi
+ static inline void dmi_memdev_name(u16 handle, const char **bank,
+ 		const char **device) { }
+ static inline u64 dmi_memdev_size(u16 handle) { return ~0ul; }
++static inline u8 dmi_memdev_type(u16 handle) { return 0x0; }
+ static inline const struct dmi_system_id *
+ 	dmi_first_match(const struct dmi_system_id *list) { return NULL; }
+ 
+
+-- 
+Jean Delvare
+SUSE L3 Support
