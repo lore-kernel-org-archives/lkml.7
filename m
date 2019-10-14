@@ -2,103 +2,125 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA0FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E98C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37ACD20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BRq3c+Pl"
+	by mail.kernel.org (Postfix) with ESMTP id 8B4E820873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732873AbfJNSh6 (ORCPT
+        id S1731527AbfJNSi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:37:58 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33008 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbfJNSh6 (ORCPT
+        Mon, 14 Oct 2019 14:38:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40317 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731224AbfJNSi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:37:58 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9EIbtM3130441;
-        Mon, 14 Oct 2019 13:37:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571078275;
-        bh=gjpe0/tPdjeJbD6c0yP9qpUnp8n/wsrLxgxIz+sbP64=;
-        h=From:To:CC:Subject:Date;
-        b=BRq3c+PlhEgCqEv7DyeL7aC1gjybRH4gu7HwQylBeqVScBl5DiKs4NbvG33uXdf7B
-         AIL+vaopmZbK+tMyzVzZOoWZ+LXxAVhYsf8SeBhNv560F61yjo1F/396hL+E7tFxOL
-         jde/s3EdZ26stbKXdAD3UXzEE51unTjFpj5u1OQk=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9EIbtsv021834
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 14 Oct 2019 13:37:55 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 14
- Oct 2019 13:37:55 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 14 Oct 2019 13:37:49 -0500
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9EIbqfI014449;
-        Mon, 14 Oct 2019 13:37:53 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <asutoshd@codeaurora.org>,
-        <riteshh@codeaurora.org>, <adrian.hunter@intel.com>,
-        <faiz_abbas@ti.com>
-Subject: [RFC] mmc: cqhci: commit descriptors before setting the doorbell
-Date:   Tue, 15 Oct 2019 00:08:49 +0530
-Message-ID: <20191014183849.14864-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
+        Mon, 14 Oct 2019 14:38:57 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iK5F5-0005ag-Cj; Mon, 14 Oct 2019 20:38:51 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1C7831C0483;
+        Mon, 14 Oct 2019 20:38:48 +0200 (CEST)
+Date:   Mon, 14 Oct 2019 18:38:48 -0000
+From:   "tip-bot2 for Sandeep Sheriker Mallikarjun" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] irqchip/atmel-aic5: Add support for sam9x60 irqchip
+Cc:     Sandeep Sheriker Mallikarjun 
+        <sandeepsheriker.mallikarjun@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Message-ID: <157107832805.12254.7183157920442567022.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a write memory barrier to make sure that descriptors are actually
-written to memory before ringing the doorbell.
+The following commit has been merged into the irq/urgent branch of tip:
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Commit-ID:     212fbf2c9e84ceb267cadd8342156b69b54b8135
+Gitweb:        https://git.kernel.org/tip/212fbf2c9e84ceb267cadd8342156b69b54b8135
+Author:        Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+AuthorDate:    Mon, 09 Sep 2019 14:00:35 +03:00
+Committer:     Marc Zyngier <maz@kernel.org>
+CommitterDate: Mon, 09 Sep 2019 18:11:51 +01:00
+
+irqchip/atmel-aic5: Add support for sam9x60 irqchip
+
+Add support for SAM9X60 irqchip.
+
+Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com
+
+[claudiu.beznea@microchip.com: update aic5_irq_fixups[], update
+ documentation]
 ---
+ Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt |  7 +++++--
+ drivers/irqchip/irq-atmel-aic5.c                                     | 10 ++++++++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-This patch fixes a very infrequent ADMA error (1 out of 100 times) that
-I have been seeing after enabling command queuing for J721e.
-Also looking at memory-barriers.txt and this commit[1],
-it looks like we should be doing this before any descriptor write
-followed by a doorbell ring operation. It'll be nice if someone with more
-expertise in memory barriers can comment.
-
-[1] ad1a1b9cd67a ("scsi: ufs: commit descriptors before setting the
-    doorbell")
-
- drivers/mmc/host/cqhci.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-index f7bdae5354c3..5047f7343ffc 100644
---- a/drivers/mmc/host/cqhci.c
-+++ b/drivers/mmc/host/cqhci.c
-@@ -611,7 +611,8 @@ static int cqhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
- 	cq_host->slot[tag].flags = 0;
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+index f4c5d34..7079d44 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+@@ -1,8 +1,11 @@
+ * Advanced Interrupt Controller (AIC)
  
- 	cq_host->qcnt += 1;
--
-+	/* Make sure descriptors are ready before ringing the doorbell */
-+	wmb();
- 	cqhci_writel(cq_host, 1 << tag, CQHCI_TDBR);
- 	if (!(cqhci_readl(cq_host, CQHCI_TDBR) & (1 << tag)))
- 		pr_debug("%s: cqhci: doorbell not set for tag %d\n",
--- 
-2.19.2
-
+ Required properties:
+-- compatible: Should be "atmel,<chip>-aic"
+-  <chip> can be "at91rm9200", "sama5d2", "sama5d3" or "sama5d4"
++- compatible: Should be:
++    - "atmel,<chip>-aic" where  <chip> can be "at91rm9200", "sama5d2",
++      "sama5d3" or "sama5d4"
++    - "microchip,<chip>-aic" where <chip> can be "sam9x60"
++
+ - interrupt-controller: Identifies the node as an interrupt controller.
+ - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
+   The first cell is the IRQ number (aka "Peripheral IDentifier" on datasheet).
+diff --git a/drivers/irqchip/irq-atmel-aic5.c b/drivers/irqchip/irq-atmel-aic5.c
+index 6acad2e..2933349 100644
+--- a/drivers/irqchip/irq-atmel-aic5.c
++++ b/drivers/irqchip/irq-atmel-aic5.c
+@@ -313,6 +313,7 @@ static void __init sama5d3_aic_irq_fixup(void)
+ static const struct of_device_id aic5_irq_fixups[] __initconst = {
+ 	{ .compatible = "atmel,sama5d3", .data = sama5d3_aic_irq_fixup },
+ 	{ .compatible = "atmel,sama5d4", .data = sama5d3_aic_irq_fixup },
++	{ .compatible = "microchip,sam9x60", .data = sama5d3_aic_irq_fixup },
+ 	{ /* sentinel */ },
+ };
+ 
+@@ -390,3 +391,12 @@ static int __init sama5d4_aic5_of_init(struct device_node *node,
+ 	return aic5_of_init(node, parent, NR_SAMA5D4_IRQS);
+ }
+ IRQCHIP_DECLARE(sama5d4_aic5, "atmel,sama5d4-aic", sama5d4_aic5_of_init);
++
++#define NR_SAM9X60_IRQS		50
++
++static int __init sam9x60_aic5_of_init(struct device_node *node,
++				       struct device_node *parent)
++{
++	return aic5_of_init(node, parent, NR_SAM9X60_IRQS);
++}
++IRQCHIP_DECLARE(sam9x60_aic5, "microchip,sam9x60-aic", sam9x60_aic5_of_init);
