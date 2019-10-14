@@ -2,535 +2,166 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE9DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4652BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F47D2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFFC2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfJNDFv (ORCPT
+        id S1729782AbfJNDKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 23:05:51 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:47632 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbfJNDFu (ORCPT
+        Sun, 13 Oct 2019 23:10:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42102 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729626AbfJNDKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 23:05:50 -0400
-Received: from localhost (unknown [192.168.167.70])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 6F37F46F49;
-        Mon, 14 Oct 2019 11:04:11 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P29289T140069197305600S1571022249836926_;
-        Mon, 14 Oct 2019 11:04:11 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <9f4217cdf9a3e140f49507c4be8ce70c>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: linus.walleij@linaro.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH v2 2/2] pinctrl: rockchip: add rk3308 SoC support
-Date:   Mon, 14 Oct 2019 11:04:08 +0800
-Message-Id: <20191014030408.18914-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191012061528.27821-1-jay.xu@rock-chips.com>
-References: <20191012061528.27821-1-jay.xu@rock-chips.com>
+        Sun, 13 Oct 2019 23:10:09 -0400
+Received: by mail-io1-f71.google.com with SMTP id w1so24727141ioj.9
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 20:10:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=whJlTVHBThaxgNCBbOhdGGsAjN8MnS4+IduwsNPUrvc=;
+        b=tgipZnuB1do9bAkqpTN1yM/0RhWMdM8GoKJffRtSiz+KdpAerlP/54+EFVQn6kCHX2
+         /aHstiruOspwRBk2Ex9BVENkG789Uu6O47uRYj/rJwYwIqd0Jfx3HrmxYp81xILykEIc
+         ftR3ZgzpvFpdXIvaUTmSU9Emst0FiePniQ1eBXCXN3i1Nwqk1/IEzAny20ECRMKt/1o8
+         sUdmAqT6U4H7A9eznp66DLcRTLOR39rYLuHJXVMs61oWOCLrBEa3hGUurFcn2B8fnOIA
+         11aKzbX7Gp2Qx+YWmfB5XF4je3z5kpy06K+Gkv35SKTzJYAAWkcd4f4dqB4RgLdReknh
+         5Hxw==
+X-Gm-Message-State: APjAAAV8jm2RP0xoZuyCQgoWZRyYVUe1vwiyBwa4wO4EVUkQNf7lzkx9
+        YFrnp9w7yzM8jdKESejp74KzlDzbcyW4ZJmJR/nm1JoMaeFk
+X-Google-Smtp-Source: APXvYqx2NyI/bDsUHWBHsVSk9DHfCItkvyJwYwHJhoUy4BfMP2t+0MmkkKzys+z1ajqi3Gkdi6eRnle7+hPGYaooTKAWUqPD0Gu+
+MIME-Version: 1.0
+X-Received: by 2002:a05:6638:3c7:: with SMTP id r7mr34731125jaq.98.1571022606708;
+ Sun, 13 Oct 2019 20:10:06 -0700 (PDT)
+Date:   Sun, 13 Oct 2019 20:10:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000683a810594d634a2@google.com>
+Subject: kernel BUG at include/linux/rmap.h:LINE!
+From:   syzbot <syzbot+3370fc9fb190f98c5c72@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, chenjianhong2@huawei.com,
+        jannh@google.com, khlebnikov@yandex-team.ru,
+        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mhocko@suse.com, mike.kravetz@oracle.com,
+        richardw.yang@linux.intel.com, riel@surriel.com,
+        sfr@canb.auug.org.au, steve.capper@arm.com,
+        syzkaller-bugs@googlegroups.com, tiny.windzz@gmail.com,
+        vbabka@suse.cz, walken@google.com, willy@infradead.org,
+        yang.shi@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch do support pinctrl for RK3308 SoCs.
+Hello,
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+syzbot found the following crash on:
+
+HEAD commit:    442630f6 Add linux-next specific files for 20191008
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11450d93600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=af1bfeef713eefdd
+dashboard link: https://syzkaller.appspot.com/bug?extid=3370fc9fb190f98c5c72
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13132d57600000
+
+The bug was bisected to:
+
+commit 480706f51e2c3a450d2f7fc10f5af215c9d249df
+Author: Wei Yang <richardw.yang@linux.intel.com>
+Date:   Mon Oct 7 20:25:37 2019 +0000
+
+     mm/rmap.c: reuse mergeable anon_vma as parent when forking
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=107ea520e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=127ea520e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=147ea520e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3370fc9fb190f98c5c72@syzkaller.appspotmail.com
+Fixes: 480706f51e2c ("mm/rmap.c: reuse mergeable anon_vma as parent when  
+forking")
+
+prot 25 anon_vma ffff88809a9c4b40 vm_ops 0000000000000000
+pgoff 20000 file 0000000000000000 private_data 0000000000000000
+flags: 0x8100077(read|write|exec|mayread|maywrite|mayexec|account|softdirty)
+------------[ cut here ]------------
+kernel BUG at include/linux/rmap.h:159!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 8601 Comm: syz-executor.0 Not tainted 5.4.0-rc2-next-20191008 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:anon_vma_merge include/linux/rmap.h:159 [inline]
+RIP: 0010:__vma_adjust+0x151c/0x1cc0 mm/mmap.c:921
+Code: 4c 89 ee 4c 89 f7 e8 b3 01 d2 ff 4d 39 ee 0f 82 1b fe ff ff 45 31 ed  
+e9 1b fe ff ff e8 7d 00 d2 ff 48 8b 7d c8 e8 76 62 fc ff <0f> 0b e8 6d 00  
+d2 ff 48 8b 85 68 ff ff ff 80 38 00 0f 85 20 07 00
+RSP: 0018:ffff8880a0e9f9c0 EFLAGS: 00010286
+RAX: 0000000000000147 RBX: dffffc0000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815cb676 RDI: ffffed10141d3f12
+RBP: ffff8880a0e9fa88 R08: 0000000000000147 R09: ffffed1015d06161
+R10: ffffed1015d06160 R11: ffff8880ae830b07 R12: ffff888095f28e10
+R13: ffff88808c0f7f18 R14: 0000000000000000 R15: 0000000000000001
+FS:  0000000000c57940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020d06000 CR3: 0000000090f89000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  vma_merge+0xb8a/0xe60 mm/mmap.c:1169
+  mmap_region+0x3e0/0x1760 mm/mmap.c:1741
+  do_mmap+0x853/0x1190 mm/mmap.c:1552
+  do_mmap_pgoff include/linux/mm.h:2361 [inline]
+  vm_mmap_pgoff+0x1c5/0x230 mm/util.c:510
+  ksys_mmap_pgoff+0xf7/0x630 mm/mmap.c:1604
+  __do_sys_mmap arch/x86/kernel/sys_x86_64.c:100 [inline]
+  __se_sys_mmap arch/x86/kernel/sys_x86_64.c:91 [inline]
+  __x64_sys_mmap+0xe9/0x1b0 arch/x86/kernel/sys_x86_64.c:91
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459a59
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffcc91b5068 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
+RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000459a59
+RDX: ffffffffefffffff RSI: 0000000000004000 RDI: 0000000020196000
+RBP: 000000000075bf20 R08: ffffffffffffffff R09: 0000000000000000
+R10: 0000000000008032 R11: 0000000000000246 R12: 0000000000c57914
+R13: 00000000004c6176 R14: 00000000004db118 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace aa2e499bc1c6fb5e ]---
+RIP: 0010:anon_vma_merge include/linux/rmap.h:159 [inline]
+RIP: 0010:__vma_adjust+0x151c/0x1cc0 mm/mmap.c:921
+Code: 4c 89 ee 4c 89 f7 e8 b3 01 d2 ff 4d 39 ee 0f 82 1b fe ff ff 45 31 ed  
+e9 1b fe ff ff e8 7d 00 d2 ff 48 8b 7d c8 e8 76 62 fc ff <0f> 0b e8 6d 00  
+d2 ff 48 8b 85 68 ff ff ff 80 38 00 0f 85 20 07 00
+RSP: 0018:ffff8880a0e9f9c0 EFLAGS: 00010286
+RAX: 0000000000000147 RBX: dffffc0000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815cb676 RDI: ffffed10141d3f12
+RBP: ffff8880a0e9fa88 R08: 0000000000000147 R09: ffffed1015d06161
+R10: ffffed1015d06160 R11: ffff8880ae830b07 R12: ffff888095f28e10
+R13: ffff88808c0f7f18 R14: 0000000000000000 R15: 0000000000000001
+FS:  0000000000c57940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020d06000 CR3: 0000000090f89000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
-changes since v1:
-- Add type case for pull get/set
-- Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- drivers/pinctrl/pinctrl-rockchip.c | 379 +++++++++++++++++++++++++++++
- 1 file changed, 379 insertions(+)
-
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index dc0bbf198cbc..15eff9676ad0 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -58,6 +58,7 @@ enum rockchip_pinctrl_type {
- 	RK3128,
- 	RK3188,
- 	RK3288,
-+	RK3308,
- 	RK3368,
- 	RK3399,
- };
-@@ -70,6 +71,7 @@ enum rockchip_pinctrl_type {
- #define IOMUX_SOURCE_PMU	BIT(2)
- #define IOMUX_UNROUTED		BIT(3)
- #define IOMUX_WIDTH_3BIT	BIT(4)
-+#define IOMUX_WIDTH_2BIT	BIT(5)
- 
- /**
-  * @type: iomux variant using IOMUX_* constants
-@@ -656,6 +658,100 @@ static  struct rockchip_mux_recalced_data rk3128_mux_recalced_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
-+	{
-+		.num = 1,
-+		.pin = 14,
-+		.reg = 0x28,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 15,
-+		.reg = 0x2c,
-+		.bit = 0,
-+		.mask = 0x3
-+	}, {
-+		.num = 1,
-+		.pin = 18,
-+		.reg = 0x30,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 19,
-+		.reg = 0x30,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 20,
-+		.reg = 0x30,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 21,
-+		.reg = 0x34,
-+		.bit = 0,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 22,
-+		.reg = 0x34,
-+		.bit = 4,
-+		.mask = 0xf
-+	}, {
-+		.num = 1,
-+		.pin = 23,
-+		.reg = 0x34,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 12,
-+		.reg = 0x68,
-+		.bit = 8,
-+		.mask = 0xf
-+	}, {
-+		.num = 3,
-+		.pin = 13,
-+		.reg = 0x68,
-+		.bit = 12,
-+		.mask = 0xf
-+	}, {
-+		.num = 2,
-+		.pin = 2,
-+		.reg = 0x608,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 3,
-+		.reg = 0x608,
-+		.bit = 4,
-+		.mask = 0x7
-+	}, {
-+		.num = 2,
-+		.pin = 16,
-+		.reg = 0x610,
-+		.bit = 8,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 10,
-+		.reg = 0x610,
-+		.bit = 0,
-+		.mask = 0x7
-+	}, {
-+		.num = 3,
-+		.pin = 11,
-+		.reg = 0x610,
-+		.bit = 4,
-+		.mask = 0x7
-+	},
-+};
-+
- static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
- 	{
- 		.num = 2,
-@@ -982,6 +1078,192 @@ static struct rockchip_mux_route_data rk3288_mux_route_data[] = {
- 	},
- };
- 
-+static struct rockchip_mux_route_data rk3308_mux_route_data[] = {
-+	{
-+		/* rtc_clk */
-+		.bank_num = 0,
-+		.pin = 19,
-+		.func = 1,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 0) | BIT(0),
-+	}, {
-+		/* uart2_rxm0 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3),
-+	}, {
-+		/* uart2_rxm1 */
-+		.bank_num = 4,
-+		.pin = 26,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 2) | BIT(16 + 3) | BIT(2),
-+	}, {
-+		/* i2c3_sdam0 */
-+		.bank_num = 0,
-+		.pin = 15,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9),
-+	}, {
-+		/* i2c3_sdam1 */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 2,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(8),
-+	}, {
-+		/* i2c3_sdam2 */
-+		.bank_num = 2,
-+		.pin = 0,
-+		.func = 3,
-+		.route_offset = 0x608,
-+		.route_val = BIT(16 + 8) | BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* i2s-8ch-1-sclktxm0 */
-+		.bank_num = 1,
-+		.pin = 3,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3),
-+	}, {
-+		/* i2s-8ch-1-sclktxm1 */
-+		.bank_num = 1,
-+		.pin = 13,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* i2s-8ch-1-sclkrxm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 3) | BIT(3),
-+	}, {
-+		/* pdm-clkm0 */
-+		.bank_num = 1,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x308,
-+		.route_val =  BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* pdm-clkm1 */
-+		.bank_num = 1,
-+		.pin = 14,
-+		.func = 4,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* pdm-clkm2 */
-+		.bank_num = 2,
-+		.pin = 6,
-+		.func = 2,
-+		.route_offset = 0x308,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* pdm-clkm-m2 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 3,
-+		.route_offset = 0x600,
-+		.route_val = BIT(16 + 2) | BIT(2),
-+	}, {
-+		/* spi1_miso */
-+		.bank_num = 3,
-+		.pin = 10,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9),
-+	}, {
-+		/* spi1_miso_m1 */
-+		.bank_num = 2,
-+		.pin = 4,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 9) | BIT(9),
-+	}, {
-+		/* owire_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11),
-+	}, {
-+		/* owire_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 7,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(10),
-+	}, {
-+		/* owire_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 10) | BIT(16 + 11) | BIT(11),
-+	}, {
-+		/* can_rxd_m0 */
-+		.bank_num = 0,
-+		.pin = 11,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13),
-+	}, {
-+		/* can_rxd_m1 */
-+		.bank_num = 1,
-+		.pin = 22,
-+		.func = 5,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(12),
-+	}, {
-+		/* can_rxd_m2 */
-+		.bank_num = 2,
-+		.pin = 2,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 12) | BIT(16 + 13) | BIT(13),
-+	}, {
-+		/* mac_rxd0_m0 */
-+		.bank_num = 1,
-+		.pin = 20,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14),
-+	}, {
-+		/* mac_rxd0_m1 */
-+		.bank_num = 4,
-+		.pin = 2,
-+		.func = 2,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 14) | BIT(14),
-+	}, {
-+		/* uart3_rx */
-+		.bank_num = 3,
-+		.pin = 12,
-+		.func = 4,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15),
-+	}, {
-+		/* uart3_rx_m1 */
-+		.bank_num = 0,
-+		.pin = 17,
-+		.func = 3,
-+		.route_offset = 0x314,
-+		.route_val = BIT(16 + 15) | BIT(15),
-+	},
-+};
-+
- static struct rockchip_mux_route_data rk3328_mux_route_data[] = {
- 	{
- 		/* uart2dbg_rxm0 */
-@@ -1475,6 +1757,26 @@ static int rv1108_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
- 	return 0;
- }
- 
-+#define RK3308_SCHMITT_PINS_PER_REG		8
-+#define RK3308_SCHMITT_BANK_STRIDE		16
-+#define RK3308_SCHMITT_GRF_OFFSET		0x1a0
-+
-+static int rk3308_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_SCHMITT_GRF_OFFSET;
-+
-+	*reg += bank->bank_num * RK3308_SCHMITT_BANK_STRIDE;
-+	*reg += ((pin_num / RK3308_SCHMITT_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3308_SCHMITT_PINS_PER_REG;
-+
-+	return 0;
-+}
-+
- #define RK2928_PULL_OFFSET		0x118
- #define RK2928_PULL_PINS_PER_REG	16
- #define RK2928_PULL_BANK_STRIDE		8
-@@ -1646,6 +1948,40 @@ static void rk3228_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
- 	*bit *= RK3288_DRV_BITS_PER_PIN;
- }
- 
-+#define RK3308_PULL_OFFSET		0xa0
-+
-+static void rk3308_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_PULL_OFFSET;
-+	*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
-+	*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
-+	*bit *= RK3188_PULL_BITS_PER_PIN;
-+}
-+
-+#define RK3308_DRV_GRF_OFFSET		0x100
-+
-+static void rk3308_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
-+				    int pin_num, struct regmap **regmap,
-+				    int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+	*reg = RK3308_DRV_GRF_OFFSET;
-+	*reg += bank->bank_num * RK3288_DRV_BANK_STRIDE;
-+	*reg += ((pin_num / RK3288_DRV_PINS_PER_REG) * 4);
-+
-+	*bit = (pin_num % RK3288_DRV_PINS_PER_REG);
-+	*bit *= RK3288_DRV_BITS_PER_PIN;
-+}
-+
- #define RK3368_PULL_GRF_OFFSET		0x100
- #define RK3368_PULL_PMU_OFFSET		0x10
- 
-@@ -1986,6 +2322,7 @@ static int rockchip_get_pull(struct rockchip_pin_bank *bank, int pin_num)
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		pull_type = bank->pull_type[pin_num / 8];
-@@ -2030,6 +2367,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		pull_type = bank->pull_type[pin_num / 8];
-@@ -2293,6 +2631,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
- 	case RV1108:
- 	case RK3188:
- 	case RK3288:
-+	case RK3308:
- 	case RK3368:
- 	case RK3399:
- 		return (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT);
-@@ -3709,6 +4048,44 @@ static struct rockchip_pin_ctrl rk3288_pin_ctrl = {
- 		.drv_calc_reg		= rk3288_calc_drv_reg_and_bit,
- };
- 
-+static struct rockchip_pin_bank rk3308_pin_banks[] = {
-+	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+	PIN_BANK_IOMUX_FLAGS(4, 32, "gpio4", IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT,
-+					     IOMUX_WIDTH_2BIT),
-+};
-+
-+static struct rockchip_pin_ctrl rk3308_pin_ctrl = {
-+		.pin_banks		= rk3308_pin_banks,
-+		.nr_banks		= ARRAY_SIZE(rk3308_pin_banks),
-+		.label			= "RK3308-GPIO",
-+		.type			= RK3308,
-+		.grf_mux_offset		= 0x0,
-+		.iomux_recalced		= rk3308_mux_recalced_data,
-+		.niomux_recalced	= ARRAY_SIZE(rk3308_mux_recalced_data),
-+		.iomux_routes		= rk3308_mux_route_data,
-+		.niomux_routes		= ARRAY_SIZE(rk3308_mux_route_data),
-+		.pull_calc_reg		= rk3308_calc_pull_reg_and_bit,
-+		.drv_calc_reg		= rk3308_calc_drv_reg_and_bit,
-+		.schmitt_calc_reg	= rk3308_calc_schmitt_reg_and_bit,
-+};
-+
- static struct rockchip_pin_bank rk3328_pin_banks[] = {
- 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
- 	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
-@@ -3849,6 +4226,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 		.data = &rk3228_pin_ctrl },
- 	{ .compatible = "rockchip,rk3288-pinctrl",
- 		.data = &rk3288_pin_ctrl },
-+	{ .compatible = "rockchip,rk3308-pinctrl",
-+		.data = &rk3308_pin_ctrl },
- 	{ .compatible = "rockchip,rk3328-pinctrl",
- 		.data = &rk3328_pin_ctrl },
- 	{ .compatible = "rockchip,rk3368-pinctrl",
--- 
-2.17.1
-
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
