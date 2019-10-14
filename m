@@ -2,130 +2,104 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F19C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25683C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2736F2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC908207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:01:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6JQT9lx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732414AbfJNN65 (ORCPT
+        id S1732379AbfJNOBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:58:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38750 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730477AbfJNN64 (ORCPT
+        Mon, 14 Oct 2019 10:01:42 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35771 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730477AbfJNOBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:58:56 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iK0s7-0000rw-9o; Mon, 14 Oct 2019 15:58:51 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E10C21C010B;
-        Mon, 14 Oct 2019 15:58:50 +0200 (CEST)
-Date:   Mon, 14 Oct 2019 13:58:50 -0000
-From:   "tip-bot2 for Eric Dumazet" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] hrtimer: Annotate lockless access to timer->base
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191008173204.180879-1-edumazet@google.com>
-References: <20191008173204.180879-1-edumazet@google.com>
+        Mon, 14 Oct 2019 10:01:42 -0400
+Received: by mail-qk1-f194.google.com with SMTP id w2so15993238qkf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 07:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wwNskThWX0Rg32SLCjk1C+65CwCG33vEO5AR8DBfLPg=;
+        b=R6JQT9lxbfFg+cJ6oCkUvptYOIGuphlHRuAdg0MTNc52WMLPkcQTT2asckWEzKx2DL
+         xwUVW9RGXOiFqWShHEfwUZaGEh6hRt8Wb0MBJ+PAk4CzeY6dkIo3Dm6Ttc9tksohTum7
+         uE0S3Xgw2KDYPfLWsG1BFX+gmhc9yp/79cNNbwxQPTxN9xgWx0o8zVHNUQhS5NwlYuMF
+         PsTsosvzE9Nt914Cd2QMgTuyD/3F+8gmsRs4s9qsFYjVCCggQ72gqivoO8NLmvwDXhbZ
+         AeXfEHp8YjvSkDkl/Q9k0xanMJM+Mj4GrO3vZpWGDaPs6BuH49VzBNfAC3OyqmEvfmtp
+         U8Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wwNskThWX0Rg32SLCjk1C+65CwCG33vEO5AR8DBfLPg=;
+        b=bO61mqWzBgC8sKN46CUjoTE4xZuFJQQVQBIcxwRh/7xVar/oXJ6JoJVCa03KxEt5Aq
+         ZAG1/YJ6NalMrv14b9TyjjgC5/ObSvGe4lSpgaLcZobqqGgNjinCHjkYXtPVorg4n6W1
+         nxqntwJUgqWrLE0blmtqgVMC5ssHwxcInLmQIr10zMzFRfKA4slrlBSrZHRSq+NzT3Ct
+         EEyNYTDNJQ5ZYBIdXErd9PIwf3+RXgFq+F+CTxii4dBqlWF8WGANCKen5T6ic1pkEWar
+         SZsWMtWHz3iyJXdSG5wj7IK2aOg5mihMgh/O6t9Zsy6zWXjulf2Zar2HLL4dsLtAPfta
+         4KnA==
+X-Gm-Message-State: APjAAAUVdZpw+JvmD1v2dOWtRTK2euP0y1WqMlSM7PGl5opC6nd3E7Qt
+        6BdrlxlWBBOHidigwjZyGRk=
+X-Google-Smtp-Source: APXvYqzbQNZyX4SWywgcvJL6SZav2qwVCKpDqxJy98zGUgyGABylAa50UD9Ocp38tFZQVOBmBSMIFg==
+X-Received: by 2002:a37:4f4d:: with SMTP id d74mr30173443qkb.51.1571061701212;
+        Mon, 14 Oct 2019 07:01:41 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id l23sm13952783qta.53.2019.10.14.07.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 07:01:40 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 41AA24DD66; Mon, 14 Oct 2019 11:01:37 -0300 (-03)
+Date:   Mon, 14 Oct 2019 11:01:37 -0300
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 1/3] perf tools: Allow to build with -ltcmalloc
+Message-ID: <20191014140137.GA19627@kernel.org>
+References: <20191013151427.11941-1-jolsa@kernel.org>
+ <20191013151427.11941-2-jolsa@kernel.org>
+ <20191014013322.GI9933@tassilo.jf.intel.com>
 MIME-Version: 1.0
-Message-ID: <157106153080.9978.2971873792879229342.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014013322.GI9933@tassilo.jf.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+Em Sun, Oct 13, 2019 at 06:33:22PM -0700, Andi Kleen escreveu:
+> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > index a099a8a89447..8f1ba986d3bf 100644
+> > --- a/tools/perf/Makefile.perf
+> > +++ b/tools/perf/Makefile.perf
+> > @@ -114,6 +114,8 @@ include ../scripts/utilities.mak
+> >  # Define NO_LIBZSTD if you do not want support of Zstandard based runtime
+> >  # trace compression in record mode.
+> >  #
+> > +# Define TCMALLOC to enable tcmalloc heap profiling.
+> 
+> It might be useful for more than just profiling. I found that gcc runs a
+> few percent faster with tcmalloc for some workloads. Maybe the same is
+> true for perf too, as sometimes it does a lot of mallocs.
 
-Commit-ID:     ff229eee3d897f52bd001c841f2d3cce8853ecdc
-Gitweb:        https://git.kernel.org/tip/ff229eee3d897f52bd001c841f2d3cce8853ecdc
-Author:        Eric Dumazet <edumazet@google.com>
-AuthorDate:    Tue, 08 Oct 2019 10:32:04 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 14 Oct 2019 15:51:49 +02:00
+Thanks, applied. Waiting for the conclusion of the discussion about JIT,
+etc to look at the rest.
 
-hrtimer: Annotate lockless access to timer->base
-
-Followup to commit dd2261ed45aa ("hrtimer: Protect lockless access
-to timer->base")
-
-lock_hrtimer_base() fetches timer->base without lock exclusion.
-
-Compiler is allowed to read timer->base twice (even if considered dumb)
-which could end up trying to lock migration_base and return
-&migration_base.
-
-  base = timer->base;
-  if (likely(base != &migration_base)) {
-
-       /* compiler reads timer->base again, and now (base == &migration_base)
-
-       raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
-       if (likely(base == timer->base))
-            return base; /* == &migration_base ! */
-
-Similarly the write sides must use WRITE_ONCE() to avoid store tearing.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191008173204.180879-1-edumazet@google.com
-
----
- kernel/time/hrtimer.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 0d4dc24..6560553 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -164,7 +164,7 @@ struct hrtimer_clock_base *lock_hrtimer_base(const struct hrtimer *timer,
- 	struct hrtimer_clock_base *base;
- 
- 	for (;;) {
--		base = timer->base;
-+		base = READ_ONCE(timer->base);
- 		if (likely(base != &migration_base)) {
- 			raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
- 			if (likely(base == timer->base))
-@@ -244,7 +244,7 @@ again:
- 			return base;
- 
- 		/* See the comment in lock_hrtimer_base() */
--		timer->base = &migration_base;
-+		WRITE_ONCE(timer->base, &migration_base);
- 		raw_spin_unlock(&base->cpu_base->lock);
- 		raw_spin_lock(&new_base->cpu_base->lock);
- 
-@@ -253,10 +253,10 @@ again:
- 			raw_spin_unlock(&new_base->cpu_base->lock);
- 			raw_spin_lock(&base->cpu_base->lock);
- 			new_cpu_base = this_cpu_base;
--			timer->base = base;
-+			WRITE_ONCE(timer->base, base);
- 			goto again;
- 		}
--		timer->base = new_base;
-+		WRITE_ONCE(timer->base, new_base);
- 	} else {
- 		if (new_cpu_base != this_cpu_base &&
- 		    hrtimer_check_target(timer, new_base)) {
+- Arnaldo
