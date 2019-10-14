@@ -2,94 +2,90 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B594CECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B162C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884F020873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571068683;
-	bh=nGdYJ/feIA7LkNQZ3wJrOxwj9ETkfx+ZMCf/VDu/oTs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O4ly8tLvKYJ3ToZXhU8ebYU+8Vz0uhrzV0NVEV9TE8Onmwox54wh/lhALW87ov5LL
-	 X59dgGH/8QE6AlcsbPTS7oHuup9+IVi2uR0Txv8g9worK2ikoQ0y0GebroD/kVrmhg
-	 YT2KigszK6SxfVH2g6OmDvYf7+sYDUDUXSH1rQ7s=
+	by mail.kernel.org (Postfix) with ESMTP id 471C120873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfJNP6C (ORCPT
+        id S1732004AbfJNP6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:58:02 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35951 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfJNP6C (ORCPT
+        Mon, 14 Oct 2019 11:58:07 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44063 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfJNP6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:58:02 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v24so17169119ljj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:58:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MsRTPbeFRd3mjs0/iVrF+EgsiOKlCUOXsruIzR2NFHM=;
-        b=Q3mA8803WJvxZe/l2GYLGlsrJ9VzYYmF28vBdeObKty7NHEuWpcW6q62AupQ2xuPnP
-         5krmS69PReezLligsUz2Cocy7nnIOPGD7iBFkCouNZF+G3EEk1COaAd+2AI7qfl11kZT
-         GSxneUGxAfRdWt7fhPwhgEEdqihgEDTDmbGGQ=
+        Mon, 14 Oct 2019 11:58:06 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q21so10615228pfn.11;
+        Mon, 14 Oct 2019 08:58:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MsRTPbeFRd3mjs0/iVrF+EgsiOKlCUOXsruIzR2NFHM=;
-        b=gJfqZZw+gkWcGI0MakXiboYj1DUtVqms0pYA9MdYpfwq3oPwEdvDHBlHYl5OYEyzzH
-         9CW2GD6IjEuuCizB8p7Z+fn8+PT71Ivp3OrLaKj4RBWwoGA8XpGfEjGAsVcJSmFYSURY
-         9di05ywcxXzXQ+YDdHSlhnbdNetcJmYSaCrTo3puhig7nG2CNB28rTlc0dfYkbUsDp6P
-         fU6n9lr0Zgp0BAgoW3/gyW8/bgh8B5KPR+UAYoEup6m/aSw6X0sroNPBrIl+TbgYoQU0
-         +FAtTEazxS5vti01SzQRtLNXePemFfEuqFrv/SpEkP1UvjxtrZqaf2qgS+1gACDURr4z
-         J97g==
-X-Gm-Message-State: APjAAAX7fhy07nD9CQyYASgJ29fGwRU8SLd0v1EVjBAxRPLmvCmdt3VO
-        EX/y7o90GvV2wOxO5zL9gm9IW5Gan2g=
-X-Google-Smtp-Source: APXvYqxG61uBNWoffMq62XA4F+0mH8OGgQ3eOazUQi941khngljOaEs+3C4rEhvMuiyXQ9e7id750g==
-X-Received: by 2002:a2e:658f:: with SMTP id e15mr19344284ljf.254.1571068679421;
-        Mon, 14 Oct 2019 08:57:59 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id x2sm4437190ljj.94.2019.10.14.08.57.58
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0z7F7bJ7/hu+WTeZGPgI6D7KPNJezuJIyaVC8SWKK1E=;
+        b=YskcesWD2beDyuMKTK8N/YROcojIIBT8xID79EK5u2yBwQ76mqb5U2cGHTgEx8iQUS
+         sLuYN2/xPZjoKByNVH2KotiL0DmDaoQVJujWIpIvCZ2cUM2Ele+O4a5DSno/0z/b8B3/
+         rF9zd0p/qLe1pVM1fOQudcXxewRWCcc6jXeigZ+QMuDSsUnVl3NRV9eW8LdCkhVhCCQ2
+         EpfE+qNJ6wDrbSukDHE7JGVlLZsPv9tjMOIbqETVhgE5482f+7cXAcGZcT0BNKFzYIlZ
+         TRBY7kaVyHWp+Svkk3TDIPDZGaLZAyu4ljrKRWvZWTbkXowxnOPqeOnE9m96tweey2xi
+         rrHw==
+X-Gm-Message-State: APjAAAUGZ2xlZJoxglv9yioUtrS82g64635ucvtplS7DWz12lq0Efd6b
+        uTmJBDQqJNrzjYveKIfQ95b462sg
+X-Google-Smtp-Source: APXvYqzjcEd43LyeZWsfCYRMvopdQ15WkebUad1/EyHRqDoR7f0gEEzovBnFPtYbHY9dYzRCBsMWFw==
+X-Received: by 2002:a65:6394:: with SMTP id h20mr33411699pgv.272.1571068685537;
+        Mon, 14 Oct 2019 08:58:05 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id 127sm16623066pfy.56.2019.10.14.08.58.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2019 08:57:58 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id l21so17181607lje.4
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:57:58 -0700 (PDT)
-X-Received: by 2002:a2e:2b91:: with SMTP id r17mr19455605ljr.1.1571068678057;
- Mon, 14 Oct 2019 08:57:58 -0700 (PDT)
+        Mon, 14 Oct 2019 08:58:04 -0700 (PDT)
+Subject: Re: [PATCH] scsi: fix unintended sign extension on left shifts
+To:     Colin King <colin.king@canonical.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Tomohiro Kusumi <kusumi.tomohiro@jp.fujitsu.com>,
+        Kei Tokunaga <tokunaga.keiich@jp.fujitsu.com>,
+        Xiao Guangrong <xiaoguangrong@cn.fujitsu.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191014121613.21999-1-colin.king@canonical.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <0e2a6d4c-b346-cb1b-7941-e247a0d0f8b2@acm.org>
+Date:   Mon, 14 Oct 2019 08:58:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191014022633.GA6430@mit.edu> <20191014070312.GA3327@iMac-3.local>
-In-Reply-To: <20191014070312.GA3327@iMac-3.local>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 14 Oct 2019 08:57:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi5J+ga=CUQ-vho3savkhDNes1Hwxij2Y19gen_-9tU7w@mail.gmail.com>
-Message-ID: <CAHk-=wi5J+ga=CUQ-vho3savkhDNes1Hwxij2Y19gen_-9tU7w@mail.gmail.com>
-Subject: Re: [REGRESSION] kmemleak: commit c566586818 causes failure to boot
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191014121613.21999-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:03 AM Catalin Marinas
-<catalin.marinas@arm.com> wrote:
->
-> Linus, could you please merge the patch above? I can send it again if
-> it's easier.
+On 10/14/19 5:16 AM, Colin King wrote:
+> diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
+> index 0f17e7dac1b0..1d3a5a2dc229 100644
+> --- a/drivers/scsi/scsi_trace.c
+> +++ b/drivers/scsi/scsi_trace.c
+> @@ -38,7 +38,7 @@ scsi_trace_rw10(struct trace_seq *p, unsigned char *cdb, int len)
+>   	const char *ret = trace_seq_buffer_ptr(p);
+>   	sector_t lba = 0, txlen = 0;
+>   
+> -	lba |= (cdb[2] << 24);
+> +	lba |= ((u64)cdb[2] << 24);
+>   	lba |= (cdb[3] << 16);
+>   	lba |= (cdb[4] << 8);
+>   	lba |=  cdb[5];
 
-I took it.
+Have you considered to use get/put_unaligned_be*() instead of making the 
+above change?
 
-Generally I prefer having patches (re-)sent to me explicitly rather
-than getting a link to it, so for next time...
+Thanks,
 
-            Linus
+Bart.
