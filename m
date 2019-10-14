@@ -2,137 +2,167 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7621DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC8C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E030217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:03:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NicpxoL9"
+	by mail.kernel.org (Postfix) with ESMTP id 70CA1217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731893AbfJNND2 (ORCPT
+        id S1731980AbfJNNEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:03:28 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:56810 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbfJNND1 (ORCPT
+        Mon, 14 Oct 2019 09:04:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22056 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727948AbfJNNEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:03:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2Tts3svB4M+OVZolTe//0r1xVhHKZwHlzhehV087qh4=; b=NicpxoL9+3EbUsIPy4VCG7tHN
-        ha2jWRIsIH92DmCJg2X1xvrgY2fwA39qlK9HJansNbKtSUSb01vxhYEeWzh57GXqGeP9OCsWyId7L
-        1Ii19wYbnJ9wsiLscRI4sPFsu4PYJu91SWg7ISnGuOU2+M6hn9FiNVYh/tBDOSLMe6OtZSia2SiWt
-        kZEzvX3hLXtTk6sK/257fBydEO5Wgg5MgEp8tt3LRWrPCA/Z+t8B+vOCGImsC4D2nuTfdDMq4ripL
-        3S81kJ7vfh8EuJDsTBsXr+UeGnWLLx4ZsjvFUN+QUdi1zy5M6DRQB9oAJ9JQUIqvwL39tpFUVaeQd
-        SdLcHx2sA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iK00R-0000aA-2u; Mon, 14 Oct 2019 13:03:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 461E430018A;
-        Mon, 14 Oct 2019 15:02:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4D7DA2829A4C9; Mon, 14 Oct 2019 15:03:21 +0200 (CEST)
-Date:   Mon, 14 Oct 2019 15:03:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Manfred Spraul <manfred@colorfullife.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Waiman Long <longman@redhat.com>, 1vier1@web.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 6/6] Documentation/memory-barriers.txt: Clarify cmpxchg()
-Message-ID: <20191014130321.GG2328@hirez.programming.kicks-ass.net>
-References: <20191012054958.3624-1-manfred@colorfullife.com>
- <20191012054958.3624-7-manfred@colorfullife.com>
+        Mon, 14 Oct 2019 09:04:10 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9ED2q3u090645
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:04:07 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vmqnbcxk3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:04:05 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Mon, 14 Oct 2019 14:04:03 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 14 Oct 2019 14:04:00 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9ED3xX446858688
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 13:03:59 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 006AF4C046;
+        Mon, 14 Oct 2019 13:03:59 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 073654C040;
+        Mon, 14 Oct 2019 13:03:56 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.59.28])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 14 Oct 2019 13:03:55 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     christophe.leroy@c-s.fr, mpe@ellerman.id.au, mikey@neuling.org
+Cc:     npiggin@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
+        naveen.n.rao@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v5 1/7] Powerpc/Watchpoint: Introduce macros for watchpoint length
+Date:   Mon, 14 Oct 2019 18:33:40 +0530
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191014130346.22660-1-ravi.bangoria@linux.ibm.com>
+References: <20191014130346.22660-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191012054958.3624-7-manfred@colorfullife.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101413-0012-0000-0000-00000357EF6C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101413-0013-0000-0000-000021930187
+Message-Id: <20191014130346.22660-2-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-14_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910140126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 07:49:58AM +0200, Manfred Spraul wrote:
-> The documentation in memory-barriers.txt claims that
-> smp_mb__{before,after}_atomic() are for atomic ops that do not return a
-> value.
-> 
-> This is misleading and doesn't match the example in atomic_t.txt,
-> and e.g. smp_mb__before_atomic() may and is used together with
-> cmpxchg_relaxed() in the wake_q code.
-> 
-> The purpose of e.g. smp_mb__before_atomic() is to "upgrade" a following
-> RMW atomic operation to a full memory barrier.
-> The return code of the atomic operation has no impact, so all of the
-> following examples are valid:
+We are hadrcoding length everywhere in the watchpoint code.
+Introduce macros for the length and use them.
 
-The value return of atomic ops is relevant in so far that
-(traditionally) all value returning atomic ops already implied full
-barriers. That of course changed when we added
-_release/_acquire/_relaxed variants.
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ arch/powerpc/include/asm/hw_breakpoint.h | 3 +++
+ arch/powerpc/kernel/hw_breakpoint.c      | 4 ++--
+ arch/powerpc/kernel/ptrace.c             | 6 +++---
+ arch/powerpc/xmon/xmon.c                 | 2 +-
+ 4 files changed, 9 insertions(+), 6 deletions(-)
 
-> 
-> 1)
-> 	smp_mb__before_atomic();
-> 	atomic_add();
-> 
-> 2)
-> 	smp_mb__before_atomic();
-> 	atomic_xchg_relaxed();
-> 
-> 3)
-> 	smp_mb__before_atomic();
-> 	atomic_fetch_add_relaxed();
-> 
-> Invalid would be:
-> 	smp_mb__before_atomic();
-> 	atomic_set();
-> 
-> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> ---
->  Documentation/memory-barriers.txt | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-> index 1adbb8a371c7..52076b057400 100644
-> --- a/Documentation/memory-barriers.txt
-> +++ b/Documentation/memory-barriers.txt
-> @@ -1873,12 +1873,13 @@ There are some more advanced barrier functions:
->   (*) smp_mb__before_atomic();
->   (*) smp_mb__after_atomic();
->  
-> -     These are for use with atomic (such as add, subtract, increment and
-> -     decrement) functions that don't return a value, especially when used for
-> -     reference counting.  These functions do not imply memory barriers.
-> +     These are for use with atomic RMW functions (such as add, subtract,
-> +     increment, decrement, failed conditional operations, ...) that do
-> +     not imply memory barriers, but where the code needs a memory barrier,
-> +     for example when used for reference counting.
->  
-> -     These are also used for atomic bitop functions that do not return a
-> -     value (such as set_bit and clear_bit).
-> +     These are also used for atomic RMW bitop functions that do imply a full
-
-s/do/do not/ ?
-
-> +     memory barrier (such as set_bit and clear_bit).
-
+diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+index 67e2da195eae..4a887e85a5f4 100644
+--- a/arch/powerpc/include/asm/hw_breakpoint.h
++++ b/arch/powerpc/include/asm/hw_breakpoint.h
+@@ -33,6 +33,9 @@ struct arch_hw_breakpoint {
+ #define HW_BRK_TYPE_PRIV_ALL	(HW_BRK_TYPE_USER | HW_BRK_TYPE_KERNEL | \
+ 				 HW_BRK_TYPE_HYP)
+ 
++#define DABR_MAX_LEN	8
++#define DAWR_MAX_LEN	512
++
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+ #include <linux/kdebug.h>
+ #include <asm/reg.h>
+diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+index 1007ec36b4cb..677041cb3c3e 100644
+--- a/arch/powerpc/kernel/hw_breakpoint.c
++++ b/arch/powerpc/kernel/hw_breakpoint.c
+@@ -163,9 +163,9 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+ 	 */
+ 	if (!ppc_breakpoint_available())
+ 		return -ENODEV;
+-	length_max = 8; /* DABR */
++	length_max = DABR_MAX_LEN; /* DABR */
+ 	if (dawr_enabled()) {
+-		length_max = 512 ; /* 64 doublewords */
++		length_max = DAWR_MAX_LEN; /* 64 doublewords */
+ 		/* DAWR region can't cross 512 boundary */
+ 		if ((attr->bp_addr >> 9) !=
+ 		    ((attr->bp_addr + attr->bp_len - 1) >> 9))
+diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
+index 8c92febf5f44..f22e773a416a 100644
+--- a/arch/powerpc/kernel/ptrace.c
++++ b/arch/powerpc/kernel/ptrace.c
+@@ -2425,7 +2425,7 @@ static int ptrace_set_debugreg(struct task_struct *task, unsigned long addr,
+ 		return -EIO;
+ 	hw_brk.address = data & (~HW_BRK_TYPE_DABR);
+ 	hw_brk.type = (data & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
+-	hw_brk.len = 8;
++	hw_brk.len = DABR_MAX_LEN;
+ 	set_bp = (data) && (hw_brk.type & HW_BRK_TYPE_RDWR);
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+ 	bp = thread->ptrace_bps[0];
+@@ -2456,7 +2456,7 @@ static int ptrace_set_debugreg(struct task_struct *task, unsigned long addr,
+ 	/* Create a new breakpoint request if one doesn't exist already */
+ 	hw_breakpoint_init(&attr);
+ 	attr.bp_addr = hw_brk.address;
+-	attr.bp_len = 8;
++	attr.bp_len = DABR_MAX_LEN;
+ 	arch_bp_generic_fields(hw_brk.type,
+ 			       &attr.bp_type);
+ 
+@@ -2882,7 +2882,7 @@ static long ppc_set_hwdebug(struct task_struct *child,
+ 
+ 	brk.address = bp_info->addr & ~7UL;
+ 	brk.type = HW_BRK_TYPE_TRANSLATE;
+-	brk.len = 8;
++	brk.len = DABR_MAX_LEN;
+ 	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_READ)
+ 		brk.type |= HW_BRK_TYPE_READ;
+ 	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_WRITE)
+diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
+index d83364ebc5c5..d547e540c230 100644
+--- a/arch/powerpc/xmon/xmon.c
++++ b/arch/powerpc/xmon/xmon.c
+@@ -884,7 +884,7 @@ static void insert_cpu_bpts(void)
+ 	if (dabr.enabled) {
+ 		brk.address = dabr.address;
+ 		brk.type = (dabr.enabled & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
+-		brk.len = 8;
++		brk.len = DABR_MAX_LEN;
+ 		__set_breakpoint(&brk);
+ 	}
+ 
+-- 
+2.21.0
 
