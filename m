@@ -2,134 +2,130 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCADC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC95DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F023120815
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F82220815
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 03:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="N+oITyUB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KEcztLNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbfJNDVT (ORCPT
+        id S1729875AbfJNDVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 23:21:19 -0400
-Received: from mail-eopbgr80081.outbound.protection.outlook.com ([40.107.8.81]:41837
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729550AbfJNDVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 23:21:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=agw2GWcuK8557c5jopFZ6Qp5QpDlLCRx9Sww1vpufW18TvNnZmsZS8iSn1p65QZGG8nb+b+rlpGMqP58pccniznSauQ4DDLeDnDgE6A89p5RL53gT93EB5KLkFf7ypwDUu5O9SRZa6mOt+UK8V9f+83nPFBgiM1TpJUNKzfRTM3mLYg97TJbOGzIAAfWljGfC8Qh0j56vN1xQx/foHdyXWoguCb2hmZo8BsNqW7hH1XYEo4g7OlzmiUwyh1AS1Ebvo+RtzcYvtkSFnFx2GXBtMFFElU/6kCe0rdGcE31okcA/ylD1z9TYM8MXOi6GrbUSXMMpZkZeIQdTcluhCvvwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kF+75ghiZE33cIQX1S7v7A1yRk6ExrQhY9+0eF9vCh0=;
- b=P2ux+QTXPuPrmguuJ1JNp+ll2d69He8oPeyRw/EUDcP3KbitwWi2J8hSXhlSbJV41q8gNDfM34KMdhdR6RQkzHCD/GUJ805h8WxZoqHIOgL0YXH5WW7mzN2nlunh/EGxEqKUKqrBwps3tt6Exw5GykQmE+mZZuWg3x2dcki+YTJ7mnS3FKA93zc9lw1ZRvqvUeJuZUt3VLp2sdAnEySfs8Qr86q/hD8RmOoWVENtoRSCzjNzdzDP0JAKtbGVdpnAnnkmL+tMax1c+ppzzY3eOyz1R2RYwjunuiTWy41XCb2oYxkSGnJdtOU4yd45lZsWH18YJJaoeIGYtybhb95aIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kF+75ghiZE33cIQX1S7v7A1yRk6ExrQhY9+0eF9vCh0=;
- b=N+oITyUByLN4SJOSKJWXKqxBGoK2Nn6KWiParJQjAF2AuDRB32lNspRhKMN1GfSwNhP6uHE/KLdk1/RnFECE2W3l1rOdI3URJA6kQV0cMABUcVy4Oq7ZQ+Oao131nAAanbgaFPsx8t38WtwoJisa1I0fECurw71MZfOtj/embaA=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4108.eurprd04.prod.outlook.com (52.135.128.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.22; Mon, 14 Oct 2019 03:21:15 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::7804:558a:eef9:cc11]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::7804:558a:eef9:cc11%7]) with mapi id 15.20.2347.023; Mon, 14 Oct 2019
- 03:21:15 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "peda@axentia.se" <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [EXT] Re: [v2,2/2] dt-bindings: i2c-mux-pca954x: Add optional
- property i2c-mux-never-disable
-Thread-Topic: [EXT] Re: [v2,2/2] dt-bindings: i2c-mux-pca954x: Add optional
- property i2c-mux-never-disable
-Thread-Index: AQHVd0AjWQ46ExUKLEmir/xZNG/rOadVlliAgAP3v4A=
-Date:   Mon, 14 Oct 2019 03:21:14 +0000
-Message-ID: <DB7PR04MB44908DE0F57E985ED40C401A8F900@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190930032503.44425-1-biwen.li@nxp.com>
- <20190930032503.44425-2-biwen.li@nxp.com> <20191011144445.GA2340@bogus>
-In-Reply-To: <20191011144445.GA2340@bogus>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2b2439f9-7e31-4862-d480-08d75055921e
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DB7PR04MB4108:|DB7PR04MB4108:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB41080FBF3DFC691C34FD64698F900@DB7PR04MB4108.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 01901B3451
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(199004)(37524003)(189003)(66946007)(76116006)(25786009)(186003)(102836004)(66476007)(99286004)(446003)(11346002)(66446008)(66556008)(26005)(6506007)(7696005)(14444005)(64756008)(71200400001)(71190400001)(14454004)(476003)(478600001)(44832011)(486006)(256004)(6116002)(3846002)(76176011)(74316002)(7736002)(305945005)(6916009)(86362001)(316002)(54906003)(8676002)(229853002)(4326008)(2906002)(55016002)(8936002)(81156014)(81166006)(9686003)(6246003)(6436002)(52536014)(66066001)(33656002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4108;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZaAH11DW50GlDgS7olgEr80XOeP3WpKHEEUqWUmpiBfi6BlIIMDLdaScS7mmuqTeSEe31+mNDySL8Qa6b2B3OUZtjwD1Fxv8Kvv6/A2ySaD7gEoJPaN/g/4gIxvKAiN9jnn09ZNXDmKQKgfBGE1HE0jjme4/pKyb9fg25B1qVCbOylEtX0pjzG59qeM3esB2TaHcNJq5wr1x9PV2N1/9a10X2GkcnLA/rEY3S5aIJv+mtMKsVgoSf7iglRvGFw8RL2L9WOx9ufeHtuFnlpjlwtdGIfLduybj1O2tVGjuvmz3V3tghMLJXTubjjmY82x2YoSnao6RiUIOGsFl8HGO8kSLh7e7HSAAlk4o1AAGMfCmYm9wbqsrU7wEWL2OdTzcklR8Q1s38bR0Y5aW5Jddc6ezEa7x4ENiyTPOnfJiTrM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 13 Oct 2019 23:21:34 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:45947 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729823AbfJNDVd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 23:21:33 -0400
+Received: by mail-vs1-f66.google.com with SMTP id d204so9909090vsc.12
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 20:21:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MoAndGD7+xOBQmFjHRilIe31g5IJG3QAYI2h3oVAfaM=;
+        b=KEcztLNrUdPKcWuyh2hGeyPVaQfBg/U/7j5i0RNpWCAbI0jKHQPdLtQOyKZlKFk+io
+         gQEboJhqjPtjsmxFmgam36eyS7/VqKYyG6aUXo9s3DFRKrICszdqtvoQabD702grmQ5F
+         3a9GW6ba/v4r/6DpR1Y28TAVgEcW+/0ZbvEnU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MoAndGD7+xOBQmFjHRilIe31g5IJG3QAYI2h3oVAfaM=;
+        b=hRRFdMlcoU4XlmVaFyJ1NfXHoK26RDQHsIfHSvQO57XqANobdGXleGV7FKfRuyvxGl
+         pzfBAi2oGy5KTBC9lyE/sIQXD6pzEZYhJHrUwde1ixfa9b/rI3GQk2QHmI1+v92UhyOQ
+         W8eFX8MvcWW8v0HVm/XYwkhNVr5WLDrMcv6V4R4adsc49RwW8f3ISZLEBJM+9mGgKY8y
+         zXfsM9QIJ85z1UTijuChgxNAZ0a29omxT+RnuHbk8SMXl4Tp/PpTDt5aSTH7RoDVi2lO
+         zYSwFSkGA0x7CYK9NfE5lqMe6NE5k4iKRmxrt4eJWFQCzwhSHxYEBJwy2Ji+8Y1uFJw/
+         jiZg==
+X-Gm-Message-State: APjAAAW4xP3eaImMAv0NjMMsJ3jC+aB/HkMNpWHCygn7oxq6yZ4h22lH
+        gfxraHyLB1bOArNb5ewh3SHHaMhT0mfOwz+fqZxwK0R9K68j7A==
+X-Google-Smtp-Source: APXvYqzUpeUtM7it5vJ7Px2l0C655iX038UrctA+47NpKao+0z1PEHHeav8gnfqe5HbF8piW70zXNvnZHj+qZJIPC8k=
+X-Received: by 2002:a05:6102:227c:: with SMTP id v28mr16725837vsd.119.1571023290929;
+ Sun, 13 Oct 2019 20:21:30 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b2439f9-7e31-4862-d480-08d75055921e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2019 03:21:14.9411
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1wEH8eFzJr2cKwYOcEzUQ7RxtJ09bLwf+7/ImemFEJq8JjCSu7B1tM8Bi8ksqeUD53iI7mvwecUvnDfAR/OrDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4108
+References: <20191007071610.65714-1-cychiang@chromium.org> <CA+Px+wWkr1xmSpgEkSaGS7UZu8TKUYvSnbjimBRH29=kDtcHKA@mail.gmail.com>
+ <ebf9bc3f-a531-6c5b-a146-d80fe6c5d772@roeck-us.net> <CAFv8NwLuYKHJoG9YR3WvofwiMnXCgYv-Sk7t5jCvTZbST+Ctjw@mail.gmail.com>
+ <5d9b5b3e.1c69fb81.7203c.1215@mx.google.com> <CAFv8Nw+x6V-995ijyws1Q36W1MpaP=kNJeiVtNakH-uC3Vgg9Q@mail.gmail.com>
+ <5d9ca7e4.1c69fb81.7f8fa.3f7d@mx.google.com> <e968e478-bb48-5b05-b6c4-ae1bf77f714f@linaro.org>
+In-Reply-To: <e968e478-bb48-5b05-b6c4-ae1bf77f714f@linaro.org>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Mon, 14 Oct 2019 11:21:04 +0800
+Message-ID: <CAFv8NwKH5rX2cdfbK1XJxUJFU3uo0K4UowUM3Z7447Qoz_y8bA@mail.gmail.com>
+Subject: Re: [PATCH] firmware: vpd: Add an interface to read VPD value
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        Hung-Te Lin <hungte@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Dylan Reid <dgreid@chromium.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> On Mon, Sep 30, 2019 at 11:25:03AM +0800, Biwen Li wrote:
-> > The patch adds an optional property i2c-mux-never-disable
+On Wed, Oct 9, 2019 at 10:05 PM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+>
+>
+> On 08/10/2019 16:14, Stephen Boyd wrote:
+> >> 3) As my use case does not use device tree, it is hard for ASoC
+> >> machine to access nvmem device. I am wondering if I can use
+> >> nvm_cell_lookup so machine driver can find the nvmem device using a
+> >> con_id. But currently the cell lookup API requires a matched device,
+> >> which does not fit my usage because there will be different machine
+> >> drivers requesting the value.
+> >> I think I can still workaround this by adding the lookup table in
+> >> machine driver. This would seem to be a bit weird because I found that
+> >> most lookup table is added in provider side, not consumer side. Not
+> >> sure if this is logically correct.
+> > Maybe Srini has some input here. It looks like your main concern is
+> > consumer to provider mapping?
 > >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> > Change in v2:
-> >       - update documentation
-> >
-> >  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> > b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> > index 30ac6a60f041..71b73d0fdb62 100644
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> > @@ -34,6 +34,7 @@ Optional Properties:
-> >      - first cell is the pin number
-> >      - second cell is used to specify flags.
-> >      See also
-> > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > +  - i2c-mux-never-disable: always forces mux to be enabled.
->=20
-> Either needs to have a vendor prefix or be documented as a common
-> property.
->=20
-> IIRC, we already have a property for mux default state which seems like t=
-hat
-> would cover this unless you need to leave it in different states.
-Okay, you are right, thank you so much. I will try it in v3.
->=20
-> Rob
+>
+> In non-DT setup, there are various ways to lookup nvmem provider.
+>
+> 1> nvmem_device_get()/put() using provider devid/name. I think you
+> should be able to use this in your case.
+> 2> nvmem_register_notifier() which notifies when nvmem provider is added
+> to system.
+> 3> nvmem_device_find() with own match function this will be merged in
+> next window (https://lkml.org/lkml/2019/10/3/215)
+>
+>
+> If none of these are of any help, could explain what exactly are you
+> looking for w.r.t nvmem to be able to move to what Stephen Boyd suggested?
+>
+> --srini
+>
+
+Hi Stephen, Mark and Srinivas,
+Thank you all for the suggestions.
+In my non-DT setup, I have been working on coreboot changes to prepare
+data in _DSD following suggestion in
+https://patchwork.kernel.org/patch/11179237
+The basic idea is that codec driver should just get data it needs from
+device property.
+The coreboot approach works in my local setup, but I have not sent the
+change to coreboot upstream yet.
+If that path work, then the change needed in kernel will be much simpler.
+
+In the future, there might be DT setup use case, and I think it should
+be doable for VPD to register a nvmem device, and let codec driver
+gets the property.
+But I would drop this path for now.
+Thanks!
