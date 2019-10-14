@@ -2,154 +2,167 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA36C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149A6C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47A021848
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9232067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="luLNBxuQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFGg2+aa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387586AbfJNPeX (ORCPT
+        id S1730929AbfJNPgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:34:23 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37555 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730550AbfJNPeX (ORCPT
+        Mon, 14 Oct 2019 11:36:10 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45347 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730550AbfJNPgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:34:23 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n17so6615371qtr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:34:22 -0700 (PDT)
+        Mon, 14 Oct 2019 11:36:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r1so9135565pgj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:36:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zrqHEv4nHi+sN0Om5M3ZbJYqGC0cBLXNH2ku0StUbdE=;
-        b=luLNBxuQTNJa+fKdTc/2LXZcaKkugTUKNdfTIidC2O5vKzTr/x90eFbx7j/9tUpbHm
-         jliGJrGYg68iVwTVqc4XRBc22+JdQVpfqbmWvLAVUad1ne2cnPJlkzfjG/ycSU80xOUq
-         pUQpruHDx1+UdtqpduYLHbw1QsUIfipQnO7z8xcjjLGYjp2RGIlNueOFGdfyicHWo5Ko
-         AVP3v74tlOjWqstbVo7ntw6ElJT00qkeglTlvpHOmqdfVXoHE4e8mQNkg/zk02WgCNs3
-         zSf+y6enISByXcWfQg5KiBKxAuRKdp1Y0im5IDdmON0tQdZ/yxgB1w1v7UZmQr51iEZF
-         2IPA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0JzEuZMgcTnB+W99wjyXU7kcGAiddB4Jt5OmZBJQues=;
+        b=KFGg2+aadsAmkO3VWYUHKbDZQKie2khKxl5ymHoPu+WG6BiC0fE9TrdzOu+dUoobwd
+         +xATgnVFzGGDCatQ12ESIkgqj/BnyfoEiPOsVYWlDo/M71ahNiDeI4Y2c6My5APAcrMy
+         Llvq9S3dWaV/yaiIlTjZhMWS8jSamcJAFZ0o1tDlx2gy0beNE/31LGFh1ss0Zj7vhD4L
+         DO6bPXLsWL5ubMwzymxtD1/QBKRWSSQovnC9eNvIVsI8nWxCN8Vac2LOx5ckaLbNv9Rq
+         w1Ps1TNcmmF3IE1QNBLkohY4XEWOOZ+hs/bBJAcm4BjhT3ZFjmDiU4PqLd3N81VBzXrv
+         PaDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zrqHEv4nHi+sN0Om5M3ZbJYqGC0cBLXNH2ku0StUbdE=;
-        b=ZliOuZejuLKV/CW44g107fn55JM//pokcm86vQ8uPYZ6F858n1VJ4zgv/7LHjDZ4s9
-         t9YyoGAhRcRUEjPtNFPmnUZALsRZQ6IkfcBMAvp4n/Vw7narYIbmUTfEcJtoM2p6Czgj
-         xB4YbMwFoyofn4mrIrKpxYKbxktx3aC2rr/Xe3nCpHYZN+BWVF8FLvE8SRT+ImnTisxg
-         fvFTf2HrsgOF2ozGNTYeID4ItHM5K4RQZJ4TDs5BpcYpiPHqlIAkV5mTHNmVHBZGx92Q
-         1KV3+RZ2y8fJ4uqAJOnNBW7een0yBJApX/U1Pvik4ky+VUBPFjoBN23u2ZLc1s9ednUg
-         DQ4g==
-X-Gm-Message-State: APjAAAX3nhs2ynU52aSQbAYIu6c8KCB/jiSF8Lnc6Q6vDhZBGckERZVY
-        i5pwcDPXd9F+7DkNDdkfBiDjmA==
-X-Google-Smtp-Source: APXvYqxekmzdMSjMjhAgFiOQx3s7qswq/tSgxGyi405nt2WbrxhaGdHGN9wmG5n7i0A7SErwbAiGnA==
-X-Received: by 2002:ac8:2a66:: with SMTP id l35mr34457334qtl.340.1571067262099;
-        Mon, 14 Oct 2019 08:34:22 -0700 (PDT)
-Received: from soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net ([40.117.208.181])
-        by smtp.gmail.com with ESMTPSA id l15sm8985494qkj.16.2019.10.14.08.34.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0JzEuZMgcTnB+W99wjyXU7kcGAiddB4Jt5OmZBJQues=;
+        b=fad0yxPyf4RuzsfY4JKVMH0kJ/WVNy1NXVE33dltketAk1qhdcdiw1i88loHq3O33m
+         fmG7JSRtNpiOuuFUi6E4K/inqpk9ghfawssyQhyyU1+ITMDxGUXrDsRuQiFJphoJMmcq
+         jPD4B0Dn4MsTxJtehNvbSUvffQ2Vsi73SOFfxlDuuJMVtHQSd28JiqndL4PshkYEixqb
+         qtLhJX36+/LymqGq18bAgKFenwH/jLvgu3GA/03WFq1Jly1icMIaJCeYWbXObWOS6pqC
+         k5JaLgOwnwei3Hup43d0yE3JXn+n8renjAg+kZbJ+8wYN5IM2IMrufQxcAOcJHn2bGSf
+         HQIw==
+X-Gm-Message-State: APjAAAXMY6PoD+Fjv27v8YL7itIa6LGxWrHVqXUAQX+CazdNsZBsStnQ
+        AwBBszYngZ8RrNY0uKITsivkOvyGpnY=
+X-Google-Smtp-Source: APXvYqzjIlrwg+aThNX7ZKbiBHS5SUDfO/Om8705QI56Jee14JSd4k5+4q9tUD/9ZhgR76MaAbylCA==
+X-Received: by 2002:a63:d50c:: with SMTP id c12mr12148168pgg.199.1571067369278;
+        Mon, 14 Oct 2019 08:36:09 -0700 (PDT)
+Received: from localhost.localdomain (155-97-232-235.usahousing.utah.edu. [155.97.232.235])
+        by smtp.googlemail.com with ESMTPSA id q76sm41142648pfc.86.2019.10.14.08.36.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 08:34:21 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 15:34:19 +0000
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     James Morse <james.morse@arm.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        vladimir.murzin@arm.com, matthias.bgg@gmail.com,
-        bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
-Subject: Re: [PATCH v6 08/17] arm64: hibernate: add trans_pgd public functions
-Message-ID: <20191014153419.galjhum7amnyuiml@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
-References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
- <20191004185234.31471-9-pasha.tatashin@soleen.com>
- <2ea69969-154d-fa55-767d-43ea8971dd0e@arm.com>
+        Mon, 14 Oct 2019 08:36:08 -0700 (PDT)
+From:   Tuowen Zhao <ztuowen@gmail.com>
+To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Cc:     Tuowen Zhao <ztuowen@gmail.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH v4 1/2] lib: devres: add a helper function for ioremap_uc
+Date:   Mon, 14 Oct 2019 09:33:43 -0600
+Message-Id: <20191014153344.8996-1-ztuowen@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ea69969-154d-fa55-767d-43ea8971dd0e@arm.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +
-> > +	memcpy(page, src_start, length);
-> > +	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
-> > +
-> > +	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
-> > +	if (!trans_pgd)
-> > +		return -ENOMEM;
-> > +
-> > +	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
-> > +				PAGE_KERNEL_EXEC);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> >  	/*
-> >  	 * Load our new page tables. A strict BBM approach requires that we
-> >  	 * ensure that TLBs are free of any entries that may overlap with the
-> 
-> (I suspect you are going to to duplicate this in the kexec code. Kexec has the same
-> pattern: instructions that have to be copied to do the relocation of the rest of memory)
-> 
+Implement a resource managed strongly uncachable ioremap function.
 
-Yes, the relocation function is also copied, but I do not see an easy
-way to unify this particular code with kexec. We can discuss in kexec
-part of this series what else can be unified with hibernate's code.
+Cc: <stable@vger.kernel.org>
+Tested-by: AceLan Kao <acelan.kao@canonical.com>
+Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
+Changes from previous version:
 
-> 
-> > @@ -462,6 +476,24 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
-> 
-> > +int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
-> > +			  unsigned long end)
-> > +{
-> > +	int rc;
-> > +	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
-> > +
-> > +	if (!trans_pgd) {
-> > +		pr_err("Failed to allocate memory for temporary page tables.\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	rc = copy_page_tables(trans_pgd, start, end);
-> > +	if (!rc)
-> > +		*dst_pgdp = trans_pgd;
-> 
-> *dst_pgdp was already allocated in swsusp_arch_resume().
+  * Add Cc stable
 
-Good catch, I forgot to remove allocation from swsusp_arch_resume().
+ .../driver-api/driver-model/devres.rst        |  1 +
+ include/linux/io.h                            |  2 ++
+ lib/devres.c                                  | 19 +++++++++++++++++++
+ 3 files changed, 22 insertions(+)
 
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index a100bef54952..92628fdc2f11 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -314,6 +314,7 @@ IOMAP
+   devm_ioport_unmap()
+   devm_ioremap()
+   devm_ioremap_nocache()
++  devm_ioremap_uc()
+   devm_ioremap_wc()
+   devm_ioremap_resource() : checks resource, requests memory region, ioremaps
+   devm_iounmap()
+diff --git a/include/linux/io.h b/include/linux/io.h
+index accac822336a..a59834bc0a11 100644
+--- a/include/linux/io.h
++++ b/include/linux/io.h
+@@ -64,6 +64,8 @@ static inline void devm_ioport_unmap(struct device *dev, void __iomem *addr)
  
-> > +
-> > +	return rc;
-> > +}
-> > +
-> >  /*
-> >   * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
-> >   *
-> > @@ -488,7 +520,7 @@ int swsusp_arch_resume(void)
-> >  		pr_err("Failed to allocate memory for temporary page tables.\n");
-> >  		return -ENOMEM;
-> >  	}
-> 
-> If the allocation moves into 'trans_pgd_create_copy()', please move the code just above
-> here (cut off by the diff) that allocates it in swsusp_arch_resume().
-> 
-> Its actually okay to leak memory like this, hibernate's allocator acts as a memory pool.
-> It either gets freed if we fail to resume, or vanishes when the resumed kernel takes over.
+ void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+ 			   resource_size_t size);
++void __iomem *devm_ioremap_uc(struct device *dev, resource_size_t offset,
++				   resource_size_t size);
+ void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+ 				   resource_size_t size);
+ void __iomem *devm_ioremap_wc(struct device *dev, resource_size_t offset,
+diff --git a/lib/devres.c b/lib/devres.c
+index 6a0e9bd6524a..17624d35e82d 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -9,6 +9,7 @@
+ enum devm_ioremap_type {
+ 	DEVM_IOREMAP = 0,
+ 	DEVM_IOREMAP_NC,
++	DEVM_IOREMAP_UC,
+ 	DEVM_IOREMAP_WC,
+ };
+ 
+@@ -39,6 +40,9 @@ static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
+ 	case DEVM_IOREMAP_NC:
+ 		addr = ioremap_nocache(offset, size);
+ 		break;
++	case DEVM_IOREMAP_UC:
++		addr = ioremap_uc(offset, size);
++		break;
+ 	case DEVM_IOREMAP_WC:
+ 		addr = ioremap_wc(offset, size);
+ 		break;
+@@ -68,6 +72,21 @@ void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+ }
+ EXPORT_SYMBOL(devm_ioremap);
+ 
++/**
++ * devm_ioremap_uc - Managed ioremap_uc()
++ * @dev: Generic device to remap IO address for
++ * @offset: Resource address to map
++ * @size: Size of map
++ *
++ * Managed ioremap_uc().  Map is automatically unmapped on driver detach.
++ */
++void __iomem *devm_ioremap_uc(struct device *dev, resource_size_t offset,
++			      resource_size_t size)
++{
++	return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_UC);
++}
++EXPORT_SYMBOL_GPL(devm_ioremap_uc);
++
+ /**
+  * devm_ioremap_nocache - Managed ioremap_nocache()
+  * @dev: Generic device to remap IO address for
+-- 
+2.23.0
 
-I did.
-
-> 
-> Reviewed-by: James Morse <james.morse@arm.com>
-
-Thank you,
-Pasha
