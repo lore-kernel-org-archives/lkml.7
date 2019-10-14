@@ -2,150 +2,231 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1A9ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93AEECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A12C320873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C06920873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/j8jtNu"
+	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="yyCN8RMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbfJNRtx (ORCPT
+        id S1731584AbfJNRuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:49:53 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41115 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729776AbfJNRtx (ORCPT
+        Mon, 14 Oct 2019 13:50:02 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40187 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731410AbfJNRuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:49:53 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p4so4849866wrm.8;
-        Mon, 14 Oct 2019 10:49:49 -0700 (PDT)
+        Mon, 14 Oct 2019 13:50:01 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b24so17602322wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 10:49:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XXUMrGZIb6oF2ZXlkY6NvVGKtm0a8dgxsmrS0PyzrVM=;
-        b=I/j8jtNurZb03wO5OtpFMwdIEKSI/vQc1BpvLpGl7ryBO321tGoGGD/dOPskkClYgw
-         od4t5zjq2+ndwxdNXh+zb0qgGfEDiYNC8CJI5nF9z0sOJtW/AfXcRs9u9iWNzfztTASm
-         zRmpLe4p98ADBn7rdM7pjSDzk7VKVIejQmclv2xjvGruv1pY+/Z3iKi3Ri2jzo/vZXKZ
-         U1CtlK0iIYAuWGsQk/PJUF6nLEzNapqKj/Nhjmq1INYWCFMOd1+W22by2mHCL9aIRP7o
-         dRogtOEYzA8TV/asYmxRHwEpPsFleBrtG5/5o48RbATHAQ6SxNYlqC7Ip8//tVEgp69R
-         zJfA==
+        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=bTFNyHkPz+Jwl3rpEjPqkoqV/N+eKEiD7jH9dC0beRs=;
+        b=yyCN8RMBnXri8Iwn/EJ96jhkdgP71gRzLQGt+dx31aTdIyQ+J+RfDl1CbxgA3lC68Q
+         Za0aR0nB2h8birBcqmOzIngFCeDLYeSccyMTukON1rKfZLLXwhdRuaIW1pTnNVtypYmP
+         yViXRjlACykspKef5Uhz93PV724unhEuJDQZSCqGN0BGK9AhyNPCtrkl7TgbP41+X2dN
+         HEF2W3PrYdQdhKmtlZjdDfDPJzrZIpkubahClNjo8m58RgrjzepgN3fVtos3V1E8xPJu
+         Mu4jCoMMWwd8pvjwpGP1qYj637QB/QYsRFz80tOgztuhRNILeayg2DfvH/Fi02MlFHxV
+         PicQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XXUMrGZIb6oF2ZXlkY6NvVGKtm0a8dgxsmrS0PyzrVM=;
-        b=iDRSjREZaDKP5Nl1ZIDtb+r//1i4tkubJ4zWmetRoiPdlb8lgy2+BIK5rPvHL6sZtp
-         ImF4NY/a/hyHRrQCeexUiB2lTsvFxRMfaRwgwKofZvmYepbRMEwrFZPjqUdiZLJKF+YL
-         ouA58MaQRhrUpY9YS5DOXKjTDQFuO52TGDk35JYJhpuE2IUum3VjzM4XvTn5CgDGqpeQ
-         0HDMou1ApeI0JN3tPHNTzRGmFbBhmyHLnw/ENj/A1/qXaH66CgG/KgWtly5PdsUFwo7t
-         3acTWr4gUUf3fcgcRz3NMKWwNj7dySP19sfPBzperEXZJYgDNSLStL072CSAwlKhSqZk
-         1iOA==
-X-Gm-Message-State: APjAAAXuo8DuEGJjVZXJtylxFGpO5+TpNp9+f95232UhWL7TqAUawFyo
-        vnceqEb2zSAIh/SV3lWC9MM=
-X-Google-Smtp-Source: APXvYqy78vv8xomOjJzk/rQmkBz13qhvU+ercRByH/EBEIZm2MrjAU0AN+KF4wDSX2QXx60c7i4efw==
-X-Received: by 2002:adf:fa92:: with SMTP id h18mr26866005wrr.220.1571075388812;
-        Mon, 14 Oct 2019 10:49:48 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id o70sm26093856wme.29.2019.10.14.10.49.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 10:49:48 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 18:49:46 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-Subject: Re: [PATCH V3 0/7] mdev based hardware virtio offloading support
-Message-ID: <20191014174946.GC5359@stefanha-x1.localdomain>
-References: <20191011081557.28302-1-jasowang@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=bTFNyHkPz+Jwl3rpEjPqkoqV/N+eKEiD7jH9dC0beRs=;
+        b=H+s3Wba5zqilMJkI063FWVXHxEGY+63GgroX0zI45tol7gpHr+S94VPOLKMbTBzyq8
+         qe/tL1+nUmR/vmXslcuLWB5pyxknGYSF9mK9RHUwRRFTv9I9082s12aWHM/IT0rZ+Y62
+         RtnSTFxqSCa5MHYijSlZVxQ8qUpQfh0djnTI761p9amkpQBZjUJIaQC0bRTNOJ59OPZx
+         8oSayVfCvp614jeUq7vntS4yBrUPxVk6AOWfC3iepJcsmeXvM79CsimF2vdIcTr/R2qu
+         FKX4yA7FJWJx4PhrsX0K7x130h3k8nTu2zKolMVP0B5QuMDOwjQHCZRYq9tZbGltNX7v
+         jtQA==
+X-Gm-Message-State: APjAAAUQkCKwcTexEcdwYSiMh0RjklpJQB5HyuyiWrtZyF8z/p6QKcOG
+        BigFLxgFX7v0IZWKUFQm3ouSmIptrtl4GQ==
+X-Google-Smtp-Source: APXvYqwywCupG0hVRyvCuCldRQPlpjiuUUfck2paqF9D/9JEze8r2+SNBN6tIxjNNB2XFJteceKOzQ==
+X-Received: by 2002:a05:600c:2489:: with SMTP id 9mr15954087wms.131.1571075398795;
+        Mon, 14 Oct 2019 10:49:58 -0700 (PDT)
+Received: from linux.fritz.box (p200300D997049C00EA2FE58343581C38.dip0.t-ipconnect.de. [2003:d9:9704:9c00:ea2f:e583:4358:1c38])
+        by smtp.googlemail.com with ESMTPSA id z13sm16906346wrq.51.2019.10.14.10.49.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Oct 2019 10:49:57 -0700 (PDT)
+Subject: Re: [PATCH 6/6] Documentation/memory-barriers.txt: Clarify cmpxchg()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Waiman Long <longman@redhat.com>, 1vier1@web.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20191012054958.3624-1-manfred@colorfullife.com>
+ <20191012054958.3624-7-manfred@colorfullife.com>
+ <20191014130321.GG2328@hirez.programming.kicks-ass.net>
+From:   Manfred Spraul <manfred@colorfullife.com>
+Message-ID: <ef45c2ca-942a-df83-22cf-690eaf761fb7@colorfullife.com>
+Date:   Mon, 14 Oct 2019 19:49:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
-Content-Disposition: inline
-In-Reply-To: <20191011081557.28302-1-jasowang@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191014130321.GG2328@hirez.programming.kicks-ass.net>
+Content-Type: multipart/mixed;
+ boundary="------------F2AD487ABA0A95F91646822E"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------F2AD487ABA0A95F91646822E
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---XMCwj5IQnwKtuyBG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello Peter,
 
-On Fri, Oct 11, 2019 at 04:15:50PM +0800, Jason Wang wrote:
-> There are hardware that can do virtio datapath offloading while having
-> its own control path. This path tries to implement a mdev based
-> unified API to support using kernel virtio driver to drive those
-> devices. This is done by introducing a new mdev transport for virtio
-> (virtio_mdev) and register itself as a new kind of mdev driver. Then
-> it provides a unified way for kernel virtio driver to talk with mdev
-> device implementation.
->=20
-> Though the series only contains kernel driver support, the goal is to
-> make the transport generic enough to support userspace drivers. This
-> means vhost-mdev[1] could be built on top as well by resuing the
-> transport.
->=20
-> A sample driver is also implemented which simulate a virito-net
-> loopback ethernet device on top of vringh + workqueue. This could be
-> used as a reference implementation for real hardware driver.
->=20
-> Consider mdev framework only support VFIO device and driver right now,
-> this series also extend it to support other types. This is done
-> through introducing class id to the device and pairing it with
-> id_talbe claimed by the driver. On top, this seris also decouple
-> device specific parents ops out of the common ones.
+On 10/14/19 3:03 PM, Peter Zijlstra wrote:
+> On Sat, Oct 12, 2019 at 07:49:58AM +0200, Manfred Spraul wrote:
+>> The documentation in memory-barriers.txt claims that
+>> smp_mb__{before,after}_atomic() are for atomic ops that do not return a
+>> value.
+>>
+>> This is misleading and doesn't match the example in atomic_t.txt,
+>> and e.g. smp_mb__before_atomic() may and is used together with
+>> cmpxchg_relaxed() in the wake_q code.
+>>
+>> The purpose of e.g. smp_mb__before_atomic() is to "upgrade" a following
+>> RMW atomic operation to a full memory barrier.
+>> The return code of the atomic operation has no impact, so all of the
+>> following examples are valid:
+> The value return of atomic ops is relevant in so far that
+> (traditionally) all value returning atomic ops already implied full
+> barriers. That of course changed when we added
+> _release/_acquire/_relaxed variants.
+I've updated the Change description accordingly
+>> 1)
+>> 	smp_mb__before_atomic();
+>> 	atomic_add();
+>>
+>> 2)
+>> 	smp_mb__before_atomic();
+>> 	atomic_xchg_relaxed();
+>>
+>> 3)
+>> 	smp_mb__before_atomic();
+>> 	atomic_fetch_add_relaxed();
+>>
+>> Invalid would be:
+>> 	smp_mb__before_atomic();
+>> 	atomic_set();
+>>
+>> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+>> Cc: Waiman Long <longman@redhat.com>
+>> Cc: Davidlohr Bueso <dave@stgolabs.net>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> ---
+>>   Documentation/memory-barriers.txt | 11 ++++++-----
+>>   1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+>> index 1adbb8a371c7..52076b057400 100644
+>> --- a/Documentation/memory-barriers.txt
+>> +++ b/Documentation/memory-barriers.txt
+>> @@ -1873,12 +1873,13 @@ There are some more advanced barrier functions:
+>>    (*) smp_mb__before_atomic();
+>>    (*) smp_mb__after_atomic();
+>>   
+>> -     These are for use with atomic (such as add, subtract, increment and
+>> -     decrement) functions that don't return a value, especially when used for
+>> -     reference counting.  These functions do not imply memory barriers.
+>> +     These are for use with atomic RMW functions (such as add, subtract,
+>> +     increment, decrement, failed conditional operations, ...) that do
+>> +     not imply memory barriers, but where the code needs a memory barrier,
+>> +     for example when used for reference counting.
+>>   
+>> -     These are also used for atomic bitop functions that do not return a
+>> -     value (such as set_bit and clear_bit).
+>> +     These are also used for atomic RMW bitop functions that do imply a full
+> s/do/do not/ ?
+Sorry, yes, of course
+>> +     memory barrier (such as set_bit and clear_bit).
 
-I was curious so I took a quick look and posted comments.
 
-I guess this driver runs inside the guest since it registers virtio
-devices?
 
-If this is used with physical PCI devices that support datapath
-offloading then how are physical devices presented to the guest without
-SR-IOV?
+--------------F2AD487ABA0A95F91646822E
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-Update-Documentation-for-_-acquire-release-relaxed.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-Update-Documentation-for-_-acquire-release-relaxed.patc";
+ filename*1="h"
 
-Stefan
+From 61c85a56994e32ea393af9debef4cccd9cd24abd Mon Sep 17 00:00:00 2001
+From: Manfred Spraul <manfred@colorfullife.com>
+Date: Fri, 11 Oct 2019 10:33:26 +0200
+Subject: [PATCH] Update Documentation for _{acquire|release|relaxed}()
 
---XMCwj5IQnwKtuyBG
-Content-Type: application/pgp-signature; name="signature.asc"
+When adding the _{acquire|release|relaxed}() variants of some atomic
+operations, it was forgotten to update Documentation/memory_barrier.txt:
 
------BEGIN PGP SIGNATURE-----
+smp_mb__{before,after}_atomic() is now indended for all RMW operations
+that do not imply a full memory barrier.
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2ktToACgkQnKSrs4Gr
-c8jgRgf/WWO5uJxyZLwosUbr+PGHcqci4COe1VGy3Aveab34yl0NQekiPT6CEG5k
-PLqiRN9UlPXnMq5H6tsIptfG1mBTxJpF0H7FVRGvwKnV+NizCllURp1Eb1y6ucTd
-j3Rg8JZAwDCdJsZ8d2o4JXQKv9CIavomjp0ZQNIdRiKJ8gOueiWydBgCOSO/l0dh
-t/YI7ENprVpSg56pZba9Y3eueA6Gt4oSfHZbgtQWXBueHkyN90em9JoDAktAOu1m
-PZAQykFnCUGV7RwfK2jUW+WIgh8mSrhu36zoyl9OAASnmHeiMBCTqpvHTKzRH180
-fEnf2WwIaOxFvEnbfxu/3ljKyhjEaA==
-=X6sM
------END PGP SIGNATURE-----
+1)
+	smp_mb__before_atomic();
+	atomic_add();
 
---XMCwj5IQnwKtuyBG--
+2)
+	smp_mb__before_atomic();
+	atomic_xchg_relaxed();
+
+3)
+	smp_mb__before_atomic();
+	atomic_fetch_add_relaxed();
+
+Invalid would be:
+	smp_mb__before_atomic();
+	atomic_set();
+
+Fixes: 654672d4ba1a ("locking/atomics: Add _{acquire|release|relaxed}() variants of some atomic operations")
+
+Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+---
+ Documentation/memory-barriers.txt | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+index 1adbb8a371c7..08090eea3751 100644
+--- a/Documentation/memory-barriers.txt
++++ b/Documentation/memory-barriers.txt
+@@ -1873,12 +1873,13 @@ There are some more advanced barrier functions:
+  (*) smp_mb__before_atomic();
+  (*) smp_mb__after_atomic();
+ 
+-     These are for use with atomic (such as add, subtract, increment and
+-     decrement) functions that don't return a value, especially when used for
+-     reference counting.  These functions do not imply memory barriers.
++     These are for use with atomic RMW functions (such as add, subtract,
++     increment, decrement, failed conditional operations, ...) that do
++     not imply memory barriers, but where the code needs a memory barrier,
++     for example when used for reference counting.
+ 
+-     These are also used for atomic bitop functions that do not return a
+-     value (such as set_bit and clear_bit).
++     These are also used for atomic RMW bitop functions that do not imply a
++     full memory barrier (such as set_bit and clear_bit).
+ 
+      As an example, consider a piece of code that marks an object as being dead
+      and then decrements the object's reference count:
+-- 
+2.21.0
+
+
+--------------F2AD487ABA0A95F91646822E--
