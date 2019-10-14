@@ -2,109 +2,135 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B13C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF98ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA2B2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:46:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YM1MA4Ug"
+	by mail.kernel.org (Postfix) with ESMTP id D1487217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387816AbfJNPqm (ORCPT
+        id S2387832AbfJNPqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:46:42 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38748 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387766AbfJNPqj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:46:39 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y18so10857155wrn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:46:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1Av3ioNZKtn1IoIkmuPv2cbQ6HyfD+1rS28OweGIOdo=;
-        b=YM1MA4Ug496qhJG5JvBKwtecmdfgxLvwt5inayWrP/lErf4KHykJ7C09zxlGL0sWGR
-         0BnL+DDPzZ1Ou6v+pY6BgmI+BkfA78ismkjLcC6D2QSxNMhAOLEdIMUDYx5gQLr652V1
-         uVl2mEp4TXv7sAqmay1F1z/HsX4N4Sr0bs6/d5bYPqBsaHPxgjSDzqufNnCbIUMpKGCp
-         1ElUPBkbaWpiV8m2jBrqZCkeNk+J4bHJvy0gNwI/KQy3DQ6D+mmqKgIr+F1qwg6I9LOK
-         9ddvnBHnmgIdnTjWTelfyj2NDxWX2akx+aLMXaYRmYL+10Vwxzpb0Y+5um9HeV4sSNYz
-         hm/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1Av3ioNZKtn1IoIkmuPv2cbQ6HyfD+1rS28OweGIOdo=;
-        b=H7ayTKVYqiieF0xQAOLqGKBq6h5OxEjPzaiI9TJcpR+KA2xDf2b1Ii4oCoIf73TzVe
-         N0ORFgGzIsIiQBCrS6zM0/FAihWf2g3cN66SsWCfvKYj1OvQV7b2GKQ+SBXOvSAd5UUh
-         +zvFD6Yo9qtrOnXHrXd/Y2Pe4AZcYCvXGjysIr9Ezck4NCVMZ11bc4RQ1dIIiZJxSsnG
-         sVy+i4BUzTbcwqdbMXnLqaNirn/0mkzg5ZClYXHfOp1O90KGvNyIE20Nja0EwFMH0Y1d
-         5jnW48ol2+kS1cDC/sapWAd1UouLSdf2770X/EKrbIYtHp4LBB1XN8n3d9kYbuBOcY3T
-         wvtQ==
-X-Gm-Message-State: APjAAAVKmgGZXbfit+FJnzXz3vGJoX2GZofqgMXoOejels4CizBU5wgb
-        EJB4o2bLCTZ0Kka7MsaEQuJhvw==
-X-Google-Smtp-Source: APXvYqzYJrKpnk39yJydikl6aLQWQKXotCoJvyK9bK+1KGh5xXAPc24eb58KOqbLaiBk+LpAw9+nCQ==
-X-Received: by 2002:a5d:5271:: with SMTP id l17mr27011147wrc.19.1571067996855;
-        Mon, 14 Oct 2019 08:46:36 -0700 (PDT)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id q22sm16539738wmj.5.2019.10.14.08.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 08:46:36 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: [PATCH v3 5/5] kdb: Tweak escape handling for vi users
-Date:   Mon, 14 Oct 2019 16:46:26 +0100
-Message-Id: <20191014154626.351-6-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191014154626.351-1-daniel.thompson@linaro.org>
-References: <20191014154626.351-1-daniel.thompson@linaro.org>
+        Mon, 14 Oct 2019 11:46:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:47392 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387802AbfJNPql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:46:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCF6C28;
+        Mon, 14 Oct 2019 08:46:40 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C04823F718;
+        Mon, 14 Oct 2019 08:46:39 -0700 (PDT)
+Subject: Re: [PATCH] drm/panfrost: DMA map all pages shared with the GPU
+To:     Steven Price <steven.price@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        dri-devel@lists.freedesktop.org
+References: <20191014151616.14099-1-steven.price@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <99f279c5-e93d-ade6-cd97-56b3078da755@arm.com>
+Date:   Mon, 14 Oct 2019 16:46:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191014151616.14099-1-steven.price@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently if sequences such as "\ehelp\r" are delivered to the console then
-the h gets eaten by the escape handling code. Since pressing escape
-becomes something of a nervous twitch for vi users (and that escape doesn't
-have much effect at a shell prompt) it is more helpful to emit the 'h' than
-the '\e'.
+On 14/10/2019 16:16, Steven Price wrote:
+> Pages shared with the GPU are (often) not cache coherent with the CPU so
+> cache maintenance is required to flush the CPU's caches. This was
+> already done when mapping pages on fault, but wasn't previously done
+> when mapping a freshly allocated page.
+> 
+> Fix this by moving the call to dma_map_sg() into mmu_map_sg() ensuring
+> that it is always called when pages are mapped onto the GPU. Since
+> mmu_map_sg() can now fail the code also now has to handle an error
+> return.
+> 
+> Not performing this cache maintenance can cause errors in the GPU output
+> (CPU caches are later flushed and overwrite the GPU output). In theory
+> it also allows the GPU (and by extension user space) to observe the
+> memory contents prior to sanitization.
 
-We don't simply choose to emit the final character for all escape sequences
-since that will do odd things for unsupported escape sequences (in
-other words we retain the existing behaviour once we see '\e[').
+For the non-heap case, aren't the pages already supposed to be mapped by 
+drm_gem_shmem_get_pages_sgt()?
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- kernel/debug/kdb/kdb_io.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+(Hmm, maybe I should try hooking up the GPU SMMU on my Juno to serve as 
+a cheeky DMA-API-mishap detector...)
 
-diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-index f9839566c7d6..5e71bb2596ed 100644
---- a/kernel/debug/kdb/kdb_io.c
-+++ b/kernel/debug/kdb/kdb_io.c
-@@ -161,8 +161,8 @@ char kdb_getchar(void)
- 
- 		*pbuf++ = key;
- 		key = kdb_handle_escape(buf, pbuf - buf);
--		if (key < 0) /* no escape sequence; return first character */
--			return buf[0];
-+		if (key < 0) /* no escape sequence; return best character */
-+			return buf[pbuf - buf == 2 ? 1 : 0];
- 		if (key > 0)
- 			return key;
- 	}
--- 
-2.21.0
+Robin.
 
+> Fixes: f3ba91228e8e ("drm/panfrost: Add initial panfrost driver")
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   drivers/gpu/drm/panfrost/panfrost_mmu.c | 20 ++++++++++++--------
+>   1 file changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> index bdd990568476..0495e48c238d 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> @@ -248,6 +248,9 @@ static int mmu_map_sg(struct panfrost_device *pfdev, struct panfrost_mmu *mmu,
+>   	struct io_pgtable_ops *ops = mmu->pgtbl_ops;
+>   	u64 start_iova = iova;
+>   
+> +	if (!dma_map_sg(pfdev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL))
+> +		return -EINVAL;
+> +
+>   	for_each_sg(sgt->sgl, sgl, sgt->nents, count) {
+>   		unsigned long paddr = sg_dma_address(sgl);
+>   		size_t len = sg_dma_len(sgl);
+> @@ -275,6 +278,7 @@ int panfrost_mmu_map(struct panfrost_gem_object *bo)
+>   	struct panfrost_device *pfdev = to_panfrost_device(obj->dev);
+>   	struct sg_table *sgt;
+>   	int prot = IOMMU_READ | IOMMU_WRITE;
+> +	int ret;
+>   
+>   	if (WARN_ON(bo->is_mapped))
+>   		return 0;
+> @@ -286,10 +290,12 @@ int panfrost_mmu_map(struct panfrost_gem_object *bo)
+>   	if (WARN_ON(IS_ERR(sgt)))
+>   		return PTR_ERR(sgt);
+>   
+> -	mmu_map_sg(pfdev, bo->mmu, bo->node.start << PAGE_SHIFT, prot, sgt);
+> -	bo->is_mapped = true;
+> +	ret = mmu_map_sg(pfdev, bo->mmu, bo->node.start << PAGE_SHIFT,
+> +			 prot, sgt);
+> +	if (ret == 0)
+> +		bo->is_mapped = true;
+>   
+> -	return 0;
+> +	return ret;
+>   }
+>   
+>   void panfrost_mmu_unmap(struct panfrost_gem_object *bo)
+> @@ -503,12 +509,10 @@ int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
+>   	if (ret)
+>   		goto err_pages;
+>   
+> -	if (!dma_map_sg(pfdev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL)) {
+> -		ret = -EINVAL;
+> +	ret = mmu_map_sg(pfdev, bo->mmu, addr,
+> +			 IOMMU_WRITE | IOMMU_READ | IOMMU_NOEXEC, sgt);
+> +	if (ret)
+>   		goto err_map;
+> -	}
+> -
+> -	mmu_map_sg(pfdev, bo->mmu, addr, IOMMU_WRITE | IOMMU_READ | IOMMU_NOEXEC, sgt);
+>   
+>   	bo->is_mapped = true;
+>   
+> 
