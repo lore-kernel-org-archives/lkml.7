@@ -2,99 +2,176 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCA0C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB20C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A263820854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571047310;
-	bh=5/ai+ZkvHjPIjd1PVgKpi0YTLpokodIIj+K2mhHp4YA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ClzJmQsdkxvGb6734lExSH+tuJtmd8qvcRONsx/L7uyu6b3cixjHTHIxHPhYb6GPs
-	 nkysuv3JS2EZVhHT5D4FH6S5yudOu/Ex/Dyxvp2PoR7SuOIY+f40qKk/euvGgdgsmK
-	 YCwUYoCMpIUz0DFYgNKzlFhNXVc5Yv2bc/47dK+s=
+	by mail.kernel.org (Postfix) with ESMTP id C535B207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731348AbfJNKBt (ORCPT
+        id S1731351AbfJNKCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:01:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48400 "EHLO mail.kernel.org"
+        Mon, 14 Oct 2019 06:02:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33204 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731119AbfJNKBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:01:49 -0400
-Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730378AbfJNKCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:02:41 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5694B207FF;
-        Mon, 14 Oct 2019 10:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571047308;
-        bh=5/ai+ZkvHjPIjd1PVgKpi0YTLpokodIIj+K2mhHp4YA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NVz7Y6tapstbkQM25HzES+ADj09TP/Wp4jPgVg7IZZYXW2LhEsDj9+r3eKt3paaCV
-         Ih9eCLs7Gq+SGaX4h/UQwdm06+AALQ1VJW++lAnAIEkJnPc12mxWxAuuPXa8UtC5xN
-         nL2EnUEkQYAhSRYJ5yOYlWlr8V9FdXSIE3lFfVy8=
-Date:   Mon, 14 Oct 2019 12:01:44 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: Module loading problem since 5.3
-Message-ID: <20191014100143.GA6525@linux-8ccs>
-References: <8132cf72-0ae1-48ae-51fb-1a01cf00c693@gmail.com>
- <CAB=NE6XdVXMnq7pgmXxv4Qicu7=xrtQC-b2sXAfVxiAq68NMKg@mail.gmail.com>
- <875eecfb-618a-4989-3b9f-f8272b8d3746@gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 7DCCB81DEB;
+        Mon, 14 Oct 2019 10:02:40 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-16.pek2.redhat.com [10.72.12.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8DCF5600CD;
+        Mon, 14 Oct 2019 10:02:26 +0000 (UTC)
+Subject: Re: [PATCH 3/3 v3] x86/kdump: clean up all the code related to the
+ backup region
+To:     Dave Young <dyoung@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, bhe@redhat.com,
+        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        vgoyal@redhat.com, kexec@lists.infradead.org
+References: <20191012022140.19003-1-lijiang@redhat.com>
+ <20191012022140.19003-4-lijiang@redhat.com>
+ <87d0f22oi5.fsf@x220.int.ebiederm.org>
+ <20191012121625.GA11587@dhcp-128-65.nay.redhat.com>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <f3fc12b9-be39-d430-52f5-d1b76b2599a3@redhat.com>
+Date:   Mon, 14 Oct 2019 18:02:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
+In-Reply-To: <20191012121625.GA11587@dhcp-128-65.nay.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <875eecfb-618a-4989-3b9f-f8272b8d3746@gmail.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 14 Oct 2019 10:02:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Heiner Kallweit [11/10/19 21:26 +0200]:
->On 10.10.2019 19:15, Luis Chamberlain wrote:
+在 2019年10月12日 20:16, Dave Young 写道:
+> Hi Eric,
+> 
+> On 10/12/19 at 06:26am, Eric W. Biederman wrote:
+>> Lianbo Jiang <lijiang@redhat.com> writes:
 >>
+>>> When the crashkernel kernel command line option is specified, the
+>>> low 1MiB memory will always be reserved, which makes that the memory
+>>> allocated later won't fall into the low 1MiB area, thereby, it's not
+>>> necessary to create a backup region and also no need to copy the first
+>>> 640k content to a backup region.
+>>>
+>>> Currently, the code related to the backup region can be safely removed,
+>>> so lets clean up.
+>>>
+>>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>>> ---
 >>
->> On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
+>>> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+>>> index eb651fbde92a..cc5774fc84c0 100644
+>>> --- a/arch/x86/kernel/crash.c
+>>> +++ b/arch/x86/kernel/crash.c
+>>> @@ -173,8 +173,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+>>>  
+>>>  #ifdef CONFIG_KEXEC_FILE
+>>>  
+>>> -static unsigned long crash_zero_bytes;
+>>> -
+>>>  static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
+>>>  {
+>>>  	unsigned int *nr_ranges = arg;
+>>> @@ -234,9 +232,15 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+>>>  {
+>>>  	struct crash_mem *cmem = arg;
+>>>  
+>>> -	cmem->ranges[cmem->nr_ranges].start = res->start;
+>>> -	cmem->ranges[cmem->nr_ranges].end = res->end;
+>>> -	cmem->nr_ranges++;
+>>> +	if (res->start >= SZ_1M) {
+>>> +		cmem->ranges[cmem->nr_ranges].start = res->start;
+>>> +		cmem->ranges[cmem->nr_ranges].end = res->end;
+>>> +		cmem->nr_ranges++;
+>>> +	} else if (res->end > SZ_1M) {
+>>> +		cmem->ranges[cmem->nr_ranges].start = SZ_1M;
+>>> +		cmem->ranges[cmem->nr_ranges].end = res->end;
+>>> +		cmem->nr_ranges++;
+>>> +	}
 >>
->>     � �MODULE_SOFTDEP("pre: realtek")
->>
->>     Are you aware of any current issues with module loading
->>     that could cause this problem?
->>
->>
->> Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
->>
->> If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
->>
->> � Luis
->>
->Maybe issue is related to a bug in introduction of symbol namespaces, see here:
->https://lkml.org/lkml/2019/10/11/659
+>> What is going on with this chunk?  I can guess but this needs a clear
+>> comment.
+> 
+> Indeed it needs some code comment, this is based on some offline
+> discussion.  cat /proc/vmcore will give a warning because ioremap is
+> mapping the system ram.
+> 
+> We pass the first 1M to kdump kernel in e820 as system ram so that 2nd
+> kernel can use the low 1M memory because for example the trampoline
+> code.
+> 
+Thank you, Eric and Dave. I will add the code comment as below if it would be OK.
 
-If you're running into depmod and module loading issues with kernels >=5.3-rc1,
-it's likely due to the namespaces patchset and we're working on
-getting all the kinks fixed. Could you please ask the bug reporter to
-try the latest -rc kernel with these set of fixes applied on top?
+@@ -234,9 +232,20 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+ {
+        struct crash_mem *cmem = arg;
+ 
+-       cmem->ranges[cmem->nr_ranges].start = res->start;
+-       cmem->ranges[cmem->nr_ranges].end = res->end;
+-       cmem->nr_ranges++;
++       /*
++        * Currently, pass the low 1MiB range to kdump kernel in e820
++        * as system ram so that kdump kernel can also use the low 1MiB
++        * memory due to the real mode trampoline code.
++        * And later, the low 1MiB range will be exclued from elf header,
++        * which will avoid remapping the 1MiB system ram when dumping
++        * vmcore.
++        */
++       if (res->start >= SZ_1M) {
++               cmem->ranges[cmem->nr_ranges].start = res->start;
++               cmem->ranges[cmem->nr_ranges].end = res->end;
++               cmem->nr_ranges++;
++       } else if (res->end > SZ_1M) {
++               cmem->ranges[cmem->nr_ranges].start = SZ_1M;
++               cmem->ranges[cmem->nr_ranges].end = res->end;
++               cmem->nr_ranges++;
++       }
+ 
+        return 0;
+ }
 
-   https://lore.kernel.org/linux-modules/20191010151443.7399-1-maennich@google.com/
-
-They fix a known depmod issue caused by our __ksymtab naming scheme,
-which is being reverted in favor of extracting the namespace from
-__kstrtabns and __ksymtab_strings. These fixes will be in by -rc4.
-
-Thanks,
-
-Jessica
-
-
+>>
+>>>  
+>>>  	return 0;
+>>>  }
+>>
+>>> @@ -356,9 +337,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+>>>  	memset(&cmd, 0, sizeof(struct crash_memmap_data));
+>>>  	cmd.params = params;
+>>>  
+>>> -	/* Add first 640K segment */
+>>> -	ei.addr = image->arch.backup_src_start;
+>>> -	ei.size = image->arch.backup_src_sz;
+>>> +	/*
+>>> +	 * Add the low memory range[0x1000, SZ_1M], skip
+>>> +	 * the first zero page.
+>>> +	 */
+>>> +	ei.addr = PAGE_SIZE;
+>>> +	ei.size = SZ_1M - PAGE_SIZE;
+>>>  	ei.type = E820_TYPE_RAM;
+>>>  	add_e820_entry(params, &ei);
+>>
+>> Likewise here.  Why do we need a special case?
+>> Why the magic with PAGE_SIZE?
+> 
+> Good catch, the zero page part is useless, I think no other special
+> reason, just assumed zero page is not usable, but it should be ok to
+> remove the special handling, just pass 0 - 1M is good enough.
+>> Thanks
+> Dave
+> 
