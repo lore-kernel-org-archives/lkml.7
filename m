@@ -2,117 +2,135 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A7DECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4866ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B697320854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571050033;
-	bh=vpT/FdAQ44SBsZqxdUofQB31bkhK8wj8sizQkj6Rfqo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LfNVamqtz/3ebgYM8sJ1BRxnqoM7JlJ9AOHvp1nAHrCHkXZ+NFu6X/898gafbLw9T
-	 V37Vx9OJS4VxcOMgc18a+gP/4X/9rt/8RAP3eG9JAGjJ9S26180uZEGhcNT0gpmw0c
-	 NR/6VeW62AJ+jvTc0vgR+04N0itYBfbw37K00GPU=
+	by mail.kernel.org (Postfix) with ESMTP id BD9AF20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:49:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RMjhVzS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbfJNKrM (ORCPT
+        id S1731647AbfJNKtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:47:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731441AbfJNKrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:47:12 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B63207FF;
-        Mon, 14 Oct 2019 10:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571050031;
-        bh=vpT/FdAQ44SBsZqxdUofQB31bkhK8wj8sizQkj6Rfqo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F0VN86+4Hapr2bz8SmKNW0OAHIY5s6XTT+UUe+ks4FaZJU8axqfv6lRn4n2yxnJjN
-         bQxyixquGe2nnkcmufn+A+wO7T++zcOQaj0v01N1kW1XAfCoNz/6RDCmT2E2wAY3yX
-         KAkSdaQeLsqLdUEQknpou+rGkikvp6Ew36LzuQHs=
-Date:   Mon, 14 Oct 2019 12:47:08 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     catalin.marinas@arm.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
-        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        will@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v4 00/11] crypto: add sun8i-ce driver for Allwinner
- crypto engine
-Message-ID: <20191014104708.cur6zbabmozhwu5o@gilmour>
-References: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
+        Mon, 14 Oct 2019 06:49:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52200 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731235AbfJNKtO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:49:14 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9EAnA94083798;
+        Mon, 14 Oct 2019 05:49:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571050150;
+        bh=CO22/vweVUdYki61a8n0uM9ME48CwXyB/hDV+RVN4oU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RMjhVzS3ImQaDnsTaTt16b6L6ZSW7UhdttuuVGxn90u2Om5Fkhb90WXomFar68Hha
+         oFaX03A70w7ylblGHwmKMRcgXAAcUeuzwnK3oPNU4ai0AfmuAhwoxk2EGXqOZnBn1n
+         fzqfwk2Dde2zfqpLClBSoxnudBYWyzCsjsAfsGoI=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9EAnA5F129483
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 14 Oct 2019 05:49:10 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 14
+ Oct 2019 05:49:04 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 14 Oct 2019 05:49:04 -0500
+Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9EAn8ft120141;
+        Mon, 14 Oct 2019 05:49:08 -0500
+Subject: Re: [PATCH v5 3/3] leds: Add control of the voltage/current regulator
+ to the LED core
+To:     Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+CC:     <daniel.thompson@linaro.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dmurphy@ti.com>,
+        <tomi.valkeinen@ti.com>
+References: <20190923102059.17818-1-jjhiblot@ti.com>
+ <20190923102059.17818-4-jjhiblot@ti.com>
+ <3e648fab-638f-4aa0-dda9-8ddba6562751@gmail.com> <20191013120937.GK5653@amd>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <eb8c0df1-0d5b-11d0-9965-3192fa5675f3@ti.com>
+Date:   Mon, 14 Oct 2019 12:49:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jcraal7cz45esj3i"
-Content-Disposition: inline
-In-Reply-To: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191013120937.GK5653@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---jcraal7cz45esj3i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Sat, Oct 12, 2019 at 08:48:41PM +0200, Corentin Labbe wrote:
-> Hello
+On 13/10/2019 14:09, Pavel Machek wrote:
+> Hi!
 >
-> This patch serie adds support for the Allwinner crypto engine.
-> The Crypto Engine is the third generation of Allwinner cryptogaphic offloader.
-> The first generation is the Security System already handled by the
-> sun4i-ss driver.
-> The second is named also Security System and is present on A80 and A83T
-> SoCs, originaly this driver supported it also, but supporting both IP bringing
-> too much complexity and another driver (sun8i-ss) will came for it.
+>> I must say I'm not a big fan of this change.
+>> It adds a bunch of code to the LED core and gives small
+>> functionality in a reward. It may also influence maximum
+>> software blinking rate, so I'd rather avoid calling
+>> regulator_enable/disable when timer trigger is set.
+>>
+>> It will of course require more code.
+>>
+>> Since AFAIR Pavel was original proponent of this change then
+>> I'd like to see his opinion before we move on to discussing
+>> possible improvements to this patch.
+> Was I?
 >
-> For the moment, the driver support only DES3/AES in ECB/CBC mode.
-> Patchs for CTR/CTS/XTS, RSA and RNGs will came later.
+> Okay, this series looks quite confusing to me. First, 1/3 looks
+> "interesting" (would have to analyze it way more).
 >
-> This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
-> and tested on:
-> sun50i-a64-bananapi-m64
-> sun50i-a64-pine64-plus
-> sun50i-h5-libretech-all-h3-cc
-> sun50i-h6-pine-h64
-> sun8i-h2-plus-libretech-all-h3-cc
-> sun8i-h2-plus-orangepi-r1
-> sun8i-h2-plus-orangepi-zero
-> sun8i-h3-libretech-all-h3-cc
-> sun8i-h3-orangepi-pc
-> sun8i-r40-bananapi-m2-ultra
+> Second, 3/3... So we have a LED driver _and_ a regulator? So yes, the
+> chip driving a LED is usually ... voltage/current regulator. What is
+> second regulator doing there? Is that a common setup?
 
-for the drivers/crypto part
-Acked-by: Maxime Ripard <mripard@kernel.org>
+This is quite common with current-sink LED drivers.
 
-I'll merge the dt and defconfig bits when Herbert will be ok with the
-changes.
+The setup looks like this:
 
-Maxime
++-----------+
+|           |
+| Regulator |
+|           +------------------------+
+|           |                        |
++-----------+                      __|__
+                                    \   /
+          +---------------------+    \ / led
+          |                     |     V
+          |    Led Driver       |   --+--
+          |                     |     |
+          |                     |     |
+          |                +----------+
+          |              \      |
+          |               \     |
+          |                +    |
+          |                |    |
+          +---------------------+
+                           |
+                        +--+--+
+                        ///////
 
---jcraal7cz45esj3i
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Only the regulator usually does not supply only one LED.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXaRSLAAKCRDj7w1vZxhR
-xbAiAQCXNw9TZ+NI9M/ffhLEMVuGBoKDSMxJpeuryNZeejUpbAEAotBuhlogZFYt
-6gcqR7k6JoRm4LKGytJt02QqNsKkQAI=
-=JdiC
------END PGP SIGNATURE-----
+JJ
 
---jcraal7cz45esj3i--
+
+>
+> Best regards,
+> 								Pavel
+> 								
