@@ -2,101 +2,72 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F08C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD56C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC1F20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:56:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="piPpFXEn"
+	by mail.kernel.org (Postfix) with ESMTP id 8C2AC20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731648AbfJNP4Z (ORCPT
+        id S1731831AbfJNP5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:56:25 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46006 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730102AbfJNP4Y (ORCPT
+        Mon, 14 Oct 2019 11:57:19 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31203 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730102AbfJNP5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:56:24 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u12so8177713pls.12
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:56:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ysKHeAWhWiDqGIO4lKEHL4zmOQ8xwTlvBSOxqXeT+Gg=;
-        b=piPpFXEnmFYl2yN5xlBQ8v7jl+7es3ZESwSR23NsPFjmV+VSDOXWWzPfxkmdL5bPpI
-         yxUz3Z//K3ZDelbiqMeDuDMpHXxUax1O6OeBwi0E9jYed6D7xqWrfkBbqfVNkW6e/Vbo
-         HMUqA9aVLm6NH25Bk1mWbz22RvMIuTRjRoHIKO46oq7dW/bgMyZ5pN22PPv8C43YDdTx
-         /QeE5zVtKwe63NL9k2LgAXCcAx+AVWKyKkxNHsO7fyG0l6WH15wEshK2jiwNJDk9x7oC
-         o6A6NDynOkZRzaEb7dEfWYEtltI1XFyVLJYpsyNBdeC+PQ7i1OXwrAxiiJdh5BwK3PYs
-         XKEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ysKHeAWhWiDqGIO4lKEHL4zmOQ8xwTlvBSOxqXeT+Gg=;
-        b=arEVCSTjBCSIct1C+q5fU5GEijSWkD4Atgdr2UWg1E4ePsuWE57juhHciTF4UlX+B2
-         ZblNjH1bs1/JqlQV0ssytGBTY1ChJip7onUmpV3zUjb7VhgEm1yTt/oBIN6BaVdetaVZ
-         pGWbFGWZznyT3b23EEhZ32eSM65lmugWB359X/ErjXsM90y3s+2mZMW7OWmflrl155C7
-         H/A2edYZEIDgZqeA8usDiIPOsZb7WixRzJoVrzgpZ0R4hA0BsD23xb+fPP5qreYeft80
-         Z/c++nspQC/fB7c3y/DpHcXDTasMCbGIwVwToFHX3M9v13TrrIEvr/ymnL5bNc8qPuRu
-         82vA==
-X-Gm-Message-State: APjAAAXKEFXyRsobg6Pla59db1FydMaSp94Q4u6IYDmtpsxHVhmEeeKw
-        2Ak9UeYYWwGAhPhA3QZooMO4MEgiUPtQE3PJUYDVQw==
-X-Google-Smtp-Source: APXvYqz/xhBeS3yRQP8QI+260d6U9shHcuPTuMGyKyNKNIVgIxg2p2GheW0ZfaMUeplnFXv2gl+6LVj7eNvm2RFQGS0=
-X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr30287723plp.179.1571068583499;
- Mon, 14 Oct 2019 08:56:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190911182049.77853-1-natechancellor@gmail.com>
- <20191014025101.18567-1-natechancellor@gmail.com> <20191014025101.18567-4-natechancellor@gmail.com>
- <20191014093501.GE28442@gate.crashing.org>
-In-Reply-To: <20191014093501.GE28442@gate.crashing.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 14 Oct 2019 08:56:12 -0700
-Message-ID: <CAKwvOdmcUT2A9FG0JD9jd0s=gAavRc_h+RLG6O3mBz4P1FfF8w@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] powerpc/prom_init: Use -ffreestanding to avoid a
- reference to bcmp
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Mon, 14 Oct 2019 11:57:19 -0400
+X-UUID: 82e2e07d42c8401c9fe66a906d53cd58-20191014
+X-UUID: 82e2e07d42c8401c9fe66a906d53cd58-20191014
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1492891351; Mon, 14 Oct 2019 23:57:12 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 14 Oct 2019 23:57:10 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 14 Oct 2019 23:57:08 +0800
+Message-ID: <1571068631.8898.8.camel@mtksdccf07>
+Subject: Re: [PATCH 2/2] kasan: add test for invalid size in memmove
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
+Date:   Mon, 14 Oct 2019 23:57:11 +0800
+In-Reply-To: <20191014150710.GY32665@bombadil.infradead.org>
+References: <20191014103654.17982-1-walter-zh.wu@mediatek.com>
+         <20191014150710.GY32665@bombadil.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 2:35 AM Segher Boessenkool
-<segher@kernel.crashing.org> wrote:
->
-> On Sun, Oct 13, 2019 at 07:51:01PM -0700, Nathan Chancellor wrote:
-> > r374662 gives LLVM the ability to convert certain loops into a reference
-> > to bcmp as an optimization; this breaks prom_init_check.sh:
->
-> When/why does LLVM think this is okay?  This function has been removed
-> from POSIX over a decade ago (and before that it always was marked as
-> legacy).
+On Mon, 2019-10-14 at 08:07 -0700, Matthew Wilcox wrote:
+> On Mon, Oct 14, 2019 at 06:36:54PM +0800, Walter Wu wrote:
+> > Test size is negative numbers in memmove in order to verify
+> > whether it correctly get KASAN report.
+> 
+> You're not testing negative numbers, though.  memmove() takes an unsigned
+> type, so you're testing a very large number.
+> 
+Casting negative numbers to size_t would indeed turn up as a "large"
+size_t and its value will be larger than ULONG_MAX/2. We mainly want to
+express this case. Maybe we can add some descriptions. Thanks for your
+reminder.
 
-Segher, do you have links for any of the above? If so, that would be
-helpful to me. I'm arguing against certain transforms that assume that
-one library function is faster than another, when such claims are
-based on measurements from one stdlib implementation. (There's others
-in the pipeline I'm not too thrilled about, too).
-
-The rationale for why it was added was that memcmp takes a measurable
-amount of time in Google's fleet, and most calls to memcmp don't care
-about the position of the mismatch; bcmp is lower overhead (or at
-least for our libc implementation, not sure about others).
--- 
-Thanks,
-~Nick Desaulniers
