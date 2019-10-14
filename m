@@ -2,135 +2,113 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7415C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B688C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9DC2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:39:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tf3Get4q"
+	by mail.kernel.org (Postfix) with ESMTP id 2F2E52067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387651AbfJNPjQ (ORCPT
+        id S2387664AbfJNPjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:39:16 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33370 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730005AbfJNPjP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:39:15 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a15so14133510oic.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hUnyvpuP6/HkBMSiwtb5MS7vmorhboIr5Cucxcuf8O4=;
-        b=tf3Get4qoIzO39iWyOCRegFp1wY/dzAobHeBdf2VA+8pw3oS7q1F2IvIw6nkg3OFX8
-         F52Y2qTRW1vOzUC69B3PjcYdqNMNkS8ARtcRvIhTZhp0Y9EvPL3iiCtc3KuWJUMDZBbr
-         4KjUbkltVWZcLU3sPz2wnmO7B8UNdUOXLyK3DcO+64luJBp44YYRzG3XBXo+PPoIvusg
-         aMefEtXMJnH1iBF71IodEUiM/Q1k0gqyau8N9LGuq7lcmSrtL8I1gGq0Pn5RjwpM3+hS
-         i1FPYiz/Ahj0pNmlgA1mBNABGuSVs+2gCKHOWqwIa871YMYgf/FRN55VJS4lUKxCsi5B
-         0WZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hUnyvpuP6/HkBMSiwtb5MS7vmorhboIr5Cucxcuf8O4=;
-        b=VXFTE7beO9c0IMuHRSkHTCmsZKmpVQgm3bRIR04tZQ858vEo0x+BZptGgN+gkgsflB
-         FioPSocOTFOzdFkrjf/u+fnpPJ7Cos03GTTHXu2CueQGJYWPpE4IvESS5pTsyb4MoDbH
-         9kqnPqWSnKE6QlRXTRWHHdzTmSGJFk8BaW6kJFVmbyINq7XbjA/88XamWuv0qQDUqvm/
-         3IOHIG1rki38s/c724YldwezS1jazODoFjx023PYar1Dcbt9KkHUAPzuK7jzvNtbTYSg
-         /TrUVulUoKCp5Df8mcPPeQ3iS6HAoxAT1E1cqC44Nbwd4lvCRsdvX4cnPOEZGZN/T85u
-         wsWA==
-X-Gm-Message-State: APjAAAWAsPIvpRCwEYJrGux3r+cZqD3OrrUNNoJO5aYuQ93+1lTQ4LPx
-        u93wpFwDIXx3G7wmhBC9j/SLVGrRAUeyZR8EQ891eA==
-X-Google-Smtp-Source: APXvYqzlapnRWtDbK3b6aprG708THmDneKBseQVBxn9YWloRQP7Qc5j44+rxOMdffE3xnRJL3og0OsxxQYOLitd7CLk=
-X-Received: by 2002:aca:da41:: with SMTP id r62mr24035154oig.47.1571067553182;
- Mon, 14 Oct 2019 08:39:13 -0700 (PDT)
+        Mon, 14 Oct 2019 11:39:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:47186 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730005AbfJNPjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:39:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7942B28;
+        Mon, 14 Oct 2019 08:39:22 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 761AF3F68E;
+        Mon, 14 Oct 2019 08:39:21 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 16:39:19 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: aardvark: Wait for endpoint to be ready before
+ training link
+Message-ID: <20191014153919.GB2928@e121166-lin.cambridge.arm.com>
+References: <20190522213351.21366-2-repk@triplefau.lt>
+ <20190806184945.GU12859@voidbox.localdomain>
 MIME-Version: 1.0
-References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-2-dancol@google.com>
-In-Reply-To: <20191012191602.45649-2-dancol@google.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 14 Oct 2019 17:38:45 +0200
-Message-ID: <CAG48ez3yOPAC3mTJdQ5_8aARQPe+siid5jaa8U+aMtfj-bUJ2g@mail.gmail.com>
-Subject: Re: [PATCH 1/7] Add a new flags-accepting interface for anonymous inodes
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>, nosh@google.com,
-        Tim Murray <timmurray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806184945.GU12859@voidbox.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 9:16 PM Daniel Colascione <dancol@google.com> wrote:
-> Add functions forwarding from the old names to the new ones so we
-> don't need to change any callers.
+On Tue, Aug 06, 2019 at 08:49:46PM +0200, Remi Pommarel wrote:
+> On Wed, May 22, 2019 at 11:33:50PM +0200, Remi Pommarel wrote:
+> > When configuring pcie reset pin from gpio (e.g. initially set by
+> > u-boot) to pcie function this pin goes low for a brief moment
+> > asserting the PERST# signal. Thus connected device enters fundamental
+> > reset process and link configuration can only begin after a minimal
+> > 100ms delay (see [1]).
+> > 
+> > Because the pin configuration comes from the "default" pinctrl it is
+> > implicitly configured before the probe callback is called:
+> > 
+> > driver_probe_device()
+> >   really_probe()
+> >     ...
+> >     pinctrl_bind_pins() /* Here pin goes from gpio to PCIE reset
+> >                            function and PERST# is asserted */
+> >     ...
+> >     drv->probe()
+> > 
+> > [1] "PCI Express Base Specification", REV. 4.0
+> >     PCI Express, February 19 2014, 6.6.1 Conventional Reset
+> > 
+> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > ---
+> > Changes since v1:
+> >   - Add a comment about pinctrl implicit pin configuration
+> >   - Use more legible msleep
+> >   - Use PCI_PM_D3COLD_WAIT macro
+> > 
+> > Please note that I will unlikely be able to answer any comments from May
+> > 24th to June 10th.
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 134e0306ff00..d998c2b9cd04 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -324,6 +324,14 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> >  	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
+> >  	advk_writel(pcie, reg, PIO_CTRL);
+> >  
+> > +	/*
+> > +	 * PERST# signal could have been asserted by pinctrl subsystem before
+> > +	 * probe() callback has been called, making the endpoint going into
+> > +	 * fundamental reset. As required by PCI Express spec a delay for at
+> > +	 * least 100ms after such a reset before link training is needed.
+> > +	 */
+> > +	msleep(PCI_PM_D3COLD_WAIT);
+> > +
+> >  	/* Start link training */
+> >  	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+> >  	reg |= PCIE_CORE_LINK_TRAINING;
+> > -- 
+> > 2.20.1
+> 
+> Gentle ping.
 
-This patch does more than the commit message says; it also refactors
-the body of the function. (I would've moved that refactoring over into
-patch 2, but I guess this works, too.)
+Thomas, sorry for the delay, unless you object I would merge this
+patch, I need your ACK to proceed though.
 
-[...]
-> -struct file *anon_inode_getfile(const char *name,
-> -                               const struct file_operations *fops,
-> -                               void *priv, int flags)
-> +struct file *anon_inode_getfile2(const char *name,
-> +                                const struct file_operations *fops,
-> +                                void *priv, int flags, int anon_inode_flags)
-
-(AFAIK, normal kernel style is to slap a "__" prefix in front of the
-function name instead of appending a digit, but I guess it doesn't
-really matter.)
-
->  {
-> +       struct inode *inode;
->         struct file *file;
->
-> -       if (IS_ERR(anon_inode_inode))
-> -               return ERR_PTR(-ENODEV);
-> -
-> -       if (fops->owner && !try_module_get(fops->owner))
-> -               return ERR_PTR(-ENOENT);
-> +       if (anon_inode_flags)
-> +               return ERR_PTR(-EINVAL);
->
-> +       inode = anon_inode_inode;
-> +       if (IS_ERR(inode))
-> +               return ERR_PTR(-ENODEV);
->         /*
-> -        * We know the anon_inode inode count is always greater than zero,
-> -        * so ihold() is safe.
-> +        * We know the anon_inode inode count is always
-> +        * greater than zero, so ihold() is safe.
->          */
-
-This looks like maybe you started editing the comment, then un-did the
-change, but left the modified line wrapping in your patch? Please
-avoid that - code changes with no real reason make "git blame" output
-more annoying and create trouble when porting patches between kernel
-versions.
-
-[...]
->  EXPORT_SYMBOL_GPL(anon_inode_getfile);
-> +EXPORT_SYMBOL_GPL(anon_inode_getfile2);
-[...]
->  EXPORT_SYMBOL_GPL(anon_inode_getfd);
-> +EXPORT_SYMBOL_GPL(anon_inode_getfd2);
-
-Since anon_inode_getfd() is now a static inline function in
-include/linux/anon_inodes.h, exporting it doesn't make sense anymore.
-Same for anon_inode_getfile().
-
-[...]
-> +#define ANON_INODE_SECURE 1
-
-That #define belongs in a later patch, right?
+Thanks,
+Lorenzo
