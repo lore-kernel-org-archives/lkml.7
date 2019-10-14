@@ -6,115 +6,98 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA069C47404
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CA5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B252C20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D086120673
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbfJNGzS (ORCPT
+        id S1730158AbfJNG4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 02:55:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58724 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726618AbfJNGzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 02:55:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 637DBAC2E;
-        Mon, 14 Oct 2019 06:55:16 +0000 (UTC)
-Subject: Re: [PATCH] 8250-men-mcb: fix error checking when get_num_ports
- returns -ENODEV
-To:     Colin King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191013220016.9369-1-colin.king@canonical.com>
-From:   Michael Moese <mmoese@suse.de>
-Message-ID: <022c9a2b-0929-3a76-7976-dca717a5bc73@suse.de>
-Date:   Mon, 14 Oct 2019 08:55:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 14 Oct 2019 02:56:50 -0400
+Received: from mga12.intel.com ([192.55.52.136]:29821 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbfJNG4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 02:56:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Oct 2019 23:56:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,295,1566889200"; 
+   d="scan'208";a="207912597"
+Received: from zhangyu-optiplex-9020.bj.intel.com (HELO localhost) ([10.238.135.148])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Oct 2019 23:56:46 -0700
+Date:   Mon, 14 Oct 2019 14:47:53 +0800
+From:   Yu Zhang <yu.c.zhang@linux.intel.com>
+To:     Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-mm@kvack.org, luto@kernel.org, peterz@infradead.org,
+        dave.hansen@intel.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, keescook@chromium.org,
+        kristen@linux.intel.com, deneen.t.dock@intel.com
+Subject: Re: [RFC PATCH 01/13] kvm: Enable MTRR to work with GFNs with perm
+ bits
+Message-ID: <20191014064753.xv365y6oowmh6ho7@linux.intel.com>
+References: <20191003212400.31130-1-rick.p.edgecombe@intel.com>
+ <20191003212400.31130-2-rick.p.edgecombe@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191013220016.9369-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191003212400.31130-2-rick.p.edgecombe@intel.com>
+User-Agent: NeoMutt/20180622-66-b94505
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 14.10.19 00:00, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Thu, Oct 03, 2019 at 02:23:48PM -0700, Rick Edgecombe wrote:
+> Mask gfn by maxphyaddr in kvm_mtrr_get_guest_memory_type so that the
+> guests view of gfn is used when high bits of the physical memory are
+> used as extra permissions bits. This supports the KVM XO feature.
 > 
-> The current checking for failure on the number of ports fails when
-> -ENODEV is returned from the call to get_num_ports. Fix this by making
-> num_ports and loop counter i signed rather than unsigned ints. Also
-> add check for num_ports being less than zero to check for -ve error
-> returns.
+> TODO: Since MTRR is emulated using EPT permissions, the XO version of
+> the gpa range will not inherrit the MTRR type with this implementation.
+> There shouldn't be any legacy use of KVM XO, but hypothetically it could
+> interfere with the uncacheable MTRR type.
 > 
-> Addresses-Coverity: ("Unsigned compared against 0")
-> Fixes: e2fea54e4592 ("8250-men-mcb: add support for 16z025 and 16z057")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-
-This looks more than reasonable to me, thanks.
-
-Reviewed-by: Michael Moese <mmoese@suse.de>
-
+> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 > ---
->   drivers/tty/serial/8250/8250_men_mcb.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
+>  arch/x86/kvm/mtrr.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/drivers/tty/serial/8250/8250_men_mcb.c b/drivers/tty/serial/8250/8250_men_mcb.c
-> index 02c5aff58a74..8df89e9cd254 100644
-> --- a/drivers/tty/serial/8250/8250_men_mcb.c
-> +++ b/drivers/tty/serial/8250/8250_men_mcb.c
-> @@ -72,8 +72,8 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
->   {
->   	struct serial_8250_men_mcb_data *data;
->   	struct resource *mem;
-> -	unsigned int num_ports;
-> -	unsigned int i;
-> +	int num_ports;
-> +	int i;
->   	void __iomem *membase;
->   
->   	mem = mcb_get_resource(mdev, IORESOURCE_MEM);
-> @@ -88,7 +88,7 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
->   	dev_dbg(&mdev->dev, "found a 16z%03u with %u ports\n",
->   		mdev->id, num_ports);
->   
-> -	if (num_ports == 0 || num_ports > 4) {
-> +	if (num_ports <= 0 || num_ports > 4) {
->   		dev_err(&mdev->dev, "unexpected number of ports: %u\n",
->   			num_ports);
->   		return -ENODEV;
-> @@ -133,7 +133,7 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
->   
->   static void serial_8250_men_mcb_remove(struct mcb_device *mdev)
->   {
-> -	unsigned int num_ports, i;
-> +	int num_ports, i;
->   	struct serial_8250_men_mcb_data *data = mcb_get_drvdata(mdev);
->   
->   	if (!data)
+> diff --git a/arch/x86/kvm/mtrr.c b/arch/x86/kvm/mtrr.c
+> index 25ce3edd1872..da38f3b83e51 100644
+> --- a/arch/x86/kvm/mtrr.c
+> +++ b/arch/x86/kvm/mtrr.c
+> @@ -621,6 +621,14 @@ u8 kvm_mtrr_get_guest_memory_type(struct kvm_vcpu *vcpu, gfn_t gfn)
+>  	const int wt_wb_mask = (1 << MTRR_TYPE_WRBACK)
+>  			       | (1 << MTRR_TYPE_WRTHROUGH);
+>  
+> +	/*
+> +	 * Handle situations where gfn bits are used as permissions bits by
+> +	 * masking KVMs view of the gfn with the guests physical address bits
+> +	 * in order to match the guests view of physical address. For normal
+> +	 * situations this will have no effect.
+> +	 */
+> +	gfn &= (1ULL << (cpuid_maxphyaddr(vcpu) - PAGE_SHIFT));
+> +
+
+Won't this break the MTRR calculation for normal gfns?
+Are you suggesting use the same MTRR value for the XO range as the normal one's?
+If so, may be we should use:
+
+	if (guest_cpuid_has(vcpu, X86_FEATURE_KVM_XO))
+		gfn &= ~(1ULL << (cpuid_maxphyaddr(vcpu) - PAGE_SHIFT));
+
+
+>  	start = gfn_to_gpa(gfn);
+>  	end = start + PAGE_SIZE;
+>  
+> -- 
+> 2.17.1
 > 
 
--- 
-Michael Moese <mmoese@suse.de>
-QA Engineer
-PGP Fingerprint: 4CCE 3896 F873 2CA5 2382  3C6F 6021 375C 8635 7E74
-
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5
-90409 Nürnberg
-Germany
-
-(HRB 247165, AG München)
-Geschäftsführer: Felix Imendörffer
-
-
-
+B.R.
+Yu
