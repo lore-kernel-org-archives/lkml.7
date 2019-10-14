@@ -2,250 +2,421 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A80C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3CCC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A19B207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94BA420650
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:34:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LujxeDo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbfJNIcf (ORCPT
+        id S1730475AbfJNIe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 04:32:35 -0400
-Received: from mga12.intel.com ([192.55.52.136]:34525 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730233AbfJNIce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:32:34 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 01:32:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,295,1566889200"; 
-   d="scan'208";a="225012217"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Oct 2019 01:32:31 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iJvmJ-0000Jr-Dk; Mon, 14 Oct 2019 16:32:31 +0800
-Date:   Mon, 14 Oct 2019 16:32:20 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     ivan.lazeev@gmail.com
-Cc:     kbuild-all@lists.01.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vanya Lazeev <ivan.lazeev@gmail.com>
-Subject: Re: [PATCH v6] tpm_crb: fix fTPM on AMD Zen+ CPUs
-Message-ID: <201910141623.SRwaPnfk%lkp@intel.com>
-References: <20191002201212.32395-1-ivan.lazeev@gmail.com>
+        Mon, 14 Oct 2019 04:34:26 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40364 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730281AbfJNIe0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:34:26 -0400
+Received: by mail-ed1-f65.google.com with SMTP id v38so14037225edm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 01:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=ev3/tmiBvz1CL+AFRiajlcGRmBwNYmqYly8acElmmc4=;
+        b=LujxeDo8Wu48fn3frx1lWXSQXTwgaUca13SemyA/tNhyZSgBQcdcboiEiYxpyhkFdU
+         1vNZSJjS0Rm/fhTXjRxrwOpG4xipVjGwRIUDF4iRDf2M8vwPYKXZ1PXPTvXKDbJgRW14
+         FwhelFgxVEL2pMLavAOnbUrkvtprLvSUOBspA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=ev3/tmiBvz1CL+AFRiajlcGRmBwNYmqYly8acElmmc4=;
+        b=ZUjb4fBlG4anrr70n0nQuhNQoYWaFVfcxQs/2HkQ+MJE2lLCyrYpqtcYOzBEDjFINo
+         I+2TL7XoR+3bBPKnutOu6hmg5VoYcgOv97y7gWOIlFMebqQYI8vwdOw4on7UtKfZ7Q0L
+         l0lcc2aXGWS6lMtLuTOyaRAmkvVHDcgZPja/l2kMMV4BREmSknuxonfBBOhZOOE3H5df
+         q+GwlosOPKW80/PfYAAN9BVeYVxdKwOHa06JDjuQrhXdDAbsErQgX9A2f5MeoZS9AQQY
+         BaagC/favps/AAIfS3e+t4v5jabTl5CkKRzNUHHgO7TA5l9VyykWmGD28ShkC39kVE+a
+         5Q3w==
+X-Gm-Message-State: APjAAAVnBPHAyCY22KMP3SCSdI2KWy4KoXf0oR6Fj2pI6iIzrwChihNB
+        qMFR7d/EzVGJLqTGPjePcp27mw==
+X-Google-Smtp-Source: APXvYqzdU3vUBf6ebA7tEk/9vdIXbVK/y31TQce6DV0kVJ6chOS2f22F44l/F9oRE4U9O9bE2V8auw==
+X-Received: by 2002:a17:907:366:: with SMTP id rs6mr27382876ejb.232.1571042062825;
+        Mon, 14 Oct 2019 01:34:22 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id e44sm3028623ede.34.2019.10.14.01.34.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 01:34:22 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 10:34:20 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     "sandy.huang" <hjc@rock-chips.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>, nd <nd@arm.com>,
+        Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
+Message-ID: <20191014083420.GB11828@phenom.ffwll.local>
+Mail-Followup-To: "sandy.huang" <hjc@rock-chips.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>, nd <nd@arm.com>,
+        Sean Paul <sean@poorly.run>
+References: <2c46d532-f810-392d-b9c0-3b9aaccae7f4@rock-chips.com>
+ <20191008113338.GP1208@intel.com>
+ <a5fa3d8e-9e8e-8aa8-8abb-f00e8357acb5@rock-chips.com>
+ <eafa5b37-e132-ad37-3876-384ac5ec9584@rock-chips.com>
+ <20191011064433.GA18503@jamwan02-TSP300>
+ <5c932cb6-fdfb-88db-3757-4c1b602d4778@rock-chips.com>
+ <20191011072250.GA20592@jamwan02-TSP300>
+ <f4828cab-da7e-1658-51e7-0d123cfdbdf9@rock-chips.com>
+ <20191011083247.GA22224@jamwan02-TSP300>
+ <dd1afe6b-9762-e8dc-c281-b0c0ff31891c@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191002201212.32395-1-ivan.lazeev@gmail.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dd1afe6b-9762-e8dc-c281-b0c0ff31891c@rock-chips.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Oct 11, 2019 at 05:45:45PM +0800, sandy.huang wrote:
+> Hi, james, ville syrjala, david,
+> 
+> 在 2019/10/11 下午4:32, james qian wang (Arm Technology China) 写道:
+> > On Fri, Oct 11, 2019 at 03:32:17PM +0800, sandy.huang wrote:
+> > > 在 2019/10/11 下午3:22, james qian wang (Arm Technology China) 写道:
+> > > > On Fri, Oct 11, 2019 at 03:07:22PM +0800, sandy.huang wrote:
+> > > > > 在 2019/10/11 下午2:44, james qian wang (Arm Technology China) 写道:
+> > > > > > On Fri, Oct 11, 2019 at 11:35:53AM +0800, sandy.huang wrote:
+> > > > > > > Hi james.qian.wang,
+> > > > > > > 
+> > > > > > >        Thank for you remind, fou some unknow reason, i miss the the mail from
+> > > > > > > you:(, i get this message from https://patchwork.kernel.org/patch/11161937/
+> > > > > > > 
+> > > > > > > sorry about that.
+> > > > > > > 
+> > > > > > >        About the format block describe, I also found some unreasonable,  this
+> > > > > > > format need 2 line aligned, so the block_h need to sed as 2, and the
+> > > > > > > char_per_block need set as w * h * 10 for y plane, and w * h * 2 * 10 for uv
+> > > > > > > plane, so the following describe maybe more correct, thanks.
+> > > > > > > 
+> > > > > > >            { .format = DRM_FORMAT_NV12_10,        .depth = 0, .num_planes = 2,
+> > > > > > >              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+> > > > > > > = { 2, 2, 0 },
+> > > > > > >              .hsub = 2, .vsub = 2, .is_yuv = true},
+> > > > > > Hi Sandy:
+> > > > > > I think for such NV12 YUV-422 (hsub = 2, vsub = 2) 2x2 subsampled format
+> > > > > > the block size can be:
+> > > > > > 
+> > > > > > the Y plane:  2x2;
+> > > > > > The UV plane: 1x2; (H direction sample 1 Cb and 1Cr, V direction 2 lines got 2)
+> > > > > > 
+> > > > > > Then:
+> > > > > > 
+> > > > > > .char_per_block = {5, 5, 0} block_w = {2, 1, 0}. block_h = {2, 2, 0};
+> > > > > > 
+> > > > > > Thanks
+> > > > > > James
+> > > > > Hi James,
+> > > > > 
+> > > > > If the block_w is 2 pixel, one line size at block is 2*10 bit %8 != 0,
+> > > > Hi Sandy:
+> > > > you got a mistake here, the bpp of UV plane is 20, 10bit Cb + 10 bit Cr.
+> > > here is for y plane.
+> > Sorry, Are we talking about the block size calcaltion here ?
+> > 
+> > block_size = block_w * block_h * plane_bpp
+> > 
+> > for you Y plane a 2x2 block is: 2 x 2 * 10 bpp = 40bits
+> > 
+> > And the block info is for computing the minimum pitch, and don't
+> > consider the specific hardware alignment here.
+> > 
+> > see: drm_format_info_min_pitch()
+> > 
+> > If you hardware need alignment, you need to put that consideration into your
+> > specific driver.
+> > 
+> > James.
+> 
+> Hi david and ville syrjala,
+> 
+>     Do you have any Suggestions?
+> 
+>     James think Y plane 2x2 block size is enough to describe this format,
+> but i prefer to use 4x2 block size, this can include the alignment message.
+> 
+> just like the malidp_de_plane_check()@malidp_plane.c have the following 
+> code, here use the block size to check alignment.
+> 
+>     block_w = drm_format_info_block_width(fb->format, 0);
+>     block_h = drm_format_info_block_height(fb->format, 0);
+>     if (fb->width % block_w || fb->height % block_h) {
+>         DRM_DEBUG_KMS("Buffer width/height needs to be a multiple of tile
+> sizes");
+>         return -EINVAL;
+>     }
+>     if ((state->src_x >> 16) % block_w || (state->src_y >> 16) % block_h) {
+>         DRM_DEBUG_KMS("Plane src_x/src_y needs to be a multiple of tile
+> sizes");
+>         return -EINVAL;
+>     }
+> 
+> can you give me some suggestions?
 
-Thank you for the patch! Perhaps something to improve:
+For the linear layout (i.e. modifier == 0) the blocks are meant to be laid
+out one after the other, linearly, in memory. If you have some additional
+hw alignment constraint then that should be checked in the driver.
 
-[auto build test WARNING on jss-tpmdd/next]
-[cannot apply to v5.4-rc3 next-20191011]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+If you have some tiling on top, then that should be encoded in a different
+modifier (which can then set its own block sizes, and have its own rules
+for how they're laid out in memory).
 
-url:    https://github.com/0day-ci/linux/commits/ivan-lazeev-gmail-com/tpm_crb-fix-fTPM-on-AMD-Zen-CPUs/20191003-054300
-base:   git://git.infradead.org/users/jjs/linux-tpmdd next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-43-g0ccb3b4-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Taking this all together I think what we want here is a 1x4 Y block and a
+1x2 UV block size in pixels. The sub-sampling is expressed in hsub/vsub
+for the UV plane, we don't align the block-sizes two 2 rows to encode that
+(see all the other yuv planar formats for examples).
+-Daniel
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> thanks,
+> 
+> sandy.huang
+> 
+> > 
+> > > > > although we use block to describe this format, but actually the data is
+> > > > > still stored one line by one line, still need 4 pixel aligned. so i think
+> > > > > here need use 4pixel*2line for per block
+> > > > I think this is your hardware specific requirement.
+> > > > 
+> > > > Thanks
+> > > > James
+> > > yes, this is a new format first used at rockchip platform.
+> > > 
+> > > 
+> > > Thanks,
+> > > 
+> > > sandy.huang
+> > > 
+> > > > > Thanks,
+> > > > > 
+> > > > > sandy.huang.
+> > > > > 
+> > > > > > >              .hsub = 2, .vsub = 2, .is_yuv = true},
+> > > > > > >            { .format = DRM_FORMAT_NV21_10,        .depth = 0, .num_planes = 2,
+> > > > > > >              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+> > > > > > > = { 2, 2, 0 },
+> > > > > > >              .hsub = 2, .vsub = 2, .is_yuv = true},
+> > > > > > >            { .format = DRM_FORMAT_NV16_10,        .depth = 0, .num_planes = 2,
+> > > > > > >              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+> > > > > > > = { 2, 2, 0 },
+> > > > > > >              .hsub = 2, .vsub = 1, .is_yuv = true},
+> > > > > > >            { .format = DRM_FORMAT_NV61_10,        .depth = 0, .num_planes = 2,
+> > > > > > >              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+> > > > > > > = { 2, 2, 0 },
+> > > > > > >              .hsub = 2, .vsub = 1, .is_yuv = true},
+> > > > > > >            { .format = DRM_FORMAT_NV24_10,        .depth = 0, .num_planes = 2,
+> > > > > > >              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+> > > > > > > = { 2, 2, 0 },
+> > > > > > >              .hsub = 1, .vsub = 1, .is_yuv = true},
+> > > > > > >            { .format = DRM_FORMAT_NV42_10,        .depth = 0, .num_planes = 2,
+> > > > > > >              .char_per_block = { 10, 10, 0 }, .block_w = { 4, 2, 0 }, .block_h
+> > > > > > > = { 2, 2, 0 },
+> > > > > > >              .hsub = 1, .vsub = 1, .is_yuv = true},
+> > > > > > > 
+> > > > > > > 
+> > > > > > > > >              { .format = DRM_FORMAT_P016,        .depth = 0,  .num_planes =
+> > > > > > > 2,
+> > > > > > > > >                .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 },
+> > > > > > > .block_h = { 1, 0, 0 },
+> > > > > > > > >                .hsub = 2, .vsub = 2, .is_yuv = true},
+> > > > > > > > > +        { .format = DRM_FORMAT_NV12_10,        .depth = 0,  .num_planes
+> > > > > > > = 2,
+> > > > > > > > > +          .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 },
+> > > > > > > .block_h = { 4, 4, 0 },
+> > > > > > > 
+> > > > > > > > Hi Sandy:
+> > > > > > > > Their is a problem here for char_per_block size of plane[0]:
+> > > > > > > > Since: 5 * 8 != 4 * 4 * 10;
+> > > > > > > > Seems you mis-set the block_w/h, per your block size the block is 2x2, and
+> > > > > > > it should be:
+> > > > > > > >      .char_per_block = { 5, 10, 0 }, .block_w = { 2, 2, 0 }, .block_h = { 2,
+> > > > > > > 2, 0 },
+> > > > > > > 
+> > > > > > > > Best Regards:
+> > > > > > > > James
+> > > > > > > 
+> > > > > > > 
+> > > > > > > 
+> > > > > > > 在 2019/10/8 下午7:49, sandy.huang 写道:
+> > > > > > > > 在 2019/10/8 下午7:33, Ville Syrjälä 写道:
+> > > > > > > > > On Tue, Oct 08, 2019 at 10:40:20AM +0800, sandy.huang wrote:
+> > > > > > > > > > Hi ville syrjala,
+> > > > > > > > > > 
+> > > > > > > > > > 在 2019/9/30 下午6:48, Ville Syrjälä 写道:
+> > > > > > > > > > > On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
+> > > > > > > > > > > > These new format is supported by some rockchip socs:
+> > > > > > > > > > > > 
+> > > > > > > > > > > > DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
+> > > > > > > > > > > > DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
+> > > > > > > > > > > > DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+> > > > > > > > > > > > 
+> > > > > > > > > > > > Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+> > > > > > > > > > > > ---
+> > > > > > > > > > > >       drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
+> > > > > > > > > > > >       include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
+> > > > > > > > > > > >       2 files changed, 32 insertions(+)
+> > > > > > > > > > > > 
+> > > > > > > > > > > > diff --git a/drivers/gpu/drm/drm_fourcc.c
+> > > > > > > > > > > > b/drivers/gpu/drm/drm_fourcc.c
+> > > > > > > > > > > > index c630064..ccd78a3 100644
+> > > > > > > > > > > > --- a/drivers/gpu/drm/drm_fourcc.c
+> > > > > > > > > > > > +++ b/drivers/gpu/drm/drm_fourcc.c
+> > > > > > > > > > > > @@ -261,6 +261,24 @@ const struct drm_format_info
+> > > > > > > > > > > > *__drm_format_info(u32 format)
+> > > > > > > > > > > >               { .format = DRM_FORMAT_P016,        .depth =
+> > > > > > > > > > > > 0,  .num_planes = 2,
+> > > > > > > > > > > >                 .char_per_block = { 2, 4, 0 }, .block_w = {
+> > > > > > > > > > > > 1, 0, 0 }, .block_h = { 1, 0, 0 },
+> > > > > > > > > > > >                 .hsub = 2, .vsub = 2, .is_yuv = true},
+> > > > > > > > > > > > +        { .format = DRM_FORMAT_NV12_10,        .depth =
+> > > > > > > > > > > > 0,  .num_planes = 2,
+> > > > > > > > > > > > +          .char_per_block = { 5, 10, 0 }, .block_w = {
+> > > > > > > > > > > > 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> > > > > > > > > > > > +          .hsub = 2, .vsub = 2, .is_yuv = true},
+> > > > > > > > > > > > +        { .format = DRM_FORMAT_NV21_10,        .depth =
+> > > > > > > > > > > > 0,  .num_planes = 2,
+> > > > > > > > > > > > +          .char_per_block = { 5, 10, 0 }, .block_w = {
+> > > > > > > > > > > > 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> > > > > > > > > > > > +          .hsub = 2, .vsub = 2, .is_yuv = true},
+> > > > > > > > > > > > +        { .format = DRM_FORMAT_NV16_10,        .depth =
+> > > > > > > > > > > > 0,  .num_planes = 2,
+> > > > > > > > > > > > +          .char_per_block = { 5, 10, 0 }, .block_w = {
+> > > > > > > > > > > > 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> > > > > > > > > > > > +          .hsub = 2, .vsub = 1, .is_yuv = true},
+> > > > > > > > > > > > +        { .format = DRM_FORMAT_NV61_10,        .depth =
+> > > > > > > > > > > > 0,  .num_planes = 2,
+> > > > > > > > > > > > +          .char_per_block = { 5, 10, 0 }, .block_w = {
+> > > > > > > > > > > > 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> > > > > > > > > > > > +          .hsub = 2, .vsub = 1, .is_yuv = true},
+> > > > > > > > > > > > +        { .format = DRM_FORMAT_NV24_10,        .depth =
+> > > > > > > > > > > > 0,  .num_planes = 2,
+> > > > > > > > > > > > +          .char_per_block = { 5, 10, 0 }, .block_w = {
+> > > > > > > > > > > > 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> > > > > > > > > > > > +          .hsub = 1, .vsub = 1, .is_yuv = true},
+> > > > > > > > > > > > +        { .format = DRM_FORMAT_NV42_10,        .depth =
+> > > > > > > > > > > > 0,  .num_planes = 2,
+> > > > > > > > > > > > +          .char_per_block = { 5, 10, 0 }, .block_w = {
+> > > > > > > > > > > > 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> > > > > > > > > > > > +          .hsub = 1, .vsub = 1, .is_yuv = true},
+> > > > > > > > > > > >               { .format = DRM_FORMAT_P210,        .depth = 0,
+> > > > > > > > > > > >                 .num_planes = 2, .char_per_block = { 2, 4, 0 },
+> > > > > > > > > > > >                 .block_w = { 1, 0, 0 }, .block_h = { 1, 0,
+> > > > > > > > > > > > 0 }, .hsub = 2,
+> > > > > > > > > > > > diff --git a/include/uapi/drm/drm_fourcc.h
+> > > > > > > > > > > > b/include/uapi/drm/drm_fourcc.h
+> > > > > > > > > > > > index 3feeaa3..08e2221 100644
+> > > > > > > > > > > > --- a/include/uapi/drm/drm_fourcc.h
+> > > > > > > > > > > > +++ b/include/uapi/drm/drm_fourcc.h
+> > > > > > > > > > > > @@ -238,6 +238,20 @@ extern "C" {
+> > > > > > > > > > > >       #define DRM_FORMAT_NV42        fourcc_code('N', 'V',
+> > > > > > > > > > > > '4', '2') /* non-subsampled Cb:Cr plane */
+> > > > > > > > > > > >          /*
+> > > > > > > > > > > > + * 2 plane YCbCr
+> > > > > > > > > > > > + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
+> > > > > > > > > > > > + * index 1 = Cb:Cr plane,
+> > > > > > > > > > > > Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
+> > > > > > > > > > > > + * or
+> > > > > > > > > > > > + * index 1 = Cr:Cb plane,
+> > > > > > > > > > > > Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
+> > > > > > > > > > > So now you're defining it as some kind of byte aligned block.
+> > > > > > > > > > > With that specifying endianness would now make sense since
+> > > > > > > > > > > otherwise this tells us absolutely nothing about the memory
+> > > > > > > > > > > layout.
+> > > > > > > > > > > 
+> > > > > > > > > > > So I'd either do that, or go back to not specifying anything and
+> > > > > > > > > > > use some weasel words like "mamory layout is implementation defined"
+> > > > > > > > > > > which of course means no one can use it for anything that involves
+> > > > > > > > > > > any kind of cross vendor stuff.
+> > > > > > > > > > /*
+> > > > > > > > > >       * 2 plane YCbCr
+> > > > > > > > > >       * index 0 = Y plane, [39: 0] Y3:Y2:Y1:Y0 10:10:10:10 little endian
+> > > > > > > > > >       * index 1 = Cb:Cr plane, [79: 0] Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0
+> > > > > > > > > > 10:10:10:10:10:10:10:10  little endian
+> > > > > > > > > >       * or
+> > > > > > > > > >       * index 1 = Cr:Cb plane, [79: 0] Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0
+> > > > > > > > > > 10:10:10:10:10:10:10:10  little endian
+> > > > > > > > > >       */
+> > > > > > > > > > 
+> > > > > > > > > > Is this description ok?
+> > > > > > > > > Seems OK to me, if it actually describes the format correctly.
+> > > > > > > > > 
+> > > > > > > > > Though I'm not sure why the CbCr is defines as an 80bit block
+> > > > > > > > > and Y has a 40bit block. 40bits should be enough for CbCr as well.
+> > > > > > > > > 
+> > > > > > > > well, this is taken into account yuv444,  4 y point corresponding with 4
+> > > > > > > > uv point.
+> > > > > > > > 
+> > > > > > > > if only describes the layout memory, here can change to 40bit block.
+> > > > > > > > 
+> > > > > > > > thanks.
+> > > > > > > > 
+> > > > > > > > > > > > + */
+> > > > > > > > > > > > +#define DRM_FORMAT_NV12_10    fourcc_code('N', 'A',
+> > > > > > > > > > > > '1', '2') /* 2x2 subsampled Cr:Cb plane */
+> > > > > > > > > > > > +#define DRM_FORMAT_NV21_10    fourcc_code('N', 'A',
+> > > > > > > > > > > > '2', '1') /* 2x2 subsampled Cb:Cr plane */
+> > > > > > > > > > > > +#define DRM_FORMAT_NV16_10    fourcc_code('N', 'A',
+> > > > > > > > > > > > '1', '6') /* 2x1 subsampled Cr:Cb plane */
+> > > > > > > > > > > > +#define DRM_FORMAT_NV61_10    fourcc_code('N', 'A',
+> > > > > > > > > > > > '6', '1') /* 2x1 subsampled Cb:Cr plane */
+> > > > > > > > > > > > +#define DRM_FORMAT_NV24_10    fourcc_code('N', 'A',
+> > > > > > > > > > > > '2', '4') /* non-subsampled Cr:Cb plane */
+> > > > > > > > > > > > +#define DRM_FORMAT_NV42_10    fourcc_code('N', 'A',
+> > > > > > > > > > > > '4', '2') /* non-subsampled Cb:Cr plane */
+> > > > > > > > > > > > +
+> > > > > > > > > > > > +/*
+> > > > > > > > > > > >        * 2 plane YCbCr MSB aligned
+> > > > > > > > > > > >        * index 0 = Y plane, [15:0] Y:x [10:6] little endian
+> > > > > > > > > > > >        * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x
+> > > > > > > > > > > > [10:6:10:6] little endian
+> > > > > > > > > > > > -- 
+> > > > > > > > > > > > 2.7.4
+> > > > > > > > > > > > 
+> > > > > > > > > > > > 
+> > > > > > > > > > > > 
+> > > > > > > > > > > > _______________________________________________
+> > > > > > > > > > > > dri-devel mailing list
+> > > > > > > > > > > > dri-devel@lists.freedesktop.org
+> > > > > > > > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > > > > > > _______________________________________________
+> > > > > > > > dri-devel mailing list
+> > > > > > > > dri-devel@lists.freedesktop.org
+> > > > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/char/tpm/tpm_crb.c:507:62: sparse: sparse: Using plain integer as NULL pointer
-
-vim +507 drivers/char/tpm/tpm_crb.c
-
-   501	
-   502	static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
-   503			      struct acpi_table_tpm2 *buf)
-   504	{
-   505		struct list_head acpi_resource_list;
-   506		struct resource iores_array[TPM_CRB_MAX_RESOURCES];
- > 507		void __iomem *iobase_array[TPM_CRB_MAX_RESOURCES] = {0};
-   508		struct resource *iores_range[] = {
-   509			iores_array,
-   510			iores_array + TPM_CRB_MAX_RESOURCES
-   511		};
-   512		struct device *dev = &device->dev;
-   513		struct resource *iores;
-   514		void __iomem **iobase_ptr;
-   515		int num_resources, i;
-   516		u32 pa_high, pa_low;
-   517		u64 cmd_pa;
-   518		u32 cmd_size;
-   519		__le64 __rsp_pa;
-   520		u64 rsp_pa;
-   521		u32 rsp_size;
-   522		int ret;
-   523	
-   524		INIT_LIST_HEAD(&acpi_resource_list);
-   525		ret = acpi_dev_get_resources(device, &acpi_resource_list,
-   526					     crb_check_resource, iores_range);
-   527		if (ret < 0)
-   528			return ret;
-   529		acpi_dev_free_resource_list(&acpi_resource_list);
-   530	
-   531		if (iores_range[0] == iores_array) {
-   532			dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
-   533			return -EINVAL;
-   534		} else if (!iores_range[0]) {
-   535			dev_warn(dev, "TPM2 ACPI table defines too many memory resources\n");
-   536			iores_range[0] = iores_range[1];
-   537		}
-   538	
-   539		num_resources = iores_range[0] - iores_array;
-   540	
-   541		iores = NULL;
-   542		iobase_ptr = NULL;
-   543		for (i = 0; i < num_resources; ++i) {
-   544			if (buf->control_address >= iores_array[i].start &&
-   545			    buf->control_address + sizeof(struct crb_regs_tail) - 1 <=
-   546			    iores_array[i].end) {
-   547				iores = iores_array + i;
-   548				iobase_ptr = iobase_array + i;
-   549				break;
-   550			}
-   551		}
-   552	
-   553		priv->regs_t = crb_map_res(dev, iores, iobase_ptr, buf->control_address,
-   554					   sizeof(struct crb_regs_tail));
-   555	
-   556		if (IS_ERR(priv->regs_t))
-   557			return PTR_ERR(priv->regs_t);
-   558	
-   559		/* The ACPI IO region starts at the head area and continues to include
-   560		 * the control area, as one nice sane region except for some older
-   561		 * stuff that puts the control area outside the ACPI IO region.
-   562		 */
-   563		if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
-   564		    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
-   565			if (iores &&
-   566			    buf->control_address == iores->start +
-   567			    sizeof(*priv->regs_h))
-   568				priv->regs_h = *iobase_ptr;
-   569			else
-   570				dev_warn(dev, FW_BUG "Bad ACPI memory layout");
-   571		}
-   572	
-   573		ret = __crb_request_locality(dev, priv, 0);
-   574		if (ret)
-   575			return ret;
-   576	
-   577		/*
-   578		 * PTT HW bug w/a: wake up the device to access
-   579		 * possibly not retained registers.
-   580		 */
-   581		ret = __crb_cmd_ready(dev, priv);
-   582		if (ret)
-   583			goto out_relinquish_locality;
-   584	
-   585		pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
-   586		pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
-   587		cmd_pa = ((u64)pa_high << 32) | pa_low;
-   588		cmd_size = ioread32(&priv->regs_t->ctrl_cmd_size);
-   589	
-   590		iores = NULL;
-   591		iobase_ptr = NULL;
-   592		for (i = 0; i < num_resources; ++i) {
-   593			if (cmd_pa >= iores_array[i].start &&
-   594			    cmd_pa <= iores_array[i].end) {
-   595				iores = iores_array + i;
-   596				iobase_ptr = iobase_array + i;
-   597				break;
-   598			}
-   599		}
-   600	
-   601		if (iores)
-   602			cmd_size = crb_fixup_cmd_size(dev, iores, cmd_pa, cmd_size);
-   603	
-   604		dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
-   605			pa_high, pa_low, cmd_size);
-   606	
-   607		priv->cmd = crb_map_res(dev, iores, iobase_ptr,	cmd_pa, cmd_size);
-   608		if (IS_ERR(priv->cmd)) {
-   609			ret = PTR_ERR(priv->cmd);
-   610			goto out;
-   611		}
-   612	
-   613		memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
-   614		rsp_pa = le64_to_cpu(__rsp_pa);
-   615		rsp_size = ioread32(&priv->regs_t->ctrl_rsp_size);
-   616	
-   617		iores = NULL;
-   618		iobase_ptr = NULL;
-   619		for (i = 0; i < num_resources; ++i) {
-   620			if (rsp_pa >= iores_array[i].start &&
-   621			    rsp_pa <= iores_array[i].end) {
-   622				iores = iores_array + i;
-   623				iobase_ptr = iobase_array + i;
-   624				break;
-   625			}
-   626		}
-   627	
-   628		if (iores)
-   629			rsp_size = crb_fixup_cmd_size(dev, iores, rsp_pa, rsp_size);
-   630	
-   631		if (cmd_pa != rsp_pa) {
-   632			priv->rsp = crb_map_res(dev, iores, iobase_ptr,
-   633						rsp_pa, rsp_size);
-   634			ret = PTR_ERR_OR_ZERO(priv->rsp);
-   635			goto out;
-   636		}
-   637	
-   638		/* According to the PTP specification, overlapping command and response
-   639		 * buffer sizes must be identical.
-   640		 */
-   641		if (cmd_size != rsp_size) {
-   642			dev_err(dev, FW_BUG "overlapping command and response buffer sizes are not identical");
-   643			ret = -EINVAL;
-   644			goto out;
-   645		}
-   646	
-   647		priv->rsp = priv->cmd;
-   648	
-   649	out:
-   650		if (!ret)
-   651			priv->cmd_size = cmd_size;
-   652	
-   653		__crb_go_idle(dev, priv);
-   654	
-   655	out_relinquish_locality:
-   656	
-   657		__crb_relinquish_locality(dev, priv, 0);
-   658	
-   659		return ret;
-   660	}
-   661	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
