@@ -2,103 +2,63 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5C9ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53881ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8368E217F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3621121835
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731949AbfJNW1h (ORCPT
+        id S2387567AbfJNWdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 18:27:37 -0400
-Received: from mga03.intel.com ([134.134.136.65]:30428 "EHLO mga03.intel.com"
+        Mon, 14 Oct 2019 18:33:51 -0400
+Received: from fieldses.org ([173.255.197.46]:34314 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731861AbfJNW1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 18:27:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 15:27:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
-   d="scan'208";a="208057753"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Oct 2019 15:27:35 -0700
-Date:   Mon, 14 Oct 2019 15:27:35 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        bberg@redhat.com, x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        ckellner@redhat.com
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Message-ID: <20191014222735.GA25203@agluck-desk2.amr.corp.intel.com>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
- <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
- <20191014213618.GK4715@zn.tnic>
+        id S1730121AbfJNWdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 18:33:51 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 84B19BDB; Mon, 14 Oct 2019 18:33:50 -0400 (EDT)
+Date:   Mon, 14 Oct 2019 18:33:50 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-nfs@vger.kernel.org,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>
+Subject: Re: SUNRPC: Checking a kmemdup() call in xdr_netobj_dup()
+Message-ID: <20191014223350.GA19883@fieldses.org>
+References: <9b5a5e63-2a24-ad79-20e2-4c01331ee041@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191014213618.GK4715@zn.tnic>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9b5a5e63-2a24-ad79-20e2-4c01331ee041@web.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 11:36:18PM +0200, Borislav Petkov wrote:
-> This description is already *begging* for this delay value to be
-> automatically set by the kernel. Putting yet another knob in front of
-> the user who doesn't have a clue most of the time shows one more time
-> that we haven't done our job properly by asking her to know what we
-> already do.
+On Sat, Oct 12, 2019 at 08:20:04PM +0200, Markus Elfring wrote:
+> I tried another script for the semantic patch language out.
+> This source code analysis approach points out that the implementation
+> of the function “xdr_netobj_dup” contains still an unchecked call
+> of the function “kmemdup”.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/sunrpc/xdr.h?id=1c0cc5f1ae5ee5a6913704c0d75a6e99604ee30a#n167
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/include/linux/sunrpc/xdr.h#L167
 > 
-> IOW, a simple history feedback mechanism which sets the timeout based on
-> the last couple of values is much smarter. The thing would have a max
-> value, of course, which, when exceeded should mean an anomaly, etc, but
-> almost anything else is better than merely asking the user to make an
-> educated guess.
+> How do you think about to improve it?
 
-You need a plausible start point for the "when to worry the user"
-message.  Maybe that is your "max value"?
+On a quick check--I see five xdr_netobj_dup callers, and all of them
+check whether dst->data is NULL.
 
-So if the system has a couple of excursions above temperature lasting
-1 second and then 2 seconds ... would you like to see those ignored
-(because they are below the initial max)? But now we have a couple
-of data points pick some new value to be the threshold for reporting?
+Sounds like a false positive for your tool?
 
-What value should we pick (based on 1 sec, then 2 sec)?
-
-I would be worried that it would self tune to the point where it
-does report something that it really didn't need to (e.g. as a result
-of a few consecutive very short excursions).
-
-We also need to take into account the "typical sampling interval"
-for user space thermal control software.
-
-Srinivas: Maybe this needs to have some more detail on what user
-solutions are being taken into account here.
-
-> > Suggested-by: Alan Cox <alan@linux.intel.com>
-> > Commit-comment-by: Tony Luck <tony.luck@intel.com>
->   ^^^^^^^^^^^^^^^^^^
-> 
-> What's that?
-
-My fault ... during review process I pretty much re-wrote the
-whole commit message to follow the form of:
-	"What is the problem?"
-	"How are we fixing it"
-But I didn't want Srinivas to take the heat for any mistakes
-that were my fault. "Co-developed-by" really didn't explain
-what happened (since I didn't write any code, just made suggestions
-on things that needed to be changed/improved).
-
--Tony
+--b.
