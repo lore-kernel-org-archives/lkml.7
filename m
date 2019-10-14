@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B552ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5012DC47404
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8BB3205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F734205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbfJNGj3 (ORCPT
+        id S1730173AbfJNGjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 02:39:29 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:36879 "EHLO
+        Mon, 14 Oct 2019 02:39:36 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:59293 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726406AbfJNGj1 (ORCPT
+        with ESMTP id S1726406AbfJNGjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 02:39:27 -0400
-X-UUID: 8610414fe4804ef0b75331352bbb39c0-20191014
-X-UUID: 8610414fe4804ef0b75331352bbb39c0-20191014
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        Mon, 14 Oct 2019 02:39:35 -0400
+X-UUID: ed55d01c9188469f805706ca7db98295-20191014
+X-UUID: ed55d01c9188469f805706ca7db98295-20191014
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1251768365; Mon, 14 Oct 2019 14:39:22 +0800
+        with ESMTP id 1114695393; Mon, 14 Oct 2019 14:39:30 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 14 Oct 2019 14:39:19 +0800
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 14 Oct 2019 14:39:27 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 14 Oct 2019 14:39:19 +0800
+ Transport; Mon, 14 Oct 2019 14:39:26 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Matthias Brugger <matthias.bgg@gmail.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -47,44 +47,43 @@ CC:     Evan Green <evgreen@chromium.org>,
         <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
         <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
         <chao.hao@mediatek.com>, <edison.hsieh@mediatek.com>
-Subject: [PATCH v3 6/7] iommu/mediatek: Use writel for TLB range invalidation
-Date:   Mon, 14 Oct 2019 14:38:20 +0800
-Message-ID: <1571035101-4213-7-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v3 7/7] iommu/mediatek: Reduce the tlb flush timeout value
+Date:   Mon, 14 Oct 2019 14:38:21 +0800
+Message-ID: <1571035101-4213-8-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1571035101-4213-1-git-send-email-yong.wu@mediatek.com>
 References: <1571035101-4213-1-git-send-email-yong.wu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 48748A048541F6C83B435A62F409553627F6DD0F6DA3E74D7B897F19B48032702000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use writel for the register F_MMU_INV_RANGE which is for triggering the
-HW work. We expect all the setting(iova_start/iova_end...) have already
-been finished before F_MMU_INV_RANGE.
+Reduce the tlb timeout value from 100000us to 1000us. the original value
+is so long that affect the multimedia performance. This is only a minor
+improvement rather than fixing a issue.
 
-Signed-off-by: Anan.Sun <anan.sun@mediatek.com>
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
 ---
- drivers/iommu/mtk_iommu.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/iommu/mtk_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index dbbacc3..d285457 100644
+index d285457..c9d49af 100644
 --- a/drivers/iommu/mtk_iommu.c
 +++ b/drivers/iommu/mtk_iommu.c
-@@ -187,8 +187,7 @@ static void mtk_iommu_tlb_flush_range_sync(unsigned long iova, size_t size,
- 		writel_relaxed(iova, data->base + REG_MMU_INVLD_START_A);
- 		writel_relaxed(iova + size - 1,
- 			       data->base + REG_MMU_INVLD_END_A);
--		writel_relaxed(F_MMU_INV_RANGE,
--			       data->base + REG_MMU_INVALIDATE);
-+		writel(F_MMU_INV_RANGE, data->base + REG_MMU_INVALIDATE);
+@@ -191,7 +191,7 @@ static void mtk_iommu_tlb_flush_range_sync(unsigned long iova, size_t size,
  
  		/* tlb sync */
  		ret = readl_poll_timeout_atomic(data->base + REG_MMU_CPE_DONE,
+-						tmp, tmp != 0, 10, 100000);
++						tmp, tmp != 0, 10, 1000);
+ 		if (ret) {
+ 			dev_warn(data->dev,
+ 				 "Partial TLB flush timed out, falling back to full flush\n");
 -- 
 1.9.1
 
