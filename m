@@ -2,134 +2,140 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2238DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C92ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6A420854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12B220854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571069558;
-	bh=6fgBtO62mZBLTVpjQ/XdUcdPxurG/FPvcAMlM0ciDns=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=yCUrWCZ49S69VJq7e4Va4oUCWSf/4edv7ALVohErqM0UygYMVB7xe+g0yoM2fO4ph
-	 zgcZMPnRHTs3cXZGC2RnsESrniMGqL5PKxAzvlX7NKDNVg4CGUknecrSnSOQrPwMA/
-	 UhmHzwDq6KFSG+vlRT2tsHuPvujQyUbKlxtAE9V0=
+	s=default; t=1571069600;
+	bh=zjFem5lp4+gnrWzIM2ZkN1H8IvqsRovrVaTH0wBvSw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zoaO+JFSf7Fyz7A8+iXCY2/g55VJAyFQWmq+6s1xlzyVzI9NcGeEj7YODW9qyQmuU
+	 dA2ZJyLBdHVIRvHGHZSXRLopI5PhGq2WncOP667q6zTkaWU20zkm6gsU6k1KUc0GrH
+	 E9+hD78vQl5UD+zQ5WiPKSb+GVwA++IzVE6Rw8gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbfJNQMh (ORCPT
+        id S2387989AbfJNQNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:12:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54810 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732195AbfJNQMg (ORCPT
+        Mon, 14 Oct 2019 12:13:19 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34974 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730030AbfJNQNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:12:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=2lucGtC5FgFnkQOwXgFW6LIHJ1tEIf7HqGz9IDto4us=; b=J7Fsb/Eu9Ao9
-        +0W6VbhNrfvcxYfqsERKsz/ohtt6gTdLZtA32MltYmlne6Yq3Psc/q+6XwhEPuEqkqIvaHqmfn6N8
-        vQO++KVVYsGl+FD1odllUQ/GS8rcvv0VOdz+BNQu6XcaLP7DucU+Il2V/lLqXs/MaTUsP8/x46zT6
-        skR3E=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iK2xK-0007yg-HJ; Mon, 14 Oct 2019 16:12:22 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id E13102741EF2; Mon, 14 Oct 2019 17:12:21 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Hulk Robot <hulkci@huawei.com>, jaska.uimonen@linux.intel.com,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, perex@perex.cz,
-        pierre-louis.bossart@linux.intel.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        tiwai@suse.com, yang.jie@linux.intel.com, yuehaibing@huawei.com,
-        yung-chuan.liao@linux.intel.com
-Subject: Applied "ASoC: SOF: Fix randbuild error" to the asoc tree
-In-Reply-To:  <20191014091308.23688-1-yuehaibing@huawei.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191014161221.E13102741EF2@ypsilon.sirena.org.uk>
-Date:   Mon, 14 Oct 2019 17:12:21 +0100 (BST)
+        Mon, 14 Oct 2019 12:13:19 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w6so12224397lfl.2;
+        Mon, 14 Oct 2019 09:13:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YHnMAZs14fJi1NNz2NtD+GzNSsWEq3noMLIQejJbPKU=;
+        b=toH9VV3wIiWhb/2qHvQHVe+jWgxZmwSsmZS57GensCyN++iU9E+LykRN0Ln+cTA3KY
+         dwzm5i6h6jXjiL6dp2lKbQtTVPEBGYvaqWG+zX3yKSTluqFm3BrklQT2G+q1b2iXIO7I
+         p9l312WUWBvjU9wLMG9MLJtlNJXqxKKiECobN92aIMmY5yoPduxzxXHgNpUGwDvKEpRu
+         VWq4U5dEOzbevlOoYQgfTJkAkeAJ2kKO8+U4Jy01yz9cmKjtVjYZ4BXLoHyx6GUzUs7n
+         DQy/qbWucgwNONBbD10gdcSN1fKeUvtgNZtv4JOEhDHWCDRMamEjq8OKl/dfc6Kmu5xl
+         qDBw==
+X-Gm-Message-State: APjAAAUSPIzgN3OCpX5H+rlkAte+JKd7NKhZnU1b0TxXrLgxBPtVne/y
+        G39hULvg8/BJZXR8PyCNvdw=
+X-Google-Smtp-Source: APXvYqwDP0lRYsp3cJGX83F+AoNpiKoRwb/MliBNk6cC6YR1rKI1uNyUAt7eBJo+pCIcoF5AbQU7Mg==
+X-Received: by 2002:ac2:5a06:: with SMTP id q6mr16772533lfn.59.1571069596454;
+        Mon, 14 Oct 2019 09:13:16 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id 126sm5526559lfh.45.2019.10.14.09.13.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 14 Oct 2019 09:13:14 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@kernel.org>)
+        id 1iK2yM-00051m-6W; Mon, 14 Oct 2019 18:13:26 +0200
+Date:   Mon, 14 Oct 2019 18:13:26 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Johan Hovold <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 0/4] treewide: fix interrupted release
+Message-ID: <20191014161326.GO13531@localhost>
+References: <20191010131333.23635-1-johan@kernel.org>
+ <20191010135043.GA16989@phenom.ffwll.local>
+ <20191011093633.GD27819@localhost>
+ <20191014084847.GD11828@phenom.ffwll.local>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014084847.GD11828@phenom.ffwll.local>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Mon, Oct 14, 2019 at 10:48:47AM +0200, Daniel Vetter wrote:
+> On Fri, Oct 11, 2019 at 11:36:33AM +0200, Johan Hovold wrote:
+> > On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
+> > > On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
+> > > > Two old USB drivers had a bug in them which could lead to memory leaks
+> > > > if an interrupted process raced with a disconnect event.
+> > > > 
+> > > > Turns out we had a few more driver in other subsystems with the same
+> > > > kind of bug in them.
+> > 
+> > > Random funny idea: Could we do some debug annotations (akin to
+> > > might_sleep) that splats when you might_sleep_interruptible somewhere
+> > > where interruptible sleeps are generally a bad idea? Like in
+> > > fops->release?
+> > 
+> > There's nothing wrong with interruptible sleep in fops->release per se,
+> > it's just that drivers cannot return -ERESTARTSYS and friends and expect
+> > to be called again later.
+> 
+> Do you have a legit usecase for interruptible sleeps in fops->release?
 
-   ASoC: SOF: Fix randbuild error
+The tty layer depends on this for example when waiting for buffered
+writes to complete (something which may never happen when using flow
+control).
 
-has been applied to the asoc tree at
+> I'm not even sure killable is legit in there, since it's an fd, not a
+> process context ...
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+It will be run in process context in many cases, and for ttys we're good
+AFAICT.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> > The return value from release() is ignored by vfs, and adding a splat in
+> > __fput() to catch these buggy drivers might be overkill.
+> 
+> Ime once you have a handful of instances of a broken pattern, creating a
+> check for it (under a debug option only ofc) is very much justified.
+> Otherwise they just come back to life like the undead, all the time. And
+> there's a _lot_ of fops->release callbacks in the kernel.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Yeah, you have a point.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+But take tty again as an example, the close tty operation called from
+release() is declared void so there's no propagated return value for vfs
+to check.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+It may even be better to fix up the 100 or so callbacks potentially
+returning non-zero and make fops->release void so that the compiler
+would help us catch any future bugs and also serve as a hint for
+developers that returning errnos from fops->release is probably not
+what you want to do.
 
-Thanks,
-Mark
+But that's a lot of churn of course.
 
-From 9899a7a869935c4c93247b290ac7a70e0deab202 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Mon, 14 Oct 2019 17:13:08 +0800
-Subject: [PATCH] ASoC: SOF: Fix randbuild error
-
-When LEDS_TRIGGER_AUDIO is m and SND_SOC_SOF is y,
-
-sound/soc/sof/control.o: In function `snd_sof_switch_put':
-control.c:(.text+0x587): undefined reference to `ledtrig_audio_set'
-control.c:(.text+0x593): undefined reference to `ledtrig_audio_set'
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 5d43001ae436 ("ASoC: SOF: acpi led support for switch controls")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191014091308.23688-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sof/control.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
-index 41551e8f6ac3..2c4abd406c4f 100644
---- a/sound/soc/sof/control.c
-+++ b/sound/soc/sof/control.c
-@@ -36,10 +36,12 @@ static void update_mute_led(struct snd_sof_control *scontrol,
- 
- 	scontrol->led_ctl.led_value = temp;
- 
-+#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
- 	if (!scontrol->led_ctl.direction)
- 		ledtrig_audio_set(LED_AUDIO_MUTE, temp ? LED_OFF : LED_ON);
- 	else
- 		ledtrig_audio_set(LED_AUDIO_MICMUTE, temp ? LED_OFF : LED_ON);
-+#endif
- }
- 
- static inline u32 mixer_to_ipc(unsigned int value, u32 *volume_map, int size)
--- 
-2.20.1
-
+Johan
