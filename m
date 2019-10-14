@@ -4,61 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FC0ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEC4ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E0420673
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA31520673
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571054716;
-	bh=/sIj46+9bgVa+vYAWnKUmVGGLWi8i3xpHBLJJTsNvIM=;
+	s=default; t=1571054719;
+	bh=/0lwq7n0eY2o8G7aIKNylCsZu7tM3iF1lAvtORUTah0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=swwFK+xv3Ghl+IktuwIZ8mQOCNhqDDN1rR3umqoC50xZ4UvZG3rq+lxhGVAONT4ey
-	 ELMZFwE+SpaLe5bwrzq2h5uCAtg5LPiytNVvJIDiDUg+W6O0fc8D+ATWZI0Xo3t3pi
-	 hsuL66+imqr6v72bJBp7oCjcZcnQq+CtLmsQ/Ozk=
+	b=pmEkiuu3uVy9UGGSxjK4zzJKz254jU+z+AqP/lOSMX6zUca+3yWmNzTfOyeRYTs8B
+	 /wtzTpi/tbPEX3o8EagFTk/uW4VhZ4+Ufu2Q2usrHTmb5l1tEBxfkXtwUNwdAb//Cr
+	 ukfNSCpqMz8SaWPftguEx+/Z+GFx+YPNBCWy0HQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731872AbfJNMFP (ORCPT
+        id S1731887AbfJNMFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 08:05:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34456 "EHLO
+        Mon, 14 Oct 2019 08:05:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34542 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730369AbfJNMFO (ORCPT
+        with ESMTP id S1730369AbfJNMFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 08:05:14 -0400
+        Mon, 14 Oct 2019 08:05:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=HTqny5PVHvnmykrT7/i1QnwbFEAoZl4BaIh7+Q4ZBD8=; b=ZkvZ04JyHUqK
-        EKhKl9qgVeJw+aFrjyJIXS7+NcnGa5tQma35pvSFybaP2Kua7HqT/YESsko4VZlh983J/GaiDxM/o
-        BK/JqULa93WSTPO2lLgkrwv9FGxqdVQ7840MOw8WdgGlK4bgQPdRmuVY9say3n4huwkdDYLkQ5Q2q
-        qZpm4=;
+        List-Archive; bh=ZEvx4rHQS/ChhCZb0lOjQFPU66r3utXfBR2h6nSX49o=; b=hy0uOOWFeDFK
+        1sjkIDRwNDFgGrVSpw/8V93GKT59q6Xb9FQgw3HmDUZAzJskk40j0j5L1gvpCYXWDSm+vTGKypof0
+        lGkz2Wqv5cimCBiMKF8280h4QfQn16Bvp0P0ssUulEBVScTlPehMSbkm5ftvYuzxi5eIMV0ZRptpo
+        Ahdf0=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iJz5u-0007WR-MS; Mon, 14 Oct 2019 12:04:58 +0000
+        id 1iJz5u-0007WY-Tx; Mon, 14 Oct 2019 12:04:59 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 236F02741EF2; Mon, 14 Oct 2019 13:04:58 +0100 (BST)
+        id 64B702742162; Mon, 14 Oct 2019 13:04:58 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        ckeepax@opensource.cirrus.com, enric.balletbo@collabora.com,
-        Hulk Robot <hulkci@huawei.com>, krzk@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        npoushin@opensource.cirrus.com, nuno.sa@analog.com,
-        paul@crapouillou.net, perex@perex.cz, piotrs@opensource.cirrus.com,
-        rf@opensource.wolfsonmicro.com, tiwai@suse.com
-Subject: Applied "ASoC: adau7118: Fix Kconfig warning without CONFIG_I2C" to the asoc tree
-In-Reply-To: <20191011150042.20096-1-yuehaibing@huawei.com>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
+        arnaud.pouliquen@st.com, broonie@kernel.org, lgirdwood@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
+        olivier.moysan@st.com, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: stm32: spdifrx: retry synchronization in sync state" to the asoc tree
+In-Reply-To: <20191011084816.14279-1-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191014120458.236F02741EF2@ypsilon.sirena.org.uk>
+Message-Id: <20191014120458.64B702742162@ypsilon.sirena.org.uk>
 Date:   Mon, 14 Oct 2019 13:04:58 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -67,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: adau7118: Fix Kconfig warning without CONFIG_I2C
+   ASoC: stm32: spdifrx: retry synchronization in sync state
 
 has been applied to the asoc tree at
 
@@ -92,41 +90,71 @@ to this mail.
 Thanks,
 Mark
 
-From de729862cc0f0b46dd3a3c11079240ea4e13b97d Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Fri, 11 Oct 2019 23:00:42 +0800
-Subject: [PATCH] ASoC: adau7118: Fix Kconfig warning without CONFIG_I2C
+From 0c93c291321f2ba8dc4cd3d4df74801caaa297db Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Fri, 11 Oct 2019 10:48:16 +0200
+Subject: [PATCH] ASoC: stm32: spdifrx: retry synchronization in sync state
 
-When building a kernel without CONFIG_I2C, Kconfig warns:
+When STM32 SPDIFRX is in sync state, allow multiple
+synchro attempts, instead of exiting on first unsuccessful
+trial. This is useful when spdif signal is not immediately
+available on input. This also allows Pulseaudio to check
+iec capture device availability when no signal is present.
 
-WARNING: unmet direct dependencies detected for REGMAP_I2C
-  Depends on [n]: I2C [=n]
-  Selected by [y]:
-  - SND_SOC_ADAU7118_I2C [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y]
-
-Add missing I2C dependency to SND_SOC_ADAU7118_I2C to fix this.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: ca514c0f12b0 ("ASOC: Add ADAU7118 8 Channel PDM-to-I2S/TDM Converter driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20191011150042.20096-1-yuehaibing@huawei.com
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Link: https://lore.kernel.org/r/20191011084816.14279-1-olivier.moysan@st.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/stm/stm32_spdifrx.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index f4747ebc251e..5a706102db04 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -416,6 +416,7 @@ config SND_SOC_ADAU7118_HW
+diff --git a/sound/soc/stm/stm32_spdifrx.c b/sound/soc/stm/stm32_spdifrx.c
+index cd4b235fce57..3fd28ee01675 100644
+--- a/sound/soc/stm/stm32_spdifrx.c
++++ b/sound/soc/stm/stm32_spdifrx.c
+@@ -351,6 +351,8 @@ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
+ 		     SPDIFRX_CR_CUMSK | SPDIFRX_CR_PTMSK | SPDIFRX_CR_RXSTEO;
+ 		cr_mask = cr;
  
- config SND_SOC_ADAU7118_I2C
- 	tristate "Analog Devices ADAU7118 8 Channel PDM-to-I2S/TDM Converter - I2C"
-+	depends on I2C
- 	select SND_SOC_ADAU7118
- 	select REGMAP_I2C
- 	help
++		cr |= SPDIFRX_CR_NBTRSET(SPDIFRX_NBTR_63);
++		cr_mask |= SPDIFRX_CR_NBTR_MASK;
+ 		cr |= SPDIFRX_CR_SPDIFENSET(SPDIFRX_SPDIFEN_SYNC);
+ 		cr_mask |= SPDIFRX_CR_SPDIFEN_MASK;
+ 		ret = regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
+@@ -666,7 +668,7 @@ static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
+ 	struct snd_pcm_substream *substream = spdifrx->substream;
+ 	struct platform_device *pdev = spdifrx->pdev;
+ 	unsigned int cr, mask, sr, imr;
+-	unsigned int flags;
++	unsigned int flags, sync_state;
+ 	int err = 0, err_xrun = 0;
+ 
+ 	regmap_read(spdifrx->regmap, STM32_SPDIFRX_SR, &sr);
+@@ -726,11 +728,23 @@ static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
+ 	}
+ 
+ 	if (err) {
+-		/* SPDIFRX in STATE_STOP. Disable SPDIFRX to clear errors */
++		regmap_read(spdifrx->regmap, STM32_SPDIFRX_CR, &cr);
++		sync_state = FIELD_GET(SPDIFRX_CR_SPDIFEN_MASK, cr) &&
++			     SPDIFRX_SPDIFEN_SYNC;
++
++		/* SPDIFRX is in STATE_STOP. Disable SPDIFRX to clear errors */
+ 		cr = SPDIFRX_CR_SPDIFENSET(SPDIFRX_SPDIFEN_DISABLE);
+ 		regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
+ 				   SPDIFRX_CR_SPDIFEN_MASK, cr);
+ 
++		/* If SPDIFRX was in STATE_SYNC, retry synchro */
++		if (sync_state) {
++			cr = SPDIFRX_CR_SPDIFENSET(SPDIFRX_SPDIFEN_SYNC);
++			regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
++					   SPDIFRX_CR_SPDIFEN_MASK, cr);
++			return IRQ_HANDLED;
++		}
++
+ 		if (substream)
+ 			snd_pcm_stop(substream, SNDRV_PCM_STATE_DISCONNECTED);
+ 
 -- 
 2.20.1
 
