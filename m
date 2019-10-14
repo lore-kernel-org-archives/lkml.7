@@ -2,179 +2,197 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A9AECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E2BECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B16A21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA1321721
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:30:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="nQ1GyZfP";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="nQ1GyZfP"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="V5mdnIjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388887AbfJNTaA (ORCPT
+        id S2388895AbfJNTaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 15:30:00 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:45364 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730405AbfJNT37 (ORCPT
+        Mon, 14 Oct 2019 15:30:14 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42865 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730405AbfJNTaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 15:29:59 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D7B238EE0F8;
-        Mon, 14 Oct 2019 12:29:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1571081398;
-        bh=6+zVmnXVRSW3VefS05Bdkv0D9Q5z93dRC6W+RmfclTk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nQ1GyZfPwpiIDjMS6VL+s814j9py+atSMF7mkEzVgJi1yieVXKP/AVWhFsFKwTsyM
-         vXGbwFHBw6eHku8aWG7E/A44hzTnSxtYVy4Wf3tLlBzkXHYx8XW5aJ8kbLjT25hsTg
-         wkOfTXhRUXg+guMhRuryHuyga8RDZvJ8IvMYSA+8=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9j7g9LG10Gpt; Mon, 14 Oct 2019 12:29:58 -0700 (PDT)
-Received: from [172.16.1.194] (unknown [63.64.162.234])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 2D6F58EE0F5;
-        Mon, 14 Oct 2019 12:29:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1571081398;
-        bh=6+zVmnXVRSW3VefS05Bdkv0D9Q5z93dRC6W+RmfclTk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nQ1GyZfPwpiIDjMS6VL+s814j9py+atSMF7mkEzVgJi1yieVXKP/AVWhFsFKwTsyM
-         vXGbwFHBw6eHku8aWG7E/A44hzTnSxtYVy4Wf3tLlBzkXHYx8XW5aJ8kbLjT25hsTg
-         wkOfTXhRUXg+guMhRuryHuyga8RDZvJ8IvMYSA+8=
-Message-ID: <1571081397.3728.9.camel@HansenPartnership.com>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "Safford, David (GE Global Research, US)" <david.safford@ge.com>
-Cc:     Ken Goldman <kgold@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Mon, 14 Oct 2019 12:29:57 -0700
-In-Reply-To: <20191014190033.GA15552@linux.intel.com>
-References: <20191003175854.GB19679@linux.intel.com>
-         <1570128827.5046.19.camel@linux.ibm.com>
-         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
-         <20191004182711.GC6945@linux.intel.com>
-         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
-         <20191007000520.GA17116@linux.intel.com>
-         <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
-         <20191008234935.GA13926@linux.intel.com>
-         <20191008235339.GB13926@linux.intel.com>
-         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
-         <20191014190033.GA15552@linux.intel.com>
+        Mon, 14 Oct 2019 15:30:13 -0400
+Received: by mail-ed1-f67.google.com with SMTP id y91so15783841ede.9
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 12:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kIlGWH7wshAdmQPQnvh6IPOGbDUQee/fBcMupsDy2Yg=;
+        b=V5mdnIjnioWkVjrobG6tmEwjoXrFCBzemiMo18PIPiiNQFechVzXynv20H09Z+wndl
+         OMqX6Yvcbob/cCOW/HG7f+QsYKt1sMYEfs2EFuygO5szJ1B3msXMCHsy/JdKCHLvtdDG
+         yFYg55ufHy0FmyPgxHM2IyS7eIYsDknKnfTvLW9jQ9xkR2+IurjnFSi+osyTiNd7iBK/
+         T/IS0M0tgeJpEOPuyaLXLT4tCCOb21zqZxeF5WUng4uAud/yRJr3y0xK3U15B+AH6Qhg
+         gmgiPhyccTZth7D5jiiRTsjpxts8hf36+Fy3OW7clcAbGbSEJVHIJfIzSZEKBs2+cK5d
+         HpsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kIlGWH7wshAdmQPQnvh6IPOGbDUQee/fBcMupsDy2Yg=;
+        b=EXKC26XrksWt8DALShdu2U2QkbBLgrh5j70HuPNga5i9GQ46fFBNTG/5gER/FXdw/y
+         PiE5qyOl2wY1aBi7BWVVenInOZfaZwbo1Fqq9DEo918495kC1wENQ9gFrdqY9gPUUV+V
+         CNCV4MiL9UQ8lqdG4p5i9TTNKAeGUy8rxTuscrtH+L/2DQhiAV64Rawwuj4ysHThyjEP
+         wwC+3u6zxOahc6SpC4xh/lWmwC9MvXl3yztFTR4VSh7FY5x+ExPxThZctv6UTS/yNe9I
+         EX4OtBCYe3JwnBtaW7CW7E8nVja+TMQcnzyqSocqPchc8ixgY83Hc+gULK/n6Si/gVsN
+         J0mA==
+X-Gm-Message-State: APjAAAVuM54krrCdl2vsrJGkWAlOUtJChzPkIRlojwItHsIH489nkKeB
+        VdJqOglSEaNqF44yz2C6z/ytoygY48qNeAbT5lE6Qg==
+X-Google-Smtp-Source: APXvYqz3tIhyaGsZu4/lfjFbR9DxFhIt0sseQX6CsiNmmunhKYf+FnIGntsN+/O5mKhxIu232qNcvhzgmMK19NiaHWU=
+X-Received: by 2002:a17:906:2cca:: with SMTP id r10mr30792016ejr.108.1571081409709;
+ Mon, 14 Oct 2019 12:30:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
+ <20191004185234.31471-15-pasha.tatashin@soleen.com> <f1c50a5f-103e-e6d7-e93d-e873a169833e@arm.com>
+In-Reply-To: <f1c50a5f-103e-e6d7-e93d-e873a169833e@arm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 14 Oct 2019 15:29:58 -0400
+Message-ID: <CA+CK2bBU3ZkTRP8VuS7zwKLPBa+4nSdirq_ss7_aODoLe2iucA@mail.gmail.com>
+Subject: Re: [PATCH v6 14/17] arm64: kexec: move relocation function setup and
+ clean up
+To:     James Morse <james.morse@arm.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-14 at 22:00 +0300, Jarkko Sakkinen wrote:
-> On Wed, Oct 09, 2019 at 12:11:06PM +0000, Safford, David (GE Global
-> Research, US) wrote:
-> > 
-> > > From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Sent: Tuesday, October 8, 2019 7:54 PM
-> > > To: Ken Goldman <kgold@linux.ibm.com>
-> > > Cc: Safford, David (GE Global Research, US) <david.safford@ge.com
-> > > >; Mimi
-> > > Zohar <zohar@linux.ibm.com>; linux-integrity@vger.kernel.org;
-> > > stable@vger.kernel.org; open list:ASYMMETRIC KEYS
-> > > <keyrings@vger.kernel.org>; open list:CRYPTO API <linux-
-> > > crypto@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-> > > Subject: EXT: Re: [PATCH] KEYS: asym_tpm: Switch to
-> > > get_random_bytes()
-> > > 
-> > > On Wed, Oct 09, 2019 at 02:49:35AM +0300, Jarkko Sakkinen wrote:
-> > > > On Mon, Oct 07, 2019 at 06:13:01PM -0400, Ken Goldman wrote:
-> > > > > The TPM library specification states that the TPM must comply
-> > > > > with NIST SP800-90 A.
-> > > > > 
-> > > > > https://trustedcomputinggroup.org/membership/certification/tp
-> > > > > m-certified-products/
-> > > > > 
-> > > > > shows that the TPMs get third party certification, Common
-> > > > > Criteria EAL 4+.
-> > > > > 
-> > > > > While it's theoretically possible that an attacker could
-> > > > > compromise both the TPM vendors and the evaluation agencies,
-> > > > > we do have EAL 4+ assurance against both 1 and 2.
-> > > > 
-> > > > Certifications do not equal to trust.
-> > > 
-> > > And for trusted keys the least trust solution is to do generation
-> > > with the kernel assets and sealing with TPM. With TEE the least
-> > > trust solution is equivalent.
-> > > 
-> > > Are you proposing that the kernel random number generation should
-> > > be removed? That would be my conclusion of this discussion if I
-> > > would agree any of this (I don't).
-> > > 
-> > > /Jarkko
-> > 
-> > No one is suggesting that.
-> > 
-> > You are suggesting changing the documented behavior of trusted
-> > keys, and that would cause problems for some of our use cases.
-> > While certification may not in your mind be equal to trust, it is
-> > equal to compliance with mandatory regulations.
-> > 
-> > Perhaps rather than arguing past each other, we should look into 
-> > providing users the ability to choose, as an argument to keyctl?
-> > 
-> > dave
-> 
-> I'm taking my words back in the regression part as regression would
-> need really a failing system. Definitely the fixes tag should be
-> removed from my patch.
-> 
-> What is anyway the role of the kernel rng? Why does it exist and when
-> exactly it should be used? This exactly where the whole review
-> process throughout the "chain of command" failed misserably with
-> tpm_asym.c.
-> 
-> The commit message for tpm_asym.c does not document the design choice
-> in any possible way and still was merged to the mainline.
-> 
-> Before knowning the answer to the "existential" question we are
-> somewhat paralyzed on moving forward with trusted keys (e.g.
-> paralyzed to merge TEE backend).
-> 
-> Your proposal might make sense but I don't really want to say
-> anything since I'm completely cluesless of the role of the kernel
-> rng. Looks like everyone who participated to the review process of
-> tpm_asym.c, is too.
+> > In addition, do some cleanup: add infor about reloction function to
+>
+> infor ? reloction?
 
-The job of the in-kernel rng is simply to produce a mixed entropy pool
-from which we can draw random numbers.  The idea is that quite a few
-attackers have identified the rng as being a weak point in the security
-architecture of the kernel, so if we mix entropy from all the sources
-we have, you have to compromise most of them to gain some predictive
-power over the rng sequence.
+Typo. I have fixed commit log. It meant to be "info about
+arm64_relocate_new_kernel function"
 
-The point is not how certified the TPM RNG is, the point is that it's a
-single source and if we rely on it solely for some applications, like
-trusted keys, then it gives the attackers a single known point to go
-after.  This may be impossible for script kiddies, but it won't be for
-nation states ... are you going to exclusively trust the random number
-you got from your chinese certified TPM?
+>
+>
+> > kexec_image_info(), and remove extra messages from machine_kexec().
+>
+>
+> > Make dtb_mem, always available, if CONFIG_KEXEC_FILE is not configured
+> > dtb_mem is set to zero anyway.
+>
+> This is unrelated cleanup, please do it as an earlier patch to make it clearer what you
+> are changing here.
+Ok.
 
-Remember also that the attack doesn't have to be to the TPM only, it
-could be the pathway by which we get the random number, which involves
-components outside of the TPM certification.
+>
+> (I'm not convinced you need to cache va<->pa)
+>
+>
+> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> > index 12a561a54128..d15ca1ca1e83 100644
+> > --- a/arch/arm64/include/asm/kexec.h
+> > +++ b/arch/arm64/include/asm/kexec.h
+> > @@ -90,14 +90,15 @@ static inline void crash_prepare_suspend(void) {}
+> >  static inline void crash_post_resume(void) {}
+> >  #endif
+> >
+> > -#ifdef CONFIG_KEXEC_FILE
+> >  #define ARCH_HAS_KIMAGE_ARCH
+> >
+> >  struct kimage_arch {
+> >       void *dtb;
+> >       unsigned long dtb_mem;
+>
+> > +     unsigned long kern_reloc;
+>
+> This is cache-ing the physical address of an all-architectures value from struct kimage,
+> in the arch specific part of struct kiamge. Why?
+> (You must have the struct kimage on hand to access this thing at all!)
 
-James
+Because, currently only one physical page is used in order to do reboot:
+control_code_page; this is where arm64_relocate_new_kernel is copied.
+So, PA of control_code_page is used as a handler. But with MMU enabled
+kexec reboot, a number of pages are allocated for reboot purposes,
+they contain page table, arm64_relocate_new_kernel, and el2 vector
+table. This is why we need handlers. control_code_page is simply one
+of the pages that can contains any of the kexec reboot specific data.
 
+> If its supposed to be a physical address, please use phys_addr_t.
+
+Done that, also changed dtb_mem to phys_addr_t.
+
+>
+> >  };
+>
+>
+> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> > index 0df8493624e0..9b41da50e6f7 100644
+> > --- a/arch/arm64/kernel/machine_kexec.c
+> > +++ b/arch/arm64/kernel/machine_kexec.c
+> > @@ -42,6 +42,7 @@ static void _kexec_image_info(const char *func, int line,
+> >       pr_debug("    start:       %lx\n", kimage->start);
+> >       pr_debug("    head:        %lx\n", kimage->head);
+> >       pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
+> > +     pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
+> >
+> >       for (i = 0; i < kimage->nr_segments; i++) {
+> >               pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
+> > @@ -58,6 +59,19 @@ void machine_kexec_cleanup(struct kimage *kimage)
+> >       /* Empty routine needed to avoid build errors. */
+> >  }
+> >
+> > +int machine_kexec_post_load(struct kimage *kimage)
+> > +{
+> > +     unsigned long kern_reloc;
+> > +
+> > +     kern_reloc = page_to_phys(kimage->control_code_page);
+>
+> kern_reloc should be phys_addr_t.
+
+Ok
+
+>
+>
+> > +     memcpy(__va(kern_reloc), arm64_relocate_new_kernel,
+> > +            arm64_relocate_new_kernel_size);
+> > +     kimage->arch.kern_reloc = kern_reloc;
+>
+>
+> Please move the cache maintenance in here too. This will save us doing it late during
+> kdump. This will also group the mmu-on changes together.
+
+OK, but I think we should do it in a separate patch. I assume you mean
+this code to be moved to load time:
+
+177         /* Flush the reboot_code_buffer in preparation for its execution. */
+178         __flush_dcache_area(reboot_code_buffer,
+arm64_relocate_new_kernel_size);
+179
+180         /*
+181          * Although we've killed off the secondary CPUs, we don't update
+182          * the online mask if we're handling a crash kernel and consequently
+183          * need to avoid flush_icache_range(), which will attempt to IPI
+184          * the offline CPUs. Therefore, we must use the __* variant here.
+185          */
+186         __flush_icache_range((uintptr_t)reboot_code_buffer,
+187                              arm64_relocate_new_kernel_size);
+
+Is it safe to do? We do not know what CPU is going to be executing
+kexec reboot for us at the load time.
+
+Pasha
