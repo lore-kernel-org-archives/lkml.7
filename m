@@ -2,72 +2,94 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD56C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B594CECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2AC20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884F020873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571068683;
+	bh=nGdYJ/feIA7LkNQZ3wJrOxwj9ETkfx+ZMCf/VDu/oTs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=O4ly8tLvKYJ3ToZXhU8ebYU+8Vz0uhrzV0NVEV9TE8Onmwox54wh/lhALW87ov5LL
+	 X59dgGH/8QE6AlcsbPTS7oHuup9+IVi2uR0Txv8g9worK2ikoQ0y0GebroD/kVrmhg
+	 YT2KigszK6SxfVH2g6OmDvYf7+sYDUDUXSH1rQ7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731831AbfJNP5T (ORCPT
+        id S1731936AbfJNP6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:57:19 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31203 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730102AbfJNP5T (ORCPT
+        Mon, 14 Oct 2019 11:58:02 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35951 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfJNP6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:57:19 -0400
-X-UUID: 82e2e07d42c8401c9fe66a906d53cd58-20191014
-X-UUID: 82e2e07d42c8401c9fe66a906d53cd58-20191014
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1492891351; Mon, 14 Oct 2019 23:57:12 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 14 Oct 2019 23:57:10 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 14 Oct 2019 23:57:08 +0800
-Message-ID: <1571068631.8898.8.camel@mtksdccf07>
-Subject: Re: [PATCH 2/2] kasan: add test for invalid size in memmove
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Mon, 14 Oct 2019 23:57:11 +0800
-In-Reply-To: <20191014150710.GY32665@bombadil.infradead.org>
-References: <20191014103654.17982-1-walter-zh.wu@mediatek.com>
-         <20191014150710.GY32665@bombadil.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 14 Oct 2019 11:58:02 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so17169119ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:58:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MsRTPbeFRd3mjs0/iVrF+EgsiOKlCUOXsruIzR2NFHM=;
+        b=Q3mA8803WJvxZe/l2GYLGlsrJ9VzYYmF28vBdeObKty7NHEuWpcW6q62AupQ2xuPnP
+         5krmS69PReezLligsUz2Cocy7nnIOPGD7iBFkCouNZF+G3EEk1COaAd+2AI7qfl11kZT
+         GSxneUGxAfRdWt7fhPwhgEEdqihgEDTDmbGGQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MsRTPbeFRd3mjs0/iVrF+EgsiOKlCUOXsruIzR2NFHM=;
+        b=gJfqZZw+gkWcGI0MakXiboYj1DUtVqms0pYA9MdYpfwq3oPwEdvDHBlHYl5OYEyzzH
+         9CW2GD6IjEuuCizB8p7Z+fn8+PT71Ivp3OrLaKj4RBWwoGA8XpGfEjGAsVcJSmFYSURY
+         9di05ywcxXzXQ+YDdHSlhnbdNetcJmYSaCrTo3puhig7nG2CNB28rTlc0dfYkbUsDp6P
+         fU6n9lr0Zgp0BAgoW3/gyW8/bgh8B5KPR+UAYoEup6m/aSw6X0sroNPBrIl+TbgYoQU0
+         +FAtTEazxS5vti01SzQRtLNXePemFfEuqFrv/SpEkP1UvjxtrZqaf2qgS+1gACDURr4z
+         J97g==
+X-Gm-Message-State: APjAAAX7fhy07nD9CQyYASgJ29fGwRU8SLd0v1EVjBAxRPLmvCmdt3VO
+        EX/y7o90GvV2wOxO5zL9gm9IW5Gan2g=
+X-Google-Smtp-Source: APXvYqxG61uBNWoffMq62XA4F+0mH8OGgQ3eOazUQi941khngljOaEs+3C4rEhvMuiyXQ9e7id750g==
+X-Received: by 2002:a2e:658f:: with SMTP id e15mr19344284ljf.254.1571068679421;
+        Mon, 14 Oct 2019 08:57:59 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id x2sm4437190ljj.94.2019.10.14.08.57.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Oct 2019 08:57:58 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id l21so17181607lje.4
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:57:58 -0700 (PDT)
+X-Received: by 2002:a2e:2b91:: with SMTP id r17mr19455605ljr.1.1571068678057;
+ Mon, 14 Oct 2019 08:57:58 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
+References: <20191014022633.GA6430@mit.edu> <20191014070312.GA3327@iMac-3.local>
+In-Reply-To: <20191014070312.GA3327@iMac-3.local>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 14 Oct 2019 08:57:41 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi5J+ga=CUQ-vho3savkhDNes1Hwxij2Y19gen_-9tU7w@mail.gmail.com>
+Message-ID: <CAHk-=wi5J+ga=CUQ-vho3savkhDNes1Hwxij2Y19gen_-9tU7w@mail.gmail.com>
+Subject: Re: [REGRESSION] kmemleak: commit c566586818 causes failure to boot
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-14 at 08:07 -0700, Matthew Wilcox wrote:
-> On Mon, Oct 14, 2019 at 06:36:54PM +0800, Walter Wu wrote:
-> > Test size is negative numbers in memmove in order to verify
-> > whether it correctly get KASAN report.
-> 
-> You're not testing negative numbers, though.  memmove() takes an unsigned
-> type, so you're testing a very large number.
-> 
-Casting negative numbers to size_t would indeed turn up as a "large"
-size_t and its value will be larger than ULONG_MAX/2. We mainly want to
-express this case. Maybe we can add some descriptions. Thanks for your
-reminder.
+On Mon, Oct 14, 2019 at 12:03 AM Catalin Marinas
+<catalin.marinas@arm.com> wrote:
+>
+> Linus, could you please merge the patch above? I can send it again if
+> it's easier.
 
+I took it.
+
+Generally I prefer having patches (re-)sent to me explicitly rather
+than getting a link to it, so for next time...
+
+            Linus
