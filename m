@@ -2,150 +2,131 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7875DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FC0ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E20920673
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:04:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uc6WYHXL"
+	by mail.kernel.org (Postfix) with ESMTP id 38E0420673
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571054716;
+	bh=/sIj46+9bgVa+vYAWnKUmVGGLWi8i3xpHBLJJTsNvIM=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=swwFK+xv3Ghl+IktuwIZ8mQOCNhqDDN1rR3umqoC50xZ4UvZG3rq+lxhGVAONT4ey
+	 ELMZFwE+SpaLe5bwrzq2h5uCAtg5LPiytNVvJIDiDUg+W6O0fc8D+ATWZI0Xo3t3pi
+	 hsuL66+imqr6v72bJBp7oCjcZcnQq+CtLmsQ/Ozk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731867AbfJNMEa (ORCPT
+        id S1731872AbfJNMFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 08:04:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44740 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731086AbfJNME3 (ORCPT
+        Mon, 14 Oct 2019 08:05:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34456 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730369AbfJNMFO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 08:04:29 -0400
+        Mon, 14 Oct 2019 08:05:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BmOPp+taOY8BR2ZI4WdO4QCUS5J7kKdc3aPpY7kmwn8=; b=Uc6WYHXLwfjraqivEtUghKj+Q
-        liuPacftC6E9Kj4e210AAaELBD8U9RTvKqc5qtKAY22DB83lPFlXKHUdM29+MY4QWkaOQ8XQjm7Zt
-        EgqVXwm/990d10P74/CiMNTqzLYXkDcxVTKaJIp+VpX98Coxtzcg/pPA/ZSAZ/a2XC2RMSlTIC0qu
-        Gg6BZKvGHuPJFrs2hqbd74b1TyK3itJ9lQT+LqtMCyIA0ZYKmebuyKcJPjIAPIwxjIXo9/PyGk5zS
-        JWGpjkSXVzzF1SDfulKWazjjW4KcoMKQnnBifQTQQT+G7eKt4eoPAPvv0T6I2OTt8tTrbcG7LyX6b
-        CHhAvKUiw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iJz5O-0004Ef-Il; Mon, 14 Oct 2019 12:04:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6BF57305E42;
-        Mon, 14 Oct 2019 14:03:29 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4900C2829A4C5; Mon, 14 Oct 2019 14:04:23 +0200 (CEST)
-Date:   Mon, 14 Oct 2019 14:04:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Manfred Spraul <manfred@colorfullife.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Waiman Long <longman@redhat.com>, 1vier1@web.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 1/6] wake_q: Cleanup + Documentation update.
-Message-ID: <20191014120423.GD2328@hirez.programming.kicks-ass.net>
-References: <20191012054958.3624-1-manfred@colorfullife.com>
- <20191012054958.3624-2-manfred@colorfullife.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191012054958.3624-2-manfred@colorfullife.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=HTqny5PVHvnmykrT7/i1QnwbFEAoZl4BaIh7+Q4ZBD8=; b=ZkvZ04JyHUqK
+        EKhKl9qgVeJw+aFrjyJIXS7+NcnGa5tQma35pvSFybaP2Kua7HqT/YESsko4VZlh983J/GaiDxM/o
+        BK/JqULa93WSTPO2lLgkrwv9FGxqdVQ7840MOw8WdgGlK4bgQPdRmuVY9say3n4huwkdDYLkQ5Q2q
+        qZpm4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iJz5u-0007WR-MS; Mon, 14 Oct 2019 12:04:58 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 236F02741EF2; Mon, 14 Oct 2019 13:04:58 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        ckeepax@opensource.cirrus.com, enric.balletbo@collabora.com,
+        Hulk Robot <hulkci@huawei.com>, krzk@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        npoushin@opensource.cirrus.com, nuno.sa@analog.com,
+        paul@crapouillou.net, perex@perex.cz, piotrs@opensource.cirrus.com,
+        rf@opensource.wolfsonmicro.com, tiwai@suse.com
+Subject: Applied "ASoC: adau7118: Fix Kconfig warning without CONFIG_I2C" to the asoc tree
+In-Reply-To: <20191011150042.20096-1-yuehaibing@huawei.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191014120458.236F02741EF2@ypsilon.sirena.org.uk>
+Date:   Mon, 14 Oct 2019 13:04:58 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 07:49:53AM +0200, Manfred Spraul wrote:
-> 1) wake_q_add() contains a memory barrier, and callers such as
-> ipc/mqueue.c rely on this barrier.
-> Unfortunately, this is documented in ipc/mqueue.c, and not in the
-> description of wake_q_add().
-> Therefore: Update the documentation.
-> Removing/updating ipc/mqueue.c will happen with the next patch in the
-> series.
-> 
-> 2) wake_q_add() ends with get_task_struct(), which is an
-> unordered refcount increase. Add a clear comment that the callers
-> are responsible for a barrier: most likely spin_unlock() or
-> smp_store_release().
-> 
-> 3) wake_up_q() relies on the memory barrier in try_to_wake_up().
-> Add a comment, to simplify searching.
-> 
-> 4) wake_q.next is accessed without synchroniyation by wake_q_add(),
-> using cmpxchg_relaxed(), and by wake_up_q().
-> Therefore: Use WRITE_ONCE in wake_up_q(), to ensure that the
-> compiler doesn't perform any tricks.
-> 
-> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  kernel/sched/core.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index dd05a378631a..60ae574317fd 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -440,8 +440,16 @@ static bool __wake_q_add(struct wake_q_head *head, struct task_struct *task)
->   * @task: the task to queue for 'later' wakeup
->   *
->   * Queue a task for later wakeup, most likely by the wake_up_q() call in the
-> - * same context, _HOWEVER_ this is not guaranteed, the wakeup can come
-> - * instantly.
-> + * same context, _HOWEVER_ this is not guaranteed. Especially, the wakeup
-> + * may happen before the function returns.
-> + *
-> + * What is guaranteed is that there is a memory barrier before the wakeup,
-> + * callers may rely on this barrier.
+The patch
 
-I would like to stress that this (wake_q_add) provides the same ordering
-guarantees as a 'normal' wakeup.
+   ASoC: adau7118: Fix Kconfig warning without CONFIG_I2C
 
-> + *
-> + * On the other hand, the caller must guarantee that @task does not disappear
-> + * before wake_q_add() completed. wake_q_add() does not contain any memory
-> + * barrier to ensure ordering, thus the caller may need to use
-> + * smp_store_release().
+has been applied to the asoc tree at
 
-Like Davidlohr, I'm slightly puzzled by this last paragraph.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
->   *
->   * This function must be used as-if it were wake_up_process(); IOW the task
->   * must be ready to be woken at this location.
-> @@ -486,11 +494,14 @@ void wake_up_q(struct wake_q_head *head)
->  		BUG_ON(!task);
->  		/* Task can safely be re-inserted now: */
->  		node = node->next;
-> -		task->wake_q.next = NULL;
-> +
-> +		WRITE_ONCE(task->wake_q.next, NULL);
->  
->  		/*
->  		 * wake_up_process() executes a full barrier, which pairs with
->  		 * the queueing in wake_q_add() so as not to miss wakeups.
-> +		 * The barrier is the smp_mb__after_spinlock() in
-> +		 * try_to_wake_up().
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-We already have wake_up_process() documented as implying this barrier;
-why do we want to mention the specifics here? That is, have a look at
-the comments before try_to_wake_up().
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
->  		 */
->  		wake_up_process(task);
->  		put_task_struct(task);
-> -- 
-> 2.21.0
-> 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From de729862cc0f0b46dd3a3c11079240ea4e13b97d Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Fri, 11 Oct 2019 23:00:42 +0800
+Subject: [PATCH] ASoC: adau7118: Fix Kconfig warning without CONFIG_I2C
+
+When building a kernel without CONFIG_I2C, Kconfig warns:
+
+WARNING: unmet direct dependencies detected for REGMAP_I2C
+  Depends on [n]: I2C [=n]
+  Selected by [y]:
+  - SND_SOC_ADAU7118_I2C [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y]
+
+Add missing I2C dependency to SND_SOC_ADAU7118_I2C to fix this.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: ca514c0f12b0 ("ASOC: Add ADAU7118 8 Channel PDM-to-I2S/TDM Converter driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20191011150042.20096-1-yuehaibing@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index f4747ebc251e..5a706102db04 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -416,6 +416,7 @@ config SND_SOC_ADAU7118_HW
+ 
+ config SND_SOC_ADAU7118_I2C
+ 	tristate "Analog Devices ADAU7118 8 Channel PDM-to-I2S/TDM Converter - I2C"
++	depends on I2C
+ 	select SND_SOC_ADAU7118
+ 	select REGMAP_I2C
+ 	help
+-- 
+2.20.1
+
