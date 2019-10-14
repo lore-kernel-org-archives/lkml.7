@@ -2,240 +2,190 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E686C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D1CECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BA3217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB21F2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:23:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fC9EYEBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387666AbfJNQX0 (ORCPT
+        id S2388097AbfJNQXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:23:26 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:34785 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729271AbfJNQXY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:23:24 -0400
-X-UUID: 00e5f5011c1b421da9e2c7e6370c8c49-20191015
-X-UUID: 00e5f5011c1b421da9e2c7e6370c8c49-20191015
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1840082822; Tue, 15 Oct 2019 00:23:19 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 15 Oct 2019 00:23:17 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 15 Oct 2019 00:23:15 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v2 1/2] kasan: detect negative size in memory operation function
-Date:   Tue, 15 Oct 2019 00:23:16 +0800
-Message-ID: <20191014162316.28314-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 14 Oct 2019 12:23:44 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33376 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731525AbfJNQXo (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:23:44 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r5so26284469qtd.0
+        for <Linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hAYFqk/fFu/i8UZEoHch6mkzHQPlY6wNG+sE5V14CB4=;
+        b=fC9EYEBeSqDv7q3Nxyj6jTbHqRWpPSelwcEsVAfXL+clChq6e2SWzGqlCCqdy5MFkg
+         BW/yoTkNgVWIKLgNUlblpfbgBjiH/3AqhT1WSJQRTwWZTFyTHjkELeBthQPhxPHYBXRl
+         GL31EfDKTaNNrzOkUTtbjMM5b0Ykck3tQRadMWmt+FsteUofywj54LYjlB29TAO7/TDX
+         696AYnOmsvjq7TG6pLlKjbSK99eGvCW/YWmdhM8M4/YhhFg84RS407sG+tBbNOVwJ8TP
+         2iVMWvzsqGAf41BZJmaDOIJhDCwS6kvifaVlfYxvqvx+5FeIl17jtpq4d1R1hVGExfQj
+         Rwxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hAYFqk/fFu/i8UZEoHch6mkzHQPlY6wNG+sE5V14CB4=;
+        b=AP2yBgU0F7O4jtI/0pxgO+VqWUS6JzFghnDwqIlmH32kcsiDSHARXmbe8cgMsfn4Hz
+         kX3oDUHcqdFdG358WQ31qbybuP+6HJC09EiDyF1ynx/IEmDOttahk9R1VpKRiLQtMYtk
+         G1fT7E1uwthk5Lcaw3FtImbQE92Hm3Wu7A9AI95kbaiMpvHyqOlgwVBlOvtdYQJS4N0Y
+         WCW92w6+ZKqbq6y/l61/Qu6O6ALakdJIDISjRsU4AjM9PKwsZS1zsdQIA18rFdhR1Bwn
+         WShxN8l96xL/VrfJMwEnp3pV/hYhEw96c0/BUglM7cCfP9ZCm6LFCkzXb47yFB7y0MHI
+         e72w==
+X-Gm-Message-State: APjAAAUysjc13xeMuGkl7UcmMYi2hYvSMW6uFtZ+lqNtLa6Y5AM+Ex0w
+        V23wO3nV7gDTShDKctuF2kE=
+X-Google-Smtp-Source: APXvYqwT3YJQ7qV2937oAnFSONUKkZlXvnFyv7dbUJcdu7ZOJ0TpUzI513RcNbx/cjNgyHgcqrXLhQ==
+X-Received: by 2002:ac8:334e:: with SMTP id u14mr34074138qta.120.1571070222860;
+        Mon, 14 Oct 2019 09:23:42 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id r19sm9629934qte.63.2019.10.14.09.23.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 09:23:41 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5FD064DD66; Mon, 14 Oct 2019 13:23:39 -0300 (-03)
+Date:   Mon, 14 Oct 2019 13:23:39 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jin Yao <yao.jin@linux.intel.com>, jolsa@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH] perf stat: Support --all-kernel/--all-user
+Message-ID: <20191014162339.GN19627@kernel.org>
+References: <20191011050545.3899-1-yao.jin@linux.intel.com>
+ <20191014144208.GC9700@krava>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014144208.GC9700@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN missed detecting size is negative numbers in memset(), memcpy(),
-and memmove(), it will cause out-of-bounds bug, so needs to be detected
-by KASAN.
+Em Mon, Oct 14, 2019 at 04:42:08PM +0200, Jiri Olsa escreveu:
+> On Fri, Oct 11, 2019 at 01:05:45PM +0800, Jin Yao wrote:
+> > perf record has supported --all-kernel / --all-user to configure all
+> > used events to run in kernel space or run in user space. But perf
+> > stat doesn't support these options.
+> > 
+> > It would be useful to support these options in perf-stat too to keep
+> > the same semantics.
+> > 
+> > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-If size is negative numbers, then it has three reasons to be
-defined as heap-out-of-bounds bug type.
-1) Casting negative numbers to size_t would indeed turn up as
-   a large size_t and its value will be larger than ULONG_MAX/2,
-   so that this can qualify as out-of-bounds.
-2) If KASAN has new bug type and user-space passes negative size,
-   then there are duplicate reports. So don't produce new bug type
-   in order to prevent duplicate reports by some systems (e.g. syzbot)
-   to report the same bug twice.
-3) When size is negative numbers, it may be passed from user-space.
-   So we always print heap-out-of-bounds in order to prevent that
-   kernel-space and user-space have the same bug but have duplicate
-   reports.
+What happens if one asks for both? From the patch only the --all-kernel
+will stick, right? Is that the behaviour for 'perf record'? Lemme see,
+as I recall having this discussion at that time...
 
-KASAN report:
+Yeah, same thing, and looking at that I wonder why we dong use
+perf_evsel__config() in 'perf stat'...
 
- BUG: KASAN: heap-out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
- Read of size 18446744073709551608 at addr ffffff8069660904 by task cat/72
+Ok, I'm going to apply it.
+ 
+> thanks,
+> jirka
+> 
+> > ---
+> >  tools/perf/Documentation/perf-stat.txt |  6 ++++++
+> >  tools/perf/builtin-stat.c              |  6 ++++++
+> >  tools/perf/util/stat.c                 | 10 ++++++++++
+> >  tools/perf/util/stat.h                 |  2 ++
+> >  4 files changed, 24 insertions(+)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> > index 930c51c01201..a9af4e440e80 100644
+> > --- a/tools/perf/Documentation/perf-stat.txt
+> > +++ b/tools/perf/Documentation/perf-stat.txt
+> > @@ -323,6 +323,12 @@ The output is SMI cycles%, equals to (aperf - unhalted core cycles) / aperf
+> >  
+> >  Users who wants to get the actual value can apply --no-metric-only.
+> >  
+> > +--all-kernel::
+> > +Configure all used events to run in kernel space.
+> > +
+> > +--all-user::
+> > +Configure all used events to run in user space.
+> > +
+> >  EXAMPLES
+> >  --------
+> >  
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index 468fc49420ce..c88d4e118409 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -803,6 +803,12 @@ static struct option stat_options[] = {
+> >  	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
+> >  		     "monitor specified metrics or metric groups (separated by ,)",
+> >  		     parse_metric_groups),
+> > +	OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
+> > +			 "Configure all used events to run in kernel space.",
+> > +			 PARSE_OPT_EXCLUSIVE),
+> > +	OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
+> > +			 "Configure all used events to run in user space.",
+> > +			 PARSE_OPT_EXCLUSIVE),
+> >  	OPT_END()
+> >  };
+> >  
+> > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> > index ebdd130557fb..6822e4ffe224 100644
+> > --- a/tools/perf/util/stat.c
+> > +++ b/tools/perf/util/stat.c
+> > @@ -490,6 +490,16 @@ int create_perf_stat_counter(struct evsel *evsel,
+> >  	if (config->identifier)
+> >  		attr->sample_type = PERF_SAMPLE_IDENTIFIER;
+> >  
+> > +	if (config->all_user) {
+> > +		attr->exclude_kernel = 1;
+> > +		attr->exclude_user   = 0;
+> > +	}
+> > +
+> > +	if (config->all_kernel) {
+> > +		attr->exclude_kernel = 0;
+> > +		attr->exclude_user   = 1;
+> > +	}
+> > +
+> >  	/*
+> >  	 * Disabling all counters initially, they will be enabled
+> >  	 * either manually by us or by kernel via enable_on_exec
+> > diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> > index edbeb2f63e8d..081c4a5113c6 100644
+> > --- a/tools/perf/util/stat.h
+> > +++ b/tools/perf/util/stat.h
+> > @@ -106,6 +106,8 @@ struct perf_stat_config {
+> >  	bool			 big_num;
+> >  	bool			 no_merge;
+> >  	bool			 walltime_run_table;
+> > +	bool			 all_kernel;
+> > +	bool			 all_user;
+> >  	FILE			*output;
+> >  	unsigned int		 interval;
+> >  	unsigned int		 timeout;
+> > -- 
+> > 2.17.1
+> > 
 
- CPU: 2 PID: 72 Comm: cat Not tainted 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
- Hardware name: linux,dummy-virt (DT)
- Call trace:
-  dump_backtrace+0x0/0x288
-  show_stack+0x14/0x20
-  dump_stack+0x10c/0x164
-  print_address_description.isra.9+0x68/0x378
-  __kasan_report+0x164/0x1a0
-  kasan_report+0xc/0x18
-  check_memory_region+0x174/0x1d0
-  memmove+0x34/0x88
-  kmalloc_memmove_invalid_size+0x70/0xa0
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
-
-Changes in v2:
-Fix the indentation bug, thanks for the reminder Matthew.
-
-Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-Reported -by: Dmitry Vyukov <dvyukov@google.com>
-Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
----
- mm/kasan/common.c         | 13 ++++++++-----
- mm/kasan/generic.c        |  5 +++++
- mm/kasan/generic_report.c | 18 ++++++++++++++++++
- mm/kasan/tags.c           |  5 +++++
- mm/kasan/tags_report.c    | 18 ++++++++++++++++++
- 5 files changed, 54 insertions(+), 5 deletions(-)
-
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 6814d6d6a023..16a370023425 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
- #undef memset
- void *memset(void *addr, int c, size_t len)
- {
--	check_memory_region((unsigned long)addr, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memset(addr, c, len);
- }
-@@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
- #undef memmove
- void *memmove(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memmove(dest, src, len);
- }
-@@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t len)
- #undef memcpy
- void *memcpy(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memcpy(dest, src, len);
- }
-diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-index 616f9dd82d12..02148a317d27 100644
---- a/mm/kasan/generic.c
-+++ b/mm/kasan/generic.c
-@@ -173,6 +173,11 @@ static __always_inline bool check_memory_region_inline(unsigned long addr,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	if (unlikely((void *)addr <
- 		kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
- 		kasan_report(addr, size, write, ret_ip);
-diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
-index 36c645939bc9..52a92c7db697 100644
---- a/mm/kasan/generic_report.c
-+++ b/mm/kasan/generic_report.c
-@@ -107,6 +107,24 @@ static const char *get_wild_bug_type(struct kasan_access_info *info)
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- 	if (addr_has_shadow(info->access_addr))
- 		return get_shadow_bug_type(info);
- 	return get_wild_bug_type(info);
-diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-index 0e987c9ca052..b829535a3ad7 100644
---- a/mm/kasan/tags.c
-+++ b/mm/kasan/tags.c
-@@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t size, bool write,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	tag = get_tag((const void *)addr);
- 
- 	/*
-diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
-index 969ae08f59d7..f7ae474aef3a 100644
---- a/mm/kasan/tags_report.c
-+++ b/mm/kasan/tags_report.c
-@@ -36,6 +36,24 @@
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
- 	struct kasan_alloc_meta *alloc_meta;
- 	struct kmem_cache *cache;
 -- 
-2.18.0
 
+- Arnaldo
