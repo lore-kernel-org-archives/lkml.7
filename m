@@ -2,136 +2,90 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFEFECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C27C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E26217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:02:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571065377;
-	bh=xAz/E30ln4PaVxA2LxqmAdU7rS99ejibxgpoMmxFkVo=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=bb43pwCsjueXa8+t3fkTRTkmbloRbdOLMSlVY7cU6AeynbtylemF0diJfH+1tc5Uy
-	 rJwi6XYzR48jBEJ/hGhmZ+pxfDrLZM1pL3ZUDMAUWMmITkh1oNdXv3NCMpxJv2/G0v
-	 mn+qVdC/1rwwX534b0B3QOzNxETacDTCwEa3rgeY=
+	by mail.kernel.org (Postfix) with ESMTP id 52AA921925
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733172AbfJNPCz (ORCPT
+        id S1733201AbfJNPEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50076 "EHLO mail.kernel.org"
+        Mon, 14 Oct 2019 11:04:44 -0400
+Received: from mga14.intel.com ([192.55.52.115]:58874 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732566AbfJNPCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:02:55 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69AFD2133F;
-        Mon, 14 Oct 2019 15:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571065374;
-        bh=xAz/E30ln4PaVxA2LxqmAdU7rS99ejibxgpoMmxFkVo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Pf/zweZKXSuPvzgFMmtNCTNSumUDU7Jtuw5EZievu7smrXdaOy62G8kU3j21PPLEU
-         tf2iVUhQr1MLGUr1nG1c/BzqebzboMHSE99IRWkZh+JeFITczQZpWmMAW3SXwodK9Y
-         4mGcNgsOEWSdPdoMjm5p8v4EcyXd0c50LPdjzVyU=
-Subject: Re: [PATCH v2] cpupower : Handle set and info subcommands correctly
-To:     Abhishek <huntbag@linux.vnet.ibm.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trenn@suse.com, ego@linux.vnet.ibm.com, shuah <shuah@kernel.org>
-References: <20190913080712.26383-1-huntbag@linux.vnet.ibm.com>
- <2614b112-5e19-96dc-179b-8d4e3b8c8858@kernel.org>
- <9f493ef7-8222-3e12-5068-41ea76e660a2@kernel.org>
- <b65b1063-941b-2838-4564-f6a6c40509c6@linux.vnet.ibm.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <64ac5ebd-ddc7-1563-bab9-ab3266279563@kernel.org>
-Date:   Mon, 14 Oct 2019 09:02:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1732854AbfJNPEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:04:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 08:04:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
+   d="scan'208";a="195016178"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 14 Oct 2019 08:04:41 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iK1to-00035y-Oc; Mon, 14 Oct 2019 23:04:40 +0800
+Date:   Mon, 14 Oct 2019 23:04:28 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Pankaj Sharma <pankj.sharma@samsung.com>
+Cc:     kbuild-all@lists.01.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
+        eugen.hristev@microchip.com, ludovic.desroches@microchip.com,
+        pankaj.dubey@samsung.com, rcsekar@samsung.com,
+        Pankaj Sharma <pankj.sharma@samsung.com>,
+        Sriram Dash <sriram.dash@samsung.com>
+Subject: [PATCH] can: m_can: fix boolreturn.cocci warnings
+Message-ID: <20191014150428.xhhc43ovkxm6oxf2@332d0cec05f4>
+References: <1571052844-22633-1-git-send-email-pankj.sharma@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <b65b1063-941b-2838-4564-f6a6c40509c6@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571052844-22633-1-git-send-email-pankj.sharma@samsung.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/14/19 3:38 AM, Abhishek wrote:
-> Hi Shuah,
-> 
-> 
-> On 10/04/2019 03:45 AM, shuah wrote:
->> Hi Abhishek,
->>
->> On 10/3/19 8:38 AM, shuah wrote:
->>> On 9/13/19 2:07 AM, Abhishek Goel wrote:
->>>> Cpupower tool has set and info options which are being used only by
->>>> x86 machines. This patch removes support for these two subcommands
->>>> from generic cpupower utility. Thus, these two subcommands will now be
->>>> available only for intel.
->>>> This removes the ambiguous error message while using set option in case
->>>> of using non-intel systems.
->>>>
->>>> Without this patch on a non-intel box:
->>>>
->>>> root@ubuntu:~# cpupower info
->>>> System does not support Intel's performance bias setting
->>>>
->>>> root@ubuntu:~# cpupower set -b 10
->>>> Error setting perf-bias value on CPU
->>>>
->>>> With this patch on a non-intel box:
->>>>
->>>> root@ubuntu:~# cpupower info
->>>> Supported commands are:
->>>>          frequency-info
->>>>          frequency-set
->>>>          idle-info
->>>>          idle-set
->>>>          monitor
->>>>          help
->>>>
->>>> Same result for set subcommand.
->>>>
->>>> This patch does not affect results on a intel box.
->>>>
->>>> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
->>>> Acked-by: Thomas Renninger <trenn@suse.de>
->>>> ---
->>>>
->>>> changes from v1:
->>>>     Instead of bailing out early in set and info commands, in V2, we
->>>>     are cutting out support for these two commands for non-intel
->>>>     systems.
->>>
->>> thanks. I will get this in for 5.4-rc3 veru likely. Definitely in 5.4
->>>
->>
->> Okay I almost applied this and decided it needs improvements.
->>
->> I don't like using #if defined(__x86_64__) || defined(__i386__)
->>
->> tools/power/cpupower/utils/cpupower.c main() already does this
->> dynamically using uname(). Please use the same logic do this,
->> instead of adding compile time code.
->>
->> thanks,
->> -- Shuah
-> 
-> Do you want the decision to be taken in cpupower-set and cpupower-info
-> file as was done in v1 but using uname() by identifying the architecture
-> there itself?
-> 
+From: kbuild test robot <lkp@intel.com>
 
-As I recall my objection to the v1 was that it is making the call very
-early and bails out. Ideally, I would like to see the change as part
-of set/info handling and then print out appropriate message.
+drivers/net/can/m_can/m_can.c:783:9-10: WARNING: return of 0/1 in function 'is_protocol_err' with return type bool
 
-thanks,
--- Shuah
+ Return statements in functions returning bool should use
+ true/false instead of 1/0.
+Generated by: scripts/coccinelle/misc/boolreturn.cocci
+
+Fixes: 46946163ac61 ("can: m_can: add support for handling arbitration error")
+CC: Pankaj Sharma <pankj.sharma@samsung.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+
+url:    https://github.com/0day-ci/linux/commits/Pankaj-Sharma/can-m_can-add-support-for-handling-arbitration-error/20191014-193532
+
+ m_can.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/net/can/m_can/m_can.c
++++ b/drivers/net/can/m_can/m_can.c
+@@ -780,9 +780,9 @@ static inline bool is_lec_err(u32 psr)
+ static inline bool is_protocol_err(u32 irqstatus)
+ {
+ 	if (irqstatus & IR_ERR_LEC_31X)
+-		return 1;
++		return true;
+ 	else
+-		return 0;
++		return false;
+ }
+ 
+ static int m_can_handle_protocol_error(struct net_device *dev, u32 irqstatus)
