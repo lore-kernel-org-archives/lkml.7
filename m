@@ -2,143 +2,358 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC1FC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D80BC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76CA12067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XE1UTlaI"
+	by mail.kernel.org (Postfix) with ESMTP id 42C952067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfJNAt4 (ORCPT
+        id S1729683AbfJNAvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 20:49:56 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43880 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729454AbfJNAt4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 20:49:56 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t84so12414132oih.10;
-        Sun, 13 Oct 2019 17:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dm90rt3X4Dj0eZ5nqIXjNthLIZg5on7T0CNMl+bnamI=;
-        b=XE1UTlaI0ZlC+hBkpc7OA5fWSkOET5PEeVgIug60HyB8Ljy84wZqVh/RMQrjINYbty
-         NdTqnyJSMZX1AFMLi4orjiH0xoP2Vigz663/RR5zx7mGQVm1R7qGnELhRrvGvRw09AwB
-         U6tT8Es08EKQ3vSOaNMXymM4T/n5uC0fnkD48oCPd8EDWrncVEFg/sAA5tcLlJsG31H4
-         Dh32BfSvfJpudqCpStZVVEkCGMNotSF1PS81/u0A5BiVBUpke8qMgtYZy+7E0aPk38jA
-         T3w4LD0S4LoMdsQ8NjZxxxmeoGCt1kM2h2lkaHeYRGIcCpfRlwE8LBKkZslNQfyld7gO
-         LM7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dm90rt3X4Dj0eZ5nqIXjNthLIZg5on7T0CNMl+bnamI=;
-        b=uhjTXTzTIaRYXfZ/PS/KgFTH/kXSAqAvTaz/fwqcQRc3cHkm+u+tzVJZdm4+pGJPjm
-         MtrSdRY2q4v0LWMnyK9g8TovvSHK5I12TIahKl5HPOS3D0GYhAH3SlWF4/XWbdlTtu4d
-         e7IhLTysuMO8bJw5cHpsOk10uslNby/I2eVLn0pd5nJQbwTBlc+4cbSZF2UIjvzk0qRS
-         RpNl+MS2nse1361lqxI9cLflvT7Or5ZFmYCwla8No+4gXPGStIZRWevbx2pscv5HSCAv
-         odTWApaUrVrfk+Lup2wgMyOVPli+0UlrsGioc9sI3Fvb8N11ysw+NFH73wUY9zH3M6Zp
-         yBbw==
-X-Gm-Message-State: APjAAAXUF+EaWV/qQLWPKDku5WXEODo3yojg6W7FtQmjPehWfI1a1jR3
-        aHxY8GFW2ruU51a5szWo+6MB6zCiynPeBinqdOXhag==
-X-Google-Smtp-Source: APXvYqxHyULL/aZ+orTB4oPYdU/SUdg/07ZS2C52JueTMCjbvM79SmxwlCVeROmuMrojVdXYg3qOO5lAxDrvtJtHKSw=
-X-Received: by 2002:aca:da41:: with SMTP id r62mr21466808oig.47.1571014193872;
- Sun, 13 Oct 2019 17:49:53 -0700 (PDT)
+        Sun, 13 Oct 2019 20:51:09 -0400
+Received: from mga05.intel.com ([192.55.52.43]:18785 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729495AbfJNAvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 20:51:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Oct 2019 17:51:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,294,1566889200"; 
+   d="gz'50?scan'50,208,50";a="207053337"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 13 Oct 2019 17:51:02 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iJoZh-00044h-Mt; Mon, 14 Oct 2019 08:51:01 +0800
+Date:   Mon, 14 Oct 2019 08:50:12 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Dmitry Safonov <dima@arista.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv7 15/33] posix-timers: Make clock_nanosleep() time
+ namespace aware
+Message-ID: <201910140837.KeMhhSqY%lkp@intel.com>
+References: <20191011012341.846266-16-dima@arista.com>
 MIME-Version: 1.0
-References: <1568974038-13750-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1568974038-13750-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 14 Oct 2019 08:49:42 +0800
-Message-ID: <CANRm+Cy_eQ=m=bDfyw2yrAmDjJuc=f+siSQTrPpjCpBbYbfPeA@mail.gmail.com>
-Subject: Re: [PATCH] KVM: LAPIC: micro-optimize fixed mode ipi delivery
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="2xz24g67pdqucyrn"
+Content-Disposition: inline
+In-Reply-To: <20191011012341.846266-16-dima@arista.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping,
-On Fri, 20 Sep 2019 at 18:07, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> After disabling mwait/halt/pause vmexits, RESCHEDULE_VECTOR and
-> CALL_FUNCTION_SINGLE_VECTOR etc IPI is one of the main remaining
-> cause of vmexits observed in product environment which can't be
-> optimized by PV IPIs. This patch is the follow-up on commit
-> 0e6d242eccdb (KVM: LAPIC: Micro optimize IPI latency), to optimize
-> redundancy logic before fixed mode ipi is delivered in the fast
-> path.
->
-> - broadcast handling needs to go slow path, so the delivery mode repair
->   can be delayed to before slow path.
-> - self-IPI will not be intervened by hypervisor any more after APICv is
->   introduced and the boxes support APICv are popular now. In addition,
->   kvm_apic_map_get_dest_lapic() can handle the self-IPI, so there is no
->   need a shortcut for the non-APICv case.
->
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/irq_comm.c | 6 +++---
->  arch/x86/kvm/lapic.c    | 5 -----
->  2 files changed, 3 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-> index 8ecd48d..aa88156 100644
-> --- a/arch/x86/kvm/irq_comm.c
-> +++ b/arch/x86/kvm/irq_comm.c
-> @@ -52,15 +52,15 @@ int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
->         unsigned long dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
->         unsigned int dest_vcpus = 0;
->
-> +       if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
-> +               return r;
-> +
->         if (irq->dest_mode == 0 && irq->dest_id == 0xff &&
->                         kvm_lowest_prio_delivery(irq)) {
->                 printk(KERN_INFO "kvm: apic: phys broadcast and lowest prio\n");
->                 irq->delivery_mode = APIC_DM_FIXED;
->         }
->
-> -       if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
-> -               return r;
-> -
->         memset(dest_vcpu_bitmap, 0, sizeof(dest_vcpu_bitmap));
->
->         kvm_for_each_vcpu(i, vcpu, kvm) {
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 323bdca..d77fe29 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -955,11 +955,6 @@ bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
->
->         *r = -1;
->
-> -       if (irq->shorthand == APIC_DEST_SELF) {
-> -               *r = kvm_apic_set_irq(src->vcpu, irq, dest_map);
-> -               return true;
-> -       }
-> -
->         rcu_read_lock();
->         map = rcu_dereference(kvm->arch.apic_map);
->
-> --
-> 2.7.4
->
+
+--2xz24g67pdqucyrn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Dmitry,
+
+Thank you for the patch! Yet something to improve:
+
+[auto build test ERROR on linus/master]
+[cannot apply to v5.4-rc2 next-20191011]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Dmitry-Safonov/kernel-Introduce-Time-Namespace/20191014-075119
+config: i386-tinyconfig (attached as .config)
+compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=i386 
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   kernel/time/posix-stubs.c: In function '__do_sys_clock_nanosleep':
+>> kernel/time/posix-stubs.c:153:31: error: 'clockid' undeclared (first use in this function); did you mean 'clock_t'?
+      texp = timens_ktime_to_host(clockid, texp);
+                                  ^~~~~~~
+                                  clock_t
+   kernel/time/posix-stubs.c:153:31: note: each undeclared identifier is reported only once for each function it appears in
+   kernel/time/posix-stubs.c: In function '__do_sys_clock_nanosleep_time32':
+>> kernel/time/posix-stubs.c:222:2: error: unknown type name 'ktime'; did you mean 'ktime_t'?
+     ktime texp;
+     ^~~~~
+     ktime_t
+   kernel/time/posix-stubs.c:243:31: error: 'clockid' undeclared (first use in this function); did you mean 'clock_t'?
+      texp = timens_ktime_to_host(clockid, texp);
+                                  ^~~~~~~
+                                  clock_t
+
+vim +153 kernel/time/posix-stubs.c
+
+   126	
+   127	SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+   128			const struct __kernel_timespec __user *, rqtp,
+   129			struct __kernel_timespec __user *, rmtp)
+   130	{
+   131		struct timespec64 t;
+   132		ktime_t texp;
+   133	
+   134		switch (which_clock) {
+   135		case CLOCK_REALTIME:
+   136		case CLOCK_MONOTONIC:
+   137		case CLOCK_BOOTTIME:
+   138			break;
+   139		default:
+   140			return -EINVAL;
+   141		}
+   142	
+   143		if (get_timespec64(&t, rqtp))
+   144			return -EFAULT;
+   145		if (!timespec64_valid(&t))
+   146			return -EINVAL;
+   147		if (flags & TIMER_ABSTIME)
+   148			rmtp = NULL;
+   149		current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+   150		current->restart_block.nanosleep.rmtp = rmtp;
+   151		texp = timespec64_to_ktime(t);
+   152		if (flags & TIMER_ABSTIME)
+ > 153			texp = timens_ktime_to_host(clockid, texp);
+   154		return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
+   155					 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+   156					 which_clock);
+   157	}
+   158	
+   159	#ifdef CONFIG_COMPAT
+   160	COMPAT_SYS_NI(timer_create);
+   161	COMPAT_SYS_NI(getitimer);
+   162	COMPAT_SYS_NI(setitimer);
+   163	#endif
+   164	
+   165	#ifdef CONFIG_COMPAT_32BIT_TIME
+   166	SYS_NI(timer_settime32);
+   167	SYS_NI(timer_gettime32);
+   168	
+   169	SYSCALL_DEFINE2(clock_settime32, const clockid_t, which_clock,
+   170			struct old_timespec32 __user *, tp)
+   171	{
+   172		struct timespec64 new_tp;
+   173	
+   174		if (which_clock != CLOCK_REALTIME)
+   175			return -EINVAL;
+   176		if (get_old_timespec32(&new_tp, tp))
+   177			return -EFAULT;
+   178	
+   179		return do_sys_settimeofday64(&new_tp, NULL);
+   180	}
+   181	
+   182	SYSCALL_DEFINE2(clock_gettime32, clockid_t, which_clock,
+   183			struct old_timespec32 __user *, tp)
+   184	{
+   185		int ret;
+   186		struct timespec64 kernel_tp;
+   187	
+   188		ret = do_clock_gettime(which_clock, &kernel_tp);
+   189		if (ret)
+   190			return ret;
+   191	
+   192		if (put_old_timespec32(&kernel_tp, tp))
+   193			return -EFAULT;
+   194		return 0;
+   195	}
+   196	
+   197	SYSCALL_DEFINE2(clock_getres_time32, clockid_t, which_clock,
+   198			struct old_timespec32 __user *, tp)
+   199	{
+   200		struct timespec64 rtn_tp = {
+   201			.tv_sec = 0,
+   202			.tv_nsec = hrtimer_resolution,
+   203		};
+   204	
+   205		switch (which_clock) {
+   206		case CLOCK_REALTIME:
+   207		case CLOCK_MONOTONIC:
+   208		case CLOCK_BOOTTIME:
+   209			if (put_old_timespec32(&rtn_tp, tp))
+   210				return -EFAULT;
+   211			return 0;
+   212		default:
+   213			return -EINVAL;
+   214		}
+   215	}
+   216	
+   217	SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
+   218			struct old_timespec32 __user *, rqtp,
+   219			struct old_timespec32 __user *, rmtp)
+   220	{
+   221		struct timespec64 t;
+ > 222		ktime texp;
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+--2xz24g67pdqucyrn
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+5mgEVbkzdIRqp8fWCQ4UfgDhSF/VDWgAAA==
+
+--2xz24g67pdqucyrn--
