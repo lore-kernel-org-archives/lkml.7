@@ -2,102 +2,94 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36ADC47404
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DE6ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B311E20650
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D9D20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfJNGNO (ORCPT
+        id S1730041AbfJNGQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 02:13:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3705 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725936AbfJNGNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 02:13:14 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 92DBC18C626919661A6C;
-        Mon, 14 Oct 2019 14:13:11 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
- 14:13:03 +0800
-Subject: Re: [PATCH 3/3] arm64: configs: unset CPU_BIG_ENDIAN
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Will Deacon <will@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20190926193030.5843-1-anders.roxell@linaro.org>
- <20190926193030.5843-5-anders.roxell@linaro.org>
- <bf5db3a5-96da-752c-49ea-d0de899882d5@huawei.com>
- <CADYN=9LB9RHgRkQj=HcKDz1x9jqmT464Kseh2wZU5VvcLit+bQ@mail.gmail.com>
- <d978673e-cbd1-5ab5-b2a4-cdb407d0f98c@huawei.com>
- <CAK8P3a0kBz1-i-3miCo1vMuoM39ivXa3oxOE9VnCqDO-nfNOxw@mail.gmail.com>
- <20191011102747.lpbaur2e4nqyf7sw@willie-the-truck>
- <73701e9f-bee1-7ae8-2277-7a3576171cd4@huawei.com>
- <CAK8P3a1C8cFB6DS9eVXTEiTQu1kPzy65JvL=BxqEe5MTkds8sQ@mail.gmail.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <e6df09ba-a016-65c0-5b56-f7b91a7c9dd8@huawei.com>
-Date:   Mon, 14 Oct 2019 14:12:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Mon, 14 Oct 2019 02:16:13 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34571 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730026AbfJNGQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 02:16:12 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iJte6-0006er-FT; Mon, 14 Oct 2019 08:15:54 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iJte2-0000yA-HW; Mon, 14 Oct 2019 08:15:50 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH v1 0/4] add dsa switch support for ar9331
+Date:   Mon, 14 Oct 2019 08:15:45 +0200
+Message-Id: <20191014061549.3669-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1C8cFB6DS9eVXTEiTQu1kPzy65JvL=BxqEe5MTkds8sQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+This patch series provides dsa switch support for Atheros ar9331 WiSoC.
+As side effect ag71xx needed to be ported to phylink to make the switch
+driver (as well phylink based) work properly.
 
-On 2019/10/12 22:05, Arnd Bergmann wrote:
-> On Sat, Oct 12, 2019 at 9:33 AM Hanjun Guo <guohanjun@huawei.com> wrote:
->>
->> On 2019/10/11 18:27, Will Deacon wrote:
->> [...]
->>>
->>> Does anybody use BIG_ENDIAN? If we're not even building it then maybe we
->>> should get rid of it altogether on arm64. I don't know of any supported
->>> userspace that supports it or any CPUs that are unable to run little-endian
->>> binaries.
->>
->> FWIW, massive telecommunication products (based on ARM64) form Huawei are using
->> BIG_ENDIAN, and will use BIG_ENDIAN in the near future as well.
-> 
-> Ok, thanks for the information -- that definitely makes it clear that
-> it cannot go
-> away anytime soon (though it doesn't stop us from change the
-> allmodconfig default
-> if we decide that's a good idea).
+Oleksij Rempel (4):
+  net: ag71xx: port to phylink
+  dt-bindings: net: dsa: qca,ar9331 switch documentation
+  MIPS: ath79: ar9331: add ar9331-switch node
+  net: dsa: add support for Atheros AR9331 build-in switch
 
-I agree with you.
+ .../devicetree/bindings/net/dsa/ar9331.txt    | 155 ++++
+ arch/mips/boot/dts/qca/ar9331.dtsi            | 128 ++-
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  13 +
+ drivers/net/dsa/Kconfig                       |   2 +
+ drivers/net/dsa/Makefile                      |   1 +
+ drivers/net/dsa/qca/Kconfig                   |  11 +
+ drivers/net/dsa/qca/Makefile                  |   2 +
+ drivers/net/dsa/qca/ar9331.c                  | 822 ++++++++++++++++++
+ drivers/net/ethernet/atheros/Kconfig          |   2 +-
+ drivers/net/ethernet/atheros/ag71xx.c         | 144 +--
+ include/net/dsa.h                             |   2 +
+ net/dsa/Kconfig                               |   6 +
+ net/dsa/Makefile                              |   1 +
+ net/dsa/tag_ar9331.c                          |  97 +++
+ 14 files changed, 1324 insertions(+), 62 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
+ create mode 100644 drivers/net/dsa/qca/Kconfig
+ create mode 100644 drivers/net/dsa/qca/Makefile
+ create mode 100644 drivers/net/dsa/qca/ar9331.c
+ create mode 100644 net/dsa/tag_ar9331.c
 
-> 
-> Do you know if there are currently any patches against mainline to
-> make big-endian
-> work in products, or is everything working out of the box?
-
-We are not using mainline kernel for product, but LTS 4.4 is working
-fine, and also we tested LTS 4.19 kernel without any other big-endian
-patches, the latest big-endian bug we found is this:
-
-a6002ec5a8c6 arm64: opcodes.h: Add arm big-endian config options before including arm header
-
-The running kernel code covered but Huawei's telecommunication products
-is limited, but I think ARM64 arch code is working fine for big-endian.
-
-Thanks
-Hanjun
+-- 
+2.23.0
 
