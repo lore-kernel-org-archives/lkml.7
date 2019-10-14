@@ -6,82 +6,106 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB9DECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD392ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F15206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F380206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387977AbfJNTL5 (ORCPT
+        id S2388054AbfJNTMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 15:11:57 -0400
-Received: from mga05.intel.com ([192.55.52.43]:46355 "EHLO mga05.intel.com"
+        Mon, 14 Oct 2019 15:12:06 -0400
+Received: from gate.crashing.org ([63.228.1.57]:48079 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732490AbfJNTL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 15:11:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 12:11:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
-   d="scan'208";a="395289832"
-Received: from kridax-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.7.178])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Oct 2019 12:11:52 -0700
-Date:   Mon, 14 Oct 2019 22:11:50 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-Cc:     Ken Goldman <kgold@linux.ibm.com>,
-        "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191014191150.GB15552@linux.intel.com>
-References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
- <20191004182711.GC6945@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
- <20191007000520.GA17116@linux.intel.com>
- <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
- <20191008234935.GA13926@linux.intel.com>
- <20191008235339.GB13926@linux.intel.com>
- <20191009073315.GA5884@linux.intel.com>
- <20191009074133.GA6202@linux.intel.com>
- <MN2PR20MB2973CDE87E4EC25CA21DD2C8CA950@MN2PR20MB2973.namprd20.prod.outlook.com>
-MIME-Version: 1.0
+        id S1732490AbfJNTMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 15:12:06 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9EJBhSD000977;
+        Mon, 14 Oct 2019 14:11:43 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x9EJBgBM000976;
+        Mon, 14 Oct 2019 14:11:42 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 14 Oct 2019 14:11:41 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/3] powerpc/prom_init: Use -ffreestanding to avoid a reference to bcmp
+Message-ID: <20191014191141.GK28442@gate.crashing.org>
+References: <20190911182049.77853-1-natechancellor@gmail.com> <20191014025101.18567-1-natechancellor@gmail.com> <20191014025101.18567-4-natechancellor@gmail.com> <20191014093501.GE28442@gate.crashing.org> <CAKwvOdmcUT2A9FG0JD9jd0s=gAavRc_h+RLG6O3mBz4P1FfF8w@mail.gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MN2PR20MB2973CDE87E4EC25CA21DD2C8CA950@MN2PR20MB2973.namprd20.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKwvOdmcUT2A9FG0JD9jd0s=gAavRc_h+RLG6O3mBz4P1FfF8w@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 08:09:29AM +0000, Pascal Van Leeuwen wrote:
-> There's certification and certification. Not all certificates are
-> created equally. But if it matches your specific requirements, why not.
-> There's a _lot_ of HW out there that's not x86 though ...
+On Mon, Oct 14, 2019 at 08:56:12AM -0700, Nick Desaulniers wrote:
+> On Mon, Oct 14, 2019 at 2:35 AM Segher Boessenkool
+> <segher@kernel.crashing.org> wrote:
+> >
+> > On Sun, Oct 13, 2019 at 07:51:01PM -0700, Nathan Chancellor wrote:
+> > > r374662 gives LLVM the ability to convert certain loops into a reference
+> > > to bcmp as an optimization; this breaks prom_init_check.sh:
+> >
+> > When/why does LLVM think this is okay?  This function has been removed
+> > from POSIX over a decade ago (and before that it always was marked as
+> > legacy).
 > 
-> And: is RDRAND certified for _all_ x86 processors? Or just Intel?
-> Or perhaps even only _specific (server) models_ of CPU's?
-> I also know for a fact that some older AMD processors had a broken
-> RDRAND implementation ...
-> 
-> So the choice really should be up to the application or user.
+> Segher, do you have links for any of the above? If so, that would be
+> helpful to me.
 
-I'm not seriously suggesting to move rdrand here. I'm trying find the
-logic how to move forward with trusted keys with multiple backends (not
-only TPM).
+Sure!
 
-AKA we have a kernel rng in existence but no clear policy when it should
-be used and when not. This leads to throwing a dice with the design
-choices. Even it TPM RNG is the right choice in tpm_asym.c, the choice
-was not based on anything (otherwise it would have been documented).
+https://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xsh_chap03.html
 
-/Jarkko
+Older versions are harder to find online, unfortunately.  But there is
+
+https://kernel.org/pub/linux/docs/man-pages/man-pages-posix/
+
+in which man3p/bcmp.3p says:
+
+FUTURE DIRECTIONS
+       This function may be withdrawn in a future version.
+
+Finally, the Linux man pages say (man bcmp):
+
+CONFORMING TO
+       4.3BSD.   This  function   is   deprecated   (marked   as   LEGACY   in
+       POSIX.1-2001): use memcmp(3) in new programs.  POSIX.1-2008 removes the
+       specification of bcmp().
+
+
+> I'm arguing against certain transforms that assume that
+> one library function is faster than another, when such claims are
+> based on measurements from one stdlib implementation.
+
+Wow.  The difference between memcmp and bcmp is trivial (just the return
+value is different, and that costs hardly anything to add).  And memcmp
+is guaranteed to exist since C89/C90 at least.
+
+> The rationale for why it was added was that memcmp takes a measurable
+> amount of time in Google's fleet, and most calls to memcmp don't care
+> about the position of the mismatch; bcmp is lower overhead (or at
+> least for our libc implementation, not sure about others).
+
+You just have to do the read of the last words you compare as big-endian,
+and then you can just subtract the two words, convert that to "int" (which
+is very inconvenient to do, but hardly expensive), and there you go.
+
+Or on x86 use the bswap insn, or something like it.
+
+Or, if you use GCC, it has __builtin_memcmp but also __builtin_memcmp_eq,
+and those are automatically used, too.
+
+
+Segher
