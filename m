@@ -2,126 +2,72 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B092C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9B3ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E0720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD0920659
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730959AbfJNJiQ (ORCPT
+        id S1731028AbfJNJiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 14 Oct 2019 05:38:19 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:64170 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730778AbfJNJiQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 14 Oct 2019 05:38:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54862 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725989AbfJNJiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:38:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1A59EBD2B;
-        Mon, 14 Oct 2019 09:38:14 +0000 (UTC)
-Date:   Mon, 14 Oct 2019 11:38:29 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Linux I2C <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 1/4] firmware: dmi: Remember the memory type
-Message-ID: <20191014113829.7e8f5df1@endymion>
-In-Reply-To: <20191014113636.57b5ce89@endymion>
-References: <20191014113636.57b5ce89@endymion>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 4db2488d3af89f8f; Mon, 14 Oct 2019 11:38:14 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     "Yin, Fengwei" <fengwei.yin@intel.com>
+Cc:     Len Brown <lenb@kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND] ACPI / processor_idle: use dead loop instead of io port access for wait
+Date:   Mon, 14 Oct 2019 11:38:13 +0200
+Message-ID: <3727681.FYoUZqeJdN@kreacher>
+In-Reply-To: <8a65bf97-c066-8e5e-ba82-75e2a6fd5b45@intel.com>
+References: <20190909073937.31554-1-fengwei.yin@intel.com> <12278756.3dKznOqol2@kreacher> <8a65bf97-c066-8e5e-ba82-75e2a6fd5b45@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Store the memory type while walking the memory slots, and provide a
-way to retrieve it later.
+On Friday, October 11, 2019 3:30:41 PM CEST Yin, Fengwei wrote:
+> 
+> On 10/11/2019 5:05 PM, Rafael J. Wysocki wrote:
+> > Sorry for the delay.
+> No problem.
+> 
+> > 
+> > On Monday, September 9, 2019 9:39:37 AM CEST Yin Fengwei wrote:
+> >> In function acpi_idle_do_entry(), we do an io port access to guarantee
+> >> hardware behavior. But it could trigger unnecessary vmexit for
+> >> virtualization environemnt.
+> > 
+> > Is this a theoretical problem, or do you actually see it?
+> > 
+> > If you see it, I'd like to have a pointer to a bug report regarding it
+> > or similar.
+> We did see this issue when we run linux as guest with ACRN hypervisor
+> instead of kvm or xen. In our case, we export all native C states to
+> guest and let guest choose which C state it will enter.
+> 
+> And we observed many pm timer port access when guest tried to enter
+> deeper C state (Yes, we emulate pm timer so pm timer access will trigger
+> vmexit).
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
----
- drivers/firmware/dmi_scan.c |   25 ++++++++++++++++++++++++-
- include/linux/dmi.h         |    2 ++
- 2 files changed, 26 insertions(+), 1 deletion(-)
+Can you please put this information into the changelog of your patch?
 
---- linux-5.3.orig/drivers/firmware/dmi_scan.c	2019-10-08 14:27:23.783640227 +0200
-+++ linux-5.3/drivers/firmware/dmi_scan.c	2019-10-08 16:35:35.442803880 +0200
-@@ -35,6 +35,7 @@ static struct dmi_memdev_info {
- 	const char *bank;
- 	u64 size;		/* bytes */
- 	u16 handle;
-+	u8 type;		/* DDR2, DDR3, DDR4 etc */
- } *dmi_memdev;
- static int dmi_memdev_nr;
- 
-@@ -391,7 +392,7 @@ static void __init save_mem_devices(cons
- 	u64 bytes;
- 	u16 size;
- 
--	if (dm->type != DMI_ENTRY_MEM_DEVICE || dm->length < 0x12)
-+	if (dm->type != DMI_ENTRY_MEM_DEVICE || dm->length < 0x13)
- 		return;
- 	if (nr >= dmi_memdev_nr) {
- 		pr_warn(FW_BUG "Too many DIMM entries in SMBIOS table\n");
-@@ -400,6 +401,7 @@ static void __init save_mem_devices(cons
- 	dmi_memdev[nr].handle = get_unaligned(&dm->handle);
- 	dmi_memdev[nr].device = dmi_string(dm, d[0x10]);
- 	dmi_memdev[nr].bank = dmi_string(dm, d[0x11]);
-+	dmi_memdev[nr].type = d[0x12];
- 
- 	size = get_unaligned((u16 *)&d[0xC]);
- 	if (size == 0)
-@@ -1128,3 +1130,24 @@ u64 dmi_memdev_size(u16 handle)
- 	return ~0ull;
- }
- EXPORT_SYMBOL_GPL(dmi_memdev_size);
-+
-+/**
-+ * dmi_memdev_type - get the memory type
-+ * @handle: DMI structure handle
-+ *
-+ * Return the DMI memory type of the module in the slot associated with the
-+ * given DMI handle, or 0x0 if no such DMI handle exists.
-+ */
-+u8 dmi_memdev_type(u16 handle)
-+{
-+	int n;
-+
-+	if (dmi_memdev) {
-+		for (n = 0; n < dmi_memdev_nr; n++) {
-+			if (handle == dmi_memdev[n].handle)
-+				return dmi_memdev[n].type;
-+		}
-+	}
-+	return 0x0;	/* Not a valid value */
-+}
-+EXPORT_SYMBOL_GPL(dmi_memdev_type);
---- linux-5.3.orig/include/linux/dmi.h	2019-10-04 16:14:24.575714482 +0200
-+++ linux-5.3/include/linux/dmi.h	2019-10-08 17:42:19.726907967 +0200
-@@ -113,6 +113,7 @@ extern int dmi_walk(void (*decode)(const
- extern bool dmi_match(enum dmi_field f, const char *str);
- extern void dmi_memdev_name(u16 handle, const char **bank, const char **device);
- extern u64 dmi_memdev_size(u16 handle);
-+extern u8 dmi_memdev_type(u16 handle);
- 
- #else
- 
-@@ -142,6 +143,7 @@ static inline bool dmi_match(enum dmi_fi
- static inline void dmi_memdev_name(u16 handle, const char **bank,
- 		const char **device) { }
- static inline u64 dmi_memdev_size(u16 handle) { return ~0ul; }
-+static inline u8 dmi_memdev_type(u16 handle) { return 0x0; }
- static inline const struct dmi_system_id *
- 	dmi_first_match(const struct dmi_system_id *list) { return NULL; }
- 
+It works very well as a rationale for me. :-)
 
--- 
-Jean Delvare
-SUSE L3 Support
+
+
