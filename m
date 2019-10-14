@@ -2,138 +2,71 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63D6ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A63C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED8321835
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:29:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x97gQJhC"
+	by mail.kernel.org (Postfix) with ESMTP id 81C9821721
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571060051;
+	bh=IjCmDtTQCKTJYyKqcpgE5FEMEpY8OPsh0gh30lGNZ2A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rO6UCT2YH6t80ecO2nAVIfPzufjJfWBgUQcHZrxGrRxR/UZOsD/roB+E1YrZEI4NE
+	 Vk8A32s8hR7XgAghP9z5pYZox4wfjU5ix+MSuVwk3mzOIKHB6vNU/d6UFarWcneSny
+	 Ba0BBBJJyeaO992mpyNHIgPSSLbIOxUvCA1GLTLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731954AbfJNN3v (ORCPT
+        id S1731364AbfJNNeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:29:51 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45991 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730070AbfJNN3v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:29:51 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r134so11808759lff.12
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 06:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vx0bTQblXCEkZh40hFYicIOm471j1IuoGfojlu4EM7I=;
-        b=x97gQJhCNW7POvJoNfOTmKXpi+DYAEhqFNuSfdmKCk5s3gPNAHgPlTaIsMeEHi+Ex6
-         0wpqP43Z40KA2/ePbqep58ZiZx16uQInAMgkjXxZ5eXOc5HLftj78V4nxaaNZ2EBp0N8
-         CCzgzzOFt30IZwQDFCH8h5mmVy3NFxwi8JhUtt+K6YVW9qafasD+Y3r4jA9huZ99xezY
-         phoslUrhuN4tIonhWw6MH/0GFAtSU7DgAmcuEgD1cVU1t61J34b+q1w89bjOx1QaC0SD
-         LwOWVB5/ycOZF5BrlrvimMloRLy4wpOYBUfqAN6RvS4S0aD7JNwbLU/bjKXs0d2fCFKn
-         Xczw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vx0bTQblXCEkZh40hFYicIOm471j1IuoGfojlu4EM7I=;
-        b=VhnExOp2CCEsVWFiZY71n1ph6ydcpY60Amu9ONR7iPsNlYTzyjCv+Ro6g6+ugyIMpR
-         /dXT/fJEPLyU7nL4+YqW8AEOWGhcZEDI2HsZw4ftPNMiAS+vI5EfDRJCifOophgDNSOS
-         b7ocu5OjPGXEXWD81QPlj75iAjElmmCik7z76IhOXRCdbFRxZtGgz2l+DHfRpMbpdvVu
-         AOSPVtmXXnyItG+/6+Jg8JjXwAKwhVnzFWW0vn7U4SBvSuHRZtCMEnqM/36u19qlKVPI
-         cp2Pq0vdsMEhh6fvtOWnEK8iX/8Z9hxfqE1nYgXpTWm9uU/uj65lwoXQHrFMzwjlTyJb
-         XvkQ==
-X-Gm-Message-State: APjAAAVe1uTGWXWuXUGTSNGPS1PTEtRbilzeTneYdd6Uno9I7XiLs0EX
-        s5AoA+WpuFlpaY3eQe4PpLlYHyYhDfgzXBXdrvQxZg==
-X-Google-Smtp-Source: APXvYqw0N6ijWxFVf5Lhgio1Ri3sVsPFQzPFiGqd7Gl4mwg58QXvvFjfJjrzPrMDPmAwpGE5EZjoaiYB+xaVCsZNMF4=
-X-Received: by 2002:ac2:4d1b:: with SMTP id r27mr17103620lfi.133.1571059789198;
- Mon, 14 Oct 2019 06:29:49 -0700 (PDT)
+        Mon, 14 Oct 2019 09:34:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727789AbfJNNeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 09:34:10 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5739A20873;
+        Mon, 14 Oct 2019 13:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571060049;
+        bh=IjCmDtTQCKTJYyKqcpgE5FEMEpY8OPsh0gh30lGNZ2A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nuoS1P9tI+itJbp3R66cC5VCB92p2BFDi/ULGQKp1D8A/6/MhTJocE5ocIaCbrfkG
+         5Fn0H9RonBiRB0Fc/LHmqj5ibEnwCcgFkb9cRq7bIxBapbpx+NLSVWwHOZy+oYMC9e
+         TE/fjBl6M6W16bQTuEgU6wbhOCw6lLHfgp/qNESA=
+Date:   Mon, 14 Oct 2019 21:33:44 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de,
+        ccaione@baylibre.com, abel.vesa@nxp.com, daniel.baluta@nxp.com,
+        andrew.smirnov@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mq-evk: Adjust nodes following
+ alphabetical sort
+Message-ID: <20191014133343.GA12262@dragon>
+References: <1570588479-28009-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <20191014114710.22142-1-valentin.schneider@arm.com> <20191014121648.GA53234@google.com>
-In-Reply-To: <20191014121648.GA53234@google.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 14 Oct 2019 15:29:37 +0200
-Message-ID: <CAKfTPtDoBrE=npY_Ay1pucdXsW1yQr1UiaCGq1DXKa2VmNqcUg@mail.gmail.com>
-Subject: Re: [PATCH] sched/topology: Disable sched_asym_cpucapacity on domain destruction
-To:     Quentin Perret <qperret@google.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <qperret@qperret.net>,
-        "# v4 . 16+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570588479-28009-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 at 14:16, Quentin Perret <qperret@google.com> wrote:
->
-> Hi Valentin,
->
-> On Monday 14 Oct 2019 at 12:47:10 (+0100), Valentin Schneider wrote:
-> > While the static key is correctly initialized as being disabled, it will
-> > remain forever enabled once turned on. This means that if we start with an
-> > asymmetric system and hotplug out enough CPUs to end up with an SMP system,
-> > the static key will remain set - which is obviously wrong. We should detect
-> > this and turn off things like misfit migration and EAS wakeups.
->
-> FWIW we already clear the EAS static key properly (based on the sd
-> pointer, not the static key), so this is really only for the
-> capacity-aware stuff.
->
-> > Having that key enabled should also mandate
-> >
-> >   per_cpu(sd_asym_cpucapacity, cpu) != NULL
-> >
-> > for all CPUs, but this is obviously not true with the above.
-> >
-> > On top of that, sched domain rebuilds first lead to attaching the NULL
-> > domain to the affected CPUs, which means there will be a window where the
-> > static key is set but the sd_asym_cpucapacity shortcut points to NULL even
-> > if asymmetry hasn't been hotplugged out.
-> >
-> > Disable the static key when destroying domains, and let
-> > build_sched_domains() (re) enable it as needed.
-> >
-> > Cc: <stable@vger.kernel.org>
-> > Fixes: df054e8445a4 ("sched/topology: Add static_key for asymmetric CPU capacity optimizations")
-> > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> > ---
-> >  kernel/sched/topology.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> > index b5667a273bf6..c49ae57a0611 100644
-> > --- a/kernel/sched/topology.c
-> > +++ b/kernel/sched/topology.c
-> > @@ -2123,7 +2123,8 @@ static void detach_destroy_domains(const struct cpumask *cpu_map)
-> >  {
-> >       int i;
-> >
-> > +     static_branch_disable_cpuslocked(&sched_asym_cpucapacity);
-> > +
-> >       rcu_read_lock();
-> >       for_each_cpu(i, cpu_map)
-> >               cpu_attach_domain(NULL, &def_root_domain, i);
->
-> So what happens it you have mutiple root domains ? You might skip
-> build_sched_domains() for one of them and end up not setting the static
-> key when you should no ?
+On Wed, Oct 09, 2019 at 10:34:38AM +0800, Anson Huang wrote:
+> Adjust some nodes to make them follow alphabetical sort except
+> iomuxc node which is put at the end of file because of its huge
+> pinctrl data.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-good point
-
->
-> I suppose an alternative would be to play with static_branch_inc() /
-> static_branch_dec() from build_sched_domains() or something along those
-> lines.
->
-> Thanks,
-> Quentin
+Applied both, thanks.
