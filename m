@@ -2,218 +2,284 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23017ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78ADECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C10206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:12:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XxjhRdaO"
+	by mail.kernel.org (Postfix) with ESMTP id 98F6321835
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571073165;
+	bh=HwD6mHtjnnDQLBpdVJDJQmUVa9+46A0MsMrWo2jCPko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tz11CnERuXSM2FoOvynBEaQAcAHhsC1rnm6NCWSfKQR90YSKTSvW8AdElgyxXW1q+
+	 Lf2uv/9AKF+BK0995BSVqjFPaLLVEgHCTxjHcAHkZfL30uZV/HjGczKw31iXFnsNKR
+	 PGKC89i6zsIMy9nx9opkmMxOVxiq9tG3RSRGgG9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388372AbfJNRMb (ORCPT
+        id S2388384AbfJNRMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:12:31 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48114 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388352AbfJNRMb (ORCPT
+        Mon, 14 Oct 2019 13:12:44 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39172 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388374AbfJNRMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:12:31 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9EH8J36027086
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 10:12:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=VZQSaFL6cILSBSh9R3ERpIGAqSNRb2JkOURfLEvU0XA=;
- b=XxjhRdaOOEW/3QdKoX/UzbVRKdtqhSM/r4lOVuctEYUIoxhlJyBxNq5w1fqO/f59m/lZ
- ZLKsA55TuNwkS+PI0hW67c3jqlKQlwGrVrs+GPj8VrxXn90jyePl6MfCN9JReKA2xEed
- r/VxfmIuJLHLv/rPno1eAdTq675SGSO/zQ4= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vky52dbms-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 10:12:30 -0700
-Received: from 2401:db00:30:6007:face:0:1:0 (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 14 Oct 2019 10:12:28 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id BC1D262E1383; Mon, 14 Oct 2019 10:12:26 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-CC:     <sashal@kernel.org>, <kernel-team@fb.com>,
-        Song Liu <songliubraving@fb.com>, <stable@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v2 bpf-next] bpf/stackmap: fix deadlock with rq_lock in bpf_get_stack()
-Date:   Mon, 14 Oct 2019 10:12:23 -0700
-Message-ID: <20191014171223.357174-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Mon, 14 Oct 2019 13:12:44 -0400
+Received: by mail-ot1-f67.google.com with SMTP id s22so14421644otr.6;
+        Mon, 14 Oct 2019 10:12:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3ZnoujlKTwiwmEY9FI0zWDU67daL9913J5sT0svGqzM=;
+        b=OYh4ZSxL0XTBjGiOS5hKd0RWlqDm7+RVgEDJdtotxdgm14Ee22brlFuTghRSrAaz+s
+         hi7rO2374aH3NCd+3ETdNo9ZY29DPLrxNf0Xn57kxhZXm98K6P4FPRY1OBvoo4DXDLax
+         6lkYV8TtKK8pEsPvH8Law7MQqoI5XN54szW1Bd0dU9JrKd0Sl0U+ucg3ORr85bRIbAA9
+         x5yy1aIrviWADND3v4v7S5m7yb4GzFmdIqdF3+aL2D/GDSdymwseN3QgM1VOmHAxIq6l
+         +L0OSaBuufOFCWSeIjUewBwasqAwuPJ1ToZx3T2En2pWU97DzP85L+A25Tx+/vhZo0us
+         ui/w==
+X-Gm-Message-State: APjAAAXL8hj7lwME8x/rrGp/gNrCZf1H3nkcenaVMbyBLowcRrIGzkNa
+        WmErDOXRs5K1sBFS6b4SDQ==
+X-Google-Smtp-Source: APXvYqyIb1FLv7/3zxJW43drLgoBfkwz/dbgzFnccw5D0lgTY+KQu3bizoMtyKSuptfPur62KU7D7w==
+X-Received: by 2002:a9d:6f85:: with SMTP id h5mr19262238otq.54.1571073162881;
+        Mon, 14 Oct 2019 10:12:42 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u141sm5671461oie.40.2019.10.14.10.12.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 10:12:41 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 12:12:41 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     vkoul@kernel.org, broonie@kernel.org, bgoswami@codeaurora.org,
+        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: soundwire: add bindings for Qcom
+ controller
+Message-ID: <20191014171241.GA24989@bogus>
+References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
+ <20191011154423.2506-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-14_09:2019-10-11,2019-10-14 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999 spamscore=0
- mlxscore=0 suspectscore=2 clxscore=1015 phishscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910140145
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011154423.2506-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bpf stackmap with build-id lookup (BPF_F_STACK_BUILD_ID) can trigger A-A
-deadlock on rq_lock():
+On Fri, Oct 11, 2019 at 04:44:22PM +0100, Srinivas Kandagatla wrote:
+> This patch adds bindings for Qualcomm soundwire controller.
+> 
+> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+> either integrated as part of WCD audio codecs via slimbus or
+> as part of SOC I/O.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../bindings/soundwire/qcom,sdw.txt           | 167 ++++++++++++++++++
+>  1 file changed, 167 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
 
-rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[...]
-Call Trace:
- try_to_wake_up+0x1ad/0x590
- wake_up_q+0x54/0x80
- rwsem_wake+0x8a/0xb0
- bpf_get_stack+0x13c/0x150
- bpf_prog_fbdaf42eded9fe46_on_event+0x5e3/0x1000
- bpf_overflow_handler+0x60/0x100
- __perf_event_overflow+0x4f/0xf0
- perf_swevent_overflow+0x99/0xc0
- ___perf_sw_event+0xe7/0x120
- __schedule+0x47d/0x620
- schedule+0x29/0x90
- futex_wait_queue_me+0xb9/0x110
- futex_wait+0x139/0x230
- do_futex+0x2ac/0xa50
- __x64_sys_futex+0x13c/0x180
- do_syscall_64+0x42/0x100
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Next time, do a DT schema.
 
-This can be reproduced by:
-1. Start a multi-thread program that does parallel mmap() and malloc();
-2. taskset the program to 2 CPUs;
-3. Attach bpf program to trace_sched_switch and gather stackmap with
-   build-id, e.g. with trace.py from bcc tools:
-   trace.py -U -p <pid> -s <some-bin,some-lib> t:sched:sched_switch
+> diff --git a/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+> new file mode 100644
+> index 000000000000..436547f3b155
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+> @@ -0,0 +1,167 @@
+> +Qualcomm SoundWire Controller Bindings
+> +
+> +
+> +This binding describes the Qualcomm SoundWire Controller along with its
+> +board specific bus parameters.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>",
+> +		    Example:
+> +			"qcom,soundwire-v1.3.0"
+> +			"qcom,soundwire-v1.5.0"
+> +			"qcom,soundwire-v1.6.0"
 
-A sample reproducer is attached at the end.
+This needs to be the actual versions supported, not examples. Elsewhere 
+in QCom bindings, we've used standard SoC specific compatibles as there 
+never tends to be many SoCs with the same version. Anything different 
+here?
 
-This could also trigger deadlock with other locks that are nested with
-rq_lock.
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: the base address and size of SoundWire controller
+> +		    address space.
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: should specify the SoundWire Controller IRQ
+> +
+> +- clock-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: should be "iface" for SoundWire Controller interface clock
+> +
+> +- clocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: should specify the SoundWire Controller interface clock
+> +
+> +- #sound-dai-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 1 for digital audio interfaces on the controller.
+> +
+> +- qcom,dout-ports:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be count of data out ports
 
-Fix this by checking whether irqs are disabled. Since rq_lock and all
-other nested locks are irq safe, it is safe to do up_read() when irqs are
-not disable. If the irqs are disabled, postpone up_read() in irq_work.
+Up to how many?
 
-Fixes: commit 615755a77b24 ("bpf: extend stackmap to save binary_build_id+offset instead of address")
-Cc: stable@vger.kernel.org # v4.17+
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+> +
+> +- qcom,din-ports:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be count of data in ports
 
-Reproducer:
-============================ 8< ============================
+Up to how many?
 
-char *filename;
+> +
+> +- qcom,ports-offset1:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: should specify payload transport window offset1 of each
+> +		    data port. Out ports followed by In ports.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +- qcom,ports-offset2:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: should specify payload transport window offset2 of each
+> +		    data port. Out ports followed by In ports.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +- qcom,ports-sinterval-low:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: should be sample interval low of each data port.
+> +		    Out ports followed by In ports. Used for Sample Interval
+> +		    calculation.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +- qcom,ports-word-length:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: should be size of payload channel sample.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +- qcom,ports-block-pack-mode:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: should be 0 or 1 to indicate the block packing mode.
+> +		    0 to indicate Blocks are per Channel
+> +		    1 to indicate Blocks are per Port.
+> +		    Out ports followed by In ports.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +- qcom,ports-block-group-count:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: should be in range 1 to 4 to indicate how many sample
+> +		    intervals are combined into a payload.
+> +		    Out ports followed by In ports.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +- qcom,ports-lane-control:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: should be in range 0 to 7 to identify which	data lane
+> +		    the data port uses.
+> +		    Out ports followed by In ports.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +- qcom,ports-hstart:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: should be number identifying lowerst numbered coloum in
+> +		    SoundWire Frame, i.e. left edge of the Transport sub-frame
+> +		    for each port. Values between 0 and 15 are valid.
+> +		    Out ports followed by In ports.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +- qcom,ports-hstop:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: should be number identifying highest numbered coloum in
+> +		    SoundWire Frame, i.e. the right edge of the Transport
+> +		    sub-frame for each port. Values between 0 and 15 are valid.
+> +		    Out ports followed by In ports.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +- qcom,dports-type:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: should be one of the following types
+> +		    0 for reduced port
+> +		    1 for simple ports
+> +		    2 for full port
+> +		    Out ports followed by In ports.
+> +		    More info in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> +Note:
+> +	More Information on detail of encoding of these fields can be
+> +found in MIPI Alliance SoundWire 1.0 Specifications.
+> +
+> += SoundWire devices
+> +Each subnode of the bus represents SoundWire device attached to it.
+> +The properties of these nodes are defined by the individual bindings.
 
-void *worker(void *p)
-{
-        void *ptr;
-        int fd;
-        char *pptr;
+Is there some sort of addressing that needs to be defined?
 
-        fd = open(filename, O_RDONLY);
-        if (fd < 0)
-                return NULL;
-        while (1) {
-                struct timespec ts = {0, 1000 + rand() % 2000};
+> +
+> += EXAMPLE
+> +The following example represents a SoundWire controller on DB845c board
+> +which has controller integrated inside WCD934x codec on SDM845 SoC.
+> +
+> +soundwire: soundwire@c85 {
+> +	compatible = "qcom,soundwire-v1.3.0";
+> +	reg = <0xc85 0x20>;
+> +	interrupts = <20 IRQ_TYPE_EDGE_RISING>;
+> +	clocks = <&wcc>;
+> +	clock-names = "iface";
+> +	#sound-dai-cells = <1>;
+> +	qcom,dports-type = <0>;
+> +	qcom,dout-ports	= <6>;
+> +	qcom,din-ports	= <2>;
+> +	qcom,ports-sinterval-low = /bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
+> +	qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
+> +	qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
+> +
+> +	/* Left Speaker */
+> +	left{
 
-                ptr = mmap(NULL, 4096 * 64, PROT_READ, MAP_PRIVATE, fd, 0);
-                usleep(1);
-                if (ptr == MAP_FAILED) {
-                        printf("failed to mmap\n");
-                        break;
-                }
-                munmap(ptr, 4096 * 64);
-                usleep(1);
-                pptr = malloc(1);
-                usleep(1);
-                pptr[0] = 1;
-                usleep(1);
-                free(pptr);
-                usleep(1);
-                nanosleep(&ts, NULL);
-        }
-        close(fd);
-        return NULL;
-}
+space       ^
+> +		....
+> +	};
+> +
+> +	/* Right Speaker */
+> +	right{
 
-int main(int argc, char *argv[])
-{
-        void *ptr;
-        int i;
-        pthread_t threads[THREAD_COUNT];
+ditto
 
-        if (argc < 2)
-                return 0;
-
-        filename = argv[1];
-
-        for (i = 0; i < THREAD_COUNT; i++) {
-                if (pthread_create(threads + i, NULL, worker, NULL)) {
-                        fprintf(stderr, "Error creating thread\n");
-                        return 0;
-                }
-        }
-
-        for (i = 0; i < THREAD_COUNT; i++)
-                pthread_join(threads[i], NULL);
-        return 0;
-}
-============================ 8< ============================
-
----
-Changes v1 => v2:
-1. Drop (1/1) and cover letter;
-2. Check irqs_disabled() instead of this_rq_is_locked()
----
- kernel/bpf/stackmap.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 052580c33d26..173e983619d7 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -287,7 +287,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- 	bool irq_work_busy = false;
- 	struct stack_map_irq_work *work = NULL;
- 
--	if (in_nmi()) {
-+	if (irqs_disabled()) {
- 		work = this_cpu_ptr(&up_read_work);
- 		if (work->irq_work.flags & IRQ_WORK_BUSY)
- 			/* cannot queue more up_read, fallback */
-@@ -295,8 +295,9 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- 	}
- 
- 	/*
--	 * We cannot do up_read() in nmi context. To do build_id lookup
--	 * in nmi context, we need to run up_read() in irq_work. We use
-+	 * We cannot do up_read() when the irq is disabled, because of
-+	 * risk to deadlock with rq_lock. To do build_id lookup when the
-+	 * irqs are disabled, we need to run up_read() in irq_work. We use
- 	 * a percpu variable to do the irq_work. If the irq_work is
- 	 * already used by another lookup, we fall back to report ips.
- 	 *
--- 
-2.17.1
-
+> +		....
+> +	};
+> +};
+> -- 
+> 2.21.0
+> 
