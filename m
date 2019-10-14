@@ -2,99 +2,81 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C862EECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB04FC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03F320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYRbwm0K"
+	by mail.kernel.org (Postfix) with ESMTP id A371821848
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571080642;
+	bh=GVOpKJU8+fX2Cvw0U5HfH5hzn91D4G2Rk4nes27+pag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=z6KjHiog5nP78HRe1GRcgUkrHkvohORg10YxbJt4EZE7vXR+lQJbIhdEsvuxRo9bU
+	 BAG76XcKBPqsa59xWd0WrYk1fsgANU6vgAdXfrYM0ief42b6w3rm0NZ5tIrB9U4JvI
+	 ZJWJVyeqICUAslLx/ac1jnwiuiJQVgobkQH7e6sY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388248AbfJNTP4 (ORCPT
+        id S2388312AbfJNTRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 15:15:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33529 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731508AbfJNTP4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 15:15:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so10926073pfl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 12:15:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=9F8hNQAFSGU9OThPzn/GM716nVF6kWYeyNCtCbn6LA8=;
-        b=VYRbwm0KHKfCEdgzoab6UoDFbyq/Erb0x37sSMQESYdo4L96hLczRoNX6GkkvBHH8N
-         wadAqQGsvOYdH7sbyn+jLixmmlwNpROn4eMB/fAVxC+f4sOTOeotiL4tGzjRhVWzLqt3
-         8S7lPFO2rZAWbZI67xInxAOHRlg+iiw/87XSwOBmij8uyljGEu2ty7sv9bcqEpJ8CPZl
-         nfiTocx14Njz9SbOiUpCw8n8KhfG4xN4VpaE4p98LvFC+hTjsUg8qHT8oKvqxZTAj3/n
-         DXGzUFCexLCT58lwVnxe3VmH+LjX0rNHyHILQ6A8GbwOjR5TKjHlLYJhYCiPqTpYDlmz
-         MVBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=9F8hNQAFSGU9OThPzn/GM716nVF6kWYeyNCtCbn6LA8=;
-        b=M1IpzDScVpyrQ/Xa/WNvokPjbgdOUu1qhnUwGY0BLPjyfEOLTEZEDkDfdQYDAdaX5n
-         gPI89dRzjD/A0F8ThZHk3TKBfHxilqLvQZmFeY0cAeE1znEQmkt1up0c43N4gs+Y0ShQ
-         Ojl5waZmi8oEVcOBIkcAc8P8AFdwlornxL9OfQGTxnsB24Xh2yx3XpEAjf/fAncqhHTv
-         yVijYlUb/mWpu8hlIUZaxI9XrSGJJygIor1BF8NdCEfD7CB0teX4i82U+KMWK0LUMjzO
-         8OXuk0ant4wAHgMcdl2dooU0HGJExOXy7PWLFLxjkDsr4H1aXjMYcT/CqkI/9SUvbXTN
-         P0BQ==
-X-Gm-Message-State: APjAAAWG/oJ9CbFkm3P7nognP7RwbTc9Syyu56qiZCZEUqP9BCVtAgVr
-        yML9sWGKVJyZ3XCgNdNYejM=
-X-Google-Smtp-Source: APXvYqxKkrOzMXpy+Lk+2GGeemh0FoDZOvoANcNVp3EiYNz+v4cfciEQvcsDBkHxGSeZCkd5Si3YvQ==
-X-Received: by 2002:a63:6486:: with SMTP id y128mr35065638pgb.444.1571080555097;
-        Mon, 14 Oct 2019 12:15:55 -0700 (PDT)
-Received: from iclxps ([155.98.131.7])
-        by smtp.gmail.com with ESMTPSA id ev20sm16730196pjb.19.2019.10.14.12.15.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 12:15:54 -0700 (PDT)
-Message-ID: <c4bcdf14e0a60a679429eebd439b2380d97dafe9.camel@gmail.com>
-Subject: Re: [PATCH v4 1/2] lib: devres: add a helper function for ioremap_uc
-From:   Tuowen Zhao <ztuowen@gmail.com>
-To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Date:   Mon, 14 Oct 2019 13:15:53 -0600
-In-Reply-To: <201910150232.F7RTW83B%lkp@intel.com>
-References: <20191014153344.8996-1-ztuowen@gmail.com>
-         <201910150232.F7RTW83B%lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1 
-MIME-Version: 1.0
+        Mon, 14 Oct 2019 15:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728005AbfJNTRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 15:17:21 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E75B9217F9;
+        Mon, 14 Oct 2019 19:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571080640;
+        bh=GVOpKJU8+fX2Cvw0U5HfH5hzn91D4G2Rk4nes27+pag=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FR3WzbMF70HWxk7LTH30/6dEQ8O2Dy6iHIYsz3roW7gGsiv/bCa+/sQvvUktTZ/BO
+         sea8B8Iv2qQrW/t9KU/O3J+J0m3QYNRD0hYc9BPn9xPN45izvaOitFObeTCJxIolf7
+         oGAogT4n2dH58KrM+gstDU8nD3TYaBLq3dqW2/DM=
+Date:   Mon, 14 Oct 2019 12:17:19 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH v6 04/10] mm/memory_hotplug: Don't access uninitialized
+ memmaps in shrink_zone_span()
+Message-Id: <20191014121719.cb9b9efe51a7e9e985b38075@linux-foundation.org>
+In-Reply-To: <5a4573de-bd8a-6cd3-55d0-86d503a236fd@redhat.com>
+References: <20191006085646.5768-1-david@redhat.com>
+        <20191006085646.5768-5-david@redhat.com>
+        <5a4573de-bd8a-6cd3-55d0-86d503a236fd@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-15 at 02:46 +0800, kbuild test robot wrote:
-> -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=sparc64 
+On Mon, 14 Oct 2019 11:32:13 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Oops, I'm not sure how would we best fix this. Clearly the patch is not
-intended for sparc64. Maybe adding devm_ioremap_uc is rather not safe
-right now.
+> > Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
+> 
+> @Andrew, can you convert that to
+> 
+> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded 
+> memory to zones until online") # visible after d0dc12e86b319
+> 
+> and add
+> 
+> Cc: stable@vger.kernel.org # v4.13+
 
-Although, We could declare dummies for these architectures like it has
-been for powerpc.
-
-I just noticed another driver having this issue, and fixed with direct
-calls to ioremap_uc().
-
-3cc2dac5be3f2: drivers/video/fbdev/atyfb: Replace MTRR UC hole with
-strong UC
-
-Tuowen
-
+Done, thanks.
