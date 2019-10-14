@@ -2,106 +2,154 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39F5ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A536CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EDC921882
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8E9217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TKlYMgY6"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="O70o41Dm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfJNXfu (ORCPT
+        id S1726610AbfJNXgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 19:35:50 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39786 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfJNXfu (ORCPT
+        Mon, 14 Oct 2019 19:36:05 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38512 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbfJNXgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 19:35:50 -0400
-Received: by mail-ot1-f68.google.com with SMTP id s22so15272052otr.6
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 16:35:49 -0700 (PDT)
+        Mon, 14 Oct 2019 19:36:05 -0400
+Received: by mail-ed1-f67.google.com with SMTP id l21so16246845edr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 16:36:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=soleen.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NwUiRmL5zHRuSpoZacB+KbqGLwUbPV8zfP2jjwTQZ40=;
-        b=TKlYMgY6BIO0a2BCP9NIZ0RDFSDCMHEJtY2x9DKJYW3dkv4cc3dMdfoEXPfq7nao1A
-         FB8isuIUIz37YiDdrnt6tj2rZPqxphRoRXt7DnRZ9IRAcs5kglsAJ0mmTwG9hxcsL0bX
-         eb0MFM9vaJmNbvXkyarJwKDErv8tEnSOvMvyg4JE7a8MGMig61jXeS76iRZsnKC2L146
-         kFdCa9XX3huj52KblSP/OsgJS7fEJJD+2W4wxnDz9el2/wmnB6wInAj4eZtqdJW4Cno0
-         lEyXvrUNPoUnOLU3oA01VMyMsvwUSEJW4ECh+yngbOn7WGb14cG6u4SCGTI79ftXco6x
-         5ZaQ==
+        bh=gkziEWncJFESfbeN+tNU3lnfttVx9foN0npvs9N1QsY=;
+        b=O70o41Dmveei74jWdiTluAuKZOpFdp96KyP9T2+VLvoKG3708U5MU64uqWTOjJw2DI
+         8fVopJbte7kdQDLDcOkGWxqOo1hPyLSGm9W5pwD9uSuKBWkYzkLQFnL0pO9rTTUkuOwv
+         YEKeJM4UaS36FSYnUDagTkfYpdKCDO1v58PJtngbqG4oKmWsHirTjN3FGADnX7mMblrq
+         UoC9Mmp7mBesVzhNvG+fDBUv3wy6kw0zxiKZxsynzZSe6ujfai3BCrztgADTlvkRGS6j
+         L5d9t+3fpiXBswUSa0ApWFQVBYX/GhB0xFLteIF/S20CrXAf1E8aB8uFws2F6tsq2Kpp
+         vUVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NwUiRmL5zHRuSpoZacB+KbqGLwUbPV8zfP2jjwTQZ40=;
-        b=S1zYNfBIKlGzwvM6r7vPa6u9lYhDWj03Km89vbhusyiSIsM5udhZxJ1gq5OoORSkxH
-         YltpUAXOWprkyi8y4icFXBSuvCOBQqKxHugunyZXKJY7UmxitfUa/HgatkCLp8Y0zpXf
-         Vuhbde0CgcILdvqAEicS1EMDDvmCOkizTFFeVa1wvxU1/cIDkd7f5dCHk1MPaDzJNODP
-         xGZuTSAJ9bbvox4nCXtRyp7TQK3V5PdsZ8mGYNNGDUB7bMWPBphL0W9nc1WqqytuNljV
-         erCn62rqyUiJBsSHGxSTbtWhcVOCcylpWXkjAef2UiwgX9uoU1XyojrwiczPmS8GjLy9
-         kQNA==
-X-Gm-Message-State: APjAAAWe3z3ADI5nxsLfqCShm98j2bb+lJEola45QSjDlkdPSISZ8wwI
-        s2ShQO5WCQyqbeEKaO3kph88lnko/H1Uh45iRwJAhg==
-X-Google-Smtp-Source: APXvYqzEMn4iiEvRoFnPWid2cqOI3VZG7sGt2CV0SkehdxGAGwKggzD4OaekfLnZ7//zX1O/DAxwc3wOaYMFld0l4Fk=
-X-Received: by 2002:a9d:66c5:: with SMTP id t5mr26275692otm.225.1571096148769;
- Mon, 14 Oct 2019 16:35:48 -0700 (PDT)
+        bh=gkziEWncJFESfbeN+tNU3lnfttVx9foN0npvs9N1QsY=;
+        b=Dp+Ol6ZSBmTvUy9okg3hYithnGV9ApzIyRDux3A66nkFBq3AvJmNybM4TX/rt+YVWZ
+         ZPCu2Ijbv0fXYvXoPmoammBWdlQcc8eX+UadJLEzWilPSude8DKYVzTMDvKyXVI8d+Bv
+         cS/MkAt7f7rH20NVcKQDsAh1uC/QdJ6l9Ttzw49e57ZxkqEXJwdNJskNp9hozWa4A5hN
+         +1HAl2noYv5Zhl8dL6h96Fv7Q73cujjkP8DeWywWrnkbf85wj2BtfYVdFLGrvWUd/MOa
+         Ey6/k/y2saCZZ2sR3cT8183brUl45nDWgB0MGkV4oFErr6TEMMoRIUgqY2KPZi2ojmrW
+         BvQw==
+X-Gm-Message-State: APjAAAWD3epEviAd4yOd1oVnVnkTY6k2h9jjIybg0Xa0ksmq4hC+RKno
+        wrbd4feLHqEOL5lp0yg5J7FZ+JB4hdcM7kxCPakYeQ==
+X-Google-Smtp-Source: APXvYqw21dAMS585cJditaHg7KjhOgxBh6OmUSMoHjJ0YGRuL7a8yLmdCHKtPPDp4d/BFzWCo6uVZPGvN8Y+J4yqjTw=
+X-Received: by 2002:a17:906:2cca:: with SMTP id r10mr31786307ejr.108.1571096163334;
+ Mon, 14 Oct 2019 16:36:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191011191521.179614-1-saravanak@google.com> <20191011191521.179614-4-saravanak@google.com>
- <20191014232828.DA62E217F9@mail.kernel.org>
-In-Reply-To: <20191014232828.DA62E217F9@mail.kernel.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 14 Oct 2019 16:35:12 -0700
-Message-ID: <CAGETcx9ke3+nGS+dBDOE9EhFhd=w6o5N+P5F7R-xNSi5fRLz_w@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] docs: driver-model: Add documentation for sync_state
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
+ <20191004185234.31471-16-pasha.tatashin@soleen.com> <fe5a4aae-fae3-f30f-db15-f3eced229a6e@arm.com>
+In-Reply-To: <fe5a4aae-fae3-f30f-db15-f3eced229a6e@arm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 14 Oct 2019 19:35:51 -0400
+Message-ID: <CA+CK2bBRRQsepxrWnOUOnFfPUe5SYsOurQ3kL_P1ghxze77RFQ@mail.gmail.com>
+Subject: Re: [PATCH v6 15/17] arm64: kexec: add expandable argument to
+ relocation function
+To:     James Morse <james.morse@arm.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 4:28 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > +struct kern_reloc_arg {
+> > +     unsigned long   head;
+> > +     unsigned long   entry_addr;
+> > +     unsigned long   kern_arg0;
+> > +     unsigned long   kern_arg1;
+> > +     unsigned long   kern_arg2;
+> > +     unsigned long   kern_arg3;
 >
-> Quoting Saravana Kannan (2019-10-11 12:15:21)
-> > The sync_state() driver callback was added recently, but the
-> > documentation was missing.  Adding it now.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  .../driver-api/driver-model/driver.rst        | 43 +++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >
-> > diff --git a/Documentation/driver-api/driver-model/driver.rst b/Documentation/driver-api/driver-model/driver.rst
-> > index 11d281506a04..baa6a85c8287 100644
-> > --- a/Documentation/driver-api/driver-model/driver.rst
-> > +++ b/Documentation/driver-api/driver-model/driver.rst
-> > @@ -169,6 +169,49 @@ A driver's probe() may return a negative errno value to indicate that
-> >  the driver did not bind to this device, in which case it should have
-> >  released all resources it allocated::
-> >
-> > +       void (*sync_state)(struct device *dev);
+> ... at least one of these should by phys_addr_t!
+
+OK, changed them to phys_addr_t
+
 >
-> This is only in -next as far as I can tell. Will this be combined with a
-> resend of the patch series that introduces this hook?
+> While the sizes are the same on arm64, this reminds the reader what kind of address this
+> is, and lets the compiler warn you if you make a mistake.
 
-Based on what Greg said in the other email, I think he's going to pick
-this up for driver-core-next.
+OK
 
--Saravana
+>
+>
+> > +};
+>
+> > diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+> > index 214685760e1c..900394907fd8 100644
+> > --- a/arch/arm64/kernel/asm-offsets.c
+> > +++ b/arch/arm64/kernel/asm-offsets.c
+> > @@ -23,6 +23,7 @@
+> >  #include <asm/suspend.h>
+> >  #include <linux/kbuild.h>
+> >  #include <linux/arm-smccc.h>
+> > +#include <linux/kexec.h>
+> >
+> >  int main(void)
+> >  {
+> > @@ -126,6 +127,14 @@ int main(void)
+> >  #ifdef CONFIG_ARM_SDE_INTERFACE
+> >    DEFINE(SDEI_EVENT_INTREGS, offsetof(struct sdei_registered_event, interrupted_regs));
+> >    DEFINE(SDEI_EVENT_PRIORITY,        offsetof(struct sdei_registered_event, priority));
+> > +#endif
+> > +#ifdef CONFIG_KEXEC_CORE
+> > +  DEFINE(KRELOC_HEAD,                offsetof(struct kern_reloc_arg, head));
+> > +  DEFINE(KRELOC_ENTRY_ADDR,  offsetof(struct kern_reloc_arg, entry_addr));
+> > +  DEFINE(KRELOC_KERN_ARG0,   offsetof(struct kern_reloc_arg, kern_arg0));
+> > +  DEFINE(KRELOC_KERN_ARG1,   offsetof(struct kern_reloc_arg, kern_arg1));
+> > +  DEFINE(KRELOC_KERN_ARG2,   offsetof(struct kern_reloc_arg, kern_arg2));
+> > +  DEFINE(KRELOC_KERN_ARG3,   offsetof(struct kern_reloc_arg, kern_arg3));
+>
+> Please use kexec as the prefix. The kernel also applies relocations during early boot.
+> These are global values, and in isolation doesn't imply kexec.
+
+OK
+> >  .align 3     /* To keep the 64-bit values below naturally aligned. */
+> > -
+> >  .Lcopy_end:
+> >  .org KEXEC_CONTROL_PAGE_SIZE
+> >
+>
+> My eyes!
+>
+> Please don't make unnecessary changes. Its hard enough to read the assembly, moving
+> whitespace, comments and re-allocating the register guarantees that no-one can work out
+> what is happening.
+>
+> If something needs cleaning up to make the change obvious, it needs doing as a previous
+> patch. Mechanical changes are fairly easy to review.
+> Functional changes behind a whirlwind of mechanical changes will cause the reviewer to
+> give up.
+
+Sure, I have split this patch into several patches, and moved
+clean-ups into separate patches.
+
+Thank you,
+Pasha
