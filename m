@@ -2,67 +2,79 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B96C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920B3C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6736620659
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KAHp44xd"
+	by mail.kernel.org (Postfix) with ESMTP id 697B021882
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbfJNNPM (ORCPT
+        id S1730988AbfJNNPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:15:12 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44736 "EHLO mail.skyhub.de"
+        Mon, 14 Oct 2019 09:15:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43696 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfJNNPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:15:12 -0400
-Received: from zn.tnic (p200300EC2F065800329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5800:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725989AbfJNNPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 09:15:51 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9B2201EC0C84;
-        Mon, 14 Oct 2019 15:15:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571058910;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ZsxX8+xNyRBUeuKB1QdVmKb+ikPBn938M3krUvBnqcI=;
-        b=KAHp44xdWyhTebZCp+anPbzpo0J6L09rDwzjn3kmbOIsdoZcpJCx36saKmcSJ+MO6Ip9Kg
-        dhR+a21UgWg257ulfdCy0X6P31B7lsg8YMQM7E0pAu72OAtis/yLsndIZLQlzRbNTAq9hD
-        K6ggoLUWti9U6mU6wr/VC0x3GJSTFWM=
-Date:   Mon, 14 Oct 2019 15:15:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 03/28] x86/asm: Annotate relocate_kernel_{32,64}.c
-Message-ID: <20191014131501.GB4715@zn.tnic>
-References: <20191011115108.12392-1-jslaby@suse.cz>
- <20191011115108.12392-4-jslaby@suse.cz>
+        by mx1.redhat.com (Postfix) with ESMTPS id D931B3082E4E;
+        Mon, 14 Oct 2019 13:15:51 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 64D786046B;
+        Mon, 14 Oct 2019 13:15:51 +0000 (UTC)
+Subject: Re: [PATCH v3 0/6] Add CascadeLake-N Support
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        andriy.shevchenko@intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191007193100.36934-1-srinivas.pandruvada@linux.intel.com>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <67aaedb2-dc74-7a60-7345-1c160e6b08e5@redhat.com>
+Date:   Mon, 14 Oct 2019 09:15:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20191007193100.36934-1-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191011115108.12392-4-jslaby@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 14 Oct 2019 13:15:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 01:50:43PM +0200, Jiri Slaby wrote:
-> There are functions in relocate_kernel_{32,64}.c which are not
-> annotated. This makes automatic works on them rather hard. So annotate
 
-Restoring from the previous version: s/works/annotations/
 
--- 
-Regards/Gruss,
-    Boris.
+On 10/7/19 3:30 PM, Srinivas Pandruvada wrote:
+> Add support for SST-BF on CascadeLake-N support.  The CascadeLake-N
+> processor only support SST-BF and not other SST functionality.
+>
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Sorry Srinivas, was away from keyboard all last week :(
+
+> v3:
+> Fix crash due to geline
+
+^^^ curious how you hit this?  I was repeatedly testing and couldn't
+get it to happen.
+
+> Fix display to perf-profile info and base-freq info command
+> Fix output for coremask
+> Fix base frequency CPU list. This should be displayed for a package
+> Auto mode support for base-freq enable/disable
+> One of the patch for config only change folded to next one where it is
+> used.
+>
+> The patch 1 has nothing to do with the CLX-N. It saves some bytes in the
+> size.
+>
+
+Reviewed-by: Prarit Bhargava <prarit@redhat.com>
+
+P.
