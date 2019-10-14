@@ -2,133 +2,502 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACA9ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524C6ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E33207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:00:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="sbJC5JJI";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="qVjU/MQT"
+	by mail.kernel.org (Postfix) with ESMTP id 29E8620673
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731863AbfJNMAl (ORCPT
+        id S1731643AbfJNMCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 08:00:41 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:15834 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730300AbfJNMAk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 08:00:40 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9EC09Tc028549;
-        Mon, 14 Oct 2019 05:00:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=4uTeaOpZDpXUzWN59NysHT46Gbs0pC0TCYAC2MfYJWc=;
- b=sbJC5JJIuk0L6usYfEfEg+vO9EM1VCQEug8sRv2UbLbf+BUmtXoBMqQ/jDbo3IAROqKL
- 9J+9fm2CldaPgrfyb1uvDeuoGzLZecNXs2a3FZGcn2ZRQZ/81Yg4J8XdZ5v+HMNuXYFN
- I7yRt6Cq+ki+m7+TN1f5DYAEG1n0YNYWrMqRioMfNm4WbtNddjNNWijSHm8G9sNy/1WO
- Of5AqJAZT2TI6/OAEVitdgow7QdHy2S3nlYH2RRYeMmwSlYX8Cgx56DMnK2r4Z68UO5N
- pW4u39y4AULHZw843UmiHGJmmi/gNVVBMobfj+3W58CbIvXL1ecVeA7gRY+/6b2Djob6 /Q== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2vkc6r6anp-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 14 Oct 2019 05:00:32 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 14 Oct
- 2019 05:00:32 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.57) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 14 Oct 2019 05:00:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fqAzlmSrejqqvEhSDw87+aS4phM+JI/8qFphzke3XuGVyH+wk1RLR4KEB5cWSoE3KUTx5/oz1GqT4pMsLYYjew+/wPTdChcHXf3Ab5fekSEYyh/u/VFkCPXpLck48b7G5E9B8H5Zl4+aTA4a6zRDcMN8ipH/j7iivnQOy1PXuHL2VhXR3nyqf7+XFJLi0PS233UkjI2Lm4ySn7CxS4UfNXumv2G60D43qld3rVAUAUTz5SXfmj2peEpTde5bJ51El4QTzxjKzczyXji2HmW4XoYW1ps8J6kfQLAT4Ybdx3dhQs+xFZc1kP3RQuAjEToMJbXbqQAxbgVXGOXYCCTkQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4uTeaOpZDpXUzWN59NysHT46Gbs0pC0TCYAC2MfYJWc=;
- b=nz8HjEROMgcjdApc0MYoRen+y5Fn5Kzmvcd2BkRMJ+1+lJE7Q7sa/6SkVfXCMIL3j0WbIFGSP5KyGkmTvBY5QP0gsct+k6wVVhty1X7HypAC9trG/vmFobmjtUYPSIegczq+h9JQpWziCy08yy7Eyx7S4NC1xJ4CVidQEpDcHq1shG0p6s9oJsKu5XSy90Y7VYHsmdpdEThOH6iK23nhA7anLf8M1A74MaPV1WsUJ4StDm7FjMi3dKOE7bug9kkyBpPFZO2DZf6w1OQVMe/3p30S5hu13GBzmiWIA2Axf8LhkrEYHR8GTJirRkx0G17tqOaafav7V1J4ExtjMb/RZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4uTeaOpZDpXUzWN59NysHT46Gbs0pC0TCYAC2MfYJWc=;
- b=qVjU/MQT4gmsos7EtRDj8chFJT+BCqDRjGqABt8GDmlNhpCkl/cifo5Qk0qt4MVl9K7Z+qA8dh+sGUdQt1GSWRl/Fdau9Yh7wMr/tCloE4ecHuM+UEGf+I7UTwpuNkjxhRI5CiltMsVsyuagNyKyhZbXYPyKp3hkG3K4r9jQ8Yg=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB2941.namprd18.prod.outlook.com (20.179.22.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Mon, 14 Oct 2019 12:00:30 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763%3]) with mapi id 15.20.2347.023; Mon, 14 Oct 2019
- 12:00:30 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-CC:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        "James Morse" <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/19] EDAC: Rework edac_mc and ghes drivers
-Thread-Topic: [PATCH 00/19] EDAC: Rework edac_mc and ghes drivers
-Thread-Index: AQHVf6jLshPLJWnlTE6zMo1DcW8g6KdaDpmA
-Date:   Mon, 14 Oct 2019 12:00:30 +0000
-Message-ID: <20191014120023.jsrwq4ptxuvuw2pq@rric.localdomain>
-References: <20191010202418.25098-1-rrichter@marvell.com>
-In-Reply-To: <20191010202418.25098-1-rrichter@marvell.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0255.eurprd05.prod.outlook.com
- (2603:10a6:3:fb::31) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 28f94daa-b533-4c30-7c36-08d7509e1c30
-x-ms-traffictypediagnostic: MN2PR18MB2941:
-x-microsoft-antispam-prvs: <MN2PR18MB294123A4C9C8EDB9061AD9D6D9900@MN2PR18MB2941.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01901B3451
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39850400004)(366004)(376002)(136003)(189003)(199004)(11346002)(446003)(26005)(102836004)(53546011)(256004)(386003)(6506007)(66946007)(186003)(66476007)(66556008)(64756008)(66446008)(14454004)(71200400001)(71190400001)(478600001)(66066001)(476003)(486006)(25786009)(2906002)(5660300002)(6916009)(4326008)(86362001)(1076003)(6436002)(229853002)(6486002)(6246003)(6512007)(9686003)(54906003)(8676002)(316002)(76176011)(4744005)(7736002)(8936002)(52116002)(99286004)(6116002)(81166006)(3846002)(81156014)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2941;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bcsVuzaHgO5G5VPKeH4FnK+3NJju56D5U/W0vBPraSK9jYM3l7qE3xydhYmwCDZfcKd53rBy5UWyGVUee8R8b558cvpQD6d2x35pwEAeP8aUSE3Yuk+nsjYInC3aTZSv3w2OS1xNkUPRUZZYss2w6heMwuHGap0oGqRxcfx8Fkyu/P3GE07kPtFLz9sZA26atdvOOxC+dWQk1ibmXfpJO3QF4M370tWCYygUb7x+Vdidl/zlKAT6qd5RXUGPIvnzHpyvbaipjkLU9sW8cGJda3ekbro/gAuIIVHVJfcsONQipPgs9PdiwX5duoQxJ5A5hRSOr8h2HwJhg+0REDHcEccg9X9sxMvQjKJnfS+FYMGNOosJg3hsbU3Yld3eEHNqaDoCewzalDKpNlC7xIEGomXgT7BrPAv4ImQaOL86OoU=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <576043D66995224296DE2E659C87CCB7@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 14 Oct 2019 08:02:17 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53046 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731371AbfJNMCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 08:02:16 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CB36895B2966ACE1E9B4;
+        Mon, 14 Oct 2019 20:02:14 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
+ 20:02:13 +0800
+Date:   Mon, 14 Oct 2019 13:02:02 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+CC:     <jic23@kernel.org>, <dragos.bogdan@analog.com>,
+        <alexandru.ardelean@analog.com>, <stefan.popa@analog.com>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 1/2] iio: adc: Add driver support for AD7292
+Message-ID: <20191014130202.000030d5@huawei.com>
+In-Reply-To: <20191013141320.aam4243nnxmofxl4@smtp.gmail.com>
+References: <20191013141320.aam4243nnxmofxl4@smtp.gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28f94daa-b533-4c30-7c36-08d7509e1c30
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2019 12:00:30.6027
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IjncbrLEw6U74d+18+t1t9ZL7lApAeu3Cb28PDfHaljtDybDw2MpyXwhFvOYnOpMiIi4TcRwBkt+Qu7des2DsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2941
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-14_07:2019-10-11,2019-10-14 signatures=0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.10.19 20:25:01, Robert Richter wrote:
-> This patch set is a rework of the ghes_edac and edac_mc driver. It
-> addresses issues found during code review and while working with the
-> code. The changes include:
+On Sun, 13 Oct 2019 11:13:22 -0300
+Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-Thanks Mauro for your review of the whole series. I hope I could all
-your concerns address with my answers.
+> The AD7292 is a 10-bit monitor and control system with ADC, DACs,
+> temperature sensor, and GPIOs.
+> 
+> Configure AD7292 devices in direct access mode, enabling single-ended
+> ADC readings.
+> 
+> Datasheet:
+> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Hi Marcelo
 
--Robert
+A few minor bits inline.  Mostly just the DT binding question.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  MAINTAINERS              |   7 +
+>  drivers/iio/adc/Kconfig  |  10 ++
+>  drivers/iio/adc/Makefile |   1 +
+>  drivers/iio/adc/ad7292.c | 350 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 368 insertions(+)
+>  create mode 100644 drivers/iio/adc/ad7292.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32bf5f8116d0..e78317a5f4f1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -813,6 +813,13 @@ S:	Supported
+>  F:	drivers/iio/adc/ad7124.c
+>  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+>  
+> +ANALOG DEVICES INC AD7292 DRIVER
+> +M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> +L:	linux-iio@vger.kernel.org
+> +W:	http://ez.analog.com/community/linux-device-drivers
+> +S:	Supported
+> +F:	drivers/iio/adc/ad7292.c
+> +
+>  ANALOG DEVICES INC AD7606 DRIVER
+>  M:	Stefan Popa <stefan.popa@analog.com>
+>  L:	linux-iio@vger.kernel.org
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 632b331429c6..02587c990cb5 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -59,6 +59,16 @@ config AD7291
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ad7291.
+>  
+> +config AD7292
+> +	tristate "Analog Devices AD7292 ADC driver"
+> +	depends on SPI
+> +	help
+> +	  Say yes here to build support for Analog Devices AD7292
+> +	  8 Channel ADC with temperature sensor.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ad7292.
+> +
+>  config AD7298
+>  	tristate "Analog Devices AD7298 ADC driver"
+>  	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 4779ab3ff8fb..1818f2f66566 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_AD7124) += ad7124.o
+>  obj-$(CONFIG_AD7173) += ad7173.o
+>  obj-$(CONFIG_AD7266) += ad7266.o
+>  obj-$(CONFIG_AD7291) += ad7291.o
+> +obj-$(CONFIG_AD7292) += ad7292.o
+>  obj-$(CONFIG_AD7298) += ad7298.o
+>  obj-$(CONFIG_AD738X) += ad738x.o
+>  obj-$(CONFIG_AD7768) += ad7768-1.o
+> diff --git a/drivers/iio/adc/ad7292.c b/drivers/iio/adc/ad7292.c
+> new file mode 100644
+> index 000000000000..076bd49a2571
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7292.c
+> @@ -0,0 +1,350 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Analog Devices AD7292 SPI ADC driver
+> + *
+> + * Copyright 2019 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#include <linux/iio/iio.h>
+> +
+> +#define ADI_VENDOR_ID 0x0018
+> +
+> +/* AD7292 registers definition */
+> +#define AD7292_REG_VENDOR_ID		0x00
+> +#define AD7292_REG_CONF_BANK		0x05
+> +#define AD7292_REG_CONV_COMM		0x0E
+> +#define AD7292_REG_ADC_CH(x)		(0x10 + (x))
+> +
+> +/* AD7292 configuration bank subregisters definition */
+> +#define AD7292_BANK_REG_VIN_RNG0	0x10
+> +#define AD7292_BANK_REG_VIN_RNG1	0x11
+> +#define AD7292_BANK_REG_SAMP_MODE	0x12
+> +
+> +#define AD7292_RD_FLAG_MSK(x)		(BIT(7) | ((x) & 0x3F))
+> +
+> +/* AD7292_REG_ADC_CONVERSION */
+> +#define AD7292_ADC_DATA_MASK		GENMASK(15, 6)
+> +#define AD7292_ADC_DATA(x)		FIELD_GET(AD7292_ADC_DATA_MASK, x)
+> +
+> +/* AD7292_CHANNEL_SAMPLING_MODE */
+> +#define AD7292_CH_SAMP_MODE(reg, ch)	((reg >> 8) & BIT(ch))
+> +
+> +/* AD7292_CHANNEL_VIN_RANGE */
+> +#define AD7292_CH_VIN_RANGE(reg, ch)	(reg & BIT(ch))
+> +
+> +#define AD7291_VOLTAGE_CHAN(_chan)					\
+> +{									\
+> +	.type = IIO_VOLTAGE,						\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
+> +			      BIT(IIO_CHAN_INFO_SCALE),			\
+> +	.indexed = 1,							\
+> +	.channel = _chan,						\
+> +}
+> +
+> +static const struct iio_chan_spec ad7292_channels[] = {
+> +	AD7291_VOLTAGE_CHAN(0),
+> +	AD7291_VOLTAGE_CHAN(1),
+> +	AD7291_VOLTAGE_CHAN(2),
+> +	AD7291_VOLTAGE_CHAN(3),
+> +	AD7291_VOLTAGE_CHAN(4),
+> +	AD7291_VOLTAGE_CHAN(5),
+> +	AD7291_VOLTAGE_CHAN(6),
+> +	AD7291_VOLTAGE_CHAN(7)
+> +};
+> +
+> +static const struct iio_chan_spec ad7292_channels_diff[] = {
+> +	{
+> +		.type = IIO_VOLTAGE,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.indexed = 1,
+> +		.differential = 1,
+> +		.channel = 0,
+> +		.channel2 = 1,
+> +	},
+> +	AD7291_VOLTAGE_CHAN(2),
+> +	AD7291_VOLTAGE_CHAN(3),
+> +	AD7291_VOLTAGE_CHAN(4),
+> +	AD7291_VOLTAGE_CHAN(5),
+> +	AD7291_VOLTAGE_CHAN(6),
+> +	AD7291_VOLTAGE_CHAN(7)
+> +};
+> +
+> +struct ad7292_state {
+> +	struct spi_device *spi;
+> +	struct regulator *reg;
+> +	unsigned short vref_mv;
+> +	union {
+> +		__be16 d16;
+> +		u8 d8[2];
+> +	} data ____cacheline_aligned;
+
+Given it is a whole cacheline long anyway, I'd be tempted to just have
+these as separate fields.
+
+> +};
+> +
+> +static int ad7292_spi_reg_read(struct ad7292_state *st, unsigned int addr)
+> +{
+> +	int ret;
+> +
+> +	st->data.d8[0] = AD7292_RD_FLAG_MSK(addr);
+> +
+> +	ret = spi_write_then_read(st->spi, st->data.d8, 1, &st->data.d16, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return be16_to_cpu(st->data.d16);
+> +}
+> +
+> +static int ad7292_spi_subreg_read(struct ad7292_state *st, unsigned int addr,
+> +				  unsigned int sub_addr, unsigned int len)
+> +{
+> +	unsigned int shift = 16 - (8 * len);
+> +	int ret;
+> +
+> +	st->data.d8[0] = AD7292_RD_FLAG_MSK(addr);
+> +	st->data.d8[1] = sub_addr;
+> +
+> +	ret = spi_write_then_read(st->spi, st->data.d8, 2, &st->data.d16, len);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return (be16_to_cpu(st->data.d16) >> shift);
+> +}
+> +
+> +static int ad7292_single_conversion(struct ad7292_state *st,
+> +				    unsigned int chan_addr)
+> +{
+> +	int ret;
+> +
+> +	struct spi_transfer t[] = {
+> +		{
+> +			.tx_buf = &st->data,
+> +			.len = 4,
+> +			.delay_usecs = 6,
+> +		}, {
+> +			.rx_buf = &st->data.d16,
+> +			.len = 2,
+> +		},
+> +	};
+> +
+> +	st->data.d8[0] = chan_addr;
+> +	st->data.d8[1] = AD7292_RD_FLAG_MSK(AD7292_REG_CONV_COMM);
+> +
+> +	ret = spi_sync_transfer(st->spi, t, ARRAY_SIZE(t));
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return be16_to_cpu(st->data.d16);
+> +}
+> +
+> +static int ad7292_vin_range_multiplier(struct ad7292_state *st, int channel)
+> +{
+> +	int samp_mode, range0, range1;
+> +	int factor = 1;
+> +
+> +	/*
+> +	 * Every AD7292 ADC channel may have its input range adjusted according
+> +	 * to the settings at the ADC sampling mode and VIN range subregisters.
+> +	 * For a given channel, the minimum input range is equal to Vref, and it
+> +	 * may be increased by a multiplier factor of 2 or 4 according to the
+> +	 * following rule:
+> +	 * If channel is being sampled wiht respect to AGND:
+> +	 *	factor = 4 if VIN range0 and VIN range1 equal 0
+> +	 *	factor = 2 if only one of VIN ranges equal 1
+> +	 *	factor = 1 if both VIN range0 and VIN range1 equal 1
+> +	 * If channel is being sampled with respect to AVDD:
+> +	 *	factor = 4 if VIN range0 and VIN range1 equal 0
+> +	 *	Behavior is undefined if any of VIN range doesn't equal 0
+> +	 */
+> +
+> +	samp_mode = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
+> +					   AD7292_BANK_REG_SAMP_MODE, 2);
+> +
+> +	if (samp_mode < 0)
+> +		return samp_mode;
+> +
+> +	range0 = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
+> +					AD7292_BANK_REG_VIN_RNG0, 2);
+> +
+> +	if (range0 < 0)
+> +		return range0;
+> +
+> +	range1 = ad7292_spi_subreg_read(st, AD7292_REG_CONF_BANK,
+> +					AD7292_BANK_REG_VIN_RNG1, 2);
+> +
+> +	if (range1 < 0)
+> +		return range1;
+> +
+> +	if (AD7292_CH_SAMP_MODE(samp_mode, channel)) {
+> +		/* Sampling with respect to AGND */
+> +		if (!AD7292_CH_VIN_RANGE(range0, channel))
+> +			factor *= 2;
+> +
+> +		if (!AD7292_CH_VIN_RANGE(range1, channel))
+> +			factor *= 2;
+> +
+> +	} else {
+> +		/* Sampling with respect to AVDD */
+> +		if (AD7292_CH_VIN_RANGE(range0, channel) ||
+> +		    AD7292_CH_VIN_RANGE(range1, channel))
+> +			return -EPERM;
+> +
+> +		factor = 4;
+> +	}
+> +
+> +	return factor;
+> +}
+> +
+> +static int ad7292_read_raw(struct iio_dev *indio_dev,
+> +			   const struct iio_chan_spec *chan,
+> +			   int *val, int *val2, long info)
+> +{
+> +	struct ad7292_state *st = iio_priv(indio_dev);
+> +	unsigned int ch_addr;
+> +	int ret;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ch_addr = AD7292_REG_ADC_CH(chan->channel);
+> +		ret = ad7292_single_conversion(st, ch_addr);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val = AD7292_ADC_DATA(ret);
+> +
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		/*
+> +		 * To convert a raw value to standard units, the IIO defines
+> +		 * this formula: Scaled value = (raw + offset) * scale.
+> +		 * For the scale to be a correct multiplier for (raw + offset),
+> +		 * it must be calculated as the input range divided by the
+> +		 * number of possible distinct input values. Given the ADC data
+> +		 * is 10 bit long, it may assume only 2^10 distinct values.
+> +		 * Hence, scale = range / 2^10. The IIO_VAL_FRACTIONAL_LOG2
+> +		 * return type indicates to the IIO API to divide *val by 2 to
+> +		 * the power of *val2 when returning from read_raw.
+> +		 */
+> +
+> +		*val = regulator_get_voltage(st->reg);
+> +		if (*val < 0)
+> +			*val = st->vref_mv;
+> +		else
+> +			*val /= 1000;
+> +
+> +		ret = ad7292_vin_range_multiplier(st, chan->channel);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val *= ret;
+> +		*val2 = 10;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	default:
+> +		break;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info ad7292_info = {
+> +	.read_raw = ad7292_read_raw,
+> +};
+> +
+> +static void ad7292_regulator_disable(void *data)
+> +{
+> +	struct ad7292_state *st = data;
+> +
+> +	regulator_disable(st->reg);
+> +}
+> +
+> +static int ad7292_probe(struct spi_device *spi)
+> +{
+> +	struct ad7292_state *st;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +	st->spi = spi;
+> +
+> +	ret = ad7292_spi_reg_read(st, AD7292_REG_VENDOR_ID);
+> +	if (ret != ADI_VENDOR_ID) {
+> +		dev_err(&spi->dev, "Wrong vendor id 0x%x\n", ret);
+> +		return -EINVAL;
+> +	}
+> +
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	st->reg = devm_regulator_get_optional(&spi->dev, "vref");
+> +	if (!IS_ERR(st->reg)) {
+> +		ret = regulator_enable(st->reg);
+> +		if (ret) {
+> +			dev_err(&spi->dev,
+> +				"Failed to enable external vref supply\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = devm_add_action_or_reset(&spi->dev,
+> +					       ad7292_regulator_disable, st);
+> +		if (ret) {
+> +			regulator_disable(st->reg);
+> +			return ret;
+> +		}
+> +
+> +		ret = regulator_get_voltage(st->reg);
+> +		if (ret < 0)
+> +			return ret;
+
+We get the voltage here, but then I think we throw it away by rereading it
+each time above.  No need to get it in both places.
+
+> +
+> +		st->vref_mv = ret / 1000;
+> +	} else {
+
+	Perhaps add a comment here to say this is the internal reference.
+
+> +		st->vref_mv = 1250;
+> +	}
+> +
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->info = &ad7292_info;
+> +
+> +	ret = of_property_read_bool(spi->dev.of_node, "diff-channels");
+
+I mention in review of the dt patch that this should use the generic
+binding support for specifying differential channels.
+
+> +	if (ret) {
+> +		indio_dev->num_channels = ARRAY_SIZE(ad7292_channels_diff);
+> +		indio_dev->channels = ad7292_channels_diff;
+> +	} else {
+> +		indio_dev->num_channels = ARRAY_SIZE(ad7292_channels);
+> +		indio_dev->channels = ad7292_channels;
+> +	}
+> +
+> +	return devm_iio_device_register(&spi->dev, indio_dev);
+> +}
+> +
+> +static const struct spi_device_id ad7292_id_table[] = {
+> +	{ "ad7292", 0 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(spi, ad7292_id_table);
+> +
+> +static const struct of_device_id ad7292_of_match[] = {
+> +	{ .compatible = "adi,ad7292" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, ad7292_of_match);
+> +
+> +static struct spi_driver ad7292_driver = {
+> +	.driver = {
+> +		.name = "ad7292",
+> +		.of_match_table = ad7292_of_match,
+> +	},
+> +	.probe = ad7292_probe,
+> +	.id_table = ad7292_id_table,
+> +};
+> +module_spi_driver(ad7292_driver);
+> +
+> +MODULE_AUTHOR("Marcelo Schmitt <marcelo.schmitt1@gmail.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD7292 ADC driver");
+> +MODULE_LICENSE("GPL v2");
+
+
