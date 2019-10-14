@@ -2,105 +2,116 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D567BC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC492ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACD5207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42F4207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:14:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBY+KsDo"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="M8CTQTPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbfJNKLY (ORCPT
+        id S1731376AbfJNKO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:11:24 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33781 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730860AbfJNKLX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:11:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i76so9840550pgc.0;
-        Mon, 14 Oct 2019 03:11:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u6WI0gDjbvLg3JzSkl1yVQQFCwF5JM/S0gxkF6bM6fg=;
-        b=lBY+KsDoJUg2hKJs7lp8p8z4x5tDAIj44Rj+aOGnsc7Inftl94nbqA0J0mKXUfDTYT
-         QeRQihPX6F3qwA0JnLbUVxFOYnix5KjZebKetNhRYXQUuSbNc9oH58UrD5vRXY5ckaze
-         Bfj3ploISAFEcjrqZuu/ms2lVfnWBhQLnitoRsqsDE/bqp3+nSuYpLdkkWiU6tXjxsiq
-         B9jYhvh42Vy5qQg1ZlpbFsI/zPK1qfuvEy8mRTVUROOTZzIGss8e1qGfv6QsNX6DP8ov
-         clD+1K+1Lj0yn0HyUbUfbyrab+M0EYUMY/Rh9ao7p213ftX+UygJAaKK1ziLIWpq9VJL
-         ZoUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u6WI0gDjbvLg3JzSkl1yVQQFCwF5JM/S0gxkF6bM6fg=;
-        b=c0Khj+exKbCl7MV3A3LZ2pGX1L1l0tjMpSEO/jDkG0AcXqGqahHB5az/vAXm0CPw8b
-         FwGAr0QI5cIObWwEEPk5kECXYQw+EJSPqr/3rhkg3FX8e+xKpmimT2lNzn53QVpRCG5G
-         3wYwV/LMvfmsqSaqY7EBkB2jNfgjebyzNSvV7OVln+IY37PfNrZSgthRDdDhvuxvhZ83
-         VAm8lpMr1pq9Dl/yS1kS9iGDva+iG0nOeaMorfwmNEoG2GHGfpMnKEIpJTObxsZvtvGr
-         HaqFXbowlO2k3faH4Omhsxb0EyuahxDGLLR8eI+Tc5DAGI9XaQus3V4d21z0hPKbCVol
-         RIIA==
-X-Gm-Message-State: APjAAAVXHOLS65x699Al3yNdd2XZ5qdmy7+lmcxHnMjQhTgWfDwypd2k
-        iRKI4Y3ieOm3I7quOR47DeiMAFs7w4FKt1Dx8QU=
-X-Google-Smtp-Source: APXvYqwwxxKi/wqKL8hzQH0JWvzTmEg06U0A67Gdgik5ysLzrtrS1capqHHl51ggKu1gORfFTWboMHEJXTZ5IVFyuCs=
-X-Received: by 2002:a17:90a:c684:: with SMTP id n4mr35304592pjt.33.1571047881584;
- Mon, 14 Oct 2019 03:11:21 -0700 (PDT)
+        Mon, 14 Oct 2019 06:14:29 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47968 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730860AbfJNKO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:14:29 -0400
+Received: from zn.tnic (p200300EC2F0658000D81860DC41819CD.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5800:d81:860d:c418:19cd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 178E01EC0C81;
+        Mon, 14 Oct 2019 12:14:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571048068;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wkz9C43pehfzIi2G8U/rqKdkFbNpdbpgepEvHllTaWY=;
+        b=M8CTQTPoMBdW++4DWBzrcGsHBNI9VODSHqJEsTxJJ3z8S8NsL1i1KINDFF752dXr4X08ZD
+        8v9PBq698wKG6xqwWv4kG6H8X8eKrlNsCmRbPAGcMhYwPI0+z82Rk/q6wTrGhi2gfdQcV6
+        4YxZ8BgCsE/zmOTHaXjMbj5lRQBSYWY=
+Date:   Mon, 14 Oct 2019 12:14:19 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        x86@kernel.org, linux-efi@vger.kernel.org
+Subject: Re: [PATCH v3] x86, efi: never relocate kernel below lowest
+ acceptable address
+Message-ID: <20191014101419.GA4715@zn.tnic>
+References: <20191012034421.25027-1-kasong@redhat.com>
 MIME-Version: 1.0
-References: <20191014090910.9701-1-jgross@suse.com> <20191014090910.9701-2-jgross@suse.com>
-In-Reply-To: <20191014090910.9701-2-jgross@suse.com>
-From:   Paul Durrant <pdurrant@gmail.com>
-Date:   Mon, 14 Oct 2019 11:11:10 +0100
-Message-ID: <CACCGGhDz6nAqoKUaZ+Ud7O7Srm1ygt=6UgSrydajizJfWZsRPQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] xen/netback: fix error path of xenvif_connect_data()
-To:     Juergen Gross <jgross@suse.com>
-Cc:     xen-devel <xen-devel@lists.xenproject.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        Paul Durrant <paul@xen.org>,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191012034421.25027-1-kasong@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 at 10:09, Juergen Gross <jgross@suse.com> wrote:
->
-> xenvif_connect_data() calls module_put() in case of error. This is
-> wrong as there is no related module_get().
->
-> Remove the superfluous module_put().
->
-> Fixes: 279f438e36c0a7 ("xen-netback: Don't destroy the netdev until the vif is shut down")
-> Cc: <stable@vger.kernel.org> # 3.12
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+On Sat, Oct 12, 2019 at 11:44:21AM +0800, Kairui Song wrote:
+> Currently, kernel fails to boot on some HyperV VMs when using EFI.
+> And it's a potential issue on all platforms.
+> 
+> It's caused a broken kernel relocation on EFI systems, when below three
+> conditions are met:
+> 
+> 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
+>    by the loader.
+> 2. There isn't enough room to contain the kernel, starting from the
+>    default load address (eg. something else occupied part the region).
+> 3. In the memmap provided by EFI firmware, there is a memory region
+>    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
+>    kernel.
+> 
+> Efi stub will perform a kernel relocation when condition 1 is met. But
+> due to condition 2, efi stub can't relocate kernel to the preferred
+> address, so it fallback to query and alloc from EFI firmware for lowest
 
-Yes, looks like this should have been cleaned up a long time ago.
+Your spelling of "EFI" is like a random number generator in this
+paragraph: "Efi", "efi" and "EFI". Can you please be more careful when
+writing your commit messages? They're not some random text you hurriedly
+jot down before sending the patch but a most important description of
+why a change is being done.
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+And if you don't see their importance now, just try doing some git
+archeology, trying to understand why a change has been done in the past
+and then encounter a commit message two-liner which doesn't say sh*t.
+Then you'll start appreciating properly written commit messages.
 
-> ---
->  drivers/net/xen-netback/interface.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
-> index 240f762b3749..103ed00775eb 100644
-> --- a/drivers/net/xen-netback/interface.c
-> +++ b/drivers/net/xen-netback/interface.c
-> @@ -719,7 +719,6 @@ int xenvif_connect_data(struct xenvif_queue *queue,
->         xenvif_unmap_frontend_data_rings(queue);
->         netif_napi_del(&queue->napi);
->  err:
-> -       module_put(THIS_MODULE);
->         return err;
->  }
->
-> --
-> 2.16.4
->
+> usable memory region.
+> 
+> It's incorrect to use the lowest memory address. In later stage, kernel
+> will assume LOAD_PHYSICAL_ADDR as the minimal acceptable relocate address,
+> but efi stub will end up relocating kernel below it.
+
+Why don't you simply explain what
+choose_random_location()->find_random_virt_addr() does? That's the
+problem you're solving, right? KASLR using LOAD_PHYSICAL_ADDR as the
+minimum...
+
+> The later kernel decompressing code will forcefully correct the wrong
+> kernel load location,
+
+... or do you mean by that the dance in
+arch/x86/boot/compressed/head_64.S where we move the kernel temporarily
+to LOAD_PHYSICAL_ADDR for the decompression?
+
+You can simply say that here...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
