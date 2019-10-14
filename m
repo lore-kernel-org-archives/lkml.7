@@ -2,158 +2,93 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5F9C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC7CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C99E20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E57120854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:38:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NRfYrTFx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="snBxDpYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388563AbfJNRe6 (ORCPT
+        id S1730451AbfJNRiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:34:58 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33214 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730180AbfJNRe5 (ORCPT
+        Mon, 14 Oct 2019 13:38:06 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34454 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730039AbfJNRiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:34:57 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EHTp3K055924;
-        Mon, 14 Oct 2019 17:34:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Sj5E7ri9EjF2cgNcXdjfk05LQnS3NN8JCDICViSe1l4=;
- b=NRfYrTFxZzoOLxMcx65XLBB3ERJNQMv6n5M78L/0xlTcg1yrbwGrNSDcLoOjtucMpMiw
- nCdS2UdRbm/zV3OryxWtaiUcBT2dhyN9Y3ciyKA+D7eqfulGWi8hxdzv2jYY+x7V2fRh
- 7Y7PnwKF+QiHacsd2rSppbdChEsZYK01alggAyr6KWNbEFwpI6SqS1Fw44fIYvxuAzF/
- QPSlZ9xDXQHJe/9Nec9YXT8VquHrSH0Q5X7a1Dyo118w1dad2a6ZkrO3Vf6iNpLxEUvF
- Wy0jby1mjEKRIw9YtOHOrgKMyLBbBeD4dzwQionO6Q0mKiHajLAiYzsQ0laTRndJLz/T Dg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vk7fr2awy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 17:34:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EHSTkp104914;
-        Mon, 14 Oct 2019 17:34:28 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2vks076tgk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 17:34:27 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9EHYQIv015116;
-        Mon, 14 Oct 2019 17:34:26 GMT
-Received: from localhost (/10.159.144.186)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 14 Oct 2019 10:34:26 -0700
-Date:   Mon, 14 Oct 2019 10:34:24 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     sandeen@redhat.com, billodo@redhat.com, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        zhengbin13@huawei.com
-Subject: Re: [PATCH] xfs: include QUOTA, FATAL ASSERT build options in
- XFS_BUILD_OPTIONS
-Message-ID: <20191014173424.GX13108@magnolia>
-References: <1567751206-128735-1-git-send-email-yukuai3@huawei.com>
- <20190916162406.GY2229799@magnolia>
+        Mon, 14 Oct 2019 13:38:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 83so14447308oii.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 10:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QSCO5aB2fA+02qEUEaBs4WEazb7/tnATGJJwnHFP2CY=;
+        b=snBxDpYBkjPomhnffO2N88geBv6vgoB9wKs2Yu2t62CUJb0JWltYMS6AaF4WKv/NlB
+         bLY6NAVQMq1lkCZPK3JKlFYPciGoE2cW/Qx8fbOFeI8HOrJtlgl3g4GSJLAGrRQ0zliB
+         y7XfpND078dDkIKkQmM05NgKIQYQTHUonOhrDjy70Rwn1wGzOb4gn5gdhxpD/DrIDAOX
+         UAyTRjasN9llYMhvUu+3xjF3E5Vkl3HkJ9lVC44s0rfPNVNPt1fqHyC5T3flTuk2nIKC
+         wEo3r9449VLdpTdbOp9NpQ+N4KSwh0KVpmpiQB+VxUT7ncoubTL7ejieKOnBbdEQem50
+         1zBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QSCO5aB2fA+02qEUEaBs4WEazb7/tnATGJJwnHFP2CY=;
+        b=tjGCtfAHlIT501hD9euHqZ5WGMqF5fq1l5lW5JbI4pG2/Jmg1YRx5arGKXQEJulY9f
+         QpUg9OTCcqkcGPm85CVe0RcHL209NCj1rLsnzjnHlikJ5I7LVXw9duxPcgXOr7v1gSnQ
+         sp34UoqUs07dqjVlmAYr7VlhmtWDoDvgO14MlSxZg37m/62P3ociS6cXHIIcHTpXZMzm
+         C99PxKhobwkGpO0gSJD/FVfcWIrpZ8S/4ayrFqjkWsicb9Hgzs7oe9sHShMyxEvqb5QP
+         0kUAlSYQu1ybZ9L+UmiTSiIi+LuLa4vuAurh48nECC/GjblAEJ2323lwS4nrJ6iCkpqv
+         8tag==
+X-Gm-Message-State: APjAAAUwoh6GS6jbB1cRuhkt9MV0knwbm+XXE4iwXiUEKa6iDQc3fDNV
+        xzxMSRB05PZslCW/tCMUWI0+V06sRZlUMxOFoLYIaQ==
+X-Google-Smtp-Source: APXvYqztx76pi31dpiCrP7KHa3pI9SHJTfDuzi9ExMRTPyT4Eeto/zDYD3BIljiOAlRPGJD1fyGVBZ5ggSkrm3My2vg=
+X-Received: by 2002:aca:f403:: with SMTP id s3mr25678430oih.23.1571074681984;
+ Mon, 14 Oct 2019 10:38:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916162406.GY2229799@magnolia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910140146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910140146
+References: <20190715191804.112933-1-hridya@google.com> <CAG48ez0dSd4q06YXOnkzmM8BkfQGTtYE6j60_YRdC5fmrTm8jw@mail.gmail.com>
+ <CAG48ez2ez1bb=3o3h1KSahPU6QcdXhbh=Z2aX4Mte24H4901_g@mail.gmail.com>
+In-Reply-To: <CAG48ez2ez1bb=3o3h1KSahPU6QcdXhbh=Z2aX4Mte24H4901_g@mail.gmail.com>
+From:   Hridya Valsaraju <hridya@google.com>
+Date:   Mon, 14 Oct 2019 10:37:25 -0700
+Message-ID: <CA+wgaPNPSOzEf-p8wsorqGe=eEbhFLkW6gYfYP1MaCqhQBvrnw@mail.gmail.com>
+Subject: Re: [PATCH] binder: prevent transactions to context manager from its
+ own process.
+To:     Jann Horn <jannh@google.com>
+Cc:     Todd Kjos <tkjos@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 09:24:06AM -0700, Darrick J. Wong wrote:
-> On Fri, Sep 06, 2019 at 02:26:46PM +0800, yu kuai wrote:
-> > In commit d03a2f1b9fa8 ("xfs: include WARN, REPAIR build options in
-> > XFS_BUILD_OPTIONS"), Eric pointed out that the XFS_BUILD_OPTIONS string,
-> > shown at module init time and in modinfo output, does not currently
-> > include all available build options. So, he added in CONFIG_XFS_WARN and
-> > CONFIG_XFS_REPAIR. However, this is not enough, add in CONFIG_XFS_QUOTA
-> > and CONFIG_XFS_ASSERT_FATAL. 
-> > 
-> > Signed-off-by: yu kuai <yukuai3@huawei.com>
-> > ---
-> >  fs/xfs/xfs_super.h | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/fs/xfs/xfs_super.h b/fs/xfs/xfs_super.h
-> > index 763e43d..b552cf6 100644
-> > --- a/fs/xfs/xfs_super.h
-> > +++ b/fs/xfs/xfs_super.h
-> > @@ -11,9 +11,11 @@
-> >  #ifdef CONFIG_XFS_QUOTA
-> >  extern int xfs_qm_init(void);
-> >  extern void xfs_qm_exit(void);
-> > +# define XFS_QUOTA_STRING	"quota, "
-> >  #else
-> >  # define xfs_qm_init()	(0)
-> >  # define xfs_qm_exit()	do { } while (0)
-> > +# define XFS_QUOTA_STRING
-> >  #endif
-> >  
-> >  #ifdef CONFIG_XFS_POSIX_ACL
-> > @@ -50,6 +52,12 @@ extern void xfs_qm_exit(void);
-> >  # define XFS_WARN_STRING
-> >  #endif
-> >  
-> > +#ifdef CONFIG_XFS_ASSERT_FATAL
-> > +# define XFS_ASSERT_FATAL_STRING	"fatal assert, "
-> 
-> /me wonders if the space here will screw up any scripts that try to
-> parse the logging string, but OTOH that seems pretty questionable to me.
+On Fri, Oct 11, 2019 at 3:11 PM Jann Horn <jannh@google.com> wrote:
+>
+> On Fri, Oct 11, 2019 at 11:59 PM Jann Horn <jannh@google.com> wrote:
+> > (I think you could also let A receive a handle
+> > to itself and then transact with itself, but I haven't tested that.)
+>
+> Ignore this sentence, that's obviously wrong because same-binder_proc
+> nodes will always show up as a binder, not a handle.
 
-Answer: There are already string components with spaces.
-
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-
-> Also, whatever happened to adding a sysfs file so that scripts (ok let's
-> be honest, xfstests) could programmatically figure out the capabilities
-> of the running xfs module?
-> 
-> --D
-> 
-> > +#else
-> > +# define XFS_ASSERT_FATAL_STRING
-> > +#endif
-> > +
-> >  #ifdef DEBUG
-> >  # define XFS_DBG_STRING		"debug"
-> >  #else
-> > @@ -63,6 +71,8 @@ extern void xfs_qm_exit(void);
-> >  				XFS_SCRUB_STRING \
-> >  				XFS_REPAIR_STRING \
-> >  				XFS_WARN_STRING \
-> > +				XFS_QUOTA_STRING \
-> > +				XFS_ASSERT_FATAL_STRING \
-> >  				XFS_DBG_STRING /* DBG must be last */
-> >  
-> >  struct xfs_inode;
-> > -- 
-> > 2.7.4
-> > 
+Thank you for the email and steps to reproduce the issue Jann. I need
+some time to take a look at the same and I will get back to you once I
+understand it and hopefully have a fix. We do want to disallow
+same-process transactions. Here is a little bit more of context for
+the patch: https://lkml.org/lkml/2018/3/28/173
