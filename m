@@ -2,108 +2,122 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7481BECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A4DECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5078E20650
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2AD207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571042358;
+	bh=/iRUtYW2DqEiFpeYYYWspGOKICVFzaiC9FJCCvg2pvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=enY/TWykKcyJfY+U6WBALJE5e4XbmO6W8LLOUtwRSOwJNt50Hv3EzKg+I6T0SK4Gf
+	 BLAQ6EeqBBfZILkC4hBGA6GCUA9kmrqMMgrtlxOwTI33xVVhGJZ1pzHzEGeNwbnvFZ
+	 ZFbH+q+XHe24nhDltaGFdVNApW9tMhq43ZPd6IGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbfJNIim (ORCPT
+        id S1730533AbfJNIjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 04:38:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40966 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729928AbfJNIil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:38:41 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8EAE6C0568FD
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:38:41 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id o188so6835273wmo.5
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 01:38:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=zgV9pC+zt0gI/V422zTkhHPL1PoCXjjbpPu+KeAB0w0=;
-        b=oXn4BbJRhYEeUuWd0snXJhOlXwwk80OAR0sPcfaxqWTwC4CljRQhGcSzQWRhQ9Uzdr
-         wnUD0DdsVIato0nw3bsFNNQtREOXKXZ36NhrwCto8N270ilnLc0n7F1tOJECu1lMIKmp
-         nWfVTunvRxdW59g2Cc6pY3MB8zwZy1qYLzocGs9PgNWGHgkX4y7WudjwPGSfVquSabx7
-         fiDeHMW9E6TeJaNJSB8a11FvCyYfPFwPqWhEoen6UiS9M0tnY0uLjzxSfmLEhv0/DucC
-         Lv/MItavoTmLBedSgRP20KSYKjCnu9nvivY9EPLjZ7ca20LNyCHs9X/vd7nsW713Y9GY
-         7fEg==
-X-Gm-Message-State: APjAAAWmiCpuHzPrAWHJWhchGcnsu2wrHrcsMcxvknhc+CQ2F+kPPjVA
-        /1bWGqNB3Ty9ej0EdJlkcPBAAjO1zfKS+Ut4G3j+O87zGZQigTLROr5MzZXNTsIMhsNwLo0iXsm
-        9oaL/jZs6E3rCYyEXYzZo38qw
-X-Received: by 2002:a1c:3284:: with SMTP id y126mr14533750wmy.164.1571042320318;
-        Mon, 14 Oct 2019 01:38:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx7BekhhYUaPdPVvYSoK18HhJqtlF38AkAYk8aK0SjlT68meT4y2oI/uOqPx7iwjAspulu58A==
-X-Received: by 2002:a1c:3284:: with SMTP id y126mr14533736wmy.164.1571042320048;
-        Mon, 14 Oct 2019 01:38:40 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id x5sm22881456wrt.75.2019.10.14.01.38.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 01:38:39 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 10:38:36 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        kvm <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 1/5] vsock/virtio: limit the memory used per-socket
-Message-ID: <20191014083836.fumqbp4sfn5usys6@steredhat>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-2-sgarzare@redhat.com>
- <20190729095956-mutt-send-email-mst@kernel.org>
- <20190830094059.c7qo5cxrp2nkrncd@steredhat>
- <20190901024525-mutt-send-email-mst@kernel.org>
- <CAGxU2F7fA5UtkuMQbOHHy0noOGZUtpepBNKFg5afD81bynMVUQ@mail.gmail.com>
- <20191014081724.GD22963@stefanha-x1.localdomain>
- <2398c960-b6d7-8af3-fa25-d75344335db7@redhat.com>
+        Mon, 14 Oct 2019 04:39:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38758 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729234AbfJNIjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:39:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A2DABB885;
+        Mon, 14 Oct 2019 08:39:15 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 10:39:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: memory offline infinite loop after soft offline
+Message-ID: <20191014083914.GA317@dhcp22.suse.cz>
+References: <1570829564.5937.36.camel@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2398c960-b6d7-8af3-fa25-d75344335db7@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1570829564.5937.36.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 04:21:35PM +0800, Jason Wang wrote:
-> On 2019/10/14 ä¸‹åˆ4:17, Stefan Hajnoczi wrote:
-> > SO_VM_SOCKETS_BUFFER_SIZE might have been useful for VMCI-specific
-> > applications, but we should use SO_RCVBUF and SO_SNDBUF for portable
-> > applications in the future.  Those socket options also work with other
-> > address families.
-> > 
-
-I think hyperv_transport started to use it in this patch:
-ac383f58f3c9  hv_sock: perf: Allow the socket buffer size options to influence
-              the actual socket buffers
-
-
-> > I guess these sockopts are bypassed by AF_VSOCK because it doesn't use
-> > the common skb queuing code in net/core/sock.c:(.  But one day we might
-> > migrate to it...
-> > 
-> > Stefan
+On Fri 11-10-19 17:32:44, Qian Cai wrote:
+> # /opt/ltp/runtest/bin/move_pages12
+> move_pages12.c:263: INFO: Free RAM 258988928 kB
+> move_pages12.c:281: INFO: Increasing 2048kB hugepages pool on node 0 to 4
+> move_pages12.c:291: INFO: Increasing 2048kB hugepages pool on node 8 to 4
+> move_pages12.c:207: INFO: Allocating and freeing 4 hugepages on node 0
+> move_pages12.c:207: INFO: Allocating and freeing 4 hugepages on node 8
+> move_pages12.c:197: PASS: Bug not reproduced
+> move_pages12.c:197: PASS: Bug not reproduced
+> 
+> for mem in $(ls -d /sys/devices/system/memory/memory*); do
+>         echo offline > $mem/state
+>         echo online > $mem/state
+> done
+> 
+> That LTP move_pages12 test will first madvise(MADV_SOFT_OFFLINE) for a range.
+> Then, one of "echo offline" will trigger an infinite loop in __offline_pages()
+> here,
+> 
+> 		/* check again */
+> 		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+> 					    NULL, check_pages_isolated_cb);
+> 	} while (ret);
+> 
+> because check_pages_isolated_cb() always return -EBUSY from
+> test_pages_isolated(),
 > 
 > 
-> +1, we should really consider to reuse the exist socket mechanism instead of
-> re-inventing wheels.
+> 	pfn = __test_page_isolated_in_pageblock(start_pfn, end_pfn,
+> 						skip_hwpoisoned_pages);
+>         ...
+>         return pfn < end_pfn ? -EBUSY : 0;
+> 
+> The root cause is in __test_page_isolated_in_pageblock() where "pfn" is always
+> less than "end_pfn" because the associated page is not a PageBuddy.
+> 
+> 	while (pfn < end_pfn) {
+> 	...
+> 		else
+> 			break;
+> 
+> 	return pfn;
 
-+1, I totally agree. I'll go this way.
+Hmm, this is interesting. I would expect that this would hit the
+previous branch
+	if (skip_hwpoisoned_pages && PageHWPoison(page))
+and skip over hwpoisoned page. But I cannot seem to find that we would
+mark all tail pages HWPoison as well and so any tail page seem to
+confuse __test_page_isolated_in_pageblock.
 
-Guys, thank you all for your suggestions!
+Oscar is rewriting the hwpoison implementation but I am not sure
+how/whether he is handling this case differently. Naoya, shouldn't we do
+the following at least?
+---
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index 89c19c0feadb..5fb3fee16fde 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -274,7 +274,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
+ 			 * simple way to verify that as VM_BUG_ON(), though.
+ 			 */
+ 			pfn += 1 << page_order(page);
+-		else if (skip_hwpoisoned_pages && PageHWPoison(page))
++		else if (skip_hwpoisoned_pages && PageHWPoison(compound_head(page)))
+ 			/* A HWPoisoned page cannot be also PageBuddy */
+ 			pfn++;
+ 		else
+-- 
+Michal Hocko
+SUSE Labs
