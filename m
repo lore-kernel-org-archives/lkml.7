@@ -2,114 +2,192 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6354EECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25D7ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFD720673
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:58:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dIkMInmT"
+	by mail.kernel.org (Postfix) with ESMTP id CB9BE2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbfJNH6r (ORCPT
+        id S1729981AbfJNIAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 03:58:47 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:44955 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728772AbfJNH6p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 03:58:45 -0400
-Received: by mail-pg1-f173.google.com with SMTP id e10so5627242pgd.11
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=y50RYUfHeI2he8tBZWuhHfSekRhLtbksYVRqOP2O+os=;
-        b=dIkMInmTpj1JrGLM5HMmR344M6bRmXAeYAMiVi8arb1/TJiPi/qUU0epeb2VIbDM4G
-         LV3tlygKC4jC/jZvI/TTi1aSMecsChNYTb6670nu93b6lUDkYL20QDgOWQLg7FTCeez4
-         X8Zy9epQLServXDvDch8Pk3PiKVzYr6g96SSq+yK5zc5ImZYUoncGr9E/hXE1UiCYKiB
-         +eJ5zOPomeSEH68qwDViDJScGl1/s35QWBNtfxK/BCDsB8akxoVVse1MfiXLl/gWOB57
-         IqRHEKdJM1AE9swDJi3rcCokwXduEo8RYy7FP6TrgWhL62naqVU5cXxMuEEmSgXFMq9V
-         rl3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=y50RYUfHeI2he8tBZWuhHfSekRhLtbksYVRqOP2O+os=;
-        b=MKlKHLSOZ8ZuP5HFjx6KWQ4YXfqGzkCx8ovTwmKdw3O5YycqWrOnx5ZTXo8OTU05bQ
-         6z1b5QoeusZxLR14uefNK6zZJGjsd2gM/01jpICoLnmxozw+Zort8Wjizl4ti//ibuge
-         9AfT9XHQhVIXRuzuHX72Y4bAQe6NNuahNEt3ChW0ZvFoDw7NG9+9MDovzOqR01SzqDPP
-         3EkGJaxWBO4+dTjGF7mSUF0sSGkJK/HWrGJrgLVMCf6q9nCRD2H2akxkR/b+hpwPPUGK
-         vLvV2969KL43h+6FJq0EuG26PJ7GBmlHlY1bpx0oJmM8yTWuSbBYVUNubwtddueOZr0A
-         ZKmQ==
-X-Gm-Message-State: APjAAAWD4HBoOOfRR3evPndLJWM0xodi+1D6FDPX7ReKUvOHWFkLp2Gq
-        BVCqkRk0D6Qtvj31Ta3kFHlLjA==
-X-Google-Smtp-Source: APXvYqz1elBbSRERXVRjYUz8rt7tmJgHaye/RY5uPh+nlyfBFC3t6Ntdv7LmkGs0yOyrkFPOBQvtXg==
-X-Received: by 2002:a62:3685:: with SMTP id d127mr159897pfa.179.1571039924723;
-        Mon, 14 Oct 2019 00:58:44 -0700 (PDT)
-Received: from localhost.localdomain (111-241-168-233.dynamic-ip.hinet.net. [111.241.168.233])
-        by smtp.gmail.com with ESMTPSA id j126sm16583137pfb.186.2019.10.14.00.58.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 00:58:43 -0700 (PDT)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC v2 4/4] MAINTAINERS: Add Green as SiFive PDMA driver maintainer
-Date:   Mon, 14 Oct 2019 15:54:27 +0800
-Message-Id: <20191014075502.15105-5-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191014075502.15105-1-green.wan@sifive.com>
-References: <20191014075502.15105-1-green.wan@sifive.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 14 Oct 2019 04:00:53 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726637AbfJNIAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:00:53 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 043818491006F9A592D1;
+        Mon, 14 Oct 2019 16:00:49 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
+ 16:00:46 +0800
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <linux-acpi@vger.kernel.org>
+References: <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
+ <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+ <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+ <20191010073212.GB18412@dhcp22.suse.cz>
+ <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+ <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+ <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
+ <20191012074014.GA2037204@kroah.com>
+ <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
+ <20191012104001.GA2052933@kroah.com> <20191012104742.GA2053473@kroah.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <82000bc8-6912-205b-0251-25b9cc430973@huawei.com>
+Date:   Mon, 14 Oct 2019 16:00:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
+MIME-Version: 1.0
+In-Reply-To: <20191012104742.GA2053473@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update MAINTAINERS for SiFive PDMA driver.
+On 2019/10/12 18:47, Greg KH wrote:
+> On Sat, Oct 12, 2019 at 12:40:01PM +0200, Greg KH wrote:
+>> On Sat, Oct 12, 2019 at 05:47:56PM +0800, Yunsheng Lin wrote:
+>>> On 2019/10/12 15:40, Greg KH wrote:
+>>>> On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
+>>>>> add pci and acpi maintainer
+>>>>> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
+>>>>>
+>>>>> On 2019/10/11 19:15, Peter Zijlstra wrote:
+>>>>>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
+>>>>>>> But I failed to see why the above is related to making node_to_cpumask_map()
+>>>>>>> NUMA_NO_NODE aware?
+>>>>>>
+>>>>>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
+>>>>>> have a node assigned.
+>>>>>>
+>>>>>> It not having one, is a straight up bug. We must not silently accept
+>>>>>> NO_NODE there, ever.
+>>>>>>
+>>>>>
+>>>>> I suppose you mean reporting a lack of affinity when the node of a pcie
+>>>>> device is not set by "not silently accept NO_NODE".
+>>>>
+>>>> If the firmware of a pci device does not provide the node information,
+>>>> then yes, warn about that.
+>>>>
+>>>>> As Greg has asked about in [1]:
+>>>>> what is a user to do when the user sees the kernel reporting that?
+>>>>>
+>>>>> We may tell user to contact their vendor for info or updates about
+>>>>> that when they do not know about their system well enough, but their
+>>>>> vendor may get away with this by quoting ACPI spec as the spec
+>>>>> considering this optional. Should the user believe this is indeed a
+>>>>> fw bug or a misreport from the kernel?
+>>>>
+>>>> Say it is a firmware bug, if it is a firmware bug, that's simple.
+>>>>
+>>>>> If this kind of reporting is common pratice and will not cause any
+>>>>> misunderstanding, then maybe we can report that.
+>>>>
+>>>> Yes, please do so, that's the only way those boxes are ever going to get
+>>>> fixed.  And go add the test to the "firmware testing" tool that is based
+>>>> on Linux that Intel has somewhere, to give vendors a chance to fix this
+>>>> before they ship hardware.
+>>>>
+>>>> This shouldn't be a big deal, we warn of other hardware bugs all the
+>>>> time.
+>>>
+>>> Ok, thanks for clarifying.
+>>>
+>>> Will send a patch to catch the case when a pcie device without numa node
+>>> being set and warn about it.
+>>>
+>>> Maybe use dev->bus to verify if it is a pci device?
+>>
+>> No, do that in the pci bus core code itself, when creating the devices
+>> as that is when you know, or do not know, the numa node, right?
+>>
+>> This can't be in the driver core only, as each bus type will have a
+>> different way of determining what the node the device is on.  For some
+>> reason, I thought the PCI core code already does this, right?
+> 
+> Yes, pci_irq_get_node(), which NO ONE CALLS!  I should go delete that
+> thing...
+> 
+> Anyway, it looks like the pci core code does call set_dev_node() based
+> on the PCI bridge, so if that is set up properly, all should be fine.
+> 
+> If not, well, you have buggy firmware and you need to warn about that at
+> the time you are creating the bridge.  Look at the call to
+> pcibus_to_node() in pci_register_host_bridge().
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Thanks for pointing out the specific function.
+Maybe we do not need to warn about the case when the device has a parent,
+because we must have warned about the parent if the device has a parent
+and the parent also has a node of NO_NODE, so do not need to warn the child
+device anymore? like blew:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a69e6db80c79..62d5b249be65 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14778,6 +14778,12 @@ F:	drivers/media/usb/siano/
- F:	drivers/media/usb/siano/
- F:	drivers/media/mmc/siano/
- 
-+SIFIVE PDMA DRIVER
-+M:	Green Wan <green.wan@sifive.com>
-+S:	Maintained
-+F:	drivers/dma/sf-pdma/
-+F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+@@ -932,6 +932,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+        list_add_tail(&bus->node, &pci_root_buses);
+        up_write(&pci_bus_sem);
+
++       if (nr_node_ids > 1 && !parent &&
++           dev_to_node(bus->bridge) == NUMA_NO_NODE)
++               dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
 +
- SIFIVE DRIVERS
- M:	Palmer Dabbelt <palmer@sifive.com>
- M:	Paul Walmsley <paul.walmsley@sifive.com>
--- 
-2.17.1
+        return 0;
+
+
+Also, we do not need to warn about that in pci_device_add(), Right?
+Because we must have warned about the pci host bridge of the pci device.
+
+I may be wrong about above because I am not so familiar with the pci.
+
+> 
+> And yes, you need to do this all on a per-bus-type basis, as has been
+> pointed out.  It's up to the bus to create the device and set this up
+> properly.
+
+Thanks.
+Will do that on per-bus-type basis.
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> .
+> 
 
