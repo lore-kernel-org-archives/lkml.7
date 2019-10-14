@@ -2,268 +2,347 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED06DECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ECAECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87B320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:32:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XICH1u05"
+	by mail.kernel.org (Postfix) with ESMTP id A624120854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731530AbfJNKcy (ORCPT
+        id S1731568AbfJNKc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:32:54 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39750 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731127AbfJNKcw (ORCPT
+        Mon, 14 Oct 2019 06:32:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41695 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731127AbfJNKc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:32:52 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p12so528388pgn.6;
-        Mon, 14 Oct 2019 03:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oUxiYEyAMUiFlWbyACYeVt4wto4jVAv/PYKjqVKaLG8=;
-        b=XICH1u057uohUq/74Alm2nHi/+fOFgDV9WgjiihVfT5Sg76syBDQB3ZizG8huP+Yqk
-         o821IEmlgdEDJyukPm/4YrmYKCkR0RMC0E7iFXRbAWBXXOc9Xl0m3ft6nVju7VuSvJ7B
-         69PzTbwPmu3Rp4LVY8Sk87PE/6NEGvbB5PWT+UbOobPlpn9YcfrulAkpId+OH/Mbe7P3
-         BivHa4t5N5eQKSHmVk+NuQejn4ttzhysNf0KBjesKMH+xz1zduMXH9LdprxgihaPPWnk
-         xyivPrh4aAvXUWB/FL/ZO1as5PHUK91l/iDsn131+Lq4sMUXUpTtsX/qqrqf9ZotcohT
-         13bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oUxiYEyAMUiFlWbyACYeVt4wto4jVAv/PYKjqVKaLG8=;
-        b=TKj5Eu36VTEFPff/y3Y9JzZdDUrlOJzJ/1b9EV6V/mwlXTe6xrkm0dkv9Dr502JNuX
-         3+nFuSDvvcm5cpnpSvdAwHSvmOI1g7hFDj4/ntazfn8vuoKTg+lKsrt/wVTwv7lRGcDs
-         X69Eisf8XMl/cKxQElKwDYWOr6neIIOW1N2oPGt6GvpihLpotX8gADgZtLr3GZP+5g5e
-         5M4OR9uw9BtLY6wnGnBfDugORwyDAHshHBbnQna9N4fx84KRIQbzsoGsZRmacQxRt1+K
-         FAl4NCED3+HRzPA0fLq36QkyRgmBHgWEYHKKowOf3JpInRgzhKDEg+5RihnkexLTZl//
-         Bm9w==
-X-Gm-Message-State: APjAAAXhFwKDgeLn4Q9HBMWfjmD+7bAM4JtvxuStFQIp+9LhtZ7/kIrk
-        G34vvDH/+NSVq0umEzwpoiO+qPLq7NB6Illo/e+rLtFI1CiVBw==
-X-Google-Smtp-Source: APXvYqysfkJBTv2Dw4llgWLXQHvvNBR+K9ynrLKorQlC8QRg5naab0Mh9FSNkA9wPHO01T9BqLztip8qsulciJzZkLU=
-X-Received: by 2002:a63:82:: with SMTP id 124mr33805671pga.112.1571049171202;
- Mon, 14 Oct 2019 03:32:51 -0700 (PDT)
+        Mon, 14 Oct 2019 06:32:57 -0400
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1iJxen-0001vG-H5; Mon, 14 Oct 2019 12:32:53 +0200
+Subject: Re: [RESEND v2] i2c: imx: support slave mode for imx I2C driver
+To:     Biwen Li <biwen.li@nxp.com>, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, wsa@the-dreams.de, leoyang.li@nxp.com,
+        aisheng.dong@nxp.com, xiaoning.wang@nxp.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, laurentiu.tudor@nxp.com,
+        jiafei.pan@nxp.com, xiaobo.xie@nxp.com
+References: <20191009101802.19309-1-biwen.li@nxp.com>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <113865e9-e846-1079-6f58-7fddb245398c@pengutronix.de>
+Date:   Mon, 14 Oct 2019 12:32:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191014090910.9701-1-jgross@suse.com> <20191014090910.9701-3-jgross@suse.com>
-In-Reply-To: <20191014090910.9701-3-jgross@suse.com>
-From:   Paul Durrant <pdurrant@gmail.com>
-Date:   Mon, 14 Oct 2019 11:32:40 +0100
-Message-ID: <CACCGGhAYRk6gy7dDqP5QqNJBJamT4wSc5muwR0LUoUEVv_O+=g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] xen/netback: cleanup init and deinit code
-To:     Juergen Gross <jgross@suse.com>
-Cc:     xen-devel <xen-devel@lists.xenproject.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        Paul Durrant <paul@xen.org>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191009101802.19309-1-biwen.li@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 at 10:09, Juergen Gross <jgross@suse.com> wrote:
->
-> Do some cleanup of the netback init and deinit code:
->
-> - add an omnipotent queue deinit function usable from
->   xenvif_disconnect_data() and the error path of xenvif_connect_data()
-> - only install the irq handlers after initializing all relevant items
->   (especially the kthreads related to the queue)
-> - there is no need to use get_task_struct() after creating a kthread
->   and using put_task_struct() again after having stopped it.
-> - use kthread_run() instead of kthread_create() to spare the call of
->   wake_up_process().
+Hi,
 
-I guess the reason it was done that way was to ensure that queue->task
-and queue->dealloc_task would be set before the relevant threads
-executed, but I don't see anywhere relying on this so I guess change
-is safe. The rest of it looks fine.
+I'm trying to test you patch on i.MX6S RIoTBoard. So far I fail to get it working with 
+following setup:
+1. register i2c-gpio
+2. connect i2c-gpio SCL to i2c-imx SCL pin and i2c-gpio SDA to i2c-imx SDA pin
+3. run this command to register i2c slave eeprom on i2c-imx:
+echo slave-24c02 0x1064 > /sys/bus/i2c/devices/i2c-3/new_device
+4. run "i2cdetect 4" on i2c-gpio to detect eeprom on i2c-imx slave.
 
->
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+So far, nothing was detected and even irq counter of i2c-imx didn't increased.
 
-Reviewed-by: Paul Durrant <paul@xen.org>
+Do I'm missing some thing? Please, help me to test you patch.
 
+And, please, do not forget to include me in the next patch round, if you wont to get your 
+patches mainline.
+
+This devicetree i used for testing:
+#include "imx6dl-riotboard.dts"
+
+/ {
+         i2c_gpio: i2c-gpio {
+                 compatible = "i2c-gpio";
+                 #address-cells = <1>;
+                 #size-cells = <0>;
+                 pinctrl-names = "default";
+                 pinctrl-0 = <&pinctrl_i2c_gpio>;
+                 gpios = <
+                         &gpio4 27 GPIO_ACTIVE_HIGH /* SDA */
+                         &gpio4 26 GPIO_ACTIVE_HIGH /* SCL */
+                 >;
+                 clock-frequency = <10000>;
+                 status = "okay";
+         };
+};
+
+&iomuxc {
+         pinctrl-names = "default";
+
+         imx6-riotboard {
+                 pinctrl_i2c_gpio: i2c-gpiogrp {
+                         fsl,pins = <
+                                 MX6QDL_PAD_DISP0_DAT6__GPIO4_IO27 0x4001b8b1
+                                 MX6QDL_PAD_DISP0_DAT5__GPIO4_IO26 0x4001b8b1
+                         >;
+                 };
+         };
+};
+
+&i2c4 {
+                 clock-frequency = <10000>;
+
+};
+
+
+Regards,
+Oleksij
+
+On 09.10.19 12:18, Biwen Li wrote:
+> The patch supports slave mode for imx I2C driver
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > ---
->  drivers/net/xen-netback/interface.c | 114 +++++++++++++++++-------------------
->  1 file changed, 54 insertions(+), 60 deletions(-)
->
-> diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
-> index 103ed00775eb..68dd7bb07ca6 100644
-> --- a/drivers/net/xen-netback/interface.c
-> +++ b/drivers/net/xen-netback/interface.c
-> @@ -626,6 +626,38 @@ int xenvif_connect_ctrl(struct xenvif *vif, grant_ref_t ring_ref,
->         return err;
->  }
->
-> +static void xenvif_disconnect_queue(struct xenvif_queue *queue)
+> Change in v2:
+> 	- remove MACRO CONFIG_I2C_SLAVE
+> 
+>   drivers/i2c/busses/i2c-imx.c | 180 ++++++++++++++++++++++++++++++++---
+>   1 file changed, 166 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index a3b61336fe55..d9858bc63656 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -203,6 +203,7 @@ struct imx_i2c_struct {
+>   	struct pinctrl_state *pinctrl_pins_gpio;
+>   
+>   	struct imx_i2c_dma	*dma;
+> +	struct i2c_client	*slave;
+>   };
+>   
+>   static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
+> @@ -588,23 +589,38 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c_imx)
+>   	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+>   }
+>   
+> -static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+> +/* Clear interrupt flag bit */
+> +static void i2c_imx_clr_if_bit(struct imx_i2c_struct *i2c_imx)
+>   {
+> -	struct imx_i2c_struct *i2c_imx = dev_id;
+> -	unsigned int temp;
+> +	unsigned int status;
+>   
+> -	temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> -	if (temp & I2SR_IIF) {
+> -		/* save status register */
+> -		i2c_imx->i2csr = temp;
+> -		temp &= ~I2SR_IIF;
+> -		temp |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
+> -		imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2SR);
+> -		wake_up(&i2c_imx->queue);
+> -		return IRQ_HANDLED;
+> -	}
+> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	status &= ~I2SR_IIF;
+> +	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
+> +	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
+> +}
+>   
+> -	return IRQ_NONE;
+> +/* Clear arbitration lost bit */
+> +static void i2c_imx_clr_al_bit(struct imx_i2c_struct *i2c_imx)
 > +{
-> +       if (queue->tx_irq) {
-> +               unbind_from_irqhandler(queue->tx_irq, queue);
-> +               if (queue->tx_irq == queue->rx_irq)
-> +                       queue->rx_irq = 0;
-> +               queue->tx_irq = 0;
-> +       }
+> +	unsigned int status;
 > +
-> +       if (queue->rx_irq) {
-> +               unbind_from_irqhandler(queue->rx_irq, queue);
-> +               queue->rx_irq = 0;
-> +       }
-> +
-> +       if (queue->task) {
-> +               kthread_stop(queue->task);
-> +               queue->task = NULL;
-> +       }
-> +
-> +       if (queue->dealloc_task) {
-> +               kthread_stop(queue->dealloc_task);
-> +               queue->dealloc_task = NULL;
-> +       }
-> +
-> +       if (queue->napi.poll) {
-> +               netif_napi_del(&queue->napi);
-> +               queue->napi.poll = NULL;
-> +       }
-> +
-> +       xenvif_unmap_frontend_data_rings(queue);
+> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	status &= ~I2SR_IAL;
+> +	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
 > +}
 > +
->  int xenvif_connect_data(struct xenvif_queue *queue,
->                         unsigned long tx_ring_ref,
->                         unsigned long rx_ring_ref,
-> @@ -651,13 +683,27 @@ int xenvif_connect_data(struct xenvif_queue *queue,
->         netif_napi_add(queue->vif->dev, &queue->napi, xenvif_poll,
->                         XENVIF_NAPI_WEIGHT);
->
-> +       queue->stalled = true;
+> +static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	unsigned int status;
 > +
-> +       task = kthread_run(xenvif_kthread_guest_rx, queue,
-> +                          "%s-guest-rx", queue->name);
-> +       if (IS_ERR(task))
-> +               goto kthread_err;
-> +       queue->task = task;
+> +	/* Save status register */
+> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	i2c_imx->i2csr = status | I2SR_IIF;
 > +
-> +       task = kthread_run(xenvif_dealloc_kthread, queue,
-> +                          "%s-dealloc", queue->name);
-> +       if (IS_ERR(task))
-> +               goto kthread_err;
-> +       queue->dealloc_task = task;
+> +	wake_up(&i2c_imx->queue);
 > +
->         if (tx_evtchn == rx_evtchn) {
->                 /* feature-split-event-channels == 0 */
->                 err = bind_interdomain_evtchn_to_irqhandler(
->                         queue->vif->domid, tx_evtchn, xenvif_interrupt, 0,
->                         queue->name, queue);
->                 if (err < 0)
-> -                       goto err_unmap;
-> +                       goto err;
->                 queue->tx_irq = queue->rx_irq = err;
->                 disable_irq(queue->tx_irq);
->         } else {
-> @@ -668,7 +714,7 @@ int xenvif_connect_data(struct xenvif_queue *queue,
->                         queue->vif->domid, tx_evtchn, xenvif_tx_interrupt, 0,
->                         queue->tx_irq_name, queue);
->                 if (err < 0)
-> -                       goto err_unmap;
-> +                       goto err;
->                 queue->tx_irq = err;
->                 disable_irq(queue->tx_irq);
->
-> @@ -678,47 +724,18 @@ int xenvif_connect_data(struct xenvif_queue *queue,
->                         queue->vif->domid, rx_evtchn, xenvif_rx_interrupt, 0,
->                         queue->rx_irq_name, queue);
->                 if (err < 0)
-> -                       goto err_tx_unbind;
-> +                       goto err;
->                 queue->rx_irq = err;
->                 disable_irq(queue->rx_irq);
->         }
->
-> -       queue->stalled = true;
-> -
-> -       task = kthread_create(xenvif_kthread_guest_rx,
-> -                             (void *)queue, "%s-guest-rx", queue->name);
-> -       if (IS_ERR(task)) {
-> -               pr_warn("Could not allocate kthread for %s\n", queue->name);
-> -               err = PTR_ERR(task);
-> -               goto err_rx_unbind;
-> -       }
-> -       queue->task = task;
-> -       get_task_struct(task);
-> -
-> -       task = kthread_create(xenvif_dealloc_kthread,
-> -                             (void *)queue, "%s-dealloc", queue->name);
-> -       if (IS_ERR(task)) {
-> -               pr_warn("Could not allocate kthread for %s\n", queue->name);
-> -               err = PTR_ERR(task);
-> -               goto err_rx_unbind;
-> -       }
-> -       queue->dealloc_task = task;
-> -
-> -       wake_up_process(queue->task);
-> -       wake_up_process(queue->dealloc_task);
-> -
->         return 0;
->
-> -err_rx_unbind:
-> -       unbind_from_irqhandler(queue->rx_irq, queue);
-> -       queue->rx_irq = 0;
-> -err_tx_unbind:
-> -       unbind_from_irqhandler(queue->tx_irq, queue);
-> -       queue->tx_irq = 0;
-> -err_unmap:
-> -       xenvif_unmap_frontend_data_rings(queue);
-> -       netif_napi_del(&queue->napi);
-> +kthread_err:
-> +       pr_warn("Could not allocate kthread for %s\n", queue->name);
-> +       err = PTR_ERR(task);
->  err:
-> +       xenvif_disconnect_queue(queue);
->         return err;
->  }
->
-> @@ -746,30 +763,7 @@ void xenvif_disconnect_data(struct xenvif *vif)
->         for (queue_index = 0; queue_index < num_queues; ++queue_index) {
->                 queue = &vif->queues[queue_index];
->
-> -               netif_napi_del(&queue->napi);
-> -
-> -               if (queue->task) {
-> -                       kthread_stop(queue->task);
-> -                       put_task_struct(queue->task);
-> -                       queue->task = NULL;
-> -               }
-> -
-> -               if (queue->dealloc_task) {
-> -                       kthread_stop(queue->dealloc_task);
-> -                       queue->dealloc_task = NULL;
-> -               }
-> -
-> -               if (queue->tx_irq) {
-> -                       if (queue->tx_irq == queue->rx_irq)
-> -                               unbind_from_irqhandler(queue->tx_irq, queue);
-> -                       else {
-> -                               unbind_from_irqhandler(queue->tx_irq, queue);
-> -                               unbind_from_irqhandler(queue->rx_irq, queue);
-> -                       }
-> -                       queue->tx_irq = 0;
-> -               }
-> -
-> -               xenvif_unmap_frontend_data_rings(queue);
-> +               xenvif_disconnect_queue(queue);
->         }
->
->         xenvif_mcast_addr_list_free(vif);
-> --
-> 2.16.4
->
+> +	return IRQ_HANDLED;
+>   }
+>   
+>   static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
+> @@ -1048,11 +1064,147 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
+>   		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
+>   }
+>   
+> +static void i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	unsigned int temp;
+> +
+> +	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
+> +
+> +	/* Set slave addr. */
+> +	imx_i2c_write_reg((i2c_imx->slave->addr << 1), i2c_imx, IMX_I2C_IADR);
+> +
+> +	/* Disable i2c module */
+> +	temp = i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN;
+> +	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+> +
+> +	/* Reset status register */
+> +	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx,
+> +			  IMX_I2C_I2SR);
+> +
+> +	/* Enable module and enable interrupt from i2c module */
+> +	temp = i2c_imx->hwdata->i2cr_ien_opcode | I2CR_IIEN;
+> +	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+> +
+> +	/* Wait controller to be stable */
+> +	usleep_range(50, 150);
+> +}
+> +
+> +static irqreturn_t i2c_imx_slave_isr(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	unsigned int status, ctl;
+> +	u8 value;
+> +
+> +	if (!i2c_imx->slave) {
+> +		dev_err(&i2c_imx->adapter.dev, "cannot deal with slave irq,i2c_imx->slave is null");
+> +		return IRQ_NONE;
+> +	}
+> +
+> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+> +	if (status & I2SR_IAL) { /* Arbitration lost */
+> +		i2c_imx_clr_al_bit(i2c_imx);
+> +	} else if (status & I2SR_IAAS) { /* Addressed as a slave */
+> +		if (status & I2SR_SRW) { /* Master wants to read from us*/
+> +			dev_dbg(&i2c_imx->adapter.dev, "read requested");
+> +			i2c_slave_event(i2c_imx->slave, I2C_SLAVE_READ_REQUESTED, &value);
+> +
+> +			/* Slave transmit */
+> +			ctl |= I2CR_MTX;
+> +			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +
+> +			/* Send data */
+> +			imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
+> +		} else { /* Master wants to write to us */
+> +			dev_dbg(&i2c_imx->adapter.dev, "write requested");
+> +			i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_REQUESTED, &value);
+> +
+> +			/* Slave receive */
+> +			ctl &= ~I2CR_MTX;
+> +			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +			/* Dummy read */
+> +			imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
+> +		}
+> +	} else if (!(ctl & I2CR_MTX)) { /* Receive mode */
+> +			if (status & I2SR_IBB) { /* No STOP signal detected */
+> +				ctl &= ~I2CR_MTX;
+> +				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +
+> +				value = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
+> +				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_RECEIVED, &value);
+> +			} else { /* STOP signal is detected */
+> +				dev_dbg(&i2c_imx->adapter.dev,
+> +					"STOP signal detected");
+> +				i2c_slave_event(i2c_imx->slave, I2C_SLAVE_STOP, &value);
+> +			}
+> +	} else if (!(status & I2SR_RXAK)) {	/* Transmit mode received ACK */
+> +		ctl |= I2CR_MTX;
+> +		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +
+> +		i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_READ_PROCESSED, &value);
+> +
+> +		imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
+> +	} else { /* Transmit mode received NAK */
+> +		ctl &= ~I2CR_MTX;
+> +		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +		imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
+> +	}
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int i2c_imx_reg_slave(struct i2c_client *client)
+> +{
+> +	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
+> +
+> +	if (i2c_imx->slave)
+> +		return -EBUSY;
+> +
+> +	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
+> +	i2c_imx->slave = client;
+> +
+> +	i2c_imx_slave_init(i2c_imx);
+> +
+> +	return 0;
+> +}
+> +
+> +static int i2c_imx_unreg_slave(struct i2c_client *client)
+> +{
+> +	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
+> +
+> +	if (!i2c_imx->slave)
+> +		return -EINVAL;
+> +
+> +	i2c_imx->slave = NULL;
+> +
+> +	return 0;
+> +}
+> +
+>   static const struct i2c_algorithm i2c_imx_algo = {
+>   	.master_xfer	= i2c_imx_xfer,
+>   	.functionality	= i2c_imx_func,
+> +	.reg_slave	= i2c_imx_reg_slave,
+> +	.unreg_slave	= i2c_imx_unreg_slave,
+>   };
+>   
+> +static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+> +{
+> +	struct imx_i2c_struct *i2c_imx = dev_id;
+> +	unsigned int status, ctl;
+> +	irqreturn_t irq_status = IRQ_NONE;
+> +
+> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+> +
+> +	if (status & I2SR_IIF) {
+> +		i2c_imx_clr_if_bit(i2c_imx);
+> +		if (ctl & I2CR_MSTA)
+> +			irq_status = i2c_imx_master_isr(i2c_imx);
+> +		else
+> +			irq_status = i2c_imx_slave_isr(i2c_imx);
+> +	}
+> +
+> +	return irq_status;
+> +}
+> +
+>   static int i2c_imx_probe(struct platform_device *pdev)
+>   {
+>   	struct imx_i2c_struct *i2c_imx;
+> 
+
+Kind regards,
+Oleksij Rempel
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
