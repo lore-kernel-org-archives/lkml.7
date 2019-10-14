@@ -2,211 +2,99 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E230C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCA0C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC392089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A263820854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571047310;
+	bh=5/ai+ZkvHjPIjd1PVgKpi0YTLpokodIIj+K2mhHp4YA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ClzJmQsdkxvGb6734lExSH+tuJtmd8qvcRONsx/L7uyu6b3cixjHTHIxHPhYb6GPs
+	 nkysuv3JS2EZVhHT5D4FH6S5yudOu/Ex/Dyxvp2PoR7SuOIY+f40qKk/euvGgdgsmK
+	 YCwUYoCMpIUz0DFYgNKzlFhNXVc5Yv2bc/47dK+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731330AbfJNKBg (ORCPT
+        id S1731348AbfJNKBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:01:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:39288 "EHLO foss.arm.com"
+        Mon, 14 Oct 2019 06:01:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731119AbfJNKBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:01:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BEB8337;
-        Mon, 14 Oct 2019 03:01:35 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 526CB3F718;
-        Mon, 14 Oct 2019 03:01:34 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 11:01:29 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
- flag
-Message-ID: <20191014100129.GA18832@e121166-lin.cambridge.arm.com>
-References: <20190522213351.21366-3-repk@triplefau.lt>
- <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
- <20190930165230.GA12568@voidbox>
- <20191001080546.GI42880@e119886-lin.cambridge.arm.com>
- <20191013113415.3c653526@why>
+        id S1731119AbfJNKBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:01:49 -0400
+Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5694B207FF;
+        Mon, 14 Oct 2019 10:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571047308;
+        bh=5/ai+ZkvHjPIjd1PVgKpi0YTLpokodIIj+K2mhHp4YA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NVz7Y6tapstbkQM25HzES+ADj09TP/Wp4jPgVg7IZZYXW2LhEsDj9+r3eKt3paaCV
+         Ih9eCLs7Gq+SGaX4h/UQwdm06+AALQ1VJW++lAnAIEkJnPc12mxWxAuuPXa8UtC5xN
+         nL2EnUEkQYAhSRYJ5yOYlWlr8V9FdXSIE3lFfVy8=
+Date:   Mon, 14 Oct 2019 12:01:44 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: Module loading problem since 5.3
+Message-ID: <20191014100143.GA6525@linux-8ccs>
+References: <8132cf72-0ae1-48ae-51fb-1a01cf00c693@gmail.com>
+ <CAB=NE6XdVXMnq7pgmXxv4Qicu7=xrtQC-b2sXAfVxiAq68NMKg@mail.gmail.com>
+ <875eecfb-618a-4989-3b9f-f8272b8d3746@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191013113415.3c653526@why>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <875eecfb-618a-4989-3b9f-f8272b8d3746@gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 13, 2019 at 11:34:15AM +0100, Marc Zyngier wrote:
-> On Tue, 1 Oct 2019 09:05:46 +0100
-> Andrew Murray <andrew.murray@arm.com> wrote:
-> 
-> Hi Lorenzo,
-> 
-> > On Mon, Sep 30, 2019 at 06:52:30PM +0200, Remi Pommarel wrote:
-> > > On Mon, Sep 30, 2019 at 04:40:18PM +0100, Andrew Murray wrote:  
-> > > > On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:  
-> > > > > Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
-> > > > > implemented and does not reflect the actual link training state (the
-> > > > > flag is always set to 0). In order to support link re-training feature
-> > > > > this flag has to be emulated. The Link Training and Status State
-> > > > > Machine (LTSSM) flag in Aardvark LMI config register could be used as
-> > > > > a link training indicator. Indeed if the LTSSM is in L0 or upper state
-> > > > > then link training has completed (see [1]).
-> > > > > 
-> > > > > Unfortunately because after asking a link retraining it takes a while
-> > > > > for the LTSSM state to become less than 0x10 (due to L0s to recovery
-> > > > > state transition delays), LTSSM can still be in L0 while link training
-> > > > > has not finished yet. So this waits for link to be in recovery or lesser
-> > > > > state before returning after asking for a link retrain.
-> > > > > 
-> > > > > [1] "PCI Express Base Specification", REV. 4.0
-> > > > >     PCI Express, February 19 2014, Table 4-14
-> > > > > 
-> > > > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > > > > ---
-> > > > > Changes since v1:
-> > > > >   - Rename retraining flag field
-> > > > >   - Fix DEVCTL register writing
-> > > > > 
-> > > > > Changes since v2:
-> > > > >   - Rewrite patch logic so it is more legible
-> > > > > 
-> > > > > Please note that I will unlikely be able to answer any comments from May
-> > > > > 24th to June 10th.
-> > > > > ---
-> > > > >  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
-> > > > >  1 file changed, 28 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > > index 134e0306ff00..8803083b2174 100644
-> > > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > > @@ -180,6 +180,8 @@
-> > > > >  #define LINK_WAIT_MAX_RETRIES		10
-> > > > >  #define LINK_WAIT_USLEEP_MIN		90000
-> > > > >  #define LINK_WAIT_USLEEP_MAX		100000
-> > > > > +#define RETRAIN_WAIT_MAX_RETRIES	10
-> > > > > +#define RETRAIN_WAIT_USLEEP_US		2000
-> > > > >  
-> > > > >  #define MSI_IRQ_NUM			32
-> > > > >  
-> > > > > @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
-> > > > >  	return -ETIMEDOUT;
-> > > > >  }
-> > > > >  
-> > > > > +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
-> > > > > +{
-> > > > > +	size_t retries;
-> > > > > +
-> > > > > +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
-> > > > > +		if (!advk_pcie_link_up(pcie))
-> > > > > +			break;
-> > > > > +		udelay(RETRAIN_WAIT_USLEEP_US);
-> > > > > +	}
-> > > > > +}
-> > > > > +
-> > > > >  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-> > > > >  {
-> > > > >  	u32 reg;
-> > > > > @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
-> > > > >  		return PCI_BRIDGE_EMUL_HANDLED;
-> > > > >  	}
-> > > > >  
-> > > > > +	case PCI_EXP_LNKCTL: {
-> > > > > +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
-> > > > > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
-> > > > > +			~(PCI_EXP_LNKSTA_LT << 16);  
-> > > > 
-> > > > The commit message says "the flag is always set to 0" - therefore I guess
-> > > > you don't *need* to mask out the LT bit here? I assume this is just
-> > > > belt-and-braces but thought I'd check incase I've misunderstood or if your
-> > > > commit message is inaccurate.
-> > > > 
-> > > > In any case masking out the bit (or adding a comment) makes this code more
-> > > > readable as the reader doesn't need to know what the hardware does with this
-> > > > bit.  
-> > > 
-> > > Actually vendor eventually responded that the bit was reserved, but
-> > > during my tests it remains to 0.
-> > > 
-> > > So yes I am masking this out mainly for belt-and-braces and legibility.  
-> > 
-> > Thanks for the clarification.
-> > 
-> > >   
-> > > > > +		if (!advk_pcie_link_up(pcie))
-> > > > > +			val |= (PCI_EXP_LNKSTA_LT << 16);
-> > > > > +		*value = val;
-> > > > > +		return PCI_BRIDGE_EMUL_HANDLED;
-> > > > > +	}
-> > > > > +
-> > > > >  	case PCI_CAP_LIST_ID:
-> > > > >  	case PCI_EXP_DEVCAP:
-> > > > >  	case PCI_EXP_DEVCTL:
-> > > > >  	case PCI_EXP_LNKCAP:
-> > > > > -	case PCI_EXP_LNKCTL:
-> > > > >  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
-> > > > >  		return PCI_BRIDGE_EMUL_HANDLED;
-> > > > >  	default:
-> > > > > @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
-> > > > >  
-> > > > >  	switch (reg) {
-> > > > >  	case PCI_EXP_DEVCTL:
-> > > > > +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> > > > > +		break;  
-> > > > 
-> > > > Why is this here?
-> > > >   
-> > > 
-> > > Before PCI_EXP_DEVCTL and PCI_EXP_LNKCTL were doing the same thing, but
-> > > as now PCI_EXP_LNKCTL does extra things (i.e. wait for link to
-> > > successfully retrain), they do have different behaviours.
-> > > 
-> > > So this is here so PCI_EXP_DEVCTL keeps its old behaviour and do not
-> > > wait for link retrain in case an unrelated (PCI_EXP_LNKCTL_RL) bit is
-> > > set.  
-> > 
-> > Oh yes, of course!
-> > 
-> > Thanks and:
-> > 
-> > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> 
-> Is there any hope for this workaround to make it into 5.4?
-> 
-> My EspressoBin (which is blessed with this joke of a PCIe controller)
-> is pretty much a doorstop without it and dies with a SError early at
-> boot.
-> 
-> FWIW:
-> 
-> Tested-by: Marc Zyngier <maz@kernel.org>
++++ Heiner Kallweit [11/10/19 21:26 +0200]:
+>On 10.10.2019 19:15, Luis Chamberlain wrote:
+>>
+>>
+>> On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
+>>
+>>        MODULE_SOFTDEP("pre: realtek")
+>>
+>>     Are you aware of any current issues with module loading
+>>     that could cause this problem?
+>>
+>>
+>> Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
+>>
+>> If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
+>>
+>>   Luis
+>>
+>Maybe issue is related to a bug in introduction of symbol namespaces, see here:
+>https://lkml.org/lkml/2019/10/11/659
 
-Hi Marc,
+If you're running into depmod and module loading issues with kernels >=5.3-rc1,
+it's likely due to the namespaces patchset and we're working on
+getting all the kinks fixed. Could you please ask the bug reporter to
+try the latest -rc kernel with these set of fixes applied on top?
 
-First thing I will have to mark it as a Fixes: (if Remi can provide
-me with a tag that'd be great), usually we send fixes at -rc* for
-patches that fix code that went in the current (eg 5.4) material,
-I will ask Bjorn to see if we can send this in one of the upcoming
--rc* even if it fixes older code.
+   https://lore.kernel.org/linux-modules/20191010151443.7399-1-maennich@google.com/
+
+They fix a known depmod issue caused by our __ksymtab naming scheme,
+which is being reverted in favor of extracting the namespace from
+__kstrtabns and __ksymtab_strings. These fixes will be in by -rc4.
 
 Thanks,
-Lorenzo
+
+Jessica
+
+
