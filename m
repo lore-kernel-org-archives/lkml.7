@@ -2,64 +2,130 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34EFC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B25C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71CF22133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14AC2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n/lIHHXX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkvzVl52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387563AbfJNQRm (ORCPT
+        id S2387568AbfJNQTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:17:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57078 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729271AbfJNQRl (ORCPT
+        Mon, 14 Oct 2019 12:19:42 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45409 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729889AbfJNQTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:17:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BSWaZ0k4tF/ISmBhPnDVCnPcq36aoFu3RAfsJrYKtl4=; b=n/lIHHXXiirtJVnDS3dTJCkmN
-        E66uJqEep2ZDkZcKUKIIZR1xvtTdWZciuyXLT7ybpQie8tuWILwNsQezKjkcW7gQ04wVZBgOBlxuc
-        6DqojZ7lQrD2OG53EItLB+AxKkMq9O3QZDL/uEJ1aPSS+I0FNgdpZja32oEqUrIz+L3vHsg5+gDPN
-        QSyYj0aDN4sw6y7Zt4NFO9qZwbnbX2tMFo92vCfw5e4oWi7r4Vhr7Givik8X5oCrWE/6ZL1WWDGz4
-        5f/EhxhMwHGssA509XHVhbGE3MixeO585yaRoR7PWit1v9M546vLSCTsvB2pQeId43kONbg0Sh2sn
-        fpp+QbetQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iK32N-00034o-Ss; Mon, 14 Oct 2019 16:17:35 +0000
-Date:   Mon, 14 Oct 2019 09:17:35 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@lists.codethink.co.uk,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm: add kernel/fork.c function definitions
-Message-ID: <20191014161735.GA9498@infradead.org>
-References: <20191009140637.12443-1-ben.dooks@codethink.co.uk>
- <20191009153316.GA25186@infradead.org>
- <12dd599c-e7e8-2cdb-4363-fdf18c023bef@codethink.co.uk>
+        Mon, 14 Oct 2019 12:19:42 -0400
+Received: by mail-qt1-f193.google.com with SMTP id c21so26144345qtj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sz7Iyq3k0PImjaLJATlB1W9ASE/exdNG56wszXOZTI4=;
+        b=nkvzVl52YqUGqmQDzwWeWb4IScwuxt5XdDJojwBsycr5o2MlmX30+d4lVaam0Byupy
+         Dc+8c0JjJbinwZPE9F7PVVoJRcsQrz5k37ZWVmCMicCcxcMiMmvATF4somVTOPXg0mXJ
+         66Ja3r21I78/5Xo7Jv2qQOj6sR/Y8vL2CzwhHV582OUljbDFcMTKRQS/FERCvz31Vw6B
+         1KMFSuhjMrLesDpD+dVooVoYxZkqVTguh+PCCP8FbnbEph/BvDwML/CIqm3j7Z60J+q/
+         p26Tj6lQtholZFPL/zUZ2Btp8FzoEoAPTYVhlRd836/vJ6mqoAQG5qJq5ijXvLVQzZXu
+         L76g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sz7Iyq3k0PImjaLJATlB1W9ASE/exdNG56wszXOZTI4=;
+        b=bL6gxDnepic3/N/EKfYs88yqT0I4M0FlCmutMnxXwpF5LmmEHsyk1g471/m2sXdO+G
+         2Rz/YKKOxennR+5sax2qtFvkEXSGaaHVa16K0R0HSYW1LeNMwSJvSW/OVvyw6BAnMlLk
+         JcxjfqD1LZH1t4gdhRZ925AfP+uylDwAkT4vRRPAvt/SNcApU+7It9U3quvu1iwutYRE
+         8bGuPDgzO1g2y0BTXWOD9bpv9XtP2oYBQXJXvBU9hd5XBQezFWe0n/DqiCShEqrtGo/r
+         DCHEVnzjoczv+jvDzls8ySzqf0fzbJNoHoJXePn1jv+Kdhv37Yh9iuYgvnWrPj7w4QUp
+         ICxA==
+X-Gm-Message-State: APjAAAV9gH+vgfm7LaZqtrLxq7bf8JfCknnVcM+9drx22sWKvUmMj3vK
+        DfH2Qkta7WsCyZTwgwK22Kw=
+X-Google-Smtp-Source: APXvYqyyUudhktAqlP6yDREPhQVZ6oR/GKkA9zxOlBEX0+qZqbzEwVRs/HfELF3VOt0TJbLtDdZ68Q==
+X-Received: by 2002:ad4:408c:: with SMTP id l12mr30518648qvp.210.1571069981201;
+        Mon, 14 Oct 2019 09:19:41 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id v13sm7939222qtp.61.2019.10.14.09.19.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 09:19:40 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 312444DD66; Mon, 14 Oct 2019 13:19:38 -0300 (-03)
+Date:   Mon, 14 Oct 2019 13:19:38 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] perf jvmti: Link in tools/lib/ctype.o
+Message-ID: <20191014161938.GM19627@kernel.org>
+References: <20191014154856.25306-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <12dd599c-e7e8-2cdb-4363-fdf18c023bef@codethink.co.uk>
+In-Reply-To: <20191014154856.25306-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 02:44:25PM +0100, Ben Dooks wrote:
-> Does anyone have a preference to where these should go?
+Em Mon, Oct 14, 2019 at 05:48:56PM +0200, Jiri Olsa escreveu:
+> The libperf-jvmti.so links already with tools/lib/string.o
+> to use strlcpy. However the string.o depends on ctype.o
+> so we need to link it in as well.
+> 
+> Fixes: 79743bc927f6 ("perf jvmti: Link against tools/lib/string.o to have weak strlcpy()")
+> Link: http://lkml.kernel.org/n/tip-zitavtnkcu2guqwfgtp7n7bg@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-Maybe include/linux/thread_info.h ?
+I applied one already for this, contributed by Thomas.
+
+Thanks,
+
+- Arnaldo
+> ---
+>  tools/perf/jvmti/Build | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/tools/perf/jvmti/Build b/tools/perf/jvmti/Build
+> index 1e148bbdf820..7de7f90bf3fb 100644
+> --- a/tools/perf/jvmti/Build
+> +++ b/tools/perf/jvmti/Build
+> @@ -3,6 +3,7 @@ jvmti-y += jvmti_agent.o
+>  
+>  # For strlcpy
+>  jvmti-y += libstring.o
+> +jvmti-y += libctype.o
+>  
+>  CFLAGS_jvmti         = -fPIC -DPIC -I$(JDIR)/include -I$(JDIR)/include/linux
+>  CFLAGS_REMOVE_jvmti  = -Wmissing-declarations
+> @@ -15,3 +16,7 @@ CFLAGS_libstring.o += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PE
+>  $(OUTPUT)jvmti/libstring.o: ../lib/string.c FORCE
+>  	$(call rule_mkdir)
+>  	$(call if_changed_dep,cc_o_c)
+> +
+> +$(OUTPUT)jvmti/libctype.o: ../lib/ctype.c FORCE
+> +	$(call rule_mkdir)
+> +	$(call if_changed_dep,cc_o_c)
+> -- 
+> 2.21.0
+
+-- 
+
+- Arnaldo
