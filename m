@@ -4,154 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFF8C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6354EECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CD5214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AFD720673
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:58:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Hw6W642x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dIkMInmT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730301AbfJNH6l (ORCPT
+        id S1730334AbfJNH6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 03:58:41 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44202 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730281AbfJNH6j (ORCPT
+        Mon, 14 Oct 2019 03:58:47 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:44955 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728772AbfJNH6p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 03:58:39 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q21so9907644pfn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:58:39 -0700 (PDT)
+        Mon, 14 Oct 2019 03:58:45 -0400
+Received: by mail-pg1-f173.google.com with SMTP id e10so5627242pgd.11
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:58:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QVRHT5pDxuvkIfhkJROJMokZUW2BLlyY/F+bHkNxqRo=;
-        b=Hw6W642xH1aROaObhBlIVPsu/fTpXv1b3H39oxGbXRFLKlZMFQNVzm/PeUsIRcyVO1
-         zFSz5IqF/qhd7w/CIawaKAsOENgjYRt3UFZqRFFTL49U+18twCrxef7/EDjwtrx2KMDs
-         /Wr+mDjiRbrgNYuI0LhMdjB3jrNL9ioEZ3sBA=
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=y50RYUfHeI2he8tBZWuhHfSekRhLtbksYVRqOP2O+os=;
+        b=dIkMInmTpj1JrGLM5HMmR344M6bRmXAeYAMiVi8arb1/TJiPi/qUU0epeb2VIbDM4G
+         LV3tlygKC4jC/jZvI/TTi1aSMecsChNYTb6670nu93b6lUDkYL20QDgOWQLg7FTCeez4
+         X8Zy9epQLServXDvDch8Pk3PiKVzYr6g96SSq+yK5zc5ImZYUoncGr9E/hXE1UiCYKiB
+         +eJ5zOPomeSEH68qwDViDJScGl1/s35QWBNtfxK/BCDsB8akxoVVse1MfiXLl/gWOB57
+         IqRHEKdJM1AE9swDJi3rcCokwXduEo8RYy7FP6TrgWhL62naqVU5cXxMuEEmSgXFMq9V
+         rl3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QVRHT5pDxuvkIfhkJROJMokZUW2BLlyY/F+bHkNxqRo=;
-        b=OgpSWQSuT6ribOnw8HBwAF7IwOHJ/tr0EPN7fHMbag2ZT3TKwQ5fNh7iwJd9IbUl18
-         6WlAiGkM2IZSMLDVPX+ywZJl1vO8BnKGcTqFNmSn4LEIQitrzX1ZUgZpZ1XeSbUzruuE
-         4NM0vL99GFCOgveSG6vdgIEpurdjSCP9tcfAG7NivGGhcTTkbQfF52fq62xmm83K0pr7
-         mQcX4Wbl9TkEXFHXjmgxpekeA5vhwOMmNHYE+roCx7ReAFX0eokDQANF0uwPPBrG+4jY
-         S3kL3mA/Vb5TLoNy+PY7wdkio0v5hhO4a77jrfl6CQH8f7Wf1zXmL+PZEIjQKSeEc3qa
-         9zNw==
-X-Gm-Message-State: APjAAAWFGGcaX9/AMeu5VbCLDL+l/KaxyMjgvqfQiaALyGkkTJd+SBAr
-        GWZLvwsxVEA6nb6q5+o6Z77lO9T2CoU=
-X-Google-Smtp-Source: APXvYqyX//1pTCjDs2s0kZc2grJXGSArCyBFdJ8I3SvUS7+iXEEXvhoXvyTt3zB+/7qKoGAQmAo4Uw==
-X-Received: by 2002:a17:90a:6302:: with SMTP id e2mr33759632pjj.20.1571039918605;
-        Mon, 14 Oct 2019 00:58:38 -0700 (PDT)
-Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
-        by smtp.googlemail.com with ESMTPSA id q76sm36695998pfc.86.2019.10.14.00.58.36
+         :references;
+        bh=y50RYUfHeI2he8tBZWuhHfSekRhLtbksYVRqOP2O+os=;
+        b=MKlKHLSOZ8ZuP5HFjx6KWQ4YXfqGzkCx8ovTwmKdw3O5YycqWrOnx5ZTXo8OTU05bQ
+         6z1b5QoeusZxLR14uefNK6zZJGjsd2gM/01jpICoLnmxozw+Zort8Wjizl4ti//ibuge
+         9AfT9XHQhVIXRuzuHX72Y4bAQe6NNuahNEt3ChW0ZvFoDw7NG9+9MDovzOqR01SzqDPP
+         3EkGJaxWBO4+dTjGF7mSUF0sSGkJK/HWrGJrgLVMCf6q9nCRD2H2akxkR/b+hpwPPUGK
+         vLvV2969KL43h+6FJq0EuG26PJ7GBmlHlY1bpx0oJmM8yTWuSbBYVUNubwtddueOZr0A
+         ZKmQ==
+X-Gm-Message-State: APjAAAWD4HBoOOfRR3evPndLJWM0xodi+1D6FDPX7ReKUvOHWFkLp2Gq
+        BVCqkRk0D6Qtvj31Ta3kFHlLjA==
+X-Google-Smtp-Source: APXvYqz1elBbSRERXVRjYUz8rt7tmJgHaye/RY5uPh+nlyfBFC3t6Ntdv7LmkGs0yOyrkFPOBQvtXg==
+X-Received: by 2002:a62:3685:: with SMTP id d127mr159897pfa.179.1571039924723;
+        Mon, 14 Oct 2019 00:58:44 -0700 (PDT)
+Received: from localhost.localdomain (111-241-168-233.dynamic-ip.hinet.net. [111.241.168.233])
+        by smtp.gmail.com with ESMTPSA id j126sm16583137pfb.186.2019.10.14.00.58.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 00:58:38 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>,
+        Mon, 14 Oct 2019 00:58:43 -0700 (PDT)
+From:   Green Wan <green.wan@sifive.com>
+Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support),
-        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v20 4/4] arm64: dts: mt8183: add scp node
-Date:   Mon, 14 Oct 2019 15:58:09 +0800
-Message-Id: <20191014075812.181942-5-pihsun@chromium.org>
-X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
-In-Reply-To: <20191014075812.181942-1-pihsun@chromium.org>
-References: <20191014075812.181942-1-pihsun@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC v2 4/4] MAINTAINERS: Add Green as SiFive PDMA driver maintainer
+Date:   Mon, 14 Oct 2019 15:54:27 +0800
+Message-Id: <20191014075502.15105-5-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191014075502.15105-1-green.wan@sifive.com>
+References: <20191014075502.15105-1-green.wan@sifive.com>
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie Huang <eddie.huang@mediatek.com>
+Update MAINTAINERS for SiFive PDMA driver.
 
-Add scp node to mt8183 and mt8183-evb
-
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+Signed-off-by: Green Wan <green.wan@sifive.com>
 ---
-Changes from v19 ... v14:
- - No change.
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes from v13:
- - Change the size of the cfg register region.
-
-Changes from v12 ... v10:
- - No change.
-
-Changes from v9:
- - Remove extra reserve-memory-vpu_share node.
-
-Changes from v8:
- - New patch.
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index 1fb195c683c3..ddb7a7ac9655 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -24,6 +24,17 @@ memory@40000000 {
- 	chosen {
- 		stdout-path = "serial0:921600n8";
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		scp_mem_reserved: scp_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x50000000 0 0x2900000>;
-+			no-map;
-+		};
-+	};
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a69e6db80c79..62d5b249be65 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14778,6 +14778,12 @@ F:	drivers/media/usb/siano/
+ F:	drivers/media/usb/siano/
+ F:	drivers/media/mmc/siano/
  
- &auxadc {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 97f84aa9fc6e..3dd1b76bbaf5 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -269,6 +269,18 @@ clocks = <&topckgen CLK_TOP_MUX_PMICSPI>,
- 			clock-names = "spi", "wrap";
- 		};
- 
-+		scp: scp@10500000 {
-+			compatible = "mediatek,mt8183-scp";
-+			reg = <0 0x10500000 0 0x80000>,
-+			      <0 0x105c0000 0 0x19080>;
-+			reg-names = "sram", "cfg";
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_SCPSYS>;
-+			clock-names = "main";
-+			memory-region = <&scp_mem_reserved>;
-+			status = "disabled";
-+		};
++SIFIVE PDMA DRIVER
++M:	Green Wan <green.wan@sifive.com>
++S:	Maintained
++F:	drivers/dma/sf-pdma/
++F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
 +
- 		auxadc: auxadc@11001000 {
- 			compatible = "mediatek,mt8183-auxadc",
- 				     "mediatek,mt8173-auxadc";
+ SIFIVE DRIVERS
+ M:	Palmer Dabbelt <palmer@sifive.com>
+ M:	Paul Walmsley <paul.walmsley@sifive.com>
 -- 
-2.23.0.700.g56cf767bdb-goog
+2.17.1
 
