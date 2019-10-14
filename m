@@ -2,277 +2,214 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A18ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916C7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59102067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEF6217F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:48:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="FINe/Hky"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vqt8mvXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732668AbfJNSsf (ORCPT
+        id S1732765AbfJNSsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:48:35 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46913 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731506AbfJNSsf (ORCPT
+        Mon, 14 Oct 2019 14:48:54 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40428 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731506AbfJNSsx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:48:35 -0400
-Received: by mail-pl1-f196.google.com with SMTP id q24so8365753plr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 11:48:34 -0700 (PDT)
+        Mon, 14 Oct 2019 14:48:53 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b24so17755896wmj.5;
+        Mon, 14 Oct 2019 11:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sjM15tTgKj3X6UIGIKv9yo7y4Z0++2yHpJVAwICI39U=;
-        b=FINe/HkyYgzCZMpzzJa0VdHcrhwqPEOVm8IYAmsjZctp7jETjAd66xmj9RZqGvrPmj
-         H+FXIhIyR9JSZsKbgRmxWh8p28fI2KaUWsusFrvNmbNdsTSE3WiaTc27SDDPElkItf6I
-         z/5s0o92bcyT34XUr1rDgKnW/+LXvtxg1VAP8=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qtApknBx8ly+kOurF6UQstOCC32vn7syQ2amILoeo/0=;
+        b=Vqt8mvXidkSy00ESZyjP1bPGmSxQBm5K0P2gZqXZ8T7x9o5pr/lRcdirGqtlA91SjW
+         TborCJb+J336HGiRdXghrHKUi4jIAk3SIzTiu0zaM3sr602dA6T2uXgtMJyHUuVimAq5
+         +QLWDLhntxXHVIHu0fSquMLn7lfhgZ71awSaOqO3B7XYdepP9isc22XU2M+a1W4TuM02
+         d935EKyUaKT8+Y8qk38ttA8/DSmWdHLChM2rY/vLZf8LZUk2vusIweqsgasJ8sgSUpLn
+         tua4YECb8euwLrzbWggVZQ7RrXmlTJWPSQPTZN6os+rps8+TGjR3mJI2h4bGOWVNWBcm
+         Nqjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sjM15tTgKj3X6UIGIKv9yo7y4Z0++2yHpJVAwICI39U=;
-        b=VjOyqrsV0RHk6ebMJrPABsb5/CXDW9QSK/B4wWbBLP7M7WDxokQb0BbC2jzhvT4tfe
-         oQ1BHDsG27PTC0d/wch5UavJg+NRoRz6V2yZYrCzajglNgaaVJDErDlgUCcy6gvvmGUO
-         wktP8hNubVquPQCVi7QhHNRwU3b1DHlAAVY6xB7+Jjo5unWTi0x74pWEhINL52tzyfS/
-         WV9QWq//H4mmjuZqGu3xAml7wr6q6I6c+XC1q3qur0jOVi7zY2aTPk+UR501hkR/jz2x
-         HBJDm5fQpezw7dvAdVBfZ4tyA1qNzsFktgN/qKaGJ7/XYyoyaGD8ImgBQjZS7RTBjhYq
-         WIOw==
-X-Gm-Message-State: APjAAAXKolFTIX1WGFGfhl/4DjDjcAfQs6Eq8QFZWjjkrODkjDxAiE1f
-        3VUB9VeNIUPEQe3VLxk6CtfGBA==
-X-Google-Smtp-Source: APXvYqzR872QIebmrMRQzexybPQBLDCvqPQOvZpwTZP2NY+lIhk2vjsBWna0jd+hGgKFRTdxl/i3zA==
-X-Received: by 2002:a17:902:aa91:: with SMTP id d17mr30610336plr.69.1571078913729;
-        Mon, 14 Oct 2019 11:48:33 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id j26sm18406495pgl.38.2019.10.14.11.48.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 11:48:33 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 14:48:32 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        David Sterba <dsterba@suse.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] rcu: make PREEMPT_RCU to be a decoration of TREE_RCU
-Message-ID: <20191014184832.GA125935@google.com>
-References: <20191013125959.3280-1-laijs@linux.alibaba.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=qtApknBx8ly+kOurF6UQstOCC32vn7syQ2amILoeo/0=;
+        b=N5MFPnVy6vH7IVER//9wci6mi44eSzar3ZF4GOU99nEk1+Pbkj361YDPAfz28XAg25
+         a7pKnfiUffdFzvk5/atkUG0wWsQtMbBHXKSc0FDHjkfX46YEKqJUpjuwCWOoXuzg3VXm
+         UKB6Mi9omGcwqlJp7OQ3OLfq83bm7RUZ9H04x1EzfTlDcUXdmzC0eisnXWke1wONks4N
+         U+Az33ZapwxmtqHzZ3hfqGqUcWFdIe32mv+ulU0/yDr0z8lfYzU+JxYHEDtZOyX3+gtL
+         fJaFg6MEKofItUCD3I97oWPHD7rJvZ3ijeKERTvl997z7ixRNBY0QooaEuMvPSNTtvoE
+         oDTw==
+X-Gm-Message-State: APjAAAU7iqq/9QSs0KCwZ4+EJNwa0QuYPPtR5QVnPC2IFGFCp3MRM4eb
+        6xuKHUJX3EhpCvkSlbDn0T8jpQ+s
+X-Google-Smtp-Source: APXvYqwQikvvPcC74zrsm7UOvdnO4AoF0vSG2bgmWgUUEQhVhm2rfwlZrDKtvI6C6JqbPZ2qvBxndg==
+X-Received: by 2002:a7b:cd04:: with SMTP id f4mr16062093wmj.91.1571078931088;
+        Mon, 14 Oct 2019 11:48:51 -0700 (PDT)
+Received: from [192.168.1.19] (cka157.neoplus.adsl.tpnet.pl. [83.31.76.157])
+        by smtp.gmail.com with ESMTPSA id h7sm17523694wrt.17.2019.10.14.11.48.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 14 Oct 2019 11:48:50 -0700 (PDT)
+Subject: Re: [PATCH v5 3/3] leds: Add control of the voltage/current regulator
+ to the LED core
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmurphy@ti.com, tomi.valkeinen@ti.com
+References: <20190923102059.17818-1-jjhiblot@ti.com>
+ <20190923102059.17818-4-jjhiblot@ti.com>
+ <3e648fab-638f-4aa0-dda9-8ddba6562751@gmail.com> <20191013120937.GK5653@amd>
+ <eb8c0df1-0d5b-11d0-9965-3192fa5675f3@ti.com>
+ <20191014123849.fhvmqn7dyu6bminc@holly.lan>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <939cf695-b955-da01-2a2b-3b5ce0dc3660@gmail.com>
+Date:   Mon, 14 Oct 2019 20:48:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191013125959.3280-1-laijs@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191014123849.fhvmqn7dyu6bminc@holly.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 13, 2019 at 12:59:57PM +0000, Lai Jiangshan wrote:
-> Currently PREEMPT_RCU and TREE_RCU are "contrary" configs
-> when they can't be both on. But PREEMPT_RCU is actually a kind
-> of TREE_RCU in the implementation. It seams to be appropriate
-> to make PREEMPT_RCU to be a decorative option of TREE_RCU.
+On 10/14/19 2:38 PM, Daniel Thompson wrote:
+> On Mon, Oct 14, 2019 at 12:49:07PM +0200, Jean-Jacques Hiblot wrote:
+>>
+>> On 13/10/2019 14:09, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> I must say I'm not a big fan of this change.
+>>>> It adds a bunch of code to the LED core and gives small
+>>>> functionality in a reward. It may also influence maximum
+>>>> software blinking rate, so I'd rather avoid calling
+>>>> regulator_enable/disable when timer trigger is set.
+>>>>
+>>>> It will of course require more code.
+>>>>
+>>>> Since AFAIR Pavel was original proponent of this change then
+>>>> I'd like to see his opinion before we move on to discussing
+>>>> possible improvements to this patch.
+>>> Was I?
+>>>
+>>> Okay, this series looks quite confusing to me. First, 1/3 looks
+>>> "interesting" (would have to analyze it way more).
+>>>
+>>> Second, 3/3... So we have a LED driver _and_ a regulator? So yes, the
+>>> chip driving a LED is usually ... voltage/current regulator. What is
+>>> second regulator doing there? Is that a common setup?
+>>
+>> This is quite common with current-sink LED drivers.
+>>
+>> The setup looks like this:
+>>
+>> +-----------+
+>> |           |
+>> | Regulator |
+>> |           +------------------------+
+>> |           |                        |
+>> +-----------+                      __|__
+>>                                    \   /
+>>          +---------------------+    \ / led
+>>          |                     |     V
+>>          |    Led Driver       |   --+--
+>>          |                     |     |
+>>          |                     |     |
+>>          |                +----------+
+>>          |              \      |
+>>          |               \     |
+>>          |                +    |
+>>          |                |    |
+>>          +---------------------+
+>>                           |
+>>                        +--+--+
+>>                        ///////
+>>
+>>
+>> Only the regulator usually does not supply only one LED.
 > 
+> Given questions have been raised about the complexity of the change I
+> wondered whether, for a system with this topology, the regulator
+> could/should be enabled when the LED driver driver probes?
 
-Looks like a nice simplification and so far I could not poke any holes in the
-code...
+And this is how are doing that now.
 
-I am in support of this patch for further review and testing. Thanks!
+Moreover, just after seeing your ASCII art it has become obvious to me
+that we can't simply do regulator_disable() while setting brightness to
+LED_OFF since it can result in powering off the LED controller, which
+would need to be reconfigured on next transition to
+brightness > LED_OFF.
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+It looks that the idea is flawed I'm afraid.
 
-thanks,
-
- - Joel
-
-
-> Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> ---
->  include/linux/rcupdate.h   |  4 ++--
->  include/trace/events/rcu.h |  4 ++--
->  kernel/rcu/Kconfig         | 13 +++++++------
->  kernel/rcu/Makefile        |  1 -
->  kernel/rcu/rcu.h           |  2 +-
->  kernel/rcu/update.c        |  2 +-
->  kernel/sysctl.c            |  2 +-
->  7 files changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> index 75a2eded7aa2..1eee9f6c27f9 100644
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -167,7 +167,7 @@ do { \
->   * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
->   */
->  
-> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-> +#if defined(CONFIG_TREE_RCU)
->  #include <linux/rcutree.h>
->  #elif defined(CONFIG_TINY_RCU)
->  #include <linux/rcutiny.h>
-> @@ -583,7 +583,7 @@ do {									      \
->   * read-side critical section that would block in a !PREEMPT kernel.
->   * But if you want the full story, read on!
->   *
-> - * In non-preemptible RCU implementations (TREE_RCU and TINY_RCU),
-> + * In non-preemptible RCU implementations (pure TREE_RCU and TINY_RCU),
->   * it is illegal to block while in an RCU read-side critical section.
->   * In preemptible RCU implementations (PREEMPT_RCU) in CONFIG_PREEMPTION
->   * kernel builds, RCU read-side critical sections may be preempted,
-> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-> index 694bd040cf51..1ce15c5be4c8 100644
-> --- a/include/trace/events/rcu.h
-> +++ b/include/trace/events/rcu.h
-> @@ -41,7 +41,7 @@ TRACE_EVENT(rcu_utilization,
->  	TP_printk("%s", __entry->s)
->  );
->  
-> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-> +#if defined(CONFIG_TREE_RCU)
->  
->  /*
->   * Tracepoint for grace-period events.  Takes a string identifying the
-> @@ -425,7 +425,7 @@ TRACE_EVENT_RCU(rcu_fqs,
->  		  __entry->cpu, __entry->qsevent)
->  );
->  
-> -#endif /* #if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) */
-> +#endif /* #if defined(CONFIG_TREE_RCU) */
->  
->  /*
->   * Tracepoint for dyntick-idle entry/exit events.  These take a string
-> diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-> index 7644eda17d62..0303934e6ef0 100644
-> --- a/kernel/rcu/Kconfig
-> +++ b/kernel/rcu/Kconfig
-> @@ -7,7 +7,7 @@ menu "RCU Subsystem"
->  
->  config TREE_RCU
->  	bool
-> -	default y if !PREEMPTION && SMP
-> +	default y if SMP
->  	help
->  	  This option selects the RCU implementation that is
->  	  designed for very large SMP system with hundreds or
-> @@ -17,6 +17,7 @@ config TREE_RCU
->  config PREEMPT_RCU
->  	bool
->  	default y if PREEMPTION
-> +	select TREE_RCU
->  	help
->  	  This option selects the RCU implementation that is
->  	  designed for very large SMP systems with hundreds or
-> @@ -78,7 +79,7 @@ config TASKS_RCU
->  	  user-mode execution as quiescent states.
->  
->  config RCU_STALL_COMMON
-> -	def_bool ( TREE_RCU || PREEMPT_RCU )
-> +	def_bool TREE_RCU
->  	help
->  	  This option enables RCU CPU stall code that is common between
->  	  the TINY and TREE variants of RCU.  The purpose is to allow
-> @@ -86,13 +87,13 @@ config RCU_STALL_COMMON
->  	  making these warnings mandatory for the tree variants.
->  
->  config RCU_NEED_SEGCBLIST
-> -	def_bool ( TREE_RCU || PREEMPT_RCU || TREE_SRCU )
-> +	def_bool ( TREE_RCU || TREE_SRCU )
->  
->  config RCU_FANOUT
->  	int "Tree-based hierarchical RCU fanout value"
->  	range 2 64 if 64BIT
->  	range 2 32 if !64BIT
-> -	depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
-> +	depends on TREE_RCU && RCU_EXPERT
->  	default 64 if 64BIT
->  	default 32 if !64BIT
->  	help
-> @@ -112,7 +113,7 @@ config RCU_FANOUT_LEAF
->  	int "Tree-based hierarchical RCU leaf-level fanout value"
->  	range 2 64 if 64BIT
->  	range 2 32 if !64BIT
-> -	depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
-> +	depends on TREE_RCU && RCU_EXPERT
->  	default 16
->  	help
->  	  This option controls the leaf-level fanout of hierarchical
-> @@ -187,7 +188,7 @@ config RCU_BOOST_DELAY
->  
->  config RCU_NOCB_CPU
->  	bool "Offload RCU callback processing from boot-selected CPUs"
-> -	depends on TREE_RCU || PREEMPT_RCU
-> +	depends on TREE_RCU
->  	depends on RCU_EXPERT || NO_HZ_FULL
->  	default n
->  	help
-> diff --git a/kernel/rcu/Makefile b/kernel/rcu/Makefile
-> index 020e8b6a644b..82d5fba48b2f 100644
-> --- a/kernel/rcu/Makefile
-> +++ b/kernel/rcu/Makefile
-> @@ -9,6 +9,5 @@ obj-$(CONFIG_TINY_SRCU) += srcutiny.o
->  obj-$(CONFIG_RCU_TORTURE_TEST) += rcutorture.o
->  obj-$(CONFIG_RCU_PERF_TEST) += rcuperf.o
->  obj-$(CONFIG_TREE_RCU) += tree.o
-> -obj-$(CONFIG_PREEMPT_RCU) += tree.o
->  obj-$(CONFIG_TINY_RCU) += tiny.o
->  obj-$(CONFIG_RCU_NEED_SEGCBLIST) += rcu_segcblist.o
-> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> index 8fd4f82c9b3d..4149ba76824f 100644
-> --- a/kernel/rcu/rcu.h
-> +++ b/kernel/rcu/rcu.h
-> @@ -452,7 +452,7 @@ enum rcutorture_type {
->  	INVALID_RCU_FLAVOR
->  };
->  
-> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-> +#if defined(CONFIG_TREE_RCU)
->  void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
->  			    unsigned long *gp_seq);
->  void rcutorture_record_progress(unsigned long vernum);
-> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> index 1861103662db..34a7452b25fd 100644
-> --- a/kernel/rcu/update.c
-> +++ b/kernel/rcu/update.c
-> @@ -435,7 +435,7 @@ struct debug_obj_descr rcuhead_debug_descr = {
->  EXPORT_SYMBOL_GPL(rcuhead_debug_descr);
->  #endif /* #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD */
->  
-> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) || defined(CONFIG_RCU_TRACE)
-> +#if defined(CONFIG_TREE_RCU) || defined(CONFIG_RCU_TRACE)
->  void do_trace_rcu_torture_read(const char *rcutorturename, struct rcu_head *rhp,
->  			       unsigned long secs,
->  			       unsigned long c_old, unsigned long c)
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 00fcea236eba..2ace158a4d72 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1268,7 +1268,7 @@ static struct ctl_table kern_table[] = {
->  		.proc_handler	= proc_do_static_key,
->  	},
->  #endif
-> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-> +#if defined(CONFIG_TREE_RCU)
->  	{
->  		.procname	= "panic_on_rcu_stall",
->  		.data		= &sysctl_panic_on_rcu_stall,
-> -- 
-> 2.20.1
-> 
+-- 
+Best regards,
+Jacek Anaszewski
