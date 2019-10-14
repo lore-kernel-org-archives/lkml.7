@@ -2,132 +2,114 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1EFC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCA5ECE58D
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720A820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA78A20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:51:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kellner.me header.i=@kellner.me header.b="m3pH2RmG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fBdXfPY7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nac7UknE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbfJNJvA (ORCPT
+        id S1731142AbfJNJvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:51:00 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:40583 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730872AbfJNJvA (ORCPT
+        Mon, 14 Oct 2019 05:51:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55368 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730872AbfJNJvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:51:00 -0400
-X-Greylist: delayed 467 seconds by postgrey-1.27 at vger.kernel.org; Mon, 14 Oct 2019 05:50:59 EDT
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 5D19F735;
-        Mon, 14 Oct 2019 05:43:10 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 14 Oct 2019 05:43:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kellner.me; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=mesmtp;
-         bh=g0eFRemBLYbt3Vj8rAn5r0iCJcP4iC+nMgPsp2aeyxQ=; b=m3pH2RmGh+mj
-        wgvkt8KKNTsOw/RCIpYWpPBZ9rvYpsYphyRZ4YEAuhQHTYFsGa6SR22GK7aHS3BF
-        kjKgFdK5SZpgFRxOdNyN36n/3I9JmIokiTyUqahDnD9DvVaMbeeE52QEnVRWV/Wq
-        AFO9J3gtmaeGLYBMtulGsshEe90KKCQ=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=g0eFRemBLYbt3Vj8rAn5r0iCJcP4iC+nMgPsp2aey
-        xQ=; b=fBdXfPY7DPkJHy3ntlbPfzGqGoe/3gzTG01r694FV4htyZypSAuCJ6qwJ
-        uCzw1sWz+HpgCIo7uQLa9TB6z4TXqHxKiXGS9E/6Caywos3hNxCC/gjKHr7X99q+
-        p2r7uKqq+IaKPAOjQwm87WGHMXpRRnTg136+xzlaAbHQXjgh2I0EoBRqbVG05WeD
-        l9iJBDmAa8smMKTFfoLdPRJw0fTr5pXkdGw3v4Do7s/3op1bk67Jbbh9kS0NE6TT
-        MjoqyEOUPckhDxg9gVMTcSXiCCaLajbpkvNzp9BgXIuPtZ2IW4FVsS1Ds8oPKxCd
-        9PhMDv7Nqz/SYtcO0hBPflt5oIyVg==
-X-ME-Sender: <xms:LEOkXXp57ew_RQs5nL-MEIIyL2yyaxsz0bzuyR4NxxtsnUFssL77ug>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrjedugddvtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpeevhhhrihhs
-    thhirghnucfmvghllhhnvghruceotghhrhhishhtihgrnheskhgvlhhlnhgvrhdrmhgvqe
-    enucfkphepkeelrdduiedrudehfedrudelieenucfrrghrrghmpehmrghilhhfrhhomhep
-    tghhrhhishhtihgrnheskhgvlhhlnhgvrhdrmhgvnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:LEOkXWR0v9fgMY1-TaHjvEQ9XWwFpBerHqNWmL-nvZfXCyL4GpewVA>
-    <xmx:LEOkXW7PuSdgAhpFcUPXbcxytFTnX2ZyCSrHWkhmwI1cX409JEvbUg>
-    <xmx:LEOkXaPMjwqqU0vq2AAH0R7Fk77oYoTzNyooSq30qDIW5Zh0-3FhDw>
-    <xmx:LUOkXcTLCneCSW0YV5A1iIvhjvw1J2XhdkfVVA7RjyJAeImeb40M-xb2e7k>
-Received: from hanada.local (cable-89-16-153-196.cust.telecolumbus.net [89.16.153.196])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AB6348005B;
-        Mon, 14 Oct 2019 05:43:05 -0400 (EDT)
-Message-ID: <abc477fb3bd8fbf7b4d7e53d079dd1d8902e54af.camel@kellner.me>
-Subject: Re: [PATCH] pidfd: add NSpid entries to fdinfo
-From:   Christian Kellner <christian@kellner.me>
-To:     Christian Brauner <christian.brauner@ubuntu.com>, jannh@google.com
-Cc:     aarcange@redhat.com, akpm@linux-foundation.org, cyphar@cyphar.com,
-        elena.reshetova@intel.com, guro@fb.com, ldv@altlinux.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, viro@zeniv.linux.org.uk
-Date:   Mon, 14 Oct 2019 11:43:01 +0200
-In-Reply-To: <20191012102119.qq2adlnxjxrkslca@wittgenstein>
-References: <CAG48ez1hk9d-qAPcRy9QOgNuO8u3Y_hu_3=GZoFYLY+oMdo8xg@mail.gmail.com>
-         <20191012101922.24168-1-christian.brauner@ubuntu.com>
-         <20191012102119.qq2adlnxjxrkslca@wittgenstein>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Mon, 14 Oct 2019 05:51:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3rjVtCZLgsilEpkgOnYIzDjjtZ2Kp11iwIF4i8XF3A8=; b=nac7UknEctDLA9sc4gOIH979e
+        nULCKrIjMf9CbbLUdLNoMbDBE0mr6s1/DovqlcygDZu7Xzl8gihBDK2b+kSb1KzE2IgaqU6eyOhVj
+        M45eKskAz2svxNJUvPYZMZBXUUMG4IHedszWllhdYyqP6PkfV1ssGyok384LEqu3jBctIrZMg4gRs
+        QK9XCaccrPOP3B6fIDDognLit2HFlE2QRQxLjvlTNoPsNZuwLCNv1rFQaR5u5lbyNW6n7/UtYY4UJ
+        sF/067U/08kPkzB/j54E7VGtoZ9W5cTqB97zx/TIf07va6Of7cYzeIZqeC2G/9xNW5hjW74k6FNx2
+        6EMbnPzWw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iJwya-0005S5-Ji; Mon, 14 Oct 2019 09:49:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6D0F305BD3;
+        Mon, 14 Oct 2019 11:48:18 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D48F820238A9A; Mon, 14 Oct 2019 11:49:12 +0200 (CEST)
+Date:   Mon, 14 Oct 2019 11:49:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
+        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        lenb@kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20191014094912.GY2311@hirez.programming.kicks-ass.net>
+References: <20191010073212.GB18412@dhcp22.suse.cz>
+ <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+ <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+ <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
+ <20191012074014.GA2037204@kroah.com>
+ <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
+ <20191012104001.GA2052933@kroah.com>
+ <20191012104742.GA2053473@kroah.com>
+ <82000bc8-6912-205b-0251-25b9cc430973@huawei.com>
+ <20191014092509.GA3050088@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014092509.GA3050088@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-10-12 at 12:21 +0200, Christian Brauner wrote:
-> I think this might be more what we want.
-Yep, indeed.
+On Mon, Oct 14, 2019 at 11:25:09AM +0200, Greg KH wrote:
+> Good luck, I don't really think that most, if any, of this is needed,
+> but hey, it's nice to clean it up where it can be :)
 
-> I tried to think of cases where the first entry of Pid is not
-> identical
-> to the first entry of NSpid but I came up with none. Maybe you do,
-> Jann?
-Yeah, I don't think that can be the case. By looking at the source of
-'pid_nr_ns(pid, ns)' a non-zero return means that a) 'pid' valid, ie.
-non-null and b) 'ns' is in the pid namespace hierarchy of 'pid' (at
-pid->level, i.e. "pid->numbers[ns->level].ns == ns").
+Some of the virtual devices we have (that use devm) really ought to set
+the node too, like drivers/base/cpu.c and driver/base/node.c and
+arguably the cooling devices too (they create a device per cpu).
 
-> Christian, this is just a quick stab I took. Feel free to pick this
-> up as a template.
-Thanks! I slightly re-worked it, with the reasoning above in mind, to
-get rid of one of the branches:
+The patch I had here:
 
-+#ifdef CONFIG_PID_NS
-+	seq_put_decimal_ull(m, "\nNSpid:\t", nr);
-+	if (nr) {
-+		int i;
-+
-+		/* If nr is non-zero it means that 'pid' is valid and that
-+		 * ns, i.e. the pid namespace associated with the procfs
-+		 * instance, is in the pid namespace hierarchy of pid.
-+		 * Start at one level below and print all descending pids.
-+		 */
-+		for (i = ns->level + 1; i <= pid->level; i++) {
-+			ns = pid->numbers[i].ns;
-+			seq_put_decimal_ull(m, "\t", pid_nr_ns(pid, ns));
-+		}
-+	}
-+#endif
+  https://lkml.kernel.org/r/20190925214526.GA4643@worktop.programming.kicks-ass.net
 
-But I now just realized that with the very same reasoning, if nr is
-non-zero, we don't need to redo all the checks and can just do:
+takes the more radical approach of requiring a node, except when
+explicitly marked not (the fake devices that don't use devm for
+example).
 
-for (i = ns->level + 1; i <= pid->level; i++)
-	seq_put_decimal_ull(m, "\t", pid->numbers[i].nr);
+But yes, PCI and other physical busses really should be having a node
+set, no excuses.
 
-If this sounds good to you I resend the patches with the change above.
-
-Thanks,
-Christian
-
+Anyway, I don't think non-physical devices actually use
+cpumask_of_node() much, a quick grep didn't show any.
