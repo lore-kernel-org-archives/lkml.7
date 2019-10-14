@@ -2,93 +2,116 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E250ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C221C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B1621882
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:41:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571067702;
-	bh=ymV5LEDVb8aHsr4Q8NYWv+K5Y1QpcdPwCL6+ZBDnL2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MgnLO3t7BSsRalXbBgnVaqmVb1WwSEFq4TYTWQeTuCaqwOH+X53mAycEZbnhaJjrv
-	 JatnPDlfaEnnquTp4vqoJFoBqYLm6nd2Aq38f1G0xsmgdUi++EKzVrtGCsodlEb1fa
-	 xsHdFkVA5majieir/eVbTbywqR8Mfokdw/lSV4Gs=
+	by mail.kernel.org (Postfix) with ESMTP id 1F56521882
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387652AbfJNPll (ORCPT
+        id S2387669AbfJNPoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:41:41 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36800 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731457AbfJNPlk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:41:40 -0400
-Received: by mail-qk1-f196.google.com with SMTP id y189so16290892qkc.3;
-        Mon, 14 Oct 2019 08:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BUs6ww2wp2HkRKO5Ig1yFUSfYWRm/mJFXsejJnbtOqs=;
-        b=oQOzhgiLemf2MFAncmQNwr1h9wmPYZjB9Mhg6CjWxiGAzLmQaUUeRd3rfj1VMVUgXB
-         T/o3WuHsOpozELcayBmb+2CMX2fA22LFOds2rvcs7WSjLFP2WyZn5MlPTOwV0zJEUGk/
-         0AH3sWGN4COj6efHDv2YZyJZGaaUl/5jK7q8NriAucA/qduGE/SI5d3R8Kq47J5m2EXo
-         AP2tAQNe4qD4gD8HfxptPoFq51uauD9hmaTSpJmi6PdyFi/oYoXjibGgvoME/Pzo/d3Y
-         7pv6CwmKL8neIiyMfpoFvvqHNK7ArxkXw1SmJyNxDEi5/K0k6Cd9X3hcnMsDpkSu1bUO
-         /G1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BUs6ww2wp2HkRKO5Ig1yFUSfYWRm/mJFXsejJnbtOqs=;
-        b=G4AAw2jhzNI4PL0K2aVdIemeTkbuKlVHFnWUEvUcTnxF15VOcfOVu61KrSotSFV6kf
-         p3FOrqX+uPG9a9emycij6j50iCG5q5+GpawRoSXhnos9ISzyZxnJhhNKYsSJa/2OSDPJ
-         WKOkiKjwzhSdGqvBTkv/mxI5a1rkMS20zhoSP/DdpcIw37hEMrp6BIBbL6G0+d2MG9+w
-         joj6B688sUo7eOd99dSii3q4u83Qiyl0M7XkFFnnNEGrcWyGjnnKjOUNj8slPWkbhWVf
-         G7MVLeBYVJHvUhUnrb1vAbOHjjcd0orzdhKBI39khT8x1+XjIcWwwllfQwuv9yZU3ymo
-         dFBg==
-X-Gm-Message-State: APjAAAWLnftbc/ZoibBYV/Xnr8m97g4EgbUEG/B+618L8bmFCUfcW+zX
-        lw5omnY2eYAJCwhG6WSXvlQ=
-X-Google-Smtp-Source: APXvYqw6h4Cle6f9ZGijs+B74SXDMAHKmu3JulWpk9p6jKiLNU22tm/HqcYx2y0bbEjKhUbAETn66g==
-X-Received: by 2002:a05:620a:887:: with SMTP id b7mr27937691qka.186.1571067698911;
-        Mon, 14 Oct 2019 08:41:38 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:50c5])
-        by smtp.gmail.com with ESMTPSA id c20sm7453462qkm.11.2019.10.14.08.41.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Oct 2019 08:41:38 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 08:41:36 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] cgroup: pids: use {READ,WRITE}_ONCE for pids->limit
- operations
-Message-ID: <20191014154136.GF18794@devbig004.ftw2.facebook.com>
-References: <20191012010539.6131-1-cyphar@cyphar.com>
+        Mon, 14 Oct 2019 11:44:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:47290 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731441AbfJNPoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:44:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60DE228;
+        Mon, 14 Oct 2019 08:44:03 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9CCC3F718;
+        Mon, 14 Oct 2019 08:44:01 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 16:43:59 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Daniel Axtens <dja@axtens.net>
+Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
+        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
+        linux-kernel@vger.kernel.org, dvyukov@google.com,
+        christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org,
+        gor@linux.ibm.com
+Subject: Re: [PATCH v8 1/5] kasan: support backing vmalloc space with real
+ shadow memory
+Message-ID: <20191014154359.GC20438@lakrids.cambridge.arm.com>
+References: <20191001065834.8880-1-dja@axtens.net>
+ <20191001065834.8880-2-dja@axtens.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191012010539.6131-1-cyphar@cyphar.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191001065834.8880-2-dja@axtens.net>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 12:05:39PM +1100, Aleksa Sarai wrote:
-> Because pids->limit can be changed concurrently (but we don't want to
-> take a lock because it would be needlessly expensive), use the
-> appropriate memory barriers.
+On Tue, Oct 01, 2019 at 04:58:30PM +1000, Daniel Axtens wrote:
+> Hook into vmalloc and vmap, and dynamically allocate real shadow
+> memory to back the mappings.
+> 
+> Most mappings in vmalloc space are small, requiring less than a full
+> page of shadow space. Allocating a full shadow page per mapping would
+> therefore be wasteful. Furthermore, to ensure that different mappings
+> use different shadow pages, mappings would have to be aligned to
+> KASAN_SHADOW_SCALE_SIZE * PAGE_SIZE.
+> 
+> Instead, share backing space across multiple mappings. Allocate a
+> backing page when a mapping in vmalloc space uses a particular page of
+> the shadow region. This page can be shared by other vmalloc mappings
+> later on.
+> 
+> We hook in to the vmap infrastructure to lazily clean up unused shadow
+> memory.
+> 
+> To avoid the difficulties around swapping mappings around, this code
+> expects that the part of the shadow region that covers the vmalloc
+> space will not be covered by the early shadow page, but will be left
+> unmapped. This will require changes in arch-specific code.
+> 
+> This allows KASAN with VMAP_STACK, and may be helpful for architectures
+> that do not have a separate module space (e.g. powerpc64, which I am
+> currently working on). It also allows relaxing the module alignment
+> back to PAGE_SIZE.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=202009
+> Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+> Signed-off-by: Daniel Axtens <dja@axtens.net>
+> [Mark: rework shadow allocation]
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 
-I can't quite tell what problem it's fixing.  Can you elaborate a
-scenario where the current code would break that your patch fixes?
+Sorry to point this out so late, but your S-o-B should come last in the
+chain per Documentation/process/submitting-patches.rst. Judging by the
+rest of that, I think you want something like:
 
-Thanks.
+Co-developed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com> [shadow rework]
+Signed-off-by: Daniel Axtens <dja@axtens.net>
 
--- 
-tejun
+... leaving yourself as the Author in the headers.
+
+Sorry to have made that more complicated!
+
+[...]
+
+> +static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+> +					void *unused)
+> +{
+> +	unsigned long page;
+> +
+> +	page = (unsigned long)__va(pte_pfn(*ptep) << PAGE_SHIFT);
+> +
+> +	spin_lock(&init_mm.page_table_lock);
+> +
+> +	if (likely(!pte_none(*ptep))) {
+> +		pte_clear(&init_mm, addr, ptep);
+> +		free_page(page);
+> +	}
+
+There should be TLB maintenance between clearing the PTE and freeing the
+page here.
+
+Thanks,
+Mark.
