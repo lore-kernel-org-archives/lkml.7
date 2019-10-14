@@ -2,115 +2,118 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04AFC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4FDECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98EA2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C615020854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NjqIdIP2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EFZRMeDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbfJNH5P (ORCPT
+        id S1730020AbfJNH5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 03:57:15 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46320 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfJNH5P (ORCPT
+        Mon, 14 Oct 2019 03:57:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35975 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfJNH5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 03:57:15 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so9900559pfg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:57:13 -0700 (PDT)
+        Mon, 14 Oct 2019 03:57:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so18483417wrd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:57:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rTp8veXsbPSlIboKUPW27VEfaouXwybhFA3W6d1O8fo=;
-        b=NjqIdIP2K4hCyynVyDdY8K51dfc2EaIY442YFIaWPHUTu44snyeWUrzK9EM4T1Ham/
-         11XeVIHhBGNvCjovYkXZJnz9VxyxOCgOKdJH+/7t/tD579UzhmvY2IhhPIb5kbwOdNnS
-         dxCRzgnXyib7zi0g33B07GAd5bl5b5UIoHvfROTVnem+7JcYQGef7zO8KkE2LtDr+tRV
-         kf3U3oh4cmQhyc7x0rVY7mTZ0SW0iHATCkW+tH0aC1G7aVtoP+QO7nAV6xqEi4dz6acx
-         uzGKSORkBSz7JSrcn1sg+TlvLUh5Pb2UahCesJC20Fxe8npSTEr4g4if7zrlV4UgA3c7
-         7pow==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wlueTYL+8qZ9KSvaC2J4g2+SKGmj7tj869xGKKDwlhM=;
+        b=EFZRMeDamau/PtjDTr3QllzMuLdqjBy/NYciSuFN+qIKgsX0Ot88ouA4V4VQ6UOMQG
+         rWcI4kDhiK/io9dxf0zDYfHtSar7xjwL5WQEmucaF+ZqA2yfOGgkG8MlP4eq8kYcYh6M
+         BV2DH+dladA+Iwa/7WEfoQWfy5qiHAzjwQP36mGz/BOraRyD/CEjY8f3SjfBYhYHafeo
+         3Y8ostev2sEjqCZQ75hoFrs+xlgITGw50ztSPEyHM6GZprKYHasX7j9i5s5o+UIcbCB+
+         Zv1gq2qmSvnoO7wpK3/3tyJGIUuBRXfHCXi/FCDYEkw/P4cXcx/KgDIBfW+E8PittOnW
+         iSQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=rTp8veXsbPSlIboKUPW27VEfaouXwybhFA3W6d1O8fo=;
-        b=QGWZpJNr8sAbW0veWwZNDUWaIP6VlnLXw4ORj0pX+/iX8bZcbEiOLklf3dxjik71jC
-         Sw1qMgtNhqdDgsjqsSPIxi+l005s/B8VzzgINPQqFcib1QluNldmJu5SHivt8xqx3o6F
-         VjNv/aucmuqZkbNq8T6BWENk1gOZeVc1OQqfJmwOjfznHJZ65VFI4/WsPzJzQl/oeqMo
-         E9MUuul1H4jRIN5ZEyhPhvGaOxzV9cwsQxH6hJ8tZO9CguZ/C7Divzlff7D/Si1WtasE
-         g6dUBRuquqlhXSEiySS1lJ485id6T2e52BXAYUCBYTwHng3HdoFtw25CYcnlHlmjhlKp
-         0DqA==
-X-Gm-Message-State: APjAAAVKOmbzVmRHLTpBi6A9360QgESS+d76NtZT7TFmGQzIiF39BNzT
-        NwCbq+YCwRxyP6Znno37GJ2R/w==
-X-Google-Smtp-Source: APXvYqwDsINI3qHxWvKQccDgfNIOC9TpH4ZPSDPxY/U3K0D4h4BQcqb1WCzleq0HYwC2jK/G0rCGNg==
-X-Received: by 2002:a63:df11:: with SMTP id u17mr19601601pgg.372.1571039833188;
-        Mon, 14 Oct 2019 00:57:13 -0700 (PDT)
-Received: from localhost.localdomain (111-241-168-233.dynamic-ip.hinet.net. [111.241.168.233])
-        by smtp.gmail.com with ESMTPSA id j126sm16583137pfb.186.2019.10.14.00.57.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 00:57:12 -0700 (PDT)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC v2 2/4] riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
-Date:   Mon, 14 Oct 2019 15:54:25 +0800
-Message-Id: <20191014075502.15105-3-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191014075502.15105-1-green.wan@sifive.com>
-References: <20191014075502.15105-1-green.wan@sifive.com>
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wlueTYL+8qZ9KSvaC2J4g2+SKGmj7tj869xGKKDwlhM=;
+        b=j8+OTBNcqRXCOM0fjqo0RESrEUtaOsjS3rzj7KeDDr6RiIpAZ0BdU2eifSFr6VppLk
+         m354+Wu7nMt7vMUMRHyK5xIx7uKgdYTi/fD77WzT+XQa7mfflyJZ2s9Hb15gQIjTy9ak
+         H8hFIplI1aJ3SgH+7bak3/BdboRBrY4Jw/JoXjPxqTGdx8Jk+zOnpv3sccL0Dk+luuKR
+         etQ0Rx8Fx2JtclRpCfGWG2q/EOBbgE9obGw+75BEHJ6BfMuAMVuDsvxvJISekbgvn1TK
+         vt7lS9zXJo0vhk41j8Kdc44iYBGxJecjv1VeDGi8YmVvsgVrJ+HCZEi+QFKM1vPG3RBR
+         5qcQ==
+X-Gm-Message-State: APjAAAWdYp/r6x6zlew4bBZRqIBKD5A1E50X81+WfR/tY6mWVo9ZekSh
+        cgd+vAXFN9b3X8K8kkSbs9+LDw==
+X-Google-Smtp-Source: APXvYqz1dQ+ediHiuUw3Ev4YeRHAcaUSBjOankgR/wtJRQ2BlmnBskvUcofomJfjQciB18XzBY6BAA==
+X-Received: by 2002:adf:f5c2:: with SMTP id k2mr26018100wrp.0.1571039847065;
+        Mon, 14 Oct 2019 00:57:27 -0700 (PDT)
+Received: from dell ([2.27.167.11])
+        by smtp.gmail.com with ESMTPSA id r2sm39324299wma.1.2019.10.14.00.57.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 14 Oct 2019 00:57:26 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 08:57:25 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, daniel.thompson@linaro.org, dmurphy@ti.com,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
+Subject: Re: [PATCH v7 5/5] backlight: add led-backlight driver
+Message-ID: <20191014075725.GI4545@dell>
+References: <20190918145730.22805-1-jjhiblot@ti.com>
+ <20190918145730.22805-6-jjhiblot@ti.com>
+ <20191004143900.GO18429@dell>
+ <cef282ee-3659-3bc3-da25-db02f843d61c@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cef282ee-3659-3bc3-da25-db02f843d61c@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PDMA support to (arch/riscv/boot/dts/sifive/fu540-c000.dtsi)
+On Fri, 04 Oct 2019, Jean-Jacques Hiblot wrote:
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+> Hi Lee,
+> 
+> On 04/10/2019 16:39, Lee Jones wrote:
+> > On Wed, 18 Sep 2019, Jean-Jacques Hiblot wrote:
+> > 
+> > > From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > > 
+> > > This patch adds a led-backlight driver (led_bl), which is similar to
+> > > pwm_bl except the driver uses a LED class driver to adjust the
+> > > brightness in the HW. Multiple LEDs can be used for a single backlight.
+> > > 
+> > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > ---
+> > >   drivers/video/backlight/Kconfig  |   7 +
+> > >   drivers/video/backlight/Makefile |   1 +
+> > >   drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++
+> > >   3 files changed, 268 insertions(+)
+> > >   create mode 100644 drivers/video/backlight/led_bl.c
+> > Applied, thanks.
+> 
+> It will break the build because it relies on functions not yet in the LED
+> core (devm_led_get() for v7 or devm_of_led_get() for v8)
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index afa43c7ea369..70a1891e7cd0 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -162,6 +162,13 @@
- 			clocks = <&prci PRCI_CLK_TLCLK>;
- 			status = "disabled";
- 		};
-+		dma: dma@3000000 {
-+			compatible = "sifive,fu540-c000-pdma";
-+			reg = <0x0 0x3000000 0x0 0x8000>;
-+			interrupt-parent = <&plic0>;
-+			interrupts = <23 24 25 26 27 28 29 30>;
-+			#dma-cells = <1>;
-+		};
- 		uart1: serial@10011000 {
- 			compatible = "sifive,fu540-c000-uart", "sifive,uart0";
- 			reg = <0x0 0x10011000 0x0 0x1000>;
+You're right, un-applied, thanks.
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
