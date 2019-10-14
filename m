@@ -2,159 +2,89 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3FEECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3D9C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0001220854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D7A20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571071835;
+	bh=VuyCcHL/P0gIP81Qm78++Xyd7HXLyzqkBUKIx7E7ilc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zC5VKqTbTtm2ABbsInX+x+VXLZR6+N96eMX5yMmRkMcvFlfo+20RZQSOdmOt3p6qn
+	 G10yntZRJs/aztdc900HifedWlkwIv/OklmptsaMp5YFPEfBQ2DDZJ9rkbBON/CzTy
+	 qaRYSX4rOWHrVecZI8eLk41d2WPgNONRcG9VSUWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388232AbfJNQua (ORCPT
+        id S2388251AbfJNQue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:50:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:48892 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730192AbfJNQua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:50:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E53E728;
-        Mon, 14 Oct 2019 09:50:29 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E14FA3F718;
-        Mon, 14 Oct 2019 09:50:28 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 17:50:26 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
- flag
-Message-ID: <20191014165026.GC2928@e121166-lin.cambridge.arm.com>
-References: <20190522213351.21366-3-repk@triplefau.lt>
+        Mon, 14 Oct 2019 12:50:34 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37676 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730192AbfJNQud (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:50:33 -0400
+Received: by mail-ot1-f67.google.com with SMTP id k32so14372927otc.4;
+        Mon, 14 Oct 2019 09:50:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u73GdQ2NeXgwoifIBxxjF/dVKgD9qkpO8Mhoo1TliII=;
+        b=nFSiqPUfAENj+PMgjl/CFLLcP4cprfswuxulDU3mC+OxEjpQli9X4mo4VUrJvcmA7/
+         CbhvjxeYaZqcn3GVB9gPfKKRgAFEffmfvA8eC9D26tYehtI/qoC2+bW5whcbt/6j0LWH
+         Kzp6qJF2HT6sWuc2f/CIgZmnxmmU5lIHKD0hLnLEmoDyBnu/Hdeu9kupBQOEjzi4foUG
+         7uqNCGnf+XJyB5ryvIDvMdfR1IoncpS7gYASzHFncwE6wxy9NgW4m+UkNCOjjV3D1aDW
+         PyeCP/M+JK/yGGrrO39zsD5t5rgxBAH+g0tT8pu7Wr2CVZcb/jOum74YlVqAoNN//kxh
+         u/eA==
+X-Gm-Message-State: APjAAAVKyNJjMxxrhpLKGpLjS/P+Lp0YXcudLwTC9AptgvrvzROo3ffh
+        gv9uNO8DrWRt/zwqxgEpDA==
+X-Google-Smtp-Source: APXvYqxvRt58KnjLizEjrt5U3N72GR4Jk1juC+HoJ6underOBPtaEVHnJGDwXyIWm+a6vNM/NaOCpA==
+X-Received: by 2002:a05:6830:1693:: with SMTP id k19mr2225402otr.233.1571071831337;
+        Mon, 14 Oct 2019 09:50:31 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h5sm5847055oth.29.2019.10.14.09.50.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 09:50:30 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 11:50:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v4 4/5] dt-bindings: clock: Introduce QCOM GCC clock
+ bindings
+Message-ID: <20191014165030.GA22526@bogus>
+References: <20191014102308.27441-1-tdas@codeaurora.org>
+ <20191014102308.27441-5-tdas@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522213351.21366-3-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191014102308.27441-5-tdas@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:
-> Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
-> implemented and does not reflect the actual link training state (the
-> flag is always set to 0). In order to support link re-training feature
-> this flag has to be emulated. The Link Training and Status State
-> Machine (LTSSM) flag in Aardvark LMI config register could be used as
-> a link training indicator. Indeed if the LTSSM is in L0 or upper state
-> then link training has completed (see [1]).
+On Mon, 14 Oct 2019 15:53:07 +0530, Taniya Das wrote:
+> Add device tree bindings for Global clock subsystem clock
+> controller for Qualcomm Technology Inc's SC7180 SoCs.
 > 
-> Unfortunately because after asking a link retraining it takes a while
-> for the LTSSM state to become less than 0x10 (due to L0s to recovery
-> state transition delays), LTSSM can still be in L0 while link training
-> has not finished yet. So this waits for link to be in recovery or lesser
-> state before returning after asking for a link retrain.
-> 
-> [1] "PCI Express Base Specification", REV. 4.0
->     PCI Express, February 19 2014, Table 4-14
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
-> Changes since v1:
->   - Rename retraining flag field
->   - Fix DEVCTL register writing
+>  .../devicetree/bindings/clock/qcom,gcc.yaml   |  14 ++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h   | 155 ++++++++++++++++++
+>  2 files changed, 169 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-sc7180.h
 > 
-> Changes since v2:
->   - Rewrite patch logic so it is more legible
-> 
-> Please note that I will unlikely be able to answer any comments from May
-> 24th to June 10th.
-> ---
->  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
 
-Merged in pci/aardvark, to be decided if we target one of the
-upcoming -rc* or v5.5.
-
-Thanks and apologies for the delay.
-
-Lorenzo
-
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 134e0306ff00..8803083b2174 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -180,6 +180,8 @@
->  #define LINK_WAIT_MAX_RETRIES		10
->  #define LINK_WAIT_USLEEP_MIN		90000
->  #define LINK_WAIT_USLEEP_MAX		100000
-> +#define RETRAIN_WAIT_MAX_RETRIES	10
-> +#define RETRAIN_WAIT_USLEEP_US		2000
->  
->  #define MSI_IRQ_NUM			32
->  
-> @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
->  	return -ETIMEDOUT;
->  }
->  
-> +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
-> +{
-> +	size_t retries;
-> +
-> +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
-> +		if (!advk_pcie_link_up(pcie))
-> +			break;
-> +		udelay(RETRAIN_WAIT_USLEEP_US);
-> +	}
-> +}
-> +
->  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  {
->  	u32 reg;
-> @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
->  		return PCI_BRIDGE_EMUL_HANDLED;
->  	}
->  
-> +	case PCI_EXP_LNKCTL: {
-> +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
-> +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
-> +			~(PCI_EXP_LNKSTA_LT << 16);
-> +		if (!advk_pcie_link_up(pcie))
-> +			val |= (PCI_EXP_LNKSTA_LT << 16);
-> +		*value = val;
-> +		return PCI_BRIDGE_EMUL_HANDLED;
-> +	}
-> +
->  	case PCI_CAP_LIST_ID:
->  	case PCI_EXP_DEVCAP:
->  	case PCI_EXP_DEVCTL:
->  	case PCI_EXP_LNKCAP:
-> -	case PCI_EXP_LNKCTL:
->  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
->  		return PCI_BRIDGE_EMUL_HANDLED;
->  	default:
-> @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
->  
->  	switch (reg) {
->  	case PCI_EXP_DEVCTL:
-> +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> +		break;
-> +
->  	case PCI_EXP_LNKCTL:
->  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> +		if (new & PCI_EXP_LNKCTL_RL)
-> +			advk_pcie_wait_for_retrain(pcie);
->  		break;
->  
->  	case PCI_EXP_RTCTL:
-> -- 
-> 2.20.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
