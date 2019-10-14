@@ -2,230 +2,133 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7B1ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4310DECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D422067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8EA20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="Xv4aMsJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731838AbfJNM53 (ORCPT
+        id S1731138AbfJNM7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 08:57:29 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:39139 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730472AbfJNM53 (ORCPT
+        Mon, 14 Oct 2019 08:59:08 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:54866 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730102AbfJNM7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 08:57:29 -0400
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 321C9100014;
-        Mon, 14 Oct 2019 12:57:24 +0000 (UTC)
-Date:   Mon, 14 Oct 2019 15:06:27 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
- flag
-Message-ID: <20191014130627.GA1426@voidbox>
-References: <20190522213351.21366-3-repk@triplefau.lt>
- <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
- <20190930165230.GA12568@voidbox>
- <20191001080546.GI42880@e119886-lin.cambridge.arm.com>
- <20191013113415.3c653526@why>
- <20191014100129.GA18832@e121166-lin.cambridge.arm.com>
+        Mon, 14 Oct 2019 08:59:08 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 5F42A5C0D8D;
+        Mon, 14 Oct 2019 14:59:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1571057945;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IrIk/+NuneeimSRaD+CUqurgwLLXMUHt9TmXZu2aqpA=;
+        b=Xv4aMsJ9afzK00Ld1FLFhDFzXUNX9iYwatA5qEdjd+uXiJ+2IJv8fm/mhS/0MqSvOEZPpp
+        CA8HQH5Ct1Gby0YK3hpwVfSxDkq7VbMJ609XS//x1ShVd4oDcy4EpZ1FceBBGhKlkP0uD3
+        n28S1auNMXzYIssL/sGaCXW1ba7sxYA=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014100129.GA18832@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 14 Oct 2019 14:59:05 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 04/14] drm/mxsfb: Reset vital registers for a proper
+ initialization
+In-Reply-To: <1567078215-31601-5-git-send-email-robert.chiras@nxp.com>
+References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
+ <1567078215-31601-5-git-send-email-robert.chiras@nxp.com>
+Message-ID: <29759c86d92f5f59da16a2ae2438c649@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo, Marc,
+On 2019-08-29 13:30, Robert Chiras wrote:
+> Some of the registers, like LCDC_CTRL, CTRL2_OUTSTANDING_REQS and
+> CTRL1_RECOVERY_ON_UNDERFLOW needs to be properly cleared/initialized
+> for a better start and stop routine.
 
-On Mon, Oct 14, 2019 at 11:01:29AM +0100, Lorenzo Pieralisi wrote:
-> On Sun, Oct 13, 2019 at 11:34:15AM +0100, Marc Zyngier wrote:
-> > On Tue, 1 Oct 2019 09:05:46 +0100
-> > Andrew Murray <andrew.murray@arm.com> wrote:
-> > 
-> > Hi Lorenzo,
-> > 
-> > > On Mon, Sep 30, 2019 at 06:52:30PM +0200, Remi Pommarel wrote:
-> > > > On Mon, Sep 30, 2019 at 04:40:18PM +0100, Andrew Murray wrote:  
-> > > > > On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:  
-> > > > > > Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
-> > > > > > implemented and does not reflect the actual link training state (the
-> > > > > > flag is always set to 0). In order to support link re-training feature
-> > > > > > this flag has to be emulated. The Link Training and Status State
-> > > > > > Machine (LTSSM) flag in Aardvark LMI config register could be used as
-> > > > > > a link training indicator. Indeed if the LTSSM is in L0 or upper state
-> > > > > > then link training has completed (see [1]).
-> > > > > > 
-> > > > > > Unfortunately because after asking a link retraining it takes a while
-> > > > > > for the LTSSM state to become less than 0x10 (due to L0s to recovery
-> > > > > > state transition delays), LTSSM can still be in L0 while link training
-> > > > > > has not finished yet. So this waits for link to be in recovery or lesser
-> > > > > > state before returning after asking for a link retrain.
-> > > > > > 
-> > > > > > [1] "PCI Express Base Specification", REV. 4.0
-> > > > > >     PCI Express, February 19 2014, Table 4-14
-> > > > > > 
-> > > > > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > > > > > ---
-> > > > > > Changes since v1:
-> > > > > >   - Rename retraining flag field
-> > > > > >   - Fix DEVCTL register writing
-> > > > > > 
-> > > > > > Changes since v2:
-> > > > > >   - Rewrite patch logic so it is more legible
-> > > > > > 
-> > > > > > Please note that I will unlikely be able to answer any comments from May
-> > > > > > 24th to June 10th.
-> > > > > > ---
-> > > > > >  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
-> > > > > >  1 file changed, 28 insertions(+), 1 deletion(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > > > index 134e0306ff00..8803083b2174 100644
-> > > > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > > > @@ -180,6 +180,8 @@
-> > > > > >  #define LINK_WAIT_MAX_RETRIES		10
-> > > > > >  #define LINK_WAIT_USLEEP_MIN		90000
-> > > > > >  #define LINK_WAIT_USLEEP_MAX		100000
-> > > > > > +#define RETRAIN_WAIT_MAX_RETRIES	10
-> > > > > > +#define RETRAIN_WAIT_USLEEP_US		2000
-> > > > > >  
-> > > > > >  #define MSI_IRQ_NUM			32
-> > > > > >  
-> > > > > > @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
-> > > > > >  	return -ETIMEDOUT;
-> > > > > >  }
-> > > > > >  
-> > > > > > +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
-> > > > > > +{
-> > > > > > +	size_t retries;
-> > > > > > +
-> > > > > > +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
-> > > > > > +		if (!advk_pcie_link_up(pcie))
-> > > > > > +			break;
-> > > > > > +		udelay(RETRAIN_WAIT_USLEEP_US);
-> > > > > > +	}
-> > > > > > +}
-> > > > > > +
-> > > > > >  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-> > > > > >  {
-> > > > > >  	u32 reg;
-> > > > > > @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
-> > > > > >  		return PCI_BRIDGE_EMUL_HANDLED;
-> > > > > >  	}
-> > > > > >  
-> > > > > > +	case PCI_EXP_LNKCTL: {
-> > > > > > +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
-> > > > > > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
-> > > > > > +			~(PCI_EXP_LNKSTA_LT << 16);  
-> > > > > 
-> > > > > The commit message says "the flag is always set to 0" - therefore I guess
-> > > > > you don't *need* to mask out the LT bit here? I assume this is just
-> > > > > belt-and-braces but thought I'd check incase I've misunderstood or if your
-> > > > > commit message is inaccurate.
-> > > > > 
-> > > > > In any case masking out the bit (or adding a comment) makes this code more
-> > > > > readable as the reader doesn't need to know what the hardware does with this
-> > > > > bit.  
-> > > > 
-> > > > Actually vendor eventually responded that the bit was reserved, but
-> > > > during my tests it remains to 0.
-> > > > 
-> > > > So yes I am masking this out mainly for belt-and-braces and legibility.  
-> > > 
-> > > Thanks for the clarification.
-> > > 
-> > > >   
-> > > > > > +		if (!advk_pcie_link_up(pcie))
-> > > > > > +			val |= (PCI_EXP_LNKSTA_LT << 16);
-> > > > > > +		*value = val;
-> > > > > > +		return PCI_BRIDGE_EMUL_HANDLED;
-> > > > > > +	}
-> > > > > > +
-> > > > > >  	case PCI_CAP_LIST_ID:
-> > > > > >  	case PCI_EXP_DEVCAP:
-> > > > > >  	case PCI_EXP_DEVCTL:
-> > > > > >  	case PCI_EXP_LNKCAP:
-> > > > > > -	case PCI_EXP_LNKCTL:
-> > > > > >  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
-> > > > > >  		return PCI_BRIDGE_EMUL_HANDLED;
-> > > > > >  	default:
-> > > > > > @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
-> > > > > >  
-> > > > > >  	switch (reg) {
-> > > > > >  	case PCI_EXP_DEVCTL:
-> > > > > > +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> > > > > > +		break;  
-> > > > > 
-> > > > > Why is this here?
-> > > > >   
-> > > > 
-> > > > Before PCI_EXP_DEVCTL and PCI_EXP_LNKCTL were doing the same thing, but
-> > > > as now PCI_EXP_LNKCTL does extra things (i.e. wait for link to
-> > > > successfully retrain), they do have different behaviours.
-> > > > 
-> > > > So this is here so PCI_EXP_DEVCTL keeps its old behaviour and do not
-> > > > wait for link retrain in case an unrelated (PCI_EXP_LNKCTL_RL) bit is
-> > > > set.  
-> > > 
-> > > Oh yes, of course!
-> > > 
-> > > Thanks and:
-> > > 
-> > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> > 
-> > Is there any hope for this workaround to make it into 5.4?
-> > 
-> > My EspressoBin (which is blessed with this joke of a PCIe controller)
-> > is pretty much a doorstop without it and dies with a SError early at
-> > boot.
-> > 
-> > FWIW:
-> > 
-> > Tested-by: Marc Zyngier <maz@kernel.org>
+
+This patch uses CTRL2_OUTSTANDING_REQS which is only introduced in the
+next patch. This breaks bisectability.
+
+--
+Stefan
+
 > 
-> Hi Marc,
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Tested-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> First thing I will have to mark it as a Fixes: (if Remi can provide
-> me with a tag that'd be great), usually we send fixes at -rc* for
-> patches that fix code that went in the current (eg 5.4) material,
-> I will ask Bjorn to see if we can send this in one of the upcoming
-> -rc* even if it fixes older code.
-
-Sure, I think this could be considered a fix for the following commit :
-Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
-
-Moreover, Marc, I am also a bit supprised that you did not have to use
-[1] to even be able to boot.
-
-Also if you want to be completely immune to this kind of SError (that
-could theoretically happen if the link goes down for other reasons than
-being retrained) you would have to use mainline ATF along with [2]. But
-the chances to hit that are low (could only happen in case of link
-errors).
-
-[1] [v3] PCI: aardvark: Use LTSSM state to build link training flag
-    https://patchwork.ozlabs.org/patch/1115864/
-[2] [v3] PCI: aardvark: Don't rely on jiffies while holding spinlock
-    https://patchwork.ozlabs.org/patch/1168349/
-
--- 
-Remi
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> index b69ace8..5e44f57 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> @@ -127,6 +127,10 @@ static void mxsfb_enable_controller(struct
+> mxsfb_drm_private *mxsfb)
+>  		clk_prepare_enable(mxsfb->clk_disp_axi);
+>  	clk_prepare_enable(mxsfb->clk);
+>  
+> +	if (mxsfb->devdata->ipversion >= 4)
+> +		writel(CTRL2_OUTSTANDING_REQS(REQ_16),
+> +		       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+> +
+>  	/* If it was disabled, re-enable the mode again */
+>  	writel(CTRL_DOTCLK_MODE, mxsfb->base + LCDC_CTRL + REG_SET);
+>  
+> @@ -136,12 +140,19 @@ static void mxsfb_enable_controller(struct
+> mxsfb_drm_private *mxsfb)
+>  	writel(reg, mxsfb->base + LCDC_VDCTRL4);
+>  
+>  	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_SET);
+> +	writel(CTRL1_RECOVERY_ON_UNDERFLOW, mxsfb->base + LCDC_CTRL1 + REG_SET);
+>  }
+>  
+>  static void mxsfb_disable_controller(struct mxsfb_drm_private *mxsfb)
+>  {
+>  	u32 reg;
+>  
+> +	if (mxsfb->devdata->ipversion >= 4)
+> +		writel(CTRL2_OUTSTANDING_REQS(0x7),
+> +		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
+> +
+> +	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
+> +
+>  	/*
+>  	 * Even if we disable the controller here, it will still continue
+>  	 * until its FIFOs are running out of data
+> @@ -295,6 +306,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
+>  	dma_addr_t paddr;
+>  
+>  	mxsfb_enable_axi_clk(mxsfb);
+> +	writel(0, mxsfb->base + LCDC_CTRL);
+>  	mxsfb_crtc_mode_set_nofb(mxsfb);
+>  
+>  	/* Write cur_buf as well to avoid an initial corrupt frame */
