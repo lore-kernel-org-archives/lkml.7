@@ -2,297 +2,198 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C860EECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD55ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B18621A4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571061447;
-	bh=LLH2uQ5gYg+SBXTksDYlU+T3+fs82qQa6ba8XCr/GLI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=y/Y7hG3zJXEF1P54jkLmo6alJEihjYs5JA5xh6gZsZpyhXXwBKFHX4RDR8P6ahR+K
-	 cd9EDwRpZuyyGLk8iGPoLV40R8bWLaEHX0HAJNTv1JkXjaJlLDRfcW15UsCjluBjak
-	 mNoSVt08zP9c4hiOaGHkC698HBjx5tLYIJTNsFRY=
+	by mail.kernel.org (Postfix) with ESMTP id 848532133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="e19PdnTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732369AbfJNN50 (ORCPT
+        id S1732377AbfJNN5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:57:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730477AbfJNN50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:57:26 -0400
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B2D21A4A;
-        Mon, 14 Oct 2019 13:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571061444;
-        bh=LLH2uQ5gYg+SBXTksDYlU+T3+fs82qQa6ba8XCr/GLI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WhWA0Z26YBfhBAV8RCEZEMYp1v+sqt+colar2WnzuXDlL8iW6T6nbdwUUz7lR8xRD
-         k0e4PvOQpMwHU+2BFSDNQzxl86uVe5XU5vttQ3NcDIoX47dI8JTqJVYmbE02q9jLiH
-         nUhPVzxIyECh8oC7bBNWteH980agEaehLbva3a1w=
-Received: by mail-qt1-f177.google.com with SMTP id w14so25522096qto.9;
-        Mon, 14 Oct 2019 06:57:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAUVQuV76dR08KCLMQTH23BGbX7FB9mZsU9tnsOwYQ8kycto0+SB
-        tzW383NdNFW3i8apbb9zfzaEA8sEQ3Py/znyEA==
-X-Google-Smtp-Source: APXvYqwX1KUTrKD9PfICXLuavHN6lAAtm6esRog7N3VFNyl9RY+ZCu7FqNsYVhKlnuWqdkfPcoK1JtogLpjhrB86EEs=
-X-Received: by 2002:ac8:6782:: with SMTP id b2mr32574382qtp.143.1571061443573;
- Mon, 14 Oct 2019 06:57:23 -0700 (PDT)
+        Mon, 14 Oct 2019 09:57:50 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40788 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730477AbfJNN5u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 09:57:50 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e13so1973108pga.7
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 06:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=w+qQ12zqF6/LBMHQ5Fp2IFcdj8n4Em4zE18BXC0o5qc=;
+        b=e19PdnTITiRHT8BkzMqzQslGAm0ePSp/Ygo3EPANA7IZYnPaqVYFwlLTDbRE6C315S
+         Fq2C21+LeOwUqC/5Q0/LhjsGkUjHkd4DrizycDmZ0CIZWjRjTpzT65GyR2KpdrUv/NzQ
+         ty+P8L2qB0/AsSbQ6iwuWlgckd43Y8kX2DTOQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=w+qQ12zqF6/LBMHQ5Fp2IFcdj8n4Em4zE18BXC0o5qc=;
+        b=tojO0MpQmrans5+dQ8hSg3a1c9c+Bmct+Gk/x93DC++2OcFoTWSXFDpvlt05uGNHBT
+         Jo6pvyYPC3oxDHF9GWNXIfDfeYo+SrCuwTNgiskBz1iAFAtZyoFybtf4Wtc3LZtmG3Xz
+         vCxjbzTWCXLNI0VmbcAs5Ng42vvCM9RMZNKoQMqsbIMi5ZNn+AU8m5R2tCSYgmib1nGZ
+         CG/vJa01xwyzFUIy1/FCCWHMDqeYSTElYsp7ldlFoBw6KAsA2ZEs5llObjaPPs1aC3/B
+         5RzYc0Uz3d6Mf6tt6ZKC+UaXiBDnnZfjF22GycZayIZOYG28j8ut8wya8nW6yoCq6dK1
+         ENpA==
+X-Gm-Message-State: APjAAAXgWIB5MsXeEvU4z1MftiW8p0uw0clxwZwURYkqLyY43Z2PuLJQ
+        UVoaVtzTHqFgTHx4IS/NJ2uhNQ==
+X-Google-Smtp-Source: APXvYqxv6ZzjyfwcTFL8mtTDtffryluSc6uc9hQ8Klc9iZGNvmBj4sktnP0dv9DvdOb4Ap0KWjNLDQ==
+X-Received: by 2002:a63:1d8:: with SMTP id 207mr17320083pgb.366.1571061468959;
+        Mon, 14 Oct 2019 06:57:48 -0700 (PDT)
+Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
+        by smtp.gmail.com with ESMTPSA id z4sm15608752pjt.17.2019.10.14.06.57.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 06:57:48 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
+        glider@google.com, luto@kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, dvyukov@google.com, christophe.leroy@c-s.fr
+Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com
+Subject: Re: [PATCH v8 1/5] kasan: support backing vmalloc space with real shadow memory
+In-Reply-To: <352cb4fa-2e57-7e3b-23af-898e113bbe22@virtuozzo.com>
+References: <20191001065834.8880-1-dja@axtens.net> <20191001065834.8880-2-dja@axtens.net> <352cb4fa-2e57-7e3b-23af-898e113bbe22@virtuozzo.com>
+Date:   Tue, 15 Oct 2019 00:57:44 +1100
+Message-ID: <87ftjvtoo7.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-References: <20191014091622.23562-1-benjamin.gaignard@st.com>
-In-Reply-To: <20191014091622.23562-1-benjamin.gaignard@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 14 Oct 2019 08:57:11 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Z7G31vBhHn_csntOsBLnZoLFU0qZHk67kdC1kahd4kQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+Z7G31vBhHn_csntOsBLnZoLFU0qZHk67kdC1kahd4kQ@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: display: Convert stm32 display bindings
- to json-schema
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 4:16 AM Benjamin Gaignard
-<benjamin.gaignard@st.com> wrote:
+Hi Andrey,
+
+
+>> +	/*
+>> +	 * Ensure poisoning is visible before the shadow is made visible
+>> +	 * to other CPUs.
+>> +	 */
+>> +	smp_wmb();
 >
-> Convert the STM32 display binding to DT schema format using json-schema.
-> Split the original bindings in two yaml files:
-> - one for display controller (ltdc)
-> - one for DSI controller
+> I'm not quite understand what this barrier do and why it needed.
+> And if it's really needed there should be a pairing barrier
+> on the other side which I don't see.
+
+Mark might be better able to answer this, but my understanding is that
+we want to make sure that we never have a situation where the writes are
+reordered so that PTE is installed before all the poisioning is written
+out. I think it follows the logic in __pte_alloc() in mm/memory.c:
+
+	/*
+	 * Ensure all pte setup (eg. pte page lock and page clearing) are
+	 * visible before the pte is made visible to other CPUs by being
+	 * put into page tables.
+	 *
+	 * The other side of the story is the pointer chasing in the page
+	 * table walking code (when walking the page table without locking;
+	 * ie. most of the time). Fortunately, these data accesses consist
+	 * of a chain of data-dependent loads, meaning most CPUs (alpha
+	 * being the notable exception) will already guarantee loads are
+	 * seen in-order. See the alpha page table accessors for the
+	 * smp_read_barrier_depends() barriers in page table walking code.
+	 */
+	smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
+
+I can clarify the comment.
+
+>> +
+>> +	spin_lock(&init_mm.page_table_lock);
+>> +	if (likely(pte_none(*ptep))) {
+>> +		set_pte_at(&init_mm, addr, ptep, pte);
+>> +		page = 0;
+>> +	}
+>> +	spin_unlock(&init_mm.page_table_lock);
+>> +	if (page)
+>> +		free_page(page);
+>> +	return 0;
+>> +}
+>> +
 >
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> changes in v3:
-> - use (GPL-2.0-only OR BSD-2-Clause) license
 >
-> changes in v2:
-> - use BSD-2-Clause license
-> - add panel property
-> - fix identation
-> - remove pinctrl-names: true
-> - remove pinctrl-[0-9]+: true
-> - rework ports block to include port@0 and port@1
-> - use const for #adress-cells and #size-cells
-> - add additionalProperties: false
+> ...
 >
->  .../devicetree/bindings/display/st,stm32-dsi.yaml  | 151 +++++++++++++++++++++
->  .../devicetree/bindings/display/st,stm32-ltdc.txt  | 144 --------------------
->  .../devicetree/bindings/display/st,stm32-ltdc.yaml |  81 +++++++++++
->  3 files changed, 232 insertions(+), 144 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
->  create mode 100644 Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
+>> @@ -754,6 +769,8 @@ merge_or_add_vmap_area(struct vmap_area *va,
+>>  	}
+>>  
+>>  insert:
+>> +	kasan_release_vmalloc(orig_start, orig_end, va->va_start, va->va_end);
+>> +
+>>  	if (!merged) {
+>>  		link_va(va, root, parent, link, head);
+>>  		augment_tree_propagate_from(va);
+>> @@ -2068,6 +2085,22 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
+>>  
+>>  	setup_vmalloc_vm(area, va, flags, caller);
+>>  
+>> +	/*
+>> +	 * For KASAN, if we are in vmalloc space, we need to cover the shadow
+>> +	 * area with real memory. If we come here through VM_ALLOC, this is
+>> +	 * done by a higher level function that has access to the true size,
+>> +	 * which might not be a full page.
+>> +	 *
+>> +	 * We assume module space comes via VM_ALLOC path.
+>> +	 */
+>> +	if (is_vmalloc_addr(area->addr) && !(area->flags & VM_ALLOC)) {
+>> +		if (kasan_populate_vmalloc(area->size, area)) {
+>> +			unmap_vmap_area(va);
+>> +			kfree(area);
+>> +			return NULL;
+>> +		}
+>> +	}
+>> +
+>>  	return area;
+>>  }
+>>  
+>> @@ -2245,6 +2278,9 @@ static void __vunmap(const void *addr, int deallocate_pages)
+>>  	debug_check_no_locks_freed(area->addr, get_vm_area_size(area));
+>>  	debug_check_no_obj_freed(area->addr, get_vm_area_size(area));
+>>  
+>> +	if (area->flags & VM_KASAN)
+>> +		kasan_poison_vmalloc(area->addr, area->size);
+>> +
+>>  	vm_remove_mappings(area, deallocate_pages);
+>>  
+>>  	if (deallocate_pages) {
+>> @@ -2497,6 +2533,9 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
+>>  	if (!addr)
+>>  		return NULL;
+>>  
+>> +	if (kasan_populate_vmalloc(real_size, area))
+>> +		return NULL;
+>> +
 >
-> diff --git a/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
-> new file mode 100644
-> index 000000000000..8dd727c7533e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
-> @@ -0,0 +1,151 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/st,stm32-dsi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 DSI host controller
-> +
-> +maintainers:
-> +  - Philippe Cornu <philippe.cornu@st.com>
-> +  - Yannick Fertre <yannick.fertre@st.com>
-> +
-> +description:
-> +  The STMicroelectronics STM32 DSI controller uses the Synopsys DesignWare MIPI-DSI host controller.
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32-dsi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module Clock
-> +      - description: DSI bus clock
-> +      - description: Pixel clock
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +      - const: ref
-> +      - const: px_clk
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    items:
-> +      - const: apb
-> +
-> +  phy-dsi-supply:
-> +    maxItems: 1
-> +    description:
-> +        Phandle of the regulator that provides the supply voltage.
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      A node containing DSI input & output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +      Documentation/devicetree/bindings/graph.txt
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description:
-> +          DSI input port node, connected to the ltdc rgb output port.
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          DSI output port node, connected to a panel or a bridge input port"
-> +
-> +patternProperties:
-> +  "^(panel|panel-dsi)@[0-9]$":
-> +    type: object
-> +    description:
-> +      A node containing the panel or bridge description as documented in
-> +      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-> +    properties:
-> +      port@0:
+> KASAN itself uses __vmalloc_node_range() to allocate and map shadow in memory online callback.
+> So we should either skip non-vmalloc and non-module addresses here or teach kasan's memory online/offline
+> callbacks to not use __vmalloc_node_range() (do something similar to kasan_populate_vmalloc() perhaps?). 
 
-You can drop this. The unit address for the panel port is decided by
-the panel binding, not this one.
+Ah, right you are. I haven't been testing that.
 
-> +        type: object
-> +        description:
-> +          Panel or bridge port node, connected to the DSI output port (port@1)
+I am a bit nervous about further restricting kasan_populate_vmalloc: I
+seem to remember having problems with code using the vmalloc family of
+functions to map memory that doesn't lie within vmalloc space but which
+still has instrumented accesses.
 
-[...]
+On the other hand, I'm not keen on rewriting any of the memory
+on/offline code if I can avoid it!
 
-> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-> new file mode 100644
-> index 000000000000..94a4137f7236
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-> @@ -0,0 +1,81 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/st,stm32-ltdc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 lcd-tft display controller
-> +
-> +maintainers:
-> +  - Philippe Cornu <philippe.cornu@st.com>
-> +  - Yannick Fertre <yannick.fertre@st.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32-ltdc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 2
-> +    maxItems: 2
+I'll have a look and get back you as soon as I can.
 
-Need to describe what each interrupt is.
+Thanks for catching this.
 
-items:
-  - description: ...
-  - description: ...
+Kind regards,
+Daniel
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: lcd
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  port:
-> +    type: object
-> +    description:
-> +      "Video port for DPI RGB output.
-> +      ltdc has one video port with up to 2 endpoints:
-> +      - for external dpi rgb panel or bridge, using gpios.
-> +      - for internal dpi input of the MIPI DSI host controller.
-> +      Note: These 2 endpoints cannot be activated simultaneously.
-> +      Please refer to the bindings defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt."
-> +
-> +  dma-ranges:
-> +    maxItems: 1
-
-dma-ranges goes in bus nodes, not device nodes.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +    ltdc: display-controller@40016800 {
-> +        compatible = "st,stm32-ltdc";
-> +        reg = <0x5a001000 0x400>;
-> +        interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&rcc LTDC_PX>;
-> +        clock-names = "lcd";
-> +        resets = <&rcc LTDC_R>;
-> +
-> +        port {
-> +             ltdc_out_dsi: endpoint {
-> +                     remote-endpoint = <&dsi_in>;
-> +             };
-> +        };
-> +    };
-> +
-> +...
-> +
-> --
-> 2.15.0
 >
+> -- 
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/352cb4fa-2e57-7e3b-23af-898e113bbe22%40virtuozzo.com.
