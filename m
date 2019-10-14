@@ -2,520 +2,119 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A2DECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C6AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C42217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="E3cxrZdd"
+	by mail.kernel.org (Postfix) with ESMTP id 2A686217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:02:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbfJNNCK (ORCPT
+        id S1732028AbfJNNCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:02:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36681 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfJNNCK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:02:10 -0400
-Received: by mail-wm1-f65.google.com with SMTP id m18so16686450wmc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 06:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/nFxm4Z4zbOqRhVwfCDlChNrbDNKiMWhquDss6zEqOw=;
-        b=E3cxrZddRUir6nAHTLAcJ1Czb68nRh/bL1wYEKOANgbFL30mHjCz6QiXkrsDefl5FR
-         1hxpaPhNBHlG5+bJsUj02vPGjOxDtEmPn3A9TpsczlOE5tkUi+uZk5/J1XzIeOV8cD89
-         d7HHVZG11CaoDJlNWvv13FVOOsKrvH1vV7FBYO7ynNzMd03caCR07LP0U+pBH/ddApKq
-         uZZR9NEW9uDK65zZpq2lu4GVC7w44hn2L1FkZO6fJb7/8KGmfBAC7eBzJdDSXRk4tu0O
-         jEJoFrIUmKqVLz7P6PzDdwzJ9V/snn2muYibxf0G11q5BWp4uoonfYxWFq8ZRZb0ddzc
-         Bh/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/nFxm4Z4zbOqRhVwfCDlChNrbDNKiMWhquDss6zEqOw=;
-        b=jcSd49/rc2aUZefQ5Ft779NiyDDorQe2wlbivjwuhXbRv4yrGoVt/neggaUsMoK/U0
-         mlqWiP5BjdRbrrUVeEgEuozdPMXAd27UZsHn+kNPypbPThMy6ahB68njiR8JZKc386lR
-         BpO4jwX8sjyiKv7Rkcy/UJFwdfHrVPPGiygHxsW/SubY03kKwOiwR9PrhrhuigO1E8aU
-         Rvh8lnExyCqc1ARXtBenUcreaqqQg/2P3FFobKDJhFlhWQ99mHDckv+e9QmZxn7JY/f4
-         MmQas5IV/KQHvUpCY3zfCOdY8+Clovk+iv2s/69YYchOw5kFonBySDNMJbcWM2a6XhGE
-         4jKg==
-X-Gm-Message-State: APjAAAWDHfZF0E3fNZz9Yz3ls2kfB+4AJQnYH2dCP8hwYkp2tOjcoA/N
-        Rq81GWl6HHcFf1ejtGoCwaozNg==
-X-Google-Smtp-Source: APXvYqzWxduvN5MalN1A4MGURPO2inFehBWQ5C7Jv9jPUxpNA5W/yKDACfllnuIFkF8p7H4/Y5LM0w==
-X-Received: by 2002:a1c:7313:: with SMTP id d19mr15338531wmb.16.1571058127081;
-        Mon, 14 Oct 2019 06:02:07 -0700 (PDT)
-Received: from localhost (ip-89-177-225-135.net.upcbroadband.cz. [89.177.225.135])
-        by smtp.gmail.com with ESMTPSA id a9sm27574015wmf.14.2019.10.14.06.02.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 06:02:06 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 15:02:05 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 06/17] ethtool: netlink bitset handling
-Message-ID: <20191014130205.GA2314@nanopsycho>
-References: <cover.1570654310.git.mkubecek@suse.cz>
- <af208e79258e7e3c3af3860e6a8908a50dec095f.1570654310.git.mkubecek@suse.cz>
- <20191011133429.GA3056@nanopsycho>
- <20191014111847.GB8493@unicorn.suse.cz>
+        Mon, 14 Oct 2019 09:02:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46146 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727948AbfJNNCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 09:02:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CC1ACBAC1;
+        Mon, 14 Oct 2019 13:02:48 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 15:02:47 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Joe Perches <joe@perches.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] printf: add support for printing symbolic error
+ names
+Message-ID: <20191014130247.rag2g7qz54uiw54z@pathway.suse.cz>
+References: <20190917065959.5560-1-linux@rasmusvillemoes.dk>
+ <20191011133617.9963-1-linux@rasmusvillemoes.dk>
+ <20191011133617.9963-2-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191014111847.GB8493@unicorn.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191011133617.9963-2-linux@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Oct 14, 2019 at 01:18:47PM CEST, mkubecek@suse.cz wrote:
->On Fri, Oct 11, 2019 at 03:34:29PM +0200, Jiri Pirko wrote:
->> Wed, Oct 09, 2019 at 10:59:18PM CEST, mkubecek@suse.cz wrote:
->> >+Bit sets
->> >+========
->> >+
->> >+For short bitmaps of (reasonably) fixed length, standard ``NLA_BITFIELD32``
->> >+type is used. For arbitrary length bitmaps, ethtool netlink uses a nested
->> >+attribute with contents of one of two forms: compact (two binary bitmaps
->> >+representing bit values and mask of affected bits) and bit-by-bit (list of
->> >+bits identified by either index or name).
->> >+
->> >+Compact form: nested (bitset) atrribute contents:
->> >+
->> >+  ============================  ======  ============================
->> >+  ``ETHTOOL_A_BITSET_LIST``     flag    no mask, only a list
->> 
->> I find "list" a bit confusing name of a flag. Perhaps better to stick
->> with the "compact" terminology and make this "ETHTOOL_A_BITSET_COMPACT"?
->> Then in the code you can have var "is_compact", which makes the code a
->> bit easier to read I believe.
->
->This is not the same as "compact", "list" flag means that the bit set
->does not represent a value/mask pair but only a single bitmap (which can
->be understood as a list or subset of possible values).
+On Fri 2019-10-11 15:36:17, Rasmus Villemoes wrote:
+> It has been suggested several times to extend vsnprintf() to be able
+> to convert the numeric value of ENOSPC to print "ENOSPC". This
+> implements that as a %p extension: With %pe, one can do
 
-Okay, this is confusing. So you say that the "LIST" may be on and
-ETHTOOL_A_BITSET_VALUE present, but ETHTOOL_A_BITSET_MASK not?
-I thought that whtn "LIST" is on, no "VALUE" nor "MASK" should be here.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
+I like the patch. There are only two rather cosmetic things.
 
->
->This saves some space in kernel replies where there is no natural mask
->so that we would have to invent one (usually all possible bits) but it
+> diff --git a/lib/errname.c b/lib/errname.c
+> new file mode 100644
+> index 000000000000..30d3bab99477
+> --- /dev/null
+> +++ b/lib/errname.c
+> +const char *errname(int err)
+> +{
+> +	bool pos = err > 0;
+> +	const char *name = __errname(err > 0 ? err : -err);
+> +
+> +	return name ? name + pos : NULL;
 
-Do you have an example?
+This made me to check C standard. It seems that "true" really has
+to be "1".
 
+But I think that I am not the only one who is not sure.
+I would prefer to make it less tricky and use, for example:
 
->is more important in request where some request want to modify a subset
->of bits (set some, unset some) while some requests pass a list of bits
->to be set after the operation (i.e. "I want exactly these to be
->enabled").
+	const char *name = __errname(err > 0 ? err : -err);
+	if (!name)
+		return NULL;
 
-Hmm, it's a different type of bitset then. Wouldn't it be better to have
-ETHTOOL_A_BITSET_TYPE
-and enum:
-ETHTOOL_A_BITSET_TYPE_LIST
-ETHTOOL_A_BITSET_TYPE_MASKED
-or something like that?
-Or maybe just NLA_FLAG called "MASKED". I don't know, "list" has a
-specific meaning and this isn't that...
+	return err > 0 ? name + 1 : name;
 
+> +}
+> diff --git a/lib/test_printf.c b/lib/test_printf.c
+> index 5d94cbff2120..4fa0ccf58420 100644
+> --- a/lib/test_printf.c
+> +++ b/lib/test_printf.c
+> @@ -593,6 +593,29 @@ flags(void)
+>  	kfree(cmp_buffer);
+>  }
+>  
+> +static void __init
+> +errptr(void)
+> +{
+> +	char buf[PLAIN_BUF_SIZE];
+> +
+> +	test("-1234", "%pe", ERR_PTR(-1234));
+> +
+> +	/* Check that %pe with a non-ERR_PTR gets treated as ordinary %p. */
+> +	BUILD_BUG_ON(IS_ERR(PTR));
+> +	snprintf(buf, sizeof(buf), "(%p)", PTR);
+> +	test(buf, "(%pe)", PTR);
 
->
->The flag could be omitted for compact form where we could simply say
->that if there is no mask, it's a list, but we need it for verbose form.
->
->> >+  ``ETHTOOL_A_BITSET_SIZE``     u32     number of significant bits
->> >+  ``ETHTOOL_A_BITSET_VALUE``    binary  bitmap of bit values
->> >+  ``ETHTOOL_A_BITSET_MASK``     binary  bitmap of valid bits
->> 
->> Couple of times the NLA_BITFIELD32 limitation was discussed, so isn't
->> this the time to introduce generic NLA_BITFIELD with variable len and
->> use it here? This is exactly job for it. As this is UAPI, I believe it
->> should be done now cause later won't work.
->
->As discussed before, we would lose the option to omit mask when it's not
->needed.
+There is a small race. "(____ptrval____)" is used for %p before
+random numbers are initialized. The switch is done via workqueue
+work, see enable_ptr_key_workfn(). It means that it can be done
+in parallel.
 
-Sorry, it's been couple of months already :/
+I doubt that anyone would ever hit the race. But it could be very confusing
+and hard to debug. I would replace it with:
+
+	test_hashed("%pe", PTR);
 
 
->
->> >+Bit-by-bit form: nested (bitset) attribute contents:
->> >+
->> >+ +---------------------------------+--------+-----------------------------+
->> >+ | ``ETHTOOL_A_BITSET_LIST``       | flag   | no mask, only a list        |
->> >+ +---------------------------------+--------+-----------------------------+
->> >+ | ``ETHTOOL_A_BITSET_SIZE``       | u32    | number of significant bits  |
->> >+ +---------------------------------+--------+-----------------------------+
->> >+ | ``ETHTOOL_A_BITSET_BIT``        | nested | array of bits               |
->> 
->> "ETHTOOL_A_BITSET_BIT" does not exist in the code. I believe you ment
->> "ETHTOOL_A_BITSET_BITS"
->> 
->> 
->> >+ +-+-------------------------------+--------+-----------------------------+
->> >+ |   ``ETHTOOL_A_BITSET_BIT+``     | nested | one bit                     |
->> 
->> You seem to be missing "|" here.
->> Also "ETHTOOL_A_BITSET_BIT" does not exist. I believe you ment
->> "ETHTOOL_A_BITS_BIT"
->
->Yes on both, thanks.
->
->> >+/* bit sets */
->> >+
->> >+enum {
->> >+	ETHTOOL_A_BIT_UNSPEC,
->> >+	ETHTOOL_A_BIT_INDEX,			/* u32 */
->> >+	ETHTOOL_A_BIT_NAME,			/* string */
->> >+	ETHTOOL_A_BIT_VALUE,			/* flag */
->> >+
->> >+	/* add new constants above here */
->> >+	__ETHTOOL_A_BIT_CNT,
->> >+	ETHTOOL_A_BIT_MAX = __ETHTOOL_A_BIT_CNT - 1
->> >+};
->> >+
->> >+enum {
->> >+	ETHTOOL_A_BITS_UNSPEC,
->> >+	ETHTOOL_A_BITS_BIT,
->> >+
->> >+	/* add new constants above here */
->> >+	__ETHTOOL_A_BITS_CNT,
->> >+	ETHTOOL_A_BITS_MAX = __ETHTOOL_A_BITS_CNT - 1
->> >+};
->> 
->> I think it would be good to have this named with "_BITSET_" in it so it
->> is crystal clear this is part of the bitset UAPI.
->
->I guess we can add "_BITSET" (e.g. ETHTOOL_A_BITSET_BIT_VALUE). These
->constants shouldn't be used outside bitset.c (and some isolated part of
->the userspace code) so the length is not so much of an issue.
+If would like to have the two things fixed. I am not sure if you want
+to send one more revision. Or I could also change it by follow
+up patch when pushing. What is your preference, please?
 
-Great.
-
-
->
->> >+/**
->> >+ * ethnl_put_bitset32() - Put a bitset nest into a message
->> >+ * @skb:      skb with the message
->> >+ * @attrtype: attribute type for the bitset nest
->> >+ * @val:      value bitmap (u32 based)
->> >+ * @mask:     mask bitmap (u32 based, optional)
->> >+ * @nbits:    bit length of the bitset
->> >+ * @names:    array of bit names (optional)
->> >+ * @compact:  use compact format for the output
->> >+ *
->> >+ * Compose a nested attribute representing a bitset. If @mask is null, simple
->> >+ * bitmap (bit list) is created, if @mask is provided, represent a value/mask
->> >+ * pair. Bit names are only used in verbose mode and when provided by calller.
->> >+ *
->> >+ * Return:    0 on success, negative error value on error
->> 
->> Remove the spaces.
->
->OK
->
->> >+ */
->> >+int ethnl_put_bitset32(struct sk_buff *skb, int attrtype, const u32 *val,
->> >+		       const u32 *mask, unsigned int nbits,
->> >+		       ethnl_string_array_t names, bool compact)
->> >+{
->> >+	struct nlattr *nest;
->> >+	struct nlattr *attr;
->> >+
->> >+	nest = nla_nest_start(skb, attrtype);
->> >+	if (!nest)
->> >+		return -EMSGSIZE;
->> >+
->> >+	if (!mask && nla_put_flag(skb, ETHTOOL_A_BITSET_LIST))
->> 
->> Wait, shouldn't you rather check "!compact" ?
->> 
->> and WARN_ON in case compact == true && mask == NULL?
->
->The "compact" and "list" flags are orthogonal. In this function, caller
->passes null @mask if it wants to generated a list (as documented in the
->function description above). In some older version I had "bool is_list"
->which was set to "!mask" but I felt it didn't really make the code any
->simpler; I can return to that if you think it will make the code easier
->to read.
->
->> 
->> 
->> >+		goto nla_put_failure;
->> >+	if (nla_put_u32(skb, ETHTOOL_A_BITSET_SIZE, nbits))
->> >+		goto nla_put_failure;
->> >+	if (compact) {
->> >+		unsigned int nwords = DIV_ROUND_UP(nbits, 32);
->> >+		unsigned int nbytes = nwords * sizeof(u32);
->> >+		u32 *dst;
->> >+
->> >+		attr = nla_reserve(skb, ETHTOOL_A_BITSET_VALUE, nbytes);
->> >+		if (!attr)
->> >+			goto nla_put_failure;
->> >+		dst = nla_data(attr);
->> >+		memcpy(dst, val, nbytes);
->> >+		if (nbits % 32)
->> >+			dst[nwords - 1] &= __lower_bits(nbits);
->> >+
->> >+		if (mask) {
->> >+			attr = nla_reserve(skb, ETHTOOL_A_BITSET_MASK, nbytes);
->> >+			if (!attr)
->> >+				goto nla_put_failure;
->> >+			dst = nla_data(attr);
->> >+			memcpy(dst, mask, nbytes);
->> >+			if (nbits % 32)
->> >+				dst[nwords - 1] &= __lower_bits(nbits);
->> >+		}
->> >+	} else {
->> >+		struct nlattr *bits;
->> >+		unsigned int i;
->> >+
->> >+		bits = nla_nest_start(skb, ETHTOOL_A_BITSET_BITS);
->> >+		if (!bits)
->> >+			goto nla_put_failure;
->> >+		for (i = 0; i < nbits; i++) {
->> >+			const char *name = names ? names[i] : NULL;
->> >+
->> >+			if (!__bitmap32_test_bit(mask ?: val, i))
->> 
->> A) this __bitmap32_test_bit() looks like something generic, yet it is
->>    not. Perhaps you would want to add this helper to
->>    include/linux/bitmap.h?
->
->I'm not sure it would be appreciated there as the whole header file is
->for functions handling unsigned long based bitmaps. I'll rename it to
->make it obvious it's a local helper.
->
->> B) Why don't you do bitmap_to_arr32 conversion in this function just
->>    before val/mask put. Then you can use normal test_bit() here.
->
->This relates to the question (below) why we need two versions of the
->functions, one for unsigned long based bitmaps, one for u32 based ones.
->The reason is that both are used internally by existing code. So if we
->had only one set of bitset functions, callers using the other format
->would have to do the wrapping themselves.
->
->There are two reasons why u32 versions are implemented directly and
->usingned long ones as wrappers. First, u32 based bitmaps are more
->frequent in existing code. Second, when we can get away with a cast
->(i.e. anywhere exect 64-bit big endian), unsigned long based bitmap can
->be always interpreted as u32 based bitmap but if we tried it the other
->way, we would need a special handling of the last word when the number
->of 32-bit words is odd.
-
-Okay. Perhaps you can add it as a comment so it is clear what is going
-on?
-
-
->
->> >+				continue;
->> >+			attr = nla_nest_start(skb, ETHTOOL_A_BITS_BIT);
->> >+			if (!attr ||
->> >+			    nla_put_u32(skb, ETHTOOL_A_BIT_INDEX, i))
->> 
->> You mix these 2 in 1 if which are not related. Better keep them separate
->> in two ifs.
->> Or you can put the rest of the puts in the same if too.
->
->OK
->
->> >+				goto nla_put_failure;
->> >+			if (name &&
->> >+			    ethnl_put_strz(skb, ETHTOOL_A_BIT_NAME, name))
->> >+				goto nla_put_failure;
->> >+			if (mask && __bitmap32_test_bit(val, i) &&
->> >+			    nla_put_flag(skb, ETHTOOL_A_BIT_VALUE))
->> >+				goto nla_put_failure;
->> >+			nla_nest_end(skb, attr);
->> >+		}
->> >+		nla_nest_end(skb, bits);
->> >+	}
->> >+
->> >+	nla_nest_end(skb, nest);
->> >+	return 0;
->> >+
->> >+nla_put_failure:
->> >+	nla_nest_cancel(skb, nest);
->> >+	return -EMSGSIZE;
->> >+}
->> >+
->> >+static const struct nla_policy bitset_policy[ETHTOOL_A_BITSET_MAX + 1] = {
->> >+	[ETHTOOL_A_BITSET_UNSPEC]	= { .type = NLA_REJECT },
->> >+	[ETHTOOL_A_BITSET_LIST]		= { .type = NLA_FLAG },
->> >+	[ETHTOOL_A_BITSET_SIZE]		= { .type = NLA_U32 },
->> >+	[ETHTOOL_A_BITSET_BITS]		= { .type = NLA_NESTED },
->> >+	[ETHTOOL_A_BITSET_VALUE]	= { .type = NLA_BINARY },
->> >+	[ETHTOOL_A_BITSET_MASK]		= { .type = NLA_BINARY },
->> >+};
->> >+
->> >+static const struct nla_policy bit_policy[ETHTOOL_A_BIT_MAX + 1] = {
->> >+	[ETHTOOL_A_BIT_UNSPEC]		= { .type = NLA_REJECT },
->> >+	[ETHTOOL_A_BIT_INDEX]		= { .type = NLA_U32 },
->> >+	[ETHTOOL_A_BIT_NAME]		= { .type = NLA_NUL_STRING },
->> >+	[ETHTOOL_A_BIT_VALUE]		= { .type = NLA_FLAG },
->> >+};
->> >+
->> >+/**
->> >+ * ethnl_bitset_is_compact() - check if bitset attribute represents a compact
->> >+ *			       bitset
->> >+ * @bitset  - nested attribute representing a bitset
->> >+ * @compact - pointer for return value
->> 
->> In the rest of the code, you use
->> @name: description
->
->Right, I'll fix this.
->
->> >+ *
->> >+ * Return: 0 on success, negative error code on failure
->> >+ */
->> >+int ethnl_bitset_is_compact(const struct nlattr *bitset, bool *compact)
->> >+{
->> >+	struct nlattr *tb[ETHTOOL_A_BITSET_MAX + 1];
->> >+	int ret;
->> >+
->> >+	ret = nla_parse_nested(tb, ETHTOOL_A_BITSET_MAX, bitset,
->> >+			       bitset_policy, NULL);
->> >+	if (ret < 0)
->> >+		return ret;
->> >+
->> >+	if (tb[ETHTOOL_A_BITSET_BITS]) {
->> >+		if (tb[ETHTOOL_A_BITSET_VALUE] || tb[ETHTOOL_A_BITSET_MASK])
->> >+			return -EINVAL;
->> >+		*compact = false;
->> >+		return 0;
->> >+	}
->> >+	if (!tb[ETHTOOL_A_BITSET_SIZE] || !tb[ETHTOOL_A_BITSET_VALUE])
->> >+		return -EINVAL;
->> >+
->> >+	*compact = true;
->> >+	return 0;
->> >+}
->> >+
->> >+static int ethnl_name_to_idx(ethnl_string_array_t names, unsigned int n_names,
->> >+			     const char *name, unsigned int name_len)
->> >+{
->> >+	unsigned int i;
->> >+
->> >+	if (!names)
->> >+		return n_names;
->> >+
->> >+	for (i = 0; i < n_names; i++) {
->> >+		const char *bname = names[i];
->> >+
->> >+		if (!strncmp(bname, name, name_len) &&
->> >+		    strlen(bname) <= name_len)
->> >+			return i;
->> >+	}
->> >+
->> >+	return n_names;
->> 
->> Maybe bettet to stick with -ERRNO?
->
->OK
->
->> >+}
->> >+
->> >+static int ethnl_parse_bit(unsigned int *index, bool *val, unsigned int nbits,
->> >+			   const struct nlattr *bit_attr, bool is_list,
->> >+			   ethnl_string_array_t names,
->> >+			   struct netlink_ext_ack *extack)
->> >+{
->> >+	struct nlattr *tb[ETHTOOL_A_BIT_MAX + 1];
->> >+	int ret, idx;
->> >+
->> >+	if (nla_type(bit_attr) != ETHTOOL_A_BITS_BIT) {
->> >+		NL_SET_ERR_MSG_ATTR(extack, bit_attr,
->> >+				    "only ETHTOOL_A_BITS_BIT allowed in ETHTOOL_A_BITSET_BITS");
->> >+		return -EINVAL;
->> >+	}
->> 
->> Probably it makes sense the caller does this check. Later on, if there
->> is another possible value, the check would have to go there anyway.
->
->OK
->
->> >+	ret = nla_parse_nested(tb, ETHTOOL_A_BIT_MAX, bit_attr, bit_policy,
->> >+			       extack);
->> >+	if (ret < 0)
->> >+		return ret;
->> >+
->> >+	if (tb[ETHTOOL_A_BIT_INDEX]) {
->> >+		const char *name;
->> >+
->> >+		idx = nla_get_u32(tb[ETHTOOL_A_BIT_INDEX]);
->> >+		if (idx >= nbits) {
->> >+			NL_SET_ERR_MSG_ATTR(extack,
->> >+					    tb[ETHTOOL_A_BIT_INDEX],
->> >+					    "bit index too high");
->> >+			return -EOPNOTSUPP;
->> >+		}
->> >+		name = names ? names[idx] : NULL;
->> >+		if (tb[ETHTOOL_A_BIT_NAME] && name &&
->> >+		    strncmp(nla_data(tb[ETHTOOL_A_BIT_NAME]), name,
->> >+			    nla_len(tb[ETHTOOL_A_BIT_NAME]))) {
->> >+			NL_SET_ERR_MSG_ATTR(extack, bit_attr,
->> >+					    "bit index and name mismatch");
->> >+			return -EINVAL;
->> >+		}
->> >+	} else if (tb[ETHTOOL_A_BIT_NAME]) {
->> >+		idx = ethnl_name_to_idx(names, nbits,
->> >+					nla_data(tb[ETHTOOL_A_BIT_NAME]),
->> >+					nla_len(tb[ETHTOOL_A_BIT_NAME]));
->> 
->> It's a string? Policy validation should take care if it is correctly
->> terminated by '\0'. Then you don't need to pass len down. Anyone who is
->> interested in length can use strlen().
->
->OK
->
->> >+	is_list = (tb[ETHTOOL_A_BITSET_LIST] != NULL);
->> 
->> just:
->> 	is_list = tb[ETHTOOL_A_BITSET_LIST]
->> is enough.
->
->Assignment from pointer to a bool felt a bit weird but if you find it
->acceptable, I have no problem with it.
->
->> >+int ethnl_bitset_is_compact(const struct nlattr *bitset, bool *compact);
->> >+int ethnl_bitset_size(const unsigned long *val, const unsigned long *mask,
->> >+		      unsigned int nbits, ethnl_string_array_t names,
->> >+		      bool compact);
->> >+int ethnl_bitset32_size(const u32 *val, const u32 *mask, unsigned int nbits,
->> >+			ethnl_string_array_t names, bool compact);
->> >+int ethnl_put_bitset(struct sk_buff *skb, int attrtype,
->> >+		     const unsigned long *val, const unsigned long *mask,
->> >+		     unsigned int nbits, ethnl_string_array_t names,
->> >+		     bool compact);
->> >+int ethnl_put_bitset32(struct sk_buff *skb, int attrtype, const u32 *val,
->> >+		       const u32 *mask, unsigned int nbits,
->> >+		       ethnl_string_array_t names, bool compact);
->> >+int ethnl_update_bitset(unsigned long *bitmap, unsigned int nbits,
->> >+			const struct nlattr *attr, ethnl_string_array_t names,
->> >+			struct netlink_ext_ack *extack, bool *mod);
->> >+int ethnl_update_bitset32(u32 *bitmap, unsigned int nbits,
->> >+			  const struct nlattr *attr, ethnl_string_array_t names,
->> >+			  struct netlink_ext_ack *extack, bool *mod);
->> 
->> Hmm, I wonder why user needs to work with the 32 variants..
->
->See above.
->
->Michal
+Best Regards,
+Petr
