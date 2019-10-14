@@ -2,119 +2,103 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE16C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5C9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E345C2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:22:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y7lIqjnt"
+	by mail.kernel.org (Postfix) with ESMTP id 8368E217F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:27:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbfJNWWW (ORCPT
+        id S1731949AbfJNW1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 18:22:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44924 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731126AbfJNWWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 18:22:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q21so11121310pfn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 15:22:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=iNkEDH3ViExpb/y5HnKz3o/CDE3c8oQsLUlWmGCk2mA=;
-        b=Y7lIqjntH5QlaeThyf1TiQlgL4k3YYX6zT4Rp28vGgY/nou3sE+AbBJONe/Qj9YmuU
-         66QHF8+NmolZkNWV5gcyXImhJrxu2FaFqgXexfaW+t9B6+j/AsTzVXb0LZOFsKU/+kH6
-         1m5ue/Hfh+crxXF2Wu/f+hID38C5u4poBphX0lR5tyh6kTPJwfnQEBROi53IEP7UDZVC
-         V1i/mceVKN1jgjF8Af4KwksD3lOPBdGXg6vSB48kFS3mLEUsRitYWPA6IQHCDMBtOOez
-         vu1OK/S8RfBJwgZAoJMQNv+hPTJtddvnWcIY/7UnrmVEEBdAeiG7UEfjyGYAePfCIkr2
-         auzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=iNkEDH3ViExpb/y5HnKz3o/CDE3c8oQsLUlWmGCk2mA=;
-        b=rbPaZk/mbWKfoihTvL8jI2oL1g+hk8yGrrxuXC+KPjoApTc7x5/eBjJ+sR+N7wVzg0
-         ytt44yeoIsa+5mw2+llKF+c4bxsUkXGOvjUrsX3mLl39vlR+5IlLWKNem2MjPcSQCdmN
-         UQcsGPEnI8TWW+V25yhhcAftP9nfdjB7WnPaWL64OzvqqFA+919yR9t8WjATtFFgJZol
-         qBd8zogSbqUhaizUHjwCmTgpBWOwevBm1iWayIpPq9GH/k+MECuEbFFHINhEzuTefIoW
-         A4CNir1XCPaMn0UpmosnXRJpxo8X9gFJjjdWYM6AputQvPZp3fwWErcloiGwkqWi9pDU
-         lSBQ==
-X-Gm-Message-State: APjAAAWFNrUiRKwmC3xF2dyGJ3XZ4i+m4onAGBTll5c2/GU73xhVhimg
-        MSdod8c3So0NPxpj9JkmolsBF3QgITTVe6fImrmCPQ==
-X-Google-Smtp-Source: APXvYqyurIJ6E+QxMgFHbL4rfPZ1AU4lFd/bZMy6hC8w1IIoa031nWIwxtdnOnNxHXJ9H/rpV+E6U6q9ZR4mOXuO8As=
-X-Received: by 2002:a63:5448:: with SMTP id e8mr7961310pgm.10.1571091740976;
- Mon, 14 Oct 2019 15:22:20 -0700 (PDT)
+        Mon, 14 Oct 2019 18:27:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:30428 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731861AbfJNW1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 18:27:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 15:27:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
+   d="scan'208";a="208057753"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Oct 2019 15:27:35 -0700
+Date:   Mon, 14 Oct 2019 15:27:35 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        bberg@redhat.com, x86@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+        ckellner@redhat.com
+Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
+ throttle messages
+Message-ID: <20191014222735.GA25203@agluck-desk2.amr.corp.intel.com>
+References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
+ <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
+ <20191014213618.GK4715@zn.tnic>
 MIME-Version: 1.0
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 14 Oct 2019 15:22:09 -0700
-Message-ID: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
-Subject: AMDGPU and 16B stack alignment
-To:     Harry Wentland <harry.wentland@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>
-Cc:     yshuiv7@gmail.com, andrew.cooper3@citrix.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Matthias Kaehlcke <mka@google.com>,
-        "S, Shirish" <shirish.s@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "Koenig, Christian" <christian.koenig@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014213618.GK4715@zn.tnic>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Mon, Oct 14, 2019 at 11:36:18PM +0200, Borislav Petkov wrote:
+> This description is already *begging* for this delay value to be
+> automatically set by the kernel. Putting yet another knob in front of
+> the user who doesn't have a clue most of the time shows one more time
+> that we haven't done our job properly by asking her to know what we
+> already do.
+> 
+> IOW, a simple history feedback mechanism which sets the timeout based on
+> the last couple of values is much smarter. The thing would have a max
+> value, of course, which, when exceeded should mean an anomaly, etc, but
+> almost anything else is better than merely asking the user to make an
+> educated guess.
 
-The x86 kernel is compiled with an 8B stack alignment via
-    `-mpreferred-stack-boundary=3` for GCC since 3.6-rc1 via
-    commit d9b0cde91c60 ("x86-64, gcc: Use
--mpreferred-stack-boundary=3 if supported")
-    or `-mstack-alignment=8` for Clang. Parts of the AMDGPU driver are
-    compiled with 16B stack alignment.
+You need a plausible start point for the "when to worry the user"
+message.  Maybe that is your "max value"?
 
-    Generally, the stack alignment is part of the ABI. Linking together two
-    different translation units with differing stack alignment is dangerous,
-    particularly when the translation unit with the smaller stack alignment
-    makes calls into the translation unit with the larger stack alignment.
-    While 8B aligned stacks are sometimes also 16B aligned, they are not
-    always.
+So if the system has a couple of excursions above temperature lasting
+1 second and then 2 seconds ... would you like to see those ignored
+(because they are below the initial max)? But now we have a couple
+of data points pick some new value to be the threshold for reporting?
 
-    Multiple users have reported General Protection Faults (GPF) when using
-    the AMDGPU driver compiled with Clang. Clang is placing objects in stack
-    slots assuming the stack is 16B aligned, and selecting instructions that
-    require 16B aligned memory operands. At runtime, syscalls handling 8B
-    stack aligned code calls into code that assumes 16B stack alignment.
-    When the stack is a multiple of 8B but not 16B, these instructions
-    result in a GPF.
+What value should we pick (based on 1 sec, then 2 sec)?
 
-    GCC doesn't select instructions with alignment requirements, so the GPFs
-    aren't observed, but it is still considered an ABI breakage to mix and
-    match stack alignment.
+I would be worried that it would self tune to the point where it
+does report something that it really didn't need to (e.g. as a result
+of a few consecutive very short excursions).
 
-I have patches that basically remove -mpreferred-stack-boundary=4 and
--mstack-alignment=16 from AMDGPU:
-https://github.com/ClangBuiltLinux/linux/issues/735#issuecomment-541247601
-Yuxuan has tested with Clang and GCC and reported it fixes the GPF's observed.
+We also need to take into account the "typical sampling interval"
+for user space thermal control software.
 
-I've split the patch into 4; same commit message but different Fixes
-tags so that they backport to stable on finer granularity. 2 questions
-BEFORE I send the series:
+Srinivas: Maybe this needs to have some more detail on what user
+solutions are being taken into account here.
 
-1. Would you prefer 4 patches with unique `fixes` tags, or 1 patch?
-2. Was there or is there still a good reason for the stack alignment mismatch?
+> > Suggested-by: Alan Cox <alan@linux.intel.com>
+> > Commit-comment-by: Tony Luck <tony.luck@intel.com>
+>   ^^^^^^^^^^^^^^^^^^
+> 
+> What's that?
 
-(Further, I think we can use -msse2 for BOTH clang+gcc after my patch,
-but I don't have hardware to test on. I'm happy to write/send the
-follow up patch, but I'd need help testing).
--- 
-Thanks,
-~Nick Desaulniers
+My fault ... during review process I pretty much re-wrote the
+whole commit message to follow the form of:
+	"What is the problem?"
+	"How are we fixing it"
+But I didn't want Srinivas to take the heat for any mistakes
+that were my fault. "Co-developed-by" really didn't explain
+what happened (since I didn't write any code, just made suggestions
+on things that needed to be changed/improved).
+
+-Tony
