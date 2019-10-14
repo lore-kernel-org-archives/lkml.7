@@ -2,216 +2,96 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3073C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC88C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD322067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC9C2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:51:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlO+lnqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbfJNCuJ (ORCPT
+        id S1729878AbfJNCvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 22:50:09 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:43118 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729852AbfJNCuI (ORCPT
+        Sun, 13 Oct 2019 22:51:22 -0400
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:37087 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729712AbfJNCvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 22:50:08 -0400
-Received: by mail-io1-f72.google.com with SMTP id i2so24545032ioo.10
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 19:50:07 -0700 (PDT)
+        Sun, 13 Oct 2019 22:51:21 -0400
+Received: by mail-oi1-f173.google.com with SMTP id i16so12574721oie.4
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 19:51:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OqhQeSDaocWWcugyUoJesGShn68jf9JC9j/MN8cXVt0=;
+        b=nlO+lnqnRRJzINk7eKGzEsDVXRZKpRSDO9Hw8IOhKcAQWKb+dFKNUYDEXriwt3z4Vu
+         r+BclH3Hc8umblXdehMtmxJsdedztKAG5pG5XV1Ec55lq52KZORXcDxvHUxm0ND9LFnr
+         3GE7z2smPWBODGpLEM6FFlNq1c/2MKGrllXL2lgkxE9p7Mfx3t3VofJHUMAd4sUfPdce
+         ng84xxa7grVNrKJ3FKTjyB8RFZFP3hqLg1ykKT4e3zFelu9AbVk6196besuw0r66IbFH
+         8MP2+EOfKnTn2Xq7K6jsXZF3l905QzZXAhd25u1hzvr2MEjfPd0DeDodB5NZVaLGQgHr
+         1u8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=CcrIogTjKFzF/l7cJ7qbuZIlf5n0t5ZZUGxaSHSOJvo=;
-        b=MFtRxX1IpL5w1BWBYh8S64thcYBStxZAOwb9TRUJAe8VTALuUoWsk2oL1dDR4PIcwj
-         XDOCgc32ShmoIdGUlISEKrKZGdg6r2XzZKCptt9PN4TgsZ+NDFLyhqU95ZcWSUgVMn7k
-         iwhRjkqRJzDdxDSprYjHZyuw8gELkJiQXai4oAeWsQmhEg9+qlK1ygcgVq2Zrokj5P4A
-         Ehw7AprsaZ2yx9SFXLRDmx92htVnktP9zbV2Mu9uyLoibyN4Ib7zZBUFUX/qr6WXsvJo
-         6fDZ1JhBFE51ojUyQSCsA16LqsojQsaNFq5CxDneVQ5PYpnKpAa7C1rF+Ls85+VqAZUo
-         WHkw==
-X-Gm-Message-State: APjAAAV1O1NuSM2ulrYhOzw5s50/LDARbe9rLXF9YYeUIGjBBmrvuheO
-        FVAv5MlpYDLXHbAIXIP4CJ1ihlNdoTZgmBJtYHwCzM8V8H0S
-X-Google-Smtp-Source: APXvYqy+MAKjCZSs4IU5vPLfktPF73tUQy4yGm8fYLvY7OpWigU9k595MItLfOwbcI1XjKaEd6F1rRGGgO7CgbrJafD4pZlp/fX/
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OqhQeSDaocWWcugyUoJesGShn68jf9JC9j/MN8cXVt0=;
+        b=qCTPh5a7QfhPd3RYk51tqrqp8+ekTci79BIrw64OkZdASyVh8euoHn0CN5Ei/yst1+
+         2V3dyEN91QMXUgaVWZVIQlsiie8VXiVU/j5fIhVimaWD7d1IE3mZQNVlse1n7LpSct4/
+         ZwlTb0qywstesuFfe1OgghLbUbZmlPlBoq4OreHCldsi1xmkWavX5M/YW5obln47Em8w
+         hG3w14V3gQ+qB0/GkWYpGG9y7EufMh8Hr+xbbRIAEt5Rw3/uunEFF8StwWMBIuJi4mVJ
+         PqVR+xQdHz/4PjLW4f6HarSWfh9Kv3tI7HXU6+pEPl63X8w0QQgNi1Xv/sG+M4Uj9lOp
+         FCLw==
+X-Gm-Message-State: APjAAAVSNTBtnmtxtzBxaSeoClvlR2oOz2GaqPCaQO9frg6WqZ1OnuPz
+        TFV5/KZTrvcafsYB+YncfrQ=
+X-Google-Smtp-Source: APXvYqz6GBZsxgq+giKH9Jhhxhcf62juaeQg2FtUlBjagl8SKfDNfbLYziCdQj01o/ohEIMWPEkiPQ==
+X-Received: by 2002:aca:cd0c:: with SMTP id d12mr22781772oig.25.1571021480513;
+        Sun, 13 Oct 2019 19:51:20 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 11sm5612491otg.62.2019.10.13.19.51.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2019 19:51:19 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH v4 0/3] LLVM/Clang fixes for pseries_defconfig
+Date:   Sun, 13 Oct 2019 19:50:58 -0700
+Message-Id: <20191014025101.18567-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190911182049.77853-1-natechancellor@gmail.com>
+References: <20190911182049.77853-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:240d:: with SMTP id s13mr34652998ioa.228.1571021407358;
- Sun, 13 Oct 2019 19:50:07 -0700 (PDT)
-Date:   Sun, 13 Oct 2019 19:50:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000eb98030594d5ecdb@google.com>
-Subject: KASAN: use-after-free Read in bpf_prog_kallsyms_find (2)
-From:   syzbot <syzbot+0bd67ad376a3f4a8606e@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        joe@wand.net.nz, john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, mauricio.vasquez@polito.it,
-        netdev@vger.kernel.org, nicolas.dichtel@6wind.com,
-        quentin.monnet@netronome.com, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi all,
 
-syzbot found the following crash on:
+This series includes a set of fixes for LLVM/Clang when building
+pseries_defconfig. These have been floating around as standalone
+patches so I decided to gather them up as a series so it was easier
+to review/apply them.
 
-HEAD commit:    b212921b elf: don't use MAP_FIXED_NOREPLACE for elf execut..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=148abb3f600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1ec3be9936e004f6
-dashboard link: https://syzkaller.appspot.com/bug?extid=0bd67ad376a3f4a8606e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f4f6c3600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10a1b857600000
+This has been broken for a bit now, it would be nice to get these
+reviewed and applied. Please let me know if I need to do anything
+to move these along.
 
-The bug was bisected to:
+Previous versions:
 
-commit 6c4fc209fcf9d27efbaa48368773e4d2bfbd59aa
-Author: Daniel Borkmann <daniel@iogearbox.net>
-Date:   Sat Dec 15 23:49:47 2018 +0000
+https://lore.kernel.org/lkml/20190911182049.77853-1-natechancellor@gmail.com/
 
-     bpf: remove useless version check for prog load
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16894e63600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15894e63600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11894e63600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0bd67ad376a3f4a8606e@syzkaller.appspotmail.com
-Fixes: 6c4fc209fcf9 ("bpf: remove useless version check for prog load")
-
-==================================================================
-BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:199  
-[inline]
-BUG: KASAN: use-after-free in __lt_find include/linux/rbtree_latch.h:118  
-[inline]
-BUG: KASAN: use-after-free in latch_tree_find  
-include/linux/rbtree_latch.h:208 [inline]
-BUG: KASAN: use-after-free in bpf_prog_kallsyms_find kernel/bpf/core.c:674  
-[inline]
-BUG: KASAN: use-after-free in bpf_prog_kallsyms_find+0x2a9/0x2c0  
-kernel/bpf/core.c:667
-Read of size 8 at addr ffff8880948217c8 by task syz-executor436/18258
-
-CPU: 0 PID: 18258 Comm: syz-executor436 Not tainted 5.4.0-rc1+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  __read_once_size include/linux/compiler.h:199 [inline]
-  __lt_find include/linux/rbtree_latch.h:118 [inline]
-  latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-  bpf_prog_kallsyms_find kernel/bpf/core.c:674 [inline]
-  bpf_prog_kallsyms_find+0x2a9/0x2c0 kernel/bpf/core.c:667
-  is_bpf_text_address+0x78/0x170 kernel/bpf/core.c:709
-  kernel_text_address+0x73/0xf0 kernel/extable.c:147
-  __kernel_text_address+0xd/0x40 kernel/extable.c:102
-  unwind_get_return_address arch/x86/kernel/unwind_frame.c:19 [inline]
-  unwind_get_return_address+0x61/0xa0 arch/x86/kernel/unwind_frame.c:14
-  arch_stack_walk+0x97/0xf0 arch/x86/kernel/stacktrace.c:26
-  stack_trace_save+0xac/0xe0 kernel/stacktrace.c:123
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:686 [inline]
-  bpf_check+0xd8/0x99c0 kernel/bpf/verifier.c:9227
-  bpf_prog_load+0xe68/0x1660 kernel/bpf/syscall.c:1709
-  __do_sys_bpf+0xa44/0x3350 kernel/bpf/syscall.c:2866
-  __se_sys_bpf kernel/bpf/syscall.c:2825 [inline]
-  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2825
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446949
-Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f134f31edb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000446949
-RDX: 0000000000000070 RSI: 0000000020000440 RDI: 0000000000000005
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffd29fc3fff R14: 00007f134f31f9c0 R15: 000000000000002d
-
-Allocated by task 18255:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:686 [inline]
-  bpf_prog_alloc_no_stats+0xe6/0x2b0 kernel/bpf/core.c:88
-  jit_subprogs kernel/bpf/verifier.c:8716 [inline]
-  fixup_call_args kernel/bpf/verifier.c:8845 [inline]
-  bpf_check+0x6b3d/0x99c0 kernel/bpf/verifier.c:9349
-  bpf_prog_load+0xe68/0x1660 kernel/bpf/syscall.c:1709
-  __do_sys_bpf+0xa44/0x3350 kernel/bpf/syscall.c:2866
-  __se_sys_bpf kernel/bpf/syscall.c:2825 [inline]
-  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2825
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 3233:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3756
-  __bpf_prog_free+0x87/0xc0 kernel/bpf/core.c:258
-  bpf_jit_free+0x64/0x1b0
-  bpf_prog_free_deferred+0x1a6/0x350 kernel/bpf/core.c:1980
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff888094821780
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 72 bytes inside of
-  512-byte region [ffff888094821780, ffff888094821980)
-The buggy address belongs to the page:
-page:ffffea0002520840 refcount:1 mapcount:0 mapping:ffff8880aa400a80  
-index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea0002a56b88 ffffea0002a5f048 ffff8880aa400a80
-raw: 0000000000000000 ffff888094821000 0000000100000006 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888094821680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888094821700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff888094821780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                               ^
-  ffff888094821800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888094821880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Cheers,
+Nathan
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
