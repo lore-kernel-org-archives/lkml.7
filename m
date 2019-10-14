@@ -2,106 +2,75 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A721ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2BCC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0C320854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8987E20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571033993;
+	bh=G3j79Lr1xNDLJ1DZYooCMhYnk2SpMlhTRuB05XZTAZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pkrLkqcL79VacPktZ/53z/LROcuZ24NqjsDX/S1bYcm71WHE3UbezucoNI3s1X6Wa
+	 9bvr2Da2hCicCX1G5xLvnfv7yh4HJwXTFde2UKdoYmety3FhJ3fAaItfLE1H1q8Orf
+	 YEgVTnn7YLH8xTU8bJx44F+mbJTZTabNXwz53b/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbfJNGS6 (ORCPT
+        id S1730054AbfJNGTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 02:18:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31646 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725936AbfJNGS5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 02:18:57 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9E67iP4104007
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 02:18:56 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vmjq99b77-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 02:18:56 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Mon, 14 Oct 2019 07:18:53 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 14 Oct 2019 07:18:49 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9E6Im7a40567074
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 06:18:48 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 039EC4CCB7;
-        Mon, 14 Oct 2019 06:18:48 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D2404CC9B;
-        Mon, 14 Oct 2019 06:18:47 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.85])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 14 Oct 2019 06:18:47 +0000 (GMT)
-Date:   Mon, 14 Oct 2019 08:18:46 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable <stable@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH 4/4] s390/zcrypt: fix memleak at release
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010131333.23635-5-johan@kernel.org>
+        Mon, 14 Oct 2019 02:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbfJNGTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 02:19:52 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CB8020854;
+        Mon, 14 Oct 2019 06:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571033991;
+        bh=G3j79Lr1xNDLJ1DZYooCMhYnk2SpMlhTRuB05XZTAZ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vqMBWKBv5wMMlKQRyLwibF7IThEe5J/kd4Ka2k3MCrCrk044Qr3UxvEykUO4KJh2A
+         zX5Am2AhoaK48PbKepzLZCeuqdAGpuEO670ySVDUx2VCDwmoCa6rX9t3MVTBDX93Cj
+         CtQOuEm7exBDrrhJijqGKHhK1LrU68E3M8jJNMsc=
+Date:   Mon, 14 Oct 2019 14:19:31 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     linux-devel@linux.nxdi.nxp.com, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [v2 1/2] arm64: dts: ls1028a: Update the clock providers for the
+ Mali DP500
+Message-ID: <20191014061930.GB12262@dragon>
+References: <20190920083419.5092-1-wen.he_1@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010131333.23635-5-johan@kernel.org>
-X-TM-AS-GCONF: 00
-x-cbid: 19101406-0008-0000-0000-00000321CE1C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101406-0009-0000-0000-00004A40DEC6
-Message-Id: <20191014061846.GA6834@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-14_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=5 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=927 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910140060
+In-Reply-To: <20190920083419.5092-1-wen.he_1@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 03:13:33PM +0200, Johan Hovold wrote:
-> If a process is interrupted while accessing the crypto device and the
-> global ap_perms_mutex is contented, release() could return early and
-> fail to free related resources.
+On Fri, Sep 20, 2019 at 04:34:18PM +0800, Wen He wrote:
+> In order to maximise performance of the LCD Controller's 64-bit AXI
+> bus, for any give speed bin of the device, the AXI master interface
+> clock(ACLK) clock can be up to CPU_frequency/2, which is already
+> capable of optimal performance. In general, ACLK is always expected
+> to be equal to CPU_frequency/2. APB slave interface clock(PCLK) and
+> Main processing clock(PCLK) both are tied to the same clock as ACLK.
 > 
-> Fixes: 00fab2350e6b ("s390/zcrypt: multiple zcrypt device nodes support")
-> Cc: stable <stable@vger.kernel.org>     # 4.19
-> Cc: Harald Freudenberger <freude@linux.ibm.com>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
->  drivers/s390/crypto/zcrypt_api.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> This change followed the LS1028A Architecture Specification Manual.
+> 
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
 
-Applied, thanks!
-
+Applied, thanks.
