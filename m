@@ -2,73 +2,102 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51588ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F05ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F25217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571071400;
-	bh=jUkpYa09cbg1NzerOrin8aZ7t3IhBLvxGwVjSWwxP/4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lOvrZ4RtNPgyuUv1gRZe6G5zTjC9F1r0fvYYjIJ4SzmSc+LVAADdnktka2233Pvx9
-	 kD/usixtvuZF7HD6KSM3xUyyjG87IHy2Sv5Z4kR/5sgKj0E2xqze3lTXMKL4sC7FHs
-	 b4O+RtAH468Ohcthb0M6aosAZOlsKMIpIQGyLzy4=
+	by mail.kernel.org (Postfix) with ESMTP id 055F320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388166AbfJNQnT (ORCPT
+        id S2388183AbfJNQoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:43:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41286 "EHLO mail.kernel.org"
+        Mon, 14 Oct 2019 12:44:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:48774 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727038AbfJNQnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:43:18 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 198E020663;
-        Mon, 14 Oct 2019 16:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571071398;
-        bh=jUkpYa09cbg1NzerOrin8aZ7t3IhBLvxGwVjSWwxP/4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c/Zw+j9iow5A3WE1EqcqrrZM1mcChVGUdIlChBTLsWqihd5EbBNpKFtHUO82WI21j
-         H1RdbzXkdW8CARvqTt7gJaoWHEVzeBtJ5MkhsI8TKYUS5uX1YydYJ8qjh5DMLV0351
-         hvZ7PCqAJPZIY2Xl0EV7mknvJX2/l9RBzNySfwjY=
-Date:   Mon, 14 Oct 2019 17:43:14 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, suzuki.poulose@arm.com,
-        Dave.Martin@arm.com
-Subject: Re: [PATCH] arm64: cpufeature: Don't expose ZFR0 to userspace when
- SVE is not enabled
-Message-ID: <20191014164313.hu2dnf5rokntzhhp@willie-the-truck>
-References: <20191014102113.16546-1-julien.grall@arm.com>
+        id S1727038AbfJNQoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:44:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DF0C28;
+        Mon, 14 Oct 2019 09:44:17 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (unknown [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DD35B3F718;
+        Mon, 14 Oct 2019 09:44:15 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        juri.lelli@redhat.com, Dietmar.Eggemann@arm.com,
+        morten.rasmussen@arm.com, seto.hidetoshi@jp.fujitsu.com,
+        qperret@google.com
+Subject: [PATCH] sched/topology: Don't set SD_BALANCE_WAKE on cpuset domain relax
+Date:   Mon, 14 Oct 2019 17:44:08 +0100
+Message-Id: <20191014164408.32596-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014102113.16546-1-julien.grall@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 11:21:13AM +0100, Julien Grall wrote:
-> The kernel may not support SVE if CONFIG_ARM64_SVE is not set and
-> will hide the feature from the from userspace.
+As pointed out in commit
 
-I don't understand this sentence.
+  182a85f8a119 ("sched: Disable wakeup balancing")
 
-> Unfortunately, the fields of ID_AA64ZFR0_EL1 are still exposed and could
-> lead to undefined behavior in userspace.
+SD_BALANCE_WAKE is a tad too aggressive, and is usually left unset.
 
-Undefined in what way? Generally, we can't stop exposing things that
-we've exposed previously in case somebody has started relying on them, so
-this needs better justification.
+However, it turns out cpuset domain relaxation will unconditionally set it
+on domains below the relaxation level. This made sense back when
+SD_BALANCE_WAKE was set unconditionally, but it no longer is the case.
 
-Will
+We can improve things slightly by noticing that set_domain_attribute() is
+always called after sd_init(), so rather than setting flags we can rely on
+whatever sd_init() is doing and only clear certain flags when above the
+relaxation level.
+
+While at it, slightly clean up the function and flip the relax level
+check to be more human readable.
+
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+I was tempted to put a
+
+Fixes: 182a85f8a119 ("sched: Disable wakeup balancing")
+
+but the SD setup code back then was a mess of SD_INIT() macros which I'm
+not familiar with. It *looks* like the sequence was roughly the same as it
+is now (i.e. set up domain flags, *then* call set_domain_attribute()) but
+I'm not completely sure.
+---
+ kernel/sched/topology.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index b5667a273bf6..3623ffe85d18 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1201,17 +1201,13 @@ static void set_domain_attribute(struct sched_domain *sd,
+ 	if (!attr || attr->relax_domain_level < 0) {
+ 		if (default_relax_domain_level < 0)
+ 			return;
+-		else
+-			request = default_relax_domain_level;
++		request = default_relax_domain_level;
+ 	} else
+ 		request = attr->relax_domain_level;
+-	if (request < sd->level) {
++
++	if (sd->level > request) {
+ 		/* Turn off idle balance on this domain: */
+ 		sd->flags &= ~(SD_BALANCE_WAKE|SD_BALANCE_NEWIDLE);
+-	} else {
+-		/* Turn on idle balance on this domain: */
+-		sd->flags |= (SD_BALANCE_WAKE|SD_BALANCE_NEWIDLE);
+ 	}
+ }
+ 
+--
+2.22.0
+
