@@ -2,184 +2,297 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECF4C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C860EECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C3A2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:55:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kl8Q9TYE"
+	by mail.kernel.org (Postfix) with ESMTP id 9B18621A4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571061447;
+	bh=LLH2uQ5gYg+SBXTksDYlU+T3+fs82qQa6ba8XCr/GLI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=y/Y7hG3zJXEF1P54jkLmo6alJEihjYs5JA5xh6gZsZpyhXXwBKFHX4RDR8P6ahR+K
+	 cd9EDwRpZuyyGLk8iGPoLV40R8bWLaEHX0HAJNTv1JkXjaJlLDRfcW15UsCjluBjak
+	 mNoSVt08zP9c4hiOaGHkC698HBjx5tLYIJTNsFRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732293AbfJNNz4 (ORCPT
+        id S1732369AbfJNN50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:55:56 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38725 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730477AbfJNNz4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:55:56 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u28so11879561lfc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 06:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oXwy1ZfXmnwZ3hifWlYThMGXSNlwZ/MYnTxH+t42hRk=;
-        b=Kl8Q9TYEwJsyah3aNcP75PA8oy/jmHqhnhgmMg20jrDsUzR9Ioyg4VL+nl67XgzpwR
-         wBmLU9vD5UWaxzcW11uY0XoYAjD/dVwlFMB5Rv/on1AVoHbkxeG15oMad1+F3CS1GkAR
-         nIxybmiwqKCyVRvq0V5YqgtfgiiZ4uX8/CYnv2lMqFeul1wD1H2eAvyRDZ3Kxvold7fm
-         ZIPZPIxYU22CvvJiEJs8sRD/xKxmBiJRQMUaoq5PMQCcR1DtwS/DvaeuQU/9E/gxsGLR
-         G+uo5slLa7d9XZTztqhqUZDJAe9T6x3AK4yykx6Al1oq1CMTz52b/14BujuQFHM1upiy
-         9LEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oXwy1ZfXmnwZ3hifWlYThMGXSNlwZ/MYnTxH+t42hRk=;
-        b=FKYtH1gQEtifG44qkwE5kmpqKRgMl5RfBwmYVIg3MQb/Kl6jxeJBVR5Z07XOqY5CoG
-         /ZuIMxS9IvNxb4eWWNC5J4jgLPhwh2ifTrU0PwjtJyc1/dzVARPsxpQPvLBJoyQIceYS
-         b9dOR7aOCmeD1BziPIcd1eqqX4TkLAh2/jbVsHSpuiHys+Oj6ssz2KYjpF2xm6ya5Z1s
-         uq7xYa3ccNP5/N+bJY3yYoTPb3/Y24Us/WemZuITtxYqQICikGqXHOWNdN8qIqwtV/an
-         +URLTthg8Hrh1U5ElMFp2RO2O8V7PGn9n7LM0PFT3DMECSxLmYmUXc9cwNBSqzh4Vqwg
-         qXfQ==
-X-Gm-Message-State: APjAAAWUc0c+EfipKqYdJT5QPPimfIoKJ5sde7C/z7743mS1sKPA/52H
-        x+gMZNbGSsuvZ4n9X0rGWC3ST3mCeLko+EpDtIG8fA==
-X-Google-Smtp-Source: APXvYqxnVb+5mh/Zgb9iLIpqLC8zBUR7RgvkoPI5yGMzs0v2vphxtYKl2lltO6U3MrQJ/oxOHmqmMQtA6/uOO20LpeE=
-X-Received: by 2002:a19:4f0e:: with SMTP id d14mr17070099lfb.177.1571061354112;
- Mon, 14 Oct 2019 06:55:54 -0700 (PDT)
+        Mon, 14 Oct 2019 09:57:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730477AbfJNN50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 09:57:26 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86B2D21A4A;
+        Mon, 14 Oct 2019 13:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571061444;
+        bh=LLH2uQ5gYg+SBXTksDYlU+T3+fs82qQa6ba8XCr/GLI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WhWA0Z26YBfhBAV8RCEZEMYp1v+sqt+colar2WnzuXDlL8iW6T6nbdwUUz7lR8xRD
+         k0e4PvOQpMwHU+2BFSDNQzxl86uVe5XU5vttQ3NcDIoX47dI8JTqJVYmbE02q9jLiH
+         nUhPVzxIyECh8oC7bBNWteH980agEaehLbva3a1w=
+Received: by mail-qt1-f177.google.com with SMTP id w14so25522096qto.9;
+        Mon, 14 Oct 2019 06:57:24 -0700 (PDT)
+X-Gm-Message-State: APjAAAUVQuV76dR08KCLMQTH23BGbX7FB9mZsU9tnsOwYQ8kycto0+SB
+        tzW383NdNFW3i8apbb9zfzaEA8sEQ3Py/znyEA==
+X-Google-Smtp-Source: APXvYqwX1KUTrKD9PfICXLuavHN6lAAtm6esRog7N3VFNyl9RY+ZCu7FqNsYVhKlnuWqdkfPcoK1JtogLpjhrB86EEs=
+X-Received: by 2002:ac8:6782:: with SMTP id b2mr32574382qtp.143.1571061443573;
+ Mon, 14 Oct 2019 06:57:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <1571014705-19646-1-git-send-email-thara.gopinath@linaro.org> <1571014705-19646-2-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1571014705-19646-2-git-send-email-thara.gopinath@linaro.org>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 14 Oct 2019 15:55:42 +0200
-Message-ID: <CAKfTPtCCjETcDNdP1xuRJ0w3futRV+J+hqkXgYyPQXzOqnaoVg@mail.gmail.com>
-Subject: Re: [Patch v3 1/7] sched/pelt.c: Add support to track thermal pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Amit Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <20191014091622.23562-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191014091622.23562-1-benjamin.gaignard@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 14 Oct 2019 08:57:11 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+Z7G31vBhHn_csntOsBLnZoLFU0qZHk67kdC1kahd4kQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+Z7G31vBhHn_csntOsBLnZoLFU0qZHk67kdC1kahd4kQ@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: display: Convert stm32 display bindings
+ to json-schema
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thara,
-
-On Mon, 14 Oct 2019 at 02:58, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+On Mon, Oct 14, 2019 at 4:16 AM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
 >
-> Extrapolating on the exisitng framework to track rt/dl utilization using
-
-s/exisitng/existing/
-
-> pelt signals, add a similar mechanism to track thermal pressue. The
-
-s/pessure/pressure/
-
-> difference here from rt/dl utilization tracking is that, instead of
-> tracking time spent by a cpu running a rt/dl task through util_avg,
-> the average thermal pressure is tracked through load_avg.
-
-It would be good to mention why you use load_avg field instead of
-util_avg field: because the signal is weighted with the capped
-capacity and is not binary
-And also explained a bit what capacity refer to
-
-> In order to track average thermal pressure, a new sched_avg variable
-> avg_thermal is introduced. Function update_thermal_avg can be called
-> to do the periodic bookeeping (accumulate, decay and average)
-> of the thermal pressure.
+> Convert the STM32 display binding to DT schema format using json-schema.
+> Split the original bindings in two yaml files:
+> - one for display controller (ltdc)
+> - one for DSI controller
 >
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  kernel/sched/pelt.c  | 13 +++++++++++++
->  kernel/sched/pelt.h  |  7 +++++++
->  kernel/sched/sched.h |  1 +
->  3 files changed, 21 insertions(+)
+> changes in v3:
+> - use (GPL-2.0-only OR BSD-2-Clause) license
 >
-> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-> index a96db50..f06aae3 100644
-> --- a/kernel/sched/pelt.c
-> +++ b/kernel/sched/pelt.c
-> @@ -353,6 +353,19 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
->         return 0;
->  }
+> changes in v2:
+> - use BSD-2-Clause license
+> - add panel property
+> - fix identation
+> - remove pinctrl-names: true
+> - remove pinctrl-[0-9]+: true
+> - rework ports block to include port@0 and port@1
+> - use const for #adress-cells and #size-cells
+> - add additionalProperties: false
 >
-> +int update_thermal_avg(u64 now, struct rq *rq, u64 capacity)
-
-All the other functions are named :
-update_cfs_rq/rt_rq/dl_rq/irq_load_avg
-
-might be good to keep similar name with update_thermal_load_avg
-
-> +{
-> +       if (___update_load_sum(now, &rq->avg_thermal,
-> +                              capacity,
-> +                              capacity,
-> +                              capacity)) {
-> +               ___update_load_avg(&rq->avg_thermal, 1, 1);
-> +               return 1;
-> +       }
+>  .../devicetree/bindings/display/st,stm32-dsi.yaml  | 151 +++++++++++++++++++++
+>  .../devicetree/bindings/display/st,stm32-ltdc.txt  | 144 --------------------
+>  .../devicetree/bindings/display/st,stm32-ltdc.yaml |  81 +++++++++++
+>  3 files changed, 232 insertions(+), 144 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
+> new file mode 100644
+> index 000000000000..8dd727c7533e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/st,stm32-dsi.yaml
+> @@ -0,0 +1,151 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/st,stm32-dsi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +       return 0;
-> +}
+> +title: STMicroelectronics STM32 DSI host controller
 > +
->  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
->  /*
->   * irq:
-> diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
-> index afff644..01c5436 100644
-> --- a/kernel/sched/pelt.h
-> +++ b/kernel/sched/pelt.h
-> @@ -6,6 +6,7 @@ int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se
->  int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq);
->  int update_rt_rq_load_avg(u64 now, struct rq *rq, int running);
->  int update_dl_rq_load_avg(u64 now, struct rq *rq, int running);
-> +int update_thermal_avg(u64 now, struct rq *rq, u64 capacity);
->
->  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
->  int update_irq_load_avg(struct rq *rq, u64 running);
-> @@ -175,6 +176,12 @@ update_rq_clock_pelt(struct rq *rq, s64 delta) { }
->  static inline void
->  update_idle_rq_clock_pelt(struct rq *rq) { }
->
-> +static inline int
-
-can you keep some function ordering as above and move
-update_thermal_avg() just after update_dl_rq_load_avg
-
-
-> +update_thermal_avg(u64 now, struct rq *rq, u64 capacity)
-> +{
-> +       return 0;
-> +}
+> +maintainers:
+> +  - Philippe Cornu <philippe.cornu@st.com>
+> +  - Yannick Fertre <yannick.fertre@st.com>
 > +
->  #endif
->
->
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 0db2c1b..d5d82c8 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -944,6 +944,7 @@ struct rq {
->  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
->         struct sched_avg        avg_irq;
->  #endif
-> +       struct sched_avg        avg_thermal;
->         u64                     idle_stamp;
->         u64                     avg_idle;
->
+> +description:
+> +  The STMicroelectronics STM32 DSI controller uses the Synopsys DesignWare MIPI-DSI host controller.
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stm32-dsi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Module Clock
+> +      - description: DSI bus clock
+> +      - description: Pixel clock
+> +    minItems: 2
+> +    maxItems: 3
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pclk
+> +      - const: ref
+> +      - const: px_clk
+> +    minItems: 2
+> +    maxItems: 3
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    items:
+> +      - const: apb
+> +
+> +  phy-dsi-supply:
+> +    maxItems: 1
+> +    description:
+> +        Phandle of the regulator that provides the supply voltage.
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing DSI input & output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +      Documentation/devicetree/bindings/graph.txt
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description:
+> +          DSI input port node, connected to the ltdc rgb output port.
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          DSI output port node, connected to a panel or a bridge input port"
+> +
+> +patternProperties:
+> +  "^(panel|panel-dsi)@[0-9]$":
+> +    type: object
+> +    description:
+> +      A node containing the panel or bridge description as documented in
+> +      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> +    properties:
+> +      port@0:
+
+You can drop this. The unit address for the panel port is decided by
+the panel binding, not this one.
+
+> +        type: object
+> +        description:
+> +          Panel or bridge port node, connected to the DSI output port (port@1)
+
+[...]
+
+> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
+> new file mode 100644
+> index 000000000000..94a4137f7236
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/st,stm32-ltdc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STM32 lcd-tft display controller
+> +
+> +maintainers:
+> +  - Philippe Cornu <philippe.cornu@st.com>
+> +  - Yannick Fertre <yannick.fertre@st.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stm32-ltdc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 2
+> +    maxItems: 2
+
+Need to describe what each interrupt is.
+
+items:
+  - description: ...
+  - description: ...
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: lcd
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  port:
+> +    type: object
+> +    description:
+> +      "Video port for DPI RGB output.
+> +      ltdc has one video port with up to 2 endpoints:
+> +      - for external dpi rgb panel or bridge, using gpios.
+> +      - for internal dpi input of the MIPI DSI host controller.
+> +      Note: These 2 endpoints cannot be activated simultaneously.
+> +      Please refer to the bindings defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt."
+> +
+> +  dma-ranges:
+> +    maxItems: 1
+
+dma-ranges goes in bus nodes, not device nodes.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +    #include <dt-bindings/reset/stm32mp1-resets.h>
+> +    ltdc: display-controller@40016800 {
+> +        compatible = "st,stm32-ltdc";
+> +        reg = <0x5a001000 0x400>;
+> +        interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&rcc LTDC_PX>;
+> +        clock-names = "lcd";
+> +        resets = <&rcc LTDC_R>;
+> +
+> +        port {
+> +             ltdc_out_dsi: endpoint {
+> +                     remote-endpoint = <&dsi_in>;
+> +             };
+> +        };
+> +    };
+> +
+> +...
+> +
 > --
-> 2.1.4
+> 2.15.0
 >
