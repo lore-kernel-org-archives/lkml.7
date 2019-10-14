@@ -2,165 +2,119 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8651DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE16C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B902067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E345C2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Hqt5KSGm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y7lIqjnt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbfJNWQr (ORCPT
+        id S1731866AbfJNWWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 18:16:47 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39284 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730369AbfJNWQq (ORCPT
+        Mon, 14 Oct 2019 18:22:22 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44924 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731126AbfJNWWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 18:16:46 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EMEOwM091697;
-        Mon, 14 Oct 2019 22:16:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=9D93uPwYO7/QwkYu0na59Bh8hudZIr/smbJMrOwimDg=;
- b=Hqt5KSGmGpsmFt4YDHWBdJa5zkUwgACGVhnyEBtQPXFC6c+Vbkm6N9N0uFxP2YoQxDxx
- dab3cJ40yT3XcA26wL0hCCySOXPTY1UELEO3BbgNyZQBBaBk6jZLf7cy+0rq4I62s2AQ
- skZiyWbdbKQtU4+8b7TOS0eqbo6t+X5ZFDpdNDc6Kb7ciMTIua5qA3SEutnFBUpB7Kbq
- kphMRzW8Uq5TiHfpJ+JB2TKfdqbfp3WELk9VV+YHG2AxeoAn7NCq4k/eOj3Q7qjPJ+ig
- 6bt+1GpfXpw4xBlkRMNyp+9szg7NEIk32OsrWXxWL7ItpDSpKxk3svn4hQEiLvDafi4q /Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vk7fr3qag-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 22:16:18 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EMCtFC120257;
-        Mon, 14 Oct 2019 22:16:17 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vkry79u7d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 22:16:17 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9EMGGkj026000;
-        Mon, 14 Oct 2019 22:16:16 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 14 Oct 2019 15:16:15 -0700
-Date:   Mon, 14 Oct 2019 15:16:12 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        syzbot <syzbot+3c01db6025f26530cf8d@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Bob Peterson <rpeterso@redhat.com>
-Subject: Re: INFO: task hung in pipe_write (2)
-Message-ID: <20191014221612.GG13098@magnolia>
-References: <000000000000ac6a360592eb26c1@google.com>
- <d9a957b3-9f0a-20b5-588a-64ca4722d433@rasmusvillemoes.dk>
- <20190919211013.GN5340@magnolia>
- <CAHc6FU7drv7r7yu4BzTGKycnKi_wUDGsvND6XyhDLq7B=HCM8g@mail.gmail.com>
+        Mon, 14 Oct 2019 18:22:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q21so11121310pfn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 15:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=iNkEDH3ViExpb/y5HnKz3o/CDE3c8oQsLUlWmGCk2mA=;
+        b=Y7lIqjntH5QlaeThyf1TiQlgL4k3YYX6zT4Rp28vGgY/nou3sE+AbBJONe/Qj9YmuU
+         66QHF8+NmolZkNWV5gcyXImhJrxu2FaFqgXexfaW+t9B6+j/AsTzVXb0LZOFsKU/+kH6
+         1m5ue/Hfh+crxXF2Wu/f+hID38C5u4poBphX0lR5tyh6kTPJwfnQEBROi53IEP7UDZVC
+         V1i/mceVKN1jgjF8Af4KwksD3lOPBdGXg6vSB48kFS3mLEUsRitYWPA6IQHCDMBtOOez
+         vu1OK/S8RfBJwgZAoJMQNv+hPTJtddvnWcIY/7UnrmVEEBdAeiG7UEfjyGYAePfCIkr2
+         auzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=iNkEDH3ViExpb/y5HnKz3o/CDE3c8oQsLUlWmGCk2mA=;
+        b=rbPaZk/mbWKfoihTvL8jI2oL1g+hk8yGrrxuXC+KPjoApTc7x5/eBjJ+sR+N7wVzg0
+         ytt44yeoIsa+5mw2+llKF+c4bxsUkXGOvjUrsX3mLl39vlR+5IlLWKNem2MjPcSQCdmN
+         UQcsGPEnI8TWW+V25yhhcAftP9nfdjB7WnPaWL64OzvqqFA+919yR9t8WjATtFFgJZol
+         qBd8zogSbqUhaizUHjwCmTgpBWOwevBm1iWayIpPq9GH/k+MECuEbFFHINhEzuTefIoW
+         A4CNir1XCPaMn0UpmosnXRJpxo8X9gFJjjdWYM6AputQvPZp3fwWErcloiGwkqWi9pDU
+         lSBQ==
+X-Gm-Message-State: APjAAAWFNrUiRKwmC3xF2dyGJ3XZ4i+m4onAGBTll5c2/GU73xhVhimg
+        MSdod8c3So0NPxpj9JkmolsBF3QgITTVe6fImrmCPQ==
+X-Google-Smtp-Source: APXvYqyurIJ6E+QxMgFHbL4rfPZ1AU4lFd/bZMy6hC8w1IIoa031nWIwxtdnOnNxHXJ9H/rpV+E6U6q9ZR4mOXuO8As=
+X-Received: by 2002:a63:5448:: with SMTP id e8mr7961310pgm.10.1571091740976;
+ Mon, 14 Oct 2019 15:22:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHc6FU7drv7r7yu4BzTGKycnKi_wUDGsvND6XyhDLq7B=HCM8g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910140185
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910140185
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 14 Oct 2019 15:22:09 -0700
+Message-ID: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
+Subject: AMDGPU and 16B stack alignment
+To:     Harry Wentland <harry.wentland@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>
+Cc:     yshuiv7@gmail.com, andrew.cooper3@citrix.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Matthias Kaehlcke <mka@google.com>,
+        "S, Shirish" <shirish.s@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Koenig, Christian" <christian.koenig@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 10:40:44PM +0200, Andreas Gruenbacher wrote:
-> Hi Darrick,
-> 
-> On Thu, Sep 19, 2019 at 11:10 PM Darrick J. Wong
-> <darrick.wong@oracle.com> wrote:
-> > On Thu, Sep 19, 2019 at 10:55:44PM +0200, Rasmus Villemoes wrote:
-> > > On 19/09/2019 19.19, syzbot wrote:
-> > > > Hello,
-> > > >
-> > > > syzbot found the following crash on:
-> > > >
-> > > > HEAD commit:    288b9117 Add linux-next specific files for 20190918
-> > > > git tree:       linux-next
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=17e86645600000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f6126e51304ef1c3
-> > > > dashboard link:
-> > > > https://syzkaller.appspot.com/bug?extid=3c01db6025f26530cf8d
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11855769600000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143580a1600000
-> > > >
-> > > > The bug was bisected to:
-> > > >
-> > > > commit cfb864757d8690631aadf1c4b80022c18ae865b3
-> > > > Author: Darrick J. Wong <darrick.wong@oracle.com>
-> > > > Date:   Tue Sep 17 16:05:22 2019 +0000
-> > > >
-> > > >     splice: only read in as much information as there is pipe buffer space
-> > >
-> > > The middle hunk (the one before splice_pipe_to_pipe()) accesses
-> > > opipe->{buffers, nrbufs}, but opipe is not locked at that point. So
-> > > maybe we end up passing len==0, which seems (once there's room in opipe)
-> > > it would put a zero-length pipe_buffer in opipe - and that probably
-> > > violates an invariant somewhere.
-> > >
-> > > But does the splice_pipe_to_pipe() case even need that extra logic?
-> > > Doesn't it handle short writes correctly already?
-> >
-> > Yep.  I missed the part where splice_pipe_to_pipe is already perfectly
-> > capable of detecting insufficient space in opipe and kicking opipe's
-> > readers to clear out the buffer.  So that hunk isn't needed, and now I'm
-> > wondering how in the other clause we return 0 from wait_for_space yet
-> > still don't have buffer space...
-> >
-> > Oh well, back to the drawing board.  Good catch, though now it's become
-> > painfully clear that xfstests lacks rigorous testing of splice()...
-> 
-> have you had any luck figuring out how to fix this? We're still
-> suffering from the regression I've reported a while ago (*).
+Hello!
 
-Nope, that's slipped along with everything else because I'm burning out
-on all the buggy sh*t that has gone in the kernel for 5.4 that has made
-it difficult to get regression tests to run reliably to find out if
-there's anything wrong with XFS.
+The x86 kernel is compiled with an 8B stack alignment via
+    `-mpreferred-stack-boundary=3` for GCC since 3.6-rc1 via
+    commit d9b0cde91c60 ("x86-64, gcc: Use
+-mpreferred-stack-boundary=3 if supported")
+    or `-mstack-alignment=8` for Clang. Parts of the AMDGPU driver are
+    compiled with 16B stack alignment.
 
-Oh, sure, if I turn off kmemleak and whatever the hell "haltpoll" is
-then it tidies up enough to run fstests but now "sleep 0.5" runs in
-anywhere between a jiffie and 10s.  WTH.
+    Generally, the stack alignment is part of the ABI. Linking together two
+    different translation units with differing stack alignment is dangerous,
+    particularly when the translation unit with the smaller stack alignment
+    makes calls into the translation unit with the larger stack alignment.
+    While 8B aligned stacks are sometimes also 16B aligned, they are not
+    always.
 
-> If not, I wonder if reverting commit 8f67b5adc030 would make sense for now.
+    Multiple users have reported General Protection Faults (GPF) when using
+    the AMDGPU driver compiled with Clang. Clang is placing objects in stack
+    slots assuming the stack is 16B aligned, and selecting instructions that
+    require 16B aligned memory operands. At runtime, syscalls handling 8B
+    stack aligned code calls into code that assumes 16B stack alignment.
+    When the stack is a multiple of 8B but not 16B, these instructions
+    result in a GPF.
 
-Ugh, no, splice shouldn't be asking the filesystem for a 75k buffered
-read and then *oopsie* running out of pages after ~64k or so.  Even more
-frighteningly the syzbot reproducer asks for a 20GB read into a pipe
-which gets sent right into the fs without any size clamping.
+    GCC doesn't select instructions with alignment requirements, so the GPFs
+    aren't observed, but it is still considered an ABI breakage to mix and
+    match stack alignment.
 
-Ok I'll at least cough up a v3 patch which maybe will work.
+I have patches that basically remove -mpreferred-stack-boundary=4 and
+-mstack-alignment=16 from AMDGPU:
+https://github.com/ClangBuiltLinux/linux/issues/735#issuecomment-541247601
+Yuxuan has tested with Clang and GCC and reported it fixes the GPF's observed.
 
---D
+I've split the patch into 4; same commit message but different Fixes
+tags so that they backport to stable on finer granularity. 2 questions
+BEFORE I send the series:
 
-> 
-> * https://lore.kernel.org/linux-fsdevel/CAHpGcM+WQYFHOOC8SzKq+=DuHVZ4fw4RHLTMUDN-o6GX3YtGvQ@mail.gmail.com/T/#u
-> 
-> Thanks,
-> Andreas
+1. Would you prefer 4 patches with unique `fixes` tags, or 1 patch?
+2. Was there or is there still a good reason for the stack alignment mismatch?
+
+(Further, I think we can use -msse2 for BOTH clang+gcc after my patch,
+but I don't have hardware to test on. I'm happy to write/send the
+follow up patch, but I'd need help testing).
+-- 
+Thanks,
+~Nick Desaulniers
