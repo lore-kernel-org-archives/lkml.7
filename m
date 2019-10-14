@@ -2,170 +2,133 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1030EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A27EECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28F32067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571079032;
-	bh=Cww9TSGnod9F0B8ddeqxqDczdSVLgo2BUsAISizOWdc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=0VApoz0q03pHDAqz91cPYzGMwOm9YuV5jaWVUS3v2FsRhVHGLklJLvvvScjnyNeeS
-	 aydaAMoh7jkAfCBaxfwwJeLrj5JQ/gfItJUKDBKpODnkMOHJ9ZFO/AFrGqx5qPD2/w
-	 FJV9x+i+oHvM92Y+IprfqO8yN1HFedmoeRWYASIk=
+	by mail.kernel.org (Postfix) with ESMTP id 59622217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732940AbfJNSub (ORCPT
+        id S1731125AbfJNTAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:50:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38859 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731149AbfJNSub (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:50:31 -0400
-Received: by mail-qk1-f196.google.com with SMTP id x4so12892210qkx.5;
-        Mon, 14 Oct 2019 11:50:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=g7fjAjGpffs0qGSw9Zw3h1P0ZmgciCK8ISjc2ELqOLg=;
-        b=WsXD7B71URX9qt4oD4s6S/P9sc9RIDXUOS+UTtspwA9XTg84YaEr62+DyRQ2dReZCB
-         n/HOl4vdlE3iv19wa8V7GPUzYor5FSGvmOwztw7nhKsdpSp25l7Aexm/dfL2TjKet5Cu
-         epndsDNQxK3IDLmpuwnirZ3r9+RqElg8tkajtb2sz1XJ3Clx5E0Qju+Jqu60bzkyG8ta
-         8HsV7bw7FdnHgrovk1vEcrsXPxk1m/WBoHpqOgsC6+m32mE97aq0AATcNzFCef3ci5+X
-         pjNiy63NxGcvNWjPWyNm3d41isW8sGvzflmErSh1Kj+acqzCexP0MjEDkb/ajpPzxpJZ
-         hBdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=g7fjAjGpffs0qGSw9Zw3h1P0ZmgciCK8ISjc2ELqOLg=;
-        b=ENiWYFi549wrxgR9cuYqEAmy/KyD9UiOIwDgYFl2z6hxyUGImizlbvpfXlLmhoGgqQ
-         Q+p6kxCQgmKuVOoMd4s/ECoo0/aMLJvLUI7YzhZ7SwJBsn4bmeFFrni6O4hzL7IkY6If
-         ivmv9Mf2RMtYnt8Cmgtu1PheAOhTkfV71PwdS73EQ15If6M9Q4C7ZuFiUa3k4sI3YC79
-         66EQsO7C+ujOv4Sl1gF3D0uTVgEu8Sf8c4ex1h3SLFIPu9sLPVhm3Tnt3DsPCvzTNRK5
-         TQg228mH5S0HMnUCvlNMci00BrlNS/iUiFd/nmfP7qSg+SC2eb6+X/J/JAiBJ+duFJsR
-         8ikw==
-X-Gm-Message-State: APjAAAU4CKGo1esRXPQvmsjvt2Nz2o8Qp7kDyQQr6HZN35DPtRF0XBl2
-        D5y/NI/z5QTGK/ZadKmNRZI=
-X-Google-Smtp-Source: APXvYqy5v/TfqVTrr+295J1rYjdEA234Qb9cUqmLvA7SrOLplSjEa52K/hLt6pYX8OgqwI85KOQPZQ==
-X-Received: by 2002:a37:bd03:: with SMTP id n3mr713929qkf.52.1571079030181;
-        Mon, 14 Oct 2019 11:50:30 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:50c5])
-        by smtp.gmail.com with ESMTPSA id y22sm9355501qka.59.2019.10.14.11.50.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Oct 2019 11:50:29 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 11:50:27 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, newella@fb.com, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH block/for-linus] blkcg: Fix ->pd_alloc_fn() being called with
- the wrong blkcg on policy activation
-Message-ID: <20191014185027.GH18794@devbig004.ftw2.facebook.com>
+        Mon, 14 Oct 2019 15:00:43 -0400
+Received: from mga05.intel.com ([192.55.52.43]:45668 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728106AbfJNTAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 15:00:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 12:00:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
+   d="scan'208";a="208023923"
+Received: from kridax-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.7.178])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Oct 2019 12:00:34 -0700
+Date:   Mon, 14 Oct 2019 22:00:33 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+Cc:     Ken Goldman <kgold@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191014190033.GA15552@linux.intel.com>
+References: <20191003175854.GB19679@linux.intel.com>
+ <1570128827.5046.19.camel@linux.ibm.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
+ <20191004182711.GC6945@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+ <20191007000520.GA17116@linux.intel.com>
+ <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+ <20191008234935.GA13926@linux.intel.com>
+ <20191008235339.GB13926@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cf09a8ee19ad ("blkcg: pass @q and @blkcg into
-blkcg_pol_alloc_pd_fn()") added @blkcg to ->pd_alloc_fn(); however,
-blkcg_activate_policy() ends up using pd's allocated for the root
-blkcg for all preallocations, so ->pd_init_fn() for non-root blkcgs
-can be passed in pd's which are allocated for the root blkcg.
+On Wed, Oct 09, 2019 at 12:11:06PM +0000, Safford, David (GE Global Research, US) wrote:
+> 
+> > From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Sent: Tuesday, October 8, 2019 7:54 PM
+> > To: Ken Goldman <kgold@linux.ibm.com>
+> > Cc: Safford, David (GE Global Research, US) <david.safford@ge.com>; Mimi
+> > Zohar <zohar@linux.ibm.com>; linux-integrity@vger.kernel.org;
+> > stable@vger.kernel.org; open list:ASYMMETRIC KEYS
+> > <keyrings@vger.kernel.org>; open list:CRYPTO API <linux-
+> > crypto@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
+> > Subject: EXT: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+> > 
+> > On Wed, Oct 09, 2019 at 02:49:35AM +0300, Jarkko Sakkinen wrote:
+> > > On Mon, Oct 07, 2019 at 06:13:01PM -0400, Ken Goldman wrote:
+> > > > The TPM library specification states that the TPM must comply with
+> > > > NIST
+> > > > SP800-90 A.
+> > > >
+> > > > https://trustedcomputinggroup.org/membership/certification/tpm-certi
+> > > > fied-products/
+> > > >
+> > > > shows that the TPMs get third party certification, Common Criteria EAL 4+.
+> > > >
+> > > > While it's theoretically possible that an attacker could compromise
+> > > > both the TPM vendors and the evaluation agencies, we do have EAL 4+
+> > > > assurance against both 1 and 2.
+> > >
+> > > Certifications do not equal to trust.
+> > 
+> > And for trusted keys the least trust solution is to do generation with the kernel
+> > assets and sealing with TPM. With TEE the least trust solution is equivalent.
+> > 
+> > Are you proposing that the kernel random number generation should be
+> > removed? That would be my conclusion of this discussion if I would agree any
+> > of this (I don't).
+> > 
+> > /Jarkko
+> 
+> No one is suggesting that.
+> 
+> You are suggesting changing the documented behavior of trusted keys, and
+> that would cause problems for some of our use cases. While certification
+> may not in your mind be equal to trust, it is equal to compliance with 
+> mandatory regulations.
+> 
+> Perhaps rather than arguing past each other, we should look into 
+> providing users the ability to choose, as an argument to keyctl?
+> 
+> dave
 
-For blk-iocost, this means that ->pd_init_fn() can write beyond the
-end of the allocated object as it determines the length of the flex
-array at the end based on the blkcg's nesting level.
+I'm taking my words back in the regression part as regression would need
+really a failing system. Definitely the fixes tag should be removed from
+my patch.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: cf09a8ee19ad ("blkcg: pass @q and @blkcg into blkcg_pol_alloc_pd_fn()")
----
- block/blk-cgroup.c |   43 +++++++++++++++++++++++++++++--------------
- 1 file changed, 29 insertions(+), 14 deletions(-)
+What is anyway the role of the kernel rng? Why does it exist and when
+exactly it should be used? This exactly where the whole review process
+throughout the "chain of command" failed misserably with tpm_asym.c.
 
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1362,7 +1362,7 @@ int blkcg_activate_policy(struct request
- 			  const struct blkcg_policy *pol)
- {
- 	struct blkg_policy_data *pd_prealloc = NULL;
--	struct blkcg_gq *blkg;
-+	struct blkcg_gq *blkg, *pinned_blkg = NULL;
- 	int ret;
- 
- 	if (blkcg_policy_enabled(q, pol))
-@@ -1370,15 +1370,7 @@ int blkcg_activate_policy(struct request
- 
- 	if (queue_is_mq(q))
- 		blk_mq_freeze_queue(q);
--pd_prealloc:
--	if (!pd_prealloc) {
--		pd_prealloc = pol->pd_alloc_fn(GFP_KERNEL, q, &blkcg_root);
--		if (!pd_prealloc) {
--			ret = -ENOMEM;
--			goto out_bypass_end;
--		}
--	}
--
-+retry:
- 	spin_lock_irq(&q->queue_lock);
- 
- 	/* blkg_list is pushed at the head, reverse walk to init parents first */
-@@ -1388,12 +1380,31 @@ pd_prealloc:
- 		if (blkg->pd[pol->plid])
- 			continue;
- 
--		pd = pol->pd_alloc_fn(GFP_NOWAIT | __GFP_NOWARN, q, &blkcg_root);
--		if (!pd)
--			swap(pd, pd_prealloc);
-+		if (blkg == pinned_blkg) {
-+			pd = pd_prealloc;
-+			pd_prealloc = NULL;
-+		} else {
-+			pd = pol->pd_alloc_fn(GFP_NOWAIT | __GFP_NOWARN, q,
-+					      blkg->blkcg);
-+		}
-+
- 		if (!pd) {
-+			if (pinned_blkg)
-+				blkg_put(pinned_blkg);
-+			blkg_get(blkg);
-+			pinned_blkg = blkg;
-+
- 			spin_unlock_irq(&q->queue_lock);
--			goto pd_prealloc;
-+
-+			kfree(pd_prealloc);
-+			pd_prealloc = pol->pd_alloc_fn(GFP_KERNEL, q,
-+						       blkg->blkcg);
-+			if (pd_prealloc) {
-+				goto retry;
-+			} else {
-+				ret = -ENOMEM;
-+				goto out_bypass_end;
-+			}
- 		}
- 
- 		blkg->pd[pol->plid] = pd;
-@@ -1403,6 +1414,10 @@ pd_prealloc:
- 			pol->pd_init_fn(pd);
- 	}
- 
-+	if (pinned_blkg)
-+		blkg_put(pinned_blkg);
-+	kfree(pd_prealloc);
-+
- 	__set_bit(pol->plid, q->blkcg_pols);
- 	ret = 0;
- 
+The commit message for tpm_asym.c does not document the design choice in
+any possible way and still was merged to the mainline.
+
+Before knowning the answer to the "existential" question we are
+somewhat paralyzed on moving forward with trusted keys (e.g. paralyzed
+to merge TEE backend).
+
+Your proposal might make sense but I don't really want to say anything
+since I'm completely cluesless of the role of the kernel rng. Looks like
+everyone who participated to the review process of tpm_asym.c, is too.
+
+/Jarkko
