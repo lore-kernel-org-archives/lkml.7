@@ -2,160 +2,154 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20572ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904D4ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01917207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61016207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:47:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="dl8szzvk";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="efm0i56k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731066AbfJNLqh (ORCPT
+        id S1730178AbfJNLra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 07:46:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54018 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730593AbfJNLqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 07:46:37 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A35CC801673;
-        Mon, 14 Oct 2019 11:46:35 +0000 (UTC)
-Received: from thinkpad.redhat.com (ovpn-116-247.ams2.redhat.com [10.36.116.247])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5186619C6A;
-        Mon, 14 Oct 2019 11:46:33 +0000 (UTC)
-From:   Laurent Vivier <lvivier@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Matt Mackall <mpm@selenic.com>,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org, Laurent Vivier <lvivier@redhat.com>
-Subject: [PATCH] hwrng: core - Fix use-after-free warning in hwrng_register()
-Date:   Mon, 14 Oct 2019 13:46:32 +0200
-Message-Id: <20191014114632.10875-1-lvivier@redhat.com>
+        Mon, 14 Oct 2019 07:47:30 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:42106 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730369AbfJNLr3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 07:47:29 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9EBjbou009798;
+        Mon, 14 Oct 2019 04:47:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=b0NFujwhevrP/Ucvmvv251g66t2yaWYt79pkDoVbMwU=;
+ b=dl8szzvkDJU8gngTDBSBuF/n8Ib8XRKqBveJ/K+hzoSEzcwSmoowmbAiX87XtRktW6Zk
+ DRWNyCyJYEkfJyabAtsMnnuIFYELsg7XHvFcmlZuYi3cMtp34AFoFjlRWle2DvezVE+I
+ pU9I+YANq4QiZtpW80CQmv+5qIx+12CcnBrMZBWGM5Os3To/tZ8d0Nyx61ZJMUVA+YSt
+ 3M0ILKy0DvFjz12pHShQG+MrJ+Jn1T6WTwY3GJJ0uGvF5YEnjbsN2M1YLneDAnETRL2v
+ ObICSXUvl06ZXEcX5KLJAHwTdM4in1LlbroR+6oP+uOo+PwgCqtnZ3RqBTqe4ZHqfFhK 6g== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2vkc6r69mx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 14 Oct 2019 04:47:14 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 14 Oct
+ 2019 04:47:13 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (104.47.49.59) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 14 Oct 2019 04:47:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g845S+sbfHBSX6OtgjJx0pzGj4tXMdJSHVW36j+7KjZoBennkTIfQfoO/4kpXFr5ivQejwiOB7wOlL5AQCboy3cQ+0lJmgC+ETnO5phJVGD8viZQBBhOuFvfPl2iWzlUZt8es+HYf6joE6MGXLKi8YqFM/jcuw+JHk3hxp4nMHwUNMUz6Tjugq+zIlqCSMGsFH2L8jpgSYoIiPrxAPPBMDp9LMKJtZ6nZQhWggoM++3+UWcHeRn+wFDcsXWE4eGDLAD5jFeMfZfI9I8qOQZS9/is8nCqRBrYS3vm+xTb259xGDDMjH+oJf/cAi3SfMSvPUZCaCWHQohNi/mYo0appg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b0NFujwhevrP/Ucvmvv251g66t2yaWYt79pkDoVbMwU=;
+ b=XFoNNaafIldnCM81/fpFX8SA8eP5OwxUHq4rmKaj6PTI5dUPlFwgoaZ5TbuCejWEQnAQSxCA2Qj6siCvgn+W/MpLDrLCLakXwHpy+e7V4FmXD1Bjt1Nv/R5bQ0O8NGhjlGyJlq/mRawCikq+OexNrI4tO6AHc+C2lwu5IpCdFHKllfAwQwCbwWZWNnd1GWUqm6Z1ux+ERDG7YKs6J0RTi8h9j5peL7xG1Gw5HQhpGchVlndJ1AZfpX+3o7XCwh071mSnx39xpoqZ6jMD7YRf+YCehcqx7TaJBa8YoVWKmzrglfrBCzWg0O6mRLu9emo5giFdsdmcxI4q7MpkYrlBiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b0NFujwhevrP/Ucvmvv251g66t2yaWYt79pkDoVbMwU=;
+ b=efm0i56kOFwykGEA70BNLTMJqYIZxDyj5BlYVkP9OUtFjClY5Z5MZKVxwC2jyNI834EhE9PPbiaKlSAldJq+M4y0428eJ4mCXPPdGY6loKpy36aWD9UUJOkTxw0JIiL8rj9qnZnmF0qvWqXHbSXXXvLd22Py2TzkROmzXU8QozM=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB2573.namprd18.prod.outlook.com (20.179.84.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Mon, 14 Oct 2019 11:47:12 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d16d:8855:c030:2763]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d16d:8855:c030:2763%3]) with mapi id 15.20.2347.023; Mon, 14 Oct 2019
+ 11:47:12 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+CC:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        "James Morse" <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 12/19] EDAC: Store error type in struct
+ edac_raw_error_desc
+Thread-Topic: [PATCH 12/19] EDAC: Store error type in struct
+ edac_raw_error_desc
+Thread-Index: AQHVf6jbve5vRxDO20qtSKMm5w5VjadVRSSAgATFvAA=
+Date:   Mon, 14 Oct 2019 11:47:12 +0000
+Message-ID: <20191014114704.yyemipcregxghrox@rric.localdomain>
+References: <20191010202418.25098-1-rrichter@marvell.com>
+ <20191010202418.25098-13-rrichter@marvell.com>
+ <20191011075412.03458c3e@coco.lan>
+In-Reply-To: <20191011075412.03458c3e@coco.lan>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0236.eurprd05.prod.outlook.com
+ (2603:10a6:3:fb::12) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8f17d8f9-9e77-4168-07c9-08d7509c4049
+x-ms-traffictypediagnostic: MN2PR18MB2573:
+x-microsoft-antispam-prvs: <MN2PR18MB25731D1819FB52889BA30213D9900@MN2PR18MB2573.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01901B3451
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39850400004)(366004)(346002)(376002)(396003)(199004)(189003)(6246003)(66946007)(6486002)(71190400001)(6512007)(86362001)(9686003)(66476007)(3846002)(256004)(6116002)(66556008)(3716004)(76176011)(71200400001)(7736002)(8936002)(81156014)(14454004)(8676002)(52116002)(81166006)(4326008)(305945005)(25786009)(64756008)(99286004)(66446008)(6436002)(186003)(1076003)(2906002)(66066001)(229853002)(5660300002)(476003)(11346002)(446003)(4744005)(486006)(478600001)(316002)(102836004)(6506007)(386003)(54906003)(53546011)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2573;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ePDyTIpDGMKnRHWXoi+m+Jz954bfkwLKz0lejF4SSp3XC1BLJkVQjc4Q7SAM9puKiG7631Ou+wW0AEaOp4QLg9YEzBk7Bm4GOV/EfZgiklNalr1aG9cmquq2gPGMv6xd2ajNpjPdWBc9M+zyOAMgRz8o86kn6a6FgrAjq5Omk73Sd0jnHP5KMFQ8y5cTBkbnsHAKimGJuu1y4tMsM/lSO0cAXLMNzjdZb6KTqUu1U5g4+IzmxGfdb/N9RMlUCI3ua0cq9MJYtuXarlS2W3sVTc2k5EnXzCnH+AHVB+zNUtuVDyp3hKU8y28hTkXPBhMvJNyug0iPgQfRvkWZD1UN+uh618DHhuTy5vmdDk7jiLEhcryfmR8akVKYT2jJJnSO7VivPbUg0DTYv0TPfeu2PHZKQ6qxb2/uooXDQUdjy3I=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4137A5AE7585544B9A91F32F1BBACFF3@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Mon, 14 Oct 2019 11:46:36 +0000 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f17d8f9-9e77-4168-07c9-08d7509c4049
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2019 11:47:12.2231
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: L9ZNsYpjzysRwKLBIJIvlAqs0NR68DuPbVmy4U/OqB90Y3jTFKt41RD4/u6p3AaLLUG9ls79HRhW+oWQhy0YFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2573
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-14_07:2019-10-11,2019-10-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit daae28debcb0 has moved add_early_randomness() out of the
-rng_mutex and tries to protect the reference of the new rng device
-by incrementing the reference counter.
+On 11.10.19 07:54:19, Mauro Carvalho Chehab wrote:
+> Em Thu, 10 Oct 2019 20:25:29 +0000
+> Robert Richter <rrichter@marvell.com> escreveu:
+>=20
+> > Store the error type in struct edac_raw_error_desc. This makes the
+> > type parameter of edac_raw_mc_handle_error() obsolete.
+>=20
+> I don't see much gain on this change, but whatever works best for
+> ghes.
 
-But in hwrng_register(), the function can be called with a new device
-that is not set as the current_rng device and the reference has not been
-initialized. This patch fixes the problem by not using the reference
-counter when the device is not the current one: the reference counter
-is only meaningful in the case of the current rng device and a device
-is not used if it is not the current one (except in hwrng_register())
+The error type clearly describes the error. It makes sense to keep it
+in struct edac_raw_error_desc as the function interface of
+edac_raw_mc_handle_error() becomes easier. There is no reason to have
+a function argument for the type while all other error data is in
+edac_raw_error_desc.
 
-The problem has been reported by Marek Szyprowski on ARM 32bit
-Exynos5420-based Chromebook Peach-Pit board:
+This change might look trivial, but this series contains many small
+changes like this and in the end there is a reasonable change of the
+function that describes it much better:
 
-WARNING: CPU: 3 PID: 1 at lib/refcount.c:156 hwrng_register+0x13c/0x1b4
-refcount_t: increment on 0; use-after-free.
-Modules linked in:
-CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00061-gdaae28debcb0
-Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[<c01124c8>] (unwind_backtrace) from [<c010dfb8>] (show_stack+0x10/0x14)
-[<c010dfb8>] (show_stack) from [<c0ae86d8>] (dump_stack+0xa8/0xd4)
-[<c0ae86d8>] (dump_stack) from [<c0127428>] (__warn+0xf4/0x10c)
-[<c0127428>] (__warn) from [<c01274b4>] (warn_slowpath_fmt+0x74/0xb8)
-[<c01274b4>] (warn_slowpath_fmt) from [<c054729c>] (hwrng_register+0x13c/0x1b4)
-[<c054729c>] (hwrng_register) from [<c0547e54>] (tpm_chip_register+0xc4/0x274)
-...
+void edac_raw_mc_handle_error(struct edac_raw_error_desc *e,
+                          struct dimm_info *dimm);
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Fixes: daae28debcb0 ("hwrng: core - move add_early_randomness() out of rng_mutex")
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Laurent Vivier <lvivier@redhat.com>
----
- drivers/char/hw_random/core.c | 33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+... that reads as handle error described in e that affects this dimm.
 
-diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
-index 29f50c045c92..d85c6e18a2d2 100644
---- a/drivers/char/hw_random/core.c
-+++ b/drivers/char/hw_random/core.c
-@@ -471,17 +471,15 @@ static void start_khwrngd(void)
- int hwrng_register(struct hwrng *rng)
- {
- 	int err = -EINVAL;
--	struct hwrng *old_rng, *new_rng, *tmp;
-+	struct hwrng *tmp;
- 	struct list_head *rng_list_ptr;
-+	bool is_new_current = false;
- 
- 	if (!rng->name || (!rng->data_read && !rng->read))
- 		goto out;
- 
- 	mutex_lock(&rng_mutex);
- 
--	old_rng = current_rng;
--	new_rng = NULL;
--
- 	/* Must not register two RNGs with the same name. */
- 	err = -EEXIST;
- 	list_for_each_entry(tmp, &rng_list, list) {
-@@ -500,9 +498,8 @@ int hwrng_register(struct hwrng *rng)
- 	}
- 	list_add_tail(&rng->list, rng_list_ptr);
- 
--	err = 0;
--	if (!old_rng ||
--	    (!cur_rng_set_by_user && rng->quality > old_rng->quality)) {
-+	if (!current_rng ||
-+	    (!cur_rng_set_by_user && rng->quality > current_rng->quality)) {
- 		/*
- 		 * Set new rng as current as the new rng source
- 		 * provides better entropy quality and was not
-@@ -511,15 +508,14 @@ int hwrng_register(struct hwrng *rng)
- 		err = set_current_rng(rng);
- 		if (err)
- 			goto out_unlock;
-+		/* to use current_rng in add_early_randomness() we need
-+		 * to take a ref
-+		 */
-+		is_new_current = true;
-+		kref_get(&rng->ref);
- 	}
--
--	new_rng = rng;
--	kref_get(&new_rng->ref);
--out_unlock:
- 	mutex_unlock(&rng_mutex);
--
--	if (new_rng) {
--		if (new_rng != old_rng || !rng->init) {
-+	if (is_new_current || !rng->init) {
- 		/*
- 		 * Use a new device's input to add some randomness to
- 		 * the system.  If this rng device isn't going to be
-@@ -527,10 +523,13 @@ int hwrng_register(struct hwrng *rng)
- 		 * called yet by set_current_rng(); so only use the
- 		 * randomness from devices that don't need an init callback
- 		 */
--			add_early_randomness(new_rng);
--		}
--		put_rng(new_rng);
-+		add_early_randomness(rng);
- 	}
-+	if (is_new_current)
-+		put_rng(rng);
-+	return 0;
-+out_unlock:
-+	mutex_unlock(&rng_mutex);
- out:
- 	return err;
- }
--- 
-2.21.0
-
+-Robert
